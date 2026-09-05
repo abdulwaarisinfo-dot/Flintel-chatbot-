@@ -18,7 +18,7 @@
      ========================================================================= */
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { background: #171615; font-family: 'Figtree', sans-serif; height: 100%; }
-  a, button { font-family: inherit; cursor: pointer; background: none; border: none; color: inherit; }
+  a, button { font-family: inherit; cursor: pointer; background: none; border: none; color: inherit; text-decoration: none; }
   .sr-only {
     position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
     overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
@@ -193,7 +193,7 @@
 
      No keyword list or job/status internals are ever rendered here.
      ========================================================================= */
-  .thread-wrap { flex: 1; padding: 56px 20px 140px 20px; }
+  .thread-wrap { flex: 1; padding: 84px 20px 220px 20px; }
   .thread-inner { max-width: 950px; margin: 0 auto; }
   @media (min-width: 1060px) {
     .thread-wrap { padding-left: 109px; padding-right: 109px; }
@@ -299,13 +299,14 @@
     background: linear-gradient(to top, #171615 85%, rgba(23,22,21,0));
     padding: 24px 20px 28px 20px; padding-top: 40px;
   }
-  .docked-input-inner { max-width: 720px; margin: 0 auto; }
+  .docked-input-inner { max-width: 950px; margin: 0 auto; }
   @media (min-width: 1060px) {
     .docked-input-wrap { padding-left: 109px; padding-right: 109px; }
+    .docked-input-inner { max-width: none; width: 100%; margin: 0; }
   }
   .search-box {
     background: #1e1d1c; border: 1px solid #3d3d3b; border-radius: 18px;
-    padding: 14px 20px 15px 20px; transition: border-color .15s ease;
+    padding: 18px 24px 19px 24px; transition: border-color .15s ease;
   }
   .search-box:focus-within {
     border: 1px solid transparent;
@@ -315,8 +316,8 @@
   }
   .search-input {
     width: 100%; background: transparent; border: none; outline: none;
-    color: #fff; font-size: 16px; font-weight: 500; font-family: inherit;
-    margin-bottom: 16px;
+    color: #fff; font-size: 17px; font-weight: 500; font-family: inherit;
+    margin-bottom: 42px;
   }
   .search-input::placeholder { color: #757473; }
   .search-controls { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
@@ -325,12 +326,12 @@
   .right-controls { display: flex; align-items: center; gap: 24px; flex-shrink: 0; }
   .platforms-btn {
     display: flex; align-items: center; gap: 8px;
-    color: #757473; font-size: 15px; font-weight: 500; transition: color .15s ease;
+    color: #757473; font-size: 16px; font-weight: 500; transition: color .15s ease;
     white-space: nowrap;
   }
   .platforms-btn:hover { color: #fff; }
   .submit-btn {
-    width: 34px; height: 34px; border-radius: 50%; background: #e8e6e3;
+    width: 36px; height: 36px; border-radius: 50%; background: #e8e6e3;
     display: flex; align-items: center; justify-content: center;
     transition: background .15s ease; flex-shrink: 0;
   }
@@ -460,7 +461,7 @@
     .sidebar.mobile-open { transform: translateX(0); }
     .mobile-topbar { display: flex; }
     .topbar { display: none; }
-    .thread-wrap { padding: 80px 16px 160px 16px; }
+    .thread-wrap { padding: 24px 16px 200px 16px; }
     .docked-input-wrap { left: 0; padding: 16px 16px 20px 16px; }
     .turn-question { font-size: 16px; max-width: 90%; }
     .post-field .field-text { font-size: 15px; }
