@@ -36,12 +36,14 @@
     position: sticky;
     top: 0;
     border-right: 1px solid #2b2a28;
+    overflow: hidden; /* nothing spills past the sidebar's own box */
   }
   .sidebar-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 18px 20px 17px 20px;
+    flex-shrink: 0; /* stays put — never pushed around by a long session list */
   }
   .logo-group { display: flex; align-items: center; gap: 9px; }
   .logo-mark {
@@ -53,9 +55,9 @@
   .icon-btn { color: #7a7a77; transition: color .15s ease; display: flex; }
   .icon-btn:hover { color: #fff; }
 
-  .divider { height: 1px; background: #2b2a28; width: 100%; }
+  .divider { height: 1px; background: #2b2a28; width: 100%; flex-shrink: 0; }
 
-  .new-section { padding: 27px 9px 0 9px; }
+  .new-section { padding: 27px 9px 0 9px; flex-shrink: 0; }
   .new-section form { margin: 0; }
   .new-btn {
     display: flex; align-items: center; gap: 11px;
@@ -70,10 +72,32 @@
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
 
-  .sessions-section { padding: 38px 20px 0 20px; }
+  /* The session list is the ONLY part of the sidebar that scrolls — the logo
+     row, New button, and Sign In/account row above and below it stay fixed
+     in place no matter how many chats pile up. `flex: 1 1 auto` + `min-height: 0`
+     is the actual mechanism: without min-height:0, a flex child refuses to
+     shrink below its content size, which is what was silently pushing the
+     Sign In row (and the divider above it) off-screen with no way to reach it. */
+  .sessions-section {
+    padding: 38px 20px 0 20px;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
   .sessions-toggle {
     width: 100%; display: flex; align-items: center; justify-content: space-between;
     color: #7a7a77; font-size: 16px; font-weight: 400;
+    flex-shrink: 0;
+  }
+  #sessions-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    /* room for the scrollbar so it doesn't sit flush against session text */
+    padding-right: 4px;
+    margin-right: -4px;
   }
   .sessions-empty { font-size: 15px; color: rgba(122,122,119,0.8); margin-top: 9px; }
   .sessions-list-wrap { margin: 12px -20px 0 -20px; padding: 0 9px; }
@@ -103,8 +127,6 @@
   }
   .session-item:hover .session-item-menu, .session-item.active .session-item-menu { display: flex; }
   .session-item-menu:hover { color: #fff; }
-
-  .spacer { flex: 1; }
 
   .signin-btn {
     display: flex; align-items: center; justify-content: space-between;
@@ -608,8 +630,6 @@
         {% endif %}
       </div>
     </div>
-
-    <div class="spacer"></div>
 
     <div class="divider"></div>
 
