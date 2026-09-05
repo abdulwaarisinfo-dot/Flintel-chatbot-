@@ -100,14 +100,21 @@ Required env vars (add to .env):
     ANTHROPIC_API_KEY=...
     CLAUDE_MODEL=claude-haiku-4-5-20251001   # optional, this is the default
 
-── v4.1 FIX (this file) ──────────────────────────────────────────────────────
+── v4.1 FIX ───────────────────────────────────────────────────────────────
 Only ONE behavior changed from the v4 file above: the /search route used to
 always `RedirectResponse(url="/")` no matter what, which bounced every
 follow-up search back to the home screen instead of keeping the user on the
 chat thread they were just talking in (like Claude/ChatGPT do). It now
 redirects to `/chat/{chat_id}` — the same chat the message was just saved
 into — falling back to "/" only if chat bookkeeping itself failed. Nothing
-else in this file was touched.
+else in that update was touched.
+
+── v4.2 FIX (this file) ──────────────────────────────────────────────────────
+FastAPI's auto-generated API docs are now disabled: the FastAPI(...) app is
+constructed with docs_url=None, redoc_url=None, openapi_url=None, so
+/docs, /redoc, and /openapi.json all 404 instead of publicly exposing every
+route, request/response shape, and internal field name. Nothing else in
+this file was touched.
 ──────────────────────────────────────────────────────────────────────────────
 """
 
@@ -191,7 +198,15 @@ chats_collection.create_index("owner_key")
 # APP SETUP
 # ─────────────────────────────────────────────────────────────────────────────
 
-app = FastAPI(title="Flintel Web Service — v4")
+app = FastAPI(
+    title="Flintel Web Service — v4",
+    # v4.2: docs/redoc/openapi.json are internal implementation detail, not a
+    # public product surface — block all three so /docs, /redoc, and
+    # /openapi.json 404 instead of exposing every route + schema to anyone.
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None,
+)
 templates = Jinja2Templates(directory="templates")
 
 # Required for login sessions (stores a signed cookie, not the DB user doc).
