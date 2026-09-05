@@ -1232,8 +1232,35 @@ def list_chats(request: Request):
 @app.post("/chats/new")
 def new_chat(request: Request, title: str = Form(None)):
     """Starts a brand-new chat and makes it the active one, the same as
-    clicking "New chat" in Claude/ChatGPT."""
+    clicking "New chat" in Claude/ChatGPT.
+
+    v4.4 FIX: clicking "New chat" repeatedly used to create a fresh empty
+    chat doc every single time, even if the currently active chat was
+    ALSO already empty (user hit "New chat" but never actually sent a
+    prompt into it yet) — leaving a trail of dead, message-less chats in
+    the sidebar. Now, if the currently active chat belongs to this same
+    owner and still has zero messages, that same empty chat is reused
+    (just re-marked active) instead of creating another one. A brand-new
+    chat doc is only created when there's no active chat, it belongs to
+    someone else, or it already has at least one message in it — i.e.
+    the user actually used it — which matches how Claude/ChatGPT avoid
+    piling up empty conversations from repeated "New chat" clicks."""
     owner_key, owner_type = get_owner(request)
+
+    active_chat_id = request.session.get("active_chat_id")
+    if active_chat_id:
+        active_chat = get_chat_session(active_chat_id, owner_key)
+        if active_chat and not active_chat.get("messages"):
+            # Already-empty chat for this same owner -> reuse it instead of
+            # spawning a duplicate empty one.
+            if title:
+                chats_collection.update_one(
+                    {"chat_id": active_chat_id, "owner_key": owner_key},
+                    {"$set": {"title": title, "updated_at": datetime.now(timezone.utc)}},
+                )
+            request.session["active_chat_id"] = active_chat_id
+            return RedirectResponse(url="/", status_code=303)
+
     chat_id = create_chat_session(owner_key, owner_type, title=title)
     request.session["active_chat_id"] = chat_id
     return RedirectResponse(url="/", status_code=303)
