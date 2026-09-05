@@ -26,7 +26,7 @@ v4 — CLAUDE ANALYSIS LAYER (NEW, on top of everything above):
     prompt.
   - Claude then decides, naturally, how to actually answer what the user
     asked — a summary, a sentiment breakdown, a drafted reply, an
-    opinion, a plain "not enough data" — whatever fits the question.
+    opinion, a plain "not enough data", whatever fits the question.
     Whenever Claude judges a table is the clearest way to explain
     something, it writes one (as part of its normal answer text) — no
     special-casing needed here, it's just Claude writing markdown.
@@ -109,12 +109,26 @@ redirects to `/chat/{chat_id}` — the same chat the message was just saved
 into — falling back to "/" only if chat bookkeeping itself failed. Nothing
 else in that update was touched.
 
-── v4.2 FIX (this file) ──────────────────────────────────────────────────────
+── v4.2 FIX ───────────────────────────────────────────────────────────────
 FastAPI's auto-generated API docs are now disabled: the FastAPI(...) app is
 constructed with docs_url=None, redoc_url=None, openapi_url=None, so
 /docs, /redoc, and /openapi.json all 404 instead of publicly exposing every
 route, request/response shape, and internal field name. Nothing else in
 this file was touched.
+
+── v4.3 FIX (this file) ───────────────────────────────────────────────────
+Adds ONE new capability: deleting a single chat. A new
+`POST /chat/{chat_id}/delete` route lets the current owner (signed-in
+email, or guest UUID) remove exactly ONE of their own chats —
+never every chat belonging to them, and never a chat belonging to a
+different owner. It reuses the exact same owner-scoping pattern already
+used by get_chat_session()/view_chat() (filtering by BOTH chat_id AND
+owner_key on the Mongo query itself, not just checking after the fact),
+so a guest or another account can't delete a chat by guessing its id —
+identical protection to how a chat is already read. If the deleted chat
+happened to be the currently active one, `active_chat_id` is cleared from
+the session so the home page falls back to showing no active chat instead
+of a stale/missing one. Nothing else in this file was touched.
 ──────────────────────────────────────────────────────────────────────────────
 """
 
@@ -874,6 +888,9 @@ def upsert_google_user(google_id: str, email: str, name: str):
 #     signed in), logging out and logging back in with the same email
 #     brings the exact same chat history back — nothing is deleted on
 #     logout.
+#   - (v4.3, NEW) A single chat can be deleted by its owner — see
+#     delete_chat() below — without touching any other chat, and without
+#     letting anyone but that same owner_key delete it.
 # ─────────────────────────────────────────────────────────────────────────────
 
 def get_anon_id(request: Request) -> str:
@@ -935,6 +952,31 @@ def get_user_chats(owner_key: str):
     return list(
         chats_collection.find({"owner_key": owner_key}, {"_id": 0}).sort("updated_at", -1)
     )
+
+
+def delete_chat_session(chat_id: str, owner_key: str) -> bool:
+    """(v4.3, NEW) Deletes exactly ONE chat — the one identified by
+    chat_id — and only if it belongs to owner_key. Uses the same
+    {"chat_id": ..., "owner_key": ...} filter as get_chat_session(), so
+    the scoping rule is identical to the one already trusted for reading
+    a chat: a guest's anon_id or a signed-in user's email can only ever
+    delete chats stamped with that exact owner_key, never another
+    owner's chats, and never (by construction, since chat_id is always
+    an exact single id) the owner's other chats.
+
+    Returns True if a chat was actually deleted, False if no matching
+    chat existed for this owner (already gone, wrong id, or belongs to
+    someone else) — callers use this to decide whether to also clear
+    `active_chat_id` from the session."""
+    if not chat_id:
+        return False
+    result = chats_collection.delete_one({"chat_id": chat_id, "owner_key": owner_key})
+    deleted = result.deleted_count > 0
+    if deleted:
+        log.info(f"Chat deleted | chat_id={chat_id} | owner_key={owner_key}")
+    else:
+        log.info(f"Chat delete no-op (not found for this owner) | chat_id={chat_id} | owner_key={owner_key}")
+    return deleted
 
 
 def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
@@ -1233,6 +1275,32 @@ def view_chat(request: Request, chat_id: str):
             "chats": get_user_chats(owner_key),
         },
     )
+
+
+@app.post("/chat/{chat_id}/delete")
+def delete_chat(request: Request, chat_id: str):
+    """(v4.3, NEW) Deletes exactly ONE chat belonging to the current owner
+    — never every chat for that owner, and never a chat belonging to a
+    different owner (signed-in email or guest UUID).
+
+    Scoping works exactly like get_chat_session()/view_chat() above: the
+    delete is filtered on BOTH chat_id AND owner_key at the database
+    level (see delete_chat_session()), not just checked afterwards — so a
+    guest or another account can never delete a chat by guessing its id,
+    the same guarantee already relied on for reading a chat.
+
+    If the deleted chat was the currently active one, `active_chat_id` is
+    cleared from the session so home() doesn't try to keep rendering a
+    chat that no longer exists. Sidebar/history for every other chat
+    belonging to this owner is completely untouched — this route never
+    touches any chat_id other than the one passed in."""
+    owner_key, _owner_type = get_owner(request)
+    deleted = delete_chat_session(chat_id, owner_key)
+
+    if deleted and request.session.get("active_chat_id") == chat_id:
+        request.session.pop("active_chat_id", None)
+
+    return RedirectResponse(url="/", status_code=303)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
