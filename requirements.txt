@@ -1,0 +1,27 @@
+# Flintel Web Service (v4) — dependencies
+# Matches the `pip install ...` line in index.py's own docstring, pinned to
+# major versions currently compatible with each other and with index.py's
+# imports:
+#   os, re, uuid, logging, datetime            -> stdlib, no package needed
+#   httpx                                       -> Claude (Anthropic) API calls
+#   dotenv (python-dotenv)                      -> loads .env
+#   bson, pymongo                               -> MongoDB (bson ships with pymongo)
+#   fastapi, starlette (SessionMiddleware)      -> web framework + sessions
+#   fastapi.templating (Jinja2Templates)        -> needs jinja2
+#   Form(...) file/form parsing                 -> needs python-multipart
+#   passlib[bcrypt]                             -> password hashing
+#   authlib                                     -> Google OAuth
+#   itsdangerous                                -> signs Starlette session cookies
+#   uvicorn                                     -> ASGI server to run the app
+
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+jinja2==3.1.4
+python-multipart==0.0.9
+pymongo==4.8.0
+python-dotenv==1.0.1
+authlib==1.3.2
+httpx==0.27.2
+itsdangerous==2.2.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.2.0

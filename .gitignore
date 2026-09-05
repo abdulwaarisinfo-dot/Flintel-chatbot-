@@ -1,0 +1,67 @@
+# ── Secrets / environment ─────────────────────────────────────────────────
+# index.py loads all of MONGODB_URI, SESSION_SECRET_KEY, GOOGLE_CLIENT_ID/
+# SECRET, ANTHROPIC_API_KEY from .env via python-dotenv — never commit it.
+.env
+.env.*
+!.env.example
+
+# ── Python ─────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ── Virtual environments ────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── Testing / coverage ──────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── uvicorn / FastAPI reload artifacts ──────────────────────────────────────
+*.pid
+
+# ── Editors / IDEs ───────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── OS cruft ─────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Jinja2 / template caches (if bytecode caching is ever enabled) ─────────
+templates/__pycache__/
+
+# ── Local scratch / exported data (never commit real Mongo dumps) ──────────
+*.dump
+*.bson
+mongo-data/
