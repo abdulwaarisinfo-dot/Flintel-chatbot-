@@ -95,10 +95,15 @@
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
-    /* room for the scrollbar so it doesn't sit flush against session text */
-    padding-right: 4px;
-    margin-right: -4px;
+    overflow-x: hidden; /* the sessions-list-wrap's negative side margins were
+                            escaping this box and triggering a horizontal
+                            scrollbar too — this shuts that off */
+    /* No visible scrollbar track/thumb/arrows — just natural trackpad/touch/
+       wheel scrolling, like the sidebar in ChatGPT/Claude itself. */
+    scrollbar-width: none;      /* Firefox */
+    -ms-overflow-style: none;   /* old Edge/IE */
   }
+  #sessions-body::-webkit-scrollbar { display: none; } /* Chrome/Safari/new Edge */
   .sessions-empty { font-size: 15px; color: rgba(122,122,119,0.8); margin-top: 9px; }
   .sessions-list-wrap { margin: 12px -20px 0 -20px; padding: 0 9px; }
   .session-item {
