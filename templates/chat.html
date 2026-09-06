@@ -482,6 +482,17 @@
 
   .hidden { display: none !important; }
 
+  /* ---------- Streamed-answer entrance animation (additive only) ---------- */
+  /* Applied once, only to an answer that just finished streaming in-place
+     (replacing the loading-row without a page reload) — a gentle fade +
+     rise instead of the content just instantly popping in. Never applied
+     to normal server-rendered page loads. */
+  @keyframes streamRevealIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .stream-reveal { animation: streamRevealIn 0.45s ease-out; }
+
   .turn-question, .thread-empty p, .post-field .field-text, .post-label,
   .platform-name, .platform-count, .answer-raw, .answer-rendered, .loading-text,
   .leadgen-heading, .leadgen-field .text, .leadgen-prospect-name,
@@ -1574,7 +1585,34 @@
       if (payload.done) {
         source.close();
         if (phraseTimer) clearInterval(phraseTimer);
-        window.location.reload();
+        // No page reload — the accumulated text is now complete, valid
+        // JSON. Render it in-place, right where the loading-row was,
+        // reusing the exact same structured-render logic every other
+        // already-answered message uses (renderStructuredAnswer), so the
+        // result is byte-identical to what a full page reload would have
+        // shown — just without the reload's jarring flash, and with a
+        // gentle entrance animation instead of the content just
+        // instantly appearing.
+        const loadingRow = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)}`);
+        if (loadingRow) {
+          const wrap = document.createElement('div');
+          wrap.className = 'answer-wrap stream-reveal';
+          const rawDiv = document.createElement('div');
+          rawDiv.className = 'answer-raw';
+          rawDiv.textContent = accumulated;
+          const renderedDiv = document.createElement('div');
+          renderedDiv.className = 'answer-rendered';
+          wrap.appendChild(rawDiv);
+          wrap.appendChild(renderedDiv);
+          loadingRow.replaceWith(wrap);
+          wrap.dataset.lastRenderedRaw = accumulated; // avoid a redundant re-render from the MutationObserver
+          renderStructuredAnswer(wrap);
+        } else {
+          // Fallback safety net: if the loading-row somehow isn't there
+          // anymore for any reason, fall back to the original, always-
+          // correct behavior rather than leaving the page stuck.
+          window.location.reload();
+        }
         return;
       }
 
