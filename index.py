@@ -1,5 +1,5 @@
 """
-FLINTEL — WEB SERVICE (v4)
+FLINTEL — WEB SERVICE (v7)
 ============================
 Everything from v3 is UNCHANGED and still works exactly as before:
   1. Take a user prompt (brand/topic/product name) from a simple web form.
@@ -100,6 +100,7 @@ Required env vars (add to .env):
     ANTHROPIC_API_KEY=...
     CLAUDE_MODEL=claude-haiku-4-5-20251001   # optional, this is the default
     RESPONSE_TIMEOUT=60                      # optional, this is the default (seconds)
+    MAX_POSTS_PER_PLATFORM=3                 # optional, this is the default (v7, see below)
 
 ── v4.1 FIX ───────────────────────────────────────────────────────────────
 Only ONE behavior changed from the v4 file above: the /search route used to
@@ -171,7 +172,7 @@ session hiccup) safely falls back to the "search" path, so this new
 feature can only ever add a shortcut — it can never break or block the
 pre-existing search pipeline, which stays the safe default on any doubt.
 
-── v6 FEATURE (this file) ─────────────────────────────────────────────────
+── v6 FEATURE ─────────────────────────────────────────────────────────────
 Adds TWO small, self-contained additions on top of v5. Nothing else in
 this file — no other route, function, or behavior — was touched.
 
@@ -220,6 +221,57 @@ this file — no other route, function, or behavior — was touched.
    guaranteed content filter — it can only ever add a shortcut/decline on
    top of the existing pipeline, it can never be the reason a genuine
    search silently fails to run.
+
+── v7 FEATURE (this file) ─────────────────────────────────────────────────
+Adds TWO small, self-contained changes, BOTH scoped entirely inside
+get_matched_signals() (the same function that has always powered post
+cards / Claude's grounding data). Nothing else in this file — no other
+route, function, template contract, or behavior — was touched.
+
+1. PER-PLATFORM RESULT CAP (new `MAX_POSTS_PER_PLATFORM` env var, default
+   3): Previously, MAX_MATCHED_RESULTS (default 25) was one shared budget
+   across every platform combined — e.g. a single search with
+   targeting_platform="all" could come back as 20 Reddit posts and only 1
+   X/Twitter post if that's simply what matched first, however lopsided.
+   Now, in addition to that existing overall MAX_MATCHED_RESULTS safety
+   cap (still respected, still unit-for-unit the same variable/behavior
+   as before), each individual platform is ALSO capped at
+   MAX_POSTS_PER_PLATFORM matches for that one search — e.g. with the
+   default of 3, a single search now returns AT MOST 3 Reddit posts, AT
+   MOST 3 X/Twitter posts, AT MOST 3 LinkedIn posts, and AT MOST 3
+   Facebook posts, so no one platform can crowd out the others in a
+   single prompt's results. MAX_POSTS_PER_PLATFORM is a plain env var —
+   change it in .env (or override at process start) and restart to pick
+   a different per-platform number later; no code change needed.
+
+2. BROADER KEYWORD MATCHING (title / post_text substring matching, ON TOP
+   OF the existing search_keyword field matching — the existing
+   search_keyword matching is completely untouched and still works
+   exactly as perfectly/exactly as it always has): previously, a signal
+   only ever counted as a match if its own search_keyword-like field
+   (see _KEYWORD_FIELD_CANDIDATES) matched one of the job's generated
+   keywords. Now, a signal ALSO counts as a match if any of the job's
+   generated keywords appears as a case-insensitive substring inside
+   that signal's OWN title or post_text (see the new
+   _text_matches_keyword() helper below) — even if its search_keyword
+   field doesn't match at all. This is a pure OR: a signal matches if
+   EITHER its search_keyword field matches, OR the keyword phrase shows
+   up in its title, OR the keyword phrase shows up in its post_text —
+   any one of the three is enough, and matching more than one of them
+   doesn't count it twice (each matched signal still only ever appears
+   once in the results, exactly as before via the existing seen_urls
+   de-duplication). Because a signal that only matches via title/text
+   (and not search_keyword) would never even be fetched by the OLD
+   Mongo query (which only ever filtered on the keyword field), the
+   Mongo query itself was widened with additional case-insensitive
+   regex OR-conditions on the title/text field candidates, so those
+   documents are actually retrieved from `flintel_signals` before the
+   Python-side check confirms the match. Everything else about
+   get_matched_signals() — its return shape ({title, post_text,
+   post_url, platform}), its signature, its platform-targeting filter,
+   its de-duplication by post_url, and every other caller in this file
+   (analyze_with_claude, build_claude_post_context, post cards, etc.) —
+   is completely unchanged.
 ──────────────────────────────────────────────────────────────────────────────
 """
 
@@ -266,8 +318,19 @@ MAX_KEYWORDS = int(os.getenv("MAX_KEYWORDS", "20"))
 
 # How many matched (post_text + url) results to surface per topic. Kept
 # separate from MAX_KEYWORDS since it's about signal output, not keyword
-# generation.
+# generation. (v7: this remains the OVERALL safety cap across every
+# platform combined — see MAX_POSTS_PER_PLATFORM below for the new
+# additional per-platform cap layered on top of this one.)
 MAX_MATCHED_RESULTS = int(os.getenv("MAX_MATCHED_RESULTS", "25"))
+
+# (v7, NEW) Caps how many matched posts ANY SINGLE platform can contribute
+# to one search's results — e.g. with the default of 3, at most 3 Reddit
+# posts AND at most 3 X/Twitter posts (etc.) show up for one prompt, even
+# if many more than that actually matched, so no one platform can crowd
+# out the others. Purely a config value — change it in .env and restart
+# to use a different number later; see get_matched_signals() below for
+# where it's applied.
+MAX_POSTS_PER_PLATFORM = int(os.getenv("MAX_POSTS_PER_PLATFORM", "3"))
 
 SESSION_SECRET_KEY  = os.getenv("SESSION_SECRET_KEY", "dev-only-change-me")
 GOOGLE_CLIENT_ID    = os.getenv("GOOGLE_CLIENT_ID")
@@ -318,7 +381,7 @@ chats_collection.create_index("owner_key")
 # ─────────────────────────────────────────────────────────────────────────────
 
 app = FastAPI(
-    title="Flintel Web Service — v6",
+    title="Flintel Web Service — v7",
     # v4.2: docs/redoc/openapi.json are internal implementation detail, not a
     # public product surface — block all three so /docs, /redoc, and
     # /openapi.json 404 instead of exposing every route + schema to anyone.
@@ -493,10 +556,11 @@ def get_signals(topic_key: str, limit: int = 25):
 
 # ─────────────────────────────────────────────────────────────────────────────
 # SIGNAL MATCHING — pull post_text + post_url for signals whose search
-# keyword matches one of the keywords generated for this job. UNCHANGED
-# from v3 — this is exactly what still powers the post cards (title +
-# post_url, as-is). Claude (below) only ever sees title + post_text from
-# whatever this returns — never post_url, never platform.
+# keyword matches one of the keywords generated for this job, OR (v7, NEW)
+# whose title/post_text itself contains one of those keywords. This is
+# exactly what still powers the post cards (title + post_url, as-is).
+# Claude (below) only ever sees title + post_text from whatever this
+# returns — never post_url, never platform.
 #
 # `flintel_signals` docs may use slightly different field names depending
 # on how Background Service #1 writes them, so this reads a small list of
@@ -560,7 +624,13 @@ def _signal_keyword_matches(doc: dict, keyword_set: set) -> bool:
     """True if this signal's search-keyword field matches ANY keyword in
     keyword_set (case-insensitive), whichever one it happens to be.
     Handles the keyword field being a single string OR a list (in case a
-    signal doc records more than one matched keyword)."""
+    signal doc records more than one matched keyword).
+
+    UNCHANGED from v3/v4/v5/v6 — this exact-field check is completely
+    untouched by v7; it still works exactly as perfectly as it always
+    has. v7 only ever ADDS more ways a signal can match (see
+    _text_matches_keyword() below) — it never removes or loosens this
+    one."""
     if not keyword_set:
         return True  # no keyword filter to apply -> don't exclude anything
 
@@ -580,6 +650,22 @@ def _signal_keyword_matches(doc: dict, keyword_set: set) -> bool:
 
     for candidate in candidates:
         if isinstance(candidate, str) and candidate.strip().lower() in keyword_set:
+            return True
+    return False
+
+
+def _text_matches_keyword(text: str, keyword_set: set) -> bool:
+    """(v7, NEW) True if ANY keyword in keyword_set appears as a
+    case-insensitive SUBSTRING somewhere inside `text`. This is what lets
+    a signal count as a match purely because a keyword phrase shows up in
+    its own title or post_text, even when its search_keyword field
+    doesn't match at all — a pure additional OR path alongside
+    _signal_keyword_matches() above, never a replacement for it."""
+    if not text or not isinstance(text, str):
+        return False
+    text_lower = text.lower()
+    for kw in keyword_set:
+        if kw and kw in text_lower:
             return True
     return False
 
@@ -605,13 +691,25 @@ def _infer_platform_from_url(url: str):
 
 
 def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str = "all", limit: int = None) -> list:
-    """Reads `flintel_signals` and keeps only the signals whose
-    search-keyword field matches ANY keyword generated for this job
-    (whichever one it is) — regardless of that signal's own topic_key.
-    topic_key match is intentionally NOT required: Background Service #1
-    may store its own topic_key for a signal, but what decides a match
-    here is purely whether search_keyword is one of our generated
-    keywords.
+    """Reads `flintel_signals` and keeps only the signals that match this
+    job's generated keywords. topic_key match is intentionally NOT
+    required: Background Service #1 may store its own topic_key for a
+    signal, but what decides a match here is purely the keyword-matching
+    rules below.
+
+    A signal counts as a match if ANY ONE of these is true (v7: this is
+    now three OR'd conditions instead of just the first one):
+      1. its search-keyword field matches one of our generated keywords
+         (see _signal_keyword_matches() — UNCHANGED, still exact/perfect,
+         same as v3-v6), OR
+      2. (v7, NEW) one of our generated keywords appears as a
+         case-insensitive substring inside its OWN title, OR
+      3. (v7, NEW) one of our generated keywords appears as a
+         case-insensitive substring inside its OWN post_text.
+    Matching via more than one of these at once still only ever produces
+    ONE entry in the results (de-duplicated by post_url exactly as
+    before) — this only widens WHICH signals can match, it never changes
+    how a matched signal is de-duplicated or shaped.
 
     `targeting_platform` (the same "all" | "reddit" | "x_twitter" |
     "linkedin" | "facebook" value already stored on the job/message) is
@@ -620,6 +718,17 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     signals from that platform only — the user's dropdown choice decides
     this, nothing else.
 
+    (v7, NEW) PER-PLATFORM CAP: on top of the existing overall `limit`
+    (MAX_MATCHED_RESULTS by default — still respected, still the same
+    variable/behavior as before), each individual platform can
+    contribute AT MOST MAX_POSTS_PER_PLATFORM matches to this call's
+    results (default 3) — e.g. with targeting_platform="all", a single
+    search now returns at most 3 Reddit posts AND at most 3 X/Twitter
+    posts AND at most 3 LinkedIn posts AND at most 3 Facebook posts,
+    instead of one shared budget that a single platform could dominate.
+    Purely a config value (MAX_POSTS_PER_PLATFORM env var) — change it
+    in .env and restart the process to use a different number later.
+
     Returns {title, post_text, post_url, platform} for each match — this
     is the only signal-derived output ever shown to the user (via post
     cards) or persisted onto a chat message's `results` (platform is
@@ -627,38 +736,67 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     it isn't used for anything else here). Never touches jobs_collection
     or the raw `signals` list returned by get_signals().
 
-    NOTE (v4): this function is completely unchanged from v3. It's also
-    the single source of truth Claude's analysis is grounded in — see
-    build_claude_post_context() below, which strips post_url/platform
-    back out before anything goes to Claude."""
+    NOTE (v7): this function's SIGNATURE, RETURN SHAPE, and every caller
+    (analyze_with_claude via build_claude_post_context, post cards via
+    save_signal_results_to_chat, etc.) are completely unchanged — only
+    the matching rule and the per-platform cap described above are new.
+    It's also the single source of truth Claude's analysis is grounded
+    in — see build_claude_post_context() below, which strips
+    post_url/platform back out before anything goes to Claude."""
     limit = limit or MAX_MATCHED_RESULTS
     keyword_list = [k for k in (keywords or []) if k]
     keyword_set = {k.strip().lower() for k in keyword_list}
     if not keyword_set:
         return []
 
-    # Query directly on the keyword field(s) with $in for efficiency —
-    # no topic_key in the filter at all. _signal_keyword_matches() below
-    # re-checks case-insensitively (and handles a list-valued keyword
-    # field) so a case/whitespace difference doesn't cause a false miss.
-    mongo_query = {"$or": [{field: {"$in": keyword_list}} for field in _KEYWORD_FIELD_CANDIDATES]}
+    # (v7) Widen the Mongo query itself: previously this only ever
+    # filtered on the keyword field(s) with $in. Now it ALSO fetches any
+    # doc whose title/text field candidates contain one of our keywords
+    # as a case-insensitive substring (via a single combined regex per
+    # field), so documents that would only match via title/text (and
+    # never had a matching search_keyword field) are actually retrieved
+    # here in the first place, instead of being invisible to the query
+    # before the Python-side check below even gets a chance to run.
+    or_conditions = [{field: {"$in": keyword_list}} for field in _KEYWORD_FIELD_CANDIDATES]
+    escaped_keywords = [re.escape(k) for k in keyword_list if k]
+    if escaped_keywords:
+        combined_pattern = "|".join(escaped_keywords)
+        for field in _TITLE_FIELD_CANDIDATES + _TEXT_FIELD_CANDIDATES:
+            or_conditions.append({field: {"$regex": combined_pattern, "$options": "i"}})
+    mongo_query = {"$or": or_conditions}
 
+    # Fetch a larger pool than `limit` since matches are now filtered
+    # further (per-platform caps below), same spirit as the old `limit *
+    # 5` headroom, just bumped up a bit since the query itself is now
+    # broader too.
     raw_docs = list(
         signals_collection.find(mongo_query, {"_id": 0})
         .sort("created_utc", -1)
-        .limit(limit * 5)
+        .limit(limit * 10)
     )
 
     matched = []
     seen_urls = set()
+    platform_counts = {}  # (v7, NEW) per-platform running count for this call
+
     for doc in raw_docs:
-        if not _signal_keyword_matches(doc, keyword_set):
+        title     = _first_present(doc, _TITLE_FIELD_CANDIDATES)
+        post_text = _first_present(doc, _TEXT_FIELD_CANDIDATES)
+
+        # (v7) A signal matches if EITHER its search_keyword field matches
+        # (unchanged, exact match), OR the keyword shows up inside its own
+        # title, OR the keyword shows up inside its own post_text. Any one
+        # of the three is enough.
+        is_match = (
+            _signal_keyword_matches(doc, keyword_set)
+            or _text_matches_keyword(title, keyword_set)
+            or _text_matches_keyword(post_text, keyword_set)
+        )
+        if not is_match:
             continue
         if not _signal_platform_matches(doc, targeting_platform):
             continue
 
-        title     = _first_present(doc, _TITLE_FIELD_CANDIDATES)
-        post_text = _first_present(doc, _TEXT_FIELD_CANDIDATES)
         post_url  = _first_present(doc, _URL_FIELD_CANDIDATES)
         platform  = _first_present(doc, _PLATFORM_FIELD_CANDIDATES) or _infer_platform_from_url(post_url)
 
@@ -666,10 +804,21 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             continue
         if post_url and post_url in seen_urls:
             continue
+
+        # (v7, NEW) Per-platform cap: once a platform has already
+        # contributed MAX_POSTS_PER_PLATFORM matches to this call, skip
+        # any further matches from that same platform (but keep scanning
+        # raw_docs — a different platform may still have room).
+        platform_key = (platform or "unknown").strip().lower()
+        if platform_counts.get(platform_key, 0) >= MAX_POSTS_PER_PLATFORM:
+            continue
+
         if post_url:
             seen_urls.add(post_url)
 
         matched.append({"title": title, "post_text": post_text, "post_url": post_url, "platform": platform})
+        platform_counts[platform_key] = platform_counts.get(platform_key, 0) + 1
+
         if len(matched) >= limit:
             break
 
@@ -690,11 +839,13 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 # already live in flintel_signals / are reconstructable from the message's
 # own keyword list. That's the cost-saving rule: store output only.
 #
-# UNCHANGED IN v5/v6 — this whole section is exactly as it was in v4. The
-# v5 router decides WHETHER a message even reaches this layer; the v6
-# response-timeout fallback (see _fill_in_message_outputs) is the only new
-# CALLER of analyze_with_claude() added on top — it reuses this function
-# completely as-is, just with an empty post list.
+# UNCHANGED IN v5/v6/v7 — this whole section is exactly as it was in v4.
+# The v5 router decides WHETHER a message even reaches this layer; the v6
+# response-timeout fallback (see _fill_in_message_outputs) is the only
+# other CALLER of analyze_with_claude() added on top — it reuses this
+# function completely as-is, just with an empty post list. v7 only
+# changed WHICH signals get_matched_signals() returns upstream of this;
+# nothing here changed as a result.
 # ─────────────────────────────────────────────────────────────────────────────
 
 CLAUDE_ANALYSIS_SYSTEM_PROMPT = """
@@ -926,6 +1077,8 @@ def analyze_with_claude(query: str, matched_signals: list) -> str:
 # check is a best-effort courtesy layer, not a guaranteed content filter:
 # on a routing failure, an abusive message falls through to the normal
 # search pipeline exactly like any other message would, same as v5.
+#
+# UNCHANGED IN v7 — this entire section is untouched.
 # ─────────────────────────────────────────────────────────────────────────────
 
 CLAUDE_ROUTER_SYSTEM_PROMPT = """
@@ -1214,6 +1367,8 @@ def upsert_google_user(google_id: str, email: str, name: str):
 #   - (v4.3) A single chat can be deleted by its owner — see
 #     delete_chat_session() below — without touching any other chat, and
 #     without letting anyone but that same owner_key delete it.
+#
+# UNCHANGED IN v7 — this entire section is untouched.
 # ─────────────────────────────────────────────────────────────────────────────
 
 def get_anon_id(request: Request) -> str:
@@ -1379,7 +1534,9 @@ def save_signal_results_to_chat(chat_id: str, owner_key: str, topic_key: str, re
     output onto the SAME chat message that holds the original user prompt
     for this topic, exactly as computed by get_matched_signals() — no
     keyword list, job status, or anything else about the job is written
-    here. This is the post-cards data, unchanged from v3.
+    here. This is the post-cards data, unchanged from v3 in shape (v7
+    only changes WHICH signals get_matched_signals() returns upstream —
+    this function itself is untouched).
 
     Safe to call repeatedly (e.g. on every chat/home page load while the
     background job is still filling in signals) — it just overwrites
@@ -1456,7 +1613,11 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list):
     existing "no posts yet, say so plainly" branch unchanged — so the
     user gets a natural "sorry, nothing found on this yet" answer instead
     of a permanently blank turn. That answer is cached the same way every
-    other answer in this file is, so it's generated (and billed) once."""
+    other answer in this file is, so it's generated (and billed) once.
+
+    UNCHANGED IN v7 — this function calls get_matched_signals() exactly
+    as before; only what THAT function returns is now broader (see v7
+    notes on get_matched_signals() above)."""
     for msg in messages or []:
         if not msg.get("topic_key"):
             continue
