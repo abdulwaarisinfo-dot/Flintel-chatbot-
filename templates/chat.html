@@ -304,17 +304,16 @@
 
   .post-block { margin-bottom: 40px; }
   .post-block:last-child { margin-bottom: 0; }
-  .post-label { color: #d1d0cf; font-size: 17px; font-weight: 600; font-style: italic; line-height: 26px; margin-bottom: 20px; }
+  .post-label { color: #d1d0cf; font-size: 17px; font-weight: 600; font-style: italic; line-height: 26px; margin-bottom: 28px; }
   .post-field { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
   .post-field:last-child { margin-bottom: 0; }
   .post-field .field-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.35); flex-shrink: 0; margin-top: 8px; }
   .post-field .field-text { color: rgba(255,255,255,0.7); font-size: 17px; font-weight: 500; line-height: 26px; }
-  .truncatable-summary-wrap { padding-left: 19px; margin-bottom: 20px; }
-  .truncatable-summary {
+  .field-text.truncatable-summary {
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-    overflow: hidden; color: rgba(255,255,255,0.7); font-size: 17px; font-weight: 500; line-height: 26px;
+    overflow: hidden;
   }
-  .truncatable-summary.expanded {
+  .field-text.truncatable-summary.expanded {
     display: block; -webkit-line-clamp: unset; overflow: visible;
   }
   .see-more-toggle {
@@ -937,10 +936,15 @@
   const SENTIMENT_COLORS = { positive: '#5FBF88', mixed: '#E8A33D', negative: '#E2645A', neutral: '#757473' };
 
   function sentimentTag(sentiment) {
+    // Plain colored text, matching every other field's value styling —
+    // no box, no border, no separate badge treatment. Just the sentiment
+    // word itself, color-coded, flowing right after "Sentiment :" like any
+    // other field's answer.
     const color = SENTIMENT_COLORS[sentiment] || SENTIMENT_COLORS.neutral;
     const span = document.createElement('span');
-    span.style.cssText = `display:inline-block; font-size:12px; font-weight:600; text-transform:capitalize; color:${color}; border:1px solid ${color}; border-radius:6px; padding:2px 8px; margin-left:8px;`;
-    span.textContent = sentiment || 'neutral';
+    span.style.cssText = `color:${color};`;
+    const label = sentiment || 'neutral';
+    span.textContent = label.charAt(0).toUpperCase() + label.slice(1);
     return span;
   }
 
@@ -970,41 +974,49 @@
   }
 
   function buildTruncatableSummary(container, label, text) {
-    const labelRow = document.createElement('div');
-    labelRow.className = 'post-field';
-    labelRow.innerHTML = `<span class="field-dot"></span><span class="field-text"></span>`;
+    // Label + colon + value all live in ONE .field-text span, same as
+    // every other field (Platform/Title/etc.) — matching how the rest of
+    // the design has the value start immediately after the label on the
+    // same line, not dropped to a new block below it. The clamp applies to
+    // the whole field-text run (label included) — with a short label like
+    // "Summary :" this is functionally identical to clamping just the
+    // value, and it keeps the DOM structure consistent with every other
+    // field instead of a special-cased layout.
+    const row = document.createElement('div');
+    row.className = 'post-field';
+    const dot = document.createElement('span');
+    dot.className = 'field-dot';
+    const textEl = document.createElement('span');
+    textEl.className = 'field-text truncatable-summary';
     const strong = document.createElement('strong');
     strong.textContent = label;
-    const textEl = labelRow.querySelector('.field-text');
     textEl.appendChild(strong);
-    textEl.appendChild(document.createTextNode(' :'));
-    container.appendChild(labelRow);
+    textEl.appendChild(document.createTextNode(' :  ' + text));
+    row.appendChild(dot);
+    row.appendChild(textEl);
+    container.appendChild(row);
 
-    const wrap = document.createElement('div');
-    wrap.className = 'truncatable-summary-wrap';
-    const summarySpan = document.createElement('span');
-    summarySpan.className = 'truncatable-summary';
-    summarySpan.textContent = text;
+    const toggleWrap = document.createElement('div');
+    toggleWrap.style.cssText = 'padding-left: 19px; margin-top: 6px; margin-bottom: 20px;';
     const toggle = document.createElement('button');
     toggle.type = 'button';
     toggle.className = 'see-more-toggle hidden';
     toggle.textContent = 'See more';
-    wrap.appendChild(summarySpan);
-    wrap.appendChild(toggle);
-    container.appendChild(wrap);
+    toggleWrap.appendChild(toggle);
+    container.appendChild(toggleWrap);
 
     // Only show the toggle at all if the text genuinely overflows 2 lines —
     // measured after a real layout pass (requestAnimationFrame), not
     // guessed from character count, since actual wrapping depends on the
     // real rendered width/font.
     requestAnimationFrame(() => {
-      const isOverflowing = summarySpan.scrollHeight > summarySpan.clientHeight + 1;
+      const isOverflowing = textEl.scrollHeight > textEl.clientHeight + 1;
       if (!isOverflowing) return;
       toggle.classList.remove('hidden');
       let expanded = false;
       toggle.addEventListener('click', () => {
         expanded = !expanded;
-        summarySpan.classList.toggle('expanded', expanded);
+        textEl.classList.toggle('expanded', expanded);
         toggle.textContent = expanded ? 'See less' : 'See more';
       });
     });
