@@ -470,6 +470,69 @@ matching rule, chunking rule, or caching rule — was touched.
    before that same answer is cached via save_claude_answer_to_chat(), so
    every persisted answer (streamed or not) gets the same real-link
    patch-up before it's ever written to the chat or shown again later.
+
+── STREAMING WIRING FIX (THIS FILE) ─────────────────────────────────────────
+THREE small, targeted, purely-additive/tightening changes on top of
+everything above. Nothing else in this file — no other route, function,
+constant, prompt, matching rule, chunking rule, or caching rule — was
+touched. Before this fix, the STREAMING ADD-ON above was fully built but
+never actually wired up: `_fill_in_message_outputs()` (called by both
+home() and view_chat() BEFORE the template ever renders) always generated
+a fresh search-type message's `claude_answer` itself, in full, via the
+existing blocking `analyze_with_claude()` call — so by the time a page
+was returned to the browser, `claude_answer` was already 100% complete.
+`GET /chat/{chat_id}/stream` therefore never had anything left to do for
+that message; a template opening it would just re-generate (and re-bill)
+the same answer a second time, or ("2)" below) show it a second time for
+free. This fix makes the already-existing streaming route the thing that
+actually produces a brand-new message's answer, without touching any
+other behavior:
+
+1. `_fill_in_message_outputs()` gained ONE new optional parameter,
+   `skip_topic_key` (default None, so every existing call site that
+   doesn't pass it behaves 100% exactly as before). When a message's
+   `topic_key` equals `skip_topic_key`, that ONE message is left
+   completely untouched by this function (no get_matched_signals() call,
+   no analyze_with_claude() call, no results/claude_answer write) — it
+   is reserved for the new streaming route to fill in instead, exactly
+   once, via analyze_with_claude_stream(). Every other message in the
+   same chat is still filled in exactly as before, in the exact same
+   loop, with the exact same RESPONSE_TIMEOUT / BUGFIX PACK #1 /
+   POST_URL-patch behavior untouched.
+
+2. `view_chat()` now computes which message (if any) is a freshly-added
+   search-type turn still waiting on its very first answer — the LAST
+   message in the chat, only if it has a `topic_key` and its
+   `claude_answer` is still falsy — and passes that message's
+   `topic_key` in as `skip_topic_key`. This is the ONLY message a
+   template's streaming JS would ever need to open `/stream` for right
+   after a redirect from POST /search (every earlier message in the
+   chat already has its answer cached from a previous visit, exactly as
+   before). If there is no such message (e.g. a chat-type turn, or a
+   search message that already has an answer), `skip_topic_key` is
+   simply None and `_fill_in_message_outputs()` behaves 100% exactly as
+   it always has — this can only ever skip filling in the one newest,
+   still-unanswered message; it never changes behavior for any other
+   message, any other route, or any chat that isn't mid-first-answer.
+   `home()` is intentionally left calling `_fill_in_message_outputs()`
+   exactly as before (no `skip_topic_key`) — it keeps its original
+   always-blocking behavior untouched; only `view_chat()` (the page a
+   search redirects to) opts into the new streaming hand-off.
+
+3. `GET /chat/{chat_id}/stream` gained ONE new guard at the top, right
+   after the target message is found and before any matching/Claude work
+   begins: if that message's `claude_answer` is already truthy (i.e. it
+   was already generated and cached — by the normal blocking path on an
+   earlier visit, or by a previous call to this same stream route), the
+   route immediately replays that cached text as a single `delta` event
+   followed by `done`, and returns — it never calls
+   get_matched_signals()/analyze_with_claude_stream() again for a
+   message that already has its answer. This is the same "generate once,
+   cache forever" guarantee every other answer path in this file already
+   follows; it simply extends that guarantee to this route, which
+   previously had no cache check at all and would silently re-call (and
+   re-bill) Claude every single time it was opened for an
+   already-answered message.
 ──────────────────────────────────────────────────────────────────────────────
 """
 
@@ -1308,8 +1371,7 @@ post URL — you were not given any.
 # ever invoked when a topic already needed enough first-level post
 # chunking that the resulting notes themselves would be too many to
 # combine directly in one final reduce call. Purely consolidates/
-# de-duplicates ALREADY-grounded notes; never introduces anything not
-# already present in them.
+# de-duplicates ALREADY-grounded notes; never introduces anything new.
 CLAUDE_NOTES_REDUCE_SYSTEM_PROMPT = """
 You are consolidating multiple batches of already-condensed grounded notes
 about social media posts, as a pre-processing step before another AI
@@ -2384,7 +2446,7 @@ def migrate_anon_chats_to_owner(anon_id: str, new_owner_key: str):
         )
 
 
-def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list):
+def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_topic_key: str = None):
     """Shared by home() and view_chat(): for any SEARCH-type message in
     `messages` that's still missing its post-card `results` and/or its
     `claude_answer`, looks up matching signals ONCE and uses that single
@@ -2430,12 +2492,28 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list):
     is still never shown a URL, so it still can never invent one — this
     only fills in a real one afterward, in Python, by matching on title.
 
+    (STREAMING WIRING FIX) `skip_topic_key` (default None — every
+    existing call site that doesn't pass it behaves 100% exactly as
+    before) lets a caller reserve exactly ONE search-type message so this
+    function leaves it completely untouched (no matching, no Claude call,
+    no results/claude_answer write) — used by view_chat() so the new
+    `GET /chat/{chat_id}/stream` route, not this function, is what
+    produces that one message's first answer live. Every other message in
+    `messages` is still filled in exactly as before, in the same loop,
+    with the same RESPONSE_TIMEOUT / BUGFIX PACK #1 / POST_URL-patch
+    behavior untouched.
+
     OTHERWISE COMPLETELY UNCHANGED BY THE KEYWORD-GENERATION SWAP — this
     function calls get_matched_signals() and analyze_with_claude() exactly
     as before, using whatever `keywords` was already stored on the message
     by add_search_to_chat() at write time."""
     for msg in messages or []:
         if not msg.get("topic_key"):
+            continue
+
+        # (STREAMING WIRING FIX) Reserved for the streaming route to fill
+        # in instead — leave this one message completely untouched here.
+        if skip_topic_key and msg.get("topic_key") == skip_topic_key:
             continue
 
         needs_results = not msg.get("results")
@@ -2529,7 +2607,27 @@ def home(request: Request):
             # turns instead of the empty placeholder.
             chat = get_chat_session(chat_id, owner_key)
             if chat and chat.get("messages"):
-                _fill_in_message_outputs(chat_id, owner_key, chat["messages"])
+                # (STREAMING WIRING FIX — HOME EXTENSION) Same logic as
+                # view_chat(): identify the one freshly-added search-type
+                # message (if any) still waiting on its very first
+                # answer — the LAST message, only if it has a topic_key
+                # and its claude_answer is still falsy — and reserve it
+                # for the streaming route instead of eager-filling it
+                # here. Every other message on this page is still filled
+                # in exactly as before, in the same loop, with the same
+                # RESPONSE_TIMEOUT / BUGFIX PACK #1 / POST_URL-patch
+                # behavior untouched. If the last message doesn't match
+                # that shape (chat-type turn, or already answered),
+                # pending_stream_topic_key stays None and this behaves
+                # 100% exactly as it always has.
+                pending_stream_topic_key = None
+                latest_msg = chat["messages"][-1]
+                if latest_msg.get("topic_key") and not latest_msg.get("claude_answer"):
+                    pending_stream_topic_key = latest_msg["topic_key"]
+
+                _fill_in_message_outputs(
+                    chat_id, owner_key, chat["messages"], skip_topic_key=pending_stream_topic_key
+                )
     except Exception as exc:
         log.warning(f"Chat lookup failed on home page: {exc}")
 
@@ -2541,6 +2639,7 @@ def home(request: Request):
             "chats": chats,
             "chat_id": chat_id,
             "chat": chat,
+            "pending_stream_topic_key": pending_stream_topic_key if chat_id else None,
         },
     )
 
@@ -2804,7 +2903,21 @@ def view_chat(request: Request, chat_id: str):
     NOTE (JSON-ANALYSIS-PROMPT SWAP): `claude_answer` will now typically
     be a raw JSON string for search-type messages. This template contract
     note is left exactly as it was — no template/rendering changes were
-    made as part of that swap, per what was asked."""
+    made as part of that swap, per what was asked.
+
+    (STREAMING WIRING FIX) Before filling anything in, this now looks at
+    the LAST message in the chat: if it has a `topic_key` (it's a
+    search-type message) and its `claude_answer` is still falsy (its
+    first answer hasn't been generated yet — i.e. this is the message a
+    POST /search redirect just landed on), that message's `topic_key` is
+    passed to `_fill_in_message_outputs()` as `skip_topic_key`, so this
+    function does NOT generate its answer — a template's streaming JS is
+    expected to open `GET /chat/{chat_id}/stream?topic_key=...` for that
+    one message instead, to get the live word-by-word effect. Every other
+    message in the chat (already answered, or a chat-type turn) is filled
+    in exactly as before. If the last message doesn't match that shape
+    (e.g. it's a chat-type turn, or it already has an answer), nothing
+    changes here at all."""
     owner_key, _owner_type = get_owner(request)
     chat = get_chat_session(chat_id, owner_key)
     if not chat:
@@ -2812,13 +2925,27 @@ def view_chat(request: Request, chat_id: str):
 
     request.session["active_chat_id"] = chat_id
 
+    # (STREAMING WIRING FIX) Identify the one freshly-added search-type
+    # message (if any) still waiting on its very first answer, so it can
+    # be reserved for the new streaming route instead of being filled in
+    # here like every other message.
+    pending_stream_topic_key = None
+    messages = chat.get("messages") or []
+    if messages:
+        latest_msg = messages[-1]
+        if latest_msg.get("topic_key") and not latest_msg.get("claude_answer"):
+            pending_stream_topic_key = latest_msg["topic_key"]
+
     # Same best-effort fill-in as home(): compute post cards + Claude's
     # answer for any SEARCH-type message that doesn't have them yet, so
     # opening a chat straight from the sidebar shows output immediately
     # instead of only after a home-page visit. Chat-type messages are
     # skipped inside _fill_in_message_outputs itself (nothing to fill in).
-    if chat.get("messages"):
-        _fill_in_message_outputs(chat_id, owner_key, chat["messages"])
+    # (STREAMING WIRING FIX) The one pending message identified above, if
+    # any, is skipped here so the streaming route can produce its answer
+    # live instead.
+    if messages:
+        _fill_in_message_outputs(chat_id, owner_key, messages, skip_topic_key=pending_stream_topic_key)
 
     return templates.TemplateResponse(
         "chat.html",
@@ -2827,6 +2954,7 @@ def view_chat(request: Request, chat_id: str):
             "user": get_current_user(request),
             "chat": chat,
             "chats": get_user_chats(owner_key),
+            "pending_stream_topic_key": pending_stream_topic_key,
         },
     )
 
@@ -2859,7 +2987,18 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
     already used by _fill_in_message_outputs() — so the caching guarantee
     is identical: generated (and billed) once, then served from the
     cache forever after, whether generation happened via this streaming
-    route or the existing blocking path."""
+    route or the existing blocking path.
+
+    (STREAMING WIRING FIX) New guard at the very top, right after the
+    target message is found: if that message's `claude_answer` is
+    already truthy (already generated/cached — by the normal blocking
+    path, or by an earlier call to this same route), this immediately
+    replays that cached text as a single `delta` event followed by
+    `done`, and returns — it never re-calls get_matched_signals()/
+    analyze_with_claude_stream() (and never re-bills Claude) for a
+    message that already has its answer. Before this fix, this route had
+    no such check and would regenerate the answer from scratch every
+    single time it was opened."""
     owner_key, _owner_type = get_owner(request)
     chat = get_chat_session(chat_id, owner_key)
 
@@ -2876,6 +3015,17 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
         def _no_msg():
             yield f"data: {json.dumps({'error': 'message not found'})}\n\n"
         return StreamingResponse(_no_msg(), media_type="text/event-stream")
+
+    # (STREAMING WIRING FIX) Already generated/cached earlier (via the
+    # normal blocking path, or a previous call to this same route) —
+    # replay it instead of ever re-calling Claude for it again.
+    if msg.get("claude_answer"):
+        cached_answer = msg["claude_answer"]
+
+        def _cached():
+            yield f"data: {json.dumps({'delta': cached_answer})}\n\n"
+            yield f"data: {json.dumps({'done': True})}\n\n"
+        return StreamingResponse(_cached(), media_type="text/event-stream")
 
     try:
         matched = get_matched_signals(
