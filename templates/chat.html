@@ -1010,16 +1010,34 @@
     });
   }
 
-  function buildPostBlock(post, index) {
+  // Each platform has its OWN field structure in the real design — not one
+  // generic layout. Reddit shows a separate Title; X and LinkedIn don't;
+  // Facebook labels it "Post title"; LinkedIn's descriptive field is called
+  // "Post summary" instead of "Summary". This mirrors the original mock
+  // exactly (mockSourceListData), just driven by real JSON instead of
+  // hardcoded text.
+  const PLATFORM_FIELD_LABELS = {
+    reddit:   { sourceLabel: 'Subreddit', showTitle: true,  titleLabel: 'Title',      summaryLabel: 'Summary' },
+    x:        { sourceLabel: 'Handle',    showTitle: false, titleLabel: 'Title',      summaryLabel: 'Summary' },
+    facebook: { sourceLabel: 'Group',     showTitle: true,  titleLabel: 'Post title', summaryLabel: 'Summary' },
+    linkedin: { sourceLabel: 'Author',    showTitle: false, titleLabel: 'Title',      summaryLabel: 'Post summary' },
+    other:    { sourceLabel: 'Source',    showTitle: true,  titleLabel: 'Title',      summaryLabel: 'Summary' },
+  };
+
+  function buildPostBlock(post, index, platformKey) {
     const block = document.createElement('div');
     block.className = 'post-block';
     const label = document.createElement('p');
     label.className = 'post-label';
     label.textContent = `Post ${index + 1}`;
     block.appendChild(label);
-    if (post.source) fieldRow(block, 'Source', post.source);
-    if (post.title) fieldRow(block, 'Title', post.title);
-    if (post.summary) buildTruncatableSummary(block, 'Summary', post.summary);
+
+    const cfg = PLATFORM_FIELD_LABELS[platformKey] || PLATFORM_FIELD_LABELS.other;
+
+    fieldRow(block, 'Platform', platformDisplayName(platformKey));
+    if (post.source) fieldRow(block, cfg.sourceLabel, post.source);
+    if (cfg.showTitle && post.title) fieldRow(block, cfg.titleLabel, post.title);
+    if (post.summary) buildTruncatableSummary(block, cfg.summaryLabel, post.summary);
     const sentRow = fieldRow(block, 'Sentiment', '');
     sentRow.querySelector('.field-text').appendChild(sentimentTag(post.sentiment));
     if (post.link) fieldRow(block, 'Link', post.link, true);
@@ -1066,7 +1084,7 @@
       nameRow.innerHTML = `<span class="platform-name">${platformDisplayName(key)}</span><span class="platform-dot"></span><span class="platform-count">${p.shown_count} of ${p.total_analyzed}</span>`;
       header.appendChild(nameRow);
       section.appendChild(header);
-      (p.posts || []).forEach((post, i) => section.appendChild(buildPostBlock(post, i)));
+      (p.posts || []).forEach((post, i) => section.appendChild(buildPostBlock(post, i, key)));
       container.appendChild(section);
       if (gi < platforms.length - 1) {
         const div = document.createElement('div');
