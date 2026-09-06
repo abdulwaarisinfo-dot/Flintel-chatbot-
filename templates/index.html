@@ -4,16 +4,17 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Flintel — What's the internet saying?</title>
+<title>{{ chat.title or 'Chat' }} — Flintel</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   /* =========================================================================
-     This stylesheet is the Document 2 ("redesign") visual system, adapted to
-     dress the Document 1 ("real backend") markup. Every class below exists to
-     style server-rendered, Jinja-driven content — nothing here depends on the
-     client-side mock data engine that shipped in Document 2. See index.py
-     comments further down for exactly which Jinja variables feed each block.
+     Same design system used on index.html (itself Document 2's visual
+     language, adapted to real Jinja-driven markup). This page's own logic —
+     the always-visible docked follow-up form posting to /search with this
+     chat's chat_id, the per-turn meta chips, the divider between turns, the
+     plain "/" sign-in link instead of a modal — is unchanged from the
+     original chat.html.
      ========================================================================= */
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { background: #171615; font-family: 'Figtree', sans-serif; height: 100%; }
@@ -25,7 +26,7 @@
 
   .layout { display: flex; min-height: 100vh; position: relative; }
 
-  /* ---------- Sidebar ---------- */
+  /* ---------- Sidebar (identical to index.html) ---------- */
   .sidebar {
     display: flex;
     flex-direction: column;
@@ -36,14 +37,14 @@
     position: sticky;
     top: 0;
     border-right: 1px solid #2b2a28;
-    overflow: hidden; /* nothing spills past the sidebar's own box */
+    overflow: hidden;
   }
   .sidebar-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 18px 20px 17px 20px;
-    flex-shrink: 0; /* stays put — never pushed around by a long session list */
+    flex-shrink: 0;
   }
   .logo-group { display: flex; align-items: center; gap: 9px; }
   .logo-mark {
@@ -72,12 +73,11 @@
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
 
-  /* The session list is the ONLY part of the sidebar that scrolls — the logo
-     row, New button, and Sign In/account row above and below it stay fixed
-     in place no matter how many chats pile up. `flex: 1 1 auto` + `min-height: 0`
-     is the actual mechanism: without min-height:0, a flex child refuses to
-     shrink below its content size, which is what was silently pushing the
-     Sign In row (and the divider above it) off-screen with no way to reach it. */
+  /* The session list is the ONLY part of the sidebar that scrolls — logo,
+     New button, and Sign In/account row stay fixed regardless of chat count.
+     flex:1 1 auto + min-height:0 is the load-bearing part: without
+     min-height:0 a flex child won't shrink below its content size, which is
+     what pushes the footer off-screen with no way to reach it. */
   .sessions-section {
     padding: 38px 0 0 0;
     flex: 1 1 auto;
@@ -97,18 +97,17 @@
     min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    /* No visible scrollbar track/thumb/arrows — just natural trackpad/touch/
-       wheel scrolling, like the sidebar in ChatGPT/Claude itself. */
-    scrollbar-width: none;      /* Firefox */
-    -ms-overflow-style: none;   /* old Edge/IE */
+    /* No visible scrollbar track/thumb/arrows — natural trackpad/touch/wheel
+       scrolling only, like the sidebar in ChatGPT/Claude itself. */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
-  #sessions-body::-webkit-scrollbar { display: none; } /* Chrome/Safari/new Edge */
+  #sessions-body::-webkit-scrollbar { display: none; }
   .sessions-empty { font-size: 15px; color: rgba(122,122,119,0.8); margin-top: 9px; padding: 0 20px; }
-  /* No negative-margin "bleed then re-pad" trick — that only worked before
-     #sessions-body became a scroll container. Negative margins on a child of
-     a scrolling box get clipped at the scrollport edge instead of bleeding
-     past it, which is exactly what sliced the rounded corners off. Plain,
-     honest 9px padding here does the same visual inset with no fragility. */
+  /* Plain padding, no negative-margin "bleed then re-pad" trick — that only
+     worked before #sessions-body became a scroll container. Negative margins
+     on a child of a scrolling box get clipped at the scrollport edge instead
+     of bleeding past it, which silently slices the rounded corners off. */
   .sessions-list-wrap { margin-top: 12px; padding: 0 9px; }
   .session-item {
     display: flex; align-items: center; justify-content: space-between;
@@ -117,13 +116,10 @@
     color: rgba(255,255,255,0.7); font-size: 16px; font-weight: 500;
     transition: background .15s ease;
     text-decoration: none;
-    position: relative; /* anchors the per-chat options dropdown below */
+    position: relative;
   }
   .session-item:hover, .session-item.active { background: #252421; }
   .session-item.active { color: #fff; }
-  /* Redesign detail from Document 2: hovering a different session should
-     visually step the persistently-active one aside, so only the item under
-     the cursor is lit up. Purely cosmetic — routing is still real <a> tags. */
   #sessions-list:has(.session-item:hover) .session-item.active:not(:hover) {
     background: transparent; color: rgba(255,255,255,0.7);
   }
@@ -131,9 +127,6 @@
     display: none;
   }
   .session-item-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-  /* Wraps the chat title link so the 3-dot menu button can sit beside it
-     without nesting a <button> inside an <a> (invalid HTML) — same click
-     target/size/ellipsis behavior as before, just split into two elements. */
   .session-item-link {
     display: flex; align-items: center; flex: 1 1 auto; min-width: 0;
     color: inherit; text-decoration: none; height: 100%;
@@ -165,6 +158,7 @@
   .session-menu-item.danger:hover { background: rgba(226,100,90,0.1); }
   .session-menu-item svg { flex-shrink: 0; }
 
+
   .signin-btn {
     display: flex; align-items: center; justify-content: space-between;
     width: 100%; padding: 24px 20px; color: #fff; transition: background .15s ease;
@@ -194,92 +188,14 @@
   .mobile-overlay.visible { display: block; }
 
   /* ---------- Main ---------- */
-  .main { flex: 1; position: relative; }
+  .main { flex: 1; position: relative; display: flex; flex-direction: column; }
 
-  .content-wrap {
-    display: flex; align-items: center; justify-content: center;
-    min-height: 663px;
-    padding: 0 20px;
-  }
-  .content-inner { width: 100%; max-width: 720px; }
-  @media (min-width: 1060px) {
-    .content-wrap { padding-left: 109px; padding-right: 109px; justify-content: center; }
-    .content-inner { max-width: 946px; width: 100%; }
-  }
-
-  .eyebrow { color: #757473; font-size: 15px; letter-spacing: 0.15px; margin-bottom: 13px; }
-  .headline {
-    color: #fff; font-size: 27px; letter-spacing: -0.54px; font-weight: 500;
-    margin-bottom: 31px; line-height: 1.2;
-  }
-
-  .search-box {
-    background: #1e1d1c;
-    border: 1px solid #3d3d3b;
-    border-radius: 18px;
-    padding: 18px 24px 19px 24px;
-    transition: border-color .15s ease;
-  }
-  .search-box:focus-within {
-    border: 1px solid transparent;
-    background:
-      linear-gradient(#1e1d1c, #1e1d1c) padding-box,
-      linear-gradient(90deg, #a3e635, #4d7c0f) border-box;
-  }
-  .search-input {
-    width: 100%; background: transparent; border: none; outline: none;
-    color: #fff; font-size: 17px; font-weight: 500; font-family: inherit;
-    margin-bottom: 42px;
-  }
-  .search-input::placeholder { color: #757473; }
-
-  .search-controls {
-    display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  }
-  .add-btn { color: #fff; transition: color .15s ease; flex-shrink: 0; }
-  .add-btn:hover { color: #a3e635; }
-
-  .right-controls { display: flex; align-items: center; gap: 24px; flex-shrink: 0; }
-  .platforms-btn {
-    display: flex; align-items: center; gap: 8px;
-    color: #757473; font-size: 16px; font-weight: 500; transition: color .15s ease;
-    white-space: nowrap;
-  }
-  .platforms-btn:hover { color: #fff; }
-
-  .submit-btn {
-    width: 36px; height: 36px; border-radius: 50%; background: #e8e6e3;
-    display: flex; align-items: center; justify-content: center;
-    transition: background .15s ease; flex-shrink: 0;
-  }
-  .submit-btn:hover { background: #fff; }
-  .submit-btn:disabled { background: #2b2a28; cursor: default; pointer-events: none; }
-  .submit-btn:disabled svg path { stroke: #757473; }
-
-  /* Explore Flintel panel */
-  .explore-panel { background: #1e1d1b; border-radius: 12px; padding-top: 15px; margin-top: 36px; }
-  .explore-title { color: #757473; font-size: 15px; font-weight: 700; padding: 0 24px; margin-bottom: 15px; }
-  .explore-box { background: #171615; border: 0.5px solid #3d3d3b; border-radius: 12px; overflow: hidden; }
-  .explore-row {
-    width: 100%; display: flex; align-items: center; justify-content: space-between;
-    padding: 17px 21px; transition: background .15s ease;
-  }
-  .explore-row:hover { background: rgba(255,255,255,0.02); }
-  .explore-row-left { display: flex; align-items: center; gap: 13px; min-width: 0; }
-  .explore-ring { width: 15px; height: 15px; border-radius: 50%; border: 1.3px solid #3d3d3b; flex-shrink: 0; }
-  .explore-text { color: rgba(255,255,255,0.8); font-size: 15px; font-weight: 500; letter-spacing: 0.15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .explore-row-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-  .explore-avatars { display: flex; align-items: center; }
-  .explore-avatars img { width: 14.5px; height: 14.5px; border-radius: 50%; object-fit: cover; margin-left: -4px; border: 1.5px solid #171615; }
-  .explore-avatars img:first-child { margin-left: 0; }
-  .explore-divider { height: 1px; background: #3d3d3b; margin: 0 20.5px; }
-
-  /* ---------- Top bar ---------- */
   .topbar {
-    height: 62px; display: flex; align-items: center; justify-content: flex-end;
+    height: 62px; display: flex; align-items: center; justify-content: space-between;
     gap: 12px; padding: 0 28px; border-bottom: 1px solid #343434;
     position: sticky; top: 0; z-index: 6; background: #171615;
   }
+  .topbar-title { color: #fff; font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .topbar-btn {
     height: 30px; padding: 0 16px; border-radius: 8px; font-size: 15px; font-weight: 600;
     display: flex; align-items: center; justify-content: center; white-space: nowrap;
@@ -287,120 +203,52 @@
   .topbar-btn.signup { background: #fff; color: #000; }
   .topbar-btn.logout { border: 1px solid #323130; color: #d1d0cf; }
 
-  /* ---------- Auth modal (Document 1's real Google + email/password auth,
-     restyled with Document 2's rounded dark "signup-card" look) ---------- */
-  .auth-overlay {
-    display: none; position: fixed; inset: 0; z-index: 30;
-    align-items: center; justify-content: center;
-    background: rgba(0,0,0,0.6); padding: 20px;
-  }
-  .auth-overlay.visible { display: flex; }
-  .auth-modal {
-    background: #1e1d1c; border: 1px solid rgba(255,255,255,0.05);
-    border-radius: 13px; box-shadow: 0 6px 53px rgba(0,0,0,0.35);
-    width: 339px; max-width: 100%; padding: 43px 33.5px 34px 33.5px;
-    position: relative;
-  }
-  .auth-close {
-    position: absolute; top: 20px; right: 23px; color: #757473;
-    transition: color .15s ease;
-  }
-  .auth-close:hover { color: #fff; }
-  .auth-avatar {
-    width: 37px; height: 37px; border-radius: 50%; overflow: hidden;
-    margin: 0 auto 20px auto; display: block;
-  }
-  .auth-avatar img { width: 100%; height: 100%; object-fit: cover; }
-  .auth-modal-title {
-    color: rgba(255,255,255,0.8); font-size: 18px; font-weight: 700;
-    letter-spacing: 0.18px; text-align: center; margin-bottom: 26px;
-  }
-  .google-btn {
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    width: 100%; height: 45px; border-radius: 12px; background: #d6d5d4; color: #191817;
-    font-size: 15px; font-weight: 600; letter-spacing: 0.15px; text-decoration: none;
-    margin-bottom: 10px; transition: opacity .15s ease;
-  }
-  .google-btn:hover { opacity: 0.9; }
-  .auth-divider { display: flex; align-items: center; gap: 12px; margin: 18px 0; color: #757473; font-size: 12px; }
-  .auth-divider::before, .auth-divider::after { content: ""; flex: 1; height: 1px; background: #383736; }
-  .auth-field { margin-bottom: 12px; }
-  .auth-field label { display: block; color: #757473; font-size: 12px; font-weight: 600; margin-bottom: 6px; letter-spacing: 0.12px; }
-  .auth-field input {
-    width: 100%; height: 45px; background: transparent; border: 1px solid #383736; border-radius: 12px;
-    padding: 0 14px; color: #fff; font-size: 15px; font-weight: 500; font-family: inherit; outline: none;
-    transition: border-color .15s ease;
-  }
-  .auth-field input:focus { border-color: #a3e635; }
-  .auth-submit-btn {
-    width: 100%; height: 45px; border-radius: 12px; background: #a3e635;
-    color: #171615; font-size: 15px; font-weight: 600; letter-spacing: 0.15px; margin-top: 6px;
-    transition: background .15s ease;
-  }
-  .auth-submit-btn:hover { background: #b6f04a; }
-  .auth-switch { text-align: center; margin-top: 18px; font-size: 13px; color: #757473; }
-  .auth-switch button { color: #a3e635; font-weight: 600; }
-
-  /* ---------- Server-rendered error state ---------- */
-  .state-card {
-    display: flex; flex-direction: column; align-items: center; text-align: center;
-    max-width: 440px; margin: 24px auto; padding: 12px 0 4px 0;
-  }
-  .state-icon-badge {
-    width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    background: #1e1d1c; border: 1px solid #343434; color: #757473;
-    margin-bottom: 20px;
-  }
-  .state-icon-badge.error { background: rgba(226,100,90,0.08); border-color: rgba(226,100,90,0.25); color: #E2645A; }
-  .state-heading { color: #fff; font-size: 17px; font-weight: 600; margin-bottom: 8px; }
-  .state-body { color: #a0a09d; font-size: 15px; font-weight: 400; line-height: 1.6; }
-
-  /* ---------- Docked follow-up input ----------
-     Present for design fidelity only. Document 1's server has no live,
-     client-side conversation state (a real search POSTs to /search and the
-     server re-renders "/" with the new turn), so nothing ever toggles this
-     wrap visible — it stays hidden, exactly as in Document 1. */
-  .docked-input-wrap { display: none; position: fixed; bottom: 0; left: 276px; right: 0; z-index: 5;
-    background: linear-gradient(to top, #171615 85%, rgba(23,22,21,0)); padding: 24px 20px 28px 20px; padding-top: 40px; }
-  .docked-input-inner { max-width: 950px; margin: 0 auto; }
-  @media (min-width: 1060px) {
-    .docked-input-wrap { padding-left: 109px; padding-right: 109px; }
-    .docked-input-inner { max-width: none; width: 100%; margin: 0; }
-  }
-  .docked-credit-estimate { font-size: 12px; color: #757473; white-space: nowrap; margin-right: 4px; }
-
   /* =========================================================================
-     Conversation area — Document 2's visual language, driven entirely by
-     Document 1's real data:
+     Chat thread — same visual language as index.html's conversation area,
+     driven by the same real fields:
 
-       msg.query          -> turn-question bubble
-       msg.claude_answer  -> answer text (rendered as markdown), or a
-                             pending/loading row while it's not yet ready
-       msg.results        -> source posts, grouped by platform for display
-                             (title / post_text / post_url — unchanged from
-                             Document 1, just laid out per Document 2's
-                             platform-section pattern instead of a flat list)
+       msg.query              -> turn-question bubble
+       msg.targeting_platform / msg.requested_at -> meta chips
+       msg.claude_answer      -> answer text (markdown-rendered), or a
+                                 pending row while it's not yet ready
+       msg.results            -> source posts, grouped by platform for
+                                 display (title / post_text / post_url —
+                                 unchanged, just laid out per-platform
+                                 instead of as a flat list)
 
-     msg.keywords and any job/status internals are still never rendered,
-     exactly as in Document 1.
+     No keyword list or job/status internals are ever rendered here.
      ========================================================================= */
-  .conversation-area { max-width: 950px; margin: 0 auto; padding: 56px 20px 120px 20px; }
+  .thread-wrap { flex: 1; padding: 84px 20px 220px 20px; }
+  .thread-inner { max-width: 950px; margin: 0 auto; }
   @media (min-width: 1060px) {
-    .conversation-area { padding-left: 109px; padding-right: 109px; max-width: 1382px; margin: 0 auto; }
+    .thread-wrap { padding-left: 109px; padding-right: 109px; }
+    .thread-inner { max-width: 1382px; margin: 0 auto; }
   }
 
-  .turn-block { margin-bottom: 56px; }
+  .thread-empty { max-width: 500px; margin: 24px auto; text-align: center; }
+  .thread-empty p { color: #757473; font-size: 15px; line-height: 1.7; }
+
+  .turn-block { margin-bottom: 40px; }
   .turn-block:last-child { margin-bottom: 0; }
-  .turn-row { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .turn-row { display: flex; justify-content: flex-end; margin-bottom: 12px; }
   .turn-question {
     background: #1e1d1b; border-radius: 16px; padding: 17px 24px;
     color: #fff; font-size: 17px; font-weight: 500; line-height: 26px;
     max-width: 80%; width: fit-content;
   }
+  .turn-meta { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+  .turn-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #1e1d1b; border: 0.5px solid #3d3d3b; border-radius: 20px;
+    padding: 5px 12px; color: #a0a09d; font-size: 12.5px; font-weight: 500;
+  }
+  .turn-chip.status-pending { color: #d8b74a; }
+  .turn-chip.status-completed { color: #a3e635; }
+  .turn-chip.status-failed { color: #E2645A; }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 
-  /* Pending states — no live polling exists, so this simply reflects
-     whichever branch Document 1's template lands on for this message. */
+  /* Pending states — no live polling exists; this simply reflects whichever
+     branch the template lands on for this message. */
   .loading-row { display: flex; align-items: center; gap: 10px; padding: 4px 0 8px 0; }
   .loading-logo { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; overflow: hidden; }
   .loading-logo img { width: 100%; height: 100%; object-fit: cover; }
@@ -411,12 +259,12 @@
   @keyframes dotpulse { 0%,80%,100% { opacity: 0.3; transform: scale(0.85); } 40% { opacity: 1; transform: scale(1); } }
   .loading-text { color: #757473; font-size: 14px; }
 
-  /* Claude's answer text (msg.claude_answer). `.answer-raw` holds the exact
-     Jinja-escaped text and is shown as plain pre-wrapped text by default. If
-     marked.js + DOMPurify load, the script swaps in `.answer-rendered` —
-     the same text parsed as markdown so headings/bullets/tables look like
-     headings/bullets/tables. Either way, only Claude's own output is shown —
-     nothing is added or altered here (same contract as Document 1). */
+  /* Claude's answer (msg.claude_answer) — grounded in the matched posts
+     (title + text only, see analyze_with_claude() in index.py). `.answer-raw`
+     holds the exact Jinja-escaped text, shown plain by default; the script
+     at the bottom swaps in `.answer-rendered` (markdown-parsed + sanitized)
+     once marked.js/DOMPurify load. Only Claude's own output text is ever
+     shown — nothing added or altered. */
   .answer-wrap { margin-bottom: 20px; }
   .answer-raw { color: #d1d0cf; font-size: 17px; font-weight: 500; line-height: 26px; white-space: pre-wrap; }
   .answer-rendered { display: none; color: #d1d0cf; font-size: 17px; font-weight: 500; line-height: 26px; }
@@ -437,7 +285,7 @@
   .answer-rendered a { color: #009dff; }
   .answer-rendered code { background: #1e1d1c; padding: 1px 6px; border-radius: 4px; font-size: 14.5px; }
 
-  /* Platform-grouped source list (Document 2's Third-Screen pattern) */
+  /* Platform-grouped source list */
   .platform-section { margin-bottom: 40px; }
   .platform-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
   .platform-icon-badge {
@@ -465,14 +313,65 @@
   .section-divider { height: 1px; background: #343434; margin: 32px 0; }
   .section-divider.no-top-margin { margin-top: 0; }
 
+  /* Divider between turns — same "turn-divider" behavior as the original
+     chat.html (one line between messages, none after the last). */
+  .turn-divider { height: 1px; background: #2b2a28; margin: 40px 0; }
+
+  /* ---------- Docked follow-up input — real, always visible, posts to
+     /search pinned to this chat via the hidden chat_id field. ---------- */
+  .docked-input-wrap {
+    position: fixed; bottom: 0; left: 276px; right: 0; z-index: 5;
+    background: linear-gradient(to top, #171615 85%, rgba(23,22,21,0));
+    padding: 24px 20px 28px 20px; padding-top: 40px;
+  }
+  .docked-input-inner { max-width: 950px; margin: 0 auto; }
+  @media (min-width: 1060px) {
+    .docked-input-wrap { padding-left: 109px; padding-right: 109px; }
+    .docked-input-inner { max-width: none; width: 100%; margin: 0; }
+  }
+  .search-box {
+    background: #1e1d1c; border: 1px solid #3d3d3b; border-radius: 18px;
+    padding: 18px 24px 19px 24px; transition: border-color .15s ease;
+  }
+  .search-box:focus-within {
+    border: 1px solid transparent;
+    background:
+      linear-gradient(#1e1d1c, #1e1d1c) padding-box,
+      linear-gradient(90deg, #a3e635, #4d7c0f) border-box;
+  }
+  .search-input {
+    width: 100%; background: transparent; border: none; outline: none;
+    color: #fff; font-size: 17px; font-weight: 500; font-family: inherit;
+    margin-bottom: 42px;
+  }
+  .search-input::placeholder { color: #757473; }
+  .search-controls { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .add-btn { color: #fff; transition: color .15s ease; flex-shrink: 0; }
+  .add-btn:hover { color: #a3e635; }
+  .right-controls { display: flex; align-items: center; gap: 24px; flex-shrink: 0; }
+  .platforms-btn {
+    display: flex; align-items: center; gap: 8px;
+    color: #757473; font-size: 16px; font-weight: 500; transition: color .15s ease;
+    white-space: nowrap;
+  }
+  .platforms-btn:hover { color: #fff; }
+  .submit-btn {
+    width: 36px; height: 36px; border-radius: 50%; background: #e8e6e3;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s ease; flex-shrink: 0;
+  }
+  .submit-btn:hover { background: #fff; }
+  .submit-btn:disabled { background: #2b2a28; cursor: default; pointer-events: none; }
+  .submit-btn:disabled svg path { stroke: #757473; }
+
 
   /* ---------- Special answer states: no-results / error / low-credit ---------- */
-  /* Restored from the full mock design build. These states are triggered
-     below by PLACEHOLDER Jinja conditionals (msg.no_results, msg.credit_error)
-     that do NOT exist on the real message object today — the real backend
-     only ever sets msg.query / msg.claude_answer / msg.results right now.
-     Until the backend actually sets one of these fields, these branches will
-     simply never fire; they're wired and ready, not faked as working. */
+  /* Restored from the full design system, same as index.html. Gated on
+     PLACEHOLDER fields (msg.no_results, msg.credit_error) that do not exist
+     on the real message object today — only msg.query / msg.claude_answer /
+     msg.results are ever set by the backend right now. These branches are
+     wired and styled, ready for when the backend sets one of these fields;
+     they simply never fire until then. */
   .state-card {
     display: flex; flex-direction: column; align-items: center; text-align: center;
     max-width: 440px; margin: 24px auto; padding: 12px 0 4px 0;
@@ -504,9 +403,7 @@
   .credit-stat .of { color: #757473; font-size: 15px; font-weight: 500; }
 
   /* ---------- Lead-generation answer format ---------- */
-  /* Restored from the full mock design build. Gated below on a PLACEHOLDER
-     field (msg.leadgen) that does not exist on the real message object
-     today — see the state-card comment above for the same caveat. */
+  /* Gated on a PLACEHOLDER field (msg.leadgen) — see state-card comment above. */
   .leadgen-heading { color: #fff; font-size: 17px; font-weight: 600; line-height: 26px; margin-bottom: 20px; }
   .leadgen-field { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
   .leadgen-field .dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.35); flex-shrink: 0; margin-top: 8px; }
@@ -542,16 +439,14 @@
   }
   .leadgen-quote-block .copy-btn.copied .copied-label { opacity: 1; }
 
-  /* ---------- Overview summary + fabricated-note blockquote (used by the
-     source-list and dashboard formats) ---------- */
+  /* ---------- Overview summary + fabricated-note blockquote ---------- */
   .overview-summary { color: #d1d0cf; font-size: 17px; font-weight: 500; line-height: 26px; margin-bottom: 40px; }
   .fabricated-note { display: flex; align-items: stretch; gap: 16px; margin-bottom: 40px; }
   .fabricated-note .bar { width: 5px; background: #323130; border-radius: 2px; flex-shrink: 0; }
   .fabricated-note p { color: #fff; font-size: 17px; font-weight: 500; line-height: 26px; margin: 0; }
 
-  /* ---------- Fourth Screen pattern: metrics dashboard ---------- */
-  /* Restored from the full mock design build. Gated below on a PLACEHOLDER
-     field (msg.dashboard) — see the state-card comment above for the caveat. */
+  /* ---------- Metrics dashboard answer format ---------- */
+  /* Gated on a PLACEHOLDER field (msg.dashboard) — see state-card comment above. */
   .dashboard-brand-block { margin-bottom: 40px; }
   .metrics-section-title { color: #fff; font-size: 17px; font-weight: 600; line-height: 26px; margin-bottom: 20px; }
   .metrics-table { background: #1e1d1c; border: 0.5px solid #343434; border-radius: 12px; overflow: hidden; margin-bottom: 40px; }
@@ -570,15 +465,12 @@
 
   .hidden { display: none !important; }
 
-  /* Cap-height-to-baseline text trimming — matches how Figma measures text
-     boxes, so margins/gaps read at the exact pixel values set. */
-  .turn-question, .state-heading, .state-body,
-  .post-field .field-text, .post-label, .platform-name, .platform-count,
-  .answer-raw, .answer-rendered, .loading-text, .auth-modal-title,
+  .turn-question, .thread-empty p, .post-field .field-text, .post-label,
+  .platform-name, .platform-count, .answer-raw, .answer-rendered, .loading-text,
   .leadgen-heading, .leadgen-field .text, .leadgen-prospect-name,
   .leadgen-numbered .num, .leadgen-numbered .text, .leadgen-quote-block p,
   .overview-summary, .fabricated-note p, .metrics-section-title,
-  .metrics-cell, .block-title, .block-text, .credit-stat {
+  .metrics-cell, .block-title, .block-text, .credit-stat, .state-heading, .state-body {
     text-box-trim: trim-both;
     text-box-edge: cap alphabetic;
   }
@@ -594,13 +486,8 @@
     .sidebar.mobile-open { transform: translateX(0); }
     .mobile-topbar { display: flex; }
     .topbar { display: none; }
-    .content-wrap { min-height: 100vh; padding: 80px 20px 40px 20px; }
-    .headline { font-size: 24px; }
-    .search-input { margin-bottom: 32px; }
-    .right-controls { gap: 12px; }
-    .platforms-btn { font-size: 15px; }
+    .thread-wrap { padding: 24px 16px 200px 16px; }
     .docked-input-wrap { left: 0; padding: 16px 16px 20px 16px; }
-    .conversation-area { padding: 24px 16px 100px 16px; }
     .turn-question { font-size: 16px; max-width: 90%; }
     .post-field .field-text { font-size: 15px; }
     .answer-raw, .answer-rendered { font-size: 15.5px; }
@@ -625,8 +512,6 @@
     <div class="divider"></div>
 
     <div class="new-section">
-      <!-- Real POST to /chats/new — starts a brand-new chat (auto-titled from
-           the first query) and makes it the active chat for this session. -->
       <form action="/chats/new" method="post">
         <button class="new-btn" id="new-btn" type="submit">
           <span class="new-icon">
@@ -643,24 +528,20 @@
         <svg id="sessions-chevron" style="transform: rotate(90deg); transition: transform .15s ease" width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1L6 6L1 11" stroke="#7a7a77" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <div id="sessions-body">
-        <!-- Real chat history from flintel_users_chat, keyed by the signed-in
-             user's email or the guest's session UUID (get_owner()/
-             get_user_chats() in index.py). Empty until the owner has run at
-             least one search. -->
         {% if chats %}
         <div class="sessions-list-wrap">
           <div id="sessions-list">
-            {% for chat_row in chats %}
-            <div class="session-item{% if chat_id is defined and chat_id and chat_row.chat_id == chat_id %} active{% endif %}">
-              <a class="session-item-link" href="/chat/{{ chat_row.chat_id }}" title="{{ chat_row.title }}">
-                <span class="session-item-label">{{ chat_row.title }}</span>
+            {% for c in chats %}
+            <div class="session-item{% if c.chat_id == chat.chat_id %} active{% endif %}">
+              <a class="session-item-link" href="/chat/{{ c.chat_id }}" title="{{ c.title }}">
+                <span class="session-item-label">{{ c.title }}</span>
               </a>
-              <button class="session-item-menu" type="button" data-chat-id="{{ chat_row.chat_id }}"
+              <button class="session-item-menu" type="button" data-chat-id="{{ c.chat_id }}"
                       aria-label="Chat options" aria-haspopup="true" aria-expanded="false">
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="3.2" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="12.8" cy="8" r="1.2" fill="currentColor"/></svg>
               </button>
               <ul class="session-menu-dropdown" role="menu">
-                <li class="session-menu-item danger session-menu-delete" role="menuitem" data-chat-id="{{ chat_row.chat_id }}">
+                <li class="session-menu-item danger session-menu-delete" role="menuitem" data-chat-id="{{ c.chat_id }}">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 7H20M9 7V4.5C9 3.67 9.67 3 10.5 3H13.5C14.33 3 15 3.67 15 4.5V7M18.5 7L17.79 18.36C17.72 19.55 16.73 20.5 15.53 20.5H8.47C7.27 20.5 6.28 19.55 6.21 18.36L5.5 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 11V16M14 11V16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
                   <span>Delete</span>
                 </li>
@@ -691,7 +572,7 @@
       </a>
     </div>
     {% else %}
-    <button class="signin-btn" id="signin-btn" type="button">
+    <a class="signin-btn" href="/">
       <span class="signin-left">
         <span class="signin-avatar">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="white" stroke-width="1.5"/><path d="M4 20c0-4 3.5-6 8-6s8 2 8 6" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -699,7 +580,7 @@
         <span class="signin-label">Sign In</span>
       </span>
       <svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1L6 6L1 11" stroke="#a3e635" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
+    </a>
     {% endif %}
   </aside>
 
@@ -721,51 +602,306 @@
   <!-- Main -->
   <main class="main">
     <div class="topbar" id="topbar">
+      <span class="topbar-title">{{ chat.title or 'Chat' }}</span>
       {% if user %}
       <a class="topbar-btn logout" href="/logout">Log out</a>
       {% else %}
-      <button class="topbar-btn signup" id="topbar-signup-btn" type="button">Sign up</button>
+      <a class="topbar-btn signup" href="/">Sign up</a>
       {% endif %}
     </div>
 
-    <div class="content-wrap" id="hero-wrap">
-      <div class="content-inner">
+    <div class="thread-wrap">
+      <div class="thread-inner">
 
-        <p class="eyebrow">Search</p>
-        <h1 class="headline">What's the internet saying?</h1>
+        {% macro platform_label(r) -%}
+          {%- set plat = (r.platform or '')|lower -%}
+          {%- if plat in ['twitter', 'x', 'x_twitter'] -%}X (Twitter)
+          {%- elif plat == 'reddit' -%}Reddit
+          {%- elif plat == 'facebook' -%}Facebook
+          {%- elif plat == 'linkedin' -%}LinkedIn
+          {%- else -%}{{ r.platform or 'Web' }}
+          {%- endif -%}
+        {%- endmacro %}
 
-        {% if error %}
-        <div class="state-card">
-          <span class="state-icon-badge error">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 4L21 20H3L12 4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 10.5V14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="17" r="0.9" fill="currentColor"/></svg>
-          </span>
-          <div class="state-heading">Search failed</div>
-          <p class="state-body">{{ error }}</p>
+        {% macro platform_badge(r) -%}
+          {%- set plat = (r.platform or '')|lower -%}
+          {%- if plat in ['twitter', 'x', 'x_twitter'] -%}
+          <span class="platform-icon-badge twitter"><svg width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span>
+          {%- elif plat == 'reddit' -%}
+          <span class="platform-icon-badge reddit"><svg width="17" height="17" viewBox="0 0 512 512" fill="#fff"><path d="M440.3 203.5c-15 0-28.2 6.2-37.9 15.9-35.7-24.7-83.8-40.6-137.1-42.3L293 52.3l88.2 19.8c0 21.6 17.6 39.2 39.2 39.2 22 0 39.6-18 39.6-39.6s-17.6-39.6-39.6-39.6c-15.4 0-28.5 9.3-35.3 22l-97.4-21.6c-4.9-1.3-9.7 2.2-11 7.1l-25.1 111.4c-53.7 2.2-101.8 18.1-137.5 42.5-9.7-9.7-23.3-16-38.1-16-43.5 0-73.2 43.6-53.4 82.1-1.1 4.9-1.7 10.3-1.7 15.5 0 65.1 78.4 118.3 175 118.3 96.9 0 175.3-53.2 175.3-118.3 0-5.5-.6-10.9-1.7-15.9 19.9-38.4-9.4-81.8-53-81.8zm-269.1 91.2c0-23.4 19.2-42.6 42.6-42.6 23.4 0 42.6 19.2 42.6 42.6 0 23.4-19.2 42.6-42.6 42.6-23.4 0-42.6-19.2-42.6-42.6zm181.3 88.9c-23.9 23.6-69 25.5-83.5 25.5-14.6 0-59.4-2.2-83.5-25.5-3.5-3.5-3.5-9.2 0-12.7 3.5-3.5 9.2-3.5 12.7 0 15.4 15.6 47.4 21.2 70.5 21.2s55.4-5.9 70.5-21.2c3.5-3.5 9.2-3.5 12.7 0 3.7 3.5 3.7 9.2.3 12.7zm-8.7-46c-23.4 0-42.6-19.2-42.6-42.6 0-23.4 19.2-42.6 42.6-42.6 23.4 0 42.6 19.2 42.6 42.6-.1 23.4-19.2 42.6-42.6 42.6z"/></svg></span>
+          {%- elif plat == 'facebook' -%}
+          <span class="platform-icon-badge facebook"><svg width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/></svg></span>
+          {%- elif plat == 'linkedin' -%}
+          <span class="platform-icon-badge linkedin"><svg width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></span>
+          {%- else -%}
+          <span class="platform-icon-badge"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="1.6"/></svg></span>
+          {%- endif -%}
+        {%- endmacro %}
+
+        {% if chat.messages %}
+          {% for msg in chat.messages %}
+          <div class="turn-block">
+            <div class="turn-row"><div class="turn-question">{{ msg.query }}</div></div>
+            <div class="turn-meta">
+              <span class="turn-chip">
+                <span class="status-dot"></span>
+                {{ msg.targeting_platform | default('all', true) }}
+              </span>
+              {% if msg.requested_at %}
+              <span class="turn-chip">{{ msg.requested_at.strftime('%b %d, %Y %H:%M') if msg.requested_at.strftime else msg.requested_at }}</span>
+              {% endif %}
+            </div>
+
+            <!-- ===================================================================
+                 RESTORED ANSWER FORMATS / SPECIAL STATES — placeholder fields.
+                 None of msg.no_results / msg.credit_error / msg.dashboard /
+                 msg.leadgen exist on the real message object today. These
+                 branches are wired and styled but WILL NEVER FIRE until the
+                 backend sets one of these fields — same contract as index.html. -->
+
+            {% if msg.no_results %}
+            {#- Expected: msg.no_results = true when the search genuinely found nothing worth showing. -#}
+            <div class="state-card">
+              <span class="state-icon-badge">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/><path d="M21 21L16.5 16.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              </span>
+              <div class="state-heading">No significant conversation found</div>
+              <p class="state-body">Not enough public discussion about "{{ msg.query }}" was found in this window. It may be very new, niche, or discussed under different terms.</p>
+              <div class="state-actions">
+                <form action="/search" method="post" style="margin:0;">
+                  <input type="hidden" name="query" value="{{ msg.query }}" />
+                  <input type="hidden" name="platform" value="All Platforms" />
+                  <input type="hidden" name="chat_id" value="{{ chat.chat_id }}" />
+                  <button class="btn-outline" type="submit" style="border:1px solid #3d3d3b; cursor:pointer;">Try All Platforms</button>
+                </form>
+              </div>
+            </div>
+
+            {% elif msg.credit_error %}
+            {#- Expected: msg.credit_error = { "balance": int, "needed": int } -#}
+            <div class="state-card">
+              <span class="state-icon-badge">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 8V12.5M12 15.5H12.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              </span>
+              <div class="credit-stat"><span class="num">{{ msg.credit_error.balance }}</span><span class="of">of {{ msg.credit_error.needed }} credits needed</span></div>
+              <div class="state-heading">Not enough credits</div>
+              <p class="state-body">Your plan doesn't have enough credits left for this search. Top up now, or upgrade for a larger monthly allowance.</p>
+              <div class="state-actions">
+                <!-- PLACEHOLDER routes — replace once real billing routes exist. -->
+                <a class="btn-primary" href="/billing/upgrade">Upgrade plan</a>
+                <a class="btn-outline" href="/billing/topup">Buy more credits</a>
+              </div>
+            </div>
+
+            {% elif msg.claude_answer %}
+            <div class="answer-wrap">
+              <div class="answer-raw">{{ msg.claude_answer }}</div>
+              <div class="answer-rendered"></div>
+            </div>
+            {% elif msg.results %}
+            <div class="loading-row">
+              <span class="loading-logo"><img src="https://www.figma.com/api/mcp/asset/9ac3df00-71a7-4d75-b3a6-1796fd320906.png" alt="" /></span>
+              <div class="loading-dots"><span></span><span></span><span></span></div>
+              <span class="loading-text">Got the posts — writing up the answer…</span>
+            </div>
+            {% else %}
+            <div class="loading-row">
+              <span class="loading-logo"><img src="https://www.figma.com/api/mcp/asset/9ac3df00-71a7-4d75-b3a6-1796fd320906.png" alt="" /></span>
+              <div class="loading-dots"><span></span><span></span><span></span></div>
+              <span class="loading-text">Still gathering results for this search…</span>
+            </div>
+            {% endif %}
+
+            {% if msg.dashboard %}
+            {#- Expected shape: see index.html's identical block for the full documented contract. -#}
+            <div class="dashboard-brand-block">
+              <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Brand</strong> :  {{ msg.dashboard.topic }}</span></div>
+              <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Window</strong> :  {{ msg.dashboard.window }}</span></div>
+              <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Platforms</strong> :  {{ msg.dashboard.platforms }}</span></div>
+            </div>
+            {% if msg.dashboard.fabricated_note %}
+            <div class="fabricated-note"><span class="bar"></span><p>{{ msg.dashboard.fabricated_note }}</p></div>
+            {% endif %}
+            {% if msg.dashboard.shift_table %}
+            <p class="metrics-section-title">Overall Sentiment Shift</p>
+            <div class="metrics-table">
+              <div class="metrics-row header" style="grid-template-columns: repeat({{ msg.dashboard.shift_table.headers|length }}, 1fr);">
+                {% for h in msg.dashboard.shift_table.headers %}<div class="metrics-cell">{{ h }}</div>{% endfor %}
+              </div>
+              {% for row in msg.dashboard.shift_table.rows %}
+              <div class="metrics-row" style="grid-template-columns: repeat({{ row|length }}, 1fr);">
+                {% for cell in row %}<div class="metrics-cell">{{ cell }}</div>{% endfor %}
+              </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+            {% if msg.dashboard.interpretation %}
+            <div class="interpretation-block">
+              <p class="block-title">Interpretation</p>
+              <p class="block-text">{{ msg.dashboard.interpretation }}</p>
+            </div>
+            {% endif %}
+            {% if msg.dashboard.weekly_table %}
+            <p class="metrics-section-title">Weekly Sentiment Breakdown</p>
+            <div class="metrics-table">
+              <div class="metrics-row header" style="grid-template-columns: repeat({{ msg.dashboard.weekly_table.headers|length }}, 1fr);">
+                {% for h in msg.dashboard.weekly_table.headers %}<div class="metrics-cell">{{ h }}</div>{% endfor %}
+              </div>
+              {% for row in msg.dashboard.weekly_table.rows %}
+              <div class="metrics-row" style="grid-template-columns: repeat({{ row|length }}, 1fr);">
+                {% for cell in row %}<div class="metrics-cell">{{ cell }}</div>{% endfor %}
+              </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+            {% if msg.dashboard.positive_drivers %}
+            <p class="block-title">{{ msg.dashboard.positive_title or "What's Driving Positive Sentiment" }}</p>
+            {% for d in msg.dashboard.positive_drivers %}
+            <div class="driver-post-platform">{{ platform_badge({'platform': d.platform}) }}<span style="color:#7a7a77;font-size:16px;font-weight:600;">{{ d.platform }}</span></div>
+            <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Post</strong> :  {{ d.post }}</span></div>
+            <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Theme</strong> :  {{ d.theme }}</span></div>
+            {% endfor %}
+            {% endif %}
+            {% if msg.dashboard.negative_drivers %}
+            <div class="section-divider"></div>
+            <p class="block-title">{{ msg.dashboard.negative_title or "What's Driving Negative / Critical Sentiment" }}</p>
+            {% for d in msg.dashboard.negative_drivers %}
+            <div class="driver-post-platform">{{ platform_badge({'platform': d.platform}) }}<span style="color:#7a7a77;font-size:16px;font-weight:600;">{{ d.platform }}</span></div>
+            <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Post</strong> :  {{ d.post }}</span></div>
+            <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Theme</strong> :  {{ d.theme }}</span></div>
+            {% endfor %}
+            {% endif %}
+            {% if msg.dashboard.trend %}
+            <div class="trend-block">
+              <p class="block-title">Trend</p>
+              <p class="block-text">{{ msg.dashboard.trend }}</p>
+            </div>
+            {% endif %}
+            {% if msg.dashboard.takeaways %}
+            <div class="takeaways-block">
+              <p class="block-title" style="color:#d1d0cf;">Key Takeaways</p>
+              {% for t in msg.dashboard.takeaways %}
+              <div class="post-field no-dot" style="padding-left:19px;"><span class="field-text">{{ t }}</span></div>
+              {% endfor %}
+            </div>
+            {% endif %}
+
+            {% elif msg.leadgen %}
+            {#- Expected shape: see index.html's identical block for the full documented contract. -#}
+            <p class="leadgen-heading">🎯 {{ msg.leadgen.total_leads }} High-Intent Leads for {{ msg.leadgen.topic }}</p>
+            <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>Goal</strong> :  {{ msg.leadgen.goal }}</span></div>
+            <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>Site</strong> :  <a href="{{ msg.leadgen.site }}" target="_blank" rel="noopener noreferrer">{{ msg.leadgen.site }}</a></span></div>
+            <div class="section-divider"></div>
+            <p class="leadgen-heading">📈 Quick Snapshot</p>
+            <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>Total leads</strong> :  {{ msg.leadgen.total_leads }}</span></div>
+            <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>Hot</strong> :  {{ msg.leadgen.hot }}</span></div>
+            <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>Warm</strong> :  {{ msg.leadgen.warm }}</span></div>
+            <div class="section-divider"></div>
+            <p class="leadgen-heading">🔥 Top Prospects</p>
+            {% for p in msg.leadgen.prospects %}
+            <div class="leadgen-prospect">
+              <div class="leadgen-prospect-head">
+                <span class="leadgen-avatar">{{ p.initials }}</span>
+                <p class="leadgen-prospect-name">{{ p.name }}</p>
+              </div>
+              <div class="leadgen-field no-dot"><span class="text"><strong>Intent</strong> : {{ p.intent }}  |  <strong>Buy</strong> : {{ p.buy }}</span></div>
+              <div class="leadgen-field no-dot"><span class="text"><strong>Need</strong> :  {{ p.need }}</span></div>
+              <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>💬 DM</strong> :  {{ p.dm }}</span></div>
+              <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>🔗 Profile</strong> :  <a href="{{ p.profile_url }}" target="_blank" rel="noopener noreferrer">{{ p.profile_url }}</a></span></div>
+            </div>
+            {% if not loop.last %}<div class="section-divider"></div>{% endif %}
+            {% endfor %}
+            <div class="section-divider"></div>
+            <p class="leadgen-heading">⚡ Quick Actions</p>
+            <div class="leadgen-numbered"><span class="num">1.</span><span class="text"><strong>Create Audience</strong> : {{ msg.leadgen.create_audience }}</span></div>
+            <div class="leadgen-numbered"><span class="num">2.</span><span class="text"><strong>Run Ad</strong> : {{ msg.leadgen.run_ad }}</span></div>
+            <div class="leadgen-numbered"><span class="num">3.</span><span class="text"><strong>DM Script</strong> :</span></div>
+            <div class="leadgen-quote-block">
+              <span class="bar"></span>
+              <p>{{ msg.leadgen.dm_script }}</p>
+            </div>
+            <div class="leadgen-numbered"><span class="num">4.</span><span class="text"><strong>Track</strong> : {{ msg.leadgen.track }}</span></div>
+
+            {% elif msg.results %}
+            <div class="section-divider no-top-margin"></div>
+            {% set ns = namespace(seen=[]) %}
+            {% for r in msg.results %}
+              {% set label = platform_label(r)|trim %}
+              {% if label not in ns.seen %}{% set ns.seen = ns.seen + [label] %}{% endif %}
+            {% endfor %}
+            {% for label in ns.seen %}
+              {% set ns2 = namespace(posts=[]) %}
+              {% for r in msg.results %}
+                {% if platform_label(r)|trim == label %}{% set ns2.posts = ns2.posts + [r] %}{% endif %}
+              {% endfor %}
+              <div class="platform-section">
+                <div class="platform-header">
+                  {{ platform_badge(ns2.posts[0]) }}
+                  <div class="platform-name-row">
+                    <span class="platform-name">{{ label }}</span>
+                    <span class="platform-dot"></span>
+                    <span class="platform-count">{{ ns2.posts|length }} of {{ ns2.posts|length }}</span>
+                  </div>
+                </div>
+                {% for r in ns2.posts %}
+                <div class="post-block">
+                  <p class="post-label">Post {{ loop.index }}</p>
+                  {% if r.title %}
+                  <div class="post-field">
+                    <span class="field-dot"></span>
+                    <span class="field-text"><strong>Title</strong> :  {{ r.title }}</span>
+                  </div>
+                  {% endif %}
+                  {% if r.post_text %}
+                  <div class="post-field">
+                    <span class="field-dot"></span>
+                    <span class="field-text"><strong>Summary</strong> :  {{ r.post_text }}</span>
+                  </div>
+                  {% endif %}
+                  {% if r.post_url %}
+                  <div class="post-field">
+                    <span class="field-dot"></span>
+                    <span class="field-text"><strong>Link</strong> :  <a href="{{ r.post_url }}" target="_blank" rel="noopener noreferrer">{{ r.post_url }}</a></span>
+                  </div>
+                  {% endif %}
+                </div>
+                {% endfor %}
+              </div>
+              {% if not loop.last %}<div class="section-divider"></div>{% endif %}
+            {% endfor %}
+            {% endif %}
+          </div>
+          {% if not loop.last %}<div class="turn-divider"></div>{% endif %}
+          {% endfor %}
+        {% else %}
+        <div class="thread-empty">
+          <p>No searches in this chat yet. Ask something below to get started.</p>
         </div>
         {% endif %}
 
+      </div>
+    </div>
+
+    <!-- Docked follow-up input — real form, posts to /search pinned to this chat -->
+    <div class="docked-input-wrap">
+      <div class="docked-input-inner">
         <form action="/search" method="post" id="search-form">
           <div class="search-box">
-            <label for="search-input" class="sr-only">Search a brand, product, or topic</label>
+            <label for="search-input" class="sr-only">Ask a follow-up</label>
             <input
               id="search-input"
               name="query"
               class="search-input"
               type="text"
-              placeholder="Search a brand, product, or topic..."
-              value="{{ query or '' }}"
+              placeholder="Ask a follow-up..."
               required
-              autofocus
               autocomplete="off"
               autocorrect="off"
               autocapitalize="off"
               spellcheck="false"
             />
             <input type="hidden" name="platform" id="platform-input" value="All Platforms" />
-            <!-- Keeps a search launched from the home page attached to
-                 whichever chat is currently active (active_chat_id in
-                 index.py) instead of always forcing a brand-new one. -->
-            <input type="hidden" name="chat_id" id="chat-id-input" value="{{ chat_id or '' }}" />
+            <input type="hidden" name="chat_id" value="{{ chat.chat_id }}" />
 
             <div class="search-controls">
               <button class="add-btn" id="attach-btn" type="button" aria-label="Add attachment">
@@ -796,533 +932,20 @@
             </div>
           </div>
         </form>
-
-        <div class="explore-panel">
-          <p class="explore-title">Explore Flintel</p>
-          <div class="explore-box">
-            <button class="explore-row" type="button" data-query="Top web dev jobs, All Platforms">
-              <span class="explore-row-left">
-                <span class="explore-ring"></span>
-                <span class="explore-text">Top web dev jobs, All Platforms</span>
-              </span>
-              <span class="explore-row-right">
-                <span class="explore-avatars">
-                  <img src="https://www.figma.com/api/mcp/asset/7018f797-1750-45dc-8316-e737adb1b5d2.png" alt="LinkedIn" />
-                  <img src="https://www.figma.com/api/mcp/asset/44c22e72-f653-4fee-845a-460dfeee415c.png" alt="Facebook" />
-                  <img src="https://www.figma.com/api/mcp/asset/4cb05953-20a9-4f84-83e1-01148eb2fa7c.png" alt="Reddit" />
-                </span>
-                <svg width="6" height="10" viewBox="0 0 6 10" fill="none"><path d="M1 1L5 5L1 9" stroke="#757473" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-            </button>
-            <div class="explore-divider"></div>
-            <button class="explore-row" type="button" data-query="Notion's top 10 complaints">
-              <span class="explore-row-left">
-                <span class="explore-ring"></span>
-                <span class="explore-text">Notion's top 10 complaints</span>
-              </span>
-              <span class="explore-row-right">
-                <svg width="6" height="10" viewBox="0 0 6 10" fill="none"><path d="M1 1L5 5L1 9" stroke="#757473" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-            </button>
-            <div class="explore-divider"></div>
-            <button class="explore-row" type="button" data-query="ChatGPT sentiment on Reddit today">
-              <span class="explore-row-left">
-                <span class="explore-ring"></span>
-                <span class="explore-text">ChatGPT sentiment on Reddit today</span>
-              </span>
-              <span class="explore-row-right">
-                <svg width="6" height="10" viewBox="0 0 6 10" fill="none"><path d="M1 1L5 5L1 9" stroke="#757473" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-            </button>
-          </div>
-        </div>
-
       </div>
     </div>
-
-    <!-- Conversation area: one .turn-block per real message in the active
-         chat. `chat` is passed in from index.py's home()/chat() route for
-         the current active_chat_id — see the block comment above the CSS
-         rules for exactly which fields are used. -->
-    <div class="conversation-area {% if not (chat and chat.messages) %}hidden{% endif %}" id="conversation-area">
-      {% macro platform_label(r) -%}
-        {%- set plat = (r.platform or '')|lower -%}
-        {%- if plat in ['twitter', 'x', 'x_twitter'] -%}X (Twitter)
-        {%- elif plat == 'reddit' -%}Reddit
-        {%- elif plat == 'facebook' -%}Facebook
-        {%- elif plat == 'linkedin' -%}LinkedIn
-        {%- else -%}{{ r.platform or 'Web' }}
-        {%- endif -%}
-      {%- endmacro %}
-
-      {% macro platform_badge(r) -%}
-        {%- set plat = (r.platform or '')|lower -%}
-        {%- if plat in ['twitter', 'x', 'x_twitter'] -%}
-        <span class="platform-icon-badge twitter"><svg width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span>
-        {%- elif plat == 'reddit' -%}
-        <span class="platform-icon-badge reddit"><svg width="17" height="17" viewBox="0 0 512 512" fill="#fff"><path d="M440.3 203.5c-15 0-28.2 6.2-37.9 15.9-35.7-24.7-83.8-40.6-137.1-42.3L293 52.3l88.2 19.8c0 21.6 17.6 39.2 39.2 39.2 22 0 39.6-18 39.6-39.6s-17.6-39.6-39.6-39.6c-15.4 0-28.5 9.3-35.3 22l-97.4-21.6c-4.9-1.3-9.7 2.2-11 7.1l-25.1 111.4c-53.7 2.2-101.8 18.1-137.5 42.5-9.7-9.7-23.3-16-38.1-16-43.5 0-73.2 43.6-53.4 82.1-1.1 4.9-1.7 10.3-1.7 15.5 0 65.1 78.4 118.3 175 118.3 96.9 0 175.3-53.2 175.3-118.3 0-5.5-.6-10.9-1.7-15.9 19.9-38.4-9.4-81.8-53-81.8zm-269.1 91.2c0-23.4 19.2-42.6 42.6-42.6 23.4 0 42.6 19.2 42.6 42.6 0 23.4-19.2 42.6-42.6 42.6-23.4 0-42.6-19.2-42.6-42.6zm181.3 88.9c-23.9 23.6-69 25.5-83.5 25.5-14.6 0-59.4-2.2-83.5-25.5-3.5-3.5-3.5-9.2 0-12.7 3.5-3.5 9.2-3.5 12.7 0 15.4 15.6 47.4 21.2 70.5 21.2s55.4-5.9 70.5-21.2c3.5-3.5 9.2-3.5 12.7 0 3.7 3.5 3.7 9.2.3 12.7zm-8.7-46c-23.4 0-42.6-19.2-42.6-42.6 0-23.4 19.2-42.6 42.6-42.6 23.4 0 42.6 19.2 42.6 42.6-.1 23.4-19.2 42.6-42.6 42.6z"/></svg></span>
-        {%- elif plat == 'facebook' -%}
-        <span class="platform-icon-badge facebook"><svg width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/></svg></span>
-        {%- elif plat == 'linkedin' -%}
-        <span class="platform-icon-badge linkedin"><svg width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></span>
-        {%- else -%}
-        <span class="platform-icon-badge"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="1.6"/></svg></span>
-        {%- endif -%}
-      {%- endmacro %}
-
-      {% if chat and chat.messages %}
-        {% for msg in chat.messages %}
-        <div class="turn-block">
-          <div class="turn-row"><div class="turn-question">{{ msg.query }}</div></div>
-
-          {#- ===================================================================
-              RESTORED ANSWER FORMATS / SPECIAL STATES — placeholder fields.
-              None of msg.no_results / msg.credit_error / msg.dashboard /
-              msg.leadgen exist on the real message object today (the backend
-              only ever sets msg.query / msg.claude_answer / msg.results).
-              These branches are wired and styled, but WILL NEVER FIRE until
-              the backend is changed to actually set one of these fields.
-              Exact expected shape for each is documented right above it. -#}
-
-          {% if msg.no_results %}
-          {#- Expected: msg.no_results = true (or any truthy value) when the
-              search genuinely found nothing worth showing. -#}
-          <div class="state-card">
-            <span class="state-icon-badge">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/><path d="M21 21L16.5 16.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-            </span>
-            <div class="state-heading">No significant conversation found</div>
-            <p class="state-body">Not enough public discussion about "{{ msg.query }}" was found in this window. It may be very new, niche, or discussed under different terms.</p>
-            <div class="state-actions">
-              <form action="/search" method="post" style="margin:0;">
-                <input type="hidden" name="query" value="{{ msg.query }}" />
-                <input type="hidden" name="platform" value="All Platforms" />
-                <input type="hidden" name="chat_id" value="{{ chat_id or '' }}" />
-                <button class="btn-outline" type="submit" style="border:1px solid #3d3d3b; cursor:pointer;">Try All Platforms</button>
-              </form>
-            </div>
-          </div>
-
-          {% elif msg.credit_error %}
-          {#- Expected: msg.credit_error = { "balance": int, "needed": int } -#}
-          <div class="state-card">
-            <span class="state-icon-badge">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 8V12.5M12 15.5H12.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-            </span>
-            <div class="credit-stat"><span class="num">{{ msg.credit_error.balance }}</span><span class="of">of {{ msg.credit_error.needed }} credits needed</span></div>
-            <div class="state-heading">Not enough credits</div>
-            <p class="state-body">Your plan doesn't have enough credits left for this search. Top up now, or upgrade for a larger monthly allowance.</p>
-            <div class="state-actions">
-              <!-- PLACEHOLDER routes — /billing/upgrade and /billing/topup do
-                   not exist yet. Replace with your real billing routes once
-                   they exist, or these buttons currently 404. -->
-              <a class="btn-primary" href="/billing/upgrade">Upgrade plan</a>
-              <a class="btn-outline" href="/billing/topup">Buy more credits</a>
-            </div>
-          </div>
-
-          {% elif msg.claude_answer %}
-          <div class="answer-wrap">
-            <div class="answer-raw">{{ msg.claude_answer }}</div>
-            <div class="answer-rendered"></div>
-          </div>
-          {% elif msg.results %}
-          <div class="loading-row">
-            <span class="loading-logo"><img src="https://www.figma.com/api/mcp/asset/9ac3df00-71a7-4d75-b3a6-1796fd320906.png" alt="" /></span>
-            <div class="loading-dots"><span></span><span></span><span></span></div>
-            <span class="loading-text">Got the posts — writing up the answer…</span>
-          </div>
-          {% else %}
-          <div class="loading-row">
-            <span class="loading-logo"><img src="https://www.figma.com/api/mcp/asset/9ac3df00-71a7-4d75-b3a6-1796fd320906.png" alt="" /></span>
-            <div class="loading-dots"><span></span><span></span><span></span></div>
-            <span class="loading-text">Still gathering results for this search…</span>
-          </div>
-          {% endif %}
-
-          {% if msg.dashboard %}
-          {#- Expected shape for msg.dashboard:
-              {
-                "topic": str,
-                "window": str, "platforms": str,               # header fields
-                "fabricated_note": str,                          # optional disclaimer
-                "shift_table": { "headers": [str,...], "rows": [[str,...],...] },
-                "interpretation": str,
-                "weekly_table": { "headers": [...], "rows": [[...],...] },
-                "positive_title": str, "positive_drivers": [ {"platform": str, "post": str, "theme": str}, ... ],
-                "negative_title": str, "negative_drivers": [ ... same shape ... ],
-                "trend": str,
-                "takeaways": [str, str, ...]
-              }
-              Column widths are auto (equal); adjust .metrics-row grid-template-columns
-              inline if a specific proportion is needed later. -#}
-          <div class="dashboard-brand-block">
-            <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Brand</strong> :  {{ msg.dashboard.topic }}</span></div>
-            <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Window</strong> :  {{ msg.dashboard.window }}</span></div>
-            <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Platforms</strong> :  {{ msg.dashboard.platforms }}</span></div>
-          </div>
-          {% if msg.dashboard.fabricated_note %}
-          <div class="fabricated-note"><span class="bar"></span><p>{{ msg.dashboard.fabricated_note }}</p></div>
-          {% endif %}
-
-          {% if msg.dashboard.shift_table %}
-          <p class="metrics-section-title">Overall Sentiment Shift</p>
-          <div class="metrics-table">
-            <div class="metrics-row header" style="grid-template-columns: repeat({{ msg.dashboard.shift_table.headers|length }}, 1fr);">
-              {% for h in msg.dashboard.shift_table.headers %}<div class="metrics-cell">{{ h }}</div>{% endfor %}
-            </div>
-            {% for row in msg.dashboard.shift_table.rows %}
-            <div class="metrics-row" style="grid-template-columns: repeat({{ row|length }}, 1fr);">
-              {% for cell in row %}<div class="metrics-cell">{{ cell }}</div>{% endfor %}
-            </div>
-            {% endfor %}
-          </div>
-          {% endif %}
-
-          {% if msg.dashboard.interpretation %}
-          <div class="interpretation-block">
-            <p class="block-title">Interpretation</p>
-            <p class="block-text">{{ msg.dashboard.interpretation }}</p>
-          </div>
-          {% endif %}
-
-          {% if msg.dashboard.weekly_table %}
-          <p class="metrics-section-title">Weekly Sentiment Breakdown</p>
-          <div class="metrics-table">
-            <div class="metrics-row header" style="grid-template-columns: repeat({{ msg.dashboard.weekly_table.headers|length }}, 1fr);">
-              {% for h in msg.dashboard.weekly_table.headers %}<div class="metrics-cell">{{ h }}</div>{% endfor %}
-            </div>
-            {% for row in msg.dashboard.weekly_table.rows %}
-            <div class="metrics-row" style="grid-template-columns: repeat({{ row|length }}, 1fr);">
-              {% for cell in row %}<div class="metrics-cell">{{ cell }}</div>{% endfor %}
-            </div>
-            {% endfor %}
-          </div>
-          {% endif %}
-
-          {% if msg.dashboard.positive_drivers %}
-          <p class="block-title">{{ msg.dashboard.positive_title or "What's Driving Positive Sentiment" }}</p>
-          {% for d in msg.dashboard.positive_drivers %}
-          <div class="driver-post-platform">{{ platform_badge({'platform': d.platform}) }}<span style="color:#7a7a77;font-size:16px;font-weight:600;">{{ d.platform }}</span></div>
-          <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Post</strong> :  {{ d.post }}</span></div>
-          <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Theme</strong> :  {{ d.theme }}</span></div>
-          {% endfor %}
-          {% endif %}
-
-          {% if msg.dashboard.negative_drivers %}
-          <div class="section-divider"></div>
-          <p class="block-title">{{ msg.dashboard.negative_title or "What's Driving Negative / Critical Sentiment" }}</p>
-          {% for d in msg.dashboard.negative_drivers %}
-          <div class="driver-post-platform">{{ platform_badge({'platform': d.platform}) }}<span style="color:#7a7a77;font-size:16px;font-weight:600;">{{ d.platform }}</span></div>
-          <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Post</strong> :  {{ d.post }}</span></div>
-          <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Theme</strong> :  {{ d.theme }}</span></div>
-          {% endfor %}
-          {% endif %}
-
-          {% if msg.dashboard.trend %}
-          <div class="trend-block">
-            <p class="block-title">Trend</p>
-            <p class="block-text">{{ msg.dashboard.trend }}</p>
-          </div>
-          {% endif %}
-
-          {% if msg.dashboard.takeaways %}
-          <div class="takeaways-block">
-            <p class="block-title" style="color:#d1d0cf;">Key Takeaways</p>
-            {% for t in msg.dashboard.takeaways %}
-            <div class="post-field no-dot" style="padding-left:19px;"><span class="field-text">{{ t }}</span></div>
-            {% endfor %}
-          </div>
-          {% endif %}
-
-          {% elif msg.leadgen %}
-          {#- Expected shape for msg.leadgen:
-              {
-                "topic": str, "goal": str, "site": str,
-                "total_leads": int, "hot": int, "warm": int,
-                "prospects": [ {"initials": str, "name": str, "intent": str,
-                                 "buy": str, "need": str, "dm": str, "profile_url": str}, ... ],
-                "create_audience": str, "run_ad": str, "dm_script": str,
-                "track": str
-              } -#}
-          <p class="leadgen-heading">🎯 {{ msg.leadgen.total_leads }} High-Intent Leads for {{ msg.leadgen.topic }}</p>
-          <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>Goal</strong> :  {{ msg.leadgen.goal }}</span></div>
-          <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>Site</strong> :  <a href="{{ msg.leadgen.site }}" target="_blank" rel="noopener noreferrer">{{ msg.leadgen.site }}</a></span></div>
-          <div class="section-divider"></div>
-          <p class="leadgen-heading">📈 Quick Snapshot</p>
-          <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>Total leads</strong> :  {{ msg.leadgen.total_leads }}</span></div>
-          <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>Hot</strong> :  {{ msg.leadgen.hot }}</span></div>
-          <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>Warm</strong> :  {{ msg.leadgen.warm }}</span></div>
-          <div class="section-divider"></div>
-          <p class="leadgen-heading">🔥 Top Prospects</p>
-          {% for p in msg.leadgen.prospects %}
-          <div class="leadgen-prospect">
-            <div class="leadgen-prospect-head">
-              <span class="leadgen-avatar">{{ p.initials }}</span>
-              <p class="leadgen-prospect-name">{{ p.name }}</p>
-            </div>
-            <div class="leadgen-field no-dot"><span class="text"><strong>Intent</strong> : {{ p.intent }}  |  <strong>Buy</strong> : {{ p.buy }}</span></div>
-            <div class="leadgen-field no-dot"><span class="text"><strong>Need</strong> :  {{ p.need }}</span></div>
-            <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>💬 DM</strong> :  {{ p.dm }}</span></div>
-            <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>🔗 Profile</strong> :  <a href="{{ p.profile_url }}" target="_blank" rel="noopener noreferrer">{{ p.profile_url }}</a></span></div>
-          </div>
-          {% if not loop.last %}<div class="section-divider"></div>{% endif %}
-          {% endfor %}
-          <div class="section-divider"></div>
-          <p class="leadgen-heading">⚡ Quick Actions</p>
-          <div class="leadgen-numbered"><span class="num">1.</span><span class="text"><strong>Create Audience</strong> : {{ msg.leadgen.create_audience }}</span></div>
-          <div class="leadgen-numbered"><span class="num">2.</span><span class="text"><strong>Run Ad</strong> : {{ msg.leadgen.run_ad }}</span></div>
-          <div class="leadgen-numbered"><span class="num">3.</span><span class="text"><strong>DM Script</strong> :</span></div>
-          <div class="leadgen-quote-block">
-            <span class="bar"></span>
-            <p>{{ msg.leadgen.dm_script }}</p>
-          </div>
-          <div class="leadgen-numbered"><span class="num">4.</span><span class="text"><strong>Track</strong> : {{ msg.leadgen.track }}</span></div>
-
-          {% elif msg.results %}
-          <div class="section-divider no-top-margin"></div>
-          {#- Group the same flat msg.results list by platform for display,
-              without changing what data each post shows. Grouping is done
-              manually (rather than Jinja's groupby filter) to avoid choking
-              on a mix of missing/None platform values. -#}
-          {% set ns = namespace(seen=[]) %}
-          {% for r in msg.results %}
-            {% set label = platform_label(r)|trim %}
-            {% if label not in ns.seen %}{% set ns.seen = ns.seen + [label] %}{% endif %}
-          {% endfor %}
-          {% for label in ns.seen %}
-            {% set ns2 = namespace(posts=[]) %}
-            {% for r in msg.results %}
-              {% if platform_label(r)|trim == label %}{% set ns2.posts = ns2.posts + [r] %}{% endif %}
-            {% endfor %}
-            <div class="platform-section">
-              <div class="platform-header">
-                {{ platform_badge(ns2.posts[0]) }}
-                <div class="platform-name-row">
-                  <span class="platform-name">{{ label }}</span>
-                  <span class="platform-dot"></span>
-                  <span class="platform-count">{{ ns2.posts|length }} of {{ ns2.posts|length }}</span>
-                </div>
-              </div>
-              {% for r in ns2.posts %}
-              <div class="post-block">
-                <p class="post-label">Post {{ loop.index }}</p>
-                {% if r.title %}
-                <div class="post-field">
-                  <span class="field-dot"></span>
-                  <span class="field-text"><strong>Title</strong> :  {{ r.title }}</span>
-                </div>
-                {% endif %}
-                {% if r.post_text %}
-                <div class="post-field">
-                  <span class="field-dot"></span>
-                  <span class="field-text"><strong>Summary</strong> :  {{ r.post_text }}</span>
-                </div>
-                {% endif %}
-                {% if r.post_url %}
-                <div class="post-field">
-                  <span class="field-dot"></span>
-                  <span class="field-text"><strong>Link</strong> :  <a href="{{ r.post_url }}" target="_blank" rel="noopener noreferrer">{{ r.post_url }}</a></span>
-                </div>
-                {% endif %}
-              </div>
-              {% endfor %}
-            </div>
-            {% if not loop.last %}<div class="section-divider"></div>{% endif %}
-          {% endfor %}
-          {% endif %}
-        </div>
-        {% endfor %}
-      {% endif %}
-    </div>
-
   </main>
-
-  <!-- Docked follow-up input — present for design fidelity, never shown. -->
-  <div class="docked-input-wrap" id="docked-input-wrap">
-    <div class="docked-input-inner">
-      <div class="search-box">
-        <label for="followup-input" class="sr-only">Ask a follow-up</label>
-        <input id="followup-input" class="search-input" type="text" placeholder="Ask a follow-up" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="margin-bottom: 16px;" />
-        <div class="search-controls">
-          <button class="add-btn" type="button" aria-label="Add attachment">
-            <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M8.5 1.5V15.5M1.5 8.5H15.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-          </button>
-          <div class="right-controls">
-            <span class="docked-credit-estimate">~2 credits</span>
-            <button class="platforms-btn" type="button">
-              <span>All Platforms</span>
-              <svg style="transform: rotate(0deg)" width="12" height="7" viewBox="0 0 12 7" fill="none"><path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-            <button class="submit-btn" id="followup-submit-btn" type="button" aria-label="Send follow-up" disabled>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="#171615" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 
-<!-- Sign in / Sign up modal — wired to index.py's real auth routes -->
-<div class="auth-overlay" id="auth-overlay">
-  <div class="auth-modal">
-    <button class="auth-close" id="auth-close-btn" type="button" aria-label="Close">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-    </button>
-    <span class="auth-avatar">
-      <img src="https://www.figma.com/api/mcp/asset/9ac3df00-71a7-4d75-b3a6-1796fd320906.png" alt="Flintel" />
-    </span>
-    <p class="auth-modal-title" id="auth-modal-title">Sign in to Flintel</p>
-
-    <a class="google-btn" href="/auth/google/login">
-      <svg width="16" height="16" viewBox="0 0 18 18">
-        <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
-        <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
-        <path fill="#FBBC05" d="M3.964 10.706A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.706V4.962H.957A9 9 0 0 0 0 9c0 1.452.348 2.827.957 4.038l3.007-2.332z"/>
-        <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.441 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.962L3.964 7.294C4.672 5.167 6.656 3.58 9 3.58z"/>
-      </svg>
-      Continue with Google
-    </a>
-
-    <div class="auth-divider">or</div>
-
-    <!-- Real POST to /login -->
-    <form action="/login" method="post" id="login-form" class="auth-form">
-      <div class="auth-field">
-        <label for="login-email">Email</label>
-        <input type="email" id="login-email" name="email" required autocomplete="email" />
-      </div>
-      <div class="auth-field">
-        <label for="login-password">Password</label>
-        <input type="password" id="login-password" name="password" required autocomplete="current-password" />
-      </div>
-      <button class="auth-submit-btn" type="submit">Log in</button>
-    </form>
-
-    <!-- Real POST to /signup -->
-    <form action="/signup" method="post" id="signup-form" class="auth-form hidden">
-      <div class="auth-field">
-        <label for="signup-email">Email</label>
-        <input type="email" id="signup-email" name="email" required autocomplete="email" />
-      </div>
-      <div class="auth-field">
-        <label for="signup-password">Password</label>
-        <input type="password" id="signup-password" name="password" required minlength="8" autocomplete="new-password" />
-      </div>
-      <div class="auth-field">
-        <label for="signup-confirm-password">Confirm password</label>
-        <input type="password" id="signup-confirm-password" name="confirm_password" required minlength="8" autocomplete="new-password" />
-      </div>
-      <button class="auth-submit-btn" type="submit">Create account</button>
-    </form>
-
-    <p class="auth-switch">
-      <span id="auth-switch-to-signup">Don't have an account? <button type="button" id="show-signup-btn">Sign up</button></span>
-      <span id="auth-switch-to-login" class="hidden">Already have an account? <button type="button" id="show-login-btn">Log in</button></span>
-    </p>
-  </div>
-</div>
-
-<!-- Markdown rendering for msg.claude_answer. If either fails to load
-     (offline, blocked CDN, etc.) the raw text in .answer-raw stays visible
-     exactly as Claude wrote it — nothing breaks, it just isn't prettified. -->
+<!-- Markdown rendering for msg.claude_answer (see .answer-raw /
+     .answer-rendered above), same behavior as index.html. If either script
+     fails to load, the raw text stays visible exactly as Claude wrote it —
+     nothing breaks, it just isn't prettified. -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
 
 <script>
-  console.log('[soft-nav] script loaded and running');
-  // =========================================================================
-  // SOFT NAVIGATION — switching chats or starting a "New" chat no longer
-  // does a full browser page reload. The backend is completely untouched:
-  // these still hit the exact same real routes (GET /chat/<id>,
-  // POST /chats/new) and get back the exact same full server-rendered HTML
-  // page as before. The only difference is THIS PAGE fetches that HTML in
-  // the background, swaps just the two regions that actually differ
-  // (the <main> content and the sidebar's session list) into the current
-  // DOM, and updates the URL via history.pushState — instead of the browser
-  // throwing away and reloading the whole page. If the fetch fails for any
-  // reason, it falls back to a real navigation so nothing is ever silently
-  // broken.
-  // =========================================================================
-  function renderMarkdownAnswers(root) {
-    if (!(window.marked && window.DOMPurify)) return;
-    root.querySelectorAll('.answer-wrap').forEach((wrap) => {
-      const rawEl = wrap.querySelector('.answer-raw');
-      const renderedEl = wrap.querySelector('.answer-rendered');
-      if (!rawEl || !renderedEl) return;
-      try {
-        const html = marked.parse(rawEl.textContent, { breaks: true, gfm: true });
-        renderedEl.innerHTML = DOMPurify.sanitize(html);
-        renderedEl.style.display = 'block';
-        rawEl.style.display = 'none';
-      } catch (e) {
-        console.warn('Markdown render failed, showing raw answer text:', e);
-      }
-    });
-  }
-
-  async function navigateTo(url, { method = 'GET', pushState = true } = {}) {
-    console.log('[soft-nav] navigateTo() called:', method, url);
-    try {
-      const response = await fetch(url, {
-        method,
-        credentials: 'same-origin',
-        redirect: 'follow',
-      });
-      if (!response.ok) throw new Error(`Request failed: ${response.status}`);
-
-      const html = await response.text();
-      const doc = new DOMParser().parseFromString(html, 'text/html');
-
-      const newMain = doc.querySelector('main.main');
-      const newSessionsList = doc.querySelector('#sessions-list');
-      const currentMain = document.querySelector('main.main');
-      const currentSessionsList = document.querySelector('#sessions-list');
-
-      if (!newMain || !currentMain) throw new Error('Fetched page missing <main> — falling back to real navigation');
-
-      currentMain.innerHTML = newMain.innerHTML;
-      if (newSessionsList && currentSessionsList) {
-        currentSessionsList.innerHTML = newSessionsList.innerHTML;
-      }
-      if (doc.title) document.title = doc.title;
-
-      // response.url accounts for any server-side redirect (e.g. POST
-      // /chats/new redirecting to /chat/<new_id>) — the address bar should
-      // reflect where we actually ended up, not the URL we requested.
-      if (pushState) {
-        history.pushState({ softNav: true }, '', response.url || url);
-      }
-
-      renderMarkdownAnswers(currentMain);
-      closeAllSessionMenus(null);
-      console.log('[soft-nav] swap complete, no page reload happened. New URL:', response.url || url);
-      const freshSearchInput = document.getElementById('search-input');
-      const freshSubmitBtn = document.getElementById('submit-btn');
-      if (freshSearchInput && freshSubmitBtn) {
-        freshSubmitBtn.disabled = freshSearchInput.value.trim().length === 0;
-      }
-    } catch (err) {
-      console.warn('Soft navigation failed, falling back to a real page load:', err);
-      if (method === 'GET') {
-        window.location.href = url;
-      } else {
-        const form = document.createElement('form');
-        form.method = method;
-        form.action = url;
-        form.style.display = 'none';
-        document.body.appendChild(form);
-        form.submit();
-      }
-    }
-  }
-
-  window.addEventListener('popstate', () => {
-    navigateTo(location.href, { pushState: false });
-  });
-
-  // ---- Sidebar (mobile drawer) ---- (unaffected by soft nav — lives outside <main>)
+  // ---- Sidebar (mobile drawer) ----
   const sidebar = document.querySelector('.sidebar');
   const overlay = document.getElementById('mobile-overlay');
   document.getElementById('mobile-sidebar-toggle').addEventListener('click', () => {
@@ -1335,7 +958,7 @@
     overlay.classList.remove('visible');
   });
 
-  // ---- Sessions expand/collapse ---- (unaffected by soft nav — outside #sessions-list)
+  // ---- Sessions expand/collapse ----
   const sessionsToggle = document.getElementById('sessions-toggle');
   const sessionsBody = document.getElementById('sessions-body');
   const sessionsChevron = document.getElementById('sessions-chevron');
@@ -1346,37 +969,9 @@
     sessionsChevron.style.transform = expanded ? 'rotate(0deg)' : 'rotate(90deg)';
   });
 
-  // ---- Sidebar chat links + "New" button — now soft-navigated ----
-  document.addEventListener('click', (e) => {
-    const link = e.target.closest('.session-item-link');
-    if (link) {
-      console.log('[soft-nav] intercepted session link click ->', link.href);
-      e.preventDefault();
-      navigateTo(link.href, { method: 'GET' });
-    }
-  });
-  document.addEventListener('submit', (e) => {
-    const form = e.target;
-    const action = form.getAttribute('action') || '';
-    // getAttribute (not form.action / .matches CSS-selector matching) so
-    // this is 100% independent of how the browser resolves/reflects the
-    // action attribute as a URL — a direct string comparison, no ambiguity.
-    if (action === '/chats/new' || action.endsWith('/chats/new')) {
-      console.log('[soft-nav] intercepted "New chat" form submit ->', action);
-      e.preventDefault();
-      navigateTo(form.action, { method: 'POST' });
-    }
-  });
-
   // ---- Per-chat options menu (3-dot -> Delete) ----
-  // Delegated on document (not bound per-element) because #sessions-list's
-  // contents get replaced by soft navigation — a direct per-element listener
-  // would be destroyed along with the old nodes. Delegation survives that.
-  // Delete itself is intentionally left as a REAL form submit (full page
-  // load) — deleting a chat wasn't part of what was asked to feel instant,
-  // and it's a big enough destructive action that a full reload landing back
-  // on a clean state is arguably the safer default. Say if you want that
-  // soft-navigated too.
+  // Real full-page-reload form submit to POST /chat/{chat_id}/delete —
+  // deliberately not soft-navigated, same as index.html.
   function closeAllSessionMenus(except) {
     document.querySelectorAll('.session-menu-dropdown.open').forEach((dd) => {
       if (dd !== except) {
@@ -1421,144 +1016,411 @@
     }
   });
 
-  // ---- Auth modal (Google OAuth link + email/password login/signup) ----
-  // Unaffected by soft nav — auth-overlay lives outside <main>. The one
-  // exception is the button that OPENS it from the topbar, which is inside
-  // <main> and does need delegation (handled further below).
-  const authOverlay = document.getElementById('auth-overlay');
-  const authModalTitle = document.getElementById('auth-modal-title');
-  const loginForm = document.getElementById('login-form');
-  const signupForm = document.getElementById('signup-form');
-  const switchToSignup = document.getElementById('auth-switch-to-signup');
-  const switchToLogin = document.getElementById('auth-switch-to-login');
-
-  function setAuthMode(mode) {
-    const isSignup = mode === 'signup';
-    loginForm.classList.toggle('hidden', isSignup);
-    signupForm.classList.toggle('hidden', !isSignup);
-    switchToSignup.classList.toggle('hidden', isSignup);
-    switchToLogin.classList.toggle('hidden', !isSignup);
-    authModalTitle.textContent = isSignup ? 'Create your account' : 'Sign in to Flintel';
-  }
-  function openAuthModal(mode) {
-    setAuthMode(mode);
-    authOverlay.classList.add('visible');
-  }
-  function closeAuthModal() { authOverlay.classList.remove('visible'); }
-
-  document.getElementById('show-signup-btn').addEventListener('click', () => setAuthMode('signup'));
-  document.getElementById('show-login-btn').addEventListener('click', () => setAuthMode('login'));
-  document.getElementById('auth-close-btn').addEventListener('click', closeAuthModal);
-  authOverlay.addEventListener('click', (e) => { if (e.target === authOverlay) closeAuthModal(); });
-
-  // Sidebar "Sign In" only exists when logged out. Lives outside <main>, so
-  // a direct binding is fine and survives soft navigation.
-  const signinBtn = document.getElementById('signin-btn');
-  if (signinBtn) signinBtn.addEventListener('click', () => openAuthModal('login'));
-
-  // Topbar "Sign up" is INSIDE <main> and gets replaced by soft nav — delegated.
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('#topbar-signup-btn')) openAuthModal('signup');
-  });
-
-  // ---- Attachment button opens file picker ---- (inside <main> — delegated)
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('#attach-btn')) {
-      const input = document.getElementById('attach-input');
-      if (input) input.click();
-    }
-  });
-  document.addEventListener('change', (e) => {
-    if (e.target.id === 'attach-input' && e.target.files.length) {
-      console.log('Files attached:', Array.from(e.target.files).map(f => f.name));
+  // ---- Attachment button opens file picker (no upload backend wired yet) ----
+  const attachBtn = document.getElementById('attach-btn');
+  const attachInput = document.getElementById('attach-input');
+  attachBtn.addEventListener('click', () => attachInput.click());
+  attachInput.addEventListener('change', () => {
+    if (attachInput.files.length) {
+      console.log('Files attached:', Array.from(attachInput.files).map(f => f.name));
     }
   });
 
-  // ---- Platforms dropdown (hero search box — inside <main>, delegated) ----
-  document.addEventListener('click', (e) => {
-    const platformsBtn = document.getElementById('platforms-btn');
-    const platformsMenu = document.getElementById('platforms-menu');
-    if (!platformsBtn || !platformsMenu) return;
-    const platformsChevron = document.getElementById('platforms-chevron');
+  // ---- Platforms dropdown ----
+  const platformsBtn = document.getElementById('platforms-btn');
+  const platformsMenu = document.getElementById('platforms-menu');
+  const platformsChevron = document.getElementById('platforms-chevron');
+  const platformsLabel = document.getElementById('platforms-label');
+  const platformInput = document.getElementById('platform-input');
 
-    if (e.target.closest('#platforms-btn')) {
-      e.stopPropagation();
-      const open = platformsMenu.style.display === 'block';
-      if (open) {
-        platformsMenu.style.display = 'none';
-        platformsBtn.setAttribute('aria-expanded', 'false');
-        platformsChevron.style.transform = 'rotate(0deg)';
-      } else {
-        platformsMenu.style.display = 'block';
-        platformsBtn.setAttribute('aria-expanded', 'true');
-        platformsChevron.style.transform = 'rotate(180deg)';
+  function closePlatformsMenu() {
+    platformsMenu.style.display = 'none';
+    platformsBtn.setAttribute('aria-expanded', 'false');
+    platformsChevron.style.transform = 'rotate(0deg)';
+  }
+  platformsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = platformsMenu.style.display === 'block';
+    if (open) { closePlatformsMenu(); }
+    else {
+      platformsMenu.style.display = 'block';
+      platformsBtn.setAttribute('aria-expanded', 'true');
+      platformsChevron.style.transform = 'rotate(180deg)';
+    }
+  });
+  platformsMenu.addEventListener('click', (e) => {
+    const li = e.target.closest('li');
+    if (!li) return;
+    platformsLabel.textContent = li.dataset.value;
+    platformInput.value = li.dataset.value;
+    closePlatformsMenu();
+  });
+  document.addEventListener('click', (e) => {
+    if (!platformsMenu.contains(e.target) && e.target !== platformsBtn) closePlatformsMenu();
+  });
+
+  // ---- Real follow-up search form ----
+  const searchForm = document.getElementById('search-form');
+  const searchInput = document.getElementById('search-input');
+  const submitBtn = document.getElementById('submit-btn');
+
+  function syncSubmitButtonState() {
+    submitBtn.disabled = searchInput.value.trim().length === 0;
+  }
+  syncSubmitButtonState();
+  searchInput.addEventListener('input', syncSubmitButtonState);
+  searchForm.addEventListener('submit', () => { submitBtn.disabled = true; });
+
+  // ---- Structured JSON answer rendering ----
+  // Claude's analysis system prompt now returns strict JSON matching one of
+  // 6 formats (source_list / trend_report / comparison / no_results /
+  // not_available / disallowed), always with a "format" field first. Plain
+  // "chat"/"blocked" replies (from the separate router prompt) are NOT
+  // JSON — those still fall back to markdown rendering below, unchanged.
+  const SENTIMENT_COLORS = { positive: '#5FBF88', mixed: '#E8A33D', negative: '#E2645A', neutral: '#757473' };
+
+  function sentimentTag(sentiment) {
+    const color = SENTIMENT_COLORS[sentiment] || SENTIMENT_COLORS.neutral;
+    const span = document.createElement('span');
+    span.style.cssText = `display:inline-block; font-size:12px; font-weight:600; text-transform:capitalize; color:${color}; border:1px solid ${color}; border-radius:6px; padding:2px 8px; margin-left:8px;`;
+    span.textContent = sentiment || 'neutral';
+    return span;
+  }
+
+  function fieldRow(container, label, value, isLink) {
+    const row = document.createElement('div');
+    row.className = 'post-field';
+    const dot = document.createElement('span');
+    dot.className = 'field-dot';
+    const text = document.createElement('span');
+    text.className = 'field-text';
+    const strong = document.createElement('strong');
+    strong.textContent = label;
+    text.appendChild(strong);
+    text.appendChild(document.createTextNode(' :  '));
+    if (isLink) {
+      const a = document.createElement('a');
+      a.href = value; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      a.textContent = value;
+      text.appendChild(a);
+    } else {
+      text.appendChild(document.createTextNode(value));
+    }
+    row.appendChild(dot);
+    row.appendChild(text);
+    container.appendChild(row);
+    return row;
+  }
+
+  function buildPostBlock(post, index) {
+    const block = document.createElement('div');
+    block.className = 'post-block';
+    const label = document.createElement('p');
+    label.className = 'post-label';
+    label.textContent = `Post ${index + 1}`;
+    block.appendChild(label);
+    if (post.source) fieldRow(block, 'Source', post.source);
+    if (post.title) fieldRow(block, 'Title', post.title);
+    if (post.summary) fieldRow(block, 'Summary', post.summary);
+    const sentRow = fieldRow(block, 'Sentiment', '');
+    sentRow.querySelector('.field-text').appendChild(sentimentTag(post.sentiment));
+    if (post.link) fieldRow(block, 'Link', post.link, true);
+    return block;
+  }
+
+  function renderPlatformsList(platforms, container) {
+    (platforms || []).forEach((p, gi) => {
+      const section = document.createElement('div');
+      section.className = 'platform-section';
+      const header = document.createElement('div');
+      header.className = 'platform-header';
+      const icon = document.createElement('span');
+      icon.className = 'platform-icon-badge ' + (p.platform || '').toLowerCase();
+      header.appendChild(icon);
+      const nameRow = document.createElement('div');
+      nameRow.className = 'platform-name-row';
+      nameRow.innerHTML = `<span class="platform-name">${(p.platform || '').toUpperCase()}</span><span class="platform-dot"></span><span class="platform-count">${p.shown_count} of ${p.total_analyzed}</span>`;
+      header.appendChild(nameRow);
+      section.appendChild(header);
+      (p.posts || []).forEach((post, i) => section.appendChild(buildPostBlock(post, i)));
+      container.appendChild(section);
+      if (gi < platforms.length - 1) {
+        const div = document.createElement('div');
+        div.className = 'section-divider';
+        container.appendChild(div);
       }
-      return;
-    }
-    const li = e.target.closest('#platforms-menu li');
-    if (li) {
-      const platformsLabel = document.getElementById('platforms-label');
-      const platformInput = document.getElementById('platform-input');
-      if (platformsLabel) platformsLabel.textContent = li.dataset.value;
-      if (platformInput) platformInput.value = li.dataset.value;
-      platformsMenu.style.display = 'none';
-      platformsBtn.setAttribute('aria-expanded', 'false');
-      platformsChevron.style.transform = 'rotate(0deg)';
-      return;
-    }
-    if (!e.target.closest('#platforms-menu') && !e.target.closest('#platforms-btn')) {
-      platformsMenu.style.display = 'none';
-      platformsBtn.setAttribute('aria-expanded', 'false');
-      platformsChevron.style.transform = 'rotate(0deg)';
-    }
-  });
-
-  // ---- Real search form ---- (still a full page load — see comment)
-  // Deliberately NOT soft-navigated. Submitting a search queues a real
-  // background job and the redirect-back-to-"/" is how the loading state
-  // gets its own fresh page load today; only chat-switching and "New" were
-  // asked to stop refreshing. Cosmetic submit-button disabling is delegated
-  // since the form lives inside <main>.
-  document.addEventListener('input', (e) => {
-    if (e.target.id === 'search-input') {
-      const btn = document.getElementById('submit-btn');
-      if (btn) btn.disabled = e.target.value.trim().length === 0;
-    }
-    if (e.target.id === 'followup-input') {
-      const btn = document.getElementById('followup-submit-btn');
-      if (btn) btn.disabled = e.target.value.trim().length === 0;
-    }
-  });
-  document.addEventListener('submit', (e) => {
-    if (e.target.id === 'search-form') {
-      const btn = document.getElementById('submit-btn');
-      if (btn) btn.disabled = true; // real POST proceeds normally, not intercepted
-    }
-  });
-  // Docked follow-up input lives OUTSIDE <main> — set its initial disabled
-  // state once here; it never needs re-syncing after a soft nav.
-  const followupInputEl = document.getElementById('followup-input');
-  const followupSubmitBtnEl = document.getElementById('followup-submit-btn');
-  if (followupInputEl && followupSubmitBtnEl) {
-    followupSubmitBtnEl.disabled = followupInputEl.value.trim().length === 0;
+    });
   }
 
-  // ---- Explore Flintel rows ---- (inside <main> — delegated)
-  document.addEventListener('click', (e) => {
-    const row = e.target.closest('.explore-row');
-    if (row) {
-      const searchInput = document.getElementById('search-input');
-      const submitBtn = document.getElementById('submit-btn');
-      if (searchInput) {
-        searchInput.value = row.dataset.query;
-        if (submitBtn) submitBtn.disabled = searchInput.value.trim().length === 0;
-        searchInput.focus();
+  function renderFollowupChips(followups, container) {
+    if (!followups || !followups.length) return;
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex; flex-wrap:wrap; gap:10px; margin-top:20px;';
+    followups.forEach(text => {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.textContent = text;
+      chip.style.cssText = 'background:#1e1d1b; border-radius:150px; padding:10px 16px; color:rgba(255,255,255,0.7); font-size:14px; font-weight:500; border:none; cursor:pointer;';
+      chip.addEventListener('click', () => {
+        const input = document.getElementById('search-input');
+        if (input) { input.value = text; input.dispatchEvent(new Event('input')); input.focus(); }
+      });
+      row.appendChild(chip);
+    });
+    container.appendChild(row);
+  }
+
+  function renderSourceList(data, container) {
+    const summary = document.createElement('p');
+    summary.className = 'overview-summary';
+    summary.textContent = data.summary || '';
+    container.appendChild(summary);
+    const divider = document.createElement('div');
+    divider.className = 'section-divider no-top-margin';
+    container.appendChild(divider);
+    renderPlatformsList(data.platforms, container);
+    renderFollowupChips(data.followups, container);
+  }
+
+  function renderComparison(data, container) {
+    const summary = document.createElement('p');
+    summary.className = 'overview-summary';
+    summary.textContent = data.summary || '';
+    container.appendChild(summary);
+    (data.subjects || []).forEach((subj, si) => {
+      const heading = document.createElement('p');
+      heading.className = 'metrics-section-title';
+      heading.textContent = subj.name;
+      container.appendChild(heading);
+      if (subj.sentiment) {
+        const s = subj.sentiment;
+        const line = document.createElement('p');
+        line.className = 'block-text';
+        line.style.marginBottom = '20px';
+        line.textContent = `Positive ${s.positive || '0%'} · Neutral ${s.neutral || '0%'} · Negative ${s.negative || '0%'}`;
+        container.appendChild(line);
+      }
+      renderPlatformsList(subj.platforms, container);
+      if (si < (data.subjects || []).length - 1) {
+        const div = document.createElement('div');
+        div.className = 'section-divider';
+        container.appendChild(div);
+      }
+    });
+    renderFollowupChips(data.followups, container);
+  }
+
+  function renderTrendReport(data, container) {
+    const brandBlock = document.createElement('div');
+    brandBlock.className = 'dashboard-brand-block';
+    fieldRow(brandBlock, 'Brand', data.topic || '');
+    fieldRow(brandBlock, 'Window', data.window || '');
+    fieldRow(brandBlock, 'Platforms', data.platforms || '');
+    container.appendChild(brandBlock);
+
+    function buildTable(tableData, gridCols) {
+      const wrap = document.createElement('div');
+      wrap.className = 'metrics-table';
+      const headerRow = document.createElement('div');
+      headerRow.className = 'metrics-row header';
+      headerRow.style.gridTemplateColumns = gridCols;
+      tableData.headers.forEach(h => {
+        const c = document.createElement('div'); c.className = 'metrics-cell'; c.textContent = h;
+        headerRow.appendChild(c);
+      });
+      wrap.appendChild(headerRow);
+      tableData.rows.forEach(r => {
+        const row = document.createElement('div');
+        row.className = 'metrics-row';
+        row.style.gridTemplateColumns = gridCols;
+        r.forEach(cell => {
+          const c = document.createElement('div'); c.className = 'metrics-cell'; c.textContent = cell;
+          row.appendChild(c);
+        });
+        wrap.appendChild(row);
+      });
+      return wrap;
+    }
+
+    if (data.shift_table) {
+      const title = document.createElement('p');
+      title.className = 'metrics-section-title';
+      title.textContent = 'Overall Sentiment Shift';
+      container.appendChild(title);
+      const cols = data.shift_table.headers.length === 4 ? '1.4fr 1fr 1fr 0.6fr' : `repeat(${data.shift_table.headers.length}, 1fr)`;
+      container.appendChild(buildTable(data.shift_table, cols));
+    }
+    if (data.interpretation) {
+      const block = document.createElement('div');
+      block.className = 'interpretation-block';
+      block.innerHTML = `<p class="block-title">Interpretation</p><p class="block-text"></p>`;
+      block.querySelector('.block-text').textContent = data.interpretation;
+      container.appendChild(block);
+    }
+    if (data.weekly_table) {
+      const title = document.createElement('p');
+      title.className = 'metrics-section-title';
+      title.textContent = 'Weekly Sentiment Breakdown';
+      container.appendChild(title);
+      container.appendChild(buildTable(data.weekly_table, '1fr 0.7fr 0.7fr 0.7fr 2fr'));
+    }
+    function renderDrivers(drivers, headingText) {
+      if (!drivers || !drivers.length) return;
+      const heading = document.createElement('p');
+      heading.className = 'block-title';
+      heading.textContent = headingText;
+      container.appendChild(heading);
+      drivers.forEach(d => {
+        const platRow = document.createElement('div');
+        platRow.className = 'driver-post-platform';
+        platRow.innerHTML = `<span class="driver-post-icon"></span><span style="color:#7a7a77;font-size:16px;font-weight:600;">${d.platform || ''}</span>`;
+        container.appendChild(platRow);
+        const postRow = fieldRow(container, 'Post', d.post || '');
+        postRow.querySelector('.field-text').appendChild(sentimentTag(d.sentiment));
+        if (d.theme) fieldRow(container, 'Theme', d.theme);
+      });
+    }
+    renderDrivers(data.positive_drivers, "What's Driving Positive Sentiment");
+    if (data.negative_drivers && data.negative_drivers.length) {
+      const div = document.createElement('div');
+      div.className = 'section-divider';
+      container.appendChild(div);
+    }
+    renderDrivers(data.negative_drivers, "What's Driving Negative / Critical Sentiment");
+    if (data.trend) {
+      const block = document.createElement('div');
+      block.className = 'trend-block';
+      block.innerHTML = `<p class="block-title">Trend</p><p class="block-text"></p>`;
+      block.querySelector('.block-text').textContent = data.trend;
+      container.appendChild(block);
+    }
+    if (data.takeaways && data.takeaways.length) {
+      const block = document.createElement('div');
+      block.className = 'takeaways-block';
+      block.innerHTML = `<p class="block-title" style="color:#d1d0cf;">Key Takeaways</p>`;
+      data.takeaways.forEach(t => {
+        const row = document.createElement('div');
+        row.className = 'post-field';
+        row.style.paddingLeft = '19px';
+        row.innerHTML = `<span class="field-text"></span>`;
+        row.querySelector('.field-text').textContent = t;
+        block.appendChild(row);
+      });
+      container.appendChild(block);
+    }
+  }
+
+  function renderNoResults(data, container) {
+    const card = document.createElement('div');
+    card.className = 'state-card';
+    card.innerHTML = `
+      <span class="state-icon-badge">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/><path d="M21 21L16.5 16.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </span>
+      <div class="state-heading">No significant conversation found</div>
+      <p class="state-body"></p>
+    `;
+    card.querySelector('.state-body').textContent = data.message || '';
+    if (data.likely_reason) {
+      const p = document.createElement('p');
+      p.className = 'state-body'; p.style.marginTop = '8px';
+      p.textContent = data.likely_reason;
+      card.appendChild(p);
+    }
+    if (data.suggested_actions && data.suggested_actions.length) {
+      const actions = document.createElement('div');
+      actions.className = 'state-actions';
+      data.suggested_actions.forEach(a => {
+        const btn = document.createElement('button');
+        btn.className = 'btn-outline'; btn.type = 'button';
+        btn.textContent = a.suggestion || a.label;
+        btn.addEventListener('click', () => {
+          const input = document.getElementById('search-input');
+          if (input) { input.value = a.suggestion || a.label; input.dispatchEvent(new Event('input')); input.focus(); }
+        });
+        actions.appendChild(btn);
+      });
+      card.appendChild(actions);
+    }
+    if (data.clarifying_question) {
+      const p = document.createElement('p');
+      p.className = 'state-body'; p.style.marginTop = '16px';
+      p.textContent = data.clarifying_question;
+      card.appendChild(p);
+    }
+    container.appendChild(card);
+  }
+
+  function renderSimpleMessage(data, container, iconSvg) {
+    const card = document.createElement('div');
+    card.className = 'state-card';
+    card.innerHTML = `<span class="state-icon-badge">${iconSvg}</span><p class="state-body"></p>`;
+    card.querySelector('.state-body').textContent = data.message || '';
+    container.appendChild(card);
+  }
+  const NOT_AVAILABLE_ICON = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 8V13M12 16.5H12.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>';
+  const DISALLOWED_ICON = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M6 6L18 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
+
+  function renderStructuredAnswer(wrap) {
+    const rawEl = wrap.querySelector('.answer-raw');
+    const renderedEl = wrap.querySelector('.answer-rendered');
+    if (!rawEl || !renderedEl) return;
+    const raw = rawEl.textContent;
+    let data = null;
+    try { data = JSON.parse(raw); } catch (e) { data = null; }
+
+    if (data && data.format) {
+      renderedEl.innerHTML = '';
+      try {
+        switch (data.format) {
+          case 'source_list':   renderSourceList(data, renderedEl); break;
+          case 'trend_report':  renderTrendReport(data, renderedEl); break;
+          case 'comparison':    renderComparison(data, renderedEl); break;
+          case 'no_results':    renderNoResults(data, renderedEl); break;
+          case 'not_available': renderSimpleMessage(data, renderedEl, NOT_AVAILABLE_ICON); break;
+          case 'disallowed':    renderSimpleMessage(data, renderedEl, DISALLOWED_ICON); break;
+          default:
+            console.warn('Unknown answer format:', data.format);
+            renderedEl.textContent = raw;
+        }
+        renderedEl.style.display = 'block';
+        rawEl.style.display = 'none';
+        return;
+      } catch (e) {
+        console.warn('Structured answer render failed, falling back to raw text:', e);
+        renderedEl.innerHTML = '';
       }
     }
-  });
 
-  // ---- Render Claude's answer as markdown (initial page load) ----
-  renderMarkdownAnswers(document.querySelector('main.main') || document);
+    // Not JSON (or rendering failed) — plain "chat"/"blocked" reply, use markdown.
+    if (window.marked && window.DOMPurify) {
+      try {
+        const html = marked.parse(raw, { breaks: true, gfm: true });
+        renderedEl.innerHTML = DOMPurify.sanitize(html);
+        renderedEl.style.display = 'block';
+        rawEl.style.display = 'none';
+      } catch (e) {
+        console.warn('Markdown render failed, showing raw answer text:', e);
+      }
+    }
+  }
+
+  document.querySelectorAll('.answer-wrap').forEach(renderStructuredAnswer);
+
+  // ---- Auto-scroll to the latest message ----
+  // The search form here is a real page reload (POST /search -> redirect
+  // back to this chat), so every time this page loads, the browser starts
+  // scrolled to the top by default — meaning the message you just typed,
+  // which gets added as the LAST turn in the thread, is scrolled out of
+  // view below the fold. This jumps straight to it instead, same as any
+  // normal chat app (WhatsApp, ChatGPT, etc.) always showing the latest
+  // message rather than making you scroll down to find it yourself.
+  (function scrollToLatestTurn() {
+    const turns = document.querySelectorAll('.turn-block');
+    if (!turns.length) return;
+    const latest = turns[turns.length - 1];
+    latest.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  })();
 </script>
 </body>
 </html>
