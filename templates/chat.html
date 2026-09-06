@@ -1071,22 +1071,341 @@
   searchInput.addEventListener('input', syncSubmitButtonState);
   searchForm.addEventListener('submit', () => { submitBtn.disabled = true; });
 
-  // ---- Render Claude's answer as markdown ----
-  if (window.marked && window.DOMPurify) {
-    document.querySelectorAll('.answer-wrap').forEach((wrap) => {
-      const rawEl = wrap.querySelector('.answer-raw');
-      const renderedEl = wrap.querySelector('.answer-rendered');
-      if (!rawEl || !renderedEl) return;
+  // ---- Structured JSON answer rendering ----
+  // Claude's analysis system prompt now returns strict JSON matching one of
+  // 6 formats (source_list / trend_report / comparison / no_results /
+  // not_available / disallowed), always with a "format" field first. Plain
+  // "chat"/"blocked" replies (from the separate router prompt) are NOT
+  // JSON — those still fall back to markdown rendering below, unchanged.
+  const SENTIMENT_COLORS = { positive: '#5FBF88', mixed: '#E8A33D', negative: '#E2645A', neutral: '#757473' };
+
+  function sentimentTag(sentiment) {
+    const color = SENTIMENT_COLORS[sentiment] || SENTIMENT_COLORS.neutral;
+    const span = document.createElement('span');
+    span.style.cssText = `display:inline-block; font-size:12px; font-weight:600; text-transform:capitalize; color:${color}; border:1px solid ${color}; border-radius:6px; padding:2px 8px; margin-left:8px;`;
+    span.textContent = sentiment || 'neutral';
+    return span;
+  }
+
+  function fieldRow(container, label, value, isLink) {
+    const row = document.createElement('div');
+    row.className = 'post-field';
+    const dot = document.createElement('span');
+    dot.className = 'field-dot';
+    const text = document.createElement('span');
+    text.className = 'field-text';
+    const strong = document.createElement('strong');
+    strong.textContent = label;
+    text.appendChild(strong);
+    text.appendChild(document.createTextNode(' :  '));
+    if (isLink) {
+      const a = document.createElement('a');
+      a.href = value; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      a.textContent = value;
+      text.appendChild(a);
+    } else {
+      text.appendChild(document.createTextNode(value));
+    }
+    row.appendChild(dot);
+    row.appendChild(text);
+    container.appendChild(row);
+    return row;
+  }
+
+  function buildPostBlock(post, index) {
+    const block = document.createElement('div');
+    block.className = 'post-block';
+    const label = document.createElement('p');
+    label.className = 'post-label';
+    label.textContent = `Post ${index + 1}`;
+    block.appendChild(label);
+    if (post.source) fieldRow(block, 'Source', post.source);
+    if (post.title) fieldRow(block, 'Title', post.title);
+    if (post.summary) fieldRow(block, 'Summary', post.summary);
+    const sentRow = fieldRow(block, 'Sentiment', '');
+    sentRow.querySelector('.field-text').appendChild(sentimentTag(post.sentiment));
+    if (post.link) fieldRow(block, 'Link', post.link, true);
+    return block;
+  }
+
+  function renderPlatformsList(platforms, container) {
+    (platforms || []).forEach((p, gi) => {
+      const section = document.createElement('div');
+      section.className = 'platform-section';
+      const header = document.createElement('div');
+      header.className = 'platform-header';
+      const icon = document.createElement('span');
+      icon.className = 'platform-icon-badge ' + (p.platform || '').toLowerCase();
+      header.appendChild(icon);
+      const nameRow = document.createElement('div');
+      nameRow.className = 'platform-name-row';
+      nameRow.innerHTML = `<span class="platform-name">${(p.platform || '').toUpperCase()}</span><span class="platform-dot"></span><span class="platform-count">${p.shown_count} of ${p.total_analyzed}</span>`;
+      header.appendChild(nameRow);
+      section.appendChild(header);
+      (p.posts || []).forEach((post, i) => section.appendChild(buildPostBlock(post, i)));
+      container.appendChild(section);
+      if (gi < platforms.length - 1) {
+        const div = document.createElement('div');
+        div.className = 'section-divider';
+        container.appendChild(div);
+      }
+    });
+  }
+
+  function renderFollowupChips(followups, container) {
+    if (!followups || !followups.length) return;
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex; flex-wrap:wrap; gap:10px; margin-top:20px;';
+    followups.forEach(text => {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.textContent = text;
+      chip.style.cssText = 'background:#1e1d1b; border-radius:150px; padding:10px 16px; color:rgba(255,255,255,0.7); font-size:14px; font-weight:500; border:none; cursor:pointer;';
+      chip.addEventListener('click', () => {
+        const input = document.getElementById('search-input');
+        if (input) { input.value = text; input.dispatchEvent(new Event('input')); input.focus(); }
+      });
+      row.appendChild(chip);
+    });
+    container.appendChild(row);
+  }
+
+  function renderSourceList(data, container) {
+    const summary = document.createElement('p');
+    summary.className = 'overview-summary';
+    summary.textContent = data.summary || '';
+    container.appendChild(summary);
+    const divider = document.createElement('div');
+    divider.className = 'section-divider no-top-margin';
+    container.appendChild(divider);
+    renderPlatformsList(data.platforms, container);
+    renderFollowupChips(data.followups, container);
+  }
+
+  function renderComparison(data, container) {
+    const summary = document.createElement('p');
+    summary.className = 'overview-summary';
+    summary.textContent = data.summary || '';
+    container.appendChild(summary);
+    (data.subjects || []).forEach((subj, si) => {
+      const heading = document.createElement('p');
+      heading.className = 'metrics-section-title';
+      heading.textContent = subj.name;
+      container.appendChild(heading);
+      if (subj.sentiment) {
+        const s = subj.sentiment;
+        const line = document.createElement('p');
+        line.className = 'block-text';
+        line.style.marginBottom = '20px';
+        line.textContent = `Positive ${s.positive || '0%'} · Neutral ${s.neutral || '0%'} · Negative ${s.negative || '0%'}`;
+        container.appendChild(line);
+      }
+      renderPlatformsList(subj.platforms, container);
+      if (si < (data.subjects || []).length - 1) {
+        const div = document.createElement('div');
+        div.className = 'section-divider';
+        container.appendChild(div);
+      }
+    });
+    renderFollowupChips(data.followups, container);
+  }
+
+  function renderTrendReport(data, container) {
+    const brandBlock = document.createElement('div');
+    brandBlock.className = 'dashboard-brand-block';
+    fieldRow(brandBlock, 'Brand', data.topic || '');
+    fieldRow(brandBlock, 'Window', data.window || '');
+    fieldRow(brandBlock, 'Platforms', data.platforms || '');
+    container.appendChild(brandBlock);
+
+    function buildTable(tableData, gridCols) {
+      const wrap = document.createElement('div');
+      wrap.className = 'metrics-table';
+      const headerRow = document.createElement('div');
+      headerRow.className = 'metrics-row header';
+      headerRow.style.gridTemplateColumns = gridCols;
+      tableData.headers.forEach(h => {
+        const c = document.createElement('div'); c.className = 'metrics-cell'; c.textContent = h;
+        headerRow.appendChild(c);
+      });
+      wrap.appendChild(headerRow);
+      tableData.rows.forEach(r => {
+        const row = document.createElement('div');
+        row.className = 'metrics-row';
+        row.style.gridTemplateColumns = gridCols;
+        r.forEach(cell => {
+          const c = document.createElement('div'); c.className = 'metrics-cell'; c.textContent = cell;
+          row.appendChild(c);
+        });
+        wrap.appendChild(row);
+      });
+      return wrap;
+    }
+
+    if (data.shift_table) {
+      const title = document.createElement('p');
+      title.className = 'metrics-section-title';
+      title.textContent = 'Overall Sentiment Shift';
+      container.appendChild(title);
+      const cols = data.shift_table.headers.length === 4 ? '1.4fr 1fr 1fr 0.6fr' : `repeat(${data.shift_table.headers.length}, 1fr)`;
+      container.appendChild(buildTable(data.shift_table, cols));
+    }
+    if (data.interpretation) {
+      const block = document.createElement('div');
+      block.className = 'interpretation-block';
+      block.innerHTML = `<p class="block-title">Interpretation</p><p class="block-text"></p>`;
+      block.querySelector('.block-text').textContent = data.interpretation;
+      container.appendChild(block);
+    }
+    if (data.weekly_table) {
+      const title = document.createElement('p');
+      title.className = 'metrics-section-title';
+      title.textContent = 'Weekly Sentiment Breakdown';
+      container.appendChild(title);
+      container.appendChild(buildTable(data.weekly_table, '1fr 0.7fr 0.7fr 0.7fr 2fr'));
+    }
+    function renderDrivers(drivers, headingText) {
+      if (!drivers || !drivers.length) return;
+      const heading = document.createElement('p');
+      heading.className = 'block-title';
+      heading.textContent = headingText;
+      container.appendChild(heading);
+      drivers.forEach(d => {
+        const platRow = document.createElement('div');
+        platRow.className = 'driver-post-platform';
+        platRow.innerHTML = `<span class="driver-post-icon"></span><span style="color:#7a7a77;font-size:16px;font-weight:600;">${d.platform || ''}</span>`;
+        container.appendChild(platRow);
+        const postRow = fieldRow(container, 'Post', d.post || '');
+        postRow.querySelector('.field-text').appendChild(sentimentTag(d.sentiment));
+        if (d.theme) fieldRow(container, 'Theme', d.theme);
+      });
+    }
+    renderDrivers(data.positive_drivers, "What's Driving Positive Sentiment");
+    if (data.negative_drivers && data.negative_drivers.length) {
+      const div = document.createElement('div');
+      div.className = 'section-divider';
+      container.appendChild(div);
+    }
+    renderDrivers(data.negative_drivers, "What's Driving Negative / Critical Sentiment");
+    if (data.trend) {
+      const block = document.createElement('div');
+      block.className = 'trend-block';
+      block.innerHTML = `<p class="block-title">Trend</p><p class="block-text"></p>`;
+      block.querySelector('.block-text').textContent = data.trend;
+      container.appendChild(block);
+    }
+    if (data.takeaways && data.takeaways.length) {
+      const block = document.createElement('div');
+      block.className = 'takeaways-block';
+      block.innerHTML = `<p class="block-title" style="color:#d1d0cf;">Key Takeaways</p>`;
+      data.takeaways.forEach(t => {
+        const row = document.createElement('div');
+        row.className = 'post-field';
+        row.style.paddingLeft = '19px';
+        row.innerHTML = `<span class="field-text"></span>`;
+        row.querySelector('.field-text').textContent = t;
+        block.appendChild(row);
+      });
+      container.appendChild(block);
+    }
+  }
+
+  function renderNoResults(data, container) {
+    const card = document.createElement('div');
+    card.className = 'state-card';
+    card.innerHTML = `
+      <span class="state-icon-badge">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/><path d="M21 21L16.5 16.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </span>
+      <div class="state-heading">No significant conversation found</div>
+      <p class="state-body"></p>
+    `;
+    card.querySelector('.state-body').textContent = data.message || '';
+    if (data.likely_reason) {
+      const p = document.createElement('p');
+      p.className = 'state-body'; p.style.marginTop = '8px';
+      p.textContent = data.likely_reason;
+      card.appendChild(p);
+    }
+    if (data.suggested_actions && data.suggested_actions.length) {
+      const actions = document.createElement('div');
+      actions.className = 'state-actions';
+      data.suggested_actions.forEach(a => {
+        const btn = document.createElement('button');
+        btn.className = 'btn-outline'; btn.type = 'button';
+        btn.textContent = a.suggestion || a.label;
+        btn.addEventListener('click', () => {
+          const input = document.getElementById('search-input');
+          if (input) { input.value = a.suggestion || a.label; input.dispatchEvent(new Event('input')); input.focus(); }
+        });
+        actions.appendChild(btn);
+      });
+      card.appendChild(actions);
+    }
+    if (data.clarifying_question) {
+      const p = document.createElement('p');
+      p.className = 'state-body'; p.style.marginTop = '16px';
+      p.textContent = data.clarifying_question;
+      card.appendChild(p);
+    }
+    container.appendChild(card);
+  }
+
+  function renderSimpleMessage(data, container, iconSvg) {
+    const card = document.createElement('div');
+    card.className = 'state-card';
+    card.innerHTML = `<span class="state-icon-badge">${iconSvg}</span><p class="state-body"></p>`;
+    card.querySelector('.state-body').textContent = data.message || '';
+    container.appendChild(card);
+  }
+  const NOT_AVAILABLE_ICON = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 8V13M12 16.5H12.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>';
+  const DISALLOWED_ICON = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M6 6L18 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
+
+  function renderStructuredAnswer(wrap) {
+    const rawEl = wrap.querySelector('.answer-raw');
+    const renderedEl = wrap.querySelector('.answer-rendered');
+    if (!rawEl || !renderedEl) return;
+    const raw = rawEl.textContent;
+    let data = null;
+    try { data = JSON.parse(raw); } catch (e) { data = null; }
+
+    if (data && data.format) {
+      renderedEl.innerHTML = '';
       try {
-        const html = marked.parse(rawEl.textContent, { breaks: true, gfm: true });
+        switch (data.format) {
+          case 'source_list':   renderSourceList(data, renderedEl); break;
+          case 'trend_report':  renderTrendReport(data, renderedEl); break;
+          case 'comparison':    renderComparison(data, renderedEl); break;
+          case 'no_results':    renderNoResults(data, renderedEl); break;
+          case 'not_available': renderSimpleMessage(data, renderedEl, NOT_AVAILABLE_ICON); break;
+          case 'disallowed':    renderSimpleMessage(data, renderedEl, DISALLOWED_ICON); break;
+          default:
+            console.warn('Unknown answer format:', data.format);
+            renderedEl.textContent = raw;
+        }
+        renderedEl.style.display = 'block';
+        rawEl.style.display = 'none';
+        return;
+      } catch (e) {
+        console.warn('Structured answer render failed, falling back to raw text:', e);
+        renderedEl.innerHTML = '';
+      }
+    }
+
+    // Not JSON (or rendering failed) — plain "chat"/"blocked" reply, use markdown.
+    if (window.marked && window.DOMPurify) {
+      try {
+        const html = marked.parse(raw, { breaks: true, gfm: true });
         renderedEl.innerHTML = DOMPurify.sanitize(html);
         renderedEl.style.display = 'block';
         rawEl.style.display = 'none';
       } catch (e) {
         console.warn('Markdown render failed, showing raw answer text:', e);
       }
-    });
+    }
   }
+
+  document.querySelectorAll('.answer-wrap').forEach(renderStructuredAnswer);
 
   // ---- Auto-scroll to the latest message ----
   // The search form here is a real page reload (POST /search -> redirect
