@@ -296,6 +296,7 @@
   .platform-icon-badge.reddit { background: #FF4500; border-color: #FF4500; }
   .platform-icon-badge.facebook { background: #1877F2; border-color: #1877F2; }
   .platform-icon-badge.linkedin { background: #0A66C2; border-color: #0A66C2; }
+  .platform-icon-badge.x { background: #000; border-color: #333; }
   .platform-name-row { display: flex; align-items: center; gap: 7px; }
   .platform-name { color: #7a7a77; font-size: 16px; font-weight: 600; }
   .platform-dot { width: 4px; height: 4px; border-radius: 50%; background: #7a7a77; }
@@ -308,6 +309,20 @@
   .post-field:last-child { margin-bottom: 0; }
   .post-field .field-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.35); flex-shrink: 0; margin-top: 8px; }
   .post-field .field-text { color: rgba(255,255,255,0.7); font-size: 17px; font-weight: 500; line-height: 26px; }
+  .truncatable-summary-wrap { padding-left: 19px; margin-bottom: 20px; }
+  .truncatable-summary {
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden; color: rgba(255,255,255,0.7); font-size: 17px; font-weight: 500; line-height: 26px;
+  }
+  .truncatable-summary.expanded {
+    display: block; -webkit-line-clamp: unset; overflow: visible;
+  }
+  .see-more-toggle {
+    display: inline-block; margin-top: 4px; color: #a3e635; background: none; border: none;
+    font-size: 15px; font-weight: 600; cursor: pointer; padding: 0; text-decoration: underline;
+    font-family: inherit;
+  }
+  .see-more-toggle.hidden { display: none; }
   .post-field .field-text strong { color: #fff; font-weight: 700; }
   .post-field .field-text a { color: #009dff; text-decoration: none; word-break: break-all; }
   .section-divider { height: 1px; background: #343434; margin: 32px 0; }
@@ -712,164 +727,6 @@
             </div>
             {% endif %}
 
-            {% if msg.dashboard %}
-            {#- Expected shape: see index.html's identical block for the full documented contract. -#}
-            <div class="dashboard-brand-block">
-              <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Brand</strong> :  {{ msg.dashboard.topic }}</span></div>
-              <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Window</strong> :  {{ msg.dashboard.window }}</span></div>
-              <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Platforms</strong> :  {{ msg.dashboard.platforms }}</span></div>
-            </div>
-            {% if msg.dashboard.fabricated_note %}
-            <div class="fabricated-note"><span class="bar"></span><p>{{ msg.dashboard.fabricated_note }}</p></div>
-            {% endif %}
-            {% if msg.dashboard.shift_table %}
-            <p class="metrics-section-title">Overall Sentiment Shift</p>
-            <div class="metrics-table">
-              <div class="metrics-row header" style="grid-template-columns: repeat({{ msg.dashboard.shift_table.headers|length }}, 1fr);">
-                {% for h in msg.dashboard.shift_table.headers %}<div class="metrics-cell">{{ h }}</div>{% endfor %}
-              </div>
-              {% for row in msg.dashboard.shift_table.rows %}
-              <div class="metrics-row" style="grid-template-columns: repeat({{ row|length }}, 1fr);">
-                {% for cell in row %}<div class="metrics-cell">{{ cell }}</div>{% endfor %}
-              </div>
-              {% endfor %}
-            </div>
-            {% endif %}
-            {% if msg.dashboard.interpretation %}
-            <div class="interpretation-block">
-              <p class="block-title">Interpretation</p>
-              <p class="block-text">{{ msg.dashboard.interpretation }}</p>
-            </div>
-            {% endif %}
-            {% if msg.dashboard.weekly_table %}
-            <p class="metrics-section-title">Weekly Sentiment Breakdown</p>
-            <div class="metrics-table">
-              <div class="metrics-row header" style="grid-template-columns: repeat({{ msg.dashboard.weekly_table.headers|length }}, 1fr);">
-                {% for h in msg.dashboard.weekly_table.headers %}<div class="metrics-cell">{{ h }}</div>{% endfor %}
-              </div>
-              {% for row in msg.dashboard.weekly_table.rows %}
-              <div class="metrics-row" style="grid-template-columns: repeat({{ row|length }}, 1fr);">
-                {% for cell in row %}<div class="metrics-cell">{{ cell }}</div>{% endfor %}
-              </div>
-              {% endfor %}
-            </div>
-            {% endif %}
-            {% if msg.dashboard.positive_drivers %}
-            <p class="block-title">{{ msg.dashboard.positive_title or "What's Driving Positive Sentiment" }}</p>
-            {% for d in msg.dashboard.positive_drivers %}
-            <div class="driver-post-platform">{{ platform_badge({'platform': d.platform}) }}<span style="color:#7a7a77;font-size:16px;font-weight:600;">{{ d.platform }}</span></div>
-            <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Post</strong> :  {{ d.post }}</span></div>
-            <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Theme</strong> :  {{ d.theme }}</span></div>
-            {% endfor %}
-            {% endif %}
-            {% if msg.dashboard.negative_drivers %}
-            <div class="section-divider"></div>
-            <p class="block-title">{{ msg.dashboard.negative_title or "What's Driving Negative / Critical Sentiment" }}</p>
-            {% for d in msg.dashboard.negative_drivers %}
-            <div class="driver-post-platform">{{ platform_badge({'platform': d.platform}) }}<span style="color:#7a7a77;font-size:16px;font-weight:600;">{{ d.platform }}</span></div>
-            <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Post</strong> :  {{ d.post }}</span></div>
-            <div class="post-field"><span class="field-dot"></span><span class="field-text"><strong>Theme</strong> :  {{ d.theme }}</span></div>
-            {% endfor %}
-            {% endif %}
-            {% if msg.dashboard.trend %}
-            <div class="trend-block">
-              <p class="block-title">Trend</p>
-              <p class="block-text">{{ msg.dashboard.trend }}</p>
-            </div>
-            {% endif %}
-            {% if msg.dashboard.takeaways %}
-            <div class="takeaways-block">
-              <p class="block-title" style="color:#d1d0cf;">Key Takeaways</p>
-              {% for t in msg.dashboard.takeaways %}
-              <div class="post-field no-dot" style="padding-left:19px;"><span class="field-text">{{ t }}</span></div>
-              {% endfor %}
-            </div>
-            {% endif %}
-
-            {% elif msg.leadgen %}
-            {#- Expected shape: see index.html's identical block for the full documented contract. -#}
-            <p class="leadgen-heading">🎯 {{ msg.leadgen.total_leads }} High-Intent Leads for {{ msg.leadgen.topic }}</p>
-            <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>Goal</strong> :  {{ msg.leadgen.goal }}</span></div>
-            <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>Site</strong> :  <a href="{{ msg.leadgen.site }}" target="_blank" rel="noopener noreferrer">{{ msg.leadgen.site }}</a></span></div>
-            <div class="section-divider"></div>
-            <p class="leadgen-heading">📈 Quick Snapshot</p>
-            <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>Total leads</strong> :  {{ msg.leadgen.total_leads }}</span></div>
-            <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>Hot</strong> :  {{ msg.leadgen.hot }}</span></div>
-            <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>Warm</strong> :  {{ msg.leadgen.warm }}</span></div>
-            <div class="section-divider"></div>
-            <p class="leadgen-heading">🔥 Top Prospects</p>
-            {% for p in msg.leadgen.prospects %}
-            <div class="leadgen-prospect">
-              <div class="leadgen-prospect-head">
-                <span class="leadgen-avatar">{{ p.initials }}</span>
-                <p class="leadgen-prospect-name">{{ p.name }}</p>
-              </div>
-              <div class="leadgen-field no-dot"><span class="text"><strong>Intent</strong> : {{ p.intent }}  |  <strong>Buy</strong> : {{ p.buy }}</span></div>
-              <div class="leadgen-field no-dot"><span class="text"><strong>Need</strong> :  {{ p.need }}</span></div>
-              <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>💬 DM</strong> :  {{ p.dm }}</span></div>
-              <div class="leadgen-field"><span class="dot"></span><span class="text"><strong>🔗 Profile</strong> :  <a href="{{ p.profile_url }}" target="_blank" rel="noopener noreferrer">{{ p.profile_url }}</a></span></div>
-            </div>
-            {% if not loop.last %}<div class="section-divider"></div>{% endif %}
-            {% endfor %}
-            <div class="section-divider"></div>
-            <p class="leadgen-heading">⚡ Quick Actions</p>
-            <div class="leadgen-numbered"><span class="num">1.</span><span class="text"><strong>Create Audience</strong> : {{ msg.leadgen.create_audience }}</span></div>
-            <div class="leadgen-numbered"><span class="num">2.</span><span class="text"><strong>Run Ad</strong> : {{ msg.leadgen.run_ad }}</span></div>
-            <div class="leadgen-numbered"><span class="num">3.</span><span class="text"><strong>DM Script</strong> :</span></div>
-            <div class="leadgen-quote-block">
-              <span class="bar"></span>
-              <p>{{ msg.leadgen.dm_script }}</p>
-            </div>
-            <div class="leadgen-numbered"><span class="num">4.</span><span class="text"><strong>Track</strong> : {{ msg.leadgen.track }}</span></div>
-
-            {% elif msg.results %}
-            <div class="section-divider no-top-margin"></div>
-            {% set ns = namespace(seen=[]) %}
-            {% for r in msg.results %}
-              {% set label = platform_label(r)|trim %}
-              {% if label not in ns.seen %}{% set ns.seen = ns.seen + [label] %}{% endif %}
-            {% endfor %}
-            {% for label in ns.seen %}
-              {% set ns2 = namespace(posts=[]) %}
-              {% for r in msg.results %}
-                {% if platform_label(r)|trim == label %}{% set ns2.posts = ns2.posts + [r] %}{% endif %}
-              {% endfor %}
-              <div class="platform-section">
-                <div class="platform-header">
-                  {{ platform_badge(ns2.posts[0]) }}
-                  <div class="platform-name-row">
-                    <span class="platform-name">{{ label }}</span>
-                    <span class="platform-dot"></span>
-                    <span class="platform-count">{{ ns2.posts|length }} of {{ ns2.posts|length }}</span>
-                  </div>
-                </div>
-                {% for r in ns2.posts %}
-                <div class="post-block">
-                  <p class="post-label">Post {{ loop.index }}</p>
-                  {% if r.title %}
-                  <div class="post-field">
-                    <span class="field-dot"></span>
-                    <span class="field-text"><strong>Title</strong> :  {{ r.title }}</span>
-                  </div>
-                  {% endif %}
-                  {% if r.post_text %}
-                  <div class="post-field">
-                    <span class="field-dot"></span>
-                    <span class="field-text"><strong>Summary</strong> :  {{ r.post_text }}</span>
-                  </div>
-                  {% endif %}
-                  {% if r.post_url %}
-                  <div class="post-field">
-                    <span class="field-dot"></span>
-                    <span class="field-text"><strong>Link</strong> :  <a href="{{ r.post_url }}" target="_blank" rel="noopener noreferrer">{{ r.post_url }}</a></span>
-                  </div>
-                  {% endif %}
-                </div>
-                {% endfor %}
-              </div>
-              {% if not loop.last %}<div class="section-divider"></div>{% endif %}
-            {% endfor %}
-            {% endif %}
           </div>
           {% if not loop.last %}<div class="turn-divider"></div>{% endif %}
           {% endfor %}
@@ -1112,6 +969,47 @@
     return row;
   }
 
+  function buildTruncatableSummary(container, label, text) {
+    const labelRow = document.createElement('div');
+    labelRow.className = 'post-field';
+    labelRow.innerHTML = `<span class="field-dot"></span><span class="field-text"></span>`;
+    const strong = document.createElement('strong');
+    strong.textContent = label;
+    const textEl = labelRow.querySelector('.field-text');
+    textEl.appendChild(strong);
+    textEl.appendChild(document.createTextNode(' :'));
+    container.appendChild(labelRow);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'truncatable-summary-wrap';
+    const summarySpan = document.createElement('span');
+    summarySpan.className = 'truncatable-summary';
+    summarySpan.textContent = text;
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'see-more-toggle hidden';
+    toggle.textContent = 'See more';
+    wrap.appendChild(summarySpan);
+    wrap.appendChild(toggle);
+    container.appendChild(wrap);
+
+    // Only show the toggle at all if the text genuinely overflows 2 lines —
+    // measured after a real layout pass (requestAnimationFrame), not
+    // guessed from character count, since actual wrapping depends on the
+    // real rendered width/font.
+    requestAnimationFrame(() => {
+      const isOverflowing = summarySpan.scrollHeight > summarySpan.clientHeight + 1;
+      if (!isOverflowing) return;
+      toggle.classList.remove('hidden');
+      let expanded = false;
+      toggle.addEventListener('click', () => {
+        expanded = !expanded;
+        summarySpan.classList.toggle('expanded', expanded);
+        toggle.textContent = expanded ? 'See less' : 'See more';
+      });
+    });
+  }
+
   function buildPostBlock(post, index) {
     const block = document.createElement('div');
     block.className = 'post-block';
@@ -1121,11 +1019,35 @@
     block.appendChild(label);
     if (post.source) fieldRow(block, 'Source', post.source);
     if (post.title) fieldRow(block, 'Title', post.title);
-    if (post.summary) fieldRow(block, 'Summary', post.summary);
+    if (post.summary) buildTruncatableSummary(block, 'Summary', post.summary);
     const sentRow = fieldRow(block, 'Sentiment', '');
     sentRow.querySelector('.field-text').appendChild(sentimentTag(post.sentiment));
     if (post.link) fieldRow(block, 'Link', post.link, true);
     return block;
+  }
+
+  const PLATFORM_ICONS = {
+    x: '<svg width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
+    reddit: '<svg width="17" height="17" viewBox="0 0 512 512" fill="#fff"><path d="M440.3 203.5c-15 0-28.2 6.2-37.9 15.9-35.7-24.7-83.8-40.6-137.1-42.3L293 52.3l88.2 19.8c0 21.6 17.6 39.2 39.2 39.2 22 0 39.6-18 39.6-39.6s-17.6-39.6-39.6-39.6c-15.4 0-28.5 9.3-35.3 22l-97.4-21.6c-4.9-1.3-9.7 2.2-11 7.1l-25.1 111.4c-53.7 2.2-101.8 18.1-137.5 42.5-9.7-9.7-23.3-16-38.1-16-43.5 0-73.2 43.6-53.4 82.1-1.1 4.9-1.7 10.3-1.7 15.5 0 65.1 78.4 118.3 175 118.3 96.9 0 175.3-53.2 175.3-118.3 0-5.5-.6-10.9-1.7-15.9 19.9-38.4-9.4-81.8-53-81.8zm-269.1 91.2c0-23.4 19.2-42.6 42.6-42.6 23.4 0 42.6 19.2 42.6 42.6 0 23.4-19.2 42.6-42.6 42.6-23.4 0-42.6-19.2-42.6-42.6zm181.3 88.9c-23.9 23.6-69 25.5-83.5 25.5-14.6 0-59.4-2.2-83.5-25.5-3.5-3.5-3.5-9.2 0-12.7 3.5-3.5 9.2-3.5 12.7 0 15.4 15.6 47.4 21.2 70.5 21.2s55.4-5.9 70.5-21.2c3.5-3.5 9.2-3.5 12.7 0 3.7 3.5 3.7 9.2.3 12.7zm-8.7-46c-23.4 0-42.6-19.2-42.6-42.6 0-23.4 19.2-42.6 42.6-42.6 23.4 0 42.6 19.2 42.6 42.6-.1 23.4-19.2 42.6-42.6 42.6z"/></svg>',
+    facebook: '<svg width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/></svg>',
+    linkedin: '<svg width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>',
+    other: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="1.6"/></svg>',
+  };
+  // Claude's JSON can send the platform name in all kinds of raw forms
+  // ("X (Twitter)", "x", "Twitter", "Reddit", etc.) — normalize to one of a
+  // small canonical set before using it as both a CSS class and an icon
+  // lookup key. Feeding an un-normalized string (e.g. "x (twitter)") straight
+  // into className produces multiple invalid class tokens and no icon at all.
+  function normalizePlatform(raw) {
+    const s = (raw || '').toLowerCase();
+    if (s.includes('reddit')) return 'reddit';
+    if (s.includes('facebook')) return 'facebook';
+    if (s.includes('linkedin')) return 'linkedin';
+    if (s.includes('x') || s.includes('twitter')) return 'x';
+    return 'other';
+  }
+  function platformDisplayName(key) {
+    return { x: 'X (Twitter)', reddit: 'Reddit', facebook: 'Facebook', linkedin: 'LinkedIn', other: 'Web' }[key] || 'Web';
   }
 
   function renderPlatformsList(platforms, container) {
@@ -1134,12 +1056,14 @@
       section.className = 'platform-section';
       const header = document.createElement('div');
       header.className = 'platform-header';
+      const key = normalizePlatform(p.platform);
       const icon = document.createElement('span');
-      icon.className = 'platform-icon-badge ' + (p.platform || '').toLowerCase();
+      icon.className = 'platform-icon-badge ' + key;
+      icon.innerHTML = PLATFORM_ICONS[key];
       header.appendChild(icon);
       const nameRow = document.createElement('div');
       nameRow.className = 'platform-name-row';
-      nameRow.innerHTML = `<span class="platform-name">${(p.platform || '').toUpperCase()}</span><span class="platform-dot"></span><span class="platform-count">${p.shown_count} of ${p.total_analyzed}</span>`;
+      nameRow.innerHTML = `<span class="platform-name">${platformDisplayName(key)}</span><span class="platform-dot"></span><span class="platform-count">${p.shown_count} of ${p.total_analyzed}</span>`;
       header.appendChild(nameRow);
       section.appendChild(header);
       (p.posts || []).forEach((post, i) => section.appendChild(buildPostBlock(post, i)));
