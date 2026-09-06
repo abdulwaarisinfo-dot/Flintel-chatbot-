@@ -1087,6 +1087,21 @@
       }
     });
   }
+
+  // ---- Auto-scroll to the latest message ----
+  // The search form here is a real page reload (POST /search -> redirect
+  // back to this chat), so every time this page loads, the browser starts
+  // scrolled to the top by default — meaning the message you just typed,
+  // which gets added as the LAST turn in the thread, is scrolled out of
+  // view below the fold. This jumps straight to it instead, same as any
+  // normal chat app (WhatsApp, ChatGPT, etc.) always showing the latest
+  // message rather than making you scroll down to find it yourself.
+  (function scrollToLatestTurn() {
+    const turns = document.querySelectorAll('.turn-block');
+    if (!turns.length) return;
+    const latest = turns[turns.length - 1];
+    latest.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  })();
 </script>
 </body>
 </html>
