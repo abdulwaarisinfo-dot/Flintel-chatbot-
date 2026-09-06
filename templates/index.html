@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1231,95 +1230,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
 
 <script>
-  // =========================================================================
-  // SOFT NAVIGATION — switching chats or starting a "New" chat no longer
-  // does a full browser page reload. The backend is completely untouched:
-  // these still hit the exact same real routes (GET /chat/<id>,
-  // POST /chats/new) and get back the exact same full server-rendered HTML
-  // page as before. The only difference is THIS PAGE fetches that HTML in
-  // the background, swaps just the two regions that actually differ
-  // (the <main> content and the sidebar's session list) into the current
-  // DOM, and updates the URL via history.pushState — instead of the browser
-  // throwing away and reloading the whole page. If the fetch fails for any
-  // reason, it falls back to a real navigation so nothing is ever silently
-  // broken.
-  // =========================================================================
-  function renderMarkdownAnswers(root) {
-    if (!(window.marked && window.DOMPurify)) return;
-    root.querySelectorAll('.answer-wrap').forEach((wrap) => {
-      const rawEl = wrap.querySelector('.answer-raw');
-      const renderedEl = wrap.querySelector('.answer-rendered');
-      if (!rawEl || !renderedEl) return;
-      try {
-        const html = marked.parse(rawEl.textContent, { breaks: true, gfm: true });
-        renderedEl.innerHTML = DOMPurify.sanitize(html);
-        renderedEl.style.display = 'block';
-        rawEl.style.display = 'none';
-      } catch (e) {
-        console.warn('Markdown render failed, showing raw answer text:', e);
-      }
-    });
-  }
-
-  async function navigateTo(url, { method = 'GET', pushState = true } = {}) {
-    try {
-      const response = await fetch(url, {
-        method,
-        credentials: 'same-origin',
-        redirect: 'follow',
-      });
-      if (!response.ok) throw new Error(`Request failed: ${response.status}`);
-
-      const html = await response.text();
-      const doc = new DOMParser().parseFromString(html, 'text/html');
-
-      const newMain = doc.querySelector('main.main');
-      const newSessionsList = doc.querySelector('#sessions-list');
-      const currentMain = document.querySelector('main.main');
-      const currentSessionsList = document.querySelector('#sessions-list');
-
-      if (!newMain || !currentMain) throw new Error('Fetched page missing <main> — falling back to real navigation');
-
-      currentMain.innerHTML = newMain.innerHTML;
-      if (newSessionsList && currentSessionsList) {
-        currentSessionsList.innerHTML = newSessionsList.innerHTML;
-      }
-      if (doc.title) document.title = doc.title;
-
-      // response.url accounts for any server-side redirect (e.g. POST
-      // /chats/new redirecting to /chat/<new_id>) — the address bar should
-      // reflect where we actually ended up, not the URL we requested.
-      if (pushState) {
-        history.pushState({ softNav: true }, '', response.url || url);
-      }
-
-      renderMarkdownAnswers(currentMain);
-      closeAllSessionMenus(null);
-      const freshSearchInput = document.getElementById('search-input');
-      const freshSubmitBtn = document.getElementById('submit-btn');
-      if (freshSearchInput && freshSubmitBtn) {
-        freshSubmitBtn.disabled = freshSearchInput.value.trim().length === 0;
-      }
-    } catch (err) {
-      console.warn('Soft navigation failed, falling back to a real page load:', err);
-      if (method === 'GET') {
-        window.location.href = url;
-      } else {
-        const form = document.createElement('form');
-        form.method = method;
-        form.action = url;
-        form.style.display = 'none';
-        document.body.appendChild(form);
-        form.submit();
-      }
-    }
-  }
-
-  window.addEventListener('popstate', () => {
-    navigateTo(location.href, { pushState: false });
-  });
-
-  // ---- Sidebar (mobile drawer) ---- (unaffected by soft nav — lives outside <main>)
+  // ---- Sidebar (mobile drawer) ----
   const sidebar = document.querySelector('.sidebar');
   const overlay = document.getElementById('mobile-overlay');
   document.getElementById('mobile-sidebar-toggle').addEventListener('click', () => {
@@ -1332,7 +1243,7 @@
     overlay.classList.remove('visible');
   });
 
-  // ---- Sessions expand/collapse ---- (unaffected by soft nav — outside #sessions-list)
+  // ---- Sessions expand/collapse ----
   const sessionsToggle = document.getElementById('sessions-toggle');
   const sessionsBody = document.getElementById('sessions-body');
   const sessionsChevron = document.getElementById('sessions-chevron');
@@ -1343,31 +1254,12 @@
     sessionsChevron.style.transform = expanded ? 'rotate(0deg)' : 'rotate(90deg)';
   });
 
-  // ---- Sidebar chat links + "New" button — now soft-navigated ----
-  document.addEventListener('click', (e) => {
-    const link = e.target.closest('.session-item-link');
-    if (link) {
-      e.preventDefault();
-      navigateTo(link.href, { method: 'GET' });
-    }
-  });
-  document.addEventListener('submit', (e) => {
-    const form = e.target;
-    if (form.matches('form[action="/chats/new"]')) {
-      e.preventDefault();
-      navigateTo(form.action, { method: 'POST' });
-    }
-  });
-
   // ---- Per-chat options menu (3-dot -> Delete) ----
-  // Delegated on document (not bound per-element) because #sessions-list's
-  // contents get replaced by soft navigation — a direct per-element listener
-  // would be destroyed along with the old nodes. Delegation survives that.
-  // Delete itself is intentionally left as a REAL form submit (full page
-  // load) — deleting a chat wasn't part of what was asked to feel instant,
-  // and it's a big enough destructive action that a full reload landing back
-  // on a clean state is arguably the safer default. Say if you want that
-  // soft-navigated too.
+  // Purely a UI affordance on top of the real POST /chat/{chat_id}/delete
+  // route already in index.py: clicking the 3-dot button toggles a small
+  // dropdown next to that chat; clicking "Delete" submits a real form POST
+  // to that route (owner-scoped server-side, exactly like reading a chat),
+  // then the server redirect reloads the sidebar without the deleted chat.
   function closeAllSessionMenus(except) {
     document.querySelectorAll('.session-menu-dropdown.open').forEach((dd) => {
       if (dd !== except) {
@@ -1380,9 +1272,8 @@
     });
   }
 
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.session-item-menu');
-    if (btn) {
+  document.querySelectorAll('.session-item-menu').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       const dropdown = btn.nextElementSibling;
@@ -1391,13 +1282,14 @@
       closeAllSessionMenus(isOpen ? null : dropdown);
       dropdown.classList.toggle('open', !isOpen);
       btn.setAttribute('aria-expanded', String(!isOpen));
-      return;
-    }
-    const deleteItem = e.target.closest('.session-menu-delete');
-    if (deleteItem) {
+    });
+  });
+
+  document.querySelectorAll('.session-menu-delete').forEach((item) => {
+    item.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      const chatId = deleteItem.dataset.chatId;
+      const chatId = item.dataset.chatId;
       if (!chatId) return;
       const form = document.createElement('form');
       form.method = 'post';
@@ -1405,17 +1297,12 @@
       form.style.display = 'none';
       document.body.appendChild(form);
       form.submit();
-      return;
-    }
-    if (!e.target.closest('.session-menu-dropdown')) {
-      closeAllSessionMenus(null);
-    }
+    });
   });
 
+  document.addEventListener('click', () => closeAllSessionMenus(null));
+
   // ---- Auth modal (Google OAuth link + email/password login/signup) ----
-  // Unaffected by soft nav — auth-overlay lives outside <main>. The one
-  // exception is the button that OPENS it from the topbar, which is inside
-  // <main> and does need delegation (handled further below).
   const authOverlay = document.getElementById('auth-overlay');
   const authModalTitle = document.getElementById('auth-modal-title');
   const loginForm = document.getElementById('login-form');
@@ -1442,114 +1329,116 @@
   document.getElementById('auth-close-btn').addEventListener('click', closeAuthModal);
   authOverlay.addEventListener('click', (e) => { if (e.target === authOverlay) closeAuthModal(); });
 
-  // Sidebar "Sign In" only exists when logged out. Lives outside <main>, so
-  // a direct binding is fine and survives soft navigation.
+  // Sidebar "Sign In" only exists when logged out (server renders the
+  // signed-in state instead of this button when a session is active).
   const signinBtn = document.getElementById('signin-btn');
   if (signinBtn) signinBtn.addEventListener('click', () => openAuthModal('login'));
 
-  // Topbar "Sign up" is INSIDE <main> and gets replaced by soft nav — delegated.
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('#topbar-signup-btn')) openAuthModal('signup');
-  });
+  // Topbar "Sign up" only exists when logged out.
+  const topbarSignupBtn = document.getElementById('topbar-signup-btn');
+  if (topbarSignupBtn) topbarSignupBtn.addEventListener('click', () => openAuthModal('signup'));
 
-  // ---- Attachment button opens file picker ---- (inside <main> — delegated)
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('#attach-btn')) {
-      const input = document.getElementById('attach-input');
-      if (input) input.click();
-    }
-  });
-  document.addEventListener('change', (e) => {
-    if (e.target.id === 'attach-input' && e.target.files.length) {
-      console.log('Files attached:', Array.from(e.target.files).map(f => f.name));
+  // ---- Attachment button opens file picker (no upload backend wired yet) ----
+  const attachBtn = document.getElementById('attach-btn');
+  const attachInput = document.getElementById('attach-input');
+  attachBtn.addEventListener('click', () => attachInput.click());
+  attachInput.addEventListener('change', () => {
+    if (attachInput.files.length) {
+      console.log('Files attached:', Array.from(attachInput.files).map(f => f.name));
     }
   });
 
-  // ---- Platforms dropdown (hero search box — inside <main>, delegated) ----
-  document.addEventListener('click', (e) => {
-    const platformsBtn = document.getElementById('platforms-btn');
-    const platformsMenu = document.getElementById('platforms-menu');
-    if (!platformsBtn || !platformsMenu) return;
-    const platformsChevron = document.getElementById('platforms-chevron');
+  // ---- Platforms dropdown — label AND a real hidden form field ----
+  // Selecting a platform does not change what keywords get generated (that
+  // logic lives entirely in index.py, untouched). It only sets the hidden
+  // `platform` field submitted with the search, which index.py turns into
+  // `targeting_platform` on the job document.
+  const platformsBtn = document.getElementById('platforms-btn');
+  const platformsMenu = document.getElementById('platforms-menu');
+  const platformsChevron = document.getElementById('platforms-chevron');
+  const platformsLabel = document.getElementById('platforms-label');
+  const platformInput = document.getElementById('platform-input');
 
-    if (e.target.closest('#platforms-btn')) {
-      e.stopPropagation();
-      const open = platformsMenu.style.display === 'block';
-      if (open) {
-        platformsMenu.style.display = 'none';
-        platformsBtn.setAttribute('aria-expanded', 'false');
-        platformsChevron.style.transform = 'rotate(0deg)';
-      } else {
-        platformsMenu.style.display = 'block';
-        platformsBtn.setAttribute('aria-expanded', 'true');
-        platformsChevron.style.transform = 'rotate(180deg)';
-      }
-      return;
-    }
-    const li = e.target.closest('#platforms-menu li');
-    if (li) {
-      const platformsLabel = document.getElementById('platforms-label');
-      const platformInput = document.getElementById('platform-input');
-      if (platformsLabel) platformsLabel.textContent = li.dataset.value;
-      if (platformInput) platformInput.value = li.dataset.value;
-      platformsMenu.style.display = 'none';
-      platformsBtn.setAttribute('aria-expanded', 'false');
-      platformsChevron.style.transform = 'rotate(0deg)';
-      return;
-    }
-    if (!e.target.closest('#platforms-menu') && !e.target.closest('#platforms-btn')) {
-      platformsMenu.style.display = 'none';
-      platformsBtn.setAttribute('aria-expanded', 'false');
-      platformsChevron.style.transform = 'rotate(0deg)';
-    }
-  });
-
-  // ---- Real search form ---- (still a full page load — see comment)
-  // Deliberately NOT soft-navigated. Submitting a search queues a real
-  // background job and the redirect-back-to-"/" is how the loading state
-  // gets its own fresh page load today; only chat-switching and "New" were
-  // asked to stop refreshing. Cosmetic submit-button disabling is delegated
-  // since the form lives inside <main>.
-  document.addEventListener('input', (e) => {
-    if (e.target.id === 'search-input') {
-      const btn = document.getElementById('submit-btn');
-      if (btn) btn.disabled = e.target.value.trim().length === 0;
-    }
-    if (e.target.id === 'followup-input') {
-      const btn = document.getElementById('followup-submit-btn');
-      if (btn) btn.disabled = e.target.value.trim().length === 0;
-    }
-  });
-  document.addEventListener('submit', (e) => {
-    if (e.target.id === 'search-form') {
-      const btn = document.getElementById('submit-btn');
-      if (btn) btn.disabled = true; // real POST proceeds normally, not intercepted
-    }
-  });
-  // Docked follow-up input lives OUTSIDE <main> — set its initial disabled
-  // state once here; it never needs re-syncing after a soft nav.
-  const followupInputEl = document.getElementById('followup-input');
-  const followupSubmitBtnEl = document.getElementById('followup-submit-btn');
-  if (followupInputEl && followupSubmitBtnEl) {
-    followupSubmitBtnEl.disabled = followupInputEl.value.trim().length === 0;
+  function closePlatformsMenu() {
+    platformsMenu.style.display = 'none';
+    platformsBtn.setAttribute('aria-expanded', 'false');
+    platformsChevron.style.transform = 'rotate(0deg)';
   }
-
-  // ---- Explore Flintel rows ---- (inside <main> — delegated)
-  document.addEventListener('click', (e) => {
-    const row = e.target.closest('.explore-row');
-    if (row) {
-      const searchInput = document.getElementById('search-input');
-      const submitBtn = document.getElementById('submit-btn');
-      if (searchInput) {
-        searchInput.value = row.dataset.query;
-        if (submitBtn) submitBtn.disabled = searchInput.value.trim().length === 0;
-        searchInput.focus();
-      }
+  platformsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = platformsMenu.style.display === 'block';
+    if (open) { closePlatformsMenu(); }
+    else {
+      platformsMenu.style.display = 'block';
+      platformsBtn.setAttribute('aria-expanded', 'true');
+      platformsChevron.style.transform = 'rotate(180deg)';
     }
   });
+  platformsMenu.addEventListener('click', (e) => {
+    const li = e.target.closest('li');
+    if (!li) return;
+    platformsLabel.textContent = li.dataset.value;
+    platformInput.value = li.dataset.value;
+    closePlatformsMenu();
+  });
+  document.addEventListener('click', (e) => {
+    if (!platformsMenu.contains(e.target) && e.target !== platformsBtn) closePlatformsMenu();
+  });
 
-  // ---- Render Claude's answer as markdown (initial page load) ----
-  renderMarkdownAnswers(document.querySelector('main.main') || document);
+  // ---- Real search form ----
+  // No client-side mocking: this is a real <form action="/search" method="post">.
+  // Submitting it POSTs to the server, which queues the job and redirects
+  // back to "/", where this same page re-renders the active chat with the
+  // new turn — Claude's answer and post cards fill in as soon as the
+  // background job has matched signals. The only JS here is cosmetic
+  // validation (disable submit until something is typed).
+  const searchForm = document.getElementById('search-form');
+  const searchInput = document.getElementById('search-input');
+  const submitBtn = document.getElementById('submit-btn');
+  const followupInput = document.getElementById('followup-input');
+  const followupSubmitBtn = document.getElementById('followup-submit-btn');
+
+  function syncSubmitButtonState(input, btn) {
+    btn.disabled = input.value.trim().length === 0;
+  }
+  syncSubmitButtonState(searchInput, submitBtn);
+  searchInput.addEventListener('input', () => syncSubmitButtonState(searchInput, submitBtn));
+  followupInput.addEventListener('input', () => syncSubmitButtonState(followupInput, followupSubmitBtn));
+
+  searchForm.addEventListener('submit', () => {
+    // Let the real POST happen — just reflect the in-flight state.
+    submitBtn.disabled = true;
+  });
+
+  // ---- Explore Flintel rows — fill the real query field, no fake submission ----
+  document.querySelectorAll('.explore-row').forEach(row => {
+    row.addEventListener('click', () => {
+      searchInput.value = row.dataset.query;
+      syncSubmitButtonState(searchInput, submitBtn);
+      searchInput.focus();
+    });
+  });
+
+  // ---- Render Claude's answer as markdown ----
+  // Each .answer-wrap holds the exact msg.claude_answer text (already
+  // Jinja-escaped) in .answer-raw, shown plain by default. If marked.js +
+  // DOMPurify loaded, swap in the parsed + sanitized HTML so headings/
+  // bullets/tables Claude writes actually render as such.
+  if (window.marked && window.DOMPurify) {
+    document.querySelectorAll('.answer-wrap').forEach((wrap) => {
+      const rawEl = wrap.querySelector('.answer-raw');
+      const renderedEl = wrap.querySelector('.answer-rendered');
+      if (!rawEl || !renderedEl) return;
+      try {
+        const html = marked.parse(rawEl.textContent, { breaks: true, gfm: true });
+        renderedEl.innerHTML = DOMPurify.sanitize(html);
+        renderedEl.style.display = 'block';
+        rawEl.style.display = 'none';
+      } catch (e) {
+        console.warn('Markdown render failed, showing raw answer text:', e);
+      }
+    });
+  }
 </script>
 </body>
 </html>
