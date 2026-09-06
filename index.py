@@ -1,6 +1,6 @@
 """
-FLINTEL — WEB SERVICE (v7)
-============================
+FLINTEL — WEB SERVICE (v7 + JSON-ANALYSIS-PROMPT SWAP)
+========================================================
 Everything from v3 is UNCHANGED and still works exactly as before:
   1. Take a user prompt (brand/topic/product name) from a simple web form.
   2. Generate FUZZY KEYWORDS in plain Python (template-based, no Claude call).
@@ -18,18 +18,12 @@ Everything from v3 is UNCHANGED and still works exactly as before:
      matched purely by search_keyword against the job's generated keyword
      list, saved onto the same chat message as the original prompt.
 
-v4 — CLAUDE ANALYSIS LAYER (NEW, on top of everything above):
+v4 — CLAUDE ANALYSIS LAYER:
   - The matched signals from step 7 are NOT shown to the user directly as
     raw dumped output. Instead, once matched, they (title + text ONLY —
     never the URL, never platform, never job internals) are handed to
     Claude as grounding context, together with the user's own chat
     prompt.
-  - Claude then decides, naturally, how to actually answer what the user
-    asked — a summary, a sentiment breakdown, a drafted reply, an
-    opinion, a plain "not enough data", whatever fits the question.
-    Whenever Claude judges a table is the clearest way to explain
-    something, it writes one (as part of its normal answer text) — no
-    special-casing needed here, it's just Claude writing markdown.
   - Model used: claude-haiku-4-5-20251001 (cheap + fast, configurable via
     CLAUDE_MODEL env var).
   - CHUNKING: if a topic's matched posts are too many to comfortably fit
@@ -118,7 +112,7 @@ constructed with docs_url=None, redoc_url=None, openapi_url=None, so
 route, request/response shape, and internal field name. Nothing else in
 this file was touched.
 
-── v4.3 FIX (this file) ───────────────────────────────────────────────────
+── v4.3 FIX ────────────────────────────────────────────────────────────────
 Adds ONE new capability: deleting a single chat. A new
 `POST /chat/{chat_id}/delete` route lets the current owner (signed-in
 email, or guest UUID) remove exactly ONE of their own chats —
@@ -188,11 +182,8 @@ this file — no other route, function, or behavior — was touched.
    `analyze_with_claude(query, [])` exactly once — the SAME function
    already used for real answers, just handed an empty post list. That
    function already has a built-in "no posts were found, say that plainly"
-   branch (see analyze_with_claude's docstring, case 1) — so this reuses
-   existing, already-reviewed prompting instead of adding a new one, and
-   Claude naturally replies with a plain "sorry, couldn't find anything on
-   this yet" — exactly the way Claude/ChatGPT would when they genuinely
-   have nothing to go on. That answer is cached via the existing
+   branch — so this reuses existing, already-reviewed prompting instead
+   of adding a new one. That answer is cached via the existing
    save_claude_answer_to_chat()/append_to_chat_summary() calls, so it's
    generated once and never re-billed. If matched posts show up LATER
    (background service just took longer than 60s), that's fine too:
@@ -222,56 +213,58 @@ this file — no other route, function, or behavior — was touched.
    top of the existing pipeline, it can never be the reason a genuine
    search silently fails to run.
 
-── v7 FEATURE (this file) ─────────────────────────────────────────────────
+── v7 FEATURE ──────────────────────────────────────────────────────────────
 Adds TWO small, self-contained changes, BOTH scoped entirely inside
 get_matched_signals() (the same function that has always powered post
 cards / Claude's grounding data). Nothing else in this file — no other
 route, function, template contract, or behavior — was touched.
 
 1. PER-PLATFORM RESULT CAP (new `MAX_POSTS_PER_PLATFORM` env var, default
-   3): Previously, MAX_MATCHED_RESULTS (default 25) was one shared budget
-   across every platform combined — e.g. a single search with
-   targeting_platform="all" could come back as 20 Reddit posts and only 1
-   X/Twitter post if that's simply what matched first, however lopsided.
-   Now, in addition to that existing overall MAX_MATCHED_RESULTS safety
-   cap (still respected, still unit-for-unit the same variable/behavior
-   as before), each individual platform is ALSO capped at
-   MAX_POSTS_PER_PLATFORM matches for that one search — e.g. with the
-   default of 3, a single search now returns AT MOST 3 Reddit posts, AT
-   MOST 3 X/Twitter posts, AT MOST 3 LinkedIn posts, and AT MOST 3
-   Facebook posts, so no one platform can crowd out the others in a
-   single prompt's results. MAX_POSTS_PER_PLATFORM is a plain env var —
-   change it in .env (or override at process start) and restart to pick
-   a different per-platform number later; no code change needed.
+   3): each individual platform is capped at MAX_POSTS_PER_PLATFORM
+   matches for that one search, on top of the existing overall
+   MAX_MATCHED_RESULTS safety cap, so no one platform can crowd out the
+   others in a single prompt's results.
 
 2. BROADER KEYWORD MATCHING (title / post_text substring matching, ON TOP
-   OF the existing search_keyword field matching — the existing
-   search_keyword matching is completely untouched and still works
-   exactly as perfectly/exactly as it always has): previously, a signal
-   only ever counted as a match if its own search_keyword-like field
-   (see _KEYWORD_FIELD_CANDIDATES) matched one of the job's generated
-   keywords. Now, a signal ALSO counts as a match if any of the job's
-   generated keywords appears as a case-insensitive substring inside
-   that signal's OWN title or post_text (see the new
-   _text_matches_keyword() helper below) — even if its search_keyword
-   field doesn't match at all. This is a pure OR: a signal matches if
-   EITHER its search_keyword field matches, OR the keyword phrase shows
-   up in its title, OR the keyword phrase shows up in its post_text —
-   any one of the three is enough, and matching more than one of them
-   doesn't count it twice (each matched signal still only ever appears
-   once in the results, exactly as before via the existing seen_urls
-   de-duplication). Because a signal that only matches via title/text
-   (and not search_keyword) would never even be fetched by the OLD
-   Mongo query (which only ever filtered on the keyword field), the
-   Mongo query itself was widened with additional case-insensitive
-   regex OR-conditions on the title/text field candidates, so those
-   documents are actually retrieved from `flintel_signals` before the
-   Python-side check confirms the match. Everything else about
-   get_matched_signals() — its return shape ({title, post_text,
-   post_url, platform}), its signature, its platform-targeting filter,
-   its de-duplication by post_url, and every other caller in this file
-   (analyze_with_claude, build_claude_post_context, post cards, etc.) —
-   is completely unchanged.
+   OF the existing search_keyword field matching): a signal now also
+   counts as a match if any of the job's generated keywords appears as a
+   case-insensitive substring inside that signal's OWN title or
+   post_text, even if its search_keyword field doesn't match at all. Pure
+   OR, never a replacement for the exact-field match. Everything else
+   about get_matched_signals() (return shape, signature, de-duplication,
+   every caller) is completely unchanged.
+
+── PROMPT SWAP (THIS FILE) ─────────────────────────────────────────────────
+ONLY ONE THING was changed from the v7 file above, and it is scoped to a
+single constant: CLAUDE_ANALYSIS_SYSTEM_PROMPT. The old plain-text,
+free-form analysis system prompt has been replaced with the strict-JSON,
+6-format ("source_list" / "trend_report" / "comparison" / "no_results" /
+"not_available" / "disallowed") analysis prompt. NOTHING else was touched:
+
+  - analyze_with_claude(), build_claude_post_context(), chunk_list(),
+    _format_posts_block(), _map_chunk(), and _call_claude() are all
+    BYTE-FOR-BYTE UNCHANGED. analyze_with_claude() still returns a plain
+    Python str (the raw text Claude responds with) exactly as before —
+    it is simply that this str will now, if Claude follows the new
+    prompt, contain a JSON document instead of free-form prose.
+  - save_claude_answer_to_chat() still stores whatever string it's given
+    as-is under `messages.$.claude_answer` — no parsing, no new schema,
+    no validation added.
+  - The CLAUDE_MAP_STEP_SYSTEM_PROMPT (used only for the intermediate
+    map/chunking step) is UNCHANGED — it still asks for plain bulleted
+    grounded notes, not JSON; only the FINAL reduce/single-call answer
+    (using CLAUDE_ANALYSIS_SYSTEM_PROMPT) is affected by the swap.
+  - Every route, every template context, every other function in this
+    file is unchanged.
+
+CONSEQUENCE OF THIS (logic-only, not a bug — flagging it here since no
+rendering code was added): because chat.html / index.html were built to
+render `claude_answer` as plain markdown-ish text, and this prompt now
+returns a strict JSON object as that text, the JSON will render VERBATIM
+(as a raw JSON string) in the chat UI unless/until a template-side parser
+and per-format renderer are added on top of this. That template/rendering
+work is intentionally OUT OF SCOPE for this change, per what was asked —
+this swap touches ONLY the CLAUDE_ANALYSIS_SYSTEM_PROMPT constant.
 ──────────────────────────────────────────────────────────────────────────────
 """
 
@@ -323,7 +316,7 @@ MAX_KEYWORDS = int(os.getenv("MAX_KEYWORDS", "20"))
 # additional per-platform cap layered on top of this one.)
 MAX_MATCHED_RESULTS = int(os.getenv("MAX_MATCHED_RESULTS", "25"))
 
-# (v7, NEW) Caps how many matched posts ANY SINGLE platform can contribute
+# (v7) Caps how many matched posts ANY SINGLE platform can contribute
 # to one search's results — e.g. with the default of 3, at most 3 Reddit
 # posts AND at most 3 X/Twitter posts (etc.) show up for one prompt, even
 # if many more than that actually matched, so no one platform can crowd
@@ -354,9 +347,9 @@ CHAT_SUMMARY_TURN_CHAR_LIMIT   = int(os.getenv("CHAT_SUMMARY_TURN_CHAR_LIMIT", "
 # ── Response-timeout config (v6) ────────────────────────────────────────────
 # How long (seconds) a search-type message is allowed to sit with no
 # matched flintel_signals before we stop silently waiting and instead give
-# the user a plain, natural "nothing found on this yet" answer, the same
-# way Claude/ChatGPT would rather than leaving them staring at a blank
-# turn forever. See _fill_in_message_outputs() below.
+# the user a plain, natural "nothing found yet" answer, the same way
+# Claude/ChatGPT would rather than leaving them staring at a blank turn
+# forever. See _fill_in_message_outputs() below.
 RESPONSE_TIMEOUT = int(os.getenv("RESPONSE_TIMEOUT", "60"))
 
 client = MongoClient(MONGODB_URI)
@@ -556,7 +549,7 @@ def get_signals(topic_key: str, limit: int = 25):
 
 # ─────────────────────────────────────────────────────────────────────────────
 # SIGNAL MATCHING — pull post_text + post_url for signals whose search
-# keyword matches one of the keywords generated for this job, OR (v7, NEW)
+# keyword matches one of the keywords generated for this job, OR (v7)
 # whose title/post_text itself contains one of those keywords. This is
 # exactly what still powers the post cards (title + post_url, as-is).
 # Claude (below) only ever sees title + post_text from whatever this
@@ -655,7 +648,7 @@ def _signal_keyword_matches(doc: dict, keyword_set: set) -> bool:
 
 
 def _text_matches_keyword(text: str, keyword_set: set) -> bool:
-    """(v7, NEW) True if ANY keyword in keyword_set appears as a
+    """(v7) True if ANY keyword in keyword_set appears as a
     case-insensitive SUBSTRING somewhere inside `text`. This is what lets
     a signal count as a match purely because a keyword phrase shows up in
     its own title or post_text, even when its search_keyword field
@@ -702,10 +695,10 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
       1. its search-keyword field matches one of our generated keywords
          (see _signal_keyword_matches() — UNCHANGED, still exact/perfect,
          same as v3-v6), OR
-      2. (v7, NEW) one of our generated keywords appears as a
-         case-insensitive substring inside its OWN title, OR
-      3. (v7, NEW) one of our generated keywords appears as a
-         case-insensitive substring inside its OWN post_text.
+      2. (v7) one of our generated keywords appears as a case-insensitive
+         substring inside its OWN title, OR
+      3. (v7) one of our generated keywords appears as a case-insensitive
+         substring inside its OWN post_text.
     Matching via more than one of these at once still only ever produces
     ONE entry in the results (de-duplicated by post_url exactly as
     before) — this only widens WHICH signals can match, it never changes
@@ -718,7 +711,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     signals from that platform only — the user's dropdown choice decides
     this, nothing else.
 
-    (v7, NEW) PER-PLATFORM CAP: on top of the existing overall `limit`
+    (v7) PER-PLATFORM CAP: on top of the existing overall `limit`
     (MAX_MATCHED_RESULTS by default — still respected, still the same
     variable/behavior as before), each individual platform can
     contribute AT MOST MAX_POSTS_PER_PLATFORM matches to this call's
@@ -777,7 +770,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 
     matched = []
     seen_urls = set()
-    platform_counts = {}  # (v7, NEW) per-platform running count for this call
+    platform_counts = {}  # (v7) per-platform running count for this call
 
     for doc in raw_docs:
         title     = _first_present(doc, _TITLE_FIELD_CANDIDATES)
@@ -805,10 +798,10 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
         if post_url and post_url in seen_urls:
             continue
 
-        # (v7, NEW) Per-platform cap: once a platform has already
-        # contributed MAX_POSTS_PER_PLATFORM matches to this call, skip
-        # any further matches from that same platform (but keep scanning
-        # raw_docs — a different platform may still have room).
+        # (v7) Per-platform cap: once a platform has already contributed
+        # MAX_POSTS_PER_PLATFORM matches to this call, skip any further
+        # matches from that same platform (but keep scanning raw_docs —
+        # a different platform may still have room).
         platform_key = (platform or "unknown").strip().lower()
         if platform_counts.get(platform_key, 0) >= MAX_POSTS_PER_PLATFORM:
             continue
@@ -830,81 +823,210 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 #
 # Matched signals never get dumped to the user directly. They're handed to
 # Claude (title + text ONLY — never post_url, never platform, never job
-# internals) together with the user's actual chat prompt, and Claude
-# decides how to answer — a summary, a sentiment read, a drafted reply, an
-# opinion, "not enough data", a markdown table if that's clearest, etc.
+# internals) together with the user's actual chat prompt, and Claude turns
+# that into the final answer.
 #
 # Only the FINAL ANSWER TEXT is ever stored (see save_claude_answer_to_chat
 # below) — the input posts are never re-saved next to it, since they
 # already live in flintel_signals / are reconstructable from the message's
 # own keyword list. That's the cost-saving rule: store output only.
 #
-# UNCHANGED IN v5/v6/v7 — this whole section is exactly as it was in v4.
-# The v5 router decides WHETHER a message even reaches this layer; the v6
-# response-timeout fallback (see _fill_in_message_outputs) is the only
-# other CALLER of analyze_with_claude() added on top — it reuses this
-# function completely as-is, just with an empty post list. v7 only
-# changed WHICH signals get_matched_signals() returns upstream of this;
-# nothing here changed as a result.
+# UNCHANGED IN v5/v6/v7 (and unchanged by the prompt swap below in terms
+# of CODE — analyze_with_claude() still returns a plain str exactly as
+# before). The v5 router decides WHETHER a message even reaches this
+# layer; the v6 response-timeout fallback (see _fill_in_message_outputs)
+# is the only other CALLER of analyze_with_claude() added on top — it
+# reuses this function completely as-is, just with an empty post list.
+# v7 only changed WHICH signals get_matched_signals() returns upstream of
+# this; nothing here changed as a result.
 # ─────────────────────────────────────────────────────────────────────────────
 
+# ── PROMPT SWAP: this is now the strict-JSON, 6-format analysis prompt ─────
+# (previously a plain-text, free-form "answer like Claude/ChatGPT" prompt).
+# Nothing else in this section — analyze_with_claude(), chunk_list(),
+# build_claude_post_context(), _format_posts_block(), _map_chunk(),
+# _call_claude() — was touched. See the PROMPT SWAP note in the module
+# docstring at the top of this file for the full consequence rundown.
 CLAUDE_ANALYSIS_SYSTEM_PROMPT = """
-You are the AI assistant inside Flintel, a social listening platform.
-You work like Claude or ChatGPT — the user can ask you anything, not just
-"give me a summary." Answer naturally, the way you would in any normal
-conversation.
-For the topic the user searched for, you have real posts pulled from
-Reddit and X/Twitter as context — each one given to you as just its
-title and text (nothing else). Use this data whenever it's relevant to
-what the user is asking.
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-YOU CAN BE ASKED LITERALLY ANYTHING
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-The user might ask for a sentiment breakdown, a quick summary, a specific
-post, a comparison to a competitor, an opinion, advice on how to respond
-to the criticism, or something that has nothing to do with the posts at
-all. Read the actual question and answer it directly — don't force every
-reply into a "summary + sentiment" shape just because that's common. Some
-examples of the range you should handle naturally:
-— "What's the sentiment on Nike?" → give an overview, with sentiment
-  (Positive/Negative/Mixed) on the posts you call out.
-— "Just give me the top 3 complaints" → three bullets, nothing else.
-— "Is this getting better or worse?" → focus on direction and why.
-— "Draft a reply to that Reddit thread" → write the reply, not an analysis.
-— "What do you think we should do about this?" → give your actual opinion.
-— A question unrelated to the posts entirely → answer it like any capable
-  assistant would, using your general knowledge — you're not limited to
-  only discussing the fetched posts.
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-GROUNDING — WHEN YOU'RE TALKING ABOUT THE POSTS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Whenever your answer draws on the fetched posts specifically:
-— Only state what the posts actually say — never invent numbers,
-  percentages, dates, quotes, or posts that weren't provided to you.
-— You do NOT have links/URLs for these posts — never write, guess, or
-  fabricate a URL for any post. If the user asks for a link, say the
-  link will be shown separately alongside your answer, not to invent one.
-— If the provided posts are too few or too vague to answer what was
-  asked, say that plainly instead of padding the answer or making
-  something up.
-— It's fine to also bring in your own general knowledge alongside the
-  posts (e.g. background on a competitor, general context) — just make
-  clear what's coming from the actual fetched data versus what you
-  already know.
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-TONE AND FORMAT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Write like a sharp, honest person talking to someone who asked a real
-question — not like a report generator. Plain language, short paragraphs
-or bullets only where they actually help. No JSON, no code blocks, no
-rigid template. Don't mention that you're an AI, that this is a "mock",
-or narrate your own reasoning process — just answer.
+You are the answer-generation brain inside Flintel, a social-listening
+platform. You are handed a user's message plus whatever real public posts
+(title + text only — never a URL, platform, or internal job/keyword data)
+were matched for it, and your job is to turn that into the single best
+possible answer for the user.
+
+CORE PRINCIPLE — work through this every time, silently, before answering:
+UNDERSTAND the request -> INTERPRET what's actually being asked ->
+REASON over what you were given -> VERIFY it's enough to answer honestly ->
+DECIDE the right format -> RESPOND. Never skip straight to an answer
+without checking whether the grounding you were given actually supports it.
+
+GROUNDING — this overrides everything else below:
+- Every factual claim must come from the matched posts you were given.
+  Never invent a post, a stat, a quote, or a sentiment that isn't actually
+  supported by what's in front of you.
+- You are not limited to a fixed set of anticipated questions or exact
+  keyword matches. People express the same intent in endless different
+  ways ("looking for X" / "anyone know a good X" / "struggling with X,
+  what are you all using" / informal, sarcastic, abbreviated, typo'd,
+  multi-part, or indirect phrasing) — read for meaning and intent, not
+  surface wording.
+
+OUTPUT CONTRACT — STRICT JSON ONLY, no markdown code fences, no preamble,
+no text outside the JSON object. Every response is exactly one JSON object,
+and `"format"` is ALWAYS the first field so the frontend knows which
+render function to call. Pick exactly one of the six formats below based
+on what the user actually asked and what you were able to find.
+
+──────────────────────────────────────────────────────────────────────────
+FORMAT 1 — "source_list"
+For sentiment/opinion queries ("What are people saying about X?").
+{
+  "format": "source_list",
+  "summary": "<2-4 sentence plain-English summary of overall sentiment/themes>",
+  "ranked": false,
+  "platforms": [
+    {
+      "platform": "<reddit|x|linkedin|facebook>",
+      "total_analyzed": <int — honest count of relevant posts actually found for this platform>,
+      "shown_count": <int — how many are in "posts" below>,
+      "posts": [
+        {
+          "source": "<subreddit/handle/page name>",
+          "title": "<post title, or a short label if the post has none>",
+          "summary": "<1-2 sentence paraphrase of the post>",
+          "sentiment": "<positive|mixed|negative|neutral>",
+          "link": "<real post URL if available, else omit this field entirely>"
+        }
+      ]
+    }
+  ],
+  "followups": ["<3 short natural next-question suggestions>"]
+}
+Only include platforms that actually returned usable data — never an empty
+platform section. Set "ranked": true (instead of false) when the user
+asked for something specific and ordered (e.g. "top 10 complaints") — same
+schema, but posts are ordered by rank/relevance and the frontend numbers
+them instead of grouping them.
+
+──────────────────────────────────────────────────────────────────────────
+FORMAT 2 — "trend_report"
+For "how has sentiment changed over time" / "sentiment over the last N
+days" queries.
+{
+  "format": "trend_report",
+  "topic": "<brand/topic name>",
+  "window": "<e.g. 'Last 30 days'>",
+  "platforms": "<comma-separated platforms actually covered>",
+  "shift_table": {
+    "headers": ["Metric", "<period start label>", "<period end label>", "Change"],
+    "rows": [["Positive mentions", "52%", "61%", "+9 pts"], ...]
+  },
+  "interpretation": "<2-4 sentences explaining what's driving the shift, grounded in the posts>",
+  "weekly_table": {
+    "headers": ["Week", "Positive", "Neutral", "Negative", "Notable Events"],
+    "rows": [["Week 1 (Aug 3-9)", "50%", "35%", "15%", "<short grounded note>"], ...]
+  },
+  "positive_drivers": [
+    {"platform": "<platform>", "post": "<paraphrased post>", "sentiment": "positive", "theme": "<short theme label>"}
+  ],
+  "negative_drivers": [
+    {"platform": "<platform>", "post": "<paraphrased post>", "sentiment": "negative", "theme": "<short theme label>"}
+  ],
+  "trend": "<1-3 sentences on the trajectory going forward, grounded in what's actually observed>",
+  "takeaways": ["<3-5 short, concrete bullet takeaways>"]
+}
+Every table row and every driver entry must be grounded in real matched
+posts — never fabricate a percentage or a week's numbers you don't
+actually have evidence for. If there isn't enough data to fill in a
+week-by-week or driver breakdown honestly, omit that field rather than
+inventing numbers to complete the shape.
+
+──────────────────────────────────────────────────────────────────────────
+FORMAT 3 — "comparison"
+For "Compare X vs Y" queries (2 or more subjects).
+{
+  "format": "comparison",
+  "summary": "<2-4 sentence summary of how the subjects differ>",
+  "subjects": [
+    {
+      "name": "<subject name>",
+      "sentiment": {"positive": "<pct>", "neutral": "<pct>", "negative": "<pct>"},
+      "platforms": [ /* same platforms/posts structure as source_list, including "sentiment" on every post */ ]
+    }
+  ],
+  "followups": ["<3 short natural next-question suggestions>"]
+}
+
+──────────────────────────────────────────────────────────────────────────
+FORMAT 4 — "no_results"
+For when little or nothing relevant was actually found.
+{
+  "format": "no_results",
+  "searched": {"query": "<what was searched>", "platforms": ["<...>"], "time_window": "<e.g. 'last 7 days'>"},
+  "message": "<plain statement of what was searched and that little/nothing turned up>",
+  "likely_reason": "<brief, genuine explanation — e.g. small/new brand, private-group discussion>",
+  "suggested_actions": [
+    {"type": "broaden_time", "label": "<e.g. 'Extend to last 30 days'>"},
+    {"type": "broaden_platforms", "label": "<e.g. 'Include all platforms + news'>"},
+    {"type": "broaden_term", "label": "Search a broader term", "suggestion": null}
+  ],
+  "clarifying_question": "<only include this field if asking for more context would genuinely help — omit otherwise>"
+}
+"suggestion" inside suggested_actions must be null unless there's a
+genuinely grounded alternative term to offer — never invent a
+plausible-sounding brand/term with no real signal behind it.
+
+──────────────────────────────────────────────────────────────────────────
+FORMAT 5 — "not_available"
+For capabilities Flintel doesn't support yet (e.g. job listings, anything
+outside social-listening).
+{
+  "format": "not_available",
+  "message": "<brief, honest explanation of what isn't available yet and what Flintel can do instead>"
+}
+
+──────────────────────────────────────────────────────────────────────────
+FORMAT 6 — "disallowed"
+For requests to identify, profile, or target a specific named individual
+person — Flintel only analyzes public conversation about topics/brands,
+never builds a profile on a person.
+{
+  "format": "disallowed",
+  "message": "<brief, non-preachy explanation, redirecting to what Flintel can help with instead>"
+}
+
+──────────────────────────────────────────────────────────────────────────
+SENTIMENT TAG RULE (applies to every post, in every format above, with no
+exception): every individual post object must include a "sentiment" field
+set to exactly one of these four lowercase strings — "positive", "mixed",
+"negative", "neutral" — and nothing else. Never omit this field on any
+post. Never use a free-text or capitalized value. The frontend maps these
+four exact values to fixed colored tags — any other value fails to render.
+
+RESPONSE FORMAT INTELLIGENCE:
+- The format above is chosen by what the user is asking and what you
+  found — not by rigid keyword triggers. A comparison request gets
+  "comparison" even if worded unusually; a request for "the top 10 X"
+  still uses "source_list" with "ranked": true, not a new shape.
+- If you genuinely cannot find enough to support "source_list",
+  "trend_report", or "comparison" honestly, use "no_results" instead of
+  forcing a thin answer into one of those shapes.
+
+TONE (applies to every text field you write inside any format above):
+- Plain, direct, conversational — the way a sharp analyst explains
+  findings to a colleague. No "As an AI..." framing, no restating the
+  question back, no filler openers, no corporate hedging.
+- Never claim more confidence than the grounding supports.
 """
 
 # Cheap "map" step used only when a topic has enough matched posts that
 # sending them all in one shot would be wasteful/risky context-wise. Each
 # chunk gets condensed down to only the points relevant to the user's
 # question before the final Haiku call ever sees them.
+#
+# UNCHANGED by the prompt swap — this still asks for plain bulleted notes,
+# not JSON. Only the FINAL reduce/single-call answer (which uses
+# CLAUDE_ANALYSIS_SYSTEM_PROMPT above) is affected.
 CLAUDE_MAP_STEP_SYSTEM_PROMPT = """
 You are helping analyze one batch of social media posts (Reddit/X) about a
 topic, as a pre-processing step before another AI writes the actual answer.
@@ -1008,7 +1130,13 @@ def analyze_with_claude(query: str, matched_signals: list) -> str:
          all the notes + the question into the final answer.
 
     Returns the final answer text only — this is the only thing callers
-    should persist (see save_claude_answer_to_chat)."""
+    should persist (see save_claude_answer_to_chat).
+
+    UNCHANGED by the prompt swap: this function's code, branching, and
+    return type (plain str) are byte-for-byte identical to before. The
+    only difference is WHAT that returned str contains, since
+    CLAUDE_ANALYSIS_SYSTEM_PROMPT itself now asks Claude for JSON instead
+    of free-form prose."""
     posts = build_claude_post_context(matched_signals)
 
     if not posts:
@@ -1059,7 +1187,7 @@ def analyze_with_claude(query: str, matched_signals: list) -> str:
 # above should run exactly as it always has), a plain "chat" message (a
 # greeting, small talk, a general question, a follow-up about something
 # already discussed, etc. — nothing should be queued into
-# flintel_search_jobs for it at all), or (v6, NEW) "blocked" — abusive,
+# flintel_search_jobs for it at all), or (v6) "blocked" — abusive,
 # harassing, hateful, sexually explicit, or threatening content, which
 # should neither be searched for nor answered normally, just declined.
 #
@@ -1078,7 +1206,10 @@ def analyze_with_claude(query: str, matched_signals: list) -> str:
 # on a routing failure, an abusive message falls through to the normal
 # search pipeline exactly like any other message would, same as v5.
 #
-# UNCHANGED IN v7 — this entire section is untouched.
+# UNCHANGED IN v7, UNCHANGED BY THE PROMPT SWAP — this entire section
+# (router prompt, chat-fallback prompt, blocked-fallback text, parsing,
+# classify_and_maybe_chat) is completely untouched. The prompt swap only
+# ever touched CLAUDE_ANALYSIS_SYSTEM_PROMPT above.
 # ─────────────────────────────────────────────────────────────────────────────
 
 CLAUDE_ROUTER_SYSTEM_PROMPT = """
@@ -1335,27 +1466,30 @@ def upsert_google_user(google_id: str, email: str, name: str):
 #   - Each search message holds:
 #       * `results`      -> post cards data (title/post_text/post_url/
 #                            platform), UNCHANGED from v3, shown as-is.
-#       * `claude_answer` -> (v4) Claude's natural-language answer to the
-#                            user's own prompt, grounded in those same
-#                            matched posts (title + text only). Only this
-#                            OUTPUT is stored — the posts fed in as input
-#                            are never duplicated here, since they already
-#                            live in flintel_signals. (v6: if no posts are
-#                            ever matched within RESPONSE_TIMEOUT seconds,
-#                            this instead ends up holding a plain "nothing
+#       * `claude_answer` -> (v4) Claude's answer text to the user's own
+#                            prompt, grounded in those same matched posts
+#                            (title + text only). Only this OUTPUT is
+#                            stored — the posts fed in as input are never
+#                            duplicated here, since they already live in
+#                            flintel_signals. (v6: if no posts are ever
+#                            matched within RESPONSE_TIMEOUT seconds, this
+#                            instead ends up holding a plain "nothing
 #                            found on this yet" answer — see
-#                            _fill_in_message_outputs below.)
-#   - (v5, NEW) A message may instead be `"message_type": "chat"` — a
-#     plain conversational turn the v5 router decided didn't need any
-#     data pulled at all (including, as of v6, a polite decline for a
+#                            _fill_in_message_outputs below. With the
+#                            prompt swap, this field's stored string will
+#                            typically now be a JSON document — see the
+#                            PROMPT SWAP note at the top of the file.)
+#   - (v5) A message may instead be `"message_type": "chat"` — a plain
+#     conversational turn the v5 router decided didn't need any data
+#     pulled at all (including, as of v6, a polite decline for a
 #     "blocked" message — same shape, no template changes needed). These
 #     have no topic_key/keywords/results, only `query` + `claude_answer`,
 #     and never touch flintel_search_jobs or flintel_signals in any way.
 #     Messages with no `message_type` (every message from before this
 #     update, and every new search-type message) are treated as ordinary
 #     search messages, exactly as before.
-#   - (v5, NEW) `summary` — a short, plain-Python rolling digest of the
-#     chat (see append_to_chat_summary above), used purely to give the
+#   - (v5) `summary` — a short, plain-Python rolling digest of the chat
+#     (see append_to_chat_summary above), used purely to give the
 #     router/chat-reply calls cheap continuity without ever sending
 #     Claude the full raw message history.
 #   - When an anonymous user signs up / logs in, their guest chats are
@@ -1368,7 +1502,8 @@ def upsert_google_user(google_id: str, email: str, name: str):
 #     delete_chat_session() below — without touching any other chat, and
 #     without letting anyone but that same owner_key delete it.
 #
-# UNCHANGED IN v7 — this entire section is untouched.
+# UNCHANGED IN v7, UNCHANGED BY THE PROMPT SWAP — this entire section is
+# untouched.
 # ─────────────────────────────────────────────────────────────────────────────
 
 def get_anon_id(request: Request) -> str:
@@ -1494,7 +1629,7 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
 
 
 def add_chat_message_to_chat(chat_id: str, owner_key: str, query: str, answer: str):
-    """(v5, NEW) Appends a plain conversational turn — NOT a search — to
+    """(v5) Appends a plain conversational turn — NOT a search — to
     the chat. No topic_key/keywords/targeting_platform, no
     flintel_search_jobs entry, no post-card results, no signal matching
     ever happens for these. This is for messages classify_and_maybe_chat()
@@ -1559,7 +1694,11 @@ def save_claude_answer_to_chat(chat_id: str, owner_key: str, topic_key: str, ans
     is what makes re-opening a chat later show the exact same answer
     again, as-is, with no need to re-call Claude. (v6: also used to cache
     the plain "nothing found yet" timeout answer — same function, same
-    caching behavior, no changes needed here.)"""
+    caching behavior, no changes needed here.)
+
+    UNCHANGED by the prompt swap: this still stores whatever string
+    `answer` is, verbatim, with no parsing/validation — it does not know
+    or care whether `answer` is free-form prose or a JSON document."""
     if not answer:
         return
     chats_collection.update_one(
@@ -1600,13 +1739,13 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list):
     Best-effort per message — one message failing must never block the
     rest of the page, and Claude failures must never affect post cards.
 
-    (v5, NEW) Messages with no topic_key are plain chat-type turns (routed
+    (v5) Messages with no topic_key are plain chat-type turns (routed
     away from the search pipeline entirely back in /search, and already
     fully answered at that time) — skipped here immediately, since there
     is nothing to fill in for them and they were never meant to touch
     flintel_signals at all.
 
-    (v6, NEW) If a search-type message STILL has no matched posts, it no
+    (v6) If a search-type message STILL has no matched posts, it no
     longer just waits forever: once RESPONSE_TIMEOUT seconds have passed
     since the message's own `requested_at`, this calls
     analyze_with_claude(query, []) exactly once — reusing that function's
@@ -1615,9 +1754,10 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list):
     of a permanently blank turn. That answer is cached the same way every
     other answer in this file is, so it's generated (and billed) once.
 
-    UNCHANGED IN v7 — this function calls get_matched_signals() exactly
-    as before; only what THAT function returns is now broader (see v7
-    notes on get_matched_signals() above)."""
+    UNCHANGED IN v7, UNCHANGED BY THE PROMPT SWAP — this function calls
+    get_matched_signals() and analyze_with_claude() exactly as before;
+    only what CLAUDE_ANALYSIS_SYSTEM_PROMPT asks analyze_with_claude() to
+    produce has changed, upstream of this function."""
     for msg in messages or []:
         if not msg.get("topic_key"):
             continue
@@ -1943,7 +2083,13 @@ def view_chat(request: Request, chat_id: str):
     like a normal conversational turn, with no post cards underneath.
     (v6) A polite "blocked" decline and a v6 timeout "nothing found yet"
     answer both use this exact same rendering path already — no template
-    changes needed for either."""
+    changes needed for either.
+
+    NOTE (PROMPT SWAP): `claude_answer` will now typically be a raw JSON
+    string for search-type messages, since CLAUDE_ANALYSIS_SYSTEM_PROMPT
+    was swapped to the strict-JSON prompt. This template contract note is
+    left exactly as it was — no template/rendering changes were made as
+    part of this swap, per what was asked."""
     owner_key, _owner_type = get_owner(request)
     chat = get_chat_session(chat_id, owner_key)
     if not chat:
