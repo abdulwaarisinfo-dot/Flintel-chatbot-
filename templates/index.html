@@ -625,9 +625,7 @@
 
     <div class="new-section">
       <!-- Real POST to /chats/new — starts a brand-new chat (auto-titled from
-           the first query) and makes it the active chat for this session.
-           Intercepted below so it swaps the response in instead of doing a
-           full page reload. -->
+           the first query) and makes it the active chat for this session. -->
       <form action="/chats/new" method="post">
         <button class="new-btn" id="new-btn" type="submit">
           <span class="new-icon">
@@ -1232,63 +1230,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
 
 <script>
-  // ============================================================================
-  // SPA-style navigation for New chat / Delete chat / Switch chat / Search.
-  //
-  // The backend is unchanged: /chats/new, /chat/<id>/delete, /chat/<id>, and
-  // /search are still real routes that render this same full page. The only
-  // change is *how* the browser gets there: instead of a normal form submit
-  // or <a> navigation (full page reload), we fetch() the same URL, take the
-  // freshly-rendered #sessions-body and .main out of the response, swap them
-  // into the current page, and update the address bar with history.pushState.
-  // That's the whole trick behind "it shouldn't refresh like Claude/GPT" —
-  // same server, same routes, same rendered HTML, just no hard navigation.
-  //
-  // If a fetch ever fails (network error, non-OK response, etc.) we fall
-  // back to a real `window.location` navigation so nothing is ever stuck.
-  // ============================================================================
-
-  function getSessionsBodyEl() { return document.getElementById('sessions-body'); }
-  function getMainEl() { return document.querySelector('.main'); }
-
-  function swapInResponseHtml(html) {
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    const newSessionsBody = doc.getElementById('sessions-body');
-    const newMain = doc.querySelector('.main');
-    const newTitle = doc.querySelector('title');
-
-    if (newSessionsBody) getSessionsBodyEl().innerHTML = newSessionsBody.innerHTML;
-    if (newMain) getMainEl().innerHTML = newMain.innerHTML;
-    if (newTitle) document.title = newTitle.textContent;
-
-    // Both regions were just replaced wholesale, so every listener that
-    // lived on their old children is gone — rebind against the fresh DOM.
-    bindSessionsBody();
-    bindMain();
-  }
-
-  async function fetchAndSwap(url, { method = 'GET', body = null, skipPushState = false } = {}) {
-    try {
-      const resp = await fetch(url, { method, body, credentials: 'same-origin' });
-      if (!resp.ok) { window.location.href = url; return; }
-      const html = await resp.text();
-      swapInResponseHtml(html);
-      if (!skipPushState) {
-        history.pushState({ flintelNav: true }, '', resp.url || url);
-      }
-    } catch (err) {
-      console.warn('AJAX navigation failed, falling back to full navigation:', err);
-      window.location.href = url;
-    }
-  }
-
-  // Back/forward browser navigation should also avoid a hard reload.
-  window.addEventListener('popstate', () => {
-    fetchAndSwap(location.href, { method: 'GET', skipPushState: true });
-  });
-
-  // ---- Sidebar (mobile drawer) — lives outside the swapped regions,
-  // bound once ----
+  // ---- Sidebar (mobile drawer) ----
   const sidebar = document.querySelector('.sidebar');
   const overlay = document.getElementById('mobile-overlay');
   document.getElementById('mobile-sidebar-toggle').addEventListener('click', () => {
@@ -1301,28 +1243,66 @@
     overlay.classList.remove('visible');
   });
 
-  // ---- Sessions expand/collapse — the toggle button lives outside
-  // #sessions-body itself, bound once ----
+  // ---- Sessions expand/collapse ----
   const sessionsToggle = document.getElementById('sessions-toggle');
+  const sessionsBody = document.getElementById('sessions-body');
   const sessionsChevron = document.getElementById('sessions-chevron');
   sessionsToggle.addEventListener('click', () => {
     const expanded = sessionsToggle.getAttribute('aria-expanded') === 'true';
     sessionsToggle.setAttribute('aria-expanded', String(!expanded));
-    getSessionsBodyEl().style.display = expanded ? 'none' : '';
+    sessionsBody.style.display = expanded ? 'none' : '';
     sessionsChevron.style.transform = expanded ? 'rotate(0deg)' : 'rotate(90deg)';
   });
 
-  // ---- "New" button — its <form> lives in the sidebar, outside
-  // #sessions-body, so it's static and bound once. Intercepts the real
-  // POST /chats/new and swaps the result in instead of a full navigation. ----
-  const newBtn = document.getElementById('new-btn');
-  const newBtnForm = newBtn.closest('form');
-  newBtnForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    fetchAndSwap(newBtnForm.action, { method: 'POST' });
+  // ---- Per-chat options menu (3-dot -> Delete) ----
+  // Purely a UI affordance on top of the real POST /chat/{chat_id}/delete
+  // route already in index.py: clicking the 3-dot button toggles a small
+  // dropdown next to that chat; clicking "Delete" submits a real form POST
+  // to that route (owner-scoped server-side, exactly like reading a chat),
+  // then the server redirect reloads the sidebar without the deleted chat.
+  function closeAllSessionMenus(except) {
+    document.querySelectorAll('.session-menu-dropdown.open').forEach((dd) => {
+      if (dd !== except) {
+        dd.classList.remove('open');
+        const btn = dd.previousElementSibling;
+        if (btn && btn.classList.contains('session-item-menu')) {
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      }
+    });
+  }
+
+  document.querySelectorAll('.session-item-menu').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const dropdown = btn.nextElementSibling;
+      if (!dropdown || !dropdown.classList.contains('session-menu-dropdown')) return;
+      const isOpen = dropdown.classList.contains('open');
+      closeAllSessionMenus(isOpen ? null : dropdown);
+      dropdown.classList.toggle('open', !isOpen);
+      btn.setAttribute('aria-expanded', String(!isOpen));
+    });
   });
 
-  // ---- Auth modal — lives outside the swapped regions entirely, bound once ----
+  document.querySelectorAll('.session-menu-delete').forEach((item) => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const chatId = item.dataset.chatId;
+      if (!chatId) return;
+      const form = document.createElement('form');
+      form.method = 'post';
+      form.action = `/chat/${chatId}/delete`;
+      form.style.display = 'none';
+      document.body.appendChild(form);
+      form.submit();
+    });
+  });
+
+  document.addEventListener('click', () => closeAllSessionMenus(null));
+
+  // ---- Auth modal (Google OAuth link + email/password login/signup) ----
   const authOverlay = document.getElementById('auth-overlay');
   const authModalTitle = document.getElementById('auth-modal-title');
   const loginForm = document.getElementById('login-form');
@@ -1350,190 +1330,115 @@
   authOverlay.addEventListener('click', (e) => { if (e.target === authOverlay) closeAuthModal(); });
 
   // Sidebar "Sign In" only exists when logged out (server renders the
-  // signed-in state instead of this button when a session is active). It
-  // lives outside #sessions-body, so it's static — bound once.
+  // signed-in state instead of this button when a session is active).
   const signinBtn = document.getElementById('signin-btn');
   if (signinBtn) signinBtn.addEventListener('click', () => openAuthModal('login'));
 
-  // ---- Docked follow-up input — lives outside the swapped regions,
-  // bound once ----
-  const followupInput = document.getElementById('followup-input');
-  const followupSubmitBtn = document.getElementById('followup-submit-btn');
-  function syncSubmitButtonState(input, btn) { btn.disabled = input.value.trim().length === 0; }
-  followupInput.addEventListener('input', () => syncSubmitButtonState(followupInput, followupSubmitBtn));
+  // Topbar "Sign up" only exists when logged out.
+  const topbarSignupBtn = document.getElementById('topbar-signup-btn');
+  if (topbarSignupBtn) topbarSignupBtn.addEventListener('click', () => openAuthModal('signup'));
 
-  // ---- Click-away handlers that must survive every swap, so they're bound
-  // once on `document` itself and always query the *current* live elements
-  // (rather than closing over elements that get destroyed on each swap) ----
-  function closeAllSessionMenus(except) {
-    document.querySelectorAll('.session-menu-dropdown.open').forEach((dd) => {
-      if (dd !== except) {
-        dd.classList.remove('open');
-        const btn = dd.previousElementSibling;
-        if (btn && btn.classList.contains('session-item-menu')) btn.setAttribute('aria-expanded', 'false');
-      }
-    });
-  }
-  document.addEventListener('click', (e) => {
-    closeAllSessionMenus(null);
-
-    const main = getMainEl();
-    const menu = main && main.querySelector('#platforms-menu');
-    const btn = main && main.querySelector('#platforms-btn');
-    if (menu && btn && menu.style.display === 'block' && !menu.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
-      menu.style.display = 'none';
-      btn.setAttribute('aria-expanded', 'false');
-      const chevron = main.querySelector('#platforms-chevron');
-      if (chevron) chevron.style.transform = 'rotate(0deg)';
+  // ---- Attachment button opens file picker (no upload backend wired yet) ----
+  const attachBtn = document.getElementById('attach-btn');
+  const attachInput = document.getElementById('attach-input');
+  attachBtn.addEventListener('click', () => attachInput.click());
+  attachInput.addEventListener('change', () => {
+    if (attachInput.files.length) {
+      console.log('Files attached:', Array.from(attachInput.files).map(f => f.name));
     }
   });
 
-  // ============================================================================
-  // Everything below lives inside #sessions-body or .main, both of which get
-  // replaced wholesale on every navigation — so their bindings are wrapped in
-  // functions and re-run (via swapInResponseHtml) after every swap.
-  // ============================================================================
+  // ---- Platforms dropdown — label AND a real hidden form field ----
+  // Selecting a platform does not change what keywords get generated (that
+  // logic lives entirely in index.py, untouched). It only sets the hidden
+  // `platform` field submitted with the search, which index.py turns into
+  // `targeting_platform` on the job document.
+  const platformsBtn = document.getElementById('platforms-btn');
+  const platformsMenu = document.getElementById('platforms-menu');
+  const platformsChevron = document.getElementById('platforms-chevron');
+  const platformsLabel = document.getElementById('platforms-label');
+  const platformInput = document.getElementById('platform-input');
 
-  function bindSessionsBody() {
-    const root = getSessionsBodyEl();
-    if (!root) return;
-
-    // Per-chat 3-dot options menu
-    root.querySelectorAll('.session-item-menu').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const dropdown = btn.nextElementSibling;
-        if (!dropdown || !dropdown.classList.contains('session-menu-dropdown')) return;
-        const isOpen = dropdown.classList.contains('open');
-        closeAllSessionMenus(isOpen ? null : dropdown);
-        dropdown.classList.toggle('open', !isOpen);
-        btn.setAttribute('aria-expanded', String(!isOpen));
-      });
-    });
-
-    // Delete — real POST to /chat/<id>/delete, swapped in instead of a full
-    // navigation (this is the "delete chat shouldn't refresh" fix).
-    root.querySelectorAll('.session-menu-delete').forEach((item) => {
-      item.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const chatId = item.dataset.chatId;
-        if (!chatId) return;
-        closeAllSessionMenus(null);
-        fetchAndSwap(`/chat/${chatId}/delete`, { method: 'POST' });
-      });
-    });
-
-    // Switching chats — real GET to /chat/<id>, swapped in instead of a full
-    // navigation.
-    root.querySelectorAll('.session-item-link').forEach((link) => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        fetchAndSwap(link.getAttribute('href'), { method: 'GET' });
-      });
-    });
+  function closePlatformsMenu() {
+    platformsMenu.style.display = 'none';
+    platformsBtn.setAttribute('aria-expanded', 'false');
+    platformsChevron.style.transform = 'rotate(0deg)';
   }
-
-  function bindMain() {
-    const root = getMainEl();
-    if (!root) return;
-
-    // Topbar "Sign up" button (only rendered when logged out)
-    const topbarSignupBtn = root.querySelector('#topbar-signup-btn');
-    if (topbarSignupBtn) topbarSignupBtn.addEventListener('click', () => openAuthModal('signup'));
-
-    // Attachment button opens file picker (no upload backend wired yet)
-    const attachBtn = root.querySelector('#attach-btn');
-    const attachInput = root.querySelector('#attach-input');
-    if (attachBtn && attachInput) {
-      attachBtn.addEventListener('click', () => attachInput.click());
-      attachInput.addEventListener('change', () => {
-        if (attachInput.files.length) console.log('Files attached:', Array.from(attachInput.files).map(f => f.name));
-      });
+  platformsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = platformsMenu.style.display === 'block';
+    if (open) { closePlatformsMenu(); }
+    else {
+      platformsMenu.style.display = 'block';
+      platformsBtn.setAttribute('aria-expanded', 'true');
+      platformsChevron.style.transform = 'rotate(180deg)';
     }
+  });
+  platformsMenu.addEventListener('click', (e) => {
+    const li = e.target.closest('li');
+    if (!li) return;
+    platformsLabel.textContent = li.dataset.value;
+    platformInput.value = li.dataset.value;
+    closePlatformsMenu();
+  });
+  document.addEventListener('click', (e) => {
+    if (!platformsMenu.contains(e.target) && e.target !== platformsBtn) closePlatformsMenu();
+  });
 
-    // Platforms dropdown — label AND a real hidden form field. Selecting a
-    // platform doesn't change what keywords get generated (that logic lives
-    // entirely server-side); it only sets the hidden `platform` field
-    // submitted with the search.
-    const platformsBtn = root.querySelector('#platforms-btn');
-    const platformsMenu = root.querySelector('#platforms-menu');
-    const platformsChevron = root.querySelector('#platforms-chevron');
-    const platformsLabel = root.querySelector('#platforms-label');
-    const platformInput = root.querySelector('#platform-input');
-    function closePlatformsMenu() {
-      platformsMenu.style.display = 'none';
-      platformsBtn.setAttribute('aria-expanded', 'false');
-      platformsChevron.style.transform = 'rotate(0deg)';
-    }
-    if (platformsBtn && platformsMenu) {
-      platformsBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const open = platformsMenu.style.display === 'block';
-        if (open) { closePlatformsMenu(); }
-        else {
-          platformsMenu.style.display = 'block';
-          platformsBtn.setAttribute('aria-expanded', 'true');
-          platformsChevron.style.transform = 'rotate(180deg)';
-        }
-      });
-      platformsMenu.addEventListener('click', (e) => {
-        const li = e.target.closest('li');
-        if (!li) return;
-        platformsLabel.textContent = li.dataset.value;
-        platformInput.value = li.dataset.value;
-        closePlatformsMenu();
-      });
-    }
+  // ---- Real search form ----
+  // No client-side mocking: this is a real <form action="/search" method="post">.
+  // Submitting it POSTs to the server, which queues the job and redirects
+  // back to "/", where this same page re-renders the active chat with the
+  // new turn — Claude's answer and post cards fill in as soon as the
+  // background job has matched signals. The only JS here is cosmetic
+  // validation (disable submit until something is typed).
+  const searchForm = document.getElementById('search-form');
+  const searchInput = document.getElementById('search-input');
+  const submitBtn = document.getElementById('submit-btn');
+  const followupInput = document.getElementById('followup-input');
+  const followupSubmitBtn = document.getElementById('followup-submit-btn');
 
-    // Real search form — still a real POST to /search; only intercepted so
-    // the result is swapped in instead of a full navigation.
-    const searchForm = root.querySelector('#search-form');
-    const searchInput = root.querySelector('#search-input');
-    const submitBtn = root.querySelector('#submit-btn');
-    if (searchForm && searchInput && submitBtn) {
+  function syncSubmitButtonState(input, btn) {
+    btn.disabled = input.value.trim().length === 0;
+  }
+  syncSubmitButtonState(searchInput, submitBtn);
+  searchInput.addEventListener('input', () => syncSubmitButtonState(searchInput, submitBtn));
+  followupInput.addEventListener('input', () => syncSubmitButtonState(followupInput, followupSubmitBtn));
+
+  searchForm.addEventListener('submit', () => {
+    // Let the real POST happen — just reflect the in-flight state.
+    submitBtn.disabled = true;
+  });
+
+  // ---- Explore Flintel rows — fill the real query field, no fake submission ----
+  document.querySelectorAll('.explore-row').forEach(row => {
+    row.addEventListener('click', () => {
+      searchInput.value = row.dataset.query;
       syncSubmitButtonState(searchInput, submitBtn);
-      searchInput.addEventListener('input', () => syncSubmitButtonState(searchInput, submitBtn));
-      searchForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        submitBtn.disabled = true;
-        const formData = new URLSearchParams(new FormData(searchForm));
-        fetchAndSwap(searchForm.action, { method: 'POST', body: formData });
-      });
-    }
-
-    // Explore Flintel rows — fill the real query field, no fake submission
-    root.querySelectorAll('.explore-row').forEach((row) => {
-      row.addEventListener('click', () => {
-        if (!searchInput) return;
-        searchInput.value = row.dataset.query;
-        syncSubmitButtonState(searchInput, submitBtn);
-        searchInput.focus();
-      });
+      searchInput.focus();
     });
+  });
 
-    // Render Claude's answer as markdown
-    if (window.marked && window.DOMPurify) {
-      root.querySelectorAll('.answer-wrap').forEach((wrap) => {
-        const rawEl = wrap.querySelector('.answer-raw');
-        const renderedEl = wrap.querySelector('.answer-rendered');
-        if (!rawEl || !renderedEl) return;
-        try {
-          const html = marked.parse(rawEl.textContent, { breaks: true, gfm: true });
-          renderedEl.innerHTML = DOMPurify.sanitize(html);
-          renderedEl.style.display = 'block';
-          rawEl.style.display = 'none';
-        } catch (e) {
-          console.warn('Markdown render failed, showing raw answer text:', e);
-        }
-      });
-    }
+  // ---- Render Claude's answer as markdown ----
+  // Each .answer-wrap holds the exact msg.claude_answer text (already
+  // Jinja-escaped) in .answer-raw, shown plain by default. If marked.js +
+  // DOMPurify loaded, swap in the parsed + sanitized HTML so headings/
+  // bullets/tables Claude writes actually render as such.
+  if (window.marked && window.DOMPurify) {
+    document.querySelectorAll('.answer-wrap').forEach((wrap) => {
+      const rawEl = wrap.querySelector('.answer-raw');
+      const renderedEl = wrap.querySelector('.answer-rendered');
+      if (!rawEl || !renderedEl) return;
+      try {
+        const html = marked.parse(rawEl.textContent, { breaks: true, gfm: true });
+        renderedEl.innerHTML = DOMPurify.sanitize(html);
+        renderedEl.style.display = 'block';
+        rawEl.style.display = 'none';
+      } catch (e) {
+        console.warn('Markdown render failed, showing raw answer text:', e);
+      }
+    });
   }
-
-  // Initial bind for the server-rendered page on first load.
-  bindSessionsBody();
-  bindMain();
 </script>
 </body>
 </html>
