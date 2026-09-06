@@ -401,6 +401,75 @@ described above.
    fewer notes (the overwhelming majority of real searches), this new
    step never triggers, and analyze_with_claude()'s behavior is 100%
    identical to before this bugfix pack.
+
+── STREAMING ADD-ON + POST_URL PATCH FIX (THIS FILE) ────────────────────────
+TWO small, targeted, purely-additive changes on top of everything above.
+Nothing else in this file — no other route, function, constant, prompt,
+matching rule, chunking rule, or caching rule — was touched.
+
+1. STREAMING (word-by-word Claude output, additive only):
+   Previously, `_call_claude()` always blocked until Claude's ENTIRE
+   response was ready before returning it — the user's screen showed
+   nothing at all for the whole duration of a call, then the full answer
+   appeared all at once. This adds a purely ADDITIVE alternate path:
+     - `_call_claude_stream()` — the exact same Anthropic Messages API
+       call as `_call_claude()`, except with `"stream": true`, yielding
+       each text delta AS Anthropic streams it back, instead of
+       collecting and returning one final string.
+     - `analyze_with_claude_stream()` — mirrors analyze_with_claude()'s
+       exact branches (no posts / single call / map-reduce, including
+       the BUGFIX PACK #3 second-level note chunking), byte-for-byte
+       identical logic, EXCEPT the one call whose text the user actually
+       reads (the final call) uses `_call_claude_stream()` instead of
+       `_call_claude()`, so that specific answer streams in live. Any
+       earlier map/notes-condense calls (never shown to the user) are
+       UNCHANGED — still plain, blocking `_call_claude()` calls, exactly
+       as in analyze_with_claude().
+     - `GET /chat/{chat_id}/stream` — a new Server-Sent-Events route a
+       template can optionally open (e.g. via EventSource/fetch-stream)
+       to watch one message's answer arrive live. On completion it saves
+       the fully-assembled answer through the EXACT SAME
+       save_claude_answer_to_chat()/append_to_chat_summary()/
+       save_signal_results_to_chat() calls already used everywhere else
+       in this file, so the caching guarantee is identical: generated
+       (and billed) once, then served from the cache forever after,
+       whether that generation happened via this new streaming route or
+       the existing blocking path.
+   `_call_claude()` and `analyze_with_claude()` themselves are completely
+   UNTOUCHED and remain exactly what every existing caller
+   (classify_and_maybe_chat, _map_chunk, _condense_notes_chunk,
+   _fill_in_message_outputs, the RESPONSE_TIMEOUT fallback) uses, exactly
+   as before. If a template never opens the new stream route, behavior
+   for every existing page/flow is 100% unchanged.
+
+2. POST_URL PATCH FIX:
+   CLAUDE_ANALYSIS_SYSTEM_PROMPT's "source_list"/"comparison" formats ask
+   Claude to include a "link" field with "the real post URL if
+   available" on every post — but Claude is deliberately NEVER shown
+   post_url (see build_claude_post_context(), unchanged), so it could
+   never actually know one, and would always either omit "link" or risk
+   guessing. Fix: a new best-effort, purely-additive post-processing
+   step — `_patch_post_urls_into_answer()` (using a small helper,
+   `_best_matching_post()`) — runs AFTER analyze_with_claude() /
+   analyze_with_claude_stream() has already produced the answer text.
+   It parses that JSON, walks the "source_list"/"comparison" post lists,
+   matches each post's "title" back to one of THIS message's already-
+   matched signals, and sets "link" to that signal's REAL post_url — the
+   exact same URL the post cards already use, computed by
+   get_matched_signals(), never anything Claude itself supplied or
+   guessed. If the answer isn't valid JSON, isn't one of those two
+   formats, no confident title match is found, or there are no matched
+   signals at all, the original answer text is returned completely
+   UNCHANGED — this can only ever ADD a real link where one is
+   confidently resolvable, never remove or alter anything else in the
+   answer, and Claude itself is still never shown a URL, so it still can
+   never invent one. Applied in exactly two places: inside
+   `_fill_in_message_outputs()` right after a fresh (non-streaming)
+   answer is generated, and inside the new streaming route right after
+   the fully-assembled streamed answer is complete — both immediately
+   before that same answer is cached via save_claude_answer_to_chat(), so
+   every persisted answer (streamed or not) gets the same real-link
+   patch-up before it's ever written to the chat or shown again later.
 ──────────────────────────────────────────────────────────────────────────────
 """
 
@@ -417,7 +486,7 @@ from bson import ObjectId
 from bson.errors import InvalidId
 from pymongo import MongoClient
 from fastapi import FastAPI, Request, Form
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 from passlib.context import CryptContext
@@ -1428,6 +1497,137 @@ def analyze_with_claude(query: str, matched_signals: list) -> str:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# STREAMING ADD-ON — additive alternate path only, see module docstring.
+# _call_claude() and analyze_with_claude() above are completely untouched
+# and remain what every existing caller uses.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _call_claude_stream(system_prompt: str, user_message: str, max_tokens: int = None):
+    """(STREAMING ADD-ON) Same Anthropic Messages API call as
+    _call_claude(), except with "stream": true — instead of blocking
+    until the whole response is ready, this yields each text delta AS
+    Anthropic streams it back (word-by-word / token-by-token), so a
+    caller can forward pieces to the browser live instead of waiting for
+    the entire answer.
+
+    Purely ADDITIVE: _call_claude() itself is untouched and is still used
+    by every existing caller (routing, map step, notes-reduce step, the
+    non-streaming analyze_with_claude()). This generator is only used by
+    analyze_with_claude_stream() / the new /stream route below.
+
+    Yields plain text chunks (str). Raises on any failure — same
+    degrade-gracefully convention as _call_claude()."""
+    if not ANTHROPIC_API_KEY:
+        raise RuntimeError("ANTHROPIC_API_KEY is not set")
+
+    payload = {
+        "model": CLAUDE_MODEL,
+        "max_tokens": max_tokens or CLAUDE_MAX_TOKENS,
+        "system": system_prompt,
+        "messages": [{"role": "user", "content": user_message}],
+        "stream": True,
+    }
+    headers = {
+        "x-api-key": ANTHROPIC_API_KEY,
+        "anthropic-version": CLAUDE_API_VERSION,
+        "content-type": "application/json",
+    }
+
+    with httpx.Client(timeout=CLAUDE_TIMEOUT_SECONDS) as http_client:
+        with http_client.stream("POST", CLAUDE_API_URL, headers=headers, json=payload) as response:
+            response.raise_for_status()
+            for line in response.iter_lines():
+                if not line:
+                    continue
+                if not line.startswith("data:"):
+                    continue
+                data_str = line[len("data:"):].strip()
+                if not data_str or data_str == "[DONE]":
+                    continue
+                try:
+                    event = json.loads(data_str)
+                except (ValueError, TypeError):
+                    continue
+                if event.get("type") == "content_block_delta":
+                    delta = event.get("delta", {}) or {}
+                    text = delta.get("text")
+                    if text:
+                        yield text
+
+
+def analyze_with_claude_stream(query: str, matched_signals: list):
+    """(STREAMING ADD-ON) Mirrors analyze_with_claude()'s exact branches
+    (no posts / single call / map-reduce, including the BUGFIX PACK #3
+    second-level note chunking) byte-for-byte — the ONLY difference is
+    that the final, user-facing call streams its text via
+    _call_claude_stream() instead of blocking via _call_claude(). Any
+    earlier map/notes-condense calls (never shown to the user directly)
+    are UNCHANGED — still plain, blocking _call_claude() calls, exactly
+    as in analyze_with_claude().
+
+    This is a generator: yields text chunks (str) as they stream in. The
+    caller is responsible for collecting them into the final full answer
+    (see the /chat/{chat_id}/stream route below) — this function itself
+    does not persist anything, exactly like analyze_with_claude()."""
+    posts = build_claude_post_context(matched_signals)
+
+    if not posts:
+        user_message = (
+            f"User's question: {query}\n\n"
+            "No posts were found for this topic yet — you have no post data "
+            "to ground an answer in. Say that plainly, then answer anything "
+            "else in the question you still can from general knowledge."
+        )
+        yield from _call_claude_stream(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message)
+        return
+
+    chunks = chunk_list(posts, CLAUDE_POSTS_PER_CHUNK)
+
+    if len(chunks) <= 1:
+        posts_block = _format_posts_block(posts)
+        user_message = f"User's question: {query}\n\nPosts (title + text only):\n{posts_block}"
+        yield from _call_claude_stream(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message)
+        return
+
+    # Map step + optional 2nd-level note chunking: identical logic to
+    # analyze_with_claude(), still blocking (never shown to the user
+    # directly) — only the final call below streams.
+    notes = []
+    for chunk in chunks:
+        try:
+            note = _map_chunk(query, chunk)
+        except Exception as exc:
+            log.warning(f"Claude map-step failed for a chunk (skipping chunk): {exc}")
+            continue
+        if note:
+            notes.append(note)
+
+    if len(notes) > CLAUDE_NOTES_PER_CHUNK:
+        note_chunks = chunk_list(notes, CLAUDE_NOTES_PER_CHUNK)
+        condensed_notes = []
+        for note_chunk in note_chunks:
+            try:
+                condensed = _condense_notes_chunk(query, note_chunk)
+            except Exception as exc:
+                log.warning(f"Claude notes-condense step failed for a batch (skipping batch): {exc}")
+                continue
+            if condensed:
+                condensed_notes.append(condensed)
+        if condensed_notes:
+            notes = condensed_notes
+
+    combined_notes = "\n\n---\n\n".join(notes) if notes else "(no grounded points extracted)"
+    user_message = (
+        f"User's question: {query}\n\n"
+        f"Below are grounded notes already condensed from {len(posts)} posts "
+        f"(title + text only), split into batches. Treat these notes as your "
+        f"only factual grounding about the posts, and answer the user's "
+        f"actual question naturally.\n\nNotes:\n{combined_notes}"
+    )
+    yield from _call_claude_stream(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # CLAUDE ROUTING LAYER (v5, extended in v6 with abuse/harm blocking, and
 # now extended AGAIN with keyword generation for "search" messages)
 #
@@ -1715,6 +1915,122 @@ def _extract_claude_format(answer_text: str):
         return None
     fmt = data.get("format")
     return fmt if isinstance(fmt, str) else None
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# POST_URL PATCH FIX — additive post-processing only, see module docstring.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _best_matching_post(title: str, matched_signals: list):
+    """(POST_URL FIX) Best-effort match of a title string (as it appears
+    inside Claude's JSON answer) back to one of the real matched_signals
+    entries, so its real post_url can be looked up. Tries an exact
+    case-insensitive match first, then falls back to a loose
+    containment check (either string contains the other) since Claude
+    may lightly reword/trim a title when it copies it into its answer.
+    Returns the matching signal dict, or None if nothing looks like a
+    reasonable match — callers must treat None as "leave the link field
+    alone", never guess a URL."""
+    if not title:
+        return None
+    title_norm = title.strip().lower()
+    if not title_norm:
+        return None
+
+    for sig in matched_signals or []:
+        sig_title = (sig.get("title") or "").strip().lower()
+        if sig_title and sig_title == title_norm:
+            return sig
+
+    for sig in matched_signals or []:
+        sig_title = (sig.get("title") or "").strip().lower()
+        if not sig_title:
+            continue
+        if sig_title in title_norm or title_norm in sig_title:
+            return sig
+
+    return None
+
+
+def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str:
+    """(POST_URL FIX) CLAUDE_ANALYSIS_SYSTEM_PROMPT asks for a "link"
+    field with "the real post URL if available" on every post it lists —
+    but Claude is deliberately NEVER shown post_url (see
+    build_claude_post_context(), unchanged), so it could never actually
+    supply a real one. This best-effort, PURELY ADDITIVE post-processing
+    step fixes that: it parses the already-generated answer_text as
+    JSON, walks the known formats that carry post lists ("source_list"
+    and "comparison"), and for every post object it finds, matches its
+    "title" back to one of THIS message's already-matched signals (via
+    _best_matching_post()) and sets "link" to that signal's REAL
+    post_url — the exact same URL already used by the post cards,
+    computed by get_matched_signals(), never anything Claude itself
+    supplied or guessed.
+
+    Grounding is preserved: this never lets Claude decide a URL. It only
+    ever substitutes in a URL Flintel already knows to be real, and only
+    when the title can be confidently matched back to one specific
+    signal; if no confident match is found, that post simply keeps
+    whatever "link" value (usually absent) Claude left it with — it is
+    never given a made-up URL by this function either.
+
+    Best-effort/non-destructive: if answer_text isn't valid JSON, isn't
+    one of the two known list-based formats, or matched_signals is
+    empty, the original answer_text is returned completely UNCHANGED —
+    this can only ever ADD a real link where one is confidently
+    resolvable, it can never remove or alter anything else in the
+    answer."""
+    if not answer_text or not matched_signals:
+        return answer_text
+
+    cleaned = answer_text.strip()
+    if cleaned.startswith("```"):
+        cleaned = cleaned.strip("`").strip()
+        cleaned = re.sub(r"^json\s*", "", cleaned, flags=re.IGNORECASE).strip()
+
+    try:
+        data = json.loads(cleaned)
+    except (ValueError, TypeError):
+        return answer_text
+    if not isinstance(data, dict):
+        return answer_text
+
+    fmt = data.get("format")
+    changed = False
+
+    def _patch_platform_list(platforms):
+        nonlocal changed
+        if not isinstance(platforms, list):
+            return
+        for platform_entry in platforms:
+            if not isinstance(platform_entry, dict):
+                continue
+            posts = platform_entry.get("posts")
+            if not isinstance(posts, list):
+                continue
+            for post in posts:
+                if not isinstance(post, dict):
+                    continue
+                match = _best_matching_post(post.get("title"), matched_signals)
+                if match and match.get("post_url"):
+                    post["link"] = match["post_url"]
+                    changed = True
+
+    if fmt == "source_list":
+        _patch_platform_list(data.get("platforms"))
+    elif fmt == "comparison":
+        subjects = data.get("subjects")
+        if isinstance(subjects, list):
+            for subject in subjects:
+                if isinstance(subject, dict):
+                    _patch_platform_list(subject.get("platforms"))
+    else:
+        return answer_text
+
+    if not changed:
+        return answer_text
+
+    return json.dumps(data, ensure_ascii=False)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -2105,6 +2421,15 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list):
     Claude call, any other format) this has NO effect and results render
     exactly as they always have.
 
+    (POST_URL FIX) Right after a fresh (non-streaming) answer is
+    generated here, it is passed through _patch_post_urls_into_answer()
+    before being cached/checked for format — so any post the JSON answer
+    references by title gets its REAL post_url patched into its "link"
+    field from the already-matched signals, the same real URL the post
+    cards use, instead of that field staying empty/missing. Claude itself
+    is still never shown a URL, so it still can never invent one — this
+    only fills in a real one afterward, in Python, by matching on title.
+
     OTHERWISE COMPLETELY UNCHANGED BY THE KEYWORD-GENERATION SWAP — this
     function calls get_matched_signals() and analyze_with_claude() exactly
     as before, using whatever `keywords` was already stored on the message
@@ -2155,6 +2480,9 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list):
         if needs_answer:
             try:
                 answer = analyze_with_claude(msg["query"], matched)
+                # (POST_URL FIX) Patch in real post_url values before this
+                # answer is cached anywhere.
+                answer = _patch_post_urls_into_answer(answer, matched)
                 msg["claude_answer"] = answer
                 save_claude_answer_to_chat(chat_id, owner_key, msg["topic_key"], answer)
                 answer_for_format_check = answer
@@ -2501,6 +2829,98 @@ def view_chat(request: Request, chat_id: str):
             "chats": get_user_chats(owner_key),
         },
     )
+
+
+@app.get("/chat/{chat_id}/stream")
+def stream_answer(request: Request, chat_id: str, topic_key: str):
+    """(STREAMING ADD-ON) Server-Sent-Events endpoint: streams Claude's
+    analysis answer for one specific search-type message (identified by
+    `topic_key`, within this chat) word-by-word as it's generated, so a
+    template can show it arriving live instead of waiting for
+    `_fill_in_message_outputs()` to finish the whole call before anything
+    appears — the same live-typing experience as Claude.ai/ChatGPT.
+
+    Purely ADDITIVE: nothing about home()/view_chat()/
+    _fill_in_message_outputs() changed. If a template never opens this
+    endpoint, every message still gets its answer exactly as before
+    (computed on the next page load) — this is just a faster/nicer
+    alternate path a template can opt into (e.g. via EventSource or a
+    fetch()-based reader).
+
+    Each SSE event is a JSON payload on a `data:` line:
+      {"delta": "<next chunk of text>"}   -- zero or more, as text streams in
+      {"done": true}                       -- exactly once, when finished
+      {"error": "<short reason>"}          -- instead of the above, on failure
+
+    On successful completion, the fully-assembled answer is passed
+    through _patch_post_urls_into_answer() (see POST_URL FIX) and then
+    saved via the EXACT SAME save_claude_answer_to_chat() /
+    append_to_chat_summary() / save_signal_results_to_chat() calls
+    already used by _fill_in_message_outputs() — so the caching guarantee
+    is identical: generated (and billed) once, then served from the
+    cache forever after, whether generation happened via this streaming
+    route or the existing blocking path."""
+    owner_key, _owner_type = get_owner(request)
+    chat = get_chat_session(chat_id, owner_key)
+
+    if not chat:
+        def _no_chat():
+            yield f"data: {json.dumps({'error': 'chat not found'})}\n\n"
+        return StreamingResponse(_no_chat(), media_type="text/event-stream")
+
+    msg = next(
+        (m for m in chat.get("messages", []) if m.get("topic_key") == topic_key),
+        None,
+    )
+    if not msg:
+        def _no_msg():
+            yield f"data: {json.dumps({'error': 'message not found'})}\n\n"
+        return StreamingResponse(_no_msg(), media_type="text/event-stream")
+
+    try:
+        matched = get_matched_signals(
+            topic_key,
+            msg.get("keywords", []),
+            targeting_platform=msg.get("targeting_platform", "all"),
+        )
+    except Exception as exc:
+        log.warning(f"Signal matching failed for streaming topic_key={topic_key}: {exc}")
+        matched = []
+
+    def event_generator():
+        collected = []
+        try:
+            for piece in analyze_with_claude_stream(msg["query"], matched):
+                collected.append(piece)
+                yield f"data: {json.dumps({'delta': piece})}\n\n"
+        except Exception as exc:
+            log.warning(f"Streaming Claude analysis failed for topic_key={topic_key}: {exc}")
+            yield f"data: {json.dumps({'error': 'analysis failed'})}\n\n"
+            return
+
+        full_answer = "".join(collected).strip()
+        if full_answer:
+            # (POST_URL FIX) Patch in real post_url values before caching,
+            # exactly like the non-streaming path in
+            # _fill_in_message_outputs() does.
+            full_answer = _patch_post_urls_into_answer(full_answer, matched)
+            try:
+                save_claude_answer_to_chat(chat_id, owner_key, topic_key, full_answer)
+                append_to_chat_summary(chat_id, owner_key, msg["query"], full_answer)
+            except Exception as exc:
+                log.warning(f"Caching streamed answer failed for topic_key={topic_key}: {exc}")
+
+            if matched:
+                claude_format = _extract_claude_format(full_answer)
+                results_to_save = [] if claude_format in _NO_DATA_CLAUDE_FORMATS else matched
+                try:
+                    save_signal_results_to_chat(chat_id, owner_key, topic_key, results_to_save)
+                except Exception as exc:
+                    log.warning(f"Saving matched results failed for topic_key={topic_key}: {exc}")
+
+        yield f"data: {json.dumps({'done': True})}\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
 
 
 @app.post("/chat/{chat_id}/delete")
