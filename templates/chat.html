@@ -1450,6 +1450,51 @@
 
   document.querySelectorAll('.answer-wrap').forEach(renderStructuredAnswer);
 
+  // ---- Auto-recover from any live content update that bypasses the render
+  //      pass above ----
+  // Symptom this fixes: the answer initially renders correctly, then some
+  // time later (a background poll, an AJAX update, anything that changes
+  // .answer-raw's text without a full page reload) shows raw JSON instead
+  // of the designed layout — until a manual refresh re-runs the script from
+  // scratch. Rather than trying to locate and patch whatever mechanism is
+  // doing that update, this watches the actual DOM directly: any time an
+  // .answer-wrap's underlying .answer-raw text changes for ANY reason, it
+  // re-runs the exact same structured-JSON render pass on it immediately.
+  // This makes the design self-healing regardless of what's changing the
+  // content or when.
+  (function watchForLiveAnswerUpdates() {
+    const threadRoot = document.querySelector('.thread-inner') || document.body;
+
+    function reconcile(wrap) {
+      const rawEl = wrap.querySelector('.answer-raw');
+      if (!rawEl) return;
+      const currentRaw = rawEl.textContent;
+      if (wrap.dataset.lastRenderedRaw === currentRaw) return; // nothing actually changed
+      wrap.dataset.lastRenderedRaw = currentRaw;
+      renderStructuredAnswer(wrap);
+    }
+
+    // Mark what's already correctly rendered at load time, so the observer
+    // doesn't immediately "reconcile" everything a second time for no reason.
+    document.querySelectorAll('.answer-wrap').forEach((wrap) => {
+      const rawEl = wrap.querySelector('.answer-raw');
+      if (rawEl) wrap.dataset.lastRenderedRaw = rawEl.textContent;
+    });
+
+    let pending = false;
+    const observer = new MutationObserver(() => {
+      if (pending) return;
+      pending = true;
+      // Batch rapid-fire mutations into one reconciliation pass instead of
+      // re-parsing JSON on every single character/node change.
+      requestAnimationFrame(() => {
+        pending = false;
+        document.querySelectorAll('.answer-wrap').forEach(reconcile);
+      });
+    });
+    observer.observe(threadRoot, { childList: true, subtree: true, characterData: true });
+  })();
+
   // ---- Auto-scroll to the latest message ----
   // The search form here is a real page reload (POST /search -> redirect
   // back to this chat), so every time this page loads, the browser starts
