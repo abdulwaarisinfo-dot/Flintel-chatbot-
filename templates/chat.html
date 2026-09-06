@@ -1310,45 +1310,128 @@
     }
   }
 
+  // ---- No-results answer format ----
+  // Matches the Figma "no results" psychology exactly: a plain left-aligned
+  // explanation (not the centered .state-card treatment used elsewhere),
+  // then a "Try one of these next steps" list where each action is a bold
+  // emoji-labeled item with its own description underneath, then an
+  // optional "Ask a related question" block with example follow-ups
+  // nested one level deeper, then a closing clarifying question. Font
+  // sizes/spacing use the app's established 17px/26px/20px/40px system
+  // rather than Figma's literal 18px/28px, per the standing rule; colors
+  // and structure match Figma exactly.
+  const NO_RESULTS_ACTION_EMOJI = {
+    broaden_time: '🔁',
+    broaden_platforms: '🌐',
+    broaden_term: '🔍',
+  };
+
+  function noResultsItem(container, emoji, label, descriptionNode) {
+    const wrap = document.createElement('div');
+    wrap.style.marginBottom = '20px';
+    const labelRow = document.createElement('div');
+    labelRow.className = 'post-field';
+    labelRow.innerHTML = `<span class="field-dot"></span><span class="field-text"></span>`;
+    const strong = document.createElement('strong');
+    strong.textContent = `${emoji} ${label}`;
+    labelRow.querySelector('.field-text').appendChild(strong);
+    wrap.appendChild(labelRow);
+    if (descriptionNode) {
+      const descWrap = document.createElement('div');
+      descWrap.style.cssText = 'padding-left: 19px; color: #d1d0cf; font-size: 17px; font-weight: 500; line-height: 26px;';
+      descWrap.appendChild(descriptionNode);
+      wrap.appendChild(descWrap);
+    }
+    container.appendChild(wrap);
+  }
+
+  function clickableTerm(text) {
+    const a = document.createElement('a');
+    a.href = '#';
+    a.textContent = text;
+    a.style.cssText = 'color: #a3e635; text-decoration: underline;';
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('search-input');
+      if (input) { input.value = text; input.dispatchEvent(new Event('input')); input.focus(); }
+    });
+    return a;
+  }
+
   function renderNoResults(data, container) {
-    const card = document.createElement('div');
-    card.className = 'state-card';
-    card.innerHTML = `
-      <span class="state-icon-badge">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/><path d="M21 21L16.5 16.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      </span>
-      <div class="state-heading">No significant conversation found</div>
-      <p class="state-body"></p>
-    `;
-    card.querySelector('.state-body').textContent = data.message || '';
+    const message = document.createElement('p');
+    message.className = 'block-text';
+    message.textContent = data.message || '';
+    container.appendChild(message);
+
     if (data.likely_reason) {
       const p = document.createElement('p');
-      p.className = 'state-body'; p.style.marginTop = '8px';
+      p.className = 'block-text';
+      p.style.marginTop = '20px';
       p.textContent = data.likely_reason;
-      card.appendChild(p);
+      container.appendChild(p);
     }
+
     if (data.suggested_actions && data.suggested_actions.length) {
-      const actions = document.createElement('div');
-      actions.className = 'state-actions';
+      const heading = document.createElement('p');
+      heading.className = 'metrics-section-title';
+      heading.style.marginTop = '40px';
+      heading.textContent = 'Try one of these next steps';
+      container.appendChild(heading);
+
       data.suggested_actions.forEach(a => {
-        const btn = document.createElement('button');
-        btn.className = 'btn-outline'; btn.type = 'button';
-        btn.textContent = a.suggestion || a.label;
-        btn.addEventListener('click', () => {
-          const input = document.getElementById('search-input');
-          if (input) { input.value = a.suggestion || a.label; input.dispatchEvent(new Event('input')); input.focus(); }
-        });
-        actions.appendChild(btn);
+        const emoji = NO_RESULTS_ACTION_EMOJI[a.type] || '➡️';
+        if (a.type === 'broaden_term') {
+          // Figma shows several genuinely-grounded alternative terms inline,
+          // each individually clickable — not just one suggestion slot.
+          // Supports both the newer "suggestions" array and the older
+          // single "suggestion" field for backward compatibility.
+          const terms = a.suggestions || (a.suggestion ? [a.suggestion] : []);
+          const desc = document.createElement('span');
+          if (terms.length) {
+            desc.appendChild(document.createTextNode('For example: '));
+            terms.forEach((t, i) => {
+              desc.appendChild(document.createTextNode('“'));
+              desc.appendChild(clickableTerm(t));
+              desc.appendChild(document.createTextNode(i < terms.length - 1 ? '”, ' : '”.'));
+            });
+          } else {
+            desc.textContent = 'Try a broader or more general version of your search term.';
+          }
+          noResultsItem(container, emoji, a.label, desc);
+        } else {
+          const desc = document.createElement('span');
+          desc.textContent = a.description || 'See if there’s more conversation with this adjustment.';
+          noResultsItem(container, emoji, a.label, desc);
+        }
       });
-      card.appendChild(actions);
+
+      if (data.related_questions && data.related_questions.length) {
+        const desc = document.createElement('div');
+        data.related_questions.forEach(q => {
+          const row = document.createElement('div');
+          row.className = 'post-field';
+          row.style.marginLeft = '30px';
+          row.innerHTML = `<span class="field-dot"></span><span class="field-text"></span>`;
+          row.querySelector('.field-text').textContent = `“${q}”`;
+          row.style.cursor = 'pointer';
+          row.addEventListener('click', () => {
+            const input = document.getElementById('search-input');
+            if (input) { input.value = q; input.dispatchEvent(new Event('input')); input.focus(); }
+          });
+          desc.appendChild(row);
+        });
+        noResultsItem(container, '💬', 'Ask a related question', desc);
+      }
     }
+
     if (data.clarifying_question) {
       const p = document.createElement('p');
-      p.className = 'state-body'; p.style.marginTop = '16px';
+      p.className = 'block-text';
+      p.style.marginTop = '40px';
       p.textContent = data.clarifying_question;
-      card.appendChild(p);
+      container.appendChild(p);
     }
-    container.appendChild(card);
   }
 
   function renderSimpleMessage(data, container, iconSvg) {
