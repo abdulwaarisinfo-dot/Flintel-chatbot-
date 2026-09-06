@@ -533,6 +533,31 @@ other behavior:
    previously had no cache check at all and would silently re-call (and
    re-bill) Claude every single time it was opened for an
    already-answered message.
+
+── HOME() CRASH FIX (THIS FILE) ─────────────────────────────────────────────
+ONE targeted fix, scoped entirely inside home(). Nothing else in this
+file was touched.
+
+`pending_stream_topic_key` was only ever assigned INSIDE the nested
+`if chat_id: ... if chat and chat.get("messages"): ...` block, but the
+final TemplateResponse at the bottom of home() referenced it unconditionally
+guarded only by `if chat_id` — not by whether that inner block actually
+ran. Whenever `chat_id` was truthy but either `chat` came back falsy (e.g.
+a stale/corrupt session pointing at a chat that no longer exists) or
+`chat.get("messages")` was empty (a brand-new chat with zero messages),
+the inner block never executed, so `pending_stream_topic_key` was never
+assigned at all — and Python raised `UnboundLocalError` trying to read it
+in the return statement, crashing the whole page.
+
+Fix: `pending_stream_topic_key = None` is now initialized at the very top
+of home(), alongside `chats, chat_id, chat = [], None, None`, so it is
+ALWAYS defined no matter which branch runs or whether the try block raises
+partway through. The return statement now just reads
+`"pending_stream_topic_key": pending_stream_topic_key` directly (the old
+`if chat_id else None` ternary is no longer needed since the variable is
+guaranteed to exist). This is a pure crash fix — it does not change what
+value gets passed to the template in any case that previously worked; it
+only prevents the exception in the cases that previously crashed.
 ──────────────────────────────────────────────────────────────────────────────
 """
 
@@ -2597,6 +2622,18 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
 @app.get("/")
 def home(request: Request):
     chats, chat_id, chat = [], None, None
+    # (HOME() CRASH FIX) Initialized here unconditionally so it is ALWAYS
+    # defined by the time the return statement below reads it — no matter
+    # which branch runs, no matter whether the try block below raises
+    # partway through, and no matter whether chat_id is truthy but chat
+    # itself (or chat["messages"]) ends up falsy. Previously this variable
+    # was only assigned deep inside the nested "if chat_id: if chat and
+    # chat.get('messages'):" block, so any case that didn't reach that
+    # inner block (stale/corrupt active_chat_id pointing at a chat that no
+    # longer exists, or a brand-new chat with zero messages) left it
+    # completely unassigned and crashed the whole page with
+    # UnboundLocalError when the return statement tried to read it.
+    pending_stream_topic_key = None
     try:
         owner_key, _owner_type = get_owner(request)
         chats = get_user_chats(owner_key)
@@ -2620,7 +2657,6 @@ def home(request: Request):
                 # that shape (chat-type turn, or already answered),
                 # pending_stream_topic_key stays None and this behaves
                 # 100% exactly as it always has.
-                pending_stream_topic_key = None
                 latest_msg = chat["messages"][-1]
                 if latest_msg.get("topic_key") and not latest_msg.get("claude_answer"):
                     pending_stream_topic_key = latest_msg["topic_key"]
@@ -2639,7 +2675,7 @@ def home(request: Request):
             "chats": chats,
             "chat_id": chat_id,
             "chat": chat,
-            "pending_stream_topic_key": pending_stream_topic_key if chat_id else None,
+            "pending_stream_topic_key": pending_stream_topic_key,
         },
     )
 
