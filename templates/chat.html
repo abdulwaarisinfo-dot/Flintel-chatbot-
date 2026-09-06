@@ -657,7 +657,7 @@
 
         {% if chat.messages %}
           {% for msg in chat.messages %}
-          <div class="turn-block">
+          <div class="turn-block" data-topic-key="{{ msg.topic_key or '' }}"{% if pending_stream_topic_key and msg.topic_key == pending_stream_topic_key %} data-pending-stream="true"{% endif %}>
             <div class="turn-row"><div class="turn-question">{{ msg.query }}</div></div>
             <div class="turn-meta">
               <span class="turn-chip">
@@ -722,7 +722,7 @@
               <span class="loading-text">Got the posts — writing up the answer…</span>
             </div>
             {% else %}
-            <div class="loading-row">
+            <div class="loading-row" id="loading-row-{{ msg.topic_key }}">
               <span class="loading-logo"><img src="https://www.figma.com/api/mcp/asset/9ac3df00-71a7-4d75-b3a6-1796fd320906.png" alt="" /></span>
               <div class="loading-dots"><span></span><span></span><span></span></div>
               <span class="loading-text">Still gathering results for this search…</span>
@@ -1512,6 +1512,88 @@
     if (!turns.length) return;
     const latest = turns[turns.length - 1];
     latest.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  })();
+</script>
+
+<script>
+  // ---- Live streaming for the one pending answer, if any ----
+  // Wires up the existing GET /chat/{chat_id}/stream SSE endpoint. Only
+  // runs at all if a message on this page is actually mid-stream (marked
+  // via data-pending-stream="true" by the Jinja template above).
+  //
+  // The streamed text is raw, INCOMPLETE JSON arriving token-by-token — it
+  // is never valid to parse mid-stream and must never be shown to the user
+  // character-by-character (that would flash broken JSON fragments on
+  // screen). So deltas are only accumulated silently in memory; the
+  // existing loading-row markup stays visually untouched the entire time.
+  // On "done", a full page reload picks up the now-cached claude_answer
+  // and results through the exact same server-rendered path every other
+  // already-answered message already uses — no new JSON-parsing or
+  // results-rendering code is needed here at all.
+  (function wireUpPendingStream() {
+    const pendingTurn = document.querySelector('[data-pending-stream="true"]');
+    if (!pendingTurn) return;
+
+    const chatIdInput = document.querySelector('#search-form input[name="chat_id"]');
+    const chatId = chatIdInput ? chatIdInput.value : '';
+    const topicKey = pendingTurn.dataset.topicKey || '';
+    if (!chatId || !topicKey) return;
+
+    const loadingTextEl = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)} .loading-text`);
+
+    // Optional, additive-only: rotate the existing .loading-text element
+    // through a few short phrases while deltas arrive. Same class, same
+    // styling — never reveals any of the accumulated raw JSON itself.
+    const rotatingPhrases = ['Reading matched posts…', 'Writing up the answer…'];
+    let phraseIndex = 0;
+    let phraseTimer = null;
+    if (loadingTextEl) {
+      phraseTimer = setInterval(() => {
+        phraseIndex = (phraseIndex + 1) % rotatingPhrases.length;
+        loadingTextEl.textContent = rotatingPhrases[phraseIndex];
+      }, 2200);
+    }
+
+    let accumulated = '';
+    const source = new EventSource(`/chat/${chatId}/stream?topic_key=${encodeURIComponent(topicKey)}`);
+
+    source.onmessage = (event) => {
+      let payload;
+      try {
+        payload = JSON.parse(event.data);
+      } catch (e) {
+        return; // malformed SSE frame — ignore, wait for a valid one or for onerror
+      }
+
+      if (payload.delta !== undefined) {
+        // Silently accumulate only — never rendered mid-stream.
+        accumulated += payload.delta;
+        return;
+      }
+
+      if (payload.done) {
+        source.close();
+        if (phraseTimer) clearInterval(phraseTimer);
+        window.location.reload();
+        return;
+      }
+
+      if (payload.error) {
+        source.close();
+        if (phraseTimer) clearInterval(phraseTimer);
+        // Leave the original "Still gathering results…" text exactly as-is
+        // — no error message shown here, no DOM changes. A later normal
+        // page load/refresh picks up the answer via the backend's own
+        // blocking fallback path.
+      }
+    };
+
+    source.onerror = () => {
+      source.close();
+      if (phraseTimer) clearInterval(phraseTimer);
+      // Same as the explicit {"error": ...} case above — leave the existing
+      // loading text untouched, no visible change.
+    };
   })();
 </script>
 </body>
