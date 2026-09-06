@@ -612,7 +612,7 @@
             <div class="turn-meta">
               <span class="turn-chip">
                 <span class="status-dot"></span>
-                {{ msg.targeting_platform | default('all') }}
+                {{ msg.targeting_platform | default('all', true) }}
               </span>
               {% if msg.requested_at %}
               <span class="turn-chip">{{ msg.requested_at.strftime('%b %d, %Y %H:%M') if msg.requested_at.strftime else msg.requested_at }}</span>
