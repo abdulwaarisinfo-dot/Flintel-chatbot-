@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -117,6 +116,7 @@
     color: rgba(255,255,255,0.7); font-size: 16px; font-weight: 500;
     transition: background .15s ease;
     text-decoration: none;
+    position: relative; /* anchors the per-chat options dropdown below */
   }
   .session-item:hover, .session-item.active { background: #252421; }
   .session-item.active { color: #fff; }
@@ -130,12 +130,39 @@
     display: none;
   }
   .session-item-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  /* Wraps the chat title link so the 3-dot menu button can sit beside it
+     without nesting a <button> inside an <a> (invalid HTML) — same click
+     target/size/ellipsis behavior as before, just split into two elements. */
+  .session-item-link {
+    display: flex; align-items: center; flex: 1 1 auto; min-width: 0;
+    color: inherit; text-decoration: none; height: 100%;
+  }
   .session-item-menu {
     display: none; color: #757473; flex-shrink: 0; padding: 4px; margin: -4px;
     transition: color .15s ease;
   }
   .session-item:hover .session-item-menu, .session-item.active .session-item-menu { display: flex; }
   .session-item-menu:hover { color: #fff; }
+
+  /* ---------- Per-chat options dropdown (3-dot menu -> Delete) ---------- */
+  .session-menu-dropdown {
+    display: none;
+    position: absolute; top: calc(100% + 4px); right: 6px; z-index: 25;
+    background: #1e1d1b; border: 1px solid #3d3d3b; border-radius: 12px;
+    padding: 6px; min-width: 132px; list-style: none;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+  }
+  .session-menu-dropdown.open { display: block; }
+  .session-menu-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 8px 10px; border-radius: 8px;
+    color: #e8e6e3; font-size: 14px; font-weight: 500;
+    cursor: pointer; transition: background .15s ease, color .15s ease;
+  }
+  .session-menu-item:hover { background: #252421; }
+  .session-menu-item.danger { color: #E2645A; }
+  .session-menu-item.danger:hover { background: rgba(226,100,90,0.1); }
+  .session-menu-item svg { flex-shrink: 0; }
 
   .signin-btn {
     display: flex; align-items: center; justify-content: space-between;
@@ -623,13 +650,21 @@
         <div class="sessions-list-wrap">
           <div id="sessions-list">
             {% for chat_row in chats %}
-            <a class="session-item{% if chat_id is defined and chat_id and chat_row.chat_id == chat_id %} active{% endif %}"
-               href="/chat/{{ chat_row.chat_id }}" title="{{ chat_row.title }}">
-              <span class="session-item-label">{{ chat_row.title }}</span>
-              <span class="session-item-menu" aria-hidden="true">
+            <div class="session-item{% if chat_id is defined and chat_id and chat_row.chat_id == chat_id %} active{% endif %}">
+              <a class="session-item-link" href="/chat/{{ chat_row.chat_id }}" title="{{ chat_row.title }}">
+                <span class="session-item-label">{{ chat_row.title }}</span>
+              </a>
+              <button class="session-item-menu" type="button" data-chat-id="{{ chat_row.chat_id }}"
+                      aria-label="Chat options" aria-haspopup="true" aria-expanded="false">
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="3.2" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="12.8" cy="8" r="1.2" fill="currentColor"/></svg>
-              </span>
-            </a>
+              </button>
+              <ul class="session-menu-dropdown" role="menu">
+                <li class="session-menu-item danger session-menu-delete" role="menuitem" data-chat-id="{{ chat_row.chat_id }}">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 7H20M9 7V4.5C9 3.67 9.67 3 10.5 3H13.5C14.33 3 15 3.67 15 4.5V7M18.5 7L17.79 18.36C17.72 19.55 16.73 20.5 15.53 20.5H8.47C7.27 20.5 6.28 19.55 6.21 18.36L5.5 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 11V16M14 11V16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                  <span>Delete</span>
+                </li>
+              </ul>
+            </div>
             {% endfor %}
           </div>
         </div>
@@ -1218,6 +1253,54 @@
     sessionsBody.style.display = expanded ? 'none' : '';
     sessionsChevron.style.transform = expanded ? 'rotate(0deg)' : 'rotate(90deg)';
   });
+
+  // ---- Per-chat options menu (3-dot -> Delete) ----
+  // Purely a UI affordance on top of the real POST /chat/{chat_id}/delete
+  // route already in index.py: clicking the 3-dot button toggles a small
+  // dropdown next to that chat; clicking "Delete" submits a real form POST
+  // to that route (owner-scoped server-side, exactly like reading a chat),
+  // then the server redirect reloads the sidebar without the deleted chat.
+  function closeAllSessionMenus(except) {
+    document.querySelectorAll('.session-menu-dropdown.open').forEach((dd) => {
+      if (dd !== except) {
+        dd.classList.remove('open');
+        const btn = dd.previousElementSibling;
+        if (btn && btn.classList.contains('session-item-menu')) {
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      }
+    });
+  }
+
+  document.querySelectorAll('.session-item-menu').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const dropdown = btn.nextElementSibling;
+      if (!dropdown || !dropdown.classList.contains('session-menu-dropdown')) return;
+      const isOpen = dropdown.classList.contains('open');
+      closeAllSessionMenus(isOpen ? null : dropdown);
+      dropdown.classList.toggle('open', !isOpen);
+      btn.setAttribute('aria-expanded', String(!isOpen));
+    });
+  });
+
+  document.querySelectorAll('.session-menu-delete').forEach((item) => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const chatId = item.dataset.chatId;
+      if (!chatId) return;
+      const form = document.createElement('form');
+      form.method = 'post';
+      form.action = `/chat/${chatId}/delete`;
+      form.style.display = 'none';
+      document.body.appendChild(form);
+      form.submit();
+    });
+  });
+
+  document.addEventListener('click', () => closeAllSessionMenus(null));
 
   // ---- Auth modal (Google OAuth link + email/password login/signup) ----
   const authOverlay = document.getElementById('auth-overlay');
