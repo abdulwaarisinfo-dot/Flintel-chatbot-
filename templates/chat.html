@@ -116,6 +116,7 @@
     color: rgba(255,255,255,0.7); font-size: 16px; font-weight: 500;
     transition: background .15s ease;
     text-decoration: none;
+    position: relative;
   }
   .session-item:hover, .session-item.active { background: #252421; }
   .session-item.active { color: #fff; }
@@ -126,12 +127,36 @@
     display: none;
   }
   .session-item-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .session-item-link {
+    display: flex; align-items: center; flex: 1 1 auto; min-width: 0;
+    color: inherit; text-decoration: none; height: 100%;
+  }
   .session-item-menu {
     display: none; color: #757473; flex-shrink: 0; padding: 4px; margin: -4px;
     transition: color .15s ease;
   }
   .session-item:hover .session-item-menu, .session-item.active .session-item-menu { display: flex; }
   .session-item-menu:hover { color: #fff; }
+
+  /* ---------- Per-chat options dropdown (3-dot menu -> Delete) ---------- */
+  .session-menu-dropdown {
+    display: none;
+    position: absolute; top: calc(100% + 4px); right: 6px; z-index: 25;
+    background: #1e1d1b; border: 1px solid #3d3d3b; border-radius: 12px;
+    padding: 6px; min-width: 132px; list-style: none;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+  }
+  .session-menu-dropdown.open { display: block; }
+  .session-menu-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 8px 10px; border-radius: 8px;
+    color: #e8e6e3; font-size: 14px; font-weight: 500;
+    cursor: pointer; transition: background .15s ease, color .15s ease;
+  }
+  .session-menu-item:hover { background: #252421; }
+  .session-menu-item.danger { color: #E2645A; }
+  .session-menu-item.danger:hover { background: rgba(226,100,90,0.1); }
+  .session-menu-item svg { flex-shrink: 0; }
 
 
   .signin-btn {
@@ -507,13 +532,21 @@
         <div class="sessions-list-wrap">
           <div id="sessions-list">
             {% for c in chats %}
-            <a class="session-item{% if c.chat_id == chat.chat_id %} active{% endif %}"
-               href="/chat/{{ c.chat_id }}" title="{{ c.title }}">
-              <span class="session-item-label">{{ c.title }}</span>
-              <span class="session-item-menu" aria-hidden="true">
+            <div class="session-item{% if c.chat_id == chat.chat_id %} active{% endif %}">
+              <a class="session-item-link" href="/chat/{{ c.chat_id }}" title="{{ c.title }}">
+                <span class="session-item-label">{{ c.title }}</span>
+              </a>
+              <button class="session-item-menu" type="button" data-chat-id="{{ c.chat_id }}"
+                      aria-label="Chat options" aria-haspopup="true" aria-expanded="false">
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="3.2" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="12.8" cy="8" r="1.2" fill="currentColor"/></svg>
-              </span>
-            </a>
+              </button>
+              <ul class="session-menu-dropdown" role="menu">
+                <li class="session-menu-item danger session-menu-delete" role="menuitem" data-chat-id="{{ c.chat_id }}">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 7H20M9 7V4.5C9 3.67 9.67 3 10.5 3H13.5C14.33 3 15 3.67 15 4.5V7M18.5 7L17.79 18.36C17.72 19.55 16.73 20.5 15.53 20.5H8.47C7.27 20.5 6.28 19.55 6.21 18.36L5.5 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 11V16M14 11V16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                  <span>Delete</span>
+                </li>
+              </ul>
+            </div>
             {% endfor %}
           </div>
         </div>
@@ -848,60 +881,60 @@
 
       </div>
     </div>
-  </main>
 
-  <!-- Docked follow-up input — real form, posts to /search pinned to this chat -->
-  <div class="docked-input-wrap">
-    <div class="docked-input-inner">
-      <form action="/search" method="post" id="search-form">
-        <div class="search-box">
-          <label for="search-input" class="sr-only">Ask a follow-up</label>
-          <input
-            id="search-input"
-            name="query"
-            class="search-input"
-            type="text"
-            placeholder="Ask a follow-up..."
-            required
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="off"
-            spellcheck="false"
-          />
-          <input type="hidden" name="platform" id="platform-input" value="All Platforms" />
-          <input type="hidden" name="chat_id" value="{{ chat.chat_id }}" />
+    <!-- Docked follow-up input — real form, posts to /search pinned to this chat -->
+    <div class="docked-input-wrap">
+      <div class="docked-input-inner">
+        <form action="/search" method="post" id="search-form">
+          <div class="search-box">
+            <label for="search-input" class="sr-only">Ask a follow-up</label>
+            <input
+              id="search-input"
+              name="query"
+              class="search-input"
+              type="text"
+              placeholder="Ask a follow-up..."
+              required
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+            />
+            <input type="hidden" name="platform" id="platform-input" value="All Platforms" />
+            <input type="hidden" name="chat_id" value="{{ chat.chat_id }}" />
 
-          <div class="search-controls">
-            <button class="add-btn" id="attach-btn" type="button" aria-label="Add attachment">
-              <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M8.5 1.5V15.5M1.5 8.5H15.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-            </button>
-            <input type="file" id="attach-input" style="display:none" multiple />
-
-            <div class="right-controls">
-              <div style="position:relative">
-                <button class="platforms-btn" id="platforms-btn" type="button" aria-haspopup="listbox" aria-expanded="false">
-                  <span id="platforms-label">All Platforms</span>
-                  <svg id="platforms-chevron" style="transform: rotate(0deg); transition: transform .15s ease" width="12" height="7" viewBox="0 0 12 7" fill="none"><path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-                <ul id="platforms-menu" role="listbox"
-                  style="display:none; position:absolute; bottom:calc(100% + 10px); right:0; background:#1e1d1b; border:1px solid #3d3d3b; border-radius:12px; padding:6px; min-width:160px; list-style:none; z-index:20;">
-                  <li role="option" data-value="All Platforms" style="padding:8px 10px; border-radius:8px; color:#e8e6e3; font-size:14px; cursor:pointer;">All Platforms</li>
-                  <li role="option" data-value="X / Twitter" style="padding:8px 10px; border-radius:8px; color:#e8e6e3; font-size:14px; cursor:pointer;">X / Twitter</li>
-                  <li role="option" data-value="Reddit" style="padding:8px 10px; border-radius:8px; color:#e8e6e3; font-size:14px; cursor:pointer;">Reddit</li>
-                  <li role="option" data-value="LinkedIn" style="padding:8px 10px; border-radius:8px; color:#e8e6e3; font-size:14px; cursor:pointer;">LinkedIn</li>
-                  <li role="option" data-value="Facebook" style="padding:8px 10px; border-radius:8px; color:#e8e6e3; font-size:14px; cursor:pointer;">Facebook</li>
-                </ul>
-              </div>
-
-              <button class="submit-btn" id="submit-btn" type="submit" aria-label="Submit search" disabled>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="#171615" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="search-controls">
+              <button class="add-btn" id="attach-btn" type="button" aria-label="Add attachment">
+                <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M8.5 1.5V15.5M1.5 8.5H15.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
               </button>
+              <input type="file" id="attach-input" style="display:none" multiple />
+
+              <div class="right-controls">
+                <div style="position:relative">
+                  <button class="platforms-btn" id="platforms-btn" type="button" aria-haspopup="listbox" aria-expanded="false">
+                    <span id="platforms-label">All Platforms</span>
+                    <svg id="platforms-chevron" style="transform: rotate(0deg); transition: transform .15s ease" width="12" height="7" viewBox="0 0 12 7" fill="none"><path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <ul id="platforms-menu" role="listbox"
+                    style="display:none; position:absolute; bottom:calc(100% + 10px); right:0; background:#1e1d1b; border:1px solid #3d3d3b; border-radius:12px; padding:6px; min-width:160px; list-style:none; z-index:20;">
+                    <li role="option" data-value="All Platforms" style="padding:8px 10px; border-radius:8px; color:#e8e6e3; font-size:14px; cursor:pointer;">All Platforms</li>
+                    <li role="option" data-value="X / Twitter" style="padding:8px 10px; border-radius:8px; color:#e8e6e3; font-size:14px; cursor:pointer;">X / Twitter</li>
+                    <li role="option" data-value="Reddit" style="padding:8px 10px; border-radius:8px; color:#e8e6e3; font-size:14px; cursor:pointer;">Reddit</li>
+                    <li role="option" data-value="LinkedIn" style="padding:8px 10px; border-radius:8px; color:#e8e6e3; font-size:14px; cursor:pointer;">LinkedIn</li>
+                    <li role="option" data-value="Facebook" style="padding:8px 10px; border-radius:8px; color:#e8e6e3; font-size:14px; cursor:pointer;">Facebook</li>
+                  </ul>
+                </div>
+
+                <button class="submit-btn" id="submit-btn" type="submit" aria-label="Submit search" disabled>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="#171615" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
-  </div>
+  </main>
 </div>
 
 <!-- Markdown rendering for msg.claude_answer (see .answer-raw /
@@ -934,6 +967,53 @@
     sessionsToggle.setAttribute('aria-expanded', String(!expanded));
     sessionsBody.style.display = expanded ? 'none' : '';
     sessionsChevron.style.transform = expanded ? 'rotate(0deg)' : 'rotate(90deg)';
+  });
+
+  // ---- Per-chat options menu (3-dot -> Delete) ----
+  // Real full-page-reload form submit to POST /chat/{chat_id}/delete —
+  // deliberately not soft-navigated, same as index.html.
+  function closeAllSessionMenus(except) {
+    document.querySelectorAll('.session-menu-dropdown.open').forEach((dd) => {
+      if (dd !== except) {
+        dd.classList.remove('open');
+        const btn = dd.previousElementSibling;
+        if (btn && btn.classList.contains('session-item-menu')) {
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      }
+    });
+  }
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.session-item-menu');
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      const dropdown = btn.nextElementSibling;
+      if (!dropdown || !dropdown.classList.contains('session-menu-dropdown')) return;
+      const isOpen = dropdown.classList.contains('open');
+      closeAllSessionMenus(isOpen ? null : dropdown);
+      dropdown.classList.toggle('open', !isOpen);
+      btn.setAttribute('aria-expanded', String(!isOpen));
+      return;
+    }
+    const deleteItem = e.target.closest('.session-menu-delete');
+    if (deleteItem) {
+      e.preventDefault();
+      e.stopPropagation();
+      const chatId = deleteItem.dataset.chatId;
+      if (!chatId) return;
+      const form = document.createElement('form');
+      form.method = 'post';
+      form.action = `/chat/${chatId}/delete`;
+      form.style.display = 'none';
+      document.body.appendChild(form);
+      form.submit();
+      return;
+    }
+    if (!e.target.closest('.session-menu-dropdown')) {
+      closeAllSessionMenus(null);
+    }
   });
 
   // ---- Attachment button opens file picker (no upload backend wired yet) ----
