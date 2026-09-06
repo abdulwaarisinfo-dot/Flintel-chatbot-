@@ -1,5 +1,6 @@
 """
-FLINTEL — WEB SERVICE (v7 + JSON-ANALYSIS-PROMPT SWAP + CLAUDE-KEYWORD SWAP)
+FLINTEL — WEB SERVICE (v7 + JSON-ANALYSIS-PROMPT SWAP + CLAUDE-KEYWORD SWAP
++ BUGFIX PACK: RESULTS/ANSWER SYNC + WORD-BOUNDARY MATCHING + 2ND-LEVEL CHUNKING)
 ============================================================================
 Everything from v3 is UNCHANGED and still works exactly as before:
   1. Take a user prompt (brand/topic/product name) from a simple web form.
@@ -101,6 +102,7 @@ Required env vars (add to .env):
     RESPONSE_TIMEOUT=60                      # optional, this is the default (seconds)
     MAX_POSTS_PER_PLATFORM=3                 # optional, this is the default (v7, see below)
     CLAUDE_MAX_KEYWORDS=10                   # optional, this is the default (new, see KEYWORD-GENERATION SWAP)
+    CLAUDE_NOTES_PER_CHUNK=8                 # optional, this is the default (new, see BUGFIX PACK #3 below)
 
 ── v4.1 FIX ───────────────────────────────────────────────────────────────
 Only ONE behavior changed from the v4 file above: the /search route used to
@@ -235,12 +237,12 @@ route, function, template contract, or behavior — was touched.
 
 2. BROADER KEYWORD MATCHING (title / post_text substring matching, ON TOP
    OF the existing search_keyword field matching): a signal now also
-   counts as a match if any of the job's generated keywords appears as a
-   case-insensitive substring inside that signal's OWN title or
-   post_text, even if its search_keyword field doesn't match at all. Pure
-   OR, never a replacement for the exact-field match. Everything else
-   about get_matched_signals() (return shape, signature, de-duplication,
-   every caller) is completely unchanged.
+   counts as a match if any of the job's generated keywords appears
+   (word-boundary matched — see BUGFIX PACK #2 below) inside that
+   signal's OWN title or post_text, even if its search_keyword field
+   doesn't match at all. Pure OR, never a replacement for the exact-field
+   match. Everything else about get_matched_signals() (return shape,
+   signature, de-duplication, every caller) is completely unchanged.
 
 ── JSON-ANALYSIS-PROMPT SWAP ────────────────────────────────────────────────
 ONLY ONE THING was changed from the v7 file above at that point, and it
@@ -250,13 +252,15 @@ strict-JSON, 6-format ("source_list" / "trend_report" / "comparison" /
 "no_results" / "not_available" / "disallowed") analysis prompt. Nothing
 else was touched by that swap: analyze_with_claude(), build_claude_post_
 context(), chunk_list(), _format_posts_block(), _map_chunk(), and
-_call_claude() are all BYTE-FOR-BYTE UNCHANGED. analyze_with_claude()
-still returns a plain Python str exactly as before — it is simply that
-this str now, if Claude follows the new prompt, contains a JSON document
-instead of free-form prose. save_claude_answer_to_chat() still stores
-whatever string it's given as-is — no parsing, no new schema. The
-CLAUDE_MAP_STEP_SYSTEM_PROMPT (intermediate map/chunking step) is
-UNCHANGED — still plain bulleted notes, not JSON.
+_call_claude() are all otherwise identical to before that swap (see
+BUGFIX PACK #3 below for the one additive change now inside
+analyze_with_claude()). analyze_with_claude() still returns a plain
+Python str exactly as before — it is simply that this str now, if Claude
+follows the new prompt, contains a JSON document instead of free-form
+prose. save_claude_answer_to_chat() still stores whatever string it's
+given as-is — no parsing, no new schema. The CLAUDE_MAP_STEP_SYSTEM_PROMPT
+(intermediate map/chunking step) is UNCHANGED — still plain bulleted
+notes, not JSON.
 
 CONSEQUENCE (logic-only, not a bug): because chat.html / index.html were
 built to render `claude_answer` as plain markdown-ish text, and that
@@ -265,7 +269,7 @@ VERBATIM in the chat UI unless/until a template-side parser and
 per-format renderer are added. That template/rendering work remains
 OUT OF SCOPE here, same as before.
 
-── KEYWORD-GENERATION SWAP (THIS FILE) ──────────────────────────────────────
+── KEYWORD-GENERATION SWAP ──────────────────────────────────────────────────
 ONLY the SOURCE of the keyword list used for a "search"-type message
 changed. Concretely:
 
@@ -328,6 +332,75 @@ changed. Concretely:
     it into. Adding real date-range filtering would be a separate,
     explicit change to get_matched_signals() — intentionally not done
     here, since it wasn't part of what was asked.
+
+── BUGFIX PACK — RESULTS/ANSWER SYNC + WORD-BOUNDARY MATCHING + 2ND-LEVEL
+   CHUNKING (THIS FILE) ───────────────────────────────────────────────────
+Three small, targeted, purely-additive/tightening changes on top of
+everything above. Nothing else in this file was touched — every other
+function, route, constant, and prompt is otherwise identical to the file
+described above.
+
+1. RESULTS/ANSWER SYNC BUG FIX:
+   Previously, `results` (post cards) and `claude_answer` (Claude's JSON
+   text) were computed and saved completely independently of each other
+   inside _fill_in_message_outputs(). This meant a message could end up
+   with claude_answer being a "no_results" / "not_available" /
+   "disallowed" JSON payload (Claude explicitly saying nothing relevant
+   was found) while `results` still showed whatever get_matched_signals()
+   loosely matched — visibly contradicting the answer text in the chat
+   UI (Claude says "no relevant posts found" while post cards for
+   unrelated posts render right below it).
+   Fix: a new tiny helper, _extract_claude_format(), best-effort parses
+   whatever claude_answer text is available (freshly generated this call,
+   or already cached on the message) and reads its "format" field. If
+   that format is one of _NO_DATA_CLAUDE_FORMATS ("no_results",
+   "not_available", "disallowed"), the post-card `results` for that same
+   message are treated as empty for this render/save instead of showing
+   the loosely-matched posts Claude itself already rejected. If the
+   answer can't be parsed as JSON (old plain-text answers, a failed
+   Claude call, or any other format) this has NO effect — results render
+   exactly as before, so this can only ever hide results in the one
+   specific case where Claude's own JSON explicitly said there was
+   nothing relevant, never in any other case. save_signal_results_to_chat()
+   itself is UNCHANGED (still a no-op on an empty/falsy results list, so
+   nothing new is ever force-written to the DB by this fix).
+
+2. WORD-BOUNDARY KEYWORD MATCHING (v7 substring-matching tightened):
+   _text_matches_keyword() used to do a bare Python `in` substring check,
+   so a short/generic keyword like "buy" matched inside completely
+   unrelated words like "buying" or "buyer" inside any post's title/text
+   — this is what let irrelevant Reddit posts (used cars, office chairs,
+   motorcycle accessories) get matched purely because a generic word
+   fragment happened to appear inside them. Fixed by switching to a
+   regex `\b<keyword>\b` word-boundary match instead of plain substring
+   containment — a keyword must now appear as a whole word/phrase, not as
+   a fragment glued onto other letters. This is the ONLY change in this
+   function; its signature, its callers, and the OR-based matching logic
+   in get_matched_signals() are all otherwise identical. The Mongo query
+   pre-filter inside get_matched_signals() is intentionally left as a
+   loose superset fetch (unchanged) since the real accept/reject decision
+   has always happened here in Python — tightening only this function is
+   enough to stop the false positives from ever reaching `matched`.
+
+3. SECOND-LEVEL NOTE CHUNKING (new, additive-only, inside
+   analyze_with_claude()):
+   The existing map-reduce (posts chunked into CLAUDE_POSTS_PER_CHUNK
+   batches, each condensed into one "notes" string via _map_chunk(), all
+   notes then joined into a single final reduce call) is completely
+   UNCHANGED for the common case. This adds ONE new safety net: if the
+   number of condensed notes itself grows past a new
+   CLAUDE_NOTES_PER_CHUNK env var (default 8) — i.e. a topic had enough
+   matched posts to need many first-level chunks — those notes are
+   themselves chunked into batches of CLAUDE_NOTES_PER_CHUNK and each
+   batch gets one extra cheap Claude call (_condense_notes_chunk(), using
+   a new CLAUDE_NOTES_REDUCE_SYSTEM_PROMPT that only consolidates and
+   de-duplicates existing grounded notes, never invents anything new)
+   BEFORE the final reduce call — so the final reduce call always sees a
+   manageable, bounded amount of text no matter how many posts were
+   matched for a topic. For any topic with CLAUDE_NOTES_PER_CHUNK or
+   fewer notes (the overwhelming majority of real searches), this new
+   step never triggers, and analyze_with_claude()'s behavior is 100%
+   identical to before this bugfix pack.
 ──────────────────────────────────────────────────────────────────────────────
 """
 
@@ -412,6 +485,13 @@ CLAUDE_POSTS_PER_CHUNK  = int(os.getenv("CLAUDE_POSTS_PER_CHUNK", "12"))
 CLAUDE_TIMEOUT_SECONDS  = float(os.getenv("CLAUDE_TIMEOUT_SECONDS", "30"))
 CLAUDE_API_URL          = "https://api.anthropic.com/v1/messages"
 CLAUDE_API_VERSION      = "2023-06-01"
+
+# (BUGFIX PACK #3) How many condensed first-level "notes" strings are
+# allowed to be combined directly in the final reduce call before a
+# SECOND level of chunking kicks in to condense them further first. Only
+# matters for topics big enough to already need first-level chunking —
+# see analyze_with_claude() below.
+CLAUDE_NOTES_PER_CHUNK  = int(os.getenv("CLAUDE_NOTES_PER_CHUNK", "8"))
 
 # ── Router + chat-summary config (v5, bumped slightly for the new
 # "keywords" field the router call can now also return) ───────────────────
@@ -747,19 +827,31 @@ def _signal_keyword_matches(doc: dict, keyword_set: set) -> bool:
 
 
 def _text_matches_keyword(text: str, keyword_set: set) -> bool:
-    """(v7) True if ANY keyword in keyword_set appears as a
-    case-insensitive SUBSTRING somewhere inside `text`. This is what lets
-    a signal count as a match purely because a keyword phrase shows up in
-    its own title or post_text, even when its search_keyword field
-    doesn't match at all — a pure additional OR path alongside
-    _signal_keyword_matches() above, never a replacement for it.
+    """(v7, tightened by BUGFIX PACK #2) True if ANY keyword in
+    keyword_set appears as a case-insensitive WHOLE-WORD/PHRASE match
+    somewhere inside `text` — this is what lets a signal count as a match
+    purely because a keyword phrase shows up in its own title or
+    post_text, even when its search_keyword field doesn't match at all —
+    a pure additional OR path alongside _signal_keyword_matches() above,
+    never a replacement for it.
 
-    UNCHANGED by the keyword-generation swap."""
+    (BUGFIX PACK #2): previously this did a bare `kw in text_lower`
+    substring check, which meant a short/generic keyword like "buy" would
+    also match inside completely unrelated words like "buying" or
+    "buyer" — pulling in irrelevant posts that happened to contain that
+    letter sequence as a fragment. Now uses a `\\b<keyword>\\b`
+    word-boundary regex instead, so a keyword only counts as a match when
+    it appears as a genuine whole word/phrase in the text, not as a
+    fragment glued onto other letters. Signature, return type, and every
+    caller are otherwise unchanged."""
     if not text or not isinstance(text, str):
         return False
     text_lower = text.lower()
     for kw in keyword_set:
-        if kw and kw in text_lower:
+        if not kw:
+            continue
+        pattern = r"\b" + re.escape(kw) + r"\b"
+        if re.search(pattern, text_lower):
             return True
     return False
 
@@ -796,10 +888,12 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
       1. its search-keyword field matches one of our generated keywords
          (see _signal_keyword_matches() — UNCHANGED, still exact/perfect,
          same as v3-v7), OR
-      2. (v7) one of our generated keywords appears as a case-insensitive
-         substring inside its OWN title, OR
-      3. (v7) one of our generated keywords appears as a case-insensitive
-         substring inside its OWN post_text.
+      2. (v7, word-boundary tightened by BUGFIX PACK #2) one of our
+         generated keywords appears as a whole-word/phrase match inside
+         its OWN title, OR
+      3. (v7, word-boundary tightened by BUGFIX PACK #2) one of our
+         generated keywords appears as a whole-word/phrase match inside
+         its OWN post_text.
     Matching via more than one of these at once still only ever produces
     ONE entry in the results (de-duplicated by post_url exactly as
     before) — this only widens WHICH signals can match, it never changes
@@ -839,7 +933,9 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     COMPLETELY UNCHANGED BY THE KEYWORD-GENERATION SWAP: this function's
     SIGNATURE, RETURN SHAPE, matching rules, and every caller are exactly
     as they were in v7 — it has no idea whether `keywords` came from
-    Claude's router call or the old fuzzy-template fallback."""
+    Claude's router call or the old fuzzy-template fallback. Only the
+    underlying whole-word tightening inside _text_matches_keyword() (see
+    BUGFIX PACK #2) changed which signals pass the OR check above."""
     limit = limit or MAX_MATCHED_RESULTS
     keyword_list = [k for k in (keywords or []) if k]
     keyword_set = {k.strip().lower() for k in keyword_list}
@@ -853,7 +949,11 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     # field), so documents that would only match via title/text (and
     # never had a matching search_keyword field) are actually retrieved
     # here in the first place, instead of being invisible to the query
-    # before the Python-side check below even gets a chance to run.
+    # before the Python-side check below even gets a chance to run. This
+    # remains an intentionally LOOSE superset fetch — the real, tightened
+    # accept/reject decision happens in the Python loop below via
+    # _text_matches_keyword() (see BUGFIX PACK #2), so leaving this query
+    # loose never causes a false positive to slip through.
     or_conditions = [{field: {"$in": keyword_list}} for field in _KEYWORD_FIELD_CANDIDATES]
     escaped_keywords = [re.escape(k) for k in keyword_list if k]
     if escaped_keywords:
@@ -881,9 +981,9 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
         post_text = _first_present(doc, _TEXT_FIELD_CANDIDATES)
 
         # (v7) A signal matches if EITHER its search_keyword field matches
-        # (unchanged, exact match), OR the keyword shows up inside its own
-        # title, OR the keyword shows up inside its own post_text. Any one
-        # of the three is enough.
+        # (unchanged, exact match), OR the keyword shows up as a whole
+        # word/phrase inside its own title, OR inside its own post_text.
+        # Any one of the three is enough.
         is_match = (
             _signal_keyword_matches(doc, keyword_set)
             or _text_matches_keyword(title, keyword_set)
@@ -936,11 +1036,12 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 # own keyword list. That's the cost-saving rule: store output only.
 #
 # COMPLETELY UNCHANGED BY THE KEYWORD-GENERATION SWAP: this whole section
-# (CLAUDE_ANALYSIS_SYSTEM_PROMPT, analyze_with_claude(), chunk_list(),
-# build_claude_post_context(), _format_posts_block(), _map_chunk(),
-# _call_claude()) only ever consumes ALREADY-MATCHED posts (the output of
-# get_matched_signals()) — it has no idea, and doesn't care, which
-# keyword list produced those matches.
+# (CLAUDE_ANALYSIS_SYSTEM_PROMPT, build_claude_post_context(), chunk_list(),
+# _format_posts_block(), _map_chunk(), _call_claude()) only ever consumes
+# ALREADY-MATCHED posts (the output of get_matched_signals()) — it has no
+# idea, and doesn't care, which keyword list produced those matches. Only
+# analyze_with_claude() itself gained one additive change — see BUGFIX
+# PACK #3 above and inline below.
 # ─────────────────────────────────────────────────────────────────────────────
 
 CLAUDE_ANALYSIS_SYSTEM_PROMPT = """
@@ -1134,6 +1235,24 @@ bullets. If nothing in these posts is relevant to the question, say exactly:
 post URL — you were not given any.
 """
 
+# (BUGFIX PACK #3) Second-level "notes-of-notes" condensing step — only
+# ever invoked when a topic already needed enough first-level post
+# chunking that the resulting notes themselves would be too many to
+# combine directly in one final reduce call. Purely consolidates/
+# de-duplicates ALREADY-grounded notes; never introduces anything not
+# already present in them.
+CLAUDE_NOTES_REDUCE_SYSTEM_PROMPT = """
+You are consolidating multiple batches of already-condensed grounded notes
+about social media posts, as a pre-processing step before another AI
+writes the final answer. Read the user's question and the notes below.
+Combine them into a single, shorter set of grounded bullet points relevant
+to the user's question — remove duplicates, merge repeated themes, but
+never invent anything not already present in the notes. Do not answer the
+user's question yet — just output the consolidated grounded bullets. If
+none of the notes contain anything relevant to the question, say exactly:
+"No relevant points in this batch."
+"""
+
 
 def build_claude_post_context(matched_signals: list) -> list:
     """Strips a matched-signals list (which has title/post_text/post_url/
@@ -1208,6 +1327,17 @@ def _map_chunk(query: str, posts_chunk: list) -> str:
     return _call_claude(CLAUDE_MAP_STEP_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_MAP_MAX_TOKENS)
 
 
+def _condense_notes_chunk(query: str, notes_chunk: list) -> str:
+    """(BUGFIX PACK #3 — 2ND-LEVEL CHUNKING) Consolidates one batch of
+    already-condensed first-level notes into a single, shorter set of
+    grounded bullets, using CLAUDE_NOTES_REDUCE_SYSTEM_PROMPT. Only ever
+    called from analyze_with_claude() when the number of first-level
+    notes exceeds CLAUDE_NOTES_PER_CHUNK — see below."""
+    notes_block = "\n\n---\n\n".join(notes_chunk)
+    user_message = f"User's question: {query}\n\nNotes:\n{notes_block}"
+    return _call_claude(CLAUDE_NOTES_REDUCE_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_MAP_MAX_TOKENS)
+
+
 def analyze_with_claude(query: str, matched_signals: list) -> str:
     """Turns (user question + matched signals) into the actual answer the
     user sees, using CLAUDE_ANALYSIS_SYSTEM_PROMPT. Handles three cases:
@@ -1220,13 +1350,20 @@ def analyze_with_claude(query: str, matched_signals: list) -> str:
       2. Few enough posts to fit one call -> single direct call.
       3. Enough posts that chunking is worth it -> map step condenses each
          chunk of CLAUDE_POSTS_PER_CHUNK posts down to grounded notes,
-         then one reduce call (still using the main system prompt) turns
-         all the notes + the question into the final answer.
+         then (BUGFIX PACK #3) IF there are more of those notes than
+         CLAUDE_NOTES_PER_CHUNK, a second condensing pass chunks the notes
+         themselves and condenses each batch further first, THEN one
+         final reduce call (still using the main system prompt) turns
+         all the (possibly twice-condensed) notes + the question into the
+         final answer. Small/medium topics skip the second pass entirely
+         and behave exactly as before this bugfix pack.
 
     Returns the final answer text only — this is the only thing callers
     should persist (see save_claude_answer_to_chat).
 
-    UNCHANGED. This function only ever sees ALREADY-MATCHED posts."""
+    UNCHANGED except for the additive second-level chunking pass described
+    above (BUGFIX PACK #3). This function only ever sees ALREADY-MATCHED
+    posts."""
     posts = build_claude_post_context(matched_signals)
 
     if not posts:
@@ -1256,6 +1393,28 @@ def analyze_with_claude(query: str, matched_signals: list) -> str:
             continue
         if note:
             notes.append(note)
+
+    # (BUGFIX PACK #3 — 2ND-LEVEL CHUNKING) If the number of condensed
+    # first-level notes itself is large enough that combining them all in
+    # one final reduce call could be unwieldy, chunk the notes into
+    # batches of CLAUDE_NOTES_PER_CHUNK and condense each batch further
+    # with one extra cheap call per batch, BEFORE the final reduce call
+    # below. This only activates for topics big enough to need it — for
+    # everything else `notes` is left exactly as-is, so behavior is
+    # identical to before this bugfix pack.
+    if len(notes) > CLAUDE_NOTES_PER_CHUNK:
+        note_chunks = chunk_list(notes, CLAUDE_NOTES_PER_CHUNK)
+        condensed_notes = []
+        for note_chunk in note_chunks:
+            try:
+                condensed = _condense_notes_chunk(query, note_chunk)
+            except Exception as exc:
+                log.warning(f"Claude notes-condense step failed for a batch (skipping batch): {exc}")
+                continue
+            if condensed:
+                condensed_notes.append(condensed)
+        if condensed_notes:
+            notes = condensed_notes
 
     combined_notes = "\n\n---\n\n".join(notes) if notes else "(no grounded points extracted)"
     user_message = (
@@ -1524,6 +1683,40 @@ def _elapsed_seconds(dt) -> float:
     return (datetime.now(timezone.utc) - dt).total_seconds()
 
 
+# (BUGFIX PACK #1) Formats CLAUDE_ANALYSIS_SYSTEM_PROMPT can return that
+# mean "no real grounded data to show" — when claude_answer parses to one
+# of these, the matching message's post-card `results` are treated as
+# empty for that render, instead of showing loosely-matched posts Claude
+# itself already rejected as irrelevant/unavailable/disallowed.
+_NO_DATA_CLAUDE_FORMATS = {"no_results", "not_available", "disallowed"}
+
+
+def _extract_claude_format(answer_text: str):
+    """(BUGFIX PACK #1) Best-effort parse of a claude_answer string to
+    pull out its "format" field, mirroring the same fence-stripping
+    tolerance already used by _parse_router_json() elsewhere in this
+    file. Returns None (never raises) if the text is missing, isn't
+    valid JSON, or doesn't have a string "format" field — callers treat
+    None as "unknown/can't tell", which always means "show results as
+    before", never "hide them". This only ever narrows what's shown when
+    it can positively confirm Claude's own JSON said there was nothing
+    relevant; it can never hide results based on a guess."""
+    if not answer_text:
+        return None
+    cleaned = answer_text.strip()
+    if cleaned.startswith("```"):
+        cleaned = cleaned.strip("`").strip()
+        cleaned = re.sub(r"^json\s*", "", cleaned, flags=re.IGNORECASE).strip()
+    try:
+        data = json.loads(cleaned)
+    except (ValueError, TypeError):
+        return None
+    if not isinstance(data, dict):
+        return None
+    fmt = data.get("format")
+    return fmt if isinstance(fmt, str) else None
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # USER ACCOUNTS — v2 (Google OAuth + email/password, `flintel_users`)
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1613,7 +1806,11 @@ def upsert_google_user(google_id: str, email: str, name: str):
 #     after your first message.
 #   - Each search message holds:
 #       * `results`      -> post cards data (title/post_text/post_url/
-#                            platform), UNCHANGED from v3, shown as-is.
+#                            platform), UNCHANGED from v3, shown as-is
+#                            (BUGFIX PACK #1: except now suppressed for
+#                            that render/save when claude_answer's own
+#                            format says nothing relevant was found — see
+#                            _fill_in_message_outputs() below).
 #       * `claude_answer` -> (v4) Claude's answer text to the user's own
 #                            prompt, grounded in those same matched posts
 #                            (title + text only). Only this OUTPUT is
@@ -1815,7 +2012,12 @@ def save_signal_results_to_chat(chat_id: str, owner_key: str, topic_key: str, re
 
     Safe to call repeatedly (e.g. on every chat/home page load while the
     background job is still filling in signals) — it just overwrites
-    `results` with the latest matched set for that message."""
+    `results` with the latest matched set for that message.
+
+    UNCHANGED: still a no-op on an empty/falsy `results` list — the new
+    BUGFIX PACK #1 gate in _fill_in_message_outputs() relies on exactly
+    this behavior (passing an empty list here simply skips the write,
+    leaving the message's already-empty `results` field as-is)."""
     if not results:
         return
     chats_collection.update_one(
@@ -1871,7 +2073,8 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list):
     `messages` that's still missing its post-card `results` and/or its
     `claude_answer`, looks up matching signals ONCE and uses that single
     lookup for both:
-      - post cards keep working exactly like v3 (results saved as-is), and
+      - post cards keep working exactly like v3 (results saved as-is,
+        subject to the BUGFIX PACK #1 gate described below), and
       - Claude only gets called (and only gets billed) the first time real
         matched posts are actually available for that message, then the
         answer is cached forever after (only the answer, not the posts).
@@ -1890,9 +2093,21 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list):
     turn. That answer is cached the same way every other answer in this
     file is, so it's generated (and billed) once.
 
-    COMPLETELY UNCHANGED BY THE KEYWORD-GENERATION SWAP — this function
-    calls get_matched_signals() and analyze_with_claude() exactly as
-    before, using whatever `keywords` was already stored on the message
+    (BUGFIX PACK #1 — RESULTS/ANSWER SYNC): once the answer for this
+    message is known (freshly generated this call, or already cached),
+    its "format" is checked via _extract_claude_format(). If that format
+    is one of _NO_DATA_CLAUDE_FORMATS ("no_results", "not_available",
+    "disallowed"), the post-card `results` saved/rendered for this
+    message are forced to an empty list instead of whatever
+    get_matched_signals() loosely matched — so the chat text and the post
+    cards underneath it can never contradict each other again. If the
+    answer can't be parsed as JSON (old plain-text answers, a failed
+    Claude call, any other format) this has NO effect and results render
+    exactly as they always have.
+
+    OTHERWISE COMPLETELY UNCHANGED BY THE KEYWORD-GENERATION SWAP — this
+    function calls get_matched_signals() and analyze_with_claude() exactly
+    as before, using whatever `keywords` was already stored on the message
     by add_search_to_chat() at write time."""
     for msg in messages or []:
         if not msg.get("topic_key"):
@@ -1932,18 +2147,17 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list):
                     log.warning(f"Timeout-fallback Claude analysis failed for topic_key={msg.get('topic_key')}: {exc}")
             continue
 
-        if needs_results:
-            msg["results"] = matched
-            try:
-                save_signal_results_to_chat(chat_id, owner_key, msg["topic_key"], matched)
-            except Exception as exc:
-                log.warning(f"Saving matched results to chat failed for topic_key={msg.get('topic_key')}: {exc}")
+        # (BUGFIX PACK #1) Track whatever answer text is/becomes available
+        # for this message, so results can be gated on its format below —
+        # starts as whatever's already cached (may be None).
+        answer_for_format_check = msg.get("claude_answer")
 
         if needs_answer:
             try:
                 answer = analyze_with_claude(msg["query"], matched)
                 msg["claude_answer"] = answer
                 save_claude_answer_to_chat(chat_id, owner_key, msg["topic_key"], answer)
+                answer_for_format_check = answer
                 # (v5) Best-effort: fold this now-answered search turn into
                 # the same rolling summary chat-type turns use, so later
                 # chat-type replies / routing decisions in this chat can
@@ -1954,6 +2168,20 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list):
                     log.warning(f"Updating chat summary failed for topic_key={msg.get('topic_key')}: {exc}")
             except Exception as exc:
                 log.warning(f"Claude analysis failed for topic_key={msg.get('topic_key')}: {exc}")
+
+        if needs_results:
+            # (BUGFIX PACK #1) If we know the answer's format and it says
+            # there's nothing relevant/available, don't show the loosely
+            # matched posts underneath a "no results" answer. If the
+            # format can't be determined (None), fall back to the
+            # original, unconditional behavior of showing `matched`.
+            claude_format = _extract_claude_format(answer_for_format_check)
+            results_to_save = [] if claude_format in _NO_DATA_CLAUDE_FORMATS else matched
+            msg["results"] = results_to_save
+            try:
+                save_signal_results_to_chat(chat_id, owner_key, msg["topic_key"], results_to_save)
+            except Exception as exc:
+                log.warning(f"Saving matched results to chat failed for topic_key={msg.get('topic_key')}: {exc}")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -2240,7 +2468,10 @@ def view_chat(request: Request, chat_id: str):
     like a normal conversational turn, with no post cards underneath.
     (v6) A polite "blocked" decline and a timeout "nothing found yet"
     answer both use this exact same rendering path already — no template
-    changes needed for either.
+    changes needed for either. (BUGFIX PACK #1) A "no_results" /
+    "not_available" / "disallowed" claude_answer also always has an empty
+    `results` list, for the same reason — no template changes needed here
+    either.
 
     NOTE (JSON-ANALYSIS-PROMPT SWAP): `claude_answer` will now typically
     be a raw JSON string for search-type messages. This template contract
