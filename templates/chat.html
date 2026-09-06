@@ -1366,8 +1366,14 @@
     const renderedEl = wrap.querySelector('.answer-rendered');
     if (!rawEl || !renderedEl) return;
     const raw = rawEl.textContent;
+    // Claude is instructed to never wrap JSON in markdown code fences, but
+    // models don't always follow that perfectly — strip ```json / ``` fences
+    // (and surrounding whitespace) before attempting to parse, so an
+    // occasional fenced response still renders structured instead of
+    // silently falling through to a raw-text/code-block display.
+    const cleaned = raw.trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '').trim();
     let data = null;
-    try { data = JSON.parse(raw); } catch (e) { data = null; }
+    try { data = JSON.parse(cleaned); } catch (e) { data = null; }
 
     if (data && data.format) {
       renderedEl.innerHTML = '';
