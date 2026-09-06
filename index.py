@@ -1,10 +1,11 @@
 """
-FLINTEL — WEB SERVICE (v7 + JSON-ANALYSIS-PROMPT SWAP)
-========================================================
+FLINTEL — WEB SERVICE (v7 + JSON-ANALYSIS-PROMPT SWAP + CLAUDE-KEYWORD SWAP)
+============================================================================
 Everything from v3 is UNCHANGED and still works exactly as before:
   1. Take a user prompt (brand/topic/product name) from a simple web form.
-  2. Generate FUZZY KEYWORDS in plain Python (template-based, no Claude call).
-     These are UNCHANGED regardless of platform selection.
+  2. Generate KEYWORDS (see KEYWORD-GENERATION SWAP note near the bottom
+     of this docstring — this step's SOURCE changed, nothing downstream
+     of it did).
   3. Patch (upsert) them into the SAME MongoDB used by Background Service #1
      — collection `flintel_search_jobs` — with status="pending".
   4. Every search redirects straight back to the chat page (index.html),
@@ -52,8 +53,8 @@ NOTE ON PLATFORM TARGETING (v2, unchanged):
   The search form sends which platform the user picked in the
   "All Platforms" dropdown (All Platforms / Reddit / X / Twitter / LinkedIn /
   Facebook). This does NOT change keyword generation in any way — the exact
-  same fuzzy keywords are sent either way. All that happens is a new field,
-  `targeting_platform`, is added to the job document:
+  same generated keywords are used either way. All that happens is a new
+  field, `targeting_platform`, is added to the job document:
     - "All Platforms" selected  -> targeting_platform = "all"
     - "Reddit" selected         -> targeting_platform = "reddit"
     - "X / Twitter" selected    -> targeting_platform = "x_twitter"
@@ -62,6 +63,9 @@ NOTE ON PLATFORM TARGETING (v2, unchanged):
   Background Service #1 (or a later version of it) can read this field to
   decide whether to search everywhere or restrict itself to one platform.
   This service itself does no filtering — it only tags the job.
+  (Still true after the KEYWORD-GENERATION SWAP below: platform targeting
+  is driven ONLY by this dropdown field, never inferred from the words
+  in the user's chat message.)
 
 NOTE: This service sends KEYWORDS ONLY. Background Service #1 searches
 Reddit SITE-WIDE per keyword (no subreddit restriction) — so there is no
@@ -72,7 +76,8 @@ background service.
 This service does NOT talk to Background Service #1 directly. The only
 connection between the two is the SAME MongoDB connection string
 (MONGODB_URI / MONGODB_DB) and the SAME collection names. Claude is only
-ever called by THIS service, purely to turn already-matched signals into
+ever called by THIS service, purely to (a) route/classify + now generate
+keywords for "search" messages, and (b) turn already-matched signals into
 an answer for the user — it never touches jobs_collection or
 signals_collection itself.
 
@@ -95,6 +100,7 @@ Required env vars (add to .env):
     CLAUDE_MODEL=claude-haiku-4-5-20251001   # optional, this is the default
     RESPONSE_TIMEOUT=60                      # optional, this is the default (seconds)
     MAX_POSTS_PER_PLATFORM=3                 # optional, this is the default (v7, see below)
+    CLAUDE_MAX_KEYWORDS=10                   # optional, this is the default (new, see KEYWORD-GENERATION SWAP)
 
 ── v4.1 FIX ───────────────────────────────────────────────────────────────
 Only ONE behavior changed from the v4 file above: the /search route used to
@@ -139,17 +145,19 @@ cheap Claude call now decides whether the user's message is:
 
   - a genuine SEARCH request (wants social-listening data pulled about a
     brand/product/topic) -> the ENTIRE v1–v4.3 pipeline above runs exactly
-    as it always has, completely UNTOUCHED: fuzzy keywords are generated,
-    a job is patched into flintel_search_jobs, and matched flintel_signals
-    posts get analyzed by Claude — all 100% as before, byte-for-byte the
-    same functions (generate_fuzzy_keywords, enqueue_search_job,
+    as it always has: a job is patched into flintel_search_jobs, and
+    matched flintel_signals posts get analyzed by Claude — all as before,
+    byte-for-byte the same functions (enqueue_search_job,
     add_search_to_chat, get_matched_signals, analyze_with_claude,
-    save_signal_results_to_chat, save_claude_answer_to_chat).
+    save_signal_results_to_chat, save_claude_answer_to_chat). The ONLY
+    thing that changed is WHERE the keyword list handed to
+    enqueue_search_job()/get_matched_signals() comes from — see the
+    KEYWORD-GENERATION SWAP note further down.
 
   - a plain CHAT message (a greeting, small talk, a general question,
     "what's up", a follow-up about something already discussed, etc.) ->
     NOTHING is generated or patched into flintel_search_jobs for it at
-    all — no fuzzy keywords, no job, no signal matching. Claude answers
+    all — no keywords, no job, no signal matching. Claude answers
     it directly (in the SAME routing call, to save a round trip) and the
     reply is saved onto the chat as a new lightweight message
     ("message_type": "chat"). The existing search pipeline is never
@@ -234,37 +242,92 @@ route, function, template contract, or behavior — was touched.
    about get_matched_signals() (return shape, signature, de-duplication,
    every caller) is completely unchanged.
 
-── PROMPT SWAP (THIS FILE) ─────────────────────────────────────────────────
-ONLY ONE THING was changed from the v7 file above, and it is scoped to a
-single constant: CLAUDE_ANALYSIS_SYSTEM_PROMPT. The old plain-text,
-free-form analysis system prompt has been replaced with the strict-JSON,
-6-format ("source_list" / "trend_report" / "comparison" / "no_results" /
-"not_available" / "disallowed") analysis prompt. NOTHING else was touched:
+── JSON-ANALYSIS-PROMPT SWAP ────────────────────────────────────────────────
+ONLY ONE THING was changed from the v7 file above at that point, and it
+was scoped to a single constant: CLAUDE_ANALYSIS_SYSTEM_PROMPT. The old
+plain-text, free-form analysis system prompt was replaced with the
+strict-JSON, 6-format ("source_list" / "trend_report" / "comparison" /
+"no_results" / "not_available" / "disallowed") analysis prompt. Nothing
+else was touched by that swap: analyze_with_claude(), build_claude_post_
+context(), chunk_list(), _format_posts_block(), _map_chunk(), and
+_call_claude() are all BYTE-FOR-BYTE UNCHANGED. analyze_with_claude()
+still returns a plain Python str exactly as before — it is simply that
+this str now, if Claude follows the new prompt, contains a JSON document
+instead of free-form prose. save_claude_answer_to_chat() still stores
+whatever string it's given as-is — no parsing, no new schema. The
+CLAUDE_MAP_STEP_SYSTEM_PROMPT (intermediate map/chunking step) is
+UNCHANGED — still plain bulleted notes, not JSON.
 
-  - analyze_with_claude(), build_claude_post_context(), chunk_list(),
-    _format_posts_block(), _map_chunk(), and _call_claude() are all
-    BYTE-FOR-BYTE UNCHANGED. analyze_with_claude() still returns a plain
-    Python str (the raw text Claude responds with) exactly as before —
-    it is simply that this str will now, if Claude follows the new
-    prompt, contain a JSON document instead of free-form prose.
-  - save_claude_answer_to_chat() still stores whatever string it's given
-    as-is under `messages.$.claude_answer` — no parsing, no new schema,
-    no validation added.
-  - The CLAUDE_MAP_STEP_SYSTEM_PROMPT (used only for the intermediate
-    map/chunking step) is UNCHANGED — it still asks for plain bulleted
-    grounded notes, not JSON; only the FINAL reduce/single-call answer
-    (using CLAUDE_ANALYSIS_SYSTEM_PROMPT) is affected by the swap.
-  - Every route, every template context, every other function in this
-    file is unchanged.
+CONSEQUENCE (logic-only, not a bug): because chat.html / index.html were
+built to render `claude_answer` as plain markdown-ish text, and that
+prompt returns a strict JSON object as that text, the JSON renders
+VERBATIM in the chat UI unless/until a template-side parser and
+per-format renderer are added. That template/rendering work remains
+OUT OF SCOPE here, same as before.
 
-CONSEQUENCE OF THIS (logic-only, not a bug — flagging it here since no
-rendering code was added): because chat.html / index.html were built to
-render `claude_answer` as plain markdown-ish text, and this prompt now
-returns a strict JSON object as that text, the JSON will render VERBATIM
-(as a raw JSON string) in the chat UI unless/until a template-side parser
-and per-format renderer are added on top of this. That template/rendering
-work is intentionally OUT OF SCOPE for this change, per what was asked —
-this swap touches ONLY the CLAUDE_ANALYSIS_SYSTEM_PROMPT constant.
+── KEYWORD-GENERATION SWAP (THIS FILE) ──────────────────────────────────────
+ONLY the SOURCE of the keyword list used for a "search"-type message
+changed. Concretely:
+
+  - BEFORE: for every "search" message, generate_fuzzy_keywords(query)
+    (plain-Python, fixed KEYWORD_TEMPLATES) mechanically produced up to
+    MAX_KEYWORDS template variations of the raw query string itself
+    (e.g. query "reddit posts about ai" -> keywords like "reddit posts
+    about ai", "reddit posts about ai review", "reddit posts about ai
+    complaint", ...) — completely oblivious to what the user actually
+    meant, and it always ran as a SEPARATE step after the v5 router had
+    already decided the message was "search".
+
+  - NOW: the SAME single cheap Claude call already used for v5/v6
+    routing (classify_and_maybe_chat() / CLAUDE_ROUTER_SYSTEM_PROMPT —
+    still exactly one call, no new round trip) ALSO returns a
+    "keywords" field whenever it classifies the message as "search".
+    Claude reads the user's actual words and decides the real topic
+    being asked about, then returns the keyword list the UNCHANGED
+    Python matching code should use — as few as ONE keyword for a
+    narrow prompt ("reddit posts about AI" -> just "AI", not "reddit
+    posts about AI review", "reddit posts about AI pricing", etc.), up
+    to CLAUDE_MAX_KEYWORDS (new env var, default 10) for a broader ask
+    that genuinely has more angles worth searching. "chat" and "blocked"
+    messages get "keywords": null, exactly as they get no job today.
+
+  - SAFETY NET (matches the file's existing philosophy everywhere else —
+    a routing/Claude hiccup can only ever fall back to the OLD safe
+    behavior, never silently produce zero keywords for a real search):
+    generate_fuzzy_keywords() and KEYWORD_TEMPLATES are KEPT, completely
+    UNCHANGED, byte-for-byte. If the routing step fails outright (API
+    error, bad JSON, session hiccup — same failure modes already handled
+    everywhere else in this file) OR it succeeds but returns an intent of
+    "search" with no usable keywords, the search pipeline falls back to
+    calling generate_fuzzy_keywords(query) for that one request only,
+    exactly as it always has. A search can therefore NEVER end up with
+    zero keywords because of this change.
+
+  - UNCHANGED BY THIS SWAP, EXPLICITLY: enqueue_search_job(),
+    get_matched_signals() (search_keyword field matching, title/text
+    substring matching, per-platform cap, de-duplication, return shape),
+    build_claude_post_context(), analyze_with_claude(), every chat/session
+    function, every route's control flow, platform targeting (still
+    driven ONLY by the `platform` dropdown field, never by words in the
+    chat message), and the chat UI/template contract. The keyword list is
+    simply a different list of strings arriving at the exact same
+    downstream functions that always consumed it.
+
+  - NOTE ON "TODAY'S POSTS" STYLE PROMPTS (e.g. "today reddit posts about
+    X"): this file has never had, and still does not have, any date/time
+    filtering. get_matched_signals() sorts candidate signals by
+    `created_utc` DESCENDING (most recent first) and then applies the
+    existing MAX_MATCHED_RESULTS / MAX_POSTS_PER_PLATFORM caps — so in
+    practice the most recently ingested matching posts are exactly what
+    gets sent to Claude (respecting the same per-platform limits as
+    every other search), which is the closest existing behavior gets to
+    "today's posts". A word like "today" in the prompt does not add any
+    new filtering by itself — Claude will fold it into the KEYWORD list
+    it returns only if it's actually part of the topic's wording, not as
+    a date filter, since no date-filtering mechanism exists here to wire
+    it into. Adding real date-range filtering would be a separate,
+    explicit change to get_matched_signals() — intentionally not done
+    here, since it wasn't part of what was asked.
 ──────────────────────────────────────────────────────────────────────────────
 """
 
@@ -307,7 +370,18 @@ load_dotenv()
 MONGODB_URI = os.getenv("MONGODB_URI")
 MONGODB_DB  = os.getenv("MONGODB_DB", "flintel_bot")
 
+# Hard ceiling on how many keywords can ever reach a job, regardless of
+# where they came from (Claude's router-generated list, or the
+# generate_fuzzy_keywords() fallback below). UNCHANGED variable/behavior
+# from before — just now also double-checked against Claude's output.
 MAX_KEYWORDS = int(os.getenv("MAX_KEYWORDS", "20"))
+
+# (KEYWORD-GENERATION SWAP) Separate, tighter cap specifically on how many
+# keywords the Claude router call is allowed to hand back for a "search"
+# message — default 10, per what was asked. Kept distinct from
+# MAX_KEYWORDS (which remains the final, absolute safety ceiling applied
+# right before a job is enqueued, covering both sources).
+CLAUDE_MAX_KEYWORDS = int(os.getenv("CLAUDE_MAX_KEYWORDS", "10"))
 
 # How many matched (post_text + url) results to surface per topic. Kept
 # separate from MAX_KEYWORDS since it's about signal output, not keyword
@@ -339,8 +413,9 @@ CLAUDE_TIMEOUT_SECONDS  = float(os.getenv("CLAUDE_TIMEOUT_SECONDS", "30"))
 CLAUDE_API_URL          = "https://api.anthropic.com/v1/messages"
 CLAUDE_API_VERSION      = "2023-06-01"
 
-# ── Router + chat-summary config (v5) ──────────────────────────────────────
-CLAUDE_ROUTER_MAX_TOKENS       = int(os.getenv("CLAUDE_ROUTER_MAX_TOKENS", "400"))
+# ── Router + chat-summary config (v5, bumped slightly for the new
+# "keywords" field the router call can now also return) ───────────────────
+CLAUDE_ROUTER_MAX_TOKENS       = int(os.getenv("CLAUDE_ROUTER_MAX_TOKENS", "500"))
 CHAT_SUMMARY_MAX_TURNS         = int(os.getenv("CHAT_SUMMARY_MAX_TURNS", "8"))
 CHAT_SUMMARY_TURN_CHAR_LIMIT   = int(os.getenv("CHAT_SUMMARY_TURN_CHAR_LIMIT", "160"))
 
@@ -409,7 +484,12 @@ oauth.register(
 
 def normalize_topic_key(query: str) -> str:
     """Turns a user's raw prompt into a stable cache/job key.
-    e.g. "  Nike  " -> "nike", "Nike Shoes!!" -> "nike shoes" """
+    e.g. "  Nike  " -> "nike", "Nike Shoes!!" -> "nike shoes"
+
+    UNCHANGED by the keyword-generation swap: topic_key is still derived
+    from the raw query string and is used only as the flintel_search_jobs
+    upsert key / chat message linkage — it has nothing to do with which
+    keywords get matched against flintel_signals."""
     cleaned = re.sub(r"[^a-z0-9\s]", "", query.strip().lower())
     cleaned = re.sub(r"\s+", " ", cleaned).strip()
     return cleaned
@@ -420,7 +500,9 @@ def normalize_topic_key(query: str) -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 
 # Maps whatever label the "All Platforms" dropdown sent to a stable key.
-# This ONLY tags the job — it never changes what keywords get generated.
+# This ONLY tags the job — it never changes what keywords get generated,
+# and it is still driven ONLY by this dropdown field, never by words in
+# the user's chat message.
 PLATFORM_KEY_MAP = {
     "all platforms": "all",
     "all":           "all",
@@ -443,7 +525,15 @@ def normalize_platform(raw: str) -> str:
 
 # ─────────────────────────────────────────────────────────────────────────────
 # FUZZY KEYWORD GENERATION — plain Python, template-based, no Claude call
-# UNCHANGED from v1 — platform selection never alters this.
+#
+# (KEYWORD-GENERATION SWAP) This function and KEYWORD_TEMPLATES are KEPT
+# COMPLETELY UNCHANGED from v1, but they are NO LONGER the primary path
+# for a "search" message. They are now used ONLY as a safety-net FALLBACK
+# — see classify_and_maybe_chat() / the /search route below — for the
+# rare case where the Claude routing call fails outright, or succeeds but
+# doesn't return a usable "keywords" list for a "search" intent. This
+# guarantees a search can never end up with zero keywords, exactly the
+# same safety philosophy already used everywhere else in this file.
 # ─────────────────────────────────────────────────────────────────────────────
 
 KEYWORD_TEMPLATES = [
@@ -480,7 +570,11 @@ KEYWORD_TEMPLATES = [
 
 def generate_fuzzy_keywords(query: str) -> list:
     """Builds a list of search phrases around the user's query using fixed
-    templates. Deterministic, fast, and needs no external API call."""
+    templates. Deterministic, fast, and needs no external API call.
+
+    (KEYWORD-GENERATION SWAP) Still here, byte-for-byte unchanged — now
+    called only as the fallback path described above, not on every
+    search."""
     q = query.strip()
     if not q:
         return []
@@ -507,9 +601,10 @@ def enqueue_search_job(topic_key: str, keywords: list, targeting_platform: str):
     """Upserts a job by topic_key. Re-searching the same topic simply
     resets it to pending instead of creating a duplicate job.
 
-    `keywords` is generated exactly as before (v1) — `targeting_platform`
-    is the only new field, added so Background Service #1 can optionally
-    restrict itself to one platform instead of searching everywhere."""
+    UNCHANGED by the keyword-generation swap: this function has no idea
+    (and doesn't need to know) whether `keywords` came from Claude's
+    router call or the generate_fuzzy_keywords() fallback — it just
+    stores whatever list it's handed, exactly as before."""
     jobs_collection.update_one(
         {"topic_key": topic_key},
         {"$set": {
@@ -554,6 +649,11 @@ def get_signals(topic_key: str, limit: int = 25):
 # exactly what still powers the post cards (title + post_url, as-is).
 # Claude (below) only ever sees title + post_text from whatever this
 # returns — never post_url, never platform.
+#
+# COMPLETELY UNCHANGED BY THE KEYWORD-GENERATION SWAP: everything in this
+# section works purely off whatever `keywords` list it's handed — it has
+# no idea, and doesn't care, whether those keywords came from Claude's
+# router call or the old fuzzy-template fallback.
 #
 # `flintel_signals` docs may use slightly different field names depending
 # on how Background Service #1 writes them, so this reads a small list of
@@ -619,11 +719,10 @@ def _signal_keyword_matches(doc: dict, keyword_set: set) -> bool:
     Handles the keyword field being a single string OR a list (in case a
     signal doc records more than one matched keyword).
 
-    UNCHANGED from v3/v4/v5/v6 — this exact-field check is completely
-    untouched by v7; it still works exactly as perfectly as it always
-    has. v7 only ever ADDS more ways a signal can match (see
-    _text_matches_keyword() below) — it never removes or loosens this
-    one."""
+    UNCHANGED from v3/v4/v5/v6/v7 and UNCHANGED by the keyword-generation
+    swap — this exact-field check is completely untouched; it still works
+    exactly as it always has, regardless of where `keyword_set` came
+    from."""
     if not keyword_set:
         return True  # no keyword filter to apply -> don't exclude anything
 
@@ -653,7 +752,9 @@ def _text_matches_keyword(text: str, keyword_set: set) -> bool:
     a signal count as a match purely because a keyword phrase shows up in
     its own title or post_text, even when its search_keyword field
     doesn't match at all — a pure additional OR path alongside
-    _signal_keyword_matches() above, never a replacement for it."""
+    _signal_keyword_matches() above, never a replacement for it.
+
+    UNCHANGED by the keyword-generation swap."""
     if not text or not isinstance(text, str):
         return False
     text_lower = text.lower()
@@ -694,7 +795,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     now three OR'd conditions instead of just the first one):
       1. its search-keyword field matches one of our generated keywords
          (see _signal_keyword_matches() — UNCHANGED, still exact/perfect,
-         same as v3-v6), OR
+         same as v3-v7), OR
       2. (v7) one of our generated keywords appears as a case-insensitive
          substring inside its OWN title, OR
       3. (v7) one of our generated keywords appears as a case-insensitive
@@ -722,6 +823,12 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     Purely a config value (MAX_POSTS_PER_PLATFORM env var) — change it
     in .env and restart the process to use a different number later.
 
+    Results are sorted by `created_utc` DESCENDING (most recent first)
+    before the caps above are applied — there is no separate date-range
+    filter anywhere in this file (see the KEYWORD-GENERATION SWAP note in
+    the module docstring for what this means for "today's posts"-style
+    prompts).
+
     Returns {title, post_text, post_url, platform} for each match — this
     is the only signal-derived output ever shown to the user (via post
     cards) or persisted onto a chat message's `results` (platform is
@@ -729,13 +836,10 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     it isn't used for anything else here). Never touches jobs_collection
     or the raw `signals` list returned by get_signals().
 
-    NOTE (v7): this function's SIGNATURE, RETURN SHAPE, and every caller
-    (analyze_with_claude via build_claude_post_context, post cards via
-    save_signal_results_to_chat, etc.) are completely unchanged — only
-    the matching rule and the per-platform cap described above are new.
-    It's also the single source of truth Claude's analysis is grounded
-    in — see build_claude_post_context() below, which strips
-    post_url/platform back out before anything goes to Claude."""
+    COMPLETELY UNCHANGED BY THE KEYWORD-GENERATION SWAP: this function's
+    SIGNATURE, RETURN SHAPE, matching rules, and every caller are exactly
+    as they were in v7 — it has no idea whether `keywords` came from
+    Claude's router call or the old fuzzy-template fallback."""
     limit = limit or MAX_MATCHED_RESULTS
     keyword_list = [k for k in (keywords or []) if k]
     keyword_set = {k.strip().lower() for k in keyword_list}
@@ -831,22 +935,14 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 # already live in flintel_signals / are reconstructable from the message's
 # own keyword list. That's the cost-saving rule: store output only.
 #
-# UNCHANGED IN v5/v6/v7 (and unchanged by the prompt swap below in terms
-# of CODE — analyze_with_claude() still returns a plain str exactly as
-# before). The v5 router decides WHETHER a message even reaches this
-# layer; the v6 response-timeout fallback (see _fill_in_message_outputs)
-# is the only other CALLER of analyze_with_claude() added on top — it
-# reuses this function completely as-is, just with an empty post list.
-# v7 only changed WHICH signals get_matched_signals() returns upstream of
-# this; nothing here changed as a result.
+# COMPLETELY UNCHANGED BY THE KEYWORD-GENERATION SWAP: this whole section
+# (CLAUDE_ANALYSIS_SYSTEM_PROMPT, analyze_with_claude(), chunk_list(),
+# build_claude_post_context(), _format_posts_block(), _map_chunk(),
+# _call_claude()) only ever consumes ALREADY-MATCHED posts (the output of
+# get_matched_signals()) — it has no idea, and doesn't care, which
+# keyword list produced those matches.
 # ─────────────────────────────────────────────────────────────────────────────
 
-# ── PROMPT SWAP: this is now the strict-JSON, 6-format analysis prompt ─────
-# (previously a plain-text, free-form "answer like Claude/ChatGPT" prompt).
-# Nothing else in this section — analyze_with_claude(), chunk_list(),
-# build_claude_post_context(), _format_posts_block(), _map_chunk(),
-# _call_claude() — was touched. See the PROMPT SWAP note in the module
-# docstring at the top of this file for the full consequence rundown.
 CLAUDE_ANALYSIS_SYSTEM_PROMPT = """
 You are the answer-generation brain inside Flintel, a social-listening
 platform. You are handed a user's message plus whatever real public posts
@@ -1024,9 +1120,7 @@ TONE (applies to every text field you write inside any format above):
 # chunk gets condensed down to only the points relevant to the user's
 # question before the final Haiku call ever sees them.
 #
-# UNCHANGED by the prompt swap — this still asks for plain bulleted notes,
-# not JSON. Only the FINAL reduce/single-call answer (which uses
-# CLAUDE_ANALYSIS_SYSTEM_PROMPT above) is affected.
+# UNCHANGED.
 CLAUDE_MAP_STEP_SYSTEM_PROMPT = """
 You are helping analyze one batch of social media posts (Reddit/X) about a
 topic, as a pre-processing step before another AI writes the actual answer.
@@ -1132,11 +1226,7 @@ def analyze_with_claude(query: str, matched_signals: list) -> str:
     Returns the final answer text only — this is the only thing callers
     should persist (see save_claude_answer_to_chat).
 
-    UNCHANGED by the prompt swap: this function's code, branching, and
-    return type (plain str) are byte-for-byte identical to before. The
-    only difference is WHAT that returned str contains, since
-    CLAUDE_ANALYSIS_SYSTEM_PROMPT itself now asks Claude for JSON instead
-    of free-form prose."""
+    UNCHANGED. This function only ever sees ALREADY-MATCHED posts."""
     posts = build_claude_post_context(matched_signals)
 
     if not posts:
@@ -1179,49 +1269,72 @@ def analyze_with_claude(query: str, matched_signals: list) -> str:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# CLAUDE ROUTING LAYER (v5, extended in v6 with abuse/harm blocking)
+# CLAUDE ROUTING LAYER (v5, extended in v6 with abuse/harm blocking, and
+# now extended AGAIN with keyword generation for "search" messages)
 #
 # Runs BEFORE anything else in POST /search. A single cheap Claude call
 # decides whether the user's message is a genuine "search" (wants social-
-# listening data pulled about a brand/product/topic — the v1-v4 pipeline
-# above should run exactly as it always has), a plain "chat" message (a
-# greeting, small talk, a general question, a follow-up about something
-# already discussed, etc. — nothing should be queued into
-# flintel_search_jobs for it at all), or (v6) "blocked" — abusive,
-# harassing, hateful, sexually explicit, or threatening content, which
-# should neither be searched for nor answered normally, just declined.
+# listening data pulled about a brand/product/topic), a plain "chat"
+# message (a greeting, small talk, a general question, a follow-up about
+# something already discussed, etc.), or "blocked" — abusive, harassing,
+# hateful, sexually explicit, or threatening content.
+#
+# (KEYWORD-GENERATION SWAP) The SAME call now ALSO returns a "keywords"
+# field when intent="search" — still just ONE Claude call total, no new
+# round trip, following the exact same "do it all in the classification
+# call" pattern v5 already used for the chat/blocked reply text. See the
+# KEYWORD-GENERATION SWAP note in the module docstring for the full
+# rationale and the fallback rule.
 #
 # When it's "chat" or "blocked", the SAME call also writes the reply
-# directly (one round trip instead of two). The reply is grounded only in
-# the short, plain-Python chat summary below — never the raw matched
-# posts, and never flintel_signals at all, since neither message type
-# triggers any signal matching.
+# directly. The reply is grounded only in the short, plain-Python chat
+# summary below — never the raw matched posts, and never flintel_signals
+# at all, since neither message type triggers any signal matching.
 #
 # Safety rule: ANY failure here (bad JSON, API error, timeout, missing
-# key) defaults to {"intent": "search"} so the pre-existing pipeline is
-# always the fallback — this routing layer can only ever add a shortcut
-# (a direct chat reply, or a polite decline), it can never silently
-# swallow a real search request. This also means the v6 abuse-blocking
-# check is a best-effort courtesy layer, not a guaranteed content filter:
-# on a routing failure, an abusive message falls through to the normal
-# search pipeline exactly like any other message would, same as v5.
-#
-# UNCHANGED IN v7, UNCHANGED BY THE PROMPT SWAP — this entire section
-# (router prompt, chat-fallback prompt, blocked-fallback text, parsing,
-# classify_and_maybe_chat) is completely untouched. The prompt swap only
-# ever touched CLAUDE_ANALYSIS_SYSTEM_PROMPT above.
+# key) defaults to {"intent": "search", "reply": None, "keywords": None}
+# so the pre-existing pipeline is always the fallback — this routing
+# layer can only ever add a shortcut (a direct chat reply, a polite
+# decline, or a smarter keyword list), it can never silently swallow a
+# real search request or leave one with zero keywords (the /search route
+# falls back to generate_fuzzy_keywords() whenever "keywords" comes back
+# empty/missing for a "search" intent).
 # ─────────────────────────────────────────────────────────────────────────────
 
 CLAUDE_ROUTER_SYSTEM_PROMPT = """
 You are the routing brain inside Flintel, a social-listening platform.
 Every message a user types goes through you FIRST, before anything else
 happens in the product.
-Your ONLY job: classify this message into exactly one of three types:
+Your job: classify this message into exactly one of three types, and for
+"search" messages, ALSO generate the keyword list Flintel's own
+(unchanged, plain-Python) matching code will use afterward.
 
 1. "search" — the message is asking Flintel to research/monitor/pull
    social-media data about a brand, product, company, person, or topic.
-   A brand-new social-listening job is about to be queued for whatever
-   the user typed. Do NOT try to answer it yourself — just classify it.
+   For "search" messages, ALSO return a "keywords" array:
+     - Read the user's own words and figure out what they are actually
+       asking about. A short, narrow prompt ("reddit posts about AI")
+       needs only the ONE (or two) keyword(s) that actually capture the
+       real topic — e.g. just "AI" — do NOT pad it out with unrelated
+       angles ("AI review", "AI pricing", "AI complaints", etc.) the user
+       never asked about.
+     - A broader or more detailed prompt can warrant more keyword
+       variations (genuine synonyms or short related phrases actually
+       likely to appear in real posts) — up to 10 keywords maximum,
+       never more.
+     - Every keyword must be something that could plausibly appear
+       verbatim, or as a close natural substring, inside a real post's
+       title or text. Keep each keyword short and natural.
+     - Never include meta wording that describes the user's REQUEST to
+       you rather than the topic itself — words like "reddit", "twitter",
+       "x", "linkedin", "facebook", "posts", "posts about", "show me",
+       "today", "find", "search" describe what/where the user wants
+       searched, not something that would appear inside an actual post,
+       so leave them out of the keyword list (the platform itself is
+       handled separately, by a dropdown the user already picked — you
+       are only responsible for the topic keywords).
+     - Do NOT try to answer the user's question yourself for "search" —
+       only classify and produce the keyword list.
 
 2. "chat" — a normal conversational message that doesn't need any new
    data pulled at all: greetings ("hi", "hello", "what's up", "kia chal
@@ -1229,7 +1342,7 @@ Your ONLY job: classify this message into exactly one of three types:
    follow-up question about something already discussed in this
    conversation, or a request to just talk. Answer the user's message
    yourself, directly and naturally, the way Claude/ChatGPT would in any
-   normal conversation.
+   normal conversation. "keywords" must be null for this type.
 
 3. "blocked" — the message is abusive, harassing, hateful, sexually
    explicit, threatening, or otherwise harmful (directed at you, at a
@@ -1237,18 +1350,19 @@ Your ONLY job: classify this message into exactly one of three types:
    normally. Instead write a short, calm, firm decline as the reply —
    don't lecture, don't repeat or quote the harmful content back, don't
    moralize at length, just briefly decline and invite them to ask
-   something else.
+   something else. "keywords" must be null for this type.
 
 A short, auto-summarized conversation history (may be empty) is given
 below for continuity when classifying and when writing a "chat" or
-"blocked" reply. Keep any reply conversational and plain — don't mention
-you're an AI or that this is a "mock", and don't narrate your own
+"blocked" reply, or when a "search" follow-up implicitly refers back to a
+topic already discussed. Keep any reply conversational and plain — don't
+mention you're an AI or that this is a "mock", and don't narrate your own
 reasoning.
 Respond with STRICT JSON ONLY — no markdown code fences, no preamble, no
 text outside the JSON object — in EXACTLY one of these three shapes:
-{"intent": "search", "reply": null}
-{"intent": "chat", "reply": "<your natural reply text here>"}
-{"intent": "blocked", "reply": "<short, polite decline text>"}
+{"intent": "search", "reply": null, "keywords": ["<keyword1>", "<keyword2>"]}
+{"intent": "chat", "reply": "<your natural reply text here>", "keywords": null}
+{"intent": "blocked", "reply": "<short, polite decline text>", "keywords": null}
 """
 
 CLAUDE_CHAT_FALLBACK_SYSTEM_PROMPT = """
@@ -1275,9 +1389,18 @@ def _parse_router_json(raw: str):
     None on anything unexpected so the caller falls back to the safe
     "search" default instead of ever guessing.
 
-    (v6) Now also accepts "blocked" alongside "search"/"chat" — same
-    validation rule as "chat": a reply is expected as a string, and if
-    it isn't one, the caller's fallback text is used instead."""
+    (v6) Accepts "blocked" alongside "search"/"chat" — a reply is
+    expected as a string for both, and if it isn't one, the caller's
+    fallback text is used instead.
+
+    (KEYWORD-GENERATION SWAP) Now also parses/validates a "keywords"
+    field for "search" intent: must be a JSON array of non-empty
+    strings; each is trimmed, de-duplicated case-insensitively, and
+    capped at CLAUDE_MAX_KEYWORDS. Anything malformed (missing, not a
+    list, empty after cleaning) simply results in keywords=None — the
+    caller (classify_and_maybe_chat / the /search route) is what applies
+    the generate_fuzzy_keywords() fallback in that case, so this function
+    itself never needs to know about that fallback."""
     if not raw:
         return None
     cleaned = raw.strip()
@@ -1296,19 +1419,44 @@ def _parse_router_json(raw: str):
     reply = data.get("reply")
     if intent in ("chat", "blocked") and not isinstance(reply, str):
         reply = None
-    return {"intent": intent, "reply": reply}
+
+    keywords = None
+    if intent == "search":
+        raw_keywords = data.get("keywords")
+        if isinstance(raw_keywords, list):
+            cleaned_keywords = []
+            seen = set()
+            for kw in raw_keywords:
+                if not isinstance(kw, str):
+                    continue
+                kw_clean = kw.strip()
+                if not kw_clean:
+                    continue
+                key = kw_clean.lower()
+                if key in seen:
+                    continue
+                seen.add(key)
+                cleaned_keywords.append(kw_clean)
+                if len(cleaned_keywords) >= CLAUDE_MAX_KEYWORDS:
+                    break
+            keywords = cleaned_keywords or None
+
+    return {"intent": intent, "reply": reply, "keywords": keywords}
 
 
 def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
-    """(v5, extended in v6) Single cheap Claude call that classifies the
-    user's message as "search", "chat", or "blocked" (v6) and, for the
-    latter two, writes the reply in the same call — saves a second round
-    trip versus classifying then answering/declining separately. Falls
-    back to {"intent": "search", "reply": None} on ANY failure (API
-    error, timeout, bad JSON) so the pre-existing search pipeline is
-    always the safe default — only the chat-reply/abuse-blocking
-    shortcuts can ever be skipped by a routing hiccup, never a genuine
-    search request."""
+    """(v5, extended in v6 with abuse-blocking, extended again with
+    keyword generation) Single cheap Claude call that classifies the
+    user's message as "search", "chat", or "blocked" and:
+      - for "chat"/"blocked", writes the reply in the same call, and
+      - for "search", ALSO returns the keyword list to use for matching.
+    Falls back to {"intent": "search", "reply": None, "keywords": None}
+    on ANY failure (API error, timeout, bad JSON) so the pre-existing
+    search pipeline is always the safe default — only the chat-reply /
+    abuse-blocking / smart-keyword shortcuts can ever be skipped by a
+    routing hiccup, never a genuine search request (the /search route
+    falls back to generate_fuzzy_keywords() whenever keywords come back
+    None for a "search" intent)."""
     user_message = (
         f"Conversation so far (auto-summarized, may be empty):\n"
         f"{chat_summary or '(no earlier messages in this chat)'}\n\n"
@@ -1318,12 +1466,12 @@ def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
         raw = _call_claude(CLAUDE_ROUTER_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_ROUTER_MAX_TOKENS)
     except Exception as exc:
         log.warning(f"Router Claude call failed (defaulting to 'search'): {exc}")
-        return {"intent": "search", "reply": None}
+        return {"intent": "search", "reply": None, "keywords": None}
 
     parsed = _parse_router_json(raw)
     if not parsed:
         log.warning(f"Router returned unparseable output (defaulting to 'search'): {raw[:200]!r}")
-        return {"intent": "search", "reply": None}
+        return {"intent": "search", "reply": None, "keywords": None}
     return parsed
 
 
@@ -1474,20 +1622,15 @@ def upsert_google_user(google_id: str, email: str, name: str):
 #                            flintel_signals. (v6: if no posts are ever
 #                            matched within RESPONSE_TIMEOUT seconds, this
 #                            instead ends up holding a plain "nothing
-#                            found on this yet" answer — see
-#                            _fill_in_message_outputs below. With the
-#                            prompt swap, this field's stored string will
-#                            typically now be a JSON document — see the
-#                            PROMPT SWAP note at the top of the file.)
+#                            found on this yet" answer.)
 #   - (v5) A message may instead be `"message_type": "chat"` — a plain
 #     conversational turn the v5 router decided didn't need any data
 #     pulled at all (including, as of v6, a polite decline for a
-#     "blocked" message — same shape, no template changes needed). These
-#     have no topic_key/keywords/results, only `query` + `claude_answer`,
-#     and never touch flintel_search_jobs or flintel_signals in any way.
-#     Messages with no `message_type` (every message from before this
-#     update, and every new search-type message) are treated as ordinary
-#     search messages, exactly as before.
+#     "blocked" message). These have no topic_key/keywords/results, only
+#     `query` + `claude_answer`, and never touch flintel_search_jobs or
+#     flintel_signals in any way. Messages with no `message_type` (every
+#     message from before this update, and every new search-type
+#     message) are treated as ordinary search messages, exactly as before.
 #   - (v5) `summary` — a short, plain-Python rolling digest of the chat
 #     (see append_to_chat_summary above), used purely to give the
 #     router/chat-reply calls cheap continuity without ever sending
@@ -1502,8 +1645,9 @@ def upsert_google_user(google_id: str, email: str, name: str):
 #     delete_chat_session() below — without touching any other chat, and
 #     without letting anyone but that same owner_key delete it.
 #
-# UNCHANGED IN v7, UNCHANGED BY THE PROMPT SWAP — this entire section is
-# untouched.
+# COMPLETELY UNCHANGED BY THE KEYWORD-GENERATION SWAP — this entire
+# section is untouched; `keywords` is stored on the message exactly as
+# before, regardless of which source produced it.
 # ─────────────────────────────────────────────────────────────────────────────
 
 def get_anon_id(request: Request) -> str:
@@ -1598,17 +1742,15 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
     """Appends a search as a new message in the chat, and auto-titles the
     chat from the very first query if it hasn't been named yet.
 
-    UNCHANGED from v4 — this is only ever called for messages the v5
-    router classified as "search". `keywords` is still stored on the
-    message (unchanged from before) so later matching/debugging can use
-    it — but note it is purely a behind-the-scenes field: nothing in this
-    service renders it back to the user on the chat surface. `results`
-    starts empty and gets filled in later by save_signal_results_to_chat()
-    once matching signals show up. `claude_answer` starts empty too and
-    is filled in once by save_claude_answer_to_chat() the first time
-    Claude has posts to work with (or, as of v6, once RESPONSE_TIMEOUT
-    seconds pass with none found) — after that it's cached and never
-    regenerated for this message."""
+    UNCHANGED from v4 (and by the keyword-generation swap) — this is only
+    ever called for messages the router classified as "search". `keywords`
+    is still stored on the message purely for internal use (later
+    matching/debugging) — it doesn't matter, and this function doesn't
+    care, whether that list came from Claude's router call or the
+    generate_fuzzy_keywords() fallback. `results` starts empty and gets
+    filled in later by save_signal_results_to_chat() once matching
+    signals show up. `claude_answer` starts empty too and is filled in
+    once by save_claude_answer_to_chat()."""
     now = datetime.now(timezone.utc)
     message = {
         "query":              query,
@@ -1637,7 +1779,7 @@ def add_chat_message_to_chat(chat_id: str, owner_key: str, query: str, answer: s
     questions, follow-ups, etc.), or (v6) a polite decline for a
     "blocked" message — both are saved with the exact same shape, since
     both render identically (query + answer text, no post cards), so no
-    template changes are needed for the v6 abuse-blocking addition.
+    template changes are needed.
 
     Completely separate from add_search_to_chat() above, which is
     untouched and still used for every actual search-type message exactly
@@ -1669,9 +1811,7 @@ def save_signal_results_to_chat(chat_id: str, owner_key: str, topic_key: str, re
     output onto the SAME chat message that holds the original user prompt
     for this topic, exactly as computed by get_matched_signals() — no
     keyword list, job status, or anything else about the job is written
-    here. This is the post-cards data, unchanged from v3 in shape (v7
-    only changes WHICH signals get_matched_signals() returns upstream —
-    this function itself is untouched).
+    here. This is the post-cards data, unchanged from v3 in shape.
 
     Safe to call repeatedly (e.g. on every chat/home page load while the
     background job is still filling in signals) — it just overwrites
@@ -1694,11 +1834,10 @@ def save_claude_answer_to_chat(chat_id: str, owner_key: str, topic_key: str, ans
     is what makes re-opening a chat later show the exact same answer
     again, as-is, with no need to re-call Claude. (v6: also used to cache
     the plain "nothing found yet" timeout answer — same function, same
-    caching behavior, no changes needed here.)
+    caching behavior.)
 
-    UNCHANGED by the prompt swap: this still stores whatever string
-    `answer` is, verbatim, with no parsing/validation — it does not know
-    or care whether `answer` is free-form prose or a JSON document."""
+    UNCHANGED: this still stores whatever string `answer` is, verbatim,
+    with no parsing/validation."""
     if not answer:
         return
     chats_collection.update_one(
@@ -1739,25 +1878,22 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list):
     Best-effort per message — one message failing must never block the
     rest of the page, and Claude failures must never affect post cards.
 
-    (v5) Messages with no topic_key are plain chat-type turns (routed
-    away from the search pipeline entirely back in /search, and already
-    fully answered at that time) — skipped here immediately, since there
-    is nothing to fill in for them and they were never meant to touch
-    flintel_signals at all.
+    (v5) Messages with no topic_key are plain chat-type turns — skipped
+    here immediately, since there is nothing to fill in for them.
 
-    (v6) If a search-type message STILL has no matched posts, it no
-    longer just waits forever: once RESPONSE_TIMEOUT seconds have passed
-    since the message's own `requested_at`, this calls
-    analyze_with_claude(query, []) exactly once — reusing that function's
-    existing "no posts yet, say so plainly" branch unchanged — so the
-    user gets a natural "sorry, nothing found on this yet" answer instead
-    of a permanently blank turn. That answer is cached the same way every
-    other answer in this file is, so it's generated (and billed) once.
+    (v6) If a search-type message STILL has no matched posts, once
+    RESPONSE_TIMEOUT seconds have passed since the message's own
+    `requested_at`, this calls analyze_with_claude(query, []) exactly
+    once — reusing that function's existing "no posts yet, say so
+    plainly" branch unchanged — so the user gets a natural "sorry,
+    nothing found on this yet" answer instead of a permanently blank
+    turn. That answer is cached the same way every other answer in this
+    file is, so it's generated (and billed) once.
 
-    UNCHANGED IN v7, UNCHANGED BY THE PROMPT SWAP — this function calls
-    get_matched_signals() and analyze_with_claude() exactly as before;
-    only what CLAUDE_ANALYSIS_SYSTEM_PROMPT asks analyze_with_claude() to
-    produce has changed, upstream of this function."""
+    COMPLETELY UNCHANGED BY THE KEYWORD-GENERATION SWAP — this function
+    calls get_matched_signals() and analyze_with_claude() exactly as
+    before, using whatever `keywords` was already stored on the message
+    by add_search_to_chat() at write time."""
     for msg in messages or []:
         if not msg.get("topic_key"):
             continue
@@ -1887,25 +2023,29 @@ def search(
         )
 
     # ─────────────────────────────────────────────────────────────────────
-    # v5 ROUTING STEP (v6: now also screens for abuse/harm) — runs BEFORE
-    # anything else below. Decides whether this message is "search" (the
-    # entire v1-v4 pipeline below runs exactly as it always has), "chat"
-    # (nothing is generated/patched into flintel_search_jobs at all —
-    # Claude just answers directly), or (v6) "blocked" (nothing is
-    # generated/patched either — Claude just declines directly).
+    # v5 ROUTING STEP (v6: abuse/harm screening; KEYWORD-GENERATION SWAP:
+    # now also returns the keyword list for "search" intent) — runs
+    # BEFORE anything else below. Decides whether this message is
+    # "search" (the pipeline below runs, using Claude's own keyword
+    # list), "chat" (nothing queued into flintel_search_jobs — Claude
+    # just answers directly), or "blocked" (nothing queued — Claude just
+    # declines directly).
     #
     # Owner/active-chat resolution + the router call itself are wrapped
     # in one try/except: ANY failure here (corrupt session, Mongo hiccup,
-    # Claude API error, bad JSON) falls back to intent="search" with the
-    # owner/chat vars left unset, and the search pipeline below re-resolves
-    # them itself exactly as it did before this update — so a routing
-    # failure can NEVER block or skip a real search job, only the chat-
-    # reply/abuse-blocking shortcuts are ever at risk.
+    # Claude API error, bad JSON) falls back to intent="search" with
+    # routed_keywords left as None, and the search pipeline below
+    # re-resolves owner/chat itself AND falls back to
+    # generate_fuzzy_keywords() for the keyword list — so a routing
+    # failure can NEVER block, skip, or under-supply a real search job,
+    # only the chat-reply/abuse-blocking/smart-keyword shortcuts are ever
+    # at risk.
     # ─────────────────────────────────────────────────────────────────────
     owner_key = owner_type = None
     active_chat_id = None
     intent = "search"
     chat_reply = None
+    routed_keywords = None
 
     try:
         owner_key, owner_type = get_owner(request)
@@ -1920,15 +2060,16 @@ def search(
         routed = classify_and_maybe_chat(query, chat_summary)
         intent = routed.get("intent", "search")
         chat_reply = routed.get("reply")
+        routed_keywords = routed.get("keywords")
     except Exception as exc:
         log.warning(f"v5 routing step failed for query={query!r} (defaulting to normal search pipeline): {exc}")
         intent = "search"
 
     # ── CHAT-TYPE OR BLOCKED-TYPE MESSAGE: answer/decline directly, ─────
-    # ── never touch the fuzzy-keyword / job-queue / signal-matching    ──
-    # ── pipeline at all. (v6: "blocked" reuses the exact same handling ──
-    # ── as "chat" — same message shape, same redirect — the only       ──
-    # ── difference is where the answer text comes from below.)         ──
+    # ── never touch the keyword-generation / job-queue / signal-        ──
+    # ── matching pipeline at all. (v6: "blocked" reuses the exact same  ──
+    # ── handling as "chat" — same message shape, same redirect — the   ──
+    # ── only difference is where the answer text comes from below.)     ──
     if intent in ("chat", "blocked"):
         if intent == "blocked":
             # Never re-sent to Claude for a fallback — a canned decline is
@@ -1969,15 +2110,33 @@ def search(
             return RedirectResponse(url=f"/chat/{redirect_chat_id}", status_code=303)
         return RedirectResponse(url="/", status_code=303)
 
-    # ── SEARCH-TYPE MESSAGE: everything below is the v1-v4.3 pipeline, ──
-    # ── 100% UNCHANGED — same functions, same order, same behavior.    ──
+    # ── SEARCH-TYPE MESSAGE: everything below is the v1-v7 pipeline,   ──
+    # ── UNCHANGED except for WHERE `keywords` comes from.              ──
 
-    # Keyword generation is completely untouched by platform selection, and
-    # this ALWAYS runs and enqueues the job — exactly like v1/v2/v3 — no
-    # matter what happens with the chat/session bookkeeping (or Claude)
-    # below. This is the part Background Service #1 depends on, so it must
-    # never be blocked by the chat feature or the Claude analysis layer.
-    keywords = generate_fuzzy_keywords(query)
+    # (KEYWORD-GENERATION SWAP) Keywords now come from the SAME Claude
+    # routing call above instead of the old plain-Python template
+    # generator — Claude reads the user's actual prompt and decides how
+    # many keywords genuinely make sense (as few as one for a narrow
+    # prompt like "reddit posts about AI" -> just "AI", up to
+    # CLAUDE_MAX_KEYWORDS for a broader ask) rather than always
+    # mechanically producing the same fixed set of template variations.
+    # generate_fuzzy_keywords() is KEPT, unchanged, purely as a
+    # safety-net fallback for when the routing step failed outright or
+    # returned no usable keywords for a "search" intent — so a Claude
+    # hiccup can never leave a search with zero keywords; it just falls
+    # back to the old deterministic behavior for that one request. This
+    # step ALWAYS runs and enqueues the job — exactly like before — no
+    # matter what happens with the chat/session bookkeeping below.
+    if routed_keywords:
+        keywords = routed_keywords
+    else:
+        log.warning(
+            f"No usable keywords from the Claude router for query={query!r} "
+            f"— falling back to generate_fuzzy_keywords()"
+        )
+        keywords = generate_fuzzy_keywords(query)
+    keywords = keywords[:MAX_KEYWORDS]
+
     enqueue_search_job(topic_key, keywords, targeting_platform)
 
     # Chat/session bookkeeping is best-effort on top of the above: if
@@ -2074,22 +2233,19 @@ def view_chat(request: Request, chat_id: str):
 
     Note for the template: render each message's `query`, `results`
     (title, post_text, post_url, platform) as post cards, and
-    `claude_answer` as the actual answer text (markdown-ish plain text —
-    render it as-is, Claude writes its own paragraphs/bullets/tables
-    inline when it decides that's clearest). `keywords` stays on the
+    `claude_answer` as the actual answer text. `keywords` stays on the
     message purely for internal use and should not be displayed here.
     (v5) A message with `"message_type": "chat"` has no `results` to show
     (it's always an empty list) — just render `query` + `claude_answer`
     like a normal conversational turn, with no post cards underneath.
-    (v6) A polite "blocked" decline and a v6 timeout "nothing found yet"
+    (v6) A polite "blocked" decline and a timeout "nothing found yet"
     answer both use this exact same rendering path already — no template
     changes needed for either.
 
-    NOTE (PROMPT SWAP): `claude_answer` will now typically be a raw JSON
-    string for search-type messages, since CLAUDE_ANALYSIS_SYSTEM_PROMPT
-    was swapped to the strict-JSON prompt. This template contract note is
-    left exactly as it was — no template/rendering changes were made as
-    part of this swap, per what was asked."""
+    NOTE (JSON-ANALYSIS-PROMPT SWAP): `claude_answer` will now typically
+    be a raw JSON string for search-type messages. This template contract
+    note is left exactly as it was — no template/rendering changes were
+    made as part of that swap, per what was asked."""
     owner_key, _owner_type = get_owner(request)
     chat = get_chat_session(chat_id, owner_key)
     if not chat:
