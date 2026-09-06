@@ -99,6 +99,7 @@ Required env vars (add to .env):
     GOOGLE_CLIENT_SECRET=...
     ANTHROPIC_API_KEY=...
     CLAUDE_MODEL=claude-haiku-4-5-20251001   # optional, this is the default
+    RESPONSE_TIMEOUT=60                      # optional, this is the default (seconds)
 
 ── v4.1 FIX ───────────────────────────────────────────────────────────────
 Only ONE behavior changed from the v4 file above: the /search route used to
@@ -129,11 +130,102 @@ identical protection to how a chat is already read. If the deleted chat
 happened to be the currently active one, `active_chat_id` is cleared from
 the session so the home page falls back to showing no active chat instead
 of a stale/missing one. Nothing else in this file was touched.
+
+── v4.4 FIX ───────────────────────────────────────────────────────────────
+POST /chats/new now reuses the currently active chat instead of creating a
+brand-new empty one if that active chat belongs to the same owner and has
+zero messages yet — avoids piling up dead, message-less chats in the
+sidebar from repeated "New chat" clicks. Nothing else in that update was
+touched.
+
+── v5 FEATURE ───────────────────────────────────────────────────────────
+Adds a ROUTING step in front of everything else in POST /search. A single
+cheap Claude call now decides whether the user's message is:
+
+  - a genuine SEARCH request (wants social-listening data pulled about a
+    brand/product/topic) -> the ENTIRE v1–v4.3 pipeline above runs exactly
+    as it always has, completely UNTOUCHED: fuzzy keywords are generated,
+    a job is patched into flintel_search_jobs, and matched flintel_signals
+    posts get analyzed by Claude — all 100% as before, byte-for-byte the
+    same functions (generate_fuzzy_keywords, enqueue_search_job,
+    add_search_to_chat, get_matched_signals, analyze_with_claude,
+    save_signal_results_to_chat, save_claude_answer_to_chat).
+
+  - a plain CHAT message (a greeting, small talk, a general question,
+    "what's up", a follow-up about something already discussed, etc.) ->
+    NOTHING is generated or patched into flintel_search_jobs for it at
+    all — no fuzzy keywords, no job, no signal matching. Claude answers
+    it directly (in the SAME routing call, to save a round trip) and the
+    reply is saved onto the chat as a new lightweight message
+    ("message_type": "chat"). The existing search pipeline is never
+    touched or invoked for these messages.
+
+Also adds a short, plain-PYTHON (no extra Claude call) rolling SUMMARY
+kept on each chat doc — one condensed line per turn, capped to the last
+CHAT_SUMMARY_MAX_TURNS turns — so Claude gets cheap conversational
+continuity (for the routing decision, and for any chat-type reply)
+without ever being sent the full raw message history for the chat.
+
+Any failure anywhere in the new routing step (Claude API error, bad JSON,
+session hiccup) safely falls back to the "search" path, so this new
+feature can only ever add a shortcut — it can never break or block the
+pre-existing search pipeline, which stays the safe default on any doubt.
+
+── v6 FEATURE (this file) ─────────────────────────────────────────────────
+Adds TWO small, self-contained additions on top of v5. Nothing else in
+this file — no other route, function, or behavior — was touched.
+
+1. RESPONSE TIMEOUT (new `RESPONSE_TIMEOUT` env var, default 60 seconds):
+   Previously, a search-type message with no matched signals yet just sat
+   forever with `claude_answer = None` — home()/view_chat() would keep
+   silently retrying `get_matched_signals()` on every page load, with no
+   answer ever shown if the background service never found anything for
+   that topic.
+   Now, `_fill_in_message_outputs()` checks how long it's been since the
+   message's own `requested_at` timestamp. Once that exceeds
+   RESPONSE_TIMEOUT seconds with STILL no matched posts, it calls
+   `analyze_with_claude(query, [])` exactly once — the SAME function
+   already used for real answers, just handed an empty post list. That
+   function already has a built-in "no posts were found, say that plainly"
+   branch (see analyze_with_claude's docstring, case 1) — so this reuses
+   existing, already-reviewed prompting instead of adding a new one, and
+   Claude naturally replies with a plain "sorry, couldn't find anything on
+   this yet" — exactly the way Claude/ChatGPT would when they genuinely
+   have nothing to go on. That answer is cached via the existing
+   save_claude_answer_to_chat()/append_to_chat_summary() calls, so it's
+   generated once and never re-billed. If matched posts show up LATER
+   (background service just took longer than 60s), that's fine too:
+   `needs_answer` only re-triggers if `claude_answer` is still falsy, so
+   once the timeout answer is cached, it stays as the final answer for
+   that message, same caching rule as every other answer in this file.
+   Before the timeout is reached, behavior is 100% unchanged: still just
+   silently waits and retries on next page load, exactly like v1-v5.
+
+2. ABUSE / HARMFUL CONTENT BLOCKING (folded into the existing v5 router):
+   The SAME single cheap Claude call in classify_and_maybe_chat() now also
+   screens for abusive, harassing, hateful, sexually explicit, threatening,
+   or otherwise harmful messages — no second API call, no new service, it
+   just adds a third possible classification alongside "search" and "chat":
+   `{"intent": "blocked", "reply": "<short, polite decline>"}`.
+   A "blocked" message never reaches the search pipeline (no keywords, no
+   job) and never reaches the plain-chat fallback either — it's saved onto
+   the chat as a normal lightweight "chat"-type message (same shape/field
+   as v5's chat messages, so no template changes are needed anywhere) whose
+   `claude_answer` is just the polite decline text, with CLAUDE_BLOCKED_
+   FALLBACK_REPLY used as a safety-net string if the router flagged
+   "blocked" but didn't return usable reply text.
+   Same safety rule as the rest of the v5 router: ANY failure in this step
+   (API error, bad JSON, timeout) still falls back to intent="search", so
+   this is a best-effort courtesy layer on top of the product, not a
+   guaranteed content filter — it can only ever add a shortcut/decline on
+   top of the existing pipeline, it can never be the reason a genuine
+   search silently fails to run.
 ──────────────────────────────────────────────────────────────────────────────
 """
 
 import os
 import re
+import json
 import uuid
 import logging
 from datetime import datetime, timezone
@@ -191,6 +283,19 @@ CLAUDE_TIMEOUT_SECONDS  = float(os.getenv("CLAUDE_TIMEOUT_SECONDS", "30"))
 CLAUDE_API_URL          = "https://api.anthropic.com/v1/messages"
 CLAUDE_API_VERSION      = "2023-06-01"
 
+# ── Router + chat-summary config (v5) ──────────────────────────────────────
+CLAUDE_ROUTER_MAX_TOKENS       = int(os.getenv("CLAUDE_ROUTER_MAX_TOKENS", "400"))
+CHAT_SUMMARY_MAX_TURNS         = int(os.getenv("CHAT_SUMMARY_MAX_TURNS", "8"))
+CHAT_SUMMARY_TURN_CHAR_LIMIT   = int(os.getenv("CHAT_SUMMARY_TURN_CHAR_LIMIT", "160"))
+
+# ── Response-timeout config (v6) ────────────────────────────────────────────
+# How long (seconds) a search-type message is allowed to sit with no
+# matched flintel_signals before we stop silently waiting and instead give
+# the user a plain, natural "nothing found on this yet" answer, the same
+# way Claude/ChatGPT would rather than leaving them staring at a blank
+# turn forever. See _fill_in_message_outputs() below.
+RESPONSE_TIMEOUT = int(os.getenv("RESPONSE_TIMEOUT", "60"))
+
 client = MongoClient(MONGODB_URI)
 db = client[MONGODB_DB]
 
@@ -213,7 +318,7 @@ chats_collection.create_index("owner_key")
 # ─────────────────────────────────────────────────────────────────────────────
 
 app = FastAPI(
-    title="Flintel Web Service — v4",
+    title="Flintel Web Service — v6",
     # v4.2: docs/redoc/openapi.json are internal implementation detail, not a
     # public product surface — block all three so /docs, /redoc, and
     # /openapi.json 404 instead of exposing every route + schema to anyone.
@@ -572,7 +677,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# CLAUDE ANALYSIS LAYER (v4, NEW)
+# CLAUDE ANALYSIS LAYER (v4)
 #
 # Matched signals never get dumped to the user directly. They're handed to
 # Claude (title + text ONLY — never post_url, never platform, never job
@@ -584,6 +689,12 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 # below) — the input posts are never re-saved next to it, since they
 # already live in flintel_signals / are reconstructable from the message's
 # own keyword list. That's the cost-saving rule: store output only.
+#
+# UNCHANGED IN v5/v6 — this whole section is exactly as it was in v4. The
+# v5 router decides WHETHER a message even reaches this layer; the v6
+# response-timeout fallback (see _fill_in_message_outputs) is the only new
+# CALLER of analyze_with_claude() added on top — it reuses this function
+# completely as-is, just with an empty post list.
 # ─────────────────────────────────────────────────────────────────────────────
 
 CLAUDE_ANALYSIS_SYSTEM_PROMPT = """
@@ -736,7 +847,9 @@ def analyze_with_claude(query: str, matched_signals: list) -> str:
 
       1. No usable posts at all -> Claude still answers, told plainly that
          there's no post data yet, per the system prompt's own grounding
-         rule.
+         rule. (v6: this is the exact branch the response-timeout fallback
+         in _fill_in_message_outputs() relies on — it calls this function
+         with an empty list purely to reach this case.)
       2. Few enough posts to fit one call -> single direct call.
       3. Enough posts that chunking is worth it -> map step condenses each
          chunk of CLAUDE_POSTS_PER_CHUNK posts down to grounded notes,
@@ -784,6 +897,199 @@ def analyze_with_claude(query: str, matched_signals: list) -> str:
         f"actual question naturally.\n\nNotes:\n{combined_notes}"
     )
     return _call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CLAUDE ROUTING LAYER (v5, extended in v6 with abuse/harm blocking)
+#
+# Runs BEFORE anything else in POST /search. A single cheap Claude call
+# decides whether the user's message is a genuine "search" (wants social-
+# listening data pulled about a brand/product/topic — the v1-v4 pipeline
+# above should run exactly as it always has), a plain "chat" message (a
+# greeting, small talk, a general question, a follow-up about something
+# already discussed, etc. — nothing should be queued into
+# flintel_search_jobs for it at all), or (v6, NEW) "blocked" — abusive,
+# harassing, hateful, sexually explicit, or threatening content, which
+# should neither be searched for nor answered normally, just declined.
+#
+# When it's "chat" or "blocked", the SAME call also writes the reply
+# directly (one round trip instead of two). The reply is grounded only in
+# the short, plain-Python chat summary below — never the raw matched
+# posts, and never flintel_signals at all, since neither message type
+# triggers any signal matching.
+#
+# Safety rule: ANY failure here (bad JSON, API error, timeout, missing
+# key) defaults to {"intent": "search"} so the pre-existing pipeline is
+# always the fallback — this routing layer can only ever add a shortcut
+# (a direct chat reply, or a polite decline), it can never silently
+# swallow a real search request. This also means the v6 abuse-blocking
+# check is a best-effort courtesy layer, not a guaranteed content filter:
+# on a routing failure, an abusive message falls through to the normal
+# search pipeline exactly like any other message would, same as v5.
+# ─────────────────────────────────────────────────────────────────────────────
+
+CLAUDE_ROUTER_SYSTEM_PROMPT = """
+You are the routing brain inside Flintel, a social-listening platform.
+Every message a user types goes through you FIRST, before anything else
+happens in the product.
+Your ONLY job: classify this message into exactly one of three types:
+
+1. "search" — the message is asking Flintel to research/monitor/pull
+   social-media data about a brand, product, company, person, or topic.
+   A brand-new social-listening job is about to be queued for whatever
+   the user typed. Do NOT try to answer it yourself — just classify it.
+
+2. "chat" — a normal conversational message that doesn't need any new
+   data pulled at all: greetings ("hi", "hello", "what's up", "kia chal
+   raha hai aj kal"), small talk, thanks, general knowledge questions, a
+   follow-up question about something already discussed in this
+   conversation, or a request to just talk. Answer the user's message
+   yourself, directly and naturally, the way Claude/ChatGPT would in any
+   normal conversation.
+
+3. "blocked" — the message is abusive, harassing, hateful, sexually
+   explicit, threatening, or otherwise harmful (directed at you, at a
+   person, or at any group). Do not search for it and do not answer it
+   normally. Instead write a short, calm, firm decline as the reply —
+   don't lecture, don't repeat or quote the harmful content back, don't
+   moralize at length, just briefly decline and invite them to ask
+   something else.
+
+A short, auto-summarized conversation history (may be empty) is given
+below for continuity when classifying and when writing a "chat" or
+"blocked" reply. Keep any reply conversational and plain — don't mention
+you're an AI or that this is a "mock", and don't narrate your own
+reasoning.
+Respond with STRICT JSON ONLY — no markdown code fences, no preamble, no
+text outside the JSON object — in EXACTLY one of these three shapes:
+{"intent": "search", "reply": null}
+{"intent": "chat", "reply": "<your natural reply text here>"}
+{"intent": "blocked", "reply": "<short, polite decline text>"}
+"""
+
+CLAUDE_CHAT_FALLBACK_SYSTEM_PROMPT = """
+You are the AI assistant inside Flintel, a social listening platform.
+Answer the user's message naturally and directly, the way Claude or
+ChatGPT would in any normal conversation. Plain language, no rigid
+template, no JSON, no code blocks. Don't mention you're an AI or that
+this is a "mock".
+"""
+
+# (v6) Safety-net text used only if the router itself flagged a message as
+# "blocked" but, for whatever reason, didn't return usable reply text —
+# never re-sent to Claude (no extra call, and no reason to hand harmful
+# content to another prompt just to get a decline message).
+CLAUDE_BLOCKED_FALLBACK_REPLY = (
+    "I can't help with that one. Happy to help you look into a brand, "
+    "product, or topic instead, or just chat about something else."
+)
+
+
+def _parse_router_json(raw: str):
+    """Best-effort JSON parse of the router's output — strips ```json
+    fences if Claude added them anyway, and validates the shape. Returns
+    None on anything unexpected so the caller falls back to the safe
+    "search" default instead of ever guessing.
+
+    (v6) Now also accepts "blocked" alongside "search"/"chat" — same
+    validation rule as "chat": a reply is expected as a string, and if
+    it isn't one, the caller's fallback text is used instead."""
+    if not raw:
+        return None
+    cleaned = raw.strip()
+    if cleaned.startswith("```"):
+        cleaned = cleaned.strip("`").strip()
+        cleaned = re.sub(r"^json\s*", "", cleaned, flags=re.IGNORECASE).strip()
+    try:
+        data = json.loads(cleaned)
+    except (ValueError, TypeError):
+        return None
+    if not isinstance(data, dict):
+        return None
+    intent = data.get("intent")
+    if intent not in ("search", "chat", "blocked"):
+        return None
+    reply = data.get("reply")
+    if intent in ("chat", "blocked") and not isinstance(reply, str):
+        reply = None
+    return {"intent": intent, "reply": reply}
+
+
+def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
+    """(v5, extended in v6) Single cheap Claude call that classifies the
+    user's message as "search", "chat", or "blocked" (v6) and, for the
+    latter two, writes the reply in the same call — saves a second round
+    trip versus classifying then answering/declining separately. Falls
+    back to {"intent": "search", "reply": None} on ANY failure (API
+    error, timeout, bad JSON) so the pre-existing search pipeline is
+    always the safe default — only the chat-reply/abuse-blocking
+    shortcuts can ever be skipped by a routing hiccup, never a genuine
+    search request."""
+    user_message = (
+        f"Conversation so far (auto-summarized, may be empty):\n"
+        f"{chat_summary or '(no earlier messages in this chat)'}\n\n"
+        f"User's new message: {query}"
+    )
+    try:
+        raw = _call_claude(CLAUDE_ROUTER_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_ROUTER_MAX_TOKENS)
+    except Exception as exc:
+        log.warning(f"Router Claude call failed (defaulting to 'search'): {exc}")
+        return {"intent": "search", "reply": None}
+
+    parsed = _parse_router_json(raw)
+    if not parsed:
+        log.warning(f"Router returned unparseable output (defaulting to 'search'): {raw[:200]!r}")
+        return {"intent": "search", "reply": None}
+    return parsed
+
+
+def _trim(text: str, limit: int) -> str:
+    text = (text or "").strip()
+    if len(text) <= limit:
+        return text
+    return text[: max(limit - 1, 0)].rstrip() + "…"
+
+
+def append_to_chat_summary(chat_id: str, owner_key: str, query: str, answer: str):
+    """(v5) Keeps a short, PLAIN-PYTHON (no extra Claude call) running
+    summary on the chat doc itself — one condensed line per turn. This is
+    what classify_and_maybe_chat() reads for continuity, so passing
+    conversation context to Claude stays cheap and small no matter how
+    long a chat gets — Claude is never sent the full raw message history,
+    only this rolling, auto-generated summary. Keeps only the last
+    CHAT_SUMMARY_MAX_TURNS lines; older lines roll off automatically.
+    Best-effort: never allowed to raise past its caller."""
+    if not chat_id or not owner_key:
+        return
+    line = f"User: {_trim(query, CHAT_SUMMARY_TURN_CHAR_LIMIT)} | Assistant: {_trim(answer, CHAT_SUMMARY_TURN_CHAR_LIMIT)}"
+
+    chat = chats_collection.find_one({"chat_id": chat_id, "owner_key": owner_key}, {"summary": 1})
+    existing_summary = (chat or {}).get("summary") or ""
+    existing_lines = [l for l in existing_summary.split("\n") if l.strip()]
+    existing_lines.append(line)
+    trimmed_lines = existing_lines[-CHAT_SUMMARY_MAX_TURNS:]
+
+    chats_collection.update_one(
+        {"chat_id": chat_id, "owner_key": owner_key},
+        {"$set": {"summary": "\n".join(trimmed_lines)}},
+    )
+
+
+def _elapsed_seconds(dt) -> float:
+    """(v6) Best-effort elapsed-seconds calculation from a stored
+    `requested_at` timestamp. Mongo may hand this back as a naive
+    datetime (it was still stored as UTC under the hood) or as an
+    already-aware one — this normalizes either case to UTC before
+    diffing against "now", so the RESPONSE_TIMEOUT comparison below never
+    raises on a naive/aware mismatch. Returns 0.0 (i.e. "just requested,
+    definitely not timed out") for anything that isn't a real datetime,
+    so a missing/corrupt timestamp can never accidentally trigger the
+    timeout fallback early."""
+    if not isinstance(dt, datetime):
+        return 0.0
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return (datetime.now(timezone.utc) - dt).total_seconds()
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -876,21 +1182,38 @@ def upsert_google_user(google_id: str, email: str, name: str):
 #   - Each search message holds:
 #       * `results`      -> post cards data (title/post_text/post_url/
 #                            platform), UNCHANGED from v3, shown as-is.
-#       * `claude_answer` -> (v4, NEW) Claude's natural-language answer to
-#                            the user's own prompt, grounded in those same
+#       * `claude_answer` -> (v4) Claude's natural-language answer to the
+#                            user's own prompt, grounded in those same
 #                            matched posts (title + text only). Only this
 #                            OUTPUT is stored — the posts fed in as input
 #                            are never duplicated here, since they already
-#                            live in flintel_signals.
+#                            live in flintel_signals. (v6: if no posts are
+#                            ever matched within RESPONSE_TIMEOUT seconds,
+#                            this instead ends up holding a plain "nothing
+#                            found on this yet" answer — see
+#                            _fill_in_message_outputs below.)
+#   - (v5, NEW) A message may instead be `"message_type": "chat"` — a
+#     plain conversational turn the v5 router decided didn't need any
+#     data pulled at all (including, as of v6, a polite decline for a
+#     "blocked" message — same shape, no template changes needed). These
+#     have no topic_key/keywords/results, only `query` + `claude_answer`,
+#     and never touch flintel_search_jobs or flintel_signals in any way.
+#     Messages with no `message_type` (every message from before this
+#     update, and every new search-type message) are treated as ordinary
+#     search messages, exactly as before.
+#   - (v5, NEW) `summary` — a short, plain-Python rolling digest of the
+#     chat (see append_to_chat_summary above), used purely to give the
+#     router/chat-reply calls cheap continuity without ever sending
+#     Claude the full raw message history.
 #   - When an anonymous user signs up / logs in, their guest chats are
 #     re-keyed onto their email so nothing is lost.
 #   - Because chats are always looked up by owner_key (the email, once
 #     signed in), logging out and logging back in with the same email
 #     brings the exact same chat history back — nothing is deleted on
 #     logout.
-#   - (v4.3, NEW) A single chat can be deleted by its owner — see
-#     delete_chat() below — without touching any other chat, and without
-#     letting anyone but that same owner_key delete it.
+#   - (v4.3) A single chat can be deleted by its owner — see
+#     delete_chat_session() below — without touching any other chat, and
+#     without letting anyone but that same owner_key delete it.
 # ─────────────────────────────────────────────────────────────────────────────
 
 def get_anon_id(request: Request) -> str:
@@ -931,6 +1254,7 @@ def create_chat_session(owner_key: str, owner_type: str, title: str = None) -> s
         "owner_type":  owner_type,  # "email" | "anon"
         "title":       title or "New chat",
         "messages":    [],
+        "summary":     "",  # (v5) rolling plain-Python conversation digest
         "created_at":  now,
         "updated_at":  now,
     })
@@ -955,8 +1279,8 @@ def get_user_chats(owner_key: str):
 
 
 def delete_chat_session(chat_id: str, owner_key: str) -> bool:
-    """(v4.3, NEW) Deletes exactly ONE chat — the one identified by
-    chat_id — and only if it belongs to owner_key. Uses the same
+    """(v4.3) Deletes exactly ONE chat — the one identified by chat_id —
+    and only if it belongs to owner_key. Uses the same
     {"chat_id": ..., "owner_key": ...} filter as get_chat_session(), so
     the scoping rule is identical to the one already trusted for reading
     a chat: a guest's anon_id or a signed-in user's email can only ever
@@ -984,14 +1308,17 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
     """Appends a search as a new message in the chat, and auto-titles the
     chat from the very first query if it hasn't been named yet.
 
-    `keywords` is still stored on the message (unchanged from before) so
-    later matching/debugging can use it — but note it is purely a
-    behind-the-scenes field: nothing in this service renders it back to
-    the user on the chat surface. `results` starts empty and gets filled
-    in later by save_signal_results_to_chat() once matching signals show
-    up. `claude_answer` (v4) starts empty too and is filled in once by
-    save_claude_answer_to_chat() the first time Claude has posts to work
-    with — after that it's cached and never regenerated for this message."""
+    UNCHANGED from v4 — this is only ever called for messages the v5
+    router classified as "search". `keywords` is still stored on the
+    message (unchanged from before) so later matching/debugging can use
+    it — but note it is purely a behind-the-scenes field: nothing in this
+    service renders it back to the user on the chat surface. `results`
+    starts empty and gets filled in later by save_signal_results_to_chat()
+    once matching signals show up. `claude_answer` starts empty too and
+    is filled in once by save_claude_answer_to_chat() the first time
+    Claude has posts to work with (or, as of v6, once RESPONSE_TIMEOUT
+    seconds pass with none found) — after that it's cached and never
+    regenerated for this message."""
     now = datetime.now(timezone.utc)
     message = {
         "query":              query,
@@ -1001,6 +1328,42 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
         "requested_at":       now,
         "results":            [],   # filled in later: [{title, post_text, post_url, platform}, ...]
         "claude_answer":      None, # filled in once: Claude's answer text, grounded in `results`
+    }
+
+    chat = chats_collection.find_one({"chat_id": chat_id, "owner_key": owner_key})
+    update = {"$push": {"messages": message}, "$set": {"updated_at": now}}
+    if chat and not chat.get("messages"):
+        update["$set"]["title"] = generate_chat_title(query)
+
+    chats_collection.update_one({"chat_id": chat_id, "owner_key": owner_key}, update)
+
+
+def add_chat_message_to_chat(chat_id: str, owner_key: str, query: str, answer: str):
+    """(v5, NEW) Appends a plain conversational turn — NOT a search — to
+    the chat. No topic_key/keywords/targeting_platform, no
+    flintel_search_jobs entry, no post-card results, no signal matching
+    ever happens for these. This is for messages classify_and_maybe_chat()
+    decided were just normal chat (greetings, small talk, general
+    questions, follow-ups, etc.), or (v6) a polite decline for a
+    "blocked" message — both are saved with the exact same shape, since
+    both render identically (query + answer text, no post cards), so no
+    template changes are needed for the v6 abuse-blocking addition.
+
+    Completely separate from add_search_to_chat() above, which is
+    untouched and still used for every actual search-type message exactly
+    as before — the two message shapes coexist in the same `messages`
+    array, distinguished by the `message_type` field ("chat" here; absent
+    or "search" for ordinary search messages)."""
+    now = datetime.now(timezone.utc)
+    message = {
+        "query":              query,
+        "topic_key":          None,
+        "keywords":           [],
+        "targeting_platform": None,
+        "requested_at":       now,
+        "results":            [],
+        "claude_answer":      answer,
+        "message_type":       "chat",
     }
 
     chat = chats_collection.find_one({"chat_id": chat_id, "owner_key": owner_key})
@@ -1037,7 +1400,9 @@ def save_claude_answer_to_chat(chat_id: str, owner_key: str, topic_key: str, ans
     message — never the posts that were sent in as input, since those
     already live in flintel_signals and don't need duplicating here. This
     is what makes re-opening a chat later show the exact same answer
-    again, as-is, with no need to re-call Claude."""
+    again, as-is, with no need to re-call Claude. (v6: also used to cache
+    the plain "nothing found yet" timeout answer — same function, same
+    caching behavior, no changes needed here.)"""
     if not answer:
         return
     chats_collection.update_one(
@@ -1067,8 +1432,8 @@ def migrate_anon_chats_to_owner(anon_id: str, new_owner_key: str):
 
 
 def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list):
-    """(v4) Shared by home() and view_chat(): for any message in `messages`
-    that's still missing its post-card `results` and/or its
+    """Shared by home() and view_chat(): for any SEARCH-type message in
+    `messages` that's still missing its post-card `results` and/or its
     `claude_answer`, looks up matching signals ONCE and uses that single
     lookup for both:
       - post cards keep working exactly like v3 (results saved as-is), and
@@ -1076,8 +1441,26 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list):
         matched posts are actually available for that message, then the
         answer is cached forever after (only the answer, not the posts).
     Best-effort per message — one message failing must never block the
-    rest of the page, and Claude failures must never affect post cards."""
+    rest of the page, and Claude failures must never affect post cards.
+
+    (v5, NEW) Messages with no topic_key are plain chat-type turns (routed
+    away from the search pipeline entirely back in /search, and already
+    fully answered at that time) — skipped here immediately, since there
+    is nothing to fill in for them and they were never meant to touch
+    flintel_signals at all.
+
+    (v6, NEW) If a search-type message STILL has no matched posts, it no
+    longer just waits forever: once RESPONSE_TIMEOUT seconds have passed
+    since the message's own `requested_at`, this calls
+    analyze_with_claude(query, []) exactly once — reusing that function's
+    existing "no posts yet, say so plainly" branch unchanged — so the
+    user gets a natural "sorry, nothing found on this yet" answer instead
+    of a permanently blank turn. That answer is cached the same way every
+    other answer in this file is, so it's generated (and billed) once."""
     for msg in messages or []:
+        if not msg.get("topic_key"):
+            continue
+
         needs_results = not msg.get("results")
         needs_answer = not msg.get("claude_answer")
         if not needs_results and not needs_answer:
@@ -1094,6 +1477,22 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list):
             continue
 
         if not matched:
+            # (v6) Nothing matched yet — before, this silently gave up for
+            # this page load and just retried again next time. Now, only
+            # once the message has been waiting longer than
+            # RESPONSE_TIMEOUT seconds, give the user a plain "nothing
+            # found" answer instead of leaving the turn blank forever.
+            if needs_answer and _elapsed_seconds(msg.get("requested_at")) >= RESPONSE_TIMEOUT:
+                try:
+                    answer = analyze_with_claude(msg["query"], [])
+                    msg["claude_answer"] = answer
+                    save_claude_answer_to_chat(chat_id, owner_key, msg["topic_key"], answer)
+                    try:
+                        append_to_chat_summary(chat_id, owner_key, msg["query"], answer)
+                    except Exception as exc:
+                        log.warning(f"Updating chat summary failed for topic_key={msg.get('topic_key')}: {exc}")
+                except Exception as exc:
+                    log.warning(f"Timeout-fallback Claude analysis failed for topic_key={msg.get('topic_key')}: {exc}")
             continue
 
         if needs_results:
@@ -1108,6 +1507,14 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list):
                 answer = analyze_with_claude(msg["query"], matched)
                 msg["claude_answer"] = answer
                 save_claude_answer_to_chat(chat_id, owner_key, msg["topic_key"], answer)
+                # (v5) Best-effort: fold this now-answered search turn into
+                # the same rolling summary chat-type turns use, so later
+                # chat-type replies / routing decisions in this chat can
+                # reference it too.
+                try:
+                    append_to_chat_summary(chat_id, owner_key, msg["query"], answer)
+                except Exception as exc:
+                    log.warning(f"Updating chat summary failed for topic_key={msg.get('topic_key')}: {exc}")
             except Exception as exc:
                 log.warning(f"Claude analysis failed for topic_key={msg.get('topic_key')}: {exc}")
 
@@ -1178,6 +1585,92 @@ def search(
             },
         )
 
+    # ─────────────────────────────────────────────────────────────────────
+    # v5 ROUTING STEP (v6: now also screens for abuse/harm) — runs BEFORE
+    # anything else below. Decides whether this message is "search" (the
+    # entire v1-v4 pipeline below runs exactly as it always has), "chat"
+    # (nothing is generated/patched into flintel_search_jobs at all —
+    # Claude just answers directly), or (v6) "blocked" (nothing is
+    # generated/patched either — Claude just declines directly).
+    #
+    # Owner/active-chat resolution + the router call itself are wrapped
+    # in one try/except: ANY failure here (corrupt session, Mongo hiccup,
+    # Claude API error, bad JSON) falls back to intent="search" with the
+    # owner/chat vars left unset, and the search pipeline below re-resolves
+    # them itself exactly as it did before this update — so a routing
+    # failure can NEVER block or skip a real search job, only the chat-
+    # reply/abuse-blocking shortcuts are ever at risk.
+    # ─────────────────────────────────────────────────────────────────────
+    owner_key = owner_type = None
+    active_chat_id = None
+    intent = "search"
+    chat_reply = None
+
+    try:
+        owner_key, owner_type = get_owner(request)
+        active_chat_id = chat_id or request.session.get("active_chat_id")
+        if not active_chat_id or not get_chat_session(active_chat_id, owner_key):
+            active_chat_id = create_chat_session(owner_key, owner_type, title=generate_chat_title(query))
+        request.session["active_chat_id"] = active_chat_id
+
+        existing_chat = get_chat_session(active_chat_id, owner_key)
+        chat_summary = (existing_chat or {}).get("summary") or ""
+
+        routed = classify_and_maybe_chat(query, chat_summary)
+        intent = routed.get("intent", "search")
+        chat_reply = routed.get("reply")
+    except Exception as exc:
+        log.warning(f"v5 routing step failed for query={query!r} (defaulting to normal search pipeline): {exc}")
+        intent = "search"
+
+    # ── CHAT-TYPE OR BLOCKED-TYPE MESSAGE: answer/decline directly, ─────
+    # ── never touch the fuzzy-keyword / job-queue / signal-matching    ──
+    # ── pipeline at all. (v6: "blocked" reuses the exact same handling ──
+    # ── as "chat" — same message shape, same redirect — the only       ──
+    # ── difference is where the answer text comes from below.)         ──
+    if intent in ("chat", "blocked"):
+        if intent == "blocked":
+            # Never re-sent to Claude for a fallback — a canned decline is
+            # enough, and there's no reason to hand harmful content to
+            # another prompt just to get a polite "no".
+            answer = (chat_reply or "").strip() or CLAUDE_BLOCKED_FALLBACK_REPLY
+        else:
+            answer = (chat_reply or "").strip()
+            if not answer:
+                # Router classified this as chat but didn't return usable
+                # reply text (e.g. truncated/odd output) — fall back to a
+                # second, plain conversational call rather than showing
+                # nothing.
+                try:
+                    answer = _call_claude(CLAUDE_CHAT_FALLBACK_SYSTEM_PROMPT, query)
+                except Exception as exc:
+                    log.warning(f"Chat fallback Claude call failed for query={query!r}: {exc}")
+                    answer = "Sorry, I couldn't come up with a reply just now — please try again."
+
+        redirect_chat_id = None
+        try:
+            if not owner_key:
+                owner_key, owner_type = get_owner(request)
+            if not active_chat_id or not get_chat_session(active_chat_id, owner_key):
+                active_chat_id = create_chat_session(owner_key, owner_type, title=generate_chat_title(query))
+            request.session["active_chat_id"] = active_chat_id
+
+            add_chat_message_to_chat(active_chat_id, owner_key, query, answer)
+            try:
+                append_to_chat_summary(active_chat_id, owner_key, query, answer)
+            except Exception as exc:
+                log.warning(f"Updating chat summary failed for chat_id={active_chat_id}: {exc}")
+            redirect_chat_id = active_chat_id
+        except Exception as exc:
+            log.warning(f"Saving {intent}-type message failed for query={query!r}: {exc}")
+
+        if redirect_chat_id:
+            return RedirectResponse(url=f"/chat/{redirect_chat_id}", status_code=303)
+        return RedirectResponse(url="/", status_code=303)
+
+    # ── SEARCH-TYPE MESSAGE: everything below is the v1-v4.3 pipeline, ──
+    # ── 100% UNCHANGED — same functions, same order, same behavior.    ──
+
     # Keyword generation is completely untouched by platform selection, and
     # this ALWAYS runs and enqueues the job — exactly like v1/v2/v3 — no
     # matter what happens with the chat/session bookkeeping (or Claude)
@@ -1193,12 +1686,17 @@ def search(
     #
     # v4.1 FIX: track which chat this search actually landed in
     # (`redirect_chat_id`) so the response below can send the browser back
-    # to that SAME chat thread instead of always bouncing to "/". This is
-    # the only behavioral change in this whole file.
+    # to that SAME chat thread instead of always bouncing to "/".
+    #
+    # (v5) Reuses owner_key/active_chat_id already resolved above by the
+    # routing step when available, so the same chat/job land together —
+    # but re-resolves them itself if that earlier step didn't run/failed,
+    # so this branch never depends on the routing step having succeeded.
     redirect_chat_id = None
     try:
-        owner_key, owner_type = get_owner(request)
-        active_chat_id = chat_id or request.session.get("active_chat_id")
+        if not owner_key:
+            owner_key, owner_type = get_owner(request)
+        active_chat_id = active_chat_id or chat_id or request.session.get("active_chat_id")
         if not active_chat_id or not get_chat_session(active_chat_id, owner_key):
             active_chat_id = create_chat_session(owner_key, owner_type, title=generate_chat_title(query))
         request.session["active_chat_id"] = active_chat_id
@@ -1278,7 +1776,13 @@ def view_chat(request: Request, chat_id: str):
     `claude_answer` as the actual answer text (markdown-ish plain text —
     render it as-is, Claude writes its own paragraphs/bullets/tables
     inline when it decides that's clearest). `keywords` stays on the
-    message purely for internal use and should not be displayed here."""
+    message purely for internal use and should not be displayed here.
+    (v5) A message with `"message_type": "chat"` has no `results` to show
+    (it's always an empty list) — just render `query` + `claude_answer`
+    like a normal conversational turn, with no post cards underneath.
+    (v6) A polite "blocked" decline and a v6 timeout "nothing found yet"
+    answer both use this exact same rendering path already — no template
+    changes needed for either."""
     owner_key, _owner_type = get_owner(request)
     chat = get_chat_session(chat_id, owner_key)
     if not chat:
@@ -1287,9 +1791,10 @@ def view_chat(request: Request, chat_id: str):
     request.session["active_chat_id"] = chat_id
 
     # Same best-effort fill-in as home(): compute post cards + Claude's
-    # answer for any message that doesn't have them yet, so opening a chat
-    # straight from the sidebar shows output immediately instead of only
-    # after a home-page visit.
+    # answer for any SEARCH-type message that doesn't have them yet, so
+    # opening a chat straight from the sidebar shows output immediately
+    # instead of only after a home-page visit. Chat-type messages are
+    # skipped inside _fill_in_message_outputs itself (nothing to fill in).
     if chat.get("messages"):
         _fill_in_message_outputs(chat_id, owner_key, chat["messages"])
 
@@ -1306,8 +1811,8 @@ def view_chat(request: Request, chat_id: str):
 
 @app.post("/chat/{chat_id}/delete")
 def delete_chat(request: Request, chat_id: str):
-    """(v4.3, NEW) Deletes exactly ONE chat belonging to the current owner
-    — never every chat for that owner, and never a chat belonging to a
+    """(v4.3) Deletes exactly ONE chat belonging to the current owner —
+    never every chat for that owner, and never a chat belonging to a
     different owner (signed-in email or guest UUID).
 
     Scoping works exactly like get_chat_session()/view_chat() above: the
