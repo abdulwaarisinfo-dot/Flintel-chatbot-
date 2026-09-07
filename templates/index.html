@@ -1641,7 +1641,6 @@
       // safe).
       wireUpInitialPendingStream();
       wireUpSoftSearchSubmit();
-      wireUpHeroSoftSearchSubmit();
       closeAllSessionMenus(null);
       console.log('[soft-nav] swap complete, no page reload happened. New URL:', response.url || url);
       const freshSearchInput = document.getElementById('search-input');
@@ -2015,8 +2014,6 @@
     const form = document.getElementById('search-form');
     const threadInner = document.querySelector('.thread-inner');
     if (!form || !threadInner) return;
-    if (form.dataset.softSubmitWired === 'true') return;
-    form.dataset.softSubmitWired = 'true';
 
     const searchInput = document.getElementById('search-input');
     const submitBtn = document.getElementById('submit-btn');
@@ -2089,112 +2086,8 @@
     });
   }
 
-  // ---- Soft-submit for the HOME/HERO search form (bug fix) ----
-  // wireUpSoftSearchSubmit() above only ever activates when .thread-inner
-  // exists — which it never does on index.html's own native hero/home
-  // markup (that page uses #conversation-area instead). This left the home
-  // page's search form as a real, full-page submit with no soft-nav path
-  // at all. This is a separate function specifically for that case —
-  // mutually exclusive with the one above by design (a page never has both
-  // .thread-inner and a hero #conversation-area at once), so there's no
-  // risk of both wiring the same form.
-  function wireUpHeroSoftSearchSubmit() {
-    const form = document.getElementById('search-form');
-    const conversationArea = document.getElementById('conversation-area');
-    if (!form || !conversationArea) return;
-    if (form.dataset.heroSoftSubmitWired === 'true') return; // same idempotency guard as wireUpSoftSearchSubmit()
-    form.dataset.heroSoftSubmitWired = 'true';
-
-    const searchInput = document.getElementById('search-input');
-    const submitBtn = document.getElementById('submit-btn');
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const query = searchInput ? searchInput.value.trim() : '';
-      if (!query) return;
-
-      if (submitBtn) submitBtn.disabled = true;
-
-      let response;
-      try {
-        const formData = new FormData(form);
-        response = await fetch(form.action, {
-          method: 'POST',
-          body: formData,
-          credentials: 'same-origin',
-          redirect: 'follow',
-        });
-        if (!response.ok) throw new Error(`Request failed: ${response.status}`);
-      } catch (fetchErr) {
-        console.warn('[hard-reload-fallback][hero-search-submit][network] Genuine fetch/network failure — falling back to a real page submit.', fetchErr);
-        form.submit();
-        return;
-      }
-
-      try {
-        const html = await response.text();
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-
-        // A first search from home is answered on a NEW chat, whose page
-        // is chat.html's own template (a different, non-identical
-        // stylesheet) — swap the active <style> tag's content the same way
-        // navigateTo() does, so the appended turn isn't rendered against
-        // the wrong page's CSS.
-        const newStyleTag = doc.querySelector('style#app-styles') || doc.querySelector('style');
-        const currentStyleTag = document.querySelector('style#app-styles') || document.querySelector('style');
-        if (newStyleTag && currentStyleTag) {
-          currentStyleTag.textContent = newStyleTag.textContent;
-        }
-
-        history.pushState({ softNav: true }, '', response.url || form.action);
-        const newChatIdInput = doc.querySelector('#search-form input[name="chat_id"]');
-        const liveChatIdInput = document.querySelector('#search-form input[name="chat_id"]');
-        if (newChatIdInput && liveChatIdInput) {
-          liveChatIdInput.value = newChatIdInput.value;
-        }
-        const newSessionsList = doc.querySelector('#sessions-list');
-        const liveSessionsList = document.querySelector('#sessions-list');
-        if (newSessionsList && liveSessionsList) {
-          liveSessionsList.innerHTML = newSessionsList.innerHTML;
-        }
-
-        // The response's turns container may be chat.html's .thread-inner
-        // (the common case, since a new chat's real route is chat.html) or
-        // .conversation-area (if it happens to be index.html's own markup)
-        // — try both rather than assuming one specific template.
-        const newTurnsContainer = doc.querySelector('.thread-inner') || doc.querySelector('.conversation-area');
-        if (!newTurnsContainer) throw new Error('Response missing a turns container');
-
-        const allNewTurns = newTurnsContainer.querySelectorAll('.turn-block');
-        const latestTurn = allNewTurns[allNewTurns.length - 1];
-        if (!latestTurn) throw new Error('No turn-block found in response');
-
-        if (searchInput) searchInput.value = '';
-
-        latestTurn.classList.add('stream-reveal');
-        const liveConversationArea = document.getElementById('conversation-area') || conversationArea;
-        liveConversationArea.classList.remove('hidden');
-        liveConversationArea.appendChild(latestTurn);
-        latestTurn.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-        if (latestTurn.dataset.pendingStream === 'true') {
-          const chatIdInput = document.querySelector('#search-form input[name="chat_id"]');
-          const chatId = chatIdInput ? chatIdInput.value : '';
-          wireUpStream(latestTurn, chatId);
-        }
-      } catch (domErr) {
-        console.warn('[dom-update-failed][hero-search-submit] Search succeeded server-side; only the in-place DOM update failed (not a network issue, so no hard reload was triggered):', domErr);
-      } finally {
-        const freshSubmitBtn = document.getElementById('submit-btn');
-        const freshSearchInput = document.getElementById('search-input');
-        if (freshSubmitBtn) freshSubmitBtn.disabled = freshSearchInput ? freshSearchInput.value.trim().length === 0 : false;
-      }
-    });
-  }
-
   wireUpInitialPendingStream();
   wireUpSoftSearchSubmit();
-  wireUpHeroSoftSearchSubmit();
 
   // ---- Render Claude's answer as markdown (initial page load) ----
   renderMarkdownAnswers(document.querySelector('main.main') || document);
