@@ -7,7 +7,7 @@
 <title>Flintel — What's the internet saying?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
+<style id="app-styles">
   /* =========================================================================
      This stylesheet is the Document 2 ("redesign") visual system, adapted to
      dress the Document 1 ("real backend") markup. Every class below exists to
@@ -456,7 +456,7 @@
 
   .post-block { margin-bottom: 40px; }
   .post-block:last-child { margin-bottom: 0; }
-  .post-label { color: #d1d0cf; font-size: 17px; font-weight: 600; font-style: italic; line-height: 26px; margin-bottom: 28px; }
+  .post-label { color: #d1d0cf; font-size: 17px; font-weight: 600; font-style: italic; line-height: 26px; margin-bottom: 40px; }
   .post-field { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
   .post-field:last-child { margin-bottom: 0; }
   .post-field .field-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.35); flex-shrink: 0; margin-top: 8px; }
@@ -469,9 +469,12 @@
     display: block; -webkit-line-clamp: unset; overflow: visible;
   }
   .see-more-toggle {
-    display: inline-block; margin-top: 4px; color: #a3e635; background: none; border: none;
-    font-size: 15px; font-weight: 600; cursor: pointer; padding: 0; text-decoration: underline;
-    font-family: inherit;
+    /* Same color as every other field value (rgba(255,255,255,0.7)) — not
+       green, not a special "link" color. Sits inline right after the text
+       it belongs to, not as a separate block below. */
+    display: inline; margin-left: 2px; color: rgba(255,255,255,0.7); background: none; border: none;
+    font-size: inherit; font-weight: 500; cursor: pointer; padding: 0; text-decoration: underline;
+    font-family: inherit; line-height: inherit;
   }
   .see-more-toggle.hidden { display: none; }
   .post-field .field-text strong { color: #fff; font-weight: 700; }
@@ -1074,16 +1077,12 @@
   // not_available / disallowed), always with a "format" field first. Plain
   // "chat"/"blocked" replies (from the separate router prompt) are NOT
   // JSON — those still fall back to markdown rendering below, unchanged.
-  const SENTIMENT_COLORS = { positive: '#5FBF88', mixed: '#E8A33D', negative: '#E2645A', neutral: '#757473' };
-
   function sentimentTag(sentiment) {
-    // Plain colored text, matching every other field's value styling —
-    // no box, no border, no separate badge treatment. Just the sentiment
-    // word itself, color-coded, flowing right after "Sentiment :" like any
-    // other field's answer.
-    const color = SENTIMENT_COLORS[sentiment] || SENTIMENT_COLORS.neutral;
+    // Per explicit instruction: sentiment text is plain text, same color as
+    // every other field's value (rgba(255,255,255,0.7), inherited from the
+    // parent .field-text) — no per-sentiment color-coding, no box, no
+    // special treatment of any kind. Just the word itself.
     const span = document.createElement('span');
-    span.style.cssText = `color:${color};`;
     const label = sentiment || 'neutral';
     span.textContent = label.charAt(0).toUpperCase() + label.slice(1);
     return span;
@@ -1115,10 +1114,10 @@
   }
 
   function buildTruncatableSummary(container, label, text) {
-    // Label + colon + value all live in ONE .field-text span, same as
-    // every other field (Platform/Title/etc.) — matching how the rest of
-    // the design has the value start immediately after the label on the
-    // same line, not dropped to a new block below it.
+    // Label + colon + value + the toggle button all live in ONE .field-text
+    // span, in that order — so "See more"/"See less" sits immediately at
+    // the end of the (possibly truncated) text, on the same line, not as a
+    // separate element below it.
     const row = document.createElement('div');
     row.className = 'post-field';
     const dot = document.createElement('span');
@@ -1128,22 +1127,35 @@
     const strong = document.createElement('strong');
     strong.textContent = label;
     textEl.appendChild(strong);
-    textEl.appendChild(document.createTextNode(' :  ' + text));
-    row.appendChild(dot);
-    row.appendChild(textEl);
-    container.appendChild(row);
+    textEl.appendChild(document.createTextNode(' :  ' + text + ' '));
 
-    const toggleWrap = document.createElement('div');
-    toggleWrap.style.cssText = 'padding-left: 19px; margin-top: 6px; margin-bottom: 20px;';
     const toggle = document.createElement('button');
     toggle.type = 'button';
     toggle.className = 'see-more-toggle hidden';
     toggle.textContent = 'See more';
-    toggleWrap.appendChild(toggle);
-    container.appendChild(toggleWrap);
+    textEl.appendChild(toggle);
 
+    row.appendChild(dot);
+    row.appendChild(textEl);
+    container.appendChild(row);
+
+    // Overflow detection: does NOT rely on clientHeight (which behaves
+    // unreliably here since .field-text is a flex child that also has
+    // display:-webkit-box applied for the clamp — combining those two box
+    // models is a known source of inconsistent clientHeight readings,
+    // which was causing "See more" to appear even on short, non-truncated
+    // text). Instead, compute what 2 lines' worth of height actually is
+    // from the real computed line-height, and compare that directly
+    // against scrollHeight — which reliably reports the full, unclamped
+    // content height regardless of any flex/box-model quirks.
     requestAnimationFrame(() => {
-      const isOverflowing = textEl.scrollHeight > textEl.clientHeight + 1;
+      const computed = window.getComputedStyle(textEl);
+      let lineHeight = parseFloat(computed.lineHeight);
+      if (!lineHeight || Number.isNaN(lineHeight)) {
+        lineHeight = parseFloat(computed.fontSize) * 1.5; // sane fallback if line-height is "normal"
+      }
+      const twoLineHeight = lineHeight * 2;
+      const isOverflowing = textEl.scrollHeight > twoLineHeight + 1;
       if (!isOverflowing) return;
       toggle.classList.remove('hidden');
       let expanded = false;
@@ -1594,6 +1606,18 @@
 
       if (!newMain || !currentMain) throw new Error('Fetched page missing <main> — falling back to real navigation');
 
+      // Swap the active <style> tag's content BEFORE swapping <main> — the
+      // fetched page might be a different template (index.html <-> chat.html)
+      // with its own, non-identical stylesheet. Without this, <main>'s new
+      // content renders against the WRONG page's CSS (missing rules for any
+      // class that only exists in the other template) until a hard refresh
+      // reloads the correct HTML+CSS pair together — this was the actual
+      // cause of "design kharab ho jata hai" after delete/search/navigate.
+      const newStyleTag = doc.querySelector('style#app-styles') || doc.querySelector('style');
+      const currentStyleTag = document.querySelector('style#app-styles') || document.querySelector('style');
+      if (newStyleTag && currentStyleTag) {
+        currentStyleTag.textContent = newStyleTag.textContent;
+      }
       currentMain.innerHTML = newMain.innerHTML;
       if (newSessionsList && currentSessionsList) {
         currentSessionsList.innerHTML = newSessionsList.innerHTML;
