@@ -1632,6 +1632,15 @@
       }
 
       renderMarkdownAnswers(currentMain);
+      // Bug 2 fix: re-run these after every soft navigation too — not just
+      // once at initial script load — so chat_id tracking and SSE
+      // streaming keep working correctly even when index.html itself was
+      // the real page load and a chat's content arrived via a soft swap
+      // (functions defined via `function` are hoisted, so this forward
+      // reference to definitions appearing later in this same script is
+      // safe).
+      wireUpInitialPendingStream();
+      wireUpSoftSearchSubmit();
       closeAllSessionMenus(null);
       console.log('[soft-nav] swap complete, no page reload happened. New URL:', response.url || url);
       const freshSearchInput = document.getElementById('search-input');
@@ -1744,12 +1753,24 @@
       e.stopPropagation();
       const chatId = deleteItem.dataset.chatId;
       if (!chatId) return;
-      const form = document.createElement('form');
-      form.method = 'post';
-      form.action = `/chat/${chatId}/delete`;
-      form.style.display = 'none';
-      document.body.appendChild(form);
-      form.submit();
+      fetch(`/chat/${chatId}/delete`, {
+        method: 'post',
+        credentials: 'same-origin',
+      }).then((response) => {
+        if (response.ok) {
+          navigateTo('/', { method: 'GET' });
+        } else {
+          throw new Error(`Delete failed: ${response.status}`);
+        }
+      }).catch((err) => {
+        console.warn('[hard-reload-fallback][delete][network] Genuine fetch/network failure on delete — falling back to a real page submit. If this recurs, capture this log + the failing request in DevTools Network tab.', err);
+        const form = document.createElement('form');
+        form.method = 'post';
+        form.action = `/chat/${chatId}/delete`;
+        form.style.display = 'none';
+        document.body.appendChild(form);
+        form.submit();
+      });
       return;
     }
     if (!e.target.closest('.session-menu-dropdown')) {
@@ -1892,6 +1913,181 @@
       }
     }
   });
+
+  // ---- SSE stream wiring + soft search-submit (copied unchanged from
+  //      chat.html) ----
+  // Only ONE adaptation was needed: chat.html calls renderStructuredAnswer
+  // on a single .answer-wrap; index.html's equivalent, renderMarkdownAnswers,
+  // operates on a container it queries .answer-wrap from — so it's called
+  // here with a tiny duck-typed object exposing just the one method
+  // (querySelectorAll) it actually uses, scoped to this single wrap. No
+  // other line differs from chat.html's version.
+  //
+  // These are added here so they EXIST and are callable when the real page
+  // load was index.html itself and the user then soft-navigates into a
+  // chat — previously, chat_id tracking and SSE streaming silently failed
+  // in that case because these functions were only ever defined inside
+  // chat.html's own <script>, which never runs when its markup arrives via
+  // an innerHTML swap instead of a real page load.
+  //
+  // Both functions already guard on chat-specific elements (.thread-inner,
+  // [data-pending-stream="true"]) that never exist on index.html's own
+  // native hero content — so calling them here is a safe no-op whenever
+  // the current page is genuinely index.html's own landing content, and
+  // only becomes active once a chat's content has actually been swapped in.
+  function wireUpStream(pendingTurn, chatId) {
+    const topicKey = pendingTurn.dataset.topicKey || '';
+    if (!chatId || !topicKey) return;
+
+    const loadingTextEl = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)} .loading-text`);
+
+    const rotatingPhrases = ['Reading matched posts…', 'Writing up the answer…'];
+    let phraseIndex = 0;
+    let phraseTimer = null;
+    if (loadingTextEl) {
+      phraseTimer = setInterval(() => {
+        phraseIndex = (phraseIndex + 1) % rotatingPhrases.length;
+        loadingTextEl.textContent = rotatingPhrases[phraseIndex];
+      }, 2200);
+    }
+
+    let accumulated = '';
+    const source = new EventSource(`/chat/${chatId}/stream?topic_key=${encodeURIComponent(topicKey)}`);
+
+    source.onmessage = (event) => {
+      let payload;
+      try {
+        payload = JSON.parse(event.data);
+      } catch (e) {
+        return;
+      }
+
+      if (payload.delta !== undefined) {
+        accumulated += payload.delta;
+        return;
+      }
+
+      if (payload.done) {
+        source.close();
+        if (phraseTimer) clearInterval(phraseTimer);
+        const loadingRow = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)}`);
+        if (loadingRow) {
+          const wrap = document.createElement('div');
+          wrap.className = 'answer-wrap stream-reveal';
+          const rawDiv = document.createElement('div');
+          rawDiv.className = 'answer-raw';
+          rawDiv.textContent = accumulated;
+          const renderedDiv = document.createElement('div');
+          renderedDiv.className = 'answer-rendered';
+          wrap.appendChild(rawDiv);
+          wrap.appendChild(renderedDiv);
+          loadingRow.replaceWith(wrap);
+          wrap.dataset.lastRenderedRaw = accumulated;
+          renderMarkdownAnswers({ querySelectorAll: (sel) => (wrap.matches(sel) ? [wrap] : []) });
+        } else {
+          window.location.reload();
+        }
+        return;
+      }
+
+      if (payload.error) {
+        source.close();
+        if (phraseTimer) clearInterval(phraseTimer);
+      }
+    };
+
+    source.onerror = () => {
+      source.close();
+      if (phraseTimer) clearInterval(phraseTimer);
+    };
+  }
+
+  function wireUpInitialPendingStream() {
+    const pendingTurn = document.querySelector('[data-pending-stream="true"]');
+    if (!pendingTurn) return;
+    const chatIdInput = document.querySelector('#search-form input[name="chat_id"]');
+    const chatId = chatIdInput ? chatIdInput.value : '';
+    wireUpStream(pendingTurn, chatId);
+  }
+
+  function wireUpSoftSearchSubmit() {
+    const form = document.getElementById('search-form');
+    const threadInner = document.querySelector('.thread-inner');
+    if (!form || !threadInner) return;
+
+    const searchInput = document.getElementById('search-input');
+    const submitBtn = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const query = searchInput ? searchInput.value.trim() : '';
+      if (!query) return;
+
+      if (submitBtn) submitBtn.disabled = true;
+
+      let response;
+      try {
+        const formData = new FormData(form);
+        response = await fetch(form.action, {
+          method: 'POST',
+          body: formData,
+          credentials: 'same-origin',
+          redirect: 'follow',
+        });
+        if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+      } catch (fetchErr) {
+        console.warn('[hard-reload-fallback][search-submit][network] Genuine fetch/network failure — falling back to a real page submit. If this is happening more often than a real offline/network issue would explain, capture this exact log + the failing request in DevTools Network tab (status, timing, response) — that is the actual signal needed to diagnose it further; it cannot be root-caused from static code alone.', fetchErr);
+        form.submit();
+        return;
+      }
+
+      try {
+        const html = await response.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+
+        history.pushState({ softNav: true }, '', response.url || form.action);
+        const newChatIdInput = doc.querySelector('#search-form input[name="chat_id"]');
+        const liveChatIdInput = document.querySelector('#search-form input[name="chat_id"]');
+        if (newChatIdInput && liveChatIdInput) {
+          liveChatIdInput.value = newChatIdInput.value;
+        }
+        const newSessionsList = doc.querySelector('#sessions-list');
+        const liveSessionsList = document.querySelector('#sessions-list');
+        if (newSessionsList && liveSessionsList) {
+          liveSessionsList.innerHTML = newSessionsList.innerHTML;
+        }
+
+        const newThreadInner = doc.querySelector('.thread-inner');
+        if (!newThreadInner) throw new Error('Response missing .thread-inner');
+
+        const allNewTurns = newThreadInner.querySelectorAll('.turn-block');
+        const latestTurn = allNewTurns[allNewTurns.length - 1];
+        if (!latestTurn) throw new Error('No turn-block found in response');
+
+        if (searchInput) searchInput.value = '';
+
+        latestTurn.classList.add('stream-reveal');
+        const liveThreadInner = document.querySelector('.thread-inner') || threadInner;
+        liveThreadInner.appendChild(latestTurn);
+        latestTurn.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        if (latestTurn.dataset.pendingStream === 'true') {
+          const chatIdInput = document.querySelector('#search-form input[name="chat_id"]');
+          const chatId = chatIdInput ? chatIdInput.value : '';
+          wireUpStream(latestTurn, chatId);
+        }
+      } catch (domErr) {
+        console.warn('[dom-update-failed][search-submit] Search succeeded server-side; only the in-place DOM update failed (not a network issue, so no hard reload was triggered):', domErr);
+      } finally {
+        const freshSubmitBtn = document.getElementById('submit-btn');
+        const freshSearchInput = document.getElementById('search-input');
+        if (freshSubmitBtn) freshSubmitBtn.disabled = freshSearchInput ? freshSearchInput.value.trim().length === 0 : false;
+      }
+    });
+  }
+
+  wireUpInitialPendingStream();
+  wireUpSoftSearchSubmit();
 
   // ---- Render Claude's answer as markdown (initial page load) ----
   renderMarkdownAnswers(document.querySelector('main.main') || document);
