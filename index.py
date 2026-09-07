@@ -103,6 +103,8 @@ Required env vars (add to .env):
     MAX_POSTS_PER_PLATFORM=3                 # optional, this is the default (v7, see below)
     CLAUDE_MAX_KEYWORDS=10                   # optional, this is the default (new, see KEYWORD-GENERATION SWAP)
     CLAUDE_NOTES_PER_CHUNK=8                 # optional, this is the default (new, see BUGFIX PACK #3 below)
+    STREAM_CHUNK_CHARS=3                     # optional, this is the default (new, see SIMULATED-STREAM FIX below)
+    STREAM_CHUNK_DELAY_SECONDS=0.02          # optional, this is the default (new, see SIMULATED-STREAM FIX below)
 
 ── v4.1 FIX ───────────────────────────────────────────────────────────────
 Only ONE behavior changed from the v4 file above: the /search route used to
@@ -424,7 +426,9 @@ matching rule, chunking rule, or caching rule — was touched.
        `_call_claude()`, so that specific answer streams in live. Any
        earlier map/notes-condense calls (never shown to the user) are
        UNCHANGED — still plain, blocking `_call_claude()` calls, exactly
-       as in analyze_with_claude().
+       as in analyze_with_claude(). NOTE: as of the SIMULATED-STREAM FIX
+       below, this function is kept fully intact but is no longer called
+       by `GET /chat/{chat_id}/stream` — see that fix for why.
      - `GET /chat/{chat_id}/stream` — a new Server-Sent-Events route a
        template can optionally open (e.g. via EventSource/fetch-stream)
        to watch one message's answer arrive live. On completion it saves
@@ -465,11 +469,13 @@ matching rule, chunking rule, or caching rule — was touched.
    answer, and Claude itself is still never shown a URL, so it still can
    never invent one. Applied in exactly two places: inside
    `_fill_in_message_outputs()` right after a fresh (non-streaming)
-   answer is generated, and inside the new streaming route right after
-   the fully-assembled streamed answer is complete — both immediately
+   answer is generated, and (as of the SIMULATED-STREAM FIX below) inside
+   the streaming route right after the FULL answer is collected but
+   BEFORE any of it is streamed out to the browser — both immediately
    before that same answer is cached via save_claude_answer_to_chat(), so
-   every persisted answer (streamed or not) gets the same real-link
-   patch-up before it's ever written to the chat or shown again later.
+   every persisted answer, and now every answer the user ever actually
+   sees on screen (streamed or not), gets the same real-link patch-up
+   first.
 
 ── STREAMING WIRING FIX (THIS FILE) ─────────────────────────────────────────
 THREE small, targeted, purely-additive/tightening changes on top of
@@ -495,10 +501,9 @@ other behavior:
    completely untouched by this function (no get_matched_signals() call,
    no analyze_with_claude() call, no results/claude_answer write) — it
    is reserved for the new streaming route to fill in instead, exactly
-   once, via analyze_with_claude_stream(). Every other message in the
-   same chat is still filled in exactly as before, in the exact same
-   loop, with the exact same RESPONSE_TIMEOUT / BUGFIX PACK #1 /
-   POST_URL-patch behavior untouched.
+   once. Every other message in the same chat is still filled in exactly
+   as before, in the exact same loop, with the exact same
+   RESPONSE_TIMEOUT / BUGFIX PACK #1 / POST_URL-patch behavior untouched.
 
 2. `view_chat()` now computes which message (if any) is a freshly-added
    search-type turn still waiting on its very first answer — the LAST
@@ -525,13 +530,12 @@ other behavior:
    was already generated and cached — by the normal blocking path on an
    earlier visit, or by a previous call to this same stream route), the
    route immediately replays that cached text as a single `delta` event
-   followed by `done`, and returns — it never calls
-   get_matched_signals()/analyze_with_claude_stream() again for a
-   message that already has its answer. This is the same "generate once,
-   cache forever" guarantee every other answer path in this file already
-   follows; it simply extends that guarantee to this route, which
-   previously had no cache check at all and would silently re-call (and
-   re-bill) Claude every single time it was opened for an
+   followed by `done`, and returns — it never redoes any matching/Claude
+   work for a message that already has its answer. This is the same
+   "generate once, cache forever" guarantee every other answer path in
+   this file already follows; it simply extends that guarantee to this
+   route, which previously had no cache check at all and would silently
+   re-call (and re-bill) Claude every single time it was opened for an
    already-answered message.
 
 ── HOME() CRASH FIX (THIS FILE) ─────────────────────────────────────────────
@@ -558,12 +562,83 @@ partway through. The return statement now just reads
 guaranteed to exist). This is a pure crash fix — it does not change what
 value gets passed to the template in any case that previously worked; it
 only prevents the exception in the cases that previously crashed.
+
+── SIMULATED-STREAM FIX (THIS FILE) ─────────────────────────────────────────
+ONE targeted change, scoped ENTIRELY inside `GET /chat/{chat_id}/stream`'s
+`event_generator()`. Nothing else in this file — no other route, function,
+constant, prompt, matching rule, chunking rule, or caching rule — was
+touched. `analyze_with_claude_stream()` / `_call_claude_stream()` are left
+completely intact (still fully defined, still byte-for-byte what they were)
+but are no longer what this route calls.
+
+THE PROBLEM THIS FIXES: previously, `event_generator()` streamed Claude's
+RAW text live, straight from `analyze_with_claude_stream()`, chunk by
+chunk, AS Claude generated it. `_patch_post_urls_into_answer()` (see
+POST_URL PATCH FIX above) only ever ran AFTER that whole stream had
+finished, on the fully-assembled text — and its patched result was only
+ever written to the DB cache, never re-sent to the browser. That meant the
+very first time a user ever saw an answer, the "link" fields inside its
+JSON were still empty/missing (Claude can never know a real post_url — see
+build_claude_post_context()) — only a LATER page visit, reading the
+already-cached+patched version, ever showed the real links. So the one
+render that mattered most (a brand-new answer, live) was exactly the one
+render that never got the real links.
+
+THE FIX: `event_generator()` now:
+  1. Calls `analyze_with_claude(msg["query"], matched)` — the existing,
+     UNCHANGED, blocking function (same one `_fill_in_message_outputs()`
+     already uses) — to get the COMPLETE answer text in one shot, before
+     anything is sent to the browser.
+  2. Immediately runs that complete text through the existing, UNCHANGED
+     `_patch_post_urls_into_answer()`, exactly as `_fill_in_message_outputs()`
+     already does — so by this point the text has real post_url values
+     patched into every "link" field it can confidently resolve, exactly
+     like the cached/blocking path always has.
+  3. ONLY THEN starts emitting SSE `delta` events — not Claude's raw
+     token-by-token output, but this same already-complete, already-patched
+     string, sliced into small fixed-size pieces (`STREAM_CHUNK_CHARS`
+     characters each, new env var, default 3) with a short pause between
+     each piece (`STREAM_CHUNK_DELAY_SECONDS`, new env var, default 0.02s,
+     via `time.sleep()` — this route is a plain sync `def`, exactly like
+     every other route in this file, so FastAPI already runs it in its
+     worker threadpool and a blocking `time.sleep()` here behaves exactly
+     like the blocking `httpx` calls this file already makes everywhere
+     else; it does not block any other request). This reproduces the same
+     "typing" impression a real token-by-token stream gives the user (ruk
+     ruk kar, jaisa Claude/ChatGPT), just built from an already-finished,
+     already-patched string instead of live tokens.
+  4. Caching (`save_claude_answer_to_chat()`, `append_to_chat_summary()`,
+     `save_signal_results_to_chat()` via `_extract_claude_format()` /
+     `_NO_DATA_CLAUDE_FORMATS`) happens exactly as before, using this same
+     one already-patched string — so the text the user watched arrive on
+     screen and the text later cached/replayed on future visits are now
+     ALWAYS byte-for-byte identical (previously the live-streamed text and
+     the cached text could differ, because only the cached copy was
+     link-patched).
+
+TRADE-OFF (documented here, not silently introduced): time-to-first-byte
+for a brand-new answer is now the time it takes Claude to finish the ENTIRE
+answer (single call, or the full map-reduce chain — same timing
+`_fill_in_message_outputs()` already has today), not the near-instant
+first-token latency a genuine token-by-token stream gives. The perceived
+"typing" effect is preserved; the actual generation latency before that
+effect starts is not reduced by this route any more than it already wasn't
+reduced by the blocking path. This is a UX/consistency trade explicitly
+chosen so every answer the user ever sees — first render or a later
+cached one — always carries correct post links.
+
+EVERYTHING ELSE ABOUT THIS ROUTE IS UNCHANGED: the top-of-function guards
+(chat not found, message not found, already-cached-answer replay), the
+`get_matched_signals()` call, the exact SSE payload shapes
+(`{"delta": ...}`, `{"done": true}`, `{"error": ...}`), and the
+`media_type="text/event-stream"` response are all exactly as they were.
 ──────────────────────────────────────────────────────────────────────────────
 """
 
 import os
 import re
 import json
+import time
 import uuid
 import logging
 from datetime import datetime, timezone
@@ -663,6 +738,15 @@ CHAT_SUMMARY_TURN_CHAR_LIMIT   = int(os.getenv("CHAT_SUMMARY_TURN_CHAR_LIMIT", "
 # Claude/ChatGPT would rather than leaving them staring at a blank turn
 # forever. See _fill_in_message_outputs() below.
 RESPONSE_TIMEOUT = int(os.getenv("RESPONSE_TIMEOUT", "60"))
+
+# ── Simulated-stream config (SIMULATED-STREAM FIX) ──────────────────────────
+# How the already-complete, already-post_url-patched answer text is sliced
+# and paced back out to the browser over SSE inside GET /chat/{chat_id}/stream
+# — see the SIMULATED-STREAM FIX note in the module docstring for the full
+# rationale. Purely cosmetic/pacing values; changing them never changes what
+# text is shown or cached, only how it visually arrives.
+STREAM_CHUNK_CHARS         = int(os.getenv("STREAM_CHUNK_CHARS", "3"))
+STREAM_CHUNK_DELAY_SECONDS = float(os.getenv("STREAM_CHUNK_DELAY_SECONDS", "0.02"))
 
 client = MongoClient(MONGODB_URI)
 db = client[MONGODB_DB]
@@ -1519,7 +1603,13 @@ def analyze_with_claude(query: str, matched_signals: list) -> str:
 
     UNCHANGED except for the additive second-level chunking pass described
     above (BUGFIX PACK #3). This function only ever sees ALREADY-MATCHED
-    posts."""
+    posts.
+
+    (SIMULATED-STREAM FIX) This function is ALSO now the one
+    GET /chat/{chat_id}/stream calls to get its complete answer text —
+    still exactly this same, byte-for-byte unchanged function, no new
+    parameters, no new branches. See that route / the module docstring
+    for why."""
     posts = build_claude_post_context(matched_signals)
 
     if not posts:
@@ -1587,6 +1677,13 @@ def analyze_with_claude(query: str, matched_signals: list) -> str:
 # STREAMING ADD-ON — additive alternate path only, see module docstring.
 # _call_claude() and analyze_with_claude() above are completely untouched
 # and remain what every existing caller uses.
+#
+# (SIMULATED-STREAM FIX) `_call_claude_stream()` and
+# `analyze_with_claude_stream()` below are kept fully intact, unchanged,
+# and importable/callable exactly as before — GET /chat/{chat_id}/stream
+# simply no longer calls them (it now calls the blocking analyze_with_claude()
+# instead, so it can post_url-patch the answer before ever sending any of it
+# out). Nothing about these two functions themselves changed.
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _call_claude_stream(system_prompt: str, user_message: str, max_tokens: int = None):
@@ -1600,7 +1697,7 @@ def _call_claude_stream(system_prompt: str, user_message: str, max_tokens: int =
     Purely ADDITIVE: _call_claude() itself is untouched and is still used
     by every existing caller (routing, map step, notes-reduce step, the
     non-streaming analyze_with_claude()). This generator is only used by
-    analyze_with_claude_stream() / the new /stream route below.
+    analyze_with_claude_stream().
 
     Yields plain text chunks (str). Raises on any failure — same
     degrade-gracefully convention as _call_claude()."""
@@ -1654,8 +1751,14 @@ def analyze_with_claude_stream(query: str, matched_signals: list):
 
     This is a generator: yields text chunks (str) as they stream in. The
     caller is responsible for collecting them into the final full answer
-    (see the /chat/{chat_id}/stream route below) — this function itself
-    does not persist anything, exactly like analyze_with_claude()."""
+    — this function itself does not persist anything, exactly like
+    analyze_with_claude().
+
+    (SIMULATED-STREAM FIX) Left fully intact and unchanged. No longer
+    called by GET /chat/{chat_id}/stream (see that route + the module
+    docstring), but still here, still correct, still usable by any future
+    caller that genuinely wants raw live token-by-token output rather
+    than the patched-then-paced text the stream route now sends."""
     posts = build_claude_post_context(matched_signals)
 
     if not posts:
@@ -2066,7 +2169,14 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str
     empty, the original answer_text is returned completely UNCHANGED —
     this can only ever ADD a real link where one is confidently
     resolvable, it can never remove or alter anything else in the
-    answer."""
+    answer.
+
+    (SIMULATED-STREAM FIX) Now called by GET /chat/{chat_id}/stream on
+    the COMPLETE answer text BEFORE any of it is streamed out to the
+    browser (previously it only ran after streaming had already
+    finished, so the live-streamed text a user first saw never had real
+    links — only a later cached re-render did). This function itself is
+    completely unchanged; only WHEN/WHERE it's called shifted."""
     if not answer_text or not matched_signals:
         return answer_text
 
@@ -2523,7 +2633,7 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
     function leaves it completely untouched (no matching, no Claude call,
     no results/claude_answer write) — used by view_chat() so the new
     `GET /chat/{chat_id}/stream` route, not this function, is what
-    produces that one message's first answer live. Every other message in
+    produces that one message's first answer. Every other message in
     `messages` is still filled in exactly as before, in the same loop,
     with the same RESPONSE_TIMEOUT / BUGFIX PACK #1 / POST_URL-patch
     behavior untouched.
@@ -2949,11 +3059,12 @@ def view_chat(request: Request, chat_id: str):
     passed to `_fill_in_message_outputs()` as `skip_topic_key`, so this
     function does NOT generate its answer — a template's streaming JS is
     expected to open `GET /chat/{chat_id}/stream?topic_key=...` for that
-    one message instead, to get the live word-by-word effect. Every other
-    message in the chat (already answered, or a chat-type turn) is filled
-    in exactly as before. If the last message doesn't match that shape
-    (e.g. it's a chat-type turn, or it already has an answer), nothing
-    changes here at all."""
+    one message instead, to get the live "typing" effect (see the
+    SIMULATED-STREAM FIX note in the module docstring for exactly how
+    that route now builds it). Every other message in the chat (already
+    answered, or a chat-type turn) is filled in exactly as before. If the
+    last message doesn't match that shape (e.g. it's a chat-type turn, or
+    it already has an answer), nothing changes here at all."""
     owner_key, _owner_type = get_owner(request)
     chat = get_chat_session(chat_id, owner_key)
     if not chat:
@@ -2979,7 +3090,7 @@ def view_chat(request: Request, chat_id: str):
     # skipped inside _fill_in_message_outputs itself (nothing to fill in).
     # (STREAMING WIRING FIX) The one pending message identified above, if
     # any, is skipped here so the streaming route can produce its answer
-    # live instead.
+    # instead.
     if messages:
         _fill_in_message_outputs(chat_id, owner_key, messages, skip_topic_key=pending_stream_topic_key)
 
@@ -2997,44 +3108,59 @@ def view_chat(request: Request, chat_id: str):
 
 @app.get("/chat/{chat_id}/stream")
 def stream_answer(request: Request, chat_id: str, topic_key: str):
-    """(STREAMING ADD-ON) Server-Sent-Events endpoint: streams Claude's
-    analysis answer for one specific search-type message (identified by
-    `topic_key`, within this chat) word-by-word as it's generated, so a
-    template can show it arriving live instead of waiting for
-    `_fill_in_message_outputs()` to finish the whole call before anything
-    appears — the same live-typing experience as Claude.ai/ChatGPT.
+    """(STREAMING ADD-ON, rebuilt by SIMULATED-STREAM FIX) Server-Sent-
+    Events endpoint: delivers Claude's analysis answer for one specific
+    search-type message (identified by `topic_key`, within this chat) as
+    a sequence of small paced chunks, so a template can show it arriving
+    with the same "typing" impression as Claude.ai/ChatGPT, instead of
+    the whole answer appearing all at once the way
+    `_fill_in_message_outputs()`'s blocking path renders it.
 
-    Purely ADDITIVE: nothing about home()/view_chat()/
+    Purely ADDITIVE, same as before: nothing about home()/view_chat()/
     _fill_in_message_outputs() changed. If a template never opens this
     endpoint, every message still gets its answer exactly as before
-    (computed on the next page load) — this is just a faster/nicer
-    alternate path a template can opt into (e.g. via EventSource or a
+    (computed on the next page load) — this is just a nicer alternate
+    path a template can opt into (e.g. via EventSource or a
     fetch()-based reader).
 
     Each SSE event is a JSON payload on a `data:` line:
-      {"delta": "<next chunk of text>"}   -- zero or more, as text streams in
+      {"delta": "<next chunk of text>"}   -- zero or more, as text is paced out
       {"done": true}                       -- exactly once, when finished
       {"error": "<short reason>"}          -- instead of the above, on failure
 
-    On successful completion, the fully-assembled answer is passed
-    through _patch_post_urls_into_answer() (see POST_URL FIX) and then
-    saved via the EXACT SAME save_claude_answer_to_chat() /
+    (SIMULATED-STREAM FIX) Unlike the original build of this route, the
+    text streamed out here is NOT Claude's raw token-by-token output.
+    Instead, `event_generator()` first calls the existing, UNCHANGED,
+    blocking `analyze_with_claude()` (the exact same function
+    `_fill_in_message_outputs()` already uses) to get the COMPLETE answer,
+    then runs that complete text through the existing, UNCHANGED
+    `_patch_post_urls_into_answer()` BEFORE sending anything to the
+    browser — so the very first render of a brand-new answer already has
+    real post_url values patched into its "link" fields, exactly like a
+    later cached re-render always has. Only THEN is that same, now-final
+    string sliced into small pieces (`STREAM_CHUNK_CHARS` characters each)
+    and paced out with a short `time.sleep(STREAM_CHUNK_DELAY_SECONDS)`
+    between pieces, to reproduce the live-typing impression. See the
+    SIMULATED-STREAM FIX note in the module docstring for the full
+    rationale and the documented time-to-first-byte trade-off.
+
+    On successful completion, this SAME already-patched string is saved
+    via the EXACT SAME save_claude_answer_to_chat() /
     append_to_chat_summary() / save_signal_results_to_chat() calls
     already used by _fill_in_message_outputs() — so the caching guarantee
     is identical: generated (and billed) once, then served from the
-    cache forever after, whether generation happened via this streaming
-    route or the existing blocking path.
+    cache forever after. Because the string streamed to the browser and
+    the string cached to Mongo are now literally the same object, a
+    user's live-typed first view and any later reload of the same chat
+    are always byte-for-byte identical (previously they could differ,
+    since only the cached copy ever got link-patched).
 
-    (STREAMING WIRING FIX) New guard at the very top, right after the
-    target message is found: if that message's `claude_answer` is
-    already truthy (already generated/cached — by the normal blocking
-    path, or by an earlier call to this same route), this immediately
-    replays that cached text as a single `delta` event followed by
-    `done`, and returns — it never re-calls get_matched_signals()/
-    analyze_with_claude_stream() (and never re-bills Claude) for a
-    message that already has its answer. Before this fix, this route had
-    no such check and would regenerate the answer from scratch every
-    single time it was opened."""
+    Unchanged guard, exactly as before: if the target message's
+    `claude_answer` is already truthy (already generated/cached — by the
+    normal blocking path, or by an earlier call to this same route), this
+    immediately replays that cached text as a single `delta` event
+    followed by `done`, and returns — it never redoes any matching/Claude
+    work for a message that already has its answer."""
     owner_key, _owner_type = get_owner(request)
     chat = get_chat_session(chat_id, owner_key)
 
@@ -3052,9 +3178,9 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             yield f"data: {json.dumps({'error': 'message not found'})}\n\n"
         return StreamingResponse(_no_msg(), media_type="text/event-stream")
 
-    # (STREAMING WIRING FIX) Already generated/cached earlier (via the
-    # normal blocking path, or a previous call to this same route) —
-    # replay it instead of ever re-calling Claude for it again.
+    # Already generated/cached earlier (via the normal blocking path, or
+    # a previous call to this same route) — replay it instead of ever
+    # re-calling Claude for it again.
     if msg.get("claude_answer"):
         cached_answer = msg["claude_answer"]
 
@@ -3074,22 +3200,40 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
         matched = []
 
     def event_generator():
-        collected = []
+        # (SIMULATED-STREAM FIX) Step 1: get the COMPLETE answer first,
+        # via the same blocking function every other answer path in this
+        # file already uses — no raw live Claude tokens are sent to the
+        # browser anymore.
         try:
-            for piece in analyze_with_claude_stream(msg["query"], matched):
-                collected.append(piece)
-                yield f"data: {json.dumps({'delta': piece})}\n\n"
+            full_answer = analyze_with_claude(msg["query"], matched)
         except Exception as exc:
             log.warning(f"Streaming Claude analysis failed for topic_key={topic_key}: {exc}")
             yield f"data: {json.dumps({'error': 'analysis failed'})}\n\n"
             return
 
-        full_answer = "".join(collected).strip()
+        full_answer = (full_answer or "").strip()
+
+        # (SIMULATED-STREAM FIX) Step 2: patch real post_url values into
+        # the complete answer BEFORE any of it is ever sent to the
+        # browser — same unchanged helper _fill_in_message_outputs() uses,
+        # just moved earlier so the FIRST render the user sees already has
+        # correct links, not just later cached re-renders.
         if full_answer:
-            # (POST_URL FIX) Patch in real post_url values before caching,
-            # exactly like the non-streaming path in
-            # _fill_in_message_outputs() does.
             full_answer = _patch_post_urls_into_answer(full_answer, matched)
+
+        # (SIMULATED-STREAM FIX) Step 3: pace the now-final string back out
+        # in small pieces to reproduce the live-typing impression, instead
+        # of dumping it all in one SSE event.
+        if full_answer:
+            for i in range(0, len(full_answer), STREAM_CHUNK_CHARS):
+                piece = full_answer[i:i + STREAM_CHUNK_CHARS]
+                yield f"data: {json.dumps({'delta': piece})}\n\n"
+                if STREAM_CHUNK_DELAY_SECONDS > 0:
+                    time.sleep(STREAM_CHUNK_DELAY_SECONDS)
+
+        # Caching — identical calls/behavior to before, just now operating
+        # on the same already-patched string the user just watched arrive.
+        if full_answer:
             try:
                 save_claude_answer_to_chat(chat_id, owner_key, topic_key, full_answer)
                 append_to_chat_summary(chat_id, owner_key, msg["query"], full_answer)
