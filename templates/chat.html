@@ -1537,16 +1537,9 @@
   // character-by-character (that would flash broken JSON fragments on
   // screen). So deltas are only accumulated silently in memory; the
   // existing loading-row markup stays visually untouched the entire time.
-  // On "done", a full page reload picks up the now-cached claude_answer
-  // and results through the exact same server-rendered path every other
-  // already-answered message already uses — no new JSON-parsing or
-  // results-rendering code is needed here at all.
-  (function wireUpPendingStream() {
-    const pendingTurn = document.querySelector('[data-pending-stream="true"]');
-    if (!pendingTurn) return;
-
-    const chatIdInput = document.querySelector('#search-form input[name="chat_id"]');
-    const chatId = chatIdInput ? chatIdInput.value : '';
+  // No page reload happens on "done" — the completed answer renders
+  // in-place with a gentle entrance animation instead.
+  function wireUpStream(pendingTurn, chatId) {
     const topicKey = pendingTurn.dataset.topicKey || '';
     if (!chatId || !topicKey) return;
 
@@ -1632,6 +1625,84 @@
       // Same as the explicit {"error": ...} case above — leave the existing
       // loading text untouched, no visible change.
     };
+  }
+
+  // Wire up any already-pending stream from a normal page load (unchanged
+  // behavior from before).
+  (function wireUpInitialPendingStream() {
+    const pendingTurn = document.querySelector('[data-pending-stream="true"]');
+    if (!pendingTurn) return;
+    const chatIdInput = document.querySelector('#search-form input[name="chat_id"]');
+    const chatId = chatIdInput ? chatIdInput.value : '';
+    wireUpStream(pendingTurn, chatId);
+  })();
+
+  // ---- Soft-submit the search form: no full page reload ----
+  // This is what actually makes the question bubble (and the loading state
+  // right after it) appear smoothly in place instead of the page doing a
+  // hard reload the instant you hit Enter. The real POST /search request
+  // still happens exactly as before — nothing changes on the backend side
+  // — this only changes how the RESPONSE is used: instead of letting the
+  // browser navigate to it, this fetches it, pulls out just the newly
+  // created turn-block from the response HTML, and animates it into the
+  // current page's thread. If that new turn is itself mid-stream
+  // (data-pending-stream="true"), the SSE wiring above attaches to it
+  // immediately, exactly as it would have after a real page load.
+  (function wireUpSoftSearchSubmit() {
+    const form = document.getElementById('search-form');
+    const threadInner = document.querySelector('.thread-inner');
+    if (!form || !threadInner) return;
+
+    const searchInput = document.getElementById('search-input');
+    const submitBtn = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const query = searchInput ? searchInput.value.trim() : '';
+      if (!query) return;
+
+      if (submitBtn) submitBtn.disabled = true;
+
+      try {
+        const formData = new FormData(form);
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: formData,
+          credentials: 'same-origin',
+          redirect: 'follow',
+        });
+        if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+
+        const html = await response.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const newThreadInner = doc.querySelector('.thread-inner');
+        if (!newThreadInner) throw new Error('Response missing .thread-inner');
+
+        const allNewTurns = newThreadInner.querySelectorAll('.turn-block');
+        const latestTurn = allNewTurns[allNewTurns.length - 1];
+        if (!latestTurn) throw new Error('No turn-block found in response');
+
+        if (searchInput) searchInput.value = '';
+
+        // Animate the new question bubble + loading state in, gently.
+        latestTurn.classList.add('stream-reveal');
+        threadInner.appendChild(latestTurn);
+        latestTurn.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // If this new turn is mid-stream, wire it up immediately — same
+        // logic as a normal page load, just triggered right now instead.
+        if (latestTurn.dataset.pendingStream === 'true') {
+          const chatIdInput = document.querySelector('#search-form input[name="chat_id"]');
+          const chatId = chatIdInput ? chatIdInput.value : '';
+          wireUpStream(latestTurn, chatId);
+        }
+      } catch (err) {
+        console.warn('Soft search submit failed, falling back to a real page submit:', err);
+        form.submit();
+      } finally {
+        if (submitBtn) submitBtn.disabled = searchInput ? searchInput.value.trim().length === 0 : false;
+      }
+    });
   })();
 </script>
 </body>
