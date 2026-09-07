@@ -855,6 +855,12 @@
       if (!newMain || !currentMain) throw new Error('Fetched page missing <main> — falling back to real navigation');
 
       currentMain.innerHTML = newMain.innerHTML;
+      // Re-bind everything that was previously only ever bound once at
+      // initial page load (search form, attach button, platforms dropdown,
+      // and the live-answer MutationObserver) against this freshly-swapped
+      // subtree — this is the fix for the stale-DOM-reference bug where
+      // these stopped working after any soft navigation.
+      initMainPageInteractions();
       if (newSessionsList && currentSessionsList) {
         currentSessionsList.innerHTML = newSessionsList.innerHTML;
       }
@@ -975,59 +981,104 @@
   });
 
   // ---- Attachment button opens file picker (no upload backend wired yet) ----
-  const attachBtn = document.getElementById('attach-btn');
-  const attachInput = document.getElementById('attach-input');
-  attachBtn.addEventListener('click', () => attachInput.click());
-  attachInput.addEventListener('change', () => {
-    if (attachInput.files.length) {
-      console.log('Files attached:', Array.from(attachInput.files).map(f => f.name));
-    }
-  });
-
   // ---- Platforms dropdown ----
-  const platformsBtn = document.getElementById('platforms-btn');
-  const platformsMenu = document.getElementById('platforms-menu');
-  const platformsChevron = document.getElementById('platforms-chevron');
-  const platformsLabel = document.getElementById('platforms-label');
-  const platformInput = document.getElementById('platform-input');
-
-  function closePlatformsMenu() {
-    platformsMenu.style.display = 'none';
-    platformsBtn.setAttribute('aria-expanded', 'false');
-    platformsChevron.style.transform = 'rotate(0deg)';
-  }
-  platformsBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const open = platformsMenu.style.display === 'block';
-    if (open) { closePlatformsMenu(); }
-    else {
-      platformsMenu.style.display = 'block';
-      platformsBtn.setAttribute('aria-expanded', 'true');
-      platformsChevron.style.transform = 'rotate(180deg)';
-    }
-  });
-  platformsMenu.addEventListener('click', (e) => {
-    const li = e.target.closest('li');
-    if (!li) return;
-    platformsLabel.textContent = li.dataset.value;
-    platformInput.value = li.dataset.value;
-    closePlatformsMenu();
-  });
-  document.addEventListener('click', (e) => {
-    if (!platformsMenu.contains(e.target) && e.target !== platformsBtn) closePlatformsMenu();
-  });
-
   // ---- Real follow-up search form ----
-  const searchForm = document.getElementById('search-form');
-  const searchInput = document.getElementById('search-input');
-  const submitBtn = document.getElementById('submit-btn');
+  // ---- MutationObserver-driven live-answer self-healing ----
+  // All four of these were previously bound ONCE at initial script
+  // execution — meaning after navigateTo()'s
+  // `currentMain.innerHTML = newMain.innerHTML` replaces this entire
+  // subtree with fresh nodes, these bindings (and the observer) were left
+  // pointing at DETACHED old elements, silently doing nothing. Wrapping
+  // them in one reusable init function — called once at load, and again
+  // after every soft navigation — fixes that.
+  let currentAnswerObserver = null;
 
-  function syncSubmitButtonState() {
-    submitBtn.disabled = searchInput.value.trim().length === 0;
+  function initMainPageInteractions() {
+    const attachBtn = document.getElementById('attach-btn');
+    const attachInput = document.getElementById('attach-input');
+    if (attachBtn && attachInput) {
+      attachBtn.addEventListener('click', () => attachInput.click());
+      attachInput.addEventListener('change', () => {
+        if (attachInput.files.length) {
+          console.log('Files attached:', Array.from(attachInput.files).map(f => f.name));
+        }
+      });
+    }
+
+    const platformsBtn = document.getElementById('platforms-btn');
+    const platformsMenu = document.getElementById('platforms-menu');
+    const platformsChevron = document.getElementById('platforms-chevron');
+    const platformsLabel = document.getElementById('platforms-label');
+    const platformInput = document.getElementById('platform-input');
+
+    if (platformsBtn && platformsMenu && platformsChevron && platformsLabel && platformInput) {
+      function closePlatformsMenu() {
+        platformsMenu.style.display = 'none';
+        platformsBtn.setAttribute('aria-expanded', 'false');
+        platformsChevron.style.transform = 'rotate(0deg)';
+      }
+      platformsBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const open = platformsMenu.style.display === 'block';
+        if (open) { closePlatformsMenu(); }
+        else {
+          platformsMenu.style.display = 'block';
+          platformsBtn.setAttribute('aria-expanded', 'true');
+          platformsChevron.style.transform = 'rotate(180deg)';
+        }
+      });
+      platformsMenu.addEventListener('click', (e) => {
+        const li = e.target.closest('li');
+        if (!li) return;
+        platformsLabel.textContent = li.dataset.value;
+        platformInput.value = li.dataset.value;
+        closePlatformsMenu();
+      });
+      // Delegated on document, but re-queries platformsMenu/platformsBtn
+      // fresh via the closure created on THIS init call — since this whole
+      // listener is re-attached each time initMainPageInteractions() runs
+      // against the current (possibly newly swapped-in) elements, it never
+      // holds onto stale references across a soft navigation.
+      document.addEventListener('click', (e) => {
+        if (!platformsMenu.contains(e.target) && e.target !== platformsBtn) closePlatformsMenu();
+      });
+    }
+
+    const searchForm = document.getElementById('search-form');
+    const searchInput = document.getElementById('search-input');
+    const submitBtn = document.getElementById('submit-btn');
+    if (searchForm && searchInput && submitBtn) {
+      function syncSubmitButtonState() {
+        submitBtn.disabled = searchInput.value.trim().length === 0;
+      }
+      syncSubmitButtonState();
+      searchInput.addEventListener('input', syncSubmitButtonState);
+      searchForm.addEventListener('submit', () => { submitBtn.disabled = true; });
+    }
+
+    // MutationObserver: disconnect any previous instance first (it's
+    // watching an old, now-detached .thread-inner) before observing the
+    // current one, so repeated soft navigations don't leak observers.
+    if (currentAnswerObserver) {
+      currentAnswerObserver.disconnect();
+      currentAnswerObserver = null;
+    }
+    watchForLiveAnswerUpdates();
+
+    // The SSE-related wiring (search-form soft-submit, and re-attaching a
+    // stream to a pending answer) lives in the second <script> block below
+    // this one. On the very first call — at initial page load, before that
+    // second script has executed yet — these functions don't exist yet, so
+    // this call would throw; the typeof guard skips them safely in that
+    // one case. On every SUBSEQUENT call (i.e. after any soft navigation,
+    // which only ever happens well after both scripts have already fully
+    // loaded), they're re-invoked normally, fixing the exact same
+    // stale-reference problem for these two as well.
+    if (typeof wireUpSoftSearchSubmit === 'function') wireUpSoftSearchSubmit();
+    if (typeof wireUpInitialPendingStream === 'function') wireUpInitialPendingStream();
   }
-  syncSubmitButtonState();
-  searchInput.addEventListener('input', syncSubmitButtonState);
-  searchForm.addEventListener('submit', () => { submitBtn.disabled = true; });
+
+  initMainPageInteractions();
 
   // ---- Structured JSON answer rendering ----
   // Claude's analysis system prompt now returns strict JSON matching one of
@@ -1565,7 +1616,7 @@
   // re-runs the exact same structured-JSON render pass on it immediately.
   // This makes the design self-healing regardless of what's changing the
   // content or when.
-  (function watchForLiveAnswerUpdates() {
+  function watchForLiveAnswerUpdates() {
     const threadRoot = document.querySelector('.thread-inner') || document.body;
 
     function reconcile(wrap) {
@@ -1596,7 +1647,8 @@
       });
     });
     observer.observe(threadRoot, { childList: true, subtree: true, characterData: true });
-  })();
+    currentAnswerObserver = observer;
+  }
 
   // ---- Auto-scroll to the latest message ----
   // The search form here is a real page reload (POST /search -> redirect
@@ -1716,13 +1768,14 @@
 
   // Wire up any already-pending stream from a normal page load (unchanged
   // behavior from before).
-  (function wireUpInitialPendingStream() {
+  function wireUpInitialPendingStream() {
     const pendingTurn = document.querySelector('[data-pending-stream="true"]');
     if (!pendingTurn) return;
     const chatIdInput = document.querySelector('#search-form input[name="chat_id"]');
     const chatId = chatIdInput ? chatIdInput.value : '';
     wireUpStream(pendingTurn, chatId);
-  })();
+  }
+  wireUpInitialPendingStream();
 
   // ---- Soft-submit the search form: no full page reload ----
   // This is what actually makes the question bubble (and the loading state
@@ -1735,7 +1788,7 @@
   // current page's thread. If that new turn is itself mid-stream
   // (data-pending-stream="true"), the SSE wiring above attaches to it
   // immediately, exactly as it would have after a real page load.
-  (function wireUpSoftSearchSubmit() {
+  function wireUpSoftSearchSubmit() {
     const form = document.getElementById('search-form');
     const threadInner = document.querySelector('.thread-inner');
     if (!form || !threadInner) return;
@@ -1750,16 +1803,32 @@
 
       if (submitBtn) submitBtn.disabled = true;
 
+      // Step 1: the actual network request. This is the ONLY part that
+      // should ever fall back to a real, full-page form submit — a
+      // genuine fetch/network failure, or a non-OK response.
+      let response;
       try {
         const formData = new FormData(form);
-        const response = await fetch(form.action, {
+        response = await fetch(form.action, {
           method: 'POST',
           body: formData,
           credentials: 'same-origin',
           redirect: 'follow',
         });
         if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+      } catch (fetchErr) {
+        console.warn('Soft search submit failed (network/request error), falling back to a real page submit:', fetchErr);
+        form.submit();
+        return;
+      }
 
+      // Step 2: parsing the response and updating the DOM. A failure here
+      // is NOT a network problem — it's most likely a stale-element issue
+      // (e.g. .thread-inner having been replaced by a prior soft
+      // navigation). It gets its own try/catch so it degrades gracefully
+      // (log + re-query fresh elements) instead of triggering the hard
+      // reload meant only for the fetch step above.
+      try {
         const html = await response.text();
         const doc = new DOMParser().parseFromString(html, 'text/html');
         const newThreadInner = doc.querySelector('.thread-inner');
@@ -1773,7 +1842,11 @@
 
         // Animate the new question bubble + loading state in, gently.
         latestTurn.classList.add('stream-reveal');
-        threadInner.appendChild(latestTurn);
+        // Re-query .thread-inner fresh rather than trusting the `threadInner`
+        // reference closed over when this listener was attached, in case a
+        // navigation replaced it since then.
+        const liveThreadInner = document.querySelector('.thread-inner') || threadInner;
+        liveThreadInner.appendChild(latestTurn);
         latestTurn.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
         // If this new turn is mid-stream, wire it up immediately — same
@@ -1783,14 +1856,21 @@
           const chatId = chatIdInput ? chatIdInput.value : '';
           wireUpStream(latestTurn, chatId);
         }
-      } catch (err) {
-        console.warn('Soft search submit failed, falling back to a real page submit:', err);
-        form.submit();
+      } catch (domErr) {
+        // The search itself already succeeded server-side at this point —
+        // only the in-place DOM update failed. A hard reload here would be
+        // wrong (and would re-run the search). Log it and leave the page
+        // as-is; the next real navigation/refresh will show the result
+        // normally through the standard server-rendered path.
+        console.warn('Soft search submit succeeded, but the in-place DOM update failed (likely a stale element reference):', domErr);
       } finally {
-        if (submitBtn) submitBtn.disabled = searchInput ? searchInput.value.trim().length === 0 : false;
+        const freshSubmitBtn = document.getElementById('submit-btn');
+        const freshSearchInput = document.getElementById('search-input');
+        if (freshSubmitBtn) freshSubmitBtn.disabled = freshSearchInput ? freshSearchInput.value.trim().length === 0 : false;
       }
     });
-  })();
+  }
+  wireUpSoftSearchSubmit();
 </script>
   </main>
 </div>
