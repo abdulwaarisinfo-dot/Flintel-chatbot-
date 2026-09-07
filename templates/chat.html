@@ -804,16 +804,6 @@
         </form>
       </div>
     </div>
-  </main>
-</div>
-
-<!-- Markdown rendering for msg.claude_answer (see .answer-raw /
-     .answer-rendered above), same behavior as index.html. If either script
-     fails to load, the raw text stays visible exactly as Claude wrote it —
-     nothing breaks, it just isn't prettified. -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
-
 <script>
   // ---- Sidebar (mobile drawer) ----
   const sidebar = document.querySelector('.sidebar');
@@ -1525,7 +1515,6 @@
     latest.scrollIntoView({ behavior: 'smooth', block: 'start' });
   })();
 </script>
-
 <script>
   // ---- Live streaming for the one pending answer, if any ----
   // Wires up the existing GET /chat/{chat_id}/stream SSE endpoint. Only
@@ -1705,5 +1694,15 @@
     });
   })();
 </script>
+  </main>
+</div>
+
+<!-- Markdown rendering for msg.claude_answer (see .answer-raw /
+     .answer-rendered above), same behavior as index.html. If either script
+     fails to load, the raw text stays visible exactly as Claude wrote it —
+     nothing breaks, it just isn't prettified. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+
 </body>
 </html>
