@@ -5,9 +5,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>{{ chat.title or 'Chat' }} — Flintel</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"> 
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
+<style id="app-styles">
   /* =========================================================================
      Same design system used on index.html (itself Document 2's visual
      language, adapted to real Jinja-driven markup). This page's own logic —
@@ -854,6 +854,18 @@
 
       if (!newMain || !currentMain) throw new Error('Fetched page missing <main> — falling back to real navigation');
 
+      // Swap the active <style> tag's content BEFORE swapping <main> — the
+      // fetched page might be a different template (index.html <-> chat.html)
+      // with its own, non-identical stylesheet. Without this, <main>'s new
+      // content renders against the WRONG page's CSS (missing rules for any
+      // class that only exists in the other template) until a hard refresh
+      // reloads the correct HTML+CSS pair together — this was the actual
+      // cause of "design kharab ho jata hai" after delete/search/navigate.
+      const newStyleTag = doc.querySelector('style#app-styles') || doc.querySelector('style');
+      const currentStyleTag = document.querySelector('style#app-styles') || document.querySelector('style');
+      if (newStyleTag && currentStyleTag) {
+        currentStyleTag.textContent = newStyleTag.textContent;
+      }
       currentMain.innerHTML = newMain.innerHTML;
       // Re-bind everything that was previously only ever bound once at
       // initial page load (search form, attach button, platforms dropdown,
@@ -965,7 +977,7 @@
           throw new Error(`Delete failed: ${response.status}`);
         }
       }).catch((err) => {
-        console.warn('Soft delete failed, falling back to a real page submit:', err);
+        console.warn('[hard-reload-fallback][delete][network] Genuine fetch/network failure on delete — falling back to a real page submit. If this recurs, capture this log + the failing request in DevTools Network tab.', err);
         const form = document.createElement('form');
         form.method = 'post';
         form.action = `/chat/${chatId}/delete`;
@@ -1817,7 +1829,7 @@
         });
         if (!response.ok) throw new Error(`Request failed: ${response.status}`);
       } catch (fetchErr) {
-        console.warn('Soft search submit failed (network/request error), falling back to a real page submit:', fetchErr);
+        console.warn('[hard-reload-fallback][search-submit][network] Genuine fetch/network failure — falling back to a real page submit. If this is happening more often than a real offline/network issue would explain, capture this exact log + the failing request in DevTools Network tab (status, timing, response) — that is the actual signal needed to diagnose it further; it cannot be root-caused from static code alone.', fetchErr);
         form.submit();
         return;
       }
@@ -1831,6 +1843,27 @@
       try {
         const html = await response.text();
         const doc = new DOMParser().parseFromString(html, 'text/html');
+
+        // Bug 2 fix: a first prompt from home (or any prompt that lands on
+        // a newly-created chat) redirects server-side to /chat/<new_id> —
+        // response.url reflects that. Without updating the address bar and
+        // the hidden chat_id field here, the NEXT prompt sent in this same
+        // session would still submit with the stale/missing chat_id,
+        // causing duplicate chats or misattributed requests.
+        history.pushState({ softNav: true }, '', response.url || form.action);
+        const newChatIdInput = doc.querySelector('#search-form input[name="chat_id"]');
+        const liveChatIdInput = document.querySelector('#search-form input[name="chat_id"]');
+        if (newChatIdInput && liveChatIdInput) {
+          liveChatIdInput.value = newChatIdInput.value;
+        }
+        // Also refresh the sidebar session list the same way navigateTo()
+        // does, so a newly created chat appears immediately without a refresh.
+        const newSessionsList = doc.querySelector('#sessions-list');
+        const liveSessionsList = document.querySelector('#sessions-list');
+        if (newSessionsList && liveSessionsList) {
+          liveSessionsList.innerHTML = newSessionsList.innerHTML;
+        }
+
         const newThreadInner = doc.querySelector('.thread-inner');
         if (!newThreadInner) throw new Error('Response missing .thread-inner');
 
@@ -1862,7 +1895,7 @@
         // wrong (and would re-run the search). Log it and leave the page
         // as-is; the next real navigation/refresh will show the result
         // normally through the standard server-rendered path.
-        console.warn('Soft search submit succeeded, but the in-place DOM update failed (likely a stale element reference):', domErr);
+        console.warn('[dom-update-failed][search-submit] Search succeeded server-side; only the in-place DOM update failed (not a network issue, so no hard reload was triggered):', domErr);
       } finally {
         const freshSubmitBtn = document.getElementById('submit-btn');
         const freshSearchInput = document.getElementById('search-input');
