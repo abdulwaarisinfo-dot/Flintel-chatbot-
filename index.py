@@ -3157,7 +3157,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
 
     Unchanged guard, exactly as before: if the target message's
     `claude_answer` is already truthy (already generated/cached — by the
-    normal blocking path, or by an earlier call to this same stream route), this
+    normal blocking path, or by an earlier call to this same route), this
     immediately replays that cached text as a single `delta` event
     followed by `done`, and returns — it never redoes any matching/Claude
     work for a message that already has its answer."""
