@@ -1804,6 +1804,14 @@
     const form = document.getElementById('search-form');
     const threadInner = document.querySelector('.thread-inner');
     if (!form || !threadInner) return;
+    // Guard against duplicate listeners: this function gets re-called every
+    // time initMainPageInteractions() runs (once at load, and again after
+    // every soft navigation). If the SAME form element somehow survives
+    // across multiple calls (rather than being replaced by an innerHTML
+    // swap), attaching another listener without this check would stack up
+    // duplicate submit handlers, causing inconsistent/duplicate behavior.
+    if (form.dataset.softSubmitWired === 'true') return;
+    form.dataset.softSubmitWired = 'true';
 
     const searchInput = document.getElementById('search-input');
     const submitBtn = document.getElementById('submit-btn');
