@@ -1,7 +1,8 @@
 """
 FLINTEL — WEB SERVICE (v7 + JSON-ANALYSIS-PROMPT SWAP + CLAUDE-KEYWORD SWAP
 + BUGFIX PACK: RESULTS/ANSWER SYNC + WORD-BOUNDARY MATCHING + 2ND-LEVEL CHUNKING
-+ TIME-WINDOW / PAIN-POINT / CLARIFY FEATURE)
++ TIME-WINDOW / PAIN-POINT / CLARIFY FEATURE
++ CLARIFY-SELF-RESOLVE + WEBSITE-URL KEYWORD EXTRACTION)
 ============================================================================
 Everything from v3 is UNCHANGED and still works exactly as before:
   1. Take a user prompt (brand/topic/product name) from a simple web form.
@@ -85,7 +86,8 @@ signals_collection itself.
 
 Stack: FastAPI + Jinja2 templates + pymongo + Authlib (Google OAuth) +
 passlib (password hashing) + Starlette SessionMiddleware (login sessions
-AND the anonymous chat-owner cookie) + httpx (Claude API calls).
+AND the anonymous chat-owner cookie) + httpx (Claude API calls + website
+fetches for the WEBSITE-URL KEYWORD EXTRACTION feature below).
 
 Run:
     pip install fastapi uvicorn jinja2 python-multipart pymongo python-dotenv \
@@ -107,6 +109,11 @@ Required env vars (add to .env):
     STREAM_CHUNK_CHARS=3                     # optional, this is the default (new, see SIMULATED-STREAM FIX below)
     STREAM_CHUNK_DELAY_SECONDS=0.02          # optional, this is the default (new, see SIMULATED-STREAM FIX below)
     MAX_TIME_WINDOW_DAYS=3650                # optional, this is the default (new, see TIME-WINDOW FEATURE below)
+    CLAUDE_TOPIC_RESOLVER_MAX_TOKENS=400     # optional, this is the default (new, see CLARIFY-SELF-RESOLVE FEATURE below)
+    MAX_WEBSITE_KEYWORDS=20                  # optional, this is the default (new, see WEBSITE-URL KEYWORD EXTRACTION FEATURE below)
+    WEBSITE_FETCH_TIMEOUT_SECONDS=15         # optional, this is the default (new, see WEBSITE-URL KEYWORD EXTRACTION FEATURE below)
+    WEBSITE_FETCH_MAX_CHARS=8000             # optional, this is the default (new, see WEBSITE-URL KEYWORD EXTRACTION FEATURE below)
+    CLAUDE_WEBSITE_KEYWORD_MAX_TOKENS=400    # optional, this is the default (new, see WEBSITE-URL KEYWORD EXTRACTION FEATURE below)
 
 ── v4.1 FIX ───────────────────────────────────────────────────────────────
 Only ONE behavior changed from the v4 file above: the /search route used to
@@ -372,7 +379,7 @@ answer -> patch links -> pace it out via SSE" rebuild of the streaming
 route. See inline comments on each piece below for the full detail — none
 of this was touched by the feature added in this file.)
 
-── TIME-WINDOW / PAIN-POINT / CLARIFY FEATURE (THIS FILE) ──────────────────
+── TIME-WINDOW / PAIN-POINT / CLARIFY FEATURE ──────────────────────────────
 THREE small, targeted, additive changes on top of everything above.
 Nothing else in this file — no other route, function, constant, matching
 rule, chunking rule, or caching rule — was touched.
@@ -459,6 +466,94 @@ rule, chunking rule, or caching rule — was touched.
    exactly as it always has — "clarify" can only ever ask a genuinely
    helpful follow-up question on top of the existing pipeline, it can
    never be the reason a real, clear search silently fails to run.
+
+── CLARIFY-SELF-RESOLVE FEATURE (THIS FILE) ────────────────────────────────
+ONE small, targeted, additive change on top of everything above, scoped
+entirely to the "clarify" branch of POST /search. Nothing else in this
+file — no other route, function, constant, matching rule, or caching
+rule — was touched.
+
+Previously, whenever the router returned intent="clarify" (a search-
+shaped message with no clear topic/brand/industry, e.g. "aaj ke reddit
+posts dikhao" with nothing else), the user was ALWAYS asked a clarifying
+question immediately — the ONLY way that ever changed to a real search
+was the user typing a follow-up message that named the topic.
+
+NOW: before falling back to asking the user, the /search route makes ONE
+extra, best-effort, single cheap Claude call — resolve_unclear_topic() —
+that tries to figure out the topic using ONLY Claude's own general
+knowledge and the existing rolling chat-summary context (e.g. a topic
+named earlier in the SAME conversation, or something Claude's own
+training knowledge can confidently infer). This step has NO web-search
+tool and is given NO new information beyond the message + the summary —
+it is deliberately a narrow, honest "can I already tell what this means"
+check, not a research step.
+
+  - If resolve_unclear_topic() comes back with a confidently-resolved
+    topic (keywords, and optionally a time_window_days), the message is
+    switched from intent="clarify" to intent="search" and falls straight
+    through into the EXACT SAME, byte-for-byte unchanged v1-v7 search
+    pipeline below (enqueue_search_job, add_search_to_chat,
+    get_matched_signals, analyze_with_claude, etc.) — using the resolved
+    keywords/time_window_days exactly the same way routed_keywords/
+    routed_time_window_days from the normal router already are. No
+    user-facing clarifying question is ever shown in this case.
+  - If it can't confidently resolve anything (the overwhelmingly more
+    common case, by design — the resolver is instructed to only succeed
+    when genuinely confident), OR if the call fails outright (API error,
+    bad JSON, timeout), intent stays "clarify" and the EXISTING clarify-
+    question flow (add_chat_message_to_chat with
+    CLAUDE_CLARIFY_FALLBACK_REPLY as the safety net) runs completely
+    unchanged, exactly as it did before this feature existed.
+
+SAFETY NET (same philosophy as the rest of this file): this can only ever
+ADD a shortcut on top of the existing "clarify" flow — it can never
+replace the safety net of asking the user, and it can never affect a
+message that was never classified as "clarify" in the first place (every
+"search", "chat", and "blocked" message is completely untouched by this
+feature).
+
+── WEBSITE-URL KEYWORD EXTRACTION FEATURE (THIS FILE) ──────────────────────
+ONE small, targeted, additive change on top of everything above, scoped
+entirely to the SEARCH-TYPE branch of POST /search (this includes a
+message that started as "clarify" and was just switched to "search" by
+the CLARIFY-SELF-RESOLVE feature above). Nothing else in this file — no
+other route, function, constant, matching rule, or caching rule — was
+touched.
+
+If the user's message itself contains a website URL (e.g. "yeh meri
+website https://example.com hai, is se related reddit posts dikhao"),
+the /search route now:
+  1. Detects the URL with a plain-Python regex check (_extract_first_url())
+     — no Claude call needed for this part.
+  2. Fetches that URL's page content and reduces it to plain text
+     (fetch_website_text()) — a lightweight, dependency-free tag-strip,
+     not a full HTML parser, truncated to WEBSITE_FETCH_MAX_CHARS so a
+     large page can never blow up the size/cost of the next step.
+  3. Makes ONE extra cheap Claude call (extract_keywords_from_website())
+     that reads the website's plain text content TOGETHER WITH the
+     user's own request text (so a specific angle the user typed
+     alongside the link, e.g. "pricing complaints", is honored — not
+     just the site's generic content on its own) and returns up to
+     MAX_WEBSITE_KEYWORDS (default 20) keywords for the topic.
+  4. If that succeeds with usable keywords, those keywords are used for
+     THIS search instead of whatever the router (or the CLARIFY-SELF-
+     RESOLVE step above) already produced — they are handed to the
+     EXACT SAME, byte-for-byte unchanged downstream pipeline
+     (enqueue_search_job, add_search_to_chat, get_matched_signals,
+     analyze_with_claude, etc.) exactly like any other keyword source in
+     this file already is.
+
+SAFETY NET (same philosophy as the rest of this file): if the URL fetch
+fails (site down, timeout, non-HTML, blocked, bad URL) OR the Claude
+extraction call fails outright OR it returns no usable keywords, this
+simply leaves the existing keyword source (the router's routed_keywords,
+or the CLARIFY-SELF-RESOLVE result) untouched — the EXISTING safety-net
+chain immediately below (routed_keywords -> generate_fuzzy_keywords())
+still applies exactly as before this feature. A search can therefore
+NEVER end up with zero keywords because of this feature, and a message
+with no URL in it behaves 100% identically to before this feature — this
+whole step is skipped entirely when _extract_first_url() finds nothing.
 
 EVERYTHING ELSE IN THIS FILE — every other route, function, constant,
 prompt, matching rule, chunking rule, caching rule, and template contract
@@ -585,6 +680,20 @@ RESPONSE_TIMEOUT = int(os.getenv("RESPONSE_TIMEOUT", "60"))
 # text is shown or cached, only how it visually arrives.
 STREAM_CHUNK_CHARS         = int(os.getenv("STREAM_CHUNK_CHARS", "3"))
 STREAM_CHUNK_DELAY_SECONDS = float(os.getenv("STREAM_CHUNK_DELAY_SECONDS", "0.02"))
+
+# ── Clarify-self-resolve config (NEW) ───────────────────────────────────────
+# Max tokens for the single extra Claude call resolve_unclear_topic() makes
+# — see that function and the CLARIFY-SELF-RESOLVE FEATURE module docstring
+# note above.
+CLAUDE_TOPIC_RESOLVER_MAX_TOKENS = int(os.getenv("CLAUDE_TOPIC_RESOLVER_MAX_TOKENS", "400"))
+
+# ── Website-URL keyword extraction config (NEW) ─────────────────────────────
+# See the WEBSITE-URL KEYWORD EXTRACTION FEATURE module docstring note
+# above, and fetch_website_text() / extract_keywords_from_website() below.
+MAX_WEBSITE_KEYWORDS               = int(os.getenv("MAX_WEBSITE_KEYWORDS", "20"))
+WEBSITE_FETCH_TIMEOUT_SECONDS      = float(os.getenv("WEBSITE_FETCH_TIMEOUT_SECONDS", "15"))
+WEBSITE_FETCH_MAX_CHARS            = int(os.getenv("WEBSITE_FETCH_MAX_CHARS", "8000"))
+CLAUDE_WEBSITE_KEYWORD_MAX_TOKENS  = int(os.getenv("CLAUDE_WEBSITE_KEYWORD_MAX_TOKENS", "400"))
 
 client = MongoClient(MONGODB_URI)
 db = client[MONGODB_DB]
@@ -1993,6 +2102,296 @@ def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
     return parsed
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# CLARIFY-SELF-RESOLVE FEATURE (NEW) — see the module docstring note above
+# for the full rationale. Only ever invoked for a message the main router
+# above already classified as intent="clarify". Uses ONE extra cheap
+# Claude call, Claude's own general knowledge only (no web-search tool,
+# no new information beyond the message + the existing rolling chat
+# summary), to make a single honest attempt at resolving the topic before
+# the existing clarify-question flow is allowed to fire.
+# ─────────────────────────────────────────────────────────────────────────────
+
+CLAUDE_TOPIC_RESOLVER_SYSTEM_PROMPT = """
+You are a fallback topic-resolution step inside Flintel, a social-listening
+platform. You are only ever called for a message that Flintel's own router
+already decided is CLARIFY — a search-shaped message ("reddit posts",
+"show me", "find me", a time range, etc.) that did NOT name a clear
+topic/brand/product/industry, either in the message itself or in the short
+conversation history.
+
+Your job: using ONLY your own general knowledge (you have no web-search
+tool here, and you are not being given any new information beyond the
+message and the conversation summary below), make ONE honest attempt to
+figure out what topic the user most likely means. This will usually fail —
+that is fine and expected; only succeed when you are genuinely confident,
+never guess just to produce an answer.
+
+Respond with STRICT JSON ONLY — no markdown code fences, no preamble, no
+text outside the JSON object — in exactly this shape:
+{"resolved": true, "keywords": ["<keyword1>", "<keyword2>"], "time_window_days": null}
+or, when you genuinely cannot infer a specific topic:
+{"resolved": false, "keywords": null, "time_window_days": null}
+
+Rules when "resolved": true:
+- "keywords": up to 10 short, natural search terms that could plausibly
+  appear inside a real Reddit/X/LinkedIn/Facebook post about the topic you
+  inferred — same rules as normal keyword generation elsewhere in this
+  product: no meta words like "reddit", "posts", "show me", "today", etc.
+- "time_window_days": convert any time range already implied by the user's
+  own message the same way it's always converted elsewhere ("today"/"aaj"
+  -> 1, "this week"/"last 7 days" -> 7, "last month" -> 30, "last 6
+  months" -> 180, "last year" -> 365, etc.) — null if no time range was
+  mentioned.
+- Only mark "resolved": true if you are genuinely confident about the
+  topic — e.g. the conversation history clearly named a brand/topic
+  earlier and this message is obviously a natural follow-up about it. Do
+  NOT invent a topic out of thin air just because the message is
+  search-shaped.
+"""
+
+
+def resolve_unclear_topic(query: str, chat_summary: str):
+    """(CLARIFY-SELF-RESOLVE FEATURE) Best-effort, single extra cheap
+    Claude call, used ONLY for a message the main router already
+    classified as "clarify" (a search-shaped message with no clear
+    topic). Uses Claude's OWN general knowledge (no web-search tool, no
+    new information beyond the message + the existing rolling chat
+    summary) to make one honest attempt at guessing the real topic —
+    e.g. a follow-up that implicitly refers back to a brand/topic already
+    named earlier in the conversation.
+
+    Returns a dict {"keywords": [...], "time_window_days": int|None} if
+    Claude was genuinely confident enough to resolve a topic, or None if
+    it wasn't (or if this call failed outright) — callers must treat
+    None exactly the same as before this feature existed: fall through
+    to the normal "clarify" question-asking behavior. This can only ever
+    ADD a shortcut on top of the existing clarify flow; it can never
+    block or replace the safety net of just asking the user."""
+    user_message = (
+        f"Conversation so far (auto-summarized, may be empty):\n"
+        f"{chat_summary or '(no earlier messages in this chat)'}\n\n"
+        f"User's message (already classified as unclear-topic 'clarify' by "
+        f"the main router): {query}"
+    )
+    try:
+        raw = _call_claude(
+            CLAUDE_TOPIC_RESOLVER_SYSTEM_PROMPT,
+            user_message,
+            max_tokens=CLAUDE_TOPIC_RESOLVER_MAX_TOKENS,
+        )
+    except Exception as exc:
+        log.warning(f"Topic-resolver Claude call failed for query={query!r}: {exc}")
+        return None
+
+    cleaned = (raw or "").strip()
+    if cleaned.startswith("```"):
+        cleaned = cleaned.strip("`").strip()
+        cleaned = re.sub(r"^json\s*", "", cleaned, flags=re.IGNORECASE).strip()
+    try:
+        data = json.loads(cleaned)
+    except (ValueError, TypeError):
+        log.warning(f"Topic-resolver returned unparseable output for query={query!r}: {raw[:200]!r}")
+        return None
+    if not isinstance(data, dict) or not data.get("resolved"):
+        return None
+
+    raw_keywords = data.get("keywords")
+    keywords = None
+    if isinstance(raw_keywords, list):
+        cleaned_keywords = []
+        seen = set()
+        for kw in raw_keywords:
+            if not isinstance(kw, str):
+                continue
+            kw_clean = kw.strip()
+            if not kw_clean:
+                continue
+            key = kw_clean.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            cleaned_keywords.append(kw_clean)
+            if len(cleaned_keywords) >= CLAUDE_MAX_KEYWORDS:
+                break
+        keywords = cleaned_keywords or None
+
+    if not keywords:
+        return None
+
+    raw_window = data.get("time_window_days")
+    time_window_days = None
+    parsed_window = None
+    if isinstance(raw_window, bool):
+        parsed_window = None
+    elif isinstance(raw_window, int):
+        parsed_window = raw_window
+    elif isinstance(raw_window, str) and raw_window.strip().isdigit():
+        parsed_window = int(raw_window.strip())
+    if isinstance(parsed_window, int) and parsed_window > 0:
+        time_window_days = min(parsed_window, MAX_TIME_WINDOW_DAYS)
+
+    return {"keywords": keywords, "time_window_days": time_window_days}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# WEBSITE-URL KEYWORD EXTRACTION FEATURE (NEW) — see the module docstring
+# note above for the full rationale. Only ever invoked for a search-type
+# message whose raw text contains an http(s) URL. Fetches that URL, turns
+# it into plain text, and hands it (together with the user's own request
+# text) to a single extra cheap Claude call to produce the keyword list.
+# ─────────────────────────────────────────────────────────────────────────────
+
+_URL_REGEX = re.compile(r'https?://[^\s<>"\')\]]+', re.IGNORECASE)
+
+
+def _extract_first_url(text: str):
+    """(WEBSITE-URL KEYWORD EXTRACTION FEATURE) Best-effort extraction of
+    the first http(s) URL appearing anywhere in the user's raw message
+    text. Purely a plain-Python regex check — never calls Claude, never
+    modifies the query. Returns None if no URL is present, which is the
+    common case and leaves every other code path completely untouched."""
+    if not text:
+        return None
+    match = _URL_REGEX.search(text)
+    if not match:
+        return None
+    url = match.group(0).rstrip(".,;:!?")
+    return url or None
+
+
+_HTML_TAG_RE            = re.compile(r"<[^>]+>")
+_HTML_SCRIPT_STYLE_RE   = re.compile(r"<(script|style)[^>]*>.*?</\1>", re.IGNORECASE | re.DOTALL)
+_HTML_WHITESPACE_RE     = re.compile(r"\s+")
+
+
+def fetch_website_text(url: str) -> str:
+    """(WEBSITE-URL KEYWORD EXTRACTION FEATURE) Fetches a user-provided
+    website URL and reduces it to plain text, good enough to hand to
+    Claude as grounding for keyword extraction — NOT a full HTML parser,
+    just enough tag-stripping to turn a page into readable text without
+    pulling in a new dependency. Raises on any failure (bad URL, timeout,
+    non-2xx, etc.) — the caller decides how to degrade gracefully, same
+    convention as _call_claude().
+
+    Truncates to WEBSITE_FETCH_MAX_CHARS so a large page can never blow
+    up the size/cost of the Claude call that follows."""
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; FlintelBot/1.0)"}
+    with httpx.Client(timeout=WEBSITE_FETCH_TIMEOUT_SECONDS, follow_redirects=True) as http_client:
+        response = http_client.get(url, headers=headers)
+        response.raise_for_status()
+        html = response.text
+
+    text = _HTML_SCRIPT_STYLE_RE.sub(" ", html)
+    text = _HTML_TAG_RE.sub(" ", text)
+    text = _HTML_WHITESPACE_RE.sub(" ", text).strip()
+
+    return text[:WEBSITE_FETCH_MAX_CHARS]
+
+
+CLAUDE_WEBSITE_KEYWORD_SYSTEM_PROMPT = """
+You are the website-to-keywords brain inside Flintel, a social-listening
+platform. The user has shared a link to their OWN website together with
+what they want Flintel to search for. Your job: read the website's plain
+text content plus the user's own request text, and produce the keyword
+list Flintel's existing (unchanged) matching code will use to find
+relevant Reddit/X/LinkedIn/Facebook posts.
+
+- Read the website to understand what the business actually offers
+  (its products, services, and industry) and combine that understanding
+  with whatever the user's own request text asks for (e.g. a specific
+  angle like "pricing complaints", or a pain-point/prospect-style ask
+  like "find people whose website is slow").
+- Return up to 20 short, natural keywords/phrases that could plausibly
+  appear verbatim, or as a close natural substring, inside a real post's
+  title or text — the same standard used everywhere else in this
+  product. Never include meta wording like "reddit", "posts", "show me",
+  "website", "today", etc.
+- If the user's own request text names a specific angle or problem, bias
+  the keywords toward THAT (same pain-point/prospect pattern used
+  elsewhere in this product: keywords about the PROBLEM/SYMPTOM being
+  described, not just the business's own name/services), rather than
+  generic keywords about the site as a whole.
+- If the website content is too thin, broken, or irrelevant to produce
+  any confident keywords, return an empty list rather than inventing
+  generic filler.
+
+Respond with STRICT JSON ONLY — no markdown code fences, no preamble, no
+text outside the JSON object — in exactly this shape:
+{"keywords": ["<keyword1>", "<keyword2>"]}
+"""
+
+
+def extract_keywords_from_website(query: str, url: str, website_text: str):
+    """(WEBSITE-URL KEYWORD EXTRACTION FEATURE) Single cheap Claude call:
+    reads the already-fetched plain-text website content PLUS the user's
+    own request text (so a specific angle/pain-point the user typed
+    alongside the link is honored, not just the site's generic content)
+    and returns up to MAX_WEBSITE_KEYWORDS keywords for the SAME
+    UNCHANGED downstream matching pipeline every other keyword source in
+    this file already feeds (enqueue_search_job, get_matched_signals,
+    etc.).
+
+    Returns a list of keyword strings, or None if Claude failed outright,
+    returned unparseable output, or returned no usable keywords — callers
+    must treat None exactly like any other "no usable keywords from this
+    source" case elsewhere in this file: fall back down the existing
+    safety-net chain (the router's own routed_keywords, then finally
+    generate_fuzzy_keywords()), never let a search end up with zero
+    keywords because of this feature."""
+    if not website_text:
+        return None
+
+    user_message = (
+        f"User's request text: {query}\n\n"
+        f"Website URL: {url}\n\n"
+        f"Website content (plain text, truncated):\n{website_text}"
+    )
+    try:
+        raw = _call_claude(
+            CLAUDE_WEBSITE_KEYWORD_SYSTEM_PROMPT,
+            user_message,
+            max_tokens=CLAUDE_WEBSITE_KEYWORD_MAX_TOKENS,
+        )
+    except Exception as exc:
+        log.warning(f"Website-keyword Claude call failed for url={url!r}: {exc}")
+        return None
+
+    cleaned = (raw or "").strip()
+    if cleaned.startswith("```"):
+        cleaned = cleaned.strip("`").strip()
+        cleaned = re.sub(r"^json\s*", "", cleaned, flags=re.IGNORECASE).strip()
+    try:
+        data = json.loads(cleaned)
+    except (ValueError, TypeError):
+        log.warning(f"Website-keyword call returned unparseable output for url={url!r}: {raw[:200]!r}")
+        return None
+    if not isinstance(data, dict):
+        return None
+
+    raw_keywords = data.get("keywords")
+    if not isinstance(raw_keywords, list):
+        return None
+
+    cleaned_keywords = []
+    seen = set()
+    for kw in raw_keywords:
+        if not isinstance(kw, str):
+            continue
+        kw_clean = kw.strip()
+        if not kw_clean:
+            continue
+        key = kw_clean.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        cleaned_keywords.append(kw_clean)
+        if len(cleaned_keywords) >= MAX_WEBSITE_KEYWORDS:
+            break
+
+    return cleaned_keywords or None
+
+
 def _trim(text: str, limit: int) -> str:
     text = (text or "").strip()
     if len(text) <= limit:
@@ -2814,6 +3213,13 @@ def search(
     chat_reply = None
     routed_keywords = None
     routed_time_window_days = None
+    # (CLARIFY-SELF-RESOLVE FEATURE) Captured here (not just inside the
+    # try block below) so it's still safely readable afterwards even if
+    # something later in the try block raises — resolve_unclear_topic()
+    # only ever needs this for extra continuity, so an empty string is a
+    # completely safe default, identical to how classify_and_maybe_chat()
+    # already treats an empty/missing summary.
+    chat_summary_for_resolve = ""
 
     try:
         owner_key, owner_type = get_owner(request)
@@ -2824,6 +3230,7 @@ def search(
 
         existing_chat = get_chat_session(active_chat_id, owner_key)
         chat_summary = (existing_chat or {}).get("summary") or ""
+        chat_summary_for_resolve = chat_summary
 
         routed = classify_and_maybe_chat(query, chat_summary)
         intent = routed.get("intent", "search")
@@ -2834,12 +3241,38 @@ def search(
         log.warning(f"v5 routing step failed for query={query!r} (defaulting to normal search pipeline): {exc}")
         intent = "search"
 
+    # ─────────────────────────────────────────────────────────────────────
+    # CLARIFY-SELF-RESOLVE (NEW) — before ever falling back to asking the
+    # user, make ONE best-effort attempt to resolve the topic using
+    # Claude's own knowledge (no web search, no new information beyond the
+    # message + the existing rolling chat summary). If that succeeds, this
+    # message is switched to a NORMAL "search" from here on — 100% as-is,
+    # using whatever keywords/time_window_days it resolved, falling
+    # straight through into the exact same pipeline below. If it can't
+    # confidently resolve anything, or the call fails outright, intent
+    # stays "clarify" and the EXISTING clarify-question flow immediately
+    # below runs completely unchanged.
+    # ─────────────────────────────────────────────────────────────────────
+    if intent == "clarify":
+        resolved = None
+        try:
+            resolved = resolve_unclear_topic(query, chat_summary_for_resolve)
+        except Exception as exc:
+            log.warning(f"Clarify self-resolve step failed for query={query!r}: {exc}")
+            resolved = None
+        if resolved and resolved.get("keywords"):
+            intent = "search"
+            routed_keywords = resolved["keywords"]
+            routed_time_window_days = resolved.get("time_window_days")
+            log.info(f"Clarify self-resolved to search | query={query!r} | keywords={routed_keywords}")
+
     # ── CHAT-TYPE, BLOCKED-TYPE, OR CLARIFY-TYPE MESSAGE: answer/decline/ ──
     # ── ask directly, never touch the keyword-generation / job-queue /   ──
     # ── signal-matching pipeline at all. (v6: "blocked" reuses the exact ──
-    # ── same handling as "chat"; NEW: "clarify" reuses it too — same     ──
-    # ── message shape, same redirect — only where the answer text comes ──
-    # ── from below differs.)                                            ──
+    # ── same handling as "chat"; "clarify" reuses it too — same message  ──
+    # ── shape, same redirect — only where the answer text comes from     ──
+    # ── below differs. NEW: "clarify" only ever reaches here if the      ──
+    # ── CLARIFY-SELF-RESOLVE step above couldn't resolve a topic.)       ──
     if intent in ("chat", "blocked", "clarify"):
         if intent == "blocked":
             # Never re-sent to Claude for a fallback — a canned decline is
@@ -2887,13 +3320,46 @@ def search(
 
     # ── SEARCH-TYPE MESSAGE: everything below is the v1-v7 pipeline,   ──
     # ── UNCHANGED except for WHERE `keywords` comes from and the new   ──
-    # ── `time_window_days` value carried alongside it.                 ──
+    # ── `time_window_days` value carried alongside it. (This branch is ──
+    # ── now also reached by a "clarify" message the CLARIFY-SELF-      ──
+    # ── RESOLVE step above successfully resolved — from this point on  ──
+    # ── it is treated 100% identically to any other search message.)   ──
+
+    # ─────────────────────────────────────────────────────────────────────
+    # WEBSITE-URL KEYWORD EXTRACTION (NEW) — if the user's message itself
+    # contains a URL (e.g. "yeh meri website [url] hai, ... dikhao"), try
+    # to fetch that website and have Claude extract up to
+    # MAX_WEBSITE_KEYWORDS keywords from ITS content (combined with the
+    # user's own request text) and use THOSE as the keyword list for this
+    # search instead of whatever the router/self-resolve step already
+    # produced. Best-effort only: any failure here (fetch error, timeout,
+    # bad URL, Claude call failure, no usable keywords) simply leaves
+    # routed_keywords untouched, so the existing safety-net chain below
+    # (routed_keywords -> generate_fuzzy_keywords()) still applies exactly
+    # as before this feature — a search can never end up with zero
+    # keywords because of this. A message with no URL in it is completely
+    # unaffected: _extract_first_url() returns None and this whole block
+    # is skipped.
+    # ─────────────────────────────────────────────────────────────────────
+    detected_url = _extract_first_url(query)
+    if detected_url:
+        website_keywords = None
+        try:
+            website_text = fetch_website_text(detected_url)
+            website_keywords = extract_keywords_from_website(query, detected_url, website_text)
+        except Exception as exc:
+            log.warning(f"Website fetch/keyword-extraction failed for url={detected_url!r}: {exc}")
+            website_keywords = None
+        if website_keywords:
+            routed_keywords = website_keywords
+            log.info(f"Website-derived keywords used | url={detected_url!r} | keywords={routed_keywords}")
 
     # (KEYWORD-GENERATION SWAP) Keywords now come from the SAME Claude
     # routing call above instead of the old plain-Python template
-    # generator. generate_fuzzy_keywords() is KEPT, unchanged, purely as a
-    # safety-net fallback for when the routing step failed outright or
-    # returned no usable keywords for a "search" intent.
+    # generator (or, per the two new features above, from the clarify
+    # self-resolve step or the website-URL extraction step). generate_
+    # fuzzy_keywords() is KEPT, unchanged, purely as a safety-net fallback
+    # for when none of those produced usable keywords.
     if routed_keywords:
         keywords = routed_keywords
     else:
