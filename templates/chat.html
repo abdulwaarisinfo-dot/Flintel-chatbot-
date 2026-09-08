@@ -230,7 +230,7 @@
 
   .turn-block { margin-bottom: 40px; }
   .turn-block:last-child { margin-bottom: 0; }
-  .turn-row { display: flex; justify-content: flex-end; margin-bottom: 17px; }
+  .turn-row { display: flex; justify-content: flex-end; margin-bottom: 24px; }
   .turn-question {
     background: #1e1d1b; border-radius: 16px; padding: 17px 24px;
     color: #fff; font-size: 17px; font-weight: 500; line-height: 26px;
@@ -471,7 +471,7 @@
   .leadgen-quote-block .copy-btn.copied .copied-label { opacity: 1; }
 
   /* ---------- Overview summary + fabricated-note blockquote ---------- */
-  .overview-summary { color: #d1d0cf; font-size: 17px; font-weight: 500; line-height: 26px; margin-bottom: 40px; }
+  .overview-summary { color: #d1d0cf; font-size: 17px; font-weight: 500; line-height: 26px; margin-bottom: 47px; }
   .fabricated-note { display: flex; align-items: stretch; gap: 16px; margin-bottom: 40px; }
   .fabricated-note .bar { width: 5px; background: #323130; border-radius: 2px; flex-shrink: 0; }
   .fabricated-note p { color: #fff; font-size: 17px; font-weight: 500; line-height: 26px; margin: 0; }
@@ -533,6 +533,63 @@
     .turn-question { font-size: 16px; max-width: 90%; }
     .post-field .field-text { font-size: 15px; }
     .answer-raw, .answer-rendered { font-size: 15.5px; }
+
+    /* ---------- Responsive audit: every component family added over the
+       course of this build that had NO mobile coverage at all — each
+       scaled down following the same ~2px body-text reduction already
+       established above (17px -> 15.5px), so nothing overflows or reads
+       too large on a narrow screen. ---------- */
+
+    /* Turn header (question bubble meta row) */
+    .turn-meta { gap: 8px; }
+    .turn-meta-time { font-size: 12.5px; }
+    .turn-meta-icon { width: 13px; height: 13px; }
+
+    /* Follow-up suggestion rows */
+    .followup-row { gap: 16px; padding: 0 16px; height: 48px; }
+    .followup-row-text { font-size: 14.5px; line-height: 22px; }
+
+    /* Overview summary / fabricated-note / block-text family (source-list,
+       trend-report, comparison shared text blocks) */
+    .overview-summary, .fabricated-note p, .block-text,
+    .leadgen-field .text, .leadgen-numbered .text, .leadgen-numbered .num,
+    .leadgen-quote-block p, .post-label {
+      font-size: 15.5px;
+    }
+    .post-label { line-height: 22px; }
+
+    /* Section headings (metrics/leadgen/block titles) */
+    .metrics-section-title, .leadgen-heading, .block-title {
+      font-size: 15.5px; line-height: 22px;
+    }
+
+    /* Metrics tables (trend-report): fixed grid-column widths (set inline
+       by JS) would overflow a narrow screen outright — this lets a wide
+       table scroll horizontally instead of squashing/breaking its columns,
+       same pattern any responsive data table uses. */
+    .metrics-table { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .metrics-row { min-width: 480px; } /* keeps columns legible while scrolling, rather than crushing them to fit */
+    .metrics-cell { padding: 0 10px; font-size: 13.5px; }
+
+    /* Lead-gen prospect cards */
+    .leadgen-prospect-name { font-size: 15.5px; line-height: 22px; }
+    .leadgen-avatar { width: 34px; height: 34px; font-size: 13px; }
+
+    /* Special states (no-results / not-available / disallowed) */
+    .state-heading { font-size: 15.5px; }
+    .state-body { font-size: 13.5px; }
+    .state-actions { gap: 8px; }
+    .btn-primary, .btn-outline { padding: 8px 14px; font-size: 13px; }
+    .credit-stat .num { font-size: 26px; }
+
+    /* Docked search / follow-up input controls */
+    .search-input { font-size: 15.5px; }
+    .platforms-btn { font-size: 14px; }
+    .add-btn svg { width: 15px; height: 15px; }
+
+    /* Sidebar session-menu dropdown — keep it from running off the edge
+       of a narrow screen */
+    .session-menu-dropdown { min-width: 120px; }
   }
 </style>
 </head>
