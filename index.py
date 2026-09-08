@@ -660,6 +660,8 @@ from starlette.middleware.sessions import SessionMiddleware
 from passlib.context import CryptContext
 from authlib.integrations.starlette_client import OAuth
 
+import flintel
+
 # ─────────────────────────────────────────────────────────────────────────────
 # LOGGING
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1148,7 +1150,7 @@ def _infer_platform_from_url(url: str):
 
 
 def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str = "all",
-                         limit: int = None, since_days: int = None) -> list:
+                         limit: int = None, since_days: int = None, unfiltered: bool = False) -> list:
     """Reads `flintel_signals` and keeps only the signals that match this
     job's generated keywords. topic_key match is intentionally NOT
     required: Background Service #1 may store its own topic_key for a
@@ -1215,6 +1217,15 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     parameter), RETURN SHAPE, matching rules, and every existing caller
     are exactly as they were in v7 — it has no idea whether `keywords`
     came from Claude's router call or the old fuzzy-template fallback."""
+    if unfiltered:
+        return flintel.get_unfiltered_matched_signals(
+            signals_collection,
+            since_days=since_days,
+            targeting_platform=targeting_platform,
+            limit=limit or MAX_MATCHED_RESULTS,
+            max_per_platform=MAX_POSTS_PER_PLATFORM,
+        )
+
     limit = limit or MAX_MATCHED_RESULTS
     keyword_list = [k for k in (keywords or []) if k]
     keyword_set = {k.strip().lower() for k in keyword_list}
@@ -1643,7 +1654,7 @@ def _condense_notes_chunk(query: str, notes_chunk: list) -> str:
     return _call_claude(CLAUDE_NOTES_REDUCE_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_MAP_MAX_TOKENS)
 
 
-def analyze_with_claude(query: str, matched_signals: list) -> str:
+def analyze_with_claude(query: str, matched_signals: list, extra_context: str = None) -> str:
     """Turns (user question + matched signals) into the actual answer the
     user sees, using CLAUDE_ANALYSIS_SYSTEM_PROMPT. Handles three cases:
 
@@ -1667,9 +1678,12 @@ def analyze_with_claude(query: str, matched_signals: list) -> str:
     should persist (see save_claude_answer_to_chat).
 
     UNCHANGED except for the additive second-level chunking pass described
-    above (BUGFIX PACK #3). This function only ever sees ALREADY-MATCHED
-    posts — it has no idea whether a time window was applied to produce
-    them.
+    above (BUGFIX PACK #3), and the additive optional `extra_context`
+    parameter: when provided, it's appended to the user_message built in
+    every branch below, right before that branch's _call_claude(...) call
+    — no other line of this function's logic/branches changes. This
+    function only ever sees ALREADY-MATCHED posts — it has no idea whether
+    a time window was applied to produce them.
 
     (SIMULATED-STREAM FIX) This function is ALSO now the one
     GET /chat/{chat_id}/stream calls to get its complete answer text —
@@ -1685,6 +1699,8 @@ def analyze_with_claude(query: str, matched_signals: list) -> str:
             "to ground an answer in. Say that plainly, then answer anything "
             "else in the question you still can from general knowledge."
         )
+        if extra_context:
+            user_message += "\n\n" + extra_context
         return _call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message)
 
     chunks = chunk_list(posts, CLAUDE_POSTS_PER_CHUNK)
@@ -1692,6 +1708,8 @@ def analyze_with_claude(query: str, matched_signals: list) -> str:
     if len(chunks) <= 1:
         posts_block = _format_posts_block(posts)
         user_message = f"User's question: {query}\n\nPosts (title + text only):\n{posts_block}"
+        if extra_context:
+            user_message += "\n\n" + extra_context
         return _call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message)
 
     # Multiple chunks -> map-reduce so no single call has to swallow every
@@ -1736,6 +1754,8 @@ def analyze_with_claude(query: str, matched_signals: list) -> str:
         f"only factual grounding about the posts, and answer the user's "
         f"actual question naturally.\n\nNotes:\n{combined_notes}"
     )
+    if extra_context:
+        user_message += "\n\n" + extra_context
     return _call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message)
 
 
@@ -2089,6 +2109,8 @@ text outside the JSON object — in EXACTLY one of these four shapes:
 {"intent": "clarify", "reply": "<short, natural clarifying question>", "keywords": null, "time_window_days": null}
 """
 
+CLAUDE_ROUTER_SYSTEM_PROMPT = CLAUDE_ROUTER_SYSTEM_PROMPT + "\n" + flintel.ROUTER_UNFILTERED_ADDENDUM
+
 CLAUDE_CHAT_FALLBACK_SYSTEM_PROMPT = """
 You are the AI assistant inside Flintel, a social listening platform.
 Answer the user's message naturally and directly, the way Claude or
@@ -2179,6 +2201,7 @@ def _parse_router_json(raw: str):
 
     keywords = None
     time_window_days = None
+    unfiltered = False
     if intent == "search":
         raw_keywords = data.get("keywords")
         if isinstance(raw_keywords, list):
@@ -2210,7 +2233,10 @@ def _parse_router_json(raw: str):
         if isinstance(parsed_window, int) and parsed_window > 0:
             time_window_days = min(parsed_window, MAX_TIME_WINDOW_DAYS)
 
-    return {"intent": intent, "reply": reply, "keywords": keywords, "time_window_days": time_window_days}
+        unfiltered = bool(data.get("unfiltered") is True)
+
+    return {"intent": intent, "reply": reply, "keywords": keywords, "time_window_days": time_window_days,
+            "unfiltered": unfiltered}
 
 
 def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
@@ -2244,12 +2270,12 @@ def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
         raw = _call_claude(CLAUDE_ROUTER_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_ROUTER_MAX_TOKENS)
     except Exception as exc:
         log.warning(f"Router Claude call failed (defaulting to 'search'): {exc}")
-        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None}
+        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None}
 
     parsed = _parse_router_json(raw)
     if not parsed:
         log.warning(f"Router returned unparseable output (defaulting to 'search'): {raw[:200]!r}")
-        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None}
+        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None}
     return parsed
 
 
@@ -2987,7 +3013,8 @@ def delete_chat_session(chat_id: str, owner_key: str) -> bool:
 
 
 def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
-                        keywords: list, targeting_platform: str, time_window_days: int = None):
+                        keywords: list, targeting_platform: str, time_window_days: int = None,
+                        unfiltered: bool = False):
     """Appends a search as a new message in the chat, and auto-titles the
     chat from the very first query if it hasn't been named yet.
 
@@ -3012,6 +3039,7 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
         "keywords":           keywords,
         "targeting_platform": targeting_platform,
         "time_window_days":   time_window_days,  # (NEW) int or None — see get_matched_signals()
+        "unfiltered":         unfiltered,
         "requested_at":       now,
         "results":            [],   # filled in later: [{title, post_text, post_url, platform}, ...]
         "claude_answer":      None, # filled in once: Claude's answer text, grounded in `results`
@@ -3206,6 +3234,7 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                 msg.get("keywords", []),
                 targeting_platform=msg.get("targeting_platform", "all"),
                 since_days=msg.get("time_window_days"),
+                unfiltered=msg.get("unfiltered", False),
             )
         except Exception as exc:
             log.warning(f"Signal matching failed for topic_key={msg.get('topic_key')}: {exc}")
@@ -3237,7 +3266,12 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
 
         if needs_answer:
             try:
-                answer = analyze_with_claude(msg["query"], matched)
+                extra_ctx = None
+                if msg.get("unfiltered"):
+                    extra_ctx = flintel.build_unfiltered_answer_context(
+                        msg["query"], msg.get("time_window_days")
+                    )
+                answer = analyze_with_claude(msg["query"], matched, extra_context=extra_ctx)
                 # (POST_URL FIX) Patch in real post_url values before this
                 # answer is cached anywhere.
                 answer = _patch_post_urls_into_answer(answer, matched)
@@ -3375,8 +3409,10 @@ def search(
     active_chat_id = None
     intent = "search"
     chat_reply = None
+    routed = {}
     routed_keywords = None
     routed_time_window_days = None
+    routed_unfiltered = False
     # (CLARIFY-SELF-RESOLVE FEATURE) Captured here (not just inside the
     # try block below) so it's still safely readable afterwards even if
     # something later in the try block raises — resolve_unclear_topic()
@@ -3401,6 +3437,7 @@ def search(
         chat_reply = routed.get("reply")
         routed_keywords = routed.get("keywords")
         routed_time_window_days = routed.get("time_window_days")
+        routed_unfiltered = routed.get("unfiltered") or False
     except Exception as exc:
         log.warning(f"v5 routing step failed for query={query!r} (defaulting to normal search pipeline): {exc}")
         intent = "search"
@@ -3519,6 +3556,15 @@ def search(
             routed_keywords = website_keywords
             log.info(f"Website-derived keywords used | url={detected_url!r} | keywords={routed_keywords}")
 
+    # (unfiltered mode) routed_unfiltered as parsed from the router is NEVER
+    # trusted blindly — flintel.is_time_only_request() requires a genuine
+    # positive time_window_days before "unfiltered" is allowed to mean
+    # anything. This re-assigns routed_unfiltered to the VALIDATED result,
+    # so this same, now-safe value is what both the keywords decision below
+    # AND the add_search_to_chat(...) call further down use — an
+    # unvalidated flag is never allowed to reach either place.
+    routed_unfiltered = bool(routed_unfiltered) and flintel.is_time_only_request(routed)
+
     # (KEYWORD-GENERATION SWAP) Keywords now come from the SAME Claude
     # routing call above instead of the old plain-Python template
     # generator (or, per the two features above, from the clarify
@@ -3527,6 +3573,14 @@ def search(
     # for when none of those produced usable keywords.
     if routed_keywords:
         keywords = routed_keywords
+    elif routed_unfiltered:
+        # (unfiltered mode) A validated unfiltered request skips keyword
+        # generation entirely — get_matched_signals() takes the
+        # unfiltered=True early-return path instead of ever needing a
+        # keyword list. If routed_unfiltered is False (unvalidated, or the
+        # router never set it), this branch is never taken and behavior
+        # below is 100% identical to before this feature.
+        keywords = []
     else:
         log.warning(
             f"No usable keywords from the Claude router for query={query!r} "
@@ -3560,6 +3614,7 @@ def search(
         add_search_to_chat(
             active_chat_id, owner_key, query, topic_key, keywords, targeting_platform,
             time_window_days=time_window_days,
+            unfiltered=routed_unfiltered,
         )
         redirect_chat_id = active_chat_id
     except Exception as exc:
@@ -3750,6 +3805,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             msg.get("keywords", []),
             targeting_platform=msg.get("targeting_platform", "all"),
             since_days=msg.get("time_window_days"),
+            unfiltered=msg.get("unfiltered", False),
         )
     except Exception as exc:
         log.warning(f"Signal matching failed for streaming topic_key={topic_key}: {exc}")
@@ -3761,7 +3817,12 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
         # file already uses — no raw live Claude tokens are sent to the
         # browser anymore.
         try:
-            full_answer = analyze_with_claude(msg["query"], matched)
+            extra_ctx = None
+            if msg.get("unfiltered"):
+                extra_ctx = flintel.build_unfiltered_answer_context(
+                    msg["query"], msg.get("time_window_days")
+                )
+            full_answer = analyze_with_claude(msg["query"], matched, extra_context=extra_ctx)
         except Exception as exc:
             log.warning(f"Streaming Claude analysis failed for topic_key={topic_key}: {exc}")
             yield f"data: {json.dumps({'error': 'analysis failed'})}\n\n"
