@@ -6,7 +6,7 @@ FLINTEL — WEB SERVICE (v7 + JSON-ANALYSIS-PROMPT SWAP + CLAUDE-KEYWORD SWAP
 + ROUTER INTENT REFINEMENT)
 ============================================================================
 Everything from v3 is UNCHANGED and still works exactly as before:
-  1. Take a user prompt (brand/topic/product name) from a simple web form.
+  1. Take a user prompt (brand/topic/product name) from a simple web form. 
   2. Generate KEYWORDS (see KEYWORD-GENERATION SWAP note near the bottom
      of this docstring — this step's SOURCE changed, nothing downstream
      of it did).
