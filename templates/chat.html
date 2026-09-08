@@ -230,22 +230,36 @@
 
   .turn-block { margin-bottom: 40px; }
   .turn-block:last-child { margin-bottom: 0; }
-  .turn-row { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+  .turn-row { display: flex; justify-content: flex-end; margin-bottom: 17px; }
   .turn-question {
     background: #1e1d1b; border-radius: 16px; padding: 17px 24px;
     color: #fff; font-size: 17px; font-weight: 500; line-height: 26px;
     max-width: 80%; width: fit-content;
   }
-  .turn-meta { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
-  .turn-chip {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: #1e1d1b; border: 0.5px solid #3d3d3b; border-radius: 20px;
-    padding: 5px 12px; color: #a0a09d; font-size: 12.5px; font-weight: 500;
+  .turn-meta { display: flex; align-items: center; justify-content: flex-end; gap: 11px; margin-bottom: 24px; }
+  .turn-meta-time {
+    font-family: 'Figtree', sans-serif; font-weight: 500; font-size: 14px;
+    color: rgba(122,122,119,0.8); white-space: nowrap;
   }
-  .turn-chip.status-pending { color: #d8b74a; }
-  .turn-chip.status-completed { color: #a3e635; }
-  .turn-chip.status-failed { color: #E2645A; }
-  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+  .turn-meta-icon { width: 15.28px; height: 15.28px; border-radius: 50%; flex-shrink: 0; overflow: hidden; }
+  .turn-meta-icon img, .turn-meta-icon svg { width: 100%; height: 100%; display: block; }
+
+  /* ---------- Follow-up suggestion rows (100% Figma match, per explicit
+     instruction — literal 18px/28px, not the app's usual 17px/26px scale) ---------- */
+  .followup-row {
+    display: flex; align-items: center; gap: 30px;
+    width: 100%; height: 54px; padding: 0 20px;
+    border-radius: 16px; background: transparent;
+    transition: background .15s ease; text-align: left; cursor: pointer;
+  }
+  .followup-row + .followup-row { margin-top: 7px; }
+  .followup-row:hover { background: #1e1d1b; }
+  .followup-row-icon { flex-shrink: 0; }
+  .followup-row-text {
+    font-family: 'Figtree', sans-serif; font-weight: 500; font-size: 16px;
+    line-height: 28px; color: rgba(255,255,255,0.8);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
+  }
 
   /* Pending states — no live polling exists; this simply reflects whichever
      branch the template lands on for this message. */
@@ -671,13 +685,23 @@
           <div class="turn-block" data-topic-key="{{ msg.topic_key or '' }}"{% if pending_stream_topic_key and msg.topic_key == pending_stream_topic_key %} data-pending-stream="true"{% endif %}>
             <div class="turn-row"><div class="turn-question">{{ msg.query }}</div></div>
             <div class="turn-meta">
-              <span class="turn-chip">
-                <span class="status-dot"></span>
-                {{ msg.targeting_platform | default('all', true) }}
-              </span>
               {% if msg.requested_at %}
-              <span class="turn-chip">{{ msg.requested_at.strftime('%b %d, %Y %H:%M') if msg.requested_at.strftime else msg.requested_at }}</span>
+              <span class="turn-meta-time" data-requested-at="{{ msg.requested_at.isoformat() if msg.requested_at.isoformat else msg.requested_at }}"></span>
               {% endif %}
+              {% set plat = (msg.targeting_platform or '')|lower %}
+              <span class="turn-meta-icon">
+                {%- if plat in ['x_twitter', 'x', 'twitter'] -%}
+                <svg viewBox="0 0 24 24" fill="#000"><rect width="24" height="24" rx="12"/><path d="M18.244 8.25h1.308l-3.227 3.26 3.502 4.24H16.17l-2.214-2.817-2.786 2.817h-1.31l3.73-3.835-3.476-3.665h3.83l1.913 2.231z" fill="#fff"/></svg>
+                {%- elif plat == 'reddit' -%}
+                <svg viewBox="0 0 24 24" fill="#FF4500"><circle cx="12" cy="12" r="12"/><path d="M18.5 11.5a1.7 1.7 0 0 0-2.9-1.2 8 8 0 0 0-3.9-1.2l.7-3.2 2.2.5a1.2 1.2 0 1 0 .1-.6l-2.5-.5a.3.3 0 0 0-.35.23l-.75 3.55a8 8 0 0 0-3.95 1.2 1.7 1.7 0 1 0-1.9 2.75 2.7 2.7 0 0 0-.05.5c0 2.5 3 4.5 6.65 4.5s6.65-2 6.65-4.5a2.7 2.7 0 0 0-.05-.5 1.7 1.7 0 0 0 .2-1.55zM9.3 12.9a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8zm5.4 3.5a4 4 0 0 1-2.7.9 4 4 0 0 1-2.7-.9.3.3 0 0 1 .4-.45c.6.5 1.4.75 2.3.75s1.7-.25 2.3-.75a.3.3 0 1 1 .4.45zm-.2-1.7a.9.9 0 1 1 0-1.8.9.9 0 0 1 0 1.8z" fill="#fff"/></svg>
+                {%- elif plat == 'linkedin' -%}
+                <svg viewBox="0 0 24 24" fill="#0A66C2"><rect width="24" height="24" rx="12"/><path d="M17.04 17.04h-2.13v-3.34c0-.8-.02-1.82-1.11-1.82-1.12 0-1.29.87-1.29 1.77v3.39H10.4V9.6h2.05v.94h.03c.29-.54.98-1.11 2.02-1.11 2.16 0 2.56 1.42 2.56 3.27v4.34zM8.15 8.66a1.24 1.24 0 1 1 0-2.48 1.24 1.24 0 0 1 0 2.48zm1.06 8.38H7.09V9.6h2.12v7.44z" fill="#fff"/></svg>
+                {%- elif plat == 'facebook' -%}
+                <svg viewBox="0 0 24 24" fill="#1877F2"><circle cx="12" cy="12" r="12"/><path d="M15.9 12.3h-1.9v6h-2.5v-6H10v-2.1h1.5V8.9c0-1.5.9-2.7 2.7-2.7h1.9v2.1h-1.3c-.4 0-.6.2-.6.6v1.3h1.9l-.2 2.1z" fill="#fff"/></svg>
+                {%- else -%}
+                <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="rgba(122,122,119,0.8)" stroke-width="1.6"/></svg>
+                {%- endif -%}
+              </span>
             </div>
 
             <!-- ===================================================================
@@ -1274,20 +1298,30 @@
 
   function renderFollowupChips(followups, container) {
     if (!followups || !followups.length) return;
-    const row = document.createElement('div');
-    row.style.cssText = 'display:flex; flex-wrap:wrap; gap:10px; margin-top:20px;';
+    // Figma shows a divider line right where the section above ends,
+    // before the suggestions list starts — reusing the same
+    // .section-divider already used elsewhere in this app.
+    const divider = document.createElement('div');
+    divider.className = 'section-divider';
+    container.appendChild(divider);
+
+    const list = document.createElement('div');
     followups.forEach(text => {
-      const chip = document.createElement('button');
-      chip.type = 'button';
-      chip.textContent = text;
-      chip.style.cssText = 'background:#1e1d1b; border-radius:150px; padding:10px 16px; color:rgba(255,255,255,0.7); font-size:14px; font-weight:500; border:none; cursor:pointer;';
-      chip.addEventListener('click', () => {
+      const row = document.createElement('button');
+      row.type = 'button';
+      row.className = 'followup-row';
+      row.innerHTML = `
+        <svg class="followup-row-icon" width="14" height="12" viewBox="0 0 14 12" fill="none"><path d="M1 1V6C1 7.65685 2.34315 9 4 9H13M13 9L9 5M13 9L9 13" stroke="rgba(255,255,255,0.8)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="followup-row-text"></span>
+      `;
+      row.querySelector('.followup-row-text').textContent = text;
+      row.addEventListener('click', () => {
         const input = document.getElementById('search-input');
         if (input) { input.value = text; input.dispatchEvent(new Event('input')); input.focus(); }
       });
-      row.appendChild(chip);
+      list.appendChild(row);
     });
-    container.appendChild(row);
+    container.appendChild(list);
   }
 
   function renderSourceList(data, container) {
@@ -1670,6 +1704,31 @@
   // view below the fold. This jumps straight to it instead, same as any
   // normal chat app (WhatsApp, ChatGPT, etc.) always showing the latest
   // message rather than making you scroll down to find it yourself.
+  // ---- Relative "X ago" time for the turn-meta row ----
+  // Kept purely client-side (index.py/templates aren't touched by this
+  // change) — the raw ISO timestamp lives in data-requested-at, and this
+  // just formats it, matching Figma's "4 minutes ago" style exactly.
+  function formatRelativeTime(iso) {
+    const then = new Date(iso);
+    if (isNaN(then.getTime())) return '';
+    const seconds = Math.floor((Date.now() - then.getTime()) / 1000);
+    if (seconds < 60) return 'just now';
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+    const days = Math.floor(hours / 24);
+    return `${days} day${days === 1 ? '' : 's'} ago`;
+  }
+  function updateRelativeTimes() {
+    document.querySelectorAll('.turn-meta-time[data-requested-at]').forEach((el) => {
+      const iso = el.getAttribute('data-requested-at');
+      if (iso) el.textContent = formatRelativeTime(iso);
+    });
+  }
+  updateRelativeTimes();
+  setInterval(updateRelativeTimes, 60000); // keeps "X minutes ago" fresh without a page reload
+
   (function scrollToLatestTurn() {
     const turns = document.querySelectorAll('.turn-block');
     if (!turns.length) return;
@@ -1804,6 +1863,14 @@
     const form = document.getElementById('search-form');
     const threadInner = document.querySelector('.thread-inner');
     if (!form || !threadInner) return;
+    // Guard against duplicate listeners: this function gets re-called every
+    // time initMainPageInteractions() runs (once at load, and again after
+    // every soft navigation). If the SAME form element somehow survives
+    // across multiple calls (rather than being replaced by an innerHTML
+    // swap), attaching another listener without this check would stack up
+    // duplicate submit handlers, causing inconsistent/duplicate behavior.
+    if (form.dataset.softSubmitWired === 'true') return;
+    form.dataset.softSubmitWired = 'true';
 
     const searchInput = document.getElementById('search-input');
     const submitBtn = document.getElementById('submit-btn');
