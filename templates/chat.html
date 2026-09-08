@@ -256,9 +256,8 @@
   .followup-row:hover { background: #1e1d1b; }
   .followup-row-icon { flex-shrink: 0; }
   .followup-row-text {
-    font-family: 'Figtree', sans-serif; font-weight: 500; font-size: 16px;
+    font-family: 'Figtree', sans-serif; font-weight: 500; font-size: 18px;
     line-height: 28px; color: rgba(255,255,255,0.8);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
   }
 
   /* Pending states — no live polling exists; this simply reflects whichever
@@ -1298,14 +1297,8 @@
 
   function renderFollowupChips(followups, container) {
     if (!followups || !followups.length) return;
-    // Figma shows a divider line right where the section above ends,
-    // before the suggestions list starts — reusing the same
-    // .section-divider already used elsewhere in this app.
-    const divider = document.createElement('div');
-    divider.className = 'section-divider';
-    container.appendChild(divider);
-
     const list = document.createElement('div');
+    list.style.cssText = 'margin-top: 20px;';
     followups.forEach(text => {
       const row = document.createElement('button');
       row.type = 'button';
