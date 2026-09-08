@@ -2,7 +2,8 @@
 FLINTEL — WEB SERVICE (v7 + JSON-ANALYSIS-PROMPT SWAP + CLAUDE-KEYWORD SWAP
 + BUGFIX PACK: RESULTS/ANSWER SYNC + WORD-BOUNDARY MATCHING + 2ND-LEVEL CHUNKING
 + TIME-WINDOW / PAIN-POINT / CLARIFY FEATURE
-+ CLARIFY-SELF-RESOLVE + WEBSITE-URL KEYWORD EXTRACTION)
++ CLARIFY-SELF-RESOLVE + WEBSITE-URL KEYWORD EXTRACTION
++ ROUTER INTENT REFINEMENT)
 ============================================================================
 Everything from v3 is UNCHANGED and still works exactly as before:
   1. Take a user prompt (brand/topic/product name) from a simple web form.
@@ -467,7 +468,7 @@ rule, chunking rule, or caching rule — was touched.
    helpful follow-up question on top of the existing pipeline, it can
    never be the reason a real, clear search silently fails to run.
 
-── CLARIFY-SELF-RESOLVE FEATURE (THIS FILE) ────────────────────────────────
+── CLARIFY-SELF-RESOLVE FEATURE ────────────────────────────────────────────
 ONE small, targeted, additive change on top of everything above, scoped
 entirely to the "clarify" branch of POST /search. Nothing else in this
 file — no other route, function, constant, matching rule, or caching
@@ -513,7 +514,7 @@ message that was never classified as "clarify" in the first place (every
 "search", "chat", and "blocked" message is completely untouched by this
 feature).
 
-── WEBSITE-URL KEYWORD EXTRACTION FEATURE (THIS FILE) ──────────────────────
+── WEBSITE-URL KEYWORD EXTRACTION FEATURE ──────────────────────────────────
 ONE small, targeted, additive change on top of everything above, scoped
 entirely to the SEARCH-TYPE branch of POST /search (this includes a
 message that started as "clarify" and was just switched to "search" by
@@ -554,6 +555,84 @@ still applies exactly as before this feature. A search can therefore
 NEVER end up with zero keywords because of this feature, and a message
 with no URL in it behaves 100% identically to before this feature — this
 whole step is skipped entirely when _extract_first_url() finds nothing.
+
+── ROUTER INTENT REFINEMENT (THIS FILE) ────────────────────────────────────
+THREE small, targeted, PROMPT-ONLY changes on top of everything above.
+Zero new code paths, zero new functions, zero new routes, zero new Mongo
+fields. Every function signature, matching rule, chunking rule, caching
+rule, and template contract in this file is byte-for-byte unchanged. The
+only things that changed are the text of CLAUDE_ROUTER_SYSTEM_PROMPT and
+the text of CLAUDE_CLARIFY_FALLBACK_REPLY, described below. This addresses
+three first-impression / product-quality gaps in how the router classifies
+borderline messages:
+
+1. GENERIC PAIN-POINT PROMPTS NO LONGER MISFIRE AS "clarify":
+   Previously, a message like "reddit par log kya problems face kar rahe
+   hain" (no brand, no product, no industry — just "problems" in
+   general) could get classified as "clarify" and bounce the user with a
+   follow-up question on their very first message, which is a poor first
+   impression. The router prompt's "search" instructions now explicitly
+   state that a broad-but-real pain-point/complaint question about a
+   PLATFORM (not about "what's trending in general" — see point 2 below)
+   IS a valid, searchable "search" subject on its own: "general
+   problems/complaints/frustrations" is itself the topic. For these,
+   Claude generates keywords around common frustration/complaint phrasing
+   likely to appear in real posts (e.g. "so frustrated with", "sick of
+   dealing with", "worst experience with", "wish there was a better",
+   "fed up with") instead of refusing to search or asking a clarifying
+   question. This only ever pulls a message OUT of "clarify" and INTO
+   "search" — it never changes how an already-clear "search" message
+   (e.g. "AI agents ke baare mein pichle 6 months mein kya baat hui") is
+   classified or keyworded; those are untouched.
+
+2. TRULY OPEN-ENDED "what's happening on this platform" PROMPTS ARE
+   "chat", NOT A DATABASE SEARCH:
+   A message that names a platform but NO subject whatsoever — not even
+   a general problem/complaint angle — e.g. "reddit par kya chal raha
+   hai", "abhi reddit par top problem kya hai" with truly nothing else to
+   go on, would previously either misfire as "clarify" (asking an
+   unhelpful follow-up on message #1) or, if forced through as "search",
+   would only ever be able to generate near-meaningless keywords with
+   nothing real to filter flintel_signals by. The router prompt's "chat"
+   instructions now explicitly cover this case: classify it as "chat" (no
+   flintel_signals query, no job enqueued, "keywords"/"time_window_days"
+   stay null exactly like any other "chat" message), and have Claude
+   answer directly from its own general knowledge of what's commonly
+   discussed on that platform, in a natural, confident, professional
+   tone — then naturally invite the user to share their business,
+   product, or website link so Flintel can pull real, current, related
+   data for them specifically. This is DELIBERATELY narrower than point 1
+   above: the distinguishing line the prompt draws is "is there an actual
+   angle/problem/subject named, even a general one (-> search), or is the
+   question just 'what's happening in general' with nothing else (->
+   chat)". A message that names ANY real subject alongside the platform —
+   a brand, product, industry, or general problem/complaint angle — is
+   "search", never this "chat" case.
+
+3. THE "clarify" REPLY NOW SOUNDS LIKE A CONSULTANT, NOT A FORM
+   VALIDATOR:
+   With points 1 and 2 above narrowing when "clarify" fires at all (down
+   to messages that are search-shaped but give NOTHING to work with —
+   not even a general problem angle, not even a platform to riff on),
+   the router's instructions for writing a "clarify" reply now ask
+   Claude to briefly explain WHY it's asking (so the search actually
+   finds something relevant) and to offer the user two ways forward in
+   one natural sentence: name a topic/brand/industry, OR just paste
+   their website link — which the EXISTING, UNCHANGED WEBSITE-URL
+   KEYWORD EXTRACTION FEATURE above already knows how to read
+   automatically on their very next message. CLAUDE_CLARIFY_FALLBACK_REPLY
+   (the safety-net string used only if the router flagged "clarify" but
+   didn't return usable reply text) was reworded to match this same
+   consultant tone and to mention the website-link option, so the
+   fallback and the router's own reply sound consistent.
+
+SAFETY NET (same philosophy as the rest of this file): all three changes
+are pure prompt wording inside CLAUDE_ROUTER_SYSTEM_PROMPT plus the
+CLAUDE_CLARIFY_FALLBACK_REPLY string. The existing "ANY router failure ->
+default to intent='search'" fallback in classify_and_maybe_chat(), the
+existing generate_fuzzy_keywords() safety net, and every other safety net
+already documented above are completely unaffected — a routing hiccup
+still can never block or under-supply a genuine search, exactly as before.
 
 EVERYTHING ELSE IN THIS FILE — every other route, function, constant,
 prompt, matching rule, chunking rule, caching rule, and template contract
@@ -681,13 +760,13 @@ RESPONSE_TIMEOUT = int(os.getenv("RESPONSE_TIMEOUT", "60"))
 STREAM_CHUNK_CHARS         = int(os.getenv("STREAM_CHUNK_CHARS", "3"))
 STREAM_CHUNK_DELAY_SECONDS = float(os.getenv("STREAM_CHUNK_DELAY_SECONDS", "0.02"))
 
-# ── Clarify-self-resolve config (NEW) ───────────────────────────────────────
+# ── Clarify-self-resolve config ─────────────────────────────────────────────
 # Max tokens for the single extra Claude call resolve_unclear_topic() makes
 # — see that function and the CLARIFY-SELF-RESOLVE FEATURE module docstring
 # note above.
 CLAUDE_TOPIC_RESOLVER_MAX_TOKENS = int(os.getenv("CLAUDE_TOPIC_RESOLVER_MAX_TOKENS", "400"))
 
-# ── Website-URL keyword extraction config (NEW) ─────────────────────────────
+# ── Website-URL keyword extraction config ───────────────────────────────────
 # See the WEBSITE-URL KEYWORD EXTRACTION FEATURE module docstring note
 # above, and fetch_website_text() / extract_keywords_from_website() below.
 MAX_WEBSITE_KEYWORDS               = int(os.getenv("MAX_WEBSITE_KEYWORDS", "20"))
@@ -1806,15 +1885,19 @@ def analyze_with_claude_stream(query: str, matched_signals: list):
 
 # ─────────────────────────────────────────────────────────────────────────────
 # CLAUDE ROUTING LAYER (v5, extended in v6 with abuse/harm blocking, again
-# with keyword generation, and now again with time-window parsing,
-# pain-point-aware keyword generation, and a 4th "clarify" intent)
+# with keyword generation, again with time-window parsing, pain-point-aware
+# keyword generation, and a 4th "clarify" intent, and now again with the
+# ROUTER INTENT REFINEMENT described in the module docstring above)
 #
 # Runs BEFORE anything else in POST /search. A single cheap Claude call
 # decides whether the user's message is a genuine "search" (wants social-
-# listening data pulled about a brand/product/topic), a plain "chat"
-# message, "blocked" (abusive/harmful content), or (new) "clarify" (a
-# search-shaped message with no clear topic/subject/industry to search
-# for at all).
+# listening data pulled about a brand/product/topic, INCLUDING a general
+# pain-point/complaint angle on a platform — see ROUTER INTENT REFINEMENT),
+# a plain "chat" message (INCLUDING a truly open-ended "what's happening on
+# this platform" question with no subject at all — see ROUTER INTENT
+# REFINEMENT), "blocked" (abusive/harmful content), or "clarify" (a
+# search-shaped message with truly nothing — not even a general angle — to
+# search for).
 #
 # (KEYWORD-GENERATION SWAP) The SAME call now ALSO returns a "keywords"
 # field when intent="search" — still just ONE Claude call total, no new
@@ -1873,6 +1956,23 @@ optional time window.
        seller's own product or company name. Read whatever problem the
        user actually describes and reflect that back — never assume a
        fixed industry or fixed symptom list.
+     - GENERAL PAIN-POINT / COMPLAINT PATTERN (no brand, product, or
+       industry named at all): a message like "reddit par log kya
+       problems face kar rahe hain" or "what are people complaining
+       about on twitter" names NO specific brand/product/industry, but it
+       DOES name a real, searchable subject — general problems/
+       complaints/frustrations on that platform. Treat this as "search"
+       (NOT "clarify" — see the "clarify" rules below), and generate
+       keywords around common frustration/complaint phrasing that would
+       plausibly appear in real posts, e.g. "so frustrated with", "sick
+       of dealing with", "worst experience with", "wish there was a
+       better", "fed up with", "nightmare trying to", "why is it so hard
+       to", "anyone else hate". This is DIFFERENT from the fully
+       open-ended "what's happening on this platform" case described
+       under "chat" below — the distinguishing line is whether the user
+       named ANY angle (a brand, a product, an industry, or a general
+       problem/complaint framing) versus naming nothing at all beyond the
+       platform itself.
      - Every keyword must be something that could plausibly appear
        verbatim, or as a close natural substring, inside a real post's
        title or text. Keep each keyword short and natural.
@@ -1910,6 +2010,31 @@ optional time window.
    normal conversation. "keywords" and "time_window_days" must be null
    for this type.
 
+   ALSO classify as "chat" (not "search", not "clarify") when the message
+   asks a broad, platform-wide "what's trending / what's happening / what
+   are the top problems right now" question with NO specific brand,
+   product, narrower topic, or industry named, AND no general problem/
+   complaint framing either — e.g. "reddit par kya chal raha hai", "abhi
+   reddit par top problem kya hai", "what's trending on twitter today"
+   with truly nothing else to go on. For these, do NOT generate search
+   keywords and do NOT trigger a database search — instead, write the
+   "reply" yourself using your own general knowledge of what's commonly
+   discussed on that platform, in a natural, confident, professional tone
+   (not hedgy, not "as an AI I don't have real-time access" — just answer
+   plainly from what you know). At the end of that reply, naturally
+   invite them to share their business, product, or website link so
+   Flintel can pull real, current, related data for them specifically.
+   "keywords" and "time_window_days" stay null for this case, exactly
+   like any other "chat" message.
+
+   This "chat" case is DIFFERENT from the GENERAL PAIN-POINT / COMPLAINT
+   PATTERN described under "search" above: if the user names ANY angle at
+   all — a brand, product, industry, or even just a general problem/
+   complaint framing (e.g. "reddit par log kya problems face kar rahe
+   hain") — that IS "search", not this "chat" case. The distinguishing
+   factor is simple: is there an actual searchable angle, or is the
+   question just "what's happening in general" with nothing else?
+
 3. "blocked" — the message is abusive, harassing, hateful, sexually
    explicit, threatening, or otherwise harmful (directed at you, at a
    person, or at any group). Do not search for it and do not answer it
@@ -1922,20 +2047,30 @@ optional time window.
 4. "clarify" — the message is clearly ASKING for a search/social-listening
    pull (it has search-shaped phrasing: "reddit posts", "show me", "find
    me", a time range, etc.) but does NOT actually name any clear
-   topic/brand/product/industry/subject to search for — neither in the
-   message itself nor anywhere in the short conversation history below.
-   Examples: "aaj ke reddit posts dikhao" alone, "last 6 months ke posts
-   do" alone, "show me today's posts" with nothing else — there is no
-   brand, product, topic, industry, or problem mentioned anywhere for
-   Flintel to actually search. In this case, do NOT guess a topic and do
-   NOT fall back to some generic/meaningless keyword. Instead, write a
-   short, natural, single clarifying question asking what topic/brand/
-   industry/problem they want to look into. "keywords" and
-   "time_window_days" must be null for this type (there is no job to run
-   yet). IMPORTANT: only use "clarify" when the TOPIC itself is missing —
-   a message that clearly names a topic/brand/industry but simply doesn't
-   mention a time range is STILL "search" with time_window_days: null,
-   never "clarify".
+   topic/brand/product/industry/subject to search for, and does NOT even
+   name a general problem/complaint angle (see the GENERAL PAIN-POINT /
+   COMPLAINT PATTERN under "search" above, which is a "search", not a
+   "clarify") — neither in the message itself nor anywhere in the short
+   conversation history below. Examples: "aaj ke reddit posts dikhao"
+   alone, "last 6 months ke posts do" alone, "show me today's posts" with
+   nothing else — there is no brand, product, topic, industry, or problem
+   mentioned anywhere for Flintel to actually search. In this case, do
+   NOT guess a topic and do NOT fall back to some generic/meaningless
+   keyword. Instead, write a short, natural, single clarifying question
+   asking what topic/brand/industry/problem they want to look into.
+   "keywords" and "time_window_days" must be null for this type (there is
+   no job to run yet). IMPORTANT: only use "clarify" when the TOPIC itself
+   is missing — a message that clearly names a topic/brand/industry (or
+   even just a general problem angle) but simply doesn't mention a time
+   range is STILL "search" with time_window_days: null, never "clarify".
+
+   When writing the clarifying reply, sound like a helpful consultant, not
+   a form validator: briefly explain WHY you're asking (so the search
+   actually finds something relevant to them), and in one natural
+   sentence give them two easy ways forward — name a topic/brand/
+   industry, OR just paste their website link, since Flintel can read a
+   shared website link automatically and pull the right keywords from it.
+   Keep it to 1-2 natural sentences, never robotic or repetitive-sounding.
 
 A short, auto-summarized conversation history (may be empty) is given
 below for continuity when classifying and when writing a "chat",
@@ -1971,13 +2106,19 @@ CLAUDE_BLOCKED_FALLBACK_REPLY = (
     "product, or topic instead, or just chat about something else."
 )
 
-# (TIME-WINDOW / PAIN-POINT / CLARIFY FEATURE) Same safety-net pattern as
-# CLAUDE_BLOCKED_FALLBACK_REPLY above: used only if the router flagged
-# "clarify" but didn't return usable reply text — never re-sent to Claude,
-# a plain generic clarifying question is enough.
+# (TIME-WINDOW / PAIN-POINT / CLARIFY FEATURE, reworded by ROUTER INTENT
+# REFINEMENT) Same safety-net pattern as CLAUDE_BLOCKED_FALLBACK_REPLY
+# above: used only if the router flagged "clarify" but didn't return
+# usable reply text — never re-sent to Claude. Reworded to match the same
+# consultant tone the router prompt now asks for, and to mention the
+# website-link shortcut (handled automatically by the existing,
+# UNCHANGED WEBSITE-URL KEYWORD EXTRACTION FEATURE on the user's next
+# message).
 CLAUDE_CLARIFY_FALLBACK_REPLY = (
-    "Happy to pull that up — which brand, product, topic, or industry "
-    "would you like me to look into?"
+    "Bilkul — bas yeh batayein aap kis brand, product, ya industry ke "
+    "baare mein Reddit aur baaki platforms se data dekhna chahte hain. "
+    "Agar apni website ka link bhi share kar dein, main us se directly "
+    "aap ke business se related conversations nikaal dunga."
 )
 
 
@@ -2010,7 +2151,13 @@ def _parse_router_json(raw: str):
         quoted), clamped between 1 and MAX_TIME_WINDOW_DAYS. Anything
         else (missing, null, zero, negative, non-numeric, or intent !=
         "search") simply results in time_window_days=None, meaning "no
-        time filter" — the exact same as if this feature didn't exist."""
+        time filter" — the exact same as if this feature didn't exist.
+
+    (ROUTER INTENT REFINEMENT) This function's logic is completely
+    UNCHANGED — the refinement is pure prompt wording inside
+    CLAUDE_ROUTER_SYSTEM_PROMPT above; the four valid intents, their
+    field shapes, and every validation/clamping rule here are identical
+    to before."""
     if not raw:
         return None
     cleaned = raw.strip()
@@ -2068,9 +2215,10 @@ def _parse_router_json(raw: str):
 
 def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
     """(v5, extended in v6 with abuse-blocking, again with keyword
-    generation, and now again with time-window parsing + a "clarify"
-    intent) Single cheap Claude call that classifies the user's message
-    as "search", "chat", "blocked", or "clarify" and:
+    generation, again with time-window parsing + a "clarify" intent, and
+    now again with the ROUTER INTENT REFINEMENT prompt wording described
+    in the module docstring) Single cheap Claude call that classifies the
+    user's message as "search", "chat", "blocked", or "clarify" and:
       - for "chat"/"blocked"/"clarify", writes the reply in the same
         call, and
       - for "search", ALSO returns the keyword list and time window to
@@ -2083,7 +2231,10 @@ def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
     genuine search request (the /search route falls back to
     generate_fuzzy_keywords() whenever keywords come back None for a
     "search" intent, and treats a missing time_window_days as "no time
-    filter", exactly as before this feature)."""
+    filter", exactly as before this feature).
+
+    (ROUTER INTENT REFINEMENT) This function's logic is completely
+    UNCHANGED — only the text of CLAUDE_ROUTER_SYSTEM_PROMPT changed."""
     user_message = (
         f"Conversation so far (auto-summarized, may be empty):\n"
         f"{chat_summary or '(no earlier messages in this chat)'}\n\n"
@@ -2103,13 +2254,18 @@ def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# CLARIFY-SELF-RESOLVE FEATURE (NEW) — see the module docstring note above
-# for the full rationale. Only ever invoked for a message the main router
+# CLARIFY-SELF-RESOLVE FEATURE — see the module docstring note above for
+# the full rationale. Only ever invoked for a message the main router
 # above already classified as intent="clarify". Uses ONE extra cheap
 # Claude call, Claude's own general knowledge only (no web-search tool,
 # no new information beyond the message + the existing rolling chat
 # summary), to make a single honest attempt at resolving the topic before
 # the existing clarify-question flow is allowed to fire.
+#
+# (ROUTER INTENT REFINEMENT) UNTOUCHED by this file's changes: with
+# "clarify" now firing less often (per point 1 and 2 of the ROUTER INTENT
+# REFINEMENT note above), this feature simply gets invoked less often —
+# its own logic, prompt, and behavior are completely unchanged.
 # ─────────────────────────────────────────────────────────────────────────────
 
 CLAUDE_TOPIC_RESOLVER_SYSTEM_PROMPT = """
@@ -2235,11 +2391,17 @@ def resolve_unclear_topic(query: str, chat_summary: str):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# WEBSITE-URL KEYWORD EXTRACTION FEATURE (NEW) — see the module docstring
-# note above for the full rationale. Only ever invoked for a search-type
+# WEBSITE-URL KEYWORD EXTRACTION FEATURE — see the module docstring note
+# above for the full rationale. Only ever invoked for a search-type
 # message whose raw text contains an http(s) URL. Fetches that URL, turns
 # it into plain text, and hands it (together with the user's own request
 # text) to a single extra cheap Claude call to produce the keyword list.
+#
+# (ROUTER INTENT REFINEMENT) UNTOUCHED by this file's changes — this is
+# the exact feature the new "clarify" reply wording (see
+# CLAUDE_CLARIFY_FALLBACK_REPLY and the router's "clarify" instructions
+# above) now proactively points the user toward. Nothing in this section
+# was modified.
 # ─────────────────────────────────────────────────────────────────────────────
 
 _URL_REGEX = re.compile(r'https?://[^\s<>"\')\]]+', re.IGNORECASE)
@@ -2869,11 +3031,11 @@ def add_chat_message_to_chat(chat_id: str, owner_key: str, query: str, answer: s
     flintel_search_jobs entry, no post-card results, no signal matching
     ever happens for these. This is for messages classify_and_maybe_chat()
     decided were just normal chat (greetings, small talk, general
-    questions, follow-ups, etc.), (v6) a polite decline for a "blocked"
-    message, or (NEW) a clarifying question for a "clarify" message — all
-    three are saved with the exact same shape, since all render
-    identically (query + answer text, no post cards), so no template
-    changes are needed.
+    questions, follow-ups, the open-ended "what's happening on this
+    platform" case, etc.), (v6) a polite decline for a "blocked" message,
+    or a clarifying question for a "clarify" message — all three are
+    saved with the exact same shape, since all render identically (query
+    + answer text, no post cards), so no template changes are needed.
 
     Completely separate from add_search_to_chat() above, which is
     untouched and still used for every actual search-type message exactly
@@ -3194,11 +3356,13 @@ def search(
     # ─────────────────────────────────────────────────────────────────────
     # v5 ROUTING STEP (v6: abuse/harm screening; KEYWORD-GENERATION SWAP:
     # keyword list; TIME-WINDOW/PAIN-POINT/CLARIFY FEATURE: time window +
-    # pain-point-aware keywords + a 4th "clarify" intent) — runs BEFORE
-    # anything else below. Decides whether this message is "search" (the
-    # pipeline below runs), "chat" (Claude answers directly), "blocked"
-    # (Claude declines directly), or "clarify" (Claude asks a short
-    # follow-up question instead of guessing a topic).
+    # pain-point-aware keywords + a 4th "clarify" intent; ROUTER INTENT
+    # REFINEMENT: prompt-only tightening of when "chat"/"search"/"clarify"
+    # each fire — see the module docstring) — runs BEFORE anything else
+    # below. Decides whether this message is "search" (the pipeline below
+    # runs), "chat" (Claude answers directly), "blocked" (Claude declines
+    # directly), or "clarify" (Claude asks a short follow-up question
+    # instead of guessing a topic).
     #
     # Owner/active-chat resolution + the router call itself are wrapped
     # in one try/except: ANY failure here falls back to intent="search"
@@ -3242,16 +3406,16 @@ def search(
         intent = "search"
 
     # ─────────────────────────────────────────────────────────────────────
-    # CLARIFY-SELF-RESOLVE (NEW) — before ever falling back to asking the
-    # user, make ONE best-effort attempt to resolve the topic using
-    # Claude's own knowledge (no web search, no new information beyond the
-    # message + the existing rolling chat summary). If that succeeds, this
-    # message is switched to a NORMAL "search" from here on — 100% as-is,
-    # using whatever keywords/time_window_days it resolved, falling
-    # straight through into the exact same pipeline below. If it can't
-    # confidently resolve anything, or the call fails outright, intent
-    # stays "clarify" and the EXISTING clarify-question flow immediately
-    # below runs completely unchanged.
+    # CLARIFY-SELF-RESOLVE — before ever falling back to asking the user,
+    # make ONE best-effort attempt to resolve the topic using Claude's own
+    # knowledge (no web search, no new information beyond the message +
+    # the existing rolling chat summary). If that succeeds, this message
+    # is switched to a NORMAL "search" from here on — 100% as-is, using
+    # whatever keywords/time_window_days it resolved, falling straight
+    # through into the exact same pipeline below. If it can't confidently
+    # resolve anything, or the call fails outright, intent stays
+    # "clarify" and the EXISTING clarify-question flow immediately below
+    # runs completely unchanged.
     # ─────────────────────────────────────────────────────────────────────
     if intent == "clarify":
         resolved = None
@@ -3271,7 +3435,7 @@ def search(
     # ── signal-matching pipeline at all. (v6: "blocked" reuses the exact ──
     # ── same handling as "chat"; "clarify" reuses it too — same message  ──
     # ── shape, same redirect — only where the answer text comes from     ──
-    # ── below differs. NEW: "clarify" only ever reaches here if the      ──
+    # ── below differs. "clarify" only ever reaches here if the           ──
     # ── CLARIFY-SELF-RESOLVE step above couldn't resolve a topic.)       ──
     if intent in ("chat", "blocked", "clarify"):
         if intent == "blocked":
@@ -3281,8 +3445,9 @@ def search(
             answer = (chat_reply or "").strip() or CLAUDE_BLOCKED_FALLBACK_REPLY
         elif intent == "clarify":
             # Same pattern: never re-sent to Claude for a fallback — a
-            # generic clarifying question is enough if the router's own
-            # reply text was missing/unusable for some reason.
+            # consultant-style clarifying question is enough if the
+            # router's own reply text was missing/unusable for some
+            # reason.
             answer = (chat_reply or "").strip() or CLAUDE_CLARIFY_FALLBACK_REPLY
         else:
             answer = (chat_reply or "").strip()
@@ -3326,7 +3491,7 @@ def search(
     # ── it is treated 100% identically to any other search message.)   ──
 
     # ─────────────────────────────────────────────────────────────────────
-    # WEBSITE-URL KEYWORD EXTRACTION (NEW) — if the user's message itself
+    # WEBSITE-URL KEYWORD EXTRACTION — if the user's message itself
     # contains a URL (e.g. "yeh meri website [url] hai, ... dikhao"), try
     # to fetch that website and have Claude extract up to
     # MAX_WEBSITE_KEYWORDS keywords from ITS content (combined with the
@@ -3356,7 +3521,7 @@ def search(
 
     # (KEYWORD-GENERATION SWAP) Keywords now come from the SAME Claude
     # routing call above instead of the old plain-Python template
-    # generator (or, per the two new features above, from the clarify
+    # generator (or, per the two features above, from the clarify
     # self-resolve step or the website-URL extraction step). generate_
     # fuzzy_keywords() is KEPT, unchanged, purely as a safety-net fallback
     # for when none of those produced usable keywords.
@@ -3462,7 +3627,7 @@ def view_chat(request: Request, chat_id: str):
     should not be displayed here. (v5) A message with
     `"message_type": "chat"` has no `results` to show (it's always an
     empty list) — just render `query` + `claude_answer` like a normal
-    conversational turn, with no post cards underneath. (v6/NEW) A polite
+    conversational turn, with no post cards underneath. (v6) A polite
     "blocked" decline, a "clarify" clarifying question, and a timeout
     "nothing found yet" answer all use this exact same rendering path
     already — no template changes needed for any of them.
