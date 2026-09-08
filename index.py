@@ -1,6 +1,7 @@
 """
 FLINTEL — WEB SERVICE (v7 + JSON-ANALYSIS-PROMPT SWAP + CLAUDE-KEYWORD SWAP
-+ BUGFIX PACK: RESULTS/ANSWER SYNC + WORD-BOUNDARY MATCHING + 2ND-LEVEL CHUNKING)
++ BUGFIX PACK: RESULTS/ANSWER SYNC + WORD-BOUNDARY MATCHING + 2ND-LEVEL CHUNKING
++ TIME-WINDOW / PAIN-POINT / CLARIFY FEATURE)
 ============================================================================
 Everything from v3 is UNCHANGED and still works exactly as before:
   1. Take a user prompt (brand/topic/product name) from a simple web form.
@@ -105,6 +106,7 @@ Required env vars (add to .env):
     CLAUDE_NOTES_PER_CHUNK=8                 # optional, this is the default (new, see BUGFIX PACK #3 below)
     STREAM_CHUNK_CHARS=3                     # optional, this is the default (new, see SIMULATED-STREAM FIX below)
     STREAM_CHUNK_DELAY_SECONDS=0.02          # optional, this is the default (new, see SIMULATED-STREAM FIX below)
+    MAX_TIME_WINDOW_DAYS=3650                # optional, this is the default (new, see TIME-WINDOW FEATURE below)
 
 ── v4.1 FIX ───────────────────────────────────────────────────────────────
 Only ONE behavior changed from the v4 file above: the /search route used to
@@ -320,27 +322,14 @@ changed. Concretely:
     downstream functions that always consumed it.
 
   - NOTE ON "TODAY'S POSTS" STYLE PROMPTS (e.g. "today reddit posts about
-    X"): this file has never had, and still does not have, any date/time
-    filtering. get_matched_signals() sorts candidate signals by
-    `created_utc` DESCENDING (most recent first) and then applies the
-    existing MAX_MATCHED_RESULTS / MAX_POSTS_PER_PLATFORM caps — so in
-    practice the most recently ingested matching posts are exactly what
-    gets sent to Claude (respecting the same per-platform limits as
-    every other search), which is the closest existing behavior gets to
-    "today's posts". A word like "today" in the prompt does not add any
-    new filtering by itself — Claude will fold it into the KEYWORD list
-    it returns only if it's actually part of the topic's wording, not as
-    a date filter, since no date-filtering mechanism exists here to wire
-    it into. Adding real date-range filtering would be a separate,
-    explicit change to get_matched_signals() — intentionally not done
-    here, since it wasn't part of what was asked.
+    X"): this used to have no date/time filtering at all — see the
+    TIME-WINDOW FEATURE note near the bottom of this docstring for how
+    that changed.
 
 ── BUGFIX PACK — RESULTS/ANSWER SYNC + WORD-BOUNDARY MATCHING + 2ND-LEVEL
-   CHUNKING (THIS FILE) ───────────────────────────────────────────────────
+   CHUNKING ────────────────────────────────────────────────────────────────
 Three small, targeted, purely-additive/tightening changes on top of
-everything above. Nothing else in this file was touched — every other
-function, route, constant, and prompt is otherwise identical to the file
-described above.
+everything above.
 
 1. RESULTS/ANSWER SYNC BUG FIX:
    Previously, `results` (post cards) and `claude_answer` (Claude's JSON
@@ -350,288 +339,130 @@ described above.
    "disallowed" JSON payload (Claude explicitly saying nothing relevant
    was found) while `results` still showed whatever get_matched_signals()
    loosely matched — visibly contradicting the answer text in the chat
-   UI (Claude says "no relevant posts found" while post cards for
-   unrelated posts render right below it).
-   Fix: a new tiny helper, _extract_claude_format(), best-effort parses
-   whatever claude_answer text is available (freshly generated this call,
-   or already cached on the message) and reads its "format" field. If
-   that format is one of _NO_DATA_CLAUDE_FORMATS ("no_results",
-   "not_available", "disallowed"), the post-card `results` for that same
-   message are treated as empty for this render/save instead of showing
-   the loosely-matched posts Claude itself already rejected. If the
-   answer can't be parsed as JSON (old plain-text answers, a failed
-   Claude call, or any other format) this has NO effect — results render
-   exactly as before, so this can only ever hide results in the one
-   specific case where Claude's own JSON explicitly said there was
-   nothing relevant, never in any other case. save_signal_results_to_chat()
-   itself is UNCHANGED (still a no-op on an empty/falsy results list, so
-   nothing new is ever force-written to the DB by this fix).
+   UI. Fix: a new tiny helper, _extract_claude_format(), best-effort
+   parses whatever claude_answer text is available and reads its
+   "format" field. If that format is one of _NO_DATA_CLAUDE_FORMATS
+   ("no_results", "not_available", "disallowed"), the post-card `results`
+   for that same message are treated as empty for this render/save
+   instead of showing the loosely-matched posts Claude itself already
+   rejected.
 
 2. WORD-BOUNDARY KEYWORD MATCHING (v7 substring-matching tightened):
    _text_matches_keyword() used to do a bare Python `in` substring check,
    so a short/generic keyword like "buy" matched inside completely
-   unrelated words like "buying" or "buyer" inside any post's title/text
-   — this is what let irrelevant Reddit posts (used cars, office chairs,
-   motorcycle accessories) get matched purely because a generic word
-   fragment happened to appear inside them. Fixed by switching to a
+   unrelated words like "buying" or "buyer". Fixed by switching to a
    regex `\b<keyword>\b` word-boundary match instead of plain substring
-   containment — a keyword must now appear as a whole word/phrase, not as
-   a fragment glued onto other letters. This is the ONLY change in this
-   function; its signature, its callers, and the OR-based matching logic
-   in get_matched_signals() are all otherwise identical. The Mongo query
-   pre-filter inside get_matched_signals() is intentionally left as a
-   loose superset fetch (unchanged) since the real accept/reject decision
-   has always happened here in Python — tightening only this function is
-   enough to stop the false positives from ever reaching `matched`.
+   containment.
 
-3. SECOND-LEVEL NOTE CHUNKING (new, additive-only, inside
-   analyze_with_claude()):
-   The existing map-reduce (posts chunked into CLAUDE_POSTS_PER_CHUNK
-   batches, each condensed into one "notes" string via _map_chunk(), all
-   notes then joined into a single final reduce call) is completely
-   UNCHANGED for the common case. This adds ONE new safety net: if the
-   number of condensed notes itself grows past a new
-   CLAUDE_NOTES_PER_CHUNK env var (default 8) — i.e. a topic had enough
-   matched posts to need many first-level chunks — those notes are
-   themselves chunked into batches of CLAUDE_NOTES_PER_CHUNK and each
-   batch gets one extra cheap Claude call (_condense_notes_chunk(), using
-   a new CLAUDE_NOTES_REDUCE_SYSTEM_PROMPT that only consolidates and
-   de-duplicates existing grounded notes, never invents anything new)
-   BEFORE the final reduce call — so the final reduce call always sees a
-   manageable, bounded amount of text no matter how many posts were
-   matched for a topic. For any topic with CLAUDE_NOTES_PER_CHUNK or
-   fewer notes (the overwhelming majority of real searches), this new
-   step never triggers, and analyze_with_claude()'s behavior is 100%
-   identical to before this bugfix pack.
+3. SECOND-LEVEL NOTE CHUNKING (additive-only, inside
+   analyze_with_claude()): if the number of condensed first-level notes
+   itself grows past CLAUDE_NOTES_PER_CHUNK (default 8), those notes are
+   themselves chunked and each batch gets one extra cheap Claude call
+   (_condense_notes_chunk()) BEFORE the final reduce call, so the final
+   reduce call always sees a bounded amount of text.
 
-── STREAMING ADD-ON + POST_URL PATCH FIX (THIS FILE) ────────────────────────
-TWO small, targeted, purely-additive changes on top of everything above.
-Nothing else in this file — no other route, function, constant, prompt,
-matching rule, chunking rule, or caching rule — was touched.
+── STREAMING ADD-ON + POST_URL PATCH FIX + STREAMING WIRING FIX +
+   HOME() CRASH FIX + SIMULATED-STREAM FIX ──────────────────────────────────
+(All unchanged from the prior file — word-by-word simulated typing via
+GET /chat/{chat_id}/stream, real post_url patching into Claude's JSON
+answer via _patch_post_urls_into_answer(), the skip_topic_key hand-off
+between _fill_in_message_outputs() and the streaming route, the
+pending_stream_topic_key crash fix in home(), and the "assemble complete
+answer -> patch links -> pace it out via SSE" rebuild of the streaming
+route. See inline comments on each piece below for the full detail — none
+of this was touched by the feature added in this file.)
 
-1. STREAMING (word-by-word Claude output, additive only):
-   Previously, `_call_claude()` always blocked until Claude's ENTIRE
-   response was ready before returning it — the user's screen showed
-   nothing at all for the whole duration of a call, then the full answer
-   appeared all at once. This adds a purely ADDITIVE alternate path:
-     - `_call_claude_stream()` — the exact same Anthropic Messages API
-       call as `_call_claude()`, except with `"stream": true`, yielding
-       each text delta AS Anthropic streams it back, instead of
-       collecting and returning one final string.
-     - `analyze_with_claude_stream()` — mirrors analyze_with_claude()'s
-       exact branches (no posts / single call / map-reduce, including
-       the BUGFIX PACK #3 second-level note chunking), byte-for-byte
-       identical logic, EXCEPT the one call whose text the user actually
-       reads (the final call) uses `_call_claude_stream()` instead of
-       `_call_claude()`, so that specific answer streams in live. Any
-       earlier map/notes-condense calls (never shown to the user) are
-       UNCHANGED — still plain, blocking `_call_claude()` calls, exactly
-       as in analyze_with_claude(). NOTE: as of the SIMULATED-STREAM FIX
-       below, this function is kept fully intact but is no longer called
-       by `GET /chat/{chat_id}/stream` — see that fix for why.
-     - `GET /chat/{chat_id}/stream` — a new Server-Sent-Events route a
-       template can optionally open (e.g. via EventSource/fetch-stream)
-       to watch one message's answer arrive live. On completion it saves
-       the fully-assembled answer through the EXACT SAME
-       save_claude_answer_to_chat()/append_to_chat_summary()/
-       save_signal_results_to_chat() calls already used everywhere else
-       in this file, so the caching guarantee is identical: generated
-       (and billed) once, then served from the cache forever after,
-       whether that generation happened via this new streaming route or
-       the existing blocking path.
-   `_call_claude()` and `analyze_with_claude()` themselves are completely
-   UNTOUCHED and remain exactly what every existing caller
-   (classify_and_maybe_chat, _map_chunk, _condense_notes_chunk,
-   _fill_in_message_outputs, the RESPONSE_TIMEOUT fallback) uses, exactly
-   as before. If a template never opens the new stream route, behavior
-   for every existing page/flow is 100% unchanged.
+── TIME-WINDOW / PAIN-POINT / CLARIFY FEATURE (THIS FILE) ──────────────────
+THREE small, targeted, additive changes on top of everything above.
+Nothing else in this file — no other route, function, constant, matching
+rule, chunking rule, or caching rule — was touched.
 
-2. POST_URL PATCH FIX:
-   CLAUDE_ANALYSIS_SYSTEM_PROMPT's "source_list"/"comparison" formats ask
-   Claude to include a "link" field with "the real post URL if
-   available" on every post — but Claude is deliberately NEVER shown
-   post_url (see build_claude_post_context(), unchanged), so it could
-   never actually know one, and would always either omit "link" or risk
-   guessing. Fix: a new best-effort, purely-additive post-processing
-   step — `_patch_post_urls_into_answer()` (using a small helper,
-   `_best_matching_post()`) — runs AFTER analyze_with_claude() /
-   analyze_with_claude_stream() has already produced the answer text.
-   It parses that JSON, walks the "source_list"/"comparison" post lists,
-   matches each post's "title" back to one of THIS message's already-
-   matched signals, and sets "link" to that signal's REAL post_url — the
-   exact same URL the post cards already use, computed by
-   get_matched_signals(), never anything Claude itself supplied or
-   guessed. If the answer isn't valid JSON, isn't one of those two
-   formats, no confident title match is found, or there are no matched
-   signals at all, the original answer text is returned completely
-   UNCHANGED — this can only ever ADD a real link where one is
-   confidently resolvable, never remove or alter anything else in the
-   answer, and Claude itself is still never shown a URL, so it still can
-   never invent one. Applied in exactly two places: inside
-   `_fill_in_message_outputs()` right after a fresh (non-streaming)
-   answer is generated, and (as of the SIMULATED-STREAM FIX below) inside
-   the streaming route right after the FULL answer is collected but
-   BEFORE any of it is streamed out to the browser — both immediately
-   before that same answer is cached via save_claude_answer_to_chat(), so
-   every persisted answer, and now every answer the user ever actually
-   sees on screen (streamed or not), gets the same real-link patch-up
-   first.
+1. TIME-WINDOW FILTERING (new, previously this file had NO date filtering
+   at all):
+   - CLAUDE_ROUTER_SYSTEM_PROMPT now ALSO returns a "time_window_days"
+     field (an integer, or null) whenever the user's message itself
+     implies a time range ("last 7 days" -> 7, "last 6 months" -> ~180,
+     "today"/"aaj" -> 1, "this week" -> 7, "past month" -> 30, etc.). If
+     the user gives no time range at all, this stays null and behavior is
+     100% identical to before this feature — no filtering is applied.
+   - This is stored on the message (add_search_to_chat() gained one new
+     parameter, `time_window_days`) exactly like `keywords` already is,
+     so it stays consistent across page reloads / re-renders of the same
+     message.
+   - get_matched_signals() gained ONE new optional parameter,
+     `since_days: int = None` (default None = old behavior, unchanged).
+     When provided, it adds an ADDITIONAL AND-condition on top of the
+     existing keyword-matching logic: only signals whose `created_utc`
+     falls within the last `since_days` days are eligible to match at
+     all. This is a pure narrowing on top of keyword matching, never a
+     replacement for it — a signal still has to pass the exact same
+     search_keyword / title / post_text keyword checks as before; the
+     time window just additionally excludes anything older than the
+     window. The Mongo query itself gets a `created_utc: {"$gte": cutoff}`
+     clause ANDed with the existing keyword `$or` clause, so old signals
+     are excluded at the database level, not just in the Python loop.
+   - `_fill_in_message_outputs()` and `GET /chat/{chat_id}/stream` both
+     now pass `since_days=msg.get("time_window_days")` into
+     get_matched_signals() — the ONLY change to either of those
+     functions/routes. Every message that has no `time_window_days`
+     (i.e. every message from before this feature, and every new message
+     where the user didn't mention a time range) behaves EXACTLY as
+     before: `since_days=None`, no filtering.
+   - MAX_TIME_WINDOW_DAYS (new env var, default 3650 i.e. ~10 years) is a
+     sanity ceiling applied when parsing the router's "time_window_days"
+     output, so a malformed/huge value from Claude can never accidentally
+     become a no-op filter or a nonsensical cutoff far in the future.
 
-── STREAMING WIRING FIX (THIS FILE) ─────────────────────────────────────────
-THREE small, targeted, purely-additive/tightening changes on top of
-everything above. Nothing else in this file — no other route, function,
-constant, prompt, matching rule, chunking rule, or caching rule — was
-touched. Before this fix, the STREAMING ADD-ON above was fully built but
-never actually wired up: `_fill_in_message_outputs()` (called by both
-home() and view_chat() BEFORE the template ever renders) always generated
-a fresh search-type message's `claude_answer` itself, in full, via the
-existing blocking `analyze_with_claude()` call — so by the time a page
-was returned to the browser, `claude_answer` was already 100% complete.
-`GET /chat/{chat_id}/stream` therefore never had anything left to do for
-that message; a template opening it would just re-generate (and re-bill)
-the same answer a second time, or ("2)" below) show it a second time for
-free. This fix makes the already-existing streaming route the thing that
-actually produces a brand-new message's answer, without touching any
-other behavior:
+2. PAIN-POINT / PROSPECT KEYWORD GENERATION (prompt-only change, zero new
+   code paths):
+   CLAUDE_ROUTER_SYSTEM_PROMPT's keyword-generation instructions now
+   explicitly cover the "I sell X, find people with problem Y" pattern
+   (e.g. "I run an AI agent company, find people complaining their
+   website is slow" / "I run a travel agency, find people saying their
+   travel service was bad") — for these, Claude generates keywords around
+   the PROBLEM/SYMPTOM being described (e.g. "website slow", "site is
+   slow", "abandoned cart", "bad travel experience", "trip was ruined"),
+   not around the seller's own product/company name, and this is
+   explicitly NOT tied to any one fixed industry — whatever industry/
+   problem the user actually describes is what Claude reads and reflects
+   back into keywords. This is a pure prompt-instruction change: every
+   downstream function (enqueue_search_job, get_matched_signals,
+   analyze_with_claude, chat/session saving) is completely unaware of
+   and unaffected by this — it just receives a different, better-targeted
+   keyword list exactly like it always has.
 
-1. `_fill_in_message_outputs()` gained ONE new optional parameter,
-   `skip_topic_key` (default None, so every existing call site that
-   doesn't pass it behaves 100% exactly as before). When a message's
-   `topic_key` equals `skip_topic_key`, that ONE message is left
-   completely untouched by this function (no get_matched_signals() call,
-   no analyze_with_claude() call, no results/claude_answer write) — it
-   is reserved for the new streaming route to fill in instead, exactly
-   once. Every other message in the same chat is still filled in exactly
-   as before, in the exact same loop, with the exact same
-   RESPONSE_TIMEOUT / BUGFIX PACK #1 / POST_URL-patch behavior untouched.
+3. "clarify" — a FOURTH router intent (alongside "search" / "chat" /
+   "blocked"), for when a search-shaped message doesn't actually name a
+   clear enough topic/subject/industry to search for at all (e.g. "aaj ke
+   reddit posts dikhao" or "last 6 months ke posts do" with NO brand,
+   product, topic, or industry mentioned anywhere in the message OR the
+   short chat-summary context). Instead of guessing a topic or falling
+   back to generate_fuzzy_keywords() on a near-empty/meaningless string,
+   the router returns:
+     {"intent": "clarify", "reply": "<short natural clarifying question>", "keywords": null, "time_window_days": null}
+   A "clarify" message is handled by the SAME code path as "chat"/
+   "blocked" in POST /search — saved as an ordinary "message_type": "chat"
+   turn (query + claude_answer = the clarifying question, no post cards,
+   no job enqueued) — so, exactly like "blocked" before it, NO template
+   changes are needed anywhere. CLAUDE_CLARIFY_FALLBACK_REPLY is used as a
+   safety-net string only if the router flagged "clarify" but didn't
+   return usable reply text.
+   IMPORTANT — this only ever fires when the TOPIC itself is unclear, not
+   when merely the time-window is unclear/unspecified: a message like
+   "AI agents ke baare mein reddit posts dikhao" (clear topic, no time
+   range) is still a normal "search" with time_window_days: null, exactly
+   as before this feature. A missing time range is never, by itself, a
+   reason to ask for clarification.
+   SAFETY NET (same philosophy as the rest of this router): if the
+   routing step fails outright (API error, bad JSON, session hiccup) OR
+   returns anything unparseable, this still falls back to intent="search"
+   exactly as it always has — "clarify" can only ever ask a genuinely
+   helpful follow-up question on top of the existing pipeline, it can
+   never be the reason a real, clear search silently fails to run.
 
-2. `view_chat()` now computes which message (if any) is a freshly-added
-   search-type turn still waiting on its very first answer — the LAST
-   message in the chat, only if it has a `topic_key` and its
-   `claude_answer` is still falsy — and passes that message's
-   `topic_key` in as `skip_topic_key`. This is the ONLY message a
-   template's streaming JS would ever need to open `/stream` for right
-   after a redirect from POST /search (every earlier message in the
-   chat already has its answer cached from a previous visit, exactly as
-   before). If there is no such message (e.g. a chat-type turn, or a
-   search message that already has an answer), `skip_topic_key` is
-   simply None and `_fill_in_message_outputs()` behaves 100% exactly as
-   it always has — this can only ever skip filling in the one newest,
-   still-unanswered message; it never changes behavior for any other
-   message, any other route, or any chat that isn't mid-first-answer.
-   `home()` is intentionally left calling `_fill_in_message_outputs()`
-   exactly as before (no `skip_topic_key`) — it keeps its original
-   always-blocking behavior untouched; only `view_chat()` (the page a
-   search redirects to) opts into the new streaming hand-off.
-
-3. `GET /chat/{chat_id}/stream` gained ONE new guard at the top, right
-   after the target message is found and before any matching/Claude work
-   begins: if that message's `claude_answer` is already truthy (i.e. it
-   was already generated and cached — by the normal blocking path on an
-   earlier visit, or by a previous call to this same stream route), the
-   route immediately replays that cached text as a single `delta` event
-   followed by `done`, and returns — it never redoes any matching/Claude
-   work for a message that already has its answer. This is the same
-   "generate once, cache forever" guarantee every other answer path in
-   this file already follows; it simply extends that guarantee to this
-   route, which previously had no cache check at all and would silently
-   re-call (and re-bill) Claude every single time it was opened for an
-   already-answered message.
-
-── HOME() CRASH FIX (THIS FILE) ─────────────────────────────────────────────
-ONE targeted fix, scoped entirely inside home(). Nothing else in this
-file was touched.
-
-`pending_stream_topic_key` was only ever assigned INSIDE the nested
-`if chat_id: ... if chat and chat.get("messages"): ...` block, but the
-final TemplateResponse at the bottom of home() referenced it unconditionally
-guarded only by `if chat_id` — not by whether that inner block actually
-ran. Whenever `chat_id` was truthy but either `chat` came back falsy (e.g.
-a stale/corrupt session pointing at a chat that no longer exists) or
-`chat.get("messages")` was empty (a brand-new chat with zero messages),
-the inner block never executed, so `pending_stream_topic_key` was never
-assigned at all — and Python raised `UnboundLocalError` trying to read it
-in the return statement, crashing the whole page.
-
-Fix: `pending_stream_topic_key = None` is now initialized at the very top
-of home(), alongside `chats, chat_id, chat = [], None, None`, so it is
-ALWAYS defined no matter which branch runs or whether the try block raises
-partway through. The return statement now just reads
-`"pending_stream_topic_key": pending_stream_topic_key` directly (the old
-`if chat_id else None` ternary is no longer needed since the variable is
-guaranteed to exist). This is a pure crash fix — it does not change what
-value gets passed to the template in any case that previously worked; it
-only prevents the exception in the cases that previously crashed.
-
-── SIMULATED-STREAM FIX (THIS FILE) ─────────────────────────────────────────
-ONE targeted change, scoped ENTIRELY inside `GET /chat/{chat_id}/stream`'s
-`event_generator()`. Nothing else in this file — no other route, function,
-constant, prompt, matching rule, chunking rule, or caching rule — was
-touched. `analyze_with_claude_stream()` / `_call_claude_stream()` are left
-completely intact (still fully defined, still byte-for-byte what they were)
-but are no longer what this route calls.
-
-THE PROBLEM THIS FIXES: previously, `event_generator()` streamed Claude's
-RAW text live, straight from `analyze_with_claude_stream()`, chunk by
-chunk, AS Claude generated it. `_patch_post_urls_into_answer()` (see
-POST_URL PATCH FIX above) only ever ran AFTER that whole stream had
-finished, on the fully-assembled text — and its patched result was only
-ever written to the DB cache, never re-sent to the browser. That meant the
-very first time a user ever saw an answer, the "link" fields inside its
-JSON were still empty/missing (Claude can never know a real post_url — see
-build_claude_post_context()) — only a LATER page visit, reading the
-already-cached+patched version, ever showed the real links. So the one
-render that mattered most (a brand-new answer, live) was exactly the one
-render that never got the real links.
-
-THE FIX: `event_generator()` now:
-  1. Calls `analyze_with_claude(msg["query"], matched)` — the existing,
-     UNCHANGED, blocking function (same one `_fill_in_message_outputs()`
-     already uses) — to get the COMPLETE answer text in one shot, before
-     anything is sent to the browser.
-  2. Immediately runs that complete text through the existing, UNCHANGED
-     `_patch_post_urls_into_answer()`, exactly as `_fill_in_message_outputs()`
-     already does — so by this point the text has real post_url values
-     patched into every "link" field it can confidently resolve, exactly
-     like the cached/blocking path always has.
-  3. ONLY THEN starts emitting SSE `delta` events — not Claude's raw
-     token-by-token output, but this same already-complete, already-patched
-     string, sliced into small fixed-size pieces (`STREAM_CHUNK_CHARS`
-     characters each, new env var, default 3) with a short pause between
-     each piece (`STREAM_CHUNK_DELAY_SECONDS`, new env var, default 0.02s,
-     via `time.sleep()` — this route is a plain sync `def`, exactly like
-     every other route in this file, so FastAPI already runs it in its
-     worker threadpool and a blocking `time.sleep()` here behaves exactly
-     like the blocking `httpx` calls this file already makes everywhere
-     else; it does not block any other request). This reproduces the same
-     "typing" impression a real token-by-token stream gives the user (ruk
-     ruk kar, jaisa Claude/ChatGPT), just built from an already-finished,
-     already-patched string instead of live tokens.
-  4. Caching (`save_claude_answer_to_chat()`, `append_to_chat_summary()`,
-     `save_signal_results_to_chat()` via `_extract_claude_format()` /
-     `_NO_DATA_CLAUDE_FORMATS`) happens exactly as before, using this same
-     one already-patched string — so the text the user watched arrive on
-     screen and the text later cached/replayed on future visits are now
-     ALWAYS byte-for-byte identical (previously the live-streamed text and
-     the cached text could differ, because only the cached copy was
-     link-patched).
-
-TRADE-OFF (documented here, not silently introduced): time-to-first-byte
-for a brand-new answer is now the time it takes Claude to finish the ENTIRE
-answer (single call, or the full map-reduce chain — same timing
-`_fill_in_message_outputs()` already has today), not the near-instant
-first-token latency a genuine token-by-token stream gives. The perceived
-"typing" effect is preserved; the actual generation latency before that
-effect starts is not reduced by this route any more than it already wasn't
-reduced by the blocking path. This is a UX/consistency trade explicitly
-chosen so every answer the user ever sees — first render or a later
-cached one — always carries correct post links.
-
-EVERYTHING ELSE ABOUT THIS ROUTE IS UNCHANGED: the top-of-function guards
-(chat not found, message not found, already-cached-answer replay), the
-`get_matched_signals()` call, the exact SSE payload shapes
-(`{"delta": ...}`, `{"done": true}`, `{"error": ...}`), and the
-`media_type="text/event-stream"` response are all exactly as they were.
+EVERYTHING ELSE IN THIS FILE — every other route, function, constant,
+prompt, matching rule, chunking rule, caching rule, and template contract
+— is untouched and behaves exactly as documented above.
 ──────────────────────────────────────────────────────────────────────────────
 """
 
@@ -641,7 +472,7 @@ import json
 import time
 import uuid
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 import httpx
 from dotenv import load_dotenv
@@ -704,6 +535,12 @@ MAX_MATCHED_RESULTS = int(os.getenv("MAX_MATCHED_RESULTS", "25"))
 # where it's applied.
 MAX_POSTS_PER_PLATFORM = int(os.getenv("MAX_POSTS_PER_PLATFORM", "3"))
 
+# (TIME-WINDOW FEATURE) Sanity ceiling on the "time_window_days" value the
+# router is allowed to hand back — purely a safety clamp so a malformed or
+# absurd value from Claude can never turn into a nonsensical cutoff.
+# Default ~10 years, effectively "no meaningful limit" for any real query.
+MAX_TIME_WINDOW_DAYS = int(os.getenv("MAX_TIME_WINDOW_DAYS", "3650"))
+
 SESSION_SECRET_KEY  = os.getenv("SESSION_SECRET_KEY", "dev-only-change-me")
 GOOGLE_CLIENT_ID    = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
@@ -726,7 +563,8 @@ CLAUDE_API_VERSION      = "2023-06-01"
 CLAUDE_NOTES_PER_CHUNK  = int(os.getenv("CLAUDE_NOTES_PER_CHUNK", "8"))
 
 # ── Router + chat-summary config (v5, bumped slightly for the new
-# "keywords" field the router call can now also return) ───────────────────
+# "keywords"/"time_window_days" fields the router call can now also
+# return) ───────────────────────────────────────────────────────────────
 CLAUDE_ROUTER_MAX_TOKENS       = int(os.getenv("CLAUDE_ROUTER_MAX_TOKENS", "500"))
 CHAT_SUMMARY_MAX_TURNS         = int(os.getenv("CHAT_SUMMARY_MAX_TURNS", "8"))
 CHAT_SUMMARY_TURN_CHAR_LIMIT   = int(os.getenv("CHAT_SUMMARY_TURN_CHAR_LIMIT", "160"))
@@ -925,7 +763,11 @@ def enqueue_search_job(topic_key: str, keywords: list, targeting_platform: str):
     UNCHANGED by the keyword-generation swap: this function has no idea
     (and doesn't need to know) whether `keywords` came from Claude's
     router call or the generate_fuzzy_keywords() fallback — it just
-    stores whatever list it's handed, exactly as before."""
+    stores whatever list it's handed, exactly as before. Also UNCHANGED
+    by the TIME-WINDOW FEATURE: a time window only ever narrows which
+    ALREADY-COLLECTED signals are matched (see get_matched_signals()
+    below) — it has no bearing on what Background Service #1 goes out
+    and fetches, so it is never stored on the job document."""
     jobs_collection.update_one(
         {"topic_key": topic_key},
         {"$set": {
@@ -1117,7 +959,8 @@ def _infer_platform_from_url(url: str):
     return None
 
 
-def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str = "all", limit: int = None) -> list:
+def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str = "all",
+                         limit: int = None, since_days: int = None) -> list:
     """Reads `flintel_signals` and keeps only the signals that match this
     job's generated keywords. topic_key match is intentionally NOT
     required: Background Service #1 may store its own topic_key for a
@@ -1151,18 +994,26 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     (MAX_MATCHED_RESULTS by default — still respected, still the same
     variable/behavior as before), each individual platform can
     contribute AT MOST MAX_POSTS_PER_PLATFORM matches to this call's
-    results (default 3) — e.g. with targeting_platform="all", a single
-    search now returns at most 3 Reddit posts AND at most 3 X/Twitter
-    posts AND at most 3 LinkedIn posts AND at most 3 Facebook posts,
-    instead of one shared budget that a single platform could dominate.
-    Purely a config value (MAX_POSTS_PER_PLATFORM env var) — change it
-    in .env and restart the process to use a different number later.
+    results (default 3).
+
+    (TIME-WINDOW FEATURE) `since_days`, default None: when a positive int
+    is given, this ADDS an extra AND-condition on top of everything
+    above — a signal must ALSO have `created_utc` within the last
+    `since_days` days to be eligible at all. This is applied BOTH at the
+    Mongo query level (so old signals are excluded from the DB fetch
+    itself, not just filtered out afterward in Python) AND, defensively,
+    once more in the Python loop below (in case a signal doc is missing a
+    usable `created_utc` value — such a doc is simply excluded rather
+    than assumed to pass). `since_days=None` (the default, and what every
+    call site used before this feature) means NO time filtering at all —
+    behavior is then 100% identical to before this feature. The time
+    window is purely a narrowing on top of keyword matching: a signal
+    still has to satisfy the exact same keyword rules 1-3 above; the time
+    window can only ever exclude MORE signals, never match one that
+    wouldn't otherwise match on keywords.
 
     Results are sorted by `created_utc` DESCENDING (most recent first)
-    before the caps above are applied — there is no separate date-range
-    filter anywhere in this file (see the KEYWORD-GENERATION SWAP note in
-    the module docstring for what this means for "today's posts"-style
-    prompts).
+    before the caps above are applied.
 
     Returns {title, post_text, post_url, platform} for each match — this
     is the only signal-derived output ever shown to the user (via post
@@ -1172,11 +1023,10 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     or the raw `signals` list returned by get_signals().
 
     COMPLETELY UNCHANGED BY THE KEYWORD-GENERATION SWAP: this function's
-    SIGNATURE, RETURN SHAPE, matching rules, and every caller are exactly
-    as they were in v7 — it has no idea whether `keywords` came from
-    Claude's router call or the old fuzzy-template fallback. Only the
-    underlying whole-word tightening inside _text_matches_keyword() (see
-    BUGFIX PACK #2) changed which signals pass the OR check above."""
+    SIGNATURE (aside from the new, optional, default-None `since_days`
+    parameter), RETURN SHAPE, matching rules, and every existing caller
+    are exactly as they were in v7 — it has no idea whether `keywords`
+    came from Claude's router call or the old fuzzy-template fallback."""
     limit = limit or MAX_MATCHED_RESULTS
     keyword_list = [k for k in (keywords or []) if k]
     keyword_set = {k.strip().lower() for k in keyword_list}
@@ -1203,6 +1053,18 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             or_conditions.append({field: {"$regex": combined_pattern, "$options": "i"}})
     mongo_query = {"$or": or_conditions}
 
+    # (TIME-WINDOW FEATURE) Compute an optional cutoff and AND it onto the
+    # existing $or clause via $and, so a time window narrows the keyword
+    # match instead of replacing it. since_days is sanity-clamped between
+    # 1 and MAX_TIME_WINDOW_DAYS — anything else (None, 0, negative,
+    # absurdly large) means "no time filter", handled the exact same way
+    # this function always behaved before this feature.
+    cutoff = None
+    if isinstance(since_days, int) and since_days > 0:
+        clamped_days = min(since_days, MAX_TIME_WINDOW_DAYS)
+        cutoff = datetime.now(timezone.utc) - timedelta(days=clamped_days)
+        mongo_query = {"$and": [mongo_query, {"created_utc": {"$gte": cutoff}}]}
+
     # Fetch a larger pool than `limit` since matches are now filtered
     # further (per-platform caps below), same spirit as the old `limit *
     # 5` headroom, just bumped up a bit since the query itself is now
@@ -1220,6 +1082,21 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     for doc in raw_docs:
         title     = _first_present(doc, _TITLE_FIELD_CANDIDATES)
         post_text = _first_present(doc, _TEXT_FIELD_CANDIDATES)
+
+        # (TIME-WINDOW FEATURE) Defensive second check: if a cutoff is
+        # active, make sure this doc's own created_utc actually satisfies
+        # it too (guards against a doc with a missing/odd created_utc
+        # slipping through the Mongo-level filter in some edge case) — a
+        # doc with no usable created_utc is excluded rather than assumed
+        # to pass, since we can't confirm it's within the window.
+        if cutoff is not None:
+            doc_created = doc.get("created_utc")
+            if not isinstance(doc_created, datetime):
+                continue
+            if doc_created.tzinfo is None:
+                doc_created = doc_created.replace(tzinfo=timezone.utc)
+            if doc_created < cutoff:
+                continue
 
         # (v7) A signal matches if EITHER its search_keyword field matches
         # (unchanged, exact match), OR the keyword shows up as a whole
@@ -1276,13 +1153,13 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 # already live in flintel_signals / are reconstructable from the message's
 # own keyword list. That's the cost-saving rule: store output only.
 #
-# COMPLETELY UNCHANGED BY THE KEYWORD-GENERATION SWAP: this whole section
-# (CLAUDE_ANALYSIS_SYSTEM_PROMPT, build_claude_post_context(), chunk_list(),
+# COMPLETELY UNCHANGED BY THE KEYWORD-GENERATION SWAP OR THE TIME-WINDOW /
+# PAIN-POINT / CLARIFY FEATURE: this whole section (CLAUDE_ANALYSIS_
+# SYSTEM_PROMPT, build_claude_post_context(), chunk_list(),
 # _format_posts_block(), _map_chunk(), _call_claude()) only ever consumes
 # ALREADY-MATCHED posts (the output of get_matched_signals()) — it has no
-# idea, and doesn't care, which keyword list produced those matches. Only
-# analyze_with_claude() itself gained one additive change — see BUGFIX
-# PACK #3 above and inline below.
+# idea, and doesn't care, which keyword list or time window produced those
+# matches.
 # ─────────────────────────────────────────────────────────────────────────────
 
 CLAUDE_ANALYSIS_SYSTEM_PROMPT = """
@@ -1603,7 +1480,8 @@ def analyze_with_claude(query: str, matched_signals: list) -> str:
 
     UNCHANGED except for the additive second-level chunking pass described
     above (BUGFIX PACK #3). This function only ever sees ALREADY-MATCHED
-    posts.
+    posts — it has no idea whether a time window was applied to produce
+    them.
 
     (SIMULATED-STREAM FIX) This function is ALSO now the one
     GET /chat/{chat_id}/stream calls to get its complete answer text —
@@ -1818,49 +1696,51 @@ def analyze_with_claude_stream(query: str, matched_signals: list):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# CLAUDE ROUTING LAYER (v5, extended in v6 with abuse/harm blocking, and
-# now extended AGAIN with keyword generation for "search" messages)
+# CLAUDE ROUTING LAYER (v5, extended in v6 with abuse/harm blocking, again
+# with keyword generation, and now again with time-window parsing,
+# pain-point-aware keyword generation, and a 4th "clarify" intent)
 #
 # Runs BEFORE anything else in POST /search. A single cheap Claude call
 # decides whether the user's message is a genuine "search" (wants social-
 # listening data pulled about a brand/product/topic), a plain "chat"
-# message (a greeting, small talk, a general question, a follow-up about
-# something already discussed, etc.), or "blocked" — abusive, harassing,
-# hateful, sexually explicit, or threatening content.
+# message, "blocked" (abusive/harmful content), or (new) "clarify" (a
+# search-shaped message with no clear topic/subject/industry to search
+# for at all).
 #
 # (KEYWORD-GENERATION SWAP) The SAME call now ALSO returns a "keywords"
 # field when intent="search" — still just ONE Claude call total, no new
-# round trip, following the exact same "do it all in the classification
-# call" pattern v5 already used for the chat/blocked reply text. See the
-# KEYWORD-GENERATION SWAP note in the module docstring for the full
-# rationale and the fallback rule.
+# round trip.
 #
-# When it's "chat" or "blocked", the SAME call also writes the reply
-# directly. The reply is grounded only in the short, plain-Python chat
-# summary below — never the raw matched posts, and never flintel_signals
-# at all, since neither message type triggers any signal matching.
+# (TIME-WINDOW / PAIN-POINT / CLARIFY FEATURE) The SAME call now ALSO
+# returns a "time_window_days" field when intent="search" (int, or null
+# if the user gave no time range), generates pain-point/prospect-style
+# keywords when that's what the message is asking for, and can return
+# intent="clarify" instead of guessing at an unclear topic.
 #
 # Safety rule: ANY failure here (bad JSON, API error, timeout, missing
-# key) defaults to {"intent": "search", "reply": None, "keywords": None}
-# so the pre-existing pipeline is always the fallback — this routing
-# layer can only ever add a shortcut (a direct chat reply, a polite
-# decline, or a smarter keyword list), it can never silently swallow a
-# real search request or leave one with zero keywords (the /search route
-# falls back to generate_fuzzy_keywords() whenever "keywords" comes back
-# empty/missing for a "search" intent).
+# key) defaults to {"intent": "search", "reply": None, "keywords": None,
+# "time_window_days": None} so the pre-existing pipeline is always the
+# fallback — this routing layer can only ever add a shortcut, it can
+# never silently swallow a real search request or leave one with zero
+# keywords.
 # ─────────────────────────────────────────────────────────────────────────────
 
 CLAUDE_ROUTER_SYSTEM_PROMPT = """
 You are the routing brain inside Flintel, a social-listening platform.
 Every message a user types goes through you FIRST, before anything else
 happens in the product.
-Your job: classify this message into exactly one of three types, and for
+Your job: classify this message into exactly one of FOUR types, and for
 "search" messages, ALSO generate the keyword list Flintel's own
-(unchanged, plain-Python) matching code will use afterward.
+(unchanged, plain-Python) matching code will use afterward, plus an
+optional time window.
 
 1. "search" — the message is asking Flintel to research/monitor/pull
-   social-media data about a brand, product, company, person, or topic.
-   For "search" messages, ALSO return a "keywords" array:
+   social-media data about a brand, product, company, person, industry,
+   or topic, AND that topic/subject is actually clear from the message
+   itself (or from the conversation history below). For "search"
+   messages, ALSO return:
+
+   - "keywords": an array of search terms.
      - Read the user's own words and figure out what they are actually
        asking about. A short, narrow prompt ("reddit posts about AI")
        needs only the ONE (or two) keyword(s) that actually capture the
@@ -1871,6 +1751,19 @@ Your job: classify this message into exactly one of three types, and for
        variations (genuine synonyms or short related phrases actually
        likely to appear in real posts) — up to 10 keywords maximum,
        never more.
+     - PAIN-POINT / PROSPECT PATTERN: if the user describes selling or
+       promoting something and wants to find people who might need it
+       (e.g. "I run an AI agent company, find people whose website is
+       slow / carts are getting abandoned", "I run a travel agency, find
+       people saying their travel experience was bad", or any similar
+       "I offer X, find people with problem Y" message, in ANY industry —
+       these are just examples, not a fixed list), generate keywords
+       around the PROBLEM/SYMPTOM the user described (e.g. "website
+       slow", "site is slow", "abandoned cart", "bad travel experience",
+       "trip was ruined", "poor customer service"), NOT around the
+       seller's own product or company name. Read whatever problem the
+       user actually describes and reflect that back — never assume a
+       fixed industry or fixed symptom list.
      - Every keyword must be something that could plausibly appear
        verbatim, or as a close natural substring, inside a real post's
        title or text. Keep each keyword short and natural.
@@ -1882,8 +1775,22 @@ Your job: classify this message into exactly one of three types, and for
        so leave them out of the keyword list (the platform itself is
        handled separately, by a dropdown the user already picked — you
        are only responsible for the topic keywords).
-     - Do NOT try to answer the user's question yourself for "search" —
-       only classify and produce the keyword list.
+
+   - "time_window_days": an integer, or null.
+     - If the user's message itself implies a time range, convert it to
+       an approximate number of days: "today"/"aaj" -> 1, "this week" /
+       "last 7 days" -> 7, "last 2 weeks" -> 14, "last month" / "past 30
+       days" -> 30, "last 3 months" -> 90, "last 6 months" -> 180, "last
+       year" -> 365, and so on for any other phrasing that clearly names
+       a time span.
+     - If the user gives NO time range at all, this MUST be null — do
+       NOT invent or assume one.
+     - A missing/null time_window_days is NOT by itself a reason to ask
+       for clarification (see "clarify" below) — plenty of valid search
+       requests never mention a time range at all.
+
+   Do NOT try to answer the user's question yourself for "search" —
+   only classify and produce the keyword list / time window.
 
 2. "chat" — a normal conversational message that doesn't need any new
    data pulled at all: greetings ("hi", "hello", "what's up", "kia chal
@@ -1891,7 +1798,8 @@ Your job: classify this message into exactly one of three types, and for
    follow-up question about something already discussed in this
    conversation, or a request to just talk. Answer the user's message
    yourself, directly and naturally, the way Claude/ChatGPT would in any
-   normal conversation. "keywords" must be null for this type.
+   normal conversation. "keywords" and "time_window_days" must be null
+   for this type.
 
 3. "blocked" — the message is abusive, harassing, hateful, sexually
    explicit, threatening, or otherwise harmful (directed at you, at a
@@ -1899,19 +1807,42 @@ Your job: classify this message into exactly one of three types, and for
    normally. Instead write a short, calm, firm decline as the reply —
    don't lecture, don't repeat or quote the harmful content back, don't
    moralize at length, just briefly decline and invite them to ask
-   something else. "keywords" must be null for this type.
+   something else. "keywords" and "time_window_days" must be null for
+   this type.
+
+4. "clarify" — the message is clearly ASKING for a search/social-listening
+   pull (it has search-shaped phrasing: "reddit posts", "show me", "find
+   me", a time range, etc.) but does NOT actually name any clear
+   topic/brand/product/industry/subject to search for — neither in the
+   message itself nor anywhere in the short conversation history below.
+   Examples: "aaj ke reddit posts dikhao" alone, "last 6 months ke posts
+   do" alone, "show me today's posts" with nothing else — there is no
+   brand, product, topic, industry, or problem mentioned anywhere for
+   Flintel to actually search. In this case, do NOT guess a topic and do
+   NOT fall back to some generic/meaningless keyword. Instead, write a
+   short, natural, single clarifying question asking what topic/brand/
+   industry/problem they want to look into. "keywords" and
+   "time_window_days" must be null for this type (there is no job to run
+   yet). IMPORTANT: only use "clarify" when the TOPIC itself is missing —
+   a message that clearly names a topic/brand/industry but simply doesn't
+   mention a time range is STILL "search" with time_window_days: null,
+   never "clarify".
 
 A short, auto-summarized conversation history (may be empty) is given
-below for continuity when classifying and when writing a "chat" or
-"blocked" reply, or when a "search" follow-up implicitly refers back to a
-topic already discussed. Keep any reply conversational and plain — don't
-mention you're an AI or that this is a "mock", and don't narrate your own
-reasoning.
+below for continuity when classifying and when writing a "chat",
+"blocked", or "clarify" reply, or when a "search" follow-up implicitly
+refers back to a topic already discussed (e.g. if the topic was named
+earlier in the conversation, a later "today ke posts do" can still be
+"search", using that earlier topic — only ask "clarify" when the topic
+truly cannot be determined from the message OR this history). Keep any
+reply conversational and plain — don't mention you're an AI or that this
+is a "mock", and don't narrate your own reasoning.
 Respond with STRICT JSON ONLY — no markdown code fences, no preamble, no
-text outside the JSON object — in EXACTLY one of these three shapes:
-{"intent": "search", "reply": null, "keywords": ["<keyword1>", "<keyword2>"]}
-{"intent": "chat", "reply": "<your natural reply text here>", "keywords": null}
-{"intent": "blocked", "reply": "<short, polite decline text>", "keywords": null}
+text outside the JSON object — in EXACTLY one of these four shapes:
+{"intent": "search", "reply": null, "keywords": ["<keyword1>", "<keyword2>"], "time_window_days": null}
+{"intent": "chat", "reply": "<your natural reply text here>", "keywords": null, "time_window_days": null}
+{"intent": "blocked", "reply": "<short, polite decline text>", "keywords": null, "time_window_days": null}
+{"intent": "clarify", "reply": "<short, natural clarifying question>", "keywords": null, "time_window_days": null}
 """
 
 CLAUDE_CHAT_FALLBACK_SYSTEM_PROMPT = """
@@ -1929,6 +1860,15 @@ this is a "mock".
 CLAUDE_BLOCKED_FALLBACK_REPLY = (
     "I can't help with that one. Happy to help you look into a brand, "
     "product, or topic instead, or just chat about something else."
+)
+
+# (TIME-WINDOW / PAIN-POINT / CLARIFY FEATURE) Same safety-net pattern as
+# CLAUDE_BLOCKED_FALLBACK_REPLY above: used only if the router flagged
+# "clarify" but didn't return usable reply text — never re-sent to Claude,
+# a plain generic clarifying question is enough.
+CLAUDE_CLARIFY_FALLBACK_REPLY = (
+    "Happy to pull that up — which brand, product, topic, or industry "
+    "would you like me to look into?"
 )
 
 
@@ -1949,7 +1889,19 @@ def _parse_router_json(raw: str):
     list, empty after cleaning) simply results in keywords=None — the
     caller (classify_and_maybe_chat / the /search route) is what applies
     the generate_fuzzy_keywords() fallback in that case, so this function
-    itself never needs to know about that fallback."""
+    itself never needs to know about that fallback.
+
+    (TIME-WINDOW / PAIN-POINT / CLARIFY FEATURE):
+      - Accepts "clarify" as a 4th valid intent, treated like "chat"/
+        "blocked" for reply-string validation (a string reply is
+        expected; anything else falls back to None so the caller's own
+        fallback text is used).
+      - Also parses/validates "time_window_days" for "search" intent:
+        must be a positive int (or a numeric string Claude accidentally
+        quoted), clamped between 1 and MAX_TIME_WINDOW_DAYS. Anything
+        else (missing, null, zero, negative, non-numeric, or intent !=
+        "search") simply results in time_window_days=None, meaning "no
+        time filter" — the exact same as if this feature didn't exist."""
     if not raw:
         return None
     cleaned = raw.strip()
@@ -1963,13 +1915,14 @@ def _parse_router_json(raw: str):
     if not isinstance(data, dict):
         return None
     intent = data.get("intent")
-    if intent not in ("search", "chat", "blocked"):
+    if intent not in ("search", "chat", "blocked", "clarify"):
         return None
     reply = data.get("reply")
-    if intent in ("chat", "blocked") and not isinstance(reply, str):
+    if intent in ("chat", "blocked", "clarify") and not isinstance(reply, str):
         reply = None
 
     keywords = None
+    time_window_days = None
     if intent == "search":
         raw_keywords = data.get("keywords")
         if isinstance(raw_keywords, list):
@@ -1990,22 +1943,38 @@ def _parse_router_json(raw: str):
                     break
             keywords = cleaned_keywords or None
 
-    return {"intent": intent, "reply": reply, "keywords": keywords}
+        raw_window = data.get("time_window_days")
+        parsed_window = None
+        if isinstance(raw_window, bool):
+            parsed_window = None  # guard: bool is a subclass of int in Python
+        elif isinstance(raw_window, int):
+            parsed_window = raw_window
+        elif isinstance(raw_window, str) and raw_window.strip().isdigit():
+            parsed_window = int(raw_window.strip())
+        if isinstance(parsed_window, int) and parsed_window > 0:
+            time_window_days = min(parsed_window, MAX_TIME_WINDOW_DAYS)
+
+    return {"intent": intent, "reply": reply, "keywords": keywords, "time_window_days": time_window_days}
 
 
 def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
-    """(v5, extended in v6 with abuse-blocking, extended again with
-    keyword generation) Single cheap Claude call that classifies the
-    user's message as "search", "chat", or "blocked" and:
-      - for "chat"/"blocked", writes the reply in the same call, and
-      - for "search", ALSO returns the keyword list to use for matching.
-    Falls back to {"intent": "search", "reply": None, "keywords": None}
-    on ANY failure (API error, timeout, bad JSON) so the pre-existing
-    search pipeline is always the safe default — only the chat-reply /
-    abuse-blocking / smart-keyword shortcuts can ever be skipped by a
-    routing hiccup, never a genuine search request (the /search route
-    falls back to generate_fuzzy_keywords() whenever keywords come back
-    None for a "search" intent)."""
+    """(v5, extended in v6 with abuse-blocking, again with keyword
+    generation, and now again with time-window parsing + a "clarify"
+    intent) Single cheap Claude call that classifies the user's message
+    as "search", "chat", "blocked", or "clarify" and:
+      - for "chat"/"blocked"/"clarify", writes the reply in the same
+        call, and
+      - for "search", ALSO returns the keyword list and time window to
+        use for matching.
+    Falls back to {"intent": "search", "reply": None, "keywords": None,
+    "time_window_days": None} on ANY failure (API error, timeout, bad
+    JSON) so the pre-existing search pipeline is always the safe default
+    — only the chat-reply / abuse-blocking / smart-keyword / time-window
+    / clarify shortcuts can ever be skipped by a routing hiccup, never a
+    genuine search request (the /search route falls back to
+    generate_fuzzy_keywords() whenever keywords come back None for a
+    "search" intent, and treats a missing time_window_days as "no time
+    filter", exactly as before this feature)."""
     user_message = (
         f"Conversation so far (auto-summarized, may be empty):\n"
         f"{chat_summary or '(no earlier messages in this chat)'}\n\n"
@@ -2015,12 +1984,12 @@ def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
         raw = _call_claude(CLAUDE_ROUTER_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_ROUTER_MAX_TOKENS)
     except Exception as exc:
         log.warning(f"Router Claude call failed (defaulting to 'search'): {exc}")
-        return {"intent": "search", "reply": None, "keywords": None}
+        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None}
 
     parsed = _parse_router_json(raw)
     if not parsed:
         log.warning(f"Router returned unparseable output (defaulting to 'search'): {raw[:200]!r}")
-        return {"intent": "search", "reply": None, "keywords": None}
+        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None}
     return parsed
 
 
@@ -2333,10 +2302,17 @@ def upsert_google_user(google_id: str, email: str, name: str):
 #                            matched within RESPONSE_TIMEOUT seconds, this
 #                            instead ends up holding a plain "nothing
 #                            found on this yet" answer.)
+#       * `time_window_days` -> (NEW) the optional time window the router
+#                            parsed out of the user's own message (int, or
+#                            None if the user gave no time range). Stored
+#                            on the message exactly like `keywords` is, so
+#                            it stays consistent across page reloads and
+#                            future re-matching of the same message.
 #   - (v5) A message may instead be `"message_type": "chat"` — a plain
 #     conversational turn the v5 router decided didn't need any data
 #     pulled at all (including, as of v6, a polite decline for a
-#     "blocked" message). These have no topic_key/keywords/results, only
+#     "blocked" message, and now also a clarifying question for a
+#     "clarify" message). These have no topic_key/keywords/results, only
 #     `query` + `claude_answer`, and never touch flintel_search_jobs or
 #     flintel_signals in any way. Messages with no `message_type` (every
 #     message from before this update, and every new search-type
@@ -2356,8 +2332,10 @@ def upsert_google_user(google_id: str, email: str, name: str):
 #     without letting anyone but that same owner_key delete it.
 #
 # COMPLETELY UNCHANGED BY THE KEYWORD-GENERATION SWAP — this entire
-# section is untouched; `keywords` is stored on the message exactly as
-# before, regardless of which source produced it.
+# section is untouched aside from the one new `time_window_days`
+# parameter on add_search_to_chat() described above; `keywords` is stored
+# on the message exactly as before, regardless of which source produced
+# it.
 # ─────────────────────────────────────────────────────────────────────────────
 
 def get_anon_id(request: Request) -> str:
@@ -2448,25 +2426,31 @@ def delete_chat_session(chat_id: str, owner_key: str) -> bool:
 
 
 def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
-                        keywords: list, targeting_platform: str):
+                        keywords: list, targeting_platform: str, time_window_days: int = None):
     """Appends a search as a new message in the chat, and auto-titles the
     chat from the very first query if it hasn't been named yet.
 
-    UNCHANGED from v4 (and by the keyword-generation swap) — this is only
-    ever called for messages the router classified as "search". `keywords`
-    is still stored on the message purely for internal use (later
-    matching/debugging) — it doesn't matter, and this function doesn't
-    care, whether that list came from Claude's router call or the
-    generate_fuzzy_keywords() fallback. `results` starts empty and gets
-    filled in later by save_signal_results_to_chat() once matching
-    signals show up. `claude_answer` starts empty too and is filled in
-    once by save_claude_answer_to_chat()."""
+    UNCHANGED from v4 (and by the keyword-generation swap) aside from the
+    ONE new `time_window_days` parameter (default None, so any future
+    caller that doesn't pass it behaves exactly as before this feature) —
+    this is only ever called for messages the router classified as
+    "search". `keywords` is still stored on the message purely for
+    internal use (later matching/debugging) — it doesn't matter, and this
+    function doesn't care, whether that list came from Claude's router
+    call or the generate_fuzzy_keywords() fallback. `time_window_days` is
+    stored the same way, purely so later re-matching of this same message
+    (see _fill_in_message_outputs() / the streaming route) can pass it
+    back into get_matched_signals() consistently. `results` starts empty
+    and gets filled in later by save_signal_results_to_chat() once
+    matching signals show up. `claude_answer` starts empty too and is
+    filled in once by save_claude_answer_to_chat()."""
     now = datetime.now(timezone.utc)
     message = {
         "query":              query,
         "topic_key":          topic_key,
         "keywords":           keywords,
         "targeting_platform": targeting_platform,
+        "time_window_days":   time_window_days,  # (NEW) int or None — see get_matched_signals()
         "requested_at":       now,
         "results":            [],   # filled in later: [{title, post_text, post_url, platform}, ...]
         "claude_answer":      None, # filled in once: Claude's answer text, grounded in `results`
@@ -2486,10 +2470,11 @@ def add_chat_message_to_chat(chat_id: str, owner_key: str, query: str, answer: s
     flintel_search_jobs entry, no post-card results, no signal matching
     ever happens for these. This is for messages classify_and_maybe_chat()
     decided were just normal chat (greetings, small talk, general
-    questions, follow-ups, etc.), or (v6) a polite decline for a
-    "blocked" message — both are saved with the exact same shape, since
-    both render identically (query + answer text, no post cards), so no
-    template changes are needed.
+    questions, follow-ups, etc.), (v6) a polite decline for a "blocked"
+    message, or (NEW) a clarifying question for a "clarify" message — all
+    three are saved with the exact same shape, since all render
+    identically (query + answer text, no post cards), so no template
+    changes are needed.
 
     Completely separate from add_search_to_chat() above, which is
     untouched and still used for every actual search-type message exactly
@@ -2502,6 +2487,7 @@ def add_chat_message_to_chat(chat_id: str, owner_key: str, query: str, answer: s
         "topic_key":          None,
         "keywords":           [],
         "targeting_platform": None,
+        "time_window_days":   None,
         "requested_at":       now,
         "results":            [],
         "claude_answer":      answer,
@@ -2612,36 +2598,33 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
     is one of _NO_DATA_CLAUDE_FORMATS ("no_results", "not_available",
     "disallowed"), the post-card `results` saved/rendered for this
     message are forced to an empty list instead of whatever
-    get_matched_signals() loosely matched — so the chat text and the post
-    cards underneath it can never contradict each other again. If the
-    answer can't be parsed as JSON (old plain-text answers, a failed
-    Claude call, any other format) this has NO effect and results render
-    exactly as they always have.
+    get_matched_signals() loosely matched.
 
     (POST_URL FIX) Right after a fresh (non-streaming) answer is
     generated here, it is passed through _patch_post_urls_into_answer()
-    before being cached/checked for format — so any post the JSON answer
-    references by title gets its REAL post_url patched into its "link"
-    field from the already-matched signals, the same real URL the post
-    cards use, instead of that field staying empty/missing. Claude itself
-    is still never shown a URL, so it still can never invent one — this
-    only fills in a real one afterward, in Python, by matching on title.
+    before being cached/checked for format.
 
-    (STREAMING WIRING FIX) `skip_topic_key` (default None — every
-    existing call site that doesn't pass it behaves 100% exactly as
-    before) lets a caller reserve exactly ONE search-type message so this
-    function leaves it completely untouched (no matching, no Claude call,
-    no results/claude_answer write) — used by view_chat() so the new
+    (STREAMING WIRING FIX) `skip_topic_key` (default None) lets a caller
+    reserve exactly ONE search-type message so this function leaves it
+    completely untouched — used by view_chat() so the new
     `GET /chat/{chat_id}/stream` route, not this function, is what
-    produces that one message's first answer. Every other message in
-    `messages` is still filled in exactly as before, in the same loop,
-    with the same RESPONSE_TIMEOUT / BUGFIX PACK #1 / POST_URL-patch
-    behavior untouched.
+    produces that one message's first answer.
 
-    OTHERWISE COMPLETELY UNCHANGED BY THE KEYWORD-GENERATION SWAP — this
-    function calls get_matched_signals() and analyze_with_claude() exactly
-    as before, using whatever `keywords` was already stored on the message
-    by add_search_to_chat() at write time."""
+    (TIME-WINDOW FEATURE) The ONLY change in this function: the
+    get_matched_signals() call now also passes
+    `since_days=msg.get("time_window_days")` — for every message that has
+    no `time_window_days` stored on it (every message from before this
+    feature, and every new message where the user gave no time range),
+    this is None and behaves exactly as before. For a message that DOES
+    have a stored time window, matching now also respects it, exactly the
+    same way on every re-render of the same message (so a chat reopened
+    later still shows results scoped to the same window it was originally
+    asked for).
+
+    OTHERWISE COMPLETELY UNCHANGED — this function calls
+    get_matched_signals() and analyze_with_claude() exactly as before,
+    using whatever `keywords` was already stored on the message by
+    add_search_to_chat() at write time."""
     for msg in messages or []:
         if not msg.get("topic_key"):
             continue
@@ -2661,6 +2644,7 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                 msg["topic_key"],
                 msg.get("keywords", []),
                 targeting_platform=msg.get("targeting_platform", "all"),
+                since_days=msg.get("time_window_days"),
             )
         except Exception as exc:
             log.warning(f"Signal matching failed for topic_key={msg.get('topic_key')}: {exc}")
@@ -2733,16 +2717,7 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
 def home(request: Request):
     chats, chat_id, chat = [], None, None
     # (HOME() CRASH FIX) Initialized here unconditionally so it is ALWAYS
-    # defined by the time the return statement below reads it — no matter
-    # which branch runs, no matter whether the try block below raises
-    # partway through, and no matter whether chat_id is truthy but chat
-    # itself (or chat["messages"]) ends up falsy. Previously this variable
-    # was only assigned deep inside the nested "if chat_id: if chat and
-    # chat.get('messages'):" block, so any case that didn't reach that
-    # inner block (stale/corrupt active_chat_id pointing at a chat that no
-    # longer exists, or a brand-new chat with zero messages) left it
-    # completely unassigned and crashed the whole page with
-    # UnboundLocalError when the return statement tried to read it.
+    # defined by the time the return statement below reads it.
     pending_stream_topic_key = None
     try:
         owner_key, _owner_type = get_owner(request)
@@ -2760,13 +2735,7 @@ def home(request: Request):
                 # answer — the LAST message, only if it has a topic_key
                 # and its claude_answer is still falsy — and reserve it
                 # for the streaming route instead of eager-filling it
-                # here. Every other message on this page is still filled
-                # in exactly as before, in the same loop, with the same
-                # RESPONSE_TIMEOUT / BUGFIX PACK #1 / POST_URL-patch
-                # behavior untouched. If the last message doesn't match
-                # that shape (chat-type turn, or already answered),
-                # pending_stream_topic_key stays None and this behaves
-                # 100% exactly as it always has.
+                # here.
                 latest_msg = chat["messages"][-1]
                 if latest_msg.get("topic_key") and not latest_msg.get("claude_answer"):
                     pending_stream_topic_key = latest_msg["topic_key"]
@@ -2825,28 +2794,26 @@ def search(
 
     # ─────────────────────────────────────────────────────────────────────
     # v5 ROUTING STEP (v6: abuse/harm screening; KEYWORD-GENERATION SWAP:
-    # now also returns the keyword list for "search" intent) — runs
-    # BEFORE anything else below. Decides whether this message is
-    # "search" (the pipeline below runs, using Claude's own keyword
-    # list), "chat" (nothing queued into flintel_search_jobs — Claude
-    # just answers directly), or "blocked" (nothing queued — Claude just
-    # declines directly).
+    # keyword list; TIME-WINDOW/PAIN-POINT/CLARIFY FEATURE: time window +
+    # pain-point-aware keywords + a 4th "clarify" intent) — runs BEFORE
+    # anything else below. Decides whether this message is "search" (the
+    # pipeline below runs), "chat" (Claude answers directly), "blocked"
+    # (Claude declines directly), or "clarify" (Claude asks a short
+    # follow-up question instead of guessing a topic).
     #
     # Owner/active-chat resolution + the router call itself are wrapped
-    # in one try/except: ANY failure here (corrupt session, Mongo hiccup,
-    # Claude API error, bad JSON) falls back to intent="search" with
-    # routed_keywords left as None, and the search pipeline below
-    # re-resolves owner/chat itself AND falls back to
-    # generate_fuzzy_keywords() for the keyword list — so a routing
-    # failure can NEVER block, skip, or under-supply a real search job,
-    # only the chat-reply/abuse-blocking/smart-keyword shortcuts are ever
-    # at risk.
+    # in one try/except: ANY failure here falls back to intent="search"
+    # with routed_keywords/routed_time_window_days left as None, and the
+    # search pipeline below re-resolves owner/chat itself AND falls back
+    # to generate_fuzzy_keywords() for the keyword list — so a routing
+    # failure can NEVER block, skip, or under-supply a real search job.
     # ─────────────────────────────────────────────────────────────────────
     owner_key = owner_type = None
     active_chat_id = None
     intent = "search"
     chat_reply = None
     routed_keywords = None
+    routed_time_window_days = None
 
     try:
         owner_key, owner_type = get_owner(request)
@@ -2862,21 +2829,28 @@ def search(
         intent = routed.get("intent", "search")
         chat_reply = routed.get("reply")
         routed_keywords = routed.get("keywords")
+        routed_time_window_days = routed.get("time_window_days")
     except Exception as exc:
         log.warning(f"v5 routing step failed for query={query!r} (defaulting to normal search pipeline): {exc}")
         intent = "search"
 
-    # ── CHAT-TYPE OR BLOCKED-TYPE MESSAGE: answer/decline directly, ─────
-    # ── never touch the keyword-generation / job-queue / signal-        ──
-    # ── matching pipeline at all. (v6: "blocked" reuses the exact same  ──
-    # ── handling as "chat" — same message shape, same redirect — the   ──
-    # ── only difference is where the answer text comes from below.)     ──
-    if intent in ("chat", "blocked"):
+    # ── CHAT-TYPE, BLOCKED-TYPE, OR CLARIFY-TYPE MESSAGE: answer/decline/ ──
+    # ── ask directly, never touch the keyword-generation / job-queue /   ──
+    # ── signal-matching pipeline at all. (v6: "blocked" reuses the exact ──
+    # ── same handling as "chat"; NEW: "clarify" reuses it too — same     ──
+    # ── message shape, same redirect — only where the answer text comes ──
+    # ── from below differs.)                                            ──
+    if intent in ("chat", "blocked", "clarify"):
         if intent == "blocked":
             # Never re-sent to Claude for a fallback — a canned decline is
             # enough, and there's no reason to hand harmful content to
             # another prompt just to get a polite "no".
             answer = (chat_reply or "").strip() or CLAUDE_BLOCKED_FALLBACK_REPLY
+        elif intent == "clarify":
+            # Same pattern: never re-sent to Claude for a fallback — a
+            # generic clarifying question is enough if the router's own
+            # reply text was missing/unusable for some reason.
+            answer = (chat_reply or "").strip() or CLAUDE_CLARIFY_FALLBACK_REPLY
         else:
             answer = (chat_reply or "").strip()
             if not answer:
@@ -2912,22 +2886,14 @@ def search(
         return RedirectResponse(url="/", status_code=303)
 
     # ── SEARCH-TYPE MESSAGE: everything below is the v1-v7 pipeline,   ──
-    # ── UNCHANGED except for WHERE `keywords` comes from.              ──
+    # ── UNCHANGED except for WHERE `keywords` comes from and the new   ──
+    # ── `time_window_days` value carried alongside it.                 ──
 
     # (KEYWORD-GENERATION SWAP) Keywords now come from the SAME Claude
     # routing call above instead of the old plain-Python template
-    # generator — Claude reads the user's actual prompt and decides how
-    # many keywords genuinely make sense (as few as one for a narrow
-    # prompt like "reddit posts about AI" -> just "AI", up to
-    # CLAUDE_MAX_KEYWORDS for a broader ask) rather than always
-    # mechanically producing the same fixed set of template variations.
-    # generate_fuzzy_keywords() is KEPT, unchanged, purely as a
+    # generator. generate_fuzzy_keywords() is KEPT, unchanged, purely as a
     # safety-net fallback for when the routing step failed outright or
-    # returned no usable keywords for a "search" intent — so a Claude
-    # hiccup can never leave a search with zero keywords; it just falls
-    # back to the old deterministic behavior for that one request. This
-    # step ALWAYS runs and enqueues the job — exactly like before — no
-    # matter what happens with the chat/session bookkeeping below.
+    # returned no usable keywords for a "search" intent.
     if routed_keywords:
         keywords = routed_keywords
     else:
@@ -2938,21 +2904,20 @@ def search(
         keywords = generate_fuzzy_keywords(query)
     keywords = keywords[:MAX_KEYWORDS]
 
+    # (TIME-WINDOW FEATURE) time_window_days is purely a downstream
+    # matching/filtering concern — see get_matched_signals() — so it is
+    # NOT passed into enqueue_search_job() (the background service's job
+    # doesn't change based on it); it's only carried along onto the chat
+    # message below so re-matching this same message later stays scoped
+    # to the same window the user actually asked for.
+    time_window_days = routed_time_window_days
+
     enqueue_search_job(topic_key, keywords, targeting_platform)
 
     # Chat/session bookkeeping is best-effort on top of the above: if
     # anything here fails — a stale/corrupt session cookie, a hiccup on the
     # flintel_users_chat collection, a Claude API error, etc. — it must
     # NEVER take down or skip the actual search job that was just queued.
-    #
-    # v4.1 FIX: track which chat this search actually landed in
-    # (`redirect_chat_id`) so the response below can send the browser back
-    # to that SAME chat thread instead of always bouncing to "/".
-    #
-    # (v5) Reuses owner_key/active_chat_id already resolved above by the
-    # routing step when available, so the same chat/job land together —
-    # but re-resolves them itself if that earlier step didn't run/failed,
-    # so this branch never depends on the routing step having succeeded.
     redirect_chat_id = None
     try:
         if not owner_key:
@@ -2961,16 +2926,16 @@ def search(
         if not active_chat_id or not get_chat_session(active_chat_id, owner_key):
             active_chat_id = create_chat_session(owner_key, owner_type, title=generate_chat_title(query))
         request.session["active_chat_id"] = active_chat_id
-        add_search_to_chat(active_chat_id, owner_key, query, topic_key, keywords, targeting_platform)
+        add_search_to_chat(
+            active_chat_id, owner_key, query, topic_key, keywords, targeting_platform,
+            time_window_days=time_window_days,
+        )
         redirect_chat_id = active_chat_id
     except Exception as exc:
         log.warning(f"Chat bookkeeping failed for topic_key={topic_key} (job was still queued): {exc}")
 
     # Stay on the same chat thread — like Claude/ChatGPT keeping you in the
     # conversation you're in, instead of bouncing back to the home screen.
-    # Falls back to "/" only if chat bookkeeping itself failed above (so
-    # there's no chat_id to redirect to). Background Service #1 still works
-    # purely off flintel_search_jobs, so none of this ever affects it.
     if redirect_chat_id:
         return RedirectResponse(url=f"/chat/{redirect_chat_id}", status_code=303)
     return RedirectResponse(url="/", status_code=303)
@@ -2993,17 +2958,9 @@ def new_chat(request: Request, title: str = Form(None)):
     """Starts a brand-new chat and makes it the active one, the same as
     clicking "New chat" in Claude/ChatGPT.
 
-    v4.4 FIX: clicking "New chat" repeatedly used to create a fresh empty
-    chat doc every single time, even if the currently active chat was
-    ALSO already empty (user hit "New chat" but never actually sent a
-    prompt into it yet) — leaving a trail of dead, message-less chats in
-    the sidebar. Now, if the currently active chat belongs to this same
-    owner and still has zero messages, that same empty chat is reused
-    (just re-marked active) instead of creating another one. A brand-new
-    chat doc is only created when there's no active chat, it belongs to
-    someone else, or it already has at least one message in it — i.e.
-    the user actually used it — which matches how Claude/ChatGPT avoid
-    piling up empty conversations from repeated "New chat" clicks."""
+    v4.4 FIX: reuses the currently active chat instead of creating a
+    fresh one if that chat belongs to this same owner and still has zero
+    messages, avoiding piling up dead, message-less chats in the sidebar."""
     owner_key, owner_type = get_owner(request)
 
     active_chat_id = request.session.get("active_chat_id")
@@ -3034,17 +2991,15 @@ def view_chat(request: Request, chat_id: str):
 
     Note for the template: render each message's `query`, `results`
     (title, post_text, post_url, platform) as post cards, and
-    `claude_answer` as the actual answer text. `keywords` stays on the
-    message purely for internal use and should not be displayed here.
-    (v5) A message with `"message_type": "chat"` has no `results` to show
-    (it's always an empty list) — just render `query` + `claude_answer`
-    like a normal conversational turn, with no post cards underneath.
-    (v6) A polite "blocked" decline and a timeout "nothing found yet"
-    answer both use this exact same rendering path already — no template
-    changes needed for either. (BUGFIX PACK #1) A "no_results" /
-    "not_available" / "disallowed" claude_answer also always has an empty
-    `results` list, for the same reason — no template changes needed here
-    either.
+    `claude_answer` as the actual answer text. `keywords` and
+    `time_window_days` stay on the message purely for internal use and
+    should not be displayed here. (v5) A message with
+    `"message_type": "chat"` has no `results` to show (it's always an
+    empty list) — just render `query` + `claude_answer` like a normal
+    conversational turn, with no post cards underneath. (v6/NEW) A polite
+    "blocked" decline, a "clarify" clarifying question, and a timeout
+    "nothing found yet" answer all use this exact same rendering path
+    already — no template changes needed for any of them.
 
     NOTE (JSON-ANALYSIS-PROMPT SWAP): `claude_answer` will now typically
     be a raw JSON string for search-type messages. This template contract
@@ -3052,19 +3007,12 @@ def view_chat(request: Request, chat_id: str):
     made as part of that swap, per what was asked.
 
     (STREAMING WIRING FIX) Before filling anything in, this now looks at
-    the LAST message in the chat: if it has a `topic_key` (it's a
-    search-type message) and its `claude_answer` is still falsy (its
-    first answer hasn't been generated yet — i.e. this is the message a
-    POST /search redirect just landed on), that message's `topic_key` is
-    passed to `_fill_in_message_outputs()` as `skip_topic_key`, so this
-    function does NOT generate its answer — a template's streaming JS is
-    expected to open `GET /chat/{chat_id}/stream?topic_key=...` for that
-    one message instead, to get the live "typing" effect (see the
-    SIMULATED-STREAM FIX note in the module docstring for exactly how
-    that route now builds it). Every other message in the chat (already
-    answered, or a chat-type turn) is filled in exactly as before. If the
-    last message doesn't match that shape (e.g. it's a chat-type turn, or
-    it already has an answer), nothing changes here at all."""
+    the LAST message in the chat: if it has a `topic_key` and its
+    `claude_answer` is still falsy, that message's `topic_key` is passed
+    to `_fill_in_message_outputs()` as `skip_topic_key`, so a template's
+    streaming JS is expected to open
+    `GET /chat/{chat_id}/stream?topic_key=...` for that one message
+    instead."""
     owner_key, _owner_type = get_owner(request)
     chat = get_chat_session(chat_id, owner_key)
     if not chat:
@@ -3084,13 +3032,7 @@ def view_chat(request: Request, chat_id: str):
             pending_stream_topic_key = latest_msg["topic_key"]
 
     # Same best-effort fill-in as home(): compute post cards + Claude's
-    # answer for any SEARCH-type message that doesn't have them yet, so
-    # opening a chat straight from the sidebar shows output immediately
-    # instead of only after a home-page visit. Chat-type messages are
-    # skipped inside _fill_in_message_outputs itself (nothing to fill in).
-    # (STREAMING WIRING FIX) The one pending message identified above, if
-    # any, is skipped here so the streaming route can produce its answer
-    # instead.
+    # answer for any SEARCH-type message that doesn't have them yet.
     if messages:
         _fill_in_message_outputs(chat_id, owner_key, messages, skip_topic_key=pending_stream_topic_key)
 
@@ -3112,55 +3054,37 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
     Events endpoint: delivers Claude's analysis answer for one specific
     search-type message (identified by `topic_key`, within this chat) as
     a sequence of small paced chunks, so a template can show it arriving
-    with the same "typing" impression as Claude.ai/ChatGPT, instead of
-    the whole answer appearing all at once the way
-    `_fill_in_message_outputs()`'s blocking path renders it.
-
-    Purely ADDITIVE, same as before: nothing about home()/view_chat()/
-    _fill_in_message_outputs() changed. If a template never opens this
-    endpoint, every message still gets its answer exactly as before
-    (computed on the next page load) — this is just a nicer alternate
-    path a template can opt into (e.g. via EventSource or a
-    fetch()-based reader).
+    with the same "typing" impression as Claude.ai/ChatGPT.
 
     Each SSE event is a JSON payload on a `data:` line:
       {"delta": "<next chunk of text>"}   -- zero or more, as text is paced out
       {"done": true}                       -- exactly once, when finished
       {"error": "<short reason>"}          -- instead of the above, on failure
 
-    (SIMULATED-STREAM FIX) Unlike the original build of this route, the
-    text streamed out here is NOT Claude's raw token-by-token output.
-    Instead, `event_generator()` first calls the existing, UNCHANGED,
-    blocking `analyze_with_claude()` (the exact same function
-    `_fill_in_message_outputs()` already uses) to get the COMPLETE answer,
-    then runs that complete text through the existing, UNCHANGED
-    `_patch_post_urls_into_answer()` BEFORE sending anything to the
-    browser — so the very first render of a brand-new answer already has
-    real post_url values patched into its "link" fields, exactly like a
-    later cached re-render always has. Only THEN is that same, now-final
-    string sliced into small pieces (`STREAM_CHUNK_CHARS` characters each)
-    and paced out with a short `time.sleep(STREAM_CHUNK_DELAY_SECONDS)`
-    between pieces, to reproduce the live-typing impression. See the
-    SIMULATED-STREAM FIX note in the module docstring for the full
-    rationale and the documented time-to-first-byte trade-off.
+    (SIMULATED-STREAM FIX) The text streamed out here is NOT Claude's raw
+    token-by-token output. `event_generator()` first calls the existing,
+    UNCHANGED, blocking `analyze_with_claude()` to get the COMPLETE
+    answer, runs it through `_patch_post_urls_into_answer()`, THEN paces
+    that final string out in small pieces (`STREAM_CHUNK_CHARS`
+    characters, `STREAM_CHUNK_DELAY_SECONDS` pause between pieces) to
+    reproduce the live-typing impression.
 
     On successful completion, this SAME already-patched string is saved
     via the EXACT SAME save_claude_answer_to_chat() /
     append_to_chat_summary() / save_signal_results_to_chat() calls
-    already used by _fill_in_message_outputs() — so the caching guarantee
-    is identical: generated (and billed) once, then served from the
-    cache forever after. Because the string streamed to the browser and
-    the string cached to Mongo are now literally the same object, a
-    user's live-typed first view and any later reload of the same chat
-    are always byte-for-byte identical (previously they could differ,
-    since only the cached copy ever got link-patched).
+    already used by _fill_in_message_outputs().
 
-    Unchanged guard, exactly as before: if the target message's
-    `claude_answer` is already truthy (already generated/cached — by the
-    normal blocking path, or by an earlier call to this same route), this
-    immediately replays that cached text as a single `delta` event
-    followed by `done`, and returns — it never redoes any matching/Claude
-    work for a message that already has its answer."""
+    Unchanged guard: if the target message's `claude_answer` is already
+    truthy, this immediately replays that cached text as a single `delta`
+    event followed by `done`, and returns — it never redoes any
+    matching/Claude work for a message that already has its answer.
+
+    (TIME-WINDOW FEATURE) The ONLY change in this route: the
+    get_matched_signals() call now also passes
+    `since_days=msg.get("time_window_days")` — for every message with no
+    stored time window (every message from before this feature, and any
+    new message where the user gave no time range) this is None and
+    behaves exactly as before."""
     owner_key, _owner_type = get_owner(request)
     chat = get_chat_session(chat_id, owner_key)
 
@@ -3194,6 +3118,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             topic_key,
             msg.get("keywords", []),
             targeting_platform=msg.get("targeting_platform", "all"),
+            since_days=msg.get("time_window_days"),
         )
     except Exception as exc:
         log.warning(f"Signal matching failed for streaming topic_key={topic_key}: {exc}")
@@ -3215,15 +3140,12 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
 
         # (SIMULATED-STREAM FIX) Step 2: patch real post_url values into
         # the complete answer BEFORE any of it is ever sent to the
-        # browser — same unchanged helper _fill_in_message_outputs() uses,
-        # just moved earlier so the FIRST render the user sees already has
-        # correct links, not just later cached re-renders.
+        # browser.
         if full_answer:
             full_answer = _patch_post_urls_into_answer(full_answer, matched)
 
         # (SIMULATED-STREAM FIX) Step 3: pace the now-final string back out
-        # in small pieces to reproduce the live-typing impression, instead
-        # of dumping it all in one SSE event.
+        # in small pieces to reproduce the live-typing impression.
         if full_answer:
             for i in range(0, len(full_answer), STREAM_CHUNK_CHARS):
                 piece = full_answer[i:i + STREAM_CHUNK_CHARS]
@@ -3257,19 +3179,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
 def delete_chat(request: Request, chat_id: str):
     """(v4.3) Deletes exactly ONE chat belonging to the current owner —
     never every chat for that owner, and never a chat belonging to a
-    different owner (signed-in email or guest UUID).
-
-    Scoping works exactly like get_chat_session()/view_chat() above: the
-    delete is filtered on BOTH chat_id AND owner_key at the database
-    level (see delete_chat_session()), not just checked afterwards — so a
-    guest or another account can never delete a chat by guessing its id,
-    the same guarantee already relied on for reading a chat.
-
-    If the deleted chat was the currently active one, `active_chat_id` is
-    cleared from the session so home() doesn't try to keep rendering a
-    chat that no longer exists. Sidebar/history for every other chat
-    belonging to this owner is completely untouched — this route never
-    touches any chat_id other than the one passed in."""
+    different owner (signed-in email or guest UUID)."""
     owner_key, _owner_type = get_owner(request)
     deleted = delete_chat_session(chat_id, owner_key)
 
