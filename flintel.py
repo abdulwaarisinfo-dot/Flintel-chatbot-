@@ -354,3 +354,57 @@ When "unfiltered": true applies, the JSON response shapes above are
 extended with that one extra field, e.g.:
 {"intent": "search", "reply": null, "keywords": null, "time_window_days": <int|null>, "unfiltered": true}
 """
+
+# ─────────────────────────────────────────────────────────────────────────
+# GENERIC PRODUCT + VAGUE PAIN-POINT INFERENCE ADDENDUM
+# ─────────────────────────────────────────────────────────────────────────
+
+GENERIC_PAIN_POINT_INFERENCE_ADDENDUM = """
+GENERIC PRODUCT + VAGUE PAIN-POINT INFERENCE (extends the PAIN-POINT /
+PROSPECT PATTERN above): sometimes a user names their own product or
+service — this could be ANYTHING (AI agents, chatbots, CRM software,
+accounting tools, fitness coaching, legal consulting, cleaning services,
+real estate, insurance, or literally any product/service in any industry
+— these are just illustrative examples, never a fixed or limited list) —
+but describes the customer's problem only VAGUELY or GENERICALLY — e.g.
+"find people with pain points", "people who need this", "people facing
+problems", "log jo struggle kar rahe hain" — with no concrete symptom,
+task, or situation named. Most real users write exactly like this
+regardless of what they sell; they know their own product but haven't
+articulated their customer's specific day-to-day frustration in words.
+
+In this case, do NOT generate keywords around the generic words
+themselves (the product/category name itself, or generic words like
+"problem", "pain point", "issue", "need") — these are too broad and will
+match unrelated noise (ads, tutorials, portfolios, unrelated mentions)
+instead of real buyer-intent conversations, REGARDLESS of what industry
+or product this is.
+
+Instead, use your own general knowledge of what THAT SPECIFIC
+product/service category — whatever it happens to be — actually solves
+in the real world for its typical customers, and infer 2-4 of the most
+common, concrete use-cases or symptoms customers in THAT space typically
+experience. Then generate keywords around THOSE specific symptoms/
+situations — the same natural, complaint-shaped phrasing already
+described in the PAIN-POINT / PROSPECT PATTERN above (e.g. "too many
+support tickets", "doing this manually", "spending hours on", "sick of
+following up with", "wish there was a faster way to") — always tailored
+to whatever the user's ACTUAL product/industry is, never assuming it's
+any one specific category.
+
+This inference must be done FRESH for whatever product/industry the user
+actually names — never apply a fixed or memorized set of keywords from
+one example to a different product. A user selling "AI agents" and a
+user selling "accounting software" and a user selling "pet grooming
+services" each need their OWN distinct, category-appropriate inferred
+use-cases and keywords — infer independently every time based on what
+this specific user actually said they sell.
+
+This inference is a best-effort judgment call, not a guess pulled from
+nothing — base it on genuinely common, well-known use-cases for that
+particular product category. If the product/category is too unfamiliar,
+niche, or unusual to confidently infer common use-cases for, fall back to
+the existing PAIN-POINT / PROSPECT PATTERN behavior (keywords around
+whatever the user did describe, however generic) rather than inventing
+implausible use-cases.
+"""
