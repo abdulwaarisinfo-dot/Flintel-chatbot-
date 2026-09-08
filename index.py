@@ -6,7 +6,7 @@ FLINTEL — WEB SERVICE (v7 + JSON-ANALYSIS-PROMPT SWAP + CLAUDE-KEYWORD SWAP
 + ROUTER INTENT REFINEMENT)
 ============================================================================
 Everything from v3 is UNCHANGED and still works exactly as before:
-  1. Take a user prompt (brand/topic/product name) from a simple web form. 
+  1. Take a user prompt (brand/topic/product name) from a simple web form.
   2. Generate KEYWORDS (see KEYWORD-GENERATION SWAP note near the bottom
      of this docstring — this step's SOURCE changed, nothing downstream
      of it did).
@@ -2109,7 +2109,11 @@ text outside the JSON object — in EXACTLY one of these four shapes:
 {"intent": "clarify", "reply": "<short, natural clarifying question>", "keywords": null, "time_window_days": null}
 """
 
-CLAUDE_ROUTER_SYSTEM_PROMPT = CLAUDE_ROUTER_SYSTEM_PROMPT + "\n" + flintel.ROUTER_UNFILTERED_ADDENDUM
+CLAUDE_ROUTER_SYSTEM_PROMPT = (
+    CLAUDE_ROUTER_SYSTEM_PROMPT
+    + "\n" + flintel.ROUTER_UNFILTERED_ADDENDUM
+    + "\n" + flintel.GENERIC_PAIN_POINT_INFERENCE_ADDENDUM
+)
 
 CLAUDE_CHAT_FALLBACK_SYSTEM_PROMPT = """
 You are the AI assistant inside Flintel, a social listening platform.
