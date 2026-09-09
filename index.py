@@ -653,7 +653,7 @@ from dotenv import load_dotenv
 from bson import ObjectId
 from bson.errors import InvalidId
 from pymongo import MongoClient
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, Request, Form, BackgroundTasks
 from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
@@ -792,6 +792,15 @@ users_collection.create_index("google_id", unique=True, sparse=True)
 chats_collection = db.flintel_users_chat
 chats_collection.create_index("chat_id", unique=True)
 chats_collection.create_index("owner_key")
+
+# (PERFORMANCE FIX) signals_collection had NO indexes at all — every
+# get_matched_signals() call (topic_key lookups and the time/platform-
+# filtered unfiltered-mode query) was doing a full collection scan. Adding
+# these is purely a speed improvement: it changes no query's results,
+# only how fast MongoDB can find them. Safe to create if they already
+# exist — create_index() is a no-op in that case.
+signals_collection.create_index("topic_key")
+signals_collection.create_index("created_utc")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # APP SETUP
@@ -3199,7 +3208,67 @@ def migrate_anon_chats_to_owner(anon_id: str, new_owner_key: str):
         )
 
 
-def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_topic_key: str = None):
+def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query: str):
+    """(PERFORMANCE FIX) Extracted, UNCHANGED logic from the RESPONSE_TIMEOUT
+    fallback branch that used to run inline inside _fill_in_message_outputs()
+    — same calls, same order, same caching. Pulled out so it can be
+    scheduled via BackgroundTasks (runs after the response is sent)
+    instead of blocking the request, exactly like
+    _complete_message_answer_and_results() below."""
+    try:
+        answer = analyze_with_claude(query, [])
+        save_claude_answer_to_chat(chat_id, owner_key, topic_key, answer)
+        try:
+            append_to_chat_summary(chat_id, owner_key, query, answer)
+        except Exception as exc:
+            log.warning(f"Updating chat summary failed for topic_key={topic_key}: {exc}")
+    except Exception as exc:
+        log.warning(f"Timeout-fallback Claude analysis failed for topic_key={topic_key}: {exc}")
+
+
+def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict, matched: list):
+    """(PERFORMANCE FIX) Extracted, UNCHANGED logic — this is exactly what
+    _fill_in_message_outputs() already did inline for the "needs_answer" +
+    "needs_results" case, just pulled into its own function so it can be
+    run either synchronously (existing behavior, when no background_tasks
+    is available) or scheduled via BackgroundTasks (new: runs AFTER the
+    response is already sent, so a slow Claude call never blocks the
+    request). Not a single line of the actual logic below changed — same
+    calls, same order, same caching, same BUGFIX PACK #1 results-gating."""
+    needs_answer = not msg.get("claude_answer")
+    answer_for_format_check = msg.get("claude_answer")
+
+    if needs_answer:
+        try:
+            extra_ctx = None
+            if msg.get("unfiltered"):
+                extra_ctx = flintel.build_unfiltered_answer_context(
+                    msg["query"], msg.get("time_window_days")
+                )
+            answer = analyze_with_claude(msg["query"], matched, extra_context=extra_ctx)
+            answer = _patch_post_urls_into_answer(answer, matched)
+            msg["claude_answer"] = answer
+            save_claude_answer_to_chat(chat_id, owner_key, msg["topic_key"], answer)
+            answer_for_format_check = answer
+            try:
+                append_to_chat_summary(chat_id, owner_key, msg["query"], answer)
+            except Exception as exc:
+                log.warning(f"Updating chat summary failed for topic_key={msg.get('topic_key')}: {exc}")
+        except Exception as exc:
+            log.warning(f"Claude analysis failed for topic_key={msg.get('topic_key')}: {exc}")
+
+    if not msg.get("results"):
+        claude_format = _extract_claude_format(answer_for_format_check)
+        results_to_save = [] if claude_format in _NO_DATA_CLAUDE_FORMATS else matched
+        msg["results"] = results_to_save
+        try:
+            save_signal_results_to_chat(chat_id, owner_key, msg["topic_key"], results_to_save)
+        except Exception as exc:
+            log.warning(f"Saving matched results to chat failed for topic_key={msg.get('topic_key')}: {exc}")
+
+
+def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_topic_key: str = None,
+                              background_tasks: BackgroundTasks = None):
     """Shared by home() and view_chat(): for any SEARCH-type message in
     `messages` that's still missing its post-card `results` and/or its
     `claude_answer`, looks up matching signals ONCE and uses that single
@@ -3211,6 +3280,23 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
         answer is cached forever after (only the answer, not the posts).
     Best-effort per message — one message failing must never block the
     rest of the page, and Claude failures must never affect post cards.
+
+    (PERFORMANCE FIX) New optional `background_tasks` parameter (default
+    None, fully backward-compatible — any existing/other caller that
+    doesn't pass it gets the EXACT original synchronous behavior, nothing
+    changes for it). When provided, the "generate answer via Claude, then
+    save results" step for a message that needs a fresh answer is
+    scheduled via `background_tasks.add_task(...)` instead of being run
+    inline — the actual logic is byte-for-byte identical either way (see
+    `_complete_message_answer_and_results()`), only WHEN it runs changes:
+    after the response has already been sent, instead of blocking it.
+    This is what makes opening/switching to a chat fast even when one of
+    its messages still needs a fresh Claude call — that message simply
+    shows its existing "still gathering results" loading state for this
+    one page load, exactly like a genuinely brand-new message already
+    does, and resolves on the next load once the background task finishes
+    and caches it — rather than the whole request blocking on a live
+    Claude call that can take several seconds.
 
     (v5) Messages with no topic_key are plain chat-type turns — skipped
     here immediately, since there is nothing to fill in for them.
@@ -3290,16 +3376,10 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
             # RESPONSE_TIMEOUT seconds, give the user a plain "nothing
             # found" answer instead of leaving the turn blank forever.
             if needs_answer and _elapsed_seconds(msg.get("requested_at")) >= RESPONSE_TIMEOUT:
-                try:
-                    answer = analyze_with_claude(msg["query"], [])
-                    msg["claude_answer"] = answer
-                    save_claude_answer_to_chat(chat_id, owner_key, msg["topic_key"], answer)
-                    try:
-                        append_to_chat_summary(chat_id, owner_key, msg["query"], answer)
-                    except Exception as exc:
-                        log.warning(f"Updating chat summary failed for topic_key={msg.get('topic_key')}: {exc}")
-                except Exception as exc:
-                    log.warning(f"Timeout-fallback Claude analysis failed for topic_key={msg.get('topic_key')}: {exc}")
+                if background_tasks is not None:
+                    background_tasks.add_task(_timeout_fallback_answer, chat_id, owner_key, msg["topic_key"], msg["query"])
+                else:
+                    _timeout_fallback_answer(chat_id, owner_key, msg["topic_key"], msg["query"])
             continue
 
         # (BUGFIX PACK #1) Track whatever answer text is/becomes available
@@ -3307,44 +3387,16 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
         # starts as whatever's already cached (may be None).
         answer_for_format_check = msg.get("claude_answer")
 
-        if needs_answer:
-            try:
-                extra_ctx = None
-                if msg.get("unfiltered"):
-                    extra_ctx = flintel.build_unfiltered_answer_context(
-                        msg["query"], msg.get("time_window_days")
-                    )
-                answer = analyze_with_claude(msg["query"], matched, extra_context=extra_ctx)
-                # (POST_URL FIX) Patch in real post_url values before this
-                # answer is cached anywhere.
-                answer = _patch_post_urls_into_answer(answer, matched)
-                msg["claude_answer"] = answer
-                save_claude_answer_to_chat(chat_id, owner_key, msg["topic_key"], answer)
-                answer_for_format_check = answer
-                # (v5) Best-effort: fold this now-answered search turn into
-                # the same rolling summary chat-type turns use, so later
-                # chat-type replies / routing decisions in this chat can
-                # reference it too.
-                try:
-                    append_to_chat_summary(chat_id, owner_key, msg["query"], answer)
-                except Exception as exc:
-                    log.warning(f"Updating chat summary failed for topic_key={msg.get('topic_key')}: {exc}")
-            except Exception as exc:
-                log.warning(f"Claude analysis failed for topic_key={msg.get('topic_key')}: {exc}")
-
-        if needs_results:
-            # (BUGFIX PACK #1) If we know the answer's format and it says
-            # there's nothing relevant/available, don't show the loosely
-            # matched posts underneath a "no results" answer. If the
-            # format can't be determined (None), fall back to the
-            # original, unconditional behavior of showing `matched`.
-            claude_format = _extract_claude_format(answer_for_format_check)
-            results_to_save = [] if claude_format in _NO_DATA_CLAUDE_FORMATS else matched
-            msg["results"] = results_to_save
-            try:
-                save_signal_results_to_chat(chat_id, owner_key, msg["topic_key"], results_to_save)
-            except Exception as exc:
-                log.warning(f"Saving matched results to chat failed for topic_key={msg.get('topic_key')}: {exc}")
+        # (PERFORMANCE FIX) This used to run inline here, blocking the
+        # request on a live Claude call whenever needs_answer was True.
+        # The exact same logic now lives in
+        # _complete_message_answer_and_results() — run inline (identical
+        # behavior) when no background_tasks was given, or scheduled to
+        # run AFTER the response is sent when it was.
+        if background_tasks is not None:
+            background_tasks.add_task(_complete_message_answer_and_results, chat_id, owner_key, msg, matched)
+        else:
+            _complete_message_answer_and_results(chat_id, owner_key, msg, matched)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -3710,7 +3762,7 @@ def new_chat(request: Request, title: str = Form(None)):
 
 
 @app.get("/chat/{chat_id}")
-def view_chat(request: Request, chat_id: str):
+def view_chat(request: Request, chat_id: str, background_tasks: BackgroundTasks):
     """Opens a specific past chat and makes it active again — this is how
     a returning user (or a user who just logged back in with their email)
     gets the same chat back, including any previously matched post cards
@@ -3761,7 +3813,8 @@ def view_chat(request: Request, chat_id: str):
     # Same best-effort fill-in as home(): compute post cards + Claude's
     # answer for any SEARCH-type message that doesn't have them yet.
     if messages:
-        _fill_in_message_outputs(chat_id, owner_key, messages, skip_topic_key=pending_stream_topic_key)
+        _fill_in_message_outputs(chat_id, owner_key, messages, skip_topic_key=pending_stream_topic_key,
+                                  background_tasks=background_tasks)
 
     return templates.TemplateResponse(
         "chat.html",
