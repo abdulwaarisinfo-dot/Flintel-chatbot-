@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1633,6 +1632,29 @@
         currentStyleTag.textContent = newStyleTag.textContent;
       }
       currentMain.innerHTML = newMain.innerHTML;
+
+      // (Bug 5 fix) This file defines its own static #docked-input-wrap as
+      // a direct sibling of <main> (outside it), present only for design
+      // fidelity and meant to always stay hidden. A fetched chat page's own
+      // <main> markup carries its OWN, functional #docked-input-wrap — and
+      // once that markup has just been swapped into currentMain above, the
+      // two elements share the same id and both get styled by whichever
+      // stylesheet is currently active (including chat.html's, which makes
+      // #docked-input-wrap a visible fixed-position bar). Left alone, that
+      // means a real chat is now showing a duplicate/overlapping docked bar.
+      // Detect that case — a #docked-input-wrap now living INSIDE <main> —
+      // and remove this file's own static, always-outside-<main> leftover
+      // so exactly one (the real, functional) #docked-input-wrap remains.
+      // This placeholder was never interactive on its own, so removing it
+      // costs nothing even if the user later soft-navigates back home.
+      const innerDockedInputWrap = currentMain.querySelector('#docked-input-wrap');
+      if (innerDockedInputWrap) {
+        const staticOuterDockedInputWrap = document.querySelector('.layout > #docked-input-wrap');
+        if (staticOuterDockedInputWrap) {
+          staticOuterDockedInputWrap.remove();
+        }
+      }
+
       if (newSessionsList && currentSessionsList) {
         currentSessionsList.innerHTML = newSessionsList.innerHTML;
       }
