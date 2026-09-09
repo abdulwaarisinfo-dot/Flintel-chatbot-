@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -836,6 +837,13 @@
   //      querySelectorAll(...).forEach(...) instead of a single call) ----
   async function navigateTo(url, { method = 'GET', pushState = true } = {}) {
     console.log('[soft-nav] navigateTo() called:', method, url);
+    // (Bug 1 fix) Close any still-open SSE connection from the page we're
+    // leaving BEFORE doing anything else — otherwise a mid-stream answer
+    // left behind by a chat switch keeps its connection open indefinitely.
+    if (activeEventSource) {
+      activeEventSource.close();
+      activeEventSource = null;
+    }
     try {
       const response = await fetch(url, {
         method,
@@ -873,6 +881,12 @@
       // subtree — this is the fix for the stale-DOM-reference bug where
       // these stopped working after any soft navigation.
       initMainPageInteractions();
+      // (Bug 3 fix) Re-run the auto-scroll-to-latest-turn behavior after
+      // every soft navigation too — previously this only ever ran once, on
+      // the initial real page load, so switching to a chat with existing
+      // messages left the user at the top of the thread instead of
+      // scrolled to the latest message.
+      scrollToLatestTurn();
       if (newSessionsList && currentSessionsList) {
         currentSessionsList.innerHTML = newSessionsList.innerHTML;
       }
@@ -1004,6 +1018,12 @@
   // them in one reusable init function — called once at load, and again
   // after every soft navigation — fixes that.
   let currentAnswerObserver = null;
+  // (Bug 1 fix) Tracks the currently-open SSE connection, if any, so
+  // navigateTo() can close it before a soft navigation — without this, a
+  // still-streaming EventSource is left open in the background on every
+  // chat switch, and repeated switching stacks up multiple live
+  // connections against the browser's per-origin connection limit.
+  let activeEventSource = null;
 
   function initMainPageInteractions() {
     const attachBtn = document.getElementById('attach-btn');
@@ -1046,14 +1066,6 @@
         platformInput.value = li.dataset.value;
         closePlatformsMenu();
       });
-      // Delegated on document, but re-queries platformsMenu/platformsBtn
-      // fresh via the closure created on THIS init call — since this whole
-      // listener is re-attached each time initMainPageInteractions() runs
-      // against the current (possibly newly swapped-in) elements, it never
-      // holds onto stale references across a soft navigation.
-      document.addEventListener('click', (e) => {
-        if (!platformsMenu.contains(e.target) && e.target !== platformsBtn) closePlatformsMenu();
-      });
     }
 
     const searchForm = document.getElementById('search-form');
@@ -1091,6 +1103,26 @@
   }
 
   initMainPageInteractions();
+
+  // (Bug 2 fix) "Click outside the platforms dropdown closes it" — bound
+  // exactly ONCE here, outside initMainPageInteractions(), instead of being
+  // re-bound on every soft navigation (which was stacking a new listener
+  // onto `document` every time and never removing the old ones). Queries
+  // the platforms elements fresh by id on every click rather than relying
+  // on any closure captured at bind time, so it keeps working correctly
+  // against whichever elements are currently in the DOM after any number
+  // of soft navigations.
+  document.addEventListener('click', (e) => {
+    const platformsMenu = document.getElementById('platforms-menu');
+    const platformsBtn = document.getElementById('platforms-btn');
+    const platformsChevron = document.getElementById('platforms-chevron');
+    if (!platformsMenu || !platformsBtn) return;
+    if (platformsMenu.style.display !== 'block') return;
+    if (platformsMenu.contains(e.target) || e.target === platformsBtn) return;
+    platformsMenu.style.display = 'none';
+    platformsBtn.setAttribute('aria-expanded', 'false');
+    if (platformsChevron) platformsChevron.style.transform = 'rotate(0deg)';
+  });
 
   // ---- Structured JSON answer rendering ----
   // Claude's analysis system prompt now returns strict JSON matching one of
@@ -1670,12 +1702,13 @@
   // view below the fold. This jumps straight to it instead, same as any
   // normal chat app (WhatsApp, ChatGPT, etc.) always showing the latest
   // message rather than making you scroll down to find it yourself.
-  (function scrollToLatestTurn() {
+  function scrollToLatestTurn() {
     const turns = document.querySelectorAll('.turn-block');
     if (!turns.length) return;
     const latest = turns[turns.length - 1];
     latest.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  })();
+  }
+  scrollToLatestTurn();
 </script>
 <script>
   // ---- Live streaming for the one pending answer, if any ----
@@ -1711,6 +1744,7 @@
 
     let accumulated = '';
     const source = new EventSource(`/chat/${chatId}/stream?topic_key=${encodeURIComponent(topicKey)}`);
+    activeEventSource = source;
 
     source.onmessage = (event) => {
       let payload;
@@ -1728,6 +1762,7 @@
 
       if (payload.done) {
         source.close();
+        activeEventSource = null;
         if (phraseTimer) clearInterval(phraseTimer);
         // No page reload — the accumulated text is now complete, valid
         // JSON. Render it in-place, right where the loading-row was,
@@ -1762,6 +1797,7 @@
 
       if (payload.error) {
         source.close();
+        activeEventSource = null;
         if (phraseTimer) clearInterval(phraseTimer);
         // Leave the original "Still gathering results…" text exactly as-is
         // — no error message shown here, no DOM changes. A later normal
@@ -1772,6 +1808,7 @@
 
     source.onerror = () => {
       source.close();
+      activeEventSource = null;
       if (phraseTimer) clearInterval(phraseTimer);
       // Same as the explicit {"error": ...} case above — leave the existing
       // loading text untouched, no visible change.
