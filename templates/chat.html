@@ -187,7 +187,7 @@
   .mobile-overlay.visible { display: block; }
 
   /* ---------- Main ---------- */
-  .main { flex: 1; position: relative; display: flex; flex-direction: column; }
+  .main { flex: 1; position: relative; display: flex; flex-direction: column; overflow-x: hidden; }
 
   .topbar {
     height: 62px; display: flex; align-items: center; justify-content: space-between;
@@ -218,7 +218,7 @@
      No keyword list or job/status internals are ever rendered here.
      ========================================================================= */
   .thread-wrap { flex: 1; padding: 84px 20px 220px 20px; }
-  .thread-inner { max-width: 950px; margin: 0 auto; }
+  .thread-inner { max-width: 950px; margin: 0 auto; overflow-x: hidden; }
   @media (min-width: 1060px) {
     .thread-wrap { padding-left: 109px; padding-right: 109px; }
     .thread-inner { max-width: 1382px; margin: 0 auto; }
@@ -465,7 +465,7 @@
   /* Gated on a PLACEHOLDER field (msg.dashboard) — see state-card comment above. */
   .dashboard-brand-block { margin-bottom: 40px; }
   .metrics-section-title { color: #fff; font-size: 17px; font-weight: 600; line-height: 26px; margin-bottom: 20px; }
-  .metrics-table { background: #1e1d1c; border: 0.5px solid #343434; border-radius: 12px; overflow: hidden; margin-bottom: 40px; }
+  .metrics-table { background: #1e1d1c; border: 0.5px solid #343434; border-radius: 12px; overflow-y: hidden; overflow-x: auto; margin-bottom: 40px; }
   .metrics-row { display: grid; height: 47px; }
   .metrics-row.header { background: #252422; }
   .metrics-row:not(.header) { background: #1e1d1c; border-top: 0.5px solid #343434; }
@@ -1807,7 +1807,7 @@
     const turns = document.querySelectorAll('.turn-block');
     if (!turns.length) return;
     const latest = turns[turns.length - 1];
-    latest.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    latest.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
   }
   scrollToLatestTurn();
 </script>
@@ -2049,7 +2049,7 @@
         // navigation replaced it since then.
         const liveThreadInner = document.querySelector('.thread-inner') || threadInner;
         liveThreadInner.appendChild(latestTurn);
-        latestTurn.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        latestTurn.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
 
         // If this new turn is mid-stream, wire it up immediately — same
         // logic as a normal page load, just triggered right now instead.
