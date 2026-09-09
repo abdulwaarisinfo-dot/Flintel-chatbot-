@@ -1602,8 +1602,27 @@
   // chat switch, and repeated switching stacks up multiple live
   // connections against the browser's per-origin connection limit.
   let activeEventSource = null;
+  // (RACE-CONDITION FIX — parity with chat.html) Monotonically
+  // incrementing generation counter. Every async soft-nav / search-submit
+  // / stream operation snapshots this at the start and re-checks it
+  // immediately before mutating the DOM — if it's moved on (a newer
+  // navigation superseded it), the stale operation silently discards its
+  // result instead of touching a DOM that now belongs to a different
+  // chat. This exact fix was previously applied only to chat.html's
+  // navigateTo()/wireUpSoftSearchSubmit()/wireUpStream() — index.html had
+  // the identical gap in its own copies of these functions (a rapid
+  // double sidebar-click, or a search-submit followed by a fast chat
+  // switch, could inject a stale response into the wrong page state)
+  // and needed the same protection.
+  let softNavGeneration = 0;
 
   async function navigateTo(url, { method = 'GET', pushState = true } = {}) {
+    // (RACE-CONDITION FIX) Snapshot the generation counter for THIS
+    // navigation right away — anything that happens after any subsequent
+    // await in this function checks against this snapshot before touching
+    // the DOM, so a later navigation started while this one is still
+    // in-flight always wins, and this one silently discards its result.
+    const myNav = ++softNavGeneration;
     console.log('[soft-nav] navigateTo() called:', method, url);
     // (Bug 1 fix) Close any still-open SSE connection from the page we're
     // leaving BEFORE doing anything else — otherwise a mid-stream answer
@@ -1629,6 +1648,13 @@
       const currentSessionsList = document.querySelector('#sessions-list');
 
       if (!newMain || !currentMain) throw new Error('Fetched page missing <main> — falling back to real navigation');
+
+      // (RACE-CONDITION FIX) A newer navigation may have started and
+      // already completed while this fetch/parse was in flight — if so,
+      // this response is stale and must never touch the DOM. Placed here,
+      // right before the first DOM mutation, this single check protects
+      // every mutation below it since nothing between them awaits again.
+      if (myNav !== softNavGeneration) return;
 
       // Swap the active <style> tag's content BEFORE swapping <main> — the
       // fetched page might be a different template (index.html <-> chat.html)
@@ -1964,6 +1990,13 @@
     const topicKey = pendingTurn.dataset.topicKey || '';
     if (!chatId || !topicKey) return;
 
+    // (RACE-CONDITION FIX — parity with chat.html) Snapshot the
+    // generation counter for THIS stream — checked again in the "done"
+    // branch before injecting the finished answer into the DOM, so a
+    // stream still running for a chat the user has since navigated away
+    // from can't inject its result into whatever chat is now on screen.
+    const myGen = softNavGeneration;
+
     const loadingTextEl = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)} .loading-text`);
 
     const rotatingPhrases = ['Reading matched posts…', 'Writing up the answer…'];
@@ -1997,6 +2030,13 @@
         source.close();
         activeEventSource = null;
         if (phraseTimer) clearInterval(phraseTimer);
+        // (RACE-CONDITION FIX) A navigation may have happened while this
+        // stream was still running — if so, its finished answer must
+        // never be injected into whatever chat is now on screen.
+        if (myGen !== softNavGeneration) {
+          console.warn('[stale-response] Discarding streamed answer — navigation occurred mid-stream.');
+          return;
+        }
         const loadingRow = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)}`);
         if (loadingRow) {
           const wrap = document.createElement('div');
@@ -2054,6 +2094,13 @@
       const query = searchInput ? searchInput.value.trim() : '';
       if (!query) return;
 
+      // (RACE-CONDITION FIX) Snapshot the generation counter for THIS
+      // submission — checked again right before any DOM mutation below, so
+      // a navigation that happens while this request is in flight makes
+      // this result get silently discarded instead of appending a stray
+      // turn to whatever chat is now on screen.
+      const myGen = softNavGeneration;
+
       if (submitBtn) submitBtn.disabled = true;
 
       let response;
@@ -2075,6 +2122,14 @@
       try {
         const html = await response.text();
         const doc = new DOMParser().parseFromString(html, 'text/html');
+
+        // (RACE-CONDITION FIX) A navigation may have happened while this
+        // request was in flight — if so, this response is stale and must
+        // never touch the DOM.
+        if (myGen !== softNavGeneration) {
+          console.warn('[stale-response] Discarding search result — navigation occurred mid-request.');
+          return;
+        }
 
         history.pushState({ softNav: true }, '', response.url || form.action);
         const newChatIdInput = doc.querySelector('#search-form input[name="chat_id"]');
@@ -2110,9 +2165,11 @@
       } catch (domErr) {
         console.warn('[dom-update-failed][search-submit] Search succeeded server-side; only the in-place DOM update failed (not a network issue, so no hard reload was triggered):', domErr);
       } finally {
-        const freshSubmitBtn = document.getElementById('submit-btn');
-        const freshSearchInput = document.getElementById('search-input');
-        if (freshSubmitBtn) freshSubmitBtn.disabled = freshSearchInput ? freshSearchInput.value.trim().length === 0 : false;
+        if (myGen === softNavGeneration) {
+          const freshSubmitBtn = document.getElementById('submit-btn');
+          const freshSearchInput = document.getElementById('search-input');
+          if (freshSubmitBtn) freshSubmitBtn.disabled = freshSearchInput ? freshSearchInput.value.trim().length === 0 : false;
+        }
       }
     });
   }
@@ -2141,6 +2198,10 @@
       const query = searchInput ? searchInput.value.trim() : '';
       if (!query) return;
 
+      // (RACE-CONDITION FIX) Same snapshot-and-recheck pattern as
+      // wireUpSoftSearchSubmit() above.
+      const myGen = softNavGeneration;
+
       if (submitBtn) submitBtn.disabled = true;
 
       let response;
@@ -2162,6 +2223,13 @@
       try {
         const html = await response.text();
         const doc = new DOMParser().parseFromString(html, 'text/html');
+
+        // (RACE-CONDITION FIX) A navigation may have happened while this
+        // request was in flight — if so, this response is stale.
+        if (myGen !== softNavGeneration) {
+          console.warn('[stale-response] Discarding hero search result — navigation occurred mid-request.');
+          return;
+        }
 
         // A first search from home is answered on a NEW chat, whose page
         // is chat.html's own template (a different, non-identical
@@ -2221,9 +2289,11 @@
       } catch (domErr) {
         console.warn('[dom-update-failed][hero-search-submit] Search succeeded server-side; only the in-place DOM update failed (not a network issue, so no hard reload was triggered):', domErr);
       } finally {
-        const freshSubmitBtn = document.getElementById('submit-btn');
-        const freshSearchInput = document.getElementById('search-input');
-        if (freshSubmitBtn) freshSubmitBtn.disabled = freshSearchInput ? freshSearchInput.value.trim().length === 0 : false;
+        if (myGen === softNavGeneration) {
+          const freshSubmitBtn = document.getElementById('submit-btn');
+          const freshSearchInput = document.getElementById('search-input');
+          if (freshSubmitBtn) freshSubmitBtn.disabled = freshSearchInput ? freshSearchInput.value.trim().length === 0 : false;
+        }
       }
     });
   }
