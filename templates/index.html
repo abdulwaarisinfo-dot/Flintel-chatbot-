@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1632,29 +1633,24 @@
         currentStyleTag.textContent = newStyleTag.textContent;
       }
       currentMain.innerHTML = newMain.innerHTML;
-
-      // (Bug 5 fix) This file defines its own static #docked-input-wrap as
-      // a direct sibling of <main> (outside it), present only for design
-      // fidelity and meant to always stay hidden. A fetched chat page's own
-      // <main> markup carries its OWN, functional #docked-input-wrap — and
-      // once that markup has just been swapped into currentMain above, the
-      // two elements share the same id and both get styled by whichever
-      // stylesheet is currently active (including chat.html's, which makes
-      // #docked-input-wrap a visible fixed-position bar). Left alone, that
-      // means a real chat is now showing a duplicate/overlapping docked bar.
-      // Detect that case — a #docked-input-wrap now living INSIDE <main> —
-      // and remove this file's own static, always-outside-<main> leftover
-      // so exactly one (the real, functional) #docked-input-wrap remains.
-      // This placeholder was never interactive on its own, so removing it
-      // costs nothing even if the user later soft-navigates back home.
-      const innerDockedInputWrap = currentMain.querySelector('#docked-input-wrap');
-      if (innerDockedInputWrap) {
-        const staticOuterDockedInputWrap = document.querySelector('.layout > #docked-input-wrap');
-        if (staticOuterDockedInputWrap) {
-          staticOuterDockedInputWrap.remove();
+      // (Bug 5 fix) This page's own #docked-input-wrap lives OUTSIDE
+      // <main>, so the swap above never touches it. That's harmless as
+      // long as it stays hidden by this page's own CSS rule
+      // (`.docked-input-wrap { display: none; ... }`) — but if we just
+      // navigated into a page (chat.html) whose <main> supplies its own
+      // real, always-visible `.docked-input-wrap`, and whose stylesheet
+      // (just swapped in above) has no such `display: none` rule, this
+      // leftover element would start rendering too, stacking on top of
+      // the freshly-swapped-in one. Remove it whenever the fetched
+      // <main> already brought its own docked input, so exactly one
+      // #docked-input-wrap / .docked-input-wrap ever exists in the DOM
+      // after any navigation.
+      if (currentMain.querySelector('.docked-input-wrap')) {
+        const staleDockedInput = document.getElementById('docked-input-wrap');
+        if (staleDockedInput && !currentMain.contains(staleDockedInput)) {
+          staleDockedInput.remove();
         }
       }
-
       if (newSessionsList && currentSessionsList) {
         currentSessionsList.innerHTML = newSessionsList.innerHTML;
       }
@@ -2184,6 +2180,20 @@
         const currentStyleTag = document.querySelector('style#app-styles') || document.querySelector('style');
         if (newStyleTag && currentStyleTag) {
           currentStyleTag.textContent = newStyleTag.textContent;
+        }
+        // (Bug 5 fix) Same leftover-element risk as navigateTo(): if the
+        // response we just got back is a real chat page (chat.html),
+        // its own <main> carries a real, always-visible
+        // `.docked-input-wrap`, and the stylesheet just swapped in above
+        // has no `display: none` rule for it — so this page's own
+        // outside-<main> `#docked-input-wrap` (previously hidden only by
+        // THIS page's now-replaced stylesheet) would start rendering too,
+        // stacking on top of the one that belongs to the chat we just
+        // landed on. Remove it whenever the fetched page's own <main>
+        // already brought its own docked input.
+        if (doc.querySelector('main.main .docked-input-wrap')) {
+          const staleDockedInput = document.getElementById('docked-input-wrap');
+          if (staleDockedInput) staleDockedInput.remove();
         }
 
         history.pushState({ softNav: true }, '', response.url || form.action);
