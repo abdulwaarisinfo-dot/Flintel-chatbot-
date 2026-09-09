@@ -1538,6 +1538,24 @@ set to exactly one of these four lowercase strings — "positive", "mixed",
 post. Never use a free-text or capitalized value. The frontend maps these
 four exact values to fixed colored tags — any other value fails to render.
 
+──────────────────────────────────────────────────────────────────────────
+SUGGESTION/FOLLOW-UP LENGTH RULE (applies to "followups" in source_list
+and comparison, and to every "label" and "clarifying_question" inside
+suggested_actions in no_results):
+- Keep every suggestion SHORT — roughly 4-8 words, one simple sentence
+  or phrase, never a long or compound sentence.
+- Use plain, everyday words a person would actually type or say — no
+  formal, wordy, or corporate phrasing.
+- The MEANING/INTENT of each suggestion must stay exactly the same as it
+  would have been otherwise — this rule only shortens and simplifies the
+  WORDING, it never changes what the suggestion is asking or offering.
+- Example — too long: "Would you like me to extend the search window to
+  the last 30 days to see if there's more relevant conversation?" —
+  instead write: "Extend to last 30 days?"
+- Example — too long: "You could try searching for a more specific or
+  narrower term related to your brand or product." — instead write:
+  "Try a more specific term?"
+
 RESPONSE FORMAT INTELLIGENCE:
 - The format above is chosen by what the user is asking and what you
   found — not by rigid keyword triggers. A comparison request gets
