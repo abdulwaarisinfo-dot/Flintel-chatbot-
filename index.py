@@ -3119,10 +3119,11 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
     call or the generate_fuzzy_keywords() fallback. `time_window_days` is
     stored the same way, purely so later re-matching of this same message
     (see _fill_in_message_outputs() / the streaming route) can pass it
-    back into get_matched_signals() consistently. `results` starts empty
-    and gets filled in later by save_signal_results_to_chat() once
-    matching signals show up. `claude_answer` starts empty too and is
-    filled in once by save_claude_answer_to_chat()."""
+    back into get_matched_signals() consistently. `results` starts as
+    `None` (NOT an empty list — see the RESULTS-RECOMPUTE FIX below) and
+    gets filled in later by save_signal_results_to_chat() once matching
+    signals show up. `claude_answer` starts empty too and is filled in
+    once by save_claude_answer_to_chat()."""
     now = datetime.now(timezone.utc)
     message = {
         "query":              query,
@@ -3132,7 +3133,14 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
         "time_window_days":   time_window_days,  # (NEW) int or None — see get_matched_signals()
         "unfiltered":         unfiltered,
         "requested_at":       now,
-        "results":            [],   # filled in later: [{title, post_text, post_url, platform}, ...]
+        # (RESULTS-RECOMPUTE FIX) `None` here, not `[]` — an empty list is
+        # a legitimate, ALREADY-COMPUTED final value (e.g. a "no_results"
+        # answer genuinely has zero results). Using None to mean "not
+        # computed yet" lets _fill_in_message_outputs() tell "never
+        # computed" apart from "computed and genuinely empty," so a
+        # message that's truly done never gets its (slow, blocking)
+        # signal-matching re-run on every later chat view.
+        "results":            None,
         "claude_answer":      None, # filled in once: Claude's answer text, grounded in `results`
     }
 
@@ -3193,11 +3201,16 @@ def save_signal_results_to_chat(chat_id: str, owner_key: str, topic_key: str, re
     background job is still filling in signals) — it just overwrites
     `results` with the latest matched set for that message.
 
-    UNCHANGED: still a no-op on an empty/falsy `results` list — the new
-    BUGFIX PACK #1 gate in _fill_in_message_outputs() relies on exactly
-    this behavior (passing an empty list here simply skips the write,
-    leaving the message's already-empty `results` field as-is)."""
-    if not results:
+    (RESULTS-RECOMPUTE FIX) Previously a no-op on ANY falsy `results`
+    (including a deliberate, final `[]`) — this silently swallowed the
+    BUGFIX PACK #1 gate's own "final results are genuinely empty" write,
+    meaning that value never actually reached Mongo, `results` stayed at
+    its uncomputed initial value forever, and _fill_in_message_outputs()
+    kept re-triggering a full re-match on every later chat view. Now only
+    skips the write on `None` (a real "nothing to write" signal) — an
+    explicit empty list `[]` is a legitimate final value and gets
+    persisted like any other."""
+    if results is None:
         return
     chats_collection.update_one(
         {"chat_id": chat_id, "owner_key": owner_key, "messages.topic_key": topic_key},
@@ -3301,9 +3314,14 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
     — same calls, same order, same caching. Pulled out so it can be
     scheduled via BackgroundTasks (runs after the response is sent)
     instead of blocking the request, exactly like
-    _complete_message_answer_and_results() below."""
+    _complete_message_answer_and_results() below.
+
+    (BUSY-LOCK RACE FIX) _set_owner_busy() is NOT called here anymore —
+    it's now set synchronously in _fill_in_message_outputs(), before this
+    function is even scheduled, so the flag is already in place before
+    the response goes out. This function only clears it, in the finally
+    below, once the work actually finishes."""
     try:
-        _set_owner_busy(owner_key)
         answer = analyze_with_claude(query, [])
         save_claude_answer_to_chat(chat_id, owner_key, topic_key, answer)
         try:
@@ -3324,13 +3342,18 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
     is available) or scheduled via BackgroundTasks (new: runs AFTER the
     response is already sent, so a slow Claude call never blocks the
     request). Not a single line of the actual logic below changed — same
-    calls, same order, same caching, same BUGFIX PACK #1 results-gating."""
+    calls, same order, same caching, same BUGFIX PACK #1 results-gating.
+
+    (BUSY-LOCK RACE FIX) _set_owner_busy() is NOT called here anymore —
+    it's now set synchronously in _fill_in_message_outputs(), before this
+    function is even scheduled, so the flag is already in place before
+    the response goes out. This function only clears it, in the finally
+    below, once the work actually finishes."""
     needs_answer = not msg.get("claude_answer")
     answer_for_format_check = msg.get("claude_answer")
 
     if needs_answer:
         try:
-            _set_owner_busy(owner_key)
             extra_ctx = None
             if msg.get("unfiltered"):
                 extra_ctx = flintel.build_unfiltered_answer_context(
@@ -3350,7 +3373,10 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
         finally:
             _clear_owner_busy(owner_key)
 
-    if not msg.get("results"):
+    # (RESULTS-RECOMPUTE FIX) `is None`, not falsy — a genuine, already-
+    # saved empty list must not be treated as "still needs computing" and
+    # get needlessly recomputed/overwritten here either.
+    if msg.get("results") is None:
         claude_format = _extract_claude_format(answer_for_format_check)
         results_to_save = [] if claude_format in _NO_DATA_CLAUDE_FORMATS else matched
         msg["results"] = results_to_save
@@ -3445,7 +3471,13 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
         if skip_topic_key and msg.get("topic_key") == skip_topic_key:
             continue
 
-        needs_results = not msg.get("results")
+        # (RESULTS-RECOMPUTE FIX) `results is None` means "genuinely never
+        # computed yet" — an already-saved empty list `[]` (a legitimate
+        # "no_results"/"not_available"/"disallowed" outcome, see BUGFIX
+        # PACK #1 below) is now correctly recognized as already-done,
+        # instead of `not []` (True) wrongly triggering a full re-match
+        # + re-answer on every single later chat view.
+        needs_results = msg.get("results") is None
         needs_answer = not msg.get("claude_answer")
         if not needs_results and not needs_answer:
             continue
@@ -3469,6 +3501,11 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
             # RESPONSE_TIMEOUT seconds, give the user a plain "nothing
             # found" answer instead of leaving the turn blank forever.
             if needs_answer and _elapsed_seconds(msg.get("requested_at")) >= RESPONSE_TIMEOUT:
+                # (BUSY-LOCK RACE FIX) Set synchronously, in THIS request,
+                # before scheduling/running the work — not inside the
+                # scheduled function itself, which could run after the
+                # response has already gone out to the browser.
+                _set_owner_busy(owner_key)
                 if background_tasks is not None:
                     background_tasks.add_task(_timeout_fallback_answer, chat_id, owner_key, msg["topic_key"], msg["query"])
                 else:
@@ -3486,6 +3523,13 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
         # _complete_message_answer_and_results() — run inline (identical
         # behavior) when no background_tasks was given, or scheduled to
         # run AFTER the response is sent when it was.
+        #
+        # (BUSY-LOCK RACE FIX) Set synchronously, in THIS request, before
+        # scheduling/running the work — closes the small window where a
+        # second request from the same owner could arrive between "the
+        # response is sent" and "the background task actually starts",
+        # since the flag document wouldn't exist yet during that window.
+        _set_owner_busy(owner_key)
         if background_tasks is not None:
             background_tasks.add_task(_complete_message_answer_and_results, chat_id, owner_key, msg, matched)
         else:
@@ -4081,13 +4125,19 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 except Exception as exc:
                     log.warning(f"Caching streamed answer failed for topic_key={topic_key}: {exc}")
 
-                if matched:
-                    claude_format = _extract_claude_format(full_answer)
-                    results_to_save = [] if claude_format in _NO_DATA_CLAUDE_FORMATS else matched
-                    try:
-                        save_signal_results_to_chat(chat_id, owner_key, topic_key, results_to_save)
-                    except Exception as exc:
-                        log.warning(f"Saving matched results failed for topic_key={topic_key}: {exc}")
+                # (RESULTS-RECOMPUTE FIX) Compute + save results_to_save
+                # unconditionally here (not gated on `if matched:`) — a
+                # genuinely empty `matched` still needs its final `[]`
+                # value persisted via save_signal_results_to_chat(), or
+                # this message's `results` stays at its uncomputed `None`
+                # forever even though its answer is already cached,
+                # triggering a needless full re-match on every later view.
+                claude_format = _extract_claude_format(full_answer)
+                results_to_save = [] if claude_format in _NO_DATA_CLAUDE_FORMATS else matched
+                try:
+                    save_signal_results_to_chat(chat_id, owner_key, topic_key, results_to_save)
+                except Exception as exc:
+                    log.warning(f"Saving matched results failed for topic_key={topic_key}: {exc}")
 
             yield f"data: {json.dumps({'done': True})}\n\n"
         finally:
