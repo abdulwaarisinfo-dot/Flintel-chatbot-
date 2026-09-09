@@ -204,6 +204,72 @@
   .topbar-btn.signup { background: #fff; color: #000; }
   .topbar-btn.logout { border: 1px solid #323130; color: #d1d0cf; }
 
+  /* ---------- Auth modal CSS (chat.html itself never renders this modal —
+     it uses a plain "/" sign-in link instead, see the sidebar markup below).
+     This block exists here PURELY so the modal stays correctly styled when
+     it's ever swapped INTO view via soft-navigation's <style> tag swap:
+     the #auth-overlay DOM element lives outside <main> on index.html and
+     is never removed by any main-content swap, so if a soft-navigation
+     ever makes THIS page's stylesheet the active one while that modal
+     element is still sitting in the DOM (e.g. clicking "New chat" from
+     index.html and landing on a fresh chat), the modal must not suddenly
+     render as a giant unstyled block with no display:none to hide it —
+     this was the actual root cause of the broken full-page logo/unstyled
+     form seen after clicking "New chat". Keeping this CSS identical to
+     index.html's, even though chat.html's own markup never uses it,
+     is what makes that safe regardless of which stylesheet ends up active. ---------- */
+  .auth-overlay {
+    display: none; position: fixed; inset: 0; z-index: 30;
+    align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.6); padding: 20px;
+  }
+  .auth-overlay.visible { display: flex; }
+  .auth-modal {
+    background: #1e1d1c; border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 13px; box-shadow: 0 6px 53px rgba(0,0,0,0.35);
+    width: 339px; max-width: 100%; padding: 43px 33.5px 34px 33.5px;
+    position: relative;
+  }
+  .auth-close {
+    position: absolute; top: 20px; right: 23px; color: #757473;
+    transition: color .15s ease;
+  }
+  .auth-close:hover { color: #fff; }
+  .auth-avatar {
+    width: 37px; height: 37px; border-radius: 50%; overflow: hidden;
+    margin: 0 auto 20px auto; display: block;
+  }
+  .auth-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .auth-modal-title {
+    color: rgba(255,255,255,0.8); font-size: 18px; font-weight: 700;
+    letter-spacing: 0.18px; text-align: center; margin-bottom: 26px;
+  }
+  .google-btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; height: 45px; border-radius: 12px; background: #d6d5d4; color: #191817;
+    font-size: 15px; font-weight: 600; letter-spacing: 0.15px; text-decoration: none;
+    margin-bottom: 10px; transition: opacity .15s ease;
+  }
+  .google-btn:hover { opacity: 0.9; }
+  .auth-divider { display: flex; align-items: center; gap: 12px; margin: 18px 0; color: #757473; font-size: 12px; }
+  .auth-divider::before, .auth-divider::after { content: ""; flex: 1; height: 1px; background: #383736; }
+  .auth-field { margin-bottom: 12px; }
+  .auth-field label { display: block; color: #757473; font-size: 12px; font-weight: 600; margin-bottom: 6px; letter-spacing: 0.12px; }
+  .auth-field input {
+    width: 100%; height: 45px; background: transparent; border: 1px solid #383736; border-radius: 12px;
+    padding: 0 14px; color: #fff; font-size: 15px; font-weight: 500; font-family: inherit; outline: none;
+    transition: border-color .15s ease;
+  }
+  .auth-field input:focus { border-color: #a3e635; }
+  .auth-submit-btn {
+    width: 100%; height: 45px; border-radius: 12px; background: #a3e635;
+    color: #171615; font-size: 15px; font-weight: 600; letter-spacing: 0.15px; margin-top: 6px;
+    transition: background .15s ease;
+  }
+  .auth-submit-btn:hover { background: #b6f04a; }
+  .auth-switch { text-align: center; margin-top: 18px; font-size: 13px; color: #757473; }
+  .auth-switch button { color: #a3e635; font-weight: 600; }
+
   /* =========================================================================
      Chat thread — same visual language as index.html's conversation area,
      driven by the same real fields:
@@ -298,17 +364,6 @@
   .platform-icon-badge.facebook { background: #1877F2; border-color: #1877F2; }
   .platform-icon-badge.linkedin { background: #0A66C2; border-color: #0A66C2; }
   .platform-icon-badge.x { background: #000; border-color: #333; }
-  /* Ported from the original mock design (Progress.html) — some pages/
-     older markup use class="platform-icon" (a real brand-image circle,
-     35x35, cropped) instead of this file's own "platform-icon-badge"
-     (a colored circle with a small white glyph inside). Kept as its own
-     class, alongside platform-icon-badge above, rather than merged into
-     it, so BOTH class names always resolve to a properly-constrained
-     35x35 circle no matter which markup/version of a page is live —
-     this is exactly the rule that was missing wherever a real
-     platform-icon <img> was rendering at full native size with no size
-     constraint at all. */
-  .platform-icon { width: 35px; height: 35px; border-radius: 50%; flex-shrink: 0; overflow: hidden; }
   .platform-name-row { display: flex; align-items: center; gap: 7px; }
   .platform-name { color: #7a7a77; font-size: 16px; font-weight: 600; }
   .platform-dot { width: 4px; height: 4px; border-radius: 50%; background: #7a7a77; }
@@ -376,6 +431,7 @@
   .search-input::placeholder { color: #757473; }
   .search-controls { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
   .add-btn { color: #fff; transition: color .15s ease; flex-shrink: 0; }
+  .docked-credit-estimate { font-size: 12px; color: #757473; white-space: nowrap; margin-right: 4px; }
   .add-btn:hover { color: #a3e635; }
   .right-controls { display: flex; align-items: center; gap: 24px; flex-shrink: 0; }
   .platforms-btn {
@@ -847,6 +903,12 @@
   //      a single .answer-wrap at a time, so it's applied via
   //      querySelectorAll(...).forEach(...) instead of a single call) ----
   async function navigateTo(url, { method = 'GET', pushState = true } = {}) {
+    // (Race-condition fix) Snapshot the generation counter for THIS
+    // navigation right away — anything that happens after any subsequent
+    // await in this function checks against this snapshot before touching
+    // the DOM, so a later navigation started while this one is still
+    // in-flight always wins, and this one silently discards its result.
+    const myNav = ++softNavGeneration;
     console.log('[soft-nav] navigateTo() called:', method, url);
     // (Bug 1 fix) Close any still-open SSE connection from the page we're
     // leaving BEFORE doing anything else — otherwise a mid-stream answer
@@ -872,6 +934,14 @@
       const currentSessionsList = document.querySelector('#sessions-list');
 
       if (!newMain || !currentMain) throw new Error('Fetched page missing <main> — falling back to real navigation');
+
+      // (Race-condition fix) A newer navigation may have started and
+      // already completed while this fetch/parse was in flight — if so,
+      // this response is stale and must never touch the DOM. Placed here,
+      // right before the first DOM mutation, this single check protects
+      // every mutation below it (style swap, main swap, re-init, scroll,
+      // sessions-list swap) since nothing between them awaits again.
+      if (myNav !== softNavGeneration) return;
 
       // Swap the active <style> tag's content BEFORE swapping <main> — the
       // fetched page might be a different template (index.html <-> chat.html)
@@ -937,27 +1007,12 @@
     navigateTo(location.href, { pushState: false });
   });
 
-  // (Bug 6 fix) Closes the mobile drawer + its dark overlay, if open.
-  // Queries `.sidebar`/`#mobile-overlay` fresh (rather than relying only on
-  // the `sidebar`/`overlay` consts captured above) so it stays correct even
-  // if a soft navigation ever swaps that markup in the future. Called right
-  // before navigation begins so tapping a sidebar chat link or "New" on
-  // mobile always closes the drawer automatically instead of leaving it
-  // open (and the screen darkened) behind the page it navigated to.
-  function closeMobileSidebarDrawer() {
-    const sb = document.querySelector('.sidebar');
-    const ov = document.getElementById('mobile-overlay');
-    if (sb) sb.classList.remove('mobile-open');
-    if (ov) ov.classList.remove('visible');
-  }
-
   // ---- Sidebar chat links + "New" button — now soft-navigated ----
   document.addEventListener('click', (e) => {
     const link = e.target.closest('.session-item-link');
     if (link) {
       console.log('[soft-nav] intercepted session link click ->', link.href);
       e.preventDefault();
-      closeMobileSidebarDrawer();
       navigateTo(link.href, { method: 'GET' });
     }
   });
@@ -970,7 +1025,6 @@
     if (action === '/chats/new' || action.endsWith('/chats/new')) {
       console.log('[soft-nav] intercepted "New chat" form submit ->', action);
       e.preventDefault();
-      closeMobileSidebarDrawer();
       navigateTo(form.action, { method: 'POST' });
     }
   });
@@ -1051,6 +1105,13 @@
   // chat switch, and repeated switching stacks up multiple live
   // connections against the browser's per-origin connection limit.
   let activeEventSource = null;
+  // (Race-condition fix) Monotonically incrementing generation counter.
+  // Every async soft-nav / search-submit / stream operation snapshots this
+  // at the start and re-checks it immediately before mutating the DOM —
+  // if it's moved on (a newer navigation superseded it), the stale
+  // operation silently discards its result instead of touching a DOM that
+  // now belongs to a different chat.
+  let softNavGeneration = 0;
 
   function initMainPageInteractions() {
     const attachBtn = document.getElementById('attach-btn');
@@ -1754,6 +1815,13 @@
     const topicKey = pendingTurn.dataset.topicKey || '';
     if (!chatId || !topicKey) return;
 
+    // (Race-condition fix) Snapshot the generation counter for THIS stream
+    // — checked again in the "done" branch before injecting the finished
+    // answer into the DOM, so a stream still running for a chat the user
+    // has since navigated away from can't inject its result into whatever
+    // chat is now on screen.
+    const myGen = softNavGeneration;
+
     const loadingTextEl = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)} .loading-text`);
 
     // Optional, additive-only: rotate the existing .loading-text element
@@ -1791,6 +1859,15 @@
         source.close();
         activeEventSource = null;
         if (phraseTimer) clearInterval(phraseTimer);
+        // (Race-condition fix) A navigation may have happened while this
+        // stream was still running — if so, its finished answer must never
+        // be injected into whatever chat is now on screen. Cleanup above
+        // already ran (closing the connection either way is correct); only
+        // the DOM mutation below is skipped.
+        if (myGen !== softNavGeneration) {
+          console.warn('[stale-response] Discarding streamed answer — navigation occurred mid-stream.');
+          return;
+        }
         // No page reload — the accumulated text is now complete, valid
         // JSON. Render it in-place, right where the loading-row was,
         // reusing the exact same structured-render logic every other
@@ -1877,6 +1954,13 @@
       const query = searchInput ? searchInput.value.trim() : '';
       if (!query) return;
 
+      // (Race-condition fix) Snapshot the generation counter for THIS
+      // submission — checked again right before any DOM mutation below, so
+      // a navigation that happens while this request is in flight makes
+      // this result get silently discarded instead of appending a stray
+      // turn to whatever chat is now on screen.
+      const myGen = softNavGeneration;
+
       if (submitBtn) submitBtn.disabled = true;
 
       // Step 1: the actual network request. This is the ONLY part that
@@ -1907,6 +1991,16 @@
       try {
         const html = await response.text();
         const doc = new DOMParser().parseFromString(html, 'text/html');
+
+        // (Race-condition fix) A navigation may have happened while this
+        // request was in flight — if so, this response is stale and must
+        // never touch the DOM (no pushState, no chat_id update, no
+        // appended turn, no stream wiring). Fails silently, exactly as if
+        // this request had never completed.
+        if (myGen !== softNavGeneration) {
+          console.warn('[stale-response] Discarding search result — navigation occurred mid-request.');
+          return;
+        }
 
         // Bug 2 fix: a first prompt from home (or any prompt that lands on
         // a newly-created chat) redirects server-side to /chat/<new_id> —
@@ -1961,9 +2055,15 @@
         // normally through the standard server-rendered path.
         console.warn('[dom-update-failed][search-submit] Search succeeded server-side; only the in-place DOM update failed (not a network issue, so no hard reload was triggered):', domErr);
       } finally {
-        const freshSubmitBtn = document.getElementById('submit-btn');
-        const freshSearchInput = document.getElementById('search-input');
-        if (freshSubmitBtn) freshSubmitBtn.disabled = freshSearchInput ? freshSearchInput.value.trim().length === 0 : false;
+        // (Race-condition fix) Only re-enable the submit button if this is
+        // still the current generation — a stale request finishing after a
+        // navigation has already happened must not touch a button that now
+        // belongs to a completely different chat's page state.
+        if (myGen === softNavGeneration) {
+          const freshSubmitBtn = document.getElementById('submit-btn');
+          const freshSearchInput = document.getElementById('search-input');
+          if (freshSubmitBtn) freshSubmitBtn.disabled = freshSearchInput ? freshSearchInput.value.trim().length === 0 : false;
+        }
       }
     });
   }
