@@ -814,6 +814,27 @@ templates = Jinja2Templates(directory="templates")
 # pointer in Claude/ChatGPT.
 app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET_KEY)
 
+# (NO-CACHE FIX) Every page this app serves is per-user, dynamic content
+# (a specific user's chat history, their active chat, credits, etc.) — none
+# of it should ever be cached by a shared intermediary (a CDN, a reverse
+# proxy like Varnish, or the browser's own disk cache). Without this, a
+# request that happens to be served from a stale cached copy can render an
+# incomplete/older version of the page (e.g. missing the docked search box
+# on a chat page that was cached before it was fully rendered) until the
+# cache entry naturally expires or gets revalidated — which looks exactly
+# like "it's broken the first time, then fixes itself" once a later
+# request (to the same or a different page) causes a fresh fetch. This
+# applies the standard "never cache this" header set to every response
+# this app returns, closing off that entire class of stale-cache bugs at
+# the source rather than trying to chase down each individual symptom.
+@app.middleware("http")
+async def add_no_cache_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
+
 # Password hashing context — bcrypt, industry-standard for this use case.
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
