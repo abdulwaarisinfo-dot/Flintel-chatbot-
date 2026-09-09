@@ -3335,34 +3335,31 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
 
 @app.get("/")
 def home(request: Request):
-    chats, chat_id, chat = [], None, None
-    # (HOME() CRASH FIX) Initialized here unconditionally so it is ALWAYS
-    # defined by the time the return statement below reads it.
-    pending_stream_topic_key = None
+    """(BARE-URL HOME FIX) Visiting the plain root URL directly (no
+    chat_id anywhere in the request) must always show a fresh, empty
+    home screen — exactly like visiting claude.ai or chatgpt.com
+    directly always shows a new blank conversation, never whatever chat
+    was last open in a previous session. This route no longer reads
+    `active_chat_id` from the session to decide what to render, and
+    never passes a populated `chat` back to the template — only the
+    sidebar's chat list is still fetched, so existing chat history
+    remains visible and clickable in the sidebar exactly as before.
+
+    A specific chat is ONLY ever rendered by visiting its own URL,
+    `GET /chat/{chat_id}` (see view_chat() below, completely UNCHANGED)
+    — that route still sets `active_chat_id` in the session when opened,
+    exactly as it always has; this fix only changes what the BARE root
+    URL itself renders, never what a specific chat URL renders.
+
+    UNCHANGED: chats list fetching, current-user lookup, and the
+    template/response contract for index.html (request/user/chats/
+    chat_id/chat/pending_stream_topic_key keys are still all passed, just
+    with chat_id/chat/pending_stream_topic_key always at their empty
+    defaults now instead of being conditionally populated)."""
+    chats = []
     try:
         owner_key, _owner_type = get_owner(request)
         chats = get_user_chats(owner_key)
-        chat_id = request.session.get("active_chat_id")
-        if chat_id:
-            # Full chat doc (messages + any results/claude_answer already
-            # saved) so index.html's conversation area can render real
-            # turns instead of the empty placeholder.
-            chat = get_chat_session(chat_id, owner_key)
-            if chat and chat.get("messages"):
-                # (STREAMING WIRING FIX — HOME EXTENSION) Same logic as
-                # view_chat(): identify the one freshly-added search-type
-                # message (if any) still waiting on its very first
-                # answer — the LAST message, only if it has a topic_key
-                # and its claude_answer is still falsy — and reserve it
-                # for the streaming route instead of eager-filling it
-                # here.
-                latest_msg = chat["messages"][-1]
-                if latest_msg.get("topic_key") and not latest_msg.get("claude_answer"):
-                    pending_stream_topic_key = latest_msg["topic_key"]
-
-                _fill_in_message_outputs(
-                    chat_id, owner_key, chat["messages"], skip_topic_key=pending_stream_topic_key
-                )
     except Exception as exc:
         log.warning(f"Chat lookup failed on home page: {exc}")
 
@@ -3372,9 +3369,9 @@ def home(request: Request):
             "request": request,
             "user": get_current_user(request),
             "chats": chats,
-            "chat_id": chat_id,
-            "chat": chat,
-            "pending_stream_topic_key": pending_stream_topic_key,
+            "chat_id": None,
+            "chat": None,
+            "pending_stream_topic_key": None,
         },
     )
 
