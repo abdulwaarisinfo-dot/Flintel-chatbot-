@@ -971,8 +971,11 @@
 
   </main>
 
-  <!-- Docked follow-up input — present for design fidelity, never shown. -->
-  <div class="docked-input-wrap" id="docked-input-wrap">
+  <!-- Docked follow-up input — present for design fidelity, never shown.
+       `hidden` attribute added as a second, HTML-level safety net on top of
+       the CSS display:none rule above, in case anything else was ever
+       overriding just the CSS. -->
+  <div class="docked-input-wrap" id="docked-input-wrap" hidden>
     <div class="docked-input-inner">
       <div class="search-box">
         <label for="followup-input" class="sr-only">Ask a follow-up</label>
