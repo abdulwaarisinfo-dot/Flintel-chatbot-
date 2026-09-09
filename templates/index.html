@@ -587,6 +587,13 @@
 
   .hidden { display: none !important; }
 
+  /* ---------- Streamed-answer entrance animation (same as chat.html) ---------- */
+  @keyframes streamRevealIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .stream-reveal { animation: streamRevealIn 0.45s ease-out; }
+
   /* Cap-height-to-baseline text trimming — matches how Figma measures text
      boxes, so margins/gaps read at the exact pixel values set. */
   .turn-question, .state-heading, .state-body,
@@ -1633,24 +1640,6 @@
         currentStyleTag.textContent = newStyleTag.textContent;
       }
       currentMain.innerHTML = newMain.innerHTML;
-      // (Bug 5 fix) This page's own #docked-input-wrap lives OUTSIDE
-      // <main>, so the swap above never touches it. That's harmless as
-      // long as it stays hidden by this page's own CSS rule
-      // (`.docked-input-wrap { display: none; ... }`) — but if we just
-      // navigated into a page (chat.html) whose <main> supplies its own
-      // real, always-visible `.docked-input-wrap`, and whose stylesheet
-      // (just swapped in above) has no such `display: none` rule, this
-      // leftover element would start rendering too, stacking on top of
-      // the freshly-swapped-in one. Remove it whenever the fetched
-      // <main> already brought its own docked input, so exactly one
-      // #docked-input-wrap / .docked-input-wrap ever exists in the DOM
-      // after any navigation.
-      if (currentMain.querySelector('.docked-input-wrap')) {
-        const staleDockedInput = document.getElementById('docked-input-wrap');
-        if (staleDockedInput && !currentMain.contains(staleDockedInput)) {
-          staleDockedInput.remove();
-        }
-      }
       if (newSessionsList && currentSessionsList) {
         currentSessionsList.innerHTML = newSessionsList.innerHTML;
       }
@@ -2180,20 +2169,6 @@
         const currentStyleTag = document.querySelector('style#app-styles') || document.querySelector('style');
         if (newStyleTag && currentStyleTag) {
           currentStyleTag.textContent = newStyleTag.textContent;
-        }
-        // (Bug 5 fix) Same leftover-element risk as navigateTo(): if the
-        // response we just got back is a real chat page (chat.html),
-        // its own <main> carries a real, always-visible
-        // `.docked-input-wrap`, and the stylesheet just swapped in above
-        // has no `display: none` rule for it — so this page's own
-        // outside-<main> `#docked-input-wrap` (previously hidden only by
-        // THIS page's now-replaced stylesheet) would start rendering too,
-        // stacking on top of the one that belongs to the chat we just
-        // landed on. Remove it whenever the fetched page's own <main>
-        // already brought its own docked input.
-        if (doc.querySelector('main.main .docked-input-wrap')) {
-          const staleDockedInput = document.getElementById('docked-input-wrap');
-          if (staleDockedInput) staleDockedInput.remove();
         }
 
         history.pushState({ softNav: true }, '', response.url || form.action);
