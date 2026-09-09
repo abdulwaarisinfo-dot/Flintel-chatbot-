@@ -921,6 +921,19 @@
         if (!stillWanted) el.remove();
       });
 
+      // Defensive verification: re-check the LIVE DOM (not the array computed
+      // above) for any reconcilable body-level element that should have just
+      // been removed but is still present — this guards against any live-
+      // collection iteration mistake (elsewhere or introduced later) silently
+      // leaving a stray, unstyled element (e.g. #auth-overlay rendered with no
+      // matching CSS rule on this page) visible to the user.
+      Array.from(document.body.children)
+        .filter(isReconcilableBodyChild)
+        .forEach((el) => {
+          const stillWanted = el.id && fetchedBodyChildren.some((f) => f.id === el.id);
+          if (!stillWanted) el.remove();
+        });
+
       fetchedBodyChildren.forEach((el) => {
         const alreadyPresent = el.id && document.getElementById(el.id);
         if (!alreadyPresent) {
