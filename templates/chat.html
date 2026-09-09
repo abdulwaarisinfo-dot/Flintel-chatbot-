@@ -739,13 +739,6 @@
           <div class="turn-block" data-topic-key="{{ msg.topic_key or '' }}"{% if pending_stream_topic_key and msg.topic_key == pending_stream_topic_key %} data-pending-stream="true"{% endif %}>
             <div class="turn-row"><div class="turn-question">{{ msg.query }}</div></div>
             <div class="turn-meta">
-              <span class="turn-chip">
-                <span class="status-dot"></span>
-                {{ msg.targeting_platform | default('all', true) }}
-              </span>
-              {% if msg.requested_at %}
-              <span class="turn-chip">{{ msg.requested_at.strftime('%b %d, %Y %H:%M') if msg.requested_at.strftime else msg.requested_at }}</span>
-              {% endif %}
             </div>
 
             <!-- ===================================================================
@@ -1400,7 +1393,7 @@
       const chip = document.createElement('button');
       chip.type = 'button';
       chip.textContent = text;
-      chip.style.cssText = 'background:#1e1d1b; border-radius:150px; padding:10px 16px; color:rgba(255,255,255,0.7); font-size:14px; font-weight:500; border:none; cursor:pointer;';
+      chip.style.cssText = 'background:#1e1d1b; border-radius:150px; padding:10px 16px; color:rgba(255,255,255,0.7); font-size:14px; font-weight:500; border:none; cursor:pointer; text-align:left;';
       chip.addEventListener('click', () => {
         const input = document.getElementById('search-input');
         if (input) { input.value = text; input.dispatchEvent(new Event('input')); input.focus(); }
