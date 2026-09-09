@@ -753,6 +753,12 @@ CHAT_SUMMARY_TURN_CHAR_LIMIT   = int(os.getenv("CHAT_SUMMARY_TURN_CHAR_LIMIT", "
 # forever. See _fill_in_message_outputs() below.
 RESPONSE_TIMEOUT = int(os.getenv("RESPONSE_TIMEOUT", "60"))
 
+# (PER-USER BUSY LOCK) Same spirit as RESPONSE_TIMEOUT above: if a request
+# crashes or the server restarts while an owner is marked busy, the flag
+# must not get stuck forever. After this many seconds, a "busy" flag is
+# treated as stale and cleared automatically the next time it's checked.
+BUSY_FLAG_TIMEOUT_SECONDS = int(os.getenv("BUSY_FLAG_TIMEOUT_SECONDS", "90"))
+
 # ── Simulated-stream config (SIMULATED-STREAM FIX) ──────────────────────────
 # How the already-complete, already-post_url-patched answer text is sliced
 # and paced back out to the browser over SSE inside GET /chat/{chat_id}/stream
@@ -790,6 +796,25 @@ users_collection.create_index("google_id", unique=True, sparse=True)
 
 # Chat/session memory (Claude/ChatGPT-style conversations).
 chats_collection = db.flintel_users_chat
+
+# (PER-USER BUSY LOCK) A dedicated small collection, keyed by owner_key —
+# not an in-memory dict, and not a field bolted onto chats_collection.
+# Reasons this fits the existing pattern best:
+#   - Every other piece of cross-request state in this file (jobs, chat
+#     sessions, users) already lives in its own Mongo collection, keyed
+#     by the same owner_key/chat_id fields used everywhere else — this
+#     follows that exact convention rather than inventing a new pattern.
+#   - It must survive across multiple server processes/workers and a
+#     server restart (an in-memory dict would only be visible to whichever
+#     single worker process happened to handle a given request, silently
+#     failing to block a second request from the same user if it landed
+#     on a different worker — a real correctness gap for anything beyond
+#     a single-process deployment).
+#   - It's independent of which chat the in-flight request belongs to
+#     (the busy state is per-OWNER, not per-chat), so it doesn't belong
+#     as a field on a specific chat document in chats_collection.
+busy_owners_collection = db.flintel_busy_owners
+busy_owners_collection.create_index("owner_key", unique=True)
 chats_collection.create_index("chat_id", unique=True)
 chats_collection.create_index("owner_key")
 
@@ -797,10 +822,24 @@ chats_collection.create_index("owner_key")
 # get_matched_signals() call (topic_key lookups and the time/platform-
 # filtered unfiltered-mode query) was doing a full collection scan. Adding
 # these is purely a speed improvement: it changes no query's results,
-# only how fast MongoDB can find them. Safe to create if they already
-# exist — create_index() is a no-op in that case.
-signals_collection.create_index("topic_key")
-signals_collection.create_index("created_utc")
+# only how fast MongoDB can find them.
+#
+# (DEPLOYMENT CRASH FIX) create_index() is normally a no-op if an index on
+# this field already exists — EXCEPT when one already exists under a
+# DIFFERENT name (e.g. a pre-existing "signals_topic_key" index), in which
+# case MongoDB raises IndexOptionsConflict instead of silently reusing it.
+# The actual goal here was only ever "make sure some index covers this
+# field" — if one already exists under any name, that goal is already
+# satisfied, so this failure is caught and logged rather than allowed to
+# crash the whole app at startup.
+try:
+    signals_collection.create_index("topic_key")
+except Exception as exc:
+    log.warning(f"Could not create index on signals_collection.topic_key (likely already exists under a different name): {exc}")
+try:
+    signals_collection.create_index("created_utc")
+except Exception as exc:
+    log.warning(f"Could not create index on signals_collection.created_utc (likely already exists under a different name): {exc}")
 
 # ─────────────────────────────────────────────────────────────────────────────
 # APP SETUP
@@ -3208,6 +3247,54 @@ def migrate_anon_chats_to_owner(anon_id: str, new_owner_key: str):
         )
 
 
+def _is_owner_busy(owner_key: str) -> bool:
+    """(PER-USER BUSY LOCK) True only if THIS owner_key currently has an
+    in-flight Claude call that hasn't finished yet, and hasn't gone stale.
+    Never checks or affects any other owner_key — this is purely a
+    per-user concern, exactly like the feature spec requires."""
+    if not owner_key:
+        return False
+    doc = busy_owners_collection.find_one({"owner_key": owner_key})
+    if not doc:
+        return False
+    if _elapsed_seconds(doc.get("started_at")) >= BUSY_FLAG_TIMEOUT_SECONDS:
+        # Stale (a crash or restart left this behind) — clear it
+        # defensively right now and treat this request as not busy,
+        # rather than leaving the user locked out forever.
+        busy_owners_collection.delete_one({"owner_key": owner_key})
+        return False
+    return True
+
+
+def _set_owner_busy(owner_key: str):
+    """(PER-USER BUSY LOCK) Marks THIS owner_key busy — called right
+    before a blocking analyze_with_claude() call begins for a user-facing
+    action. upsert=True so this is safe to call even if a stale doc
+    somehow already exists for this owner_key."""
+    if not owner_key:
+        return
+    try:
+        busy_owners_collection.update_one(
+            {"owner_key": owner_key},
+            {"$set": {"owner_key": owner_key, "started_at": datetime.now(timezone.utc)}},
+            upsert=True,
+        )
+    except Exception as exc:
+        log.warning(f"Setting busy flag failed for owner_key={owner_key}: {exc}")
+
+
+def _clear_owner_busy(owner_key: str):
+    """(PER-USER BUSY LOCK) Clears THIS owner_key's busy flag — called
+    once the in-flight Claude call finishes, success or failure, so the
+    user's very next request goes through normally right away."""
+    if not owner_key:
+        return
+    try:
+        busy_owners_collection.delete_one({"owner_key": owner_key})
+    except Exception as exc:
+        log.warning(f"Clearing busy flag failed for owner_key={owner_key}: {exc}")
+
+
 def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query: str):
     """(PERFORMANCE FIX) Extracted, UNCHANGED logic from the RESPONSE_TIMEOUT
     fallback branch that used to run inline inside _fill_in_message_outputs()
@@ -3216,6 +3303,7 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
     instead of blocking the request, exactly like
     _complete_message_answer_and_results() below."""
     try:
+        _set_owner_busy(owner_key)
         answer = analyze_with_claude(query, [])
         save_claude_answer_to_chat(chat_id, owner_key, topic_key, answer)
         try:
@@ -3224,6 +3312,8 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
             log.warning(f"Updating chat summary failed for topic_key={topic_key}: {exc}")
     except Exception as exc:
         log.warning(f"Timeout-fallback Claude analysis failed for topic_key={topic_key}: {exc}")
+    finally:
+        _clear_owner_busy(owner_key)
 
 
 def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict, matched: list):
@@ -3240,6 +3330,7 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
 
     if needs_answer:
         try:
+            _set_owner_busy(owner_key)
             extra_ctx = None
             if msg.get("unfiltered"):
                 extra_ctx = flintel.build_unfiltered_answer_context(
@@ -3256,6 +3347,8 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
                 log.warning(f"Updating chat summary failed for topic_key={msg.get('topic_key')}: {exc}")
         except Exception as exc:
             log.warning(f"Claude analysis failed for topic_key={msg.get('topic_key')}: {exc}")
+        finally:
+            _clear_owner_busy(owner_key)
 
     if not msg.get("results"):
         claude_format = _extract_claude_format(answer_for_format_check)
@@ -3453,6 +3546,39 @@ def search(
     platform: str = Form("All Platforms"),
     chat_id: str = Form(None),
 ):
+    # (PER-USER BUSY LOCK) Additive check at the very start, before any
+    # existing logic below runs — declines a new request from THIS SAME
+    # owner_key while their previous one is still being processed by
+    # Claude. Never enqueues a job, never calls the router, never creates
+    # a chat message for a declined request. Every other owner_key is
+    # completely unaffected — this only ever reads/writes a document keyed
+    # to the current request's own owner_key.
+    busy_owner_key = None
+    try:
+        busy_owner_key, _busy_owner_type = get_owner(request)
+    except Exception as exc:
+        log.warning(f"Owner lookup failed during busy-check (treating as not busy): {exc}")
+
+    if busy_owner_key and _is_owner_busy(busy_owner_key):
+        chats_safe, chat_id_safe = [], None
+        try:
+            chats_safe = get_user_chats(busy_owner_key)
+            chat_id_safe = request.session.get("active_chat_id")
+        except Exception as exc:
+            log.warning(f"Chat lookup failed while rendering busy-decline: {exc}")
+
+        return templates.TemplateResponse(
+            "index.html",
+            {
+                "request": request,
+                "error": "Please wait for your current request to finish first.",
+                "query": query,
+                "user": get_current_user(request),
+                "chats": chats_safe,
+                "chat_id": chat_id_safe,
+            },
+        )
+
     topic_key = normalize_topic_key(query)
     targeting_platform = normalize_platform(platform)
 
@@ -3906,57 +4032,66 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
         matched = []
 
     def event_generator():
-        # (SIMULATED-STREAM FIX) Step 1: get the COMPLETE answer first,
-        # via the same blocking function every other answer path in this
-        # file already uses — no raw live Claude tokens are sent to the
-        # browser anymore.
+        # (PER-USER BUSY LOCK) Set right at the start of the whole
+        # generator, cleared in the finally below — covers every exit
+        # path (the early error-return, and the normal completion path
+        # after the answer is saved) exactly once, so the flag is never
+        # left set no matter how this generator ends.
+        _set_owner_busy(owner_key)
         try:
-            extra_ctx = None
-            if msg.get("unfiltered"):
-                extra_ctx = flintel.build_unfiltered_answer_context(
-                    msg["query"], msg.get("time_window_days")
-                )
-            full_answer = analyze_with_claude(msg["query"], matched, extra_context=extra_ctx)
-        except Exception as exc:
-            log.warning(f"Streaming Claude analysis failed for topic_key={topic_key}: {exc}")
-            yield f"data: {json.dumps({'error': 'analysis failed'})}\n\n"
-            return
-
-        full_answer = (full_answer or "").strip()
-
-        # (SIMULATED-STREAM FIX) Step 2: patch real post_url values into
-        # the complete answer BEFORE any of it is ever sent to the
-        # browser.
-        if full_answer:
-            full_answer = _patch_post_urls_into_answer(full_answer, matched)
-
-        # (SIMULATED-STREAM FIX) Step 3: pace the now-final string back out
-        # in small pieces to reproduce the live-typing impression.
-        if full_answer:
-            for i in range(0, len(full_answer), STREAM_CHUNK_CHARS):
-                piece = full_answer[i:i + STREAM_CHUNK_CHARS]
-                yield f"data: {json.dumps({'delta': piece})}\n\n"
-                if STREAM_CHUNK_DELAY_SECONDS > 0:
-                    time.sleep(STREAM_CHUNK_DELAY_SECONDS)
-
-        # Caching — identical calls/behavior to before, just now operating
-        # on the same already-patched string the user just watched arrive.
-        if full_answer:
+            # (SIMULATED-STREAM FIX) Step 1: get the COMPLETE answer first,
+            # via the same blocking function every other answer path in this
+            # file already uses — no raw live Claude tokens are sent to the
+            # browser anymore.
             try:
-                save_claude_answer_to_chat(chat_id, owner_key, topic_key, full_answer)
-                append_to_chat_summary(chat_id, owner_key, msg["query"], full_answer)
+                extra_ctx = None
+                if msg.get("unfiltered"):
+                    extra_ctx = flintel.build_unfiltered_answer_context(
+                        msg["query"], msg.get("time_window_days")
+                    )
+                full_answer = analyze_with_claude(msg["query"], matched, extra_context=extra_ctx)
             except Exception as exc:
-                log.warning(f"Caching streamed answer failed for topic_key={topic_key}: {exc}")
+                log.warning(f"Streaming Claude analysis failed for topic_key={topic_key}: {exc}")
+                yield f"data: {json.dumps({'error': 'analysis failed'})}\n\n"
+                return
 
-            if matched:
-                claude_format = _extract_claude_format(full_answer)
-                results_to_save = [] if claude_format in _NO_DATA_CLAUDE_FORMATS else matched
+            full_answer = (full_answer or "").strip()
+
+            # (SIMULATED-STREAM FIX) Step 2: patch real post_url values into
+            # the complete answer BEFORE any of it is ever sent to the
+            # browser.
+            if full_answer:
+                full_answer = _patch_post_urls_into_answer(full_answer, matched)
+
+            # (SIMULATED-STREAM FIX) Step 3: pace the now-final string back out
+            # in small pieces to reproduce the live-typing impression.
+            if full_answer:
+                for i in range(0, len(full_answer), STREAM_CHUNK_CHARS):
+                    piece = full_answer[i:i + STREAM_CHUNK_CHARS]
+                    yield f"data: {json.dumps({'delta': piece})}\n\n"
+                    if STREAM_CHUNK_DELAY_SECONDS > 0:
+                        time.sleep(STREAM_CHUNK_DELAY_SECONDS)
+
+            # Caching — identical calls/behavior to before, just now operating
+            # on the same already-patched string the user just watched arrive.
+            if full_answer:
                 try:
-                    save_signal_results_to_chat(chat_id, owner_key, topic_key, results_to_save)
+                    save_claude_answer_to_chat(chat_id, owner_key, topic_key, full_answer)
+                    append_to_chat_summary(chat_id, owner_key, msg["query"], full_answer)
                 except Exception as exc:
-                    log.warning(f"Saving matched results failed for topic_key={topic_key}: {exc}")
+                    log.warning(f"Caching streamed answer failed for topic_key={topic_key}: {exc}")
 
-        yield f"data: {json.dumps({'done': True})}\n\n"
+                if matched:
+                    claude_format = _extract_claude_format(full_answer)
+                    results_to_save = [] if claude_format in _NO_DATA_CLAUDE_FORMATS else matched
+                    try:
+                        save_signal_results_to_chat(chat_id, owner_key, topic_key, results_to_save)
+                    except Exception as exc:
+                        log.warning(f"Saving matched results failed for topic_key={topic_key}: {exc}")
+
+            yield f"data: {json.dumps({'done': True})}\n\n"
+        finally:
+            _clear_owner_busy(owner_key)
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
