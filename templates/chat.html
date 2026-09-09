@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -834,6 +836,12 @@
   //      a single .answer-wrap at a time, so it's applied via
   //      querySelectorAll(...).forEach(...) instead of a single call) ----
   async function navigateTo(url, { method = 'GET', pushState = true } = {}) {
+    // (Race-condition fix) Snapshot the generation counter for THIS
+    // navigation right away — anything that happens after any subsequent
+    // await in this function checks against this snapshot before touching
+    // the DOM, so a later navigation started while this one is still
+    // in-flight always wins, and this one silently discards its result.
+    const myNav = ++softNavGeneration;
     console.log('[soft-nav] navigateTo() called:', method, url);
     // (Bug 1 fix) Close any still-open SSE connection from the page we're
     // leaving BEFORE doing anything else — otherwise a mid-stream answer
@@ -860,6 +868,14 @@
 
       if (!newMain || !currentMain) throw new Error('Fetched page missing <main> — falling back to real navigation');
 
+      // (Race-condition fix) A newer navigation may have started and
+      // already completed while this fetch/parse was in flight — if so,
+      // this response is stale and must never touch the DOM. Placed here,
+      // right before the first DOM mutation, this single check protects
+      // every mutation below it (style swap, main swap, re-init, scroll,
+      // sessions-list swap) since nothing between them awaits again.
+      if (myNav !== softNavGeneration) return;
+
       // Swap the active <style> tag's content BEFORE swapping <main> — the
       // fetched page might be a different template (index.html <-> chat.html)
       // with its own, non-identical stylesheet. Without this, <main>'s new
@@ -873,20 +889,6 @@
         currentStyleTag.textContent = newStyleTag.textContent;
       }
       currentMain.innerHTML = newMain.innerHTML;
-      // (Bug 5 fix) Remove any leftover #docked-input-wrap /
-      // .docked-input-wrap element that belongs to the PAGE WE'RE LEAVING
-      // and lives outside <main> (e.g. the home page's own copy of this
-      // element, which independently defines it outside of its own
-      // <main>). Only the instance that just came in as part of the
-      // freshly swapped-in <main> content (already inside currentMain at
-      // this point) should remain in the DOM after this navigation — any
-      // stray copy sitting elsewhere in the document is a leftover from
-      // the previous page and must be removed.
-      document.querySelectorAll('.docked-input-wrap, #docked-input-wrap').forEach((el) => {
-        if (!currentMain.contains(el)) {
-          el.remove();
-        }
-      });
       // Re-bind everything that was previously only ever bound once at
       // initial page load (search form, attach button, platforms dropdown,
       // and the live-answer MutationObserver) against this freshly-swapped
@@ -944,12 +946,6 @@
     if (link) {
       console.log('[soft-nav] intercepted session link click ->', link.href);
       e.preventDefault();
-      // (Bug 6 fix) Close the mobile drawer and its dark overlay as soon as
-      // a sidebar chat link is tapped, so navigating away always closes
-      // them automatically instead of leaving them open behind the newly
-      // swapped-in page.
-      sidebar.classList.remove('mobile-open');
-      overlay.classList.remove('visible');
       navigateTo(link.href, { method: 'GET' });
     }
   });
@@ -962,11 +958,6 @@
     if (action === '/chats/new' || action.endsWith('/chats/new')) {
       console.log('[soft-nav] intercepted "New chat" form submit ->', action);
       e.preventDefault();
-      // (Bug 6 fix) Same as the sidebar chat link handler above — close the
-      // mobile drawer and overlay as soon as "New" is tapped, before the
-      // resulting navigation happens.
-      sidebar.classList.remove('mobile-open');
-      overlay.classList.remove('visible');
       navigateTo(form.action, { method: 'POST' });
     }
   });
@@ -1047,6 +1038,13 @@
   // chat switch, and repeated switching stacks up multiple live
   // connections against the browser's per-origin connection limit.
   let activeEventSource = null;
+  // (Race-condition fix) Monotonically incrementing generation counter.
+  // Every async soft-nav / search-submit / stream operation snapshots this
+  // at the start and re-checks it immediately before mutating the DOM —
+  // if it's moved on (a newer navigation superseded it), the stale
+  // operation silently discards its result instead of touching a DOM that
+  // now belongs to a different chat.
+  let softNavGeneration = 0;
 
   function initMainPageInteractions() {
     const attachBtn = document.getElementById('attach-btn');
@@ -1750,6 +1748,13 @@
     const topicKey = pendingTurn.dataset.topicKey || '';
     if (!chatId || !topicKey) return;
 
+    // (Race-condition fix) Snapshot the generation counter for THIS stream
+    // — checked again in the "done" branch before injecting the finished
+    // answer into the DOM, so a stream still running for a chat the user
+    // has since navigated away from can't inject its result into whatever
+    // chat is now on screen.
+    const myGen = softNavGeneration;
+
     const loadingTextEl = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)} .loading-text`);
 
     // Optional, additive-only: rotate the existing .loading-text element
@@ -1787,6 +1792,15 @@
         source.close();
         activeEventSource = null;
         if (phraseTimer) clearInterval(phraseTimer);
+        // (Race-condition fix) A navigation may have happened while this
+        // stream was still running — if so, its finished answer must never
+        // be injected into whatever chat is now on screen. Cleanup above
+        // already ran (closing the connection either way is correct); only
+        // the DOM mutation below is skipped.
+        if (myGen !== softNavGeneration) {
+          console.warn('[stale-response] Discarding streamed answer — navigation occurred mid-stream.');
+          return;
+        }
         // No page reload — the accumulated text is now complete, valid
         // JSON. Render it in-place, right where the loading-row was,
         // reusing the exact same structured-render logic every other
@@ -1873,6 +1887,13 @@
       const query = searchInput ? searchInput.value.trim() : '';
       if (!query) return;
 
+      // (Race-condition fix) Snapshot the generation counter for THIS
+      // submission — checked again right before any DOM mutation below, so
+      // a navigation that happens while this request is in flight makes
+      // this result get silently discarded instead of appending a stray
+      // turn to whatever chat is now on screen.
+      const myGen = softNavGeneration;
+
       if (submitBtn) submitBtn.disabled = true;
 
       // Step 1: the actual network request. This is the ONLY part that
@@ -1903,6 +1924,16 @@
       try {
         const html = await response.text();
         const doc = new DOMParser().parseFromString(html, 'text/html');
+
+        // (Race-condition fix) A navigation may have happened while this
+        // request was in flight — if so, this response is stale and must
+        // never touch the DOM (no pushState, no chat_id update, no
+        // appended turn, no stream wiring). Fails silently, exactly as if
+        // this request had never completed.
+        if (myGen !== softNavGeneration) {
+          console.warn('[stale-response] Discarding search result — navigation occurred mid-request.');
+          return;
+        }
 
         // Bug 2 fix: a first prompt from home (or any prompt that lands on
         // a newly-created chat) redirects server-side to /chat/<new_id> —
@@ -1957,9 +1988,15 @@
         // normally through the standard server-rendered path.
         console.warn('[dom-update-failed][search-submit] Search succeeded server-side; only the in-place DOM update failed (not a network issue, so no hard reload was triggered):', domErr);
       } finally {
-        const freshSubmitBtn = document.getElementById('submit-btn');
-        const freshSearchInput = document.getElementById('search-input');
-        if (freshSubmitBtn) freshSubmitBtn.disabled = freshSearchInput ? freshSearchInput.value.trim().length === 0 : false;
+        // (Race-condition fix) Only re-enable the submit button if this is
+        // still the current generation — a stale request finishing after a
+        // navigation has already happened must not touch a button that now
+        // belongs to a completely different chat's page state.
+        if (myGen === softNavGeneration) {
+          const freshSubmitBtn = document.getElementById('submit-btn');
+          const freshSearchInput = document.getElementById('search-input');
+          if (freshSubmitBtn) freshSubmitBtn.disabled = freshSearchInput ? freshSearchInput.value.trim().length === 0 : false;
+        }
       }
     });
   }
