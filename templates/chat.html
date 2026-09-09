@@ -885,23 +885,48 @@
         currentStyleTag.textContent = newStyleTag.textContent;
       }
 
-      // Reconcile #auth-overlay — it belongs to index.html only and lives
-      // OUTSIDE <main>, so the <main>/style/sessions-list swap here never
-      // touches it. Without this:
-      //   - Navigating home -> chat leaves a stale #auth-overlay in the DOM
-      //     with no matching CSS rule in chat.html's stylesheet (which defines
-      //     none), rendering it as an unstyled visible block instead of the
-      //     hidden modal it's supposed to be.
-      //   - Navigating chat -> home leaves nothing for index.html's own
-      //     Sign In / Sign Up buttons to open, since chat.html never had this
-      //     element and never re-adds it on its own.
-      const newAuthOverlay = doc.getElementById('auth-overlay');
-      const currentAuthOverlay = document.getElementById('auth-overlay');
-      if (newAuthOverlay && !currentAuthOverlay) {
-        document.body.appendChild(newAuthOverlay.cloneNode(true));
-      } else if (!newAuthOverlay && currentAuthOverlay) {
-        currentAuthOverlay.remove();
+      // Generalized body-level reconciliation. <main> (inside .layout) and
+      // #sessions-list are already handled above/below; .layout itself is the
+      // persistent navigation chrome and must never be touched here. Every OTHER
+      // direct child of <body> — anything a specific page adds outside .layout,
+      // such as index.html's #auth-overlay, or any future page-specific overlay
+      // /modal/toast container — is exactly the category of element that keeps
+      // getting left behind (or missing) across a soft navigation, because none
+      // of it was previously covered by name. Rather than special-casing each
+      // one as it's discovered, sync the whole category generically:
+      //
+      //   - Any current body-level child that is not .layout, not a <script>,
+      //     and does NOT have a matching element (by id) in the fetched
+      //     document -> remove it (it belongs to the page we're leaving).
+      //   - Any fetched-document body-level child that is not .layout, not a
+      //     <script>, and does NOT already exist in the current document ->
+      //     clone it and append it to <body> (it belongs to the page we just
+      //     navigated to).
+      //   - Anything present in both (matched by id) is left completely alone,
+      //     to avoid wiping out live state (e.g. a modal currently open, or
+      //     in-progress form input inside it).
+      //
+      // This must run in that removal-then-addition order so that a same-id
+      // element present on both sides is correctly recognized as "already
+      // present" before any removal happens.
+      function isReconcilableBodyChild(el) {
+        return el.nodeType === 1 && !el.matches('.layout') && el.tagName !== 'SCRIPT';
       }
+
+      const currentBodyChildren = Array.from(document.body.children).filter(isReconcilableBodyChild);
+      const fetchedBodyChildren = Array.from(doc.body.children).filter(isReconcilableBodyChild);
+
+      currentBodyChildren.forEach((el) => {
+        const stillWanted = el.id && fetchedBodyChildren.some((f) => f.id === el.id);
+        if (!stillWanted) el.remove();
+      });
+
+      fetchedBodyChildren.forEach((el) => {
+        const alreadyPresent = el.id && document.getElementById(el.id);
+        if (!alreadyPresent) {
+          document.body.appendChild(el.cloneNode(true));
+        }
+      });
 
       currentMain.innerHTML = newMain.innerHTML;
       // (Bug 5 fix) Remove any leftover #docked-input-wrap /
