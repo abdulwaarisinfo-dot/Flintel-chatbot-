@@ -752,7 +752,7 @@
       {% endif %}
     </div>
 
-    <div class="content-wrap" id="hero-wrap">
+    <div class="content-wrap{% if chat and chat.messages %} hidden{% endif %}" id="hero-wrap">
       <div class="content-inner">
 
         <p class="eyebrow">Search</p>
@@ -2199,6 +2199,14 @@
         latestTurn.classList.add('stream-reveal');
         const liveConversationArea = document.getElementById('conversation-area') || conversationArea;
         liveConversationArea.classList.remove('hidden');
+        // (Bug fix) The hero block (#hero-wrap: search box + "Explore
+        // Flintel") has no visibility logic tied to this soft-submit path
+        // at all — without hiding it here too, both the hero AND the
+        // conversation area render on screen at once after the first
+        // search from home, which is the exact "both sections showing
+        // together" bug reported.
+        const heroWrap = document.getElementById('hero-wrap');
+        if (heroWrap) heroWrap.classList.add('hidden');
         liveConversationArea.appendChild(latestTurn);
         latestTurn.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
