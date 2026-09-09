@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -875,6 +873,20 @@
         currentStyleTag.textContent = newStyleTag.textContent;
       }
       currentMain.innerHTML = newMain.innerHTML;
+      // (Bug 5 fix) Remove any leftover #docked-input-wrap /
+      // .docked-input-wrap element that belongs to the PAGE WE'RE LEAVING
+      // and lives outside <main> (e.g. the home page's own copy of this
+      // element, which independently defines it outside of its own
+      // <main>). Only the instance that just came in as part of the
+      // freshly swapped-in <main> content (already inside currentMain at
+      // this point) should remain in the DOM after this navigation — any
+      // stray copy sitting elsewhere in the document is a leftover from
+      // the previous page and must be removed.
+      document.querySelectorAll('.docked-input-wrap, #docked-input-wrap').forEach((el) => {
+        if (!currentMain.contains(el)) {
+          el.remove();
+        }
+      });
       // Re-bind everything that was previously only ever bound once at
       // initial page load (search form, attach button, platforms dropdown,
       // and the live-answer MutationObserver) against this freshly-swapped
@@ -932,6 +944,12 @@
     if (link) {
       console.log('[soft-nav] intercepted session link click ->', link.href);
       e.preventDefault();
+      // (Bug 6 fix) Close the mobile drawer and its dark overlay as soon as
+      // a sidebar chat link is tapped, so navigating away always closes
+      // them automatically instead of leaving them open behind the newly
+      // swapped-in page.
+      sidebar.classList.remove('mobile-open');
+      overlay.classList.remove('visible');
       navigateTo(link.href, { method: 'GET' });
     }
   });
@@ -944,6 +962,11 @@
     if (action === '/chats/new' || action.endsWith('/chats/new')) {
       console.log('[soft-nav] intercepted "New chat" form submit ->', action);
       e.preventDefault();
+      // (Bug 6 fix) Same as the sidebar chat link handler above — close the
+      // mobile drawer and overlay as soon as "New" is tapped, before the
+      // resulting navigation happens.
+      sidebar.classList.remove('mobile-open');
+      overlay.classList.remove('visible');
       navigateTo(form.action, { method: 'POST' });
     }
   });
