@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -837,6 +835,7 @@
   //      querySelectorAll(...).forEach(...) instead of a single call) ----
   async function navigateTo(url, { method = 'GET', pushState = true } = {}) {
     console.log('[soft-nav] navigateTo() called:', method, url);
+    const myNav = ++softNavGeneration;
     // (Bug 1 fix) Close any still-open SSE connection from the page we're
     // leaving BEFORE doing anything else — otherwise a mid-stream answer
     // left behind by a chat switch keeps its connection open indefinitely.
@@ -862,6 +861,17 @@
 
       if (!newMain || !currentMain) throw new Error('Fetched page missing <main> — falling back to real navigation');
 
+      // (Generation guard) A newer navigation may have started and possibly
+      // already resolved while this fetch/parse was in flight. If our
+      // generation number is stale by the time we're about to touch the
+      // DOM, discard this result silently instead of mutating a page that
+      // no longer belongs to this navigation. Everything below this point
+      // is a synchronous block of DOM mutations (style-tag swap, main swap,
+      // docked-input-wrap cleanup, initMainPageInteractions(),
+      // scrollToLatestTurn(), sessions-list swap), so a single check here
+      // covers all of them.
+      if (myNav !== softNavGeneration) return;
+
       // Swap the active <style> tag's content BEFORE swapping <main> — the
       // fetched page might be a different template (index.html <-> chat.html)
       // with its own, non-identical stylesheet. Without this, <main>'s new
@@ -874,7 +884,40 @@
       if (newStyleTag && currentStyleTag) {
         currentStyleTag.textContent = newStyleTag.textContent;
       }
+
+      // Reconcile #auth-overlay — it belongs to index.html only and lives
+      // OUTSIDE <main>, so the <main>/style/sessions-list swap here never
+      // touches it. Without this:
+      //   - Navigating home -> chat leaves a stale #auth-overlay in the DOM
+      //     with no matching CSS rule in chat.html's stylesheet (which defines
+      //     none), rendering it as an unstyled visible block instead of the
+      //     hidden modal it's supposed to be.
+      //   - Navigating chat -> home leaves nothing for index.html's own
+      //     Sign In / Sign Up buttons to open, since chat.html never had this
+      //     element and never re-adds it on its own.
+      const newAuthOverlay = doc.getElementById('auth-overlay');
+      const currentAuthOverlay = document.getElementById('auth-overlay');
+      if (newAuthOverlay && !currentAuthOverlay) {
+        document.body.appendChild(newAuthOverlay.cloneNode(true));
+      } else if (!newAuthOverlay && currentAuthOverlay) {
+        currentAuthOverlay.remove();
+      }
+
       currentMain.innerHTML = newMain.innerHTML;
+      // (Bug 5 fix) Remove any leftover #docked-input-wrap /
+      // .docked-input-wrap element that belongs to the PAGE WE'RE LEAVING
+      // and lives outside <main> (e.g. the home page's own copy of this
+      // element, which independently defines it outside of its own
+      // <main>). Only the instance that just came in as part of the
+      // freshly swapped-in <main> content (already inside currentMain at
+      // this point) should remain in the DOM after this navigation — any
+      // stray copy sitting elsewhere in the document is a leftover from
+      // the previous page and must be removed.
+      document.querySelectorAll('.docked-input-wrap, #docked-input-wrap').forEach((el) => {
+        if (!currentMain.contains(el)) {
+          el.remove();
+        }
+      });
       // Re-bind everything that was previously only ever bound once at
       // initial page load (search form, attach button, platforms dropdown,
       // and the live-answer MutationObserver) against this freshly-swapped
@@ -926,27 +969,18 @@
     navigateTo(location.href, { pushState: false });
   });
 
-  // (Bug 6 fix) Closes the mobile drawer + its dark overlay, if open.
-  // Queries `.sidebar`/`#mobile-overlay` fresh (rather than relying only on
-  // the `sidebar`/`overlay` consts captured above) so it stays correct even
-  // if a soft navigation ever swaps that markup in the future. Called right
-  // before navigation begins so tapping a sidebar chat link or "New" on
-  // mobile always closes the drawer automatically instead of leaving it
-  // open (and the screen darkened) behind the page it navigated to.
-  function closeMobileSidebarDrawer() {
-    const sb = document.querySelector('.sidebar');
-    const ov = document.getElementById('mobile-overlay');
-    if (sb) sb.classList.remove('mobile-open');
-    if (ov) ov.classList.remove('visible');
-  }
-
   // ---- Sidebar chat links + "New" button — now soft-navigated ----
   document.addEventListener('click', (e) => {
     const link = e.target.closest('.session-item-link');
     if (link) {
       console.log('[soft-nav] intercepted session link click ->', link.href);
       e.preventDefault();
-      closeMobileSidebarDrawer();
+      // (Bug 6 fix) Close the mobile drawer and its dark overlay as soon as
+      // a sidebar chat link is tapped, so navigating away always closes
+      // them automatically instead of leaving them open behind the newly
+      // swapped-in page.
+      sidebar.classList.remove('mobile-open');
+      overlay.classList.remove('visible');
       navigateTo(link.href, { method: 'GET' });
     }
   });
@@ -959,7 +993,11 @@
     if (action === '/chats/new' || action.endsWith('/chats/new')) {
       console.log('[soft-nav] intercepted "New chat" form submit ->', action);
       e.preventDefault();
-      closeMobileSidebarDrawer();
+      // (Bug 6 fix) Same as the sidebar chat link handler above — close the
+      // mobile drawer and overlay as soon as "New" is tapped, before the
+      // resulting navigation happens.
+      sidebar.classList.remove('mobile-open');
+      overlay.classList.remove('visible');
       navigateTo(form.action, { method: 'POST' });
     }
   });
@@ -1040,6 +1078,15 @@
   // chat switch, and repeated switching stacks up multiple live
   // connections against the browser's per-origin connection limit.
   let activeEventSource = null;
+  // Monotonically incrementing navigation generation counter. Every async
+  // operation that will eventually mutate the DOM (a soft navigation, a
+  // follow-up search submit, an in-flight SSE stream) snapshots this value
+  // when it starts, and re-checks it immediately before mutating the DOM.
+  // If the counter has moved on by the time the operation is ready to
+  // touch the DOM, that means a newer navigation has since started, and
+  // the stale operation discards its result silently instead of mutating
+  // DOM that no longer belongs to it.
+  let softNavGeneration = 0;
 
   function initMainPageInteractions() {
     const attachBtn = document.getElementById('attach-btn');
@@ -1740,6 +1787,7 @@
   // No page reload happens on "done" — the completed answer renders
   // in-place with a gentle entrance animation instead.
   function wireUpStream(pendingTurn, chatId) {
+    const myGen = softNavGeneration;
     const topicKey = pendingTurn.dataset.topicKey || '';
     if (!chatId || !topicKey) return;
 
@@ -1777,6 +1825,18 @@
       }
 
       if (payload.done) {
+        // (Generation guard) If a navigation has happened since this stream
+        // started, the chat thread this answer belongs to may no longer be
+        // in the DOM at all — discard the completed answer silently instead
+        // of injecting it into whatever chat is now on screen. The
+        // connection still needs to be closed and its timer cleared either
+        // way, to avoid leaking it.
+        if (myGen !== softNavGeneration) {
+          source.close();
+          activeEventSource = null;
+          if (phraseTimer) clearInterval(phraseTimer);
+          return;
+        }
         source.close();
         activeEventSource = null;
         if (phraseTimer) clearInterval(phraseTimer);
@@ -1866,6 +1926,13 @@
       const query = searchInput ? searchInput.value.trim() : '';
       if (!query) return;
 
+      // (Generation guard) Snapshot the navigation generation current at
+      // the moment this follow-up was submitted. If the user navigates
+      // away (chat switch, "New", etc.) before this request resolves, the
+      // generation counter will have moved on by the time we're ready to
+      // touch the DOM below, and this stale result gets discarded silently.
+      const myGen = softNavGeneration;
+
       if (submitBtn) submitBtn.disabled = true;
 
       // Step 1: the actual network request. This is the ONLY part that
@@ -1896,6 +1963,17 @@
       try {
         const html = await response.text();
         const doc = new DOMParser().parseFromString(html, 'text/html');
+
+        // (Generation guard) The request has resolved — before touching the
+        // DOM at all, check whether a navigation happened while we were
+        // waiting. If so, this result is stale: the user has since moved to
+        // a different chat (or a rapid double-navigation superseded this
+        // one), and appending this follow-up's turn now would inject it
+        // into the wrong chat's DOM. Discard silently.
+        if (myGen !== softNavGeneration) {
+          console.warn('[stale-response] Discarding search result — navigation occurred mid-request.');
+          return;
+        }
 
         // Bug 2 fix: a first prompt from home (or any prompt that lands on
         // a newly-created chat) redirects server-side to /chat/<new_id> —
@@ -1950,9 +2028,14 @@
         // normally through the standard server-rendered path.
         console.warn('[dom-update-failed][search-submit] Search succeeded server-side; only the in-place DOM update failed (not a network issue, so no hard reload was triggered):', domErr);
       } finally {
-        const freshSubmitBtn = document.getElementById('submit-btn');
-        const freshSearchInput = document.getElementById('search-input');
-        if (freshSubmitBtn) freshSubmitBtn.disabled = freshSearchInput ? freshSearchInput.value.trim().length === 0 : false;
+        // Only re-enable the submit button if this is still the current
+        // generation — don't re-enable a button belonging to a page state
+        // that's already been replaced by a subsequent navigation.
+        if (myGen === softNavGeneration) {
+          const freshSubmitBtn = document.getElementById('submit-btn');
+          const freshSearchInput = document.getElementById('search-input');
+          if (freshSubmitBtn) freshSubmitBtn.disabled = freshSearchInput ? freshSearchInput.value.trim().length === 0 : false;
+        }
       }
     });
   }
