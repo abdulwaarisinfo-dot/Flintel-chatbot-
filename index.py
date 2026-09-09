@@ -3645,30 +3645,31 @@ def list_chats(request: Request):
 
 @app.post("/chats/new")
 def new_chat(request: Request, title: str = Form(None)):
-    """Starts a brand-new chat and makes it the active one, the same as
-    clicking "New chat" in Claude/ChatGPT.
+    """(NEW CHAT BEHAVIOR FIX) Clicking "New chat" now behaves exactly
+    like Claude/ChatGPT: it does NOT create any new chat document in
+    Mongo, and does NOT touch any existing chat. It only clears
+    `active_chat_id` from the session, so the very next page load
+    (home()) renders the empty/home search screen with no active chat
+    selected — ready for the user to type their first message.
 
-    v4.4 FIX: reuses the currently active chat instead of creating a
-    fresh one if that chat belongs to this same owner and still has zero
-    messages, avoiding piling up dead, message-less chats in the sidebar."""
-    owner_key, owner_type = get_owner(request)
+    The actual chat document is still created lazily, exactly as it
+    already is: the moment the user's first message is sent via
+    POST /search (chat, blocked, clarify, or search intent), that
+    existing, UNCHANGED logic creates a new chat via
+    create_chat_session() whenever active_chat_id is missing or invalid
+    for the current owner. Nothing about that creation logic changed.
 
-    active_chat_id = request.session.get("active_chat_id")
-    if active_chat_id:
-        active_chat = get_chat_session(active_chat_id, owner_key)
-        if active_chat and not active_chat.get("messages"):
-            # Already-empty chat for this same owner -> reuse it instead of
-            # spawning a duplicate empty one.
-            if title:
-                chats_collection.update_one(
-                    {"chat_id": active_chat_id, "owner_key": owner_key},
-                    {"$set": {"title": title, "updated_at": datetime.now(timezone.utc)}},
-                )
-            request.session["active_chat_id"] = active_chat_id
-            return RedirectResponse(url="/", status_code=303)
+    REMOVED (no longer needed): the previous v4.4 FIX reuse-if-empty
+    logic that checked whether the currently active chat had zero
+    messages and reused it instead of creating a duplicate — that
+    problem can no longer occur, since this route itself never creates
+    an empty chat anymore for there to be a duplicate of.
 
-    chat_id = create_chat_session(owner_key, owner_type, title=title)
-    request.session["active_chat_id"] = chat_id
+    `title` is still accepted as a form parameter for backward-
+    compatible form compatibility with any existing frontend that posts
+    it, but it is no longer used for anything, since no chat is created
+    here to title."""
+    request.session.pop("active_chat_id", None)
     return RedirectResponse(url="/", status_code=303)
 
 
