@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -187,7 +189,7 @@
   .mobile-overlay.visible { display: block; }
 
   /* ---------- Main ---------- */
-  .main { flex: 1; position: relative; display: flex; flex-direction: column; overflow-x: hidden; }
+  .main { flex: 1; position: relative; display: flex; flex-direction: column; }
 
   .topbar {
     height: 62px; display: flex; align-items: center; justify-content: space-between;
@@ -218,7 +220,7 @@
      No keyword list or job/status internals are ever rendered here.
      ========================================================================= */
   .thread-wrap { flex: 1; padding: 84px 20px 220px 20px; }
-  .thread-inner { max-width: 950px; margin: 0 auto; overflow-x: hidden; }
+  .thread-inner { max-width: 950px; margin: 0 auto; }
   @media (min-width: 1060px) {
     .thread-wrap { padding-left: 109px; padding-right: 109px; }
     .thread-inner { max-width: 1382px; margin: 0 auto; }
@@ -296,6 +298,17 @@
   .platform-icon-badge.facebook { background: #1877F2; border-color: #1877F2; }
   .platform-icon-badge.linkedin { background: #0A66C2; border-color: #0A66C2; }
   .platform-icon-badge.x { background: #000; border-color: #333; }
+  /* Ported from the original mock design (Progress.html) — some pages/
+     older markup use class="platform-icon" (a real brand-image circle,
+     35x35, cropped) instead of this file's own "platform-icon-badge"
+     (a colored circle with a small white glyph inside). Kept as its own
+     class, alongside platform-icon-badge above, rather than merged into
+     it, so BOTH class names always resolve to a properly-constrained
+     35x35 circle no matter which markup/version of a page is live —
+     this is exactly the rule that was missing wherever a real
+     platform-icon <img> was rendering at full native size with no size
+     constraint at all. */
+  .platform-icon { width: 35px; height: 35px; border-radius: 50%; flex-shrink: 0; overflow: hidden; }
   .platform-name-row { display: flex; align-items: center; gap: 7px; }
   .platform-name { color: #7a7a77; font-size: 16px; font-weight: 600; }
   .platform-dot { width: 4px; height: 4px; border-radius: 50%; background: #7a7a77; }
@@ -465,7 +478,7 @@
   /* Gated on a PLACEHOLDER field (msg.dashboard) — see state-card comment above. */
   .dashboard-brand-block { margin-bottom: 40px; }
   .metrics-section-title { color: #fff; font-size: 17px; font-weight: 600; line-height: 26px; margin-bottom: 20px; }
-  .metrics-table { background: #1e1d1c; border: 0.5px solid #343434; border-radius: 12px; overflow-y: hidden; overflow-x: auto; margin-bottom: 40px; }
+  .metrics-table { background: #1e1d1c; border: 0.5px solid #343434; border-radius: 12px; overflow: hidden; margin-bottom: 40px; }
   .metrics-row { display: grid; height: 47px; }
   .metrics-row.header { background: #252422; }
   .metrics-row:not(.header) { background: #1e1d1c; border-top: 0.5px solid #343434; }
@@ -835,7 +848,6 @@
   //      querySelectorAll(...).forEach(...) instead of a single call) ----
   async function navigateTo(url, { method = 'GET', pushState = true } = {}) {
     console.log('[soft-nav] navigateTo() called:', method, url);
-    const myNav = ++softNavGeneration;
     // (Bug 1 fix) Close any still-open SSE connection from the page we're
     // leaving BEFORE doing anything else — otherwise a mid-stream answer
     // left behind by a chat switch keeps its connection open indefinitely.
@@ -861,17 +873,6 @@
 
       if (!newMain || !currentMain) throw new Error('Fetched page missing <main> — falling back to real navigation');
 
-      // (Generation guard) A newer navigation may have started and possibly
-      // already resolved while this fetch/parse was in flight. If our
-      // generation number is stale by the time we're about to touch the
-      // DOM, discard this result silently instead of mutating a page that
-      // no longer belongs to this navigation. Everything below this point
-      // is a synchronous block of DOM mutations (style-tag swap, main swap,
-      // docked-input-wrap cleanup, initMainPageInteractions(),
-      // scrollToLatestTurn(), sessions-list swap), so a single check here
-      // covers all of them.
-      if (myNav !== softNavGeneration) return;
-
       // Swap the active <style> tag's content BEFORE swapping <main> — the
       // fetched page might be a different template (index.html <-> chat.html)
       // with its own, non-identical stylesheet. Without this, <main>'s new
@@ -884,78 +885,7 @@
       if (newStyleTag && currentStyleTag) {
         currentStyleTag.textContent = newStyleTag.textContent;
       }
-
-      // Generalized body-level reconciliation. <main> (inside .layout) and
-      // #sessions-list are already handled above/below; .layout itself is the
-      // persistent navigation chrome and must never be touched here. Every OTHER
-      // direct child of <body> — anything a specific page adds outside .layout,
-      // such as index.html's #auth-overlay, or any future page-specific overlay
-      // /modal/toast container — is exactly the category of element that keeps
-      // getting left behind (or missing) across a soft navigation, because none
-      // of it was previously covered by name. Rather than special-casing each
-      // one as it's discovered, sync the whole category generically:
-      //
-      //   - Any current body-level child that is not .layout, not a <script>,
-      //     and does NOT have a matching element (by id) in the fetched
-      //     document -> remove it (it belongs to the page we're leaving).
-      //   - Any fetched-document body-level child that is not .layout, not a
-      //     <script>, and does NOT already exist in the current document ->
-      //     clone it and append it to <body> (it belongs to the page we just
-      //     navigated to).
-      //   - Anything present in both (matched by id) is left completely alone,
-      //     to avoid wiping out live state (e.g. a modal currently open, or
-      //     in-progress form input inside it).
-      //
-      // This must run in that removal-then-addition order so that a same-id
-      // element present on both sides is correctly recognized as "already
-      // present" before any removal happens.
-      function isReconcilableBodyChild(el) {
-        return el.nodeType === 1 && !el.matches('.layout') && el.tagName !== 'SCRIPT';
-      }
-
-      const currentBodyChildren = Array.from(document.body.children).filter(isReconcilableBodyChild);
-      const fetchedBodyChildren = Array.from(doc.body.children).filter(isReconcilableBodyChild);
-
-      currentBodyChildren.forEach((el) => {
-        const stillWanted = el.id && fetchedBodyChildren.some((f) => f.id === el.id);
-        if (!stillWanted) el.remove();
-      });
-
-      // Defensive verification: re-check the LIVE DOM (not the array computed
-      // above) for any reconcilable body-level element that should have just
-      // been removed but is still present — this guards against any live-
-      // collection iteration mistake (elsewhere or introduced later) silently
-      // leaving a stray, unstyled element (e.g. #auth-overlay rendered with no
-      // matching CSS rule on this page) visible to the user.
-      Array.from(document.body.children)
-        .filter(isReconcilableBodyChild)
-        .forEach((el) => {
-          const stillWanted = el.id && fetchedBodyChildren.some((f) => f.id === el.id);
-          if (!stillWanted) el.remove();
-        });
-
-      fetchedBodyChildren.forEach((el) => {
-        const alreadyPresent = el.id && document.getElementById(el.id);
-        if (!alreadyPresent) {
-          document.body.appendChild(el.cloneNode(true));
-        }
-      });
-
       currentMain.innerHTML = newMain.innerHTML;
-      // (Bug 5 fix) Remove any leftover #docked-input-wrap /
-      // .docked-input-wrap element that belongs to the PAGE WE'RE LEAVING
-      // and lives outside <main> (e.g. the home page's own copy of this
-      // element, which independently defines it outside of its own
-      // <main>). Only the instance that just came in as part of the
-      // freshly swapped-in <main> content (already inside currentMain at
-      // this point) should remain in the DOM after this navigation — any
-      // stray copy sitting elsewhere in the document is a leftover from
-      // the previous page and must be removed.
-      document.querySelectorAll('.docked-input-wrap, #docked-input-wrap').forEach((el) => {
-        if (!currentMain.contains(el)) {
-          el.remove();
-        }
-      });
       // Re-bind everything that was previously only ever bound once at
       // initial page load (search form, attach button, platforms dropdown,
       // and the live-answer MutationObserver) against this freshly-swapped
@@ -1007,18 +937,27 @@
     navigateTo(location.href, { pushState: false });
   });
 
+  // (Bug 6 fix) Closes the mobile drawer + its dark overlay, if open.
+  // Queries `.sidebar`/`#mobile-overlay` fresh (rather than relying only on
+  // the `sidebar`/`overlay` consts captured above) so it stays correct even
+  // if a soft navigation ever swaps that markup in the future. Called right
+  // before navigation begins so tapping a sidebar chat link or "New" on
+  // mobile always closes the drawer automatically instead of leaving it
+  // open (and the screen darkened) behind the page it navigated to.
+  function closeMobileSidebarDrawer() {
+    const sb = document.querySelector('.sidebar');
+    const ov = document.getElementById('mobile-overlay');
+    if (sb) sb.classList.remove('mobile-open');
+    if (ov) ov.classList.remove('visible');
+  }
+
   // ---- Sidebar chat links + "New" button — now soft-navigated ----
   document.addEventListener('click', (e) => {
     const link = e.target.closest('.session-item-link');
     if (link) {
       console.log('[soft-nav] intercepted session link click ->', link.href);
       e.preventDefault();
-      // (Bug 6 fix) Close the mobile drawer and its dark overlay as soon as
-      // a sidebar chat link is tapped, so navigating away always closes
-      // them automatically instead of leaving them open behind the newly
-      // swapped-in page.
-      sidebar.classList.remove('mobile-open');
-      overlay.classList.remove('visible');
+      closeMobileSidebarDrawer();
       navigateTo(link.href, { method: 'GET' });
     }
   });
@@ -1031,11 +970,7 @@
     if (action === '/chats/new' || action.endsWith('/chats/new')) {
       console.log('[soft-nav] intercepted "New chat" form submit ->', action);
       e.preventDefault();
-      // (Bug 6 fix) Same as the sidebar chat link handler above — close the
-      // mobile drawer and overlay as soon as "New" is tapped, before the
-      // resulting navigation happens.
-      sidebar.classList.remove('mobile-open');
-      overlay.classList.remove('visible');
+      closeMobileSidebarDrawer();
       navigateTo(form.action, { method: 'POST' });
     }
   });
@@ -1116,15 +1051,6 @@
   // chat switch, and repeated switching stacks up multiple live
   // connections against the browser's per-origin connection limit.
   let activeEventSource = null;
-  // Monotonically incrementing navigation generation counter. Every async
-  // operation that will eventually mutate the DOM (a soft navigation, a
-  // follow-up search submit, an in-flight SSE stream) snapshots this value
-  // when it starts, and re-checks it immediately before mutating the DOM.
-  // If the counter has moved on by the time the operation is ready to
-  // touch the DOM, that means a newer navigation has since started, and
-  // the stale operation discards its result silently instead of mutating
-  // DOM that no longer belongs to it.
-  let softNavGeneration = 0;
 
   function initMainPageInteractions() {
     const attachBtn = document.getElementById('attach-btn');
@@ -1807,7 +1733,7 @@
     const turns = document.querySelectorAll('.turn-block');
     if (!turns.length) return;
     const latest = turns[turns.length - 1];
-    latest.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+    latest.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
   scrollToLatestTurn();
 </script>
@@ -1825,7 +1751,6 @@
   // No page reload happens on "done" — the completed answer renders
   // in-place with a gentle entrance animation instead.
   function wireUpStream(pendingTurn, chatId) {
-    const myGen = softNavGeneration;
     const topicKey = pendingTurn.dataset.topicKey || '';
     if (!chatId || !topicKey) return;
 
@@ -1863,18 +1788,6 @@
       }
 
       if (payload.done) {
-        // (Generation guard) If a navigation has happened since this stream
-        // started, the chat thread this answer belongs to may no longer be
-        // in the DOM at all — discard the completed answer silently instead
-        // of injecting it into whatever chat is now on screen. The
-        // connection still needs to be closed and its timer cleared either
-        // way, to avoid leaking it.
-        if (myGen !== softNavGeneration) {
-          source.close();
-          activeEventSource = null;
-          if (phraseTimer) clearInterval(phraseTimer);
-          return;
-        }
         source.close();
         activeEventSource = null;
         if (phraseTimer) clearInterval(phraseTimer);
@@ -1964,13 +1877,6 @@
       const query = searchInput ? searchInput.value.trim() : '';
       if (!query) return;
 
-      // (Generation guard) Snapshot the navigation generation current at
-      // the moment this follow-up was submitted. If the user navigates
-      // away (chat switch, "New", etc.) before this request resolves, the
-      // generation counter will have moved on by the time we're ready to
-      // touch the DOM below, and this stale result gets discarded silently.
-      const myGen = softNavGeneration;
-
       if (submitBtn) submitBtn.disabled = true;
 
       // Step 1: the actual network request. This is the ONLY part that
@@ -2001,17 +1907,6 @@
       try {
         const html = await response.text();
         const doc = new DOMParser().parseFromString(html, 'text/html');
-
-        // (Generation guard) The request has resolved — before touching the
-        // DOM at all, check whether a navigation happened while we were
-        // waiting. If so, this result is stale: the user has since moved to
-        // a different chat (or a rapid double-navigation superseded this
-        // one), and appending this follow-up's turn now would inject it
-        // into the wrong chat's DOM. Discard silently.
-        if (myGen !== softNavGeneration) {
-          console.warn('[stale-response] Discarding search result — navigation occurred mid-request.');
-          return;
-        }
 
         // Bug 2 fix: a first prompt from home (or any prompt that lands on
         // a newly-created chat) redirects server-side to /chat/<new_id> —
@@ -2049,7 +1944,7 @@
         // navigation replaced it since then.
         const liveThreadInner = document.querySelector('.thread-inner') || threadInner;
         liveThreadInner.appendChild(latestTurn);
-        latestTurn.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+        latestTurn.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
         // If this new turn is mid-stream, wire it up immediately — same
         // logic as a normal page load, just triggered right now instead.
@@ -2066,14 +1961,9 @@
         // normally through the standard server-rendered path.
         console.warn('[dom-update-failed][search-submit] Search succeeded server-side; only the in-place DOM update failed (not a network issue, so no hard reload was triggered):', domErr);
       } finally {
-        // Only re-enable the submit button if this is still the current
-        // generation — don't re-enable a button belonging to a page state
-        // that's already been replaced by a subsequent navigation.
-        if (myGen === softNavGeneration) {
-          const freshSubmitBtn = document.getElementById('submit-btn');
-          const freshSearchInput = document.getElementById('search-input');
-          if (freshSubmitBtn) freshSubmitBtn.disabled = freshSearchInput ? freshSearchInput.value.trim().length === 0 : false;
-        }
+        const freshSubmitBtn = document.getElementById('submit-btn');
+        const freshSearchInput = document.getElementById('search-input');
+        if (freshSubmitBtn) freshSubmitBtn.disabled = freshSearchInput ? freshSearchInput.value.trim().length === 0 : false;
       }
     });
   }
