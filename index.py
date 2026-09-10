@@ -2882,6 +2882,31 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str
     return json.dumps(data, ensure_ascii=False)
 
 
+def _inject_website_context_into_answer(answer_text: str, website_context: dict) -> str:
+    """Purely additive, Python-side post-processing — parses the
+    already-generated Claude JSON answer and injects `website_context`
+    as a new top-level field at the START of the JSON object (before
+    "format"), without depending on any model-side instruction to add
+    it. Mirrors the same parse/patch/re-serialize pattern already used
+    by _patch_post_urls_into_answer(): best-effort and non-destructive
+    — if answer_text isn't valid JSON, or website_context is falsy,
+    the original answer_text is returned completely unchanged."""
+    if not answer_text or not website_context:
+        return answer_text
+    cleaned = answer_text.strip()
+    if cleaned.startswith("```"):
+        cleaned = cleaned.strip("`").strip()
+        cleaned = re.sub(r"^json\s*", "", cleaned, flags=re.IGNORECASE).strip()
+    try:
+        data = json.loads(cleaned)
+    except (ValueError, TypeError):
+        return answer_text
+    if not isinstance(data, dict):
+        return answer_text
+    new_data = {"website_context": website_context, **data}
+    return json.dumps(new_data, ensure_ascii=False)
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # USER ACCOUNTS — v2 (Google OAuth + email/password, `flintel_users`)
 # ─────────────────────────────────────────────────────────────────────────────
@@ -3382,31 +3407,10 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
                 extra_ctx = flintel.build_unfiltered_answer_context(
                     msg["query"], msg.get("time_window_days")
                 )
-            # (STRUCTURED WEBSITE SUMMARY) Folded into the SAME extra_context
-            # string mechanism the unfiltered-mode case already uses —
-            # analyze_with_claude() itself stays completely untouched. In
-            # practice unfiltered and website_context are mutually
-            # exclusive paths, but this still builds a combined string if
-            # both were somehow set, rather than one silently overwriting
-            # the other.
-            if msg.get("website_context"):
-                website_instruction = (
-                    "The user shared their own website. Here is a structured summary "
-                    "Flintel already generated from it (overview + sections of "
-                    "bullets) — include this VERBATIM as a new top-level "
-                    "\"website_context\" field (same shape: {\"overview\": str, "
-                    "\"sections\": [{\"title\": str, \"bullets\": [str, ...]}]}) at "
-                    "the START of your JSON response, as the very first field before "
-                    "\"format\", so the frontend can render the website breakdown "
-                    "above the matched-posts answer. Do not alter, summarize, or "
-                    "paraphrase this data — reproduce it exactly as given, then "
-                    "continue with your normal source_list/no_results/etc. answer for "
-                    "the matched posts as usual.\n\nwebsite_context JSON:\n"
-                    + json.dumps(msg["website_context"], ensure_ascii=False)
-                )
-                extra_ctx = (extra_ctx + "\n\n" + website_instruction) if extra_ctx else website_instruction
             answer = analyze_with_claude(msg["query"], matched, extra_context=extra_ctx)
             answer = _patch_post_urls_into_answer(answer, matched)
+            if msg.get("website_context"):
+                answer = _inject_website_context_into_answer(answer, msg["website_context"])
             msg["claude_answer"] = answer
             save_claude_answer_to_chat(chat_id, owner_key, msg["topic_key"], answer)
             answer_for_format_check = answer
@@ -3813,12 +3817,15 @@ def search(
             # stated ask alongside the link (e.g. "...its my web so find me
             # for customers") is not incorrectly force-summarized.
             try:
-                is_bare_url_request = not website_intelligence.has_request_shaped_language(
+                has_shaped_language = website_intelligence.has_request_shaped_language(
                     query, detected_url_for_routing
                 )
+                is_generic_leadgen = website_intelligence.is_generic_leadgen_ask(query)
+                is_bare_url_request = (not has_shaped_language)
             except Exception as exc:
                 log.warning(f"has_request_shaped_language failed for query={query!r}: {exc}")
                 is_bare_url_request = False
+                is_generic_leadgen = False
 
         if is_bare_url_request:
             # BEHAVIOR 1 — bare URL, no real ask: summarize the site and
@@ -3956,7 +3963,10 @@ def search(
         # link? No separately-named topic (BEHAVIOR 2) vs a separately
         # named topic alongside the URL (BEHAVIOR 3 candidate).
         try:
-            has_named_topic = website_intelligence.has_request_shaped_language(query, detected_url)
+            has_named_topic = (
+                website_intelligence.has_request_shaped_language(query, detected_url)
+                and not website_intelligence.is_generic_leadgen_ask(query)
+            )
         except Exception as exc:
             log.warning(f"has_request_shaped_language failed for url={detected_url!r}: {exc}")
             has_named_topic = False
@@ -4029,6 +4039,15 @@ def search(
                 if website_keywords:
                     routed_keywords = website_keywords
                     log.info(f"Website-derived keywords used | url={detected_url!r} | keywords={routed_keywords}")
+
+                try:
+                    structured = website_intelligence.summarize_website_structured(
+                        website_text, call_claude_fn=_call_claude
+                    )
+                    website_answer_context = website_intelligence.format_structured_summary_for_answer(structured)
+                except Exception as exc:
+                    log.warning(f"Structured website summary failed for url={detected_url!r}: {exc}")
+                    website_answer_context = None
             elif topic_match_result["topic_matches_website"] is True:
                 # Topic genuinely connects to the website — use the
                 # keywords produced by the SAME call, exactly like
@@ -4357,26 +4376,6 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     extra_ctx = flintel.build_unfiltered_answer_context(
                         msg["query"], msg.get("time_window_days")
                     )
-                # (STRUCTURED WEBSITE SUMMARY) Identical pattern to
-                # _complete_message_answer_and_results() — a freshly-created
-                # message that happens to stream its first answer also gets
-                # the website_context folded in the same way.
-                if msg.get("website_context"):
-                    website_instruction = (
-                        "The user shared their own website. Here is a structured summary "
-                        "Flintel already generated from it (overview + sections of "
-                        "bullets) — include this VERBATIM as a new top-level "
-                        "\"website_context\" field (same shape: {\"overview\": str, "
-                        "\"sections\": [{\"title\": str, \"bullets\": [str, ...]}]}) at "
-                        "the START of your JSON response, as the very first field before "
-                        "\"format\", so the frontend can render the website breakdown "
-                        "above the matched-posts answer. Do not alter, summarize, or "
-                        "paraphrase this data — reproduce it exactly as given, then "
-                        "continue with your normal source_list/no_results/etc. answer for "
-                        "the matched posts as usual.\n\nwebsite_context JSON:\n"
-                        + json.dumps(msg["website_context"], ensure_ascii=False)
-                    )
-                    extra_ctx = (extra_ctx + "\n\n" + website_instruction) if extra_ctx else website_instruction
                 full_answer = analyze_with_claude(msg["query"], matched, extra_context=extra_ctx)
             except Exception as exc:
                 log.warning(f"Streaming Claude analysis failed for topic_key={topic_key}: {exc}")
@@ -4390,6 +4389,8 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # browser.
             if full_answer:
                 full_answer = _patch_post_urls_into_answer(full_answer, matched)
+                if msg.get("website_context"):
+                    full_answer = _inject_website_context_into_answer(full_answer, msg["website_context"])
 
             # (SIMULATED-STREAM FIX) Step 3: pace the now-final string back out
             # in small pieces to reproduce the live-typing impression.
