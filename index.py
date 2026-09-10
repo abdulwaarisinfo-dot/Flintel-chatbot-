@@ -3966,6 +3966,7 @@ def search(
             # site" with no separately-named topic: EXISTING, UNCHANGED
             # behavior, zero change to this path.
             website_keywords = None
+            website_text = None
             try:
                 website_text = fetch_website_text(detected_url)
                 website_keywords = extract_keywords_from_website(query, detected_url, website_text)
