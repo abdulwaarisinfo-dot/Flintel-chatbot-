@@ -635,3 +635,46 @@ def has_request_shaped_language(text: str, url: str) -> bool:
     remaining_clean = _WHITESPACE_RE.sub("", remaining_clean)
 
     return len(remaining_clean) >= _MIN_MEANINGFUL_CHARS
+
+
+# Generic lead-generation / "find me customers" style phrasing that names
+# NO distinct topic — case-insensitive matching applied by
+# is_generic_leadgen_ask() below, not baked into the patterns themselves.
+_GENERIC_LEADGEN_PATTERNS = [
+    r"\bfind (me )?(for )?customers\b",
+    r"\bfind (me )?(potential )?customers\b",
+    r"\bfind (me )?leads\b",
+    r"\bget (me )?customers\b",
+    r"\bget (me )?leads\b",
+    r"\bpromote (my|this) (site|website)\b",
+    r"\bmarket (my|this) (site|website)\b",
+]
+
+
+def is_generic_leadgen_ask(text: str) -> bool:
+    """Narrow, additive heuristic used by index.py to distinguish a
+    generic "find me customers/leads" ask — no distinct topic named,
+    should route to BEHAVIOR 2 (extract_keywords_from_website()) — from a
+    genuinely named topic stated alongside a URL (a BEHAVIOR 3 candidate,
+    i.e. check_topic_matches_website()).
+
+    THIS IS A LAST-RESORT REFINEMENT ON TOP OF has_request_shaped_language(),
+    NOT A REPLACEMENT FOR IT. has_request_shaped_language() already
+    answers "is there any real request-shaped language beyond the bare
+    URL at all" — this function answers a narrower follow-up question,
+    for text that already passed that first check: "is the request-shaped
+    language itself just generic lead-gen phrasing with no distinct topic
+    named, or does it actually name something?"
+
+    Pure Python, no Claude call, no network call, no Mongo access —
+    instant and side-effect-free, same convention as
+    has_request_shaped_language(). Never raises: returns False for any
+    falsy/non-string `text` instead of raising."""
+    if not text or not isinstance(text, str):
+        return False
+
+    text_lower = text.lower()
+    for pattern in _GENERIC_LEADGEN_PATTERNS:
+        if re.search(pattern, text_lower):
+            return True
+    return False
