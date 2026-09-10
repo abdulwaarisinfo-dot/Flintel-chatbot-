@@ -556,7 +556,7 @@ NEVER end up with zero keywords because of this feature, and a message
 with no URL in it behaves 100% identically to before this feature — this
 whole step is skipped entirely when _extract_first_url() finds nothing.
 
-── ROUTER INTENT REFINEMENT (THIS FILE) ────────────────────────────────────
+── ROUTER INTENT REFINEMENT ────────────────────────────────────────────────
 THREE small, targeted, PROMPT-ONLY changes on top of everything above.
 Zero new code paths, zero new functions, zero new routes, zero new Mongo
 fields. Every function signature, matching rule, chunking rule, caching
@@ -634,6 +634,66 @@ existing generate_fuzzy_keywords() safety net, and every other safety net
 already documented above are completely unaffected — a routing hiccup
 still can never block or under-supply a genuine search, exactly as before.
 
+── URL-HANDLING REFINEMENTS (THIS FILE) ────────────────────────────────────
+Wires in three new URL-handling behaviors via the NEW, self-contained
+website_intelligence.py module (imported as `website_intelligence`
+alongside the existing `import flintel`). NOTHING from that module is
+reimplemented here — this file only calls into it. Nothing about
+_extract_first_url(), fetch_website_text(), or
+extract_keywords_from_website() changed; all three are still reused
+exactly as they were.
+
+Scoped to exactly TWO integration points inside POST /search:
+
+INTEGRATION POINT 1 (runs after classify_and_maybe_chat() /
+CLARIFY-SELF-RESOLVE, BEFORE the existing chat/blocked/clarify handling
+branch): if a URL is detected in the message, and the router's own
+classification says "clarify"/"chat" (or, as a last-resort fallback when
+that signal is ambiguous, website_intelligence.has_request_shaped_
+language() finds no real request-shaped text beyond the link itself),
+this is a bare URL with no real ask — BEHAVIOR 1. The site is summarized
+via website_intelligence.summarize_website() and a natural, professional
+reply built via website_intelligence.build_url_only_reply() invites the
+user to say what they'd like looked into, saved via the EXISTING,
+UNCHANGED add_chat_message_to_chat() (same message shape as any other
+chat/blocked/clarify turn — no template changes needed) and the rest of
+the search pipeline is skipped for this request. Any failure fetching or
+summarizing the site simply falls through to the EXISTING clarify/chat
+behavior — no new failure mode. Otherwise (a real, separately-stated ask
+alongside the URL), intent is treated as "search" and INTEGRATION POINT 2
+below runs instead of the plain WEBSITE-URL KEYWORD EXTRACTION call.
+
+INTEGRATION POINT 2 (inside the SEARCH-TYPE branch, replacing the single
+extract_keywords_from_website() call for the case where the message has
+BOTH a URL and explicit topic/request text): the SAME
+has_request_shaped_language() heuristic distinguishes BEHAVIOR 2 ("find
+leads/customers/posts related to MY site" with no separately-named
+topic — the EXISTING, UNCHANGED extract_keywords_from_website() path,
+zero change) from a BEHAVIOR 3 candidate (a topic named alongside the
+URL). For a BEHAVIOR 3 candidate,
+website_intelligence.check_topic_matches_website() reads the topic and
+the website together in ONE Claude call and returns both a match verdict
+and (if it matches) the keyword list. An inconclusive/failed check falls
+straight through to the EXISTING extract_keywords_from_website() path and
+the EXISTING safety-net chain (routed_keywords -> generate_fuzzy_
+keywords()) — completely intact. A confirmed match uses the returned
+keywords exactly like extract_keywords_from_website()'s output is used
+today. An explicit mismatch (BEHAVIOR 3's actual trigger) skips
+enqueueing a job entirely, tells the user plainly via website_
+intelligence.build_topic_mismatch_reply(), saved via the same EXISTING
+add_chat_message_to_chat(), and redirects exactly like the chat/blocked/
+clarify branch does.
+
+Every message with NO URL in it, and every message that already behaved
+as a normal "search"/"chat"/"blocked"/"clarify" before this feature, is
+100% unchanged. Nothing here touches CLAUDE_ROUTER_SYSTEM_PROMPT,
+CLAUDE_ANALYSIS_SYSTEM_PROMPT, get_matched_signals(), the per-user busy
+lock, the results-recompute fix, or any other existing feature/route in
+this file. GENERICITY: nothing added here hardcodes or special-cases any
+specific topic, brand, or industry — website_intelligence.py's own
+functions reason fresh from whatever content/topic they're given, exactly
+as documented in that module.
+
 EVERYTHING ELSE IN THIS FILE — every other route, function, constant,
 prompt, matching rule, chunking rule, caching rule, and template contract
 — is untouched and behaves exactly as documented above.
@@ -661,6 +721,7 @@ from passlib.context import CryptContext
 from authlib.integrations.starlette_client import OAuth
 
 import flintel
+import website_intelligence
 
 # ─────────────────────────────────────────────────────────────────────────────
 # LOGGING
@@ -3741,13 +3802,108 @@ def search(
             routed_time_window_days = resolved.get("time_window_days")
             log.info(f"Clarify self-resolved to search | query={query!r} | keywords={routed_keywords}")
 
+    # ─────────────────────────────────────────────────────────────────────
+    # WEBSITE-URL BEHAVIOR ROUTING (INTEGRATION POINT 1) — additive only,
+    # scoped entirely to this block, using ONLY website_intelligence.py's
+    # own functions (no reimplementation of any of its logic here). Runs
+    # AFTER the routing step / CLARIFY-SELF-RESOLVE above, BEFORE the
+    # existing chat/blocked/clarify handling branch immediately below.
+    #
+    # "blocked" messages are left completely untouched by this block —
+    # abusive/harmful content should never trigger a website fetch or
+    # summary, so it falls straight through to the existing
+    # chat/blocked/clarify branch below exactly as it always has.
+    # ─────────────────────────────────────────────────────────────────────
+    detected_url_for_routing = None
+    if intent != "blocked":
+        detected_url_for_routing = _extract_first_url(query)
+
+    if detected_url_for_routing:
+        # PRIMARY SIGNAL: the router's own classification. "clarify"/
+        # "chat" already mean "no clear topic/request was found in the
+        # text" — no need to second-guess that with the pure-Python
+        # helper below.
+        if intent in ("clarify", "chat"):
+            is_bare_url_request = True
+        else:
+            # FALLBACK SIGNAL ONLY (per website_intelligence.py's own
+            # docstring): used only when intent isn't already a clear
+            # "clarify"/"chat" signal — e.g. intent defaulted to "search"
+            # because the router call itself failed outright, so we
+            # don't actually know whether this was a real request or
+            # just a bare link drop.
+            try:
+                is_bare_url_request = not website_intelligence.has_request_shaped_language(
+                    query, detected_url_for_routing
+                )
+            except Exception as exc:
+                log.warning(f"has_request_shaped_language failed for query={query!r}: {exc}")
+                is_bare_url_request = False
+
+        if is_bare_url_request:
+            # BEHAVIOR 1 — bare URL, no real ask: summarize the site and
+            # invite the user to say what they'd like looked into,
+            # instead of guessing a topic or asking a generic clarifying
+            # question. Best-effort: any failure fetching or summarizing
+            # the site simply leaves this block a no-op, and control
+            # falls straight through to the EXISTING clarify/chat
+            # fallback-reply behavior immediately below exactly as it
+            # works today — no new failure mode is introduced.
+            summary = None
+            try:
+                website_text_for_summary = fetch_website_text(detected_url_for_routing)
+                summary = website_intelligence.summarize_website(
+                    website_text_for_summary, call_claude_fn=_call_claude
+                )
+            except Exception as exc:
+                log.warning(f"Website fetch/summary failed for url={detected_url_for_routing!r}: {exc}")
+                summary = None
+
+            if summary:
+                url_only_answer = website_intelligence.build_url_only_reply(summary, query_seed=query)
+
+                redirect_chat_id = None
+                try:
+                    if not owner_key:
+                        owner_key, owner_type = get_owner(request)
+                    if not active_chat_id or not get_chat_session(active_chat_id, owner_key):
+                        active_chat_id = create_chat_session(owner_key, owner_type, title=generate_chat_title(query))
+                    request.session["active_chat_id"] = active_chat_id
+
+                    add_chat_message_to_chat(active_chat_id, owner_key, query, url_only_answer)
+                    try:
+                        append_to_chat_summary(active_chat_id, owner_key, query, url_only_answer)
+                    except Exception as exc:
+                        log.warning(f"Updating chat summary failed for chat_id={active_chat_id}: {exc}")
+                    redirect_chat_id = active_chat_id
+                except Exception as exc:
+                    log.warning(f"Saving URL-only reply failed for query={query!r}: {exc}")
+
+                if redirect_chat_id:
+                    return RedirectResponse(url=f"/chat/{redirect_chat_id}", status_code=303)
+                return RedirectResponse(url="/", status_code=303)
+            # else: summarization failed — fall through to the EXISTING
+            # clarify/chat fallback-reply behavior below exactly as it
+            # works today (do not introduce a new failure mode).
+        else:
+            # Otherwise: intent is "search" (directly, or resolved to
+            # "search" via CLARIFY-SELF-RESOLVE above) and there IS
+            # request-shaped language alongside the URL — force intent to
+            # "search" if it isn't already, and let INTEGRATION POINT 2
+            # (inside the search-type branch below) handle the
+            # topic-vs-website connection check instead of the plain
+            # WEBSITE-URL KEYWORD EXTRACTION call that used to run there.
+            intent = "search"
+
     # ── CHAT-TYPE, BLOCKED-TYPE, OR CLARIFY-TYPE MESSAGE: answer/decline/ ──
     # ── ask directly, never touch the keyword-generation / job-queue /   ──
     # ── signal-matching pipeline at all. (v6: "blocked" reuses the exact ──
     # ── same handling as "chat"; "clarify" reuses it too — same message  ──
     # ── shape, same redirect — only where the answer text comes from     ──
     # ── below differs. "clarify" only ever reaches here if the           ──
-    # ── CLARIFY-SELF-RESOLVE step above couldn't resolve a topic.)       ──
+    # ── CLARIFY-SELF-RESOLVE step above couldn't resolve a topic, AND    ──
+    # ── (if a URL was present) BEHAVIOR 1 above couldn't produce a       ──
+    # ── summary reply.)                                                  ──
     if intent in ("chat", "blocked", "clarify"):
         if intent == "blocked":
             # Never re-sent to Claude for a fallback — a canned decline is
@@ -3802,33 +3958,119 @@ def search(
     # ── it is treated 100% identically to any other search message.)   ──
 
     # ─────────────────────────────────────────────────────────────────────
-    # WEBSITE-URL KEYWORD EXTRACTION — if the user's message itself
-    # contains a URL (e.g. "yeh meri website [url] hai, ... dikhao"), try
-    # to fetch that website and have Claude extract up to
-    # MAX_WEBSITE_KEYWORDS keywords from ITS content (combined with the
-    # user's own request text) and use THOSE as the keyword list for this
-    # search instead of whatever the router/self-resolve step already
-    # produced. Best-effort only: any failure here (fetch error, timeout,
-    # bad URL, Claude call failure, no usable keywords) simply leaves
-    # routed_keywords untouched, so the existing safety-net chain below
-    # (routed_keywords -> generate_fuzzy_keywords()) still applies exactly
-    # as before this feature — a search can never end up with zero
-    # keywords because of this. A message with no URL in it is completely
-    # unaffected: _extract_first_url() returns None and this whole block
-    # is skipped.
+    # WEBSITE-URL KEYWORD EXTRACTION (INTEGRATION POINT 2) — if the user's
+    # message itself contains a website URL, this decides between
+    # BEHAVIOR 2 ("find leads/customers/posts related to MY site", no
+    # separately-named topic — the ORIGINAL, UNCHANGED
+    # extract_keywords_from_website() call) and BEHAVIOR 3 (a SEPARATE
+    # named topic alongside the URL, checked against the site's own
+    # content via website_intelligence.check_topic_matches_website()).
+    # Uses ONLY website_intelligence.py's own functions for the new
+    # logic — no reimplementation here.
     # ─────────────────────────────────────────────────────────────────────
     detected_url = _extract_first_url(query)
     if detected_url:
-        website_keywords = None
+        # Same pure-Python heuristic used in INTEGRATION POINT 1 above,
+        # reused here for the SAME underlying question: is there real
+        # request-shaped language beyond just referencing/pasting the
+        # link? No separately-named topic (BEHAVIOR 2) vs a separately
+        # named topic alongside the URL (BEHAVIOR 3 candidate).
         try:
-            website_text = fetch_website_text(detected_url)
-            website_keywords = extract_keywords_from_website(query, detected_url, website_text)
+            has_named_topic = website_intelligence.has_request_shaped_language(query, detected_url)
         except Exception as exc:
-            log.warning(f"Website fetch/keyword-extraction failed for url={detected_url!r}: {exc}")
+            log.warning(f"has_request_shaped_language failed for url={detected_url!r}: {exc}")
+            has_named_topic = False
+
+        if not has_named_topic:
+            # BEHAVIOR 2 — "find me leads/customers/posts related to my
+            # site" with no separately-named topic: EXISTING, UNCHANGED
+            # behavior, zero change to this path.
             website_keywords = None
-        if website_keywords:
-            routed_keywords = website_keywords
-            log.info(f"Website-derived keywords used | url={detected_url!r} | keywords={routed_keywords}")
+            try:
+                website_text = fetch_website_text(detected_url)
+                website_keywords = extract_keywords_from_website(query, detected_url, website_text)
+            except Exception as exc:
+                log.warning(f"Website fetch/keyword-extraction failed for url={detected_url!r}: {exc}")
+                website_keywords = None
+            if website_keywords:
+                routed_keywords = website_keywords
+                log.info(f"Website-derived keywords used | url={detected_url!r} | keywords={routed_keywords}")
+        else:
+            # BEHAVIOR 3 candidate — a separately named topic alongside
+            # the URL: check whether that topic genuinely connects to
+            # what the website offers, via ONE combined Claude call that
+            # produces both the match verdict and (if it matches) the
+            # keyword list in one shot.
+            website_text_for_match = None
+            topic_match_result = None
+            try:
+                website_text_for_match = fetch_website_text(detected_url)
+                topic_match_result = website_intelligence.check_topic_matches_website(
+                    query, detected_url, website_text_for_match, call_claude_fn=_call_claude
+                )
+            except Exception as exc:
+                log.warning(f"Topic-vs-website check failed for url={detected_url!r}: {exc}")
+                topic_match_result = None
+
+            if not topic_match_result or not isinstance(topic_match_result.get("topic_matches_website"), bool):
+                # Inconclusive/failure — fall straight through to the
+                # EXISTING behavior as if this integration point didn't
+                # exist: the plain extract_keywords_from_website() call,
+                # feeding the EXISTING safety-net chain
+                # (routed_keywords -> generate_fuzzy_keywords()) exactly
+                # as before this feature.
+                website_keywords = None
+                try:
+                    website_text = (
+                        website_text_for_match
+                        if website_text_for_match is not None
+                        else fetch_website_text(detected_url)
+                    )
+                    website_keywords = extract_keywords_from_website(query, detected_url, website_text)
+                except Exception as exc:
+                    log.warning(f"Website fetch/keyword-extraction failed for url={detected_url!r}: {exc}")
+                    website_keywords = None
+                if website_keywords:
+                    routed_keywords = website_keywords
+                    log.info(f"Website-derived keywords used | url={detected_url!r} | keywords={routed_keywords}")
+            elif topic_match_result["topic_matches_website"] is True:
+                # Topic genuinely connects to the website — use the
+                # keywords produced by the SAME call, exactly like
+                # extract_keywords_from_website()'s existing output is
+                # used today.
+                if topic_match_result.get("keywords"):
+                    routed_keywords = topic_match_result["keywords"]
+                    log.info(
+                        f"Topic-vs-website match confirmed | url={detected_url!r} | "
+                        f"keywords={routed_keywords}"
+                    )
+            else:
+                # BEHAVIOR 3's actual trigger — the stated topic does NOT
+                # connect to this website: tell the user plainly instead
+                # of enqueuing an irrelevant search, and skip the rest of
+                # the search pipeline for this request entirely.
+                mismatch_answer = website_intelligence.build_topic_mismatch_reply(query)
+
+                redirect_chat_id = None
+                try:
+                    if not owner_key:
+                        owner_key, owner_type = get_owner(request)
+                    if not active_chat_id or not get_chat_session(active_chat_id, owner_key):
+                        active_chat_id = create_chat_session(owner_key, owner_type, title=generate_chat_title(query))
+                    request.session["active_chat_id"] = active_chat_id
+
+                    add_chat_message_to_chat(active_chat_id, owner_key, query, mismatch_answer)
+                    try:
+                        append_to_chat_summary(active_chat_id, owner_key, query, mismatch_answer)
+                    except Exception as exc:
+                        log.warning(f"Updating chat summary failed for chat_id={active_chat_id}: {exc}")
+                    redirect_chat_id = active_chat_id
+                except Exception as exc:
+                    log.warning(f"Saving topic-mismatch reply failed for query={query!r}: {exc}")
+
+                if redirect_chat_id:
+                    return RedirectResponse(url=f"/chat/{redirect_chat_id}", status_code=303)
+                return RedirectResponse(url="/", status_code=303)
 
     # (unfiltered mode) routed_unfiltered as parsed from the router is NEVER
     # trusted blindly — flintel.is_time_only_request() requires a genuine
