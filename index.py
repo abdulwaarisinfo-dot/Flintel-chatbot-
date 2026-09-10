@@ -709,10 +709,8 @@ import logging
 from datetime import datetime, timedelta, timezone
 
 import httpx
-from dotenv import load_dotenv
 from bson import ObjectId
 from bson.errors import InvalidId
-from pymongo import MongoClient
 from fastapi import FastAPI, Request, Form, BackgroundTasks
 from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
@@ -722,26 +720,24 @@ from authlib.integrations.starlette_client import OAuth
 
 import flintel
 import website_intelligence
+from database import (
+    db,
+    jobs_collection,
+    signals_collection,
+    users_collection,
+    chats_collection,
+    busy_owners_collection,
+)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # LOGGING
 # ─────────────────────────────────────────────────────────────────────────────
+# logging.basicConfig() is now called once, in database.py (imported above)
+# — calling it again here would just be a harmless no-op, but this module's
+# own logger identity ("flintel-web") is still defined here, since that's
+# unrelated to where the shared config lives.
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-)
 log = logging.getLogger("flintel-web")
-
-# ─────────────────────────────────────────────────────────────────────────────
-# ENV / CONFIG — SAME MongoDB as Background Service #1
-# ─────────────────────────────────────────────────────────────────────────────
-
-load_dotenv()
-
-MONGODB_URI = os.getenv("MONGODB_URI")
-MONGODB_DB  = os.getenv("MONGODB_DB", "flintel_bot")
 
 # Hard ceiling on how many keywords can ever reach a job, regardless of
 # where they came from (Claude's router-generated list, or the
@@ -843,64 +839,12 @@ WEBSITE_FETCH_TIMEOUT_SECONDS      = float(os.getenv("WEBSITE_FETCH_TIMEOUT_SECO
 WEBSITE_FETCH_MAX_CHARS            = int(os.getenv("WEBSITE_FETCH_MAX_CHARS", "8000"))
 CLAUDE_WEBSITE_KEYWORD_MAX_TOKENS  = int(os.getenv("CLAUDE_WEBSITE_KEYWORD_MAX_TOKENS", "400"))
 
-client = MongoClient(MONGODB_URI)
-db = client[MONGODB_DB]
-
-# Same two collections Background Service #1 already uses.
-jobs_collection    = db.flintel_search_jobs
-signals_collection = db.flintel_signals
-
-# User accounts (Google OAuth + email/password).
-users_collection = db.flintel_users
-users_collection.create_index("email", unique=True, sparse=True)
-users_collection.create_index("google_id", unique=True, sparse=True)
-
-# Chat/session memory (Claude/ChatGPT-style conversations).
-chats_collection = db.flintel_users_chat
-
-# (PER-USER BUSY LOCK) A dedicated small collection, keyed by owner_key —
-# not an in-memory dict, and not a field bolted onto chats_collection.
-# Reasons this fits the existing pattern best:
-#   - Every other piece of cross-request state in this file (jobs, chat
-#     sessions, users) already lives in its own Mongo collection, keyed
-#     by the same owner_key/chat_id fields used everywhere else — this
-#     follows that exact convention rather than inventing a new pattern.
-#   - It must survive across multiple server processes/workers and a
-#     server restart (an in-memory dict would only be visible to whichever
-#     single worker process happened to handle a given request, silently
-#     failing to block a second request from the same user if it landed
-#     on a different worker — a real correctness gap for anything beyond
-#     a single-process deployment).
-#   - It's independent of which chat the in-flight request belongs to
-#     (the busy state is per-OWNER, not per-chat), so it doesn't belong
-#     as a field on a specific chat document in chats_collection.
-busy_owners_collection = db.flintel_busy_owners
-busy_owners_collection.create_index("owner_key", unique=True)
-chats_collection.create_index("chat_id", unique=True)
-chats_collection.create_index("owner_key")
-
-# (PERFORMANCE FIX) signals_collection had NO indexes at all — every
-# get_matched_signals() call (topic_key lookups and the time/platform-
-# filtered unfiltered-mode query) was doing a full collection scan. Adding
-# these is purely a speed improvement: it changes no query's results,
-# only how fast MongoDB can find them.
-#
-# (DEPLOYMENT CRASH FIX) create_index() is normally a no-op if an index on
-# this field already exists — EXCEPT when one already exists under a
-# DIFFERENT name (e.g. a pre-existing "signals_topic_key" index), in which
-# case MongoDB raises IndexOptionsConflict instead of silently reusing it.
-# The actual goal here was only ever "make sure some index covers this
-# field" — if one already exists under any name, that goal is already
-# satisfied, so this failure is caught and logged rather than allowed to
-# crash the whole app at startup.
-try:
-    signals_collection.create_index("topic_key")
-except Exception as exc:
-    log.warning(f"Could not create index on signals_collection.topic_key (likely already exists under a different name): {exc}")
-try:
-    signals_collection.create_index("created_utc")
-except Exception as exc:
-    log.warning(f"Could not create index on signals_collection.created_utc (likely already exists under a different name): {exc}")
+# db, jobs_collection, signals_collection, users_collection,
+# chats_collection, busy_owners_collection are now all imported from
+# database.py above — that module owns the Mongo client, every collection
+# handle, and every index-creation call (same URI/DB env vars, same
+# collection names, same indexes, same startup log lines as before this
+# extraction).
 
 # ─────────────────────────────────────────────────────────────────────────────
 # APP SETUP
@@ -3166,7 +3110,7 @@ def delete_chat_session(chat_id: str, owner_key: str) -> bool:
 
 def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
                         keywords: list, targeting_platform: str, time_window_days: int = None,
-                        unfiltered: bool = False):
+                        unfiltered: bool = False, website_context: dict = None):
     """Appends a search as a new message in the chat, and auto-titles the
     chat from the very first query if it hasn't been named yet.
 
@@ -3184,7 +3128,15 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
     `None` (NOT an empty list — see the RESULTS-RECOMPUTE FIX below) and
     gets filled in later by save_signal_results_to_chat() once matching
     signals show up. `claude_answer` starts empty too and is filled in
-    once by save_claude_answer_to_chat()."""
+    once by save_claude_answer_to_chat().
+
+    `website_context` (NEW, optional, default None — every existing
+    caller that doesn't pass it behaves exactly as before) stores the
+    structured website breakdown (overview + sections) computed at
+    INTEGRATION POINT 2, when this search was derived from a website URL
+    the user shared alongside a real ask. None means "no website context
+    for this message," exactly like `time_window_days=None` already
+    means "no time range" for messages that don't have one."""
     now = datetime.now(timezone.utc)
     message = {
         "query":              query,
@@ -3193,6 +3145,7 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
         "targeting_platform": targeting_platform,
         "time_window_days":   time_window_days,  # (NEW) int or None — see get_matched_signals()
         "unfiltered":         unfiltered,
+        "website_context":    website_context,
         "requested_at":       now,
         # (RESULTS-RECOMPUTE FIX) `None` here, not `[]` — an empty list is
         # a legitimate, ALREADY-COMPUTED final value (e.g. a "no_results"
@@ -3429,6 +3382,29 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
                 extra_ctx = flintel.build_unfiltered_answer_context(
                     msg["query"], msg.get("time_window_days")
                 )
+            # (STRUCTURED WEBSITE SUMMARY) Folded into the SAME extra_context
+            # string mechanism the unfiltered-mode case already uses —
+            # analyze_with_claude() itself stays completely untouched. In
+            # practice unfiltered and website_context are mutually
+            # exclusive paths, but this still builds a combined string if
+            # both were somehow set, rather than one silently overwriting
+            # the other.
+            if msg.get("website_context"):
+                website_instruction = (
+                    "The user shared their own website. Here is a structured summary "
+                    "Flintel already generated from it (overview + sections of "
+                    "bullets) — include this VERBATIM as a new top-level "
+                    "\"website_context\" field (same shape: {\"overview\": str, "
+                    "\"sections\": [{\"title\": str, \"bullets\": [str, ...]}]}) at "
+                    "the START of your JSON response, as the very first field before "
+                    "\"format\", so the frontend can render the website breakdown "
+                    "above the matched-posts answer. Do not alter, summarize, or "
+                    "paraphrase this data — reproduce it exactly as given, then "
+                    "continue with your normal source_list/no_results/etc. answer for "
+                    "the matched posts as usual.\n\nwebsite_context JSON:\n"
+                    + json.dumps(msg["website_context"], ensure_ascii=False)
+                )
+                extra_ctx = (extra_ctx + "\n\n" + website_instruction) if extra_ctx else website_instruction
             answer = analyze_with_claude(msg["query"], matched, extra_context=extra_ctx)
             answer = _patch_post_urls_into_answer(answer, matched)
             msg["claude_answer"] = answer
@@ -3748,6 +3724,12 @@ def search(
     routed_keywords = None
     routed_time_window_days = None
     routed_unfiltered = False
+    # (STRUCTURED WEBSITE SUMMARY) Stays None for every case except the
+    # two website-derived-keywords paths in INTEGRATION POINT 2 below
+    # (BEHAVIOR 2, and the BEHAVIOR 3 confirmed-match branch) — never set
+    # for a BEHAVIOR 3 mismatch, no URL at all, unfiltered mode, or a
+    # plain keyword search with no URL.
+    website_answer_context = None
     # (CLARIFY-SELF-RESOLVE FEATURE) Captured here (not just inside the
     # try block below) so it's still safely readable afterwards even if
     # something later in the try block raises — resolve_unclear_topic()
@@ -3819,19 +3801,17 @@ def search(
         detected_url_for_routing = _extract_first_url(query)
 
     if detected_url_for_routing:
-        # PRIMARY SIGNAL: the router's own classification. "clarify"/
-        # "chat" already mean "no clear topic/request was found in the
-        # text" — no need to second-guess that with the pure-Python
-        # helper below.
-        if intent in ("clarify", "chat"):
+        # PRIMARY SIGNAL: the router's own classification. "chat" already
+        # means "no clear topic/request was found in the text" — no need
+        # to second-guess that with the pure-Python helper below.
+        if intent == "chat":
             is_bare_url_request = True
         else:
-            # FALLBACK SIGNAL ONLY (per website_intelligence.py's own
-            # docstring): used only when intent isn't already a clear
-            # "clarify"/"chat" signal — e.g. intent defaulted to "search"
-            # because the router call itself failed outright, so we
-            # don't actually know whether this was a real request or
-            # just a bare link drop.
+            # intent == "clarify" (no explicit topic named) OR the
+            # router-failure fallback "search" — in both cases, double-check
+            # with the heuristic instead of assuming a bare URL, so a real
+            # stated ask alongside the link (e.g. "...its my web so find me
+            # for customers") is not incorrectly force-summarized.
             try:
                 is_bare_url_request = not website_intelligence.has_request_shaped_language(
                     query, detected_url_for_routing
@@ -3995,6 +3975,21 @@ def search(
             if website_keywords:
                 routed_keywords = website_keywords
                 log.info(f"Website-derived keywords used | url={detected_url!r} | keywords={routed_keywords}")
+
+            # (STRUCTURED WEBSITE SUMMARY) Additive only — never blocks or
+            # fails the keyword extraction/job enqueue flow above. On any
+            # failure (including website_text never having been set if the
+            # fetch itself failed), website_answer_context simply stays
+            # None and the search proceeds exactly as it does today, just
+            # without the extra website breakdown in the final answer.
+            try:
+                structured = website_intelligence.summarize_website_structured(
+                    website_text, call_claude_fn=_call_claude
+                )
+                website_answer_context = website_intelligence.format_structured_summary_for_answer(structured)
+            except Exception as exc:
+                log.warning(f"Structured website summary failed for url={detected_url!r}: {exc}")
+                website_answer_context = None
         else:
             # BEHAVIOR 3 candidate — a separately named topic alongside
             # the URL: check whether that topic genuinely connects to
@@ -4044,6 +4039,19 @@ def search(
                         f"Topic-vs-website match confirmed | url={detected_url!r} | "
                         f"keywords={routed_keywords}"
                     )
+
+                # (STRUCTURED WEBSITE SUMMARY) Same additive-only pattern
+                # as the BEHAVIOR 2 branch above — never blocks or fails
+                # this path; reuses website_text_for_match, already fetched
+                # earlier in this same branch.
+                try:
+                    structured = website_intelligence.summarize_website_structured(
+                        website_text_for_match, call_claude_fn=_call_claude
+                    )
+                    website_answer_context = website_intelligence.format_structured_summary_for_answer(structured)
+                except Exception as exc:
+                    log.warning(f"Structured website summary failed for url={detected_url!r}: {exc}")
+                    website_answer_context = None
             else:
                 # BEHAVIOR 3's actual trigger — the stated topic does NOT
                 # connect to this website: tell the user plainly instead
@@ -4131,6 +4139,7 @@ def search(
             active_chat_id, owner_key, query, topic_key, keywords, targeting_platform,
             time_window_days=time_window_days,
             unfiltered=routed_unfiltered,
+            website_context=website_answer_context,
         )
         redirect_chat_id = active_chat_id
     except Exception as exc:
@@ -4347,6 +4356,26 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     extra_ctx = flintel.build_unfiltered_answer_context(
                         msg["query"], msg.get("time_window_days")
                     )
+                # (STRUCTURED WEBSITE SUMMARY) Identical pattern to
+                # _complete_message_answer_and_results() — a freshly-created
+                # message that happens to stream its first answer also gets
+                # the website_context folded in the same way.
+                if msg.get("website_context"):
+                    website_instruction = (
+                        "The user shared their own website. Here is a structured summary "
+                        "Flintel already generated from it (overview + sections of "
+                        "bullets) — include this VERBATIM as a new top-level "
+                        "\"website_context\" field (same shape: {\"overview\": str, "
+                        "\"sections\": [{\"title\": str, \"bullets\": [str, ...]}]}) at "
+                        "the START of your JSON response, as the very first field before "
+                        "\"format\", so the frontend can render the website breakdown "
+                        "above the matched-posts answer. Do not alter, summarize, or "
+                        "paraphrase this data — reproduce it exactly as given, then "
+                        "continue with your normal source_list/no_results/etc. answer for "
+                        "the matched posts as usual.\n\nwebsite_context JSON:\n"
+                        + json.dumps(msg["website_context"], ensure_ascii=False)
+                    )
+                    extra_ctx = (extra_ctx + "\n\n" + website_instruction) if extra_ctx else website_instruction
                 full_answer = analyze_with_claude(msg["query"], matched, extra_context=extra_ctx)
             except Exception as exc:
                 log.warning(f"Streaming Claude analysis failed for topic_key={topic_key}: {exc}")
