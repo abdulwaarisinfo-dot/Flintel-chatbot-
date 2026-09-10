@@ -1172,6 +1172,7 @@
     const submitBtn = document.getElementById('submit-btn');
     if (searchForm && searchInput && submitBtn) {
       function syncSubmitButtonState() {
+        if (submitBtn.classList.contains('loading')) return;
         submitBtn.disabled = searchInput.value.trim().length === 0;
       }
       syncSubmitButtonState();
