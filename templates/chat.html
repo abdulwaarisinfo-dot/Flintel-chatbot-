@@ -429,6 +429,10 @@
     margin-bottom: 42px;
   }
   .search-input::placeholder { color: #757473; }
+  .search-inline-error {
+    display: none; color: #E2645A; font-size: 13px; font-weight: 500;
+    margin-top: 10px;
+  }
   .search-controls { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
   .add-btn { color: #fff; transition: color .15s ease; flex-shrink: 0; }
   .docked-credit-estimate { font-size: 12px; color: #757473; white-space: nowrap; margin-right: 4px; }
@@ -448,6 +452,19 @@
   .submit-btn:hover { background: #fff; }
   .submit-btn:disabled { background: #2b2a28; cursor: default; pointer-events: none; }
   .submit-btn:disabled svg path { stroke: #757473; }
+
+  /* ---------- Submit-button loading spinner (additive only) ---------- */
+  .spinner-icon { display: none; }
+  .submit-btn.loading svg { display: none; }
+  .submit-btn.loading .spinner-icon {
+    display: flex; width: 15px; height: 15px; border-radius: 50%;
+    border: 2px solid rgba(163,230,53,0.25); border-top-color: #a3e635;
+    animation: submitSpinnerRotate 0.7s linear infinite;
+  }
+  @keyframes submitSpinnerRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
 
 
   /* ---------- Special answer states: no-results / error / low-credit ---------- */
@@ -858,6 +875,7 @@
 
                 <button class="submit-btn" id="submit-btn" type="submit" aria-label="Submit search" disabled>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="#171615" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <span class="spinner-icon"></span>
                 </button>
               </div>
             </div>
@@ -1833,6 +1851,10 @@
     let accumulated = '';
     const source = new EventSource(`/chat/${chatId}/stream?topic_key=${encodeURIComponent(topicKey)}`);
     activeEventSource = source;
+    // (LOADING STATE) A stream starting means an answer is actively being
+    // generated for this chat — lock the submit box for the duration,
+    // same as the moment the search was first submitted.
+    setSubmitLoading(true);
 
     source.onmessage = (event) => {
       let payload;
@@ -1861,6 +1883,8 @@
           console.warn('[stale-response] Discarding streamed answer — navigation occurred mid-stream.');
           return;
         }
+        // (LOADING STATE) The answer is ready — unlock the submit box.
+        setSubmitLoading(false);
         // No page reload — the accumulated text is now complete, valid
         // JSON. Render it in-place, right where the loading-row was,
         // reusing the exact same structured-render logic every other
@@ -1896,6 +1920,11 @@
         source.close();
         activeEventSource = null;
         if (phraseTimer) clearInterval(phraseTimer);
+        // (LOADING STATE) Never leave the user locked out forever because
+        // of a failed analysis — same generation-guard as the done branch,
+        // so a stale/superseded stream's error doesn't touch a submit box
+        // that now belongs to a different chat.
+        if (myGen === softNavGeneration) setSubmitLoading(false);
         // Leave the original "Still gathering results…" text exactly as-is
         // — no error message shown here, no DOM changes. A later normal
         // page load/refresh picks up the answer via the backend's own
@@ -1907,6 +1936,8 @@
       source.close();
       activeEventSource = null;
       if (phraseTimer) clearInterval(phraseTimer);
+      // (LOADING STATE) Same reasoning as the payload.error branch above.
+      if (myGen === softNavGeneration) setSubmitLoading(false);
       // Same as the explicit {"error": ...} case above — leave the existing
       // loading text untouched, no visible change.
     };
@@ -1919,6 +1950,11 @@
     if (!pendingTurn) return;
     const chatIdInput = document.querySelector('#search-form input[name="chat_id"]');
     const chatId = chatIdInput ? chatIdInput.value : '';
+    // (LOADING STATE) No separate setSubmitLoading() call needed here —
+    // wireUpStream() itself already sets it synchronously the moment the
+    // EventSource is created (before any onmessage fires), so a
+    // page-load/soft-nav that lands on an already-pending message locks
+    // the submit box immediately, not only once the stream produces data.
     wireUpStream(pendingTurn, chatId);
   }
   wireUpInitialPendingStream();
@@ -1934,6 +1970,43 @@
   // current page's thread. If that new turn is itself mid-stream
   // (data-pending-stream="true"), the SSE wiring above attaches to it
   // immediately, exactly as it would have after a real page load.
+  // ---- Submit-button loading state (shared by search-submit + stream wiring) ----
+  function setSubmitLoading(isLoading) {
+    const submitBtn = document.getElementById('submit-btn');
+    const searchInput = document.getElementById('search-input');
+    if (submitBtn) {
+      submitBtn.classList.toggle('loading', isLoading);
+      // While loading, always disabled regardless of input content. Once
+      // loading ends, fall back to the exact same empty-input check
+      // syncSubmitButtonState() already does — that function itself is
+      // never modified; disabling search-input during loading (below)
+      // means it can't fire 'input' events anyway, so this is the only
+      // place that needs to account for the loading state at all.
+      submitBtn.disabled = isLoading ? true : (searchInput ? searchInput.value.trim().length === 0 : false);
+    }
+    if (searchInput) searchInput.disabled = isLoading;
+  }
+
+  // ---- Small inline warning row under the search box (busy-lock case only) ----
+  function showSearchInlineError(message, restoreQuery) {
+    const searchInput = document.getElementById('search-input');
+    if (searchInput && restoreQuery !== undefined) {
+      searchInput.value = restoreQuery;
+    }
+    const searchBox = document.querySelector('.search-box');
+    if (!searchBox) return;
+    let errorRow = searchBox.querySelector('.search-inline-error');
+    if (!errorRow) {
+      errorRow = document.createElement('div');
+      errorRow.className = 'search-inline-error';
+      searchBox.appendChild(errorRow);
+    }
+    errorRow.textContent = message;
+    errorRow.style.display = 'block';
+    clearTimeout(errorRow._hideTimer);
+    errorRow._hideTimer = setTimeout(() => { errorRow.style.display = 'none'; }, 6000);
+  }
+
   function wireUpSoftSearchSubmit() {
     const form = document.getElementById('search-form');
     const threadInner = document.querySelector('.thread-inner');
@@ -1954,7 +2027,13 @@
       // turn to whatever chat is now on screen.
       const myGen = softNavGeneration;
 
-      if (submitBtn) submitBtn.disabled = true;
+      // (LOADING STATE) Disables both the button and the input the moment
+      // submission starts. A local flag tracks whether this specific
+      // request hands off to an in-flight stream (in which case loading
+      // must stay on until THAT resolves) — the finally block below only
+      // clears loading when it wasn't handed off.
+      setSubmitLoading(true);
+      let handedOffToStream = false;
 
       // Step 1: the actual network request. This is the ONLY part that
       // should ever fall back to a real, full-page form submit — a
@@ -1992,6 +2071,21 @@
         // this request had never completed.
         if (myGen !== softNavGeneration) {
           console.warn('[stale-response] Discarding search result — navigation occurred mid-request.');
+          return;
+        }
+
+        // (BUSY-LOCK) The backend's per-owner busy check declines a
+        // request by re-rendering the error state (.state-card /
+        // .state-body — the same pattern index.html already uses for a
+        // validation error) instead of creating a new turn-block. Detect
+        // that BEFORE looking for a turn-block at all — no new message
+        // was saved, so nothing here should be treated as a normal
+        // success (no pushState, no chat_id/sessions-list update, no
+        // turn append, no stream wiring).
+        const errorCard = doc.querySelector('.state-card .state-body') || doc.querySelector('.state-card');
+        if (errorCard) {
+          const errorText = errorCard.textContent.trim() || 'Please wait for your current request to finish first.';
+          showSearchInlineError(errorText, query);
           return;
         }
 
@@ -2038,7 +2132,12 @@
         if (latestTurn.dataset.pendingStream === 'true') {
           const chatIdInput = document.querySelector('#search-form input[name="chat_id"]');
           const chatId = chatIdInput ? chatIdInput.value : '';
+          handedOffToStream = true; // wireUpStream()'s own done/error handlers clear loading from here on
           wireUpStream(latestTurn, chatId);
+        } else {
+          // No stream needed — the response already came back with a
+          // complete claude_answer, so loading ends right here.
+          setSubmitLoading(false);
         }
       } catch (domErr) {
         // The search itself already succeeded server-side at this point —
@@ -2048,14 +2147,15 @@
         // normally through the standard server-rendered path.
         console.warn('[dom-update-failed][search-submit] Search succeeded server-side; only the in-place DOM update failed (not a network issue, so no hard reload was triggered):', domErr);
       } finally {
-        // (Race-condition fix) Only re-enable the submit button if this is
-        // still the current generation — a stale request finishing after a
-        // navigation has already happened must not touch a button that now
-        // belongs to a completely different chat's page state.
-        if (myGen === softNavGeneration) {
-          const freshSubmitBtn = document.getElementById('submit-btn');
-          const freshSearchInput = document.getElementById('search-input');
-          if (freshSubmitBtn) freshSubmitBtn.disabled = freshSearchInput ? freshSearchInput.value.trim().length === 0 : false;
+        // (Race-condition fix, extended for LOADING STATE) Only touch
+        // things if this is still the current generation — a stale
+        // request finishing after a navigation has already happened must
+        // not touch elements that now belong to a completely different
+        // chat's page state. Skip clearing loading if this request handed
+        // off to an in-flight stream — that stream's own done/error
+        // handlers own clearing it from here on, not this finally block.
+        if (myGen === softNavGeneration && !handedOffToStream) {
+          setSubmitLoading(false);
         }
       }
     });
