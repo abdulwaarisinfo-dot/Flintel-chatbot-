@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1617,7 +1616,7 @@
   // and needed the same protection.
   let softNavGeneration = 0;
 
-  async function navigateTo(url, { method = 'GET', pushState = true } = {}) {
+  async function navigateTo(url, { method = 'GET', pushState = true, body = undefined, fallbackForm = undefined } = {}) {
     // (RACE-CONDITION FIX) Snapshot the generation counter for THIS
     // navigation right away — anything that happens after any subsequent
     // await in this function checks against this snapshot before touching
@@ -1633,10 +1632,15 @@
       activeEventSource = null;
     }
     try {
+      // (New, optional `body` param — undefined for every existing caller,
+      // so fetch()'s behavior is 100% unchanged for all of them. Only a
+      // caller that explicitly passes one, like a form submit needing to
+      // send its field data, is affected.)
       const response = await fetch(url, {
         method,
         credentials: 'same-origin',
         redirect: 'follow',
+        ...(body !== undefined ? { body } : {}),
       });
       if (!response.ok) throw new Error(`Request failed: ${response.status}`);
 
@@ -1704,6 +1708,14 @@
       console.warn('Soft navigation failed, falling back to a real page load:', err);
       if (method === 'GET') {
         window.location.href = url;
+      } else if (fallbackForm) {
+        // (New, optional — undefined for every existing caller, so this
+        // branch never fires for them.) Submits the ACTUAL original form
+        // with its real field values, instead of a blank one with no
+        // data — needed for any POST that carries form data (like a
+        // search query), so a genuine network failure doesn't silently
+        // lose what the user typed.
+        fallbackForm.submit();
       } else {
         const form = document.createElement('form');
         form.method = method;
@@ -2191,111 +2203,28 @@
     if (form.dataset.heroSoftSubmitWired === 'true') return; // same idempotency guard as wireUpSoftSearchSubmit()
     form.dataset.heroSoftSubmitWired = 'true';
 
-    const searchInput = document.getElementById('search-input');
-    const submitBtn = document.getElementById('submit-btn');
-
-    form.addEventListener('submit', async (e) => {
+    // (REBUILT — same fix pattern already proven for chat.html) This used
+    // to manually reconstruct the post-search page state piece by piece
+    // (append the new turn, patch the topbar title, patch the sidebar,
+    // decide which parts of the hero to hide, wire the stream...) — and
+    // every one of those pieces was a separate place a fix could be
+    // incomplete, which is exactly what kept happening (a missing search
+    // box, a missing topbar title, and other pieces still wrong after
+    // that). A real page refresh was always correct because it just gets
+    // the actual server-rendered page in full — so instead of chasing
+    // each new missing piece individually, this now does the SAME thing
+    // navigateTo() already does for every other soft navigation in this
+    // app: fetch the real response and swap the ENTIRE <main> (plus the
+    // style tag, sidebar, title, and re-wiring) in one shot, exactly
+    // matching what a refresh produces, with nothing left to patch by hand.
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
+      const searchInput = document.getElementById('search-input');
+      const submitBtn = document.getElementById('submit-btn');
       const query = searchInput ? searchInput.value.trim() : '';
       if (!query) return;
-
-      // (RACE-CONDITION FIX) Same snapshot-and-recheck pattern as
-      // wireUpSoftSearchSubmit() above.
-      const myGen = softNavGeneration;
-
       if (submitBtn) submitBtn.disabled = true;
-
-      let response;
-      try {
-        const formData = new FormData(form);
-        response = await fetch(form.action, {
-          method: 'POST',
-          body: formData,
-          credentials: 'same-origin',
-          redirect: 'follow',
-        });
-        if (!response.ok) throw new Error(`Request failed: ${response.status}`);
-      } catch (fetchErr) {
-        console.warn('[hard-reload-fallback][hero-search-submit][network] Genuine fetch/network failure — falling back to a real page submit.', fetchErr);
-        form.submit();
-        return;
-      }
-
-      try {
-        const html = await response.text();
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-
-        // (RACE-CONDITION FIX) A navigation may have happened while this
-        // request was in flight — if so, this response is stale.
-        if (myGen !== softNavGeneration) {
-          console.warn('[stale-response] Discarding hero search result — navigation occurred mid-request.');
-          return;
-        }
-
-        // A first search from home is answered on a NEW chat, whose page
-        // is chat.html's own template (a different, non-identical
-        // stylesheet) — swap the active <style> tag's content the same way
-        // navigateTo() does, so the appended turn isn't rendered against
-        // the wrong page's CSS.
-        const newStyleTag = doc.querySelector('style#app-styles') || doc.querySelector('style');
-        const currentStyleTag = document.querySelector('style#app-styles') || document.querySelector('style');
-        if (newStyleTag && currentStyleTag) {
-          currentStyleTag.textContent = newStyleTag.textContent;
-        }
-
-        history.pushState({ softNav: true }, '', response.url || form.action);
-        const newChatIdInput = doc.querySelector('#search-form input[name="chat_id"]');
-        const liveChatIdInput = document.querySelector('#search-form input[name="chat_id"]');
-        if (newChatIdInput && liveChatIdInput) {
-          liveChatIdInput.value = newChatIdInput.value;
-        }
-        const newSessionsList = doc.querySelector('#sessions-list');
-        const liveSessionsList = document.querySelector('#sessions-list');
-        if (newSessionsList && liveSessionsList) {
-          liveSessionsList.innerHTML = newSessionsList.innerHTML;
-        }
-
-        // The response's turns container may be chat.html's .thread-inner
-        // (the common case, since a new chat's real route is chat.html) or
-        // .conversation-area (if it happens to be index.html's own markup)
-        // — try both rather than assuming one specific template.
-        const newTurnsContainer = doc.querySelector('.thread-inner') || doc.querySelector('.conversation-area');
-        if (!newTurnsContainer) throw new Error('Response missing a turns container');
-
-        const allNewTurns = newTurnsContainer.querySelectorAll('.turn-block');
-        const latestTurn = allNewTurns[allNewTurns.length - 1];
-        if (!latestTurn) throw new Error('No turn-block found in response');
-
-        if (searchInput) searchInput.value = '';
-
-        latestTurn.classList.add('stream-reveal');
-        const liveConversationArea = document.getElementById('conversation-area') || conversationArea;
-        liveConversationArea.classList.remove('hidden');
-        // (Bug fix) The hero block (#hero-wrap: search box + "Explore
-        // Flintel") has no visibility logic tied to this soft-submit path
-        // at all — without hiding it here too, both the hero AND the
-        // conversation area render on screen at once after the first
-        // search from home, which is the exact "both sections showing
-        // together" bug reported.
-        const heroWrap = document.getElementById('hero-wrap');
-        if (heroWrap) heroWrap.classList.add('hidden');
-        liveConversationArea.appendChild(latestTurn);
-        latestTurn.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-        if (latestTurn.dataset.pendingStream === 'true') {
-          const chatIdInput = document.querySelector('#search-form input[name="chat_id"]');
-          const chatId = chatIdInput ? chatIdInput.value : '';
-          wireUpStream(latestTurn, chatId);
-        }
-      } catch (domErr) {
-        console.warn('[dom-update-failed][hero-search-submit] Search succeeded server-side; only the in-place DOM update failed (not a network issue, so no hard reload was triggered):', domErr);
-      } finally {
-        if (myGen === softNavGeneration) {
-          const freshSubmitBtn = document.getElementById('submit-btn');
-          const freshSearchInput = document.getElementById('search-input');
-          if (freshSubmitBtn) freshSubmitBtn.disabled = freshSearchInput ? freshSearchInput.value.trim().length === 0 : false;
-        }
-      }
+      navigateTo(form.action, { method: 'POST', body: new FormData(form), fallbackForm: form });
     });
   }
 
