@@ -95,6 +95,11 @@ MAX_WEBSITE_KEYWORDS = int(os.getenv("MAX_WEBSITE_KEYWORDS", "20"))
 # output is meant to be a short 2-3 sentence summary, not a report.
 WEBSITE_SUMMARY_MAX_TOKENS = int(os.getenv("WEBSITE_SUMMARY_MAX_TOKENS", "300"))
 
+# Max tokens for the new structured (sectioned/bulleted) summary call —
+# a bit higher than the flat summary's since this produces more content
+# (an overview line plus several sections of bullets).
+WEBSITE_STRUCTURED_SUMMARY_MAX_TOKENS = int(os.getenv("WEBSITE_STRUCTURED_SUMMARY_MAX_TOKENS", "500"))
+
 # Max tokens for the Piece 2 topic-match + keyword call — similar
 # ballpark to index.py's own CLAUDE_WEBSITE_KEYWORD_MAX_TOKENS, since
 # this call produces a similarly-shaped JSON payload (keywords list) plus
@@ -273,6 +278,138 @@ def build_url_only_reply(summary: str, query_seed: str = "") -> str:
         )
     template = _pick_variant(_URL_ONLY_REPLY_VARIANTS, seed=query_seed)
     return template.format(summary=summary.strip())
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PIECE 1B — STRUCTURED (SECTIONED, BULLETED) WEBSITE SUMMARY
+# ─────────────────────────────────────────────────────────────────────────────
+# Separate from the flat summarize_website()/build_url_only_reply() pair
+# above, which stays completely unchanged and is still what BEHAVIOR 1
+# (a bare URL, no real ask) uses. This is only ever called for the
+# URL + real-ask flow, so Flintel can show the user a clean, professional
+# breakdown of what it understood about their own site, above the
+# matched-posts answer, in the same reply.
+# ─────────────────────────────────────────────────────────────────────────────
+
+WEBSITE_STRUCTURED_SUMMARY_SYSTEM_PROMPT = """
+You are the website-summary brain inside Flintel, a social-listening
+platform. You are given the plain text content of a website a user just
+shared. Read it and produce a CLEAN, SECTIONED breakdown of what the
+business/site/individual actually offers — not a flat paragraph.
+
+Reason freshly from the actual content you were given — never assume or
+default to any particular industry or category, and never force the same
+fixed set of section titles onto every website. Produce 2 to 4 sections
+total, choosing whichever section titles genuinely fit THIS site's
+content. Natural groupings often look something like "What they offer",
+"Business signals", or "Notable things" — treat these as loose
+inspiration for the kind of grouping that tends to work, not a required
+list; a different site may call for entirely different section titles.
+
+Each section should have 2 to 5 short bullets — plain language, no
+fluff, no marketing tone. Stay honest and slightly skeptical where the
+content actually warrants it: if something on the site reads like a
+pressure tactic, an inflated claim, or an odd/notable pattern, it's fine
+to note that plainly and factually — never write in a promotional voice
+on the business's behalf.
+
+If the content is too thin, broken, or generic to say anything confident
+across multiple sections, keep the overview honest about that and
+produce however few genuinely-supportable sections make sense (including
+possibly just one) rather than padding for the sake of hitting a count.
+
+Respond with STRICT JSON ONLY — no markdown code fences, no preamble, no
+text outside the JSON object — in exactly this shape:
+{"overview": "<1-2 sentence plain-language opening line>", "sections": [{"title": "<short section heading>", "bullets": ["<bullet 1>", "<bullet 2>"]}]}
+"""
+
+
+def summarize_website_structured(website_text: str, call_claude_fn):
+    """Makes ONE Claude call reading the website's plain text and returns
+    a structured (sectioned, bulleted) breakdown as a Python dict:
+
+        {"overview": "<1-2 sentence opening line>",
+         "sections": [{"title": "...", "bullets": ["...", ...]}, ...]}
+
+    `call_claude_fn` must have the same signature as index.py's own
+    _call_claude(system_prompt, user_message, max_tokens=None) -> str —
+    this module never talks to the Anthropic API directly, same
+    injection pattern summarize_website() already uses.
+
+    Degrades exactly like every other function in this file: empty/
+    missing website_text -> None; call_claude_fn exception -> None;
+    unparseable JSON -> None. Any section that doesn't have a string
+    title and a list of string bullets is silently dropped rather than
+    failing the whole call. If nothing usable survives cleaning (no
+    overview AND no sections), returns None so the caller can fall back,
+    same "couldn't determine this" contract used everywhere else here.
+    Never raises past this function."""
+    if not website_text or not isinstance(website_text, str):
+        return None
+    if not callable(call_claude_fn):
+        return None
+
+    user_message = f"Website content (plain text):\n{website_text}"
+    try:
+        raw = call_claude_fn(
+            WEBSITE_STRUCTURED_SUMMARY_SYSTEM_PROMPT,
+            user_message,
+            max_tokens=WEBSITE_STRUCTURED_SUMMARY_MAX_TOKENS,
+        )
+    except Exception:
+        return None
+
+    data = _parse_json_object(raw)
+    if not data:
+        return None
+
+    overview = data.get("overview")
+    overview = overview.strip() if isinstance(overview, str) else ""
+
+    raw_sections = data.get("sections")
+    cleaned_sections = []
+    if isinstance(raw_sections, list):
+        for section in raw_sections:
+            if not isinstance(section, dict):
+                continue
+            title = section.get("title")
+            bullets = section.get("bullets")
+            if not isinstance(title, str) or not title.strip():
+                continue
+            if not isinstance(bullets, list):
+                continue
+            cleaned_bullets = [b.strip() for b in bullets if isinstance(b, str) and b.strip()]
+            if not cleaned_bullets:
+                continue
+            cleaned_sections.append({"title": title.strip(), "bullets": cleaned_bullets})
+
+    if not overview and not cleaned_sections:
+        return None
+
+    return {"overview": overview, "sections": cleaned_sections}
+
+
+def format_structured_summary_for_answer(structured):
+    """Pure Python, no Claude call. Takes the dict returned by
+    summarize_website_structured() (or None) and returns a JSON-
+    serializable dict ready to be embedded as a new top-level field
+    inside index.py's CLAUDE_ANALYSIS_SYSTEM_PROMPT JSON answer:
+
+        {"overview": "<...>", "sections": [{"title": "...", "bullets": [...]}]}
+
+    Returns None if `structured` is None or has nothing usable in it, so
+    the caller can simply omit the field rather than embedding an empty
+    object. index.py never needs to know this module's internal shape
+    details beyond calling this."""
+    if not structured or not isinstance(structured, dict):
+        return None
+    overview = structured.get("overview")
+    overview = overview.strip() if isinstance(overview, str) else ""
+    sections = structured.get("sections")
+    sections = sections if isinstance(sections, list) else []
+    if not overview and not sections:
+        return None
+    return {"overview": overview, "sections": sections}
 
 
 # ─────────────────────────────────────────────────────────────────────────────
