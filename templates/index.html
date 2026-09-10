@@ -1989,7 +1989,7 @@
   document.addEventListener('input', (e) => {
     if (e.target.id === 'search-input') {
       const btn = document.getElementById('submit-btn');
-      if (btn) btn.disabled = e.target.value.trim().length === 0;
+      if (btn && !btn.classList.contains('loading')) btn.disabled = e.target.value.trim().length === 0;
     }
     if (e.target.id === 'followup-input') {
       const btn = document.getElementById('followup-submit-btn');
