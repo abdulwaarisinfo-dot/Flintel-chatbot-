@@ -3349,7 +3349,16 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
     function is even scheduled, so the flag is already in place before
     the response goes out. This function only clears it, in the finally
     below, once the work actually finishes."""
-    needs_answer = not msg.get("claude_answer")
+    # (RESULTS-RECOMPUTE FIX, applied here too for the same reason) `is
+    # None`, not falsy — closes a low-probability but real analogous gap:
+    # if a Claude API call ever technically "succeeds" but returns zero
+    # text content, analyze_with_claude() would return "" (empty string,
+    # falsy), which `not msg.get(...)` would wrongly treat as "still
+    # needs answering" forever, re-triggering Claude on every later view
+    # exactly like the results-list bug did. claude_answer already
+    # initializes to None (never "") at message creation, so this check
+    # is the only piece that needed to change.
+    needs_answer = msg.get("claude_answer") is None
     answer_for_format_check = msg.get("claude_answer")
 
     if needs_answer:
@@ -3478,7 +3487,10 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
         # instead of `not []` (True) wrongly triggering a full re-match
         # + re-answer on every single later chat view.
         needs_results = msg.get("results") is None
-        needs_answer = not msg.get("claude_answer")
+        # Same `is None` reasoning as needs_results above, applied to
+        # claude_answer for full consistency (see the docstring note in
+        # _complete_message_answer_and_results()).
+        needs_answer = msg.get("claude_answer") is None
         if not needs_results and not needs_answer:
             continue
 
@@ -3977,7 +3989,7 @@ def view_chat(request: Request, chat_id: str, background_tasks: BackgroundTasks)
     messages = chat.get("messages") or []
     if messages:
         latest_msg = messages[-1]
-        if latest_msg.get("topic_key") and not latest_msg.get("claude_answer"):
+        if latest_msg.get("topic_key") and latest_msg.get("claude_answer") is None:
             pending_stream_topic_key = latest_msg["topic_key"]
 
     # Same best-effort fill-in as home(): compute post cards + Claude's
