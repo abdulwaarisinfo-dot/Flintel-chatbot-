@@ -232,6 +232,10 @@
     margin-bottom: 42px;
   }
   .search-input::placeholder { color: #757473; }
+  .search-inline-error {
+    display: none; color: #E2645A; font-size: 13px; font-weight: 500;
+    margin-top: 10px;
+  }
 
   .search-controls {
     display: flex; align-items: center; justify-content: space-between; gap: 16px;
@@ -255,6 +259,19 @@
   .submit-btn:hover { background: #fff; }
   .submit-btn:disabled { background: #2b2a28; cursor: default; pointer-events: none; }
   .submit-btn:disabled svg path { stroke: #757473; }
+
+  /* ---------- Submit-button loading spinner (additive only, same as chat.html) ---------- */
+  .spinner-icon { display: none; }
+  .submit-btn.loading svg { display: none; }
+  .submit-btn.loading .spinner-icon {
+    display: flex; width: 15px; height: 15px; border-radius: 50%;
+    border: 2px solid rgba(163,230,53,0.25); border-top-color: #a3e635;
+    animation: submitSpinnerRotate 0.7s linear infinite;
+  }
+  @keyframes submitSpinnerRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
 
   /* Explore Flintel panel */
   .explore-panel { background: #1e1d1b; border-radius: 12px; padding-top: 15px; margin-top: 36px; }
@@ -815,6 +832,7 @@
 
                 <button class="submit-btn" id="submit-btn" type="submit" aria-label="Submit search" disabled>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="#171615" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <span class="spinner-icon"></span>
                 </button>
               </div>
             </div>
@@ -1616,7 +1634,7 @@
   // and needed the same protection.
   let softNavGeneration = 0;
 
-  async function navigateTo(url, { method = 'GET', pushState = true, body = undefined, fallbackForm = undefined } = {}) {
+  async function navigateTo(url, { method = 'GET', pushState = true, body = undefined, fallbackForm = undefined, onBusyDecline = undefined } = {}) {
     // (RACE-CONDITION FIX) Snapshot the generation counter for THIS
     // navigation right away — anything that happens after any subsequent
     // await in this function checks against this snapshot before touching
@@ -1661,6 +1679,27 @@
       // every mutation below it since nothing between them awaits again.
       if (myNav !== softNavGeneration) return;
 
+      // (BUSY-LOCK) Only relevant to callers that can hit the per-owner
+      // busy check (currently: wireUpHeroSoftSearchSubmit()'s POST to
+      // /search) — the backend declines by re-rendering the error state
+      // (.state-card / .state-body, the same pattern already used for a
+      // validation error) instead of a real new page. `.state-card` never
+      // legitimately appears in the server-rendered HTML for any other
+      // route this app has (session links, /chats/new), so this check is
+      // inert for every other existing caller of navigateTo() — nothing
+      // about their behavior changes. When it DOES fire, the normal full
+      // swap below is skipped entirely (no style/main swap, no pushState)
+      // since nothing new was actually saved server-side, and the
+      // optional onBusyDecline callback (if the caller provided one) runs
+      // instead — a caller that doesn't pass one simply gets no swap and
+      // no callback, which is still correct/safe, just silent.
+      const errorCard = doc.querySelector('.state-card .state-body') || doc.querySelector('.state-card');
+      if (errorCard) {
+        const errorText = errorCard.textContent.trim() || 'Please wait for your current request to finish first.';
+        if (typeof onBusyDecline === 'function') onBusyDecline(errorText);
+        return;
+      }
+
       // Swap the active <style> tag's content BEFORE swapping <main> — the
       // fetched page might be a different template (index.html <-> chat.html)
       // with its own, non-identical stylesheet. Without this, <main>'s new
@@ -1702,7 +1741,14 @@
       const freshSearchInput = document.getElementById('search-input');
       const freshSubmitBtn = document.getElementById('submit-btn');
       if (freshSearchInput && freshSubmitBtn) {
-        freshSubmitBtn.disabled = freshSearchInput.value.trim().length === 0;
+        // (LOADING STATE) wireUpInitialPendingStream() above may have just
+        // synchronously set loading (via wireUpStream()) if the freshly
+        // swapped-in content has a pending-stream turn — don't blindly
+        // override that back to a simple "is the input empty" check; only
+        // apply the normal check when nothing set loading a moment ago.
+        if (!freshSubmitBtn.classList.contains('loading')) {
+          freshSubmitBtn.disabled = freshSearchInput.value.trim().length === 0;
+        }
       }
     } catch (err) {
       console.warn('Soft navigation failed, falling back to a real page load:', err);
@@ -1999,6 +2045,37 @@
   // native hero content — so calling them here is a safe no-op whenever
   // the current page is genuinely index.html's own landing content, and
   // only becomes active once a chat's content has actually been swapped in.
+  // ---- Submit-button loading state (shared by search-submit + stream wiring, same as chat.html) ----
+  function setSubmitLoading(isLoading) {
+    const submitBtn = document.getElementById('submit-btn');
+    const searchInput = document.getElementById('search-input');
+    if (submitBtn) {
+      submitBtn.classList.toggle('loading', isLoading);
+      submitBtn.disabled = isLoading ? true : (searchInput ? searchInput.value.trim().length === 0 : false);
+    }
+    if (searchInput) searchInput.disabled = isLoading;
+  }
+
+  // ---- Small inline warning row under the search box (busy-lock case only) ----
+  function showSearchInlineError(message, restoreQuery) {
+    const searchInput = document.getElementById('search-input');
+    if (searchInput && restoreQuery !== undefined) {
+      searchInput.value = restoreQuery;
+    }
+    const searchBox = document.querySelector('.search-box');
+    if (!searchBox) return;
+    let errorRow = searchBox.querySelector('.search-inline-error');
+    if (!errorRow) {
+      errorRow = document.createElement('div');
+      errorRow.className = 'search-inline-error';
+      searchBox.appendChild(errorRow);
+    }
+    errorRow.textContent = message;
+    errorRow.style.display = 'block';
+    clearTimeout(errorRow._hideTimer);
+    errorRow._hideTimer = setTimeout(() => { errorRow.style.display = 'none'; }, 6000);
+  }
+
   function wireUpStream(pendingTurn, chatId) {
     const topicKey = pendingTurn.dataset.topicKey || '';
     if (!chatId || !topicKey) return;
@@ -2025,6 +2102,9 @@
     let accumulated = '';
     const source = new EventSource(`/chat/${chatId}/stream?topic_key=${encodeURIComponent(topicKey)}`);
     activeEventSource = source;
+    // (LOADING STATE) A stream starting means an answer is actively being
+    // generated for this chat — lock the submit box for the duration.
+    setSubmitLoading(true);
 
     source.onmessage = (event) => {
       let payload;
@@ -2050,6 +2130,8 @@
           console.warn('[stale-response] Discarding streamed answer — navigation occurred mid-stream.');
           return;
         }
+        // (LOADING STATE) The answer is ready — unlock the submit box.
+        setSubmitLoading(false);
         const loadingRow = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)}`);
         if (loadingRow) {
           const wrap = document.createElement('div');
@@ -2074,6 +2156,8 @@
         source.close();
         activeEventSource = null;
         if (phraseTimer) clearInterval(phraseTimer);
+        // (LOADING STATE) Never leave the user locked out forever.
+        if (myGen === softNavGeneration) setSubmitLoading(false);
       }
     };
 
@@ -2081,6 +2165,8 @@
       source.close();
       activeEventSource = null;
       if (phraseTimer) clearInterval(phraseTimer);
+      // (LOADING STATE) Same reasoning as the payload.error branch above.
+      if (myGen === softNavGeneration) setSubmitLoading(false);
     };
   }
 
@@ -2089,6 +2175,11 @@
     if (!pendingTurn) return;
     const chatIdInput = document.querySelector('#search-form input[name="chat_id"]');
     const chatId = chatIdInput ? chatIdInput.value : '';
+    // (LOADING STATE) No separate setSubmitLoading() call needed here —
+    // wireUpStream() itself already sets it synchronously the moment the
+    // EventSource is created, before any onmessage fires, so a page-load
+    // or soft-nav landing on an already-pending message locks the submit
+    // box immediately.
     wireUpStream(pendingTurn, chatId);
   }
 
@@ -2114,7 +2205,13 @@
       // turn to whatever chat is now on screen.
       const myGen = softNavGeneration;
 
-      if (submitBtn) submitBtn.disabled = true;
+      // (LOADING STATE) Disables both the button and the input the moment
+      // submission starts. A local flag tracks whether this specific
+      // request hands off to an in-flight stream (in which case loading
+      // must stay on until THAT resolves) — the finally block below only
+      // clears loading when it wasn't handed off.
+      setSubmitLoading(true);
+      let handedOffToStream = false;
 
       let response;
       try {
@@ -2141,6 +2238,20 @@
         // never touch the DOM.
         if (myGen !== softNavGeneration) {
           console.warn('[stale-response] Discarding search result — navigation occurred mid-request.');
+          return;
+        }
+
+        // (BUSY-LOCK) The backend's per-owner busy check declines a
+        // request by re-rendering the error state (.state-card /
+        // .state-body — the same pattern index.html already uses for a
+        // validation error) instead of creating a new turn-block. Detect
+        // that BEFORE looking for a turn-block at all — no new message
+        // was saved, so nothing here should be treated as a normal
+        // success.
+        const errorCard = doc.querySelector('.state-card .state-body') || doc.querySelector('.state-card');
+        if (errorCard) {
+          const errorText = errorCard.textContent.trim() || 'Please wait for your current request to finish first.';
+          showSearchInlineError(errorText, query);
           return;
         }
 
@@ -2173,15 +2284,18 @@
         if (latestTurn.dataset.pendingStream === 'true') {
           const chatIdInput = document.querySelector('#search-form input[name="chat_id"]');
           const chatId = chatIdInput ? chatIdInput.value : '';
+          handedOffToStream = true; // wireUpStream()'s own done/error handlers clear loading from here on
           wireUpStream(latestTurn, chatId);
+        } else {
+          // No stream needed — the response already came back with a
+          // complete claude_answer, so loading ends right here.
+          setSubmitLoading(false);
         }
       } catch (domErr) {
         console.warn('[dom-update-failed][search-submit] Search succeeded server-side; only the in-place DOM update failed (not a network issue, so no hard reload was triggered):', domErr);
       } finally {
-        if (myGen === softNavGeneration) {
-          const freshSubmitBtn = document.getElementById('submit-btn');
-          const freshSearchInput = document.getElementById('search-input');
-          if (freshSubmitBtn) freshSubmitBtn.disabled = freshSearchInput ? freshSearchInput.value.trim().length === 0 : false;
+        if (myGen === softNavGeneration && !handedOffToStream) {
+          setSubmitLoading(false);
         }
       }
     });
@@ -2220,11 +2334,29 @@
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const searchInput = document.getElementById('search-input');
-      const submitBtn = document.getElementById('submit-btn');
       const query = searchInput ? searchInput.value.trim() : '';
       if (!query) return;
-      if (submitBtn) submitBtn.disabled = true;
-      navigateTo(form.action, { method: 'POST', body: new FormData(form), fallbackForm: form });
+      // (LOADING STATE) Set right away — navigateTo()'s own successful
+      // swap either finds a pending-stream turn (in which case
+      // wireUpInitialPendingStream()/wireUpStream() inside it keep this on
+      // until that stream finishes, per the fix to navigateTo()'s own
+      // final disabled-check above) or finds none, in which case that
+      // same final check correctly turns loading back off. Nothing extra
+      // needs to happen here after navigateTo() resolves.
+      setSubmitLoading(true);
+      navigateTo(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        fallbackForm: form,
+        // (BUSY-LOCK) Runs instead of the normal swap if the backend
+        // declined this request — restore what the user typed, show the
+        // inline warning, and unlock the box so they can try again right
+        // away once their other request finishes.
+        onBusyDecline: (errorText) => {
+          showSearchInlineError(errorText, query);
+          setSubmitLoading(false);
+        },
+      });
     });
   }
 
