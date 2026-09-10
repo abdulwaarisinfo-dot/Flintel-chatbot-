@@ -2210,12 +2210,18 @@
       // request hands off to an in-flight stream (in which case loading
       // must stay on until THAT resolves) — the finally block below only
       // clears loading when it wasn't handed off.
+      //
+      // (422 FIX) FormData MUST be built BEFORE setSubmitLoading(true) —
+      // that call disables search-input, and a disabled field is excluded
+      // from FormData entirely (standard HTML behavior), so building it
+      // after would silently drop the "query" field and make the backend's
+      // required Form(...) validation fail with 422.
+      const formData = new FormData(form);
       setSubmitLoading(true);
       let handedOffToStream = false;
 
       let response;
       try {
-        const formData = new FormData(form);
         response = await fetch(form.action, {
           method: 'POST',
           body: formData,
@@ -2343,10 +2349,18 @@
       // final disabled-check above) or finds none, in which case that
       // same final check correctly turns loading back off. Nothing extra
       // needs to happen here after navigateTo() resolves.
+      //
+      // (422 FIX) FormData MUST be captured BEFORE setSubmitLoading(true)
+      // — that call disables search-input, and a disabled field is
+      // excluded from FormData entirely, so building it inline inside the
+      // navigateTo() call below (after loading was already set) would
+      // silently drop the "query" field and fail the backend's required
+      // Form(...) validation with 422.
+      const formData = new FormData(form);
       setSubmitLoading(true);
       navigateTo(form.action, {
         method: 'POST',
-        body: new FormData(form),
+        body: formData,
         fallbackForm: form,
         // (BUSY-LOCK) Runs instead of the normal swap if the backend
         // declined this request — restore what the user typed, show the
