@@ -2032,6 +2032,13 @@
       // request hands off to an in-flight stream (in which case loading
       // must stay on until THAT resolves) — the finally block below only
       // clears loading when it wasn't handed off.
+      //
+      // (422 FIX) FormData MUST be built BEFORE setSubmitLoading(true) —
+      // that call disables search-input, and a disabled field is excluded
+      // from FormData entirely (standard HTML behavior), so building it
+      // after would silently drop the "query" field and make the backend's
+      // required Form(...) validation fail with 422.
+      const formData = new FormData(form);
       setSubmitLoading(true);
       let handedOffToStream = false;
 
@@ -2040,7 +2047,6 @@
       // genuine fetch/network failure, or a non-OK response.
       let response;
       try {
-        const formData = new FormData(form);
         response = await fetch(form.action, {
           method: 'POST',
           body: formData,
