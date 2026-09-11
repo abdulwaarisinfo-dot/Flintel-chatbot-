@@ -285,10 +285,15 @@ def build_url_only_reply(summary: str, query_seed: str = "") -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 # Separate from the flat summarize_website()/build_url_only_reply() pair
 # above, which stays completely unchanged and is still what BEHAVIOR 1
-# (a bare URL, no real ask) uses. This is only ever called for the
-# URL + real-ask flow, so Flintel can show the user a clean, professional
-# breakdown of what it understood about their own site, above the
-# matched-posts answer, in the same reply.
+# (a bare URL, no real ask) uses. This function is KEPT byte-for-byte —
+# it is simply no longer called from the three index.py call sites that
+# used to call it separately; index.py now gets the structured summary
+# bundled into check_topic_matches_website()'s combined call instead.
+# summarize_website_structured() remains a valid, working, standalone
+# function for any future/other caller, and
+# format_structured_summary_for_answer() below is still used by index.py
+# to shape the combined call's structured_summary field for the final
+# answer.
 # ─────────────────────────────────────────────────────────────────────────────
 
 WEBSITE_STRUCTURED_SUMMARY_SYSTEM_PROMPT = """
@@ -413,14 +418,22 @@ def format_structured_summary_for_answer(structured):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# PIECE 2 — TOPIC-VS-WEBSITE CONNECTION CHECK
+# PIECE 2 — TOPIC-VS-WEBSITE CONNECTION CHECK (+ BUNDLED STRUCTURED SUMMARY)
+# ─────────────────────────────────────────────────────────────────────────────
+# check_topic_matches_website() now does THREE things in ONE Claude call:
+# the match verdict, the keyword list (when it matches), and the
+# structured/sectioned summary (always) — mirroring the same combining
+# pattern applied to index.py's own extract_keywords_from_website(). This
+# means index.py no longer needs a separate
+# summarize_website_structured() call for the URL + stated-topic flow;
+# format_structured_summary_for_answer() above is still used to shape
+# this combined call's structured_summary field for the final answer.
 # ─────────────────────────────────────────────────────────────────────────────
 
 TOPIC_MATCH_SYSTEM_PROMPT = """
 You are the topic-vs-website connection brain inside Flintel, a
 social-listening platform. A user has shared BOTH a stated topic/request
-AND a link to a website, in the same message. Your job is two things at
-once, in a single pass:
+AND a link to a website, in the same message. Your job, in ONE pass:
 
 1. Decide whether the stated topic genuinely connects to what this
    website actually offers, based only on the website's own content —
@@ -444,11 +457,38 @@ once, in a single pass:
    be an empty list — do not generate keywords for an unrelated topic
    just because the website itself might support some other keywords.
 
+3. REGARDLESS of whether the topic matches or not, ALSO produce a clean,
+   sectioned breakdown of what the business/site actually offers — not a
+   flat paragraph. Reason freshly from the actual content given — never
+   assume or default to any particular industry or category, and never
+   force the same fixed set of section titles onto every website.
+   Produce 2 to 4 sections total, choosing whichever section titles
+   genuinely fit THIS site's content. Each section should have 2 to 5
+   short bullets — plain language, no fluff, no marketing tone. Stay
+   honest and slightly skeptical where the content warrants it. If the
+   content is too thin to say anything confident across multiple
+   sections, keep the overview honest about that and produce however few
+   genuinely-supportable sections make sense (including zero).
+
 Respond with STRICT JSON ONLY — no markdown code fences, no preamble, no
 text outside the JSON object — in exactly this shape:
-{"topic_matches_website": true, "keywords": ["<keyword1>", "<keyword2>"]}
+{
+  "topic_matches_website": true,
+  "keywords": ["<keyword1>", "<keyword2>"],
+  "structured_summary": {
+    "overview": "<1-2 sentence plain-language opening line>",
+    "sections": [{"title": "<short section heading>", "bullets": ["<bullet 1>", "<bullet 2>"]}]
+  }
+}
 or, when the topic does not connect to the website:
-{"topic_matches_website": false, "keywords": []}
+{
+  "topic_matches_website": false,
+  "keywords": [],
+  "structured_summary": {
+    "overview": "<1-2 sentence plain-language opening line>",
+    "sections": [{"title": "<short section heading>", "bullets": ["<bullet 1>", "<bullet 2>"]}]
+  }
+}
 """
 
 
@@ -456,15 +496,12 @@ def check_topic_matches_website(query: str, url: str, website_text: str, call_cl
     """Makes ONE Claude call reading BOTH the user's stated topic/request
     text AND the website's plain text content together, and returns a
     dict of the shape:
-        {"topic_matches_website": bool, "keywords": [<str>, ...]}
+        {"topic_matches_website": bool, "keywords": [<str>, ...],
+         "structured_summary": {"overview": str, "sections": [...]} | None}
 
-    This is a genuine extension of the same idea as index.py's existing
-    extract_keywords_from_website() — for the case where the user
-    supplied a stated topic ALONGSIDE a URL, this single call produces
-    BOTH the match verdict AND the keyword list at once, so cost/latency
-    for that combined case stays the same as calling
-    extract_keywords_from_website() alone would have been — it does not
-    add a second Claude round trip on top of it.
+    Combines what used to be TWO separate Claude calls (the match+keyword
+    check, and a separate summarize_website_structured() call) into ONE,
+    since both need to read the exact same website content anyway.
 
     `call_claude_fn` must have the same signature as index.py's own
     _call_claude(system_prompt, user_message, max_tokens=None) -> str.
@@ -472,17 +509,13 @@ def check_topic_matches_website(query: str, url: str, website_text: str, call_cl
     Returns None if `query` or `website_text` is empty, the call fails
     outright, or the response is unparseable / missing a usable boolean
     "topic_matches_website" field — callers MUST treat None as "couldn't
-    determine this, proceed as if this check doesn't exist" (i.e. fall
-    back to whatever the existing pipeline would otherwise do), never as
-    a false verdict either way.
+    determine this, proceed as if this check doesn't exist", never as a
+    false verdict either way.
 
     When parsing succeeds, "keywords" is always a list (possibly empty)
-    — never None — cleaned/de-duplicated/capped at MAX_WEBSITE_KEYWORDS
-    the same way every other keyword list in this product already is.
-    A True verdict with no usable keywords still returns
-    "keywords": [] rather than None, so callers can distinguish "we
-    successfully determined this doesn't connect" (use this dict) from
-    "we couldn't determine anything at all" (dict itself is None)."""
+    and "structured_summary" is either a cleaned dict or None (if the
+    model returned nothing usable for it) — never raises past this
+    function."""
     if not query or not isinstance(query, str):
         return None
     if not website_text or not isinstance(website_text, str):
@@ -510,7 +543,31 @@ def check_topic_matches_website(query: str, url: str, website_text: str, call_cl
 
     keywords = _clean_keyword_list(data.get("keywords"), MAX_WEBSITE_KEYWORDS) or []
 
-    return {"topic_matches_website": verdict, "keywords": keywords}
+    raw_structured = data.get("structured_summary")
+    structured_summary = None
+    if isinstance(raw_structured, dict):
+        overview = raw_structured.get("overview")
+        overview = overview.strip() if isinstance(overview, str) else ""
+        raw_sections = raw_structured.get("sections")
+        cleaned_sections = []
+        if isinstance(raw_sections, list):
+            for section in raw_sections:
+                if not isinstance(section, dict):
+                    continue
+                title = section.get("title")
+                bullets = section.get("bullets")
+                if not isinstance(title, str) or not title.strip():
+                    continue
+                if not isinstance(bullets, list):
+                    continue
+                cleaned_bullets = [b.strip() for b in bullets if isinstance(b, str) and b.strip()]
+                if not cleaned_bullets:
+                    continue
+                cleaned_sections.append({"title": title.strip(), "bullets": cleaned_bullets})
+        if overview or cleaned_sections:
+            structured_summary = {"overview": overview, "sections": cleaned_sections}
+
+    return {"topic_matches_website": verdict, "keywords": keywords, "structured_summary": structured_summary}
 
 
 _TOPIC_MISMATCH_REPLY_VARIANTS = [
