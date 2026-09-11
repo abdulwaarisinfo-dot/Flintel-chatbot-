@@ -2557,26 +2557,27 @@
           el.classList.add('hidden');
         });
       }
-      const liveConversationArea = document.getElementById('conversation-area') || conversationArea;
-      liveConversationArea.classList.remove('hidden');
-      const optimisticTurn = document.createElement('div');
-      optimisticTurn.className = 'turn-block';
-      const turnRow = document.createElement('div');
-      turnRow.className = 'turn-row';
-      const turnQuestion = document.createElement('div');
-      turnQuestion.className = 'turn-question';
-      turnQuestion.textContent = query;
-      turnRow.appendChild(turnQuestion);
-      optimisticTurn.appendChild(turnRow);
-      const loadingRow = document.createElement('div');
-      loadingRow.className = 'loading-row';
-      loadingRow.innerHTML =
-        '<span class="loading-logo"><img src="https://www.figma.com/api/mcp/asset/9ac3df00-71a7-4d75-b3a6-1796fd320906.png" alt="" /></span>' +
-        '<div class="loading-dots"><span></span><span></span><span></span></div>' +
-        '<span class="loading-text">Still gathering results for this search…</span>';
-      optimisticTurn.appendChild(loadingRow);
-      liveConversationArea.appendChild(optimisticTurn);
-      optimisticTurn.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // (DOUBLE-LAYOUT FLASH FIX) This used to also build an optimistic
+      // turn-block (question bubble + loading row) and append it into
+      // #conversation-area for instant feedback. The problem: that
+      // container belongs to index.html's OWN hero-page layout (narrower,
+      // centered) — it is never part of the <main> that survives
+      // navigateTo()'s swap below, which replaces the entire <main> with
+      // chat.html's fetched markup (.thread-wrap, wider, with a docked
+      // input). So the optimistic turn was necessarily shown once in the
+      // WRONG layout, then discarded and effectively redrawn in the
+      // correct one a moment later — a jarring "double layout" flash as
+      // the same turn visually relocated mid-transition.
+      //
+      // Fix: don't render anything into #conversation-area for this case
+      // at all. The search box itself already gives instant feedback —
+      // setSubmitLoading(true) above disables it and shows the spinner
+      // (.submit-btn.loading, already defined) immediately — so the user
+      // still knows their submission was received. The real turn then
+      // renders exactly once, in its correct final layout, the moment
+      // navigateTo()'s swap completes below. Trades "see your exact turn
+      // text immediately" for "never see it in the wrong layout."
 
       navigateTo(form.action, {
         method: 'POST',
