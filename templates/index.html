@@ -1824,6 +1824,17 @@
       }
       if (doc.title) document.title = doc.title;
 
+      // (SCROLL-POSITION FIX) Reset scroll to the top after every soft
+      // navigation swap — without this, if the PREVIOUS page was scrolled
+      // down (e.g. a long chat), the new page (home page, a different
+      // chat, etc.) visually inherits that same scroll offset, since
+      // swapping <main>'s innerHTML alone never touches the page's own
+      // scroll position. A real page load/reload always starts at the
+      // top, so this matches that same expected behavior for every soft
+      // navigation too — "New chat," switching chats, and any other link
+      // handled by this function.
+      window.scrollTo(0, 0);
+
       // response.url accounts for any server-side redirect (e.g. POST
       // /chats/new redirecting to /chat/<new_id>) — the address bar should
       // reflect where we actually ended up, not the URL we requested.
