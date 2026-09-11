@@ -1780,6 +1780,16 @@
     const renderedEl = wrap.querySelector('.answer-rendered');
     if (!rawEl || !renderedEl) return;
     const raw = rawEl.textContent;
+    // (BUG 1 FIX) Dedupe check now lives HERE, inside the function that
+    // actually does the rendering, instead of being split across three
+    // separate callers (initial load, the MutationObserver's reconcile(),
+    // wireUpStream()'s "done" handler) that each set the flag themselves.
+    // That split was the actual bug: a caller could mark a wrap as
+    // "already rendered" (dataset.lastRenderedRaw = raw) BEFORE this
+    // function had actually succeeded at parsing/rendering it, and once
+    // set, nothing would ever retry that node again even though it was
+    // still showing raw JSON.
+    if (wrap.dataset.lastRenderedRaw === raw) return;
     // Claude is instructed to never wrap JSON in markdown code fences, but
     // models don't always follow that perfectly — strip ```json / ``` fences
     // (and surrounding whitespace) before attempting to parse, so an
@@ -1790,6 +1800,7 @@
     try { data = JSON.parse(cleaned); } catch (e) { data = null; }
 
     if (data && data.format) {
+      const KNOWN_FORMATS = ['source_list', 'trend_report', 'comparison', 'no_results', 'not_available', 'disallowed'];
       renderedEl.innerHTML = '';
       try {
         renderWebsiteContext(data.website_context, renderedEl);
@@ -1806,6 +1817,15 @@
         }
         renderedEl.style.display = 'block';
         rawEl.style.display = 'none';
+        // (BUG 1 FIX) Only mark as rendered for a KNOWN format that
+        // actually went through one of the real render* functions above —
+        // never for the unknown-format fallback (that just dumps raw text
+        // into .answer-rendered, which is not a genuine structured render
+        // and must remain eligible for a retry, e.g. once a newer backend
+        // adds support for that format and re-sends the same text).
+        if (KNOWN_FORMATS.includes(data.format)) {
+          wrap.dataset.lastRenderedRaw = raw;
+        }
         return;
       } catch (e) {
         console.warn('Structured answer render failed, falling back to raw text:', e);
@@ -1820,6 +1840,12 @@
         renderedEl.innerHTML = DOMPurify.sanitize(html);
         renderedEl.style.display = 'block';
         rawEl.style.display = 'none';
+        // (BUG 1 FIX) Genuine successful render (real markdown output) —
+        // safe to mark as done. A JSON.parse failure that ALSO fails to
+        // produce markdown output (window.marked missing, or marked.parse
+        // itself throwing) intentionally does NOT reach this line, so it
+        // stays eligible for a retry instead of getting stuck.
+        wrap.dataset.lastRenderedRaw = raw;
       } catch (e) {
         console.warn('Markdown render failed, showing raw answer text:', e);
       }
@@ -1847,17 +1873,17 @@
       const rawEl = wrap.querySelector('.answer-raw');
       if (!rawEl) return;
       const currentRaw = rawEl.textContent;
-      if (wrap.dataset.lastRenderedRaw === currentRaw) return; // nothing actually changed
-      wrap.dataset.lastRenderedRaw = currentRaw;
+      // (BUG 1 FIX) No longer sets wrap.dataset.lastRenderedRaw here before
+      // calling renderStructuredAnswer() — that used to be exactly the bug:
+      // marking a wrap "already rendered" before the render had actually
+      // succeeded, permanently skipping the real render pass if it failed.
+      // renderStructuredAnswer() now owns this flag entirely (its own
+      // internal dedupe check makes calling it on an unchanged wrap a
+      // cheap no-op anyway, so skipping the call here is purely an
+      // optimization, not something correctness depends on).
+      if (wrap.dataset.lastRenderedRaw === currentRaw) return;
       renderStructuredAnswer(wrap);
     }
-
-    // Mark what's already correctly rendered at load time, so the observer
-    // doesn't immediately "reconcile" everything a second time for no reason.
-    document.querySelectorAll('.answer-wrap').forEach((wrap) => {
-      const rawEl = wrap.querySelector('.answer-raw');
-      if (rawEl) wrap.dataset.lastRenderedRaw = rawEl.textContent;
-    });
 
     let pending = false;
     const observer = new MutationObserver(() => {
@@ -1986,8 +2012,25 @@
           wrap.appendChild(rawDiv);
           wrap.appendChild(renderedDiv);
           loadingRow.replaceWith(wrap);
-          wrap.dataset.lastRenderedRaw = accumulated; // avoid a redundant re-render from the MutationObserver
+          // (BUG 1 FIX) No longer pre-sets wrap.dataset.lastRenderedRaw
+          // here before calling renderStructuredAnswer() — that flag is
+          // now owned entirely by renderStructuredAnswer() itself, set
+          // only once it has actually succeeded (see its own definition).
           renderStructuredAnswer(wrap);
+          // (BUG 1 FIX) Defensive re-render: confirm the render actually
+          // produced visible content (every success path inside
+          // renderStructuredAnswer explicitly sets renderedEl's display to
+          // 'block') before trusting it worked. If not, retry once after
+          // a microtask delay — covers a rare transient failure (e.g. a
+          // race with marked.js/DOMPurify not being fully ready yet). If
+          // the retry also doesn't succeed, .answer-raw is already
+          // visible by default (nothing hides it except a successful
+          // render), so the raw text is shown rather than nothing at all.
+          if (renderedDiv.style.display !== 'block') {
+            Promise.resolve().then(() => {
+              renderStructuredAnswer(wrap);
+            });
+          }
         } else {
           // Fallback safety net: if the loading-row somehow isn't there
           // anymore for any reason, fall back to the original, always-
@@ -2017,8 +2060,15 @@
       source.close();
       activeEventSource = null;
       if (phraseTimer) clearInterval(phraseTimer);
-      // (LOADING STATE) Same reasoning as the payload.error branch above.
-      if (myGen === softNavGeneration) setSubmitLoading(false);
+      // (BUG 2 FIX) Unconditional, unlike the payload.error branch above —
+      // a dropped/failed SSE connection is exactly the scenario that can
+      // leave the input permanently disabled with no other recovery path
+      // (no payload.done, no payload.error ever arrives to clear it). A
+      // stale-DOM write here (clearing loading for a chat the user has
+      // since navigated away from) is a much smaller problem than a
+      // search box stuck disabled forever, so this always fires as a
+      // last resort regardless of the myGen check.
+      setSubmitLoading(false);
       // Same as the explicit {"error": ...} case above — leave the existing
       // loading text untouched, no visible change.
     };
@@ -2052,6 +2102,10 @@
   // (data-pending-stream="true"), the SSE wiring above attaches to it
   // immediately, exactly as it would have after a real page load.
   // ---- Submit-button loading state (shared by search-submit + stream wiring) ----
+  // (BUG 2 FIX) Tracks the pending watchdog timeout below, so any call to
+  // setSubmitLoading(false) — from ANY code path — always cancels it.
+  let submitLoadingWatchdogId = null;
+  const SUBMIT_LOADING_TIMEOUT_MS = 35000; // 35s — comfortably above a normal slow Claude call, short enough that "stuck forever" never actually happens
   function setSubmitLoading(isLoading) {
     const submitBtn = document.getElementById('submit-btn');
     const searchInput = document.getElementById('search-input');
@@ -2066,6 +2120,25 @@
       submitBtn.disabled = isLoading ? true : (searchInput ? searchInput.value.trim().length === 0 : false);
     }
     if (searchInput) searchInput.disabled = isLoading;
+
+    // (BUG 2 FIX) A client-side safety net, independent of whichever
+    // specific code path set isLoading=true — covers a dropped SSE
+    // connection whose onmessage/onerror/onclose never fires, or a
+    // softNavGeneration change that causes a guarded finally block to
+    // skip clearing loading. Regardless of the cause, a search box stuck
+    // disabled forever with no feedback is worse than force-clearing it
+    // after a generous timeout and letting the user just try again.
+    if (submitLoadingWatchdogId !== null) {
+      clearTimeout(submitLoadingWatchdogId);
+      submitLoadingWatchdogId = null;
+    }
+    if (isLoading) {
+      submitLoadingWatchdogId = setTimeout(() => {
+        submitLoadingWatchdogId = null;
+        setSubmitLoading(false);
+        showSearchInlineError('Taking longer than expected — you can try again.');
+      }, SUBMIT_LOADING_TIMEOUT_MS);
+    }
   }
 
   // ---- Small inline warning row under the search box (busy-lock case only) ----
