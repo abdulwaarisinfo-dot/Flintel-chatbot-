@@ -2527,20 +2527,36 @@
       const formData = new FormData(form);
       setSubmitLoading(true);
 
-      // (BUG 4 FIX) Instant feedback — the search box no longer sits idle
+      // (BUG FIX) Instant feedback — the search box no longer sits idle
       // for the several seconds the backend's own synchronous Claude
       // routing call can take before it even redirects. Immediately hide
-      // the hero landing content and show a chat-like "thinking" state
-      // (the user's own just-typed query, followed by the same loading
-      // row markup a real pending turn already uses) — BEFORE the fetch
-      // resolves. navigateTo()'s own full <main> swap below replaces this
-      // placeholder with the real server-rendered content once the
-      // response comes back, exactly as it already does for every other
-      // soft navigation — nothing here changes what the backend does or
-      // how long its own work takes, this only removes the dead wait on
-      // the search box itself.
+      // the hero LANDING content (headline/explore-panel) and show a
+      // chat-like "thinking" state — BEFORE the fetch resolves.
+      // navigateTo()'s own full <main> swap below replaces all of this
+      // with the real server-rendered content once the response comes
+      // back, exactly as it already does for every other soft navigation.
+      //
+      // (SEARCH-BOX-DISAPPEARS FIX) This used to hide the ENTIRE
+      // #hero-wrap — but #hero-wrap is the SAME container that holds
+      // #search-form itself (headline, search box, and explore panel all
+      // live inside it together), and there is no docked search box
+      // visible on the hero page (.docked-input-wrap is CSS
+      // display:none by design — nothing ever toggles it visible). So
+      // hiding the whole wrap made the ONLY visible search input on the
+      // page disappear entirely for the full duration of the backend
+      // request. Only the landing pieces (eyebrow, headline, explore
+      // panel) are hidden now — #search-form itself is left untouched,
+      // staying visibly in place the whole time, just disabled/grayed via
+      // the same setSubmitLoading(true) call already made above (which
+      // already handles the "grayed out, not gone" visual state via the
+      // existing .submit-btn:disabled / disabled-input styling — no new
+      // CSS needed).
       const heroWrap = document.getElementById('hero-wrap');
-      if (heroWrap) heroWrap.classList.add('hidden');
+      if (heroWrap) {
+        heroWrap.querySelectorAll('.eyebrow, .headline, .explore-panel').forEach((el) => {
+          el.classList.add('hidden');
+        });
+      }
       const liveConversationArea = document.getElementById('conversation-area') || conversationArea;
       liveConversationArea.classList.remove('hidden');
       const optimisticTurn = document.createElement('div');
