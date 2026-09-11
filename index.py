@@ -2201,6 +2201,18 @@ optional time window.
    even just a general problem angle) but simply doesn't mention a time
    range is STILL "search" with time_window_days: null, never "clarify".
 
+   ADDITIONALLY: if the user's message contains a website URL (a link
+   starting with http:// or https://) together with ANY stated request,
+   ask, or angle at all — including a generic one like "find me
+   customers", "find me leads", "promote my site", "market my website",
+   or similar — this is NEVER "clarify", even though no specific
+   topic/brand/industry is named. A URL is itself enough context to
+   search from (Flintel can read the site directly), so treat this as
+   "search" with "keywords": null (the downstream website-reading step
+   will fill in real keywords from the site's own content). Only use
+   "clarify" when there is NEITHER a URL NOR any named topic/brand/
+   industry/problem angle anywhere in the message.
+
    When writing the clarifying reply, sound like a helpful consultant, not
    a form validator: briefly explain WHY you're asking (so the search
    actually finds something relevant to them), and in one natural
@@ -2494,8 +2506,23 @@ def resolve_unclear_topic(query: str, chat_summary: str):
     try:
         data = json.loads(cleaned)
     except (ValueError, TypeError):
-        log.warning(f"Topic-resolver returned unparseable output for query={query!r}: {raw[:200]!r}")
-        return None
+        # (RESILIENT JSON EXTRACTION) Claude sometimes appends trailing
+        # prose after a valid JSON object (e.g. "```json\n{...}\n```\n\nThe
+        # user has shared..."). Before giving up, try extracting just the
+        # first {...} object via a non-greedy regex and parsing that alone
+        # — this can only ever recover an otherwise-wasted call, never
+        # change behavior for already-valid JSON (which was already
+        # handled above).
+        match = re.search(r"\{.*?\}", cleaned, re.DOTALL)
+        if match:
+            try:
+                data = json.loads(match.group(0))
+            except (ValueError, TypeError):
+                log.warning(f"Topic-resolver returned unparseable output for query={query!r}: {raw[:200]!r}")
+                return None
+        else:
+            log.warning(f"Topic-resolver returned unparseable output for query={query!r}: {raw[:200]!r}")
+            return None
     if not isinstance(data, dict) or not data.get("resolved"):
         return None
 
@@ -2601,11 +2628,13 @@ def fetch_website_text(url: str) -> str:
 CLAUDE_WEBSITE_KEYWORD_SYSTEM_PROMPT = """
 You are the website-to-keywords brain inside Flintel, a social-listening
 platform. The user has shared a link to their OWN website together with
-what they want Flintel to search for. Your job: read the website's plain
-text content plus the user's own request text, and produce the keyword
-list Flintel's existing (unchanged) matching code will use to find
-relevant Reddit/X/LinkedIn/Facebook posts.
+what they want Flintel to search for. Your job, in ONE pass: read the
+website's plain text content plus the user's own request text, and
+produce BOTH (1) the keyword list Flintel's existing matching code will
+use to find relevant Reddit/X/LinkedIn/Facebook posts, AND (2) a clean,
+sectioned breakdown of what the business/site actually offers.
 
+PART 1 — KEYWORDS:
 - Read the website to understand what the business actually offers
   (its products, services, and industry) and combine that understanding
   with whatever the user's own request text asks for (e.g. a specific
@@ -2625,9 +2654,32 @@ relevant Reddit/X/LinkedIn/Facebook posts.
   any confident keywords, return an empty list rather than inventing
   generic filler.
 
+PART 2 — STRUCTURED SUMMARY:
+- Produce a CLEAN, SECTIONED breakdown of what the business/site/
+  individual actually offers — not a flat paragraph. Reason freshly from
+  the actual content given — never assume or default to any particular
+  industry or category, and never force the same fixed set of section
+  titles onto every website.
+- Produce 2 to 4 sections total, choosing whichever section titles
+  genuinely fit THIS site's content (e.g. "What they offer", "Business
+  signals", "Notable things" are loose inspiration, not required).
+- Each section should have 2 to 5 short bullets — plain language, no
+  fluff, no marketing tone. Stay honest and slightly skeptical where the
+  content warrants it.
+- If the content is too thin to say anything confident across multiple
+  sections, keep the overview honest about that and produce however few
+  genuinely-supportable sections make sense (including zero) rather than
+  padding.
+
 Respond with STRICT JSON ONLY — no markdown code fences, no preamble, no
 text outside the JSON object — in exactly this shape:
-{"keywords": ["<keyword1>", "<keyword2>"]}
+{
+  "keywords": ["<keyword1>", "<keyword2>"],
+  "structured_summary": {
+    "overview": "<1-2 sentence plain-language opening line>",
+    "sections": [{"title": "<short section heading>", "bullets": ["<bullet 1>", "<bullet 2>"]}]
+  }
+}
 """
 
 
@@ -2636,18 +2688,22 @@ def extract_keywords_from_website(query: str, url: str, website_text: str):
     reads the already-fetched plain-text website content PLUS the user's
     own request text (so a specific angle/pain-point the user typed
     alongside the link is honored, not just the site's generic content)
-    and returns up to MAX_WEBSITE_KEYWORDS keywords for the SAME
-    UNCHANGED downstream matching pipeline every other keyword source in
-    this file already feeds (enqueue_search_job, get_matched_signals,
-    etc.).
+    and returns up to MAX_WEBSITE_KEYWORDS keywords, PLUS a structured
+    summary breakdown of the site, in ONE combined pass — both derived
+    from the SAME Claude call, using CLAUDE_WEBSITE_KEYWORD_SYSTEM_PROMPT.
 
-    Returns a list of keyword strings, or None if Claude failed outright,
-    returned unparseable output, or returned no usable keywords — callers
-    must treat None exactly like any other "no usable keywords from this
-    source" case elsewhere in this file: fall back down the existing
-    safety-net chain (the router's own routed_keywords, then finally
-    generate_fuzzy_keywords()), never let a search end up with zero
-    keywords because of this feature."""
+    Returns `{"keywords": list|None, "structured_summary": dict|None}`
+    if Claude returned anything usable (either piece present is enough),
+    or `None` if Claude failed outright, returned unparseable output, or
+    returned neither usable keywords nor a usable structured summary —
+    NEVER a bare list anymore. Callers (see INTEGRATION POINT 2 in
+    POST /search) already expect this new shape: they read
+    `result.get("keywords")` and `result.get("structured_summary")`
+    separately, and must treat a `None` return exactly like any other "no
+    usable output from this source" case elsewhere in this file: fall
+    back down the existing safety-net chain (the router's own
+    routed_keywords, then finally generate_fuzzy_keywords()), never let a
+    search end up with zero keywords because of this feature."""
     if not website_text:
         return None
 
@@ -2679,26 +2735,52 @@ def extract_keywords_from_website(query: str, url: str, website_text: str):
         return None
 
     raw_keywords = data.get("keywords")
-    if not isinstance(raw_keywords, list):
+    cleaned_keywords = None
+    if isinstance(raw_keywords, list):
+        cleaned_list = []
+        seen = set()
+        for kw in raw_keywords:
+            if not isinstance(kw, str):
+                continue
+            kw_clean = kw.strip()
+            if not kw_clean:
+                continue
+            key = kw_clean.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            cleaned_list.append(kw_clean)
+            if len(cleaned_list) >= MAX_WEBSITE_KEYWORDS:
+                break
+        cleaned_keywords = cleaned_list or None
+
+    raw_structured = data.get("structured_summary")
+    structured_summary = None
+    if isinstance(raw_structured, dict):
+        overview = raw_structured.get("overview")
+        overview = overview.strip() if isinstance(overview, str) else ""
+        raw_sections = raw_structured.get("sections")
+        cleaned_sections = []
+        if isinstance(raw_sections, list):
+            for section in raw_sections:
+                if not isinstance(section, dict):
+                    continue
+                title = section.get("title")
+                bullets = section.get("bullets")
+                if not isinstance(title, str) or not title.strip():
+                    continue
+                if not isinstance(bullets, list):
+                    continue
+                cleaned_bullets = [b.strip() for b in bullets if isinstance(b, str) and b.strip()]
+                if not cleaned_bullets:
+                    continue
+                cleaned_sections.append({"title": title.strip(), "bullets": cleaned_bullets})
+        if overview or cleaned_sections:
+            structured_summary = {"overview": overview, "sections": cleaned_sections}
+
+    if not cleaned_keywords and not structured_summary:
         return None
-
-    cleaned_keywords = []
-    seen = set()
-    for kw in raw_keywords:
-        if not isinstance(kw, str):
-            continue
-        kw_clean = kw.strip()
-        if not kw_clean:
-            continue
-        key = kw_clean.lower()
-        if key in seen:
-            continue
-        seen.add(key)
-        cleaned_keywords.append(kw_clean)
-        if len(cleaned_keywords) >= MAX_WEBSITE_KEYWORDS:
-            break
-
-    return cleaned_keywords or None
+    return {"keywords": cleaned_keywords, "structured_summary": structured_summary}
 
 
 def _trim(text: str, limit: int) -> str:
@@ -3998,34 +4080,27 @@ def search(
 
         if not has_named_topic:
             # BEHAVIOR 2 — "find me leads/customers/posts related to my
-            # site" with no separately-named topic: EXISTING, UNCHANGED
-            # behavior, zero change to this path.
+            # site" with no separately-named topic: EXISTING behavior,
+            # now sourced from the SAME combined Claude call that also
+            # produces the structured website summary (see FIX D above)
+            # instead of a separate summarize_website_structured() call.
             website_keywords = None
             website_text = None
+            website_extraction_result = None
             try:
                 website_text = fetch_website_text(detected_url)
-                website_keywords = extract_keywords_from_website(query, detected_url, website_text)
+                website_extraction_result = extract_keywords_from_website(query, detected_url, website_text)
             except Exception as exc:
                 log.warning(f"Website fetch/keyword-extraction failed for url={detected_url!r}: {exc}")
-                website_keywords = None
-            if website_keywords:
-                routed_keywords = website_keywords
-                log.info(f"Website-derived keywords used | url={detected_url!r} | keywords={routed_keywords}")
-
-            # (STRUCTURED WEBSITE SUMMARY) Additive only — never blocks or
-            # fails the keyword extraction/job enqueue flow above. On any
-            # failure (including website_text never having been set if the
-            # fetch itself failed), website_answer_context simply stays
-            # None and the search proceeds exactly as it does today, just
-            # without the extra website breakdown in the final answer.
-            try:
-                structured = website_intelligence.summarize_website_structured(
-                    website_text, call_claude_fn=_call_claude
+                website_extraction_result = None
+            if website_extraction_result:
+                website_keywords = website_extraction_result.get("keywords")
+                if website_keywords:
+                    routed_keywords = website_keywords
+                    log.info(f"Website-derived keywords used | url={detected_url!r} | keywords={routed_keywords}")
+                website_answer_context = website_intelligence.format_structured_summary_for_answer(
+                    website_extraction_result.get("structured_summary")
                 )
-                website_answer_context = website_intelligence.format_structured_summary_for_answer(structured)
-            except Exception as exc:
-                log.warning(f"Structured website summary failed for url={detected_url!r}: {exc}")
-                website_answer_context = None
         else:
             # BEHAVIOR 3 candidate — a separately named topic alongside
             # the URL: check whether that topic genuinely connects to
@@ -4049,54 +4124,44 @@ def search(
                 # exist: the plain extract_keywords_from_website() call,
                 # feeding the EXISTING safety-net chain
                 # (routed_keywords -> generate_fuzzy_keywords()) exactly
-                # as before this feature.
-                website_keywords = None
+                # as before this feature, now also sourced from the SAME
+                # combined Claude call for keywords + structured summary
+                # (see FIX D above).
+                website_extraction_result = None
                 try:
                     website_text = (
                         website_text_for_match
                         if website_text_for_match is not None
                         else fetch_website_text(detected_url)
                     )
-                    website_keywords = extract_keywords_from_website(query, detected_url, website_text)
+                    website_extraction_result = extract_keywords_from_website(query, detected_url, website_text)
                 except Exception as exc:
                     log.warning(f"Website fetch/keyword-extraction failed for url={detected_url!r}: {exc}")
-                    website_keywords = None
-                if website_keywords:
-                    routed_keywords = website_keywords
-                    log.info(f"Website-derived keywords used | url={detected_url!r} | keywords={routed_keywords}")
-
-                try:
-                    structured = website_intelligence.summarize_website_structured(
-                        website_text, call_claude_fn=_call_claude
+                    website_extraction_result = None
+                if website_extraction_result:
+                    website_keywords = website_extraction_result.get("keywords")
+                    if website_keywords:
+                        routed_keywords = website_keywords
+                        log.info(f"Website-derived keywords used | url={detected_url!r} | keywords={routed_keywords}")
+                    website_answer_context = website_intelligence.format_structured_summary_for_answer(
+                        website_extraction_result.get("structured_summary")
                     )
-                    website_answer_context = website_intelligence.format_structured_summary_for_answer(structured)
-                except Exception as exc:
-                    log.warning(f"Structured website summary failed for url={detected_url!r}: {exc}")
-                    website_answer_context = None
             elif topic_match_result["topic_matches_website"] is True:
                 # Topic genuinely connects to the website — use the
                 # keywords produced by the SAME call, exactly like
                 # extract_keywords_from_website()'s existing output is
-                # used today.
+                # used today. The structured summary also comes straight
+                # from this SAME call's own "structured_summary" field —
+                # no separate summarize_website_structured() call needed.
                 if topic_match_result.get("keywords"):
                     routed_keywords = topic_match_result["keywords"]
                     log.info(
                         f"Topic-vs-website match confirmed | url={detected_url!r} | "
                         f"keywords={routed_keywords}"
                     )
-
-                # (STRUCTURED WEBSITE SUMMARY) Same additive-only pattern
-                # as the BEHAVIOR 2 branch above — never blocks or fails
-                # this path; reuses website_text_for_match, already fetched
-                # earlier in this same branch.
-                try:
-                    structured = website_intelligence.summarize_website_structured(
-                        website_text_for_match, call_claude_fn=_call_claude
-                    )
-                    website_answer_context = website_intelligence.format_structured_summary_for_answer(structured)
-                except Exception as exc:
-                    log.warning(f"Structured website summary failed for url={detected_url!r}: {exc}")
-                    website_answer_context = None
+                website_answer_context = website_intelligence.format_structured_summary_for_answer(
+                    topic_match_result.get("structured_summary")
+                )
             else:
                 # BEHAVIOR 3's actual trigger — the stated topic does NOT
                 # connect to this website: tell the user plainly instead
