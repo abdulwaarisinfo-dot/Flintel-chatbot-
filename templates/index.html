@@ -2551,10 +2551,25 @@
       // already handles the "grayed out, not gone" visual state via the
       // existing .submit-btn:disabled / disabled-input styling — no new
       // CSS needed).
+      //
+      // (SEARCH-BOX-JUMPS-POSITION FIX) Using the .hidden class here
+      // (display: none) COLLAPSES these elements' layout space entirely.
+      // #hero-wrap's own container (.content-wrap) vertically centers its
+      // content (display:flex; align-items:center; justify-content:center;
+      // min-height:663px) — so once the eyebrow/headline/explore-panel's
+      // height disappears, the much-shorter remaining content (just the
+      // search form) re-centers into the middle of that box, visibly
+      // floating higher up than its real, final position — then jumps
+      // down once navigateTo()'s swap replaces it with chat.html's
+      // bottom-docked layout. Using inline visibility:hidden instead
+      // makes these elements invisible WITHOUT collapsing their layout
+      // space, so the search form's height/position never shifts at all
+      // during the loading transition — no jump, no CSS class definition
+      // touched (this is a plain inline style, not a class).
       const heroWrap = document.getElementById('hero-wrap');
       if (heroWrap) {
         heroWrap.querySelectorAll('.eyebrow, .headline, .explore-panel').forEach((el) => {
-          el.classList.add('hidden');
+          el.style.visibility = 'hidden';
         });
       }
 
