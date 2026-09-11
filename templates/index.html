@@ -964,7 +964,7 @@
           </div>
 
           {% elif msg.claude_answer %}
-          <div class="answer-wrap">
+          <div class="answer-wrap" data-matched-results="{{ (msg.results or []) | tojson | e }}">
             <div class="answer-raw">{{ msg.claude_answer }}</div>
             <div class="answer-rendered"></div>
           </div>
@@ -1498,7 +1498,7 @@
     return a;
   }
 
-  function renderNoResults(data, container) {
+  function renderNoResults(data, container, matchedResults) {
     const message = document.createElement('p');
     message.className = 'block-text';
     message.textContent = data.message || '';
@@ -1568,14 +1568,55 @@
       p.textContent = data.clarifying_question;
       container.appendChild(p);
     }
+
+    renderClosestMatchesFromResults(matchedResults, container);
   }
 
-  function renderSimpleMessage(data, container, iconSvg) {
+  function renderClosestMatchesFromResults(matchedResults, container) {
+    // (BUG 2b FRONTEND COMPLETION — additive only, no new CSS/design)
+    // Backend's _finalize_answer_and_results() now keeps real matched
+    // posts instead of discarding them whenever Claude's own analysis
+    // picked a "no_data" format — this is what actually SHOWS those
+    // posts to the user. Raw signal objects only ever carry
+    // {title, post_text, post_url, platform} (see get_matched_signals()
+    // in index.py) — mapped here onto the exact same {title, summary,
+    // link} shape buildPostBlock()/renderPlatformsList() already expect
+    // and render everywhere else in this file, so this reuses the
+    // IDENTICAL existing visual design (same classes, same layout) with
+    // zero new styling. sentiment/source aren't computed for these raw
+    // fallback matches, so those fields are simply left out —
+    // buildPostBlock() already skips them gracefully when absent.
+    if (!Array.isArray(matchedResults) || matchedResults.length === 0) return;
+
+    const grouped = {};
+    matchedResults.forEach((r) => {
+      const key = normalizePlatform(r.platform);
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push({ title: r.title, summary: r.post_text, link: r.post_url });
+    });
+
+    const heading = document.createElement('p');
+    heading.className = 'metrics-section-title';
+    heading.style.marginTop = '40px';
+    heading.textContent = 'Closest matches found';
+    container.appendChild(heading);
+
+    const platforms = Object.keys(grouped).map((key) => ({
+      platform: key,
+      shown_count: grouped[key].length,
+      total_analyzed: grouped[key].length,
+      posts: grouped[key],
+    }));
+    renderPlatformsList(platforms, container);
+  }
+
+  function renderSimpleMessage(data, container, iconSvg, matchedResults) {
     const card = document.createElement('div');
     card.className = 'state-card';
     card.innerHTML = `<span class="state-icon-badge">${iconSvg}</span><p class="state-body"></p>`;
     card.querySelector('.state-body').textContent = data.message || '';
     container.appendChild(card);
+    renderClosestMatchesFromResults(matchedResults, container);
   }
   const NOT_AVAILABLE_ICON = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 8V13M12 16.5H12.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>';
   const DISALLOWED_ICON = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M6 6L18 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
@@ -1669,13 +1710,25 @@
         renderedEl.innerHTML = '';
         try {
           renderWebsiteContext(data.website_context, renderedEl);
+          // (BUG 2b FRONTEND COMPLETION) Parsed once here from the wrap's
+          // own data-matched-results attribute (set either by the Jinja
+          // template on page load, or by wireUpStream()'s done handler
+          // for a freshly-streamed answer) — only the "no_data" formats
+          // below actually use this; every other format ignores it
+          // exactly as before.
+          let matchedResults = [];
+          try {
+            matchedResults = JSON.parse(wrap.dataset.matchedResults || '[]');
+          } catch (e) {
+            matchedResults = [];
+          }
           switch (data.format) {
             case 'source_list':   renderSourceList(data, renderedEl); break;
             case 'trend_report':  renderTrendReport(data, renderedEl); break;
             case 'comparison':    renderComparison(data, renderedEl); break;
-            case 'no_results':    renderNoResults(data, renderedEl); break;
-            case 'not_available': renderSimpleMessage(data, renderedEl, NOT_AVAILABLE_ICON); break;
-            case 'disallowed':    renderSimpleMessage(data, renderedEl, DISALLOWED_ICON); break;
+            case 'no_results':    renderNoResults(data, renderedEl, matchedResults); break;
+            case 'not_available': renderSimpleMessage(data, renderedEl, NOT_AVAILABLE_ICON, matchedResults); break;
+            case 'disallowed':    renderSimpleMessage(data, renderedEl, DISALLOWED_ICON, matchedResults); break;
             default:
               console.warn('Unknown answer format:', data.format);
               renderedEl.textContent = raw;
@@ -2113,12 +2166,75 @@
       if (btn) btn.disabled = e.target.value.trim().length === 0;
     }
   });
+  // (SERVER-REFRESH BUG FIX) This used to just disable the button and let
+  // the browser's real, native POST "proceed normally, not intercepted" —
+  // a leftover from before this form's submission was ever handled via
+  // AJAX at all. Once wireUpHeroSoftSearchSubmit() was later added to
+  // intercept this SAME form's submission with its own DIRECT listener
+  // (form.addEventListener), this comment/behavior was never updated to
+  // match — meaning if that direct listener ever failed to attach for any
+  // reason (a wiring/lifecycle timing issue), THIS delegated listener was
+  // the one that actually ran, and since it never called
+  // preventDefault(), the form fell through to a REAL native POST +
+  // browser navigation/reload every time. That is exactly the "server
+  // refresh on home-page submit" bug — a real, working (non-erroring)
+  // fallback code path, not a crash, which is why no console error or
+  // warning ever appeared for it.
+  //
+  // Fix: handle the home-page (hero) search submission HERE instead —
+  // a delegated listener on `document` is bound ONCE and can never fail
+  // to "attach" the way a listener on a specific, possibly-replaced form
+  // element can. This is the exact same robust pattern the "/chats/new"
+  // delegated listener above already uses reliably. The within-chat
+  // docked-follow-up case (.thread-inner present) is untouched — that
+  // continues to be handled entirely by wireUpSoftSearchSubmit()'s own,
+  // already-working direct listener, exactly as before.
   document.addEventListener('submit', (e) => {
-    if (e.target.id === 'search-form') {
-      const btn = document.getElementById('submit-btn');
-      if (btn) btn.disabled = true; // real POST proceeds normally, not intercepted
-    }
+    if (e.target.id !== 'search-form') return;
+    const form = e.target;
+    const conversationArea = document.getElementById('conversation-area');
+    const threadInner = document.querySelector('.thread-inner');
+    // Only handle the home-page (hero) case here — #conversation-area only
+    // exists in index.html's own template, never in chat.html's swapped-in
+    // markup. If we're already inside a chat (.thread-inner present),
+    // leave this submission alone entirely; wireUpSoftSearchSubmit()'s own
+    // listener already handles it correctly.
+    if (!conversationArea || threadInner) return;
+
+    e.preventDefault();
+    const searchInput = document.getElementById('search-input');
+    const query = searchInput ? searchInput.value.trim() : '';
+    if (!query) return;
+
+    // (NO-VISIBLE-WAIT-STATE FIX) The homepage must show ZERO visible
+    // change while the backend does its own routing work — no disabled/
+    // grayed search box, no spinner, no hidden headline/explore panel.
+    // The user should submit and then land directly on the real chat
+    // page the moment navigateTo()'s swap below completes, with nothing
+    // different to look at on the homepage itself in between. A simple,
+    // purely-internal flag (not tied to any visible styling) still
+    // prevents a double-submit if the button is clicked twice quickly —
+    // it just never shows up as anything on screen.
+    if (form.dataset.heroSubmitInFlight === 'true') return;
+    form.dataset.heroSubmitInFlight = 'true';
+
+    const formData = new FormData(form);
+
+    navigateTo(form.action, {
+      method: 'POST',
+      body: formData,
+      fallbackForm: form,
+      // (BUSY-LOCK) Runs instead of the normal swap if the backend
+      // declined this request — restore what the user typed and clear
+      // the in-flight flag so they can try again right away once their
+      // other request finishes.
+      onBusyDecline: (errorText) => {
+        showSearchInlineError(errorText, query);
+        form.dataset.heroSubmitInFlight = 'false';
+      },
+    });
   });
+
   // Docked follow-up input lives OUTSIDE <main> — set its initial disabled
   // state once here; it never needs re-syncing after a soft nav.
   const followupInputEl = document.getElementById('followup-input');
@@ -2282,6 +2398,12 @@
         if (loadingRow) {
           const wrap = document.createElement('div');
           wrap.className = 'answer-wrap stream-reveal';
+          // (FRONTEND CLOSEST-MATCHES FEATURE) Same data-matched-results
+          // convention the Jinja-rendered case uses — payload.results is
+          // the new, additive field the backend's SSE "done" event now
+          // includes, so a freshly-streamed answer's post cards render
+          // the exact same way a page-loaded one already does.
+          wrap.dataset.matchedResults = JSON.stringify(payload.results || []);
           const rawDiv = document.createElement('div');
           rawDiv.className = 'answer-raw';
           rawDiv.textContent = accumulated;
@@ -2496,129 +2618,26 @@
   // .thread-inner and a hero #conversation-area at once), so there's no
   // risk of both wiring the same form.
   function wireUpHeroSoftSearchSubmit() {
-    const form = document.getElementById('search-form');
-    const conversationArea = document.getElementById('conversation-area');
-    if (!form || !conversationArea) return;
-    if (form.dataset.heroSoftSubmitWired === 'true') return; // same idempotency guard as wireUpSoftSearchSubmit()
-    form.dataset.heroSoftSubmitWired = 'true';
-
-    // (REBUILT — same fix pattern already proven for chat.html) This used
-    // to manually reconstruct the post-search page state piece by piece
-    // (append the new turn, patch the topbar title, patch the sidebar,
-    // decide which parts of the hero to hide, wire the stream...) — and
-    // every one of those pieces was a separate place a fix could be
-    // incomplete, which is exactly what kept happening (a missing search
-    // box, a missing topbar title, and other pieces still wrong after
-    // that). A real page refresh was always correct because it just gets
-    // the actual server-rendered page in full — so instead of chasing
-    // each new missing piece individually, this now does the SAME thing
-    // navigateTo() already does for every other soft navigation in this
-    // app: fetch the real response and swap the ENTIRE <main> (plus the
-    // style tag, sidebar, title, and re-wiring) in one shot, exactly
-    // matching what a refresh produces, with nothing left to patch by hand.
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const searchInput = document.getElementById('search-input');
-      const query = searchInput ? searchInput.value.trim() : '';
-      if (!query) return;
-      // (LOADING STATE) Set right away — navigateTo()'s own successful
-      // swap either finds a pending-stream turn (in which case
-      // wireUpInitialPendingStream()/wireUpStream() inside it keep this on
-      // until that stream finishes, per the fix to navigateTo()'s own
-      // final disabled-check above) or finds none, in which case that
-      // same final check correctly turns loading back off. Nothing extra
-      // needs to happen here after navigateTo() resolves.
-      //
-      // (422 FIX) FormData MUST be captured BEFORE setSubmitLoading(true)
-      // — that call disables search-input, and a disabled field is
-      // excluded from FormData entirely, so building it inline inside the
-      // navigateTo() call below (after loading was already set) would
-      // silently drop the "query" field and fail the backend's required
-      // Form(...) validation with 422.
-      const formData = new FormData(form);
-      setSubmitLoading(true);
-
-      // (BUG FIX) Instant feedback — the search box no longer sits idle
-      // for the several seconds the backend's own synchronous Claude
-      // routing call can take before it even redirects. Immediately hide
-      // the hero LANDING content (headline/explore-panel) and show a
-      // chat-like "thinking" state — BEFORE the fetch resolves.
-      // navigateTo()'s own full <main> swap below replaces all of this
-      // with the real server-rendered content once the response comes
-      // back, exactly as it already does for every other soft navigation.
-      //
-      // (SEARCH-BOX-DISAPPEARS FIX) This used to hide the ENTIRE
-      // #hero-wrap — but #hero-wrap is the SAME container that holds
-      // #search-form itself (headline, search box, and explore panel all
-      // live inside it together), and there is no docked search box
-      // visible on the hero page (.docked-input-wrap is CSS
-      // display:none by design — nothing ever toggles it visible). So
-      // hiding the whole wrap made the ONLY visible search input on the
-      // page disappear entirely for the full duration of the backend
-      // request. Only the landing pieces (eyebrow, headline, explore
-      // panel) are hidden now — #search-form itself is left untouched,
-      // staying visibly in place the whole time, just disabled/grayed via
-      // the same setSubmitLoading(true) call already made above (which
-      // already handles the "grayed out, not gone" visual state via the
-      // existing .submit-btn:disabled / disabled-input styling — no new
-      // CSS needed).
-      //
-      // (SEARCH-BOX-JUMPS-POSITION FIX) Using the .hidden class here
-      // (display: none) COLLAPSES these elements' layout space entirely.
-      // #hero-wrap's own container (.content-wrap) vertically centers its
-      // content (display:flex; align-items:center; justify-content:center;
-      // min-height:663px) — so once the eyebrow/headline/explore-panel's
-      // height disappears, the much-shorter remaining content (just the
-      // search form) re-centers into the middle of that box, visibly
-      // floating higher up than its real, final position — then jumps
-      // down once navigateTo()'s swap replaces it with chat.html's
-      // bottom-docked layout. Using inline visibility:hidden instead
-      // makes these elements invisible WITHOUT collapsing their layout
-      // space, so the search form's height/position never shifts at all
-      // during the loading transition — no jump, no CSS class definition
-      // touched (this is a plain inline style, not a class).
-      const heroWrap = document.getElementById('hero-wrap');
-      if (heroWrap) {
-        heroWrap.querySelectorAll('.eyebrow, .headline, .explore-panel').forEach((el) => {
-          el.style.visibility = 'hidden';
-        });
-      }
-
-      // (DOUBLE-LAYOUT FLASH FIX) This used to also build an optimistic
-      // turn-block (question bubble + loading row) and append it into
-      // #conversation-area for instant feedback. The problem: that
-      // container belongs to index.html's OWN hero-page layout (narrower,
-      // centered) — it is never part of the <main> that survives
-      // navigateTo()'s swap below, which replaces the entire <main> with
-      // chat.html's fetched markup (.thread-wrap, wider, with a docked
-      // input). So the optimistic turn was necessarily shown once in the
-      // WRONG layout, then discarded and effectively redrawn in the
-      // correct one a moment later — a jarring "double layout" flash as
-      // the same turn visually relocated mid-transition.
-      //
-      // Fix: don't render anything into #conversation-area for this case
-      // at all. The search box itself already gives instant feedback —
-      // setSubmitLoading(true) above disables it and shows the spinner
-      // (.submit-btn.loading, already defined) immediately — so the user
-      // still knows their submission was received. The real turn then
-      // renders exactly once, in its correct final layout, the moment
-      // navigateTo()'s swap completes below. Trades "see your exact turn
-      // text immediately" for "never see it in the wrong layout."
-
-      navigateTo(form.action, {
-        method: 'POST',
-        body: formData,
-        fallbackForm: form,
-        // (BUSY-LOCK) Runs instead of the normal swap if the backend
-        // declined this request — restore what the user typed, show the
-        // inline warning, and unlock the box so they can try again right
-        // away once their other request finishes.
-        onBusyDecline: (errorText) => {
-          showSearchInlineError(errorText, query);
-          setSubmitLoading(false);
-        },
-      });
-    });
+    // (SERVER-REFRESH BUG FIX) This used to attach a DIRECT listener to
+    // the #search-form element itself (form.addEventListener) — fragile,
+    // because a listener attached to a SPECIFIC element only works for as
+    // long as that exact element is never replaced, and needs this whole
+    // function re-invoked correctly every single time to keep working.
+    // If that ever failed to happen/attach for any reason, the form had
+    // no listener intercepting it at all, and its submission fell through
+    // to the browser's own default, real POST + page navigation — the
+    // "server refresh on home-page submit" bug.
+    //
+    // All of that logic has been moved into a delegated
+    // document.addEventListener('submit', ...) listener instead (see
+    // above, right next to the existing "/chats/new" delegated listener,
+    // which already uses this exact same robust pattern reliably) — a
+    // listener on `document` is bound ONCE and can never fail to
+    // "attach" the way a listener on a specific, possibly-replaced form
+    // element can. This function is kept as a no-op purely so its
+    // existing call sites (below, and inside navigateTo()'s re-init)
+    // don't need to be hunted down and removed — it has nothing left to
+    // do.
   }
 
   wireUpInitialPendingStream();
