@@ -318,18 +318,35 @@ def build_unfiltered_answer_context(query: str, time_window_days: int) -> str:
     """Returns a short instruction string index.py's analyze_with_claude()
     appends to its existing user-message context (NOT a new system prompt)
     when the message being answered was an unfiltered/topic-less pull.
-    Kept short (2-3 sentences) so it composes cleanly with
-    CLAUDE_ANALYSIS_SYSTEM_PROMPT's own existing instructions without
-    duplicating anything already said there."""
+    Kept short so it composes cleanly with CLAUDE_ANALYSIS_SYSTEM_PROMPT's
+    own existing instructions without duplicating anything already said
+    there.
+
+    (BUGFIX 2a) Previously this only described the request as topic-less
+    without addressing CLAUDE_ANALYSIS_SYSTEM_PROMPT's general "no
+    coherent theme -> no_results" heuristic — so a genuinely successful
+    unfiltered pull (e.g. a stock-trading post, a furniture post, and a
+    festival-pass post, none related to each other) got misclassified as
+    "no_results" simply because the posts didn't share a theme, even
+    though real posts were found. This now explicitly overrides that
+    heuristic for this specific case: no shared theme is expected and
+    normal here, never a reason for "no_results" on its own."""
     window_desc = f"the last {time_window_days} day{'s' if time_window_days != 1 else ''}"
     return (
         f"Note: this request named no specific brand, product, or topic — "
         f"it's a general, time-scoped pull covering {window_desc}, not "
-        f"filtered to anything in particular. After summarizing what's in "
-        f"the posts, close with a natural, professional invitation for the "
-        f"user to name a topic, brand, or industry (or share their website "
-        f"link) next time for more targeted results — vary the wording, "
-        f"don't sound like a canned disclaimer.\n\n{_pick_invite_line(query)}"
+        f"filtered to anything in particular. Because of that, the matched "
+        f"posts having NO common theme or topic with each other is EXPECTED "
+        f"and NORMAL for this kind of request — it is NOT a valid reason to "
+        f"choose the \"no_results\" format. If posts were matched, use the "
+        f"\"source_list\" format (\"ranked\": false) and simply present them "
+        f"grouped by platform, even though they're unrelated to one "
+        f"another. Only use \"no_results\" if the post list you were given "
+        f"is genuinely empty. After presenting whatever was found, close "
+        f"with a natural, professional invitation for the user to name a "
+        f"topic, brand, or industry (or share their website link) next "
+        f"time for more targeted results — vary the wording, don't sound "
+        f"like a canned disclaimer.\n\n{_pick_invite_line(query)}"
     )
 
 
