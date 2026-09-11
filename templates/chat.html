@@ -800,7 +800,7 @@
             </div>
 
             {% elif msg.claude_answer %}
-            <div class="answer-wrap">
+            <div class="answer-wrap" data-matched-results="{{ (msg.results or []) | tojson | e }}">
               <div class="answer-raw">{{ msg.claude_answer }}</div>
               <div class="answer-rendered"></div>
             </div>
@@ -1634,7 +1634,7 @@
     return a;
   }
 
-  function renderNoResults(data, container) {
+  function renderNoResults(data, container, matchedResults) {
     const message = document.createElement('p');
     message.className = 'block-text';
     message.textContent = data.message || '';
@@ -1708,14 +1708,55 @@
       p.textContent = data.clarifying_question;
       container.appendChild(p);
     }
+
+    renderClosestMatchesFromResults(matchedResults, container);
   }
 
-  function renderSimpleMessage(data, container, iconSvg) {
+  function renderClosestMatchesFromResults(matchedResults, container) {
+    // (BUG 2b FRONTEND COMPLETION — additive only, no new CSS/design)
+    // Backend's _finalize_answer_and_results() now keeps real matched
+    // posts instead of discarding them whenever Claude's own analysis
+    // picked a "no_data" format — this is what actually SHOWS those
+    // posts to the user. Raw signal objects only ever carry
+    // {title, post_text, post_url, platform} (see get_matched_signals()
+    // in index.py) — mapped here onto the exact same {title, summary,
+    // link} shape buildPostBlock()/renderPlatformsList() already expect
+    // and render everywhere else in this file, so this reuses the
+    // IDENTICAL existing visual design (same classes, same layout) with
+    // zero new styling. sentiment/source aren't computed for these raw
+    // fallback matches, so those fields are simply left out —
+    // buildPostBlock() already skips them gracefully when absent.
+    if (!Array.isArray(matchedResults) || matchedResults.length === 0) return;
+
+    const grouped = {};
+    matchedResults.forEach((r) => {
+      const key = normalizePlatform(r.platform);
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push({ title: r.title, summary: r.post_text, link: r.post_url });
+    });
+
+    const heading = document.createElement('p');
+    heading.className = 'metrics-section-title';
+    heading.style.marginTop = '40px';
+    heading.textContent = 'Closest matches found';
+    container.appendChild(heading);
+
+    const platforms = Object.keys(grouped).map((key) => ({
+      platform: key,
+      shown_count: grouped[key].length,
+      total_analyzed: grouped[key].length,
+      posts: grouped[key],
+    }));
+    renderPlatformsList(platforms, container);
+  }
+
+  function renderSimpleMessage(data, container, iconSvg, matchedResults) {
     const card = document.createElement('div');
     card.className = 'state-card';
     card.innerHTML = `<span class="state-icon-badge">${iconSvg}</span><p class="state-body"></p>`;
     card.querySelector('.state-body').textContent = data.message || '';
     container.appendChild(card);
+    renderClosestMatchesFromResults(matchedResults, container);
   }
   const NOT_AVAILABLE_ICON = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 8V13M12 16.5H12.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>';
   const DISALLOWED_ICON = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M6 6L18 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
@@ -1804,13 +1845,25 @@
       renderedEl.innerHTML = '';
       try {
         renderWebsiteContext(data.website_context, renderedEl);
+        // (BUG 2b FRONTEND COMPLETION) Parsed once here from the wrap's
+        // own data-matched-results attribute (set either by the Jinja
+        // template on page load, or by wireUpStream()'s done handler for
+        // a freshly-streamed answer) — only the "no_data" formats below
+        // actually use this; every other format ignores it exactly as
+        // before.
+        let matchedResults = [];
+        try {
+          matchedResults = JSON.parse(wrap.dataset.matchedResults || '[]');
+        } catch (e) {
+          matchedResults = [];
+        }
         switch (data.format) {
           case 'source_list':   renderSourceList(data, renderedEl); break;
           case 'trend_report':  renderTrendReport(data, renderedEl); break;
           case 'comparison':    renderComparison(data, renderedEl); break;
-          case 'no_results':    renderNoResults(data, renderedEl); break;
-          case 'not_available': renderSimpleMessage(data, renderedEl, NOT_AVAILABLE_ICON); break;
-          case 'disallowed':    renderSimpleMessage(data, renderedEl, DISALLOWED_ICON); break;
+          case 'no_results':    renderNoResults(data, renderedEl, matchedResults); break;
+          case 'not_available': renderSimpleMessage(data, renderedEl, NOT_AVAILABLE_ICON, matchedResults); break;
+          case 'disallowed':    renderSimpleMessage(data, renderedEl, DISALLOWED_ICON, matchedResults); break;
           default:
             console.warn('Unknown answer format:', data.format);
             renderedEl.textContent = raw;
@@ -2004,6 +2057,13 @@
         if (loadingRow) {
           const wrap = document.createElement('div');
           wrap.className = 'answer-wrap stream-reveal';
+          // (FRONTEND CLOSEST-MATCHES FEATURE) Same data-matched-results
+          // convention the Jinja-rendered case uses (see the
+          // {% elif msg.claude_answer %} branch above) — payload.results
+          // is the new, additive field the backend's SSE "done" event now
+          // includes, so a freshly-streamed answer's post cards render
+          // the exact same way a page-loaded one already does.
+          wrap.dataset.matchedResults = JSON.stringify(payload.results || []);
           const rawDiv = document.createElement('div');
           rawDiv.className = 'answer-raw';
           rawDiv.textContent = accumulated;
