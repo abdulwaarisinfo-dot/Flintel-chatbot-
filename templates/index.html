@@ -1740,7 +1740,7 @@
   // and needed the same protection.
   let softNavGeneration = 0;
 
-  async function navigateTo(url, { method = 'GET', pushState = true, body = undefined, fallbackForm = undefined, onBusyDecline = undefined } = {}) {
+  async function navigateTo(url, { method = 'GET', pushState = true, body = undefined, fallbackForm = undefined, onBusyDecline = undefined, revealOnSwap = false } = {}) {
     // (RACE-CONDITION FIX) Snapshot the generation counter for THIS
     // navigation right away — anything that happens after any subsequent
     // await in this function checks against this snapshot before touching
@@ -1819,6 +1819,23 @@
         currentStyleTag.textContent = newStyleTag.textContent;
       }
       currentMain.innerHTML = newMain.innerHTML;
+      // (SMOOTH-HERO-TRANSITION FIX) Only applied when the caller opts in
+      // via revealOnSwap (currently just wireUpHeroSoftSearchSubmit()'s
+      // first-message-from-home case) — every other soft navigation
+      // through this shared function (session clicks, "New chat", etc.)
+      // is completely unaffected and keeps its existing instant-swap
+      // behavior. Reuses the SAME .stream-reveal entrance animation
+      // already used elsewhere for a new answer arriving, so the whole
+      // newly-swapped page (the user's own question, followed by the
+      // loading state) fades/slides in gently instead of appearing as an
+      // abrupt instant cut — directly addressing the "sudden jump after a
+      // frozen pause" complaint for this specific transition.
+      if (revealOnSwap) {
+        currentMain.classList.add('stream-reveal');
+        currentMain.addEventListener('animationend', () => {
+          currentMain.classList.remove('stream-reveal');
+        }, { once: true });
+      }
       if (newSessionsList && currentSessionsList) {
         currentSessionsList.innerHTML = newSessionsList.innerHTML;
       }
@@ -2113,75 +2130,12 @@
       if (btn) btn.disabled = e.target.value.trim().length === 0;
     }
   });
-  // (SERVER-REFRESH BUG FIX) This used to just disable the button and let
-  // the browser's real, native POST "proceed normally, not intercepted" —
-  // a leftover from before this form's submission was ever handled via
-  // AJAX at all. Once wireUpHeroSoftSearchSubmit() was later added to
-  // intercept this SAME form's submission with its own DIRECT listener
-  // (form.addEventListener), this comment/behavior was never updated to
-  // match — meaning if that direct listener ever failed to attach for any
-  // reason (a wiring/lifecycle timing issue), THIS delegated listener was
-  // the one that actually ran, and since it never called
-  // preventDefault(), the form fell through to a REAL native POST +
-  // browser navigation/reload every time. That is exactly the "server
-  // refresh on home-page submit" bug — a real, working (non-erroring)
-  // fallback code path, not a crash, which is why no console error or
-  // warning ever appeared for it.
-  //
-  // Fix: handle the home-page (hero) search submission HERE instead —
-  // a delegated listener on `document` is bound ONCE and can never fail
-  // to "attach" the way a listener on a specific, possibly-replaced form
-  // element can. This is the exact same robust pattern the "/chats/new"
-  // delegated listener above already uses reliably. The within-chat
-  // docked-follow-up case (.thread-inner present) is untouched — that
-  // continues to be handled entirely by wireUpSoftSearchSubmit()'s own,
-  // already-working direct listener, exactly as before.
   document.addEventListener('submit', (e) => {
-    if (e.target.id !== 'search-form') return;
-    const form = e.target;
-    const conversationArea = document.getElementById('conversation-area');
-    const threadInner = document.querySelector('.thread-inner');
-    // Only handle the home-page (hero) case here — #conversation-area only
-    // exists in index.html's own template, never in chat.html's swapped-in
-    // markup. If we're already inside a chat (.thread-inner present),
-    // leave this submission alone entirely; wireUpSoftSearchSubmit()'s own
-    // listener already handles it correctly.
-    if (!conversationArea || threadInner) return;
-
-    e.preventDefault();
-    const searchInput = document.getElementById('search-input');
-    const query = searchInput ? searchInput.value.trim() : '';
-    if (!query) return;
-
-    // (NO-VISIBLE-WAIT-STATE FIX) The homepage must show ZERO visible
-    // change while the backend does its own routing work — no disabled/
-    // grayed search box, no spinner, no hidden headline/explore panel.
-    // The user should submit and then land directly on the real chat
-    // page the moment navigateTo()'s swap below completes, with nothing
-    // different to look at on the homepage itself in between. A simple,
-    // purely-internal flag (not tied to any visible styling) still
-    // prevents a double-submit if the button is clicked twice quickly —
-    // it just never shows up as anything on screen.
-    if (form.dataset.heroSubmitInFlight === 'true') return;
-    form.dataset.heroSubmitInFlight = 'true';
-
-    const formData = new FormData(form);
-
-    navigateTo(form.action, {
-      method: 'POST',
-      body: formData,
-      fallbackForm: form,
-      // (BUSY-LOCK) Runs instead of the normal swap if the backend
-      // declined this request — restore what the user typed and clear
-      // the in-flight flag so they can try again right away once their
-      // other request finishes.
-      onBusyDecline: (errorText) => {
-        showSearchInlineError(errorText, query);
-        form.dataset.heroSubmitInFlight = 'false';
-      },
-    });
+    if (e.target.id === 'search-form') {
+      const btn = document.getElementById('submit-btn');
+      if (btn) btn.disabled = true; // real POST proceeds normally, not intercepted
+    }
   });
-
   // Docked follow-up input lives OUTSIDE <main> — set its initial disabled
   // state once here; it never needs re-syncing after a soft nav.
   const followupInputEl = document.getElementById('followup-input');
@@ -2514,7 +2468,15 @@
         const latestTurn = allNewTurns[allNewTurns.length - 1];
         if (!latestTurn) throw new Error('No turn-block found in response');
 
-        if (searchInput) searchInput.value = '';
+        // (STALE-INPUT FIX) Re-query #search-input fresh here instead of
+        // using the `searchInput` reference closured at setup time — this
+        // is the exact same "always re-query fresh" pattern already used
+        // by setSubmitLoading() elsewhere in this file, and fixes the
+        // typed query staying visibly stuck in the box the whole time a
+        // search is processing (the closured reference could point to a
+        // node that's no longer the one actually visible on screen).
+        const freshSearchInputToClear = document.getElementById('search-input');
+        if (freshSearchInputToClear) freshSearchInputToClear.value = '';
 
         latestTurn.classList.add('stream-reveal');
         const liveThreadInner = document.querySelector('.thread-inner') || threadInner;
@@ -2559,26 +2521,134 @@
   // .thread-inner and a hero #conversation-area at once), so there's no
   // risk of both wiring the same form.
   function wireUpHeroSoftSearchSubmit() {
-    // (SERVER-REFRESH BUG FIX) This used to attach a DIRECT listener to
-    // the #search-form element itself (form.addEventListener) — fragile,
-    // because a listener attached to a SPECIFIC element only works for as
-    // long as that exact element is never replaced, and needs this whole
-    // function re-invoked correctly every single time to keep working.
-    // If that ever failed to happen/attach for any reason, the form had
-    // no listener intercepting it at all, and its submission fell through
-    // to the browser's own default, real POST + page navigation — the
-    // "server refresh on home-page submit" bug.
-    //
-    // All of that logic has been moved into a delegated
-    // document.addEventListener('submit', ...) listener instead (see
-    // above, right next to the existing "/chats/new" delegated listener,
-    // which already uses this exact same robust pattern reliably) — a
-    // listener on `document` is bound ONCE and can never fail to
-    // "attach" the way a listener on a specific, possibly-replaced form
-    // element can. This function is kept as a no-op purely so its
-    // existing call sites (below, and inside navigateTo()'s re-init)
-    // don't need to be hunted down and removed — it has nothing left to
-    // do.
+    const form = document.getElementById('search-form');
+    const conversationArea = document.getElementById('conversation-area');
+    if (!form || !conversationArea) return;
+    if (form.dataset.heroSoftSubmitWired === 'true') return; // same idempotency guard as wireUpSoftSearchSubmit()
+    form.dataset.heroSoftSubmitWired = 'true';
+
+    // (REBUILT — same fix pattern already proven for chat.html) This used
+    // to manually reconstruct the post-search page state piece by piece
+    // (append the new turn, patch the topbar title, patch the sidebar,
+    // decide which parts of the hero to hide, wire the stream...) — and
+    // every one of those pieces was a separate place a fix could be
+    // incomplete, which is exactly what kept happening (a missing search
+    // box, a missing topbar title, and other pieces still wrong after
+    // that). A real page refresh was always correct because it just gets
+    // the actual server-rendered page in full — so instead of chasing
+    // each new missing piece individually, this now does the SAME thing
+    // navigateTo() already does for every other soft navigation in this
+    // app: fetch the real response and swap the ENTIRE <main> (plus the
+    // style tag, sidebar, title, and re-wiring) in one shot, exactly
+    // matching what a refresh produces, with nothing left to patch by hand.
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const searchInput = document.getElementById('search-input');
+      const query = searchInput ? searchInput.value.trim() : '';
+      if (!query) return;
+      // (LOADING STATE) Set right away — navigateTo()'s own successful
+      // swap either finds a pending-stream turn (in which case
+      // wireUpInitialPendingStream()/wireUpStream() inside it keep this on
+      // until that stream finishes, per the fix to navigateTo()'s own
+      // final disabled-check above) or finds none, in which case that
+      // same final check correctly turns loading back off. Nothing extra
+      // needs to happen here after navigateTo() resolves.
+      //
+      // (422 FIX) FormData MUST be captured BEFORE setSubmitLoading(true)
+      // — that call disables search-input, and a disabled field is
+      // excluded from FormData entirely, so building it inline inside the
+      // navigateTo() call below (after loading was already set) would
+      // silently drop the "query" field and fail the backend's required
+      // Form(...) validation with 422.
+      const formData = new FormData(form);
+      setSubmitLoading(true);
+
+      // (BUG FIX) Instant feedback — the search box no longer sits idle
+      // for the several seconds the backend's own synchronous Claude
+      // routing call can take before it even redirects. Immediately hide
+      // the hero LANDING content (headline/explore-panel) and show a
+      // chat-like "thinking" state — BEFORE the fetch resolves.
+      // navigateTo()'s own full <main> swap below replaces all of this
+      // with the real server-rendered content once the response comes
+      // back, exactly as it already does for every other soft navigation.
+      //
+      // (SEARCH-BOX-DISAPPEARS FIX) This used to hide the ENTIRE
+      // #hero-wrap — but #hero-wrap is the SAME container that holds
+      // #search-form itself (headline, search box, and explore panel all
+      // live inside it together), and there is no docked search box
+      // visible on the hero page (.docked-input-wrap is CSS
+      // display:none by design — nothing ever toggles it visible). So
+      // hiding the whole wrap made the ONLY visible search input on the
+      // page disappear entirely for the full duration of the backend
+      // request. Only the landing pieces (eyebrow, headline, explore
+      // panel) are hidden now — #search-form itself is left untouched,
+      // staying visibly in place the whole time, just disabled/grayed via
+      // the same setSubmitLoading(true) call already made above (which
+      // already handles the "grayed out, not gone" visual state via the
+      // existing .submit-btn:disabled / disabled-input styling — no new
+      // CSS needed).
+      //
+      // (SEARCH-BOX-JUMPS-POSITION FIX) Using the .hidden class here
+      // (display: none) COLLAPSES these elements' layout space entirely.
+      // #hero-wrap's own container (.content-wrap) vertically centers its
+      // content (display:flex; align-items:center; justify-content:center;
+      // min-height:663px) — so once the eyebrow/headline/explore-panel's
+      // height disappears, the much-shorter remaining content (just the
+      // search form) re-centers into the middle of that box, visibly
+      // floating higher up than its real, final position — then jumps
+      // down once navigateTo()'s swap replaces it with chat.html's
+      // bottom-docked layout. Using inline visibility:hidden instead
+      // makes these elements invisible WITHOUT collapsing their layout
+      // space, so the search form's height/position never shifts at all
+      // during the loading transition — no jump, no CSS class definition
+      // touched (this is a plain inline style, not a class).
+      const heroWrap = document.getElementById('hero-wrap');
+      if (heroWrap) {
+        heroWrap.querySelectorAll('.eyebrow, .headline, .explore-panel').forEach((el) => {
+          el.style.visibility = 'hidden';
+        });
+      }
+
+      // (DOUBLE-LAYOUT FLASH FIX) This used to also build an optimistic
+      // turn-block (question bubble + loading row) and append it into
+      // #conversation-area for instant feedback. The problem: that
+      // container belongs to index.html's OWN hero-page layout (narrower,
+      // centered) — it is never part of the <main> that survives
+      // navigateTo()'s swap below, which replaces the entire <main> with
+      // chat.html's fetched markup (.thread-wrap, wider, with a docked
+      // input). So the optimistic turn was necessarily shown once in the
+      // WRONG layout, then discarded and effectively redrawn in the
+      // correct one a moment later — a jarring "double layout" flash as
+      // the same turn visually relocated mid-transition.
+      //
+      // Fix: don't render anything into #conversation-area for this case
+      // at all. The search box itself already gives instant feedback —
+      // setSubmitLoading(true) above disables it and shows the spinner
+      // (.submit-btn.loading, already defined) immediately — so the user
+      // still knows their submission was received. The real turn then
+      // renders exactly once, in its correct final layout, the moment
+      // navigateTo()'s swap completes below. Trades "see your exact turn
+      // text immediately" for "never see it in the wrong layout."
+
+      navigateTo(form.action, {
+        method: 'POST',
+        body: formData,
+        fallbackForm: form,
+        // (SMOOTH-HERO-TRANSITION FIX) Opt in to the gentle fade/slide
+        // entrance for this specific transition only — see navigateTo()'s
+        // own comment on revealOnSwap for why this doesn't affect any
+        // other soft navigation.
+        revealOnSwap: true,
+        // (BUSY-LOCK) Runs instead of the normal swap if the backend
+        // declined this request — restore what the user typed, show the
+        // inline warning, and unlock the box so they can try again right
+        // away once their other request finishes.
+        onBusyDecline: (errorText) => {
+          showSearchInlineError(errorText, query);
+          setSubmitLoading(false);
+        },
+      });
+    });
   }
 
   wireUpInitialPendingStream();
