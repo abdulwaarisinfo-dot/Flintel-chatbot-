@@ -813,7 +813,14 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
 
         def _cached():
             yield f"data: {json.dumps({'delta': cached_answer})}\n\n"
-            yield f"data: {json.dumps({'done': True})}\n\n"
+            # (FRONTEND CLOSEST-MATCHES FEATURE — additive only) Includes
+            # this message's already-saved matched results in the "done"
+            # payload, exactly like the main completion path below, so a
+            # replayed/cached answer can render its "closest matches"
+            # post cards the same way a freshly-streamed one does. New
+            # field only — the existing "done": true contract is
+            # untouched for any client that doesn't read it.
+            yield f"data: {json.dumps({'done': True, 'results': msg.get('results') or []})}\n\n"
         return StreamingResponse(_cached(), media_type="text/event-stream")
 
     try:
@@ -906,7 +913,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 except Exception as exc:
                     log.warning(f"Saving matched results failed for topic_key={topic_key}: {exc}")
 
-            yield f"data: {json.dumps({'done': True})}\n\n"
+            yield f"data: {json.dumps({'done': True, 'results': results_to_save})}\n\n"
         finally:
             _clear_owner_busy(owner_key)
 
