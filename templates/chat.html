@@ -805,7 +805,7 @@
               <div class="answer-rendered"></div>
             </div>
             {% elif msg.results %}
-            <div class="loading-row">
+            <div class="loading-row" id="loading-row-{{ msg.topic_key }}">
               <span class="loading-logo"><img src="https://www.figma.com/api/mcp/asset/9ac3df00-71a7-4d75-b3a6-1796fd320906.png" alt="" /></span>
               <div class="loading-dots"><span></span><span></span><span></span></div>
               <span class="loading-text">Got the posts — writing up the answer…</span>
@@ -1422,6 +1422,26 @@
     container.appendChild(row);
   }
 
+  function renderRankedPostsList(platforms, container) {
+    // (BUG 3 FIX) "ranked": true — one flat, sequentially-numbered list
+    // across every platform, in the exact order the backend already
+    // provided them, instead of the grouped per-platform sections with
+    // "shown_count of total_analyzed" headers. Every existing per-post
+    // field (via buildPostBlock, unchanged) stays exactly the same —
+    // only the grouping/numbering changes. buildPostBlock's own "Post N"
+    // label already does the numbering; a continuous index across the
+    // whole flattened list is what makes it "1.", "2.", "3." … instead
+    // of resetting per platform. Mirrors index.html's identical fix.
+    let i = 0;
+    (platforms || []).forEach((p) => {
+      const key = normalizePlatform(p.platform);
+      (p.posts || []).forEach((post) => {
+        container.appendChild(buildPostBlock(post, i, key));
+        i++;
+      });
+    });
+  }
+
   function renderSourceList(data, container) {
     const summary = document.createElement('p');
     summary.className = 'overview-summary';
@@ -1430,7 +1450,11 @@
     const divider = document.createElement('div');
     divider.className = 'section-divider no-top-margin';
     container.appendChild(divider);
-    renderPlatformsList(data.platforms, container);
+    if (data.ranked === true) {
+      renderRankedPostsList(data.platforms, container);
+    } else {
+      renderPlatformsList(data.platforms, container);
+    }
     renderFollowupChips(data.followups, container);
   }
 
@@ -1696,6 +1720,61 @@
   const NOT_AVAILABLE_ICON = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 8V13M12 16.5H12.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>';
   const DISALLOWED_ICON = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M6 6L18 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
 
+  function renderWebsiteContext(websiteContext, container) {
+    // (BUG 2 FIX) Fires whenever data.website_context is present,
+    // regardless of which format fired alongside it — reuses existing
+    // classes only, no new CSS: .metrics-section-title for the heading,
+    // .block-text for the overview paragraph, and the same .post-field /
+    // .field-dot / .field-text bullet-row markup used everywhere else in
+    // this file for a plain (non label:value) bullet line. Identical
+    // implementation to index.html's fix, so both files stay in sync.
+    if (!websiteContext || typeof websiteContext !== 'object') return;
+    const overview = websiteContext.overview;
+    const sections = Array.isArray(websiteContext.sections) ? websiteContext.sections : [];
+    if (!overview && sections.length === 0) return;
+
+    const heading = document.createElement('p');
+    heading.className = 'metrics-section-title';
+    heading.textContent = 'About this website';
+    container.appendChild(heading);
+
+    if (overview) {
+      const overviewEl = document.createElement('p');
+      overviewEl.className = 'block-text';
+      overviewEl.style.marginBottom = '20px';
+      overviewEl.textContent = overview;
+      container.appendChild(overviewEl);
+    }
+
+    sections.forEach((section) => {
+      if (!section || typeof section !== 'object') return;
+      const bullets = Array.isArray(section.bullets) ? section.bullets : [];
+      if (section.title) {
+        const sectionTitle = document.createElement('p');
+        sectionTitle.className = 'metrics-section-title';
+        sectionTitle.textContent = section.title;
+        container.appendChild(sectionTitle);
+      }
+      bullets.forEach((bullet) => {
+        if (!bullet) return;
+        const row = document.createElement('div');
+        row.className = 'post-field';
+        const dot = document.createElement('span');
+        dot.className = 'field-dot';
+        const text = document.createElement('span');
+        text.className = 'field-text';
+        text.textContent = bullet;
+        row.appendChild(dot);
+        row.appendChild(text);
+        container.appendChild(row);
+      });
+    });
+
+    const divider = document.createElement('div');
+    divider.className = 'divider';
+    container.appendChild(divider);
+  }
+
   function renderStructuredAnswer(wrap) {
     const rawEl = wrap.querySelector('.answer-raw');
     const renderedEl = wrap.querySelector('.answer-rendered');
@@ -1713,6 +1792,7 @@
     if (data && data.format) {
       renderedEl.innerHTML = '';
       try {
+        renderWebsiteContext(data.website_context, renderedEl);
         switch (data.format) {
           case 'source_list':   renderSourceList(data, renderedEl); break;
           case 'trend_report':  renderTrendReport(data, renderedEl); break;
@@ -2043,6 +2123,38 @@
       setSubmitLoading(true);
       let handedOffToStream = false;
 
+      // (BUG 4 FIX) Instant feedback — the docked follow-up box no longer
+      // sits idle for the several seconds the backend's own synchronous
+      // Claude routing call can take before it even responds. Immediately
+      // append an optimistic turn (the user's own just-typed query,
+      // followed by the same loading row markup a real pending turn
+      // already uses) to .thread-inner — BEFORE the fetch resolves — and
+      // scroll to it. Once the real response comes back, this placeholder
+      // is removed and replaced with the actual turn the server rendered
+      // (or handed off to wireUpStream() if it's mid-stream), exactly as
+      // described in the fix. Nothing here changes what the backend does
+      // or how long its own work takes — only removes the dead wait on
+      // the input box itself.
+      const liveThreadInnerForOptimistic = document.querySelector('.thread-inner') || threadInner;
+      const optimisticTurn = document.createElement('div');
+      optimisticTurn.className = 'turn-block';
+      const optimisticTurnRow = document.createElement('div');
+      optimisticTurnRow.className = 'turn-row';
+      const optimisticQuestion = document.createElement('div');
+      optimisticQuestion.className = 'turn-question';
+      optimisticQuestion.textContent = query;
+      optimisticTurnRow.appendChild(optimisticQuestion);
+      optimisticTurn.appendChild(optimisticTurnRow);
+      const optimisticLoadingRow = document.createElement('div');
+      optimisticLoadingRow.className = 'loading-row';
+      optimisticLoadingRow.innerHTML =
+        '<span class="loading-logo"><img src="https://www.figma.com/api/mcp/asset/9ac3df00-71a7-4d75-b3a6-1796fd320906.png" alt="" /></span>' +
+        '<div class="loading-dots"><span></span><span></span><span></span></div>' +
+        '<span class="loading-text">Still gathering results for this search…</span>';
+      optimisticTurn.appendChild(optimisticLoadingRow);
+      liveThreadInnerForOptimistic.appendChild(optimisticTurn);
+      optimisticTurn.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
       // Step 1: the actual network request. This is the ONLY part that
       // should ever fall back to a real, full-page form submit — a
       // genuine fetch/network failure, or a non-OK response.
@@ -2092,6 +2204,7 @@
         const errorCard = doc.querySelector('.state-card .state-body') || doc.querySelector('.state-card');
         if (errorCard) {
           const errorText = errorCard.textContent.trim() || 'Please wait for your current request to finish first.';
+          optimisticTurn.remove();
           showSearchInlineError(errorText, query);
           return;
         }
@@ -2131,6 +2244,9 @@
         // reference closed over when this listener was attached, in case a
         // navigation replaced it since then.
         const liveThreadInner = document.querySelector('.thread-inner') || threadInner;
+        // (BUG 4 FIX) Replace the optimistic placeholder with the real,
+        // server-rendered turn now that it's arrived.
+        optimisticTurn.remove();
         liveThreadInner.appendChild(latestTurn);
         latestTurn.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
@@ -2142,6 +2258,14 @@
           handedOffToStream = true; // wireUpStream()'s own done/error handlers clear loading from here on
           wireUpStream(latestTurn, chatId);
         } else {
+          // (BUG 5 FIX) This turn already arrived with a complete
+          // claude_answer — its .answer-wrap's raw JSON must be rendered
+          // right now, synchronously, not left for the MutationObserver
+          // to eventually notice (racy — could leave raw JSON visibly
+          // sitting in .answer-raw until something else forces a
+          // re-render, like a manual refresh).
+          const newAnswerWrap = latestTurn.querySelector('.answer-wrap');
+          if (newAnswerWrap) renderStructuredAnswer(newAnswerWrap);
           // No stream needed — the response already came back with a
           // complete claude_answer, so loading ends right here.
           setSubmitLoading(false);
