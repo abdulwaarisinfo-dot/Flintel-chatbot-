@@ -914,7 +914,7 @@
 
       {% if chat and chat.messages %}
         {% for msg in chat.messages %}
-        <div class="turn-block">
+        <div class="turn-block" data-topic-key="{{ msg.topic_key or '' }}"{% if pending_stream_topic_key and msg.topic_key == pending_stream_topic_key %} data-pending-stream="true"{% endif %}>
           <div class="turn-row"><div class="turn-question">{{ msg.query }}</div></div>
 
           {#- ===================================================================
@@ -1286,6 +1286,26 @@
     container.appendChild(row);
   }
 
+  function renderRankedPostsList(platforms, container) {
+    // (BUG 3 FIX) "ranked": true — one flat, sequentially-numbered list
+    // across every platform, in the exact order the backend already
+    // provided them, instead of the grouped per-platform sections with
+    // "shown_count of total_analyzed" headers. Every existing per-post
+    // field (via buildPostBlock, unchanged) stays exactly the same —
+    // only the grouping/numbering changes. buildPostBlock's own "Post N"
+    // label already does the numbering; a continuous index across the
+    // whole flattened list is what makes it "1.", "2.", "3." … instead
+    // of resetting per platform.
+    let i = 0;
+    (platforms || []).forEach((p) => {
+      const key = normalizePlatform(p.platform);
+      (p.posts || []).forEach((post) => {
+        container.appendChild(buildPostBlock(post, i, key));
+        i++;
+      });
+    });
+  }
+
   function renderSourceList(data, container) {
     const summary = document.createElement('p');
     summary.className = 'overview-summary';
@@ -1294,7 +1314,11 @@
     const divider = document.createElement('div');
     divider.className = 'section-divider no-top-margin';
     container.appendChild(divider);
-    renderPlatformsList(data.platforms, container);
+    if (data.ranked === true) {
+      renderRankedPostsList(data.platforms, container);
+    } else {
+      renderPlatformsList(data.platforms, container);
+    }
     renderFollowupChips(data.followups, container);
   }
 
@@ -1556,6 +1580,60 @@
   const NOT_AVAILABLE_ICON = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 8V13M12 16.5H12.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>';
   const DISALLOWED_ICON = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M6 6L18 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
 
+  function renderWebsiteContext(websiteContext, container) {
+    // (BUG 2 FIX) Fires whenever data.website_context is present,
+    // regardless of which format fired alongside it — reuses existing
+    // classes only, no new CSS: .metrics-section-title for the heading,
+    // .block-text for the overview paragraph, and the same .post-field /
+    // .field-dot / .field-text bullet-row markup used everywhere else in
+    // this file for a plain (non label:value) bullet line.
+    if (!websiteContext || typeof websiteContext !== 'object') return;
+    const overview = websiteContext.overview;
+    const sections = Array.isArray(websiteContext.sections) ? websiteContext.sections : [];
+    if (!overview && sections.length === 0) return;
+
+    const heading = document.createElement('p');
+    heading.className = 'metrics-section-title';
+    heading.textContent = 'About this website';
+    container.appendChild(heading);
+
+    if (overview) {
+      const overviewEl = document.createElement('p');
+      overviewEl.className = 'block-text';
+      overviewEl.style.marginBottom = '20px';
+      overviewEl.textContent = overview;
+      container.appendChild(overviewEl);
+    }
+
+    sections.forEach((section) => {
+      if (!section || typeof section !== 'object') return;
+      const bullets = Array.isArray(section.bullets) ? section.bullets : [];
+      if (section.title) {
+        const sectionTitle = document.createElement('p');
+        sectionTitle.className = 'metrics-section-title';
+        sectionTitle.textContent = section.title;
+        container.appendChild(sectionTitle);
+      }
+      bullets.forEach((bullet) => {
+        if (!bullet) return;
+        const row = document.createElement('div');
+        row.className = 'post-field';
+        const dot = document.createElement('span');
+        dot.className = 'field-dot';
+        const text = document.createElement('span');
+        text.className = 'field-text';
+        text.textContent = bullet;
+        row.appendChild(dot);
+        row.appendChild(text);
+        container.appendChild(row);
+      });
+    });
+
+    const divider = document.createElement('div');
+    divider.className = 'divider';
+    container.appendChild(divider);
+  }
+
   function renderMarkdownAnswers(root) {
     root.querySelectorAll('.answer-wrap').forEach((wrap) => {
       const rawEl = wrap.querySelector('.answer-raw');
@@ -1580,6 +1658,7 @@
       if (data && data.format) {
         renderedEl.innerHTML = '';
         try {
+          renderWebsiteContext(data.website_context, renderedEl);
           switch (data.format) {
             case 'source_list':   renderSourceList(data, renderedEl); break;
             case 'trend_report':  renderTrendReport(data, renderedEl); break;
@@ -2293,6 +2372,14 @@
           handedOffToStream = true; // wireUpStream()'s own done/error handlers clear loading from here on
           wireUpStream(latestTurn, chatId);
         } else {
+          // (BUG 5 FIX) This turn already arrived with a complete
+          // claude_answer — its .answer-wrap's raw JSON must be rendered
+          // right now, synchronously, not left for the MutationObserver
+          // to eventually notice (racy — could leave raw JSON visibly
+          // sitting in .answer-raw until something else forces a
+          // re-render). latestTurn is a real DOM node, so it can be
+          // passed directly as the root to search within.
+          renderMarkdownAnswers(latestTurn);
           // No stream needed — the response already came back with a
           // complete claude_answer, so loading ends right here.
           setSubmitLoading(false);
@@ -2358,6 +2445,42 @@
       // Form(...) validation with 422.
       const formData = new FormData(form);
       setSubmitLoading(true);
+
+      // (BUG 4 FIX) Instant feedback — the search box no longer sits idle
+      // for the several seconds the backend's own synchronous Claude
+      // routing call can take before it even redirects. Immediately hide
+      // the hero landing content and show a chat-like "thinking" state
+      // (the user's own just-typed query, followed by the same loading
+      // row markup a real pending turn already uses) — BEFORE the fetch
+      // resolves. navigateTo()'s own full <main> swap below replaces this
+      // placeholder with the real server-rendered content once the
+      // response comes back, exactly as it already does for every other
+      // soft navigation — nothing here changes what the backend does or
+      // how long its own work takes, this only removes the dead wait on
+      // the search box itself.
+      const heroWrap = document.getElementById('hero-wrap');
+      if (heroWrap) heroWrap.classList.add('hidden');
+      const liveConversationArea = document.getElementById('conversation-area') || conversationArea;
+      liveConversationArea.classList.remove('hidden');
+      const optimisticTurn = document.createElement('div');
+      optimisticTurn.className = 'turn-block';
+      const turnRow = document.createElement('div');
+      turnRow.className = 'turn-row';
+      const turnQuestion = document.createElement('div');
+      turnQuestion.className = 'turn-question';
+      turnQuestion.textContent = query;
+      turnRow.appendChild(turnQuestion);
+      optimisticTurn.appendChild(turnRow);
+      const loadingRow = document.createElement('div');
+      loadingRow.className = 'loading-row';
+      loadingRow.innerHTML =
+        '<span class="loading-logo"><img src="https://www.figma.com/api/mcp/asset/9ac3df00-71a7-4d75-b3a6-1796fd320906.png" alt="" /></span>' +
+        '<div class="loading-dots"><span></span><span></span><span></span></div>' +
+        '<span class="loading-text">Still gathering results for this search…</span>';
+      optimisticTurn.appendChild(loadingRow);
+      liveConversationArea.appendChild(optimisticTurn);
+      optimisticTurn.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
       navigateTo(form.action, {
         method: 'POST',
         body: formData,
