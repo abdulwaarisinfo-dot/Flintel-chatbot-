@@ -2152,54 +2152,32 @@
     const searchInput = document.getElementById('search-input');
     const query = searchInput ? searchInput.value.trim() : '';
     if (!query) return;
-    // (LOADING STATE) Set right away — navigateTo()'s own successful
-    // swap either finds a pending-stream turn (in which case
-    // wireUpInitialPendingStream()/wireUpStream() inside it keep this on
-    // until that stream finishes, per the fix to navigateTo()'s own
-    // final disabled-check above) or finds none, in which case that
-    // same final check correctly turns loading back off. Nothing extra
-    // needs to happen here after navigateTo() resolves.
-    //
-    // (422 FIX) FormData MUST be captured BEFORE setSubmitLoading(true)
-    // — that call disables search-input, and a disabled field is
-    // excluded from FormData entirely, so building it inline inside the
-    // navigateTo() call below (after loading was already set) would
-    // silently drop the "query" field and fail the backend's required
-    // Form(...) validation with 422.
+
+    // (NO-VISIBLE-WAIT-STATE FIX) The homepage must show ZERO visible
+    // change while the backend does its own routing work — no disabled/
+    // grayed search box, no spinner, no hidden headline/explore panel.
+    // The user should submit and then land directly on the real chat
+    // page the moment navigateTo()'s swap below completes, with nothing
+    // different to look at on the homepage itself in between. A simple,
+    // purely-internal flag (not tied to any visible styling) still
+    // prevents a double-submit if the button is clicked twice quickly —
+    // it just never shows up as anything on screen.
+    if (form.dataset.heroSubmitInFlight === 'true') return;
+    form.dataset.heroSubmitInFlight = 'true';
+
     const formData = new FormData(form);
-    setSubmitLoading(true);
 
-    // (SEARCH-BOX-DISAPPEARS FIX) Only the hero LANDING pieces (eyebrow,
-    // headline, explore panel) are hidden — #search-form itself is left
-    // untouched, staying visibly in place the whole time, just
-    // disabled/grayed via the setSubmitLoading(true) call above.
-    //
-    // (SEARCH-BOX-JUMPS-POSITION FIX) Inline visibility:hidden (not the
-    // .hidden class) so these elements' layout space is preserved — the
-    // search form's position never shifts during the loading transition.
-    const heroWrap = document.getElementById('hero-wrap');
-    if (heroWrap) {
-      heroWrap.querySelectorAll('.eyebrow, .headline, .explore-panel').forEach((el) => {
-        el.style.visibility = 'hidden';
-      });
-    }
-
-    // (DOUBLE-LAYOUT FLASH FIX) Deliberately does NOT render anything
-    // into #conversation-area for this case — see navigateTo()'s own
-    // full <main> swap below, which replaces it with chat.html's correct,
-    // final layout exactly once, avoiding a turn ever appearing in the
-    // wrong (hero-page) layout first.
     navigateTo(form.action, {
       method: 'POST',
       body: formData,
       fallbackForm: form,
       // (BUSY-LOCK) Runs instead of the normal swap if the backend
-      // declined this request — restore what the user typed, show the
-      // inline warning, and unlock the box so they can try again right
-      // away once their other request finishes.
+      // declined this request — restore what the user typed and clear
+      // the in-flight flag so they can try again right away once their
+      // other request finishes.
       onBusyDecline: (errorText) => {
         showSearchInlineError(errorText, query);
-        setSubmitLoading(false);
+        form.dataset.heroSubmitInFlight = 'false';
       },
     });
   });
