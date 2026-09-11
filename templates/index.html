@@ -1740,7 +1740,7 @@
   // and needed the same protection.
   let softNavGeneration = 0;
 
-  async function navigateTo(url, { method = 'GET', pushState = true, body = undefined, fallbackForm = undefined, onBusyDecline = undefined, revealOnSwap = false } = {}) {
+  async function navigateTo(url, { method = 'GET', pushState = true, body = undefined, fallbackForm = undefined, onBusyDecline = undefined } = {}) {
     // (RACE-CONDITION FIX) Snapshot the generation counter for THIS
     // navigation right away — anything that happens after any subsequent
     // await in this function checks against this snapshot before touching
@@ -1819,23 +1819,6 @@
         currentStyleTag.textContent = newStyleTag.textContent;
       }
       currentMain.innerHTML = newMain.innerHTML;
-      // (SMOOTH-HERO-TRANSITION FIX) Only applied when the caller opts in
-      // via revealOnSwap (currently just wireUpHeroSoftSearchSubmit()'s
-      // first-message-from-home case) — every other soft navigation
-      // through this shared function (session clicks, "New chat", etc.)
-      // is completely unaffected and keeps its existing instant-swap
-      // behavior. Reuses the SAME .stream-reveal entrance animation
-      // already used elsewhere for a new answer arriving, so the whole
-      // newly-swapped page (the user's own question, followed by the
-      // loading state) fades/slides in gently instead of appearing as an
-      // abrupt instant cut — directly addressing the "sudden jump after a
-      // frozen pause" complaint for this specific transition.
-      if (revealOnSwap) {
-        currentMain.classList.add('stream-reveal');
-        currentMain.addEventListener('animationend', () => {
-          currentMain.classList.remove('stream-reveal');
-        }, { once: true });
-      }
       if (newSessionsList && currentSessionsList) {
         currentSessionsList.innerHTML = newSessionsList.innerHTML;
       }
@@ -2468,15 +2451,7 @@
         const latestTurn = allNewTurns[allNewTurns.length - 1];
         if (!latestTurn) throw new Error('No turn-block found in response');
 
-        // (STALE-INPUT FIX) Re-query #search-input fresh here instead of
-        // using the `searchInput` reference closured at setup time — this
-        // is the exact same "always re-query fresh" pattern already used
-        // by setSubmitLoading() elsewhere in this file, and fixes the
-        // typed query staying visibly stuck in the box the whole time a
-        // search is processing (the closured reference could point to a
-        // node that's no longer the one actually visible on screen).
-        const freshSearchInputToClear = document.getElementById('search-input');
-        if (freshSearchInputToClear) freshSearchInputToClear.value = '';
+        if (searchInput) searchInput.value = '';
 
         latestTurn.classList.add('stream-reveal');
         const liveThreadInner = document.querySelector('.thread-inner') || threadInner;
@@ -2634,11 +2609,6 @@
         method: 'POST',
         body: formData,
         fallbackForm: form,
-        // (SMOOTH-HERO-TRANSITION FIX) Opt in to the gentle fade/slide
-        // entrance for this specific transition only — see navigateTo()'s
-        // own comment on revealOnSwap for why this doesn't affect any
-        // other soft navigation.
-        revealOnSwap: true,
         // (BUSY-LOCK) Runs instead of the normal swap if the backend
         // declined this request — restore what the user typed, show the
         // inline warning, and unlock the box so they can try again right
