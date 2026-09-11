@@ -698,6 +698,46 @@ EVERYTHING ELSE IN THIS FILE — every other route, function, constant,
 prompt, matching rule, chunking rule, caching rule, and template contract
 — is untouched and behaves exactly as documented above.
 ──────────────────────────────────────────────────────────────────────────────
+
+── STRUCTURAL SPLIT + BUG FIX PASS ─────────────────────────────────────────
+STRUCTURAL SPLIT: every FastAPI route handler (`home`, `search`,
+`list_chats`, `new_chat`, `view_chat`, `stream_answer`, `delete_chat`,
+`google_login`, `google_callback`, `signup`, `login`, `logout`) has moved
+out, verbatim, into a new `routes.py` module — this file now holds zero
+`@app.get`/`@app.post` decorators. `index.py` still owns `app`,
+`templates`, `pwd_context`, `oauth`, every constant, and every piece of
+business logic; `routes.py` imports all of that and registers its routes
+on the SAME `app` object constructed here. `index.py` imports `routes` at
+the very bottom, purely for the side effect of registering those routes
+before the app is served — the `uvicorn.run("index:app", ...)` string
+and the deployment/run command are unchanged.
+
+BUG 1 (chat-summary context loss): `append_to_chat_summary()` used to
+character-trim the raw `claude_answer` JSON string, slicing it mid-object
+and discarding the exact fields (a suggested term, a followup, a
+likely_reason) a later confirmation-style reply ("yes", "sure", "search
+it") needed to resolve against. A new `_extract_summary_text_from_claude_
+answer()` helper now pulls the human-readable fields out of the JSON
+first, so the summary line stays useful after trimming.
+
+BUG 2b (real matched posts hidden by a "no_data" format): `_complete_
+message_answer_and_results()` used to discard real matched posts purely
+because Claude's own written analysis picked "no_results"/
+"not_available"/"disallowed" for the narrative text. A new shared
+`_finalize_answer_and_results()` helper (also used by `routes.py`'s
+streaming route) now keeps Claude's honest text intact but appends one
+short, rotating positive closing note (`_pick_closest_matches_note()` /
+`_append_closest_matches_note()`) whenever real posts were actually
+matched, instead of hiding them.
+
+BUG 3 (model suggesting competitors/other channels): `CLAUDE_ANALYSIS_
+SYSTEM_PROMPT`'s "no_results" format previously let Claude fill
+"likely_reason" with genuinely-true-but-harmful observations like "people
+usually search Google/Discord/a directory instead" — a new CRITICAL
+GUARDRAIL paragraph (plus one added TONE bullet) explicitly forbids
+naming any platform, tool, or channel outside Flintel as a better place
+to look, in this or any other format's text fields.
+──────────────────────────────────────────────────────────────────────────────
 """
 
 import os
@@ -711,8 +751,7 @@ from datetime import datetime, timedelta, timezone
 import httpx
 from bson import ObjectId
 from bson.errors import InvalidId
-from fastapi import FastAPI, Request, Form, BackgroundTasks
-from fastapi.responses import RedirectResponse, StreamingResponse
+from fastapi import FastAPI, Request, BackgroundTasks
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 from passlib.context import CryptContext
@@ -1564,6 +1603,25 @@ For when little or nothing relevant was actually found.
 genuinely grounded alternative term to offer — never invent a
 plausible-sounding brand/term with no real signal behind it.
 
+CRITICAL GUARDRAIL FOR "likely_reason" (and every other text field in
+this format, and in "not_available"/"disallowed" below): NEVER name,
+suggest, or imply any platform, tool, marketplace, directory, search
+engine, community, or channel OUTSIDE Flintel as a better place to look
+— this includes but is not limited to Google, app/tool directories,
+review sites, Slack, Discord, niche forums, or any other product. Doing
+so tells the user to leave Flintel for something else, which this
+product must never do, regardless of whether the observation is
+factually true. If you genuinely believe the conversation is happening
+somewhere Flintel doesn't cover, phrase "likely_reason" purely in terms
+of why THIS search (these keywords, this time window, these platforms)
+came up short — e.g. "the exact solution name isn't something people
+usually type in complaint-style posts" or "this is a newer/niche term
+that hasn't built up much public discussion yet" — and let
+"suggested_actions" (broaden_time / broaden_platforms / broaden_term,
+all of which are things FLINTEL ITSELF can do) be the only next steps
+offered. Never write anything that reads as "go search somewhere else
+instead."
+
 TONE FOR "no_results" (write like a sharp analyst reporting back, not a
 form rejection):
 - Open by stating plainly WHAT was searched and WHERE (platforms,
@@ -1577,6 +1635,9 @@ form rejection):
   optionally grouped by how relevant/strong the signal is, so the user
   sees real signal instead of a blank "nothing found."
 - Never sound like a rejection or a canned apology.
+- Never point the user toward a different platform, tool, or channel as
+  the place to actually find this — Flintel's own suggested_actions are
+  the only next steps to offer.
 
 ──────────────────────────────────────────────────────────────────────────
 FORMAT 5 — "not_available"
@@ -2790,6 +2851,77 @@ def _trim(text: str, limit: int) -> str:
     return text[: max(limit - 1, 0)].rstrip() + "…"
 
 
+def _extract_summary_text_from_claude_answer(answer: str) -> str:
+    """(BUG FIX — CHAT-SUMMARY CONTEXT LOSS) append_to_chat_summary()
+    used to blindly character-trim the raw claude_answer string to
+    CHAT_SUMMARY_TURN_CHAR_LIMIT characters. Since the JSON-ANALYSIS-
+    PROMPT-SWAP, claude_answer is a JSON document, so trimming it as raw
+    text usually cuts the string off mid-object — discarding exactly the
+    fields (a suggested next term, a followup, a likely_reason) a later
+    confirmation-style reply ("yes", "sure", "search it", "haan karo")
+    needs to resolve against. This is a purely additive, best-effort
+    pre-processing step: it parses the answer as JSON and pulls out the
+    human-readable parts most useful for conversational continuity,
+    BEFORE the caller applies its own char-limit trim.
+
+    Generic by design — reads whatever fields are present on whatever
+    format the answer happens to be, never hardcodes a topic, keyword,
+    or industry. Falls back to the original raw string unchanged if the
+    answer isn't valid JSON (e.g. a plain "chat"/"blocked"/"clarify"
+    reply, which is already plain text and doesn't need this treatment)
+    or has none of the known fields — so this can only ever IMPROVE the
+    summary's usefulness, never make it worse than doing nothing."""
+    if not answer:
+        return answer or ""
+
+    cleaned = answer.strip()
+    if cleaned.startswith("```"):
+        cleaned = cleaned.strip("`").strip()
+        cleaned = re.sub(r"^json\s*", "", cleaned, flags=re.IGNORECASE).strip()
+
+    data = None
+    try:
+        parsed = json.loads(cleaned)
+        if isinstance(parsed, dict):
+            data = parsed
+    except (ValueError, TypeError):
+        data = None
+
+    if not data:
+        # Not JSON (a plain chat/blocked/clarify reply, or unparseable
+        # output) — nothing to extract, use the text exactly as given.
+        return answer
+
+    parts = []
+    for key in ("summary", "message", "likely_reason", "interpretation", "trend"):
+        val = data.get(key)
+        if isinstance(val, str) and val.strip():
+            parts.append(val.strip())
+
+    followups = data.get("followups")
+    if isinstance(followups, list):
+        parts.extend(f.strip() for f in followups if isinstance(f, str) and f.strip())
+
+    suggested_actions = data.get("suggested_actions")
+    if isinstance(suggested_actions, list):
+        for action in suggested_actions:
+            if not isinstance(action, dict):
+                continue
+            for field_name in ("suggestion", "label"):
+                val = action.get(field_name)
+                if isinstance(val, str) and val.strip():
+                    parts.append(val.strip())
+
+    clarifying_question = data.get("clarifying_question")
+    if isinstance(clarifying_question, str) and clarifying_question.strip():
+        parts.append(clarifying_question.strip())
+
+    if not parts:
+        return answer
+
+    return " | ".join(parts)
+
+
 def append_to_chat_summary(chat_id: str, owner_key: str, query: str, answer: str):
     """(v5) Keeps a short, PLAIN-PYTHON (no extra Claude call) running
     summary on the chat doc itself — one condensed line per turn. This is
@@ -2798,10 +2930,18 @@ def append_to_chat_summary(chat_id: str, owner_key: str, query: str, answer: str
     long a chat gets — Claude is never sent the full raw message history,
     only this rolling, auto-generated summary. Keeps only the last
     CHAT_SUMMARY_MAX_TURNS lines; older lines roll off automatically.
-    Best-effort: never allowed to raise past its caller."""
+    Best-effort: never allowed to raise past its caller.
+
+    (BUG FIX — CHAT-SUMMARY CONTEXT LOSS) `answer` is now run through
+    _extract_summary_text_from_claude_answer() before trimming, so a
+    JSON-format answer contributes its actual human-readable fields to
+    the summary instead of getting sliced mid-object by the raw
+    character trim — see that function's own docstring for why this
+    matters for confirmation-style follow-up replies."""
     if not chat_id or not owner_key:
         return
-    line = f"User: {_trim(query, CHAT_SUMMARY_TURN_CHAR_LIMIT)} | Assistant: {_trim(answer, CHAT_SUMMARY_TURN_CHAR_LIMIT)}"
+    digest = _extract_summary_text_from_claude_answer(answer)
+    line = f"User: {_trim(query, CHAT_SUMMARY_TURN_CHAR_LIMIT)} | Assistant: {_trim(digest, CHAT_SUMMARY_TURN_CHAR_LIMIT)}"
 
     chat = chats_collection.find_one({"chat_id": chat_id, "owner_key": owner_key}, {"summary": 1})
     existing_summary = (chat or {}).get("summary") or ""
@@ -2864,6 +3004,86 @@ def _extract_claude_format(answer_text: str):
         return None
     fmt = data.get("format")
     return fmt if isinstance(fmt, str) else None
+
+
+# (BUG FIX — DON'T HIDE REAL MATCHED POSTS / KEEP A POSITIVE CLOSING NOTE)
+# Rotated the same cheap-hash way as flintel.py's own _pick_invite_line()
+# and website_intelligence.py's own _pick_variant(), so the same
+# sentence doesn't repeat mechanically every time.
+_CLOSEST_MATCHES_NOTE_VARIANTS = [
+    "These are the closest posts I found — happy to run a more targeted search if you give me a specific angle.",
+    "I've shared the nearest matches below in case they're useful — let me know if you'd like this narrowed down further.",
+    "Sharing the closest posts I could find below — point me at a more specific angle and I can dig further.",
+    "Yeh sabse qareeb posts hain jo mujhe mile — agar aap koi khaas angle bata dein to main zyada targeted search kar sakta hoon.",
+]
+
+
+def _pick_closest_matches_note(seed: str = "") -> str:
+    """Same cheap, deterministic-hash rotation already used elsewhere in
+    this product (flintel.py's _pick_invite_line, website_intelligence.py's
+    _pick_variant) — avoids the exact same sentence every time without
+    needing a random source or stored state."""
+    if not seed:
+        return _CLOSEST_MATCHES_NOTE_VARIANTS[0]
+    idx = sum(ord(c) for c in seed) % len(_CLOSEST_MATCHES_NOTE_VARIANTS)
+    return _CLOSEST_MATCHES_NOTE_VARIANTS[idx]
+
+
+def _append_closest_matches_note(answer_text: str, seed: str = "") -> str:
+    """(BUG FIX) Purely additive, non-destructive post-processing step,
+    same parse/patch/re-serialize pattern already used by
+    _patch_post_urls_into_answer() and _inject_website_context_into_answer().
+    Appends one short, rotating, positive closing line onto the
+    format's own "message" field — never changes Claude's own honest
+    assessment text otherwise. If answer_text isn't valid JSON, or has
+    no "message" field, the original text is returned unchanged."""
+    if not answer_text:
+        return answer_text
+    cleaned = answer_text.strip()
+    if cleaned.startswith("```"):
+        cleaned = cleaned.strip("`").strip()
+        cleaned = re.sub(r"^json\s*", "", cleaned, flags=re.IGNORECASE).strip()
+    try:
+        data = json.loads(cleaned)
+    except (ValueError, TypeError):
+        return answer_text
+    if not isinstance(data, dict):
+        return answer_text
+
+    val = data.get("message")
+    if not isinstance(val, str) or not val.strip():
+        return answer_text
+
+    data["message"] = val.strip() + " " + _pick_closest_matches_note(seed)
+    return json.dumps(data, ensure_ascii=False)
+
+
+def _finalize_answer_and_results(answer_text: str, matched: list, seed: str = ""):
+    """(BUG FIX) Shared decision point for both the non-streaming path
+    (_complete_message_answer_and_results) and the streaming route
+    (routes.py): given Claude's own answer text and the posts actually
+    matched by get_matched_signals()/get_unfiltered_matched_signals(),
+    decides what to persist as this message's final `results` and
+    `claude_answer`.
+
+    Real matched posts are NEVER hidden just because Claude's own
+    analysis chose a "no_data" format (no_results/not_available/
+    disallowed) for the written response — that's a statement about how
+    confidently Claude could ground a full narrative answer, not a
+    statement about whether ANY real data exists. When that happens,
+    this keeps Claude's own honest text intact but appends one short,
+    positive closing note (see _append_closest_matches_note()) so the
+    user still sees the real posts below and isn't left at a dead end.
+    Genuinely empty results (no data AND nothing matched) are still
+    saved as an empty list, exactly as before this fix.
+
+    Returns (final_answer_text, results_to_save)."""
+    claude_format = _extract_claude_format(answer_text)
+    if claude_format in _NO_DATA_CLAUDE_FORMATS and matched:
+        return _append_closest_matches_note(answer_text, seed=seed), matched
+    if claude_format in _NO_DATA_CLAUDE_FORMATS:
+        return answer_text, []
+    return answer_text, matched
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -3494,7 +3714,14 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
     it's now set synchronously in _fill_in_message_outputs(), before this
     function is even scheduled, so the flag is already in place before
     the response goes out. This function only clears it, in the finally
-    below, once the work actually finishes."""
+    below, once the work actually finishes.
+
+    (BUG FIX — DON'T HIDE REAL MATCHED POSTS) The results-gating decision
+    now goes through _finalize_answer_and_results() instead of the old
+    inline `[] if claude_format in _NO_DATA_CLAUDE_FORMATS else matched`
+    — real matched posts are no longer discarded just because Claude's
+    own written analysis picked a "no_data" format; see that function's
+    own docstring for the full reasoning."""
     # (RESULTS-RECOMPUTE FIX, applied here too for the same reason) `is
     # None`, not falsy — closes a low-probability but real analogous gap:
     # if a Claude API call ever technically "succeeds" but returns zero
@@ -3534,8 +3761,15 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
     # saved empty list must not be treated as "still needs computing" and
     # get needlessly recomputed/overwritten here either.
     if msg.get("results") is None:
-        claude_format = _extract_claude_format(answer_for_format_check)
-        results_to_save = [] if claude_format in _NO_DATA_CLAUDE_FORMATS else matched
+        final_answer, results_to_save = _finalize_answer_and_results(
+            answer_for_format_check, matched, seed=msg.get("query", "")
+        )
+        if final_answer != answer_for_format_check:
+            msg["claude_answer"] = final_answer
+            try:
+                save_claude_answer_to_chat(chat_id, owner_key, msg["topic_key"], final_answer)
+            except Exception as exc:
+                log.warning(f"Saving closing-note-patched answer failed for topic_key={msg.get('topic_key')}: {exc}")
         msg["results"] = results_to_save
         try:
             save_signal_results_to_chat(chat_id, owner_key, msg["topic_key"], results_to_save)
@@ -3696,972 +3930,7 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
             _complete_message_answer_and_results(chat_id, owner_key, msg, matched)
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# ROUTES — SEARCH / CHAT
-# ─────────────────────────────────────────────────────────────────────────────
-
-@app.get("/")
-def home(request: Request):
-    """(BARE-URL HOME FIX) Visiting the plain root URL directly (no
-    chat_id anywhere in the request) must always show a fresh, empty
-    home screen — exactly like visiting claude.ai or chatgpt.com
-    directly always shows a new blank conversation, never whatever chat
-    was last open in a previous session. This route no longer reads
-    `active_chat_id` from the session to decide what to render, and
-    never passes a populated `chat` back to the template — only the
-    sidebar's chat list is still fetched, so existing chat history
-    remains visible and clickable in the sidebar exactly as before.
-
-    A specific chat is ONLY ever rendered by visiting its own URL,
-    `GET /chat/{chat_id}` (see view_chat() below, completely UNCHANGED)
-    — that route still sets `active_chat_id` in the session when opened,
-    exactly as it always has; this fix only changes what the BARE root
-    URL itself renders, never what a specific chat URL renders.
-
-    UNCHANGED: chats list fetching, current-user lookup, and the
-    template/response contract for index.html (request/user/chats/
-    chat_id/chat/pending_stream_topic_key keys are still all passed, just
-    with chat_id/chat/pending_stream_topic_key always at their empty
-    defaults now instead of being conditionally populated)."""
-    chats = []
-    try:
-        owner_key, _owner_type = get_owner(request)
-        chats = get_user_chats(owner_key)
-    except Exception as exc:
-        log.warning(f"Chat lookup failed on home page: {exc}")
-
-    return templates.TemplateResponse(
-        "index.html",
-        {
-            "request": request,
-            "user": get_current_user(request),
-            "chats": chats,
-            "chat_id": None,
-            "chat": None,
-            "pending_stream_topic_key": None,
-        },
-    )
-
-
-@app.post("/search")
-def search(
-    request: Request,
-    query: str = Form(...),
-    platform: str = Form("All Platforms"),
-    chat_id: str = Form(None),
-):
-    # (PER-USER BUSY LOCK) Additive check at the very start, before any
-    # existing logic below runs — declines a new request from THIS SAME
-    # owner_key while their previous one is still being processed by
-    # Claude. Never enqueues a job, never calls the router, never creates
-    # a chat message for a declined request. Every other owner_key is
-    # completely unaffected — this only ever reads/writes a document keyed
-    # to the current request's own owner_key.
-    busy_owner_key = None
-    try:
-        busy_owner_key, _busy_owner_type = get_owner(request)
-    except Exception as exc:
-        log.warning(f"Owner lookup failed during busy-check (treating as not busy): {exc}")
-
-    if busy_owner_key and _is_owner_busy(busy_owner_key):
-        chats_safe, chat_id_safe = [], None
-        try:
-            chats_safe = get_user_chats(busy_owner_key)
-            chat_id_safe = request.session.get("active_chat_id")
-        except Exception as exc:
-            log.warning(f"Chat lookup failed while rendering busy-decline: {exc}")
-
-        return templates.TemplateResponse(
-            "index.html",
-            {
-                "request": request,
-                "error": "Please wait for your current request to finish first.",
-                "query": query,
-                "user": get_current_user(request),
-                "chats": chats_safe,
-                "chat_id": chat_id_safe,
-            },
-        )
-
-    topic_key = normalize_topic_key(query)
-    targeting_platform = normalize_platform(platform)
-
-    if not topic_key:
-        # Best-effort context for the error re-render only — never let a
-        # chat-lookup hiccup get in the way of showing the validation error.
-        chats_safe, chat_id_safe = [], None
-        try:
-            owner_key, _owner_type = get_owner(request)
-            chats_safe = get_user_chats(owner_key)
-            chat_id_safe = request.session.get("active_chat_id")
-        except Exception as exc:
-            log.warning(f"Chat lookup failed while rendering empty-query error: {exc}")
-
-        return templates.TemplateResponse(
-            "index.html",
-            {
-                "request": request,
-                "error": "Please enter a search term.",
-                "query": query,
-                "user": get_current_user(request),
-                "chats": chats_safe,
-                "chat_id": chat_id_safe,
-            },
-        )
-
-    # ─────────────────────────────────────────────────────────────────────
-    # v5 ROUTING STEP (v6: abuse/harm screening; KEYWORD-GENERATION SWAP:
-    # keyword list; TIME-WINDOW/PAIN-POINT/CLARIFY FEATURE: time window +
-    # pain-point-aware keywords + a 4th "clarify" intent; ROUTER INTENT
-    # REFINEMENT: prompt-only tightening of when "chat"/"search"/"clarify"
-    # each fire — see the module docstring) — runs BEFORE anything else
-    # below. Decides whether this message is "search" (the pipeline below
-    # runs), "chat" (Claude answers directly), "blocked" (Claude declines
-    # directly), or "clarify" (Claude asks a short follow-up question
-    # instead of guessing a topic).
-    #
-    # Owner/active-chat resolution + the router call itself are wrapped
-    # in one try/except: ANY failure here falls back to intent="search"
-    # with routed_keywords/routed_time_window_days left as None, and the
-    # search pipeline below re-resolves owner/chat itself AND falls back
-    # to generate_fuzzy_keywords() for the keyword list — so a routing
-    # failure can NEVER block, skip, or under-supply a real search job.
-    # ─────────────────────────────────────────────────────────────────────
-    owner_key = owner_type = None
-    active_chat_id = None
-    intent = "search"
-    chat_reply = None
-    routed = {}
-    routed_keywords = None
-    routed_time_window_days = None
-    routed_unfiltered = False
-    # (STRUCTURED WEBSITE SUMMARY) Stays None for every case except the
-    # two website-derived-keywords paths in INTEGRATION POINT 2 below
-    # (BEHAVIOR 2, and the BEHAVIOR 3 confirmed-match branch) — never set
-    # for a BEHAVIOR 3 mismatch, no URL at all, unfiltered mode, or a
-    # plain keyword search with no URL.
-    website_answer_context = None
-    # (CLARIFY-SELF-RESOLVE FEATURE) Captured here (not just inside the
-    # try block below) so it's still safely readable afterwards even if
-    # something later in the try block raises — resolve_unclear_topic()
-    # only ever needs this for extra continuity, so an empty string is a
-    # completely safe default, identical to how classify_and_maybe_chat()
-    # already treats an empty/missing summary.
-    chat_summary_for_resolve = ""
-
-    try:
-        owner_key, owner_type = get_owner(request)
-        active_chat_id = chat_id or request.session.get("active_chat_id")
-        if not active_chat_id or not get_chat_session(active_chat_id, owner_key):
-            active_chat_id = create_chat_session(owner_key, owner_type, title=generate_chat_title(query))
-        request.session["active_chat_id"] = active_chat_id
-
-        existing_chat = get_chat_session(active_chat_id, owner_key)
-        chat_summary = (existing_chat or {}).get("summary") or ""
-        chat_summary_for_resolve = chat_summary
-
-        routed = classify_and_maybe_chat(query, chat_summary)
-        intent = routed.get("intent", "search")
-        chat_reply = routed.get("reply")
-        routed_keywords = routed.get("keywords")
-        routed_time_window_days = routed.get("time_window_days")
-        routed_unfiltered = routed.get("unfiltered") or False
-    except Exception as exc:
-        log.warning(f"v5 routing step failed for query={query!r} (defaulting to normal search pipeline): {exc}")
-        intent = "search"
-
-    # ─────────────────────────────────────────────────────────────────────
-    # CLARIFY-SELF-RESOLVE — before ever falling back to asking the user,
-    # make ONE best-effort attempt to resolve the topic using Claude's own
-    # knowledge (no web search, no new information beyond the message +
-    # the existing rolling chat summary). If that succeeds, this message
-    # is switched to a NORMAL "search" from here on — 100% as-is, using
-    # whatever keywords/time_window_days it resolved, falling straight
-    # through into the exact same pipeline below. If it can't confidently
-    # resolve anything, or the call fails outright, intent stays
-    # "clarify" and the EXISTING clarify-question flow immediately below
-    # runs completely unchanged.
-    # ─────────────────────────────────────────────────────────────────────
-    if intent == "clarify":
-        resolved = None
-        try:
-            resolved = resolve_unclear_topic(query, chat_summary_for_resolve)
-        except Exception as exc:
-            log.warning(f"Clarify self-resolve step failed for query={query!r}: {exc}")
-            resolved = None
-        if resolved and resolved.get("keywords"):
-            intent = "search"
-            routed_keywords = resolved["keywords"]
-            routed_time_window_days = resolved.get("time_window_days")
-            log.info(f"Clarify self-resolved to search | query={query!r} | keywords={routed_keywords}")
-
-    # ─────────────────────────────────────────────────────────────────────
-    # WEBSITE-URL BEHAVIOR ROUTING (INTEGRATION POINT 1) — additive only,
-    # scoped entirely to this block, using ONLY website_intelligence.py's
-    # own functions (no reimplementation of any of its logic here). Runs
-    # AFTER the routing step / CLARIFY-SELF-RESOLVE above, BEFORE the
-    # existing chat/blocked/clarify handling branch immediately below.
-    #
-    # "blocked" messages are left completely untouched by this block —
-    # abusive/harmful content should never trigger a website fetch or
-    # summary, so it falls straight through to the existing
-    # chat/blocked/clarify branch below exactly as it always has.
-    # ─────────────────────────────────────────────────────────────────────
-    detected_url_for_routing = None
-    if intent != "blocked":
-        detected_url_for_routing = _extract_first_url(query)
-
-    if detected_url_for_routing:
-        # PRIMARY SIGNAL: the router's own classification. "chat" already
-        # means "no clear topic/request was found in the text" — no need
-        # to second-guess that with the pure-Python helper below.
-        if intent == "chat":
-            is_bare_url_request = True
-        else:
-            # intent == "clarify" (no explicit topic named) OR the
-            # router-failure fallback "search" — in both cases, double-check
-            # with the heuristic instead of assuming a bare URL, so a real
-            # stated ask alongside the link (e.g. "...its my web so find me
-            # for customers") is not incorrectly force-summarized.
-            try:
-                has_shaped_language = website_intelligence.has_request_shaped_language(
-                    query, detected_url_for_routing
-                )
-                is_generic_leadgen = website_intelligence.is_generic_leadgen_ask(query)
-                is_bare_url_request = (not has_shaped_language)
-            except Exception as exc:
-                log.warning(f"has_request_shaped_language failed for query={query!r}: {exc}")
-                is_bare_url_request = False
-                is_generic_leadgen = False
-
-        if is_bare_url_request:
-            # BEHAVIOR 1 — bare URL, no real ask: summarize the site and
-            # invite the user to say what they'd like looked into,
-            # instead of guessing a topic or asking a generic clarifying
-            # question. Best-effort: any failure fetching or summarizing
-            # the site simply leaves this block a no-op, and control
-            # falls straight through to the EXISTING clarify/chat
-            # fallback-reply behavior immediately below exactly as it
-            # works today — no new failure mode is introduced.
-            summary = None
-            try:
-                website_text_for_summary = fetch_website_text(detected_url_for_routing)
-                summary = website_intelligence.summarize_website(
-                    website_text_for_summary, call_claude_fn=_call_claude
-                )
-            except Exception as exc:
-                log.warning(f"Website fetch/summary failed for url={detected_url_for_routing!r}: {exc}")
-                summary = None
-
-            if summary:
-                url_only_answer = website_intelligence.build_url_only_reply(summary, query_seed=query)
-
-                redirect_chat_id = None
-                try:
-                    if not owner_key:
-                        owner_key, owner_type = get_owner(request)
-                    if not active_chat_id or not get_chat_session(active_chat_id, owner_key):
-                        active_chat_id = create_chat_session(owner_key, owner_type, title=generate_chat_title(query))
-                    request.session["active_chat_id"] = active_chat_id
-
-                    add_chat_message_to_chat(active_chat_id, owner_key, query, url_only_answer)
-                    try:
-                        append_to_chat_summary(active_chat_id, owner_key, query, url_only_answer)
-                    except Exception as exc:
-                        log.warning(f"Updating chat summary failed for chat_id={active_chat_id}: {exc}")
-                    redirect_chat_id = active_chat_id
-                except Exception as exc:
-                    log.warning(f"Saving URL-only reply failed for query={query!r}: {exc}")
-
-                if redirect_chat_id:
-                    return RedirectResponse(url=f"/chat/{redirect_chat_id}", status_code=303)
-                return RedirectResponse(url="/", status_code=303)
-            # else: summarization failed — fall through to the EXISTING
-            # clarify/chat fallback-reply behavior below exactly as it
-            # works today (do not introduce a new failure mode).
-        else:
-            # Otherwise: intent is "search" (directly, or resolved to
-            # "search" via CLARIFY-SELF-RESOLVE above) and there IS
-            # request-shaped language alongside the URL — force intent to
-            # "search" if it isn't already, and let INTEGRATION POINT 2
-            # (inside the search-type branch below) handle the
-            # topic-vs-website connection check instead of the plain
-            # WEBSITE-URL KEYWORD EXTRACTION call that used to run there.
-            intent = "search"
-
-    # ── CHAT-TYPE, BLOCKED-TYPE, OR CLARIFY-TYPE MESSAGE: answer/decline/ ──
-    # ── ask directly, never touch the keyword-generation / job-queue /   ──
-    # ── signal-matching pipeline at all. (v6: "blocked" reuses the exact ──
-    # ── same handling as "chat"; "clarify" reuses it too — same message  ──
-    # ── shape, same redirect — only where the answer text comes from     ──
-    # ── below differs. "clarify" only ever reaches here if the           ──
-    # ── CLARIFY-SELF-RESOLVE step above couldn't resolve a topic, AND    ──
-    # ── (if a URL was present) BEHAVIOR 1 above couldn't produce a       ──
-    # ── summary reply.)                                                  ──
-    if intent in ("chat", "blocked", "clarify"):
-        if intent == "blocked":
-            # Never re-sent to Claude for a fallback — a canned decline is
-            # enough, and there's no reason to hand harmful content to
-            # another prompt just to get a polite "no".
-            answer = (chat_reply or "").strip() or CLAUDE_BLOCKED_FALLBACK_REPLY
-        elif intent == "clarify":
-            # Same pattern: never re-sent to Claude for a fallback — a
-            # consultant-style clarifying question is enough if the
-            # router's own reply text was missing/unusable for some
-            # reason.
-            answer = (chat_reply or "").strip() or CLAUDE_CLARIFY_FALLBACK_REPLY
-        else:
-            answer = (chat_reply or "").strip()
-            if not answer:
-                # Router classified this as chat but didn't return usable
-                # reply text (e.g. truncated/odd output) — fall back to a
-                # second, plain conversational call rather than showing
-                # nothing.
-                try:
-                    answer = _call_claude(CLAUDE_CHAT_FALLBACK_SYSTEM_PROMPT, query)
-                except Exception as exc:
-                    log.warning(f"Chat fallback Claude call failed for query={query!r}: {exc}")
-                    answer = "Sorry, I couldn't come up with a reply just now — please try again."
-
-        redirect_chat_id = None
-        try:
-            if not owner_key:
-                owner_key, owner_type = get_owner(request)
-            if not active_chat_id or not get_chat_session(active_chat_id, owner_key):
-                active_chat_id = create_chat_session(owner_key, owner_type, title=generate_chat_title(query))
-            request.session["active_chat_id"] = active_chat_id
-
-            add_chat_message_to_chat(active_chat_id, owner_key, query, answer)
-            try:
-                append_to_chat_summary(active_chat_id, owner_key, query, answer)
-            except Exception as exc:
-                log.warning(f"Updating chat summary failed for chat_id={active_chat_id}: {exc}")
-            redirect_chat_id = active_chat_id
-        except Exception as exc:
-            log.warning(f"Saving {intent}-type message failed for query={query!r}: {exc}")
-
-        if redirect_chat_id:
-            return RedirectResponse(url=f"/chat/{redirect_chat_id}", status_code=303)
-        return RedirectResponse(url="/", status_code=303)
-
-    # ── SEARCH-TYPE MESSAGE: everything below is the v1-v7 pipeline,   ──
-    # ── UNCHANGED except for WHERE `keywords` comes from and the new   ──
-    # ── `time_window_days` value carried alongside it. (This branch is ──
-    # ── now also reached by a "clarify" message the CLARIFY-SELF-      ──
-    # ── RESOLVE step above successfully resolved — from this point on  ──
-    # ── it is treated 100% identically to any other search message.)   ──
-
-    # ─────────────────────────────────────────────────────────────────────
-    # WEBSITE-URL KEYWORD EXTRACTION (INTEGRATION POINT 2) — if the user's
-    # message itself contains a website URL, this decides between
-    # BEHAVIOR 2 ("find leads/customers/posts related to MY site", no
-    # separately-named topic — the ORIGINAL, UNCHANGED
-    # extract_keywords_from_website() call) and BEHAVIOR 3 (a SEPARATE
-    # named topic alongside the URL, checked against the site's own
-    # content via website_intelligence.check_topic_matches_website()).
-    # Uses ONLY website_intelligence.py's own functions for the new
-    # logic — no reimplementation here.
-    # ─────────────────────────────────────────────────────────────────────
-    detected_url = _extract_first_url(query)
-    if detected_url:
-        # Same pure-Python heuristic used in INTEGRATION POINT 1 above,
-        # reused here for the SAME underlying question: is there real
-        # request-shaped language beyond just referencing/pasting the
-        # link? No separately-named topic (BEHAVIOR 2) vs a separately
-        # named topic alongside the URL (BEHAVIOR 3 candidate).
-        try:
-            has_named_topic = (
-                website_intelligence.has_request_shaped_language(query, detected_url)
-                and not website_intelligence.is_generic_leadgen_ask(query)
-            )
-        except Exception as exc:
-            log.warning(f"has_request_shaped_language failed for url={detected_url!r}: {exc}")
-            has_named_topic = False
-
-        if not has_named_topic:
-            # BEHAVIOR 2 — "find me leads/customers/posts related to my
-            # site" with no separately-named topic: EXISTING behavior,
-            # now sourced from the SAME combined Claude call that also
-            # produces the structured website summary (see FIX D above)
-            # instead of a separate summarize_website_structured() call.
-            website_keywords = None
-            website_text = None
-            website_extraction_result = None
-            try:
-                website_text = fetch_website_text(detected_url)
-                website_extraction_result = extract_keywords_from_website(query, detected_url, website_text)
-            except Exception as exc:
-                log.warning(f"Website fetch/keyword-extraction failed for url={detected_url!r}: {exc}")
-                website_extraction_result = None
-            if website_extraction_result:
-                website_keywords = website_extraction_result.get("keywords")
-                if website_keywords:
-                    routed_keywords = website_keywords
-                    log.info(f"Website-derived keywords used | url={detected_url!r} | keywords={routed_keywords}")
-                website_answer_context = website_intelligence.format_structured_summary_for_answer(
-                    website_extraction_result.get("structured_summary")
-                )
-        else:
-            # BEHAVIOR 3 candidate — a separately named topic alongside
-            # the URL: check whether that topic genuinely connects to
-            # what the website offers, via ONE combined Claude call that
-            # produces both the match verdict and (if it matches) the
-            # keyword list in one shot.
-            website_text_for_match = None
-            topic_match_result = None
-            try:
-                website_text_for_match = fetch_website_text(detected_url)
-                topic_match_result = website_intelligence.check_topic_matches_website(
-                    query, detected_url, website_text_for_match, call_claude_fn=_call_claude
-                )
-            except Exception as exc:
-                log.warning(f"Topic-vs-website check failed for url={detected_url!r}: {exc}")
-                topic_match_result = None
-
-            if not topic_match_result or not isinstance(topic_match_result.get("topic_matches_website"), bool):
-                # Inconclusive/failure — fall straight through to the
-                # EXISTING behavior as if this integration point didn't
-                # exist: the plain extract_keywords_from_website() call,
-                # feeding the EXISTING safety-net chain
-                # (routed_keywords -> generate_fuzzy_keywords()) exactly
-                # as before this feature, now also sourced from the SAME
-                # combined Claude call for keywords + structured summary
-                # (see FIX D above).
-                website_extraction_result = None
-                try:
-                    website_text = (
-                        website_text_for_match
-                        if website_text_for_match is not None
-                        else fetch_website_text(detected_url)
-                    )
-                    website_extraction_result = extract_keywords_from_website(query, detected_url, website_text)
-                except Exception as exc:
-                    log.warning(f"Website fetch/keyword-extraction failed for url={detected_url!r}: {exc}")
-                    website_extraction_result = None
-                if website_extraction_result:
-                    website_keywords = website_extraction_result.get("keywords")
-                    if website_keywords:
-                        routed_keywords = website_keywords
-                        log.info(f"Website-derived keywords used | url={detected_url!r} | keywords={routed_keywords}")
-                    website_answer_context = website_intelligence.format_structured_summary_for_answer(
-                        website_extraction_result.get("structured_summary")
-                    )
-            elif topic_match_result["topic_matches_website"] is True:
-                # Topic genuinely connects to the website — use the
-                # keywords produced by the SAME call, exactly like
-                # extract_keywords_from_website()'s existing output is
-                # used today. The structured summary also comes straight
-                # from this SAME call's own "structured_summary" field —
-                # no separate summarize_website_structured() call needed.
-                if topic_match_result.get("keywords"):
-                    routed_keywords = topic_match_result["keywords"]
-                    log.info(
-                        f"Topic-vs-website match confirmed | url={detected_url!r} | "
-                        f"keywords={routed_keywords}"
-                    )
-                website_answer_context = website_intelligence.format_structured_summary_for_answer(
-                    topic_match_result.get("structured_summary")
-                )
-            else:
-                # BEHAVIOR 3's actual trigger — the stated topic does NOT
-                # connect to this website: tell the user plainly instead
-                # of enqueuing an irrelevant search, and skip the rest of
-                # the search pipeline for this request entirely.
-                mismatch_answer = website_intelligence.build_topic_mismatch_reply(query)
-
-                redirect_chat_id = None
-                try:
-                    if not owner_key:
-                        owner_key, owner_type = get_owner(request)
-                    if not active_chat_id or not get_chat_session(active_chat_id, owner_key):
-                        active_chat_id = create_chat_session(owner_key, owner_type, title=generate_chat_title(query))
-                    request.session["active_chat_id"] = active_chat_id
-
-                    add_chat_message_to_chat(active_chat_id, owner_key, query, mismatch_answer)
-                    try:
-                        append_to_chat_summary(active_chat_id, owner_key, query, mismatch_answer)
-                    except Exception as exc:
-                        log.warning(f"Updating chat summary failed for chat_id={active_chat_id}: {exc}")
-                    redirect_chat_id = active_chat_id
-                except Exception as exc:
-                    log.warning(f"Saving topic-mismatch reply failed for query={query!r}: {exc}")
-
-                if redirect_chat_id:
-                    return RedirectResponse(url=f"/chat/{redirect_chat_id}", status_code=303)
-                return RedirectResponse(url="/", status_code=303)
-
-    # (unfiltered mode) routed_unfiltered as parsed from the router is NEVER
-    # trusted blindly — flintel.is_time_only_request() requires a genuine
-    # positive time_window_days before "unfiltered" is allowed to mean
-    # anything. This re-assigns routed_unfiltered to the VALIDATED result,
-    # so this same, now-safe value is what both the keywords decision below
-    # AND the add_search_to_chat(...) call further down use — an
-    # unvalidated flag is never allowed to reach either place.
-    routed_unfiltered = bool(routed_unfiltered) and flintel.is_time_only_request(routed)
-
-    # (KEYWORD-GENERATION SWAP) Keywords now come from the SAME Claude
-    # routing call above instead of the old plain-Python template
-    # generator (or, per the two features above, from the clarify
-    # self-resolve step or the website-URL extraction step). generate_
-    # fuzzy_keywords() is KEPT, unchanged, purely as a safety-net fallback
-    # for when none of those produced usable keywords.
-    if routed_keywords:
-        keywords = routed_keywords
-    elif routed_unfiltered:
-        # (unfiltered mode) A validated unfiltered request skips keyword
-        # generation entirely — get_matched_signals() takes the
-        # unfiltered=True early-return path instead of ever needing a
-        # keyword list. If routed_unfiltered is False (unvalidated, or the
-        # router never set it), this branch is never taken and behavior
-        # below is 100% identical to before this feature.
-        keywords = []
-    else:
-        log.warning(
-            f"No usable keywords from the Claude router for query={query!r} "
-            f"— falling back to generate_fuzzy_keywords()"
-        )
-        keywords = generate_fuzzy_keywords(query)
-    keywords = keywords[:MAX_KEYWORDS]
-
-    # (TIME-WINDOW FEATURE) time_window_days is purely a downstream
-    # matching/filtering concern — see get_matched_signals() — so it is
-    # NOT passed into enqueue_search_job() (the background service's job
-    # doesn't change based on it); it's only carried along onto the chat
-    # message below so re-matching this same message later stays scoped
-    # to the same window the user actually asked for.
-    time_window_days = routed_time_window_days
-
-    enqueue_search_job(topic_key, keywords, targeting_platform)
-
-    # Chat/session bookkeeping is best-effort on top of the above: if
-    # anything here fails — a stale/corrupt session cookie, a hiccup on the
-    # flintel_users_chat collection, a Claude API error, etc. — it must
-    # NEVER take down or skip the actual search job that was just queued.
-    redirect_chat_id = None
-    try:
-        if not owner_key:
-            owner_key, owner_type = get_owner(request)
-        active_chat_id = active_chat_id or chat_id or request.session.get("active_chat_id")
-        if not active_chat_id or not get_chat_session(active_chat_id, owner_key):
-            active_chat_id = create_chat_session(owner_key, owner_type, title=generate_chat_title(query))
-        request.session["active_chat_id"] = active_chat_id
-        add_search_to_chat(
-            active_chat_id, owner_key, query, topic_key, keywords, targeting_platform,
-            time_window_days=time_window_days,
-            unfiltered=routed_unfiltered,
-            website_context=website_answer_context,
-        )
-        redirect_chat_id = active_chat_id
-    except Exception as exc:
-        log.warning(f"Chat bookkeeping failed for topic_key={topic_key} (job was still queued): {exc}")
-
-    # Stay on the same chat thread — like Claude/ChatGPT keeping you in the
-    # conversation you're in, instead of bouncing back to the home screen.
-    if redirect_chat_id:
-        return RedirectResponse(url=f"/chat/{redirect_chat_id}", status_code=303)
-    return RedirectResponse(url="/", status_code=303)
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# ROUTES — CHATS
-# ─────────────────────────────────────────────────────────────────────────────
-
-@app.get("/chats")
-def list_chats(request: Request):
-    """Sidebar-style list of every chat belonging to the current owner
-    (signed-in email, or guest UUID)."""
-    owner_key, _owner_type = get_owner(request)
-    return {"chats": get_user_chats(owner_key)}
-
-
-@app.post("/chats/new")
-def new_chat(request: Request, title: str = Form(None)):
-    """(NEW CHAT BEHAVIOR FIX) Clicking "New chat" now behaves exactly
-    like Claude/ChatGPT: it does NOT create any new chat document in
-    Mongo, and does NOT touch any existing chat. It only clears
-    `active_chat_id` from the session, so the very next page load
-    (home()) renders the empty/home search screen with no active chat
-    selected — ready for the user to type their first message.
-
-    The actual chat document is still created lazily, exactly as it
-    already is: the moment the user's first message is sent via
-    POST /search (chat, blocked, clarify, or search intent), that
-    existing, UNCHANGED logic creates a new chat via
-    create_chat_session() whenever active_chat_id is missing or invalid
-    for the current owner. Nothing about that creation logic changed.
-
-    REMOVED (no longer needed): the previous v4.4 FIX reuse-if-empty
-    logic that checked whether the currently active chat had zero
-    messages and reused it instead of creating a duplicate — that
-    problem can no longer occur, since this route itself never creates
-    an empty chat anymore for there to be a duplicate of.
-
-    `title` is still accepted as a form parameter for backward-
-    compatible form compatibility with any existing frontend that posts
-    it, but it is no longer used for anything, since no chat is created
-    here to title."""
-    request.session.pop("active_chat_id", None)
-    return RedirectResponse(url="/", status_code=303)
-
-
-@app.get("/chat/{chat_id}")
-def view_chat(request: Request, chat_id: str, background_tasks: BackgroundTasks):
-    """Opens a specific past chat and makes it active again — this is how
-    a returning user (or a user who just logged back in with their email)
-    gets the same chat back, including any previously matched post cards
-    AND Claude's previously generated answer, exactly as saved.
-
-    Note for the template: render each message's `query`, `results`
-    (title, post_text, post_url, platform) as post cards, and
-    `claude_answer` as the actual answer text. `keywords` and
-    `time_window_days` stay on the message purely for internal use and
-    should not be displayed here. (v5) A message with
-    `"message_type": "chat"` has no `results` to show (it's always an
-    empty list) — just render `query` + `claude_answer` like a normal
-    conversational turn, with no post cards underneath. (v6) A polite
-    "blocked" decline, a "clarify" clarifying question, and a timeout
-    "nothing found yet" answer all use this exact same rendering path
-    already — no template changes needed for any of them.
-
-    NOTE (JSON-ANALYSIS-PROMPT SWAP): `claude_answer` will now typically
-    be a raw JSON string for search-type messages. This template contract
-    note is left exactly as it was — no template/rendering changes were
-    made as part of that swap, per what was asked.
-
-    (STREAMING WIRING FIX) Before filling anything in, this now looks at
-    the LAST message in the chat: if it has a `topic_key` and its
-    `claude_answer` is still falsy, that message's `topic_key` is passed
-    to `_fill_in_message_outputs()` as `skip_topic_key`, so a template's
-    streaming JS is expected to open
-    `GET /chat/{chat_id}/stream?topic_key=...` for that one message
-    instead."""
-    owner_key, _owner_type = get_owner(request)
-    chat = get_chat_session(chat_id, owner_key)
-    if not chat:
-        return RedirectResponse(url="/", status_code=303)
-
-    request.session["active_chat_id"] = chat_id
-
-    # (STREAMING WIRING FIX) Identify the one freshly-added search-type
-    # message (if any) still waiting on its very first answer, so it can
-    # be reserved for the new streaming route instead of being filled in
-    # here like every other message.
-    pending_stream_topic_key = None
-    messages = chat.get("messages") or []
-    if messages:
-        latest_msg = messages[-1]
-        if latest_msg.get("topic_key") and latest_msg.get("claude_answer") is None:
-            pending_stream_topic_key = latest_msg["topic_key"]
-
-    # Same best-effort fill-in as home(): compute post cards + Claude's
-    # answer for any SEARCH-type message that doesn't have them yet.
-    if messages:
-        _fill_in_message_outputs(chat_id, owner_key, messages, skip_topic_key=pending_stream_topic_key,
-                                  background_tasks=background_tasks)
-
-    return templates.TemplateResponse(
-        "chat.html",
-        {
-            "request": request,
-            "user": get_current_user(request),
-            "chat": chat,
-            "chats": get_user_chats(owner_key),
-            "pending_stream_topic_key": pending_stream_topic_key,
-        },
-    )
-
-
-@app.get("/chat/{chat_id}/stream")
-def stream_answer(request: Request, chat_id: str, topic_key: str):
-    """(STREAMING ADD-ON, rebuilt by SIMULATED-STREAM FIX) Server-Sent-
-    Events endpoint: delivers Claude's analysis answer for one specific
-    search-type message (identified by `topic_key`, within this chat) as
-    a sequence of small paced chunks, so a template can show it arriving
-    with the same "typing" impression as Claude.ai/ChatGPT.
-
-    Each SSE event is a JSON payload on a `data:` line:
-      {"delta": "<next chunk of text>"}   -- zero or more, as text is paced out
-      {"done": true}                       -- exactly once, when finished
-      {"error": "<short reason>"}          -- instead of the above, on failure
-
-    (SIMULATED-STREAM FIX) The text streamed out here is NOT Claude's raw
-    token-by-token output. `event_generator()` first calls the existing,
-    UNCHANGED, blocking `analyze_with_claude()` to get the COMPLETE
-    answer, runs it through `_patch_post_urls_into_answer()`, THEN paces
-    that final string out in small pieces (`STREAM_CHUNK_CHARS`
-    characters, `STREAM_CHUNK_DELAY_SECONDS` pause between pieces) to
-    reproduce the live-typing impression.
-
-    On successful completion, this SAME already-patched string is saved
-    via the EXACT SAME save_claude_answer_to_chat() /
-    append_to_chat_summary() / save_signal_results_to_chat() calls
-    already used by _fill_in_message_outputs().
-
-    Unchanged guard: if the target message's `claude_answer` is already
-    truthy, this immediately replays that cached text as a single `delta`
-    event followed by `done`, and returns — it never redoes any
-    matching/Claude work for a message that already has its answer.
-
-    (TIME-WINDOW FEATURE) The ONLY change in this route: the
-    get_matched_signals() call now also passes
-    `since_days=msg.get("time_window_days")` — for every message with no
-    stored time window (every message from before this feature, and any
-    new message where the user gave no time range) this is None and
-    behaves exactly as before."""
-    owner_key, _owner_type = get_owner(request)
-    chat = get_chat_session(chat_id, owner_key)
-
-    if not chat:
-        def _no_chat():
-            yield f"data: {json.dumps({'error': 'chat not found'})}\n\n"
-        return StreamingResponse(_no_chat(), media_type="text/event-stream")
-
-    msg = next(
-        (m for m in chat.get("messages", []) if m.get("topic_key") == topic_key),
-        None,
-    )
-    if not msg:
-        def _no_msg():
-            yield f"data: {json.dumps({'error': 'message not found'})}\n\n"
-        return StreamingResponse(_no_msg(), media_type="text/event-stream")
-
-    # Already generated/cached earlier (via the normal blocking path, or
-    # a previous call to this same route) — replay it instead of ever
-    # re-calling Claude for it again.
-    if msg.get("claude_answer"):
-        cached_answer = msg["claude_answer"]
-
-        def _cached():
-            yield f"data: {json.dumps({'delta': cached_answer})}\n\n"
-            yield f"data: {json.dumps({'done': True})}\n\n"
-        return StreamingResponse(_cached(), media_type="text/event-stream")
-
-    try:
-        matched = get_matched_signals(
-            topic_key,
-            msg.get("keywords", []),
-            targeting_platform=msg.get("targeting_platform", "all"),
-            since_days=msg.get("time_window_days"),
-            unfiltered=msg.get("unfiltered", False),
-        )
-    except Exception as exc:
-        log.warning(f"Signal matching failed for streaming topic_key={topic_key}: {exc}")
-        matched = []
-
-    def event_generator():
-        # (PER-USER BUSY LOCK) Set right at the start of the whole
-        # generator, cleared in the finally below — covers every exit
-        # path (the early error-return, and the normal completion path
-        # after the answer is saved) exactly once, so the flag is never
-        # left set no matter how this generator ends.
-        _set_owner_busy(owner_key)
-        try:
-            # (SIMULATED-STREAM FIX) Step 1: get the COMPLETE answer first,
-            # via the same blocking function every other answer path in this
-            # file already uses — no raw live Claude tokens are sent to the
-            # browser anymore.
-            try:
-                extra_ctx = None
-                if msg.get("unfiltered"):
-                    extra_ctx = flintel.build_unfiltered_answer_context(
-                        msg["query"], msg.get("time_window_days")
-                    )
-                full_answer = analyze_with_claude(msg["query"], matched, extra_context=extra_ctx)
-            except Exception as exc:
-                log.warning(f"Streaming Claude analysis failed for topic_key={topic_key}: {exc}")
-                yield f"data: {json.dumps({'error': 'analysis failed'})}\n\n"
-                return
-
-            full_answer = (full_answer or "").strip()
-
-            # (SIMULATED-STREAM FIX) Step 2: patch real post_url values into
-            # the complete answer BEFORE any of it is ever sent to the
-            # browser.
-            if full_answer:
-                full_answer = _patch_post_urls_into_answer(full_answer, matched)
-                if msg.get("website_context"):
-                    full_answer = _inject_website_context_into_answer(full_answer, msg["website_context"])
-
-            # (SIMULATED-STREAM FIX) Step 3: pace the now-final string back out
-            # in small pieces to reproduce the live-typing impression.
-            if full_answer:
-                for i in range(0, len(full_answer), STREAM_CHUNK_CHARS):
-                    piece = full_answer[i:i + STREAM_CHUNK_CHARS]
-                    yield f"data: {json.dumps({'delta': piece})}\n\n"
-                    if STREAM_CHUNK_DELAY_SECONDS > 0:
-                        time.sleep(STREAM_CHUNK_DELAY_SECONDS)
-
-            # Caching — identical calls/behavior to before, just now operating
-            # on the same already-patched string the user just watched arrive.
-            if full_answer:
-                try:
-                    save_claude_answer_to_chat(chat_id, owner_key, topic_key, full_answer)
-                    append_to_chat_summary(chat_id, owner_key, msg["query"], full_answer)
-                except Exception as exc:
-                    log.warning(f"Caching streamed answer failed for topic_key={topic_key}: {exc}")
-
-                # (RESULTS-RECOMPUTE FIX) Compute + save results_to_save
-                # unconditionally here (not gated on `if matched:`) — a
-                # genuinely empty `matched` still needs its final `[]`
-                # value persisted via save_signal_results_to_chat(), or
-                # this message's `results` stays at its uncomputed `None`
-                # forever even though its answer is already cached,
-                # triggering a needless full re-match on every later view.
-                claude_format = _extract_claude_format(full_answer)
-                results_to_save = [] if claude_format in _NO_DATA_CLAUDE_FORMATS else matched
-                try:
-                    save_signal_results_to_chat(chat_id, owner_key, topic_key, results_to_save)
-                except Exception as exc:
-                    log.warning(f"Saving matched results failed for topic_key={topic_key}: {exc}")
-
-            yield f"data: {json.dumps({'done': True})}\n\n"
-        finally:
-            _clear_owner_busy(owner_key)
-
-    return StreamingResponse(event_generator(), media_type="text/event-stream")
-
-
-@app.post("/chat/{chat_id}/delete")
-def delete_chat(request: Request, chat_id: str):
-    """(v4.3) Deletes exactly ONE chat belonging to the current owner —
-    never every chat for that owner, and never a chat belonging to a
-    different owner (signed-in email or guest UUID)."""
-    owner_key, _owner_type = get_owner(request)
-    deleted = delete_chat_session(chat_id, owner_key)
-
-    if deleted and request.session.get("active_chat_id") == chat_id:
-        request.session.pop("active_chat_id", None)
-
-    return RedirectResponse(url="/", status_code=303)
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# ROUTES — AUTH: GOOGLE OAUTH
-# ─────────────────────────────────────────────────────────────────────────────
-
-@app.get("/auth/google/login")
-async def google_login(request: Request):
-    redirect_uri = request.url_for("google_callback")
-    return await oauth.google.authorize_redirect(request, redirect_uri)
-
-
-@app.get("/auth/google/callback")
-async def google_callback(request: Request):
-    try:
-        token = await oauth.google.authorize_access_token(request)
-    except Exception as exc:
-        log.warning(f"Google OAuth callback failed: {exc}")
-        return templates.TemplateResponse(
-            "index.html",
-            {"request": request, "error": "Google sign-in failed. Please try again.", "user": None},
-        )
-
-    userinfo = token.get("userinfo")
-    if not userinfo:
-        userinfo = await oauth.google.parse_id_token(request, token)
-
-    google_id = userinfo["sub"]
-    email = userinfo["email"]
-    name = userinfo.get("name") or email
-
-    # Capture the guest UUID (if any) BEFORE login overwrites how get_owner()
-    # resolves this request, so we can migrate any guest chats onto the
-    # account being signed into — same as v2's existing linking behavior,
-    # just extended to chat history too.
-    anon_id = request.session.get("anon_id")
-
-    user_doc = upsert_google_user(google_id=google_id, email=email, name=name)
-    _log_user_in(request, user_doc)
-    try:
-        migrate_anon_chats_to_owner(anon_id, email)
-    except Exception as exc:
-        log.warning(f"Guest chat migration failed for {email} (sign-in still succeeded): {exc}")
-    log.info(f"Google sign-in | email={email}")
-
-    return RedirectResponse(url="/")
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# ROUTES — AUTH: EMAIL + PASSWORD
-# ─────────────────────────────────────────────────────────────────────────────
-
-@app.post("/signup")
-def signup(
-    request: Request,
-    email: str = Form(...),
-    password: str = Form(...),
-    confirm_password: str = Form(...),
-):
-    email_norm = email.strip().lower()
-
-    if password != confirm_password:
-        return templates.TemplateResponse(
-            "index.html",
-            {"request": request, "error": "Passwords do not match.", "user": None},
-        )
-
-    if len(password) < 8:
-        return templates.TemplateResponse(
-            "index.html",
-            {"request": request, "error": "Password must be at least 8 characters.", "user": None},
-        )
-
-    if users_collection.find_one({"email": email_norm}):
-        return templates.TemplateResponse(
-            "index.html",
-            {"request": request, "error": "An account with that email already exists.", "user": None},
-        )
-
-    anon_id = request.session.get("anon_id")
-
-    password_hash = pwd_context.hash(password)
-    user_doc = create_email_user(email_norm, password_hash)
-    _log_user_in(request, user_doc)
-    try:
-        migrate_anon_chats_to_owner(anon_id, email_norm)
-    except Exception as exc:
-        log.warning(f"Guest chat migration failed for {email_norm} (signup still succeeded): {exc}")
-    log.info(f"New email signup | email={email_norm}")
-
-    return RedirectResponse(url="/", status_code=303)
-
-
-@app.post("/login")
-def login(request: Request, email: str = Form(...), password: str = Form(...)):
-    email_norm = email.strip().lower()
-    user = users_collection.find_one({"email": email_norm})
-
-    if not user or not user.get("password_hash") or not pwd_context.verify(password, user["password_hash"]):
-        return templates.TemplateResponse(
-            "index.html",
-            {"request": request, "error": "Invalid email or password.", "query": None, "user": None},
-        )
-
-    anon_id = request.session.get("anon_id")
-
-    users_collection.update_one(
-        {"_id": user["_id"]}, {"$set": {"last_login_at": datetime.now(timezone.utc)}}
-    )
-    _log_user_in(request, user)
-    try:
-        migrate_anon_chats_to_owner(anon_id, email_norm)
-    except Exception as exc:
-        log.warning(f"Guest chat migration failed for {email_norm} (login still succeeded): {exc}")
-    log.info(f"Email login | email={email_norm}")
-
-    return RedirectResponse(url="/", status_code=303)
-
-
-@app.get("/logout")
-def logout(request: Request):
-    # Clearing the session only drops the login cookie and the guest UUID
-    # for THIS browser session — nothing is deleted from Mongo. Because
-    # chats are stored keyed by email, logging back in with the same email
-    # looks the chats up again via get_owner() -> get_user_chats() and
-    # they're right where they were, same as Claude/ChatGPT.
-    request.session.clear()
-    return RedirectResponse(url="/")
-
+import routes  # noqa: F401  (registers every route on `app`)
 
 if __name__ == "__main__":
     import uvicorn
