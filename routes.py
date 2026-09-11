@@ -26,6 +26,7 @@ from index import (
     RESPONSE_TIMEOUT,
     STREAM_CHUNK_CHARS,
     STREAM_CHUNK_DELAY_SECONDS,
+    MAX_KEYWORDS,                       # <-- FIX: was missing, caused NameError in search()
     # business logic
     normalize_topic_key,
     normalize_platform,
@@ -61,11 +62,14 @@ from index import (
     save_claude_answer_to_chat,
     migrate_anon_chats_to_owner,
     _is_owner_busy,
+    _set_owner_busy,                    # <-- FIX: was missing, used in stream_answer()
+    _clear_owner_busy,                  # <-- FIX: was missing, used in stream_answer()
     _fill_in_message_outputs,
     CLAUDE_BLOCKED_FALLBACK_REPLY,
     CLAUDE_CLARIFY_FALLBACK_REPLY,
     CLAUDE_CHAT_FALLBACK_SYSTEM_PROMPT,
 )
+from database import users_collection  # <-- FIX: was missing, used in signup()/login()
 from datetime import datetime, timezone
 
 
@@ -1060,4 +1064,3 @@ def logout(request: Request):
     # they're right where they were, same as Claude/ChatGPT.
     request.session.clear()
     return RedirectResponse(url="/")
-
