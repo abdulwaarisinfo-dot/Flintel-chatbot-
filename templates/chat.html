@@ -2067,11 +2067,11 @@
           const wrap = document.createElement('div');
           wrap.className = 'answer-wrap stream-reveal';
           // (FRONTEND CLOSEST-MATCHES FEATURE) Same data-matched-results
-          // convention the Jinja-rendered case uses (see the
-          // {% elif msg.claude_answer %} branch above) — payload.results
-          // is the new, additive field the backend's SSE "done" event now
-          // includes, so a freshly-streamed answer's post cards render
-          // the exact same way a page-loaded one already does.
+          // convention the Jinja-rendered case uses (see the msg.claude_answer
+          // branch above) — payload.results is the new, additive field the
+          // backend's SSE "done" event now includes, so a freshly-streamed
+          // answer's post cards render the exact same way a page-loaded one
+          // already does.
           wrap.dataset.matchedResults = JSON.stringify(payload.results || []);
           const rawDiv = document.createElement('div');
           rawDiv.className = 'answer-raw';
