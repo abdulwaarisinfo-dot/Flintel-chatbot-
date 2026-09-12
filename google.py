@@ -62,12 +62,26 @@ GOOGLE_SEARCH_MAX_RESULTS_PER_KEYWORD = int(os.getenv("GOOGLE_SEARCH_MAX_RESULTS
 # Network timeout for the RapidAPI call itself.
 GOOGLE_SEARCH_TIMEOUT_SECONDS = int(os.getenv("GOOGLE_SEARCH_TIMEOUT_SECONDS", "15"))
 
-# search_google_for_reddit_posts() only folds the first this-many keywords
-# into its query string — a query built from every keyword in a long list
-# quickly stops reading like something a person (or Google) would match
-# well against, and a shorter, sharper query is more likely to surface
-# genuinely relevant Reddit threads than a long keyword-soup one.
-GOOGLE_QUERY_MAX_KEYWORDS = int(os.getenv("GOOGLE_QUERY_MAX_KEYWORDS", "5"))
+# (2-KEYWORD BATCHING) How many keywords are folded into ONE RapidAPI
+# query. Lowered from the old "combine-up-to-5-into-one-query" behavior
+# to 2, based on real-world background-service experience: bundling many
+# keywords into a single query returns FEWER/weaker results than running
+# several tighter, smaller-keyword-count queries and combining their
+# results. ALL of the caller's keywords are now covered (not just the
+# first N and silently dropping the rest) — see
+# search_google_for_reddit_posts() below, which now loops over
+# consecutive batches of this size instead of using only the first
+# GOOGLE_QUERY_MAX_KEYWORDS keywords.
+GOOGLE_QUERY_KEYWORDS_PER_BATCH = int(os.getenv("GOOGLE_QUERY_KEYWORDS_PER_BATCH", "2"))
+
+# (DEPTH PARAMETER) Sent on every RapidAPI call as the "depth" query
+# param, asking the provider to search deeper into Google's own result
+# set. Purely a request-side parameter — does NOT change
+# GOOGLE_SEARCH_MAX_RESULTS_PER_KEYWORD below, which remains the
+# separate, LOCAL, post-fetch cap on how many results any single call's
+# response is allowed to contribute (still 10 by default, completely
+# unchanged).
+GOOGLE_SEARCH_DEPTH = int(os.getenv("GOOGLE_SEARCH_DEPTH", "200"))
 
 # Matches a normal Reddit post/subreddit URL path to pull out the
 # subreddit name — e.g. "https://www.reddit.com/r/webdev/comments/..."
@@ -100,7 +114,10 @@ def _call_rapidapi_google_search(query: str):
     }
     try:
         with httpx.Client(timeout=GOOGLE_SEARCH_TIMEOUT_SECONDS) as client:
-            response = client.get(url, headers=headers, params={"query": query})
+            response = client.get(
+                url, headers=headers,
+                params={"query": query, "depth": GOOGLE_SEARCH_DEPTH},
+            )
             response.raise_for_status()
             return response.json()
     except Exception:
@@ -179,11 +196,16 @@ def _extract_reddit_results(raw_response) -> list:
 
 
 def search_google_for_reddit_posts(keywords: list, google_posts_collection, search_keyword_for_storage: str = None) -> list:
-    """Public entry point index.py calls. Builds ONE query string from
-    the first GOOGLE_QUERY_MAX_KEYWORDS of `keywords` (a Reddit-site-
-    restricted search, e.g. "site:reddit.com keyword1 keyword2 ..."),
-    asks Google (via RapidAPI) for matches, keeps only the Reddit
-    results, and upserts a lightweight stub document per result into
+    """Public entry point index.py calls. Splits ALL of the caller's
+    non-empty string keywords (not just a fixed first-N subset) into
+    consecutive batches of GOOGLE_QUERY_KEYWORDS_PER_BATCH keywords each
+    (default 2), and makes ONE separate RapidAPI call per batch (each a
+    Reddit-site-restricted search, e.g.
+    "site:reddit.com keyword1 keyword2") — see GOOGLE_QUERY_KEYWORDS_PER_BATCH's
+    own comment for why several smaller-keyword-count queries replaced
+    the old single-combined-query approach. Keeps only the Reddit results
+    from each batch, de-duplicates by post_url across all batches, and
+    upserts a lightweight stub document per remaining result into
     `google_posts_collection` — real content for each URL is fetched
     later, out of band, by Background Service #2 (not part of this
     file), which is why a stub only ever records discovery metadata and
@@ -193,7 +215,13 @@ def search_google_for_reddit_posts(keywords: list, google_posts_collection, sear
     a pre-existing stub — possibly already reddit_fetched=True from a
     prior background fetch — is never overwritten or reset back to
     False by a later, repeated search that happens to surface the same
-    URL again.
+    URL again. fuzzy_keywords still gets the caller's FULL original
+    `keywords` list merged in via $addToSet on every result (not just
+    that result's own 2-keyword batch), exactly as before this change.
+
+    A batch whose own RapidAPI call fails, or whose response has no
+    usable Reddit results, is simply skipped — the loop moves on to the
+    next batch rather than aborting the whole function.
 
     Returns the list of stub dicts that now exist for this search
     (freshly inserted OR already-existing ones matching post_url), so
@@ -210,63 +238,75 @@ def search_google_for_reddit_posts(keywords: list, google_posts_collection, sear
         return []
 
     try:
-        query_keywords = [k for k in keywords[:GOOGLE_QUERY_MAX_KEYWORDS] if isinstance(k, str) and k.strip()]
-        if not query_keywords:
+        clean_keywords = [k for k in keywords if isinstance(k, str) and k.strip()]
+        if not clean_keywords:
             return []
-        query = "site:reddit.com " + " ".join(query_keywords)
+        default_search_keyword = search_keyword_for_storage or clean_keywords[0]
 
-        raw_response = _call_rapidapi_google_search(query)
-        extracted = _extract_reddit_results(raw_response)
-        if not extracted:
-            return []
+        batches = [
+            clean_keywords[i:i + GOOGLE_QUERY_KEYWORDS_PER_BATCH]
+            for i in range(0, len(clean_keywords), GOOGLE_QUERY_KEYWORDS_PER_BATCH)
+        ]
 
-        extracted = extracted[:GOOGLE_SEARCH_MAX_RESULTS_PER_KEYWORD]
-        stubs = []
         now = datetime.now(timezone.utc)
-        default_search_keyword = search_keyword_for_storage or (keywords[0] if keywords else None)
+        stubs = []
+        seen_post_urls = set()
 
-        for result in extracted:
-            doc = {
-                "post_url": result["post_url"],
-                "discovered_at": now,
-                "fetched_at": None,
-                "fuzzy_keywords": keywords,
-                "fuzzy_matched": True,
-                "google_rank": result["google_rank"],
-                "next_retry_at": None,
-                "reddit_fetched": False,
-                "search_keyword": default_search_keyword,
-                "subreddit": result["subreddit"],
-            }
-            try:
-                # (KEYWORD-MERGE FIX) Split off fuzzy_keywords so it can
-                # go through $addToSet/$each instead of $setOnInsert —
-                # $setOnInsert only ever applies on the FIRST insert, so
-                # a later search that rediscovers this same post_url
-                # under different keywords would otherwise have its
-                # keywords silently dropped. $addToSet/$each merges them
-                # into the existing array (deduplicated) on every call,
-                # insert or not, while every other field below still
-                # only ever gets set once, on first insert, exactly as
-                # before.
-                doc_without_fuzzy_keywords = {k: v for k, v in doc.items() if k != "fuzzy_keywords"}
-                google_posts_collection.update_one(
-                    {"post_url": doc["post_url"]},
-                    {
-                        "$setOnInsert": doc_without_fuzzy_keywords,
-                        "$addToSet": {"fuzzy_keywords": {"$each": doc["fuzzy_keywords"]}},
-                    },
-                    upsert=True,
-                )
-                # Read back whatever now actually exists for this
-                # post_url (freshly inserted, or a pre-existing stub
-                # that $setOnInsert correctly left untouched) so the
-                # caller always gets the real, current stored state —
-                # not just the doc this call attempted to insert.
-                stored = google_posts_collection.find_one({"post_url": doc["post_url"]}, {"_id": 0})
-                stubs.append(stored if stored else doc)
-            except Exception:
+        for batch_keywords in batches:
+            query = "site:reddit.com " + " ".join(batch_keywords)
+            raw_response = _call_rapidapi_google_search(query)
+            extracted = _extract_reddit_results(raw_response)
+            if not extracted:
                 continue
+
+            extracted = extracted[:GOOGLE_SEARCH_MAX_RESULTS_PER_KEYWORD]
+
+            for result in extracted:
+                if result["post_url"] in seen_post_urls:
+                    continue
+                seen_post_urls.add(result["post_url"])
+
+                doc = {
+                    "post_url": result["post_url"],
+                    "discovered_at": now,
+                    "fetched_at": None,
+                    "fuzzy_keywords": keywords,
+                    "fuzzy_matched": True,
+                    "google_rank": result["google_rank"],
+                    "next_retry_at": None,
+                    "reddit_fetched": False,
+                    "search_keyword": default_search_keyword,
+                    "subreddit": result["subreddit"],
+                }
+                try:
+                    # (KEYWORD-MERGE FIX) Split off fuzzy_keywords so it can
+                    # go through $addToSet/$each instead of $setOnInsert —
+                    # $setOnInsert only ever applies on the FIRST insert, so
+                    # a later search that rediscovers this same post_url
+                    # under different keywords would otherwise have its
+                    # keywords silently dropped. $addToSet/$each merges them
+                    # into the existing array (deduplicated) on every call,
+                    # insert or not, while every other field below still
+                    # only ever gets set once, on first insert, exactly as
+                    # before.
+                    doc_without_fuzzy_keywords = {k: v for k, v in doc.items() if k != "fuzzy_keywords"}
+                    google_posts_collection.update_one(
+                        {"post_url": doc["post_url"]},
+                        {
+                            "$setOnInsert": doc_without_fuzzy_keywords,
+                            "$addToSet": {"fuzzy_keywords": {"$each": doc["fuzzy_keywords"]}},
+                        },
+                        upsert=True,
+                    )
+                    # Read back whatever now actually exists for this
+                    # post_url (freshly inserted, or a pre-existing stub
+                    # that $setOnInsert correctly left untouched) so the
+                    # caller always gets the real, current stored state —
+                    # not just the doc this call attempted to insert.
+                    stored = google_posts_collection.find_one({"post_url": doc["post_url"]}, {"_id": 0})
+                    stubs.append(stored if stored else doc)
+                except Exception:
+                    continue
 
         return stubs
     except Exception:
