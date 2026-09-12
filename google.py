@@ -239,9 +239,23 @@ def search_google_for_reddit_posts(keywords: list, google_posts_collection, sear
                 "subreddit": result["subreddit"],
             }
             try:
+                # (KEYWORD-MERGE FIX) Split off fuzzy_keywords so it can
+                # go through $addToSet/$each instead of $setOnInsert —
+                # $setOnInsert only ever applies on the FIRST insert, so
+                # a later search that rediscovers this same post_url
+                # under different keywords would otherwise have its
+                # keywords silently dropped. $addToSet/$each merges them
+                # into the existing array (deduplicated) on every call,
+                # insert or not, while every other field below still
+                # only ever gets set once, on first insert, exactly as
+                # before.
+                doc_without_fuzzy_keywords = {k: v for k, v in doc.items() if k != "fuzzy_keywords"}
                 google_posts_collection.update_one(
                     {"post_url": doc["post_url"]},
-                    {"$setOnInsert": doc},
+                    {
+                        "$setOnInsert": doc_without_fuzzy_keywords,
+                        "$addToSet": {"fuzzy_keywords": {"$each": doc["fuzzy_keywords"]}},
+                    },
                     upsert=True,
                 )
                 # Read back whatever now actually exists for this
