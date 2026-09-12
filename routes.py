@@ -8,6 +8,7 @@ for its side effect of registering these routes.
 
 import json
 import time
+import threading
 import logging
 
 from fastapi import Request, Form, BackgroundTasks
@@ -777,7 +778,7 @@ def view_chat(request: Request, chat_id: str, background_tasks: BackgroundTasks)
 
 
 @app.get("/chat/{chat_id}/stream")
-def stream_answer(request: Request, chat_id: str, topic_key: str, background_tasks: BackgroundTasks):
+def stream_answer(request: Request, chat_id: str, topic_key: str):
     """(STREAMING ADD-ON, rebuilt by SIMULATED-STREAM FIX) Server-Sent-
     Events endpoint: delivers Claude's analysis answer for one specific
     search-type message (identified by `topic_key`, within this chat) as
@@ -944,13 +945,36 @@ def stream_answer(request: Request, chat_id: str, topic_key: str, background_tas
                     # already uses — fires at most once per message
                     # (mark_google_fallback_triggered() is set
                     # synchronously here, in this request, BEFORE
-                    # scheduling the background search, mirroring the
+                    # starting the background thread, mirroring the
                     # exact same race-condition fix already applied to
                     # this same trigger elsewhere in this codebase).
+                    #
+                    # (THREADING FIX) BackgroundTasks only ever runs AFTER
+                    # the full HTTP response has been sent and the
+                    # connection closed — but this SSE stream stays open
+                    # for the ENTIRE polling loop + analyze_with_claude()
+                    # call, up to RESPONSE_TIMEOUT (80s), so a scheduled
+                    # BackgroundTasks call would never actually start
+                    # running until AFTER the stub-results read-back at
+                    # the very end of this same request already happened,
+                    # silently breaking the whole 40s-fire/80s-read
+                    # timing this feature depends on. A real
+                    # threading.Thread starts running immediately, in
+                    # parallel with this still-open stream, so its writes
+                    # to flintel_google_posts are actually there by the
+                    # time RESPONSE_TIMEOUT's read-back runs.
+                    # _trigger_google_fallback_search() already has its
+                    # own try/except and never raises (see index.py), so
+                    # it's safe to run on a bare thread with no
+                    # additional wrapping here.
                     if flintel.should_trigger_google_fallback(
                             elapsed, msg.get("google_fallback_triggered", False)):
                         mark_google_fallback_triggered(chat_id, owner_key, topic_key)
-                        background_tasks.add_task(_trigger_google_fallback_search, chat_id, owner_key, msg)
+                        threading.Thread(
+                            target=_trigger_google_fallback_search,
+                            args=(chat_id, owner_key, msg),
+                            daemon=True,
+                        ).start()
                         msg["google_fallback_triggered"] = True
 
                     if elapsed >= RESPONSE_TIMEOUT:
