@@ -870,7 +870,15 @@ CHAT_SUMMARY_TURN_CHAR_LIMIT   = int(os.getenv("CHAT_SUMMARY_TURN_CHAR_LIMIT", "
 # the user a plain, natural "nothing found yet" answer, the same way
 # Claude/ChatGPT would rather than leaving them staring at a blank turn
 # forever. See _fill_in_message_outputs() below.
-RESPONSE_TIMEOUT = int(os.getenv("RESPONSE_TIMEOUT", "60"))
+# (RESPONSE_TIMEOUT BUMP) Previously 60 seconds. Raised to 80 seconds
+# so the Google-search fallback — triggered at
+# GOOGLE_FALLBACK_TRIGGER_SECONDS (40s, unchanged, in flintel.py) —
+# has a full 40-second window (40s to 80s) to complete its now-
+# batched RapidAPI calls (see google.py's GOOGLE_QUERY_KEYWORDS_PER_
+# BATCH) and have its stub results already stored in
+# flintel_google_posts BEFORE this timeout fires and reads them back,
+# instead of the previous, tighter 20-second window (40s to 60s).
+RESPONSE_TIMEOUT = int(os.getenv("RESPONSE_TIMEOUT", "80"))
 
 # (PER-USER BUSY LOCK) Same spirit as RESPONSE_TIMEOUT above: if a request
 # crashes or the server restarts while an owner is marked busy, the flag
