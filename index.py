@@ -776,6 +776,11 @@ from authlib.integrations.starlette_client import OAuth
 
 import flintel
 import website_intelligence
+import google as google_search   # the new google.py module
+    # (renamed on import to `google_search` to avoid any ambiguity
+    # with the unrelated third-party `google` package some
+    # environments have installed — module FILE stays google.py, only
+    # the import alias differs)
 from database import (
     db,
     jobs_collection,
@@ -783,6 +788,7 @@ from database import (
     users_collection,
     chats_collection,
     busy_owners_collection,
+    google_posts_collection,
 )
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -3542,7 +3548,15 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
     INTEGRATION POINT 2, when this search was derived from a website URL
     the user shared alongside a real ask. None means "no website context
     for this message," exactly like `time_window_days=None` already
-    means "no time range" for messages that don't have one."""
+    means "no time range" for messages that don't have one.
+
+    (GOOGLE-FALLBACK FEATURE) `google_fallback_triggered` always starts
+    False on a new message — flipped to True exactly once, by
+    mark_google_fallback_triggered(), the first time
+    _fill_in_message_outputs() decides to fire the Google-search
+    fallback for this message. Older messages (before this feature)
+    simply don't have this field at all; every read of it elsewhere
+    uses .get(..., False) so that's indistinguishable from False."""
     now = datetime.now(timezone.utc)
     message = {
         "query":              query,
@@ -3552,6 +3566,7 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
         "time_window_days":   time_window_days,  # (NEW) int or None — see get_matched_signals()
         "unfiltered":         unfiltered,
         "website_context":    website_context,
+        "google_fallback_triggered": False,
         "requested_at":       now,
         # (RESULTS-RECOMPUTE FIX) `None` here, not `[]` — an empty list is
         # a legitimate, ALREADY-COMPUTED final value (e.g. a "no_results"
@@ -3663,6 +3678,29 @@ def save_claude_answer_to_chat(chat_id: str, owner_key: str, topic_key: str, ans
     )
 
 
+def mark_google_fallback_triggered(chat_id: str, owner_key: str, topic_key: str):
+    """(GOOGLE-FALLBACK FEATURE) Same targeted-update pattern as
+    save_claude_answer_to_chat()/save_signal_results_to_chat() — flips
+    this one message's google_fallback_triggered field to True so
+    should_trigger_google_fallback() never fires the Google-search
+    fallback more than once for the same message, even if it found zero
+    Reddit results.
+
+    Best-effort, never raises past itself: any failure here is logged
+    and swallowed rather than breaking whatever background task called
+    this."""
+    try:
+        chats_collection.update_one(
+            {"chat_id": chat_id, "owner_key": owner_key, "messages.topic_key": topic_key},
+            {"$set": {
+                "messages.$.google_fallback_triggered": True,
+                "updated_at": datetime.now(timezone.utc),
+            }},
+        )
+    except Exception as exc:
+        log.warning(f"Marking google_fallback_triggered failed for topic_key={topic_key}: {exc}")
+
+
 def migrate_anon_chats_to_owner(anon_id: str, new_owner_key: str):
     """When a guest signs up or logs in, re-key their guest chat history
     onto their account so it isn't lost — same pattern Claude/ChatGPT use
@@ -3728,7 +3766,35 @@ def _clear_owner_busy(owner_key: str):
         log.warning(f"Clearing busy flag failed for owner_key={owner_key}: {exc}")
 
 
-def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query: str):
+def _trigger_google_fallback_search(chat_id: str, owner_key: str, msg: dict):
+    """(GOOGLE-FALLBACK FEATURE) Fires the Google-search-for-Reddit-posts
+    fallback for a message that still has no flintel_signals match after
+    GOOGLE_FALLBACK_TRIGGER_SECONDS — see
+    flintel.should_trigger_google_fallback() for the timing decision this
+    is called in response to.
+
+    Marks mark_google_fallback_triggered() regardless of whether the
+    search found anything, so this only ever fires ONCE per message —
+    a message with zero Reddit results found is just as "done" here as
+    one that found several; either way there's nothing more for this
+    function to usefully retry.
+
+    Wrapped in try/except, never raises — a failure here just means this
+    message doesn't get any Google-sourced stub links, exactly like
+    before this feature existed."""
+    try:
+        google_search.search_google_for_reddit_posts(
+            msg.get("keywords", []),
+            google_posts_collection,
+            search_keyword_for_storage=msg.get("topic_key"),
+        )
+    except Exception as exc:
+        log.warning(f"Google-fallback search failed for topic_key={msg.get('topic_key')}: {exc}")
+    finally:
+        mark_google_fallback_triggered(chat_id, owner_key, msg["topic_key"])
+
+
+def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query: str, keywords: list = None):
     """(PERFORMANCE FIX) Extracted, UNCHANGED logic from the RESPONSE_TIMEOUT
     fallback branch that used to run inline inside _fill_in_message_outputs()
     — same calls, same order, same caching. Pulled out so it can be
@@ -3740,7 +3806,20 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
     it's now set synchronously in _fill_in_message_outputs(), before this
     function is even scheduled, so the flag is already in place before
     the response goes out. This function only clears it, in the finally
-    below, once the work actually finishes."""
+    below, once the work actually finishes.
+
+    (GOOGLE-FALLBACK FEATURE) New optional `keywords` parameter (default
+    None, so the one call site that doesn't pass it — there isn't one
+    left, but this keeps the signature change itself non-breaking) is
+    used to pull back whatever Google-sourced Reddit stub links were
+    already stored (by _trigger_google_fallback_search(), fired earlier
+    at the 40s mark) for this same message, without calling the Google
+    API a second time. Those stubs are reformatted into the same shape
+    get_matched_signals() returns and run through the EXISTING
+    _finalize_answer_and_results() helper — reusing BUG-2b's own
+    "no_data format + real matched list -> keep text, append closing
+    note, save the list as results" behavior with zero new branching
+    logic here."""
     try:
         # (BUG FIX — DON'T RE-SUGGEST A DECLINED ALTERNATIVE) Same
         # continuity context as _complete_message_answer_and_results()
@@ -3751,17 +3830,44 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
         except Exception as exc:
             log.warning(f"Chat summary lookup failed for topic_key={topic_key}: {exc}")
             chat_summary_for_answer = ""
-        extra_ctx = None
+        extra_ctx_parts = []
         if chat_summary_for_answer:
-            extra_ctx = (
+            extra_ctx_parts.append(
                 "Conversation so far (auto-summarized, may be empty) — see "
                 "the CONVERSATION CONTINUITY instruction above for how to "
                 "use this:\n" + chat_summary_for_answer
             )
+
+        # (GOOGLE-FALLBACK FEATURE) Pull back any stubs already stored at
+        # the 40s mark, so this can show them without a second Google
+        # API call — safe to call even if none were ever stored (returns
+        # []) or if the Google-fallback feature never fired for this
+        # message at all.
+        stub_docs = google_search.get_stub_results_for_keywords(
+            google_posts_collection, keywords or [])
+        google_results = flintel.format_google_stub_results(stub_docs)
+        google_ctx = flintel.build_google_fallback_answer_context(query, len(stub_docs))
+        extra_ctx_parts.append(google_ctx)
+
+        extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
         answer = analyze_with_claude(query, [], extra_context=extra_ctx)
-        save_claude_answer_to_chat(chat_id, owner_key, topic_key, answer)
+
+        # (GOOGLE-FALLBACK FEATURE) Reuses the EXISTING BUG-2b decision
+        # point instead of saving `answer`/no-results untouched — if
+        # Claude's own analysis picked a "no_data" format but real
+        # Google-sourced stub links exist, this keeps the honest text,
+        # appends the usual closing note, and saves the stub links as
+        # this message's results, exactly like a normal matched-signals
+        # answer already does elsewhere in this file.
+        final_answer, results_to_save = _finalize_answer_and_results(answer, google_results, seed=query)
+
+        save_claude_answer_to_chat(chat_id, owner_key, topic_key, final_answer)
         try:
-            append_to_chat_summary(chat_id, owner_key, query, answer)
+            save_signal_results_to_chat(chat_id, owner_key, topic_key, results_to_save)
+        except Exception as exc:
+            log.warning(f"Saving google-fallback results failed for topic_key={topic_key}: {exc}")
+        try:
+            append_to_chat_summary(chat_id, owner_key, query, final_answer)
         except Exception as exc:
             log.warning(f"Updating chat summary failed for topic_key={topic_key}: {exc}")
     except Exception as exc:
@@ -3988,16 +4094,34 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
             # once the message has been waiting longer than
             # RESPONSE_TIMEOUT seconds, give the user a plain "nothing
             # found" answer instead of leaving the turn blank forever.
-            if needs_answer and _elapsed_seconds(msg.get("requested_at")) >= RESPONSE_TIMEOUT:
+            elapsed = _elapsed_seconds(msg.get("requested_at"))
+
+            # (GOOGLE-FALLBACK FEATURE) Fires at 40s (only once per
+            # message, tracked via the message's own
+            # google_fallback_triggered field) — well before the 60s
+            # RESPONSE_TIMEOUT below, so any stub links it finds are
+            # already stored and ready by the time that fallback answer
+            # gets generated. This block only ever fires the Google
+            # search + stub storage — it never answers the user itself,
+            # so it always falls through to the existing RESPONSE_TIMEOUT
+            # check below regardless of what it does here.
+            if flintel.should_trigger_google_fallback(
+                    elapsed, msg.get("google_fallback_triggered", False)):
+                if background_tasks is not None:
+                    background_tasks.add_task(_trigger_google_fallback_search, chat_id, owner_key, msg)
+                else:
+                    _trigger_google_fallback_search(chat_id, owner_key, msg)
+
+            if needs_answer and elapsed >= RESPONSE_TIMEOUT:
                 # (BUSY-LOCK RACE FIX) Set synchronously, in THIS request,
                 # before scheduling/running the work — not inside the
                 # scheduled function itself, which could run after the
                 # response has already gone out to the browser.
                 _set_owner_busy(owner_key)
                 if background_tasks is not None:
-                    background_tasks.add_task(_timeout_fallback_answer, chat_id, owner_key, msg["topic_key"], msg["query"])
+                    background_tasks.add_task(_timeout_fallback_answer, chat_id, owner_key, msg["topic_key"], msg["query"], msg.get("keywords", []))
                 else:
-                    _timeout_fallback_answer(chat_id, owner_key, msg["topic_key"], msg["query"])
+                    _timeout_fallback_answer(chat_id, owner_key, msg["topic_key"], msg["query"], msg.get("keywords", []))
             continue
 
         # (BUGFIX PACK #1) Track whatever answer text is/becomes available
