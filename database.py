@@ -100,3 +100,36 @@ try:
     signals_collection.create_index("created_utc")
 except Exception as exc:
     log.warning(f"Could not create index on signals_collection.created_utc (likely already exists under a different name): {exc}")
+
+# (GOOGLE-SEARCH REDDIT-POST DISCOVERY) Lightweight "stub" documents for
+# Reddit URLs surfaced by google.py's RapidAPI Google search — real
+# content for each URL is fetched later, out of band, by Background
+# Service #2 (not part of this repo), which is why this collection only
+# ever stores discovery metadata (post_url, discovered_at, search
+# keywords, google_rank, subreddit) plus a reddit_fetched flag that
+# starts False.
+google_posts_collection = db.flintel_google_posts
+
+try:
+    # Prevents duplicate stubs for the same discovered URL across
+    # repeated searches/keywords; google.py's upsert relies on this.
+    google_posts_collection.create_index("post_url", unique=True)
+except Exception as exc:
+    log.warning(f"Could not create index on google_posts_collection.post_url (likely already exists under a different name): {exc}")
+try:
+    # Speeds up get_stub_results_for_keywords() lookups.
+    google_posts_collection.create_index("search_keyword")
+except Exception as exc:
+    log.warning(f"Could not create index on google_posts_collection.search_keyword (likely already exists under a different name): {exc}")
+try:
+    # Lets Background Service #2 efficiently find pending
+    # (reddit_fetched: false) stubs to process.
+    google_posts_collection.create_index("reddit_fetched")
+except Exception as exc:
+    log.warning(f"Could not create index on google_posts_collection.reddit_fetched (likely already exists under a different name): {exc}")
+try:
+    # Sort-by-recency support, mirrors signals_collection's own
+    # created_utc index.
+    google_posts_collection.create_index("discovered_at")
+except Exception as exc:
+    log.warning(f"Could not create index on google_posts_collection.discovered_at (likely already exists under a different name): {exc}")
