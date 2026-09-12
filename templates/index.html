@@ -1110,8 +1110,15 @@
     // every other field's value (rgba(255,255,255,0.7), inherited from the
     // parent .field-text) — no per-sentiment color-coding, no box, no
     // special treatment of any kind. Just the word itself.
+    //
+    // (FAKE-NEUTRAL FIX) No longer defaults to 'neutral' — buildPostBlock()
+    // now only ever calls this when post.sentiment is already a truthy
+    // string (a genuinely Claude-analyzed post), so this just uses the
+    // value it's given rather than inventing a default that would
+    // misleadingly imply analysis happened for a Google-fallback stub
+    // post that was never actually read.
     const span = document.createElement('span');
-    const label = sentiment || 'neutral';
+    const label = sentiment;
     span.textContent = label.charAt(0).toUpperCase() + label.slice(1);
     return span;
   }
@@ -1217,9 +1224,20 @@
     if (post.source) fieldRow(block, cfg.sourceLabel, post.source);
     if (cfg.showTitle && post.title) fieldRow(block, cfg.titleLabel, post.title);
     if (post.summary) buildTruncatableSummary(block, cfg.summaryLabel, post.summary);
-    const sentRow = fieldRow(block, 'Sentiment', '');
-    sentRow.querySelector('.field-text').appendChild(sentimentTag(post.sentiment));
+    // (FAKE-NEUTRAL FIX) Only render the Sentiment row when it's actually
+    // present — a Google-fallback stub post never had its content read,
+    // so it never has a real sentiment; showing "Neutral" for it would
+    // falsely imply Claude analyzed it and judged it neutral.
+    if (post.sentiment) {
+      const sentRow = fieldRow(block, 'Sentiment', '');
+      sentRow.querySelector('.field-text').appendChild(sentimentTag(post.sentiment));
+    }
     if (post.link) fieldRow(block, 'Link', post.link, true);
+    // (GOOGLE-RANK DISPLAY FIX) Only present on Google-fallback stub
+    // posts (see format_google_stub_results() in flintel.py) — a real
+    // matched signal from flintel_signals never has this field, so this
+    // naturally only ever shows up where it's meaningful.
+    if (post.google_rank) fieldRow(block, 'Google Rank', `#${post.google_rank}`);
     return block;
   }
 
@@ -1601,7 +1619,7 @@
     matchedResults.forEach((r) => {
       const key = normalizePlatform(r.platform);
       if (!grouped[key]) grouped[key] = [];
-      grouped[key].push({ title: r.title, summary: r.post_text, link: r.post_url });
+      grouped[key].push({ title: r.title, summary: r.post_text, link: r.post_url, google_rank: r.google_rank });
     });
 
     const heading = document.createElement('p');
@@ -1802,6 +1820,25 @@
   // and needed the same protection.
   let softNavGeneration = 0;
 
+  // (STALE-CHAT-ID FIX) Shared by navigateTo()'s own post-swap check, the
+  // popstate handler, and the delegated #search-form submit listener's
+  // final safety-net check — all three need the EXACT same "is this
+  // genuinely the home page, and if so, is the hidden chat-id field
+  // really empty" logic, so it lives in one place instead of being
+  // duplicated three times. Never trusts the server-rendered value in
+  // the field alone — always force-clears it to '' when the page is
+  // confirmed to be the home page, closing the gap regardless of what
+  // caused a stale value to still be sitting there (a timing/race issue
+  // after a swap, a stale DOM reference, bfcache, etc.).
+  function resetChatIdInputIfHomePage() {
+    const conversationArea = document.getElementById('conversation-area');
+    const threadInner = document.querySelector('.thread-inner');
+    if (conversationArea && !threadInner) {
+      const chatIdInput = document.getElementById('chat-id-input');
+      if (chatIdInput) chatIdInput.value = '';
+    }
+  }
+
   async function navigateTo(url, { method = 'GET', pushState = true, body = undefined, fallbackForm = undefined, onBusyDecline = undefined } = {}) {
     // (RACE-CONDITION FIX) Snapshot the generation counter for THIS
     // navigation right away — anything that happens after any subsequent
@@ -1886,6 +1923,14 @@
       }
       if (doc.title) document.title = doc.title;
 
+      // (STALE-CHAT-ID FIX) Right after the swap: if the page we just
+      // swapped in IS the home page (#conversation-area exists, no
+      // .thread-inner), force the hidden chat-id field to genuinely
+      // empty — never trust the server-rendered value alone here, since
+      // the whole point of this fix is to close the gap regardless of
+      // what caused a stale value to still be sitting in that field.
+      resetChatIdInputIfHomePage();
+
       // (SCROLL-POSITION FIX) Reset scroll to the top after every soft
       // navigation swap — without this, if the PREVIOUS page was scrolled
       // down (e.g. a long chat), the new page (home page, a different
@@ -1953,7 +1998,15 @@
   }
 
   window.addEventListener('popstate', () => {
-    navigateTo(location.href, { pushState: false });
+    navigateTo(location.href, { pushState: false }).then(() => {
+      // (STALE-CHAT-ID FIX) Extra safety net specifically for the
+      // browser back/forward case — navigateTo() itself already runs
+      // this same check right after its own swap, but the back/forward
+      // button (and bfcache restoring an old DOM state) is one of the
+      // more likely triggers for a stale hidden field, so this repeats
+      // the check once more here, after that swap has fully settled.
+      resetChatIdInputIfHomePage();
+    });
   });
 
   // ---- Sidebar (mobile drawer) ---- (unaffected by soft nav — lives outside <main>)
@@ -2226,6 +2279,16 @@
     // it just never shows up as anything on screen.
     if (form.dataset.heroSubmitInFlight === 'true') return;
     form.dataset.heroSubmitInFlight = 'true';
+
+    // (STALE-CHAT-ID FIX) Final safety net, right before FormData
+    // captures whatever is in the DOM at this exact moment — we've
+    // already confirmed above that this IS the home-page case
+    // (conversationArea exists, no threadInner), so force the hidden
+    // chat-id field to genuinely empty one more time here, redundant
+    // with the checks in navigateTo()/popstate but harmless — better to
+    // be safe than to reintroduce this bug via some navigation path not
+    // yet covered by those other two checks.
+    resetChatIdInputIfHomePage();
 
     const formData = new FormData(form);
 
