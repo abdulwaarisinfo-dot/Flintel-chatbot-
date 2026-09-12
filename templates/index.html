@@ -1464,6 +1464,7 @@
     broaden_time: '🔁',
     broaden_platforms: '🌐',
     broaden_term: '🔍',
+    try_nearest_alternative: '📍',
   };
 
   function noResultsItem(container, emoji, label, descriptionNode) {
@@ -1533,6 +1534,14 @@
             });
           } else {
             desc.textContent = 'Try a broader or more general version of your search term.';
+          }
+          noResultsItem(container, emoji, a.label, desc);
+        } else if (a.type === 'try_nearest_alternative') {
+          const desc = document.createElement('span');
+          if (a.suggestion) {
+            desc.appendChild(clickableTerm(a.suggestion));
+          } else {
+            desc.textContent = 'No close alternative found.';
           }
           noResultsItem(container, emoji, a.label, desc);
         } else {
