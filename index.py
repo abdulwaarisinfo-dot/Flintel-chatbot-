@@ -1515,6 +1515,22 @@ GROUNDING — this overrides everything else below:
   multi-part, or indirect phrasing) — read for meaning and intent, not
   surface wording.
 
+CONVERSATION CONTINUITY — DECLINED ALTERNATIVES:
+If a short summary of earlier turns in this same conversation is included
+in your input below (labeled "Conversation so far"), read it BEFORE
+writing "suggested_actions", "likely_reason", "followups", or any other
+suggestion field. If the user has already explicitly declined, rejected,
+or narrowed away from a broader scope, an alternative location, an
+alternative platform, or an alternative term in an earlier turn (e.g.
+"no, only X", "sirf X chahiye", "not Y, just X"), do NOT offer that same
+already-declined alternative again in this answer. If, after honoring
+that narrower scope, there is still genuinely nothing relevant to show,
+say so plainly and honestly (e.g. "I searched for this in the system but
+didn't find relevant posts for it") instead of re-suggesting the
+alternative the user already turned down. This applies regardless of
+format — it only changes what you suggest, never whether you searched or
+what data you were grounded in.
+
 OUTPUT CONTRACT — STRICT JSON ONLY, no markdown code fences, no preamble,
 no text outside the JSON object. Every response is exactly one JSON object,
 and `"format"` is ALWAYS the first field so the frontend knows which
@@ -3726,7 +3742,23 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
     the response goes out. This function only clears it, in the finally
     below, once the work actually finishes."""
     try:
-        answer = analyze_with_claude(query, [])
+        # (BUG FIX — DON'T RE-SUGGEST A DECLINED ALTERNATIVE) Same
+        # continuity context as _complete_message_answer_and_results()
+        # above — best-effort, never blocks this fallback answer.
+        try:
+            existing_chat = get_chat_session(chat_id, owner_key)
+            chat_summary_for_answer = (existing_chat or {}).get("summary") or ""
+        except Exception as exc:
+            log.warning(f"Chat summary lookup failed for topic_key={topic_key}: {exc}")
+            chat_summary_for_answer = ""
+        extra_ctx = None
+        if chat_summary_for_answer:
+            extra_ctx = (
+                "Conversation so far (auto-summarized, may be empty) — see "
+                "the CONVERSATION CONTINUITY instruction above for how to "
+                "use this:\n" + chat_summary_for_answer
+            )
+        answer = analyze_with_claude(query, [], extra_context=extra_ctx)
         save_claude_answer_to_chat(chat_id, owner_key, topic_key, answer)
         try:
             append_to_chat_summary(chat_id, owner_key, query, answer)
@@ -3774,11 +3806,35 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
 
     if needs_answer:
         try:
-            extra_ctx = None
+            extra_ctx_parts = []
             if msg.get("unfiltered"):
-                extra_ctx = flintel.build_unfiltered_answer_context(
-                    msg["query"], msg.get("time_window_days")
+                extra_ctx_parts.append(
+                    flintel.build_unfiltered_answer_context(
+                        msg["query"], msg.get("time_window_days")
+                    )
                 )
+            # (BUG FIX — DON'T RE-SUGGEST A DECLINED ALTERNATIVE) Pull this
+            # chat's own rolling summary and hand it to analyze_with_claude()
+            # as extra context, so Claude can see whether the user already
+            # explicitly declined/narrowed away from an earlier suggested
+            # alternative — see CLAUDE_ANALYSIS_SYSTEM_PROMPT's own
+            # "CONVERSATION CONTINUITY" instruction for what it does with
+            # this. Best-effort: a lookup failure here just means this
+            # answer is generated without that continuity context, exactly
+            # like before this fix — it never blocks or breaks the answer.
+            try:
+                existing_chat = get_chat_session(chat_id, owner_key)
+                chat_summary_for_answer = (existing_chat or {}).get("summary") or ""
+            except Exception as exc:
+                log.warning(f"Chat summary lookup failed for topic_key={msg.get('topic_key')}: {exc}")
+                chat_summary_for_answer = ""
+            if chat_summary_for_answer:
+                extra_ctx_parts.append(
+                    "Conversation so far (auto-summarized, may be empty) — see "
+                    "the CONVERSATION CONTINUITY instruction above for how to "
+                    "use this:\n" + chat_summary_for_answer
+                )
+            extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
             answer = analyze_with_claude(msg["query"], matched, extra_context=extra_ctx)
             answer = _patch_post_urls_into_answer(answer, matched)
             if msg.get("website_context"):
