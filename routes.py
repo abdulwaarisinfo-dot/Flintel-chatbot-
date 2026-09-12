@@ -14,6 +14,9 @@ from fastapi import Request, Form, BackgroundTasks
 from fastapi.responses import RedirectResponse, StreamingResponse
 
 import flintel
+import google as google_search   # the new google.py module — needed here
+    # for the Google-fallback stub-results read-back at RESPONSE_TIMEOUT
+    # (mirrors index.py's own `import google as google_search` alias)
 import website_intelligence
 
 from index import (
@@ -46,6 +49,9 @@ from index import (
     _patch_post_urls_into_answer,
     _inject_website_context_into_answer,
     _finalize_answer_and_results,       # <-- Bug 2b helper from index.py
+    _elapsed_seconds,                   # <-- GOOGLE-FALLBACK POLLING FIX: needed in stream_answer()
+    mark_google_fallback_triggered,     # <-- GOOGLE-FALLBACK POLLING FIX: needed in stream_answer()
+    _trigger_google_fallback_search,    # <-- GOOGLE-FALLBACK POLLING FIX: needed in stream_answer()
     get_current_user,
     _log_user_in,
     create_email_user,
@@ -70,6 +76,7 @@ from index import (
     CLAUDE_CHAT_FALLBACK_SYSTEM_PROMPT,
 )
 from database import users_collection  # <-- FIX: was missing, used in signup()/login()
+from database import google_posts_collection  # <-- GOOGLE-FALLBACK POLLING FIX: needed in stream_answer()
 from datetime import datetime, timezone
 
 
@@ -770,7 +777,7 @@ def view_chat(request: Request, chat_id: str, background_tasks: BackgroundTasks)
 
 
 @app.get("/chat/{chat_id}/stream")
-def stream_answer(request: Request, chat_id: str, topic_key: str):
+def stream_answer(request: Request, chat_id: str, topic_key: str, background_tasks: BackgroundTasks):
     """(STREAMING ADD-ON, rebuilt by SIMULATED-STREAM FIX) Server-Sent-
     Events endpoint: delivers Claude's analysis answer for one specific
     search-type message (identified by `topic_key`, within this chat) as
@@ -812,7 +819,28 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
     (imported from index.py) instead of its own separate inline
     "no_data format -> hide results" check, applied BEFORE the answer is
     paced out — so a streamed answer and the cached/re-rendered version
-    of it can never disagree on whether real matched posts get shown."""
+    of it can never disagree on whether real matched posts get shown.
+
+    (GOOGLE-FALLBACK POLLING FIX) The very FIRST message of any new chat
+    is always served by THIS route, never by _fill_in_message_outputs()
+    (view_chat() reserves it via skip_topic_key) — so before this fix,
+    if the initial get_matched_signals() call above found nothing, this
+    route answered immediately from an empty list, with no waiting, no
+    RESPONSE_TIMEOUT check, and no Google-search fallback ever
+    triggered. Because the answer got cached right away,
+    _fill_in_message_outputs() would see claude_answer already set on
+    every later reload and skip the message entirely — so the Google
+    fallback logic could never run for a chat's first message at all.
+    Now, if the initial call finds nothing, event_generator() polls
+    get_matched_signals() again every ~2 seconds (checking
+    should_trigger_google_fallback() on each iteration, exactly like
+    _fill_in_message_outputs() already does) until either real signals
+    appear or RESPONSE_TIMEOUT is reached — at which point it falls back
+    to whatever Google-search stub results are already stored, mirroring
+    _timeout_fallback_answer()'s own behavior exactly, so the streamed
+    answer stays consistent with the non-streaming path. If the initial
+    call already found something, none of this polling ever runs — zero
+    change to that already-working case."""
     owner_key, _owner_type = get_owner(request)
     chat = get_chat_session(chat_id, owner_key)
 
@@ -872,6 +900,16 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
         matched = []
 
     def event_generator():
+        # (GOOGLE-FALLBACK POLLING FIX) This generator reassigns `matched`
+        # (during the polling loop below, and again if the
+        # RESPONSE_TIMEOUT/Google-stub-fallback branch runs) — `nonlocal`
+        # is required so those reassignments update the SAME `matched`
+        # from the enclosing stream_answer() scope (the one already set,
+        # once, by the initial get_matched_signals() call above) instead
+        # of Python treating it as a brand-new local variable for this
+        # entire function, which would make the very first `if not
+        # matched:` check below raise UnboundLocalError.
+        nonlocal matched
         # (PER-USER BUSY LOCK) Set right at the start of the whole
         # generator, cleared in the finally below — covers every exit
         # path (the early error-return, and the normal completion path
@@ -884,6 +922,78 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # full rationale. Sent once, immediately, before any other
             # SSE payload in this stream.
             yield "retry: 86400000\n\n"
+
+            # (GOOGLE-FALLBACK POLLING FIX) `matched` here starts as the
+            # ONE initial get_matched_signals() call already made above,
+            # outside this generator. If that already found something,
+            # none of this runs at all — zero change to the
+            # already-working "signals matched right away" case. Only if
+            # it found nothing does this poll, exactly mirroring what
+            # _fill_in_message_outputs()'s own `if not matched:` branch
+            # already does for every OTHER message in a chat — this is
+            # the first message of a new chat, which never goes through
+            # that function at all (view_chat() reserves it via
+            # skip_topic_key), so it needs this same waiting/fallback
+            # logic here instead.
+            google_ctx = None
+            if not matched:
+                while True:
+                    elapsed = _elapsed_seconds(msg.get("requested_at"))
+
+                    # Same trigger check/timing _fill_in_message_outputs()
+                    # already uses — fires at most once per message
+                    # (mark_google_fallback_triggered() is set
+                    # synchronously here, in this request, BEFORE
+                    # scheduling the background search, mirroring the
+                    # exact same race-condition fix already applied to
+                    # this same trigger elsewhere in this codebase).
+                    if flintel.should_trigger_google_fallback(
+                            elapsed, msg.get("google_fallback_triggered", False)):
+                        mark_google_fallback_triggered(chat_id, owner_key, topic_key)
+                        background_tasks.add_task(_trigger_google_fallback_search, chat_id, owner_key, msg)
+                        msg["google_fallback_triggered"] = True
+
+                    if elapsed >= RESPONSE_TIMEOUT:
+                        break
+
+                    time.sleep(2)
+
+                    try:
+                        matched = get_matched_signals(
+                            topic_key,
+                            msg.get("keywords", []),
+                            targeting_platform=msg.get("targeting_platform", "all"),
+                            since_days=msg.get("time_window_days"),
+                            unfiltered=msg.get("unfiltered", False),
+                        )
+                    except Exception as exc:
+                        log.warning(f"Signal matching failed while polling for streaming topic_key={topic_key}: {exc}")
+                        matched = []
+
+                    if matched:
+                        break
+
+                if not matched:
+                    # (GOOGLE-FALLBACK POLLING FIX) RESPONSE_TIMEOUT reached
+                    # with still nothing matched — fall back to whatever
+                    # Google-search stub results are already stored,
+                    # mirroring _timeout_fallback_answer()'s own behavior
+                    # in index.py exactly, so the streamed answer stays
+                    # consistent with the non-streaming path. `matched` is
+                    # reassigned to this stub-derived list so every
+                    # downstream use below (analyze_with_claude,
+                    # _patch_post_urls_into_answer,
+                    # _finalize_answer_and_results, the final "done"
+                    # payload) sees this same final result set.
+                    try:
+                        stub_docs = google_search.get_stub_results_for_keywords(
+                            google_posts_collection, msg.get("keywords", []))
+                    except Exception as exc:
+                        log.warning(f"Fetching Google-fallback stubs failed for topic_key={topic_key}: {exc}")
+                        stub_docs = []
+                    matched = flintel.format_google_stub_results(stub_docs)
+                    google_ctx = flintel.build_google_fallback_answer_context(msg["query"], len(stub_docs))
+
             # (SIMULATED-STREAM FIX) Step 1: get the COMPLETE answer first,
             # via the same blocking function every other answer path in this
             # file already uses — no raw live Claude tokens are sent to the
@@ -908,6 +1018,12 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                         "see the CONVERSATION CONTINUITY instruction above for "
                         "how to use this:\n" + chat_summary_for_answer
                     )
+                # (GOOGLE-FALLBACK POLLING FIX) Only set when the
+                # RESPONSE_TIMEOUT branch above actually ran — a normal
+                # match (whether from the initial call or found during
+                # polling) never adds this, exactly like today.
+                if google_ctx:
+                    extra_ctx_parts.append(google_ctx)
                 extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
                 full_answer = analyze_with_claude(msg["query"], matched, extra_context=extra_ctx)
             except Exception as exc:
