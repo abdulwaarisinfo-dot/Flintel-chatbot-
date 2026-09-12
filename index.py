@@ -737,6 +737,23 @@ usually search Google/Discord/a directory instead" — a new CRITICAL
 GUARDRAIL paragraph (plus one added TONE bullet) explicitly forbids
 naming any platform, tool, or channel outside Flintel as a better place
 to look, in this or any other format's text fields.
+
+BUG 4 (stale "try these next steps" showing alongside real matched
+posts): when `_finalize_answer_and_results()` routes a message through
+`_append_closest_matches_note()` because Claude's own written analysis
+picked a "no_data" format even though real posts were matched, the
+format's own `suggested_actions` (the broaden_time / broaden_platforms /
+broaden_term "Try one of these next steps" block) and
+`clarifying_question` fields used to still be shown, directly underneath
+the real posts already displayed for that same message — reading as
+contradictory ("try broadening your search" right next to real results).
+`_append_closest_matches_note()` now also strips both of those fields
+from the JSON in that same pass, since real posts are ALWAYS being shown
+below this text whenever this function is called (see
+`_finalize_answer_and_results()`) — a genuine no_results answer (no
+matched posts at all) never reaches this function, so its
+`suggested_actions` / `clarifying_question` are completely unaffected by
+this change.
 ──────────────────────────────────────────────────────────────────────────────
 """
 
@@ -3036,7 +3053,14 @@ def _append_closest_matches_note(answer_text: str, seed: str = "") -> str:
     Appends one short, rotating, positive closing line onto the
     format's own "message" field — never changes Claude's own honest
     assessment text otherwise. If answer_text isn't valid JSON, or has
-    no "message" field, the original text is returned unchanged."""
+    no "message" field, the original text is returned unchanged.
+
+    (BUG FIX — DON'T SHOW STALE "TRY THESE NEXT STEPS" ALONGSIDE REAL
+    POSTS) Also strips "suggested_actions" and "clarifying_question"
+    from the JSON in this same pass — see the inline comment below for
+    why, and _finalize_answer_and_results()'s docstring for confirmation
+    that this function is ONLY ever invoked when real matched posts are
+    about to be shown to the user."""
     if not answer_text:
         return answer_text
     cleaned = answer_text.strip()
@@ -3053,6 +3077,20 @@ def _append_closest_matches_note(answer_text: str, seed: str = "") -> str:
     val = data.get("message")
     if not isinstance(val, str) or not val.strip():
         return answer_text
+
+    # (BUG FIX — DON'T SHOW STALE "TRY THESE NEXT STEPS" ALONGSIDE REAL
+    # POSTS) Once real matched posts are being shown below this text
+    # (which is the ONLY case this function is ever called for — see
+    # _finalize_answer_and_results()), the format's own "suggested_actions"
+    # (broaden time/platform/term) and "clarifying_question" fields become
+    # redundant/contradictory — the user already sees real posts, so
+    # "try broadening your search" reads as odd next to them. Remove
+    # both fields here, in this branch ONLY. A genuine no_results answer
+    # (matched empty) never reaches this function — see
+    # _finalize_answer_and_results() — so its suggested_actions /
+    # clarifying_question are completely untouched by this change.
+    data.pop("suggested_actions", None)
+    data.pop("clarifying_question", None)
 
     data["message"] = val.strip() + " " + _pick_closest_matches_note(seed)
     return json.dumps(data, ensure_ascii=False)
