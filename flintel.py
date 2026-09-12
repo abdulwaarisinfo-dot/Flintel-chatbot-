@@ -425,3 +425,117 @@ the existing PAIN-POINT / PROSPECT PATTERN behavior (keywords around
 whatever the user did describe, however generic) rather than inventing
 implausible use-cases.
 """
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# GOOGLE-FALLBACK FEATURE
+# ─────────────────────────────────────────────────────────────────────────────
+# Same self-contained, pure-function style as the rest of this file — no
+# Mongo connection created here, no Claude call made here. index.py owns
+# both (it holds the message doc / google_posts_collection, and its own
+# analyze_with_claude()) and calls into these three functions with
+# whatever plain data it already has.
+
+GOOGLE_FALLBACK_TRIGGER_SECONDS = int(os.getenv("GOOGLE_FALLBACK_TRIGGER_SECONDS", "40"))
+# Elapsed seconds since a search message's requested_at before the
+# Google-search fallback is triggered, IF flintel_signals still has no
+# match. Must be strictly less than RESPONSE_TIMEOUT (60) — index.py
+# enforces this ordering, this module just holds the constant.
+
+
+def should_trigger_google_fallback(elapsed_seconds: float, already_triggered: bool) -> bool:
+    """Pure decision function, no side effects, no I/O. Returns True only
+    if enough time has passed AND this hasn't already fired once for this
+    message.
+
+    `already_triggered` is read from the message's own
+    google_fallback_triggered field (a new field on the message doc, set
+    by index.py the first time this returns True and it acts on it) —
+    checking it here is what stops this from re-triggering the Google API
+    call on every single page-load poll once it's already run once for a
+    given message."""
+    if already_triggered:
+        return False
+    return elapsed_seconds >= GOOGLE_FALLBACK_TRIGGER_SECONDS
+
+
+def format_google_stub_results(stub_docs: list) -> list:
+    """Converts flintel_google_posts stub documents (see google.py) into
+    the SAME {"title", "post_text", "post_url", "platform"} shape
+    get_matched_signals() already returns, so the EXISTING post-card
+    rendering code path in index.py/routes.py/templates needs zero
+    changes to display them.
+
+    post_text is always None — no real post content has been fetched yet
+    for a discovery-only stub (that happens later, out of band, via
+    Background Service #2), so this never fabricates text that isn't
+    actually there.
+
+    Also includes one additive "google_rank" field on each returned
+    dict — ignored by any existing code that doesn't know about it, but
+    available for a template to render "Google rank: N" if it chooses
+    to.
+
+    Skips any stub missing post_url. Never raises: a malformed/non-dict
+    entry in `stub_docs` is skipped rather than crashing the whole
+    conversion."""
+    if not stub_docs or not isinstance(stub_docs, list):
+        return []
+
+    formatted = []
+    for stub in stub_docs:
+        if not isinstance(stub, dict):
+            continue
+        post_url = stub.get("post_url")
+        if not post_url:
+            continue
+        subreddit = stub.get("subreddit")
+        formatted.append({
+            "title": f"r/{subreddit}" if subreddit else None,
+            "post_text": None,
+            "post_url": post_url,
+            "platform": "reddit",
+            "google_rank": stub.get("google_rank"),
+        })
+    return formatted
+
+
+def build_google_fallback_answer_context(query: str, stub_count: int) -> str:
+    """Mirrors the EXACT pattern of build_unfiltered_answer_context()
+    above: returns a short instruction string index.py's
+    analyze_with_claude() appends to its existing user-message context
+    (NOT a new system prompt) — safe to call unconditionally, including
+    with stub_count == 0.
+
+    Purpose: flintel_signals had no match yet for this topic, so no
+    grounded post TEXT is available to answer from — but `stub_count`
+    related Reddit threads (if any) were found via a Google-search
+    fallback and will be shown to the user separately, as links only.
+    Tells Claude to (a) answer the user's actual question from its own
+    general knowledge, (b) NEVER invent or guess what those threads
+    actually say, since only their URLs were found, not their content,
+    and (c) if stub_count > 0, briefly and honestly mention that some
+    related discussions were found and are shown below, without
+    describing their content."""
+    if not stub_count:
+        return (
+            "Note: no matching posts were found for this topic yet. Answer "
+            "the user's actual question from your own general knowledge "
+            "instead, and be honest that no specific posts were found for "
+            "this search rather than inventing any."
+        )
+
+    plural = "s" if stub_count != 1 else ""
+    return (
+        f"Note: no matching posts with actual content were found for this "
+        f"topic in the system yet — but a Google search turned up "
+        f"{stub_count} related Reddit thread{plural}, shown to the user "
+        f"below as links only (their post_text is intentionally empty — "
+        f"their actual content hasn't been fetched yet). Answer the user's "
+        f"actual question from your own general knowledge. You may briefly "
+        f"and honestly mention that some related discussions were found and "
+        f"are shown below, but NEVER invent, guess, or describe what those "
+        f"threads actually say — only their links exist right now, not "
+        f"their content."
+    )
+
