@@ -852,11 +852,26 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # file already uses — no raw live Claude tokens are sent to the
             # browser anymore.
             try:
-                extra_ctx = None
+                extra_ctx_parts = []
                 if msg.get("unfiltered"):
-                    extra_ctx = flintel.build_unfiltered_answer_context(
-                        msg["query"], msg.get("time_window_days")
+                    extra_ctx_parts.append(
+                        flintel.build_unfiltered_answer_context(
+                            msg["query"], msg.get("time_window_days")
+                        )
                     )
+                # (BUG FIX — DON'T RE-SUGGEST A DECLINED ALTERNATIVE) Same
+                # continuity context as the non-streaming path in index.py's
+                # _complete_message_answer_and_results() — `chat` was already
+                # fetched above in this route, so no extra Mongo lookup is
+                # needed here.
+                chat_summary_for_answer = (chat or {}).get("summary") or ""
+                if chat_summary_for_answer:
+                    extra_ctx_parts.append(
+                        "Conversation so far (auto-summarized, may be empty) — "
+                        "see the CONVERSATION CONTINUITY instruction above for "
+                        "how to use this:\n" + chat_summary_for_answer
+                    )
+                extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
                 full_answer = analyze_with_claude(msg["query"], matched, extra_context=extra_ctx)
             except Exception as exc:
                 log.warning(f"Streaming Claude analysis failed for topic_key={topic_key}: {exc}")
