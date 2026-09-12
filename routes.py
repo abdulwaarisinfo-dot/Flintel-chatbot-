@@ -816,6 +816,17 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
         cached_answer = msg["claude_answer"]
 
         def _cached():
+            # (SSE RECONNECT-LOOP FIX) Sent as the very first line, before any
+            # data payload — tells the browser's EventSource to wait 24 hours
+            # before attempting any reconnection to this URL, per the SSE
+            # spec's "retry:" field. This does not change what data is sent or
+            # how the client processes it (the client's own source.close() on
+            # "done" is unchanged and still the primary mechanism) — it is a
+            # pure safety net against the browser's native auto-reconnect
+            # racing ahead of that client-side close() call, which is
+            # especially likely for a response this fast (no Claude call
+            # needed on this branch).
+            yield "retry: 86400000\n\n"
             yield f"data: {json.dumps({'delta': cached_answer})}\n\n"
             # (FRONTEND CLOSEST-MATCHES FEATURE — additive only) Includes
             # this message's already-saved matched results in the "done"
@@ -847,6 +858,11 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
         # left set no matter how this generator ends.
         _set_owner_busy(owner_key)
         try:
+            # (SSE RECONNECT-LOOP FIX) Same "retry:" safety net as the
+            # _cached() branch above — see that branch's comment for the
+            # full rationale. Sent once, immediately, before any other
+            # SSE payload in this stream.
+            yield "retry: 86400000\n\n"
             # (SIMULATED-STREAM FIX) Step 1: get the COMPLETE answer first,
             # via the same blocking function every other answer path in this
             # file already uses — no raw live Claude tokens are sent to the
