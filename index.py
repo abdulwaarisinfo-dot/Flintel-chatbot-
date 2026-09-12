@@ -3773,11 +3773,12 @@ def _trigger_google_fallback_search(chat_id: str, owner_key: str, msg: dict):
     flintel.should_trigger_google_fallback() for the timing decision this
     is called in response to.
 
-    Marks mark_google_fallback_triggered() regardless of whether the
-    search found anything, so this only ever fires ONCE per message —
-    a message with zero Reddit results found is just as "done" here as
-    one that found several; either way there's nothing more for this
-    function to usefully retry.
+    (RACE FIX) google_fallback_triggered is now marked SYNCHRONOUSLY by
+    the caller (_fill_in_message_outputs()), BEFORE this function is
+    scheduled/called — not here anymore — so a second concurrent request
+    for the same message can never see the flag still False and schedule
+    a duplicate search. This function's only job now is to actually run
+    the search and store whatever stubs it finds.
 
     Wrapped in try/except, never raises — a failure here just means this
     message doesn't get any Google-sourced stub links, exactly like
@@ -3790,8 +3791,6 @@ def _trigger_google_fallback_search(chat_id: str, owner_key: str, msg: dict):
         )
     except Exception as exc:
         log.warning(f"Google-fallback search failed for topic_key={msg.get('topic_key')}: {exc}")
-    finally:
-        mark_google_fallback_triggered(chat_id, owner_key, msg["topic_key"])
 
 
 def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query: str, keywords: list = None):
@@ -4107,6 +4106,16 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
             # check below regardless of what it does here.
             if flintel.should_trigger_google_fallback(
                     elapsed, msg.get("google_fallback_triggered", False)):
+                # (RACE FIX) Mark synchronously, in THIS request, before
+                # scheduling/running the search — mirrors the exact same
+                # busy-lock race fix already applied to
+                # _set_owner_busy()/_complete_message_answer_and_results()
+                # elsewhere in this function. Closes the window where a
+                # second concurrent reload for the same message could see
+                # google_fallback_triggered still False and schedule a
+                # duplicate Google-search call before the first background
+                # task finishes.
+                mark_google_fallback_triggered(chat_id, owner_key, msg["topic_key"])
                 if background_tasks is not None:
                     background_tasks.add_task(_trigger_google_fallback_search, chat_id, owner_key, msg)
                 else:
