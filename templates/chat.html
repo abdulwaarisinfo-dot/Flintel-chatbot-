@@ -1235,8 +1235,15 @@
     // every other field's value (rgba(255,255,255,0.7), inherited from the
     // parent .field-text) — no per-sentiment color-coding, no box, no
     // special treatment of any kind. Just the word itself.
+    //
+    // (FAKE-NEUTRAL FIX) No longer defaults to 'neutral' — buildPostBlock()
+    // now only ever calls this when post.sentiment is already a truthy
+    // string (a genuinely Claude-analyzed post), so this just uses the
+    // value it's given rather than inventing a default that would
+    // misleadingly imply analysis happened for a Google-fallback stub
+    // post that was never actually read.
     const span = document.createElement('span');
-    const label = sentiment || 'neutral';
+    const label = sentiment;
     span.textContent = label.charAt(0).toUpperCase() + label.slice(1);
     return span;
   }
@@ -1348,9 +1355,20 @@
     if (post.source) fieldRow(block, cfg.sourceLabel, post.source);
     if (cfg.showTitle && post.title) fieldRow(block, cfg.titleLabel, post.title);
     if (post.summary) buildTruncatableSummary(block, cfg.summaryLabel, post.summary);
-    const sentRow = fieldRow(block, 'Sentiment', '');
-    sentRow.querySelector('.field-text').appendChild(sentimentTag(post.sentiment));
+    // (FAKE-NEUTRAL FIX) Only render the Sentiment row when it's actually
+    // present — a Google-fallback stub post never had its content read,
+    // so it never has a real sentiment; showing "Neutral" for it would
+    // falsely imply Claude analyzed it and judged it neutral.
+    if (post.sentiment) {
+      const sentRow = fieldRow(block, 'Sentiment', '');
+      sentRow.querySelector('.field-text').appendChild(sentimentTag(post.sentiment));
+    }
     if (post.link) fieldRow(block, 'Link', post.link, true);
+    // (GOOGLE-RANK DISPLAY FIX) Only present on Google-fallback stub
+    // posts (see format_google_stub_results() in flintel.py) — a real
+    // matched signal from flintel_signals never has this field, so this
+    // naturally only ever shows up where it's meaningful.
+    if (post.google_rank) fieldRow(block, 'Google Rank', `#${post.google_rank}`);
     return block;
   }
 
@@ -1741,7 +1759,7 @@
     matchedResults.forEach((r) => {
       const key = normalizePlatform(r.platform);
       if (!grouped[key]) grouped[key] = [];
-      grouped[key].push({ title: r.title, summary: r.post_text, link: r.post_url });
+      grouped[key].push({ title: r.title, summary: r.post_text, link: r.post_url, google_rank: r.google_rank });
     });
 
     const heading = document.createElement('p');
