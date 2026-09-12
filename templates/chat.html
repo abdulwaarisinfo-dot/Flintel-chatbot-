@@ -1600,6 +1600,7 @@
     broaden_time: '🔁',
     broaden_platforms: '🌐',
     broaden_term: '🔍',
+    try_nearest_alternative: '📍',
   };
 
   function noResultsItem(container, emoji, label, descriptionNode) {
@@ -1673,6 +1674,14 @@
             });
           } else {
             desc.textContent = 'Try a broader or more general version of your search term.';
+          }
+          noResultsItem(container, emoji, a.label, desc);
+        } else if (a.type === 'try_nearest_alternative') {
+          const desc = document.createElement('span');
+          if (a.suggestion) {
+            desc.appendChild(clickableTerm(a.suggestion));
+          } else {
+            desc.textContent = 'No close alternative found.';
           }
           noResultsItem(container, emoji, a.label, desc);
         } else {
@@ -2059,7 +2068,7 @@
           wrap.className = 'answer-wrap stream-reveal';
           // (FRONTEND CLOSEST-MATCHES FEATURE) Same data-matched-results
           // convention the Jinja-rendered case uses (see the
-          // msg.claude_answer branch above) — payload.results
+          // {% elif msg.claude_answer %} branch above) — payload.results
           // is the new, additive field the backend's SSE "done" event now
           // includes, so a freshly-streamed answer's post cards render
           // the exact same way a page-loaded one already does.
