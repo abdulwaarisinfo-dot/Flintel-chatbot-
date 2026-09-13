@@ -460,6 +460,19 @@ def should_trigger_google_fallback(elapsed_seconds: float, already_triggered: bo
     return elapsed_seconds >= GOOGLE_FALLBACK_TRIGGER_SECONDS
 
 
+def should_trigger_immediately(already_triggered: bool) -> bool:
+    """Returns True exactly once per message — the very first time this
+    is checked (already_triggered=False) — so the Google search and the
+    search-progress UI generation both fire in PARALLEL with the initial
+    flintel_signals lookup, instead of waiting
+    GOOGLE_FALLBACK_TRIGGER_SECONDS (40s) as should_trigger_google_
+    fallback() above still does. Same fire-once contract as that
+    function: once True is returned, the caller must mark its own flag
+    True so this never fires twice for the same message. Pure decision
+    function, no side effects, no I/O."""
+    return not already_triggered
+
+
 def format_google_stub_results(stub_docs: list) -> list:
     """Converts flintel_google_posts stub documents (see google.py) into
     the SAME {"title", "post_text", "post_url", "platform"} shape
@@ -499,6 +512,96 @@ def format_google_stub_results(stub_docs: list) -> list:
             "google_rank": stub.get("google_rank"),
         })
     return formatted
+
+
+MAX_COMBINED_POSTS_FOR_CLAUDE = int(os.getenv("MAX_COMBINED_POSTS_FOR_CLAUDE", "7"))
+
+
+def merge_matched_and_google_results(matched_signals: list, google_stub_results: list, max_total: int = None) -> list:
+    """Combines matched_signals (grounded, real content) with
+    google_stub_results (discovery-only, no content yet — see
+    format_google_stub_results()) into one list, de-duplicated by
+    post_url (a real signal always wins over a stub for the same URL,
+    since it has actual text). Caps the combined total at max_total
+    (default MAX_COMBINED_POSTS_FOR_CLAUDE = 7) — real signals are kept
+    first (fully grounded), Google stubs fill any remaining room up to
+    the cap, ordered by google_rank ascending (best Google rank first).
+    Returns the same {"title", "post_text", "post_url", "platform"}
+    shape get_matched_signals() already returns, with "google_rank"/
+    "subreddit" additionally present on Google-sourced entries only.
+
+    Never raises: bad/empty input on either side just means that side
+    contributes nothing."""
+    cap = max_total if isinstance(max_total, int) and max_total > 0 else MAX_COMBINED_POSTS_FOR_CLAUDE
+
+    clean_signals = [s for s in (matched_signals or []) if isinstance(s, dict) and s.get("post_url")]
+    clean_stubs = [s for s in (google_stub_results or []) if isinstance(s, dict) and s.get("post_url")]
+
+    seen_urls = set()
+    combined = []
+
+    for signal in clean_signals:
+        if len(combined) >= cap:
+            break
+        url = signal["post_url"]
+        if url in seen_urls:
+            continue
+        seen_urls.add(url)
+        combined.append(signal)
+
+    remaining_stubs = [s for s in clean_stubs if s["post_url"] not in seen_urls]
+    remaining_stubs.sort(key=lambda s: s.get("google_rank") if isinstance(s.get("google_rank"), int) else float("inf"))
+
+    for stub in remaining_stubs:
+        if len(combined) >= cap:
+            break
+        url = stub["post_url"]
+        if url in seen_urls:
+            continue
+        seen_urls.add(url)
+        combined.append(stub)
+
+    return combined
+
+
+def build_combined_source_context(signal_count: int, google_count: int) -> str:
+    """Mirrors build_unfiltered_answer_context()/build_google_fallback_
+    answer_context()'s existing pattern: a short instruction string
+    index.py's analyze_with_claude() appends to its existing
+    user-message context (NOT a new system prompt).
+
+    Tells Claude it has been given a MIX of two kinds of posts in the
+    SAME batch: fully-grounded posts from Flintel's own collected
+    signals (real title + text), and discovery-only posts found via a
+    supplementary Google search (title is just the subreddit name,
+    google_rank is its search rank, post_text is intentionally empty
+    because the actual content hasn't been fetched yet). Instructs
+    Claude to NEVER invent or guess text for a discovery-only post — if
+    it includes one in the final answer, its "summary" field must
+    honestly say the content hasn't been fetched yet rather than
+    fabricating one. Also instructs Claude to never surface more than
+    MAX_COMBINED_POSTS_FOR_CLAUDE posts total in its final answer,
+    freely choosing the best combination from either source based on
+    genuine relevance — never forcing an even split, never padding with
+    a low-quality post just to reach a count."""
+    return (
+        f"Note: you have been given a MIX of two kinds of posts in this "
+        f"same batch — {signal_count} fully-grounded post(s) from "
+        f"Flintel's own collected signals (real title and text, safe to "
+        f"quote/summarize normally), and {google_count} discovery-only "
+        f"post(s) found via a supplementary Google search (their "
+        f"\"title\" is just the subreddit name, \"google_rank\" is their "
+        f"search rank, and \"post_text\" is intentionally empty because "
+        f"the actual content hasn't been fetched yet). NEVER invent or "
+        f"guess what a discovery-only post actually says — if you "
+        f"include one in your answer, its summary must honestly say the "
+        f"content hasn't been fetched yet rather than fabricating one. "
+        f"Never surface more than {MAX_COMBINED_POSTS_FOR_CLAUDE} posts "
+        f"total in your final answer — freely choose the best "
+        f"combination from either source based on genuine relevance, "
+        f"never forcing an even split between the two, and never "
+        f"padding with a low-quality post just to reach a count."
+    )
 
 
 def build_google_fallback_answer_context(query: str, stub_count: int) -> str:
