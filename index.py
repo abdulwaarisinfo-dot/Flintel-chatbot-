@@ -1163,6 +1163,7 @@ _TITLE_FIELD_CANDIDATES    = ["title", "post_title", "headline"]
 _TEXT_FIELD_CANDIDATES     = ["post_text", "text", "body", "content", "selftext"]
 _URL_FIELD_CANDIDATES      = ["post_url", "url", "link", "permalink"]
 _PLATFORM_FIELD_CANDIDATES = ["platform", "source", "source_platform"]
+_SUBREDDIT_FIELD_CANDIDATES = ["subreddit", "sub", "subreddit_name"]   
 
 # Maps a job's targeting_platform ("all" | "reddit" | "x_twitter" |
 # "linkedin" | "facebook" — see normalize_platform()) to the value(s) a
@@ -1457,6 +1458,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 
         post_url  = _first_present(doc, _URL_FIELD_CANDIDATES)
         platform  = _first_present(doc, _PLATFORM_FIELD_CANDIDATES) or _infer_platform_from_url(post_url)
+        subreddit = _first_present(doc, _SUBREDDIT_FIELD_CANDIDATES)   # <-- NAYA
 
         if not title and not post_text and not post_url:
             continue
@@ -1474,7 +1476,14 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
         if post_url:
             seen_urls.add(post_url)
 
-        matched.append({"title": title, "post_text": post_text, "post_url": post_url, "platform": platform})
+        matched.append({
+            "title": title,
+            "post_text": post_text,
+            "post_url": post_url,
+            "platform": platform,
+            "subreddit": subreddit,   
+        })
+        
         platform_counts[platform_key] = platform_counts.get(platform_key, 0) + 1
 
         if len(matched) >= limit:
