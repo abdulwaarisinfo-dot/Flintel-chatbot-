@@ -24,6 +24,7 @@ its own already-parsed router output, etc.), exactly as a drop-in.
 
 import os
 import re
+import json
 from datetime import datetime, timedelta, timezone
 
 
@@ -133,11 +134,10 @@ def is_time_only_request(router_output: dict) -> bool:
 # SIGNAL MATCHING (no keyword filtering at all)
 # ─────────────────────────────────────────────────────────────────────────────
 
-_TITLE_FIELD_CANDIDATES     = ["title", "post_title", "headline"]
-_TEXT_FIELD_CANDIDATES      = ["post_text", "text", "body", "content", "selftext"]
-_URL_FIELD_CANDIDATES       = ["post_url", "url", "link", "permalink"]
-_PLATFORM_FIELD_CANDIDATES  = ["platform", "source", "source_platform"]
-_SUBREDDIT_FIELD_CANDIDATES = ["subreddit", "sub", "subreddit_name"]
+_TITLE_FIELD_CANDIDATES    = ["title", "post_title", "headline"]
+_TEXT_FIELD_CANDIDATES     = ["post_text", "text", "body", "content", "selftext"]
+_URL_FIELD_CANDIDATES      = ["post_url", "url", "link", "permalink"]
+_PLATFORM_FIELD_CANDIDATES = ["platform", "source", "source_platform"]
 
 # Mirrors index.py's _PLATFORM_DOC_VALUES exactly (see module docstring for
 # why this is duplicated rather than imported: index.py imports FROM this
@@ -203,7 +203,7 @@ def get_unfiltered_matched_signals(signals_collection, since_days, targeting_pla
                                     limit=None, max_per_platform=None,
                                     max_time_window_days=None, platform_matcher_fn=None) -> list:
     """Mirrors the EXACT return shape of index.py's get_matched_signals():
-        [{"title":..., "post_text":..., "post_url":..., "platform":..., "subreddit":...}, ...]
+        [{"title":..., "post_text":..., "post_url":..., "platform":...}, ...]
 
     Does NOT require or accept a `keywords` list — no keyword filtering is
     applied at all. Only a time-window cutoff and an optional platform
@@ -289,7 +289,6 @@ def get_unfiltered_matched_signals(signals_collection, since_days, targeting_pla
 
         post_url = _first_present(doc, _URL_FIELD_CANDIDATES)
         platform = _first_present(doc, _PLATFORM_FIELD_CANDIDATES) or _infer_platform_from_url(post_url)
-        subreddit = _first_present(doc, _SUBREDDIT_FIELD_CANDIDATES)
 
         if not title and not post_text and not post_url:
             continue
@@ -303,13 +302,7 @@ def get_unfiltered_matched_signals(signals_collection, since_days, targeting_pla
         if post_url:
             seen_urls.add(post_url)
 
-        matched.append({
-            "title": title,
-            "post_text": post_text,
-            "post_url": post_url,
-            "platform": platform,
-            "subreddit": subreddit,
-        })
+        matched.append({"title": title, "post_text": post_text, "post_url": post_url, "platform": platform})
         platform_counts[platform_key] = platform_counts.get(platform_key, 0) + 1
 
         if len(matched) >= effective_limit:
@@ -546,3 +539,138 @@ def build_google_fallback_answer_context(query: str, stub_count: int) -> str:
         f"threads actually say — only their links exist right now, not "
         f"their content."
     )
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SEARCH-PROGRESS UI CONTENT (query-aware "still searching" message)
+# ─────────────────────────────────────────────────────────────────────────────
+# Same self-contained, pure-function-plus-injected-Claude-call style as
+# website_intelligence.py's summarize_website_structured() — this module
+# never talks to the Anthropic API directly; index.py/routes.py pass in
+# their own _call_claude() as `call_claude_fn`.
+
+SEARCH_PROGRESS_MAX_TOKENS = int(os.getenv("SEARCH_PROGRESS_MAX_TOKENS", "300"))
+
+SEARCH_PROGRESS_SYSTEM_PROMPT = """
+You are writing a short, reassuring "still searching" status update shown
+to a Flintel user while their search is still in progress (no matching
+posts found yet, still looking). You are given the user's search query
+and the keywords/platform being searched. Write copy that sounds like it
+was written specifically for THIS search — never generic filler.
+
+Produce exactly two short sentences ("intro" and "outro") plus a
+checklist of exactly 4 short items describing what kinds of posts are
+being looked for, all genuinely tailored to this specific query/topic —
+infer closely related terms a person searching this topic would
+recognize (e.g. a specific software category naturally implies related
+adjacent terms), but never invent an unrelated tangent.
+
+"intro" describes what's being searched and where (platform(s), topic) —
+one sentence, plain and specific.
+"outro" describes what the user will get back once results are ready —
+one sentence, plain and confident, never apologetic.
+"checklist" is exactly 4 short phrases (not full sentences, no trailing
+period needed but fine either way), each describing a distinct kind of
+signal being looked for — vary these by what's genuinely relevant to
+this specific query (buying intent, recommendation requests, complaints
+about alternatives, specific technical/feature asks, etc. — whichever 4
+genuinely fit this topic best).
+
+Respond with STRICT JSON ONLY — no markdown code fences, no preamble, no
+text outside the JSON object — in exactly this shape:
+{"intro": "<one sentence>", "outro": "<one sentence>", "checklist": ["<item 1>", "<item 2>", "<item 3>", "<item 4>"]}
+"""
+
+
+def _parse_json_object(raw: str):
+    """Best-effort parse of a Claude text response into a JSON dict.
+    Strips ```json fences if present, same tolerance already used
+    elsewhere in this product. Returns None (never raises) on anything
+    that isn't a well-formed JSON object."""
+    if not raw:
+        return None
+    cleaned = raw.strip()
+    if cleaned.startswith("```"):
+        cleaned = cleaned.strip("`").strip()
+        cleaned = re.sub(r"^json\s*", "", cleaned, flags=re.IGNORECASE).strip()
+    try:
+        data = json.loads(cleaned)
+    except (ValueError, TypeError):
+        return None
+    return data if isinstance(data, dict) else None
+
+
+def generate_search_progress_content(query: str, keywords: list, targeting_platform: str, call_claude_fn):
+    """Makes ONE Claude call to produce query-aware "still searching"
+    status copy — an intro sentence, an outro sentence, and a 4-item
+    checklist of what's being looked for — used by the frontend's
+    richer in-progress UI once a search has been running long enough
+    that the plain spinner alone starts to feel uninformative.
+
+    `call_claude_fn` must have the same signature as index.py's own
+    _call_claude(system_prompt, user_message, max_tokens=None) -> str —
+    this module never talks to the Anthropic API directly, same
+    injection pattern website_intelligence.py's
+    summarize_website_structured() already uses.
+
+    Returns {"intro": str, "outro": str, "checklist": [str, str, str, str]}
+    or None on any failure (missing query, call_claude_fn exception,
+    unparseable JSON, or a response missing usable fields) — the caller
+    falls back to the plain spinner state in that case, exactly as if
+    this feature didn't exist. Never raises past this function."""
+    if not query or not isinstance(query, str):
+        return None
+    if not callable(call_claude_fn):
+        return None
+
+    user_message = (
+        f"Search query: {query}\n"
+        f"Keywords being searched: {', '.join(k for k in (keywords or []) if isinstance(k, str))}\n"
+        f"Platform(s): {targeting_platform or 'all'}"
+    )
+    try:
+        raw = call_claude_fn(
+            SEARCH_PROGRESS_SYSTEM_PROMPT,
+            user_message,
+            max_tokens=SEARCH_PROGRESS_MAX_TOKENS,
+        )
+    except Exception:
+        return None
+
+    data = _parse_json_object(raw)
+    if not data:
+        return None
+
+    intro = data.get("intro")
+    outro = data.get("outro")
+    checklist = data.get("checklist")
+
+    intro = intro.strip() if isinstance(intro, str) and intro.strip() else None
+    outro = outro.strip() if isinstance(outro, str) and outro.strip() else None
+    checklist = (
+        [item.strip() for item in checklist if isinstance(item, str) and item.strip()]
+        if isinstance(checklist, list) else []
+    )
+
+    if not intro or not outro or not checklist:
+        return None
+
+    return {"intro": intro, "outro": outro, "checklist": checklist}
+
+
+def calculate_search_progress_percent(elapsed_seconds: float, trigger_seconds: float, timeout_seconds: float) -> int:
+    """Pure calculation, no side effects: maps elapsed time within the
+    [trigger_seconds, timeout_seconds] window onto a 0-100 display
+    percentage for the search-progress bar, so the bar visibly advances
+    as time passes rather than showing a static number. Clamped to
+    [0, 100] so a caller passing a slightly-out-of-range elapsed value
+    (e.g. right at the boundary) never produces a nonsensical display
+    value. Returns 0 if trigger_seconds >= timeout_seconds (degenerate
+    window, avoids a division by zero)."""
+    if timeout_seconds <= trigger_seconds:
+        return 0
+    span = timeout_seconds - trigger_seconds
+    progress = (elapsed_seconds - trigger_seconds) / span
+    percent = round(progress * 100)
+    return max(0, min(100, percent))
+
