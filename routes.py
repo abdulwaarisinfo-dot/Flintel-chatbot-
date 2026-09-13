@@ -427,7 +427,7 @@ def search(
                     # second, plain conversational call rather than showing
                     # nothing.
                     try:
-                        answer = _call_claude(CLAUDE_CHAT_FALLBACK_SYSTEM_PROMPT, query)
+                        answer = _call_claude(CLAUDE_CHAT_FALLBACK_SYSTEM_PROMPT, query, enable_web_search=True)
                     except Exception as exc:
                         log.warning(f"Chat fallback Claude call failed for query={query!r}: {exc}")
                         answer = "Sorry, I couldn't come up with a reply just now — please try again."
