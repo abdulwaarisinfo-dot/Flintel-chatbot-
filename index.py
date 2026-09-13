@@ -1569,7 +1569,8 @@ For sentiment/opinion queries ("What are people saying about X?").
           "title": "<post title, or a short label if the post has none>",
           "summary": "<1-2 sentence paraphrase of the post>",
           "sentiment": "<positive|mixed|negative|neutral>",
-          "link": "<real post URL if available, else omit this field entirely>"
+          "link": "<real post URL if available, else omit this field entirely>",
+          "google_rank": <int, omit this field entirely unless this post came from the supplementary Google search>
         }
       ]
     }
@@ -1645,7 +1646,9 @@ For when little or nothing relevant was actually found.
     {"type": "broaden_term", "label": "Search a broader term", "suggestion": null},
     {"type": "try_nearest_alternative", "label": "<e.g. 'Try Hyderabad instead?'>", "suggestion": "<nearest alternative term, or omit this entire action if none>"}
   ],
-  "clarifying_question": "<only include this field if asking for more context would genuinely help — omit otherwise>"
+  "clarifying_question": "<only include this field if asking for more context would genuinely help — omit otherwise>",
+  "near_match_confidence": "<\"high\" | \"low\" | null — only present when you were given a set of LOOSER, secondary candidate posts to judge (see the CLOSEST-MATCHES TIER-3 instruction below); null when no such candidates were given, or when you genuinely don't think any of them are close to what was asked>",
+  "near_match_offer": "<short natural offer sentence, e.g. 'I did find a few looser matches — want me to share them?' — ONLY include this field when near_match_confidence is \"low\">"
 }
 "suggestion" inside suggested_actions must be null unless there's a
 genuinely grounded alternative term to offer — never invent a
@@ -1678,6 +1681,32 @@ broader one:
   behavior, never a replacement for it.
 - "suggestion" here must be the alternative term ITSELF (e.g.
   "Hyderabad"), ready to be used directly as a follow-up search term.
+
+CLOSEST-MATCHES TIER-3 REFINEMENT ("near_match_confidence" /
+"near_match_offer"): sometimes, alongside a genuinely empty primary
+search, you may be given a SEPARATE, SECOND set of looser candidate
+posts — found via a broader, best-effort secondary match attempt — for
+you to judge. When you were given such candidates:
+- Judge your own genuine confidence that these loose candidates are
+  actually close to what the user originally asked for — not just
+  "technically matched a keyword," but plausibly relevant to their real
+  intent.
+- If you're genuinely confident (roughly 90%+ close) —
+  "near_match_confidence": "high". Write "message" as if these ARE your
+  answer's posts (they will be shown to the user directly, same as any
+  normal matched-post display) — do not hedge or apologize for them.
+- If you're not confident enough to show them outright, but they're not
+  nothing either — "near_match_confidence": "low", and write
+  "near_match_offer" as a short, natural sentence asking whether the
+  user wants them shared (these posts are withheld from display until
+  the user says yes in a follow-up turn — never describe their content
+  in "message" or "likely_reason" in this case, since the user hasn't
+  agreed to see them yet).
+- If you were given no such candidates at all, or you genuinely don't
+  think any of them are close to what was asked — "near_match_
+  confidence": null, and omit "near_match_offer" entirely. In this
+  case nothing about the rest of the "no_results" format changes from
+  its normal honest behavior.
 
 CRITICAL GUARDRAIL FOR "likely_reason" (and every other text field in
 this format, and in "not_available"/"disallowed" below): NEVER name,
@@ -1752,6 +1781,17 @@ set to exactly one of these four lowercase strings — "positive", "mixed",
 "negative", "neutral" — and nothing else. Never omit this field on any
 post. Never use a free-text or capitalized value. The frontend maps these
 four exact values to fixed colored tags — any other value fails to render.
+
+──────────────────────────────────────────────────────────────────────────
+POST-COUNT LIMIT: Never include more than 7 posts total, combined across
+every platform, in a single answer. If you were given both grounded posts
+(real text) and discovery-only posts (Google search, title/subreddit +
+google_rank only, no text yet), choose the best combination of up to 7
+based on genuine relevance — do not force an even split between the two
+kinds, and never pad with a low-quality post just to reach a count. A
+discovery-only post's "summary" must say its content hasn't been fetched
+yet (e.g. "Content not yet available — found via search, rank #<n>"),
+never a fabricated summary.
 
 ──────────────────────────────────────────────────────────────────────────
 SUGGESTION/FOLLOW-UP LENGTH RULE (applies to "followups" in source_list
@@ -3082,6 +3122,33 @@ def _extract_claude_format(answer_text: str):
     return fmt if isinstance(fmt, str) else None
 
 
+def _extract_near_match_confidence(answer_text: str):
+    """(CLOSEST-MATCHES TIER-3 REFINEMENT) Best-effort parse of a
+    claude_answer string to pull out its "near_match_confidence" field
+    (only present on the "no_results" format's tier-3 refinement — see
+    CLAUDE_ANALYSIS_SYSTEM_PROMPT's own instruction for what this
+    means). Same fence-stripping tolerance as _extract_claude_format().
+    Returns None (never raises) if the text is missing, isn't valid
+    JSON, or doesn't have a "near_match_confidence" field at all — this
+    is indistinguishable from Claude itself explicitly returning
+    null/None for that field, which is the correct, safe default
+    ("no loose candidates existed" / "treat as ordinary no_results")."""
+    if not answer_text:
+        return None
+    cleaned = answer_text.strip()
+    if cleaned.startswith("```"):
+        cleaned = cleaned.strip("`").strip()
+        cleaned = re.sub(r"^json\s*", "", cleaned, flags=re.IGNORECASE).strip()
+    try:
+        data = json.loads(cleaned)
+    except (ValueError, TypeError):
+        return None
+    if not isinstance(data, dict):
+        return None
+    confidence = data.get("near_match_confidence")
+    return confidence if confidence in ("high", "low") else None
+
+
 # (BUG FIX — DON'T HIDE REAL MATCHED POSTS / KEEP A POSITIVE CLOSING NOTE)
 # Rotated the same cheap-hash way as flintel.py's own _pick_invite_line()
 # and website_intelligence.py's own _pick_variant(), so the same
@@ -3252,7 +3319,17 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str
     browser (previously it only ran after streaming had already
     finished, so the live-streamed text a user first saw never had real
     links — only a later cached re-render did). This function itself is
-    completely unchanged; only WHEN/WHERE it's called shifted."""
+    completely unchanged; only WHEN/WHERE it's called shifted.
+
+    (google_rank / subreddit PATCHING) In the SAME pass, once a post's
+    title is confidently matched back to a signal, if that signal came
+    from the Google side of a merged pool (see flintel.merge_matched_
+    and_google_results()) and has a "google_rank" and/or "subreddit"
+    field, those are patched onto the post too — "google_rank" always,
+    "subreddit" only as a fallback "source" if Claude didn't already
+    set one. Same best-effort, non-destructive rule as the link patch:
+    never invented, only filled in when a confident match already
+    exists."""
     if not answer_text or not matched_signals:
         return answer_text
 
@@ -3288,6 +3365,17 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str
                 if match and match.get("post_url"):
                     post["link"] = match["post_url"]
                     changed = True
+                    # (google_rank / subreddit PATCHING) Only present on
+                    # signals that came from the Google-search side of a
+                    # merged pool (see flintel.merge_matched_and_google_
+                    # results()) — same best-effort, non-destructive
+                    # pattern as the post_url patch above: never invents
+                    # a value, only fills one in once a confident title
+                    # match already exists.
+                    if match.get("google_rank") is not None:
+                        post["google_rank"] = match["google_rank"]
+                    if match.get("subreddit") and not post.get("source"):
+                        post["source"] = match["subreddit"]
 
     if fmt == "source_list":
         _patch_platform_list(data.get("platforms"))
@@ -3931,18 +4019,33 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
     the response goes out. This function only clears it, in the finally
     below, once the work actually finishes.
 
-    (GOOGLE-FALLBACK FEATURE) New optional `keywords` parameter (default
-    None, so the one call site that doesn't pass it — there isn't one
-    left, but this keeps the signature change itself non-breaking) is
-    used to pull back whatever Google-sourced Reddit stub links were
-    already stored (by _trigger_google_fallback_search(), fired earlier
-    at the 40s mark) for this same message, without calling the Google
-    API a second time. Those stubs are reformatted into the same shape
-    get_matched_signals() returns and run through the EXISTING
-    _finalize_answer_and_results() helper — reusing BUG-2b's own
-    "no_data format + real matched list -> keep text, append closing
-    note, save the list as results" behavior with zero new branching
-    logic here."""
+    (RESPONSE_TIMEOUT'S NEW ROLE) By the time this is called,
+    _fill_in_message_outputs() already confirmed the merged
+    (flintel_signals + Google) pool was empty as of that check — but
+    this function re-fetches BOTH sources fresh rather than trusting
+    that stale snapshot, since some time may have passed between that
+    check and this actually running (especially when scheduled via
+    BackgroundTasks). If a real merged pool exists now, this answers
+    normally from it — RESPONSE_TIMEOUT firing doesn't automatically
+    mean tier-3; it only means "check one more time, seriously, and if
+    STILL nothing, fall back."
+
+    (CLOSEST-MATCHES TIER-3 REFINEMENT) Only when the merged pool is
+    STILL genuinely empty on this fresh re-check does the tier-3 flow
+    run: a best-effort SECOND, looser matching attempt (reusing the
+    unfiltered matching path) is made, and if that finds anything,
+    Claude is asked to judge its own confidence that these loose
+    candidates are actually close to what the user asked for
+    ("near_match_confidence": "high"/"low"/null, see
+    CLAUDE_ANALYSIS_SYSTEM_PROMPT's own instruction). "high" shows the
+    posts directly, same as any normal answer. "low" shows only the
+    plain message text plus a natural offer sentence
+    ("near_match_offer") asking whether the user wants them shared —
+    the posts themselves are withheld until the user says yes in a
+    follow-up turn, reusing the EXISTING conversation-continuity
+    mechanism (no new plumbing needed for that follow-up). null (or no
+    loose candidates found at all) falls through to today's honest,
+    unchanged "no_results" message with nothing to show."""
     try:
         # (BUG FIX — DON'T RE-SUGGEST A DECLINED ALTERNATIVE) Same
         # continuity context as _complete_message_answer_and_results()
@@ -3953,36 +4056,75 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
         except Exception as exc:
             log.warning(f"Chat summary lookup failed for topic_key={topic_key}: {exc}")
             chat_summary_for_answer = ""
-        extra_ctx_parts = []
+        continuity_ctx = None
         if chat_summary_for_answer:
-            extra_ctx_parts.append(
+            continuity_ctx = (
                 "Conversation so far (auto-summarized, may be empty) — see "
                 "the CONVERSATION CONTINUITY instruction above for how to "
                 "use this:\n" + chat_summary_for_answer
             )
 
-        # (GOOGLE-FALLBACK FEATURE) Pull back any stubs already stored at
-        # the 40s mark, so this can show them without a second Google
-        # API call — safe to call even if none were ever stored (returns
-        # []) or if the Google-fallback feature never fired for this
-        # message at all.
-        stub_docs = google_search.get_stub_results_for_keywords(
-            google_posts_collection, keywords or [])
+        # (MERGE BEFORE ANSWERING) Fresh re-fetch of both sources — never
+        # trusts the earlier "empty" snapshot that triggered this call.
+        try:
+            matched = get_matched_signals(topic_key, keywords or [], targeting_platform="all")
+        except Exception as exc:
+            log.warning(f"Signal matching failed for topic_key={topic_key}: {exc}")
+            matched = []
+        try:
+            stub_docs = google_search.get_stub_results_for_keywords(
+                google_posts_collection, keywords or [])
+        except Exception as exc:
+            log.warning(f"Fetching Google-fallback stubs failed for topic_key={topic_key}: {exc}")
+            stub_docs = []
         google_results = flintel.format_google_stub_results(stub_docs)
-        google_ctx = flintel.build_google_fallback_answer_context(query, len(stub_docs))
-        extra_ctx_parts.append(google_ctx)
+        merged_pool = flintel.merge_matched_and_google_results(matched, google_results)
 
-        extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
-        answer = analyze_with_claude(query, [], extra_context=extra_ctx)
+        if merged_pool:
+            # Real answer, from the merged pool — RESPONSE_TIMEOUT firing
+            # didn't mean tier-3 after all; something showed up since the
+            # earlier empty check.
+            extra_ctx_parts = [continuity_ctx] if continuity_ctx else []
+            if google_results:
+                extra_ctx_parts.append(flintel.build_combined_source_context(len(matched), len(google_results)))
+            extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
+            answer = analyze_with_claude(query, merged_pool, extra_context=extra_ctx)
+            answer = _patch_post_urls_into_answer(answer, merged_pool)
+            final_answer, results_to_save = _finalize_answer_and_results(answer, merged_pool, seed=query)
+        else:
+            # (CLOSEST-MATCHES TIER-3 REFINEMENT) Both sources are
+            # genuinely empty — try a looser, best-effort secondary match
+            # before giving up entirely.
+            try:
+                loose_candidates = get_matched_signals(topic_key, keywords or [], targeting_platform="all", unfiltered=True)
+            except Exception as exc:
+                log.warning(f"Loose signal matching failed for topic_key={topic_key}: {exc}")
+                loose_candidates = []
 
-        # (GOOGLE-FALLBACK FEATURE) Reuses the EXISTING BUG-2b decision
-        # point instead of saving `answer`/no-results untouched — if
-        # Claude's own analysis picked a "no_data" format but real
-        # Google-sourced stub links exist, this keeps the honest text,
-        # appends the usual closing note, and saves the stub links as
-        # this message's results, exactly like a normal matched-signals
-        # answer already does elsewhere in this file.
-        final_answer, results_to_save = _finalize_answer_and_results(answer, google_results, seed=query)
+            extra_ctx_parts = [continuity_ctx] if continuity_ctx else []
+            extra_ctx_parts.append(flintel.build_google_fallback_answer_context(query, len(stub_docs)))
+            extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
+            answer = analyze_with_claude(query, loose_candidates, extra_context=extra_ctx)
+
+            if loose_candidates:
+                confidence = _extract_near_match_confidence(answer)
+                if confidence == "high":
+                    # Genuinely close — present directly, same as any
+                    # normal matched-post display.
+                    answer = _patch_post_urls_into_answer(answer, loose_candidates)
+                    final_answer, results_to_save = _finalize_answer_and_results(answer, loose_candidates, seed=query)
+                elif confidence == "low":
+                    # Not confident enough to auto-show — plain message +
+                    # offer sentence only; posts withheld until the user
+                    # confirms in a follow-up turn.
+                    final_answer, results_to_save = answer, []
+                else:
+                    # null — Claude itself didn't find these genuinely
+                    # close; honest no_results, nothing to show.
+                    final_answer, results_to_save = answer, []
+            else:
+                # Nothing loose either — today's unchanged honest message.
+                final_answer, results_to_save = answer, []
 
         save_claude_answer_to_chat(chat_id, owner_key, topic_key, final_answer)
         try:
@@ -4035,12 +4177,35 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
 
     if needs_answer:
         try:
+            # (MERGE BEFORE ANSWERING) Pulls in Google-search stub
+            # results and combines them with the flintel_signals
+            # `matched` list passed in, capped at 7 total — Claude now
+            # gets ONE merged pool from both sources in a single call,
+            # instead of Google only ever being a last-resort
+            # replacement used when signals were empty.
+            try:
+                stub_docs = google_search.get_stub_results_for_keywords(
+                    google_posts_collection, msg.get("keywords", []))
+            except Exception as exc:
+                log.warning(f"Fetching Google-fallback stubs failed for topic_key={msg.get('topic_key')}: {exc}")
+                stub_docs = []
+            google_results = flintel.format_google_stub_results(stub_docs)
+            merged_pool = flintel.merge_matched_and_google_results(matched, google_results)
+
             extra_ctx_parts = []
             if msg.get("unfiltered"):
                 extra_ctx_parts.append(
                     flintel.build_unfiltered_answer_context(
                         msg["query"], msg.get("time_window_days")
                     )
+                )
+            # (MERGE BEFORE ANSWERING) Tells Claude it has a mix of
+            # grounded signals and discovery-only Google posts in the
+            # same batch — never removed alongside whatever other
+            # context strings are already being appended here.
+            if google_results:
+                extra_ctx_parts.append(
+                    flintel.build_combined_source_context(len(matched), len(google_results))
                 )
             # (BUG FIX — DON'T RE-SUGGEST A DECLINED ALTERNATIVE) Pull this
             # chat's own rolling summary and hand it to analyze_with_claude()
@@ -4064,8 +4229,8 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
                     "use this:\n" + chat_summary_for_answer
                 )
             extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
-            answer = analyze_with_claude(msg["query"], matched, extra_context=extra_ctx)
-            answer = _patch_post_urls_into_answer(answer, matched)
+            answer = analyze_with_claude(msg["query"], merged_pool, extra_context=extra_ctx)
+            answer = _patch_post_urls_into_answer(answer, merged_pool)
             if msg.get("website_context"):
                 answer = _inject_website_context_into_answer(answer, msg["website_context"])
             msg["claude_answer"] = answer
@@ -4211,59 +4376,58 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
             log.warning(f"Signal matching failed for topic_key={msg.get('topic_key')}: {exc}")
             continue
 
-        if not matched:
-            # (v6) Nothing matched yet — before, this silently gave up for
-            # this page load and just retried again next time. Now, only
-            # once the message has been waiting longer than
-            # RESPONSE_TIMEOUT seconds, give the user a plain "nothing
-            # found" answer instead of leaving the turn blank forever.
-            elapsed = _elapsed_seconds(msg.get("requested_at"))
+        elapsed = _elapsed_seconds(msg.get("requested_at"))
 
-            # (GOOGLE-FALLBACK FEATURE) Fires at 40s (only once per
-            # message, tracked via the message's own
-            # google_fallback_triggered field) — well before the 60s
-            # RESPONSE_TIMEOUT below, so any stub links it finds are
-            # already stored and ready by the time that fallback answer
-            # gets generated. This block only ever fires the Google
-            # search + stub storage — it never answers the user itself,
-            # so it always falls through to the existing RESPONSE_TIMEOUT
-            # check below regardless of what it does here.
-            if flintel.should_trigger_google_fallback(
-                    elapsed, msg.get("google_fallback_triggered", False)):
-                # (RACE FIX) Mark synchronously, in THIS request, before
-                # scheduling/running the search — mirrors the exact same
-                # busy-lock race fix already applied to
-                # _set_owner_busy()/_complete_message_answer_and_results()
-                # elsewhere in this function. Closes the window where a
-                # second concurrent reload for the same message could see
-                # google_fallback_triggered still False and schedule a
-                # duplicate Google-search call before the first background
-                # task finishes.
-                mark_google_fallback_triggered(chat_id, owner_key, msg["topic_key"])
-                if background_tasks is not None:
-                    background_tasks.add_task(_trigger_google_fallback_search, chat_id, owner_key, msg)
-                else:
-                    _trigger_google_fallback_search(chat_id, owner_key, msg)
+        # (IMMEDIATE PARALLEL TRIGGERING) Both the Google search and the
+        # search-progress UI generation now fire in PARALLEL with this
+        # very first flintel_signals lookup above — right away, the
+        # first time this message is processed — instead of waiting
+        # GOOGLE_FALLBACK_TRIGGER_SECONDS (40s) as before. Each still
+        # only ever fires ONCE per message (fire-once guards below,
+        # marked synchronously before dispatch, unchanged from before).
+        if flintel.should_trigger_immediately(msg.get("google_fallback_triggered", False)):
+            mark_google_fallback_triggered(chat_id, owner_key, msg["topic_key"])
+            if background_tasks is not None:
+                background_tasks.add_task(_trigger_google_fallback_search, chat_id, owner_key, msg)
+            else:
+                _trigger_google_fallback_search(chat_id, owner_key, msg)
 
-            # (SEARCH-PROGRESS UI) Fires at the SAME 40s mark as the
-            # Google-fallback above — a separate, independent action
-            # (its own fire-once guard, search_progress_generated) that
-            # generates query-aware "still searching" status copy for
-            # the frontend's richer in-progress UI, so the plain spinner
-            # doesn't feel uninformative once a search has been running
-            # this long. Reuses flintel.should_trigger_google_fallback()
-            # for the identical timing/once-only logic, just checked
-            # against this feature's own flag instead.
-            if flintel.should_trigger_google_fallback(
-                    elapsed, msg.get("search_progress_generated", False)):
-                # (RACE FIX) Same synchronous-mark-before-dispatch pattern
-                # as the Google-fallback trigger above.
-                mark_search_progress_generated(chat_id, owner_key, msg["topic_key"])
-                if background_tasks is not None:
-                    background_tasks.add_task(_generate_search_progress, chat_id, owner_key, msg)
-                else:
-                    _generate_search_progress(chat_id, owner_key, msg)
+        if flintel.should_trigger_immediately(msg.get("search_progress_generated", False)):
+            mark_search_progress_generated(chat_id, owner_key, msg["topic_key"])
+            if background_tasks is not None:
+                background_tasks.add_task(_generate_search_progress, chat_id, owner_key, msg)
+            else:
+                _generate_search_progress(chat_id, owner_key, msg)
 
+        # (MERGE BEFORE ANSWERING) Pulls in whatever Google-search stub
+        # results already exist for this message (from ANY prior trigger
+        # of the block above, possibly a previous page load) — best
+        # effort, never blocks waiting for Google's own call to finish.
+        # Used ONLY to decide whether there's anything to answer from at
+        # all; _complete_message_answer_and_results()/
+        # _timeout_fallback_answer() each independently re-fetch and
+        # merge again right before actually calling analyze_with_claude(),
+        # so this pool can never go stale between this check and the
+        # real answer generation.
+        try:
+            stub_docs = google_search.get_stub_results_for_keywords(
+                google_posts_collection, msg.get("keywords", []))
+        except Exception as exc:
+            log.warning(f"Fetching Google-fallback stubs failed for topic_key={msg.get('topic_key')}: {exc}")
+            stub_docs = []
+        google_results = flintel.format_google_stub_results(stub_docs)
+        merged_pool = flintel.merge_matched_and_google_results(matched, google_results)
+
+        if not merged_pool:
+            # (RESPONSE_TIMEOUT'S NEW ROLE) No longer the primary "wait
+            # until this many seconds have passed" trigger — the merge
+            # above already runs every pass, as soon as both sources
+            # have anything. RESPONSE_TIMEOUT now only matters as an
+            # ultimate safety ceiling: only once it's been this long
+            # since requested_at AND the merged pool is STILL genuinely
+            # empty does the tier-3 closest-matches flow trigger, via
+            # _timeout_fallback_answer() (which does its own tier-3
+            # refinement internally — see that function's docstring).
             if needs_answer and elapsed >= RESPONSE_TIMEOUT:
                 # (BUSY-LOCK RACE FIX) Set synchronously, in THIS request,
                 # before scheduling/running the work — not inside the
