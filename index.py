@@ -870,15 +870,14 @@ CHAT_SUMMARY_TURN_CHAR_LIMIT   = int(os.getenv("CHAT_SUMMARY_TURN_CHAR_LIMIT", "
 # the user a plain, natural "nothing found yet" answer, the same way
 # Claude/ChatGPT would rather than leaving them staring at a blank turn
 # forever. See _fill_in_message_outputs() below.
-# (RESPONSE_TIMEOUT BUMP) Previously 60 seconds. Raised to 80 seconds
-# so the Google-search fallback — triggered at
-# GOOGLE_FALLBACK_TRIGGER_SECONDS (40s, unchanged, in flintel.py) —
-# has a full 40-second window (40s to 80s) to complete its now-
-# batched RapidAPI calls (see google.py's GOOGLE_QUERY_KEYWORDS_PER_
-# BATCH) and have its stub results already stored in
-# flintel_google_posts BEFORE this timeout fires and reads them back,
-# instead of the previous, tighter 20-second window (40s to 60s).
-RESPONSE_TIMEOUT = int(os.getenv("RESPONSE_TIMEOUT", "80"))
+# (RESPONSE_TIMEOUT BUMP) Previously 60, then 80 seconds. Now 180
+# seconds (3 minutes) — tier-3 "closest match" should only ever fire
+# after BOTH flintel_signals and flintel_google_posts have had a
+# genuinely full window to produce a real match (Google search now
+# fires immediately/in parallel rather than at any gated mark, so this
+# ceiling is purely "how long do we keep waiting before giving up",
+# not a timing coordination point with any other trigger).
+RESPONSE_TIMEOUT = int(os.getenv("RESPONSE_TIMEOUT", "180"))
 
 # (PER-USER BUSY LOCK) Same spirit as RESPONSE_TIMEOUT above: if a request
 # crashes or the server restarts while an owner is marked busy, the flag
@@ -1273,6 +1272,65 @@ def _text_matches_keyword(text: str, keyword_set: set) -> bool:
     return False
 
 
+_PHRASE_MATCH_STOPWORDS = {
+    "a", "an", "the", "my", "your", "their", "is", "are", "to", "for",
+    "of", "in", "on", "with", "and", "it", "this", "that",
+}
+
+
+def _phrase_matches_text(phrase: str, text: str, loose: bool = False) -> bool:
+    """(PHRASE-MATCHING FEATURE) True if `phrase` (a short, natural 4-10
+    word phrase — see the router's own "match_phrases" field) is
+    genuinely reflected in `text`, checked two ways:
+      1. The full phrase appears as a direct case-insensitive substring
+         of `text` (a strong, exact signal), OR
+      2. At least 70% of the phrase's MEANINGFUL words (a small, generic
+         stopword list is dropped first — "a", "the", "is", etc., never
+         topic-specific) appear as whole-word matches somewhere in
+         `text`.
+    This is what stops a single bare word like "agents" from ever
+    matching a post on its own — a phrase carries several meaningful
+    words, and an unrelated post will not contain 70%+ of them.
+
+    `loose=True` lowers the fraction threshold to 40% instead of 70% —
+    used ONLY for the tier-3 "closest match" candidate pool, never for
+    the normal/primary match path.
+
+    Returns False immediately if either `phrase` or `text` is falsy."""
+    if not phrase or not text or not isinstance(phrase, str) or not isinstance(text, str):
+        return False
+
+    text_lower = text.lower()
+    phrase_lower = phrase.lower().strip()
+    if not phrase_lower:
+        return False
+
+    if phrase_lower in text_lower:
+        return True
+
+    phrase_words = [w for w in re.findall(r"[a-z0-9']+", phrase_lower) if w not in _PHRASE_MATCH_STOPWORDS]
+    if not phrase_words:
+        return False
+
+    threshold = 0.4 if loose else 0.7
+    matched_count = 0
+    for word in phrase_words:
+        pattern = r"\b" + re.escape(word) + r"\b"
+        if re.search(pattern, text_lower):
+            matched_count += 1
+
+    return (matched_count / len(phrase_words)) >= threshold
+
+
+def _text_matches_any_phrase(text: str, phrases: list, loose: bool = False) -> bool:
+    """(PHRASE-MATCHING FEATURE) True if _phrase_matches_text() is True
+    for ANY phrase in `phrases`. Returns False immediately if `text` or
+    `phrases` is falsy — never raises."""
+    if not text or not phrases:
+        return False
+    return any(_phrase_matches_text(phrase, text, loose=loose) for phrase in phrases)
+
+
 def _infer_platform_from_url(url: str):
     """Fallback for when a signal doc doesn't have a usable platform field:
     guesses the platform from the post URL's domain so the icon/badge still
@@ -1294,7 +1352,8 @@ def _infer_platform_from_url(url: str):
 
 
 def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str = "all",
-                         limit: int = None, since_days: int = None, unfiltered: bool = False) -> list:
+                         limit: int = None, since_days: int = None, unfiltered: bool = False,
+                         match_phrases: list = None, loose: bool = False) -> list:
     """Reads `flintel_signals` and keeps only the signals that match this
     job's generated keywords. topic_key match is intentionally NOT
     required: Background Service #1 may store its own topic_key for a
@@ -1360,7 +1419,25 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     SIGNATURE (aside from the new, optional, default-None `since_days`
     parameter), RETURN SHAPE, matching rules, and every existing caller
     are exactly as they were in v7 — it has no idea whether `keywords`
-    came from Claude's router call or the old fuzzy-template fallback."""
+    came from Claude's router call or the old fuzzy-template fallback.
+
+    (PHRASE-MATCHING FEATURE) When `match_phrases` (a list of short,
+    natural 4-10 word phrases — see the router's own "match_phrases"
+    field) is provided and non-empty, conditions 2/3 above (title/text
+    matching) switch from single-keyword word-boundary matching to
+    _text_matches_any_phrase() against these phrases instead — this is
+    what stops a single generic keyword like "agents" from matching a
+    post that only shares that one bare word with no other topical
+    overlap. `loose=True` lowers the phrase-match threshold (40% instead
+    of 70% of a phrase's meaningful words) — used ONLY by the tier-3
+    "closest match" fallback, never the normal/primary match path.
+    When `match_phrases` is empty/None (e.g. an older cached message
+    from before this feature, or a code path out of scope for it), this
+    gracefully falls back to the EXISTING _text_matches_keyword()-based
+    word-boundary check against `keywords`, completely unchanged, so
+    nothing breaks for those cases. Condition 1 (_signal_keyword_matches
+    against the signal's own search_keyword field) is UNTOUCHED either
+    way."""
     if unfiltered:
         return flintel.get_unfiltered_matched_signals(
             signals_collection,
@@ -1442,13 +1519,28 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                 continue
 
         # (v7) A signal matches if EITHER its search_keyword field matches
-        # (unchanged, exact match), OR the keyword shows up as a whole
-        # word/phrase inside its own title, OR inside its own post_text.
-        # Any one of the three is enough.
+        # (unchanged, exact match), OR the topic shows up genuinely in its
+        # own title, OR inside its own post_text.
+        # (PHRASE-MATCHING FEATURE) When match_phrases is available, the
+        # title/text check uses _text_matches_any_phrase() instead of the
+        # old single-keyword word-boundary check — a phrase carries
+        # several meaningful words, so a post sharing just one generic
+        # bare word with `keywords` (e.g. "agents") no longer counts as a
+        # match on its own. Falls back to the old keyword-based check
+        # when match_phrases is empty/None, unchanged from before.
+        if match_phrases:
+            title_or_text_match = (
+                _text_matches_any_phrase(title, match_phrases, loose=loose)
+                or _text_matches_any_phrase(post_text, match_phrases, loose=loose)
+            )
+        else:
+            title_or_text_match = (
+                _text_matches_keyword(title, keyword_set)
+                or _text_matches_keyword(post_text, keyword_set)
+            )
         is_match = (
             _signal_keyword_matches(doc, keyword_set)
-            or _text_matches_keyword(title, keyword_set)
-            or _text_matches_keyword(post_text, keyword_set)
+            or title_or_text_match
         )
         if not is_match:
             continue
@@ -1670,7 +1762,7 @@ For when little or nothing relevant was actually found.
   ],
   "clarifying_question": "<only include this field if asking for more context would genuinely help — omit otherwise>",
   "near_match_confidence": "<\"high\" | \"low\" | null — only present when you were given a set of LOOSER, secondary candidate posts to judge (see the CLOSEST-MATCHES TIER-3 instruction below); null when no such candidates were given, or when you genuinely don't think any of them are close to what was asked>",
-  "near_match_offer": "<short natural offer sentence, e.g. 'I did find a few looser matches — want me to share them?' — ONLY include this field when near_match_confidence is \"low\">"
+  "near_match_offer": "<short, professional (not apologetic) sentence stating plainly that there's no exact match for this topic but a looser/adjacent set of posts was found, then asking permission to share them — e.g. 'I don't have exact data on this specific topic, but I did find some related posts that come close — want me to share them?' — ONLY include this field when near_match_confidence is \"low\">"
 }
 "suggestion" inside suggested_actions must be null unless there's a
 genuinely grounded alternative term to offer — never invent a
@@ -1718,12 +1810,17 @@ you to judge. When you were given such candidates:
   answer's posts (they will be shown to the user directly, same as any
   normal matched-post display) — do not hedge or apologize for them.
 - If you're not confident enough to show them outright, but they're not
-  nothing either — "near_match_confidence": "low", and write
-  "near_match_offer" as a short, natural sentence asking whether the
-  user wants them shared (these posts are withheld from display until
-  the user says yes in a follow-up turn — never describe their content
-  in "message" or "likely_reason" in this case, since the user hasn't
-  agreed to see them yet).
+  nothing either — "near_match_confidence": "low". Write "message"
+  (and "near_match_offer") in this exact tone: plainly tell the user
+  Flintel does not have an exact match for what they asked, but that a
+  looser/adjacent set of posts was found, and ask for explicit
+  permission before sharing them — e.g. "I don't have exact data on
+  this specific topic, but I did find some related posts that come
+  close — want me to share them?" Say this professionally and matter-
+  of-factly, never apologetically. These posts are withheld from
+  display until the user says yes in a follow-up turn — never describe
+  their content in "message" or "likely_reason" in this case, since the
+  user hasn't agreed to see them yet.
 - If you were given no such candidates at all, or you genuinely don't
   think any of them are close to what was asked — "near_match_
   confidence": null, and omit "near_match_offer" entirely. In this
@@ -2324,6 +2421,19 @@ optional time window.
        handled separately, by a dropdown the user already picked — you
        are only responsible for the topic keywords).
 
+   - "match_phrases": an array of 4 to 10 short, natural phrases/
+     sentences (each phrase itself should be roughly 4-10 words long),
+     up to 7 phrases maximum. Each phrase should read like something a
+     real person might actually write in a post about this topic (e.g.
+     for "AI agents": "using an AI agent to handle customer support",
+     "built an AI agent for my business", "AI agents doing repetitive
+     tasks automatically") — NOT a single word, NOT meta wording
+     ("reddit", "posts", "show me"). These phrases exist purely to
+     confirm a post is genuinely ABOUT the topic, not just that a
+     generic word appears somewhere in it — this is what stops a single
+     bare keyword like "agents" from matching a post that has nothing
+     to do with the actual topic.
+
    - "time_window_days": an integer, or null.
      - If the user's message itself implies a time range, convert it to
        an approximate number of days: "today"/"aaj" -> 1, "this week" /
@@ -2434,10 +2544,10 @@ reply conversational and plain — don't mention you're an AI or that this
 is a "mock", and don't narrate your own reasoning.
 Respond with STRICT JSON ONLY — no markdown code fences, no preamble, no
 text outside the JSON object — in EXACTLY one of these four shapes:
-{"intent": "search", "reply": null, "keywords": ["<keyword1>", "<keyword2>"], "time_window_days": null}
-{"intent": "chat", "reply": "<your natural reply text here>", "keywords": null, "time_window_days": null}
-{"intent": "blocked", "reply": "<short, polite decline text>", "keywords": null, "time_window_days": null}
-{"intent": "clarify", "reply": "<short, natural clarifying question>", "keywords": null, "time_window_days": null}
+{"intent": "search", "reply": null, "keywords": ["<keyword1>", "<keyword2>"], "time_window_days": null, "match_phrases": ["<phrase1>", "<phrase2>"]}
+{"intent": "chat", "reply": "<your natural reply text here>", "keywords": null, "time_window_days": null, "match_phrases": null}
+{"intent": "blocked", "reply": "<short, polite decline text>", "keywords": null, "time_window_days": null, "match_phrases": null}
+{"intent": "clarify", "reply": "<short, natural clarifying question>", "keywords": null, "time_window_days": null, "match_phrases": null}
 """
 
 CLAUDE_ROUTER_SYSTEM_PROMPT = (
@@ -2514,7 +2624,17 @@ def _parse_router_json(raw: str):
     UNCHANGED — the refinement is pure prompt wording inside
     CLAUDE_ROUTER_SYSTEM_PROMPT above; the four valid intents, their
     field shapes, and every validation/clamping rule here are identical
-    to before."""
+    to before.
+
+    (PHRASE-MATCHING FEATURE) Also parses/validates a NEW, SEPARATE
+    "match_phrases" field for "search" intent — cleaned the same way
+    "keywords" is (trimmed, non-strings/empties dropped, de-duplicated
+    case-insensitively), but capped at 7 entries instead of
+    CLAUDE_MAX_KEYWORDS. A missing/malformed field simply results in
+    match_phrases=None — no exception, no different fallback behavior
+    for anything else in this function. This field never touches the
+    job document or the Google search call; it exists purely for
+    get_matched_signals()'s own loose title/text phrase check."""
     if not raw:
         return None
     cleaned = raw.strip()
@@ -2535,6 +2655,7 @@ def _parse_router_json(raw: str):
         reply = None
 
     keywords = None
+    match_phrases = None
     time_window_days = None
     unfiltered = False
     if intent == "search":
@@ -2557,6 +2678,25 @@ def _parse_router_json(raw: str):
                     break
             keywords = cleaned_keywords or None
 
+        raw_phrases = data.get("match_phrases")
+        if isinstance(raw_phrases, list):
+            cleaned_phrases = []
+            seen_phrases = set()
+            for phrase in raw_phrases:
+                if not isinstance(phrase, str):
+                    continue
+                phrase_clean = phrase.strip()
+                if not phrase_clean:
+                    continue
+                key = phrase_clean.lower()
+                if key in seen_phrases:
+                    continue
+                seen_phrases.add(key)
+                cleaned_phrases.append(phrase_clean)
+                if len(cleaned_phrases) >= 7:
+                    break
+            match_phrases = cleaned_phrases or None
+
         raw_window = data.get("time_window_days")
         parsed_window = None
         if isinstance(raw_window, bool):
@@ -2571,7 +2711,7 @@ def _parse_router_json(raw: str):
         unfiltered = bool(data.get("unfiltered") is True)
 
     return {"intent": intent, "reply": reply, "keywords": keywords, "time_window_days": time_window_days,
-            "unfiltered": unfiltered}
+            "unfiltered": unfiltered, "match_phrases": match_phrases}
 
 
 def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
@@ -2605,12 +2745,12 @@ def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
         raw = _call_claude(CLAUDE_ROUTER_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_ROUTER_MAX_TOKENS)
     except Exception as exc:
         log.warning(f"Router Claude call failed (defaulting to 'search'): {exc}")
-        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None}
+        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None}
 
     parsed = _parse_router_json(raw)
     if not parsed:
         log.warning(f"Router returned unparseable output (defaulting to 'search'): {raw[:200]!r}")
-        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None}
+        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None}
     return parsed
 
 
@@ -2646,15 +2786,20 @@ never guess just to produce an answer.
 
 Respond with STRICT JSON ONLY — no markdown code fences, no preamble, no
 text outside the JSON object — in exactly this shape:
-{"resolved": true, "keywords": ["<keyword1>", "<keyword2>"], "time_window_days": null}
+{"resolved": true, "keywords": ["<keyword1>", "<keyword2>"], "time_window_days": null, "match_phrases": ["<phrase1>", "<phrase2>"]}
 or, when you genuinely cannot infer a specific topic:
-{"resolved": false, "keywords": null, "time_window_days": null}
+{"resolved": false, "keywords": null, "time_window_days": null, "match_phrases": null}
 
 Rules when "resolved": true:
 - "keywords": up to 10 short, natural search terms that could plausibly
   appear inside a real Reddit/X/LinkedIn/Facebook post about the topic you
   inferred — same rules as normal keyword generation elsewhere in this
   product: no meta words like "reddit", "posts", "show me", "today", etc.
+- "match_phrases": an array of 4 to 10 short, natural phrases/sentences
+  (each roughly 4-10 words long), up to 7 phrases maximum — same kind of
+  real-person phrasing described for the router's own "match_phrases"
+  field elsewhere in this product, used to confirm a post is genuinely
+  about the topic you inferred, not just that a generic keyword appears.
 - "time_window_days": convert any time range already implied by the user's
   own message the same way it's always converted elsewhere ("today"/"aaj"
   -> 1, "this week"/"last 7 days" -> 7, "last month" -> 30, "last 6
@@ -2751,6 +2896,26 @@ def resolve_unclear_topic(query: str, chat_summary: str):
     if not keywords:
         return None
 
+    raw_phrases = data.get("match_phrases")
+    match_phrases = None
+    if isinstance(raw_phrases, list):
+        cleaned_phrases = []
+        seen_phrases = set()
+        for phrase in raw_phrases:
+            if not isinstance(phrase, str):
+                continue
+            phrase_clean = phrase.strip()
+            if not phrase_clean:
+                continue
+            key = phrase_clean.lower()
+            if key in seen_phrases:
+                continue
+            seen_phrases.add(key)
+            cleaned_phrases.append(phrase_clean)
+            if len(cleaned_phrases) >= 7:
+                break
+        match_phrases = cleaned_phrases or None
+
     raw_window = data.get("time_window_days")
     time_window_days = None
     parsed_window = None
@@ -2763,7 +2928,7 @@ def resolve_unclear_topic(query: str, chat_summary: str):
     if isinstance(parsed_window, int) and parsed_window > 0:
         time_window_days = min(parsed_window, MAX_TIME_WINDOW_DAYS)
 
-    return {"keywords": keywords, "time_window_days": time_window_days}
+    return {"keywords": keywords, "time_window_days": time_window_days, "match_phrases": match_phrases}
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -2856,6 +3021,16 @@ PART 1 — KEYWORDS:
   any confident keywords, return an empty list rather than inventing
   generic filler.
 
+PART 1B — MATCH PHRASES:
+- Return "match_phrases": an array of 4 to 10 short, natural phrases/
+  sentences (each roughly 4-10 words long), up to 7 phrases maximum —
+  the SAME kind of natural, real-person phrasing described for the
+  router's own "match_phrases" field elsewhere in this product (e.g.
+  "using an AI agent to handle customer support", NOT a single word,
+  NOT meta wording). These exist purely to confirm a post is genuinely
+  ABOUT the topic derived from this website + the user's request, not
+  just that a generic keyword appears somewhere in it.
+
 PART 2 — STRUCTURED SUMMARY:
 - Produce a CLEAN, SECTIONED breakdown of what the business/site/
   individual actually offers — not a flat paragraph. Reason freshly from
@@ -2877,6 +3052,7 @@ Respond with STRICT JSON ONLY — no markdown code fences, no preamble, no
 text outside the JSON object — in exactly this shape:
 {
   "keywords": ["<keyword1>", "<keyword2>"],
+  "match_phrases": ["<phrase1>", "<phrase2>"],
   "structured_summary": {
     "overview": "<1-2 sentence plain-language opening line>",
     "sections": [{"title": "<short section heading>", "bullets": ["<bullet 1>", "<bullet 2>"]}]
@@ -2894,11 +3070,12 @@ def extract_keywords_from_website(query: str, url: str, website_text: str):
     summary breakdown of the site, in ONE combined pass — both derived
     from the SAME Claude call, using CLAUDE_WEBSITE_KEYWORD_SYSTEM_PROMPT.
 
-    Returns `{"keywords": list|None, "structured_summary": dict|None}`
-    if Claude returned anything usable (either piece present is enough),
-    or `None` if Claude failed outright, returned unparseable output, or
-    returned neither usable keywords nor a usable structured summary —
-    NEVER a bare list anymore. Callers (see INTEGRATION POINT 2 in
+    Returns `{"keywords": list|None, "structured_summary": dict|None,
+    "match_phrases": list|None}` if Claude returned anything usable
+    (keywords or structured_summary present is enough; match_phrases is
+    always additive), or `None` if Claude failed outright, returned
+    unparseable output, or returned neither usable keywords nor a usable
+    structured summary — NEVER a bare list anymore. Callers (see INTEGRATION POINT 2 in
     POST /search) already expect this new shape: they read
     `result.get("keywords")` and `result.get("structured_summary")`
     separately, and must treat a `None` return exactly like any other "no
@@ -2956,6 +3133,26 @@ def extract_keywords_from_website(query: str, url: str, website_text: str):
                 break
         cleaned_keywords = cleaned_list or None
 
+    raw_phrases = data.get("match_phrases")
+    cleaned_phrases = None
+    if isinstance(raw_phrases, list):
+        cleaned_phrase_list = []
+        seen_phrases = set()
+        for phrase in raw_phrases:
+            if not isinstance(phrase, str):
+                continue
+            phrase_clean = phrase.strip()
+            if not phrase_clean:
+                continue
+            key = phrase_clean.lower()
+            if key in seen_phrases:
+                continue
+            seen_phrases.add(key)
+            cleaned_phrase_list.append(phrase_clean)
+            if len(cleaned_phrase_list) >= 7:
+                break
+        cleaned_phrases = cleaned_phrase_list or None
+
     raw_structured = data.get("structured_summary")
     structured_summary = None
     if isinstance(raw_structured, dict):
@@ -2982,7 +3179,7 @@ def extract_keywords_from_website(query: str, url: str, website_text: str):
 
     if not cleaned_keywords and not structured_summary:
         return None
-    return {"keywords": cleaned_keywords, "structured_summary": structured_summary}
+    return {"keywords": cleaned_keywords, "structured_summary": structured_summary, "match_phrases": cleaned_phrases}
 
 
 def _trim(text: str, limit: int) -> str:
@@ -3248,28 +3445,31 @@ def _append_closest_matches_note(answer_text: str, seed: str = "") -> str:
 
 
 def _finalize_answer_and_results(answer_text: str, matched: list, seed: str = ""):
-    """(BUG FIX) Shared decision point for both the non-streaming path
+    """(CHANGE 3 — STOP OVERRIDING CLAUDE'S OWN "NO DATA" VERDICT) Shared
+    decision point for both the non-streaming path
     (_complete_message_answer_and_results) and the streaming route
     (routes.py): given Claude's own answer text and the posts actually
-    matched by get_matched_signals()/get_unfiltered_matched_signals(),
-    decides what to persist as this message's final `results` and
-    `claude_answer`.
+    matched, decides what to persist as this message's final `results`.
 
-    Real matched posts are NEVER hidden just because Claude's own
-    analysis chose a "no_data" format (no_results/not_available/
-    disallowed) for the written response — that's a statement about how
-    confidently Claude could ground a full narrative answer, not a
-    statement about whether ANY real data exists. When that happens,
-    this keeps Claude's own honest text intact but appends one short,
-    positive closing note (see _append_closest_matches_note()) so the
-    user still sees the real posts below and isn't left at a dead end.
-    Genuinely empty results (no data AND nothing matched) are still
-    saved as an empty list, exactly as before this fix.
+    Previously this force-showed `matched` posts (with an appended
+    closing note) whenever Claude's own answer format was a "no_data"
+    one (no_results/not_available/disallowed) but `matched` was
+    non-empty — on the theory that Claude's format choice was purely
+    about narrative confidence, not about whether real data existed.
+    Now that CHANGE 2's phrase-matching keeps `matched` itself far more
+    tightly scoped to genuine topical relevance, that override is no
+    longer needed and is actively wrong: Claude's own honest "no_results"
+    verdict is trusted and respected — the primary/normal answer path
+    never force-shows posts Claude itself already judged irrelevant.
+    (`_append_closest_matches_note()`/`_pick_closest_matches_note()`
+    remain defined elsewhere in this file but are no longer called from
+    here or anywhere else automatically.)
+
+    Genuinely empty results (no data, or Claude picked a "no_data"
+    format) are saved as an empty list, exactly as before.
 
     Returns (final_answer_text, results_to_save)."""
     claude_format = _extract_claude_format(answer_text)
-    if claude_format in _NO_DATA_CLAUDE_FORMATS and matched:
-        return _append_closest_matches_note(answer_text, seed=seed), matched
     if claude_format in _NO_DATA_CLAUDE_FORMATS:
         return answer_text, []
     return answer_text, matched
@@ -3672,7 +3872,7 @@ def delete_chat_session(chat_id: str, owner_key: str) -> bool:
 
 def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
                         keywords: list, targeting_platform: str, time_window_days: int = None,
-                        unfiltered: bool = False, website_context: dict = None):
+                        unfiltered: bool = False, website_context: dict = None, match_phrases: list = None):
     """Appends a search as a new message in the chat, and auto-titles the
     chat from the very first query if it hasn't been named yet.
 
@@ -3716,12 +3916,22 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
     for this message; `search_progress_generated` is the fire-once guard
     for that, mirroring google_fallback_triggered exactly. Older
     messages simply don't have either field, and every read uses
-    .get(..., False)/.get(...) so that's indistinguishable from unset."""
+    .get(..., False)/.get(...) so that's indistinguishable from unset.
+
+    (PHRASE-MATCHING FEATURE) `match_phrases` (NEW, optional, default
+    None — every existing caller that doesn't pass it behaves exactly as
+    before) stores the 4-10-word natural phrases the router (or
+    resolve_unclear_topic()/extract_keywords_from_website()) generated
+    alongside `keywords`, for get_matched_signals()'s own loose title/
+    text phrase check. None means "no match_phrases for this message" —
+    get_matched_signals() gracefully falls back to its old keyword-word-
+    boundary check in that case, exactly like before this feature."""
     now = datetime.now(timezone.utc)
     message = {
         "query":              query,
         "topic_key":          topic_key,
         "keywords":           keywords,
+        "match_phrases":      match_phrases,  # (PHRASE-MATCHING FEATURE) list or None
         "targeting_platform": targeting_platform,
         "time_window_days":   time_window_days,  # (NEW) int or None — see get_matched_signals()
         "unfiltered":         unfiltered,
@@ -4030,7 +4240,7 @@ def _generate_search_progress(chat_id: str, owner_key: str, msg: dict):
         log.warning(f"Search-progress generation failed for topic_key={msg.get('topic_key')}: {exc}")
 
 
-def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query: str, keywords: list = None):
+def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query: str, keywords: list = None, match_phrases: list = None):
     """(PERFORMANCE FIX) Extracted, UNCHANGED logic from the RESPONSE_TIMEOUT
     fallback branch that used to run inline inside _fill_in_message_outputs()
     — same calls, same order, same caching. Pulled out so it can be
@@ -4092,7 +4302,7 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
         # (MERGE BEFORE ANSWERING) Fresh re-fetch of both sources — never
         # trusts the earlier "empty" snapshot that triggered this call.
         try:
-            matched = get_matched_signals(topic_key, keywords or [], targeting_platform="all")
+            matched = get_matched_signals(topic_key, keywords or [], targeting_platform="all", match_phrases=match_phrases)
         except Exception as exc:
             log.warning(f"Signal matching failed for topic_key={topic_key}: {exc}")
             matched = []
@@ -4120,8 +4330,18 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
             # (CLOSEST-MATCHES TIER-3 REFINEMENT) Both sources are
             # genuinely empty — try a looser, best-effort secondary match
             # before giving up entirely.
+            # (BUG FIX — DEAD-CODE FIX) Previously called with
+            # unfiltered=True, which routes to
+            # flintel.get_unfiltered_matched_signals() — that path
+            # requires a since_days argument this call never provided,
+            # so it always silently returned []. Now uses the SAME
+            # phrase-matching machinery from get_matched_signals() in its
+            # loosened mode (40% threshold instead of 70%), scoped to
+            # this message's own match_phrases — keeping the "closest
+            # match" pool on-topic instead of pulling in ANY signal from
+            # the time window regardless of relevance.
             try:
-                loose_candidates = get_matched_signals(topic_key, keywords or [], targeting_platform="all", unfiltered=True)
+                loose_candidates = get_matched_signals(topic_key, keywords or [], targeting_platform="all", match_phrases=match_phrases, loose=True)
             except Exception as exc:
                 log.warning(f"Loose signal matching failed for topic_key={topic_key}: {exc}")
                 loose_candidates = []
@@ -4135,9 +4355,18 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
                 confidence = _extract_near_match_confidence(answer)
                 if confidence == "high":
                     # Genuinely close — present directly, same as any
-                    # normal matched-post display.
+                    # normal matched-post display. (BUG FIX) Does NOT go
+                    # through _finalize_answer_and_results() here — that
+                    # function now unconditionally empties results for
+                    # ANY "no_data" format (see CHANGE 3), but this
+                    # format IS still "no_results" even in the tier-3
+                    # "high confidence" case (near_match_confidence is
+                    # just an extra field on the SAME format) — the
+                    # decision to show these posts was already made
+                    # explicitly, right here, based on Claude's own
+                    # near_match_confidence judgment.
                     answer = _patch_post_urls_into_answer(answer, loose_candidates)
-                    final_answer, results_to_save = _finalize_answer_and_results(answer, loose_candidates, seed=query)
+                    final_answer, results_to_save = answer, loose_candidates
                 elif confidence == "low":
                     # Not confident enough to auto-show — plain message +
                     # offer sentence only; posts withheld until the user
@@ -4396,6 +4625,7 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                 targeting_platform=msg.get("targeting_platform", "all"),
                 since_days=msg.get("time_window_days"),
                 unfiltered=msg.get("unfiltered", False),
+                match_phrases=msg.get("match_phrases"),
             )
         except Exception as exc:
             log.warning(f"Signal matching failed for topic_key={msg.get('topic_key')}: {exc}")
@@ -4460,9 +4690,9 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                 # response has already gone out to the browser.
                 _set_owner_busy(owner_key)
                 if background_tasks is not None:
-                    background_tasks.add_task(_timeout_fallback_answer, chat_id, owner_key, msg["topic_key"], msg["query"], msg.get("keywords", []))
+                    background_tasks.add_task(_timeout_fallback_answer, chat_id, owner_key, msg["topic_key"], msg["query"], msg.get("keywords", []), msg.get("match_phrases"))
                 else:
-                    _timeout_fallback_answer(chat_id, owner_key, msg["topic_key"], msg["query"], msg.get("keywords", []))
+                    _timeout_fallback_answer(chat_id, owner_key, msg["topic_key"], msg["query"], msg.get("keywords", []), msg.get("match_phrases"))
             continue
 
         # (BUGFIX PACK #1) Track whatever answer text is/becomes available
