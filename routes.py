@@ -53,6 +53,8 @@ from index import (
     _elapsed_seconds,                   # <-- GOOGLE-FALLBACK POLLING FIX: needed in stream_answer()
     mark_google_fallback_triggered,     # <-- GOOGLE-FALLBACK POLLING FIX: needed in stream_answer()
     _trigger_google_fallback_search,    # <-- GOOGLE-FALLBACK POLLING FIX: needed in stream_answer()
+    mark_search_progress_generated,     # <-- SEARCH-PROGRESS UI: needed in stream_answer()
+    save_search_progress_to_chat,       # <-- SEARCH-PROGRESS UI: needed in stream_answer()
     get_current_user,
     _log_user_in,
     create_email_user,
@@ -938,6 +940,33 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # logic here instead.
             google_ctx = None
             if not matched:
+                # (SEARCH-PROGRESS UI) Written into by the background
+                # thread below once flintel.generate_search_progress_content()
+                # finishes — checked each poll iteration so this loop can
+                # yield the content as a new SSE event the moment it's
+                # ready, without a DB read on every iteration.
+                search_progress_holder = {}
+                search_progress_sent = False
+
+                def _generate_and_store_search_progress(holder, chat_id, owner_key, msg):
+                    # (RACE FIX) search_progress_generated is already
+                    # marked True synchronously by the caller below,
+                    # before this thread starts — this function's only
+                    # job is to actually generate and save the content,
+                    # exactly mirroring _trigger_google_fallback_search()'s
+                    # own post-race-fix shape.
+                    try:
+                        content = flintel.generate_search_progress_content(
+                            msg.get("query"),
+                            msg.get("keywords", []),
+                            msg.get("targeting_platform"),
+                            _call_claude,
+                        )
+                        if content:
+                            holder["content"] = content
+                    except Exception as exc:
+                        log.warning(f"Search-progress generation failed for topic_key={topic_key}: {exc}")
+
                 while True:
                     elapsed = _elapsed_seconds(msg.get("requested_at"))
 
@@ -976,6 +1005,38 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                             daemon=True,
                         ).start()
                         msg["google_fallback_triggered"] = True
+
+                    # (SEARCH-PROGRESS UI) Fires at the SAME 40s mark, as
+                    # a separate, independent action with its own
+                    # fire-once guard (search_progress_generated) — same
+                    # synchronous-mark-before-dispatch race fix, same
+                    # threading.Thread reasoning as the Google-fallback
+                    # trigger just above (this SSE stream stays open for
+                    # the whole polling loop, so BackgroundTasks would
+                    # never actually run in time here either).
+                    if flintel.should_trigger_google_fallback(
+                            elapsed, msg.get("search_progress_generated", False)):
+                        mark_search_progress_generated(chat_id, owner_key, topic_key)
+                        threading.Thread(
+                            target=_generate_and_store_search_progress,
+                            args=(search_progress_holder, chat_id, owner_key, msg),
+                            daemon=True,
+                        ).start()
+                        msg["search_progress_generated"] = True
+
+                    # (SEARCH-PROGRESS UI) Once the background thread above
+                    # has filled in a result, save it (so a later
+                    # non-streaming page view sees it too) and yield it to
+                    # the browser exactly once, as its own SSE event type —
+                    # the client's EventSource handler renders this
+                    # alongside the live elapsed-time-based progress bar.
+                    if not search_progress_sent and search_progress_holder.get("content"):
+                        try:
+                            save_search_progress_to_chat(chat_id, owner_key, topic_key, search_progress_holder["content"])
+                        except Exception as exc:
+                            log.warning(f"Saving search_progress failed for topic_key={topic_key}: {exc}")
+                        yield f"data: {json.dumps({'search_progress': search_progress_holder['content']})}\n\n"
+                        search_progress_sent = True
 
                     if elapsed >= RESPONSE_TIMEOUT:
                         break
