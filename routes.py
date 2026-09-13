@@ -46,6 +46,7 @@ from index import (
     extract_keywords_from_website,
     append_to_chat_summary,
     _extract_claude_format,
+    _extract_near_match_confidence,     # <-- CLOSEST-MATCHES TIER-3 REFINEMENT: needed in stream_answer()
     _NO_DATA_CLAUDE_FORMATS,
     _patch_post_urls_into_answer,
     _inject_website_context_into_answer,
@@ -926,103 +927,68 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # SSE payload in this stream.
             yield "retry: 86400000\n\n"
 
+            # (IMMEDIATE PARALLEL TRIGGERING) Both the Google search and
+            # the search-progress UI generation now fire in PARALLEL with
+            # this route's own initial get_matched_signals() call made
+            # above — right away, on this very first check — instead of
+            # waiting for elapsed time to reach any threshold. Each still
+            # only ever fires ONCE per message (fire-once guards below,
+            # marked synchronously before dispatch, unchanged). This runs
+            # UNCONDITIONALLY, whether or not `matched` already has
+            # something, mirroring index.py's own should_trigger_
+            # immediately() usage in _fill_in_message_outputs().
+            search_progress_holder = {}
+            search_progress_sent = False
+
+            def _generate_and_store_search_progress(holder, chat_id, owner_key, msg):
+                # (RACE FIX) search_progress_generated is already
+                # marked True synchronously by the caller below,
+                # before this thread starts — this function's only
+                # job is to actually generate and save the content,
+                # exactly mirroring _trigger_google_fallback_search()'s
+                # own post-race-fix shape.
+                try:
+                    content = flintel.generate_search_progress_content(
+                        msg.get("query"),
+                        msg.get("keywords", []),
+                        msg.get("targeting_platform"),
+                        _call_claude,
+                    )
+                    if content:
+                        holder["content"] = content
+                except Exception as exc:
+                    log.warning(f"Search-progress generation failed for topic_key={topic_key}: {exc}")
+
+            if flintel.should_trigger_immediately(msg.get("google_fallback_triggered", False)):
+                mark_google_fallback_triggered(chat_id, owner_key, topic_key)
+                threading.Thread(
+                    target=_trigger_google_fallback_search,
+                    args=(chat_id, owner_key, msg),
+                    daemon=True,
+                ).start()
+                msg["google_fallback_triggered"] = True
+
+            if flintel.should_trigger_immediately(msg.get("search_progress_generated", False)):
+                mark_search_progress_generated(chat_id, owner_key, topic_key)
+                threading.Thread(
+                    target=_generate_and_store_search_progress,
+                    args=(search_progress_holder, chat_id, owner_key, msg),
+                    daemon=True,
+                ).start()
+                msg["search_progress_generated"] = True
+
             # (GOOGLE-FALLBACK POLLING FIX) `matched` here starts as the
             # ONE initial get_matched_signals() call already made above,
             # outside this generator. If that already found something,
-            # none of this runs at all — zero change to the
-            # already-working "signals matched right away" case. Only if
-            # it found nothing does this poll, exactly mirroring what
-            # _fill_in_message_outputs()'s own `if not matched:` branch
-            # already does for every OTHER message in a chat — this is
-            # the first message of a new chat, which never goes through
-            # that function at all (view_chat() reserves it via
-            # skip_topic_key), so it needs this same waiting/fallback
-            # logic here instead.
-            google_ctx = None
+            # the polling loop below never runs at all — zero change to
+            # the already-working "signals matched right away" case.
+            # Only if it found nothing does this poll, re-checking
+            # get_matched_signals() every ~2s until either something
+            # appears or RESPONSE_TIMEOUT is reached.
+            tier3_triggered = False
             if not matched:
-                # (SEARCH-PROGRESS UI) Written into by the background
-                # thread below once flintel.generate_search_progress_content()
-                # finishes — checked each poll iteration so this loop can
-                # yield the content as a new SSE event the moment it's
-                # ready, without a DB read on every iteration.
-                search_progress_holder = {}
-                search_progress_sent = False
-
-                def _generate_and_store_search_progress(holder, chat_id, owner_key, msg):
-                    # (RACE FIX) search_progress_generated is already
-                    # marked True synchronously by the caller below,
-                    # before this thread starts — this function's only
-                    # job is to actually generate and save the content,
-                    # exactly mirroring _trigger_google_fallback_search()'s
-                    # own post-race-fix shape.
-                    try:
-                        content = flintel.generate_search_progress_content(
-                            msg.get("query"),
-                            msg.get("keywords", []),
-                            msg.get("targeting_platform"),
-                            _call_claude,
-                        )
-                        if content:
-                            holder["content"] = content
-                    except Exception as exc:
-                        log.warning(f"Search-progress generation failed for topic_key={topic_key}: {exc}")
-
                 while True:
                     elapsed = _elapsed_seconds(msg.get("requested_at"))
-
-                    # Same trigger check/timing _fill_in_message_outputs()
-                    # already uses — fires at most once per message
-                    # (mark_google_fallback_triggered() is set
-                    # synchronously here, in this request, BEFORE
-                    # starting the background thread, mirroring the
-                    # exact same race-condition fix already applied to
-                    # this same trigger elsewhere in this codebase).
-                    #
-                    # (THREADING FIX) BackgroundTasks only ever runs AFTER
-                    # the full HTTP response has been sent and the
-                    # connection closed — but this SSE stream stays open
-                    # for the ENTIRE polling loop + analyze_with_claude()
-                    # call, up to RESPONSE_TIMEOUT (80s), so a scheduled
-                    # BackgroundTasks call would never actually start
-                    # running until AFTER the stub-results read-back at
-                    # the very end of this same request already happened,
-                    # silently breaking the whole 40s-fire/80s-read
-                    # timing this feature depends on. A real
-                    # threading.Thread starts running immediately, in
-                    # parallel with this still-open stream, so its writes
-                    # to flintel_google_posts are actually there by the
-                    # time RESPONSE_TIMEOUT's read-back runs.
-                    # _trigger_google_fallback_search() already has its
-                    # own try/except and never raises (see index.py), so
-                    # it's safe to run on a bare thread with no
-                    # additional wrapping here.
-                    if flintel.should_trigger_google_fallback(
-                            elapsed, msg.get("google_fallback_triggered", False)):
-                        mark_google_fallback_triggered(chat_id, owner_key, topic_key)
-                        threading.Thread(
-                            target=_trigger_google_fallback_search,
-                            args=(chat_id, owner_key, msg),
-                            daemon=True,
-                        ).start()
-                        msg["google_fallback_triggered"] = True
-
-                    # (SEARCH-PROGRESS UI) Fires at the SAME 40s mark, as
-                    # a separate, independent action with its own
-                    # fire-once guard (search_progress_generated) — same
-                    # synchronous-mark-before-dispatch race fix, same
-                    # threading.Thread reasoning as the Google-fallback
-                    # trigger just above (this SSE stream stays open for
-                    # the whole polling loop, so BackgroundTasks would
-                    # never actually run in time here either).
-                    if flintel.should_trigger_google_fallback(
-                            elapsed, msg.get("search_progress_generated", False)):
-                        mark_search_progress_generated(chat_id, owner_key, topic_key)
-                        threading.Thread(
-                            target=_generate_and_store_search_progress,
-                            args=(search_progress_holder, chat_id, owner_key, msg),
-                            daemon=True,
-                        ).start()
-                        msg["search_progress_generated"] = True
 
                     # (SEARCH-PROGRESS UI) Once the background thread above
                     # has filled in a result, save it (so a later
@@ -1038,7 +1004,14 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                         yield f"data: {json.dumps({'search_progress': search_progress_holder['content']})}\n\n"
                         search_progress_sent = True
 
+                    # (RESPONSE_TIMEOUT'S NEW ROLE) Still the ultimate
+                    # ceiling, but since Google search now starts
+                    # immediately above (rather than at the old 40s mark),
+                    # this loop typically exits much sooner now, once
+                    # BOTH the signals query and the Google search attempt
+                    # have resolved — this is expected, not a bug.
                     if elapsed >= RESPONSE_TIMEOUT:
+                        tier3_triggered = True
                         break
 
                     time.sleep(2)
@@ -1058,88 +1031,113 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     if matched:
                         break
 
-                if not matched:
-                    # (GOOGLE-FALLBACK POLLING FIX) RESPONSE_TIMEOUT reached
-                    # with still nothing matched — fall back to whatever
-                    # Google-search stub results are already stored,
-                    # mirroring _timeout_fallback_answer()'s own behavior
-                    # in index.py exactly, so the streamed answer stays
-                    # consistent with the non-streaming path. `matched` is
-                    # reassigned to this stub-derived list so every
-                    # downstream use below (analyze_with_claude,
-                    # _patch_post_urls_into_answer,
-                    # _finalize_answer_and_results, the final "done"
-                    # payload) sees this same final result set.
-                    try:
-                        stub_docs = google_search.get_stub_results_for_keywords(
-                            google_posts_collection, msg.get("keywords", []))
-                    except Exception as exc:
-                        log.warning(f"Fetching Google-fallback stubs failed for topic_key={topic_key}: {exc}")
-                        stub_docs = []
-                    matched = flintel.format_google_stub_results(stub_docs)
-                    google_ctx = flintel.build_google_fallback_answer_context(msg["query"], len(stub_docs))
+            # (MERGE BEFORE ANSWERING) Pulls in whatever Google-search
+            # stub results exist right now — combined with `matched` via
+            # merge_matched_and_google_results(), capped at 7 total —
+            # instead of Google only ever being a last-resort replacement
+            # used when signals were empty.
+            try:
+                stub_docs = google_search.get_stub_results_for_keywords(
+                    google_posts_collection, msg.get("keywords", []))
+            except Exception as exc:
+                log.warning(f"Fetching Google-fallback stubs failed for topic_key={topic_key}: {exc}")
+                stub_docs = []
+            google_results = flintel.format_google_stub_results(stub_docs)
+            merged_pool = flintel.merge_matched_and_google_results(matched, google_results)
 
             # (SIMULATED-STREAM FIX) Step 1: get the COMPLETE answer first,
             # via the same blocking function every other answer path in this
             # file already uses — no raw live Claude tokens are sent to the
             # browser anymore.
             try:
-                extra_ctx_parts = []
-                if msg.get("unfiltered"):
-                    extra_ctx_parts.append(
-                        flintel.build_unfiltered_answer_context(
-                            msg["query"], msg.get("time_window_days")
-                        )
-                    )
                 # (BUG FIX — DON'T RE-SUGGEST A DECLINED ALTERNATIVE) Same
                 # continuity context as the non-streaming path in index.py's
                 # _complete_message_answer_and_results() — `chat` was already
                 # fetched above in this route, so no extra Mongo lookup is
                 # needed here.
                 chat_summary_for_answer = (chat or {}).get("summary") or ""
+                continuity_ctx = None
                 if chat_summary_for_answer:
-                    extra_ctx_parts.append(
+                    continuity_ctx = (
                         "Conversation so far (auto-summarized, may be empty) — "
                         "see the CONVERSATION CONTINUITY instruction above for "
                         "how to use this:\n" + chat_summary_for_answer
                     )
-                # (GOOGLE-FALLBACK POLLING FIX) Only set when the
-                # RESPONSE_TIMEOUT branch above actually ran — a normal
-                # match (whether from the initial call or found during
-                # polling) never adds this, exactly like today.
-                if google_ctx:
-                    extra_ctx_parts.append(google_ctx)
-                extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
-                full_answer = analyze_with_claude(msg["query"], matched, extra_context=extra_ctx)
+
+                if not merged_pool and tier3_triggered:
+                    # (CLOSEST-MATCHES TIER-3, via the shared helper's own
+                    # near_match_confidence branching, mirroring
+                    # _timeout_fallback_answer()'s exact tier-3 logic in
+                    # index.py) Both sources are STILL genuinely empty —
+                    # try a looser, best-effort secondary match before
+                    # giving up entirely.
+                    try:
+                        loose_candidates = get_matched_signals(
+                            topic_key, msg.get("keywords", []),
+                            targeting_platform="all", unfiltered=True,
+                        )
+                    except Exception as exc:
+                        log.warning(f"Loose signal matching failed for topic_key={topic_key}: {exc}")
+                        loose_candidates = []
+
+                    extra_ctx_parts = [continuity_ctx] if continuity_ctx else []
+                    extra_ctx_parts.append(flintel.build_google_fallback_answer_context(msg["query"], len(stub_docs)))
+                    extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
+                    full_answer = analyze_with_claude(msg["query"], loose_candidates, extra_context=extra_ctx)
+
+                    if loose_candidates:
+                        confidence = _extract_near_match_confidence(full_answer)
+                        if confidence == "high":
+                            # Genuinely close — present directly, same as
+                            # any normal matched-post display.
+                            full_answer = _patch_post_urls_into_answer(full_answer, loose_candidates)
+                            full_answer, results_to_save = _finalize_answer_and_results(
+                                full_answer, loose_candidates, seed=msg.get("query", "")
+                            )
+                        else:
+                            # "low" or null — not confident enough (or
+                            # Claude itself found nothing close): withhold
+                            # the posts, keep the text as-is.
+                            results_to_save = []
+                    else:
+                        # Nothing loose either — today's unchanged honest
+                        # message, nothing to show.
+                        results_to_save = []
+                else:
+                    # Normal path: merged_pool has something (from the
+                    # initial check, from polling, or from Google stubs
+                    # already stored) — answer from the merged pool.
+                    extra_ctx_parts = []
+                    if msg.get("unfiltered"):
+                        extra_ctx_parts.append(
+                            flintel.build_unfiltered_answer_context(
+                                msg["query"], msg.get("time_window_days")
+                            )
+                        )
+                    if continuity_ctx:
+                        extra_ctx_parts.append(continuity_ctx)
+                    # (MERGE BEFORE ANSWERING) Tells Claude it has a mix
+                    # of grounded signals and discovery-only Google posts
+                    # in the same batch.
+                    if google_results:
+                        extra_ctx_parts.append(
+                            flintel.build_combined_source_context(len(matched), len(google_results))
+                        )
+                    extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
+                    full_answer = analyze_with_claude(msg["query"], merged_pool, extra_context=extra_ctx)
+                    full_answer = _patch_post_urls_into_answer((full_answer or "").strip(), merged_pool) if full_answer else full_answer
+                    if full_answer and msg.get("website_context"):
+                        full_answer = _inject_website_context_into_answer(full_answer, msg["website_context"])
+                    full_answer, results_to_save = (
+                        _finalize_answer_and_results(full_answer, merged_pool, seed=msg.get("query", ""))
+                        if full_answer else (full_answer, merged_pool)
+                    )
             except Exception as exc:
                 log.warning(f"Streaming Claude analysis failed for topic_key={topic_key}: {exc}")
                 yield f"data: {json.dumps({'error': 'analysis failed'})}\n\n"
                 return
 
             full_answer = (full_answer or "").strip()
-
-            # (SIMULATED-STREAM FIX) Step 2: patch real post_url values into
-            # the complete answer BEFORE any of it is ever sent to the
-            # browser.
-            if full_answer:
-                full_answer = _patch_post_urls_into_answer(full_answer, matched)
-                if msg.get("website_context"):
-                    full_answer = _inject_website_context_into_answer(full_answer, msg["website_context"])
-
-            # (BUG FIX 2b) Decide the final answer text + final results
-            # BEFORE pacing anything out, using the SAME shared decision
-            # point the non-streaming path uses
-            # (_complete_message_answer_and_results() in index.py), so a
-            # streamed answer and a re-rendered/cached answer can never
-            # disagree on whether real matched posts get shown. This
-            # never hides posts that were actually matched just because
-            # Claude's own analysis chose a "no_data" format — see
-            # _finalize_answer_and_results()'s docstring in index.py.
-            results_to_save = matched
-            if full_answer:
-                full_answer, results_to_save = _finalize_answer_and_results(
-                    full_answer, matched, seed=msg.get("query", "")
-                )
 
             # (SIMULATED-STREAM FIX) Step 3: pace the now-final string back out
             # in small pieces to reproduce the live-typing impression.
@@ -1164,7 +1162,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 # not gated on `if matched:` — a genuinely empty result
                 # set still needs its final `[]` persisted, or `results`
                 # stays uncomputed forever. `results_to_save` was already
-                # decided above by _finalize_answer_and_results().
+                # decided above.
                 try:
                     save_signal_results_to_chat(chat_id, owner_key, topic_key, results_to_save)
                 except Exception as exc:
