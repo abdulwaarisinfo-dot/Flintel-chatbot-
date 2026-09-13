@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -426,6 +427,24 @@
   .loading-dots span:nth-child(3) { animation-delay: 0.3s; }
   @keyframes dotpulse { 0%,80%,100% { opacity: 0.3; transform: scale(0.85); } 40% { opacity: 1; transform: scale(1); } }
   .loading-text { color: #757473; font-size: 14px; }
+
+  /* (SEARCH-PROGRESS UI) Richer "still searching" state — replaces the
+     plain .loading-row above once msg.search_progress has been
+     generated (see flintel.generate_search_progress_content()). Colors,
+     spacing, and font sizes taken directly from the Figma design
+     (file V97CYC2tyIcu5B6ZNzwdLr, frame "Desktop - 2", node 1:2). */
+  .search-progress-block { margin-bottom: 20px; }
+  .search-progress-text { color: #d1d0cf; font-family: 'Figtree', sans-serif; font-weight: 500; font-size: 18px; line-height: 28px; margin: 0 0 20px 0; }
+  .search-progress-text strong { color: #fff; font-weight: 700; }
+  .search-progress-checking-label { color: #d1d0cf; font-family: 'Figtree', sans-serif; font-weight: 500; font-size: 18px; line-height: 28px; margin: 0 0 12px 0; }
+  .search-progress-checklist { list-style: none; margin: 0 0 30px 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+  .search-progress-checklist li { position: relative; padding-left: 20px; color: rgba(255,255,255,0.7); font-family: 'Figtree', sans-serif; font-weight: 500; font-size: 18px; line-height: 28px; }
+  .search-progress-checklist li::before { content: ''; position: absolute; left: 0; top: 11px; width: 7px; height: 7px; border-radius: 50%; background: linear-gradient(90deg, #c0fb3d 0%, #83be00 100%); }
+  .search-progress-bar-track { position: relative; background: #242323; height: 31px; border-radius: 10px; max-width: 413px; display: flex; align-items: center; padding: 0 13px; }
+  .search-progress-bar-label { color: rgba(209,208,207,0.6); font-family: 'Figtree', sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0.04em; white-space: nowrap; }
+  .search-progress-bar-fill-wrap { flex: 1; height: 18px; margin: 0 12px; border-radius: 9px; background: #3a3a3a; overflow: hidden; }
+  .search-progress-bar-fill { height: 100%; width: 0%; border-radius: 9px; background: linear-gradient(90deg, #c0fb3d 0%, #83be00 100%); transition: width 1s linear; }
+  .search-progress-bar-percent { color: rgba(209,208,207,0.6); font-family: 'Figtree', sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0.04em; white-space: nowrap; }
 
   /* Claude's answer text (msg.claude_answer). `.answer-raw` holds the exact
      Jinja-escaped text and is shown as plain pre-wrapped text by default. If
@@ -968,13 +987,29 @@
             <div class="answer-rendered"></div>
           </div>
           {% elif msg.results %}
-          <div class="loading-row">
+          <div class="loading-row" id="loading-row-{{ msg.topic_key }}">
             <span class="loading-logo"><img src="https://www.figma.com/api/mcp/asset/9ac3df00-71a7-4d75-b3a6-1796fd320906.png" alt="" /></span>
             <div class="loading-dots"><span></span><span></span><span></span></div>
             <span class="loading-text">Got the posts — writing up the answer…</span>
           </div>
+          {% elif msg.search_progress %}
+          <div class="search-progress-block" id="loading-row-{{ msg.topic_key }}"
+               data-requested-at="{{ msg.requested_at.isoformat() if msg.requested_at else '' }}">
+            <p class="search-progress-text">{{ msg.search_progress.intro }} <strong>This may take a moment.</strong> {{ msg.search_progress.outro }}</p>
+            <p class="search-progress-checking-label">I’m checking for:</p>
+            <ul class="search-progress-checklist">
+              {% for item in msg.search_progress.checklist %}
+              <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+            <div class="search-progress-bar-track">
+              <span class="search-progress-bar-label">Searching Reddit…</span>
+              <div class="search-progress-bar-fill-wrap"><div class="search-progress-bar-fill"></div></div>
+              <span class="search-progress-bar-percent">0%</span>
+            </div>
+          </div>
           {% else %}
-          <div class="loading-row">
+          <div class="loading-row" id="loading-row-{{ msg.topic_key }}">
             <span class="loading-logo"><img src="https://www.figma.com/api/mcp/asset/9ac3df00-71a7-4d75-b3a6-1796fd320906.png" alt="" /></span>
             <div class="loading-dots"><span></span><span></span><span></span></div>
             <span class="loading-text">Still gathering results for this search…</span>
@@ -1598,6 +1633,93 @@
     renderClosestMatchesFromResults(matchedResults, container);
   }
 
+  // (SEARCH-PROGRESS UI) Same 40s/80s window flintel.py's
+  // GOOGLE_FALLBACK_TRIGGER_SECONDS / index.py's RESPONSE_TIMEOUT use —
+  // kept here as plain constants (not fetched from the backend) since
+  // they're stable config values; if either one is ever changed via its
+  // own env var, update these two to match.
+  const SEARCH_PROGRESS_TRIGGER_SECONDS = 40;
+  const SEARCH_PROGRESS_TIMEOUT_SECONDS = 80;
+
+  function startSearchProgressPercentTimer(blockEl) {
+    // Live-updates the bar's fill width + percentage text every second,
+    // computed from real elapsed time since data-requested-at — never a
+    // static/hardcoded number. Stops on its own once the bar reaches
+    // 100% (the backend's own RESPONSE_TIMEOUT fallback takes over from
+    // there) or if the block is no longer in the document (e.g. the
+    // real answer has since replaced it).
+    const requestedAtRaw = blockEl.dataset.requestedAt;
+    const requestedAtMs = requestedAtRaw ? new Date(requestedAtRaw).getTime() : NaN;
+    const fillEl = blockEl.querySelector('.search-progress-bar-fill');
+    const percentEl = blockEl.querySelector('.search-progress-bar-percent');
+    if (!fillEl || !percentEl) return;
+
+    function tick() {
+      if (!document.body.contains(blockEl)) return;
+      const elapsedSeconds = isNaN(requestedAtMs)
+        ? SEARCH_PROGRESS_TRIGGER_SECONDS
+        : (Date.now() - requestedAtMs) / 1000;
+      const span = SEARCH_PROGRESS_TIMEOUT_SECONDS - SEARCH_PROGRESS_TRIGGER_SECONDS;
+      const rawPercent = ((elapsedSeconds - SEARCH_PROGRESS_TRIGGER_SECONDS) / span) * 100;
+      const percent = Math.max(0, Math.min(100, Math.round(rawPercent)));
+      fillEl.style.width = percent + '%';
+      percentEl.textContent = percent + '%';
+      if (percent < 100) setTimeout(tick, 1000);
+    }
+    tick();
+  }
+
+  function renderSearchProgressBlock(loadingRowEl, progressContent, requestedAtIso) {
+    // (SEARCH-PROGRESS UI) Builds the exact same markup/classes as the
+    // Jinja-rendered msg.search_progress branch above, for the
+    // live-streaming case (the SSE "search_progress" event arriving
+    // while the plain spinner is still showing). Replaces the plain
+    // .loading-row content in place — same #loading-row-<topicKey> id,
+    // so any other code already referencing that id keeps working.
+    loadingRowEl.className = 'search-progress-block';
+    loadingRowEl.dataset.requestedAt = requestedAtIso || '';
+
+    const textP = document.createElement('p');
+    textP.className = 'search-progress-text';
+    textP.append(
+      document.createTextNode(progressContent.intro + ' '),
+      Object.assign(document.createElement('strong'), { textContent: 'This may take a moment.' }),
+      document.createTextNode(' ' + progressContent.outro)
+    );
+
+    const checkingLabel = document.createElement('p');
+    checkingLabel.className = 'search-progress-checking-label';
+    checkingLabel.textContent = 'I’m checking for:';
+
+    const list = document.createElement('ul');
+    list.className = 'search-progress-checklist';
+    (progressContent.checklist || []).forEach((item) => {
+      const li = document.createElement('li');
+      li.textContent = item;
+      list.appendChild(li);
+    });
+
+    const track = document.createElement('div');
+    track.className = 'search-progress-bar-track';
+    const label = document.createElement('span');
+    label.className = 'search-progress-bar-label';
+    label.textContent = 'Searching Reddit…';
+    const fillWrap = document.createElement('div');
+    fillWrap.className = 'search-progress-bar-fill-wrap';
+    const fill = document.createElement('div');
+    fill.className = 'search-progress-bar-fill';
+    fillWrap.appendChild(fill);
+    const percentEl = document.createElement('span');
+    percentEl.className = 'search-progress-bar-percent';
+    percentEl.textContent = '0%';
+    track.append(label, fillWrap, percentEl);
+
+    loadingRowEl.innerHTML = '';
+    loadingRowEl.append(textP, checkingLabel, list, track);
+
+    startSearchProgressPercentTimer(loadingRowEl);
+  }
+
   function renderClosestMatchesFromResults(matchedResults, container) {
     // (BUG 2b FRONTEND COMPLETION — additive only, no new CSS/design)
     // Backend's _finalize_answer_and_results() now keeps real matched
@@ -1618,7 +1740,7 @@
     matchedResults.forEach((r) => {
       const key = normalizePlatform(r.platform);
       if (!grouped[key]) grouped[key] = [];
-      grouped[key].push({ title: r.title, summary: r.post_text, link: r.post_url, google_rank: r.google_rank, source: r.subreddit });
+      grouped[key].push({ title: r.title, summary: r.post_text, link: r.post_url, google_rank: r.google_rank });
     });
 
     const heading = document.createElement('p');
@@ -2449,6 +2571,21 @@
 
       if (payload.delta !== undefined) {
         accumulated += payload.delta;
+        return;
+      }
+
+      if (payload.search_progress) {
+        // (SEARCH-PROGRESS UI) Arrives once, mid-stream, once the
+        // backend's own 40s-mark trigger finishes generating the
+        // query-aware status copy — replaces the plain spinner with the
+        // richer in-progress design and starts its own live percentage
+        // timer. Never interferes with the ongoing delta accumulation
+        // above; this is purely a visual swap of the loading state.
+        const loadingRow = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)}`);
+        if (loadingRow) {
+          if (phraseTimer) clearInterval(phraseTimer);
+          renderSearchProgressBlock(loadingRow, payload.search_progress, new Date().toISOString());
+        }
         return;
       }
 
