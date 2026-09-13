@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1759,7 +1757,7 @@
     matchedResults.forEach((r) => {
       const key = normalizePlatform(r.platform);
       if (!grouped[key]) grouped[key] = [];
-      grouped[key].push({ title: r.title, summary: r.post_text, link: r.post_url, google_rank: r.google_rank });
+      grouped[key].push({ title: r.title, summary: r.post_text, link: r.post_url, google_rank: r.google_rank, source: r.subreddit });
     });
 
     const heading = document.createElement('p');
