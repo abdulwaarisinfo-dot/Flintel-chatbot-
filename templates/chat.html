@@ -1770,6 +1770,21 @@
       container.appendChild(p);
     }
 
+    if (data.near_match_offer) {
+      // (CLOSEST-MATCHES TIER-3 REFINEMENT) Only present when the
+      // backend's own near_match_confidence was "low" — genuinely close
+      // candidates exist but Claude wasn't confident enough to show
+      // them outright, so this natural offer sentence is shown instead,
+      // and matchedResults stays empty until the user confirms in a
+      // follow-up turn (existing conversation-continuity mechanism —
+      // no new plumbing needed here, just displaying this one field).
+      const p = document.createElement('p');
+      p.className = 'block-text';
+      p.style.marginTop = '20px';
+      p.textContent = data.near_match_offer;
+      container.appendChild(p);
+    }
+
     renderClosestMatchesFromResults(matchedResults, container);
   }
 
