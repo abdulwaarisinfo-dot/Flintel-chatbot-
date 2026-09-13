@@ -3,7 +3,8 @@ FLINTEL — WEB SERVICE (v7 + JSON-ANALYSIS-PROMPT SWAP + CLAUDE-KEYWORD SWAP
 + BUGFIX PACK: RESULTS/ANSWER SYNC + WORD-BOUNDARY MATCHING + 2ND-LEVEL CHUNKING
 + TIME-WINDOW / PAIN-POINT / CLARIFY FEATURE
 + CLARIFY-SELF-RESOLVE + WEBSITE-URL KEYWORD EXTRACTION
-+ ROUTER INTENT REFINEMENT)
++ ROUTER INTENT REFINEMENT
++ CHAT WEB-SEARCH FEATURE)
 ============================================================================
 Everything from v3 is UNCHANGED and still works exactly as before:
   1. Take a user prompt (brand/topic/product name) from a simple web form.
@@ -754,6 +755,58 @@ below this text whenever this function is called (see
 matched posts at all) never reaches this function, so its
 `suggested_actions` / `clarifying_question` are completely unaffected by
 this change.
+──────────────────────────────────────────────────────────────────────────────
+
+── CHAT WEB-SEARCH FEATURE ─────────────────────────────────────────────────
+ONE small, targeted, additive change on top of everything above, scoped
+to exactly two things: `_call_claude()` and the plain "chat" reply path
+inside the router. Nothing else in this file — no other function, route,
+constant, matching rule, chunking rule, or caching rule — was touched.
+
+1. `_call_claude()` gained ONE new, optional, default-False parameter,
+   `enable_web_search`. When True, it adds the Anthropic web_search tool
+   (`{"type": "web_search_20250305", "name": "web_search"}`) to the
+   request payload before it's sent to the Anthropic API. No other line
+   of this function changed — the existing text-extraction logic (it
+   picks out "text" type blocks from `data.get("content", [])`) already
+   handles a web_search-augmented response correctly, since Anthropic's
+   own text blocks are what carry the model's final answer either way.
+   Every EXISTING caller of `_call_claude()` (the map step, the notes-
+   reduce step, the topic resolver, the website-keyword extraction call)
+   does NOT pass this parameter and therefore defaults to False,
+   behaving exactly as before this feature — those calls are grounded
+   purely in flintel_signals/website data and have no reason to reach
+   out to the live web.
+
+2. `classify_and_maybe_chat()`'s own router call now passes
+   `enable_web_search=True` — this is the ONLY call site that opts in.
+   Since the router call is also what produces a plain "chat" reply (see
+   the v5 FEATURE note above: chat/blocked/clarify replies are written
+   in the SAME call that classifies the message, to save a round trip),
+   this means a plain conversational message that's actually about
+   something current, recent, or beyond Claude's own training knowledge
+   can now have Claude search the live web for it and answer from real,
+   up-to-date information — instead of falling back to a stale "I don't
+   have real-time access" / knowledge-cutoff disclaimer, which reads
+   poorly in a product context. CLAUDE_ROUTER_SYSTEM_PROMPT's own "chat"
+   intent instructions, and CLAUDE_CHAT_FALLBACK_SYSTEM_PROMPT (used
+   only as this feature's own unrelated fallback text, not itself
+   web-search-enabled by this change), were both given one added
+   sentence telling Claude it has this tool and should use it for
+   exactly this kind of question.
+
+SAFETY NET (same philosophy as the rest of this file): "search" and
+"blocked"/"clarify" classification and reply generation happen in the
+exact SAME router call as before — this feature does not add a second
+call, a new intent, or any new field to the router's JSON contract
+(`_parse_router_json()` is completely untouched). It only gives Claude an
+extra tool it may or may not choose to invoke while producing whatever
+reply text it was already going to produce for a "chat"-classified
+message. A tool-use turn that fails or times out degrades exactly like
+any other `_call_claude()` failure already does (caught by
+`classify_and_maybe_chat()`'s own try/except, falling back to
+intent="search" as always) — it can never break or block the
+pre-existing routing/search pipeline.
 ──────────────────────────────────────────────────────────────────────────────
 """
 
@@ -1761,8 +1814,8 @@ For when little or nothing relevant was actually found.
     {"type": "try_nearest_alternative", "label": "<e.g. 'Try Hyderabad instead?'>", "suggestion": "<nearest alternative term, or omit this entire action if none>"}
   ],
   "clarifying_question": "<only include this field if asking for more context would genuinely help — omit otherwise>",
-  "near_match_confidence": "<\"high\" | \"low\" | null — only present when you were given a set of LOOSER, secondary candidate posts to judge (see the CLOSEST-MATCHES TIER-3 instruction below); null when no such candidates were given, or when you genuinely don't think any of them are close to what was asked>",
-  "near_match_offer": "<short, professional (not apologetic) sentence stating plainly that there's no exact match for this topic but a looser/adjacent set of posts was found, then asking permission to share them — e.g. 'I don't have exact data on this specific topic, but I did find some related posts that come close — want me to share them?' — ONLY include this field when near_match_confidence is \"low\">"
+  "near_match_confidence": "<\\"high\\" | \\"low\\" | null — only present when you were given a set of LOOSER, secondary candidate posts to judge (see the CLOSEST-MATCHES TIER-3 instruction below); null when no such candidates were given, or when you genuinely don't think any of them are close to what was asked>",
+  "near_match_offer": "<short, professional (not apologetic) sentence stating plainly that there's no exact match for this topic but a looser/adjacent set of posts was found, then asking permission to share them — e.g. 'I don't have exact data on this specific topic, but I did find some related posts that come close — want me to share them?' — ONLY include this field when near_match_confidence is \\"low\\">"
 }
 "suggestion" inside suggested_actions must be null unless there's a
 genuinely grounded alternative term to offer — never invent a
@@ -2022,10 +2075,21 @@ def _format_posts_block(posts: list) -> str:
     return "\n\n".join(lines)
 
 
-def _call_claude(system_prompt: str, user_message: str, max_tokens: int = None) -> str:
+def _call_claude(system_prompt: str, user_message: str, max_tokens: int = None, enable_web_search: bool = False) -> str:
     """Single call to the Anthropic Messages API. Raises on any failure —
     callers decide how to degrade gracefully (never let this block the
-    search job or the post cards, which don't depend on Claude at all)."""
+    search job or the post cards, which don't depend on Claude at all).
+
+    (CHAT WEB-SEARCH FEATURE) `enable_web_search` (default False — every
+    existing caller that doesn't pass it behaves exactly as before this
+    feature): when True, adds the Anthropic web_search tool to the
+    request payload so Claude can look up current/recent information
+    instead of relying purely on its own training knowledge. Nothing
+    else about this function changed — the existing text-extraction
+    logic below already handles the response correctly when a
+    web_search tool result comes back, since it just picks out "text"
+    type blocks from `data.get("content", [])` regardless of what tool
+    calls happened in between."""
     if not ANTHROPIC_API_KEY:
         raise RuntimeError("ANTHROPIC_API_KEY is not set")
 
@@ -2035,6 +2099,8 @@ def _call_claude(system_prompt: str, user_message: str, max_tokens: int = None) 
         "system": system_prompt,
         "messages": [{"role": "user", "content": user_message}],
     }
+    if enable_web_search:
+        payload["tools"] = [{"type": "web_search_20250305", "name": "web_search"}]
     headers = {
         "x-api-key": ANTHROPIC_API_KEY,
         "anthropic-version": CLAUDE_API_VERSION,
@@ -2105,7 +2171,12 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
     GET /chat/{chat_id}/stream calls to get its complete answer text —
     still exactly this same, byte-for-byte unchanged function, no new
     parameters, no new branches. See that route / the module docstring
-    for why."""
+    for why.
+
+    (CHAT WEB-SEARCH FEATURE) Every _call_claude(...) invocation inside
+    this function is UNCHANGED — none of them pass enable_web_search=True.
+    This function only ever analyzes ALREADY-MATCHED, grounded posts, and
+    has no reason to reach out to the live web."""
     posts = build_claude_post_context(matched_signals)
 
     if not posts:
@@ -2322,8 +2393,9 @@ def analyze_with_claude_stream(query: str, matched_signals: list):
 # ─────────────────────────────────────────────────────────────────────────────
 # CLAUDE ROUTING LAYER (v5, extended in v6 with abuse/harm blocking, again
 # with keyword generation, again with time-window parsing, pain-point-aware
-# keyword generation, and a 4th "clarify" intent, and now again with the
-# ROUTER INTENT REFINEMENT described in the module docstring above)
+# keyword generation, and a 4th "clarify" intent, again with the
+# ROUTER INTENT REFINEMENT described in the module docstring above, and
+# now again with the CHAT WEB-SEARCH FEATURE described there too)
 #
 # Runs BEFORE anything else in POST /search. A single cheap Claude call
 # decides whether the user's message is a genuine "search" (wants social-
@@ -2344,6 +2416,15 @@ def analyze_with_claude_stream(query: str, matched_signals: list):
 # if the user gave no time range), generates pain-point/prospect-style
 # keywords when that's what the message is asking for, and can return
 # intent="clarify" instead of guessing at an unclear topic.
+#
+# (CHAT WEB-SEARCH FEATURE) The SAME call now ALSO has the Anthropic
+# web_search tool available to it (see _call_claude()'s own
+# `enable_web_search` parameter and classify_and_maybe_chat() below) —
+# this only ever matters for the "chat" branch, since that's the only
+# branch where Claude writes a user-facing reply directly; "search" still
+# only ever returns keywords/time_window_days, never a reply, so having
+# the tool available changes nothing about that branch's own output
+# contract.
 #
 # Safety rule: ANY failure here (bad JSON, API error, timeout, missing
 # key) defaults to {"intent": "search", "reply": None, "keywords": None,
@@ -2456,8 +2537,14 @@ optional time window.
    follow-up question about something already discussed in this
    conversation, or a request to just talk. Answer the user's message
    yourself, directly and naturally, the way Claude/ChatGPT would in any
-   normal conversation. "keywords" and "time_window_days" must be null
-   for this type.
+   normal conversation. You also have access to a live web_search tool
+   for these "chat" replies — use it whenever the user's question is
+   about something current, recent, or beyond your own training
+   knowledge (news, prices, scores, who currently holds some role,
+   "what happened with X today", etc.), instead of saying you don't
+   have real-time access or citing a knowledge cutoff. Search first,
+   then answer plainly and naturally from what you find. "keywords" and
+   "time_window_days" must be null for this type.
 
    ALSO classify as "chat" (not "search", not "clarify") when the message
    asks a broad, platform-wide "what's trending / what's happening / what
@@ -2470,11 +2557,12 @@ optional time window.
    "reply" yourself using your own general knowledge of what's commonly
    discussed on that platform, in a natural, confident, professional tone
    (not hedgy, not "as an AI I don't have real-time access" — just answer
-   plainly from what you know). At the end of that reply, naturally
-   invite them to share their business, product, or website link so
-   Flintel can pull real, current, related data for them specifically.
-   "keywords" and "time_window_days" stay null for this case, exactly
-   like any other "chat" message.
+   plainly from what you know, using the web_search tool above if it
+   would help ground the answer in something current). At the end of
+   that reply, naturally invite them to share their business, product, or
+   website link so Flintel can pull real, current, related data for them
+   specifically. "keywords" and "time_window_days" stay null for this
+   case, exactly like any other "chat" message.
 
    This "chat" case is DIFFERENT from the GENERAL PAIN-POINT / COMPLAINT
    PATTERN described under "search" above: if the user names ANY angle at
@@ -2562,6 +2650,12 @@ Answer the user's message naturally and directly, the way Claude or
 ChatGPT would in any normal conversation. Plain language, no rigid
 template, no JSON, no code blocks. Don't mention you're an AI or that
 this is a "mock".
+
+You also have access to a live web_search tool — use it whenever the
+user's question is about something current, recent, or beyond your own
+training knowledge, instead of saying you don't have real-time access or
+citing a knowledge cutoff. Search first, then answer plainly and
+naturally from what you find.
 """
 
 # (v6) Safety-net text used only if the router itself flagged a message as
@@ -2625,6 +2719,11 @@ def _parse_router_json(raw: str):
     CLAUDE_ROUTER_SYSTEM_PROMPT above; the four valid intents, their
     field shapes, and every validation/clamping rule here are identical
     to before.
+
+    (CHAT WEB-SEARCH FEATURE) This function's logic is completely
+    UNCHANGED — the feature only affects _call_claude()'s request
+    payload and does not change the router's own JSON output contract in
+    any way.
 
     (PHRASE-MATCHING FEATURE) Also parses/validates a NEW, SEPARATE
     "match_phrases" field for "search" intent — cleaned the same way
@@ -2716,9 +2815,10 @@ def _parse_router_json(raw: str):
 
 def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
     """(v5, extended in v6 with abuse-blocking, again with keyword
-    generation, again with time-window parsing + a "clarify" intent, and
-    now again with the ROUTER INTENT REFINEMENT prompt wording described
-    in the module docstring) Single cheap Claude call that classifies the
+    generation, again with time-window parsing + a "clarify" intent,
+    again with the ROUTER INTENT REFINEMENT prompt wording described in
+    the module docstring, and now again with the CHAT WEB-SEARCH FEATURE
+    described there too) Single cheap Claude call that classifies the
     user's message as "search", "chat", "blocked", or "clarify" and:
       - for "chat"/"blocked"/"clarify", writes the reply in the same
         call, and
@@ -2728,21 +2828,29 @@ def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
     "time_window_days": None} on ANY failure (API error, timeout, bad
     JSON) so the pre-existing search pipeline is always the safe default
     — only the chat-reply / abuse-blocking / smart-keyword / time-window
-    / clarify shortcuts can ever be skipped by a routing hiccup, never a
-    genuine search request (the /search route falls back to
-    generate_fuzzy_keywords() whenever keywords come back None for a
+    / clarify / web-search shortcuts can ever be skipped by a routing
+    hiccup, never a genuine search request (the /search route falls back
+    to generate_fuzzy_keywords() whenever keywords come back None for a
     "search" intent, and treats a missing time_window_days as "no time
     filter", exactly as before this feature).
 
     (ROUTER INTENT REFINEMENT) This function's logic is completely
-    UNCHANGED — only the text of CLAUDE_ROUTER_SYSTEM_PROMPT changed."""
+    UNCHANGED — only the text of CLAUDE_ROUTER_SYSTEM_PROMPT changed.
+
+    (CHAT WEB-SEARCH FEATURE) The ONLY change in this function: the
+    router's own _call_claude(...) call now passes
+    enable_web_search=True, so Claude may use the live web_search tool
+    while producing a "chat"-classified reply. No other line of this
+    function changed — the same try/except safety net, the same
+    _parse_router_json() validation, and the same "any failure ->
+    default to intent='search'" fallback all apply exactly as before."""
     user_message = (
         f"Conversation so far (auto-summarized, may be empty):\n"
         f"{chat_summary or '(no earlier messages in this chat)'}\n\n"
         f"User's new message: {query}"
     )
     try:
-        raw = _call_claude(CLAUDE_ROUTER_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_ROUTER_MAX_TOKENS)
+        raw = _call_claude(CLAUDE_ROUTER_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_ROUTER_MAX_TOKENS, enable_web_search=True)
     except Exception as exc:
         log.warning(f"Router Claude call failed (defaulting to 'search'): {exc}")
         return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None}
@@ -2767,6 +2875,12 @@ def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
 # "clarify" now firing less often (per point 1 and 2 of the ROUTER INTENT
 # REFINEMENT note above), this feature simply gets invoked less often —
 # its own logic, prompt, and behavior are completely unchanged.
+#
+# (CHAT WEB-SEARCH FEATURE) UNTOUCHED — the resolve_unclear_topic() call
+# below does NOT pass enable_web_search=True, exactly as instructed: this
+# step stays a narrow, honest "can I already tell what this means from my
+# own training knowledge + the chat summary" check, never a research
+# step.
 # ─────────────────────────────────────────────────────────────────────────────
 
 CLAUDE_TOPIC_RESOLVER_SYSTEM_PROMPT = """
@@ -2943,6 +3057,12 @@ def resolve_unclear_topic(query: str, chat_summary: str):
 # CLAUDE_CLARIFY_FALLBACK_REPLY and the router's "clarify" instructions
 # above) now proactively points the user toward. Nothing in this section
 # was modified.
+#
+# (CHAT WEB-SEARCH FEATURE) UNTOUCHED — extract_keywords_from_website()'s
+# own _call_claude(...) call below does NOT pass enable_web_search=True.
+# This step is grounded purely in the already-fetched website text plus
+# the user's own request text; it has no reason to reach out to the live
+# web on top of that.
 # ─────────────────────────────────────────────────────────────────────────────
 
 _URL_REGEX = re.compile(r'https?://[^\s<>"\')\]]+', re.IGNORECASE)
