@@ -133,10 +133,11 @@ def is_time_only_request(router_output: dict) -> bool:
 # SIGNAL MATCHING (no keyword filtering at all)
 # ─────────────────────────────────────────────────────────────────────────────
 
-_TITLE_FIELD_CANDIDATES    = ["title", "post_title", "headline"]
-_TEXT_FIELD_CANDIDATES     = ["post_text", "text", "body", "content", "selftext"]
-_URL_FIELD_CANDIDATES      = ["post_url", "url", "link", "permalink"]
-_PLATFORM_FIELD_CANDIDATES = ["platform", "source", "source_platform"]
+_TITLE_FIELD_CANDIDATES     = ["title", "post_title", "headline"]
+_TEXT_FIELD_CANDIDATES      = ["post_text", "text", "body", "content", "selftext"]
+_URL_FIELD_CANDIDATES       = ["post_url", "url", "link", "permalink"]
+_PLATFORM_FIELD_CANDIDATES  = ["platform", "source", "source_platform"]
+_SUBREDDIT_FIELD_CANDIDATES = ["subreddit", "sub", "subreddit_name"]
 
 # Mirrors index.py's _PLATFORM_DOC_VALUES exactly (see module docstring for
 # why this is duplicated rather than imported: index.py imports FROM this
@@ -202,7 +203,7 @@ def get_unfiltered_matched_signals(signals_collection, since_days, targeting_pla
                                     limit=None, max_per_platform=None,
                                     max_time_window_days=None, platform_matcher_fn=None) -> list:
     """Mirrors the EXACT return shape of index.py's get_matched_signals():
-        [{"title":..., "post_text":..., "post_url":..., "platform":...}, ...]
+        [{"title":..., "post_text":..., "post_url":..., "platform":..., "subreddit":...}, ...]
 
     Does NOT require or accept a `keywords` list — no keyword filtering is
     applied at all. Only a time-window cutoff and an optional platform
@@ -288,6 +289,7 @@ def get_unfiltered_matched_signals(signals_collection, since_days, targeting_pla
 
         post_url = _first_present(doc, _URL_FIELD_CANDIDATES)
         platform = _first_present(doc, _PLATFORM_FIELD_CANDIDATES) or _infer_platform_from_url(post_url)
+        subreddit = _first_present(doc, _SUBREDDIT_FIELD_CANDIDATES)
 
         if not title and not post_text and not post_url:
             continue
@@ -301,7 +303,13 @@ def get_unfiltered_matched_signals(signals_collection, since_days, targeting_pla
         if post_url:
             seen_urls.add(post_url)
 
-        matched.append({"title": title, "post_text": post_text, "post_url": post_url, "platform": platform})
+        matched.append({
+            "title": title,
+            "post_text": post_text,
+            "post_url": post_url,
+            "platform": platform,
+            "subreddit": subreddit,
+        })
         platform_counts[platform_key] = platform_counts.get(platform_key, 0) + 1
 
         if len(matched) >= effective_limit:
@@ -538,4 +546,3 @@ def build_google_fallback_answer_context(query: str, stub_count: int) -> str:
         f"threads actually say — only their links exist right now, not "
         f"their content."
     )
-
