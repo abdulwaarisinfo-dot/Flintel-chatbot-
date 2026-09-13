@@ -239,6 +239,7 @@ def search(
         chat_reply = None
         routed = {}
         routed_keywords = None
+        routed_match_phrases = None
         routed_time_window_days = None
         routed_unfiltered = False
         # (STRUCTURED WEBSITE SUMMARY) Stays None for every case except the
@@ -270,6 +271,7 @@ def search(
             intent = routed.get("intent", "search")
             chat_reply = routed.get("reply")
             routed_keywords = routed.get("keywords")
+            routed_match_phrases = routed.get("match_phrases")
             routed_time_window_days = routed.get("time_window_days")
             routed_unfiltered = routed.get("unfiltered") or False
         except Exception as exc:
@@ -298,6 +300,7 @@ def search(
             if resolved and resolved.get("keywords"):
                 intent = "search"
                 routed_keywords = resolved["keywords"]
+                routed_match_phrases = resolved.get("match_phrases")
                 routed_time_window_days = resolved.get("time_window_days")
                 log.info(f"Clarify self-resolved to search | query={query!r} | keywords={routed_keywords}")
 
@@ -503,6 +506,7 @@ def search(
                     website_keywords = website_extraction_result.get("keywords")
                     if website_keywords:
                         routed_keywords = website_keywords
+                        routed_match_phrases = website_extraction_result.get("match_phrases")
                         log.info(f"Website-derived keywords used | url={detected_url!r} | keywords={routed_keywords}")
                     website_answer_context = website_intelligence.format_structured_summary_for_answer(
                         website_extraction_result.get("structured_summary")
@@ -548,6 +552,7 @@ def search(
                         website_keywords = website_extraction_result.get("keywords")
                         if website_keywords:
                             routed_keywords = website_keywords
+                            routed_match_phrases = website_extraction_result.get("match_phrases")
                             log.info(f"Website-derived keywords used | url={detected_url!r} | keywords={routed_keywords}")
                         website_answer_context = website_intelligence.format_structured_summary_for_answer(
                             website_extraction_result.get("structured_summary")
@@ -559,6 +564,13 @@ def search(
                     # used today. The structured summary also comes straight
                     # from this SAME call's own "structured_summary" field —
                     # no separate summarize_website_structured() call needed.
+                    # (PHRASE-MATCHING FEATURE) topic_match_result comes from
+                    # website_intelligence.check_topic_matches_website(),
+                    # which is out of scope for this feature and does not
+                    # return match_phrases — routed_match_phrases simply
+                    # stays None for this path, which get_matched_signals()
+                    # already handles gracefully (falls back to the
+                    # existing keyword-based check).
                     if topic_match_result.get("keywords"):
                         routed_keywords = topic_match_result["keywords"]
                         log.info(
@@ -656,6 +668,7 @@ def search(
                 time_window_days=time_window_days,
                 unfiltered=routed_unfiltered,
                 website_context=website_answer_context,
+                match_phrases=routed_match_phrases,
             )
             redirect_chat_id = active_chat_id
         except Exception as exc:
@@ -898,6 +911,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             targeting_platform=msg.get("targeting_platform", "all"),
             since_days=msg.get("time_window_days"),
             unfiltered=msg.get("unfiltered", False),
+            match_phrases=msg.get("match_phrases"),
         )
     except Exception as exc:
         log.warning(f"Signal matching failed for streaming topic_key={topic_key}: {exc}")
@@ -1055,6 +1069,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                             targeting_platform=msg.get("targeting_platform", "all"),
                             since_days=msg.get("time_window_days"),
                             unfiltered=msg.get("unfiltered", False),
+                            match_phrases=msg.get("match_phrases"),
                         )
                     except Exception as exc:
                         log.warning(f"Signal matching failed while polling for streaming topic_key={topic_key}: {exc}")
@@ -1103,10 +1118,22 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     # index.py) Both sources are STILL genuinely empty —
                     # try a looser, best-effort secondary match before
                     # giving up entirely.
+                    # (BUG FIX — DEAD-CODE FIX) Previously called with
+                    # unfiltered=True, which routes to
+                    # flintel.get_unfiltered_matched_signals() — that path
+                    # requires a since_days argument this call never
+                    # provided, so it always silently returned []. Now uses
+                    # the SAME phrase-matching machinery from
+                    # get_matched_signals() in its loosened mode (40%
+                    # threshold instead of 70%), scoped to this message's
+                    # own match_phrases — keeping the "closest match" pool
+                    # on-topic instead of pulling in ANY signal from the
+                    # time window regardless of relevance.
                     try:
                         loose_candidates = get_matched_signals(
                             topic_key, msg.get("keywords", []),
-                            targeting_platform="all", unfiltered=True,
+                            targeting_platform="all",
+                            match_phrases=msg.get("match_phrases"), loose=True,
                         )
                     except Exception as exc:
                         log.warning(f"Loose signal matching failed for topic_key={topic_key}: {exc}")
@@ -1121,11 +1148,20 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                         confidence = _extract_near_match_confidence(full_answer)
                         if confidence == "high":
                             # Genuinely close — present directly, same as
-                            # any normal matched-post display.
+                            # any normal matched-post display. (BUG FIX)
+                            # Does NOT go through
+                            # _finalize_answer_and_results() here — that
+                            # function now unconditionally empties results
+                            # for ANY "no_data" format (see index.py's
+                            # CHANGE 3), but this format IS still
+                            # "no_results" even in the tier-3 "high
+                            # confidence" case (near_match_confidence is
+                            # just an extra field on the SAME format) —
+                            # the decision to show these posts was already
+                            # made explicitly, right here, based on
+                            # Claude's own near_match_confidence judgment.
                             full_answer = _patch_post_urls_into_answer(full_answer, loose_candidates)
-                            full_answer, results_to_save = _finalize_answer_and_results(
-                                full_answer, loose_candidates, seed=msg.get("query", "")
-                            )
+                            results_to_save = loose_candidates
                         else:
                             # "low" or null — not confident enough (or
                             # Claude itself found nothing close): withhold
