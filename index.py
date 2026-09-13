@@ -1163,7 +1163,6 @@ _TITLE_FIELD_CANDIDATES    = ["title", "post_title", "headline"]
 _TEXT_FIELD_CANDIDATES     = ["post_text", "text", "body", "content", "selftext"]
 _URL_FIELD_CANDIDATES      = ["post_url", "url", "link", "permalink"]
 _PLATFORM_FIELD_CANDIDATES = ["platform", "source", "source_platform"]
-_SUBREDDIT_FIELD_CANDIDATES = ["subreddit", "sub", "subreddit_name"]   
 
 # Maps a job's targeting_platform ("all" | "reddit" | "x_twitter" |
 # "linkedin" | "facebook" — see normalize_platform()) to the value(s) a
@@ -1458,7 +1457,6 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 
         post_url  = _first_present(doc, _URL_FIELD_CANDIDATES)
         platform  = _first_present(doc, _PLATFORM_FIELD_CANDIDATES) or _infer_platform_from_url(post_url)
-        subreddit = _first_present(doc, _SUBREDDIT_FIELD_CANDIDATES)   # <-- NAYA
 
         if not title and not post_text and not post_url:
             continue
@@ -1476,14 +1474,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
         if post_url:
             seen_urls.add(post_url)
 
-        matched.append({
-            "title": title,
-            "post_text": post_text,
-            "post_url": post_url,
-            "platform": platform,
-            "subreddit": subreddit,   
-        })
-        
+        matched.append({"title": title, "post_text": post_text, "post_url": post_url, "platform": platform})
         platform_counts[platform_key] = platform_counts.get(platform_key, 0) + 1
 
         if len(matched) >= limit:
@@ -3602,7 +3593,17 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
     _fill_in_message_outputs() decides to fire the Google-search
     fallback for this message. Older messages (before this feature)
     simply don't have this field at all; every read of it elsewhere
-    uses .get(..., False) so that's indistinguishable from False."""
+    uses .get(..., False) so that's indistinguishable from False.
+
+    (SEARCH-PROGRESS UI) `search_progress` and `search_progress_generated`
+    follow the exact same pattern — `search_progress` starts None and is
+    set exactly once, by save_search_progress_to_chat(), the first time
+    _fill_in_message_outputs()/stream_answer() decides to generate the
+    query-aware "still searching" status copy (intro/outro/checklist)
+    for this message; `search_progress_generated` is the fire-once guard
+    for that, mirroring google_fallback_triggered exactly. Older
+    messages simply don't have either field, and every read uses
+    .get(..., False)/.get(...) so that's indistinguishable from unset."""
     now = datetime.now(timezone.utc)
     message = {
         "query":              query,
@@ -3613,6 +3614,8 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
         "unfiltered":         unfiltered,
         "website_context":    website_context,
         "google_fallback_triggered": False,
+        "search_progress": None,               # (SEARCH-PROGRESS UI) None until generated
+        "search_progress_generated": False,    # (SEARCH-PROGRESS UI) fire-once guard, mirrors google_fallback_triggered
         "requested_at":       now,
         # (RESULTS-RECOMPUTE FIX) `None` here, not `[]` — an empty list is
         # a legitimate, ALREADY-COMPUTED final value (e.g. a "no_results"
@@ -3747,6 +3750,48 @@ def mark_google_fallback_triggered(chat_id: str, owner_key: str, topic_key: str)
         log.warning(f"Marking google_fallback_triggered failed for topic_key={topic_key}: {exc}")
 
 
+def mark_search_progress_generated(chat_id: str, owner_key: str, topic_key: str):
+    """(SEARCH-PROGRESS UI) Same fire-once guard pattern as
+    mark_google_fallback_triggered() — flips this one message's
+    search_progress_generated field to True so the generation trigger
+    never fires more than once for the same message, even if
+    generate_search_progress_content() itself failed and produced
+    nothing to save. Best-effort, never raises past itself."""
+    try:
+        chats_collection.update_one(
+            {"chat_id": chat_id, "owner_key": owner_key, "messages.topic_key": topic_key},
+            {"$set": {
+                "messages.$.search_progress_generated": True,
+                "updated_at": datetime.now(timezone.utc),
+            }},
+        )
+    except Exception as exc:
+        log.warning(f"Marking search_progress_generated failed for topic_key={topic_key}: {exc}")
+
+
+def save_search_progress_to_chat(chat_id: str, owner_key: str, topic_key: str, progress_content: dict):
+    """(SEARCH-PROGRESS UI) Same targeted-update pattern as
+    save_claude_answer_to_chat()/save_signal_results_to_chat() — stores
+    the generated {"intro", "outro", "checklist"} dict (see
+    flintel.generate_search_progress_content()) on this one message, so
+    the frontend can render the richer in-progress UI instead of the
+    plain spinner. Best-effort, never raises past itself: a failure here
+    just means this message keeps showing the plain spinner state,
+    exactly like before this feature existed."""
+    if not progress_content:
+        return
+    try:
+        chats_collection.update_one(
+            {"chat_id": chat_id, "owner_key": owner_key, "messages.topic_key": topic_key},
+            {"$set": {
+                "messages.$.search_progress": progress_content,
+                "updated_at": datetime.now(timezone.utc),
+            }},
+        )
+    except Exception as exc:
+        log.warning(f"Saving search_progress failed for topic_key={topic_key}: {exc}")
+
+
 def migrate_anon_chats_to_owner(anon_id: str, new_owner_key: str):
     """When a guest signs up or logs in, re-key their guest chat history
     onto their account so it isn't lost — same pattern Claude/ChatGPT use
@@ -3837,6 +3882,39 @@ def _trigger_google_fallback_search(chat_id: str, owner_key: str, msg: dict):
         )
     except Exception as exc:
         log.warning(f"Google-fallback search failed for topic_key={msg.get('topic_key')}: {exc}")
+
+
+def _generate_search_progress(chat_id: str, owner_key: str, msg: dict):
+    """(SEARCH-PROGRESS UI) Fires the query-aware "still searching"
+    status-copy generation for a message that's been running long
+    enough that the plain spinner alone starts to feel uninformative —
+    fired at the same GOOGLE_FALLBACK_TRIGGER_SECONDS mark as the
+    Google-search fallback (a separate, independent action; this never
+    depends on that fallback's own outcome).
+
+    (RACE FIX) search_progress_generated is marked SYNCHRONOUSLY by the
+    caller (_fill_in_message_outputs()/routes.py's stream_answer()),
+    BEFORE this function is scheduled/called — not here — mirroring the
+    exact same fix already applied to
+    mark_google_fallback_triggered()/_trigger_google_fallback_search(),
+    so a second concurrent request for the same message can never see
+    the flag still False and schedule a duplicate generation call. This
+    function's only job is to actually generate and save the content.
+
+    Wrapped in try/except, never raises — a failure here just means this
+    message keeps showing the plain spinner state, exactly like before
+    this feature existed."""
+    try:
+        progress_content = flintel.generate_search_progress_content(
+            msg.get("query"),
+            msg.get("keywords", []),
+            msg.get("targeting_platform"),
+            _call_claude,
+        )
+        if progress_content:
+            save_search_progress_to_chat(chat_id, owner_key, msg["topic_key"], progress_content)
+    except Exception as exc:
+        log.warning(f"Search-progress generation failed for topic_key={msg.get('topic_key')}: {exc}")
 
 
 def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query: str, keywords: list = None):
@@ -4166,6 +4244,25 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                     background_tasks.add_task(_trigger_google_fallback_search, chat_id, owner_key, msg)
                 else:
                     _trigger_google_fallback_search(chat_id, owner_key, msg)
+
+            # (SEARCH-PROGRESS UI) Fires at the SAME 40s mark as the
+            # Google-fallback above — a separate, independent action
+            # (its own fire-once guard, search_progress_generated) that
+            # generates query-aware "still searching" status copy for
+            # the frontend's richer in-progress UI, so the plain spinner
+            # doesn't feel uninformative once a search has been running
+            # this long. Reuses flintel.should_trigger_google_fallback()
+            # for the identical timing/once-only logic, just checked
+            # against this feature's own flag instead.
+            if flintel.should_trigger_google_fallback(
+                    elapsed, msg.get("search_progress_generated", False)):
+                # (RACE FIX) Same synchronous-mark-before-dispatch pattern
+                # as the Google-fallback trigger above.
+                mark_search_progress_generated(chat_id, owner_key, msg["topic_key"])
+                if background_tasks is not None:
+                    background_tasks.add_task(_generate_search_progress, chat_id, owner_key, msg)
+                else:
+                    _generate_search_progress(chat_id, owner_key, msg)
 
             if needs_answer and elapsed >= RESPONSE_TIMEOUT:
                 # (BUSY-LOCK RACE FIX) Set synchronously, in THIS request,
