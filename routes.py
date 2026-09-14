@@ -31,6 +31,8 @@ from index import (
     STREAM_CHUNK_CHARS,
     STREAM_CHUNK_DELAY_SECONDS,
     MAX_KEYWORDS,                       # <-- FIX: was missing, caused NameError in search()
+    MAX_ANALYSIS_EVIDENCE,              # <-- EVIDENCE-BUDGET: needed in stream_answer()
+    MIN_ANALYSIS_EVIDENCE,              # <-- EVIDENCE-BUDGET: needed in stream_answer()
     # business logic
     normalize_topic_key,
     normalize_platform,
@@ -669,6 +671,7 @@ def search(
                 unfiltered=routed_unfiltered,
                 website_context=website_answer_context,
                 match_phrases=routed_match_phrases,
+                evidence_required=routed.get("evidence_required"),
             )
             redirect_chat_id = active_chat_id
         except Exception as exc:
@@ -831,6 +834,21 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
     new message where the user gave no time range) this is None and
     behaves exactly as before.
 
+    (EVIDENCE-BUDGET FEATURE) The ONLY other change in this route:
+    every get_matched_signals() call that decides the primary/polling
+    matched-signal pool now also passes `limit=effective_evidence_limit`
+    — computed once, right after `msg` is fetched, from
+    `msg.get("evidence_required")`, clamped between MIN_ANALYSIS_EVIDENCE
+    and MAX_ANALYSIS_EVIDENCE exactly like index.py's own
+    `_complete_message_answer_and_results()` / `_timeout_fallback_answer()`
+    do — and the merge_matched_and_google_results() call now also passes
+    `max_total=effective_evidence_limit`, so a streamed answer's evidence
+    pool can never exceed (or be capped differently than) the
+    non-streaming path's. For every message with no stored
+    `evidence_required` (every message from before this feature), this
+    resolves to MIN_ANALYSIS_EVIDENCE exactly as before — zero behavior
+    change for old/non-search messages.
+
     (BUG FIX 2b) The results-gating decision inside event_generator() now
     goes through the shared _finalize_answer_and_results() helper
     (imported from index.py) instead of its own separate inline
@@ -875,6 +893,21 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             yield f"data: {json.dumps({'error': 'message not found'})}\n\n"
         return StreamingResponse(_no_msg(), media_type="text/event-stream")
 
+    # (EVIDENCE-BUDGET FEATURE) Computed once, right after `msg` is
+    # resolved, and reused for every get_matched_signals()/
+    # merge_matched_and_google_results() call below — mirrors index.py's
+    # own non-streaming _complete_message_answer_and_results()/
+    # _timeout_fallback_answer() clamp exactly, so a streaming and a
+    # non-streaming answer for the same message can never end up with a
+    # different evidence budget. Messages with no stored
+    # "evidence_required" (every message predating this feature) fall
+    # back to MIN_ANALYSIS_EVIDENCE here, then get clamped against
+    # MAX_ANALYSIS_EVIDENCE like any other value.
+    effective_evidence_limit = min(
+        msg.get("evidence_required") or MIN_ANALYSIS_EVIDENCE,
+        MAX_ANALYSIS_EVIDENCE,
+    )
+
     # Already generated/cached earlier (via the normal blocking path, or
     # a previous call to this same route) — replay it instead of ever
     # re-calling Claude for it again.
@@ -912,6 +945,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             since_days=msg.get("time_window_days"),
             unfiltered=msg.get("unfiltered", False),
             match_phrases=msg.get("match_phrases"),
+            limit=effective_evidence_limit,
         )
     except Exception as exc:
         log.warning(f"Signal matching failed for streaming topic_key={topic_key}: {exc}")
@@ -1070,6 +1104,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                             since_days=msg.get("time_window_days"),
                             unfiltered=msg.get("unfiltered", False),
                             match_phrases=msg.get("match_phrases"),
+                            limit=effective_evidence_limit,
                         )
                     except Exception as exc:
                         log.warning(f"Signal matching failed while polling for streaming topic_key={topic_key}: {exc}")
@@ -1080,9 +1115,10 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
 
             # (MERGE BEFORE ANSWERING) Pulls in whatever Google-search
             # stub results exist right now — combined with `matched` via
-            # merge_matched_and_google_results(), capped at 7 total —
-            # instead of Google only ever being a last-resort replacement
-            # used when signals were empty.
+            # merge_matched_and_google_results(), capped at
+            # effective_evidence_limit total — instead of Google only
+            # ever being a last-resort replacement used when signals
+            # were empty.
             try:
                 stub_docs = google_search.get_stub_results_for_keywords(
                     google_posts_collection, msg.get("keywords", []))
@@ -1090,7 +1126,9 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 log.warning(f"Fetching Google-fallback stubs failed for topic_key={topic_key}: {exc}")
                 stub_docs = []
             google_results = flintel.format_google_stub_results(stub_docs)
-            merged_pool = flintel.merge_matched_and_google_results(matched, google_results)
+            merged_pool = flintel.merge_matched_and_google_results(
+                matched, google_results, max_total=effective_evidence_limit
+            )
 
             # (SIMULATED-STREAM FIX) Step 1: get the COMPLETE answer first,
             # via the same blocking function every other answer path in this
