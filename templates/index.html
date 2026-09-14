@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1358,6 +1357,26 @@
     });
   }
 
+  function renderBusinessInsight(insight, container) {
+    // (BUSINESS-INSIGHT FEATURE) Mirrors the equivalent block added in
+    // chat.html so both files render this field identically. Reuses the
+    // existing .fabricated-note pattern (left accent bar + text) already
+    // defined in the CSS above — no new classes, no innerHTML with raw
+    // text, same safety pattern as every other render* function here.
+    // Pure no-op unless data.business_insight is a genuine non-empty
+    // string.
+    if (typeof insight !== 'string' || insight.trim().length === 0) return;
+    const note = document.createElement('div');
+    note.className = 'fabricated-note';
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    const p = document.createElement('p');
+    p.textContent = insight;
+    note.appendChild(bar);
+    note.appendChild(p);
+    container.appendChild(note);
+  }
+
   function renderSourceList(data, container) {
     const summary = document.createElement('p');
     summary.className = 'overview-summary';
@@ -1371,6 +1390,7 @@
     } else {
       renderPlatformsList(data.platforms, container);
     }
+    renderBusinessInsight(data.business_insight, container);
     renderFollowupChips(data.followups, container);
   }
 
