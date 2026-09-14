@@ -874,6 +874,24 @@ CLAUDE_MAX_KEYWORDS = int(os.getenv("CLAUDE_MAX_KEYWORDS", "10"))
 # additional per-platform cap layered on top of this one.)
 MAX_MATCHED_RESULTS = int(os.getenv("MAX_MATCHED_RESULTS", "25"))
 
+# (EVIDENCE-BUDGET FEATURE) Absolute safety ceiling on how much evidence
+# the router's evidence planner is ever allowed to request for analysis.
+# Mirrors flintel.py's own MAX_ANALYSIS_EVIDENCE (kept as a separate,
+# independently-configurable constant, same convention as every other
+# mirrored constant in this file, e.g. MAX_TIME_WINDOW_DAYS).
+MAX_ANALYSIS_EVIDENCE = int(os.getenv("MAX_ANALYSIS_EVIDENCE", "100"))
+
+# (EVIDENCE-BUDGET FEATURE) Floor — never retrieve fewer than this many,
+# even for the simplest query, so a tiny/malformed planner value can't
+# starve the analysis of evidence.
+MIN_ANALYSIS_EVIDENCE = int(os.getenv("MIN_ANALYSIS_EVIDENCE", "15"))
+
+# (EVIDENCE-BUDGET FEATURE) Fixed cap on how many evidence posts are
+# ever shown in the final chat response — completely separate from the
+# analysis evidence budget above. Referenced by CLAUDE_ANALYSIS_SYSTEM_
+# PROMPT's own "post-count limit" instruction instead of a bare literal.
+MAX_CHAT_EVIDENCE_POSTS = int(os.getenv("MAX_CHAT_EVIDENCE_POSTS", "7"))
+
 # (v7) Caps how many matched posts ANY SINGLE platform can contribute
 # to one search's results — e.g. with the default of 3, at most 3 Reddit
 # posts AND at most 3 X/Twitter posts (etc.) show up for one prompt, even
@@ -1442,6 +1460,16 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     contribute AT MOST MAX_POSTS_PER_PLATFORM matches to this call's
     results (default 3).
 
+    (EVIDENCE-BUDGET FEATURE) `limit` is no longer always the static
+    MAX_MATCHED_RESULTS default — a caller may now also pass a dynamic
+    value derived from a message's own `evidence_required` (the router's
+    per-query evidence-planner estimate, clamped between
+    MIN_ANALYSIS_EVIDENCE and MAX_ANALYSIS_EVIDENCE). This function's own
+    signature/logic is otherwise completely unchanged: `limit=None`
+    (the default, and what every pre-existing call site still passes for
+    an older/non-search message) falls back to MAX_MATCHED_RESULTS
+    exactly as it always has.
+
     (TIME-WINDOW FEATURE) `since_days`, default None: when a positive int
     is given, this ADDS an extra AND-condition on top of everything
     above — a signal must ALSO have `created_utc` within the last
@@ -1978,7 +2006,7 @@ POST-COUNT LIMIT: Never include more than 7 posts total, combined across
 every platform, in a single answer. If you were given both grounded posts
 (real text) and discovery-only posts (Google search, title/subreddit +
 google_rank only, no text yet), choose the best combination of up to 7
-based on genuine relevance — do not force an even split between the two
+based on genuine relevance - do not force an even split between the two
 kinds, and never pad with a low-quality post just to reach a count. A
 discovery-only post's "summary" must say its content hasn't been fetched
 yet (e.g. "Content not yet available — found via search, rank #<n>"),
@@ -2017,6 +2045,12 @@ TONE (applies to every text field you write inside any format above):
   question back, no filler openers, no corporate hedging.
 - Never claim more confidence than the grounding supports.
 """
+
+CLAUDE_ANALYSIS_SYSTEM_PROMPT = (
+    CLAUDE_ANALYSIS_SYSTEM_PROMPT
+    .replace("more than 7 posts total", f"more than {MAX_CHAT_EVIDENCE_POSTS} posts total")
+    .replace("up to 7\nbased on genuine relevance", f"up to {MAX_CHAT_EVIDENCE_POSTS}\nbased on genuine relevance")
+)
 
 # Cheap "map" step used only when a topic has enough matched posts that
 # sending them all in one shot would be wasteful/risky context-wise. Each
@@ -2558,6 +2592,26 @@ optional time window.
        for clarification (see "clarify" below) — plenty of valid search
        requests never mention a time range at all.
 
+   - "evidence_required": an integer.
+     - Estimate approximately how much evidence (matched posts) is needed
+       to properly answer this question — NOT a fixed formula. Consider:
+       whether a time period was mentioned and how long it is, whether the
+       user asks for a trend/change over time, whether the user asks for a
+       comparison between two or more entities, whether it's simple
+       sentiment, whether the user asks for reasons/drivers/recurring
+       themes, and overall complexity of the question.
+     - A simple, narrow question with no time range typically needs
+       roughly 20-30. A trend/change question over a longer window
+       typically needs meaningfully more. A comparison between entities,
+       especially over a longer window, typically needs the most. A
+       "why are people complaining" style question needs enough to
+       identify recurring patterns, not just a handful of posts.
+     - These are illustrative guidelines, not fixed rules — reason about
+       the actual query every time.
+     - Never below 15, never above 100 — the backend will clamp this
+       regardless, so pick the number that's genuinely right for the
+       question, not a number chosen to avoid clamping.
+
    Do NOT try to answer the user's question yourself for "search" —
    only classify and produce the keyword list / time window.
 
@@ -2662,10 +2716,10 @@ reply conversational and plain — don't mention you're an AI or that this
 is a "mock", and don't narrate your own reasoning.
 Respond with STRICT JSON ONLY — no markdown code fences, no preamble, no
 text outside the JSON object — in EXACTLY one of these four shapes:
-{"intent": "search", "reply": null, "keywords": ["<keyword1>", "<keyword2>"], "time_window_days": null, "match_phrases": ["<phrase1>", "<phrase2>"]}
-{"intent": "chat", "reply": "<your natural reply text here>", "keywords": null, "time_window_days": null, "match_phrases": null}
-{"intent": "blocked", "reply": "<short, polite decline text>", "keywords": null, "time_window_days": null, "match_phrases": null}
-{"intent": "clarify", "reply": "<short, natural clarifying question>", "keywords": null, "time_window_days": null, "match_phrases": null}
+{"intent": "search", "reply": null, "keywords": ["<keyword1>", "<keyword2>"], "time_window_days": null, "match_phrases": ["<phrase1>", "<phrase2>"], "evidence_required": <int|null>}
+{"intent": "chat", "reply": "<your natural reply text here>", "keywords": null, "time_window_days": null, "match_phrases": null, "evidence_required": null}
+{"intent": "blocked", "reply": "<short, polite decline text>", "keywords": null, "time_window_days": null, "match_phrases": null, "evidence_required": null}
+{"intent": "clarify", "reply": "<short, natural clarifying question>", "keywords": null, "time_window_days": null, "match_phrases": null, "evidence_required": null}
 """
 
 CLAUDE_ROUTER_SYSTEM_PROMPT = (
@@ -2744,6 +2798,15 @@ def _parse_router_json(raw: str):
         "search") simply results in time_window_days=None, meaning "no
         time filter" — the exact same as if this feature didn't exist.
 
+    (EVIDENCE-BUDGET FEATURE):
+      - Also parses/validates "evidence_required" for "search" intent
+        ONLY: accepts an int (or a numeric string Claude accidentally
+        quoted), clamped between MIN_ANALYSIS_EVIDENCE and
+        MAX_ANALYSIS_EVIDENCE. Anything else (missing, null, non-numeric,
+        or intent != "search") simply results in evidence_required=None
+        — exactly the same "missing means use the default" convention
+        already used by "keywords"/"time_window_days" above.
+
     (ROUTER INTENT REFINEMENT) This function's logic is completely
     UNCHANGED — the refinement is pure prompt wording inside
     CLAUDE_ROUTER_SYSTEM_PROMPT above; the four valid intents, their
@@ -2786,6 +2849,7 @@ def _parse_router_json(raw: str):
     keywords = None
     match_phrases = None
     time_window_days = None
+    evidence_required = None
     unfiltered = False
     if intent == "search":
         raw_keywords = data.get("keywords")
@@ -2837,10 +2901,26 @@ def _parse_router_json(raw: str):
         if isinstance(parsed_window, int) and parsed_window > 0:
             time_window_days = min(parsed_window, MAX_TIME_WINDOW_DAYS)
 
+        # (EVIDENCE-BUDGET FEATURE) Same accept-int-or-numeric-string
+        # tolerance as time_window_days above, but clamped into
+        # [MIN_ANALYSIS_EVIDENCE, MAX_ANALYSIS_EVIDENCE] instead of
+        # [1, MAX_TIME_WINDOW_DAYS] — the backend is the final authority
+        # on the bound regardless of what the model actually picked.
+        raw_evidence = data.get("evidence_required")
+        parsed_evidence = None
+        if isinstance(raw_evidence, bool):
+            parsed_evidence = None  # guard: bool is a subclass of int in Python
+        elif isinstance(raw_evidence, int):
+            parsed_evidence = raw_evidence
+        elif isinstance(raw_evidence, str) and raw_evidence.strip().isdigit():
+            parsed_evidence = int(raw_evidence.strip())
+        if isinstance(parsed_evidence, int):
+            evidence_required = max(MIN_ANALYSIS_EVIDENCE, min(parsed_evidence, MAX_ANALYSIS_EVIDENCE))
+
         unfiltered = bool(data.get("unfiltered") is True)
 
     return {"intent": intent, "reply": reply, "keywords": keywords, "time_window_days": time_window_days,
-            "unfiltered": unfiltered, "match_phrases": match_phrases}
+            "unfiltered": unfiltered, "match_phrases": match_phrases, "evidence_required": evidence_required}
 
 
 def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
@@ -2883,12 +2963,12 @@ def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
         raw = _call_claude(CLAUDE_ROUTER_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_ROUTER_MAX_TOKENS, enable_web_search=True)
     except Exception as exc:
         log.warning(f"Router Claude call failed (defaulting to 'search'): {exc}")
-        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None}
+        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None, "evidence_required": None}
 
     parsed = _parse_router_json(raw)
     if not parsed:
         log.warning(f"Router returned unparseable output (defaulting to 'search'): {raw[:200]!r}")
-        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None}
+        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None, "evidence_required": None}
     return parsed
 
 
@@ -4022,7 +4102,8 @@ def delete_chat_session(chat_id: str, owner_key: str) -> bool:
 
 def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
                         keywords: list, targeting_platform: str, time_window_days: int = None,
-                        unfiltered: bool = False, website_context: dict = None, match_phrases: list = None):
+                        unfiltered: bool = False, website_context: dict = None, match_phrases: list = None,
+                        evidence_required: int = None):
     """Appends a search as a new message in the chat, and auto-titles the
     chat from the very first query if it hasn't been named yet.
 
@@ -4075,7 +4156,20 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
     alongside `keywords`, for get_matched_signals()'s own loose title/
     text phrase check. None means "no match_phrases for this message" —
     get_matched_signals() gracefully falls back to its old keyword-word-
-    boundary check in that case, exactly like before this feature."""
+    boundary check in that case, exactly like before this feature.
+
+    (EVIDENCE-BUDGET FEATURE) `evidence_required` (NEW, optional, default
+    None — every existing caller that doesn't pass it behaves exactly as
+    before) stores the router's own per-query evidence-planner estimate
+    (already clamped to [MIN_ANALYSIS_EVIDENCE, MAX_ANALYSIS_EVIDENCE] by
+    _parse_router_json()) for how much evidence this particular query
+    needs, so later re-matching/re-answering of this same message (see
+    _fill_in_message_outputs() / _complete_message_answer_and_results() /
+    _timeout_fallback_answer()) can derive its evidence limit from it
+    consistently. None means "no evidence budget for this message" — an
+    older/non-search message — and every downstream consumer of this
+    field falls back to its own pre-existing default exactly as it did
+    before this feature existed."""
     now = datetime.now(timezone.utc)
     message = {
         "query":              query,
@@ -4084,6 +4178,7 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
         "match_phrases":      match_phrases,  # (PHRASE-MATCHING FEATURE) list or None
         "targeting_platform": targeting_platform,
         "time_window_days":   time_window_days,  # (NEW) int or None — see get_matched_signals()
+        "evidence_required":  evidence_required,  # (EVIDENCE-BUDGET FEATURE) int or None
         "unfiltered":         unfiltered,
         "website_context":    website_context,
         "google_fallback_triggered": False,
@@ -4390,7 +4485,8 @@ def _generate_search_progress(chat_id: str, owner_key: str, msg: dict):
         log.warning(f"Search-progress generation failed for topic_key={msg.get('topic_key')}: {exc}")
 
 
-def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query: str, keywords: list = None, match_phrases: list = None):
+def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query: str, keywords: list = None,
+                              match_phrases: list = None, evidence_required: int = None):
     """(PERFORMANCE FIX) Extracted, UNCHANGED logic from the RESPONSE_TIMEOUT
     fallback branch that used to run inline inside _fill_in_message_outputs()
     — same calls, same order, same caching. Pulled out so it can be
@@ -4403,6 +4499,19 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
     function is even scheduled, so the flag is already in place before
     the response goes out. This function only clears it, in the finally
     below, once the work actually finishes.
+
+    (EVIDENCE-BUDGET FEATURE) New optional `evidence_required` parameter
+    (default None — any existing/other caller that doesn't pass it gets
+    the exact original behavior: get_matched_signals() below is called
+    with `limit=None`, so MAX_MATCHED_RESULTS' own default applies, same
+    as before this feature). When provided (the message's own stored,
+    already-clamped evidence budget), it is passed straight through as
+    `limit` to both get_matched_signals() calls below (the primary match
+    and the loose tier-3 candidate pool), and is also used to derive
+    `effective_evidence_limit` — via the same
+    `min(evidence_required or MIN_ANALYSIS_EVIDENCE, MAX_ANALYSIS_EVIDENCE)`
+    formula used in _complete_message_answer_and_results() — for the
+    `max_total` passed to merge_matched_and_google_results() below.
 
     (RESPONSE_TIMEOUT'S NEW ROLE) By the time this is called,
     _fill_in_message_outputs() already confirmed the merged
@@ -4432,6 +4541,15 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
     loose candidates found at all) falls through to today's honest,
     unchanged "no_results" message with nothing to show."""
     try:
+        # (EVIDENCE-BUDGET FEATURE) Resolved once, up front — used for
+        # both the get_matched_signals() `limit` passes below and the
+        # merge_matched_and_google_results() `max_total` pass. Mirrors
+        # the exact formula used in _complete_message_answer_and_results().
+        effective_evidence_limit = min(
+            evidence_required or MIN_ANALYSIS_EVIDENCE,
+            MAX_ANALYSIS_EVIDENCE,
+        )
+
         # (BUG FIX — DON'T RE-SUGGEST A DECLINED ALTERNATIVE) Same
         # continuity context as _complete_message_answer_and_results()
         # above — best-effort, never blocks this fallback answer.
@@ -4452,7 +4570,7 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
         # (MERGE BEFORE ANSWERING) Fresh re-fetch of both sources — never
         # trusts the earlier "empty" snapshot that triggered this call.
         try:
-            matched = get_matched_signals(topic_key, keywords or [], targeting_platform="all", match_phrases=match_phrases)
+            matched = get_matched_signals(topic_key, keywords or [], targeting_platform="all", match_phrases=match_phrases, limit=evidence_required)
         except Exception as exc:
             log.warning(f"Signal matching failed for topic_key={topic_key}: {exc}")
             matched = []
@@ -4463,7 +4581,7 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
             log.warning(f"Fetching Google-fallback stubs failed for topic_key={topic_key}: {exc}")
             stub_docs = []
         google_results = flintel.format_google_stub_results(stub_docs)
-        merged_pool = flintel.merge_matched_and_google_results(matched, google_results)
+        merged_pool = flintel.merge_matched_and_google_results(matched, google_results, max_total=effective_evidence_limit)
 
         if merged_pool:
             # Real answer, from the merged pool — RESPONSE_TIMEOUT firing
@@ -4491,7 +4609,7 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
             # match" pool on-topic instead of pulling in ANY signal from
             # the time window regardless of relevance.
             try:
-                loose_candidates = get_matched_signals(topic_key, keywords or [], targeting_platform="all", match_phrases=match_phrases, loose=True)
+                loose_candidates = get_matched_signals(topic_key, keywords or [], targeting_platform="all", match_phrases=match_phrases, loose=True, limit=evidence_required)
             except Exception as exc:
                 log.warning(f"Loose signal matching failed for topic_key={topic_key}: {exc}")
                 loose_candidates = []
@@ -4566,7 +4684,15 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
     inline `[] if claude_format in _NO_DATA_CLAUDE_FORMATS else matched`
     — real matched posts are no longer discarded just because Claude's
     own written analysis picked a "no_data" format; see that function's
-    own docstring for the full reasoning."""
+    own docstring for the full reasoning.
+
+    (EVIDENCE-BUDGET FEATURE) The ONLY change in this function: right
+    before merge_matched_and_google_results() is called, an
+    `effective_evidence_limit` is resolved from this message's own stored
+    `evidence_required` (falling back to MIN_ANALYSIS_EVIDENCE when the
+    message has none — an older/non-search message — and always clamped
+    to MAX_ANALYSIS_EVIDENCE), and passed through as that call's
+    `max_total`. No other line of this function's logic/order changed."""
     # (RESULTS-RECOMPUTE FIX, applied here too for the same reason) `is
     # None`, not falsy — closes a low-probability but real analogous gap:
     # if a Claude API call ever technically "succeeds" but returns zero
@@ -4583,10 +4709,11 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
         try:
             # (MERGE BEFORE ANSWERING) Pulls in Google-search stub
             # results and combines them with the flintel_signals
-            # `matched` list passed in, capped at 7 total — Claude now
-            # gets ONE merged pool from both sources in a single call,
-            # instead of Google only ever being a last-resort
-            # replacement used when signals were empty.
+            # `matched` list passed in, capped at the message's own
+            # evidence budget (see effective_evidence_limit below) —
+            # Claude now gets ONE merged pool from both sources in a
+            # single call, instead of Google only ever being a
+            # last-resort replacement used when signals were empty.
             try:
                 stub_docs = google_search.get_stub_results_for_keywords(
                     google_posts_collection, msg.get("keywords", []))
@@ -4594,7 +4721,19 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
                 log.warning(f"Fetching Google-fallback stubs failed for topic_key={msg.get('topic_key')}: {exc}")
                 stub_docs = []
             google_results = flintel.format_google_stub_results(stub_docs)
-            merged_pool = flintel.merge_matched_and_google_results(matched, google_results)
+            # (EVIDENCE-BUDGET FEATURE) Resolved from this message's own
+            # stored evidence_required (already clamped at parse time in
+            # _parse_router_json()), falling back to MIN_ANALYSIS_EVIDENCE
+            # for an older/non-search message that never had one, and
+            # always re-clamped to MAX_ANALYSIS_EVIDENCE as a final safety
+            # ceiling.
+            effective_evidence_limit = min(
+                msg.get("evidence_required") or MIN_ANALYSIS_EVIDENCE,
+                MAX_ANALYSIS_EVIDENCE,
+            )
+            merged_pool = flintel.merge_matched_and_google_results(
+                matched, google_results, max_total=effective_evidence_limit
+            )
 
             extra_ctx_parts = []
             if msg.get("unfiltered"):
@@ -4730,8 +4869,7 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
     `GET /chat/{chat_id}/stream` route, not this function, is what
     produces that one message's first answer.
 
-    (TIME-WINDOW FEATURE) The ONLY change in this function: the
-    get_matched_signals() call now also passes
+    (TIME-WINDOW FEATURE) The get_matched_signals() call also passes
     `since_days=msg.get("time_window_days")` — for every message that has
     no `time_window_days` stored on it (every message from before this
     feature, and every new message where the user gave no time range),
@@ -4740,6 +4878,16 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
     same way on every re-render of the same message (so a chat reopened
     later still shows results scoped to the same window it was originally
     asked for).
+
+    (EVIDENCE-BUDGET FEATURE) The ONLY other change in this function: the
+    get_matched_signals() call now also passes
+    `limit=msg.get("evidence_required")` — for every message that has no
+    `evidence_required` stored on it (every message from before this
+    feature, and every new non-search-derived message), this is None and
+    get_matched_signals() falls back to its own MAX_MATCHED_RESULTS
+    default exactly as before this feature — 100% backward compatible.
+    For a message that DOES have a stored evidence budget, matching now
+    retrieves up to that many posts instead of the static default.
 
     OTHERWISE COMPLETELY UNCHANGED — this function calls
     get_matched_signals() and analyze_with_claude() exactly as before,
@@ -4768,6 +4916,16 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
         if not needs_results and not needs_answer:
             continue
 
+        # (EVIDENCE-BUDGET FEATURE) Resolved once per message: this
+        # message's own stored evidence_required (already clamped to
+        # [MIN_ANALYSIS_EVIDENCE, MAX_ANALYSIS_EVIDENCE] by
+        # _parse_router_json() at write time), or None for an
+        # older/non-search message — passed straight through as `limit`
+        # below so get_matched_signals() falls back to its own
+        # MAX_MATCHED_RESULTS default whenever this is None, exactly as
+        # it always has.
+        effective_evidence_limit = msg.get("evidence_required")
+
         try:
             matched = get_matched_signals(
                 msg["topic_key"],
@@ -4776,6 +4934,7 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                 since_days=msg.get("time_window_days"),
                 unfiltered=msg.get("unfiltered", False),
                 match_phrases=msg.get("match_phrases"),
+                limit=effective_evidence_limit,
             )
         except Exception as exc:
             log.warning(f"Signal matching failed for topic_key={msg.get('topic_key')}: {exc}")
@@ -4840,9 +4999,9 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                 # response has already gone out to the browser.
                 _set_owner_busy(owner_key)
                 if background_tasks is not None:
-                    background_tasks.add_task(_timeout_fallback_answer, chat_id, owner_key, msg["topic_key"], msg["query"], msg.get("keywords", []), msg.get("match_phrases"))
+                    background_tasks.add_task(_timeout_fallback_answer, chat_id, owner_key, msg["topic_key"], msg["query"], msg.get("keywords", []), msg.get("match_phrases"), msg.get("evidence_required"))
                 else:
-                    _timeout_fallback_answer(chat_id, owner_key, msg["topic_key"], msg["query"], msg.get("keywords", []), msg.get("match_phrases"))
+                    _timeout_fallback_answer(chat_id, owner_key, msg["topic_key"], msg["query"], msg.get("keywords", []), msg.get("match_phrases"), msg.get("evidence_required"))
             continue
 
         # (BUGFIX PACK #1) Track whatever answer text is/becomes available
