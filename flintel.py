@@ -516,6 +516,10 @@ def format_google_stub_results(stub_docs: list) -> list:
 
 MAX_COMBINED_POSTS_FOR_CLAUDE = int(os.getenv("MAX_COMBINED_POSTS_FOR_CLAUDE", "7"))
 
+# Analysis-time cap (kitna evidence Claude ko analysis ke liye milega) —
+# ab dynamic hoga, ye sirf ABSOLUTE ceiling hai jo kabhi cross nahi hoga.
+MAX_ANALYSIS_EVIDENCE = int(os.getenv("MAX_ANALYSIS_EVIDENCE", "100"))
+
 
 def merge_matched_and_google_results(matched_signals: list, google_stub_results: list, max_total: int = None) -> list:
     """Combines matched_signals (grounded, real content) with
@@ -529,6 +533,11 @@ def merge_matched_and_google_results(matched_signals: list, google_stub_results:
     Returns the same {"title", "post_text", "post_url", "platform"}
     shape get_matched_signals() already returns, with "google_rank"/
     "subreddit" additionally present on Google-sourced entries only.
+
+    `max_total` can also be passed in dynamically by the caller (e.g.
+    index.py's own evidence planner) rather than relying on the
+    MAX_COMBINED_POSTS_FOR_CLAUDE default — 7 remains only the fallback
+    value used when no explicit max_total is supplied.
 
     Never raises: bad/empty input on either side just means that side
     contributes nothing."""
@@ -776,4 +785,3 @@ def calculate_search_progress_percent(elapsed_seconds: float, trigger_seconds: f
     progress = (elapsed_seconds - trigger_seconds) / span
     percent = round(progress * 100)
     return max(0, min(100, percent))
-
