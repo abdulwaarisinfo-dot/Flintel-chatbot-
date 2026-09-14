@@ -1742,29 +1742,13 @@ For sentiment/opinion queries ("What are people saying about X?").
       ]
     }
   ],
-  "followups": ["<3 short natural next-question suggestions>"],
-  "business_insight": "<OPTIONAL — see instructions below>"
+  "followups": ["<3 short natural next-question suggestions>"]
 }
 Only include platforms that actually returned usable data — never an empty
 platform section. Set "ranked": true (instead of false) when the user
 asked for something specific and ordered (e.g. "top 10 complaints") — same
 schema, but posts are ordered by rank/relevance and the frontend numbers
 them instead of grouping them.
-
-OPTIONAL FIELD — "business_insight" (source_list format only):
-After grounding "summary" and "platforms" strictly in the matched posts,
-you MAY also include a "business_insight" field — a short (2-4 sentence),
-clearly-labeled analyst take: what this discussion pattern might suggest
-about emerging demand, and how a business in this space could position
-or pitch around it. This is explicitly YOUR OWN reasoning/opinion layered
-ON TOP of the grounded data — it must read as interpretation, not as a
-claim sourced from the posts themselves (e.g. start with phrasing like
-"Reading between the lines," or "From a business standpoint," rather than
-presenting it as another grounded fact). Never let this field dilute or
-replace the grounding requirement on "summary"/"platforms" — those must
-stay 100% fact-based regardless of whether this field is included. Omit
-this field entirely for queries where a business angle isn't naturally
-relevant (e.g. simple sentiment checks) — never force it in.
 
 ──────────────────────────────────────────────────────────────────────────
 FORMAT 2 — "trend_report"
@@ -2506,20 +2490,6 @@ optional time window.
        named ANY angle (a brand, a product, an industry, or a general
        problem/complaint framing) versus naming nothing at all beyond the
        platform itself.
-     - GENERAL DEMAND / MARKET-RESEARCH PATTERN (no platform named either):
-       a message that asks what people are frustrated with, annoyed by, or
-       wish existed — in any domain, industry, or "technology" broadly — even
-       WITHOUT naming a specific platform, is still a valid "search" subject:
-       the complaint/demand angle itself (e.g. "annoyed with", "frustrated
-       by", "wish there was", "biggest problem with") is the searchable topic.
-       This is different from a truly platform-only, topic-less question like
-       "reddit par kya chal raha hai" (which stays "chat" per the rule below)
-       — the distinguishing signal is whether the message names ANY complaint/
-       demand/pain-point angle, not whether it names a platform. Generate
-       keywords around the complaint/frustration phrasing the user implied
-       (e.g. "so annoyed with", "wish there was a tool for", "sick of dealing
-       with", "biggest pain point in"), the same way the PAIN-POINT / PROSPECT
-       PATTERN above does.
      - Every keyword must be something that could plausibly appear
        verbatim, or as a close natural substring, inside a real post's
        title or text. Keep each keyword short and natural.
