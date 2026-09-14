@@ -360,8 +360,7 @@ everything above.
    _text_matches_keyword() used to do a bare Python `in` substring check,
    so a short/generic keyword like "buy" matched inside completely
    unrelated words like "buying" or "buyer". Fixed by switching to a
-   regex `\b<keyword>\b` word-boundary match instead of plain substring
-   containment.
+   regex `\b<keyword>\b` word-boundary match instead.
 
 3. SECOND-LEVEL NOTE CHUNKING (additive-only, inside
    analyze_with_claude()): if the number of condensed first-level notes
@@ -2159,6 +2158,14 @@ def _call_claude(system_prompt: str, user_message: str, max_tokens: int = None, 
 
     with httpx.Client(timeout=CLAUDE_TIMEOUT_SECONDS) as http_client:
         response = http_client.post(CLAUDE_API_URL, headers=headers, json=payload)
+        if response.status_code >= 400:
+            log.warning(
+                f"Claude API error {response.status_code} | model={CLAUDE_MODEL} | "
+                f"max_tokens={payload['max_tokens']} | "
+                f"system_chars={len(system_prompt or '')} | "
+                f"user_message_chars={len(user_message or '')} | "
+                f"body={response.text[:2000]}"
+            )
         response.raise_for_status()
         data = response.json()
 
@@ -2576,7 +2583,7 @@ optional time window.
      ("reddit", "posts", "show me"). These phrases exist purely to
      confirm a post is genuinely ABOUT the topic, not just that a
      generic word appears somewhere in it — this is what stops a single
-     bare keyword like "agents" from matching a post that has nothing
+     bare keyword like "agents" from ever matching a post that has nothing
      to do with the actual topic.
 
    - "time_window_days": an integer, or null.
