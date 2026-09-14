@@ -1506,10 +1506,6 @@
       renderPlatformsList(data.platforms, container);
     }
     if (typeof data.business_insight === 'string' && data.business_insight.trim().length > 0) {
-      const insightHeading = document.createElement('p');
-      insightHeading.className = 'metrics-section-title';
-      insightHeading.textContent = 'Business insight';
-      container.appendChild(insightHeading);
       const insightNote = document.createElement('div');
       insightNote.className = 'fabricated-note';
       const insightBar = document.createElement('div');
