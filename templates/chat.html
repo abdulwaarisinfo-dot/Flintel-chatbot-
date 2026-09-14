@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1506,6 +1504,21 @@
       renderRankedPostsList(data.platforms, container);
     } else {
       renderPlatformsList(data.platforms, container);
+    }
+    if (typeof data.business_insight === 'string' && data.business_insight.trim().length > 0) {
+      const insightHeading = document.createElement('p');
+      insightHeading.className = 'metrics-section-title';
+      insightHeading.textContent = 'Business insight';
+      container.appendChild(insightHeading);
+      const insightNote = document.createElement('div');
+      insightNote.className = 'fabricated-note';
+      const insightBar = document.createElement('div');
+      insightBar.className = 'bar';
+      const insightText = document.createElement('p');
+      insightText.textContent = data.business_insight;
+      insightNote.appendChild(insightBar);
+      insightNote.appendChild(insightText);
+      container.appendChild(insightNote);
     }
     renderFollowupChips(data.followups, container);
   }
