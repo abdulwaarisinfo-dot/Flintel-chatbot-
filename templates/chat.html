@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -830,7 +831,7 @@
             <div class="search-progress-block" id="loading-row-{{ msg.topic_key }}"
                  data-requested-at="{{ msg.requested_at.isoformat() if msg.requested_at else '' }}">
               <p class="search-progress-text">{{ msg.search_progress.intro }} <strong>This may take a moment.</strong> {{ msg.search_progress.outro }}</p>
-              <p class="search-progress-checking-label">I'm checking for:</p>
+              <p class="search-progress-checking-label">I’m checking for:</p>
               <ul class="search-progress-checklist">
                 {% for item in msg.search_progress.checklist %}
                 <li>{{ item }}</li>
@@ -1262,23 +1263,6 @@
   // not_available / disallowed), always with a "format" field first. Plain
   // "chat"/"blocked" replies (from the separate router prompt) are NOT
   // JSON — those still fall back to markdown rendering below, unchanged.
-
-  // (CITATION-TAG SANITIZER) Claude's raw output can contain literal
-  // citation-tag artifacts like (cite index="0-1">...</cite> or
-  // (cite index="0-1">...</cite> — these are internal
-  // citation markers, never meant to be shown to the user. This strips
-  // just the tag delimiters (opening and closing), leaving whatever text
-  // was between them intact, so the reader sees clean prose instead of
-  // raw markup. This is purely a DISPLAY-time transform: it's applied to
-  // a local copy of the text right before that text is parsed/rendered,
-  // never to .answer-raw itself (see renderStructuredAnswer below) and
-  // never to anything sent back to the server. Identical helper to the
-  // one added to index.html, so both files stay in sync.
-  function stripCitationTags(str) {
-    if (typeof str !== 'string') return str;
-    return str.replace(/<\/?(?:antml:)?cite(?:\s+index="[^"]*")?\s*>/gi, '');
-  }
-
   function sentimentTag(sentiment) {
     // Per explicit instruction: sentiment text is plain text, same color as
     // every other field's value (rgba(255,255,255,0.7), inherited from the
@@ -1292,7 +1276,7 @@
     // misleadingly imply analysis happened for a Google-fallback stub
     // post that was never actually read.
     const span = document.createElement('span');
-    const label = stripCitationTags(sentiment);
+    const label = sentiment;
     span.textContent = label.charAt(0).toUpperCase() + label.slice(1);
     return span;
   }
@@ -1311,10 +1295,10 @@
     if (isLink) {
       const a = document.createElement('a');
       a.href = value; a.target = '_blank'; a.rel = 'noopener noreferrer';
-      a.textContent = stripCitationTags(value);
+      a.textContent = value;
       text.appendChild(a);
     } else {
-      text.appendChild(document.createTextNode(stripCitationTags(value)));
+      text.appendChild(document.createTextNode(value));
     }
     row.appendChild(dot);
     row.appendChild(text);
@@ -1327,7 +1311,6 @@
     // span, in that order — so "See more"/"See less" sits immediately at
     // the end of the (possibly truncated) text, on the same line, not as a
     // separate element below it.
-    const cleanedText = stripCitationTags(text);
     const row = document.createElement('div');
     row.className = 'post-field';
     const dot = document.createElement('span');
@@ -1337,7 +1320,7 @@
     const strong = document.createElement('strong');
     strong.textContent = label;
     textEl.appendChild(strong);
-    textEl.appendChild(document.createTextNode(' :  ' + cleanedText + ' '));
+    textEl.appendChild(document.createTextNode(' :  ' + text + ' '));
 
     const toggle = document.createElement('button');
     toggle.type = 'button';
@@ -1477,14 +1460,13 @@
     const row = document.createElement('div');
     row.style.cssText = 'display:flex; flex-wrap:wrap; gap:10px; margin-top:20px;';
     followups.forEach(text => {
-      const cleanedText = stripCitationTags(text);
       const chip = document.createElement('button');
       chip.type = 'button';
-      chip.textContent = cleanedText;
+      chip.textContent = text;
       chip.style.cssText = 'background:#1e1d1b; border-radius:150px; padding:10px 16px; color:rgba(255,255,255,0.7); font-size:14px; font-weight:500; border:none; cursor:pointer; text-align:left;';
       chip.addEventListener('click', () => {
         const input = document.getElementById('search-input');
-        if (input) { input.value = cleanedText; input.dispatchEvent(new Event('input')); input.focus(); }
+        if (input) { input.value = text; input.dispatchEvent(new Event('input')); input.focus(); }
       });
       row.appendChild(chip);
     });
@@ -1514,7 +1496,7 @@
   function renderSourceList(data, container) {
     const summary = document.createElement('p');
     summary.className = 'overview-summary';
-    summary.textContent = stripCitationTags(data.summary || '');
+    summary.textContent = data.summary || '';
     container.appendChild(summary);
     const divider = document.createElement('div');
     divider.className = 'section-divider no-top-margin';
@@ -1524,29 +1506,18 @@
     } else {
       renderPlatformsList(data.platforms, container);
     }
-    if (typeof data.business_insight === 'string' && data.business_insight.trim().length > 0) {
-      const insightNote = document.createElement('div');
-      insightNote.className = 'fabricated-note';
-      const insightBar = document.createElement('div');
-      insightBar.className = 'bar';
-      const insightText = document.createElement('p');
-      insightText.textContent = stripCitationTags(data.business_insight);
-      insightNote.appendChild(insightBar);
-      insightNote.appendChild(insightText);
-      container.appendChild(insightNote);
-    }
     renderFollowupChips(data.followups, container);
   }
 
   function renderComparison(data, container) {
     const summary = document.createElement('p');
     summary.className = 'overview-summary';
-    summary.textContent = stripCitationTags(data.summary || '');
+    summary.textContent = data.summary || '';
     container.appendChild(summary);
     (data.subjects || []).forEach((subj, si) => {
       const heading = document.createElement('p');
       heading.className = 'metrics-section-title';
-      heading.textContent = stripCitationTags(subj.name);
+      heading.textContent = subj.name;
       container.appendChild(heading);
       if (subj.sentiment) {
         const s = subj.sentiment;
@@ -1581,7 +1552,7 @@
       headerRow.className = 'metrics-row header';
       headerRow.style.gridTemplateColumns = gridCols;
       tableData.headers.forEach(h => {
-        const c = document.createElement('div'); c.className = 'metrics-cell'; c.textContent = stripCitationTags(h);
+        const c = document.createElement('div'); c.className = 'metrics-cell'; c.textContent = h;
         headerRow.appendChild(c);
       });
       wrap.appendChild(headerRow);
@@ -1590,7 +1561,7 @@
         row.className = 'metrics-row';
         row.style.gridTemplateColumns = gridCols;
         r.forEach(cell => {
-          const c = document.createElement('div'); c.className = 'metrics-cell'; c.textContent = stripCitationTags(cell);
+          const c = document.createElement('div'); c.className = 'metrics-cell'; c.textContent = cell;
           row.appendChild(c);
         });
         wrap.appendChild(row);
@@ -1610,7 +1581,7 @@
       const block = document.createElement('div');
       block.className = 'interpretation-block';
       block.innerHTML = `<p class="block-title">Interpretation</p><p class="block-text"></p>`;
-      block.querySelector('.block-text').textContent = stripCitationTags(data.interpretation);
+      block.querySelector('.block-text').textContent = data.interpretation;
       container.appendChild(block);
     }
     if (data.weekly_table) {
@@ -1629,7 +1600,7 @@
       drivers.forEach(d => {
         const platRow = document.createElement('div');
         platRow.className = 'driver-post-platform';
-        platRow.innerHTML = `<span class="driver-post-icon"></span><span style="color:#7a7a77;font-size:16px;font-weight:600;">${stripCitationTags(d.platform || '')}</span>`;
+        platRow.innerHTML = `<span class="driver-post-icon"></span><span style="color:#7a7a77;font-size:16px;font-weight:600;">${d.platform || ''}</span>`;
         container.appendChild(platRow);
         const postRow = fieldRow(container, 'Post', d.post || '');
         postRow.querySelector('.field-text').appendChild(sentimentTag(d.sentiment));
@@ -1647,7 +1618,7 @@
       const block = document.createElement('div');
       block.className = 'trend-block';
       block.innerHTML = `<p class="block-title">Trend</p><p class="block-text"></p>`;
-      block.querySelector('.block-text').textContent = stripCitationTags(data.trend);
+      block.querySelector('.block-text').textContent = data.trend;
       container.appendChild(block);
     }
     if (data.takeaways && data.takeaways.length) {
@@ -1659,7 +1630,7 @@
         row.className = 'post-field';
         row.style.paddingLeft = '19px';
         row.innerHTML = `<span class="field-text"></span>`;
-        row.querySelector('.field-text').textContent = stripCitationTags(t);
+        row.querySelector('.field-text').textContent = t;
         block.appendChild(row);
       });
       container.appendChild(block);
@@ -1690,7 +1661,7 @@
     labelRow.className = 'post-field';
     labelRow.innerHTML = `<span class="field-dot"></span><span class="field-text"></span>`;
     const strong = document.createElement('strong');
-    strong.textContent = `${emoji} ${stripCitationTags(label)}`;
+    strong.textContent = `${emoji} ${label}`;
     labelRow.querySelector('.field-text').appendChild(strong);
     wrap.appendChild(labelRow);
     if (descriptionNode) {
@@ -1703,15 +1674,14 @@
   }
 
   function clickableTerm(text) {
-    const cleanedText = stripCitationTags(text);
     const a = document.createElement('a');
     a.href = '#';
-    a.textContent = cleanedText;
+    a.textContent = text;
     a.style.cssText = 'color: #a3e635; text-decoration: underline;';
     a.addEventListener('click', (e) => {
       e.preventDefault();
       const input = document.getElementById('search-input');
-      if (input) { input.value = cleanedText; input.dispatchEvent(new Event('input')); input.focus(); }
+      if (input) { input.value = text; input.dispatchEvent(new Event('input')); input.focus(); }
     });
     return a;
   }
@@ -1719,14 +1689,14 @@
   function renderNoResults(data, container, matchedResults) {
     const message = document.createElement('p');
     message.className = 'block-text';
-    message.textContent = stripCitationTags(data.message || '');
+    message.textContent = data.message || '';
     container.appendChild(message);
 
     if (data.likely_reason) {
       const p = document.createElement('p');
       p.className = 'block-text';
       p.style.marginTop = '20px';
-      p.textContent = stripCitationTags(data.likely_reason);
+      p.textContent = data.likely_reason;
       container.appendChild(p);
     }
 
@@ -1767,7 +1737,7 @@
           noResultsItem(container, emoji, a.label, desc);
         } else {
           const desc = document.createElement('span');
-          desc.textContent = stripCitationTags(a.description || 'See if there’s more conversation with this adjustment.');
+          desc.textContent = a.description || 'See if there’s more conversation with this adjustment.';
           noResultsItem(container, emoji, a.label, desc);
         }
       });
@@ -1775,16 +1745,15 @@
       if (data.related_questions && data.related_questions.length) {
         const desc = document.createElement('div');
         data.related_questions.forEach(q => {
-          const cleanedQ = stripCitationTags(q);
           const row = document.createElement('div');
           row.className = 'post-field';
           row.style.marginLeft = '30px';
           row.innerHTML = `<span class="field-dot"></span><span class="field-text"></span>`;
-          row.querySelector('.field-text').textContent = `“${cleanedQ}”`;
+          row.querySelector('.field-text').textContent = `“${q}”`;
           row.style.cursor = 'pointer';
           row.addEventListener('click', () => {
             const input = document.getElementById('search-input');
-            if (input) { input.value = cleanedQ; input.dispatchEvent(new Event('input')); input.focus(); }
+            if (input) { input.value = q; input.dispatchEvent(new Event('input')); input.focus(); }
           });
           desc.appendChild(row);
         });
@@ -1796,7 +1765,7 @@
       const p = document.createElement('p');
       p.className = 'block-text';
       p.style.marginTop = '40px';
-      p.textContent = stripCitationTags(data.clarifying_question);
+      p.textContent = data.clarifying_question;
       container.appendChild(p);
     }
 
@@ -1811,7 +1780,7 @@
       const p = document.createElement('p');
       p.className = 'block-text';
       p.style.marginTop = '20px';
-      p.textContent = stripCitationTags(data.near_match_offer);
+      p.textContent = data.near_match_offer;
       container.appendChild(p);
     }
 
@@ -1867,9 +1836,9 @@
     const textP = document.createElement('p');
     textP.className = 'search-progress-text';
     textP.append(
-      document.createTextNode(stripCitationTags(progressContent.intro) + ' '),
+      document.createTextNode(progressContent.intro + ' '),
       Object.assign(document.createElement('strong'), { textContent: 'This may take a moment.' }),
-      document.createTextNode(' ' + stripCitationTags(progressContent.outro))
+      document.createTextNode(' ' + progressContent.outro)
     );
 
     const checkingLabel = document.createElement('p');
@@ -1880,7 +1849,7 @@
     list.className = 'search-progress-checklist';
     (progressContent.checklist || []).forEach((item) => {
       const li = document.createElement('li');
-      li.textContent = stripCitationTags(item);
+      li.textContent = item;
       list.appendChild(li);
     });
 
@@ -1947,7 +1916,7 @@
     const card = document.createElement('div');
     card.className = 'state-card';
     card.innerHTML = `<span class="state-icon-badge">${iconSvg}</span><p class="state-body"></p>`;
-    card.querySelector('.state-body').textContent = stripCitationTags(data.message || '');
+    card.querySelector('.state-body').textContent = data.message || '';
     container.appendChild(card);
     renderClosestMatchesFromResults(matchedResults, container);
   }
@@ -1976,7 +1945,7 @@
       const overviewEl = document.createElement('p');
       overviewEl.className = 'block-text';
       overviewEl.style.marginBottom = '20px';
-      overviewEl.textContent = stripCitationTags(overview);
+      overviewEl.textContent = overview;
       container.appendChild(overviewEl);
     }
 
@@ -1986,7 +1955,7 @@
       if (section.title) {
         const sectionTitle = document.createElement('p');
         sectionTitle.className = 'metrics-section-title';
-        sectionTitle.textContent = stripCitationTags(section.title);
+        sectionTitle.textContent = section.title;
         container.appendChild(sectionTitle);
       }
       bullets.forEach((bullet) => {
@@ -1997,7 +1966,7 @@
         dot.className = 'field-dot';
         const text = document.createElement('span');
         text.className = 'field-text';
-        text.textContent = stripCitationTags(bullet);
+        text.textContent = bullet;
         row.appendChild(dot);
         row.appendChild(text);
         container.appendChild(row);
@@ -2024,21 +1993,12 @@
     // set, nothing would ever retry that node again even though it was
     // still showing raw JSON.
     if (wrap.dataset.lastRenderedRaw === raw) return;
-    // (CITATION-TAG SANITIZER) `raw` itself (and rawEl.textContent) is
-    // NEVER modified — it stays exactly as the server/stream produced it,
-    // preserving the dedupe check above and anything else that reads
-    // .answer-raw later. All cleanup happens on `sanitizedRaw`, a
-    // display-only local copy used both for the JSON-parsing attempt below
-    // (so any citation artifacts embedded inside a JSON string field are
-    // already gone by the time that field's value is read out and written
-    // into the DOM) and for the plain-markdown fallback path further down.
-    const sanitizedRaw = stripCitationTags(raw);
     // Claude is instructed to never wrap JSON in markdown code fences, but
     // models don't always follow that perfectly — strip ```json / ``` fences
     // (and surrounding whitespace) before attempting to parse, so an
     // occasional fenced response still renders structured instead of
     // silently falling through to a raw-text/code-block display.
-    const cleaned = sanitizedRaw.trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '').trim();
+    const cleaned = raw.trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '').trim();
     let data = null;
     try { data = JSON.parse(cleaned); } catch (e) { data = null; }
 
@@ -2068,7 +2028,7 @@
           case 'disallowed':    renderSimpleMessage(data, renderedEl, DISALLOWED_ICON, matchedResults); break;
           default:
             console.warn('Unknown answer format:', data.format);
-            renderedEl.textContent = sanitizedRaw;
+            renderedEl.textContent = raw;
         }
         renderedEl.style.display = 'block';
         rawEl.style.display = 'none';
@@ -2091,7 +2051,7 @@
     // Not JSON (or rendering failed) — plain "chat"/"blocked" reply, use markdown.
     if (window.marked && window.DOMPurify) {
       try {
-        const html = marked.parse(sanitizedRaw, { breaks: true, gfm: true });
+        const html = marked.parse(raw, { breaks: true, gfm: true });
         renderedEl.innerHTML = DOMPurify.sanitize(html);
         renderedEl.style.display = 'block';
         rawEl.style.display = 'none';
@@ -2232,6 +2192,26 @@
         return;
       }
 
+      if (payload.progress_percent !== undefined) {
+        // (PROGRESS-PERCENTAGE STREAMING) Server-calculated, real-time
+        // percentage (elapsed time vs the actual RESPONSE_TIMEOUT) —
+        // more accurate than this file's own client-side elapsed-time
+        // guess (which uses fixed 40s/80s constants), so this updates
+        // the SAME bar/percentage elements whenever a fresher server
+        // value arrives. Purely additive: if the richer search-progress
+        // block hasn't rendered yet (still showing the plain spinner),
+        // these elements don't exist yet either — this safely no-ops
+        // in that case and simply has nothing to update.
+        const loadingRow = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)}`);
+        if (loadingRow) {
+          const fillEl = loadingRow.querySelector('.search-progress-bar-fill');
+          const percentEl = loadingRow.querySelector('.search-progress-bar-percent');
+          if (fillEl) fillEl.style.width = payload.progress_percent + '%';
+          if (percentEl) percentEl.textContent = payload.progress_percent + '%';
+        }
+        return;
+      }
+
       if (payload.search_progress) {
         // (SEARCH-PROGRESS UI) Arrives once, mid-stream, once the
         // backend's own 40s-mark trigger finishes generating the
@@ -2265,13 +2245,11 @@
         // No page reload — the accumulated text is now complete, valid
         // JSON. Render it in-place, right where the loading-row was,
         // reusing the exact same structured-render logic every other
-        // already-answered message uses (renderStructuredAnswer — which
-        // itself now strips citation-tag artifacts from every text field
-        // before inserting them into the DOM, see its own definition
-        // above), so the result is byte-identical to what a full page
-        // reload would have shown — just without the reload's jarring
-        // flash, and with a gentle entrance animation instead of the
-        // content just instantly appearing.
+        // already-answered message uses (renderStructuredAnswer), so the
+        // result is byte-identical to what a full page reload would have
+        // shown — just without the reload's jarring flash, and with a
+        // gentle entrance animation instead of the content just
+        // instantly appearing.
         const loadingRow = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)}`);
         if (loadingRow) {
           const wrap = document.createElement('div');
@@ -2285,10 +2263,6 @@
           wrap.dataset.matchedResults = JSON.stringify(payload.results || []);
           const rawDiv = document.createElement('div');
           rawDiv.className = 'answer-raw';
-          // Stored exactly as accumulated from the stream — never
-          // sanitized here. renderStructuredAnswer() reads this raw text
-          // and produces its own cleaned copy purely for display; nothing
-          // written to .answer-raw itself is ever altered.
           rawDiv.textContent = accumulated;
           const renderedDiv = document.createElement('div');
           renderedDiv.className = 'answer-rendered';
