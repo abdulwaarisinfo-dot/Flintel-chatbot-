@@ -1025,6 +1025,16 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 ).start()
                 msg["search_progress_generated"] = True
 
+            # (PROGRESS-PERCENTAGE STREAMING) Emitted once, immediately,
+            # right here — before the bounded search-progress wait and
+            # before the polling loop even starts — so the bar shows 0%
+            # right away instead of only appearing after the first 2s
+            # poll tick. Skipped when `matched` already has something,
+            # since the `if not matched:` polling loop right below never
+            # runs in that case — there is nothing to show progress for.
+            if not matched:
+                yield f"data: {json.dumps({'progress_percent': 0})}\n\n"
+
             # (SEARCH-PROGRESS UI FIX) Runs UNCONDITIONALLY — whether or
             # not `matched` was already found — giving the background
             # thread started just above a short, bounded window to
@@ -1069,6 +1079,23 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             if not matched:
                 while True:
                     elapsed = _elapsed_seconds(msg.get("requested_at"))
+
+                    # (PROGRESS-PERCENTAGE STREAMING) Placed BEFORE the
+                    # search_progress check and BEFORE the RESPONSE_TIMEOUT
+                    # break check below, so the numeric percentage and the
+                    # richer intro/outro/checklist text can both be present
+                    # in the same polling iteration without one blocking
+                    # the other. trigger_seconds=0 means this starts
+                    # counting from the moment the message was requested
+                    # (0%), reaching 100% exactly when elapsed >=
+                    # RESPONSE_TIMEOUT — the SAME threshold that sets
+                    # tier3_triggered = True a few lines below. Rides along
+                    # on this loop's own existing ~2s cadence (time.sleep(2)
+                    # at the bottom) — no separate, faster timer needed.
+                    progress_percent = flintel.calculate_search_progress_percent(
+                        elapsed, trigger_seconds=0, timeout_seconds=RESPONSE_TIMEOUT
+                    )
+                    yield f"data: {json.dumps({'progress_percent': progress_percent})}\n\n"
 
                     # (SEARCH-PROGRESS UI) Once the background thread above
                     # has filled in a result, save it (so a later
