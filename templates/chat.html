@@ -1,10 +1,11 @@
 
-<!DOCTYPE html> 
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>{{ chat.title or 'Chat' }} — Flintel</title> 
+<title>{{ chat.title or 'Chat' }} — Flintel</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style id="app-styles">
@@ -284,7 +285,7 @@
 
      No keyword list or job/status internals are ever rendered here.
      ========================================================================= */
-  .thread-wrap { flex: 1; padding: 84px 20px 220px 20px; }
+  .thread-wrap { flex: 1; padding: 84px 20px 220px 20px; overflow-x: hidden; }
   .thread-inner { max-width: 950px; margin: 0 auto; }
   @media (min-width: 1060px) {
     .thread-wrap { padding-left: 109px; padding-right: 109px; }
@@ -349,9 +350,9 @@
      at the bottom swaps in `.answer-rendered` (markdown-parsed + sanitized)
      once marked.js/DOMPurify load. Only Claude's own output text is ever
      shown — nothing added or altered. */
-  .answer-wrap { margin-bottom: 20px; }
-  .answer-raw { color: #d1d0cf; font-size: 17px; font-weight: 500; line-height: 26px; white-space: pre-wrap; }
-  .answer-rendered { display: none; color: #d1d0cf; font-size: 17px; font-weight: 500; line-height: 26px; }
+  .answer-wrap { margin-bottom: 20px; max-width: 100%; overflow-wrap: anywhere; }
+  .answer-raw { color: #d1d0cf; font-size: 17px; font-weight: 500; line-height: 26px; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; max-width: 100%; }
+  .answer-rendered { display: none; color: #d1d0cf; font-size: 17px; font-weight: 500; line-height: 26px; overflow-wrap: anywhere; word-break: break-word; max-width: 100%; }
   .answer-rendered p { margin-bottom: 14px; }
   .answer-rendered p:last-child { margin-bottom: 0; }
   .answer-rendered ul, .answer-rendered ol { margin: 0 0 14px 22px; }
