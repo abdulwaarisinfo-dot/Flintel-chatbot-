@@ -704,11 +704,14 @@ platform. You are handed a user's message plus whatever real public posts
 were matched for it, and your job is to turn that into the single best
 possible answer for the user.
 
-CORE PRINCIPLE — work through this every time, silently, before answering:
-UNDERSTAND the request -> INTERPRET what's actually being asked ->
-REASON over what you were given -> VERIFY it's enough to answer honestly ->
-DECIDE the right format -> RESPOND. Never skip straight to an answer
-without checking whether the grounding you were given actually supports it.
+CORE PRINCIPLE — apply this thinking every time, but NEVER write any part
+of it out: understand what's actually being asked, reason honestly over
+what you were given, and check that it genuinely supports an answer
+before deciding the format and responding. Never skip straight to an
+answer without checking whether the grounding you were given actually
+supports it. This is an internal discipline, not an output — never
+produce section headers, labels, or bullet points describing your own
+reasoning steps anywhere in your response.
 
 GROUNDING — this overrides everything else below:
 - Every factual claim must come from the matched posts you were given.
@@ -784,6 +787,17 @@ no text outside the JSON object. Every response is exactly one JSON object,
 and `"format"` is ALWAYS the first field so the frontend knows which
 render function to call. Pick exactly one of the six formats below based
 on what the user actually asked and what you were able to find.
+
+THIS IS ABSOLUTE: the very FIRST character of your entire response must
+be `{` — nothing before it, not one word, not a heading, not a phrase
+like "Let me think through this" or a labeled step like "Understanding
+the request:". Do not narrate your own reasoning process anywhere, in
+any form, before, inside (outside a JSON string value), or after the
+JSON object. Do not wrap the JSON in ```json or any other code fence.
+The very LAST character of your entire response must be `}` — nothing
+after it either. If you ever feel the urge to explain your thinking
+before responding, that urge is the signal to stop and just output the
+JSON object instead.
 
 ──────────────────────────────────────────────────────────────────────────
 FORMAT 1 — "source_list"
@@ -1286,7 +1300,7 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
         )
         if extra_context:
             user_message += "\n\n" + extra_context
-        return _call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message)
+        return _extract_json_object_from_text(_call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message))
 
     chunks = chunk_list(posts, CLAUDE_POSTS_PER_CHUNK)
 
@@ -1295,7 +1309,7 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
         user_message = f"User's question: {query}\n\nPosts (title + text only):\n{posts_block}"
         if extra_context:
             user_message += "\n\n" + extra_context
-        return _call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message)
+        return _extract_json_object_from_text(_call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message))
 
     # Multiple chunks -> map-reduce so no single call has to swallow every
     # matched post at once.
@@ -1341,7 +1355,7 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
     )
     if extra_context:
         user_message += "\n\n" + extra_context
-    return _call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message)
+    return _extract_json_object_from_text(_call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message))
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -2598,6 +2612,69 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
 # empty for that render, instead of showing loosely-matched posts Claude
 # itself already rejected as irrelevant/unavailable/disallowed.
 _NO_DATA_CLAUDE_FORMATS = {"no_results", "not_available", "disallowed"}
+
+
+def _extract_json_object_from_text(text: str) -> str:
+    """(DEFENSIVE JSON-EXTRACTION) A small, complex system prompt can
+    occasionally cause even a well-instructed model to prepend a short
+    burst of "thinking out loud" text (e.g. narrating its own reasoning
+    steps) before the actual JSON object it was told to return — this
+    happened in practice with CLAUDE_ANALYSIS_SYSTEM_PROMPT's own
+    "CORE PRINCIPLE" line reading like a step-by-step template the model
+    started echoing back verbatim as labeled headers. The prompt itself
+    has been reworded to make this far less likely, but this function is
+    the SAFETY NET underneath that prompt fix: it finds and extracts the
+    actual JSON object from `text` NO MATTER what surrounds it, so a
+    single occasional slip never reaches the frontend as a raw wall of
+    text.
+
+    Strategy, in order:
+      1. If a ```...``` fence exists anywhere in `text` (not just at the
+         very start), try parsing whatever is between the FIRST pair of
+         fences (optionally preceded by a "json" language tag).
+      2. Otherwise (or if that fails), find the FIRST "{" anywhere in
+         `text` and use Python's own JSON decoder to parse a complete,
+         correctly-balanced JSON value starting there — this correctly
+         handles nested braces and braces that appear inside quoted
+         string values, unlike a naive character-counting approach,
+         since it's the real parser doing the work, not a guess. If
+         that specific "{" doesn't lead to valid JSON (e.g. it was a
+         stray brace inside plain narration, not the real object's
+         start), tries the NEXT "{" in the text, and so on, until one
+         succeeds or none are left.
+      3. If nothing above produces valid, parseable JSON, return `text`
+         completely unchanged — this function can only ever CLEAN a
+         response, never make one worse than doing nothing.
+
+    Returns a JSON string (re-serialized from whatever was successfully
+    parsed) on success, or the original `text` unchanged on failure.
+    Never raises."""
+    if not text or not isinstance(text, str):
+        return text
+
+    stripped = text.strip()
+
+    fence_match = re.search(r"```(?:json)?\s*(.*?)```", stripped, re.DOTALL | re.IGNORECASE)
+    if fence_match:
+        candidate = fence_match.group(1).strip()
+        try:
+            parsed = json.loads(candidate)
+            if isinstance(parsed, dict):
+                return json.dumps(parsed, ensure_ascii=False)
+        except (ValueError, TypeError):
+            pass
+
+    brace_index = stripped.find("{")
+    while brace_index != -1:
+        try:
+            parsed, _end_index = json.JSONDecoder().raw_decode(stripped, brace_index)
+            if isinstance(parsed, dict):
+                return json.dumps(parsed, ensure_ascii=False)
+        except (ValueError, TypeError):
+            pass
+        brace_index = stripped.find("{", brace_index + 1)
+
+    return text
 
 
 def _extract_claude_format(answer_text: str):
