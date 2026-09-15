@@ -1,12 +1,13 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Flintel — What's the internet saying?</title> 
+<title>Flintel — What's the internet saying?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style id="app-styles"> 
+<style id="app-styles">
   /* =========================================================================
      This stylesheet is the Document 2 ("redesign") visual system, adapted to
      dress the Document 1 ("real backend") markup. Every class below exists to
@@ -401,7 +402,7 @@
      msg.keywords and any job/status internals are still never rendered,
      exactly as in Document 1.
      ========================================================================= */
-  .conversation-area { max-width: 950px; margin: 0 auto; padding: 56px 20px 120px 20px; }
+  .conversation-area { max-width: 950px; margin: 0 auto; padding: 56px 20px 120px 20px; overflow-x: hidden; }
   @media (min-width: 1060px) {
     .conversation-area { padding-left: 109px; padding-right: 109px; max-width: 1382px; margin: 0 auto; }
   }
@@ -451,9 +452,9 @@
      the same text parsed as markdown so headings/bullets/tables look like
      headings/bullets/tables. Either way, only Claude's own output is shown —
      nothing is added or altered here (same contract as Document 1). */
-  .answer-wrap { margin-bottom: 20px; }
-  .answer-raw { color: #d1d0cf; font-size: 17px; font-weight: 500; line-height: 26px; white-space: pre-wrap; }
-  .answer-rendered { display: none; color: #d1d0cf; font-size: 17px; font-weight: 500; line-height: 26px; }
+  .answer-wrap { margin-bottom: 20px; max-width: 100%; overflow-wrap: anywhere; }
+  .answer-raw { color: #d1d0cf; font-size: 17px; font-weight: 500; line-height: 26px; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; max-width: 100%; }
+  .answer-rendered { display: none; color: #d1d0cf; font-size: 17px; font-weight: 500; line-height: 26px; overflow-wrap: anywhere; word-break: break-word; max-width: 100%; }
   .answer-rendered p { margin-bottom: 14px; }
   .answer-rendered p:last-child { margin-bottom: 0; }
   .answer-rendered ul, .answer-rendered ol { margin: 0 0 14px 22px; }
