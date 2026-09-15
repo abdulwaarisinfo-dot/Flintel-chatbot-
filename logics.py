@@ -5,7 +5,7 @@ Pulls the heavy "brain" logic out of index.py — signal matching, keyword
 generation/fallback, the router, the analysis layer, the website-keyword
 extraction wrapper, and the single LLM call function. This is what
 actually shrinks index.py's size/load; index.py keeps only FastAPI app
-wiring plus chat/session/Mongo orchestration (flintel_users /
+wiring plus chat/session/Mongo orchestration (flintel_users / 
 flintel_users_chat).
 
 MOVED HERE VERBATIM (no logic change) from index.py: normalize_topic_key,
