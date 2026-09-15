@@ -1149,95 +1149,45 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                         "how to use this:\n" + chat_summary_for_answer
                     )
 
-                if not merged_pool and tier3_triggered:
-                    # (CLOSEST-MATCHES TIER-3, via the shared helper's own
-                    # near_match_confidence branching, mirroring
-                    # _timeout_fallback_answer()'s exact tier-3 logic in
-                    # index.py) Both sources are STILL genuinely empty —
-                    # try a looser, best-effort secondary match before
-                    # giving up entirely.
-                    # (BUG FIX — DEAD-CODE FIX) Previously called with
-                    # unfiltered=True, which routes to
-                    # flintel.get_unfiltered_matched_signals() — that path
-                    # requires a since_days argument this call never
-                    # provided, so it always silently returned []. Now uses
-                    # the SAME phrase-matching machinery from
-                    # get_matched_signals() in its loosened mode (40%
-                    # threshold instead of 70%), scoped to this message's
-                    # own match_phrases — keeping the "closest match" pool
-                    # on-topic instead of pulling in ANY signal from the
-                    # time window regardless of relevance.
-                    try:
-                        loose_candidates = get_matched_signals(
-                            topic_key, msg.get("keywords", []),
-                            targeting_platform="all",
-                            match_phrases=msg.get("match_phrases"), loose=True,
+                # (CLOSEST-MATCHES TIER-3 REMOVED — mirrors logics.py's
+                # own _timeout_fallback_answer() simplification, CHANGE C)
+                # The old "if not merged_pool and tier3_triggered: ...
+                # loose_candidates / near_match_confidence / near_match_
+                # offer ... else: ..." branching is gone. Whatever
+                # merged_pool holds right now — even a handful of posts,
+                # even zero — is handed straight to analyze_with_claude()
+                # below, unconditionally. Zero posts still lands in
+                # analyze_with_claude()'s own existing "no posts yet"
+                # honest branch (untouched) — that IS the correct
+                # "genuinely found nothing" outcome, never a fabricated
+                # "closest match" offer. `tier3_triggered` is still set
+                # above (still useful for logging/observability) but no
+                # longer gates which code path runs here.
+                extra_ctx_parts = []
+                if msg.get("unfiltered"):
+                    extra_ctx_parts.append(
+                        flintel.build_unfiltered_answer_context(
+                            msg["query"], msg.get("time_window_days")
                         )
-                    except Exception as exc:
-                        log.warning(f"Loose signal matching failed for topic_key={topic_key}: {exc}")
-                        loose_candidates = []
-
-                    extra_ctx_parts = [continuity_ctx] if continuity_ctx else []
-                    extra_ctx_parts.append(flintel.build_google_fallback_answer_context(msg["query"], len(stub_docs)))
-                    extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
-                    full_answer = analyze_with_claude(msg["query"], loose_candidates, extra_context=extra_ctx)
-
-                    if loose_candidates:
-                        confidence = _extract_near_match_confidence(full_answer)
-                        if confidence == "high":
-                            # Genuinely close — present directly, same as
-                            # any normal matched-post display. (BUG FIX)
-                            # Does NOT go through
-                            # _finalize_answer_and_results() here — that
-                            # function now unconditionally empties results
-                            # for ANY "no_data" format (see index.py's
-                            # CHANGE 3), but this format IS still
-                            # "no_results" even in the tier-3 "high
-                            # confidence" case (near_match_confidence is
-                            # just an extra field on the SAME format) —
-                            # the decision to show these posts was already
-                            # made explicitly, right here, based on
-                            # Claude's own near_match_confidence judgment.
-                            full_answer = _patch_post_urls_into_answer(full_answer, loose_candidates)
-                            results_to_save = loose_candidates
-                        else:
-                            # "low" or null — not confident enough (or
-                            # Claude itself found nothing close): withhold
-                            # the posts, keep the text as-is.
-                            results_to_save = []
-                    else:
-                        # Nothing loose either — today's unchanged honest
-                        # message, nothing to show.
-                        results_to_save = []
-                else:
-                    # Normal path: merged_pool has something (from the
-                    # initial check, from polling, or from Google stubs
-                    # already stored) — answer from the merged pool.
-                    extra_ctx_parts = []
-                    if msg.get("unfiltered"):
-                        extra_ctx_parts.append(
-                            flintel.build_unfiltered_answer_context(
-                                msg["query"], msg.get("time_window_days")
-                            )
-                        )
-                    if continuity_ctx:
-                        extra_ctx_parts.append(continuity_ctx)
-                    # (MERGE BEFORE ANSWERING) Tells Claude it has a mix
-                    # of grounded signals and discovery-only Google posts
-                    # in the same batch.
-                    if google_results:
-                        extra_ctx_parts.append(
-                            flintel.build_combined_source_context(len(matched), len(google_results))
-                        )
-                    extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
-                    full_answer = analyze_with_claude(msg["query"], merged_pool, extra_context=extra_ctx)
-                    full_answer = _patch_post_urls_into_answer((full_answer or "").strip(), merged_pool) if full_answer else full_answer
-                    if full_answer and msg.get("website_context"):
-                        full_answer = _inject_website_context_into_answer(full_answer, msg["website_context"])
-                    full_answer, results_to_save = (
-                        _finalize_answer_and_results(full_answer, merged_pool, seed=msg.get("query", ""))
-                        if full_answer else (full_answer, merged_pool)
                     )
+                if continuity_ctx:
+                    extra_ctx_parts.append(continuity_ctx)
+                # (MERGE BEFORE ANSWERING) Tells Claude it has a mix
+                # of grounded signals and discovery-only Google posts
+                # in the same batch.
+                if google_results:
+                    extra_ctx_parts.append(
+                        flintel.build_combined_source_context(len(matched), len(google_results))
+                    )
+                extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
+                full_answer = analyze_with_claude(msg["query"], merged_pool, extra_context=extra_ctx)
+                full_answer = _patch_post_urls_into_answer((full_answer or "").strip(), merged_pool) if full_answer else full_answer
+                if full_answer and msg.get("website_context"):
+                    full_answer = _inject_website_context_into_answer(full_answer, msg["website_context"])
+                full_answer, results_to_save = (
+                    _finalize_answer_and_results(full_answer, merged_pool, seed=msg.get("query", ""))
+                    if full_answer else (full_answer, merged_pool)
+                )
             except Exception as exc:
                 log.warning(f"Streaming Claude analysis failed for topic_key={topic_key}: {exc}")
                 yield f"data: {json.dumps({'error': 'analysis failed'})}\n\n"
