@@ -5,21 +5,19 @@ Pulls the heavy "brain" logic out of index.py — signal matching, keyword
 generation/fallback, the router, the analysis layer, the website-keyword
 extraction wrapper, and the single LLM call function. This is what
 actually shrinks index.py's size/load; index.py keeps only FastAPI app
-wiring plus chat/session/Mongo orchestration (flintel_users / 
+wiring plus chat/session/Mongo orchestration (flintel_users /
 flintel_users_chat).
 
 MOVED HERE VERBATIM (no logic change) from index.py: normalize_topic_key,
 normalize_platform, keyword-fallback generation, job/signal Mongo reads,
 every signal-matching helper (including phrase-matching), get_matched_
-signals() itself (matching rules 100% UNCHANGED), the whole Claude/OpenAI
+signals() itself (matching rules 100% UNCHANGED), the whole Claude
 analysis layer (map-reduce, prompts), the router, the topic-resolver, the
 website-keyword-extraction wrapper, and the post-processing helpers
 (format extraction, answer-finalization, URL/website-context patching).
 
-(MODEL SWAP) _call_claude() / _call_claude_stream() now talk to OpenAI's
-Responses API (GPT-5 mini) instead of Anthropic's Messages API — see
-each function's own docstring. Name, signature, and return contract are
-UNCHANGED, so every other call site in this codebase needed zero changes.
+_call_claude() / _call_claude_stream() talk to Anthropic's Messages API
+(Claude Haiku) — see each function's own docstring.
 
 (TIMEOUT-SIMPLIFICATION CHANGE) _timeout_fallback_answer()'s old tier-3
 "loose_candidates / near_match_confidence / near_match_offer" branch has
@@ -53,10 +51,10 @@ from config import (
     MAX_KEYWORDS, CLAUDE_MAX_KEYWORDS, MAX_MATCHED_RESULTS,
     MAX_TIME_WINDOW_DAYS, MAX_POSTS_PER_PLATFORM,
     MAX_CHAT_EVIDENCE_POSTS, MAX_ANALYSIS_EVIDENCE,
-    MIN_ANALYSIS_EVIDENCE, OPENAI_API_KEY, OPENAI_MODEL,
-    OPENAI_API_URL, OPENAI_TIMEOUT_SECONDS,
+    MIN_ANALYSIS_EVIDENCE, ANTHROPIC_API_KEY, CLAUDE_MODEL,
+    CLAUDE_API_URL, CLAUDE_API_VERSION,
     CLAUDE_MAX_TOKENS, CLAUDE_MAP_MAX_TOKENS,
-    CLAUDE_POSTS_PER_CHUNK, CLAUDE_NOTES_PER_CHUNK,
+    CLAUDE_POSTS_PER_CHUNK, CLAUDE_NOTES_PER_CHUNK, CLAUDE_TIMEOUT_SECONDS,
     CLAUDE_ROUTER_MAX_TOKENS, CLAUDE_TOPIC_RESOLVER_MAX_TOKENS,
     MAX_WEBSITE_KEYWORDS, WEBSITE_FETCH_TIMEOUT_SECONDS,
     WEBSITE_FETCH_MAX_CHARS, CLAUDE_WEBSITE_KEYWORD_MAX_TOKENS,
@@ -1167,67 +1165,56 @@ def _format_posts_block(posts: list) -> str:
 
 
 def _call_claude(system_prompt: str, user_message: str, max_tokens: int = None, enable_web_search: bool = False) -> str:
-    """Single call to the LLM. Raises on any failure — callers decide how
-    to degrade gracefully (never let this block the search job or the
-    post cards, which don't depend on this call at all).
-
-    (MODEL SWAP — Claude Haiku -> GPT-5 mini) This function's NAME,
-    SIGNATURE, and return contract are all UNCHANGED — every existing
-    call site in this codebase needed zero changes. The body now talks
-    to OpenAI's Responses API instead of Anthropic's Messages API.
+    """Single call to the Anthropic Messages API (Claude Haiku). Raises
+    on any failure — callers decide how to degrade gracefully (never let
+    this block the search job or the post cards, which don't depend on
+    this call at all).
 
     (CHAT WEB-SEARCH FEATURE) `enable_web_search` (default False — every
     existing caller that doesn't pass it behaves exactly as before this
-    feature): when True, adds OpenAI's own "web_search" tool to the
-    request payload so the model can look up current/recent information
-    instead of relying purely on its own training knowledge.
-
-    NOTE: verify the exact GPT-5 mini Responses-API field names
-    (max_output_tokens, output_text, tool name "web_search") against
-    OpenAI's current docs at implementation time — the shape below is
-    the correct general pattern but field names can shift between API
-    versions."""
-    if not OPENAI_API_KEY:
-        raise RuntimeError("OPENAI_API_KEY is not set")
+    feature): when True, adds the Anthropic web_search tool to the
+    request payload so Claude can look up current/recent information
+    instead of relying purely on its own training knowledge. Nothing
+    else about this function changed — the existing text-extraction
+    logic below already handles the response correctly when a
+    web_search tool result comes back, since it just picks out "text"
+    type blocks from `data.get("content", [])` regardless of what tool
+    calls happened in between."""
+    if not ANTHROPIC_API_KEY:
+        raise RuntimeError("ANTHROPIC_API_KEY is not set")
 
     payload = {
-        "model": OPENAI_MODEL,
-        "instructions": system_prompt,
-        "input": user_message,
-        "max_output_tokens": max_tokens or CLAUDE_MAX_TOKENS,
+        "model": CLAUDE_MODEL,
+        "max_tokens": max_tokens or CLAUDE_MAX_TOKENS,
+        "system": system_prompt,
+        "messages": [{"role": "user", "content": user_message}],
     }
     if enable_web_search:
-        payload["tools"] = [{"type": "web_search"}]
+        payload["tools"] = [{"type": "web_search_20250305", "name": "web_search"}]
     headers = {
-        "Authorization": f"Bearer {OPENAI_API_KEY}",
-        "Content-Type": "application/json",
+        "x-api-key": ANTHROPIC_API_KEY,
+        "anthropic-version": CLAUDE_API_VERSION,
+        "content-type": "application/json",
     }
 
-    with httpx.Client(timeout=OPENAI_TIMEOUT_SECONDS) as http_client:
-        response = http_client.post(OPENAI_API_URL, headers=headers, json=payload)
+    with httpx.Client(timeout=CLAUDE_TIMEOUT_SECONDS) as http_client:
+        response = http_client.post(CLAUDE_API_URL, headers=headers, json=payload)
         if response.status_code >= 400:
             log.warning(
-                f"OpenAI API error {response.status_code} | model={OPENAI_MODEL} | "
-                f"max_output_tokens={payload['max_output_tokens']} | "
-                f"instructions_chars={len(system_prompt or '')} | "
-                f"input_chars={len(user_message or '')} | "
+                f"Claude API error {response.status_code} | model={CLAUDE_MODEL} | "
+                f"max_tokens={payload['max_tokens']} | "
+                f"system_chars={len(system_prompt or '')} | "
+                f"user_message_chars={len(user_message or '')} | "
                 f"body={response.text[:2000]}"
             )
         response.raise_for_status()
         data = response.json()
 
-    # Prefer the SDK-style convenience field if present, else walk the
-    # output blocks manually (mirrors the old text-block-extraction logic).
-    text = data.get("output_text")
-    if not text:
-        parts = []
-        for block in data.get("output", []):
-            if block.get("type") == "message":
-                for c in block.get("content", []):
-                    if c.get("type") == "output_text" and c.get("text"):
-                        parts.append(c["text"])
-        text = "\n".join(parts).strip()
-    return (text or "").strip()
+    text_blocks = [
+        block.get("text", "") for block in data.get("content", [])
+        if block.get("type") == "text"
+    ]
+    return "\n".join(t for t in text_blocks if t).strip()
 
 
 def _map_chunk(query: str, posts_chunk: list) -> str:
@@ -1371,48 +1358,38 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _call_claude_stream(system_prompt: str, user_message: str, max_tokens: int = None):
-    """(STREAMING ADD-ON) Same LLM call as _call_claude(), except with
-    "stream": true — instead of blocking until the whole response is
-    ready, this yields each text delta AS the API streams it back
-    (word-by-word / token-by-token), so a caller can forward pieces to
-    the browser live instead of waiting for the entire answer.
+    """(STREAMING ADD-ON) Same Anthropic Messages API call as
+    _call_claude(), except with "stream": true — instead of blocking
+    until the whole response is ready, this yields each text delta AS
+    Anthropic streams it back (word-by-word / token-by-token), so a
+    caller can forward pieces to the browser live instead of waiting for
+    the entire answer.
 
-    (MODEL SWAP — Claude Haiku -> GPT-5 mini) Now talks to OpenAI's
-    streaming Responses API instead of Anthropic's streaming Messages
-    API. Generator contract (yields plain text chunks, str) is
-    IDENTICAL — analyze_with_claude_stream() needs zero changes since it
-    only consumes this generator.
-
-    Purely ADDITIVE: _call_claude() itself is untouched (aside from
-    CHANGE A's model swap) and is still used by every existing caller
-    (routing, map step, notes-reduce step, the non-streaming
-    analyze_with_claude()). This generator is only used by
+    Purely ADDITIVE: _call_claude() itself is untouched and is still used
+    by every existing caller (routing, map step, notes-reduce step, the
+    non-streaming analyze_with_claude()). This generator is only used by
     analyze_with_claude_stream().
 
     Yields plain text chunks (str). Raises on any failure — same
-    degrade-gracefully convention as _call_claude().
-
-    NOTE: verify the exact GPT-5 mini streaming event shape
-    (event "type" values, the "delta" field) against OpenAI's current
-    docs at implementation time — the shape below is the correct
-    general pattern but field names can shift between API versions."""
-    if not OPENAI_API_KEY:
-        raise RuntimeError("OPENAI_API_KEY is not set")
+    degrade-gracefully convention as _call_claude()."""
+    if not ANTHROPIC_API_KEY:
+        raise RuntimeError("ANTHROPIC_API_KEY is not set")
 
     payload = {
-        "model": OPENAI_MODEL,
-        "instructions": system_prompt,
-        "input": user_message,
-        "max_output_tokens": max_tokens or CLAUDE_MAX_TOKENS,
+        "model": CLAUDE_MODEL,
+        "max_tokens": max_tokens or CLAUDE_MAX_TOKENS,
+        "system": system_prompt,
+        "messages": [{"role": "user", "content": user_message}],
         "stream": True,
     }
     headers = {
-        "Authorization": f"Bearer {OPENAI_API_KEY}",
-        "Content-Type": "application/json",
+        "x-api-key": ANTHROPIC_API_KEY,
+        "anthropic-version": CLAUDE_API_VERSION,
+        "content-type": "application/json",
     }
 
-    with httpx.Client(timeout=OPENAI_TIMEOUT_SECONDS) as http_client:
-        with http_client.stream("POST", OPENAI_API_URL, headers=headers, json=payload) as response:
+    with httpx.Client(timeout=CLAUDE_TIMEOUT_SECONDS) as http_client:
+        with http_client.stream("POST", CLAUDE_API_URL, headers=headers, json=payload) as response:
             response.raise_for_status()
             for line in response.iter_lines():
                 if not line:
@@ -1426,8 +1403,9 @@ def _call_claude_stream(system_prompt: str, user_message: str, max_tokens: int =
                     event = json.loads(data_str)
                 except (ValueError, TypeError):
                     continue
-                if event.get("type") == "response.output_text.delta":
-                    text = event.get("delta")
+                if event.get("type") == "content_block_delta":
+                    delta = event.get("delta", {}) or {}
+                    text = delta.get("text")
                     if text:
                         yield text
 
