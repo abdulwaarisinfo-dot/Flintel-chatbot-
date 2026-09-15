@@ -34,6 +34,26 @@ MAX_MATCHED_RESULTS = int(os.getenv("MAX_MATCHED_RESULTS", "25"))
 MAX_POSTS_PER_PLATFORM = int(os.getenv("MAX_POSTS_PER_PLATFORM", "3"))
 MAX_TIME_WINDOW_DAYS = int(os.getenv("MAX_TIME_WINDOW_DAYS", "3650"))
 
+# ── Evidence-count limits (EVIDENCE-BUDGET FEATURE — used by logics.py's
+#    router/analysis/timeout-fallback layer to decide how many matched+
+#    Google posts get retrieved, merged, and handed to the LLM for one
+#    answer) ─────────────────────────────────────────────────────────────
+# MAX_ANALYSIS_EVIDENCE: absolute safety ceiling on how much evidence the
+# router's evidence planner is ever allowed to request for analysis.
+# Mirrors flintel.py's own MAX_ANALYSIS_EVIDENCE (kept as a separate,
+# independently-configurable constant, same convention as every other
+# mirrored constant in this file, e.g. MAX_TIME_WINDOW_DAYS).
+MAX_ANALYSIS_EVIDENCE = int(os.getenv("MAX_ANALYSIS_EVIDENCE", "100"))
+# MIN_ANALYSIS_EVIDENCE: floor — never retrieve fewer than this many, even
+# for the simplest query, so a tiny/malformed planner value can't starve
+# the analysis of evidence.
+MIN_ANALYSIS_EVIDENCE = int(os.getenv("MIN_ANALYSIS_EVIDENCE", "15"))
+# MAX_CHAT_EVIDENCE_POSTS: fixed cap on how many evidence posts are ever
+# shown in the final chat response — completely separate from the
+# analysis evidence budget above. Referenced by CLAUDE_ANALYSIS_SYSTEM_
+# PROMPT's own "post-count limit" instruction instead of a bare literal.
+MAX_CHAT_EVIDENCE_POSTS = int(os.getenv("MAX_CHAT_EVIDENCE_POSTS", "7"))
+
 # ── Auth / session ────────────────────────────────────────────────────────
 SESSION_SECRET_KEY = os.getenv("SESSION_SECRET_KEY", "dev-only-change-me")
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
