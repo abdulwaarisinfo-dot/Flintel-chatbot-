@@ -1472,13 +1472,87 @@
     container.appendChild(row);
   }
 
+  // ---- (BUG FIX) Shared helper: render an array of key_findings the exact
+  //      same way for source_list's top-level data.key_findings AND
+  //      comparison's per-subject subj.key_findings. Uses only existing
+  //      classes: .metrics-section-title for the finding name, and the
+  //      existing .post-field / .field-dot / .field-text row markup (via
+  //      fieldRow) for evidence_type / signal_strength / impact. Any
+  //      missing sub-field is simply skipped — never an empty row. ----
+  function renderKeyFindings(findings, container) {
+    (findings || []).forEach((f) => {
+      if (!f) return;
+      if (f.finding) {
+        const heading = document.createElement('p');
+        heading.className = 'metrics-section-title';
+        heading.textContent = f.finding;
+        container.appendChild(heading);
+      }
+      if (f.evidence_type) fieldRow(container, 'Evidence type', f.evidence_type);
+      if (f.signal_strength) fieldRow(container, 'Signal strength', f.signal_strength);
+      if (f.impact) fieldRow(container, 'Impact', f.impact);
+    });
+  }
+
+  // ---- (BUG FIX) Shared helper: render source_list's data.detailed_findings
+  //      array using only existing classes — .block-title for each item's
+  //      title, .block-text for what_evidence_shows / why_it_matters. ----
+  function renderDetailedFindings(items, container) {
+    (items || []).forEach((d) => {
+      if (!d) return;
+      if (d.title) {
+        const title = document.createElement('p');
+        title.className = 'block-title';
+        title.textContent = d.title;
+        container.appendChild(title);
+      }
+      if (d.what_evidence_shows) {
+        const p = document.createElement('p');
+        p.className = 'block-text';
+        p.textContent = d.what_evidence_shows;
+        container.appendChild(p);
+      }
+      if (d.why_it_matters) {
+        const p = document.createElement('p');
+        p.className = 'block-text';
+        p.textContent = d.why_it_matters;
+        container.appendChild(p);
+      }
+    });
+  }
+
+  // ---- (BUG FIX) Shared helper: a .block-title + .block-text pair for a
+  //      single named string field (market_pattern / conclusion /
+  //      business_insight). Renders nothing at all when text is missing. ----
+  function renderTitledTextBlock(container, title, text) {
+    if (!text) return;
+    const h = document.createElement('p');
+    h.className = 'block-title';
+    h.textContent = title;
+    container.appendChild(h);
+    const p = document.createElement('p');
+    p.className = 'block-text';
+    p.textContent = text;
+    container.appendChild(p);
+  }
+
+  // ---- (BUG FIX) Shared helper: the new backend sends a single
+  //      followup_question string instead of the old followups array —
+  //      wrap it into a 1-item array and hand it to the existing,
+  //      unmodified renderFollowupChips(). Falls back to the old
+  //      data.followups array for backward compatibility. ----
+  function renderFollowupQuestionChip(data, container) {
+    const followups = data.followup_question ? [data.followup_question] : (data.followups || []);
+    renderFollowupChips(followups, container);
+  }
+
   function renderRankedPostsList(platforms, container) {
     // (BUG 3 FIX) "ranked": true — one flat, sequentially-numbered list
     // across every platform, in the exact order the backend already
     // provided them, instead of the grouped per-platform sections with
     // "shown_count of total_analyzed" headers. Every existing per-post
     // field (via buildPostBlock, unchanged) stays exactly the same —
-    // only the grouping/numbering changes. buildPostBlock's own "Post N"
+    // only the grouping/numbering changes. buildPostBlock()'s own "Post N"
     // label already does the numbering; a continuous index across the
     // whole flattened list is what makes it "1.", "2.", "3." … instead
     // of resetting per platform. Mirrors index.html's identical fix.
@@ -1493,10 +1567,35 @@
   }
 
   function renderSourceList(data, container) {
-    const summary = document.createElement('p');
-    summary.className = 'overview-summary';
-    summary.textContent = data.summary || '';
-    container.appendChild(summary);
+    // (BUG 1 FIX) The analysis prompt's "source_list" format now sends
+    // research_objective / executive_summary / key_findings /
+    // detailed_findings / market_pattern / conclusion / business_insight /
+    // followup_question instead of the old flat summary/followups shape.
+    // Everything below reuses only existing classes; a field that's
+    // missing simply doesn't render (no empty headings/paragraphs).
+    // data.summary / data.followups are still honored as a fallback for
+    // backward compatibility with any older cached answers.
+    if (data.research_objective) {
+      const objective = document.createElement('p');
+      objective.className = 'block-text';
+      objective.textContent = data.research_objective;
+      container.appendChild(objective);
+    }
+
+    const summaryText = data.executive_summary || data.summary;
+    if (summaryText) {
+      const summary = document.createElement('p');
+      summary.className = 'overview-summary';
+      summary.textContent = summaryText;
+      container.appendChild(summary);
+    }
+
+    renderKeyFindings(data.key_findings, container);
+    renderDetailedFindings(data.detailed_findings, container);
+    renderTitledTextBlock(container, 'Market Pattern', data.market_pattern);
+    renderTitledTextBlock(container, 'Conclusion', data.conclusion);
+    renderTitledTextBlock(container, 'Business Insight', data.business_insight);
+
     const divider = document.createElement('div');
     divider.className = 'section-divider no-top-margin';
     container.appendChild(divider);
@@ -1505,14 +1604,29 @@
     } else {
       renderPlatformsList(data.platforms, container);
     }
-    renderFollowupChips(data.followups, container);
+    renderFollowupQuestionChip(data, container);
   }
 
   function renderComparison(data, container) {
-    const summary = document.createElement('p');
-    summary.className = 'overview-summary';
-    summary.textContent = data.summary || '';
-    container.appendChild(summary);
+    // (BUG 2 FIX) Same executive_summary/research_objective/key_findings/
+    // market_pattern/conclusion/followup_question shape as source_list,
+    // just with key_findings nested per-subject. Backward compatible with
+    // the old data.summary / data.followups.
+    if (data.research_objective) {
+      const objective = document.createElement('p');
+      objective.className = 'block-text';
+      objective.textContent = data.research_objective;
+      container.appendChild(objective);
+    }
+
+    const summaryText = data.executive_summary || data.summary;
+    if (summaryText) {
+      const summary = document.createElement('p');
+      summary.className = 'overview-summary';
+      summary.textContent = summaryText;
+      container.appendChild(summary);
+    }
+
     (data.subjects || []).forEach((subj, si) => {
       const heading = document.createElement('p');
       heading.className = 'metrics-section-title';
@@ -1526,6 +1640,7 @@
         line.textContent = `Positive ${s.positive || '0%'} · Neutral ${s.neutral || '0%'} · Negative ${s.negative || '0%'}`;
         container.appendChild(line);
       }
+      renderKeyFindings(subj.key_findings, container);
       renderPlatformsList(subj.platforms, container);
       if (si < (data.subjects || []).length - 1) {
         const div = document.createElement('div');
@@ -1533,7 +1648,10 @@
         container.appendChild(div);
       }
     });
-    renderFollowupChips(data.followups, container);
+
+    renderTitledTextBlock(container, 'Market Pattern', data.market_pattern);
+    renderTitledTextBlock(container, 'Conclusion', data.conclusion);
+    renderFollowupQuestionChip(data, container);
   }
 
   function renderTrendReport(data, container) {
@@ -1633,7 +1751,17 @@
         block.appendChild(row);
       });
       container.appendChild(block);
+    } else if (data.conclusion) {
+      // (BUG 3 FIX) Backend no longer sends data.takeaways — it sends a
+      // single data.conclusion string instead. Reuse the existing
+      // .block-title/.block-text pair (same as market_pattern/trend
+      // blocks above) rather than inventing any new markup.
+      renderTitledTextBlock(container, 'Conclusion', data.conclusion);
     }
+    // (BUG 3 FIX) New data.followup_question single string — reuse the
+    // existing renderFollowupChips() unchanged, via the same shared
+    // helper used by source_list/comparison above.
+    renderFollowupQuestionChip(data, container);
   }
 
   // ---- No-results answer format ----
@@ -1786,13 +1914,13 @@
     renderClosestMatchesFromResults(matchedResults, container);
   }
 
-  // (SEARCH-PROGRESS UI) Same 40s/80s window flintel.py's
-  // GOOGLE_FALLBACK_TRIGGER_SECONDS / index.py's RESPONSE_TIMEOUT use —
-  // kept here as plain constants (not fetched from the backend) since
-  // they're stable config values; if either one is ever changed via its
-  // own env var, update these two to match.
-  const SEARCH_PROGRESS_TRIGGER_SECONDS = 40;
-  const SEARCH_PROGRESS_TIMEOUT_SECONDS = 80;
+  // (SEARCH-PROGRESS UI) Matches backend's current RESPONSE_TIMEOUT (180s)
+  // and its 0-second search-progress/Google-fallback trigger — kept here as
+  // plain constants (not fetched from the backend) since they're stable
+  // config values; if either one is ever changed via its own env var,
+  // update these two to match.
+  const SEARCH_PROGRESS_TRIGGER_SECONDS = 0;
+  const SEARCH_PROGRESS_TIMEOUT_SECONDS = 180;
 
   function startSearchProgressPercentTimer(blockEl) {
     // Live-updates the bar's fill width + percentage text every second,
@@ -2213,11 +2341,11 @@
 
       if (payload.search_progress) {
         // (SEARCH-PROGRESS UI) Arrives once, mid-stream, once the
-        // backend's own 40s-mark trigger finishes generating the
-        // query-aware status copy — replaces the plain spinner with the
-        // richer in-progress design and starts its own live percentage
-        // timer. Never interferes with the ongoing delta accumulation
-        // above; this is purely a visual swap of the loading state.
+        // backend's own trigger finishes generating the query-aware
+        // status copy — replaces the plain spinner with the richer
+        // in-progress design and starts its own live percentage timer.
+        // Never interferes with the ongoing delta accumulation above;
+        // this is purely a visual swap of the loading state.
         const loadingRow = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)}`);
         if (loadingRow) {
           if (phraseTimer) clearInterval(phraseTimer);
