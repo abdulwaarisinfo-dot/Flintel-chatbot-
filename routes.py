@@ -875,7 +875,22 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
     _timeout_fallback_answer()'s own behavior exactly, so the streamed
     answer stays consistent with the non-streaming path. If the initial
     call already found something, none of this polling ever runs — zero
-    change to that already-working case."""
+    change to that already-working case.
+
+    (DUPLICATE-REFRESH FIX) Before doing any of its own work,
+    event_generator() now checks `_is_owner_busy(owner_key)`. If a
+    Claude call for this SAME owner is already in flight — e.g. this
+    exact SSE connection got dropped and the browser's EventSource
+    reconnected, or the chat page was refreshed while the very first
+    stream request for this message was still running — this does NOT
+    start a second, independent `analyze_with_claude()` call. Instead it
+    waits (bounded by RESPONSE_TIMEOUT) for the in-flight call to finish
+    and cache the answer, then replays that cached answer exactly like
+    the existing `claude_answer already truthy` branch above does. Only
+    if the in-flight call never finishes within that window does this
+    fall through to running its own call, so a genuine stall can never
+    hang the page forever. See event_generator()'s own comment below for
+    the full rationale."""
     owner_key, _owner_type = get_owner(request)
     chat = get_chat_session(chat_id, owner_key)
 
@@ -962,6 +977,72 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
         # entire function, which would make the very first `if not
         # matched:` check below raise UnboundLocalError.
         nonlocal matched
+
+        # (DUPLICATE-REFRESH FIX) If this SAME owner already has a
+        # Claude call in flight (e.g. the original stream request that
+        # opened this SSE connection is still running its
+        # analyze_with_claude() call, and the browser reconnected/
+        # refreshed and opened a SECOND stream for the exact same
+        # topic_key), do NOT start a second, independent
+        # analyze_with_claude() call here — that would double-bill
+        # Claude and race with the original call over which one's
+        # answer gets saved/cached last (last-write-wins on
+        # save_claude_answer_to_chat()).
+        #
+        # Instead, this connection waits (bounded by RESPONSE_TIMEOUT,
+        # same ceiling used everywhere else in this route) for the
+        # in-flight call to finish and cache the answer, polling
+        # get_chat_session() every ~1s. The moment claude_answer shows
+        # up on the message (saved by whichever request actually owns
+        # the busy flag), this replays it exactly like the existing
+        # `claude_answer already truthy` branch above does — same
+        # delta/done event shape, so the frontend needs no changes to
+        # handle this path.
+        #
+        # If the in-flight call somehow never finishes within
+        # RESPONSE_TIMEOUT (a genuine stall/crash on the owning
+        # request), this falls through to running its OWN
+        # analyze_with_claude() call below rather than hanging forever —
+        # the busy flag itself is also self-healing via
+        # BUSY_FLAG_TIMEOUT_SECONDS in _is_owner_busy(), so a truly
+        # abandoned flag clears on its own regardless.
+        if _is_owner_busy(owner_key):
+            wait_deadline = time.time() + RESPONSE_TIMEOUT
+            resolved_answer = None
+            resolved_results = None
+            while time.time() < wait_deadline:
+                try:
+                    fresh_chat = get_chat_session(chat_id, owner_key)
+                    fresh_msg = next(
+                        (m for m in (fresh_chat or {}).get("messages", []) if m.get("topic_key") == topic_key),
+                        None,
+                    )
+                except Exception as exc:
+                    log.warning(f"Polling for in-flight answer failed for topic_key={topic_key}: {exc}")
+                    fresh_msg = None
+                if fresh_msg and fresh_msg.get("claude_answer"):
+                    resolved_answer = fresh_msg["claude_answer"]
+                    resolved_results = fresh_msg.get("results") or []
+                    break
+                if not _is_owner_busy(owner_key):
+                    # Owner is no longer busy but still no answer saved —
+                    # the in-flight call likely failed/cleared without
+                    # saving; stop waiting and fall through to running
+                    # this request's own call below instead of waiting
+                    # out the full deadline for nothing.
+                    break
+                time.sleep(1)
+
+            if resolved_answer is not None:
+                yield "retry: 86400000\n\n"
+                yield f"data: {json.dumps({'delta': resolved_answer})}\n\n"
+                yield f"data: {json.dumps({'done': True, 'results': resolved_results})}\n\n"
+                return
+            # else: fall through to the normal path below, which will
+            # itself set the busy flag and run its own Claude call —
+            # this only happens if the original in-flight call never
+            # actually completed/saved anything within the wait window.
+
         # (PER-USER BUSY LOCK) Set right at the start of the whole
         # generator, cleared in the finally below — covers every exit
         # path (the early error-return, and the normal completion path
