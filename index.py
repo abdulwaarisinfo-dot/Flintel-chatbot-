@@ -35,6 +35,17 @@ by name, never by talking to the API directly.
 no longer has a "closest match" tier-3 fallback — see that function's
 own docstring in logics.py. Nothing in this file needed to change for
 that either.
+
+(DUPLICATE-REFRESH FIX) `_fill_in_message_outputs()` now checks
+`_is_owner_busy()` before scheduling either of the two Claude-calling
+branches (the normal "needs answer" branch and the RESPONSE_TIMEOUT /
+tier-3 fallback branch) — previously only `_set_owner_busy()` ran there,
+with nothing checking whether a Claude call for this owner was already
+in flight. A refresh/poll landing on a message whose `claude_answer` was
+still `None` would therefore schedule a brand-new, independent Claude
+call every single time, double-billing Claude and racing with the
+original call over whose result gets saved last. See each call site
+below for the full rationale — no other logic in this module changed.
 """
 
 import re
@@ -1109,6 +1120,22 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
     For a message that DOES have a stored evidence budget, matching now
     retrieves up to that many posts instead of the static default.
 
+    (DUPLICATE-REFRESH FIX) Both places in this function that used to
+    unconditionally call `_set_owner_busy()` and then schedule/run a
+    Claude-calling function now first check `_is_owner_busy(owner_key)`.
+    If this owner already has an in-flight Claude call (from an earlier
+    pass over this same message — e.g. a refresh/poll that landed here
+    while the original call for this message, or another message from
+    the same owner, was still running), this simply skips scheduling a
+    SECOND one and moves on. The message's `claude_answer` stays `None`
+    until the in-flight call finishes and saves it (or, if that call
+    errors out and clears the busy flag without saving anything, the
+    VERY NEXT call to this function will see the owner is no longer busy
+    and try again normally). This can only ever skip a redundant call —
+    it never blocks or delays the original one, and it never changes
+    what gets computed once a call is actually allowed to run. See each
+    call site below for the specific rationale.
+
     OTHERWISE COMPLETELY UNCHANGED — this function calls
     get_matched_signals() and analyze_with_claude() exactly as before,
     using whatever `keywords` was already stored on the message by
@@ -1213,15 +1240,27 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
             # _timeout_fallback_answer() (which does its own tier-3
             # refinement internally — see that function's docstring).
             if needs_answer and elapsed >= RESPONSE_TIMEOUT:
+                # (DUPLICATE-REFRESH FIX) A refresh/poll hitting this exact
+                # timeout branch again — very plausible here specifically,
+                # since the message is ALREADY past RESPONSE_TIMEOUT, so
+                # every subsequent reload keeps landing on this same
+                # branch — must not fire a second _timeout_fallback_answer()
+                # while one is still running for this owner. Only proceed
+                # (and only then mark the owner busy) if no Claude call for
+                # this owner is currently in flight; otherwise skip this
+                # pass entirely and let the in-flight call finish and save
+                # its own answer, which the next reload will simply see.
+                #
                 # (BUSY-LOCK RACE FIX) Set synchronously, in THIS request,
                 # before scheduling/running the work — not inside the
                 # scheduled function itself, which could run after the
                 # response has already gone out to the browser.
-                _set_owner_busy(owner_key)
-                if background_tasks is not None:
-                    background_tasks.add_task(_timeout_fallback_answer, chat_id, owner_key, msg["topic_key"], msg["query"], msg.get("keywords", []), msg.get("match_phrases"), msg.get("evidence_required"))
-                else:
-                    _timeout_fallback_answer(chat_id, owner_key, msg["topic_key"], msg["query"], msg.get("keywords", []), msg.get("match_phrases"), msg.get("evidence_required"))
+                if not _is_owner_busy(owner_key):
+                    _set_owner_busy(owner_key)
+                    if background_tasks is not None:
+                        background_tasks.add_task(_timeout_fallback_answer, chat_id, owner_key, msg["topic_key"], msg["query"], msg.get("keywords", []), msg.get("match_phrases"), msg.get("evidence_required"))
+                    else:
+                        _timeout_fallback_answer(chat_id, owner_key, msg["topic_key"], msg["query"], msg.get("keywords", []), msg.get("match_phrases"), msg.get("evidence_required"))
             continue
 
         # (BUGFIX PACK #1) Track whatever answer text is/becomes available
@@ -1236,16 +1275,33 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
         # behavior) when no background_tasks was given, or scheduled to
         # run AFTER the response is sent when it was.
         #
+        # (DUPLICATE-REFRESH FIX) A refresh/poll for a message whose
+        # answer is still being generated (claude_answer still None) used
+        # to reach this exact branch again on every reload, since nothing
+        # here checked whether a Claude call for this SAME owner was
+        # already in flight — only _set_owner_busy() ran, never
+        # _is_owner_busy(). That silently fired a second, independent
+        # analyze_with_claude() call for the same message: double Claude
+        # billing, and a race on which call's result gets saved last.
+        # Now, if this owner is already busy (an earlier call for this or
+        # another message from them hasn't finished yet), this request is
+        # simply skipped — no new Claude call, no _set_owner_busy()
+        # re-set — and the NEXT reload/poll will see claude_answer still
+        # None and try again, until the in-flight call finishes and
+        # clears the flag itself. This can only ever SKIP a redundant
+        # call; it never blocks the original one.
+        #
         # (BUSY-LOCK RACE FIX) Set synchronously, in THIS request, before
         # scheduling/running the work — closes the small window where a
         # second request from the same owner could arrive between "the
         # response is sent" and "the background task actually starts",
         # since the flag document wouldn't exist yet during that window.
-        _set_owner_busy(owner_key)
-        if background_tasks is not None:
-            background_tasks.add_task(_complete_message_answer_and_results, chat_id, owner_key, msg, matched)
-        else:
-            _complete_message_answer_and_results(chat_id, owner_key, msg, matched)
+        if not _is_owner_busy(owner_key):
+            _set_owner_busy(owner_key)
+            if background_tasks is not None:
+                background_tasks.add_task(_complete_message_answer_and_results, chat_id, owner_key, msg, matched)
+            else:
+                _complete_message_answer_and_results(chat_id, owner_key, msg, matched)
 
 
 import routes  # noqa: F401  (registers every route on `app`)
