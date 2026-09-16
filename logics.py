@@ -661,6 +661,20 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
         if not _signal_platform_matches(doc, targeting_platform):
             continue
 
+        # (TEXT-REQUIRED AT PICK-TIME) post_text is mandatory — a doc
+        # with no post_text is never counted as a match, even if it
+        # matched on title/keyword. This check has to live HERE, inside
+        # the matching loop, rather than later in build_claude_post_
+        # context() (logics.py's own Claude-context builder): doing it
+        # here means an evidence_required budget (e.g. 50) is always
+        # sized against text-guaranteed posts, and the timeout/Google-
+        # fallback "did we actually find anything" check (which looks at
+        # whether this function's own result is empty) is always judged
+        # against real, analyzable posts rather than title-only stubs
+        # that would silently get dropped downstream anyway.
+        if not post_text:
+            continue
+
         post_url  = _first_present(doc, _URL_FIELD_CANDIDATES)
         platform  = _first_present(doc, _PLATFORM_FIELD_CANDIDATES) or _infer_platform_from_url(post_url)
 
@@ -1215,13 +1229,23 @@ def build_claude_post_context(matched_signals: list) -> list:
     """Strips a matched-signals list (which has title/post_text/post_url/
     platform, used for post cards) down to ONLY title + text — this is the
     single point where post_url and platform are dropped before anything
-    is sent to Claude. Skips a post entirely if it has neither a title nor
-    any text to offer."""
+    is sent to Claude.
+
+    (TEXT-REQUIRED FILTER) Skips a post unless it has real post_text.
+    Title alone is no longer enough to reach Claude — this drops
+    title-only stub entries (e.g. a Google-fallback stub whose "title"
+    is just a subreddit name and whose post_text is always None) before
+    they're ever handed to analyze_with_claude() / analyze_with_claude_
+    stream(). This can only ever REMOVE posts from what Claude sees; it
+    never adds or alters anything else. Everything downstream of this
+    function (matching, evidence-budget sizing, merge_matched_and_
+    google_results(), the post-card `results` a user actually sees) is
+    untouched — only Claude's own analysis input is narrowed here."""
     posts = []
     for m in matched_signals or []:
         title = (m.get("title") or "").strip()
         text  = (m.get("post_text") or "").strip()
-        if not title and not text:
+        if not text:
             continue
         posts.append({"title": title, "text": text})
     return posts
