@@ -1359,10 +1359,114 @@
   }
 
   function renderSourceList(data, container) {
-    const summary = document.createElement('p');
-    summary.className = 'overview-summary';
-    summary.textContent = data.summary || '';
-    container.appendChild(summary);
+    // (PROMPT UPGRADE — BUG 1 FIX) The analysis prompt now sends a much
+    // richer research-report shape (research_objective, executive_summary,
+    // key_findings, detailed_findings, market_pattern, conclusion,
+    // business_insight, followup_question as a single string) instead of
+    // the old flat data.summary/data.followups. Every new field is
+    // rendered here using ONLY existing classes already defined in
+    // <style id="app-styles"> (.block-text, .overview-summary,
+    // .metrics-section-title, .block-title, plus the existing fieldRow()
+    // helper for .post-field/.field-dot/.field-text rows) — no new class,
+    // no new CSS. Each block only renders when its field is actually
+    // present, per that field's own docstring bullet. Backward compatible:
+    // an older/cached answer that still has data.summary/data.followups
+    // (and nothing else new) renders exactly as it did before this fix.
+
+    // 1. research_objective -> .block-text
+    if (data.research_objective) {
+      const p = document.createElement('p');
+      p.className = 'block-text';
+      p.style.marginBottom = '20px';
+      p.textContent = data.research_objective;
+      container.appendChild(p);
+    }
+
+    // 2. executive_summary -> .overview-summary (same slot data.summary
+    // used to fill; data.summary is the backward-compat fallback).
+    const summaryText = data.executive_summary || data.summary;
+    if (summaryText) {
+      const summary = document.createElement('p');
+      summary.className = 'overview-summary';
+      summary.textContent = summaryText;
+      container.appendChild(summary);
+    }
+
+    // 3. key_findings -> per finding: .metrics-section-title (the finding
+    // itself) + existing fieldRow() rows for evidence_type/signal_strength/
+    // impact (skips whichever sub-fields aren't present on that finding).
+    (data.key_findings || []).forEach((kf) => {
+      if (!kf || !kf.finding) return;
+      const heading = document.createElement('p');
+      heading.className = 'metrics-section-title';
+      heading.textContent = kf.finding;
+      container.appendChild(heading);
+      if (kf.evidence_type) fieldRow(container, 'Evidence Type', kf.evidence_type);
+      if (kf.signal_strength) fieldRow(container, 'Signal Strength', kf.signal_strength);
+      if (kf.impact) fieldRow(container, 'Impact', kf.impact);
+    });
+
+    // 4. detailed_findings -> per item: .block-title (title) +
+    // .block-text (what_evidence_shows, why_it_matters).
+    (data.detailed_findings || []).forEach((df) => {
+      if (!df) return;
+      if (df.title) {
+        const title = document.createElement('p');
+        title.className = 'block-title';
+        title.textContent = df.title;
+        container.appendChild(title);
+      }
+      if (df.what_evidence_shows) {
+        const p = document.createElement('p');
+        p.className = 'block-text';
+        p.textContent = df.what_evidence_shows;
+        container.appendChild(p);
+      }
+      if (df.why_it_matters) {
+        const p = document.createElement('p');
+        p.className = 'block-text';
+        p.textContent = df.why_it_matters;
+        container.appendChild(p);
+      }
+    });
+
+    // 5. market_pattern -> .block-title + .block-text
+    if (data.market_pattern) {
+      const title = document.createElement('p');
+      title.className = 'block-title';
+      title.textContent = 'Market Pattern';
+      container.appendChild(title);
+      const p = document.createElement('p');
+      p.className = 'block-text';
+      p.textContent = data.market_pattern;
+      container.appendChild(p);
+    }
+
+    // 6. conclusion -> .block-title + .block-text
+    if (data.conclusion) {
+      const title = document.createElement('p');
+      title.className = 'block-title';
+      title.textContent = 'Conclusion';
+      container.appendChild(title);
+      const p = document.createElement('p');
+      p.className = 'block-text';
+      p.textContent = data.conclusion;
+      container.appendChild(p);
+    }
+
+    // 7. business_insight (optional) -> .block-title + .block-text
+    if (data.business_insight) {
+      const title = document.createElement('p');
+      title.className = 'block-title';
+      title.textContent = 'Business Insight';
+      container.appendChild(title);
+      const p = document.createElement('p');
+      p.className = 'block-text';
+      p.textContent = data.business_insight;
+      container.appendChild(p);
+    }
+
+    // 8. existing divider + platforms list — logic completely unchanged.
     const divider = document.createElement('div');
     divider.className = 'section-divider no-top-margin';
     container.appendChild(divider);
@@ -1371,14 +1475,39 @@
     } else {
       renderPlatformsList(data.platforms, container);
     }
-    renderFollowupChips(data.followups, container);
+
+    // 9. followup_question (single string) -> reuse the existing,
+    // unchanged renderFollowupChips() by wrapping it in a 1-item array.
+    // Backward compat: data.followups (already an array) still works.
+    if (data.followup_question) {
+      renderFollowupChips([data.followup_question], container);
+    } else if (data.followups) {
+      renderFollowupChips(data.followups, container);
+    }
   }
 
   function renderComparison(data, container) {
-    const summary = document.createElement('p');
-    summary.className = 'overview-summary';
-    summary.textContent = data.summary || '';
-    container.appendChild(summary);
+    // (PROMPT UPGRADE — BUG 2 FIX) Same field-shape upgrade as
+    // renderSourceList() above — see that function's own comment for the
+    // full rationale. research_objective/market_pattern/conclusion are
+    // new, top-level, optional fields; subj.key_findings is the SAME
+    // per-finding shape used in renderSourceList()'s key_findings.
+    // Backward compatible: data.summary/data.followups still work when
+    // the newer fields aren't present.
+    const summaryText = data.executive_summary || data.summary;
+    if (summaryText) {
+      const summary = document.createElement('p');
+      summary.className = 'overview-summary';
+      summary.textContent = summaryText;
+      container.appendChild(summary);
+    }
+    if (data.research_objective) {
+      const p = document.createElement('p');
+      p.className = 'block-text';
+      p.style.marginBottom = '20px';
+      p.textContent = data.research_objective;
+      container.appendChild(p);
+    }
     (data.subjects || []).forEach((subj, si) => {
       const heading = document.createElement('p');
       heading.className = 'metrics-section-title';
@@ -1392,6 +1521,16 @@
         line.textContent = `Positive ${s.positive || '0%'} · Neutral ${s.neutral || '0%'} · Negative ${s.negative || '0%'}`;
         container.appendChild(line);
       }
+      (subj.key_findings || []).forEach((kf) => {
+        if (!kf || !kf.finding) return;
+        const kfHeading = document.createElement('p');
+        kfHeading.className = 'metrics-section-title';
+        kfHeading.textContent = kf.finding;
+        container.appendChild(kfHeading);
+        if (kf.evidence_type) fieldRow(container, 'Evidence Type', kf.evidence_type);
+        if (kf.signal_strength) fieldRow(container, 'Signal Strength', kf.signal_strength);
+        if (kf.impact) fieldRow(container, 'Impact', kf.impact);
+      });
       renderPlatformsList(subj.platforms, container);
       if (si < (data.subjects || []).length - 1) {
         const div = document.createElement('div');
@@ -1399,7 +1538,31 @@
         container.appendChild(div);
       }
     });
-    renderFollowupChips(data.followups, container);
+    if (data.market_pattern) {
+      const title = document.createElement('p');
+      title.className = 'block-title';
+      title.textContent = 'Market Pattern';
+      container.appendChild(title);
+      const p = document.createElement('p');
+      p.className = 'block-text';
+      p.textContent = data.market_pattern;
+      container.appendChild(p);
+    }
+    if (data.conclusion) {
+      const title = document.createElement('p');
+      title.className = 'block-title';
+      title.textContent = 'Conclusion';
+      container.appendChild(title);
+      const p = document.createElement('p');
+      p.className = 'block-text';
+      p.textContent = data.conclusion;
+      container.appendChild(p);
+    }
+    if (data.followup_question) {
+      renderFollowupChips([data.followup_question], container);
+    } else if (data.followups) {
+      renderFollowupChips(data.followups, container);
+    }
   }
 
   function renderTrendReport(data, container) {
@@ -1499,6 +1662,23 @@
         block.appendChild(row);
       });
       container.appendChild(block);
+    } else if (data.conclusion) {
+      // (PROMPT UPGRADE — BUG 3 FIX) data.takeaways is no longer sent by
+      // the backend — data.conclusion (a plain string) replaces it. Only
+      // used when takeaways is genuinely absent, so an older/cached
+      // answer that DOES have takeaways still renders exactly as before
+      // this fix. Same block-title/block-text pattern already used for
+      // "Trend"/"Interpretation" above — no new class introduced.
+      const block = document.createElement('div');
+      block.innerHTML = `<p class="block-title">Conclusion</p><p class="block-text"></p>`;
+      block.querySelector('.block-text').textContent = data.conclusion;
+      container.appendChild(block);
+    }
+    if (data.followup_question) {
+      // (PROMPT UPGRADE — BUG 3 FIX) followup_question is now a single
+      // string instead of an array — wrap it so the existing, unchanged
+      // renderFollowupChips() (which expects an array) still works.
+      renderFollowupChips([data.followup_question], container);
     }
   }
 
@@ -1648,13 +1828,14 @@
     renderClosestMatchesFromResults(matchedResults, container);
   }
 
-  // (SEARCH-PROGRESS UI) Same 40s/80s window flintel.py's
-  // GOOGLE_FALLBACK_TRIGGER_SECONDS / index.py's RESPONSE_TIMEOUT use —
-  // kept here as plain constants (not fetched from the backend) since
+  // (SEARCH-PROGRESS UI) Mirrors flintel.py's should_trigger_immediately()
+  // (fires right away, at 0s — Google-fallback/search-progress no longer
+  // wait for any gated mark) and config.py's RESPONSE_TIMEOUT (now 180s)
+  // — kept here as plain constants (not fetched from the backend) since
   // they're stable config values; if either one is ever changed via its
   // own env var, update these two to match.
-  const SEARCH_PROGRESS_TRIGGER_SECONDS = 40;
-  const SEARCH_PROGRESS_TIMEOUT_SECONDS = 80;
+  const SEARCH_PROGRESS_TRIGGER_SECONDS = 0;
+  const SEARCH_PROGRESS_TIMEOUT_SECONDS = 180;
 
   function startSearchProgressPercentTimer(blockEl) {
     // Live-updates the bar's fill width + percentage text every second,
@@ -1838,6 +2019,80 @@
     container.appendChild(divider);
   }
 
+  function extractJsonObjectFromText(text) {
+    // (RESILIENT JSON-EXTRACTION) Mirrors logics.py's own
+    // _extract_json_object_from_text() — needed here specifically so
+    // OLD, already-cached messages saved BEFORE that backend fix (i.e.
+    // a message whose claude_answer already has leaked reasoning text
+    // baked into it in the database) still render correctly, not just
+    // brand-new ones. A backend fix alone can only clean up answers
+    // generated AFTER it shipped — this is what makes that fix
+    // retroactive for chats that already exist.
+    //
+    // Tries, in order: (1) the text as-is (fast path for already-clean
+    // JSON), (2) a ```json fence anywhere in the text, (3) a balanced
+    // {...} object starting at each "{" found in the text in turn,
+    // correctly skipping over braces that appear inside quoted string
+    // values (tracking string/escape state character-by-character, the
+    // same reasoning Python's own JSON decoder applies) so a stray "{"
+    // inside a sentence never gets mistaken for the real object's
+    // start. Returns the matched JSON substring on success, or the
+    // original text completely unchanged if nothing parses — this can
+    // only ever help, never make a response worse than doing nothing.
+    if (!text || typeof text !== 'string') return text;
+    const trimmed = text.trim();
+
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (parsed && typeof parsed === 'object') return trimmed;
+    } catch (e) { /* fall through */ }
+
+    const fenceMatch = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/i);
+    if (fenceMatch) {
+      const fenced = fenceMatch[1].trim();
+      try {
+        const parsed = JSON.parse(fenced);
+        if (parsed && typeof parsed === 'object') return fenced;
+      } catch (e) { /* fall through */ }
+    }
+
+    let searchFrom = 0;
+    while (true) {
+      const start = trimmed.indexOf('{', searchFrom);
+      if (start === -1) break;
+
+      let depth = 0;
+      let inString = false;
+      let escapeNext = false;
+      let end = -1;
+
+      for (let i = start; i < trimmed.length; i++) {
+        const ch = trimmed[i];
+        if (escapeNext) { escapeNext = false; continue; }
+        if (ch === '\\') { escapeNext = true; continue; }
+        if (ch === '"') { inString = !inString; continue; }
+        if (inString) continue;
+        if (ch === '{') depth++;
+        else if (ch === '}') {
+          depth--;
+          if (depth === 0) { end = i; break; }
+        }
+      }
+
+      if (end !== -1) {
+        const candidate = trimmed.slice(start, end + 1);
+        try {
+          const parsed = JSON.parse(candidate);
+          if (parsed && typeof parsed === 'object') return candidate;
+        } catch (e) { /* try the next "{" */ }
+      }
+
+      searchFrom = start + 1;
+    }
+
+    return text;
+  }
+
   function renderMarkdownAnswers(root) {
     root.querySelectorAll('.answer-wrap').forEach((wrap) => {
       const rawEl = wrap.querySelector('.answer-raw');
@@ -1859,12 +2114,14 @@
       // render) — never for a JSON.parse failure or an unknown-format
       // fallback. Identical fix to chat.html's renderStructuredAnswer().
       //
-      // Strip accidental ```json / ``` code fences before parsing — Claude
-      // is told never to add them, but models don't always comply perfectly,
-      // and without this an occasional fenced response silently falls
-      // through to a raw-text/code-block display instead of rendering
-      // structured.
-      const cleaned = raw.trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '').trim();
+      // Strip accidental preamble/fences before parsing — Claude is told
+      // never to add reasoning text or code fences, but models don't
+      // always comply perfectly, and an OLDER, already-cached message
+      // might have been saved with leaked reasoning baked into it before
+      // that backend fix shipped (see extractJsonObjectFromText()'s own
+      // docstring above) — so this now uses that same resilient
+      // extraction instead of a plain fence-strip, covering both cases.
+      const cleaned = extractJsonObjectFromText(raw.trim());
       let data = null;
       try { data = JSON.parse(cleaned); } catch (e) { data = null; }
 
