@@ -20,6 +20,13 @@ Every function below is pure (no Mongo connection created here, no
 FastAPI route, no direct Claude API call) — index.py owns all of that and
 calls into this module with what it already has (its own signals_collection,
 its own already-parsed router output, etc.), exactly as a drop-in.
+
+(TEXT-REQUIRED AT PICK-TIME) get_unfiltered_matched_signals() below now
+requires a doc to have real post_text before it is counted as a match at
+all — moved into the matching loop itself (same fix, same reasoning, as
+logics.py's get_matched_signals()), rather than being left to a later
+Claude-context-building stage. See that function's own docstring/inline
+comment for the full rationale.
 """
 
 import os
@@ -231,6 +238,17 @@ def get_unfiltered_matched_signals(signals_collection, since_days, targeting_pla
     get_matched_signals(), so post cards behave identically whether
     keyword-based or unfiltered.
 
+    (TEXT-REQUIRED AT PICK-TIME) A doc is never counted as a match unless
+    it has real post_text — this is checked here, inside the matching
+    loop, right after the platform filter and before post_url/platform
+    are even looked up. See the inline comment at that check for why this
+    has to live at pick-time rather than later (e.g. in logics.py's
+    build_claude_post_context()): keeping it here means `limit` (and any
+    caller-supplied evidence budget) is always sized against text-
+    guaranteed posts, and this function's own "did anything match" signal
+    (its return value being empty or not) is always judged against real,
+    analyzable posts rather than title-only stubs.
+
     Accepts the already-connected `signals_collection` object as a
     parameter — never creates its own Mongo connection."""
     effective_limit = limit if isinstance(limit, int) and limit > 0 else UNFILTERED_DEFAULT_LIMIT
@@ -285,6 +303,15 @@ def get_unfiltered_matched_signals(signals_collection, since_days, targeting_pla
             continue
 
         if not matcher(doc, targeting_platform):
+            continue
+
+        # (TEXT-REQUIRED AT PICK-TIME) Same reasoning as
+        # get_matched_signals() in logics.py — post_text is mandatory,
+        # checked here at pick-time (before a doc is ever appended to
+        # `matched`), not later at Claude-context-building time. A doc
+        # with no post_text simply never counts as a match, even if it
+        # passed the time-window and platform checks above.
+        if not post_text:
             continue
 
         post_url = _first_present(doc, _URL_FIELD_CANDIDATES)
