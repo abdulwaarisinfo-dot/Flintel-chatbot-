@@ -929,7 +929,15 @@
         <span class="platform-icon-badge"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="1.6"/></svg></span>
         {%- endif -%}
       {%- endmacro %}
-
+{# DEAD-CODE NOTE: chat is always None on GET / (home() in index.py
+   always passes chat=None by design, per its own "BARE-URL HOME FIX"
+   comment) so this block below never executes on this route — the bare
+   home page always shows a fresh, empty screen. Real chat display (a
+   populated chat with real messages) only ever happens via GET
+   /chat/{chat_id}, rendered by chat.html, which has its own correct,
+   reachable version of this same block. This is left in place only in
+   case a future change to home() ever passes a populated chat —
+   nothing here currently needs fixing. #}
       {% if chat and chat.messages %}
         {% for msg in chat.messages %}
         <div class="turn-block" data-topic-key="{{ msg.topic_key or '' }}"{% if pending_stream_topic_key and msg.topic_key == pending_stream_topic_key %} data-pending-stream="true"{% endif %}>
