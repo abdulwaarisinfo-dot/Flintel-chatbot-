@@ -8,7 +8,7 @@ actually shrinks index.py's size/load; index.py keeps only FastAPI app
 wiring plus chat/session/Mongo orchestration (flintel_users /
 flintel_users_chat).
 
-MOVED HERE VERBATIM (no logic change) from index.py: normalize_topic_key,
+MOVED HERE VERBATIM (no logic change) from index.py: normalize_topic_key, 
 normalize_platform, keyword-fallback generation, job/signal Mongo reads,
 every signal-matching helper (including phrase-matching), get_matched_
 signals() itself (matching rules 100% UNCHANGED), the whole Claude
