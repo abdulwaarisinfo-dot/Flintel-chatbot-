@@ -52,6 +52,7 @@ import re
 import json
 import time
 from datetime import datetime, timedelta, timezone
+from typing import Optional
 
 import httpx
 
@@ -719,7 +720,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 # completely untouched by this feature.
 # ─────────────────────────────────────────────────────────────────────────────
 
-def get_cached_topic_evidence(chat_id: str, topic_key: str) -> dict | None:
+def get_cached_topic_evidence(chat_id: str, topic_key: str) -> Optional[dict]:
     """Reads the already-cached evidence posts for this chat + topic.
     Returns None if there's nothing cached yet (first time this topic is
     asked about in this chat)."""
@@ -737,10 +738,17 @@ def get_cached_topic_evidence(chat_id: str, topic_key: str) -> dict | None:
 def save_topic_evidence_cache(chat_id: str, owner_key: str, topic_key: str,
                                 posts: list, keywords: list, match_phrases: list = None):
     """Upserts the cache — the FULL posts list is overwritten each time
-    (the caller has already merged old + new posts before calling this)."""
+    (the caller has already merged old + new posts before calling this).
+
+    (CACHE TRUNCATION ORDER FIX) get_evidence_with_topup() always builds
+    `posts` as [older cached posts..., newer freshly-fetched posts...] —
+    so when the list needs to be capped, keeping the FIRST N would keep
+    the OLDEST posts and silently drop the newest, most-recently-
+    discovered ones once a topic's evidence count reaches the cap. Slicing
+    from the end instead keeps the LAST N (i.e. the newest) posts."""
     if not chat_id or not topic_key:
         return
-    capped_posts = (posts or [])[:TOPIC_CACHE_MAX_EVIDENCE]
+    capped_posts = (posts or [])[-TOPIC_CACHE_MAX_EVIDENCE:]
     now = datetime.now(timezone.utc)
     try:
         topic_evidence_cache_collection.update_one(
@@ -775,8 +783,10 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
       3. If the cache is short (or empty), fetch only the DELTA of new
          evidence needed (matcher_fn gets a limit of
          max(evidence_required, cached_count + TOPIC_CACHE_MIN_TOPUP)),
-         de-duplicate the old + new posts, update the cache, and return
-         the full merged list.
+         de-duplicate the old + new posts, update the cache ONLY if that
+         actually added something new (skips a wasted write when a
+         repeated poll finds nothing new yet), and return the full
+         merged list.
 
     `matcher_fn` is get_matched_signals() itself, passed in via dependency
     injection, so this function never duplicates its own matching-query
@@ -812,7 +822,16 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
             seen_urls.add(url)
         merged.append(post)
 
-    save_topic_evidence_cache(chat_id, owner_key, topic_key, merged, keywords, match_phrases)
+    # (REDUNDANT-WRITE FIX) Only write to the cache when something
+    # genuinely new was actually added. Without this, a caller that
+    # polls repeatedly while nothing new is being found yet (e.g.
+    # stream_answer()'s own polling loop, which calls this function
+    # every ~2s while waiting for evidence to show up) would trigger a
+    # full Mongo write on every single poll, even when the top-up fetch
+    # keeps returning nothing new — this skips that write while still
+    # always returning the correct, up-to-date merged list.
+    if len(merged) > cached_count:
+        save_topic_evidence_cache(chat_id, owner_key, topic_key, merged, keywords, match_phrases)
     return merged
 
 
