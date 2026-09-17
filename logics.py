@@ -2821,6 +2821,9 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
         # honest branch (untouched) — that IS the correct "I genuinely
         # found nothing" outcome, never a fabricated "closest match" offer.
         extra_ctx_parts = [continuity_ctx] if continuity_ctx else []
+        # (MIXED EVIDENCE HANDLING) Always added — same reminder as
+        # _complete_message_answer_and_results() in index.py.
+        extra_ctx_parts.append(flintel.build_mixed_evidence_note())
         if google_results:
             extra_ctx_parts.append(flintel.build_combined_source_context(len(matched), len(google_results)))
         extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
