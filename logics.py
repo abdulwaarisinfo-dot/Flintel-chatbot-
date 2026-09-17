@@ -59,7 +59,7 @@ import flintel
 import website_intelligence
 import google as google_search   # the new google.py module
 
-from database import jobs_collection, signals_collection, google_posts_collection
+from database import jobs_collection, signals_collection, google_posts_collection, topic_evidence_cache_collection
 
 from config import (
     MAX_KEYWORDS, CLAUDE_MAX_KEYWORDS, MAX_MATCHED_RESULTS,
@@ -72,6 +72,7 @@ from config import (
     CLAUDE_ROUTER_MAX_TOKENS, CLAUDE_TOPIC_RESOLVER_MAX_TOKENS,
     MAX_WEBSITE_KEYWORDS, WEBSITE_FETCH_TIMEOUT_SECONDS,
     WEBSITE_FETCH_MAX_CHARS, CLAUDE_WEBSITE_KEYWORD_MAX_TOKENS,
+    TOPIC_CACHE_MAX_EVIDENCE, TOPIC_CACHE_MIN_TOPUP,
 )
 
 import logging
@@ -704,6 +705,118 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# TOPIC EVIDENCE CACHE (per-chat, per-topic post reuse)
+#
+# A caching layer ON TOP OF get_matched_signals() — never a reimplementation
+# of its matching rules. When the same topic (chat_id + topic_key) is asked
+# about repeatedly in the same chat, this avoids re-querying Mongo and
+# re-sending Claude the exact same posts on every follow-up: cached posts
+# are reused as-is when they already satisfy the evidence budget, and only
+# the DELTA is fetched (via the real get_matched_signals(), passed in as
+# matcher_fn) when more depth is genuinely requested. Cache-awareness is
+# wired in index.py/routes.py, at the call sites that already call
+# get_matched_signals() directly — get_matched_signals() itself is
+# completely untouched by this feature.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def get_cached_topic_evidence(chat_id: str, topic_key: str) -> dict | None:
+    """Reads the already-cached evidence posts for this chat + topic.
+    Returns None if there's nothing cached yet (first time this topic is
+    asked about in this chat)."""
+    if not chat_id or not topic_key:
+        return None
+    try:
+        return topic_evidence_cache_collection.find_one(
+            {"chat_id": chat_id, "topic_key": topic_key}, {"_id": 0}
+        )
+    except Exception as exc:
+        log.warning(f"Topic-evidence cache read failed for topic_key={topic_key}: {exc}")
+        return None
+
+
+def save_topic_evidence_cache(chat_id: str, owner_key: str, topic_key: str,
+                                posts: list, keywords: list, match_phrases: list = None):
+    """Upserts the cache — the FULL posts list is overwritten each time
+    (the caller has already merged old + new posts before calling this)."""
+    if not chat_id or not topic_key:
+        return
+    capped_posts = (posts or [])[:TOPIC_CACHE_MAX_EVIDENCE]
+    now = datetime.now(timezone.utc)
+    try:
+        topic_evidence_cache_collection.update_one(
+            {"chat_id": chat_id, "topic_key": topic_key},
+            {"$set": {
+                "chat_id": chat_id,
+                "topic_key": topic_key,
+                "owner_key": owner_key,
+                "posts": capped_posts,
+                "post_urls_seen": [p.get("post_url") for p in capped_posts if p.get("post_url")],
+                "evidence_count": len(capped_posts),
+                "keywords": keywords or [],
+                "match_phrases": match_phrases,
+                "updated_at": now,
+            }, "$setOnInsert": {"created_at": now}},
+            upsert=True,
+        )
+    except Exception as exc:
+        log.warning(f"Topic-evidence cache save failed for topic_key={topic_key}: {exc}")
+
+
+def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
+                              keywords: list, evidence_required: int,
+                              matcher_fn, match_phrases: list = None,
+                              targeting_platform: str = "all",
+                              since_days: int = None, unfiltered: bool = False) -> list:
+    """CORE FUNCTION — instead of running a fully-fresh query every time
+    the same topic is asked about again:
+      1. Check the cache first.
+      2. If the cache already has evidence_required (or more) posts,
+         return those cached posts as-is — no new Mongo query at all.
+      3. If the cache is short (or empty), fetch only the DELTA of new
+         evidence needed (matcher_fn gets a limit of
+         max(evidence_required, cached_count + TOPIC_CACHE_MIN_TOPUP)),
+         de-duplicate the old + new posts, update the cache, and return
+         the full merged list.
+
+    `matcher_fn` is get_matched_signals() itself, passed in via dependency
+    injection, so this function never duplicates its own matching-query
+    logic — it is purely the caching/top-up decision layer on top of it."""
+    cached = get_cached_topic_evidence(chat_id, topic_key)
+    cached_posts = (cached or {}).get("posts") or []
+    cached_count = len(cached_posts)
+
+    if cached_count >= (evidence_required or MIN_ANALYSIS_EVIDENCE):
+        # Cache already has enough — no new fetch needed.
+        return cached_posts
+
+    # A top-up is needed — fetch at least TOPIC_CACHE_MIN_TOPUP more than
+    # what's already cached, even if the raw delta would be smaller.
+    fetch_limit = max(
+        evidence_required or MIN_ANALYSIS_EVIDENCE,
+        cached_count + TOPIC_CACHE_MIN_TOPUP,
+    )
+    fresh_posts = matcher_fn(
+        topic_key, keywords, targeting_platform=targeting_platform,
+        since_days=since_days, unfiltered=unfiltered,
+        match_phrases=match_phrases, limit=fetch_limit,
+    )
+
+    # De-dup: old cached posts + new posts, keyed on post_url.
+    seen_urls = {p.get("post_url") for p in cached_posts if p.get("post_url")}
+    merged = list(cached_posts)
+    for post in fresh_posts:
+        url = post.get("post_url")
+        if url and url in seen_urls:
+            continue
+        if url:
+            seen_urls.add(url)
+        merged.append(post)
+
+    save_topic_evidence_cache(chat_id, owner_key, topic_key, merged, keywords, match_phrases)
+    return merged
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # CLAUDE ANALYSIS LAYER (v4, ANALYST-PROMPT UPGRADE)
 #
 # Matched signals never get dumped to the user directly. They're handed to
@@ -869,28 +982,42 @@ narrower scope, there's genuinely nothing relevant, say so plainly
 instead of re-offering what was already declined.
 
 ──────────────────────────────────────────────────────────────────────────
-DEPTH SCALES WITH THE QUESTION, NEVER WITH A FIXED LENGTH
+DEPTH LADDER — NON-NEGOTIABLE (this is the GOLDEN RULE)
 
-There is no fixed sentence/word cap on the executive summary or on any
-finding's explanation — write as much as the evidence and the question
-genuinely require, and no more. Do not pad. Do not compress a real,
-supportable finding down to one throwaway line just to keep things
-short, and do not stretch a thin finding into a long paragraph just to
-look thorough.
+Depth always comes from the actual quantity/quality of evidence you were
+given — never from an assumption that "the response should be long."
 
-- A simple, narrow question (few relevant posts, one clear angle) still
-  gets the full analyst treatment — proper findings, evidence type,
-  signal strength, references — just with fewer findings and shorter,
-  tighter explanations, because that's genuinely all the evidence
-  supports. Depth per finding does not disappear just because the
-  question is simple.
-- A broad, complex question (many posts, several distinct angles,
-  comparisons, trends, or recurring themes) gets a proportionally fuller
-  report — more findings, more detailed explanation per finding — because
-  that is what a real analyst would produce for a question of that
-  scope.
-- In every case: explain what the evidence MEANS, don't just restate
-  what individual posts said.
+- 1-2 genuinely relevant posts -> a short, honest answer. Give the full
+  value of what you found, but say explicitly that this is only one or
+  two signals — never manufacture a fake broader pattern out of it.
+  Keep executive_summary to no more than 2-3 sentences, key_findings to
+  1 entry (2 at most), and OMIT market_pattern entirely (there genuinely
+  isn't a broader pattern in this case).
+- 3-10 relevant posts, one angle -> 1-2 genuine findings, each grounded
+  in its own evidence. Do not write a drawn-out executive_summary for
+  this much evidence.
+- 10+ relevant posts, multiple angles -> the full analyst-style report —
+  this is the only case where multiple key_findings, detailed_findings,
+  and market_pattern are genuinely justified.
+
+Never stretch thin evidence into something long. Never short-change
+strong evidence either. Depth per finding comes from the weight of its
+evidence, not from a fixed template.
+
+──────────────────────────────────────────────────────────────────────────
+PREDICTION / INTERPRETATION DISCIPLINE
+
+"market_pattern" and any other forward-looking interpretation are
+OPTIONAL, never mandatory. Only write one when the evidence genuinely
+supports it — present signal compared against a past baseline pointing
+to a grounded direction (e.g. "the current data shows X, the earlier
+baseline was Y, so this suggests Z is trending up") — and always hedge
+it: "suggests", "indicates", never stated as settled fact.
+
+If the evidence is too thin or too scattered to support a genuine
+direction, keep "market_pattern" short or OMIT it completely — never
+write a filler prediction just to fill the field. Not every single query
+needs a forced prediction.
 
 ──────────────────────────────────────────────────────────────────────────
 OUTPUT CONTRACT — STRICT JSON ONLY, no markdown code fences, no
