@@ -640,6 +640,27 @@ def build_combined_source_context(signal_count: int, google_count: int) -> str:
     )
 
 
+def build_mixed_evidence_note() -> str:
+    """(MIXED EVIDENCE HANDLING) A small, additive context string that
+    reminds analyze_with_claude() that when the evidence contains
+    conflicting/mixed signals (some posts positive, some negative, no
+    single clear one-sided pattern), both sides must be written out
+    explicitly and separately — never hidden or diluted into one. This
+    is a direct implementation of the FLINTEL Master Response Guide
+    (Section 8: "Mixed evidence -> explain both sides clearly").
+
+    Safe to always append — it's a short, general-purpose reminder, and
+    Claude will only find it relevant when the evidence is genuinely
+    mixed; otherwise it's simply ignored."""
+    return (
+        "Note: if the evidence shows genuinely mixed or conflicting "
+        "signals (some posts support one view, others contradict it), "
+        "explicitly present BOTH sides clearly and separately in your "
+        "findings/conclusion — never blend them into a single muted "
+        "average, and never silently favor one side."
+    )
+
+
 def build_google_fallback_answer_context(query: str, stub_count: int) -> str:
     """Mirrors the EXACT pattern of build_unfiltered_answer_context()
     above: returns a short instruction string index.py's
