@@ -968,6 +968,12 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
             )
 
             extra_ctx_parts = []
+            # (MIXED EVIDENCE HANDLING) Always added — a short, general
+            # reminder to explicitly write out both sides when the
+            # evidence is genuinely mixed/conflicting. Harmless when the
+            # evidence isn't mixed; Claude simply has no reason to act on
+            # it in that case.
+            extra_ctx_parts.append(flintel.build_mixed_evidence_note())
             if msg.get("unfiltered"):
                 extra_ctx_parts.append(
                     flintel.build_unfiltered_answer_context(
