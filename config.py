@@ -4,7 +4,7 @@ FLINTEL — CONFIGURATION
 Single place for every constant that used to live directly inside
 index.py's own config block. flintel.py, google.py, and website_
 intelligence.py stay fully self-contained exactly as they already are —
-each owns its own small config block, per their own module docstrings — 
+each owns its own small config block, per their own module docstrings —
 so none of THEIR constants live here; this file is index.py's config
 only.
 
@@ -52,6 +52,32 @@ MIN_ANALYSIS_EVIDENCE = int(os.getenv("MIN_ANALYSIS_EVIDENCE", "15"))
 # analysis evidence budget above. Referenced by CLAUDE_ANALYSIS_SYSTEM_
 # PROMPT's own "post-count limit" instruction instead of a bare literal.
 MAX_CHAT_EVIDENCE_POSTS = int(os.getenv("MAX_CHAT_EVIDENCE_POSTS", "7"))
+
+# ── Topic Evidence Cache (per-chat, per-topic post reuse) ────────────────
+# When the same topic (chat_id + topic_key) is asked about repeatedly, the
+# system reuses previously-cached posts instead of re-querying Mongo and
+# re-sending the same posts to Claude — new posts are only fetched when
+# evidence_required exceeds what's already cached.
+
+# Absolute ceiling on how many posts get stored per topic in the cache
+# collection. Mirrors MAX_ANALYSIS_EVIDENCE but stays a separate,
+# independently-configurable constant, same convention as every other
+# mirrored constant in this file, so cache and live-fetch limits never
+# accidentally collide with each other.
+TOPIC_CACHE_MAX_EVIDENCE = int(os.getenv("TOPIC_CACHE_MAX_EVIDENCE", "100"))
+
+# When the user asks for more depth and the new evidence_required exceeds
+# the already-cached count, the top-up fetch tries to bring in at least
+# this many new posts (the evidence_required - cached_count delta gets
+# clamped to this floor) — so a top-up is never a wasteful 1-2 post fetch
+# unless that's genuinely all that's needed.
+TOPIC_CACHE_MIN_TOPUP = int(os.getenv("TOPIC_CACHE_MIN_TOPUP", "5"))
+
+# How many days a cache entry stays valid — lets old, stale topic-evidence
+# caches automatically expire/get ignored when a very old chat is reopened
+# (the posts landscape will have changed by then). 0 or negative means
+# "never expire" (testing/debug only).
+TOPIC_CACHE_TTL_DAYS = int(os.getenv("TOPIC_CACHE_TTL_DAYS", "7"))
 
 # ── Auth / session ────────────────────────────────────────────────────────
 SESSION_SECRET_KEY = os.getenv("SESSION_SECRET_KEY", "dev-only-change-me")
