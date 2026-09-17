@@ -39,6 +39,7 @@ from index import (
     generate_fuzzy_keywords,
     enqueue_search_job,
     get_matched_signals,
+    get_evidence_with_topup,            # <-- TOPIC EVIDENCE CACHE: needed in stream_answer()
     analyze_with_claude,
     _call_claude,
     classify_and_maybe_chat,
@@ -953,14 +954,17 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
         return StreamingResponse(_cached(), media_type="text/event-stream")
 
     try:
-        matched = get_matched_signals(
-            topic_key,
-            msg.get("keywords", []),
+        matched = get_evidence_with_topup(
+            chat_id=chat_id,
+            owner_key=owner_key,
+            topic_key=topic_key,
+            keywords=msg.get("keywords", []),
+            evidence_required=effective_evidence_limit,
+            matcher_fn=get_matched_signals,
+            match_phrases=msg.get("match_phrases"),
             targeting_platform=msg.get("targeting_platform", "all"),
             since_days=msg.get("time_window_days"),
             unfiltered=msg.get("unfiltered", False),
-            match_phrases=msg.get("match_phrases"),
-            limit=effective_evidence_limit,
         )
     except Exception as exc:
         log.warning(f"Signal matching failed for streaming topic_key={topic_key}: {exc}")
@@ -1205,14 +1209,17 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     time.sleep(2)
 
                     try:
-                        matched = get_matched_signals(
-                            topic_key,
-                            msg.get("keywords", []),
+                        matched = get_evidence_with_topup(
+                            chat_id=chat_id,
+                            owner_key=owner_key,
+                            topic_key=topic_key,
+                            keywords=msg.get("keywords", []),
+                            evidence_required=effective_evidence_limit,
+                            matcher_fn=get_matched_signals,
+                            match_phrases=msg.get("match_phrases"),
                             targeting_platform=msg.get("targeting_platform", "all"),
                             since_days=msg.get("time_window_days"),
                             unfiltered=msg.get("unfiltered", False),
-                            match_phrases=msg.get("match_phrases"),
-                            limit=effective_evidence_limit,
                         )
                     except Exception as exc:
                         log.warning(f"Signal matching failed while polling for streaming topic_key={topic_key}: {exc}")
