@@ -89,6 +89,7 @@ from logics import (
     _extract_near_match_confidence, _NO_DATA_CLAUDE_FORMATS,
     _patch_post_urls_into_answer, _inject_website_context_into_answer,
     _finalize_answer_and_results, _timeout_fallback_answer,
+    get_evidence_with_topup,
     CLAUDE_BLOCKED_FALLBACK_REPLY, CLAUDE_CLARIFY_FALLBACK_REPLY,
     CLAUDE_CHAT_FALLBACK_SYSTEM_PROMPT,
 )
@@ -1174,14 +1175,17 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
         effective_evidence_limit = msg.get("evidence_required")
 
         try:
-            matched = get_matched_signals(
-                msg["topic_key"],
-                msg.get("keywords", []),
+            matched = get_evidence_with_topup(
+                chat_id=chat_id,
+                owner_key=owner_key,
+                topic_key=msg["topic_key"],
+                keywords=msg.get("keywords", []),
+                evidence_required=effective_evidence_limit,
+                matcher_fn=get_matched_signals,
+                match_phrases=msg.get("match_phrases"),
                 targeting_platform=msg.get("targeting_platform", "all"),
                 since_days=msg.get("time_window_days"),
                 unfiltered=msg.get("unfiltered", False),
-                match_phrases=msg.get("match_phrases"),
-                limit=effective_evidence_limit,
             )
         except Exception as exc:
             log.warning(f"Signal matching failed for topic_key={msg.get('topic_key')}: {exc}")
