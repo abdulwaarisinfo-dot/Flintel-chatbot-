@@ -2,7 +2,7 @@
 FLINTEL — TIME-ONLY / NO-TOPIC SEARCH ("unfiltered" mode)
 ============================================================================
 Self-contained module. Nothing here imports from or modifies index.py —
-index.py imports FROM this file only (one-way dependency).
+index.py imports FROM this file only (one-way dependency). 
 
 WHAT THIS FEATURE IS FOR:
 Some user messages give ONLY a time reference and/or an explicit "anything
