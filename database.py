@@ -133,3 +133,44 @@ try:
     google_posts_collection.create_index("discovered_at")
 except Exception as exc:
     log.warning(f"Could not create index on google_posts_collection.discovered_at (likely already exists under a different name): {exc}")
+
+# (TOPIC EVIDENCE CACHE) Per-chat, per-topic cache of already-matched
+# evidence posts — so the same topic doesn't re-query Mongo and re-send
+# Claude the same posts on every follow-up. Key is always the
+# (chat_id, topic_key) combination — so each chat/user has its own
+# cache, never any cross-user mixing.
+#
+# Document shape:
+#   {
+#     "chat_id": str,
+#     "topic_key": str,
+#     "owner_key": str,               # extra safety scoping
+#     "posts": [ {title, post_text, post_url, platform}, ... ],
+#     "post_urls_seen": [str, ...],   # fast de-dup check on top-up
+#     "evidence_count": int,          # len(posts), cached for quick reads
+#     "keywords": [str, ...],         # the keywords these posts were matched by
+#     "match_phrases": [str, ...] | None,
+#     "created_at": datetime,
+#     "updated_at": datetime,
+#   }
+topic_evidence_cache_collection = db.flintel_topic_evidence_cache
+
+try:
+    # One cache row per topic — this is the key an upsert writes against.
+    topic_evidence_cache_collection.create_index(
+        [("chat_id", 1), ("topic_key", 1)], unique=True
+    )
+except Exception as exc:
+    log.warning(f"Could not create index on topic_evidence_cache_collection.chat_id+topic_key: {exc}")
+
+try:
+    # TTL index — old cache entries expire automatically per
+    # TOPIC_CACHE_TTL_DAYS (config.py). TTL is expressed in seconds, so
+    # the config's day-count is converted here, at index-creation time.
+    from config import TOPIC_CACHE_TTL_DAYS
+    if TOPIC_CACHE_TTL_DAYS > 0:
+        topic_evidence_cache_collection.create_index(
+            "updated_at", expireAfterSeconds=TOPIC_CACHE_TTL_DAYS * 86400
+        )
+except Exception as exc:
+    log.warning(f"Could not create TTL index on topic_evidence_cache_collection.updated_at: {exc}")
