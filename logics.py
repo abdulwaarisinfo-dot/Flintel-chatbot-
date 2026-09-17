@@ -2711,14 +2711,23 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
 
     (EVIDENCE-BUDGET FEATURE) `evidence_required` (default None — any
     existing/other caller that doesn't pass it gets the exact original
-    behavior: get_matched_signals() below is called with `limit=None`, so
-    MAX_MATCHED_RESULTS' own default applies) is the message's own
-    stored, already-clamped evidence budget — passed straight through as
-    `limit` to get_matched_signals(), and used to derive
-    `effective_evidence_limit` (via
-    `min(evidence_required or MIN_ANALYSIS_EVIDENCE, MAX_ANALYSIS_EVIDENCE)`,
-    the same formula _complete_message_answer_and_results() uses) for the
-    `max_total` passed to merge_matched_and_google_results().
+    behavior: get_evidence_with_topup() falls back to MIN_ANALYSIS_
+    EVIDENCE as its own floor when this is None) is the message's own
+    stored, already-clamped evidence budget — passed straight through to
+    get_evidence_with_topup(), and used to derive `effective_evidence_
+    limit` (via `min(evidence_required or MIN_ANALYSIS_EVIDENCE,
+    MAX_ANALYSIS_EVIDENCE)`, the same formula _complete_message_answer_
+    and_results() uses) for the `max_total` passed to merge_matched_and_
+    google_results().
+
+    (TOPIC EVIDENCE CACHE) The evidence fetch below goes through
+    get_evidence_with_topup() rather than calling get_matched_signals()
+    directly — this topic's already-cached posts are reused as-is when
+    they already satisfy evidence_required, and only the delta is
+    fetched (via get_matched_signals, injected as matcher_fn) otherwise.
+    get_matched_signals() itself, and its matching rules, are completely
+    untouched by this — get_evidence_with_topup() is purely a caching
+    layer on top of it.
 
     (RESPONSE_TIMEOUT'S NEW ROLE) By the time this is called,
     _fill_in_message_outputs() already confirmed the merged
@@ -2779,11 +2788,18 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
             )
 
         # (MERGE BEFORE ANSWERING) ONE fresh re-check — never trusts the
-        # earlier "empty" snapshot that triggered this call.
+        # earlier "empty" snapshot that triggered this call. Now cache-
+        # aware via get_evidence_with_topup(): reuses this topic's already-
+        # cached posts when they already satisfy evidence_required, and
+        # only fetches the delta (via get_matched_signals, injected as
+        # matcher_fn) otherwise — same wiring as _fill_in_message_
+        # outputs()'s own call site in index.py.
         try:
-            matched = get_matched_signals(
-                topic_key, keywords or [], targeting_platform="all",
-                match_phrases=match_phrases, limit=evidence_required,
+            matched = get_evidence_with_topup(
+                chat_id=chat_id, owner_key=owner_key, topic_key=topic_key,
+                keywords=keywords or [], evidence_required=evidence_required,
+                matcher_fn=get_matched_signals, match_phrases=match_phrases,
+                targeting_platform="all",
             )
         except Exception as exc:
             log.warning(f"Signal matching failed for topic_key={topic_key}: {exc}")
