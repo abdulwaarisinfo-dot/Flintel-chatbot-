@@ -115,6 +115,31 @@ WEBSITE_FETCH_TIMEOUT_SECONDS      = float(os.getenv("WEBSITE_FETCH_TIMEOUT_SECO
 WEBSITE_FETCH_MAX_CHARS            = int(os.getenv("WEBSITE_FETCH_MAX_CHARS", "8000"))
 CLAUDE_WEBSITE_KEYWORD_MAX_TOKENS  = int(os.getenv("CLAUDE_WEBSITE_KEYWORD_MAX_TOKENS", "400"))
 
+# ── Website Intelligence — multi-page discovery + evidence caching ──────
+# Kitne pages tak (homepage samet) discover/fetch karna hai — controlled,
+# same-domain, koi uncontrolled crawling nahi.
+MAX_WEBSITE_PAGES = int(os.getenv("MAX_WEBSITE_PAGES", "5"))
+
+# Homepage ke internal links mein se kaunse paths follow karne layak hain
+# — sirf yeh path-hints jin links mein match karein unhi ko follow karo.
+WEBSITE_DISCOVERY_PATH_HINTS = [
+    "about", "products", "product", "services", "service",
+    "pricing", "price", "faq", "faqs", "contact", "features", "feature",
+]
+
+# Website evidence cache kitne din tak valid rahega — TTL index isi se
+# banega (topic_evidence_cache ke TOPIC_CACHE_TTL_DAYS jaisa pattern).
+# Website content occasionally badal sakta hai, is liye topic-evidence
+# cache se chhota TTL rakha gaya hai.
+WEBSITE_EVIDENCE_CACHE_TTL_DAYS = int(os.getenv("WEBSITE_EVIDENCE_CACHE_TTL_DAYS", "3"))
+
+# Structured business-evidence + website-insight-answer Claude call ke
+# liye max_tokens — CLAUDE_WEBSITE_KEYWORD_MAX_TOKENS se thoda zyada,
+# kyunke yeh call structured schema + insight-answer text dono produce
+# karta hai.
+WEBSITE_EVIDENCE_MAX_TOKENS = int(os.getenv("WEBSITE_EVIDENCE_MAX_TOKENS", "700"))
+WEBSITE_INSIGHT_MAX_TOKENS = int(os.getenv("WEBSITE_INSIGHT_MAX_TOKENS", "600"))
+
 # ── Model config (ANTHROPIC — Claude Haiku) ──────────────────────────────
 ANTHROPIC_API_KEY   = os.getenv("ANTHROPIC_API_KEY")
 CLAUDE_MODEL        = os.getenv("CLAUDE_MODEL", "claude-haiku-4-5-20251001")
