@@ -78,6 +78,7 @@ back to whatever behavior already exists today.
 import os
 import re
 import json
+from urllib.parse import urlparse, urlunparse
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -735,3 +736,310 @@ def is_generic_leadgen_ask(text: str) -> bool:
         if re.search(pattern, text_lower):
             return True
     return False
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PIECE 4 — URL VALIDATION / NORMALIZATION
+# ─────────────────────────────────────────────────────────────────────────────
+
+def validate_and_normalize_url(raw_url: str):
+    """Pure Python (no network call). Validates that the URL is http/https,
+    and normalizes it into a stable, cache-friendly form (scheme+netloc+
+    path lowercase, trailing slash consistent, no fragment/query-string —
+    since the same page usually returns the same content). Returns None
+    if the URL is invalid (any other scheme like ftp://, javascript:, or
+    malformed) — never raises an exception, caller should treat None as
+    'invalid URL'.
+
+    This function is also used for the cache key
+    (website_evidence_cache_collection.url) — so consistent normalization
+    is essential, otherwise the same website could get cached twice under
+    two different URL strings."""
+    if not raw_url or not isinstance(raw_url, str):
+        return None
+    try:
+        parsed = urlparse(raw_url.strip())
+    except Exception:
+        return None
+    if parsed.scheme not in ("http", "https"):
+        return None
+    if not parsed.netloc:
+        return None
+    path = parsed.path.rstrip("/") or ""
+    normalized = urlunparse((parsed.scheme, parsed.netloc.lower(), path, "", "", ""))
+    return normalized
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PIECE 5 — STRUCTURED BUSINESS EVIDENCE (query-independent, cacheable)
+# ─────────────────────────────────────────────────────────────────────────────
+
+WEBSITE_EVIDENCE_SYSTEM_PROMPT = """
+You are the website-evidence extraction brain inside Flintel, a
+social-listening platform. You are given the combined plain-text content
+of one or more pages from a website (homepage plus any discovered
+internal pages like /about, /pricing, /faq). Your job: extract
+STRUCTURED business evidence from this text — never invent anything not
+actually present.
+
+Produce a JSON object with these fields — ONLY include a field if the
+website content actually supports it; omit (or use an honest short
+"not visible on the site" style value) any field the content doesn't
+support. NEVER invent pricing, target customer, or features that aren't
+genuinely stated or strongly implied by the text.
+
+{
+  "title": "<page title / brand name>",
+  "description": "<meta-description-style one-liner, if inferable>",
+  "business": "<what kind of business/brand this is, e.g. 'Shopify e-commerce brand selling X'>",
+  "products_services": ["<product/service 1>", "..."],
+  "pricing": ["<pricing detail 1, only if actually visible on the site>"],
+  "target_customer": "<who this appears to serve, based on the site's own language — 'unclear' if genuinely not inferable>",
+  "features": ["<feature 1>", "..."],
+  "value_proposition": "<the site's own core pitch, in plain language>",
+  "important_pages": ["<page names/paths that were fetched or referenced>"],
+  "contact_information": {"email": "...", "phone": "...", "address": "..."},
+  "faq": ["<faq topic 1>", "..."]
+}
+
+GROUNDING RULE (absolute): every field must come from the actual text
+given. If pricing isn't visible, omit "pricing" or set it to an empty
+list — never guess a price. If the target customer is unclear, say so
+plainly rather than inventing a persona.
+
+Respond with STRICT JSON ONLY — no markdown code fences, no preamble.
+"""
+
+
+def extract_structured_website_evidence(url: str, combined_website_text: str, call_claude_fn) -> dict:
+    """ONE Claude call: reads the combined multi-page website text and
+    returns the structured evidence schema above. This is QUERY-
+    INDEPENDENT — it does not know or care what the user actually asked;
+    it just extracts what the website itself says. This is what gets
+    CACHED (see logics.py's get_or_fetch_website_evidence()) since it
+    doesn't change per-request, only when the website's own content
+    changes.
+
+    Returns a cleaned dict (only fields with real content survive
+    cleaning) or None on total failure (no call_claude_fn, empty text,
+    unparseable response) — caller must treat None as 'could not extract
+    structured evidence', falling back to a thin/failed evidence_quality
+    classification (see classify_evidence_quality() below)."""
+    if not combined_website_text or not callable(call_claude_fn):
+        return None
+    user_message = f"Website URL: {url}\n\nCombined website content (plain text):\n{combined_website_text}"
+    try:
+        raw = call_claude_fn(WEBSITE_EVIDENCE_SYSTEM_PROMPT, user_message, max_tokens=700)
+    except Exception:
+        return None
+    data = _parse_json_object(raw)
+    if not data:
+        return None
+    # (cleaning) keep only genuinely non-empty fields — same spirit as
+    # summarize_website_structured()'s own cleaning logic above.
+    cleaned = {}
+    for key in ("title", "description", "business", "target_customer", "value_proposition"):
+        val = data.get(key)
+        if isinstance(val, str) and val.strip():
+            cleaned[key] = val.strip()
+    for key in ("products_services", "pricing", "features", "important_pages", "faq"):
+        val = data.get(key)
+        if isinstance(val, list):
+            items = [v.strip() for v in val if isinstance(v, str) and v.strip()]
+            if items:
+                cleaned[key] = items
+    contact = data.get("contact_information")
+    if isinstance(contact, dict):
+        contact_clean = {k: v.strip() for k, v in contact.items() if isinstance(v, str) and v.strip()}
+        if contact_clean:
+            cleaned["contact_information"] = contact_clean
+    return cleaned or None
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PIECE 6 — EVIDENCE-QUALITY CLASSIFIER
+# ─────────────────────────────────────────────────────────────────────────────
+
+def classify_evidence_quality(combined_website_text: str, structured_evidence: dict) -> str:
+    """Pure Python, no Claude call. Distinguishes 'website fetched
+    successfully' from 'enough useful evidence was extracted' (Section 3
+    of the spec — these are NOT the same thing).
+
+    Returns one of:
+      "failed" — combined_website_text is empty/missing (fetch itself
+                 failed or returned nothing usable).
+      "thin"   — text exists but structured_evidence is empty/near-empty
+                 (site fetched but had almost no extractable business
+                 content — e.g. a JS-only page, a placeholder page).
+      "strong" — structured_evidence has several populated fields
+                 (business, products_services/features, value_proposition
+                 all present).
+      "mixed"  — some fields populated, others clearly missing (e.g.
+                 business + products known, but pricing/target_customer
+                 genuinely absent) — partial evidence, be explicit about
+                 what's missing.
+
+    This never raises — a missing/malformed structured_evidence is
+    treated as empty, never crashes the caller."""
+    if not combined_website_text or not combined_website_text.strip():
+        return "failed"
+    if not structured_evidence or not isinstance(structured_evidence, dict):
+        return "thin"
+
+    strong_fields = ("business", "products_services", "features", "value_proposition")
+    populated = sum(1 for f in strong_fields if structured_evidence.get(f))
+    total_fields = sum(1 for f in (
+        "business", "products_services", "pricing", "target_customer",
+        "features", "value_proposition", "faq", "contact_information",
+    ) if structured_evidence.get(f))
+
+    if populated == 0:
+        return "thin"
+    if populated >= 3 and total_fields >= 5:
+        return "strong"
+    return "mixed"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PIECE 7 — WEBSITE INSIGHT ANSWER (Points 1, 4, 5, 6, 7 — never cached,
+# query-dependent)
+# ─────────────────────────────────────────────────────────────────────────────
+
+WEBSITE_INSIGHT_SYSTEM_PROMPT = """
+You are the website-insight brain inside Flintel, a social-listening
+platform. A user shared a website URL (with or without a specific ask).
+You are given the structured business evidence already extracted from
+that website (see schema below), plus an honest evidence-quality label
+("strong" | "mixed" | "thin" | "failed"), plus the user's own request
+text (which may be empty/generic if they just shared a bare link).
+
+YOUR JOB: write a concise, professional business-intelligence answer
+grounded ONLY in the evidence given — never invent anything the evidence
+doesn't support.
+
+──────────────────────────────────────────────────────────────────────
+LENGTH & DEPTH (Point 1 + Point 5 — respect the reader's time)
+
+Depth scales with how much genuine evidence exists — never with an
+assumption that "more text is better":
+- evidence_quality == "strong" -> a clean, medium-length breakdown using
+  the labeled format below. Not a long report — one tight paragraph or
+  a short labeled list, whichever reads better for what was actually
+  found.
+- evidence_quality == "mixed" -> the same labeled format, but explicitly
+  say which fields could not be verified from the site (e.g. "Pricing:
+  not visible on the site") — never silently omit a field the user might
+  expect; say plainly that it wasn't found.
+- evidence_quality == "thin" -> a short, honest note: the site was
+  reached but very little usable business content was extractable — say
+  so plainly, share whatever little was found, and do not pad it out
+  into a fake full report.
+- evidence_quality == "failed" -> a short, honest note that the site
+  could not be accessed, so there isn't evidence to analyze yet.
+
+NEVER produce a long report when the evidence is thin. NEVER pad a short
+finding into paragraphs. Match the response's length to the evidence's
+real weight, exactly like Flintel's own social-listening reports do.
+
+──────────────────────────────────────────────────────────────────────
+LABELED FORMAT (Point 4 — use this style when evidence_quality is
+"strong" or "mixed"; each line only if the evidence actually supports it,
+never invented):
+
+Business: <what kind of business/brand this is>
+Products: <main products/services, comma-separated>
+Target customer: <who it serves, or "unclear from the site" if genuinely not inferable>
+Pricing: <pricing detail, or "not visible on the site" if absent>
+Market signal: <any demand/positioning signal visible from the site's own content>
+Buyer pain: <any customer problem/friction the site itself addresses or implies>
+Opportunity: <a grounded observation about positioning/gaps — clearly framed as your own reading, never a stated fact>
+
+Not every line is mandatory every time — include the ones the evidence
+actually supports; skip a line entirely rather than forcing a weak or
+invented value into it.
+
+──────────────────────────────────────────────────────────────────────
+UNDERSTANDING THE USER'S ACTUAL REQUEST (Point 5)
+
+Read the user's own request text (if any) closely before answering:
+- If they shared a bare link with no ask, give the general business
+  breakdown above — that IS the useful default answer, don't invent a
+  narrower angle they didn't ask for.
+- If they asked something specific (e.g. "what's their pricing?", "who
+  are their customers?"), answer THAT specific question first and
+  directly, then add only the other labeled lines that are genuinely
+  relevant — don't dump the entire labeled format when they asked one
+  narrow question.
+- If the request itself is vague or could mean several different things,
+  do not guess wildly or produce five different interpretations at once
+  — pick the single most reasonable reading (usually: give the general
+  business breakdown), and if it's genuinely ambiguous, you may end with
+  ONE short, natural clarifying question — never a list of questions,
+  never an overwhelming menu of options.
+
+──────────────────────────────────────────────────────────────────────
+NEVER REFUSE — INTERPRET AND HELP (Point 6)
+
+If the user asks for something that sounds broader or more aggressive
+than a simple website read — e.g. "get me sales", "find me leads from
+this", "go deep on this business" — do NOT respond with a flat refusal
+like "Flintel doesn't do that" or "I can't do that here". Instead,
+interpret the request as asking for the closest genuinely useful signal
+Flintel CAN ground in real evidence — buyer-intent signals, pain points,
+positioning gaps, or an invitation to pull related public conversation
+from Reddit/X about this business or its space. Stay honest about what
+the website evidence alone can and can't prove, but never sound like a
+door closing.
+
+──────────────────────────────────────────────────────────────────────
+NEVER POINT OUTSIDE FLINTEL (Point 7)
+
+If the website evidence alone can't answer something, do NOT tell the
+user to go check the website themselves, use another tool, or look
+elsewhere. Flintel already has (or can get) real public conversation
+data about most businesses/topics via Reddit/X search — when evidence is
+thin, offer that as the natural next step ("I can also pull what people
+are saying about [business] on Reddit/X for more signal") rather than
+directing them away from Flintel.
+
+──────────────────────────────────────────────────────────────────────
+TONE: confident, precise, evidence-led — like a sharp analyst, not a
+generic chatbot. No "As an AI..." framing, no restating the question
+back, no filler openers.
+
+Respond with PLAIN TEXT (not JSON) — this is a direct chat answer, not a
+structured report object.
+"""
+
+
+def build_website_insight_answer(url: str, query: str, structured_evidence: dict,
+                                   evidence_quality: str, call_claude_fn) -> str:
+    """ONE Claude call producing the final website-insight answer text
+    (Points 1, 4, 5, 6, 7 all baked into the system prompt above). This
+    IS query-dependent (unlike extract_structured_website_evidence()) —
+    it reads the user's actual request text to decide focus/depth, so it
+    is NEVER cached; called fresh every time a website-only or website-
+    focused message needs an answer.
+
+    Returns the answer text, or a short honest fallback string if the
+    call fails outright — never raises past this function, never leaves
+    the caller with nothing to show."""
+    user_message = (
+        f"Website URL: {url}\n"
+        f"User's request text (may be empty/generic): {query or '(none — bare link shared)'}\n"
+        f"Evidence quality: {evidence_quality}\n\n"
+        f"Structured evidence (JSON):\n{json.dumps(structured_evidence or {}, ensure_ascii=False)}"
+    )
+    try:
+        answer = call_claude_fn(WEBSITE_INSIGHT_SYSTEM_PROMPT, user_message, max_tokens=600)
+        return (answer or "").strip() or _fallback_insight_text(evidence_quality)
+    except Exception:
+        return _fallback_insight_text(evidence_quality)
+
+
+def _fallback_insight_text(evidence_quality: str) -> str:
+    """(Section 7 A/B — honest failure-state text) Safety-net used only
+    if the Claude call itself fails outright — never re-sent to Claude."""
+    if evidence_quality == "failed":
+        return "I couldn't access the website, so I don't have enough evidence to analyze it yet."
+    return "I accessed the website, but only limited usable information was available, so this analysis is limited."
