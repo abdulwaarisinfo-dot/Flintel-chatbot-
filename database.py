@@ -4,7 +4,7 @@ database.py — ALL MongoDB connection and collection setup for Flintel.
 Pure extraction from index.py: this module owns the Mongo client, the
 database handle, every collection handle, and every index-creation call
 that used to live inline in index.py. Zero behavior change from before —
-same URI/DB env vars, same collection names, same indexes, same log 
+same URI/DB env vars, same collection names, same indexes, same log
 messages on startup.
 
 This file has ZERO dependency on index.py, flintel.py, or
@@ -174,3 +174,42 @@ try:
         )
 except Exception as exc:
     log.warning(f"Could not create TTL index on topic_evidence_cache_collection.updated_at: {exc}")
+
+# (WEBSITE EVIDENCE CACHE) Per-URL cache of already-fetched website
+# content + structured business evidence — taake same URL baar baar
+# refetch/re-analyze na ho. Global (chat-independent) hai, kyunke website
+# ka content khud kisi user-specific cheez ka hissa nahi — ek website ka
+# data har chat/user ke liye same hi hoga.
+#
+# Document shape:
+#   {
+#     "url": str,                    # normalized URL — unique key
+#     "domain": str,
+#     "pages_fetched": [str, ...],
+#     "combined_text": str,          # multi-page combined, truncated text
+#     "structured_evidence": {       # business/products/pricing/etc schema
+#         "title": str, "description": str, "business": str,
+#         "products_services": [...], "pricing": [...],
+#         "target_customer": str, "features": [...],
+#         "value_proposition": str, "important_pages": [...],
+#         "contact_information": {...}, "faq": [...],
+#     },
+#     "evidence_quality": str,       # "failed" | "thin" | "strong" | "mixed"
+#     "fetched_at": datetime,
+#     "updated_at": datetime,
+#   }
+website_evidence_cache_collection = db.flintel_website_evidence_cache
+
+try:
+    website_evidence_cache_collection.create_index("url", unique=True)
+except Exception as exc:
+    log.warning(f"Could not create index on website_evidence_cache_collection.url: {exc}")
+
+try:
+    from config import WEBSITE_EVIDENCE_CACHE_TTL_DAYS
+    if WEBSITE_EVIDENCE_CACHE_TTL_DAYS > 0:
+        website_evidence_cache_collection.create_index(
+            "updated_at", expireAfterSeconds=WEBSITE_EVIDENCE_CACHE_TTL_DAYS * 86400
+        )
+except Exception as exc:
+    log.warning(f"Could not create TTL index on website_evidence_cache_collection.updated_at: {exc}")
