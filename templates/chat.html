@@ -444,6 +444,7 @@
     width: 100%; background: transparent; border: none; outline: none;
     color: #fff; font-size: 17px; font-weight: 500; font-family: inherit;
     margin-bottom: 42px;
+    resize: none; overflow-y: hidden;
   }
   .search-input::placeholder { color: #757473; }
   .search-inline-error {
@@ -869,18 +870,18 @@
         <form action="/search" method="post" id="search-form">
           <div class="search-box">
             <label for="search-input" class="sr-only">Ask a follow-up</label>
-            <input
+            <textarea
               id="search-input"
               name="query"
               class="search-input"
-              type="text"
+              rows="1"
               placeholder="Ask a follow-up..."
               required
               autocomplete="off"
               autocorrect="off"
               autocapitalize="off"
               spellcheck="false"
-            />
+            ></textarea>
             <input type="hidden" name="platform" id="platform-input" value="All Platforms" />
             <input type="hidden" name="chat_id" value="{{ chat.chat_id }}" />
 
@@ -1157,6 +1158,37 @@
   // now belongs to a different chat.
   let softNavGeneration = 0;
 
+  // (AUTO-EXPANDING TEXTAREA) #search-input is a <textarea rows="1"> so
+  // typed text wraps vertically instead of scrolling horizontally; this
+  // resets the height to 'auto' first (so it can shrink back down after a
+  // deletion) then grows it to fit the current content via scrollHeight.
+  // Called from every place in this file that sets search-input's value,
+  // not just its 'input' listener, so programmatic value changes (restored
+  // query text, clearing after submit) keep the box sized correctly too.
+  function autoGrowSearchInput(el) {
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }
+  // (AUTO-EXPANDING TEXTAREA) Now that #search-input is a <textarea>,
+  // plain Enter no longer submits the form natively (it inserts a
+  // newline instead) — this restores the same Enter-to-submit UX the
+  // element had as an <input>, while Shift+Enter still inserts a literal
+  // newline. requestSubmit() dispatches a real, cancelable 'submit' event
+  // (unlike form.submit()), so it runs through the exact same submit
+  // listeners below and respects the "required" validation exactly as a
+  // native Enter-submit on an <input> would have.
+  document.addEventListener('keydown', (e) => {
+    if (e.target && e.target.id === 'search-input' && e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      const form = document.getElementById('search-form');
+      if (form) {
+        if (form.requestSubmit) form.requestSubmit();
+        else form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+      }
+    }
+  });
+
   function initMainPageInteractions() {
     const attachBtn = document.getElementById('attach-btn');
     const attachInput = document.getElementById('attach-input');
@@ -1209,7 +1241,11 @@
         submitBtn.disabled = searchInput.value.trim().length === 0;
       }
       syncSubmitButtonState();
-      searchInput.addEventListener('input', syncSubmitButtonState);
+      autoGrowSearchInput(searchInput);
+      searchInput.addEventListener('input', () => {
+        syncSubmitButtonState();
+        autoGrowSearchInput(searchInput);
+      });
       searchForm.addEventListener('submit', () => { submitBtn.disabled = true; });
     }
 
@@ -2531,6 +2567,7 @@
     const searchInput = document.getElementById('search-input');
     if (searchInput && restoreQuery !== undefined) {
       searchInput.value = restoreQuery;
+      autoGrowSearchInput(searchInput);
     }
     const searchBox = document.querySelector('.search-box');
     if (!searchBox) return;
@@ -2694,7 +2731,7 @@
         const latestTurn = allNewTurns[allNewTurns.length - 1];
         if (!latestTurn) throw new Error('No turn-block found in response');
 
-        if (searchInput) searchInput.value = '';
+        if (searchInput) { searchInput.value = ''; autoGrowSearchInput(searchInput); }
 
         // Animate the new question bubble + loading state in, gently.
         latestTurn.classList.add('stream-reveal');
