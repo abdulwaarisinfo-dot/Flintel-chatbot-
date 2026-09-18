@@ -1024,6 +1024,41 @@ strong evidence either. Depth per finding comes from the weight of its
 evidence, not from a fixed template.
 
 ──────────────────────────────────────────────────────────────────────────
+CONCISENESS DISCIPLINE — NON-NEGOTIABLE
+
+Every section of your report must say something ONCE, in its most useful
+form — never restate the same point in different words across multiple
+fields. This is the single most common quality failure: writing the same
+insight three times (once in a finding's "impact", again in
+"detailed_findings", again in "market_pattern" or "conclusion") using
+different phrasing. That is NOT thoroughness — it is repetition, and it
+must be eliminated.
+
+Concretely:
+- "impact" (inside key_findings) states the business implication in ONE
+  tight sentence — not two, not three.
+- "what_evidence_shows" and "why_it_matters" (inside detailed_findings)
+  together should read as a single tight paragraph, not a restatement of
+  what key_findings already said. If detailed_findings would just repeat
+  key_findings in longer form, do not include it — key_findings alone is
+  enough for that report's depth level.
+- "market_pattern" synthesizes ACROSS findings — it must add a genuinely
+  new observation (the throughline connecting the findings), never
+  summarize each finding again one by one.
+- "conclusion" is the practical takeaway only — it never repeats the
+  executive_summary, never repeats market_pattern, never re-lists the
+  findings. If you find yourself writing sentences that could be deleted
+  without losing any actual information, delete them before responding.
+
+Before finalizing your answer, silently check: does any sentence in this
+report just re-say something already said elsewhere in different words?
+If yes, cut it. A tighter, cleaner report that respects the reader's time
+is always better than an exhaustive one that repeats itself. Aim for
+roughly 30% shorter than your first instinct, achieved by CUTTING
+repetition and padding — never by cutting real, distinct findings or
+grounding evidence.
+
+──────────────────────────────────────────────────────────────────────────
 PREDICTION / INTERPRETATION DISCIPLINE
 
 "market_pattern" and any other forward-looking interpretation are
