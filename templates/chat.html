@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -774,6 +773,23 @@
           <div class="turn-block" data-topic-key="{{ msg.topic_key or '' }}"{% if pending_stream_topic_key and msg.topic_key == pending_stream_topic_key %} data-pending-stream="true"{% endif %}>
             <div class="turn-row"><div class="turn-question">{{ msg.query }}</div></div>
             <div class="turn-meta">
+              {% if msg.message_type != 'chat' %}
+              {% set _plat = (msg.targeting_platform or 'all')|lower|trim %}
+              <span class="turn-chip">
+                {%- if _plat in ['all', 'all platforms'] -%}All Platforms
+                {%- elif _plat in ['x_twitter', 'x / twitter', 'x', 'twitter'] -%}X / Twitter
+                {%- elif _plat == 'reddit' -%}Reddit
+                {%- elif _plat == 'linkedin' -%}LinkedIn
+                {%- elif _plat == 'facebook' -%}Facebook
+                {%- else -%}{{ msg.targeting_platform }}
+                {%- endif -%}
+              </span>
+              {% if msg.claude_answer is none %}
+              <span class="turn-chip status-pending"><span class="status-dot"></span>Searching…</span>
+              {% else %}
+              <span class="turn-chip status-completed"><span class="status-dot"></span>Completed</span>
+              {% endif %}
+              {% endif %}
             </div>
 
             <!-- ===================================================================
