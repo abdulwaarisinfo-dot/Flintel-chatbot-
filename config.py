@@ -22,9 +22,77 @@ call).
 confidence" / threshold constant lives here — that entire mechanism is
 being removed outright, not reconfigured, so no config value is needed
 for it.
+
+(NAMESPACE-HYGIENE FIX) index.py does `from config import *`. Without an
+explicit `__all__`, Python's wildcard import exports every top-level name
+that doesn't start with an underscore — including the `os` module itself,
+imported below purely so this file can read env vars. That leaked `os`
+name was harmless in practice (index.py never referenced a bare `os.`
+anywhere), but it was still an accident waiting to happen: any future
+top-level import added here (e.g. `import re`) would silently leak into
+index.py's namespace too. `__all__` below makes the exported surface
+explicit and limits it to the actual config constants — nothing else
+changes; every existing name index.py already relies on is still here,
+unchanged.
 """
 
 import os
+
+__all__ = [
+    # Keyword / matching limits
+    "MAX_KEYWORDS",
+    "CLAUDE_MAX_KEYWORDS",
+    "MAX_MATCHED_RESULTS",
+    "MAX_POSTS_PER_PLATFORM",
+    "MAX_TIME_WINDOW_DAYS",
+    # Evidence-count limits
+    "MAX_ANALYSIS_EVIDENCE",
+    "MIN_ANALYSIS_EVIDENCE",
+    "MAX_CHAT_EVIDENCE_POSTS",
+    # Topic evidence cache
+    "TOPIC_CACHE_MAX_EVIDENCE",
+    "TOPIC_CACHE_MIN_TOPUP",
+    "TOPIC_CACHE_TTL_DAYS",
+    # Auth / session
+    "SESSION_SECRET_KEY",
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET",
+    # Claude analysis layer config (v4)
+    "CLAUDE_MAX_TOKENS",
+    "CLAUDE_MAP_MAX_TOKENS",
+    "CLAUDE_POSTS_PER_CHUNK",
+    "CLAUDE_TIMEOUT_SECONDS",
+    "CLAUDE_NOTES_PER_CHUNK",
+    # Router + chat-summary config (v5)
+    "CLAUDE_ROUTER_MAX_TOKENS",
+    "CHAT_SUMMARY_MAX_TURNS",
+    "CHAT_SUMMARY_TURN_CHAR_LIMIT",
+    # Response-timeout config (v6)
+    "RESPONSE_TIMEOUT",
+    # Busy-lock config
+    "BUSY_FLAG_TIMEOUT_SECONDS",
+    # Simulated-stream config
+    "STREAM_CHUNK_CHARS",
+    "STREAM_CHUNK_DELAY_SECONDS",
+    # Clarify-self-resolve config
+    "CLAUDE_TOPIC_RESOLVER_MAX_TOKENS",
+    # Website-URL keyword extraction config
+    "MAX_WEBSITE_KEYWORDS",
+    "WEBSITE_FETCH_TIMEOUT_SECONDS",
+    "WEBSITE_FETCH_MAX_CHARS",
+    "CLAUDE_WEBSITE_KEYWORD_MAX_TOKENS",
+    # Website Intelligence — multi-page discovery + evidence caching
+    "MAX_WEBSITE_PAGES",
+    "WEBSITE_DISCOVERY_PATH_HINTS",
+    "WEBSITE_EVIDENCE_CACHE_TTL_DAYS",
+    "WEBSITE_EVIDENCE_MAX_TOKENS",
+    "WEBSITE_INSIGHT_MAX_TOKENS",
+    # Model config (ANTHROPIC — Claude Haiku)
+    "ANTHROPIC_API_KEY",
+    "CLAUDE_MODEL",
+    "CLAUDE_API_URL",
+    "CLAUDE_API_VERSION",
+]
 
 # ── Keyword / matching limits ────────────────────────────────────────────
 MAX_KEYWORDS = int(os.getenv("MAX_KEYWORDS", "20"))
