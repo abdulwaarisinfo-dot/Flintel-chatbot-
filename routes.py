@@ -157,6 +157,44 @@ def _evidence_to_structured_summary(se):
     return {"overview": overview, "sections": sections}
 
 
+def _build_website_context_summary(ctx):
+    """Router ko dene ke liye saved website context ka chhota text."""
+    if not ctx:
+        return None
+    parts = [f"URL: {ctx.get('url')}"]
+    if ctx.get("business"):
+        parts.append(f"Business: {ctx['business']}")
+    kws = [k for k in (ctx.get("keywords") or []) if isinstance(k, str)][:8]
+    if kws:
+        parts.append("Saved keywords: " + ", ".join(kws))
+    return "\n".join(parts)
+
+
+def _build_website_note(ctx, mode):
+    """Analysis ke extra_context ke liye note. mode: own | related | unrelated"""
+    ctx = ctx or {}
+    biz = ctx.get("business") or ctx.get("url") or "their website"
+    if mode == "own":
+        return (
+            f"Note: the user previously shared their own website ({biz}). This request is about "
+            f"their own business/niche, so read the posts as leads/market signals relevant to that "
+            f"business. If genuinely supported, business_insight may explain how these posts relate to it."
+        )
+    if mode == "related":
+        return (
+            f"Note: the user's own website ({biz}) was shared earlier in this chat. This request is about "
+            f"a specific topic connected to it — keep the analysis focused on that topic only."
+        )
+    return (
+        f"Note: the user's own website ({biz}) was shared earlier in this chat, but THIS request's topic "
+        f"has no direct connection to their niche. Begin the first sentence of the answer's "
+        f"executive_summary (or the \"message\" field for no_results) with one short note, in the same "
+        f"language style the user wrote in, saying: you checked their website, this topic isn't directly "
+        f"connected to their niche, but you're sharing these posts anyway in case they're useful. Do not "
+        f"treat the posts as leads for their business."
+    )
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # ROUTES — SEARCH / CHAT
 # ─────────────────────────────────────────────────────────────────────────────
