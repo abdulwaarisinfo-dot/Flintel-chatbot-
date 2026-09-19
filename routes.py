@@ -7,6 +7,7 @@ for its side effect of registering these routes.
 """ 
  
 import json
+import re
 import time
 import threading
 import logging
@@ -96,51 +97,59 @@ from datetime import datetime, timezone
 # nothing here changes any existing route's behavior on its own.
 # ─────────────────────────────────────────────────────────────────────────────
 
-# (VAGUE WEBSITE FOLLOW-UP REUSE) Lowercase substrings that, on a router
-# "chat" turn with NO url in the message, signal the user is still talking
-# about the website from a previous message in this same chat (e.g. "reddit
-# pe log kya keh rahe hain") rather than making genuine small talk ("hi",
-# "thanks") — those never match anything here and so never trigger reuse.
-_WEBSITE_FOLLOWUP_HINTS = (
-    "reddit", "twitter", "linkedin", "facebook", "posts", "post",
-    "discussion", "conversation", "complaint", "review", "competitor",
-    "leads", "customers", "log kya", "people saying",
+# (VAGUE WEBSITE FOLLOW-UP REUSE) On a router "chat" turn with NO url in
+# the message, signals the user is still talking about the website from a
+# previous message in this same chat (e.g. "reddit pe log kya keh rahe
+# hain") rather than making genuine small talk ("hi", "thanks") — those
+# never match anything here and so never trigger reuse. Word-boundary
+# regex (rather than plain substring checks) so e.g. "post" doesn't match
+# inside "postpone", and a generic "what is reddit?" still matches (that
+# tradeoff is accepted — see the search() comment where this is used).
+_WEBSITE_FOLLOWUP_RE = re.compile(
+    r"\b(reddit|twitter|linkedin|facebook|posts?|discussions?|conversations?|"
+    r"complaints?|reviews?|competitors?|leads|customers)\b|log kya|people saying",
+    re.IGNORECASE,
 )
 
 
 def _evidence_to_structured_summary(se):
     """(WEBSITE INTELLIGENCE CACHE) Adapts the flat `structured_evidence`
     dict returned by get_or_fetch_website_evidence()/logics.py into the
-    SAME {"overview": ..., "sections": {...}} shape
-    website_intelligence.format_structured_summary_for_answer() already
-    expects elsewhere in this file (from extract_keywords_from_website()'s
-    own "structured_summary" field) — no new format is introduced, and no
-    section is added unless it actually has at least one bullet to show.
-    Returns None if nothing usable was found at all."""
+    SAME {"overview": ..., "sections": [{"title": ..., "bullets": [...]}]}
+    shape website_intelligence.format_structured_summary_for_answer() (and
+    the chat.html frontend rendering website_context) already expect
+    elsewhere in this file (from extract_keywords_from_website()'s own
+    "structured_summary" field) — `sections` is a LIST of
+    {title, bullets} dicts, not a dict keyed by title. No section is added
+    unless it actually has at least one bullet to show. `pricing` is
+    joined into a plain string if it comes back as a list, so it never
+    renders as a Python repr. Returns None if nothing usable was found at
+    all."""
     if not se:
         return None
 
     overview = se.get("value_proposition") or se.get("business") or ""
-
-    sections = {}
+    sections = []
 
     products_services = (se.get("products_services") or [])[:5]
     if products_services:
-        sections["What they offer"] = products_services
+        sections.append({"title": "What they offer", "bullets": products_services})
 
-    pricing_bullets = []
+    who_bullets = []
     target_customer = se.get("target_customer")
     if target_customer:
-        pricing_bullets.append(f"Target customer: {target_customer}")
+        who_bullets.append(f"Target customer: {target_customer}")
     pricing = se.get("pricing")
+    if isinstance(pricing, list):
+        pricing = ", ".join(p for p in pricing if isinstance(p, str) and p.strip())
     if pricing:
-        pricing_bullets.append(f"Pricing: {pricing}")
-    if pricing_bullets:
-        sections["Who it's for & pricing"] = pricing_bullets
+        who_bullets.append(f"Pricing: {pricing}")
+    if who_bullets:
+        sections.append({"title": "Who it's for & pricing", "bullets": who_bullets})
 
     features = (se.get("features") or [])[:4]
     if features:
-        sections["Notable"] = features
+        sections.append({"title": "Notable", "bullets": features})
 
     if not overview and not sections:
         return None
@@ -378,8 +387,14 @@ def search(
                     if intent == "clarify":
                         should_reuse = True
                     elif intent == "chat":
-                        query_lower = query.lower()
-                        should_reuse = any(hint in query_lower for hint in _WEBSITE_FOLLOWUP_HINTS)
+                        # (TRADEOFF, noted not fixed) This only ever runs
+                        # for router intents "clarify"/"chat" — if the
+                        # router itself classifies a follow-up like "reddit
+                        # par log kya problems face kar rahe hain" straight
+                        # as "search", this reuse block never even
+                        # considers it, since that's a different code path
+                        # entirely (the normal search-type pipeline below).
+                        should_reuse = bool(_WEBSITE_FOLLOWUP_RE.search(query))
 
                     if should_reuse:
                         intent = "search"
