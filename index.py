@@ -46,6 +46,20 @@ still `None` would therefore schedule a brand-new, independent Claude
 call every single time, double-billing Claude and racing with the
 original call over whose result gets saved last. See each call site
 below for the full rationale — no other logic in this module changed.
+
+(WEBSITE INTELLIGENCE) Three additions, all backward-compatible:
+  (A) add_search_to_chat() takes two new optional params, `website_only`
+      and `website_evidence`, stored on the message.
+  (B) _complete_message_answer_and_results() has a new `website_only`
+      branch that builds the answer via
+      website_intelligence.build_website_insight_answer() instead of the
+      normal Reddit-evidence analyze_with_claude() path, and forces
+      `results` to [].
+  (C) save_last_website_context_to_chat() stores the chat's most recent
+      website context at the chat-document level, for vague follow-ups.
+  Plus (D): _fill_in_message_outputs() short-circuits `website_only`
+  messages straight to (B), so their answer never waits on Reddit/Google
+  evidence (or the RESPONSE_TIMEOUT fallback) to show up.
 """
 
 import re
@@ -406,6 +420,9 @@ def upsert_google_user(google_id: str, email: str, name: str):
 #     (see append_to_chat_summary above), used purely to give the
 #     router/chat-reply calls cheap continuity without ever sending
 #     Claude the full raw message history.
+#   - (WEBSITE INTELLIGENCE) `last_website_context` — chat-level (not
+#     message-level) record of the most recent website analysis in this
+#     chat, see save_last_website_context_to_chat() below.
 #   - When an anonymous user signs up / logs in, their guest chats are
 #     re-keyed onto their email so nothing is lost.
 #   - Because chats are always looked up by owner_key (the email, once
@@ -513,7 +530,8 @@ def delete_chat_session(chat_id: str, owner_key: str) -> bool:
 def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
                         keywords: list, targeting_platform: str, time_window_days: int = None,
                         unfiltered: bool = False, website_context: dict = None, match_phrases: list = None,
-                        evidence_required: int = None):
+                        evidence_required: int = None,
+                        website_only: bool = False, website_evidence: dict = None):
     """Appends a search as a new message in the chat, and auto-titles the
     chat from the very first query if it hasn't been named yet.
 
@@ -579,7 +597,21 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
     consistently. None means "no evidence budget for this message" — an
     older/non-search message — and every downstream consumer of this
     field falls back to its own pre-existing default exactly as it did
-    before this feature existed."""
+    before this feature existed.
+
+    (WEBSITE INTELLIGENCE) `website_only` (NEW, optional, default False —
+    every existing caller that doesn't pass it behaves exactly as
+    before) permanently tags this message as one whose answer must be
+    built from website evidence (website_intelligence.
+    build_website_insight_answer()) instead of Reddit evidence. It is
+    persisted on the message, so _fill_in_message_outputs() /
+    _complete_message_answer_and_results() never have to re-decide it.
+    `website_evidence` (NEW, optional, default None) is the structured
+    business-evidence dict ({url, structured_evidence, evidence_quality})
+    that answer needs — stored on the message itself (in addition to any
+    chat-level cache) so regenerating this message's answer later uses
+    the exact evidence originally used, even if a cache has since
+    expired or changed."""
     now = datetime.now(timezone.utc)
     message = {
         "query":              query,
@@ -590,6 +622,10 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
         "time_window_days":   time_window_days,  # (NEW) int or None — see get_matched_signals()
         "evidence_required":  evidence_required,  # (EVIDENCE-BUDGET FEATURE) int or None
         "unfiltered":         unfiltered,
+        "website_only":       website_only,      # (WEBSITE INTELLIGENCE) bool — True routes answer-generation
+                                                  # through the website-insight path, not Reddit evidence.
+        "website_evidence":   website_evidence,  # (WEBSITE INTELLIGENCE) dict|None — structured business
+                                                  # evidence needed to build the website-insight answer.
         "website_context":    website_context,
         "google_fallback_triggered": False,
         "search_progress": None,               # (SEARCH-PROGRESS UI) None until generated
@@ -681,6 +717,36 @@ def save_signal_results_to_chat(chat_id: str, owner_key: str, topic_key: str, re
             "updated_at": datetime.now(timezone.utc),
         }},
     )
+
+
+def save_last_website_context_to_chat(chat_id: str, owner_key: str, context: dict):
+    """(WEBSITE INTELLIGENCE — POINT 3) Chat ke top-level document par
+    (kisi specific message par nahi) is chat mein SABSE RECENT website
+    analysis ka context store karta hai: {url, topic_key, keywords,
+    match_phrases}. Isi ki wajah se agar user baad mein ek vague follow-
+    up bole ("reddit ke baare mein batao"), routes.py isi stored
+    topic_key/keywords ko REUSE kar sakta hai — bina dobara Claude se
+    naye keywords generate kiye, aur is tarah guarantee milta hai ke
+    wahi flintel_signals/google_posts data mile jo pehle se collect ho
+    chuka tha.
+
+    Chat-level (message-level nahi) is liye, kyunke follow-up message ka
+    apna koi topic_key nahi hota jab tak router decide na kare. Sirf
+    SABSE RECENT context store hota hai (har baar overwrite).
+
+    Best-effort, never raises past itself."""
+    if not chat_id or not owner_key or not context:
+        return
+    try:
+        chats_collection.update_one(
+            {"chat_id": chat_id, "owner_key": owner_key},
+            {"$set": {
+                "last_website_context": context,
+                "updated_at": datetime.now(timezone.utc),
+            }},
+        )
+    except Exception as exc:
+        log.warning(f"Saving last_website_context failed for chat_id={chat_id}: {exc}")
 
 
 def save_claude_answer_to_chat(chat_id: str, owner_key: str, topic_key: str, answer: str):
@@ -924,7 +990,18 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
     `evidence_required` (falling back to MIN_ANALYSIS_EVIDENCE when the
     message has none — an older/non-search message — and always clamped
     to MAX_ANALYSIS_EVIDENCE), and passed through as that call's
-    `max_total`. No other line of this function's logic/order changed."""
+    `max_total`. No other line of this function's logic/order changed.
+
+    (WEBSITE INTELLIGENCE — WEBSITE-ONLY BRANCH) If `msg["website_only"]`
+    is set, the answer is NOT built by the normal Reddit-evidence
+    analyze_with_claude() path — it comes from
+    website_intelligence.build_website_insight_answer(), grounded only on
+    the website evidence stored on the message. The message's `results`
+    (Reddit post-cards) are always forced to [] for these. This branch
+    returns early, so none of the normal-path logic below runs for such a
+    message. Background search-job/Google-fallback machinery is
+    unaffected (it runs elsewhere, before this function) so
+    flintel_signals/google_posts keep filling in for later follow-ups."""
     # (RESULTS-RECOMPUTE FIX, applied here too for the same reason) `is
     # None`, not falsy — closes a low-probability but real analogous gap:
     # if a Claude API call ever technically "succeeds" but returns zero
@@ -939,6 +1016,46 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
 
     if needs_answer:
         try:
+            # (WEBSITE INTELLIGENCE — WEBSITE-ONLY BRANCH) Point 1: agar yeh
+            # message ek bare-URL (ya website-focused) search hai, iska
+            # answer NORMAL Reddit-evidence analyze_with_claude() se nahi
+            # aata — website_intelligence.build_website_insight_answer() se
+            # aata hai, jo sirf website evidence ke upar grounded hai. Search
+            # job/Google-fallback/keyword-matching baqi sab NORMAL chalta
+            # rehta hai (background mein flintel_signals collect hoti rehti
+            # hai future follow-ups ke liye — Point 3) — sirf THIS message
+            # ka claude_answer alag tareeke se banta hai, aur iske "results"
+            # (Reddit post-cards) hamesha khaali rakhe jate hain.
+            #
+            # IMPORTANT: yeh check try: ke andar SABSE PEHLE hai, aur return
+            # ke sath khatam hota hai taake baqi purana logic (Google-stub
+            # merge, extra-context building, analyze_with_claude()) is
+            # message ke liye bilkul na chale.
+            if msg.get("website_only"):
+                from website_intelligence import build_website_insight_answer
+                website_evidence = msg.get("website_evidence") or {}
+                answer = build_website_insight_answer(
+                    url=website_evidence.get("url") or msg.get("query"),
+                    query=msg.get("query"),
+                    structured_evidence=website_evidence.get("structured_evidence"),
+                    evidence_quality=website_evidence.get("evidence_quality", "thin"),
+                    call_claude_fn=_call_claude,
+                )
+                msg["claude_answer"] = answer
+                save_claude_answer_to_chat(chat_id, owner_key, msg["topic_key"], answer)
+                # Reddit post-cards is message ke neeche kabhi nahi dikhne —
+                # results forced empty, regardless of matched.
+                msg["results"] = []
+                save_signal_results_to_chat(chat_id, owner_key, msg["topic_key"], [])
+                try:
+                    append_to_chat_summary(chat_id, owner_key, msg["query"], answer)
+                except Exception as exc:
+                    log.warning(f"Updating chat summary failed for topic_key={msg.get('topic_key')}: {exc}")
+                # (busy flag ka clear neeche wale `finally` se hota hai —
+                # return par bhi woh chalta hai, alag se call ki zaroorat nahi.)
+                return  # website-only path complete — skip the normal branch below entirely.
+
+            # ── EXISTING NORMAL BRANCH (unchanged) starts here ──
             # (MERGE BEFORE ANSWERING) Pulls in Google-search stub
             # results and combines them with the flintel_signals
             # `matched` list passed in, capped at the message's own
@@ -1143,6 +1260,18 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
     what gets computed once a call is actually allowed to run. See each
     call site below for the specific rationale.
 
+    (WEBSITE INTELLIGENCE — WEBSITE-ONLY SHORT-CIRCUIT) A message tagged
+    `website_only=True` does NOT wait for Reddit/Google evidence to
+    appear. Its answer comes purely from website evidence, so gating it
+    on `if not merged_pool` (and the RESPONSE_TIMEOUT fallback that
+    follows) would either stall it or replace it with a generic
+    "nothing found" answer. So, right AFTER the signal lookup and the two
+    immediate-trigger blocks (Google search + search-progress — both
+    still fire, so flintel_signals/google_posts keep getting collected in
+    the background for later follow-ups), such a message is handed
+    straight to _complete_message_answer_and_results(), whose own
+    website_only branch builds the answer and forces results to [].
+
     OTHERWISE COMPLETELY UNCHANGED — this function calls
     get_matched_signals() and analyze_with_claude() exactly as before,
     using whatever `keywords` was already stored on the message by
@@ -1219,6 +1348,39 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                 background_tasks.add_task(_generate_search_progress, chat_id, owner_key, msg)
             else:
                 _generate_search_progress(chat_id, owner_key, msg)
+
+        # (WEBSITE INTELLIGENCE — WEBSITE-ONLY SHORT-CIRCUIT) Website-only
+        # messages never wait for Reddit/Google evidence (see the
+        # docstring above) — the background Google search/search-progress
+        # triggers above have already fired, so flintel_signals/
+        # google_posts keep filling in for later follow-ups; this message's
+        # own answer is built right away by
+        # _complete_message_answer_and_results()'s website_only branch,
+        # and the normal `merged_pool`/RESPONSE_TIMEOUT logic below is
+        # skipped entirely for it.
+        if msg.get("website_only"):
+            if needs_answer:
+                # Same busy-lock protection as the normal branch below —
+                # never schedule a second, duplicate call for this owner
+                # while one is already in flight (DUPLICATE-REFRESH FIX),
+                # and mark busy synchronously BEFORE scheduling
+                # (BUSY-LOCK RACE FIX).
+                if not _is_owner_busy(owner_key):
+                    _set_owner_busy(owner_key)
+                    if background_tasks is not None:
+                        background_tasks.add_task(_complete_message_answer_and_results, chat_id, owner_key, msg, matched)
+                    else:
+                        _complete_message_answer_and_results(chat_id, owner_key, msg, matched)
+            elif needs_results:
+                # Answer already saved but results never got written —
+                # website-only messages never show Reddit post-cards, so
+                # just persist the forced-empty list.
+                msg["results"] = []
+                try:
+                    save_signal_results_to_chat(chat_id, owner_key, msg["topic_key"], [])
+                except Exception as exc:
+                    log.warning(f"Saving empty website-only results failed for topic_key={msg.get('topic_key')}: {exc}")
+            continue
 
         # (MERGE BEFORE ANSWERING) Pulls in whatever Google-search stub
         # results already exist for this message (from ANY prior trigger
