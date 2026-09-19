@@ -322,6 +322,18 @@ def search(
         # the matching job for those keywords/topic is already collecting
         # data under the ORIGINAL message's topic_key.
         reuse_website_keywords = False
+        # (BUG 1) Set once, inside the router try-block below, to the
+        # chat's currently stored last_website_context (if any) — reused
+        # by both the router's own website_ctx_summary and the VAGUE
+        # WEBSITE FOLLOW-UP REUSE block right after it, so both read the
+        # exact same snapshot instead of two separate Mongo reads.
+        saved_website_ctx = None
+        # (BUG 1) The short note appended to analyze_with_claude()'s extra
+        # context (via stream_answer()'s extra_ctx_parts) whenever this
+        # message reused a previously shared website's keywords, or the
+        # router flagged this search as related/unrelated to it. None for
+        # every other message — completely unused otherwise.
+        website_note = None
         # (STRUCTURED WEBSITE SUMMARY) Stays None for every case except the
         # two website-derived-keywords paths in INTEGRATION POINT 2 below
         # (BEHAVIOR 2, and the BEHAVIOR 3 confirmed-match branch) — never set
@@ -347,7 +359,13 @@ def search(
             chat_summary = (existing_chat or {}).get("summary") or ""
             chat_summary_for_resolve = chat_summary
 
-            routed = classify_and_maybe_chat(query, chat_summary)
+            saved_website_ctx = (existing_chat or {}).get("last_website_context")
+            website_ctx_summary = (
+                _build_website_context_summary(saved_website_ctx)
+                if saved_website_ctx and not _extract_first_url(query) else None
+            )
+
+            routed = classify_and_maybe_chat(query, chat_summary, website_ctx_summary)
             intent = routed.get("intent", "search")
             chat_reply = routed.get("reply")
             routed_keywords = routed.get("keywords")
@@ -370,6 +388,16 @@ def search(
         # check simply never fires for this message, saving the extra
         # resolve_unclear_topic() Claude call entirely.
         #
+        # (BUG 1) The router itself now sees the saved website context (via
+        # website_ctx_summary above) and can classify this turn directly,
+        # returning routed["use_website_context"] and/or
+        # routed["website_topic_relation"] — this block's own
+        # _WEBSITE_FOLLOWUP_RE regex check is kept ONLY as a backup for
+        # "clarify"/"chat" turns the router didn't already flag for reuse.
+        # last_website_context itself is deliberately NEVER overwritten
+        # here — it stays exactly as BEHAVIOR 1/2/3 originally saved it, so
+        # later follow-ups keep working off the same saved keywords.
+        #
         # Best-effort only: any failure here simply leaves `intent`/
         # routed_* completely untouched, falling straight through to the
         # EXISTING clarify-self-resolve / chat / search handling below
@@ -377,34 +405,23 @@ def search(
         # ─────────────────────────────────────────────────────────────────────
         if not _extract_first_url(query):
             try:
-                chat_for_reuse = (
-                    get_chat_session(active_chat_id, owner_key)
-                    if active_chat_id and owner_key else None
-                )
-                last_website_context = (chat_for_reuse or {}).get("last_website_context")
-                if last_website_context and last_website_context.get("keywords"):
-                    should_reuse = False
-                    if intent == "clarify":
-                        should_reuse = True
-                    elif intent == "chat":
-                        # (TRADEOFF, noted not fixed) This only ever runs
-                        # for router intents "clarify"/"chat" — if the
-                        # router itself classifies a follow-up like "reddit
-                        # par log kya problems face kar rahe hain" straight
-                        # as "search", this reuse block never even
-                        # considers it, since that's a different code path
-                        # entirely (the normal search-type pipeline below).
-                        should_reuse = bool(_WEBSITE_FOLLOWUP_RE.search(query))
-
+                ctx = saved_website_ctx
+                if ctx and ctx.get("keywords") and intent != "blocked":
+                    should_reuse = bool(routed.get("use_website_context"))
+                    if not should_reuse and intent in ("clarify", "chat"):
+                        should_reuse = bool(_WEBSITE_FOLLOWUP_RE.search(query))  # purana backup
                     if should_reuse:
                         intent = "search"
-                        routed_keywords = last_website_context["keywords"]
-                        routed_match_phrases = last_website_context.get("match_phrases")
+                        routed_keywords = ctx["keywords"]
+                        routed_match_phrases = ctx.get("match_phrases")
                         reuse_website_keywords = True
+                        website_note = _build_website_note(ctx, "own")
                         log.info(
                             f"Reusing last website context for follow-up | "
                             f"chat_id={active_chat_id} | keywords={routed_keywords}"
                         )
+                    elif intent == "search" and routed.get("website_topic_relation") in ("related", "unrelated"):
+                        website_note = _build_website_note(ctx, routed["website_topic_relation"])
             except Exception as exc:
                 log.warning(f"Website follow-up reuse check failed for query={query!r}: {exc}")
 
@@ -540,6 +557,10 @@ def search(
                                         "topic_key": topic_key,
                                         "keywords": keywords,
                                         "match_phrases": kw.get("match_phrases"),
+                                        "business": (
+                                            (evidence.get("structured_evidence") or {}).get("business")
+                                            or (evidence.get("structured_evidence") or {}).get("title")
+                                        ),
                                     },
                                 )
                             except Exception as exc:
@@ -645,6 +666,12 @@ def search(
         # REUSE feature above to pick up on a later message in this chat.
         # ─────────────────────────────────────────────────────────────────────
         website_context_url = None
+        # (BUG 1) Set whenever BEHAVIOR 2/3 (or BEHAVIOR 1 above) manages to
+        # pull a short business/title seed out of the website's own
+        # evidence — used ONLY by the final generate_fuzzy_keywords()
+        # safety-net fallback further below, so a fuzzy-keyword fallback
+        # never has to fall back to seeding itself with the raw URL string.
+        website_seed_for_fallback = None
         detected_url = _extract_first_url(query)
         if detected_url:
             # Same pure-Python heuristic used in INTEGRATION POINT 1 above,
@@ -689,6 +716,13 @@ def search(
                     except Exception as exc:
                         log.warning(f"Website keyword generation failed for url={website_evidence.get('url')!r}: {exc}")
                         kw = None
+                    # (BUG 1) A usable business/title seed came out of this
+                    # evidence regardless of whether keyword generation
+                    # itself succeeded — captured here so the final
+                    # generate_fuzzy_keywords() safety net below never has
+                    # to seed itself with the raw URL string.
+                    _se = website_evidence.get("structured_evidence") or {}
+                    website_seed_for_fallback = (_se.get("business") or _se.get("title") or "")[:80] or None
                     if kw and kw.get("keywords"):
                         routed_keywords = kw["keywords"]
                         routed_match_phrases = kw.get("match_phrases")
@@ -700,12 +734,14 @@ def search(
                         used_cached_evidence = True
 
                 if not used_cached_evidence:
-                    # PURANA path — safety net, unchanged.
+                    # PURANA path — safety net, unchanged, except the site
+                    # is no longer re-fetched if we already have its text
+                    # from the evidence cache above (BUG 1).
                     website_keywords = None
                     website_text = None
                     website_extraction_result = None
                     try:
-                        website_text = fetch_website_text(detected_url)
+                        website_text = (website_evidence or {}).get("combined_text") or fetch_website_text(detected_url)
                         website_extraction_result = extract_keywords_from_website(query, detected_url, website_text)
                     except Exception as exc:
                         log.warning(f"Website fetch/keyword-extraction failed for url={detected_url!r}: {exc}")
@@ -863,11 +899,17 @@ def search(
             # below is 100% identical to before this feature.
             keywords = []
         else:
-            log.warning(
-                f"No usable keywords from the Claude router for query={query!r} "
-                f"— falling back to generate_fuzzy_keywords()"
-            )
-            keywords = generate_fuzzy_keywords(query)
+            # (BUG 1) fuzzy_seed prefers a short business/title seed pulled
+            # from the website's own evidence (website_seed_for_fallback)
+            # over the raw query text whenever a URL is present — before
+            # this, a fuzzy fallback for a URL-containing query fed the raw
+            # URL string itself into generate_fuzzy_keywords(), producing
+            # junk keywords.
+            fuzzy_seed = query
+            if detected_url:
+                fuzzy_seed = website_seed_for_fallback or query.replace(detected_url, " ").strip() or query
+            log.warning(f"No usable keywords for query={query!r} — fuzzy fallback with seed={fuzzy_seed!r}")
+            keywords = generate_fuzzy_keywords(fuzzy_seed)
         keywords = keywords[:MAX_KEYWORDS]
 
         # (TIME-WINDOW FEATURE) time_window_days is purely a downstream
@@ -907,6 +949,7 @@ def search(
                 website_context=website_answer_context,
                 match_phrases=routed_match_phrases,
                 evidence_required=routed.get("evidence_required"),
+                website_note=website_note,
             )
             # (WEBSITE INTELLIGENCE) Whenever this message's keywords came
             # from the website (BEHAVIOR 2, or a BEHAVIOR 3 confirmed
@@ -925,6 +968,7 @@ def search(
                             "topic_key": topic_key,
                             "keywords": keywords,
                             "match_phrases": routed_match_phrases,
+                            "business": website_seed_for_fallback,
                         },
                     )
                 except Exception as exc:
@@ -1165,7 +1209,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
         return StreamingResponse(_no_chat(), media_type="text/event-stream")
 
     msg = next(
-        (m for m in chat.get("messages", []) if m.get("topic_key") == topic_key),
+        (m for m in reversed(chat.get("messages") or []) if m.get("topic_key") == topic_key),
         None,
     )
     if not msg:
@@ -1244,7 +1288,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     try:
                         fresh_chat = get_chat_session(chat_id, owner_key)
                         fresh_msg = next(
-                            (m for m in (fresh_chat or {}).get("messages", []) if m.get("topic_key") == topic_key),
+                            (m for m in reversed((fresh_chat or {}).get("messages") or []) if m.get("topic_key") == topic_key),
                             None,
                         )
                     except Exception as exc:
@@ -1391,7 +1435,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 try:
                     fresh_chat = get_chat_session(chat_id, owner_key)
                     fresh_msg = next(
-                        (m for m in (fresh_chat or {}).get("messages", []) if m.get("topic_key") == topic_key),
+                        (m for m in reversed((fresh_chat or {}).get("messages") or []) if m.get("topic_key") == topic_key),
                         None,
                     )
                 except Exception as exc:
@@ -1658,6 +1702,8 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                             msg["query"], msg.get("time_window_days")
                         )
                     )
+                if msg.get("website_note"):
+                    extra_ctx_parts.append(msg["website_note"])
                 if continuity_ctx:
                     extra_ctx_parts.append(continuity_ctx)
                 # (MERGE BEFORE ANSWERING) Tells Claude it has a mix
@@ -1698,7 +1744,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             if full_answer:
                 try:
                     save_claude_answer_to_chat(chat_id, owner_key, topic_key, full_answer)
-                    append_to_chat_summary(chat_id, owner_key, msg["query"], full_answer)
+                    append_to_chat_summary(chat_id, owner_key, msg["query"], full_answer, keywords=msg.get("keywords"))
                 except Exception as exc:
                     log.warning(f"Caching streamed answer failed for topic_key={topic_key}: {exc}")
 
