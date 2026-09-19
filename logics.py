@@ -1021,9 +1021,9 @@ given — never from an assumption that "the response should be long."
 - 3-10 relevant posts, one angle -> 1-2 genuine findings, each grounded
   in its own evidence. Do not write a drawn-out executive_summary for
   this much evidence.
-- 10+ relevant posts, multiple angles -> the full analyst-style report —
-  this is the only case where multiple key_findings, detailed_findings,
-  and market_pattern are genuinely justified.
+- 10+ relevant posts, multiple angles -> up to 3 key_findings plus a
+  short market_pattern; detailed_findings only if the user asks for
+  detail (see RESPONSE SIZE CONTROL).
 
 Never stretch thin evidence into something long. Never short-change
 strong evidence either. Depth per finding comes from the weight of its
@@ -1078,6 +1078,23 @@ If the evidence is too thin or too scattered to support a genuine
 direction, keep "market_pattern" short or OMIT it completely — never
 write a filler prediction just to fill the field. Not every single query
 needs a forced prediction.
+
+──────────────────────────────────────────────────────────────────────────
+RESPONSE SIZE CONTROL — DEFAULT IS MEDIUM (overrides the depth ladder)
+
+Default to a MEDIUM-length report a reader can act on in about a minute.
+The analysis logic above stays the same; only how much is written out changes.
+- executive_summary: 2-4 sentences.
+- key_findings: at most 3, each "impact" one sentence.
+- detailed_findings: empty list by default. Include only if the user
+  explicitly asks for detail / deep dive / full report, then at most 3.
+- market_pattern: 1-2 sentences only when genuinely supported, else omit.
+- conclusion: 1-2 sentences.
+- business_insight: only when the user is clearly selling something or
+  asking for leads/positioning, max 2 sentences.
+- Each post "summary": one short sentence.
+Scale to the user's prompt: simple question -> shorter answer;
+"detail"/"deep"/"poori detail" -> expanded. Never pad.
 
 ──────────────────────────────────────────────────────────────────────────
 OUTPUT CONTRACT — STRICT JSON ONLY, no markdown code fences, no
@@ -1503,6 +1520,8 @@ def _call_claude(system_prompt: str, user_message: str, max_tokens: int = None, 
             )
         response.raise_for_status()
         data = response.json()
+        if data.get("stop_reason") == "max_tokens":
+            log.warning(f"Claude hit max_tokens={payload['max_tokens']} — output likely truncated")
 
     text_blocks = [
         block.get("text", "") for block in data.get("content", [])
@@ -2077,10 +2096,36 @@ text outside the JSON object — in EXACTLY one of these four shapes:
 {"intent": "clarify", "reply": "<short, natural clarifying question>", "keywords": null, "time_window_days": null, "match_phrases": null, "evidence_required": null}
 """
 
+CLAUDE_ROUTER_WEBSITE_CONTEXT_ADDENDUM = """
+SAVED WEBSITE CONTEXT (applies ONLY when a "Saved website context" block
+appears in the input. If absent, ignore this section; use_website_context
+is false.)
+The user shared THEIR OWN website earlier in this chat; its URL, business
+and already-extracted keywords are given. Decide which case applies:
+1. OWN-BUSINESS REQUEST: user wants something for their own business/
+   niche/website WITHOUT naming a different topic ("mere niche se related
+   posts do", "mere liye leads dhoond kar do", "sales do", "find customers
+   for me"). Return intent="search", "use_website_context": true,
+   "keywords": null, "match_phrases": null (backend reuses saved website
+   keywords, never generate new). While a saved website context exists
+   such a message is NEVER "clarify" and NEVER "chat".
+2. SPECIFIC TOPIC CONNECTED TO THE WEBSITE: user names a specific
+   product/angle that belongs to what the website offers. intent="search",
+   "use_website_context": false, generate keywords/match_phrases for THAT
+   topic normally, "website_topic_relation": "related".
+3. TOPIC UNRELATED TO THE WEBSITE: normal search with keywords for that
+   topic, "use_website_context": false, "website_topic_relation":
+   "unrelated". Never mix the website's keywords in.
+4. Everything else (greetings, blocked etc.): use_website_context false.
+Extended search JSON shape:
+{"intent":"search","reply":null,"keywords":[...]|null,"time_window_days":<int|null>,"match_phrases":[...]|null,"evidence_required":<int|null>,"website_only":false,"use_website_context":<true|false>,"website_topic_relation":"related"|"unrelated"|null}
+"""
+
 CLAUDE_ROUTER_SYSTEM_PROMPT = (
     CLAUDE_ROUTER_SYSTEM_PROMPT
     + "\n" + flintel.ROUTER_UNFILTERED_ADDENDUM
     + "\n" + flintel.GENERIC_PAIN_POINT_INFERENCE_ADDENDUM
+    + "\n" + CLAUDE_ROUTER_WEBSITE_CONTEXT_ADDENDUM
 )
 
 CLAUDE_CHAT_FALLBACK_SYSTEM_PROMPT = """
@@ -2207,6 +2252,8 @@ def _parse_router_json(raw: str):
     evidence_required = None
     unfiltered = False
     website_only = False
+    use_website_context = False
+    website_topic_relation = None
     if intent == "search":
         raw_keywords = data.get("keywords")
         if isinstance(raw_keywords, list):
@@ -2275,13 +2322,17 @@ def _parse_router_json(raw: str):
 
         unfiltered = bool(data.get("unfiltered") is True)
         website_only = bool(data.get("website_only") is True)
+        use_website_context = bool(data.get("use_website_context") is True)
+        _rel = data.get("website_topic_relation")
+        website_topic_relation = _rel if _rel in ("related", "unrelated") else None
 
     return {"intent": intent, "reply": reply, "keywords": keywords, "time_window_days": time_window_days,
             "unfiltered": unfiltered, "match_phrases": match_phrases, "evidence_required": evidence_required,
-            "website_only": website_only}
+            "website_only": website_only, "use_website_context": use_website_context,
+            "website_topic_relation": website_topic_relation}
 
 
-def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
+def classify_and_maybe_chat(query: str, chat_summary: str, website_context_summary: str = None) -> dict:
     """(v5, extended in v6 with abuse-blocking, again with keyword
     generation, again with time-window parsing + a "clarify" intent,
     again with the ROUTER INTENT REFINEMENT prompt wording described in
@@ -2312,21 +2363,28 @@ def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
     function changed — the same try/except safety net, the same
     _parse_router_json() validation, and the same "any failure ->
     default to intent='search'" fallback all apply exactly as before."""
+    website_context_block = ""
+    if website_context_summary:
+        website_context_block = (
+            "Saved website context (the user shared their own website earlier in this chat):\n"
+            f"{website_context_summary}\n\n"
+        )
     user_message = (
         f"Conversation so far (auto-summarized, may be empty):\n"
         f"{chat_summary or '(no earlier messages in this chat)'}\n\n"
+        f"{website_context_block}"
         f"User's new message: {query}"
     )
     try:
         raw = _call_claude(CLAUDE_ROUTER_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_ROUTER_MAX_TOKENS, enable_web_search=True)
     except Exception as exc:
         log.warning(f"Router Claude call failed (defaulting to 'search'): {exc}")
-        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None, "evidence_required": None, "website_only": False}
+        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None, "evidence_required": None, "website_only": False, "use_website_context": False, "website_topic_relation": None}
 
     parsed = _parse_router_json(raw)
     if not parsed:
         log.warning(f"Router returned unparseable output (defaulting to 'search'): {raw[:200]!r}")
-        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None, "evidence_required": None, "website_only": False}
+        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None, "evidence_required": None, "website_only": False, "use_website_context": False, "website_topic_relation": None}
     return parsed
 
 
@@ -2686,6 +2744,107 @@ def fetch_website_multi_page(url: str) -> dict:
     return {"combined_text": combined_text, "pages_fetched": pages_fetched}
 
 
+def _repair_truncated_json(text):
+    """(BUG 1 / BUG 3 — TRUNCATED JSON REPAIR) Best-effort recovery of a
+    valid JSON object out of `text` that was cut off mid-stream (e.g. by
+    max_tokens) — walks backward from a set of candidate cut points
+    (commas/braces/brackets found outside of string literals), closes off
+    whatever braces/brackets are still open at that cut point, and tries
+    to parse the result. Tries up to the last 60 candidate cut points,
+    starting from the latest (least truncation) and working backward.
+    Returns a dict on success, or None if nothing could be repaired —
+    never raises."""
+    s = (text or "").strip()
+    start = s.find("{")
+    if start == -1:
+        return None
+    s = s[start:]
+    in_str = esc = False
+    cuts = []
+    for i, ch in enumerate(s):
+        if in_str:
+            if esc:
+                esc = False
+            elif ch == "\\":
+                esc = True
+            elif ch == '"':
+                in_str = False
+            continue
+        if ch == '"':
+            in_str = True
+        elif ch in ",}]":
+            cuts.append(i)
+    for cut in reversed(cuts[-60:]):
+        candidate = s[:cut] if s[cut] == "," else s[:cut + 1]
+        stack, in_s, e = [], False, False
+        for ch in candidate:
+            if in_s:
+                if e:
+                    e = False
+                elif ch == "\\":
+                    e = True
+                elif ch == '"':
+                    in_s = False
+                continue
+            if ch == '"':
+                in_s = True
+            elif ch in "{[":
+                stack.append("}" if ch == "{" else "]")
+            elif ch in "}]" and stack:
+                stack.pop()
+        try:
+            parsed = json.loads(candidate + "".join(reversed(stack)))
+            if isinstance(parsed, dict):
+                return parsed
+        except ValueError:
+            continue
+    return None
+
+
+def _parse_json_lenient(raw):
+    """(BUG 1 — LENIENT JSON PARSE) Best-effort, NON-RAISING JSON parse
+    tolerant of Claude's occasional fence-wrapping, leading/trailing
+    prose, and truncated output. Tries, in order:
+      1. Strip a ```json ... ``` (or ``` ... ```) fence if present, same
+         convention already used elsewhere in this file (tolerates a
+         missing closing fence too, since str.strip("`") strips from both
+         ends independently).
+      2. A direct json.loads() on the cleaned text.
+      3. json.JSONDecoder().raw_decode() starting at the first "{" found
+         anywhere in the text (handles leading narration before the JSON).
+      4. _repair_truncated_json() as a last resort, for genuinely
+         truncated JSON missing its closing brackets.
+    Returns a dict on success, or None on total failure — never raises."""
+    if not raw:
+        return None
+    cleaned = raw.strip()
+    if cleaned.startswith("```"):
+        cleaned = cleaned.strip("`").strip()
+        cleaned = re.sub(r"^json\s*", "", cleaned, flags=re.IGNORECASE).strip()
+
+    try:
+        data = json.loads(cleaned)
+        if isinstance(data, dict):
+            return data
+    except (ValueError, TypeError):
+        pass
+
+    brace_index = cleaned.find("{")
+    if brace_index != -1:
+        try:
+            data, _end = json.JSONDecoder().raw_decode(cleaned, brace_index)
+            if isinstance(data, dict):
+                return data
+        except (ValueError, TypeError):
+            pass
+
+    repaired = _repair_truncated_json(cleaned)
+    if isinstance(repaired, dict):
+        return repaired
+
+    return None
+
+
 CLAUDE_WEBSITE_KEYWORD_SYSTEM_PROMPT = """
 You are the website-to-keywords brain inside Flintel, a social-listening
 platform. The user has shared a link to their OWN website together with
@@ -2801,16 +2960,9 @@ def extract_keywords_from_website(query: str, url: str, website_text: str):
         log.warning(f"Website-keyword Claude call failed for url={url!r}: {exc}")
         return None
 
-    cleaned = (raw or "").strip()
-    if cleaned.startswith("```"):
-        cleaned = cleaned.strip("`").strip()
-        cleaned = re.sub(r"^json\s*", "", cleaned, flags=re.IGNORECASE).strip()
-    try:
-        data = json.loads(cleaned)
-    except (ValueError, TypeError):
-        log.warning(f"Website-keyword call returned unparseable output for url={url!r}: {raw[:200]!r}")
-        return None
-    if not isinstance(data, dict):
+    data = _parse_json_lenient(raw)
+    if not data:
+        log.warning(f"Website-keyword call returned unparseable output for url={url!r}: {(raw or '')[:200]!r}")
         return None
 
     raw_keywords = data.get("keywords")
@@ -3030,15 +3182,9 @@ def generate_keywords_for_website_request(query: str, url: str, structured_evide
         log.warning(f"Website-request keyword generation failed for url={url!r}: {exc}")
         return {"keywords": None, "match_phrases": None}
 
-    cleaned = (raw or "").strip()
-    if cleaned.startswith("```"):
-        cleaned = cleaned.strip("`").strip()
-        cleaned = re.sub(r"^json\s*", "", cleaned, flags=re.IGNORECASE).strip()
-    try:
-        data = json.loads(cleaned)
-    except (ValueError, TypeError):
-        return {"keywords": None, "match_phrases": None}
-    if not isinstance(data, dict):
+    data = _parse_json_lenient(raw)
+    if not data:
+        log.warning(f"Website-request keyword generation returned unparseable output for url={url!r}: {(raw or '')[:200]!r}")
         return {"keywords": None, "match_phrases": None}
 
     keywords = data.get("keywords") if isinstance(data.get("keywords"), list) else None
@@ -3049,7 +3195,7 @@ def generate_keywords_for_website_request(query: str, url: str, structured_evide
 
 
 def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query: str, keywords: list = None,
-                              match_phrases: list = None, evidence_required: int = None):
+                              match_phrases: list = None, evidence_required: int = None, website_note: str = None):
     """(PERFORMANCE FIX) Extracted, UNCHANGED logic from the RESPONSE_TIMEOUT
     fallback branch that used to run inline inside _fill_in_message_outputs()
     — same calls, same order, same caching. Pulled out so it can be
@@ -3180,6 +3326,8 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
         extra_ctx_parts.append(flintel.build_mixed_evidence_note())
         if google_results:
             extra_ctx_parts.append(flintel.build_combined_source_context(len(matched), len(google_results)))
+        if website_note:
+            extra_ctx_parts.append(website_note)
         extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
 
         answer = analyze_with_claude(query, merged_pool, extra_context=extra_ctx)
@@ -3192,7 +3340,7 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
         except Exception as exc:
             log.warning(f"Saving google-fallback results failed for topic_key={topic_key}: {exc}")
         try:
-            append_to_chat_summary(chat_id, owner_key, query, final_answer)
+            append_to_chat_summary(chat_id, owner_key, query, final_answer, keywords=keywords)
         except Exception as exc:
             log.warning(f"Updating chat summary failed for topic_key={topic_key}: {exc}")
     except Exception as exc:
@@ -3252,7 +3400,11 @@ def _extract_json_object_from_text(text: str) -> str:
         candidate = fence_match.group(1).strip()
         try:
             parsed = json.loads(candidate)
-            if isinstance(parsed, dict):
+            # (BUG 3) Require "format" too — otherwise a complete, valid,
+            # but IRRELEVANT nested JSON object living inside truncated
+            # text (which itself has no "format" key) could get returned
+            # instead of the real top-level answer object.
+            if isinstance(parsed, dict) and "format" in parsed:
                 return json.dumps(parsed, ensure_ascii=False)
         except (ValueError, TypeError):
             pass
@@ -3261,11 +3413,19 @@ def _extract_json_object_from_text(text: str) -> str:
     while brace_index != -1:
         try:
             parsed, _end_index = json.JSONDecoder().raw_decode(stripped, brace_index)
-            if isinstance(parsed, dict):
+            if isinstance(parsed, dict) and "format" in parsed:
                 return json.dumps(parsed, ensure_ascii=False)
         except (ValueError, TypeError):
             pass
         brace_index = stripped.find("{", brace_index + 1)
+
+    # (BUG 3 — TRUNCATED JSON REPAIR) Nothing above found a complete,
+    # valid, "format"-bearing JSON object — try repairing genuinely
+    # truncated JSON (e.g. cut off by max_tokens) before giving up.
+    repaired = _repair_truncated_json(stripped)
+    if isinstance(repaired, dict) and repaired.get("format"):
+        log.warning("Claude answer was truncated JSON — repaired before saving")
+        return json.dumps(repaired, ensure_ascii=False)
 
     return text
 
