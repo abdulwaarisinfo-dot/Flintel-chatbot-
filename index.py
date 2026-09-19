@@ -60,6 +60,32 @@ below for the full rationale — no other logic in this module changed.
   Plus (D): _fill_in_message_outputs() short-circuits `website_only`
   messages straight to (B), so their answer never waits on Reddit/Google
   evidence (or the RESPONSE_TIMEOUT fallback) to show up.
+
+(BUG FIX PACK #2 — CHAT SUMMARY CONTEXT + REFRESH/DUPLICATE-PROMPT)
+  (1) _extract_summary_text_from_claude_answer() now also pulls
+      "executive_summary"/"conclusion" and a "followup_question" string
+      out of an analyst-style JSON answer — these are newer fields the
+      JSON-ANALYSIS-PROMPT format can emit that the original field list
+      didn't know about, so the rolling chat summary was silently
+      dropping them.
+  (2) append_to_chat_summary() takes an optional `keywords` param and,
+      when given, appends a short "[searched: ...]" note to the summary
+      line so later continuity/router reads know what was actually
+      searched for.
+  (3) add_search_to_chat() takes an optional `website_note` param,
+      stored on the message and folded into analyze_with_claude()'s
+      extra_context by _complete_message_answer_and_results() (and
+      forwarded into _timeout_fallback_answer()'s tier-3 flow too).
+  (4) REFRESH/DUPLICATE-PROMPT FIX: topic_key is derived only from the
+      query text, so resending the exact same prompt in the same chat
+      creates a second message with the same topic_key. The five
+      save/mark helpers used to update via Mongo's positional `$`
+      operator, which always resolves to the FIRST matching array
+      element — so a repeated prompt's answer/results/flags always
+      landed on the OLDEST message with that topic_key, and the new
+      message's fields stayed None forever. These helpers now go
+      through a shared _set_on_latest_message() helper that updates the
+      most recent matching message by its actual array index instead.
 """
 
 import re
@@ -200,7 +226,16 @@ def _extract_summary_text_from_claude_answer(answer: str) -> str:
     answer isn't valid JSON (e.g. a plain "chat"/"blocked"/"clarify"
     reply, which is already plain text and doesn't need this treatment)
     or has none of the known fields — so this can only ever IMPROVE the
-    summary's usefulness, never make it worse than doing nothing."""
+    summary's usefulness, never make it worse than doing nothing.
+
+    (BUG FIX PACK #2) The field list now also includes
+    "executive_summary" and "conclusion" — newer analyst-style JSON
+    formats emit these instead of (or alongside) "summary"/"trend", and
+    the original list was silently skipping them, so an executive-
+    summary-only answer contributed NOTHING to the rolling chat summary.
+    A top-level "followup_question" string (distinct from the
+    "followups" list already handled below) is also pulled in, for the
+    same reason."""
     if not answer:
         return answer or ""
 
@@ -223,10 +258,15 @@ def _extract_summary_text_from_claude_answer(answer: str) -> str:
         return answer
 
     parts = []
-    for key in ("summary", "message", "likely_reason", "interpretation", "trend"):
+    for key in ("executive_summary", "summary", "message", "likely_reason",
+                "interpretation", "trend", "conclusion"):
         val = data.get(key)
         if isinstance(val, str) and val.strip():
             parts.append(val.strip())
+
+    followup_question = data.get("followup_question")
+    if isinstance(followup_question, str) and followup_question.strip():
+        parts.append(followup_question.strip())
 
     followups = data.get("followups")
     if isinstance(followups, list):
@@ -252,7 +292,7 @@ def _extract_summary_text_from_claude_answer(answer: str) -> str:
     return " | ".join(parts)
 
 
-def append_to_chat_summary(chat_id: str, owner_key: str, query: str, answer: str):
+def append_to_chat_summary(chat_id: str, owner_key: str, query: str, answer: str, keywords: list = None):
     """(v5) Keeps a short, PLAIN-PYTHON (no extra Claude call) running
     summary on the chat doc itself — one condensed line per turn. This is
     what classify_and_maybe_chat() reads for continuity, so passing
@@ -267,11 +307,26 @@ def append_to_chat_summary(chat_id: str, owner_key: str, query: str, answer: str
     JSON-format answer contributes its actual human-readable fields to
     the summary instead of getting sliced mid-object by the raw
     character trim — see that function's own docstring for why this
-    matters for confirmation-style follow-up replies."""
+    matters for confirmation-style follow-up replies.
+
+    (BUG FIX PACK #2) `keywords` (NEW, optional, default None — every
+    existing caller that doesn't pass it behaves exactly as before)
+    appends a short "[searched: ...]" note (up to the first 4 keywords)
+    to the summary line for a search-type turn, so later continuity/
+    router reads can tell what was actually searched for, not just what
+    was asked."""
     if not chat_id or not owner_key:
         return
     digest = _extract_summary_text_from_claude_answer(answer)
-    line = f"User: {_trim(query, CHAT_SUMMARY_TURN_CHAR_LIMIT)} | Assistant: {_trim(digest, CHAT_SUMMARY_TURN_CHAR_LIMIT)}"
+    kw_note = ""
+    if keywords:
+        kw_list = [k for k in keywords[:4] if isinstance(k, str)]
+        if kw_list:
+            kw_note = f" [searched: {', '.join(kw_list)}]"
+    line = (
+        f"User: {_trim(query, CHAT_SUMMARY_TURN_CHAR_LIMIT)} | "
+        f"Assistant: {_trim(digest, CHAT_SUMMARY_TURN_CHAR_LIMIT)}{kw_note}"
+    )
 
     chat = chats_collection.find_one({"chat_id": chat_id, "owner_key": owner_key}, {"summary": 1})
     existing_summary = (chat or {}).get("summary") or ""
@@ -531,7 +586,8 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
                         keywords: list, targeting_platform: str, time_window_days: int = None,
                         unfiltered: bool = False, website_context: dict = None, match_phrases: list = None,
                         evidence_required: int = None,
-                        website_only: bool = False, website_evidence: dict = None):
+                        website_only: bool = False, website_evidence: dict = None,
+                        website_note: str = None):
     """Appends a search as a new message in the chat, and auto-titles the
     chat from the very first query if it hasn't been named yet.
 
@@ -611,7 +667,16 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
     that answer needs — stored on the message itself (in addition to any
     chat-level cache) so regenerating this message's answer later uses
     the exact evidence originally used, even if a cache has since
-    expired or changed."""
+    expired or changed.
+
+    (BUG FIX PACK #2) `website_note` (NEW, optional, default None — every
+    existing caller that doesn't pass it behaves exactly as before) is a
+    short, plain-text classification note (e.g. own-business vs related
+    vs unrelated website) that _complete_message_answer_and_results()
+    folds into analyze_with_claude()'s extra_context for this message,
+    so the answer can account for how the shared website relates to the
+    query. Stored on the message so it stays consistent across
+    re-answers of the same message, exactly like website_evidence."""
     now = datetime.now(timezone.utc)
     message = {
         "query":              query,
@@ -626,6 +691,8 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
                                                   # through the website-insight path, not Reddit evidence.
         "website_evidence":   website_evidence,  # (WEBSITE INTELLIGENCE) dict|None — structured business
                                                   # evidence needed to build the website-insight answer.
+        "website_note":       website_note,      # (WEBSITE INTELLIGENCE) str|None — classification note folded
+                                                  # into analyze_with_claude()'s extra_context for this message.
         "website_context":    website_context,
         "google_fallback_triggered": False,
         "search_progress": None,               # (SEARCH-PROGRESS UI) None until generated
@@ -688,6 +755,34 @@ def add_chat_message_to_chat(chat_id: str, owner_key: str, query: str, answer: s
     chats_collection.update_one({"chat_id": chat_id, "owner_key": owner_key}, update)
 
 
+def _set_on_latest_message(chat_id: str, owner_key: str, topic_key: str, fields: dict):
+    """(BUG 3 FIX — REFRESH/DUPLICATE-PROMPT HIDES ANSWER) `topic_key` is
+    derived only from the query text, so re-sending the exact same prompt
+    in the same chat produces a second message with the SAME topic_key.
+    Every save/mark helper below used to update via
+    {"messages.topic_key": topic_key} + "messages.$....", and Mongo's
+    positional `$` operator always resolves to the FIRST array element
+    that matches the filter — so the write always landed on the OLDEST
+    message with that topic_key, never the new one. The new message's
+    fields stayed None forever (even though the write genuinely succeeded
+    against the old message), so it never resolved/rendered.
+
+    This finds the LAST (most recent) message with a matching topic_key
+    and updates it by its actual array index instead of by positional
+    match, so a repeated prompt's newest occurrence is the one that gets
+    its answer/results/flags written. Best-effort: silently no-ops if the
+    chat or a matching message can't be found, exactly like the old
+    positional-update calls silently no-op'd on no match."""
+    chat = chats_collection.find_one({"chat_id": chat_id, "owner_key": owner_key}, {"messages.topic_key": 1})
+    msgs = (chat or {}).get("messages") or []
+    idx = next((i for i in range(len(msgs) - 1, -1, -1) if msgs[i].get("topic_key") == topic_key), None)
+    if idx is None:
+        return
+    update = {f"messages.{idx}.{k}": v for k, v in fields.items()}
+    update["updated_at"] = datetime.now(timezone.utc)
+    chats_collection.update_one({"chat_id": chat_id, "owner_key": owner_key}, {"$set": update})
+
+
 def save_signal_results_to_chat(chat_id: str, owner_key: str, topic_key: str, results: list):
     """Best-effort: writes the matched title/post_text/post_url/platform
     output onto the SAME chat message that holds the original user prompt
@@ -707,16 +802,14 @@ def save_signal_results_to_chat(chat_id: str, owner_key: str, topic_key: str, re
     kept re-triggering a full re-match on every later chat view. Now only
     skips the write on `None` (a real "nothing to write" signal) — an
     explicit empty list `[]` is a legitimate final value and gets
-    persisted like any other."""
+    persisted like any other.
+
+    (BUG 3 FIX) Now targets the most recent message with this topic_key
+    via _set_on_latest_message() instead of Mongo's positional `$`
+    operator — see that helper's docstring for why."""
     if results is None:
         return
-    chats_collection.update_one(
-        {"chat_id": chat_id, "owner_key": owner_key, "messages.topic_key": topic_key},
-        {"$set": {
-            "messages.$.results": results,
-            "updated_at": datetime.now(timezone.utc),
-        }},
-    )
+    _set_on_latest_message(chat_id, owner_key, topic_key, {"results": results})
 
 
 def save_last_website_context_to_chat(chat_id: str, owner_key: str, context: dict):
@@ -759,16 +852,14 @@ def save_claude_answer_to_chat(chat_id: str, owner_key: str, topic_key: str, ans
     caching behavior.)
 
     UNCHANGED: this still stores whatever string `answer` is, verbatim,
-    with no parsing/validation."""
+    with no parsing/validation.
+
+    (BUG 3 FIX) Now targets the most recent message with this topic_key
+    via _set_on_latest_message() instead of Mongo's positional `$`
+    operator — see that helper's docstring for why."""
     if not answer:
         return
-    chats_collection.update_one(
-        {"chat_id": chat_id, "owner_key": owner_key, "messages.topic_key": topic_key},
-        {"$set": {
-            "messages.$.claude_answer": answer,
-            "updated_at": datetime.now(timezone.utc),
-        }},
-    )
+    _set_on_latest_message(chat_id, owner_key, topic_key, {"claude_answer": answer})
 
 
 def mark_google_fallback_triggered(chat_id: str, owner_key: str, topic_key: str):
@@ -781,15 +872,13 @@ def mark_google_fallback_triggered(chat_id: str, owner_key: str, topic_key: str)
 
     Best-effort, never raises past itself: any failure here is logged
     and swallowed rather than breaking whatever background task called
-    this."""
+    this.
+
+    (BUG 3 FIX) Now targets the most recent message with this topic_key
+    via _set_on_latest_message() instead of Mongo's positional `$`
+    operator — see that helper's docstring for why."""
     try:
-        chats_collection.update_one(
-            {"chat_id": chat_id, "owner_key": owner_key, "messages.topic_key": topic_key},
-            {"$set": {
-                "messages.$.google_fallback_triggered": True,
-                "updated_at": datetime.now(timezone.utc),
-            }},
-        )
+        _set_on_latest_message(chat_id, owner_key, topic_key, {"google_fallback_triggered": True})
     except Exception as exc:
         log.warning(f"Marking google_fallback_triggered failed for topic_key={topic_key}: {exc}")
 
@@ -800,15 +889,13 @@ def mark_search_progress_generated(chat_id: str, owner_key: str, topic_key: str)
     search_progress_generated field to True so the generation trigger
     never fires more than once for the same message, even if
     generate_search_progress_content() itself failed and produced
-    nothing to save. Best-effort, never raises past itself."""
+    nothing to save. Best-effort, never raises past itself.
+
+    (BUG 3 FIX) Now targets the most recent message with this topic_key
+    via _set_on_latest_message() instead of Mongo's positional `$`
+    operator — see that helper's docstring for why."""
     try:
-        chats_collection.update_one(
-            {"chat_id": chat_id, "owner_key": owner_key, "messages.topic_key": topic_key},
-            {"$set": {
-                "messages.$.search_progress_generated": True,
-                "updated_at": datetime.now(timezone.utc),
-            }},
-        )
+        _set_on_latest_message(chat_id, owner_key, topic_key, {"search_progress_generated": True})
     except Exception as exc:
         log.warning(f"Marking search_progress_generated failed for topic_key={topic_key}: {exc}")
 
@@ -821,17 +908,15 @@ def save_search_progress_to_chat(chat_id: str, owner_key: str, topic_key: str, p
     the frontend can render the richer in-progress UI instead of the
     plain spinner. Best-effort, never raises past itself: a failure here
     just means this message keeps showing the plain spinner state,
-    exactly like before this feature existed."""
+    exactly like before this feature existed.
+
+    (BUG 3 FIX) Now targets the most recent message with this topic_key
+    via _set_on_latest_message() instead of Mongo's positional `$`
+    operator — see that helper's docstring for why."""
     if not progress_content:
         return
     try:
-        chats_collection.update_one(
-            {"chat_id": chat_id, "owner_key": owner_key, "messages.topic_key": topic_key},
-            {"$set": {
-                "messages.$.search_progress": progress_content,
-                "updated_at": datetime.now(timezone.utc),
-            }},
-        )
+        _set_on_latest_message(chat_id, owner_key, topic_key, {"search_progress": progress_content})
     except Exception as exc:
         log.warning(f"Saving search_progress failed for topic_key={topic_key}: {exc}")
 
@@ -1001,7 +1086,16 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
     returns early, so none of the normal-path logic below runs for such a
     message. Background search-job/Google-fallback machinery is
     unaffected (it runs elsewhere, before this function) so
-    flintel_signals/google_posts keep filling in for later follow-ups."""
+    flintel_signals/google_posts keep filling in for later follow-ups.
+
+    (BUG FIX PACK #2) In the normal branch, this message's own
+    `website_note` (if any) is folded into `extra_ctx_parts` right before
+    they're joined into `extra_context`, and the normal branch's
+    append_to_chat_summary() call now also passes this message's
+    `keywords` — see both docstrings above for why. The website-only
+    branch's own append_to_chat_summary() call is unchanged (no keywords,
+    since that branch never used Reddit-evidence keywords to begin
+    with)."""
     # (RESULTS-RECOMPUTE FIX, applied here too for the same reason) `is
     # None`, not falsy — closes a low-probability but real analogous gap:
     # if a Claude API call ever technically "succeeds" but returns zero
@@ -1126,6 +1220,12 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
                     "the CONVERSATION CONTINUITY instruction above for how to "
                     "use this:\n" + chat_summary_for_answer
                 )
+            # (BUG FIX PACK #2 — WEBSITE-NOTE CONTEXT) This message's own
+            # website-classification note (own-business/related/unrelated),
+            # if any, is folded in last so analyze_with_claude() can
+            # account for how the shared website relates to the query.
+            if msg.get("website_note"):
+                extra_ctx_parts.append(msg["website_note"])
             extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
             answer = analyze_with_claude(msg["query"], merged_pool, extra_context=extra_ctx)
             answer = _patch_post_urls_into_answer(answer, merged_pool)
@@ -1135,7 +1235,7 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
             save_claude_answer_to_chat(chat_id, owner_key, msg["topic_key"], answer)
             answer_for_format_check = answer
             try:
-                append_to_chat_summary(chat_id, owner_key, msg["query"], answer)
+                append_to_chat_summary(chat_id, owner_key, msg["query"], answer, keywords=msg.get("keywords"))
             except Exception as exc:
                 log.warning(f"Updating chat summary failed for topic_key={msg.get('topic_key')}: {exc}")
         except Exception as exc:
@@ -1271,6 +1371,14 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
     the background for later follow-ups), such a message is handed
     straight to _complete_message_answer_and_results(), whose own
     website_only branch builds the answer and forces results to [].
+
+    (BUG FIX PACK #2) Both places below that schedule/run
+    _timeout_fallback_answer() now also pass this message's
+    `website_note` as its new final argument, so a message stuck on the
+    RESPONSE_TIMEOUT tier-3 fallback still gets its website-classification
+    context folded into that answer too — see
+    _complete_message_answer_and_results()'s own docstring for the
+    normal-path equivalent.
 
     OTHERWISE COMPLETELY UNCHANGED — this function calls
     get_matched_signals() and analyze_with_claude() exactly as before,
@@ -1430,9 +1538,17 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                 if not _is_owner_busy(owner_key):
                     _set_owner_busy(owner_key)
                     if background_tasks is not None:
-                        background_tasks.add_task(_timeout_fallback_answer, chat_id, owner_key, msg["topic_key"], msg["query"], msg.get("keywords", []), msg.get("match_phrases"), msg.get("evidence_required"))
+                        background_tasks.add_task(
+                            _timeout_fallback_answer, chat_id, owner_key, msg["topic_key"], msg["query"],
+                            msg.get("keywords", []), msg.get("match_phrases"), msg.get("evidence_required"),
+                            msg.get("website_note"),
+                        )
                     else:
-                        _timeout_fallback_answer(chat_id, owner_key, msg["topic_key"], msg["query"], msg.get("keywords", []), msg.get("match_phrases"), msg.get("evidence_required"))
+                        _timeout_fallback_answer(
+                            chat_id, owner_key, msg["topic_key"], msg["query"],
+                            msg.get("keywords", []), msg.get("match_phrases"), msg.get("evidence_required"),
+                            msg.get("website_note"),
+                        )
             continue
 
         # (BUGFIX PACK #1) Track whatever answer text is/becomes available
