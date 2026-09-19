@@ -5,7 +5,7 @@ Single place for every constant that used to live directly inside
 index.py's own config block. flintel.py, google.py, and website_
 intelligence.py stay fully self-contained exactly as they already are —
 each owns its own small config block, per their own module docstrings —
-so none of THEIR constants live here; this file is index.py's config
+so none of THEIR constants live here; this file is index.py's config 
 only.
 
 CONSTRAINT: import-safe with zero side effects other than reading env
