@@ -60,7 +60,10 @@ import flintel
 import website_intelligence
 import google as google_search   # the new google.py module
 
-from database import jobs_collection, signals_collection, google_posts_collection, topic_evidence_cache_collection
+from database import (
+    jobs_collection, signals_collection, google_posts_collection, topic_evidence_cache_collection,
+    website_evidence_cache_collection,
+)
 
 from config import (
     MAX_KEYWORDS, CLAUDE_MAX_KEYWORDS, MAX_MATCHED_RESULTS,
@@ -74,6 +77,9 @@ from config import (
     MAX_WEBSITE_KEYWORDS, WEBSITE_FETCH_TIMEOUT_SECONDS,
     WEBSITE_FETCH_MAX_CHARS, CLAUDE_WEBSITE_KEYWORD_MAX_TOKENS,
     TOPIC_CACHE_MAX_EVIDENCE, TOPIC_CACHE_MIN_TOPUP,
+    MAX_WEBSITE_PAGES, WEBSITE_DISCOVERY_PATH_HINTS,
+    WEBSITE_EVIDENCE_CACHE_TTL_DAYS, WEBSITE_EVIDENCE_MAX_TOKENS,
+    WEBSITE_INSIGHT_MAX_TOKENS,
 )
 
 import logging
@@ -1902,6 +1908,19 @@ optional time window.
        handled separately, by a dropdown the user already picked — you
        are only responsible for the topic keywords).
 
+   - "website_only": a boolean, true ONLY when the user's message is
+     JUST a website URL (or a URL plus only trivial filler like "check
+     this out", "yeh dekho") with NO other stated ask/angle at all. In
+     this case, still return "keywords": null (the downstream website-
+     reading pipeline fills in real keywords from the site's own
+     content, exactly like the existing website-URL flow) — "website_only"
+     is what tells the backend to answer the user with a WEBSITE
+     BUSINESS BREAKDOWN, not a Reddit/X-evidence report, even though
+     keyword generation / background search still runs normally.
+     Default false for everything else, including when a URL is shared
+     ALONGSIDE a real ask (e.g. "find me leads from this site") — in
+     that case treat it as a normal "search" with website_only: false.
+
    - "match_phrases": an array of 4 to 10 short, natural phrases/
      sentences (each phrase itself should be roughly 4-10 words long),
      up to 7 phrases maximum. Each phrase should read like something a
@@ -2052,7 +2071,7 @@ reply conversational and plain — don't mention you're an AI or that this
 is a "mock", and don't narrate your own reasoning.
 Respond with STRICT JSON ONLY — no markdown code fences, no preamble, no
 text outside the JSON object — in EXACTLY one of these four shapes:
-{"intent": "search", "reply": null, "keywords": ["<keyword1>", "<keyword2>"], "time_window_days": null, "match_phrases": ["<phrase1>", "<phrase2>"], "evidence_required": <int|null>}
+{"intent": "search", "reply": null, "keywords": ["<keyword1>", "<keyword2>"], "time_window_days": null, "match_phrases": ["<phrase1>", "<phrase2>"], "evidence_required": <int|null>, "website_only": false}
 {"intent": "chat", "reply": "<your natural reply text here>", "keywords": null, "time_window_days": null, "match_phrases": null, "evidence_required": null}
 {"intent": "blocked", "reply": "<short, polite decline text>", "keywords": null, "time_window_days": null, "match_phrases": null, "evidence_required": null}
 {"intent": "clarify", "reply": "<short, natural clarifying question>", "keywords": null, "time_window_days": null, "match_phrases": null, "evidence_required": null}
@@ -2187,6 +2206,7 @@ def _parse_router_json(raw: str):
     time_window_days = None
     evidence_required = None
     unfiltered = False
+    website_only = False
     if intent == "search":
         raw_keywords = data.get("keywords")
         if isinstance(raw_keywords, list):
@@ -2254,9 +2274,11 @@ def _parse_router_json(raw: str):
             evidence_required = max(MIN_ANALYSIS_EVIDENCE, min(parsed_evidence, MAX_ANALYSIS_EVIDENCE))
 
         unfiltered = bool(data.get("unfiltered") is True)
+        website_only = bool(data.get("website_only") is True)
 
     return {"intent": intent, "reply": reply, "keywords": keywords, "time_window_days": time_window_days,
-            "unfiltered": unfiltered, "match_phrases": match_phrases, "evidence_required": evidence_required}
+            "unfiltered": unfiltered, "match_phrases": match_phrases, "evidence_required": evidence_required,
+            "website_only": website_only}
 
 
 def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
@@ -2299,12 +2321,12 @@ def classify_and_maybe_chat(query: str, chat_summary: str) -> dict:
         raw = _call_claude(CLAUDE_ROUTER_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_ROUTER_MAX_TOKENS, enable_web_search=True)
     except Exception as exc:
         log.warning(f"Router Claude call failed (defaulting to 'search'): {exc}")
-        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None, "evidence_required": None}
+        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None, "evidence_required": None, "website_only": False}
 
     parsed = _parse_router_json(raw)
     if not parsed:
         log.warning(f"Router returned unparseable output (defaulting to 'search'): {raw[:200]!r}")
-        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None, "evidence_required": None}
+        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None, "evidence_required": None, "website_only": False}
     return parsed
 
 
@@ -2558,6 +2580,112 @@ def fetch_website_text(url: str) -> str:
     return text[:WEBSITE_FETCH_MAX_CHARS]
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# WEBSITE INTELLIGENCE — MULTI-PAGE FETCH (additive; fetch_website_text()
+# above is left completely untouched and remains available as a
+# single-page safety-net fallback for any call site not wired to the new
+# multi-page / cache-aware flow below).
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _extract_same_domain_links(html: str, base_url: str) -> list:
+    """Pure Python, no network call. Crude but safe link-extraction from
+    raw HTML (before tag-stripping) — finds <a href="..."> targets that
+    are same-domain as base_url and whose path matches one of
+    WEBSITE_DISCOVERY_PATH_HINTS (about/products/pricing/faq/contact/
+    features/...). Never follows a different domain (SAME-DOMAIN
+    RESTRICTION, Section 8). Returns a deduplicated list of absolute
+    URLs, capped defensively at 20 candidates (further capped by
+    MAX_WEBSITE_PAGES downstream)."""
+    from urllib.parse import urljoin, urlparse
+    if not html or not base_url:
+        return []
+    base_domain = urlparse(base_url).netloc.lower()
+    hrefs = re.findall(r'href=["\']([^"\']+)["\']', html, re.IGNORECASE)
+    candidates = []
+    seen = set()
+    for href in hrefs:
+        absolute = urljoin(base_url, href)
+        parsed = urlparse(absolute)
+        if parsed.netloc.lower() != base_domain:
+            continue
+        path_lower = parsed.path.lower()
+        if not any(hint in path_lower for hint in WEBSITE_DISCOVERY_PATH_HINTS):
+            continue
+        normalized = absolute.split("#")[0]
+        if normalized in seen:
+            continue
+        seen.add(normalized)
+        candidates.append(normalized)
+        if len(candidates) >= 20:
+            break
+    return candidates
+
+
+def _fetch_raw_html(url: str) -> str:
+    """Same HTTP fetch as fetch_website_text()'s own internals, but
+    returns RAW html (not tag-stripped) — needed so link-discovery can
+    still see <a href> tags. Raises on failure, same convention as
+    fetch_website_text()."""
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; FlintelBot/1.0)"}
+    with httpx.Client(timeout=WEBSITE_FETCH_TIMEOUT_SECONDS, follow_redirects=True) as http_client:
+        response = http_client.get(url, headers=headers)
+        response.raise_for_status()
+        return response.text
+
+
+def fetch_website_multi_page(url: str) -> dict:
+    """(WEBSITE INTELLIGENCE — MULTI-PAGE FETCH) Fetches the homepage,
+    discovers up to MAX_WEBSITE_PAGES-1 same-domain internal pages
+    matching WEBSITE_DISCOVERY_PATH_HINTS (Section 8: /about, /products,
+    /pricing, /faq, /contact, /features, ...), fetches each with the same
+    WEBSITE_FETCH_TIMEOUT_SECONDS timeout, and combines all their plain
+    text into one string, capped overall at WEBSITE_FETCH_MAX_CHARS
+    (Section 8: respects max pages, max content size, timeout, dedup,
+    same-domain — reuses existing config, no duplicate config system).
+
+    NEVER crashes the whole fetch because one page fails (Section 1: a
+    connection error / HTTP error / blocked page on any ONE page is
+    skipped, not fatal) — only the homepage fetch failing is fatal (in
+    which case this returns {"combined_text": "", "pages_fetched": []},
+    the caller treats this as evidence_quality "failed").
+
+    Returns {"combined_text": str, "pages_fetched": [url, ...]}."""
+    pages_fetched = []
+    text_parts = []
+
+    try:
+        homepage_html = _fetch_raw_html(url)
+    except Exception as exc:
+        log.warning(f"Homepage fetch failed for url={url!r}: {exc}")
+        return {"combined_text": "", "pages_fetched": []}
+
+    homepage_text = _HTML_SCRIPT_STYLE_RE.sub(" ", homepage_html)
+    homepage_text = _HTML_TAG_RE.sub(" ", homepage_text)
+    homepage_text = _HTML_WHITESPACE_RE.sub(" ", homepage_text).strip()
+    if homepage_text:
+        text_parts.append(homepage_text)
+        pages_fetched.append(url)
+
+    remaining_budget = MAX_WEBSITE_PAGES - 1
+    if remaining_budget > 0:
+        candidate_links = _extract_same_domain_links(homepage_html, url)
+        for link in candidate_links[:remaining_budget]:
+            try:
+                page_html = _fetch_raw_html(link)
+                page_text = _HTML_SCRIPT_STYLE_RE.sub(" ", page_html)
+                page_text = _HTML_TAG_RE.sub(" ", page_text)
+                page_text = _HTML_WHITESPACE_RE.sub(" ", page_text).strip()
+                if page_text:
+                    text_parts.append(page_text)
+                    pages_fetched.append(link)
+            except Exception as exc:
+                log.warning(f"Discovered page fetch failed for url={link!r} (skipping): {exc}")
+                continue
+
+    combined_text = "\n\n---\n\n".join(text_parts)[:WEBSITE_FETCH_MAX_CHARS]
+    return {"combined_text": combined_text, "pages_fetched": pages_fetched}
+
+
 CLAUDE_WEBSITE_KEYWORD_SYSTEM_PROMPT = """
 You are the website-to-keywords brain inside Flintel, a social-listening
 platform. The user has shared a link to their OWN website together with
@@ -2624,6 +2752,12 @@ text outside the JSON object — in exactly this shape:
     "sections": [{"title": "<short section heading>", "bullets": ["<bullet 1>", "<bullet 2>"]}]
   }
 }
+
+Never refuse a request just because it sounds broad or ambitious (e.g.
+"find me sales", "get me leads") — interpret it as a buyer-intent/pain-
+point search (same PAIN-POINT / PROSPECT PATTERN used elsewhere in this
+product) and generate the closest genuinely useful keywords instead of
+returning nothing.
 """
 
 
@@ -2746,6 +2880,172 @@ def extract_keywords_from_website(query: str, url: str, website_text: str):
     if not cleaned_keywords and not structured_summary:
         return None
     return {"keywords": cleaned_keywords, "structured_summary": structured_summary, "match_phrases": cleaned_phrases}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# WEBSITE INTELLIGENCE — CACHE-AWARE WRAPPER (Point 2's core): website
+# content/business-evidence is cached per-URL (TTL-based, via
+# website_evidence_cache_collection) so the same site is never re-fetched
+# and re-analyzed on every message — but keywords/match_phrases for an
+# actual search are NEVER cached; they're always generated fresh, scoped
+# to the CURRENT request's own text, via generate_keywords_for_website_
+# request() below. fetch_website_text() / extract_keywords_from_website()
+# above remain completely untouched, unchanged safety-net fallbacks for
+# any call site not wired to this new flow.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def get_or_fetch_website_evidence(url: str, query: str, call_claude_fn) -> dict:
+    """CORE FUNCTION for Point 2 — 'same URL dobara fetch na ho, lekin
+    keywords/signals hamesha fresh rahein':
+
+      1. URL normalize karo (website_intelligence.validate_and_normalize_url).
+      2. website_evidence_cache_collection mein check karo — agar fresh
+         (TTL ke andar) doc mile, uska combined_text/structured_evidence/
+         evidence_quality reuse karo — NO NEW FETCH, NO NEW EVIDENCE-
+         EXTRACTION CLAUDE CALL.
+      3. Agar cache miss/stale ho, tab hi fetch_website_multi_page() +
+         website_intelligence.extract_structured_website_evidence() +
+         website_intelligence.classify_evidence_quality() chalao, aur
+         result cache mein save karo.
+      4. REGARDLESS of cache hit/miss — website_intelligence.
+         build_website_insight_answer() is function ke andar CALL NAHI
+         hota (wo query-dependent hai, caller khud alag se call karega
+         jab actual answer chahiye ho) — yeh function sirf evidence
+         return karta hai, answer nahi.
+
+    Returns:
+      {
+        "url": normalized_url,
+        "combined_text": str,
+        "structured_evidence": dict,
+        "evidence_quality": str,
+        "pages_fetched": [str, ...],
+        "from_cache": bool,
+      }
+    ya None agar URL hi invalid ho."""
+    from website_intelligence import (
+        validate_and_normalize_url, extract_structured_website_evidence,
+        classify_evidence_quality,
+    )
+
+    normalized_url = validate_and_normalize_url(url)
+    if not normalized_url:
+        return None
+
+    cached = None
+    try:
+        cached = website_evidence_cache_collection.find_one({"url": normalized_url}, {"_id": 0})
+    except Exception as exc:
+        log.warning(f"Website-evidence cache read failed for url={normalized_url!r}: {exc}")
+
+    if cached and cached.get("combined_text") is not None:
+        fetched_at = cached.get("fetched_at")
+        is_fresh = True
+        if isinstance(fetched_at, datetime):
+            cache_age = datetime.now(timezone.utc) - (
+                fetched_at if fetched_at.tzinfo else fetched_at.replace(tzinfo=timezone.utc)
+            )
+            is_fresh = cache_age <= timedelta(days=WEBSITE_EVIDENCE_CACHE_TTL_DAYS)
+        if is_fresh:
+            return {
+                "url": normalized_url,
+                "combined_text": cached.get("combined_text", ""),
+                "structured_evidence": cached.get("structured_evidence") or {},
+                "evidence_quality": cached.get("evidence_quality", "thin"),
+                "pages_fetched": cached.get("pages_fetched", []),
+                "from_cache": True,
+            }
+
+    # Cache miss/stale — fetch + extract fresh.
+    fetch_result = fetch_website_multi_page(normalized_url)
+    combined_text = fetch_result["combined_text"]
+    pages_fetched = fetch_result["pages_fetched"]
+
+    structured_evidence = None
+    if combined_text:
+        try:
+            structured_evidence = extract_structured_website_evidence(
+                normalized_url, combined_text, call_claude_fn or _call_claude
+            )
+        except Exception as exc:
+            log.warning(f"Structured-evidence extraction failed for url={normalized_url!r}: {exc}")
+            structured_evidence = None
+
+    evidence_quality = classify_evidence_quality(combined_text, structured_evidence)
+
+    try:
+        website_evidence_cache_collection.update_one(
+            {"url": normalized_url},
+            {"$set": {
+                "url": normalized_url,
+                "domain": normalized_url.split("/")[2] if "//" in normalized_url else normalized_url,
+                "pages_fetched": pages_fetched,
+                "combined_text": combined_text,
+                "structured_evidence": structured_evidence or {},
+                "evidence_quality": evidence_quality,
+                "fetched_at": datetime.now(timezone.utc),
+                "updated_at": datetime.now(timezone.utc),
+            }},
+            upsert=True,
+        )
+    except Exception as exc:
+        log.warning(f"Website-evidence cache save failed for url={normalized_url!r}: {exc}")
+
+    return {
+        "url": normalized_url,
+        "combined_text": combined_text,
+        "structured_evidence": structured_evidence or {},
+        "evidence_quality": evidence_quality,
+        "pages_fetched": pages_fetched,
+        "from_cache": False,
+    }
+
+
+def generate_keywords_for_website_request(query: str, url: str, structured_evidence: dict) -> dict:
+    """Point 2's OTHER half — keywords/match_phrases NEVER cache hote,
+    hamesha current request/prompt ke hisaab se FRESH Claude call se
+    generate hote hain, chahe website evidence cache se aaya ho ya fresh
+    fetch se. Yeh existing extract_keywords_from_website() jaisa hi
+    Claude call hai, lekin ab already-cached structured_evidence ko bhi
+    context ke tor par deta hai (taake Claude ko dobara pura raw text
+    padhna na pare — sirf structured summary + current query se hi
+    keywords generate kar sake, tez aur sasta).
+
+    Returns {"keywords": list|None, "match_phrases": list|None} — dono
+    None ho sakte hain agar Claude kuch usable na de, caller apna existing
+    generate_fuzzy_keywords() fallback chain use kare, bilkul jaise ab
+    hota hai."""
+    user_message = (
+        f"User's request text: {query or '(no specific ask — bare link shared)'}\n\n"
+        f"Website URL: {url}\n\n"
+        f"Already-extracted business evidence (JSON):\n"
+        f"{json.dumps(structured_evidence or {}, ensure_ascii=False)}"
+    )
+    try:
+        raw = _call_claude(
+            CLAUDE_WEBSITE_KEYWORD_SYSTEM_PROMPT, user_message,
+            max_tokens=CLAUDE_WEBSITE_KEYWORD_MAX_TOKENS,
+        )
+    except Exception as exc:
+        log.warning(f"Website-request keyword generation failed for url={url!r}: {exc}")
+        return {"keywords": None, "match_phrases": None}
+
+    cleaned = (raw or "").strip()
+    if cleaned.startswith("```"):
+        cleaned = cleaned.strip("`").strip()
+        cleaned = re.sub(r"^json\s*", "", cleaned, flags=re.IGNORECASE).strip()
+    try:
+        data = json.loads(cleaned)
+    except (ValueError, TypeError):
+        return {"keywords": None, "match_phrases": None}
+    if not isinstance(data, dict):
+        return {"keywords": None, "match_phrases": None}
+
+    keywords = data.get("keywords") if isinstance(data.get("keywords"), list) else None
+    match_phrases = data.get("match_phrases") if isinstance(data.get("match_phrases"), list) else None
+    keywords = [k.strip() for k in (keywords or []) if isinstance(k, str) and k.strip()] or None
+    match_phrases = [p.strip() for p in (match_phrases or []) if isinstance(p, str) and p.strip()] or None
+    return {"keywords": keywords, "match_phrases": match_phrases}
 
 
 def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query: str, keywords: list = None,
