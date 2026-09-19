@@ -19,6 +19,7 @@ import google as google_search   # the new google.py module — needed here
     # for the Google-fallback stub-results read-back at RESPONSE_TIMEOUT
     # (mirrors index.py's own `import google as google_search` alias)
 import website_intelligence
+from logics import get_or_fetch_website_evidence, generate_keywords_for_website_request
 
 from index import (
     app,
@@ -73,6 +74,7 @@ from index import (
     add_chat_message_to_chat,
     save_signal_results_to_chat,
     save_claude_answer_to_chat,
+    save_last_website_context_to_chat,  # <-- WEBSITE INTELLIGENCE: needed in search()
     migrate_anon_chats_to_owner,
     _is_owner_busy,
     _set_owner_busy,                    # <-- FIX: was missing, used in stream_answer()
@@ -85,6 +87,65 @@ from index import (
 from database import users_collection  # <-- FIX: was missing, used in signup()/login()
 from database import google_posts_collection  # <-- GOOGLE-FALLBACK POLLING FIX: needed in stream_answer()
 from datetime import datetime, timezone
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# WEBSITE INTELLIGENCE — module-level helpers/constants shared by both
+# search() (BEHAVIOR 1/2/3 + the vague follow-up reuse feature) and
+# stream_answer() (the website_only streaming branch). Additive only —
+# nothing here changes any existing route's behavior on its own.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# (VAGUE WEBSITE FOLLOW-UP REUSE) Lowercase substrings that, on a router
+# "chat" turn with NO url in the message, signal the user is still talking
+# about the website from a previous message in this same chat (e.g. "reddit
+# pe log kya keh rahe hain") rather than making genuine small talk ("hi",
+# "thanks") — those never match anything here and so never trigger reuse.
+_WEBSITE_FOLLOWUP_HINTS = (
+    "reddit", "twitter", "linkedin", "facebook", "posts", "post",
+    "discussion", "conversation", "complaint", "review", "competitor",
+    "leads", "customers", "log kya", "people saying",
+)
+
+
+def _evidence_to_structured_summary(se):
+    """(WEBSITE INTELLIGENCE CACHE) Adapts the flat `structured_evidence`
+    dict returned by get_or_fetch_website_evidence()/logics.py into the
+    SAME {"overview": ..., "sections": {...}} shape
+    website_intelligence.format_structured_summary_for_answer() already
+    expects elsewhere in this file (from extract_keywords_from_website()'s
+    own "structured_summary" field) — no new format is introduced, and no
+    section is added unless it actually has at least one bullet to show.
+    Returns None if nothing usable was found at all."""
+    if not se:
+        return None
+
+    overview = se.get("value_proposition") or se.get("business") or ""
+
+    sections = {}
+
+    products_services = (se.get("products_services") or [])[:5]
+    if products_services:
+        sections["What they offer"] = products_services
+
+    pricing_bullets = []
+    target_customer = se.get("target_customer")
+    if target_customer:
+        pricing_bullets.append(f"Target customer: {target_customer}")
+    pricing = se.get("pricing")
+    if pricing:
+        pricing_bullets.append(f"Pricing: {pricing}")
+    if pricing_bullets:
+        sections["Who it's for & pricing"] = pricing_bullets
+
+    features = (se.get("features") or [])[:4]
+    if features:
+        sections["Notable"] = features
+
+    if not overview and not sections:
+        return None
+
+    return {"overview": overview, "sections": sections}
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -245,6 +306,13 @@ def search(
         routed_match_phrases = None
         routed_time_window_days = None
         routed_unfiltered = False
+        # (WEBSITE INTELLIGENCE — VAGUE FOLLOW-UP REUSE) True only when this
+        # message's keywords were reused from a previously stored
+        # last_website_context instead of being freshly generated — used
+        # below purely to skip a redundant enqueue_search_job() call, since
+        # the matching job for those keywords/topic is already collecting
+        # data under the ORIGINAL message's topic_key.
+        reuse_website_keywords = False
         # (STRUCTURED WEBSITE SUMMARY) Stays None for every case except the
         # two website-derived-keywords paths in INTEGRATION POINT 2 below
         # (BEHAVIOR 2, and the BEHAVIOR 3 confirmed-match branch) — never set
@@ -280,6 +348,50 @@ def search(
         except Exception as exc:
             log.warning(f"v5 routing step failed for query={query!r} (defaulting to normal search pipeline): {exc}")
             intent = "search"
+
+        # ─────────────────────────────────────────────────────────────────────
+        # VAGUE WEBSITE FOLLOW-UP REUSE (WEBSITE INTELLIGENCE, Point 3) — a
+        # message with NO url of its own, in a chat that already has a
+        # stored `last_website_context` (saved by BEHAVIOR 1/2/3 below on an
+        # earlier message in this SAME chat), reuses those stored keywords
+        # instead of asking the user to clarify or answering generically.
+        # Runs AFTER the v5 routing step above, BEFORE CLARIFY-SELF-RESOLVE
+        # immediately below — so a successful reuse here switches `intent`
+        # to "search" and CLARIFY-SELF-RESOLVE's own `if intent == "clarify"`
+        # check simply never fires for this message, saving the extra
+        # resolve_unclear_topic() Claude call entirely.
+        #
+        # Best-effort only: any failure here simply leaves `intent`/
+        # routed_* completely untouched, falling straight through to the
+        # EXISTING clarify-self-resolve / chat / search handling below
+        # exactly as it works today — no new failure mode is introduced.
+        # ─────────────────────────────────────────────────────────────────────
+        if not _extract_first_url(query):
+            try:
+                chat_for_reuse = (
+                    get_chat_session(active_chat_id, owner_key)
+                    if active_chat_id and owner_key else None
+                )
+                last_website_context = (chat_for_reuse or {}).get("last_website_context")
+                if last_website_context and last_website_context.get("keywords"):
+                    should_reuse = False
+                    if intent == "clarify":
+                        should_reuse = True
+                    elif intent == "chat":
+                        query_lower = query.lower()
+                        should_reuse = any(hint in query_lower for hint in _WEBSITE_FOLLOWUP_HINTS)
+
+                    if should_reuse:
+                        intent = "search"
+                        routed_keywords = last_website_context["keywords"]
+                        routed_match_phrases = last_website_context.get("match_phrases")
+                        reuse_website_keywords = True
+                        log.info(
+                            f"Reusing last website context for follow-up | "
+                            f"chat_id={active_chat_id} | keywords={routed_keywords}"
+                        )
+            except Exception as exc:
+                log.warning(f"Website follow-up reuse check failed for query={query!r}: {exc}")
 
         # ─────────────────────────────────────────────────────────────────────
         # CLARIFY-SELF-RESOLVE — before ever falling back to asking the user,
@@ -324,10 +436,11 @@ def search(
             detected_url_for_routing = _extract_first_url(query)
 
         if detected_url_for_routing:
-            # PRIMARY SIGNAL: the router's own classification. "chat" already
-            # means "no clear topic/request was found in the text" — no need
-            # to second-guess that with the pure-Python helper below.
-            if intent == "chat":
+            # PRIMARY SIGNAL: the router's own "website_only" flag, when
+            # present, or its classification. "chat" already means "no
+            # clear topic/request was found in the text" — no need to
+            # second-guess that with the pure-Python helper below.
+            if routed.get("website_only") is True or intent == "chat":
                 is_bare_url_request = True
             else:
                 # intent == "clarify" (no explicit topic named) OR the
@@ -347,26 +460,43 @@ def search(
                     is_generic_leadgen = False
 
             if is_bare_url_request:
-                # BEHAVIOR 1 — bare URL, no real ask: summarize the site and
-                # invite the user to say what they'd like looked into,
-                # instead of guessing a topic or asking a generic clarifying
-                # question. Best-effort: any failure fetching or summarizing
-                # the site simply leaves this block a no-op, and control
-                # falls straight through to the EXISTING clarify/chat
-                # fallback-reply behavior immediately below exactly as it
-                # works today — no new failure mode is introduced.
-                summary = None
+                # BEHAVIOR 1 — bare URL, no real ask: fetch/reuse cached
+                # website evidence, generate website-derived keywords, and
+                # kick off a real (website-scoped) search job instead of
+                # just summarizing the site. Best-effort throughout: any
+                # failure fetching evidence simply leaves this block a
+                # no-op, and control falls straight through to the
+                # EXISTING clarify/chat fallback-reply behavior immediately
+                # below exactly as it works today — no new failure mode is
+                # introduced.
+                evidence = None
                 try:
-                    website_text_for_summary = fetch_website_text(detected_url_for_routing)
-                    summary = website_intelligence.summarize_website(
-                        website_text_for_summary, call_claude_fn=_call_claude
-                    )
+                    evidence = get_or_fetch_website_evidence(detected_url_for_routing, query, _call_claude)
                 except Exception as exc:
-                    log.warning(f"Website fetch/summary failed for url={detected_url_for_routing!r}: {exc}")
-                    summary = None
+                    log.warning(f"Website evidence fetch failed for url={detected_url_for_routing!r}: {exc}")
+                    evidence = None
 
-                if summary:
-                    url_only_answer = website_intelligence.build_url_only_reply(summary, query_seed=query)
+                if evidence:
+                    if evidence.get("evidence_quality") != "failed":
+                        try:
+                            kw = generate_keywords_for_website_request(
+                                query, evidence["url"], evidence["structured_evidence"]
+                            )
+                        except Exception as exc:
+                            log.warning(f"Website keyword generation failed for url={evidence.get('url')!r}: {exc}")
+                            kw = {"keywords": None, "match_phrases": None}
+                    else:
+                        kw = {"keywords": None, "match_phrases": None}
+
+                    keywords = kw.get("keywords")
+                    if keywords is None:
+                        bare_structured_evidence = evidence.get("structured_evidence") or {}
+                        bare_seed = bare_structured_evidence.get("title") or bare_structured_evidence.get("business")
+                        keywords = generate_fuzzy_keywords(bare_seed) if bare_seed else []
+                    keywords = keywords[:MAX_KEYWORDS]
+
+                    if keywords:
+                        enqueue_search_job(topic_key, keywords, targeting_platform)
 
                     redirect_chat_id = None
                     try:
@@ -376,19 +506,37 @@ def search(
                             active_chat_id = create_chat_session(owner_key, owner_type, title=generate_chat_title(query))
                         request.session["active_chat_id"] = active_chat_id
 
-                        add_chat_message_to_chat(active_chat_id, owner_key, query, url_only_answer)
-                        try:
-                            append_to_chat_summary(active_chat_id, owner_key, query, url_only_answer)
-                        except Exception as exc:
-                            log.warning(f"Updating chat summary failed for chat_id={active_chat_id}: {exc}")
+                        add_search_to_chat(
+                            active_chat_id, owner_key, query, topic_key, keywords, targeting_platform,
+                            match_phrases=kw.get("match_phrases"),
+                            website_only=True,
+                            website_evidence={
+                                "url": evidence["url"],
+                                "structured_evidence": evidence["structured_evidence"],
+                                "evidence_quality": evidence["evidence_quality"],
+                            },
+                        )
+                        if keywords:
+                            try:
+                                save_last_website_context_to_chat(
+                                    active_chat_id, owner_key,
+                                    {
+                                        "url": evidence["url"],
+                                        "topic_key": topic_key,
+                                        "keywords": keywords,
+                                        "match_phrases": kw.get("match_phrases"),
+                                    },
+                                )
+                            except Exception as exc:
+                                log.warning(f"Saving last website context failed for chat_id={active_chat_id}: {exc}")
                         redirect_chat_id = active_chat_id
                     except Exception as exc:
-                        log.warning(f"Saving URL-only reply failed for query={query!r}: {exc}")
+                        log.warning(f"Saving website-only search failed for query={query!r}: {exc}")
 
                     if redirect_chat_id:
                         return RedirectResponse(url=f"/chat/{redirect_chat_id}", status_code=303)
                     return RedirectResponse(url="/", status_code=303)
-                # else: summarization failed — fall through to the EXISTING
+                # else: evidence fetch failed — fall through to the EXISTING
                 # clarify/chat fallback-reply behavior below exactly as it
                 # works today (do not introduce a new failure mode).
             else:
@@ -467,13 +615,21 @@ def search(
         # WEBSITE-URL KEYWORD EXTRACTION (INTEGRATION POINT 2) — if the user's
         # message itself contains a website URL, this decides between
         # BEHAVIOR 2 ("find leads/customers/posts related to MY site", no
-        # separately-named topic — the ORIGINAL, UNCHANGED
+        # separately-named topic — cache-aware via get_or_fetch_website_
+        # evidence(), falling back to the ORIGINAL, UNCHANGED
         # extract_keywords_from_website() call) and BEHAVIOR 3 (a SEPARATE
         # named topic alongside the URL, checked against the site's own
         # content via website_intelligence.check_topic_matches_website()).
-        # Uses ONLY website_intelligence.py's own functions for the new
-        # logic — no reimplementation here.
+        # Uses ONLY website_intelligence.py's/logics.py's own functions for
+        # the new logic — no reimplementation here.
+        #
+        # `website_context_url` is set whenever BEHAVIOR 2 or BEHAVIOR 3
+        # actually produced website-derived keywords for this message — used
+        # further below (AFTER the main add_search_to_chat() call) to persist
+        # a fresh `last_website_context` for the VAGUE WEBSITE FOLLOW-UP
+        # REUSE feature above to pick up on a later message in this chat.
         # ─────────────────────────────────────────────────────────────────────
+        website_context_url = None
         detected_url = _extract_first_url(query)
         if detected_url:
             # Same pure-Python heuristic used in INTEGRATION POINT 1 above,
@@ -492,38 +648,89 @@ def search(
 
             if not has_named_topic:
                 # BEHAVIOR 2 — "find me leads/customers/posts related to my
-                # site" with no separately-named topic: EXISTING behavior,
-                # now sourced from the SAME combined Claude call that also
-                # produces the structured website summary (see FIX D above)
-                # instead of a separate summarize_website_structured() call.
-                website_keywords = None
-                website_text = None
-                website_extraction_result = None
+                # site" with no separately-named topic. Cache-aware: tries
+                # the shared website-evidence cache/fetch first (the SAME
+                # get_or_fetch_website_evidence() BEHAVIOR 1 uses), so a
+                # site already fetched earlier in this chat isn't fetched a
+                # second time. Any failure, missing evidence, or a "failed"
+                # evidence_quality falls straight through to the ORIGINAL
+                # fetch_website_text() + extract_keywords_from_website()
+                # path exactly as it worked before this feature — a pure
+                # safety net, no new failure mode.
+                website_evidence = None
                 try:
-                    website_text = fetch_website_text(detected_url)
-                    website_extraction_result = extract_keywords_from_website(query, detected_url, website_text)
+                    website_evidence = get_or_fetch_website_evidence(detected_url, query, _call_claude)
                 except Exception as exc:
-                    log.warning(f"Website fetch/keyword-extraction failed for url={detected_url!r}: {exc}")
-                    website_extraction_result = None
-                if website_extraction_result:
-                    website_keywords = website_extraction_result.get("keywords")
-                    if website_keywords:
-                        routed_keywords = website_keywords
-                        routed_match_phrases = website_extraction_result.get("match_phrases")
+                    log.warning(f"Website evidence fetch failed for url={detected_url!r}: {exc}")
+                    website_evidence = None
+
+                used_cached_evidence = False
+                if website_evidence and website_evidence.get("evidence_quality") != "failed":
+                    kw = None
+                    try:
+                        kw = generate_keywords_for_website_request(
+                            query, website_evidence["url"], website_evidence["structured_evidence"]
+                        )
+                    except Exception as exc:
+                        log.warning(f"Website keyword generation failed for url={website_evidence.get('url')!r}: {exc}")
+                        kw = None
+                    if kw and kw.get("keywords"):
+                        routed_keywords = kw["keywords"]
+                        routed_match_phrases = kw.get("match_phrases")
                         log.info(f"Website-derived keywords used | url={detected_url!r} | keywords={routed_keywords}")
-                    website_answer_context = website_intelligence.format_structured_summary_for_answer(
-                        website_extraction_result.get("structured_summary")
-                    )
+                        website_answer_context = website_intelligence.format_structured_summary_for_answer(
+                            _evidence_to_structured_summary(website_evidence.get("structured_evidence"))
+                        )
+                        website_context_url = website_evidence.get("url") or detected_url
+                        used_cached_evidence = True
+
+                if not used_cached_evidence:
+                    # PURANA path — safety net, unchanged.
+                    website_keywords = None
+                    website_text = None
+                    website_extraction_result = None
+                    try:
+                        website_text = fetch_website_text(detected_url)
+                        website_extraction_result = extract_keywords_from_website(query, detected_url, website_text)
+                    except Exception as exc:
+                        log.warning(f"Website fetch/keyword-extraction failed for url={detected_url!r}: {exc}")
+                        website_extraction_result = None
+                    if website_extraction_result:
+                        website_keywords = website_extraction_result.get("keywords")
+                        if website_keywords:
+                            routed_keywords = website_keywords
+                            routed_match_phrases = website_extraction_result.get("match_phrases")
+                            log.info(f"Website-derived keywords used | url={detected_url!r} | keywords={routed_keywords}")
+                            website_context_url = detected_url
+                        website_answer_context = website_intelligence.format_structured_summary_for_answer(
+                            website_extraction_result.get("structured_summary")
+                        )
             else:
                 # BEHAVIOR 3 candidate — a separately named topic alongside
                 # the URL: check whether that topic genuinely connects to
                 # what the website offers, via ONE combined Claude call that
                 # produces both the match verdict and (if it matches) the
-                # keyword list in one shot.
+                # keyword list in one shot. The website text fed into that
+                # check is now sourced from the shared evidence cache first
+                # (get_or_fetch_website_evidence()'s own "combined_text"),
+                # to avoid a redundant fetch — falling back to
+                # fetch_website_text() exactly as before whenever the cache
+                # doesn't have it.
                 website_text_for_match = None
                 topic_match_result = None
                 try:
-                    website_text_for_match = fetch_website_text(detected_url)
+                    cached_evidence_for_match = None
+                    try:
+                        cached_evidence_for_match = get_or_fetch_website_evidence(detected_url, query, _call_claude)
+                    except Exception as exc:
+                        log.warning(f"Website evidence fetch failed for url={detected_url!r}: {exc}")
+                        cached_evidence_for_match = None
+
+                    website_text_for_match = (
+                        cached_evidence_for_match.get("combined_text")
+                        if cached_evidence_for_match and cached_evidence_for_match.get("combined_text")
+                        else fetch_website_text(detected_url)
+                    )
                     topic_match_result = website_intelligence.check_topic_matches_website(
                         query, detected_url, website_text_for_match, call_claude_fn=_call_claude
                     )
@@ -537,9 +744,7 @@ def search(
                     # exist: the plain extract_keywords_from_website() call,
                     # feeding the EXISTING safety-net chain
                     # (routed_keywords -> generate_fuzzy_keywords()) exactly
-                    # as before this feature, now also sourced from the SAME
-                    # combined Claude call for keywords + structured summary
-                    # (see FIX D above).
+                    # as before this feature.
                     website_extraction_result = None
                     try:
                         website_text = (
@@ -557,6 +762,7 @@ def search(
                             routed_keywords = website_keywords
                             routed_match_phrases = website_extraction_result.get("match_phrases")
                             log.info(f"Website-derived keywords used | url={detected_url!r} | keywords={routed_keywords}")
+                            website_context_url = detected_url
                         website_answer_context = website_intelligence.format_structured_summary_for_answer(
                             website_extraction_result.get("structured_summary")
                         )
@@ -567,6 +773,9 @@ def search(
                     # used today. The structured summary also comes straight
                     # from this SAME call's own "structured_summary" field —
                     # no separate summarize_website_structured() call needed.
+                    # generate_keywords_for_website_request() is deliberately
+                    # NOT called again here — the keywords from this SAME
+                    # check_topic_matches_website() call are reused as-is.
                     # (PHRASE-MATCHING FEATURE) topic_match_result comes from
                     # website_intelligence.check_topic_matches_website(),
                     # which is out of scope for this feature and does not
@@ -580,6 +789,7 @@ def search(
                             f"Topic-vs-website match confirmed | url={detected_url!r} | "
                             f"keywords={routed_keywords}"
                         )
+                        website_context_url = detected_url
                     website_answer_context = website_intelligence.format_structured_summary_for_answer(
                         topic_match_result.get("structured_summary")
                     )
@@ -622,10 +832,11 @@ def search(
 
         # (KEYWORD-GENERATION SWAP) Keywords now come from the SAME Claude
         # routing call above instead of the old plain-Python template
-        # generator (or, per the two features above, from the clarify
-        # self-resolve step or the website-URL extraction step). generate_
-        # fuzzy_keywords() is KEPT, unchanged, purely as a safety-net fallback
-        # for when none of those produced usable keywords.
+        # generator (or, per the features above, from the clarify
+        # self-resolve step, the vague-website-follow-up reuse step, or the
+        # website-URL extraction step). generate_fuzzy_keywords() is KEPT,
+        # unchanged, purely as a safety-net fallback for when none of those
+        # produced usable keywords.
         if routed_keywords:
             keywords = routed_keywords
         elif routed_unfiltered:
@@ -652,7 +863,15 @@ def search(
         # to the same window the user actually asked for.
         time_window_days = routed_time_window_days
 
-        enqueue_search_job(topic_key, keywords, targeting_platform)
+        # (VAGUE WEBSITE FOLLOW-UP REUSE) When this message's keywords were
+        # reused from a stored last_website_context, the matching job for
+        # them is already collecting data under the ORIGINAL message's
+        # topic_key — enqueueing a second, duplicate job here for the SAME
+        # keywords under this NEW topic_key would be redundant work with no
+        # benefit, so it's skipped. Every other case enqueues exactly as
+        # before this feature.
+        if not reuse_website_keywords:
+            enqueue_search_job(topic_key, keywords, targeting_platform)
 
         # Chat/session bookkeeping is best-effort on top of the above: if
         # anything here fails — a stale/corrupt session cookie, a hiccup on the
@@ -674,6 +893,27 @@ def search(
                 match_phrases=routed_match_phrases,
                 evidence_required=routed.get("evidence_required"),
             )
+            # (WEBSITE INTELLIGENCE) Whenever this message's keywords came
+            # from the website (BEHAVIOR 2, or a BEHAVIOR 3 confirmed
+            # match), persist a fresh last_website_context on this chat —
+            # AFTER add_search_to_chat() above, and deliberately WITHOUT
+            # website_only (this is a normal Reddit-evidence search, not a
+            # website-only reply) — so a later, vague follow-up message in
+            # this same chat can reuse it (see the VAGUE WEBSITE FOLLOW-UP
+            # REUSE block near the top of this function).
+            if website_context_url and keywords:
+                try:
+                    save_last_website_context_to_chat(
+                        active_chat_id, owner_key,
+                        {
+                            "url": website_context_url,
+                            "topic_key": topic_key,
+                            "keywords": keywords,
+                            "match_phrases": routed_match_phrases,
+                        },
+                    )
+                except Exception as exc:
+                    log.warning(f"Saving last website context failed for chat_id={active_chat_id}: {exc}")
             redirect_chat_id = active_chat_id
         except Exception as exc:
             log.warning(f"Chat bookkeeping failed for topic_key={topic_key} (job was still queued): {exc}")
@@ -828,6 +1068,15 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
     event followed by `done`, and returns — it never redoes any
     matching/Claude work for a message that already has its answer.
 
+    (WEBSITE INTELLIGENCE) Immediately after that cached-answer guard, and
+    BEFORE the normal get_matched_signals()/get_evidence_with_topup() call
+    below, a message saved with `website_only: True` (BEHAVIOR 1 in
+    search()) is served by its OWN generator entirely — it never touches
+    signal matching at all, and instead re-derives (or replays, if another
+    request for the same owner is already in flight) a website-insight
+    answer straight from the message's stored `website_evidence` via
+    website_intelligence.build_website_insight_answer().
+
     (TIME-WINDOW FEATURE) The ONLY change in this route: the
     get_matched_signals() call now also passes
     `since_days=msg.get("time_window_days")` — for every message with no
@@ -952,6 +1201,115 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # untouched for any client that doesn't read it.
             yield f"data: {json.dumps({'done': True, 'results': msg.get('results') or []})}\n\n"
         return StreamingResponse(_cached(), media_type="text/event-stream")
+
+    # (WEBSITE INTELLIGENCE) A website-only message (BEHAVIOR 1 in
+    # search()) never goes through signal matching at all — it is served
+    # entirely from its own stored `website_evidence`, via a dedicated
+    # generator. Placed right after the cached-answer replay above and
+    # BEFORE the normal get_evidence_with_topup()/`matched` computation
+    # below, so this branch never triggers any of that normal-path work.
+    if msg.get("website_only"):
+        def _website_only_generator():
+            # (SSE RECONNECT-LOOP FIX) Same safety net as the _cached()
+            # branch above.
+            yield "retry: 86400000\n\n"
+
+            # (DUPLICATE-REFRESH GUARD) Same shape as the main
+            # event_generator()'s own guard below: if a Claude call for
+            # this SAME owner is already in flight (e.g. a reconnected
+            # EventSource for the same message), don't start a second,
+            # independent build_website_insight_answer() call — wait
+            # (bounded by RESPONSE_TIMEOUT) for the in-flight call to
+            # finish and cache the answer, then replay it.
+            if _is_owner_busy(owner_key):
+                wait_deadline = time.time() + RESPONSE_TIMEOUT
+                resolved_answer = None
+                resolved_results = None
+                while time.time() < wait_deadline:
+                    try:
+                        fresh_chat = get_chat_session(chat_id, owner_key)
+                        fresh_msg = next(
+                            (m for m in (fresh_chat or {}).get("messages", []) if m.get("topic_key") == topic_key),
+                            None,
+                        )
+                    except Exception as exc:
+                        log.warning(f"Polling for in-flight website-only answer failed for topic_key={topic_key}: {exc}")
+                        fresh_msg = None
+                    if fresh_msg and fresh_msg.get("claude_answer"):
+                        resolved_answer = fresh_msg["claude_answer"]
+                        resolved_results = fresh_msg.get("results") or []
+                        break
+                    if not _is_owner_busy(owner_key):
+                        # Owner no longer busy but still no answer saved —
+                        # the in-flight call likely failed/cleared without
+                        # saving; stop waiting and fall through to running
+                        # this request's own call below.
+                        break
+                    time.sleep(1)
+
+                if resolved_answer is not None:
+                    yield f"data: {json.dumps({'delta': resolved_answer})}\n\n"
+                    yield f"data: {json.dumps({'done': True, 'results': resolved_results})}\n\n"
+                    return
+                # else: fall through to the normal path below.
+
+            _set_owner_busy(owner_key)
+            try:
+                # Fire the SAME Google-fallback pattern used elsewhere in
+                # this route (fire-once guard + background thread), so
+                # broader Reddit-evidence collection for this topic keeps
+                # running in the background even though the website-insight
+                # answer itself arrives immediately. Search-progress
+                # generation is deliberately NOT triggered on this branch —
+                # there's no waiting/loading period here for it to fill.
+                if flintel.should_trigger_immediately(msg.get("google_fallback_triggered", False)):
+                    mark_google_fallback_triggered(chat_id, owner_key, topic_key)
+                    threading.Thread(
+                        target=_trigger_google_fallback_search,
+                        args=(chat_id, owner_key, msg),
+                        daemon=True,
+                    ).start()
+                    msg["google_fallback_triggered"] = True
+
+                ev = msg.get("website_evidence") or {}
+                try:
+                    answer = website_intelligence.build_website_insight_answer(
+                        url=ev.get("url") or msg["query"],
+                        query=msg["query"],
+                        structured_evidence=ev.get("structured_evidence"),
+                        evidence_quality=ev.get("evidence_quality", "thin"),
+                        call_claude_fn=_call_claude,
+                    )
+                except Exception as exc:
+                    log.warning(f"Website-insight answer generation failed for topic_key={topic_key}: {exc}")
+                    yield f"data: {json.dumps({'error': 'analysis failed'})}\n\n"
+                    return
+
+                answer = (answer or "").strip()
+
+                # (SIMULATED-STREAM FIX, same pattern) Pace the final
+                # string out in small pieces to reproduce the live-typing
+                # impression.
+                if answer:
+                    for i in range(0, len(answer), STREAM_CHUNK_CHARS):
+                        piece = answer[i:i + STREAM_CHUNK_CHARS]
+                        yield f"data: {json.dumps({'delta': piece})}\n\n"
+                        if STREAM_CHUNK_DELAY_SECONDS > 0:
+                            time.sleep(STREAM_CHUNK_DELAY_SECONDS)
+
+                if answer:
+                    try:
+                        save_claude_answer_to_chat(chat_id, owner_key, topic_key, answer)
+                        save_signal_results_to_chat(chat_id, owner_key, topic_key, [])
+                        append_to_chat_summary(chat_id, owner_key, msg["query"], answer)
+                    except Exception as exc:
+                        log.warning(f"Caching website-only streamed answer failed for topic_key={topic_key}: {exc}")
+
+                yield f"data: {json.dumps({'done': True, 'results': []})}\n\n"
+            finally:
+                _clear_owner_busy(owner_key)
+
+        return StreamingResponse(_website_only_generator(), media_type="text/event-stream")
 
     try:
         matched = get_evidence_with_topup(
