@@ -6,7 +6,7 @@ generation/fallback, the router, the analysis layer, the website-keyword
 extraction wrapper, and the single LLM call function. This is what
 actually shrinks index.py's size/load; index.py keeps only FastAPI app
 wiring plus chat/session/Mongo orchestration (flintel_users /
-flintel_users_chat). 
+flintel_users_chat).
 
 MOVED HERE VERBATIM (no logic change) from index.py: normalize_topic_key, 
 normalize_platform, keyword-fallback generation, job/signal Mongo reads,
@@ -2106,8 +2106,10 @@ and already-extracted keywords are given. Decide which case applies:
    niche/website WITHOUT naming a different topic ("mere niche se related
    posts do", "mere liye leads dhoond kar do", "sales do", "find customers
    for me"). Return intent="search", "use_website_context": true,
-   "keywords": null, "match_phrases": null (backend reuses saved website
-   keywords, never generate new). While a saved website context exists
+   "keywords": null, "match_phrases": null (the backend will itself generate
+   FRESH keywords and phrases from the saved website evidence combined with
+   this new message — never reuse old ones and never generate them here).
+   While a saved website context exists
    such a message is NEVER "clarify" and NEVER "chat".
 2. SPECIFIC TOPIC CONNECTED TO THE WEBSITE: user names a specific
    product/angle that belongs to what the website offers. intent="search",
