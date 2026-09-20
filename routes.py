@@ -88,6 +88,7 @@ from index import (
 from database import users_collection  # <-- FIX: was missing, used in signup()/login()
 from database import google_posts_collection  # <-- GOOGLE-FALLBACK POLLING FIX: needed in stream_answer()
 from datetime import datetime, timezone
+from config import URL_PROMPT_MERGE_ENABLED, URL_PROMPT_MAX_KEYWORDS, URL_PROMPT_MAX_PHRASES, URL_MERGED_MAX_PHRASES
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -193,6 +194,25 @@ def _build_website_note(ctx, mode):
         f"connected to their niche, but you're sharing these posts anyway in case they're useful. Do not "
         f"treat the posts as leads for their business."
     )
+
+
+def _merge_unique(primary, secondary, limit):
+    """Do string lists ko merge karta hai: primary pehle, phir secondary;
+    case-insensitive dedupe; limit tak."""
+    out, seen = [], set()
+    for lst in (primary, secondary):
+        for item in (lst or []):
+            if not isinstance(item, str):
+                continue
+            clean = item.strip()
+            key = clean.lower()
+            if not clean or key in seen:
+                continue
+            seen.add(key)
+            out.append(clean)
+            if len(out) >= limit:
+                return out
+    return out
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -723,6 +743,11 @@ def search(
         # REUSE feature above to pick up on a later message in this chat.
         # ─────────────────────────────────────────────────────────────────────
         website_context_url = None
+        # (URL+PROMPT MERGE) Router ki di hui keywords/phrases, is se PEHLE ke
+        # kisi bhi website-derived override se pehle capture ki gayi hain.
+        prompt_keywords_from_router = list(routed_keywords) if routed_keywords else []
+        prompt_phrases_from_router = list(routed_match_phrases) if routed_match_phrases else []
+        behavior2_website_keywords = False
         # (FRESH KEYWORDS FROM SAVED EVIDENCE) Set only when BEHAVIOR 2's
         # cached-evidence branch, or BEHAVIOR 3's confirmed-match branch,
         # actually had a structured_evidence dict available — persisted
@@ -795,6 +820,7 @@ def search(
                             _evidence_to_structured_summary(website_evidence.get("structured_evidence"))
                         )
                         website_context_url = website_evidence.get("url") or detected_url
+                        behavior2_website_keywords = True
                         website_structured_evidence_for_save = website_evidence.get("structured_evidence")
                         used_cached_evidence = True
 
@@ -818,6 +844,7 @@ def search(
                             routed_match_phrases = website_extraction_result.get("match_phrases")
                             log.info(f"Website-derived keywords used | url={detected_url!r} | keywords={routed_keywords}")
                             website_context_url = detected_url
+                            behavior2_website_keywords = True
                         website_answer_context = website_intelligence.format_structured_summary_for_answer(
                             website_extraction_result.get("structured_summary")
                         )
@@ -942,6 +969,21 @@ def search(
                     if redirect_chat_id:
                         return RedirectResponse(url=f"/chat/{redirect_chat_id}", status_code=303)
                     return RedirectResponse(url="/", status_code=303)
+
+        # (URL+PROMPT MERGE) BEHAVIOR 2 (URL + generic ask, no separately-named
+        # topic) mein website-derived keywords ne router ki prompt-based keywords
+        # ko override kar diya tha — yahan dono ko merge karte hain (prompt pehle,
+        # phir website), taake user ka apna prompt bhi search mein reflect ho.
+        # BEHAVIOR 1 / BEHAVIOR 3 / follow-up reuse mein behavior2_website_keywords
+        # False rehta hai, isliye wahan yeh block kabhi nahi chalta.
+        if URL_PROMPT_MERGE_ENABLED and behavior2_website_keywords and (prompt_keywords_from_router or prompt_phrases_from_router):
+            merged_kw = _merge_unique(prompt_keywords_from_router[:URL_PROMPT_MAX_KEYWORDS], routed_keywords, MAX_KEYWORDS)
+            merged_ph = _merge_unique(prompt_phrases_from_router[:URL_PROMPT_MAX_PHRASES], routed_match_phrases, URL_MERGED_MAX_PHRASES)
+            if merged_kw:
+                routed_keywords = merged_kw
+            if merged_ph:
+                routed_match_phrases = merged_ph
+            log.info(f"URL+prompt keywords merged | prompt_kw={prompt_keywords_from_router[:URL_PROMPT_MAX_KEYWORDS]} | final_kw={routed_keywords}")
 
         # (unfiltered mode) routed_unfiltered as parsed from the router is NEVER
         # trusted blindly — flintel.is_time_only_request() requires a genuine
