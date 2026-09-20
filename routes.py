@@ -769,10 +769,17 @@ def search(
             # link? No separately-named topic (BEHAVIOR 2) vs a separately
             # named topic alongside the URL (BEHAVIOR 3 candidate).
             try:
-                has_named_topic = (
-                    website_intelligence.has_request_shaped_language(query, detected_url)
-                    and not website_intelligence.is_generic_leadgen_ask(query)
-                )
+                uat = routed.get("url_ask_type")
+                if uat == "generic_own_business":
+                    has_named_topic = False
+                elif uat == "specific_topic":
+                    has_named_topic = True
+                else:
+                    # router ne nahi bataya (fail/None): purana heuristic backup
+                    has_named_topic = (
+                        website_intelligence.has_request_shaped_language(query, detected_url)
+                        and not website_intelligence.is_generic_leadgen_ask(query)
+                    )
             except Exception as exc:
                 log.warning(f"has_request_shaped_language failed for url={detected_url!r}: {exc}")
                 has_named_topic = False
