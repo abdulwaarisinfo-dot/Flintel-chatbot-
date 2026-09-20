@@ -706,12 +706,6 @@ _GENERIC_LEADGEN_PATTERNS = [
     r"\bget (me )?leads\b",
     r"\bpromote (my|this) (site|website)\b",
     r"\bmarket (my|this) (site|website)\b",
-    r"\b(find|get|generate|create|need|want)\s+(me\s+)?(some\s+)?(sales|leads|customers|clients|buyers|prospects)\b",
-    r"\b(sales|leads|customers|clients|grahak)\s+(la|lao|nikal|nikalo|dhoond|dhund|dhundo|chahiye|chahiyen|do|de|dedo|kar|karo|generate|find)\b",
-    r"\b(mujhe|mujhay|mjhe)\s+(sales|leads|customers|clients|grahak)\b",
-    r"\bsales\s+(la|nikal|dhoond|dhund|find|generate|chahiye|kar)",
-    r"\bgrahak\b",
-    r"\bcustomer\s+(la|nikal|dhoond|dhund|chahiye)",
 ]
 
 
