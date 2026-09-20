@@ -210,8 +210,8 @@ WEBSITE_EVIDENCE_CACHE_TTL_DAYS = int(os.getenv("WEBSITE_EVIDENCE_CACHE_TTL_DAYS
 # liye max_tokens — CLAUDE_WEBSITE_KEYWORD_MAX_TOKENS se thoda zyada,
 # kyunke yeh call structured schema + insight-answer text dono produce
 # karta hai.
-WEBSITE_EVIDENCE_MAX_TOKENS = int(os.getenv("WEBSITE_EVIDENCE_MAX_TOKENS", "700"))
-WEBSITE_INSIGHT_MAX_TOKENS = int(os.getenv("WEBSITE_INSIGHT_MAX_TOKENS", "600"))
+WEBSITE_EVIDENCE_MAX_TOKENS = int(os.getenv("WEBSITE_EVIDENCE_MAX_TOKENS", "1200"))
+WEBSITE_INSIGHT_MAX_TOKENS = int(os.getenv("WEBSITE_INSIGHT_MAX_TOKENS", "1200"))
 
 # ── URL + prompt merge (BEHAVIOR 2) ──────────────────────────────────────
 # Jab user ek hi message mein URL aur ask (jaise "sales la do") dono de,
