@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2212,6 +2213,22 @@
         }
         renderedEl.style.display = 'block';
         rawEl.style.display = 'none';
+        // (BLANK-ANSWER-AFTER-REFRESH FIX) A switch/case branch above may
+        // complete without throwing yet still leave .answer-rendered with
+        // no actual visible content (e.g. a source_list answer whose
+        // executive_summary/key_findings/market_pattern/conclusion/
+        // platforms are all empty/missing) — that used to leave the screen
+        // blank (raw hidden, rendered empty) forever, since nothing
+        // downstream ever re-checks it. Detect that here and revert to
+        // showing the raw JSON instead of a blank gap.
+        const hasVisibleContent = renderedEl.children.length > 0 ||
+          (renderedEl.textContent && renderedEl.textContent.trim().length > 0);
+        if (!hasVisibleContent) {
+          renderedEl.style.display = 'none';
+          rawEl.style.display = 'block';
+          // Do NOT mark lastRenderedRaw here — stays eligible for a retry.
+          return;
+        }
         // (BUG 1 FIX) Only mark as rendered for a KNOWN format that
         // actually went through one of the real render* functions above —
         // never for the unknown-format fallback (that just dumps raw text
@@ -2225,6 +2242,16 @@
       } catch (e) {
         console.warn('Structured answer render failed, falling back to raw text:', e);
         renderedEl.innerHTML = '';
+        renderedEl.style.display = 'none';
+        rawEl.style.display = 'block';
+        // (BLANK-ANSWER-AFTER-REFRESH FIX) data.format was present, so this
+        // is known structured JSON, not a plain chat/blocked markdown
+        // reply — never let it fall through to the markdown-fallback
+        // branch below (a JSON string "succeeds" trivially as markdown,
+        // which used to permanently mark this wrap as rendered while
+        // showing nothing useful). Do NOT mark lastRenderedRaw — stays
+        // eligible for a retry.
+        return;
       }
     }
 
