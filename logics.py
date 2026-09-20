@@ -7,7 +7,7 @@ extraction wrapper, and the single LLM call function. This is what
 actually shrinks index.py's size/load; index.py keeps only FastAPI app
 wiring plus chat/session/Mongo orchestration (flintel_users /
 flintel_users_chat).
- 
+
 MOVED HERE VERBATIM (no logic change) from index.py: normalize_topic_key, 
 normalize_platform, keyword-fallback generation, job/signal Mongo reads,
 every signal-matching helper (including phrase-matching), get_matched_
@@ -1060,7 +1060,7 @@ Before finalizing your answer, silently check: does any sentence in this
 report just re-say something already said elsewhere in different words?
 If yes, cut it. A tighter, cleaner report that respects the reader's time
 is always better than an exhaustive one that repeats itself. Aim for
-roughly 30% shorter than your first instinct, achieved by CUTTING
+roughly 40% shorter than your first instinct, achieved by CUTTING
 repetition and padding — never by cutting real, distinct findings or
 grounding evidence.
 
@@ -1084,15 +1084,18 @@ RESPONSE SIZE CONTROL — DEFAULT IS MEDIUM (overrides the depth ladder)
 
 Default to a MEDIUM-length report a reader can act on in about a minute.
 The analysis logic above stays the same; only how much is written out changes.
-- executive_summary: 2-4 sentences.
-- key_findings: at most 3, each "impact" one sentence.
+- research_objective: one short sentence.
+- executive_summary: 2-3 sentences, hard cap.
+- key_findings: at most 3 (2 is better when evidence is thin), each "impact" ONE short sentence.
 - detailed_findings: empty list by default. Include only if the user
   explicitly asks for detail / deep dive / full report, then at most 3.
-- market_pattern: 1-2 sentences only when genuinely supported, else omit.
+- market_pattern: 1 sentence only when genuinely supported, else omit.
 - conclusion: 1-2 sentences.
 - business_insight: only when the user is clearly selling something or
   asking for leads/positioning, max 2 sentences.
-- Each post "summary": one short sentence.
+- Each post "summary": max 12-15 words.
+- followup_question: one short question.
+- Total target: a reader should finish the whole report in about 40 seconds.
 Scale to the user's prompt: simple question -> shorter answer;
 "detail"/"deep"/"poori detail" -> expanded. Never pad.
 
@@ -1116,13 +1119,13 @@ pain-point/general research queries.
 {
   "format": "source_list",
   "research_objective": "<one clear sentence: what this analysis is actually trying to answer>",
-  "executive_summary": "<a genuine analyst-style overview: what the evidence shows overall, the major recurring patterns, what stands out, and any real limitation in the evidence. Length scales with complexity — no fixed sentence count, no padding.>",
+  "executive_summary": "<2-3 sentences max: what the evidence shows overall and the single most important pattern. No padding.>",
   "key_findings": [
     {
       "finding": "<short name of the pattern, e.g. 'Pricing pressure / affordability'>",
       "evidence_type": "<Direct|Indirect|Contextual|Builder/Provider|Buyer>",
       "signal_strength": "<Strong|Moderate|Weak>",
-      "impact": "<what this pattern means for the market/business, 1-2 sentences>",
+      "impact": "<ONE short sentence: what this means for the market/business>",
       "supporting_post_indices": [<int>, <int>]
     }
   ],
@@ -1134,8 +1137,8 @@ pain-point/general research queries.
       "supporting_post_indices": [<int>, <int>]
     }
   ],
-  "market_pattern": "<synthesis: the common thread across all the evidence — what's really going on beneath the individual findings. Omit or keep brief if there genuinely isn't enough evidence for a broader pattern.>",
-  "conclusion": "<what the evidence consistently shows, the strongest recurring pattern, what the evidence does NOT prove (if relevant), and the practical takeaway. No new information introduced here.>",
+  "market_pattern": "<ONE sentence, only if genuinely supported by the evidence, else omit this field entirely>",
+  "conclusion": "<1-2 sentences: the practical takeaway only. Never repeat the summary or findings.>",
   "followup_question": "<ONE genuinely useful next-step question that moves the research forward — never a list of 3>",
   "platforms": [
     {
@@ -1147,7 +1150,7 @@ pain-point/general research queries.
           "index": <int — matches the numbers used in supporting_post_indices above>,
           "source": "<subreddit/handle/page name>",
           "title": "<post title, or a short label if none>",
-          "summary": "<1 sentence paraphrase, kept minimal — this is a reference, not the analysis>",
+          "summary": "<max 12-15 words, minimal paraphrase — this is a reference, not the analysis>",
           "sentiment": "<positive|mixed|negative|neutral>",
           "link": "<real post URL if available, else omit this field entirely>",
           "google_rank": <int, omit unless this post came from the supplementary Google search>
