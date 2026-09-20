@@ -2081,6 +2081,17 @@ optional time window.
    Only use "clarify" when there is NEITHER a URL NOR any named topic/
    brand/industry/problem angle anywhere in the message.
 
+   When a URL is present together with an ask, ALSO return "url_ask_type":
+   - "generic_own_business": the user wants something for their OWN business
+     or website in general (sales, leads, customers, growth, promotion,
+     "find people for this", in ANY language or phrasing), with NO separate
+     named topic, problem, or angle.
+   - "specific_topic": the user names a distinct topic, problem, product
+     angle, or question alongside the URL (e.g. complaints about something,
+     competitors, a particular feature or issue).
+   Decide from the meaning of the message, never from specific words.
+   For a bare URL with no ask, use "none". Without a URL, use null.
+
    When writing the clarifying reply, sound like a helpful consultant, not
    a form validator: briefly explain WHY you're asking (so the search
    actually finds something relevant to them), and in one natural
@@ -2100,7 +2111,7 @@ reply conversational and plain — don't mention you're an AI or that this
 is a "mock", and don't narrate your own reasoning.
 Respond with STRICT JSON ONLY — no markdown code fences, no preamble, no
 text outside the JSON object — in EXACTLY one of these four shapes:
-{"intent": "search", "reply": null, "keywords": ["<keyword1>", "<keyword2>"], "time_window_days": null, "match_phrases": ["<phrase1>", "<phrase2>"], "evidence_required": <int|null>, "website_only": false}
+{"intent": "search", "reply": null, "keywords": ["<keyword1>", "<keyword2>"], "time_window_days": null, "match_phrases": ["<phrase1>", "<phrase2>"], "evidence_required": <int|null>, "website_only": false, "url_ask_type": "generic_own_business"|"specific_topic"|"none"|null}
 {"intent": "chat", "reply": "<your natural reply text here>", "keywords": null, "time_window_days": null, "match_phrases": null, "evidence_required": null}
 {"intent": "blocked", "reply": "<short, polite decline text>", "keywords": null, "time_window_days": null, "match_phrases": null, "evidence_required": null}
 {"intent": "clarify", "reply": "<short, natural clarifying question>", "keywords": null, "time_window_days": null, "match_phrases": null, "evidence_required": null}
@@ -2130,7 +2141,7 @@ and already-extracted keywords are given. Decide which case applies:
    "unrelated". Never mix the website's keywords in.
 4. Everything else (greetings, blocked etc.): use_website_context false.
 Extended search JSON shape:
-{"intent":"search","reply":null,"keywords":[...]|null,"time_window_days":<int|null>,"match_phrases":[...]|null,"evidence_required":<int|null>,"website_only":false,"use_website_context":<true|false>,"website_topic_relation":"related"|"unrelated"|null}
+{"intent":"search","reply":null,"keywords":[...]|null,"time_window_days":<int|null>,"match_phrases":[...]|null,"evidence_required":<int|null>,"website_only":false,"url_ask_type":"generic_own_business"|"specific_topic"|"none"|null,"use_website_context":<true|false>,"website_topic_relation":"related"|"unrelated"|null}
 """
 
 CLAUDE_ROUTER_SYSTEM_PROMPT = (
@@ -2266,6 +2277,7 @@ def _parse_router_json(raw: str):
     website_only = False
     use_website_context = False
     website_topic_relation = None
+    url_ask_type = None
     if intent == "search":
         raw_keywords = data.get("keywords")
         if isinstance(raw_keywords, list):
@@ -2337,11 +2349,13 @@ def _parse_router_json(raw: str):
         use_website_context = bool(data.get("use_website_context") is True)
         _rel = data.get("website_topic_relation")
         website_topic_relation = _rel if _rel in ("related", "unrelated") else None
+        _uat = data.get("url_ask_type")
+        url_ask_type = _uat if _uat in ("generic_own_business", "specific_topic", "none") else None
 
     return {"intent": intent, "reply": reply, "keywords": keywords, "time_window_days": time_window_days,
             "unfiltered": unfiltered, "match_phrases": match_phrases, "evidence_required": evidence_required,
             "website_only": website_only, "use_website_context": use_website_context,
-            "website_topic_relation": website_topic_relation}
+            "website_topic_relation": website_topic_relation, "url_ask_type": url_ask_type}
 
 
 def classify_and_maybe_chat(query: str, chat_summary: str, website_context_summary: str = None) -> dict:
@@ -2391,12 +2405,12 @@ def classify_and_maybe_chat(query: str, chat_summary: str, website_context_summa
         raw = _call_claude(CLAUDE_ROUTER_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_ROUTER_MAX_TOKENS, enable_web_search=True)
     except Exception as exc:
         log.warning(f"Router Claude call failed (defaulting to 'search'): {exc}")
-        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None, "evidence_required": None, "website_only": False, "use_website_context": False, "website_topic_relation": None}
+        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None, "evidence_required": None, "website_only": False, "use_website_context": False, "website_topic_relation": None, "url_ask_type": None}
 
     parsed = _parse_router_json(raw)
     if not parsed:
         log.warning(f"Router returned unparseable output (defaulting to 'search'): {raw[:200]!r}")
-        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None, "evidence_required": None, "website_only": False, "use_website_context": False, "website_topic_relation": None}
+        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None, "evidence_required": None, "website_only": False, "use_website_context": False, "website_topic_relation": None, "url_ask_type": None}
     return parsed
 
 
