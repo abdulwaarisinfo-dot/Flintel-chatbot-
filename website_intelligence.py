@@ -2,7 +2,7 @@
 FLINTEL — WEBSITE INTELLIGENCE (URL-HANDLING REFINEMENTS)
 ============================================================================
 Self-contained module. Nothing here imports from or modifies index.py or
-flintel.py — both of those files may import FROM this file, never the 
+flintel.py — both of those files may import FROM this file, never the
 other way around (the exact same one-way-dependency pattern flintel.py
 already uses relative to index.py).
 
@@ -922,14 +922,13 @@ LENGTH & DEPTH (Point 1 + Point 5 — respect the reader's time)
 
 Depth scales with how much genuine evidence exists — never with an
 assumption that "more text is better":
-- evidence_quality == "strong" -> a clean, medium-length breakdown using
-  the labeled format below. Not a long report — one tight paragraph or
-  a short labeled list, whichever reads better for what was actually
-  found.
-- evidence_quality == "mixed" -> the same labeled format, but explicitly
-  say which fields could not be verified from the site (e.g. "Pricing:
-  not visible on the site") — never silently omit a field the user might
-  expect; say plainly that it wasn't found.
+- evidence_quality == "strong" -> a SHORT labeled breakdown using the
+  labeled format below. Each labeled line must be ONE short line
+  (max ~15 words). Maximum 5 lines total. No intro sentence, no closing recap.
+- evidence_quality == "mixed" -> the same SHORT labeled format (one short
+  line per label, max 5 lines), but explicitly say in a few words which key
+  fields could not be verified (e.g. "Pricing: not visible on the site") —
+  never silently omit a field the user might expect.
 - evidence_quality == "thin" -> a short, honest note: the site was
   reached but very little usable business content was extractable — say
   so plainly, share whatever little was found, and do not pad it out
@@ -957,6 +956,10 @@ Opportunity: <a grounded observation about positioning/gaps — clearly framed a
 Not every line is mandatory every time — include the ones the evidence
 actually supports; skip a line entirely rather than forcing a weak or
 invented value into it.
+
+BREVITY RULE: each line is a compact phrase, not a full sentence or
+paragraph. Skip "Market signal" / "Buyer pain" / "Opportunity" unless
+the evidence clearly supports them. If in doubt, leave the line out.
 
 ──────────────────────────────────────────────────────────────────────
 UNDERSTANDING THE USER'S ACTUAL REQUEST (Point 5)
@@ -1031,7 +1034,7 @@ def build_website_insight_answer(url: str, query: str, structured_evidence: dict
         f"Structured evidence (JSON):\n{json.dumps(structured_evidence or {}, ensure_ascii=False)}"
     )
     try:
-        answer = call_claude_fn(WEBSITE_INSIGHT_SYSTEM_PROMPT, user_message, max_tokens=600)
+        answer = call_claude_fn(WEBSITE_INSIGHT_SYSTEM_PROMPT, user_message, max_tokens=400)
         return (answer or "").strip() or _fallback_insight_text(evidence_quality)
     except Exception:
         return _fallback_insight_text(evidence_quality)
