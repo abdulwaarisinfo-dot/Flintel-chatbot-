@@ -6,7 +6,7 @@ session setup, Google OAuth registration), password hashing, and every
 `flintel_users` / `flintel_users_chat` Mongo-backed function (user
 accounts, chat sessions, message bookkeeping, the busy-lock, the  
 background-trigger orchestration for Google-fallback/search-progress,
-and the two functions that decide when a message's answer is ready to 
+and the two functions that decide when a message's answer is ready to  
 fill in).
 
 Every constant this module used to define directly now lives in
