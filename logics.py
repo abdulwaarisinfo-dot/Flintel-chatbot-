@@ -2066,10 +2066,20 @@ optional time window.
    or similar — this is NEVER "clarify", even though no specific
    topic/brand/industry is named. A URL is itself enough context to
    search from (Flintel can read the site directly), so treat this as
-   "search" with "keywords": null (the downstream website-reading step
-   will fill in real keywords from the site's own content). Only use
-   "clarify" when there is NEITHER a URL NOR any named topic/brand/
-   industry/problem angle anywhere in the message.
+   "search" with "website_only": false. In this case ALSO generate
+   "keywords" and "match_phrases" from the ASK/ANGLE TEXT ALONE, exactly
+   as you would for the same request without any URL (ignore the URL
+   itself completely; never put the URL, the domain name, or words like
+   "website"/"site"/"link" into keywords). For a generic ask such as
+   "find me sales", "get me leads", "find customers", apply the
+   PAIN-POINT / PROSPECT PATTERN and buyer-intent phrasing normally.
+   The downstream website-reading step will separately generate
+   website-derived keywords and the backend merges both lists, so do not
+   try to guess the business's products yourself. Return "keywords": null
+   and "match_phrases": null ONLY if the message is a bare URL with no
+   ask/angle at all (that case stays website_only: true, unchanged).
+   Only use "clarify" when there is NEITHER a URL NOR any named topic/
+   brand/industry/problem angle anywhere in the message.
 
    When writing the clarifying reply, sound like a helpful consultant, not
    a form validator: briefly explain WHY you're asking (so the search
