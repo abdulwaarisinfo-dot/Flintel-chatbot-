@@ -87,6 +87,11 @@ __all__ = [
     "WEBSITE_EVIDENCE_CACHE_TTL_DAYS",
     "WEBSITE_EVIDENCE_MAX_TOKENS",
     "WEBSITE_INSIGHT_MAX_TOKENS",
+    # URL + prompt merge (BEHAVIOR 2)
+    "URL_PROMPT_MERGE_ENABLED",
+    "URL_PROMPT_MAX_KEYWORDS",
+    "URL_PROMPT_MAX_PHRASES",
+    "URL_MERGED_MAX_PHRASES",
     # Model config (ANTHROPIC — Claude Haiku)
     "ANTHROPIC_API_KEY",
     "CLAUDE_MODEL",
@@ -207,6 +212,18 @@ WEBSITE_EVIDENCE_CACHE_TTL_DAYS = int(os.getenv("WEBSITE_EVIDENCE_CACHE_TTL_DAYS
 # karta hai.
 WEBSITE_EVIDENCE_MAX_TOKENS = int(os.getenv("WEBSITE_EVIDENCE_MAX_TOKENS", "700"))
 WEBSITE_INSIGHT_MAX_TOKENS = int(os.getenv("WEBSITE_INSIGHT_MAX_TOKENS", "600"))
+
+# ── URL + prompt merge (BEHAVIOR 2) ──────────────────────────────────────
+# Jab user ek hi message mein URL aur ask (jaise "sales la do") dono de,
+# to website-derived keywords ke sath prompt ke apne keywords/phrases bhi
+# merge hote hain.
+URL_PROMPT_MERGE_ENABLED = os.getenv("URL_PROMPT_MERGE_ENABLED", "true").strip().lower() in ("1", "true", "yes", "on")
+# Prompt ke maximum kitne keywords merged list mein pehle rakhe jayen.
+URL_PROMPT_MAX_KEYWORDS = int(os.getenv("URL_PROMPT_MAX_KEYWORDS", "6"))
+# Prompt ke maximum kitne match_phrases merged list mein pehle rakhe jayen.
+URL_PROMPT_MAX_PHRASES = int(os.getenv("URL_PROMPT_MAX_PHRASES", "3"))
+# Merge ke baad match_phrases ki total limit (website 7 + prompt 3 = 10).
+URL_MERGED_MAX_PHRASES = int(os.getenv("URL_MERGED_MAX_PHRASES", "10"))
 
 # ── Model config (ANTHROPIC — Claude Haiku) ──────────────────────────────
 ANTHROPIC_API_KEY   = os.getenv("ANTHROPIC_API_KEY")
