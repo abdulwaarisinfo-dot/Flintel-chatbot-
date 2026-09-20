@@ -4,9 +4,9 @@ extracted from index.py to keep that module to shared infrastructure
 and business logic. Imports `app` from index.py and registers every
 route on it; index.py imports this module once, at the bottom, purely
 for its side effect of registering these routes.
-""" 
- 
-import json 
+"""
+
+import json
 import re
 import time
 import threading
@@ -450,14 +450,32 @@ def search(
                         should_reuse = bool(_WEBSITE_FOLLOWUP_RE.search(query))  # purana backup
                     if should_reuse:
                         intent = "search"
-                        routed_keywords = ctx["keywords"]
-                        routed_match_phrases = ctx.get("match_phrases")
-                        reuse_website_keywords = True
+                        # (FRESH KEYWORDS FROM SAVED EVIDENCE) Purane saved
+                        # keywords blindly reuse karne ke bajaye, saved
+                        # structured_evidence + user ke NAYE prompt se naye
+                        # keywords/match_phrases generate hote hain. Website
+                        # dobara fetch NAHI hoti — sirf saved evidence use hota
+                        # hai. reuse_website_keywords jaan-boojh kar False hi
+                        # rehta hai, taake neeche enqueue_search_job() in naye
+                        # keywords ke sath chale.
+                        fresh = None
+                        saved_evidence = ctx.get("structured_evidence")
+                        if saved_evidence:
+                            try:
+                                fresh = generate_keywords_for_website_request(query, ctx.get("url"), saved_evidence)
+                            except Exception as exc:
+                                log.warning(f"Fresh keyword generation from saved website evidence failed: {exc}")
+                                fresh = None
+                        if fresh and fresh.get("keywords"):
+                            routed_keywords = fresh["keywords"]
+                            routed_match_phrases = fresh.get("match_phrases")
+                            log.info(f"Fresh keywords from saved website evidence | chat_id={active_chat_id} | keywords={routed_keywords}")
+                        else:
+                            # fallback: purani chats (jin mein structured_evidence save nahi) ya generation fail
+                            routed_keywords = ctx["keywords"]
+                            routed_match_phrases = ctx.get("match_phrases")
+                            log.info(f"Reusing last website context (fallback) | chat_id={active_chat_id} | keywords={routed_keywords}")
                         website_note = _build_website_note(ctx, "own")
-                        log.info(
-                            f"Reusing last website context for follow-up | "
-                            f"chat_id={active_chat_id} | keywords={routed_keywords}"
-                        )
                     elif intent == "search" and routed.get("website_topic_relation") in ("related", "unrelated"):
                         website_note = _build_website_note(ctx, routed["website_topic_relation"])
             except Exception as exc:
@@ -599,6 +617,7 @@ def search(
                                             (evidence.get("structured_evidence") or {}).get("business")
                                             or (evidence.get("structured_evidence") or {}).get("title")
                                         ),
+                                        "structured_evidence": evidence.get("structured_evidence"),
                                     },
                                 )
                             except Exception as exc:
@@ -704,6 +723,13 @@ def search(
         # REUSE feature above to pick up on a later message in this chat.
         # ─────────────────────────────────────────────────────────────────────
         website_context_url = None
+        # (FRESH KEYWORDS FROM SAVED EVIDENCE) Set only when BEHAVIOR 2's
+        # cached-evidence branch, or BEHAVIOR 3's confirmed-match branch,
+        # actually had a structured_evidence dict available — persisted
+        # alongside last_website_context below so a later, URL-less
+        # follow-up can generate fresh keywords from it without ever
+        # re-fetching the website. Stays None on every other path.
+        website_structured_evidence_for_save = None
         # (BUG 1) Set whenever BEHAVIOR 2/3 (or BEHAVIOR 1 above) manages to
         # pull a short business/title seed out of the website's own
         # evidence — used ONLY by the final generate_fuzzy_keywords()
@@ -769,6 +795,7 @@ def search(
                             _evidence_to_structured_summary(website_evidence.get("structured_evidence"))
                         )
                         website_context_url = website_evidence.get("url") or detected_url
+                        website_structured_evidence_for_save = website_evidence.get("structured_evidence")
                         used_cached_evidence = True
 
                 if not used_cached_evidence:
@@ -807,6 +834,11 @@ def search(
                 # doesn't have it.
                 website_text_for_match = None
                 topic_match_result = None
+                # (FRESH KEYWORDS FROM SAVED EVIDENCE) Initialized BEFORE the
+                # try below so it is always defined by the time the
+                # confirmed-match branch further down reads it, even if the
+                # try block raises before its own inner assignment runs.
+                cached_evidence_for_match = None
                 try:
                     cached_evidence_for_match = None
                     try:
@@ -879,6 +911,7 @@ def search(
                             f"keywords={routed_keywords}"
                         )
                         website_context_url = detected_url
+                        website_structured_evidence_for_save = (cached_evidence_for_match or {}).get("structured_evidence")
                     website_answer_context = website_intelligence.format_structured_summary_for_answer(
                         topic_match_result.get("structured_summary")
                     )
@@ -1007,6 +1040,7 @@ def search(
                             "keywords": keywords,
                             "match_phrases": routed_match_phrases,
                             "business": website_seed_for_fallback,
+                            "structured_evidence": website_structured_evidence_for_save,
                         },
                     )
                 except Exception as exc:
