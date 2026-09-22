@@ -3,7 +3,7 @@ database.py — ALL MongoDB connection and collection setup for Flintel.
 
 Pure extraction from index.py: this module owns the Mongo client, the
 database handle, every collection handle, and every index-creation call
-that used to live inline in index.py. Zero behavior change from before —
+that used to live inline in index.py. Zero behavior change from before — 
 same URI/DB env vars, same collection names, same indexes, same log
 messages on startup.
 
