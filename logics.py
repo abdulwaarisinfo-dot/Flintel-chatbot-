@@ -61,7 +61,7 @@ import website_intelligence
 import google as google_search   # the new google.py module
 
 from database import (
-    jobs_collection, signals_collection, google_posts_collection, topic_evidence_cache_collection,
+    jobs_collection, signals_collection, signals_collection_2, google_posts_collection, topic_evidence_cache_collection,
     website_evidence_cache_collection,
 )
 
@@ -465,7 +465,8 @@ def _infer_platform_from_url(url: str):
 
 def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str = "all",
                          limit: int = None, since_days: int = None, unfiltered: bool = False,
-                         match_phrases: list = None, loose: bool = False) -> list:
+                         match_phrases: list = None, loose: bool = False,
+                         signals_collection_2=None) -> list:
     """Reads `flintel_signals` and keeps only the signals that match this
     job's generated keywords. topic_key match is intentionally NOT
     required: Background Service #1 may store its own topic_key for a
@@ -559,7 +560,17 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     word-boundary check against `keywords`, completely unchanged, so
     nothing breaks for those cases. Condition 1 (_signal_keyword_matches
     against the signal's own search_keyword field) is UNTOUCHED either
-    way."""
+    way.
+
+    (SECOND-COLLECTION MERGE) `signals_collection_2`, default None: an
+    optional second Mongo collection handle. When provided, its docs are
+    combined into the same matching pool as `signals_collection`'s own
+    docs — see the inline comments below at both call sites (the
+    `unfiltered` branch's flintel.get_unfiltered_matched_signals() call,
+    and the primary `raw_docs` fetch) for exactly how. Every matching
+    rule downstream (keyword match, phrase match, platform filter,
+    text-required check, dedup, per-platform cap, limit) is completely
+    unchanged and applies identically to docs from either collection."""
     if unfiltered:
         return flintel.get_unfiltered_matched_signals(
             signals_collection,
@@ -567,6 +578,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             targeting_platform=targeting_platform,
             limit=limit or MAX_MATCHED_RESULTS,
             max_per_platform=MAX_POSTS_PER_PLATFORM,
+            signals_collection_2=signals_collection_2,
         )
 
     limit = limit or MAX_MATCHED_RESULTS
@@ -616,6 +628,24 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
         .sort("created_utc", -1)
         .limit(limit * 10)
     )
+
+    # (SECOND-COLLECTION MERGE) Same combine-pattern already used in
+    # flintel.py: when a second signals collection is provided, fetch
+    # matches from it too (using the exact same mongo_query) and append
+    # them into the same raw_docs pool the Python loop below scans —
+    # best-effort, non-fatal: any failure here is logged and silently
+    # skipped so a problem with the second collection can never break
+    # the primary matching path.
+    if signals_collection_2 is not None:
+        try:
+            raw_docs_2 = list(
+                signals_collection_2.find(mongo_query, {"_id": 0})
+                .sort("created_utc", -1)
+                .limit(limit * 10)
+            )
+            raw_docs.extend(raw_docs_2)
+        except Exception as exc:
+            log.warning(f"signals_collection_2 fetch failed (skipping second collection): {exc}")
 
     matched = []
     seen_urls = set()
@@ -815,6 +845,7 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
         topic_key, keywords, targeting_platform=targeting_platform,
         since_days=since_days, unfiltered=unfiltered,
         match_phrases=match_phrases, limit=fetch_limit,
+        signals_collection_2=signals_collection_2,
     )
 
     # De-dup: old cached posts + new posts, keyed on post_url.
