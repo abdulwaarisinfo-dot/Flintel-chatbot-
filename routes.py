@@ -2,7 +2,7 @@
 routes.py — all FastAPI route handlers for the Flintel web service,
 extracted from index.py to keep that module to shared infrastructure
 and business logic. Imports `app` from index.py and registers every
-route on it; index.py imports this module once, at the bottom, purely
+route on it; index.py imports this module once, at the bottom, purely 
 for its side effect of registering these routes.  
 """
 
