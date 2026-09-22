@@ -86,6 +86,18 @@ below for the full rationale — no other logic in this module changed.
       message's fields stayed None forever. These helpers now go
       through a shared _set_on_latest_message() helper that updates the
       most recent matching message by its actual array index instead.
+
+(SIGNALS_COLLECTION_2 CONFIRMATION — this file unchanged) `index.py`
+reaches signal matching in exactly one place: `_fill_in_message_outputs()`
+passes `get_matched_signals` BY REFERENCE as the `matcher_fn=` argument
+to `get_evidence_with_topup()` — it never calls `get_matched_signals()`
+(or `get_unfiltered_matched_signals()`, which doesn't appear in this file
+at all) directly. `get_evidence_with_topup()` itself (defined in
+logics.py) is the one place that resolves/injects `signals_collection_2`
+before invoking `matcher_fn`, so nothing here needs to import
+`signals_collection_2` or pass it manually. No code in this file changed
+as a result — this note is purely documentation confirming that fact for
+future readers.
 """
 
 import re
@@ -1379,6 +1391,13 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
     context folded into that answer too — see
     _complete_message_answer_and_results()'s own docstring for the
     normal-path equivalent.
+
+    (SIGNALS_COLLECTION_2 CONFIRMATION) The get_evidence_with_topup()
+    call below passes `matcher_fn=get_matched_signals` (by reference,
+    never called directly here) and no `signals_collection`/
+    `signals_collection_2` argument of any kind — that injection happens
+    entirely inside get_evidence_with_topup() itself, in logics.py. This
+    function's own parameter list and call are unchanged.
 
     OTHERWISE COMPLETELY UNCHANGED — this function calls
     get_matched_signals() and analyze_with_claude() exactly as before,
