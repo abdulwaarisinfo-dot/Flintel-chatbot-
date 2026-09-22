@@ -8,7 +8,7 @@ each owns its own small config block, per their own module docstrings —
 so none of THEIR constants live here; this file is index.py's config 
 only.
 
-CONSTRAINT: import-safe with zero side effects other than reading env
+CONSTRAINT: import-safe with zero side effects other than reading env 
 vars — no Mongo connection, no HTTP call, nothing that can fail or block
 at import time. Exactly the same spirit as the top of index.py's own
 former config block.
