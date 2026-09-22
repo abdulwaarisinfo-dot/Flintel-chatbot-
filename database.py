@@ -49,6 +49,25 @@ db = client[MONGODB_DB]
 jobs_collection    = db.flintel_search_jobs
 signals_collection = db.flintel_signals
 
+# (SECONDARY SIGNALS-ONLY MONGO — READ-ONLY MIRROR) A second, completely
+# independent MongoClient, built only from MONGODB2 (config.py). This is
+# NOT a fallback and NOT used for writes/indexes anywhere — it only ever
+# gives a read handle onto that second cluster's flintel_signals
+# collection, under the exact same MONGODB_DB name the primary client
+# uses. If MONGODB2 isn't set, or the connection fails for any reason,
+# signals_collection_2 stays None and the app keeps starting normally —
+# this must never be able to crash startup.
+from config import MONGODB2
+
+signals_collection_2 = None
+if MONGODB2:
+    try:
+        client_2 = MongoClient(MONGODB2)
+        signals_collection_2 = client_2[MONGODB_DB].flintel_signals
+    except Exception as exc:
+        log.warning(f"Could not connect secondary MongoDB (MONGODB2): {exc}")
+        signals_collection_2 = None
+
 # User accounts (Google OAuth + email/password).
 users_collection = db.flintel_users
 users_collection.create_index("email", unique=True, sparse=True)
