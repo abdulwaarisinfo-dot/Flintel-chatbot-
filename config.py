@@ -97,6 +97,8 @@ __all__ = [
     "CLAUDE_MODEL",
     "CLAUDE_API_URL",
     "CLAUDE_API_VERSION",
+    # Secondary MongoDB (signals mirror)
+    "MONGODB2",
 ]
 
 # ── Keyword / matching limits ────────────────────────────────────────────
@@ -230,3 +232,6 @@ ANTHROPIC_API_KEY   = os.getenv("ANTHROPIC_API_KEY")
 CLAUDE_MODEL        = os.getenv("CLAUDE_MODEL", "claude-haiku-4-5-20251001")
 CLAUDE_API_URL      = "https://api.anthropic.com/v1/messages"
 CLAUDE_API_VERSION  = os.getenv("CLAUDE_API_VERSION", "2023-06-01")
+
+# ── Secondary signals-only MongoDB (READ-ONLY mirror of flintel_signals) ──
+MONGODB2 = os.getenv("MONGODB2", "")
