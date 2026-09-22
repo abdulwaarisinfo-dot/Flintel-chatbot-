@@ -208,7 +208,8 @@ def _default_platform_matches(doc: dict, targeting_platform: str) -> bool:
 
 def get_unfiltered_matched_signals(signals_collection, since_days, targeting_platform="all",
                                     limit=None, max_per_platform=None,
-                                    max_time_window_days=None, platform_matcher_fn=None) -> list:
+                                    max_time_window_days=None, platform_matcher_fn=None,
+                                    signals_collection_2=None) -> list:
     """Mirrors the EXACT return shape of index.py's get_matched_signals():
         [{"title":..., "post_text":..., "post_url":..., "platform":...}, ...]
 
@@ -281,6 +282,26 @@ def get_unfiltered_matched_signals(signals_collection, since_days, targeting_pla
         .sort("created_utc", -1)
         .limit(effective_limit * 10)
     )
+
+    # (SECONDARY SIGNALS-ONLY MONGO — READ-ONLY MIRROR) If a second,
+    # independent signals collection was supplied (database.py's
+    # signals_collection_2, built from config.py's MONGODB2), pull the
+    # same time-windowed query from it too and fold its docs into the
+    # same raw_docs pool the matching loop below already operates on —
+    # no separate matching path, no separate limit/cap logic. Wrapped in
+    # its own try/except so any failure on this secondary source (bad
+    # connection, timeout, etc.) never affects the primary fetch above —
+    # it's silently skipped and matching proceeds on whatever raw_docs
+    # already holds.
+    if signals_collection_2 is not None:
+        try:
+            raw_docs += list(
+                signals_collection_2.find(mongo_query, {"_id": 0})
+                .sort("created_utc", -1)
+                .limit(effective_limit * 10)
+            )
+        except Exception:
+            pass
 
     matched = []
     seen_urls = set()
