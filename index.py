@@ -116,6 +116,7 @@ from passlib.context import CryptContext
 from authlib.integrations.starlette_client import OAuth
 
 import flintel
+import scheduler as trending_keywords_scheduler   # 12-hourly trending-keywords background job
 import google as google_search   # the new google.py module
     # (renamed on import to `google_search` to avoid any ambiguity
     # with the unrelated third-party `google` package some
@@ -197,6 +198,13 @@ async def add_no_cache_headers(request: Request, call_next):
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "0"
     return response
+
+# Starts the 12-hourly trending-keywords → Google-search background job
+# (scheduler.py). Fire-and-forget: schedules an asyncio task and returns
+# immediately, never blocks app startup or any request.
+@app.on_event("startup")
+async def _start_trending_keywords_scheduler():
+    trending_keywords_scheduler.start_trending_keywords_scheduler()
 
 # Password hashing context — bcrypt, industry-standard for this use case.
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
