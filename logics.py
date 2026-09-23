@@ -1648,9 +1648,17 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
     if not posts:
         user_message = (
             f"User's question: {query}\n\n"
-            "No posts were found for this topic yet — you have no post data "
-            "to ground an answer in. Say that plainly, then answer anything "
-            "else in the question you still can from general knowledge."
+            "Note: no posts were matched for this topic yet — flintel_signals "
+            "mein abhi is exact topic ka data collect nahi hua. Respond "
+            "STRICTLY in the no_results JSON format defined above — never "
+            "switch to free-text/general-knowledge prose for this case. "
+            "message field mein: (a) plainly batao kya search kiya gaya, "
+            "(b) ek honest, non-apologetic reason do (e.g. 'ye topic abhi "
+            "tak zyada discuss nahi hua ho sakta hai, ya niche/new brand "
+            "hai'), (c) suggested_actions mein sirf Flintel ke apne "
+            "next-steps do (broaden time/platform/term) — kabhi bhi kisi "
+            "bahar ke tool/platform ka naam mat lo. Tone: confident analyst "
+            "jo status report de raha hai, na ke koi form-based rejection."
         )
         if extra_context:
             user_message += "\n\n" + extra_context
