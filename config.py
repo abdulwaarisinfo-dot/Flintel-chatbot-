@@ -99,6 +99,8 @@ __all__ = [
     "CLAUDE_API_VERSION",
     # Secondary MongoDB (signals mirror)
     "MONGODB2",
+    # Tertiary MongoDB (everything except flintel_signals)
+    "MONGODB3",
 ]
 
 # ── Keyword / matching limits ────────────────────────────────────────────
@@ -235,3 +237,8 @@ CLAUDE_API_VERSION  = os.getenv("CLAUDE_API_VERSION", "2023-06-01")
 
 # ── Secondary signals-only MongoDB (READ-ONLY mirror of flintel_signals) ──
 MONGODB2 = os.getenv("MONGODB2", "")
+
+# ── Tertiary MongoDB (primary home for every collection EXCEPT
+#    flintel_signals — jobs, users, chats, busy-owners, google_posts,
+#    topic_evidence_cache, website_evidence_cache) ─────────────────
+MONGODB3 = os.getenv("MONGODB3", "")
