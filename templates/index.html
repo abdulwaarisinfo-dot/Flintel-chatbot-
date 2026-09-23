@@ -3217,6 +3217,98 @@
   wireUpHeroSoftSearchSubmit();
   autoGrowSearchInput(document.getElementById('search-input'));
 
+  // ---- Animated cycling placeholder (typewriter effect) on the hero
+  //      search box — type out a phrase, pause, delete it, move to the
+  //      next phrase, loop. Pauses the moment the user focuses or types
+  //      into the box, and only resumes once it's both empty and blurred
+  //      again. Wrapped in its own IIFE so its helper names/state never
+  //      leak into (or collide with) anything else in this script.
+  (function initPlaceholderAnimation() {
+    const searchInput = document.getElementById('search-input');
+    if (!searchInput) return;
+
+    const placeholderPhrases = [
+      "Search any brand today",
+      "Find top product complaints",
+      "Compare two competitors now",
+      "Track brand sentiment live",
+      "Find SaaS user feedback",
+      "Discover industry trends now",
+      "Monitor your brand reputation",
+      "Find top AI SaaS users",
+      "Explore competitor reviews today",
+      "What's trending this week?"
+    ];
+    const TYPE_MS = 37;
+    const DELETE_MS = 20;
+    const PAUSE_AFTER_TYPE_MS = 1550;
+    const PAUSE_AFTER_DELETE_MS = 300;
+
+    let placeholderTimer = null;
+    let placeholderActive = false;
+
+    function stopPlaceholderAnimation() {
+      placeholderActive = false;
+      if (placeholderTimer) { clearTimeout(placeholderTimer); placeholderTimer = null; }
+    }
+
+    function startPlaceholderAnimation() {
+      if (placeholderActive) return;
+      if (document.activeElement === searchInput) return;
+      if (searchInput.value.length > 0) return;
+      placeholderActive = true;
+
+      let phraseIndex = 0;
+
+      function typePhrase() {
+        if (!placeholderActive) return;
+        const phrase = placeholderPhrases[phraseIndex];
+        let charIndex = 0;
+
+        function typeStep() {
+          if (!placeholderActive) return;
+          searchInput.placeholder = phrase.slice(0, charIndex);
+          charIndex++;
+          if (charIndex <= phrase.length) {
+            placeholderTimer = setTimeout(typeStep, TYPE_MS);
+          } else {
+            placeholderTimer = setTimeout(deletePhrase, PAUSE_AFTER_TYPE_MS);
+          }
+        }
+        typeStep();
+
+        function deletePhrase() {
+          if (!placeholderActive) return;
+          let delIndex = phrase.length;
+          function deleteStep() {
+            if (!placeholderActive) return;
+            searchInput.placeholder = phrase.slice(0, delIndex);
+            delIndex--;
+            if (delIndex >= 0) {
+              placeholderTimer = setTimeout(deleteStep, DELETE_MS);
+            } else {
+              phraseIndex = (phraseIndex + 1) % placeholderPhrases.length;
+              placeholderTimer = setTimeout(typePhrase, PAUSE_AFTER_DELETE_MS);
+            }
+          }
+          deleteStep();
+        }
+      }
+
+      typePhrase();
+    }
+
+    searchInput.addEventListener('focus', stopPlaceholderAnimation);
+    searchInput.addEventListener('input', () => {
+      if (searchInput.value.length > 0) stopPlaceholderAnimation();
+    });
+    searchInput.addEventListener('blur', () => {
+      if (searchInput.value.length === 0) startPlaceholderAnimation();
+    });
+
+    startPlaceholderAnimation();
+  })();
+
   // ---- Render Claude's answer as markdown (initial page load) ----
   renderMarkdownAnswers(document.querySelector('main.main') || document);
 
