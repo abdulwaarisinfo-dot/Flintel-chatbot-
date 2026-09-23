@@ -45,9 +45,18 @@ MONGODB_DB  = os.getenv("MONGODB_DB", "flintel_bot")
 client = MongoClient(MONGODB_URI)
 db = client[MONGODB_DB]
 
-# Same two collections Background Service #1 already uses.
-jobs_collection    = db.flintel_search_jobs
-signals_collection = db.flintel_signals
+# (MONGODB3 — new primary home for every collection EXCEPT
+# flintel_signals) A second, independent MongoClient, built only
+# from MONGODB3 (config.py). Unlike MONGODB2 (an optional read-only
+# mirror), this one is required: every collection below other than
+# signals_collection now lives here.
+from config import MONGODB3
+
+client_3 = MongoClient(MONGODB3)
+db3 = client_3[MONGODB_DB]
+
+jobs_collection    = db3.flintel_search_jobs
+signals_collection = db.flintel_signals   # stays on the PRIMARY cluster — unchanged
 
 # (SECONDARY SIGNALS-ONLY MONGO — READ-ONLY MIRROR) A second, completely
 # independent MongoClient, built only from MONGODB2 (config.py). This is
@@ -68,13 +77,13 @@ if MONGODB2:
         log.warning(f"Could not connect secondary MongoDB (MONGODB2): {exc}")
         signals_collection_2 = None
 
-# User accounts (Google OAuth + email/password).
-users_collection = db.flintel_users
+# User accounts (Google OAuth + email/password). — now on MONGODB3
+users_collection = db3.flintel_users
 users_collection.create_index("email", unique=True, sparse=True)
 users_collection.create_index("google_id", unique=True, sparse=True)
 
-# Chat/session memory (Claude/ChatGPT-style conversations).
-chats_collection = db.flintel_users_chat
+# Chat/session memory (Claude/ChatGPT-style conversations). — now on MONGODB3
+chats_collection = db3.flintel_users_chat
 
 # (PER-USER BUSY LOCK) A dedicated small collection, keyed by owner_key —
 # not an in-memory dict, and not a field bolted onto chats_collection.
@@ -92,7 +101,7 @@ chats_collection = db.flintel_users_chat
 #   - It's independent of which chat the in-flight request belongs to
 #     (the busy state is per-OWNER, not per-chat), so it doesn't belong
 #     as a field on a specific chat document in chats_collection.
-busy_owners_collection = db.flintel_busy_owners
+busy_owners_collection = db3.flintel_busy_owners
 busy_owners_collection.create_index("owner_key", unique=True)
 chats_collection.create_index("chat_id", unique=True)
 chats_collection.create_index("owner_key")
@@ -127,7 +136,7 @@ except Exception as exc:
 # ever stores discovery metadata (post_url, discovered_at, search
 # keywords, google_rank, subreddit) plus a reddit_fetched flag that
 # starts False.
-google_posts_collection = db.flintel_google_posts
+google_posts_collection = db3.flintel_google_posts
 
 try:
     # Prevents duplicate stubs for the same discovered URL across
@@ -172,7 +181,7 @@ except Exception as exc:
 #     "created_at": datetime,
 #     "updated_at": datetime,
 #   }
-topic_evidence_cache_collection = db.flintel_topic_evidence_cache
+topic_evidence_cache_collection = db3.flintel_topic_evidence_cache
 
 try:
     # One cache row per topic — this is the key an upsert writes against.
@@ -217,7 +226,7 @@ except Exception as exc:
 #     "fetched_at": datetime,
 #     "updated_at": datetime,
 #   }
-website_evidence_cache_collection = db.flintel_website_evidence_cache
+website_evidence_cache_collection = db3.flintel_website_evidence_cache
 
 try:
     website_evidence_cache_collection.create_index("url", unique=True)
