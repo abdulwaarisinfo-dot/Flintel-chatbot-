@@ -1033,6 +1033,28 @@ def _trigger_google_fallback_search(chat_id: str, owner_key: str, msg: dict):
         log.warning(f"Google-fallback search failed for topic_key={msg.get('topic_key')}: {exc}")
 
 
+# (SEARCH-PROGRESS UI — MANDATORY FALLBACK, FIX 2) Static, non-Claude
+# search_progress content in the exact same {intro, outro, checklist}
+# shape the frontend already renders (see chat.html/index.html's
+# renderSearchProgressBlock() and the Jinja msg.search_progress branch —
+# neither one cares whether the content came from Claude or from here).
+# Used ONLY when flintel.generate_search_progress_content() itself fails
+# or returns nothing, so a message sitting in the RESPONSE_TIMEOUT/
+# zero-post wait window is GUARANTEED to show a "still working" progress
+# UI instead of silently falling back to the plain spinner. Deliberately
+# generic/query-agnostic, since it only ever fires when the query-aware
+# Claude generation couldn't run.
+_SEARCH_PROGRESS_FALLBACK_CONTENT = {
+    "intro": "Still searching across Reddit and the web for this topic.",
+    "outro": "Hang tight — results will appear here as soon as they're found.",
+    "checklist": [
+        "Scanning recent posts and discussions",
+        "Cross-checking matches against your topic",
+        "Preparing a grounded answer",
+    ],
+}
+
+
 def _generate_search_progress(chat_id: str, owner_key: str, msg: dict):
     """(SEARCH-PROGRESS UI) Fires the query-aware "still searching"
     status-copy generation for a message that's been running long
@@ -1050,9 +1072,15 @@ def _generate_search_progress(chat_id: str, owner_key: str, msg: dict):
     the flag still False and schedule a duplicate generation call. This
     function's only job is to actually generate and save the content.
 
-    Wrapped in try/except, never raises — a failure here just means this
-    message keeps showing the plain spinner state, exactly like before
-    this feature existed."""
+    (MANDATORY FALLBACK, FIX 2) A failure here — the Claude call errors,
+    or returns no usable content — no longer leaves this message showing
+    the plain spinner. It now falls back to
+    _SEARCH_PROGRESS_FALLBACK_CONTENT, a static, always-available
+    progress UI in the same {intro, outro, checklist} shape, so the
+    "still working" UI is GUARANTEED during the RESPONSE_TIMEOUT/
+    zero-post wait — not merely best-effort. save_search_progress_to_chat()
+    itself is still the thing that actually persists it, and it already
+    degrades gracefully (own try/except) on any storage failure."""
     try:
         progress_content = flintel.generate_search_progress_content(
             msg.get("query"),
@@ -1060,10 +1088,14 @@ def _generate_search_progress(chat_id: str, owner_key: str, msg: dict):
             msg.get("targeting_platform"),
             _call_claude,
         )
-        if progress_content:
-            save_search_progress_to_chat(chat_id, owner_key, msg["topic_key"], progress_content)
     except Exception as exc:
         log.warning(f"Search-progress generation failed for topic_key={msg.get('topic_key')}: {exc}")
+        progress_content = None
+
+    save_search_progress_to_chat(
+        chat_id, owner_key, msg["topic_key"],
+        progress_content or _SEARCH_PROGRESS_FALLBACK_CONTENT,
+    )
 
 
 def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict, matched: list):
