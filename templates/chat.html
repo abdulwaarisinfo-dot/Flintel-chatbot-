@@ -366,7 +366,14 @@
   .answer-rendered th, .answer-rendered td { border: 1px solid #343434; padding: 8px 12px; text-align: left; }
   .answer-rendered th { color: #fff; background: #1e1d1c; font-weight: 700; }
   .answer-rendered td { color: #d1d0cf; }
-  .answer-rendered a { color: #009dff; }
+  /* (LINK-STYLE FIX) A detected website URL/link inside a rendered answer
+     should read as normal body text with a subtle underline, not a blue
+     hyperlink — color: inherit picks up whatever color the surrounding
+     text already has (so it's never a hardcoded value that could drift
+     out of sync with it), and text-decoration: underline is the only
+     other override needed on top of the app-wide `a { text-decoration:
+     none; }` reset. Font/size/spacing untouched. */
+  .answer-rendered a { color: inherit; text-decoration: underline; }
   .answer-rendered code { background: #1e1d1c; padding: 1px 6px; border-radius: 4px; font-size: 14.5px; }
 
   /* Platform-grouped source list */
@@ -2250,6 +2257,23 @@
     container.appendChild(divider);
   }
 
+  // (LINK-STYLE FIX) A markdown-rendered answer (marked.js + DOMPurify,
+  // below) can contain a real http(s) link — either a genuine [text](url)
+  // link or a bare URL that marked's gfm mode auto-links — that never
+  // goes through fieldRow()'s isLink branch (the only other place in
+  // this file that already knows to add target="_blank"/rel). Called
+  // once right after that HTML is dropped into the DOM so every one of
+  // those links opens in a new tab too, same as the ones fieldRow()
+  // already builds. Only touches real http(s) links — never an in-page
+  // "#" link (e.g. clickableTerm()'s search-suggestion chips), and those
+  // aren't part of this sanitized HTML anyway.
+  function hardenExternalLinks(container) {
+    container.querySelectorAll('a[href^="http"]').forEach((a) => {
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+    });
+  }
+
   function renderStructuredAnswer(wrap) {
     const rawEl = wrap.querySelector('.answer-raw');
     const renderedEl = wrap.querySelector('.answer-rendered');
@@ -2351,6 +2375,7 @@
       try {
         const html = marked.parse(raw, { breaks: true, gfm: true });
         renderedEl.innerHTML = DOMPurify.sanitize(html);
+        hardenExternalLinks(renderedEl);
         renderedEl.style.display = 'block';
         rawEl.style.display = 'none';
         // (BUG 1 FIX) Genuine successful render (real markdown output) —
