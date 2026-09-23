@@ -98,17 +98,39 @@ from config import URL_PROMPT_MERGE_ENABLED, URL_PROMPT_MAX_KEYWORDS, URL_PROMPT
 # nothing here changes any existing route's behavior on its own.
 # ─────────────────────────────────────────────────────────────────────────────
 
-# (VAGUE WEBSITE FOLLOW-UP REUSE) On a router "chat" turn with NO url in
-# the message, signals the user is still talking about the website from a
-# previous message in this same chat (e.g. "reddit pe log kya keh rahe
-# hain") rather than making genuine small talk ("hi", "thanks") — those
-# never match anything here and so never trigger reuse. Word-boundary
-# regex (rather than plain substring checks) so e.g. "post" doesn't match
-# inside "postpone", and a generic "what is reddit?" still matches (that
-# tradeoff is accepted — see the search() comment where this is used).
-_WEBSITE_FOLLOWUP_RE = re.compile(
-    r"\b(reddit|twitter|linkedin|facebook|posts?|discussions?|conversations?|"
-    r"complaints?|reviews?|competitors?|leads|customers)\b|log kya|people saying",
+# (VAGUE WEBSITE FOLLOW-UP REUSE — LOOSENED, FIX 3) Last-resort Python
+# backup for a router "chat"/"clarify" turn with NO url in the message,
+# used ONLY when the router itself didn't already flag reuse via
+# use_website_context/website_topic_relation — that addendum rule in
+# CLAUDE_ROUTER_WEBSITE_CONTEXT_ADDENDUM (logics.py) is now the PRIMARY
+# signal, since it can actually understand arbitrary phrasing the way a
+# fixed regex never can.
+#
+# This backup used to require a positive keyword match (reddit/posts/
+# reviews/etc.) and so silently missed any other phrasing ("mujhe iske
+# baare mein aur batao", "kya log ispar bura bol rahe hain"). It now
+# DEFAULTS TO REUSE and only turns reuse OFF on two negative/"opposite"
+# signals:
+#   1. _WEBSITE_FOLLOWUP_SMALLTALK_RE — the message is pure small talk
+#      with nothing else in it (a bare "hi"/"thanks"/"ok" etc.). Genuine
+#      chit-chat must never silently reuse a saved website's keywords —
+#      this preserves the original small-talk exclusion.
+#   2. _WEBSITE_FOLLOWUP_NEW_TOPIC_RE — the message itself signals a
+#      switch to something else ("instead", "a different topic", "alag
+#      topic", "naya brand", "ignore that website", etc.).
+# Anything else, in any phrasing/language, now defaults to reuse.
+_WEBSITE_FOLLOWUP_SMALLTALK_RE = re.compile(
+    r"^\s*(hi+|hello+|hey+|salaam\w*|assalam\w*|thanks?|thank\s*you|shukriya|"
+    r"ok(?:ay)?|bye+|good\s*(?:morning|afternoon|evening|night)|yes|yeah|"
+    r"no|haan|nahi|theek\s*hai)\s*[.,!?]*\s*$",
+    re.IGNORECASE,
+)
+_WEBSITE_FOLLOWUP_NEW_TOPIC_RE = re.compile(
+    r"\b(instead|different\s+(?:topic|brand|business|industry)|another\s+"
+    r"(?:topic|brand|business)|switch(?:ing)?\s+to|not\s+about|forget\s+"
+    r"(?:that|it|the\s+website)|ignore\s+(?:that|the)\s+website|alag\s+topic|"
+    r"dusra\s+topic|dusri\s+company|kisi\s+aur|naya\s+topic|naye\s+topic|"
+    r"new\s+topic|new\s+brand)\b",
     re.IGNORECASE,
 )
 
@@ -467,7 +489,13 @@ def search(
                 if ctx and ctx.get("keywords") and intent != "blocked":
                     should_reuse = bool(routed.get("use_website_context"))
                     if not should_reuse and intent in ("clarify", "chat"):
-                        should_reuse = bool(_WEBSITE_FOLLOWUP_RE.search(query))  # purana backup
+                        # (LOOSENED BACKUP, FIX 3) Default to reuse now —
+                        # only skip it on genuine small talk or an explicit
+                        # new-topic signal (see the regex definitions above).
+                        stripped_query = query.strip()
+                        is_smalltalk_only = bool(_WEBSITE_FOLLOWUP_SMALLTALK_RE.match(stripped_query))
+                        names_new_topic = bool(_WEBSITE_FOLLOWUP_NEW_TOPIC_RE.search(query))
+                        should_reuse = not is_smalltalk_only and not names_new_topic
                     if should_reuse:
                         intent = "search"
                         # (FRESH KEYWORDS FROM SAVED EVIDENCE) Purane saved
