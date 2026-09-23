@@ -1868,32 +1868,87 @@
   const SEARCH_PROGRESS_TRIGGER_SECONDS = 0;
   const SEARCH_PROGRESS_TIMEOUT_SECONDS = 180;
 
-  function startSearchProgressPercentTimer(blockEl) {
-    // Live-updates the bar's fill width + percentage text every second,
-    // computed from real elapsed time since data-requested-at — never a
-    // static/hardcoded number. Stops on its own once the bar reaches
-    // 100% (the backend's own RESPONSE_TIMEOUT fallback takes over from
-    // there) or if the block is no longer in the document (e.g. the
-    // real answer has since replaced it).
-    const requestedAtRaw = blockEl.dataset.requestedAt;
-    const requestedAtMs = requestedAtRaw ? new Date(requestedAtRaw).getTime() : NaN;
+  // (PROGRESS-BAR FIX) The bar used to have TWO independent writers —
+  // this client-side elapsed-time guess, and the server-computed
+  // payload.progress_percent handler in wireUpStream() — each one
+  // overwriting fillEl.style.width / percentEl.textContent directly,
+  // even when its own new value was LOWER than what was already shown.
+  // That's what produced the forward-then-backward jumps. This is now
+  // the ONLY function allowed to touch the bar, so both writers funnel
+  // through the same monotonic (never-goes-backward) gate:
+  //  - a 'server' value is always the source of truth: once one has
+  //    arrived, dataset.serverProgressSeen is set and any running client
+  //    timer is cancelled — the client guess never overwrites a real
+  //    server value again.
+  //  - a 'client' guess is capped at 90% so it can never look
+  //    "finished" before the server actually confirms that.
+  //  - either source is simply dropped (no DOM write at all) if it
+  //    would move the bar backward from what's currently shown.
+  function applySearchProgressPercent(blockEl, percent, source) {
+    if (!blockEl) return;
     const fillEl = blockEl.querySelector('.search-progress-bar-fill');
     const percentEl = blockEl.querySelector('.search-progress-bar-percent');
     if (!fillEl || !percentEl) return;
+    let p = Math.max(0, Math.min(100, Math.round(percent)));
+    if (source === 'server') {
+      blockEl.dataset.serverProgressSeen = 'true';
+      if (blockEl._progressTimer) { clearTimeout(blockEl._progressTimer); blockEl._progressTimer = null; }
+    } else {
+      if (blockEl.dataset.serverProgressSeen === 'true') return; // server is the source of truth
+      p = Math.min(p, 90); // client guess must never look "finished"
+    }
+    const shown = parseInt(blockEl.dataset.progressShown || '0', 10);
+    if (p <= shown) return; // MONOTONIC: the bar never goes backward
+    blockEl.dataset.progressShown = String(p);
+    fillEl.style.width = p + '%';
+    percentEl.textContent = p + '%';
+  }
+
+  function startSearchProgressPercentTimer(blockEl) {
+    // Live-updates the bar (via applySearchProgressPercent() above, the
+    // single writer) every second, computed from real elapsed time since
+    // data-requested-at — never a static/hardcoded number. Guarded
+    // against ever running more than one loop on the same block, and
+    // defers entirely to the server the moment a real
+    // payload.progress_percent value has been seen.
+    if (blockEl._progressTimer) return; // single loop per block — never stack a second one
+    if (blockEl.dataset.serverProgressSeen === 'true') return; // server already speaking for this block
+    if (!document.body.contains(blockEl)) return;
+
+    const requestedAtRaw = blockEl.dataset.requestedAt;
+    const requestedAtMs = requestedAtRaw ? new Date(requestedAtRaw).getTime() : NaN;
+    if (isNaN(requestedAtMs)) return; // no real request time to guess from — wait for server values only
 
     function tick() {
-      if (!document.body.contains(blockEl)) return;
-      const elapsedSeconds = isNaN(requestedAtMs)
-        ? SEARCH_PROGRESS_TRIGGER_SECONDS
-        : (Date.now() - requestedAtMs) / 1000;
+      if (!document.body.contains(blockEl) || blockEl.dataset.serverProgressSeen === 'true') {
+        blockEl._progressTimer = null;
+        return;
+      }
+      const elapsedSeconds = (Date.now() - requestedAtMs) / 1000;
       const span = SEARCH_PROGRESS_TIMEOUT_SECONDS - SEARCH_PROGRESS_TRIGGER_SECONDS;
       const rawPercent = ((elapsedSeconds - SEARCH_PROGRESS_TRIGGER_SECONDS) / span) * 100;
-      const percent = Math.max(0, Math.min(100, Math.round(rawPercent)));
-      fillEl.style.width = percent + '%';
-      percentEl.textContent = percent + '%';
-      if (percent < 100) setTimeout(tick, 1000);
+      applySearchProgressPercent(blockEl, rawPercent, 'client');
+      const shownNow = parseInt(blockEl.dataset.progressShown || '0', 10);
+      if (shownNow >= 90) { blockEl._progressTimer = null; return; } // capped — nothing left to do until the server speaks
+      blockEl._progressTimer = setTimeout(tick, 1000);
     }
     tick();
+  }
+
+  // (PROGRESS-BAR FIX) Server-rendered .search-progress-block elements
+  // (the Jinja msg.search_progress branch — a real page load or soft-nav
+  // landing on a chat whose search is still in progress) arrive with a
+  // static 0% bar: renderSearchProgressBlock() below is only ever called
+  // for the live-SSE case, so nothing used to start this element's timer
+  // on a reload. Called on initial load and after every soft navigation
+  // (see navigateTo()'s re-init block, and the top-level call below);
+  // safe to call repeatedly since startSearchProgressPercentTimer()
+  // itself guards against a duplicate loop on a block that already has
+  // one running.
+  function initSearchProgressBlocks() {
+    document.querySelectorAll('.search-progress-block').forEach((block) => {
+      startSearchProgressPercentTimer(block);
+    });
   }
 
   function renderSearchProgressBlock(loadingRowEl, progressContent, requestedAtIso) {
@@ -1905,6 +1960,15 @@
     // so any other code already referencing that id keeps working.
     loadingRowEl.className = 'search-progress-block';
     loadingRowEl.dataset.requestedAt = requestedAtIso || '';
+    // (PROGRESS-BAR FIX) This installs a brand-new 0% bar — this id is
+    // reused across the plain-spinner -> search-progress-block swap, so
+    // clear any stale progress state a previous render might have left
+    // on this same element, otherwise the fresh bar could be treated as
+    // "already at some higher percent" or "server already seen" before
+    // it has even started.
+    delete loadingRowEl.dataset.progressShown;
+    delete loadingRowEl.dataset.serverProgressSeen;
+    if (loadingRowEl._progressTimer) { clearTimeout(loadingRowEl._progressTimer); loadingRowEl._progressTimer = null; }
 
     const textP = document.createElement('p');
     textP.className = 'search-progress-text';
@@ -2412,6 +2476,11 @@
       wireUpInitialPendingStream();
       wireUpSoftSearchSubmit();
       wireUpHeroSoftSearchSubmit();
+      // (PROGRESS-BAR FIX) Same reasoning as the calls above — start the
+      // live timer on any server-rendered .search-progress-block that
+      // just soft-swapped into the page (see initSearchProgressBlocks()
+      // definition further down this same script).
+      initSearchProgressBlocks();
       closeAllSessionMenus(null);
       console.log('[soft-nav] swap complete, no page reload happened. New URL:', response.url || url);
       const freshSearchInput = document.getElementById('search-input');
@@ -2941,20 +3010,17 @@
 
       if (payload.progress_percent !== undefined) {
         // (PROGRESS-PERCENTAGE STREAMING) Server-calculated, real-time
-        // percentage (elapsed time vs the actual RESPONSE_TIMEOUT) —
-        // more accurate than this file's own client-side elapsed-time
-        // guess (which uses fixed 40s/80s constants), so this updates
-        // the SAME bar/percentage elements whenever a fresher server
-        // value arrives. Purely additive: if the richer search-progress
-        // block hasn't rendered yet (still showing the plain spinner),
-        // these elements don't exist yet either — this safely no-ops
-        // in that case and simply has nothing to update.
+        // percentage (elapsed time vs the actual RESPONSE_TIMEOUT) — the
+        // real source of truth, routed through applySearchProgressPercent()
+        // (the single writer shared with the client-side guess timer) so
+        // it can never fight that timer or move the bar backward. Purely
+        // additive: if the richer search-progress block hasn't rendered
+        // yet (still showing the plain spinner), applySearchProgressPercent()
+        // safely no-ops (its .search-progress-bar-fill/-percent lookups
+        // come back empty) and simply has nothing to update.
         const loadingRow = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)}`);
         if (loadingRow) {
-          const fillEl = loadingRow.querySelector('.search-progress-bar-fill');
-          const percentEl = loadingRow.querySelector('.search-progress-bar-percent');
-          if (fillEl) fillEl.style.width = payload.progress_percent + '%';
-          if (percentEl) percentEl.textContent = payload.progress_percent + '%';
+          applySearchProgressPercent(loadingRow, payload.progress_percent, 'server');
         }
         return;
       }
@@ -2966,10 +3032,20 @@
         // richer in-progress design and starts its own live percentage
         // timer. Never interferes with the ongoing delta accumulation
         // above; this is purely a visual swap of the loading state.
+        // (PROGRESS-BAR FIX) requestedAt must be the real REQUEST time,
+        // not "the moment this SSE event was received" — new
+        // Date().toISOString() here used the latter, so the client
+        // timer's elapsed-time guess started from the wrong instant
+        // (always some seconds short of the true elapsed time, worse the
+        // longer search_progress took to arrive). Use the server's own
+        // payload.requested_at when the backend sends it; otherwise pass
+        // '' so startSearchProgressPercentTimer() correctly declines to
+        // guess at all and the bar waits for real payload.progress_percent
+        // values instead.
         const loadingRow = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)}`);
         if (loadingRow) {
           if (phraseTimer) clearInterval(phraseTimer);
-          renderSearchProgressBlock(loadingRow, payload.search_progress, new Date().toISOString());
+          renderSearchProgressBlock(loadingRow, payload.search_progress, payload.requested_at || '');
         }
         return;
       }
@@ -3236,6 +3312,9 @@
   wireUpInitialPendingStream();
   wireUpSoftSearchSubmit();
   wireUpHeroSoftSearchSubmit();
+  // (PROGRESS-BAR FIX) Real initial-page-load trigger for any
+  // server-rendered .search-progress-block already on the page.
+  initSearchProgressBlocks();
   autoGrowSearchInput(document.getElementById('search-input'));
 
   // ---- Animated cycling placeholder (typewriter effect) on the hero
