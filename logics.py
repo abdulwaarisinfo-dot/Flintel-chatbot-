@@ -2093,6 +2093,20 @@ optional time window.
    factor is simple: is there an actual searchable angle, or is the
    question just "what's happening in general" with nothing else?
 
+   Agar user ke message mein kisi post/result ka NUMBER ya POSITION ka
+   reference ho (e.g. "3 number wala", "pehla wala", "post #2", "us
+   doosre wale ke baare mein") — ye ek REFERENCE-TO-PREVIOUS-RESULT
+   follow-up hai, normal chat nahi. Is case mein bhi intent "chat" hi
+   rahega, lekin reply likhte waqt neeche diye gaye "Referenced post
+   data" block (agar provided ho) ko hi apni asal source maano — apne
+   general knowledge se mat banao. Agar "Referenced post data" ek hi
+   specific post deta hai, seedha usi post ke title/summary/sentiment/
+   link ke baare mein confidently jawab do. Agar wo poori numbered list
+   deta hai (kyunke exact number resolve nahi ho saka), pehle list mein
+   se sahi number khud match karo phir usi ke baare mein jawab do — agar
+   diya gaya number genuinely list mein exist nahi karta (out of range),
+   honestly bata do ke itne posts nahi the, generic confusion mat dikhao.
+
 3. "blocked" — the message is abusive, harassing, hateful, sexually
    explicit, threatening, or otherwise harmful (directed at you, at a
    person, or at any group). Do not search for it and do not answer it
@@ -2203,6 +2217,21 @@ and already-extracted keywords are given. Decide which case applies:
    topic, "use_website_context": false, "website_topic_relation":
    "unrelated". Never mix the website's keywords in.
 4. Everything else (greetings, blocked etc.): use_website_context false.
+Agar "Saved website context" block maujood hai, to is baar ka message,
+chahe kitni bhi tarah likha ho, agar apne (saved website ke) business/
+niche/customers/market ke baare mein hi baat kar raha hai — bina kisi
+naye, alag topic/brand ke naam liye — to ALWAYS use_website_context:
+true return karo. Isme koi bhi phrasing chal sakti hai: "aur dikhao",
+"iske baare mein reviews", "kya log isko pasand karte hain", "sales
+kaisi hain" — sirf fixed keywords match hona zaroori nahi. Sirf tab
+use_website_context: false do jab user CLEARLY ek naya, alag topic/
+brand/industry name kare jiska is website se koi taaluq nahi. This
+check applies BEFORE you decide to generate your own fresh keywords for
+a "search" intent, too — cases 2 and 3 above only apply once you've
+confirmed the message is NOT actually an own-business follow-up per
+this rule; never silently generate unrelated keywords for what is
+really an own-business request just because it doesn't literally repeat
+earlier wording.
 Extended search JSON shape:
 {"intent":"search","reply":null,"keywords":[...]|null,"time_window_days":<int|null>,"match_phrases":[...]|null,"evidence_required":<int|null>,"website_only":false,"url_ask_type":"generic_own_business"|"specific_topic"|"none"|null,"use_website_context":<true|false>,"website_topic_relation":"related"|"unrelated"|null}
 """
@@ -2421,7 +2450,8 @@ def _parse_router_json(raw: str):
             "website_topic_relation": website_topic_relation, "url_ask_type": url_ask_type}
 
 
-def classify_and_maybe_chat(query: str, chat_summary: str, website_context_summary: str = None) -> dict:
+def classify_and_maybe_chat(query: str, chat_summary: str, website_context_summary: str = None,
+                             referenced_post_context: str = None) -> dict:
     """(v5, extended in v6 with abuse-blocking, again with keyword
     generation, again with time-window parsing + a "clarify" intent,
     again with the ROUTER INTENT REFINEMENT prompt wording described in
@@ -2451,17 +2481,33 @@ def classify_and_maybe_chat(query: str, chat_summary: str, website_context_summa
     while producing a "chat"-classified reply. No other line of this
     function changed — the same try/except safety net, the same
     _parse_router_json() validation, and the same "any failure ->
-    default to intent='search'" fallback all apply exactly as before."""
+    default to intent='search'" fallback all apply exactly as before.
+
+    (POST-REFERENCE FEATURE, FIX 4) `referenced_post_context` (NEW,
+    optional, default None — every existing caller that doesn't pass it
+    behaves exactly as before) is a plain-text block the caller
+    (routes.py's search()) builds ONLY when this message looks like it
+    references a specific post by number/position ("number 3", "pehla
+    wala") — either that one post's real, already-grounded data, or the
+    full numbered list of posts from the last search shown to this user,
+    for Claude to resolve against per the "2. chat" section rule in
+    CLAUDE_ROUTER_SYSTEM_PROMPT above. None means "no reference detected
+    for this message" — identical to how a missing website_context_
+    summary means "no saved website for this chat"."""
     website_context_block = ""
     if website_context_summary:
         website_context_block = (
             "Saved website context (the user shared their own website earlier in this chat):\n"
             f"{website_context_summary}\n\n"
         )
+    referenced_post_block = ""
+    if referenced_post_context:
+        referenced_post_block = f"Referenced post data:\n{referenced_post_context}\n\n"
     user_message = (
         f"Conversation so far (auto-summarized, may be empty):\n"
         f"{chat_summary or '(no earlier messages in this chat)'}\n\n"
         f"{website_context_block}"
+        f"{referenced_post_block}"
         f"User's new message: {query}"
     )
     try:
