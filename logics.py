@@ -3116,6 +3116,91 @@ def extract_keywords_from_website(query: str, url: str, website_text: str):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# TRENDING KEYWORDS VIA WEB SEARCH — standalone helper for the "every 12
+# hours, refresh trending search-phrases from live web search" background
+# job. Nothing in this file calls it yet; it is only the one building
+# block that job will use. Same _call_claude() + web_search tool pattern
+# already used for the router's "chat" intent above (enable_web_search=
+# True), the same lenient JSON parser already used everywhere else in
+# this file, and the exact same keyword-quality rule already written for
+# CLAUDE_ROUTER_SYSTEM_PROMPT above (copied verbatim, not re-authored).
+# ─────────────────────────────────────────────────────────────────────────────
+
+CLAUDE_TRENDING_KEYWORDS_MAX_TOKENS = 4000  # generous — a 200-item JSON keyword list can run long
+
+CLAUDE_TRENDING_KEYWORDS_SYSTEM_PROMPT = """
+You are the trending-keywords brain inside Flintel, a social-listening
+platform. Use live web search to find out what topics, products, and
+industries are trending RIGHT NOW, then generate 200 short, natural
+search-phrases based on what you find — phrases that could plausibly
+appear, verbatim or as a close natural substring, inside the title or
+text of a real Reddit or X post.
+
+- Every keyword must be something that could plausibly appear
+  verbatim, or as a close natural substring, inside a real post's
+  title or text. Keep each keyword short and natural.
+- Never include meta wording that describes the user's REQUEST to
+  you rather than the topic itself — words like "reddit", "twitter",
+  "x", "linkedin", "facebook", "posts", "posts about", "show me",
+  "today", "find", "search" describe what/where the user wants
+  searched, not something that would appear inside an actual post,
+  so leave them out of the keyword list (the platform itself is
+  handled separately, by a dropdown the user already picked — you
+  are only responsible for the topic keywords).
+
+Respond with STRICT JSON ONLY — no markdown code fences, no preamble, no
+text outside the JSON object — in exactly this shape:
+{"keywords": ["<keyword1>", "<keyword2>", ...]}
+
+Return up to 200 keywords total, spread across whatever trending
+topics/products/industries your web search actually turns up — never
+padded with filler just to reach 200.
+"""
+
+
+def generate_trending_keywords_via_web_search():
+    """Calls Claude with enable_web_search=True (the same pattern already
+    used for the router's "chat" intent above) so Claude can look up
+    what's trending right now instead of relying on training knowledge,
+    then generates up to 200 natural search-phrases from that. Meant to
+    be called on a schedule (every 12 hours) by whatever job wires this
+    up — this function itself only does the one Claude call + parse, no
+    scheduling/storage logic of its own.
+
+    Returns a list of up to 200 keyword strings, or None if the Claude
+    call failed outright, returned unparseable output, or returned no
+    usable keywords — never raises, so a failure here can never crash
+    whatever job calls this. Callers should treat None exactly like any
+    other "no usable output from this source" case elsewhere in this
+    file."""
+    try:
+        raw = _call_claude(
+            CLAUDE_TRENDING_KEYWORDS_SYSTEM_PROMPT,
+            "Find what's trending right now and generate the keyword list.",
+            max_tokens=CLAUDE_TRENDING_KEYWORDS_MAX_TOKENS,
+            enable_web_search=True,
+        )
+    except Exception as exc:
+        log.warning(f"Trending-keywords Claude call failed: {exc}")
+        return None
+
+    data = _parse_json_lenient(raw)
+    if not data:
+        log.warning(f"Trending-keywords call returned unparseable output: {(raw or '')[:200]!r}")
+        return None
+
+    raw_keywords = data.get("keywords")
+    if not isinstance(raw_keywords, list):
+        log.warning(f"Trending-keywords call returned no usable 'keywords' list: {(raw or '')[:200]!r}")
+        return None
+
+    keywords = [kw.strip() for kw in raw_keywords if isinstance(kw, str) and kw.strip()]
+    if not keywords:
+        return None
+    return keywords[:200]
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # WEBSITE INTELLIGENCE — CACHE-AWARE WRAPPER (Point 2's core): website
 # content/business-evidence is cached per-URL (TTL-based, via
 # website_evidence_cache_collection) so the same site is never re-fetched
