@@ -568,7 +568,20 @@
   /* ---------- Metrics dashboard answer format ---------- */
   /* Gated on a PLACEHOLDER field (msg.dashboard) — see state-card comment above. */
   .dashboard-brand-block { margin-bottom: 40px; }
-  .metrics-section-title { color: #fff; font-size: 17px; font-weight: 600; line-height: 26px; margin-bottom: 20px; }
+  /* (SPACING FIX) A section heading (.metrics-section-title / .block-title)
+     needs the app's 40px "section spacing" ABOVE it — separating it from
+     whatever content came before — on top of its own smaller "field
+     spacing" below it (to its own body directly underneath, which reads
+     as part of the same section). Before this fix these only had a
+     bottom margin, so back-to-back sections (e.g. consecutive
+     key_findings, or a block-title following a long block-text) had
+     nothing but that single 20px/14px gap between them — the same
+     spacing used *inside* a section — so nothing visually announced a
+     new section starting. :first-child zeroes the top gap when a
+     heading opens a wrapper/the whole answer, so it doesn't float away
+     from the top edge. */
+  .metrics-section-title { color: #fff; font-size: 17px; font-weight: 600; line-height: 26px; margin-top: 40px; margin-bottom: 20px; }
+  .metrics-section-title:first-child { margin-top: 0; }
   .metrics-table { background: #1e1d1c; border: 0.5px solid #343434; border-radius: 12px; overflow: hidden; margin-bottom: 40px; }
   .metrics-row { display: grid; height: 47px; }
   .metrics-row.header { background: #252422; }
@@ -576,9 +589,19 @@
   .metrics-cell { display: flex; align-items: center; padding: 0 18px; font-size: 15px; color: #fff; font-weight: 500; border-left: 0.5px solid #343434; }
   .metrics-cell:first-child { border-left: none; }
   .metrics-row.header .metrics-cell { font-weight: 700; }
-  .interpretation-block, .trend-block, .takeaways-block { margin-bottom: 40px; }
-  .block-title { color: #fff; font-size: 17px; font-weight: 600; line-height: 26px; margin-bottom: 14px; }
+  /* These wrap a .block-title as their own first child (see below), so the
+     40px "new section" gap lives on the WRAPPER, not the title — the
+     title's own margin-top collapses to 0 via :first-child. */
+  .interpretation-block, .trend-block, .takeaways-block { margin-top: 40px; margin-bottom: 40px; }
+  .block-title { color: #fff; font-size: 17px; font-weight: 600; line-height: 26px; margin-top: 40px; margin-bottom: 14px; }
+  .block-title:first-child { margin-top: 0; }
   .block-text { color: #d1d0cf; font-size: 17px; font-weight: 500; line-height: 26px; margin-bottom: 20px; }
+  /* (SPACING FIX) renderWebsiteContext()'s divider sat with zero margin —
+     fine for the sidebar's own .divider (spaced by its parent's padding),
+     but inside the streamed answer it landed flush against the text
+     above and below it. Scoped to .answer-rendered only, so the sidebar
+     divider is untouched. */
+  .answer-rendered .divider { margin: 40px 0; }
   .driver-post-platform { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
   .driver-post-icon { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; overflow: hidden; }
   .driver-post-icon img { width: 100%; height: 100%; object-fit: cover; }
@@ -1884,7 +1907,6 @@
     if (data.suggested_actions && data.suggested_actions.length) {
       const heading = document.createElement('p');
       heading.className = 'metrics-section-title';
-      heading.style.marginTop = '40px';
       heading.textContent = 'Try one of these next steps';
       container.appendChild(heading);
 
@@ -2080,7 +2102,6 @@
 
     const heading = document.createElement('p');
     heading.className = 'metrics-section-title';
-    heading.style.marginTop = '40px';
     heading.textContent = 'Closest matches found';
     container.appendChild(heading);
 
