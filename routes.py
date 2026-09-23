@@ -135,6 +135,166 @@ _WEBSITE_FOLLOWUP_NEW_TOPIC_RE = re.compile(
 )
 
 
+# (POST-REFERENCE FEATURE, FIX 4) Detects a message that references a
+# specific post by its NUMBER or POSITION ("number 3", "post #2", "pehla
+# wala", "us doosre wale ke baare mein", "last wala") — English + Roman
+# Urdu, digits or ordinal words. This is only a GATE (should we even
+# bother looking up the last search's posts?) — the actual number/
+# position is resolved separately by _extract_referenced_post_number()
+# below, and the router prompt still makes the final call on whether
+# this is really a reference-to-previous-result follow-up.
+_POST_REFERENCE_RE = re.compile(
+    r"\b(?:number|no\.?|#)\s*\d+\b"
+    r"|\b\d+\s*(?:number|wala|walay|waali)\b"
+    r"|\bpost\s*#?\s*\d+\b"
+    r"|\b(?:pehl[ae]i?|first|doosr[ae]?|dusr[ae]?|second|tees?r[ae]?|tisr[ae]?|third|"
+    r"chauth[ae]i?|fourth|paanchw[ae]|panchw[ae]|fifth|aakhri|akhri|last)\b",
+    re.IGNORECASE,
+)
+
+# Ordinal-word -> 1-based position, English + common Roman Urdu spellings.
+# Only used as a fallback when no explicit digit ("number 3", "post #2")
+# is present in the message.
+_POST_ORDINAL_WORDS = {
+    "first": 1, "pehla": 1, "pehle": 1, "pehli": 1,
+    "second": 2, "doosra": 2, "dusra": 2, "doosre": 2, "dusre": 2,
+    "third": 3, "teesra": 3, "tisra": 3, "teesre": 3, "tisre": 3,
+    "fourth": 4, "chautha": 4, "chauthi": 4, "chauthe": 4,
+    "fifth": 5, "paanchwa": 5, "panchwa": 5, "paanchwe": 5, "panchwe": 5,
+}
+
+
+def _extract_referenced_post_number(query: str, total: int):
+    """Best-effort: pulls the specific 1-based post number the user means
+    out of their message, or None if it can't be confidently resolved
+    (caller then falls back to handing Claude the WHOLE numbered list —
+    see _build_referenced_post_context()). Tries explicit digits first
+    ("number 3", "post #2", "3 number wala"), then ordinal words (English
+    + Roman Urdu), then "aakhri"/"last" (resolved against `total`, the
+    actual count of posts available, so it can never point past the end
+    of the list)."""
+    q = (query or "").lower()
+    m = (
+        re.search(r"\b(?:number|no\.?|#)\s*(\d+)\b", q)
+        or re.search(r"\b(\d+)\s*(?:number|wala|walay|waali)\b", q)
+        or re.search(r"\bpost\s*#?\s*(\d+)\b", q)
+    )
+    if m:
+        return int(m.group(1))
+    for word, num in _POST_ORDINAL_WORDS.items():
+        if re.search(rf"\b{word}\b", q):
+            return num
+    if total and re.search(r"\b(?:aakhri|akhri|last)\b", q):
+        return total
+    return None
+
+
+def _get_last_search_message_posts(chat: dict):
+    """(POST-REFERENCE FEATURE, FIX 4) Walks this chat's messages
+    newest-first looking for the most recent SEARCH-type message
+    (message_type != "chat") that both has a saved claude_answer AND
+    that answer actually contains posts — reading straight from
+    chats_collection (via the already-fetched `chat` dict), never from
+    the rolling `summary`, since the summary never keeps individual
+    post title/link/sentiment data (that's the whole bug this fix
+    exists to close).
+
+    Flattens platforms[].posts[] (source_list format) or every subject's
+    platforms[].posts[] (comparison format) into ONE list, renumbered
+    1..N in the order posts actually appear on the page, top to bottom,
+    across every platform section — DELIBERATELY not the same numbering
+    as each platform section's own "Post 1/2/3..." UI label (which
+    resets per platform, see chat.html/index.html's buildPostBlock()),
+    since a single flat, chat-wide numbering is what lets one "number 3"
+    resolve unambiguously in the common single-platform case, and
+    degrades gracefully to "hand Claude the whole list" otherwise (see
+    _build_referenced_post_context()).
+
+    Skips past a search message with no usable posts (e.g. a genuine
+    no_results answer) to an OLDER one that has them, so "number 3"
+    after a later, unrelated chat aside still resolves against the last
+    message that actually showed numbered posts. Returns None if no
+    message in this chat ever had any — callers must treat that as
+    "nothing to inject," never fabricate posts."""
+    for msg in reversed((chat or {}).get("messages") or []):
+        if msg.get("message_type") == "chat":
+            continue
+        answer = msg.get("claude_answer")
+        if not answer:
+            continue
+        try:
+            cleaned = answer.strip()
+            if cleaned.startswith("```"):
+                cleaned = cleaned.strip("`").strip()
+                cleaned = re.sub(r"^json\s*", "", cleaned, flags=re.IGNORECASE).strip()
+            data = json.loads(cleaned)
+        except (ValueError, TypeError):
+            continue
+        if not isinstance(data, dict):
+            continue
+
+        platform_lists = []
+        if data.get("format") == "source_list":
+            platform_lists = [data.get("platforms")]
+        elif data.get("format") == "comparison":
+            subjects = data.get("subjects") or []
+            platform_lists = [s.get("platforms") for s in subjects if isinstance(s, dict)]
+
+        flat = []
+        for platforms in platform_lists:
+            for platform_entry in (platforms or []):
+                if not isinstance(platform_entry, dict):
+                    continue
+                for post in (platform_entry.get("posts") or []):
+                    if not isinstance(post, dict):
+                        continue
+                    flat.append({
+                        "number": len(flat) + 1,
+                        "platform": platform_entry.get("platform"),
+                        "title": post.get("title"),
+                        "source": post.get("source"),
+                        "summary": post.get("summary"),
+                        "sentiment": post.get("sentiment"),
+                        "link": post.get("link"),
+                    })
+
+        if flat:
+            return flat
+        # This message parsed fine but had no posts (e.g. no_results) —
+        # keep looking further back rather than stopping here.
+
+    return None
+
+
+def _build_referenced_post_context(flat_posts: list, query: str):
+    """Turns the flattened, numbered post list from
+    _get_last_search_message_posts() into the "Referenced post data"
+    text block injected into the router/chat call's user_message. When
+    the message's number/position can be confidently resolved AND is in
+    range, hands Claude ONLY that one post's real data — title, link,
+    sentiment, everything already grounded, nothing invented. Otherwise
+    (ambiguous phrasing, or a number Flintel can't confidently resolve)
+    hands Claude the WHOLE numbered list so it can reconcile "number 3"
+    itself using the router-prompt rule (CLAUDE_ROUTER_SYSTEM_PROMPT,
+    "2. chat" section) — never guesses on Flintel's own side which post
+    was meant."""
+    number = _extract_referenced_post_number(query, total=len(flat_posts))
+    if number is not None and 1 <= number <= len(flat_posts):
+        post = flat_posts[number - 1]
+        return (
+            f"The user is referring to post number {number} from the results you "
+            f"last showed them. Its real data (use this, not general knowledge):\n"
+            f"{json.dumps(post, ensure_ascii=False)}"
+        )
+    return (
+        "The user referenced a specific numbered/positioned post, but Flintel "
+        "couldn't confidently resolve which exact number they mean from the "
+        "message alone — here is the full numbered list of posts from the last "
+        "search results shown to them, in the order they appeared on the page:\n"
+        f"{json.dumps(flat_posts, ensure_ascii=False)}"
+    )
+
+
 def _evidence_to_structured_summary(se):
     """(WEBSITE INTELLIGENCE CACHE) Adapts the flat `structured_evidence`
     dict returned by get_or_fetch_website_evidence()/logics.py into the
@@ -445,7 +605,21 @@ def search(
                 if saved_website_ctx and not _extract_first_url(query) else None
             )
 
-            routed = classify_and_maybe_chat(query, chat_summary, website_ctx_summary)
+            # (POST-REFERENCE FEATURE, FIX 4) Only bother looking up the
+            # last search's posts when the message actually looks like a
+            # number/position reference — best-effort, never blocks
+            # routing: any failure here just leaves referenced_post_context
+            # None, same as before this feature existed.
+            referenced_post_context = None
+            if _POST_REFERENCE_RE.search(query):
+                try:
+                    flat_posts = _get_last_search_message_posts(existing_chat)
+                    if flat_posts:
+                        referenced_post_context = _build_referenced_post_context(flat_posts, query)
+                except Exception as exc:
+                    log.warning(f"Referenced-post lookup failed for query={query!r}: {exc}")
+
+            routed = classify_and_maybe_chat(query, chat_summary, website_ctx_summary, referenced_post_context)
             intent = routed.get("intent", "search")
             chat_reply = routed.get("reply")
             routed_keywords = routed.get("keywords")
