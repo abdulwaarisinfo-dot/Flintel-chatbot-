@@ -2,7 +2,7 @@
 FLINTEL — TRENDING-KEYWORDS BACKGROUND SCHEDULER
 ============================================================================
 Self-contained orchestration module — same one-way-dependency spirit as
-google.py/website_intelligence.py: this file imports FROM logics.py,
+google.py/website_intelligence.py: this file imports FROM logics.py, 
 google.py, and database.py, never the other way around. It owns no
 keyword-generation or storage logic of its own; it only calls, in order,
 two functions that already exist and already degrade gracefully on their
