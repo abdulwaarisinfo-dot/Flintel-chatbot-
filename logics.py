@@ -1530,7 +1530,7 @@ def _format_posts_block(posts: list) -> str:
     return "\n\n".join(lines)
 
 
-def _call_claude(system_prompt: str, user_message: str, max_tokens: int = None, enable_web_search: bool = False) -> str:
+def _call_claude(system_prompt: str, user_message: str, max_tokens: int = None, enable_web_search: bool = False, force_json_prefill: bool = False) -> str:
     """Single call to the Anthropic Messages API (Claude Haiku). Raises
     on any failure — callers decide how to degrade gracefully (never let
     this block the search job or the post cards, which don't depend on
@@ -1545,15 +1545,39 @@ def _call_claude(system_prompt: str, user_message: str, max_tokens: int = None, 
     logic below already handles the response correctly when a
     web_search tool result comes back, since it just picks out "text"
     type blocks from `data.get("content", [])` regardless of what tool
-    calls happened in between."""
+    calls happened in between.
+
+    (STRUCTURAL JSON-ONLY FIX) `force_json_prefill` (default False — every
+    existing caller that doesn't pass it behaves exactly as before this
+    fix): when True, appends a trailing assistant turn whose content is
+    the single character "{" to the request's `messages` array. This is
+    the standard Anthropic-documented technique for forcing JSON-only
+    output — the API continues generation FROM that exact point, so it
+    is structurally impossible for the model to prepend any "thinking
+    out loud" prose (e.g. "I need to work through this carefully...
+    UNDERSTAND the request:...") before the JSON object, the way
+    _extract_json_object_from_text()'s docstring describes happening
+    occasionally with CLAUDE_ANALYSIS_SYSTEM_PROMPT. This replaces
+    "instruct the model and hope" with "make the alternative
+    impossible". Since the API's response never repeats the prefilled
+    text, the leading "{" is prepended back onto the returned string
+    below so callers still get the complete JSON. Only pass this for a
+    system prompt that ALWAYS returns a JSON object as its entire
+    response (never for CLAUDE_MAP_STEP_SYSTEM_PROMPT /
+    CLAUDE_NOTES_REDUCE_SYSTEM_PROMPT, which return plain grounded
+    notes text, not JSON)."""
     if not ANTHROPIC_API_KEY:
         raise RuntimeError("ANTHROPIC_API_KEY is not set")
+
+    messages = [{"role": "user", "content": user_message}]
+    if force_json_prefill:
+        messages.append({"role": "assistant", "content": "{"})
 
     payload = {
         "model": CLAUDE_MODEL,
         "max_tokens": max_tokens or CLAUDE_MAX_TOKENS,
         "system": system_prompt,
-        "messages": [{"role": "user", "content": user_message}],
+        "messages": messages,
     }
     if enable_web_search:
         payload["tools"] = [{"type": "web_search_20250305", "name": "web_search"}]
@@ -1582,7 +1606,10 @@ def _call_claude(system_prompt: str, user_message: str, max_tokens: int = None, 
         block.get("text", "") for block in data.get("content", [])
         if block.get("type") == "text"
     ]
-    return "\n".join(t for t in text_blocks if t).strip()
+    result = "\n".join(t for t in text_blocks if t).strip()
+    if force_json_prefill and result and not result.startswith("{"):
+        result = "{" + result
+    return result
 
 
 def _map_chunk(query: str, posts_chunk: list) -> str:
@@ -1662,7 +1689,7 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
         )
         if extra_context:
             user_message += "\n\n" + extra_context
-        return _extract_json_object_from_text(_call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message))
+        return _extract_json_object_from_text(_call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message, force_json_prefill=True))
 
     chunks = chunk_list(posts, CLAUDE_POSTS_PER_CHUNK)
 
@@ -1671,7 +1698,7 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
         user_message = f"User's question: {query}\n\nPosts (title + text only):\n{posts_block}"
         if extra_context:
             user_message += "\n\n" + extra_context
-        return _extract_json_object_from_text(_call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message))
+        return _extract_json_object_from_text(_call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message, force_json_prefill=True))
 
     # Multiple chunks -> map-reduce so no single call has to swallow every
     # matched post at once.
@@ -1717,7 +1744,7 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
     )
     if extra_context:
         user_message += "\n\n" + extra_context
-    return _extract_json_object_from_text(_call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message))
+    return _extract_json_object_from_text(_call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message, force_json_prefill=True))
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -3647,7 +3674,51 @@ def _extract_json_object_from_text(text: str) -> str:
         log.warning("Claude answer was truncated JSON — repaired before saving")
         return json.dumps(repaired, ensure_ascii=False)
 
-    return text
+    # (FINAL SAFETY NET — NEVER PERSIST BARE PROSE) Every caller of this
+    # function immediately hands the return value to
+    # save_claude_answer_to_chat(), which persists it in Mongo and serves
+    # it back on every future page load/refresh of this message — so
+    # returning raw, un-enveloped text here (the old behavior) meant a
+    # single bad generation could leave a message permanently showing an
+    # unstyled wall of text (or, worse, leaked "thinking out loud"
+    # narration like "I need to work through this carefully...") instead
+    # of the app's normal card UI, until someone manually re-triggered
+    # that exact message. With force_json_prefill now on every caller of
+    # _call_claude() that feeds this function, reaching this point at all
+    # should be rare (the model can no longer start its reply with prose
+    # — see _call_claude()'s own docstring) — this is the last-resort
+    # backstop for genuinely pathological cases (e.g. an empty/whitespace
+    # response, or something that still isn't valid JSON even once
+    # repaired). Wrapping `text` into a real, KNOWN_FORMAT-compliant
+    # "no_results" object guarantees the frontend (chat.html's
+    # renderStructuredAnswer()) ALWAYS receives parseable, format-bearing
+    # JSON — never raw prose — so the card UI renders every single time,
+    # with no dependency on window.marked/DOMPurify having loaded.
+    log.warning(
+        "Claude answer had no parseable JSON object even after repair — "
+        "wrapping as a safe no_results envelope instead of persisting raw "
+        f"text (first 200 chars: {text[:200]!r})"
+    )
+    fallback_message = text.strip() if text and text.strip() else (
+        "Search ran, but the answer couldn't be generated in the expected "
+        "format this time."
+    )
+    # Keep this readable/short in the UI — the raw leaked text (if any) is
+    # still in the log line above for debugging, but showing an entire
+    # rambling reasoning trace to the user is never useful.
+    if len(fallback_message) > 400:
+        fallback_message = fallback_message[:400].rsplit(" ", 1)[0] + "…"
+    safe_envelope = {
+        "format": "no_results",
+        "searched": {"query": None, "platforms": [], "time_window": None},
+        "message": fallback_message,
+        "likely_reason": "The answer generation step hit an unexpected formatting issue.",
+        "suggested_actions": [
+            {"type": "broaden_time", "label": "Extend to last 30 days"},
+            {"type": "broaden_platforms", "label": "Include all platforms"},
+        ],
+    }
+    return json.dumps(safe_envelope, ensure_ascii=False)
 
 
 def _extract_claude_format(answer_text: str):
