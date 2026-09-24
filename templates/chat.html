@@ -53,7 +53,16 @@
   }
   .logo-mark img { width: 100%; height: 100%; object-fit: cover; }
   .logo-text { color: #fff; font-size: 15.97px; font-weight: 500; letter-spacing: 0.16px; }
-  .icon-btn { color: #7a7a77; transition: color .15s ease; display: flex; }
+  .icon-btn {
+    color: #7a7a77; transition: color .15s ease; display: flex;
+    align-items: center; justify-content: center;
+    background: none; border: none; padding: 0; margin: 0; cursor: pointer;
+  } /* (MOBILE FIX 1) explicit reset — a bare <button class="icon-btn"> was
+       otherwise rendering with the browser's OWN default button chrome
+       (padding + border), which is why #mobile-sidebar-toggle looked much
+       bigger than the same-class <a> icon-buttons elsewhere in this file
+       (an <a> never gets that default chrome). Purely visual, changes no
+       layout/positioning. */
   .icon-btn:hover { color: #fff; }
 
   .divider { height: 1px; background: #2b2a28; width: 100%; flex-shrink: 0; }
@@ -648,6 +657,13 @@
     .mobile-topbar { display: flex; }
     .topbar { display: none; }
     .thread-wrap { padding: 24px 16px 200px 16px; }
+    /* (MOBILE FIX 3) scrollToLatestTurn()'s scrollIntoView({block:'start'})
+       aligns the latest turn's TOP edge with the viewport's top edge — but
+       on mobile .mobile-topbar is position:fixed and sits ON TOP of that
+       same top strip (~60px), so the just-sent prompt landed exactly
+       behind it, invisible. scroll-margin-top leaves that much room so the
+       same scrollIntoView call stops below the fixed topbar instead. */
+    .turn-block { scroll-margin-top: 76px; }
     .docked-input-wrap { left: 0; padding: 16px 16px 20px 16px; }
     .turn-question { font-size: 16px; max-width: 90%; }
     .post-field .field-text { font-size: 15px; }
@@ -977,6 +993,36 @@
     sidebar.classList.remove('mobile-open');
     overlay.classList.remove('visible');
   });
+
+  // (MOBILE FIX 4) .docked-input-wrap is `position: fixed; bottom: 0`,
+  // pinned to the LAYOUT viewport. Mobile browsers don't all resize the
+  // layout viewport the same way when the on-screen keyboard opens — the
+  // dock (and the search box inside it) can end up drifting/jumping, and
+  // the page ends up needing a manual scroll-up to see content that was
+  // already on screen. The VisualViewport API reports the ACTUAL visible
+  // area (already keyboard-adjusted), so on every resize/scroll of it,
+  // this nudges the dock's own `bottom` offset to sit flush above
+  // whatever the keyboard is currently covering — 0 with no keyboard
+  // (unchanged, existing look), the keyboard's height once one opens.
+  // Mobile-only; a no-op (never attaches) wherever visualViewport isn't
+  // supported, or there's no keyboard to make room for.
+  (function keepDockPinnedAboveKeyboard() {
+    const dock = document.querySelector('.docked-input-wrap');
+    if (!dock || !window.visualViewport) return;
+    const isMobile = () => window.matchMedia('(max-width: 767px)').matches;
+    const vv = window.visualViewport;
+    function reposition() {
+      if (!isMobile()) {
+        dock.style.bottom = '';
+        return;
+      }
+      const offset = window.innerHeight - vv.height - vv.offsetTop;
+      dock.style.bottom = Math.max(0, Math.round(offset)) + 'px';
+    }
+    vv.addEventListener('resize', reposition);
+    vv.addEventListener('scroll', reposition);
+    reposition();
+  })();
 
   // ---- Sessions expand/collapse ----
   const sessionsToggle = document.getElementById('sessions-toggle');
