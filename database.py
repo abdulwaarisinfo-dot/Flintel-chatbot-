@@ -5,7 +5,7 @@ Pure extraction from index.py: this module owns the Mongo client, the
 database handle, every collection handle, and every index-creation call
 that used to live inline in index.py. Zero behavior change from before — 
 same URI/DB env vars, same collection names, same indexes, same log
-messages on startup.
+messages on startup. 
 
 This file has ZERO dependency on index.py, flintel.py, or
 website_intelligence.py — they import FROM this module, never the
