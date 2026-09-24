@@ -1,7 +1,7 @@
 """
 FLINTEL — WEBSITE INTELLIGENCE (URL-HANDLING REFINEMENTS)
 ============================================================================
-Self-contained module. Nothing here imports from or modifies index.py or
+Self-contained module. Nothing here imports from or modifies index.py or 
 flintel.py — both of those files may import FROM this file, never the
 other way around (the exact same one-way-dependency pattern flintel.py
 already uses relative to index.py). 
