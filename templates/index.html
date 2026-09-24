@@ -204,7 +204,13 @@
   .mobile-overlay.visible { display: block; }
 
   /* ---------- Main ---------- */
-  .main { flex: 1; position: relative; }
+  /* (HORIZONTAL-OVERFLOW HARDENING) Same fix as chat.html's .main — a flex
+     item's default min-width is "auto" (its content's min-content size),
+     not 0, so an unbreakable descendant (a markdown code block, a long
+     unbroken token) could force this wider than available space and push
+     the whole page into a horizontal scrollbar. min-width:0 removes that
+     default floor. */
+  .main { flex: 1; min-width: 0; position: relative; }
 
   .content-wrap {
     display: flex; align-items: center; justify-content: center;
@@ -498,7 +504,16 @@
      other override needed on top of the app-wide `a { text-decoration:
      none; }` reset. Font/size/spacing untouched. */
   .answer-rendered a { color: inherit; text-decoration: underline; }
-  .answer-rendered code { background: #1e1d1c; padding: 1px 6px; border-radius: 4px; font-size: 14.5px; }
+  .answer-rendered code { background: #1e1d1c; padding: 1px 6px; border-radius: 4px; font-size: 14.5px; overflow-wrap: anywhere; word-break: break-word; }
+  /* (HORIZONTAL-OVERFLOW HARDENING) Same fix as chat.html — no rule
+     existed for a markdown code FENCE (<pre><code>), whose default
+     white-space:pre never wraps and could otherwise force this page into
+     a horizontal scrollbar. Kept scrollable within the block itself. */
+  .answer-rendered pre {
+    max-width: 100%; overflow-x: auto; background: #1e1d1c;
+    border-radius: 8px; padding: 12px 14px; margin: 0 0 14px 0;
+  }
+  .answer-rendered pre code { background: none; padding: 0; white-space: pre; }
 
   /* Platform-grouped source list (Document 2's Third-Screen pattern) */
   .platform-section { margin-bottom: 40px; }
