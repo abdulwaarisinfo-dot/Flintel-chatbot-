@@ -197,7 +197,18 @@
   .mobile-overlay.visible { display: block; }
 
   /* ---------- Main ---------- */
-  .main { flex: 1; position: relative; display: flex; flex-direction: column; }
+  /* (HORIZONTAL-OVERFLOW HARDENING) A flex item's default minimum width is
+     "auto" — its content's own min-content size — NOT 0. That means any
+     descendant that can't break onto multiple lines (a <pre> code block
+     from a markdown-rendered answer, a long unbroken token/URL) can force
+     THIS flex item wider than the space actually available, pushing
+     .layout — and the whole page — into a horizontal scrollbar, even
+     though .thread-wrap below already has overflow-x:hidden (that only
+     clips rendering; it can't stop an ancestor's own box from growing to
+     fit an oversized child in the first place). min-width:0 here removes
+     that default floor, so overflow-x:hidden downstream actually works as
+     intended in every case, not just the ones tested so far. */
+  .main { flex: 1; min-width: 0; position: relative; display: flex; flex-direction: column; }
 
   .topbar {
     height: 62px; display: flex; align-items: center; justify-content: space-between;
@@ -293,10 +304,12 @@
 
      No keyword list or job/status internals are ever rendered here.
      ========================================================================= */
-  .thread-wrap { flex: 1; padding: 40px 20px 220px 20px; overflow-x: hidden; } /* (DESKTOP SPACING) top gap
+  .thread-wrap { flex: 1; min-width: 0; padding: 40px 20px 220px 20px; overflow-x: hidden; } /* (DESKTOP SPACING) top gap
     below the sticky .topbar reduced from 84px to 40px — desktop only; the
     84px used on mobile (inside the max-width:767px query below) is load-
-    bearing there (clears the FIXED .mobile-topbar) and is untouched. */
+    bearing there (clears the FIXED .mobile-topbar) and is untouched.
+    min-width:0 added as part of the same flex-chain hardening as .main
+    above, for the same reason. */
   .thread-inner { max-width: 950px; margin: 0 auto; }
   @media (min-width: 1060px) {
     .thread-wrap { padding-left: 109px; padding-right: 109px; }
@@ -386,7 +399,22 @@
      other override needed on top of the app-wide `a { text-decoration:
      none; }` reset. Font/size/spacing untouched. */
   .answer-rendered a { color: inherit; text-decoration: underline; }
-  .answer-rendered code { background: #1e1d1c; padding: 1px 6px; border-radius: 4px; font-size: 14.5px; }
+  .answer-rendered code { background: #1e1d1c; padding: 1px 6px; border-radius: 4px; font-size: 14.5px; overflow-wrap: anywhere; word-break: break-word; }
+  /* (HORIZONTAL-OVERFLOW HARDENING) No rule existed for a markdown code
+     FENCE (marked.js renders ```...``` as <pre><code>...</code></pre>) —
+     a <pre>'s default white-space:pre never wraps, so one long unbroken
+     line (a long URL, a minified JSON dump, anything Claude's answer
+     text might legitimately quote) would size the <pre> to its own
+     content and, combined with the flex min-width:auto gap fixed above,
+     could push the whole page into a horizontal scrollbar. Scoped
+     overflow-x:auto keeps any such line scrollable WITHIN the code block
+     itself — never the page — while max-width:100% stops it from ever
+     being wider than its container to begin with. */
+  .answer-rendered pre {
+    max-width: 100%; overflow-x: auto; background: #1e1d1c;
+    border-radius: 8px; padding: 12px 14px; margin: 0 0 14px 0;
+  }
+  .answer-rendered pre code { background: none; padding: 0; white-space: pre; }
 
   /* Platform-grouped source list */
   .platform-section { margin-bottom: 40px; }
