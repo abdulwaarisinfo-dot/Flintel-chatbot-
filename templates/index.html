@@ -396,6 +396,16 @@
     .docked-input-wrap { padding-left: 109px; padding-right: 109px; }
     .docked-input-inner { max-width: none; width: 100%; margin: 0; }
   }
+  /* (SEARCH-BOX MAX-WIDTH) See chat.html for the full rationale — same
+     component, same bug: above 1060px this box grew to fill 100% of the
+     remaining space with no upper limit. 946px is exactly what it already
+     computes to at a 1440px viewport (1440 - 276px sidebar - 109px each
+     side padding), so this caps it there and centers it in any extra
+     space on larger screens instead of stretching further. Nothing below
+     1440px changes. */
+  @media (min-width: 1440px) {
+    .docked-input-inner { max-width: 946px; margin: 0 auto; }
+  }
   .docked-credit-estimate { font-size: 12px; color: #757473; white-space: nowrap; margin-right: 4px; }
 
   /* =========================================================================
