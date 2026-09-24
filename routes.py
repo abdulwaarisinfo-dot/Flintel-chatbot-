@@ -1477,7 +1477,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
     `max_total=effective_evidence_limit`, so a streamed answer's evidence
     pool can never exceed (or be capped differently than) the
     non-streaming path's. For every message with no stored
-    `evidence_required` (every message from before this feature), this
+    `evidence_required` (every message predating this feature), this
     resolves to MIN_ANALYSIS_EVIDENCE exactly as before — zero behavior
     change for old/non-search messages.
 
@@ -1857,7 +1857,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # poll tick. Skipped when `matched` already has something,
             # since the `if not matched:` polling loop right below never
             # runs in that case — there is nothing to show progress for.
-            if not matched:
+            if len(matched) < effective_evidence_limit:
                 yield f"data: {json.dumps({'progress_percent': 0})}\n\n"
 
             # (SEARCH-PROGRESS UI FIX) Runs UNCONDITIONALLY — whether or
@@ -1901,7 +1901,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # get_matched_signals() every ~2s until either something
             # appears or RESPONSE_TIMEOUT is reached.
             tier3_triggered = False
-            if not matched:
+            if len(matched) < effective_evidence_limit:
                 while True:
                     elapsed = _elapsed_seconds(msg.get("requested_at"))
 
@@ -1963,9 +1963,9 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                         )
                     except Exception as exc:
                         log.warning(f"Signal matching failed while polling for streaming topic_key={topic_key}: {exc}")
-                        matched = []
+                        # matched ko touch mat karo, pehle mili hui posts na khoyein
 
-                    if matched:
+                    if len(matched) >= effective_evidence_limit:
                         break
 
             # (MERGE BEFORE ANSWERING) Pulls in whatever Google-search
