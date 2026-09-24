@@ -446,6 +446,19 @@
     .docked-input-wrap { padding-left: 109px; padding-right: 109px; }
     .docked-input-inner { max-width: none; width: 100%; margin: 0; }
   }
+  /* (SEARCH-BOX MAX-WIDTH) Above 1060px the box was set to grow to fill
+     100% of the remaining space (sidebar width + fixed 109px side padding
+     aside) with no upper limit — fine up to 1440px, but past that it just
+     kept getting wider as the screen did. 946px is exactly what that box
+     already computes to at a 1440px viewport (1440 - 276px sidebar - 109px
+     left padding - 109px right padding), so this caps it at its own
+     1440px-design width and centers it (via margin: 0 auto) in whatever
+     extra space opens up on larger screens, instead of stretching. Below
+     1440px, nothing here changes — the min-width:1060px rule above still
+     runs unmodified. */
+  @media (min-width: 1440px) {
+    .docked-input-inner { max-width: 946px; margin: 0 auto; }
+  }
   .search-box {
     background: #1e1d1c; border: 1px solid #3d3d3b; border-radius: 18px;
     padding: 18px 24px 19px 24px; transition: border-color .15s ease;
