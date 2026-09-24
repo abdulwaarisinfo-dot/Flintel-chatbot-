@@ -656,7 +656,17 @@
     .sidebar.mobile-open { transform: translateX(0); }
     .mobile-topbar { display: flex; }
     .topbar { display: none; }
-    .thread-wrap { padding: 24px 16px 200px 16px; }
+    /* (MOBILE FIX 3b) Root cause of the sent-prompt-hidden-behind-topbar
+       bug: this rule used to set only 24px of top padding on mobile — LESS
+       than .mobile-topbar's own ~60px fixed height. So the very first
+       turn-block on the page started out sitting partly BEHIND the fixed
+       topbar from the moment the page loaded, with nothing to do with
+       scrolling at all — a short chat (one turn + a loading row) never
+       even needs to scroll, so scrollToLatestTurn()'s scrollIntoView() had
+       nothing to correct; the content's own resting position was already
+       wrong. 84px matches the (already-correct) desktop top padding below,
+       clearing the fixed topbar with room to spare. */
+    .thread-wrap { padding: 84px 16px 200px 16px; }
     /* (MOBILE FIX 3) scrollToLatestTurn()'s scrollIntoView({block:'start'})
        aligns the latest turn's TOP edge with the viewport's top edge — but
        on mobile .mobile-topbar is position:fixed and sits ON TOP of that
