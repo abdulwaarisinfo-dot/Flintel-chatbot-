@@ -1549,6 +1549,14 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                     log.warning(f"Saving empty website-only results failed for topic_key={msg.get('topic_key')}: {exc}")
             continue
 
+        # (TARGET-OR-TIMEOUT RULE) Jab tak flintel_signals ki posts target
+        # (evidence_required) tak nahi pahunchi aur RESPONSE_TIMEOUT bhi nahi hua,
+        # answer generate mat karo, agli poll/reload par dobara check hoga.
+        # Timeout ke baad jo posts hon (chahe 3, chahe 45) unse answer banega.
+        target_evidence = effective_evidence_limit or MIN_ANALYSIS_EVIDENCE
+        if len(matched) < target_evidence and elapsed < RESPONSE_TIMEOUT:
+            continue
+
         # (MERGE BEFORE ANSWERING) Pulls in whatever Google-search stub
         # results already exist for this message (from ANY prior trigger
         # of the block above, possibly a previous page load) — best
