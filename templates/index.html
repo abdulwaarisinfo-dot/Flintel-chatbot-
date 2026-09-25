@@ -31,7 +31,7 @@
     display: flex;
     flex-direction: column;
     background: #1e1d1b;
-    width: 276px;
+    width: 256px;
     flex-shrink: 0;
     height: 100vh;
     position: sticky;
@@ -395,7 +395,8 @@
      client-side conversation state (a real search POSTs to /search and the
      server re-renders "/" with the new turn), so nothing ever toggles this
      wrap visible — it stays hidden, exactly as in Document 1. */
-  .docked-input-wrap { display: none; position: fixed; bottom: 0; left: 276px; right: 0; z-index: 5;
+  .docked-input-wrap { display: none; position: fixed; bottom: 0; left: 256px; right: 0; z-index: 5; /* kept
+    flush with .sidebar's new 256px width (was 276px) */
     background: linear-gradient(to top, #171615 85%, rgba(23,22,21,0)); padding: 24px 20px 28px 20px; padding-top: 40px; }
   .docked-input-inner { max-width: 950px; margin: 0 auto; }
   @media (min-width: 1060px) {
