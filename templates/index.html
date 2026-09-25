@@ -387,15 +387,24 @@
      closed via its own X button. All colors/sizes/spacing below are
      taken directly from the Figma node, not estimated. ---------- */
   .welcome-overlay {
+    /* Desktop: NOT a dimmed full-screen modal (the real Figma design has
+       no backdrop) — this div only exists to host the fixed-positioned
+       card and toggle it on/off; pointer-events:none lets clicks reach
+       the page underneath. The mobile override below (in the existing
+       max-width:767px block) restores a real centered/dimmed overlay,
+       unchanged from before. */
     display: none; position: fixed; inset: 0; z-index: 30;
-    align-items: center; justify-content: center;
-    background: rgba(0,0,0,0.6); padding: 20px;
+    pointer-events: none;
   }
-  .welcome-overlay.visible { display: flex; }
+  .welcome-overlay.visible { display: block; }
   .welcome-card {
+    /* Pinned to the bottom-right corner, 28px off both edges, on every
+       desktop width (including 1440px) — not centered. */
+    pointer-events: auto;
+    position: fixed; right: 28px; bottom: 28px;
     background: #1e1d1c; border: 1px solid rgba(255,255,255,0.05);
     border-radius: 13px; box-shadow: 0 6px 53px rgba(0,0,0,0.25);
-    width: 339px; max-width: 100%; position: relative;
+    width: 339px; max-width: calc(100% - 56px);
     padding: 42px 33.5px 44px 33.5px;
   }
   .welcome-close {
@@ -432,7 +441,14 @@
   }
   .welcome-field input::placeholder { color: #757473; }
   .welcome-field input:focus { border-color: #a3e635; }
-  .welcome-btn-continue { background: #2b2a29; color: rgba(255,255,255,0.4); border: none; cursor: pointer; }
+  .welcome-btn-continue {
+    background: #2b2a29; color: rgba(255,255,255,0.4); border: none; cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+  }
+  /* Lights up (full white, dark text) once the visitor has typed something
+     into the email field above it — toggled by JS, see the welcome-card
+     script block. */
+  .welcome-btn-continue.active { background: #fff; color: #191817; }
 
   /* ---------- Server-rendered error state ---------- */
   .state-card {
@@ -789,6 +805,14 @@
     .turn-question { font-size: 16px; max-width: 90%; }
     .post-field .field-text { font-size: 15px; }
     .answer-raw, .answer-rendered { font-size: 15.5px; }
+    /* Welcome card: keep the original centered/dimmed presentation on
+       mobile — only the desktop rule above changed to a corner card. */
+    .welcome-overlay {
+      align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.6); padding: 20px; pointer-events: auto;
+    }
+    .welcome-overlay.visible { display: flex; }
+    .welcome-card { position: relative; right: auto; bottom: auto; max-width: 100%; }
   }
 </style>
 </head>
@@ -2908,12 +2932,23 @@
     if (appleBtn) appleBtn.addEventListener('click', () => {
       if (openRealSignupForm()) dismissWelcome();
     });
+
+    // Continue button: lights up (full white) as soon as something is
+    // typed into the email field — purely a visual active/inactive state.
+    // Clicking it only dismisses this card now — it used to open the real
+    // signup modal on top of it (a second card appearing over this one),
+    // which is exactly the behavior that was reported as wrong, so that
+    // call was removed here. There's no passwordless/email-only backend
+    // route for this field yet, so the typed email isn't submitted
+    // anywhere by this button.
     const continueBtn = document.getElementById('welcome-continue-btn');
     const emailInput = document.getElementById('welcome-email-input');
-    if (continueBtn) continueBtn.addEventListener('click', () => {
-      const email = emailInput ? emailInput.value.trim() : '';
-      if (openRealSignupForm(email)) dismissWelcome();
-    });
+    if (emailInput && continueBtn) {
+      emailInput.addEventListener('input', () => {
+        continueBtn.classList.toggle('active', emailInput.value.trim().length > 0);
+      });
+    }
+    if (continueBtn) continueBtn.addEventListener('click', dismissWelcome);
   })();
 
   // ---- Attachment button opens file picker ---- (inside <main> — delegated)
