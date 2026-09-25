@@ -31,7 +31,7 @@
     display: flex;
     flex-direction: column;
     background: #1e1d1b;
-    width: 276px;
+    width: 256px;
     flex-shrink: 0;
     height: 100vh;
     position: sticky;
@@ -468,7 +468,10 @@
   /* ---------- Docked follow-up input — real, always visible, posts to
      /search pinned to this chat via the hidden chat_id field. ---------- */
   .docked-input-wrap {
-    position: fixed; bottom: 0; left: 276px; right: 0; z-index: 5;
+    position: fixed; bottom: 0; left: 256px; right: 0; z-index: 5; /* kept flush
+      with .sidebar's new 256px width (was 276px) — this value is not part
+      of the sidebar itself but must match it exactly or a gap opens up
+      between the sidebar's edge and the docked search box. */
     background: linear-gradient(to top, #171615 85%, rgba(23,22,21,0));
     padding: 24px 20px 28px 20px; padding-top: 40px;
   }
