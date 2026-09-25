@@ -43,7 +43,18 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 20px 17px 20px;
+    /* .topbar is 62px tall with its dividing line drawn as border-bottom
+       (so the line itself occupies the box's LAST pixel row, rows 61-62).
+       This box has no border — its dividing line is the separate
+       <div class="divider"> right after it in the HTML, which starts
+       exactly where this box ends. So this box must be 61px (not 62px)
+       for that following 1px line to land on rows 61-62 too — matching
+       the topbar's line instead of sitting one row below it.
+       align-items:center takes care of centering the logo inside it, no
+       vertical padding needed. Was 18px/17px padding before (62.7px
+       tall total), which is what caused the visible misalignment. */
+    height: 61px;
+    padding: 0 20px;
     flex-shrink: 0;
   }
   .logo-group { display: flex; align-items: center; gap: 9px; }
@@ -790,6 +801,10 @@
     .sidebar.mobile-open { transform: translateX(0); }
     .mobile-topbar { display: flex; }
     .topbar { display: none; }
+    /* Mobile sidebar open/close icon was reported too big — was 22px
+       (the button itself keeps its full tap-target size via .icon-btn's
+       own padding-free centered layout, only the glyph shrinks). */
+    #mobile-sidebar-toggle svg { width: 18px; height: 18px; }
     /* (MOBILE FIX 3b) Root cause of the sent-prompt-hidden-behind-topbar
        bug: this rule used to set only 24px of top padding on mobile — LESS
        than .mobile-topbar's own ~60px fixed height. So the very first
@@ -3227,7 +3242,7 @@
         }
       }
     });
-  } 
+  }
   wireUpSoftSearchSubmit();
 </script>
   </main>
