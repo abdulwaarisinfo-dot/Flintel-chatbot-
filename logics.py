@@ -100,6 +100,31 @@ ambiguous, chat-less document. get_evidence_with_topup() was updated to
 pass its own `chat_id` through to matcher_fn() (get_matched_signals())
 so the real production polling path stays cache-consistent; nothing
 else about either function changed.
+
+(PER-PHRASE EMBEDDING MATCHING FIX) get_matched_signals()'s own single,
+combined query embedding (built by joining keywords + match_phrases into
+ONE string) has been replaced with PER-ITEM embeddings — one embedding
+per keyword and per match_phrase, generated in a single batched OpenAI
+call via the new generate_query_embeddings_batch() — and the match
+decision for each document is now the MAX cosine similarity across all
+of those per-item embeddings, not the similarity against one blended/
+averaged embedding. This exists purely to stop dilution: when
+match_phrases genuinely cover different sub-topics/angles (e.g. "pricing
+complaints" and "customer support delays" for the same brand), the old
+single combined embedding averaged those angles together, so a document
+that matched only ONE of them strongly showed a lower, diluted
+similarity than it would have against that one phrase's own embedding.
+See generate_query_embeddings_batch()'s own docstring and get_matched_
+signals()'s own updated docstring for the full mechanism. The single-
+string generate_query_embedding() is left completely untouched/as-is —
+still defined, still used elsewhere/available for backward-compat — it
+is simply no longer called from inside get_matched_signals() itself. The
+QUERY-EMBEDDING CACHE (topic_evidence_cache_collection's own
+"query_embedding" field) now stores/reads a LIST of vectors instead of a
+single vector — see get_matched_signals()'s own docstring for the
+updated cache shape; every other rule of that cache (signature-based
+invalidation, chat_id+topic_key keying, "no chat_id -> skip caching
+entirely") is completely unchanged.
 """
 
 import re
@@ -547,7 +572,7 @@ def _infer_platform_from_url(url: str):
 # non-unfiltered matching decision (see that function below). Mirrors the
 # background service's own embedding config/client/generation logic
 # name-for-name (see config.py's own docstring for the mirrored
-# constants) — this is ONLY for generating the single QUERY embedding for
+# constants) — this is ONLY for generating the QUERY embedding(s) for
 # a given call's keywords + match_phrases; document embeddings themselves
 # are generated and saved onto flintel_signals.embedding by the
 # background service, never regenerated here.
@@ -583,7 +608,14 @@ def generate_query_embedding(text: str):
     rather than ever raising. This is ONLY for embedding a QUERY string
     (this call's own keywords + match_phrases joined together) — document
     embeddings are already generated and saved by the background service
-    and are never regenerated here."""
+    and are never regenerated here.
+
+    (PER-PHRASE EMBEDDING MATCHING FIX) Left completely AS-IS — no
+    longer called from inside get_matched_signals() (which now calls
+    generate_query_embeddings_batch() below instead, so every keyword/
+    phrase gets its own embedding instead of one blended one), but kept
+    here byte-for-byte unchanged: it may still be used elsewhere / is
+    kept for backward-compat."""
     if not text or not isinstance(text, str):
         return None
     client = _get_openai_client()
@@ -599,6 +631,55 @@ def generate_query_embedding(text: str):
         return response.data[0].embedding
     except Exception as exc:
         log.warning(f"Query-embedding generation failed: {exc}")
+        return None
+
+
+def generate_query_embeddings_batch(texts: list):
+    """(PER-PHRASE EMBEDDING MATCHING FIX) Generates a SEPARATE embedding
+    for EACH text (each keyword or each match_phrase) in `texts`, in a
+    single batched OpenAI API call (one HTTP round trip, `input` given as
+    a list) — never one combined/blended embedding for all of them
+    joined together. This is what gives per-phrase precision: when
+    match_phrases genuinely cover different sub-topics/angles for the
+    same brand (e.g. "pricing complaints" vs "customer support delays"),
+    a document that only strongly matches ONE of those angles is still
+    caught, because it gets to be scored against that ONE phrase's own,
+    un-diluted embedding rather than against a single averaged embedding
+    of every phrase mashed together.
+
+    Mirrors generate_query_embedding()'s exact fail-safe contract: never
+    raises. Returns None (never raises) on a missing API key, a client-
+    init failure, an API error, a timeout, or empty/all-falsy input —
+    exactly the same failure modes generate_query_embedding() already
+    guards against, just applied to a batch call instead of a single
+    string.
+
+    Falsy/non-string entries in `texts` are dropped before the API call
+    (e.g. an empty string that slipped into a keywords/match_phrases
+    list) — the returned list is in the SAME ORDER as `texts` AFTER that
+    filtering, never the original, unfiltered order.
+
+    Returns list[list[float]] (one embedding vector per surviving text,
+    in order) on success, or None on total failure (including the case
+    where every entry in `texts` was falsy/non-string and nothing usable
+    was left to send)."""
+    if not texts:
+        return None
+    client = _get_openai_client()
+    if not client:
+        return None
+    try:
+        truncated = [t[:EMBEDDING_MAX_CHARS] for t in texts if t and isinstance(t, str)]
+        if not truncated:
+            return None
+        response = client.embeddings.create(
+            model=EMBEDDING_MODEL,
+            input=truncated,
+            timeout=EMBEDDING_TIMEOUT,
+        )
+        return [item.embedding for item in response.data]
+    except Exception as exc:
+        log.warning(f"Batch query-embedding generation failed: {exc}")
         return None
 
 
@@ -664,32 +745,47 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     topic_key for a signal, but what decides a match here is purely the
     relevance check described below.
 
-    (EMBEDDING-BASED MATCHING CHANGE) The core "is this signal a match"
-    decision is now EMBEDDING COSINE-SIMILARITY based, not keyword/title/
+    (EMBEDDING-BASED MATCHING CHANGE, per-phrase precision added by the
+    PER-PHRASE EMBEDDING MATCHING FIX) The core "is this signal a match"
+    decision is EMBEDDING COSINE-SIMILARITY based, not keyword/title/
     text substring based:
-      1. `keywords` + `match_phrases` (when given) are joined into a
-         single query string, and a single query embedding is generated
-         for this call via generate_query_embedding().
+      1. `keywords` + `match_phrases` (when given) are treated as
+         SEPARATE query items — never joined into one combined string —
+         and a SEPARATE embedding is generated for EACH one, in a single
+         batched OpenAI call, via generate_query_embeddings_batch().
+         This avoids the "diluted/averaged" similarity a single combined
+         embedding used to produce when match_phrases genuinely covered
+         different sub-topics/angles (e.g. "pricing complaints" vs
+         "customer support delays") — a document that only strongly
+         matches ONE angle is scored against that angle's own, un-
+         diluted embedding, not an average of every angle mashed
+         together.
       2. Only documents that already have a saved `embedding` field
          (produced ahead of time by the background service — never
          regenerated here) are even considered as candidates — this is
-         now enforced directly in the Mongo query itself
+         enforced directly in the Mongo query itself
          (`{"embedding": {"$ne": None, "$exists": True}}`), on top of the
          existing time-window cutoff (see TIME-WINDOW FEATURE below,
          unchanged).
-      3. Each candidate document's cosine similarity against the query
-         embedding is computed (_cosine_similarity()); a document whose
-         similarity falls below SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD is
-         not considered a match at all.
-      4. Candidates that clear the threshold are sorted by similarity
-         score, HIGHEST FIRST, before the platform filter, per-platform
-         cap, and overall `limit` below are applied — so the
+      3. Each candidate document's similarity score is the MAXIMUM
+         cosine similarity between its own saved embedding and ANY ONE
+         of this call's per-keyword/per-phrase query embeddings
+         (_cosine_similarity() computed once per query embedding, then
+         the max is taken) — so a document only needs to strongly match
+         ONE keyword or ONE phrase to be picked up, exactly as if that
+         one phrase had run as its own standalone search. A document
+         whose best (max) similarity falls below
+         SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD is not considered a match
+         at all.
+      4. Candidates that clear the threshold are sorted by this max
+         similarity score, HIGHEST FIRST, before the platform filter,
+         per-platform cap, and overall `limit` below are applied — so the
          best-matching posts are always the ones kept when a cap trims
          the list. (The existing `created_utc` descending sort still
          governs the Mongo-level FETCH stage only, purely to pick which
          SIGNAL_EMBEDDING_CANDIDATE_POOL-sized pool of recent-first
          candidates gets its similarity computed in the first place.)
-      5. If a query embedding cannot be generated at all for this call
+      5. If query embeddings cannot be generated at all for this call
          (e.g. OPENAI_API_KEY is missing, or the embeddings API call
          fails), this function fails safe and returns an empty list —
          exactly the same "no keywords -> no results" safety behavior
@@ -699,7 +795,11 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     rules (_signal_keyword_matches, _text_matches_keyword, _text_matches_
     any_phrase, _phrase_matches_text) are no longer used by this
     function — they remain defined above, untouched, as harmless dead
-    code.
+    code. generate_query_embedding() (the single-string version) is
+    ALSO no longer called from inside this function — it remains defined
+    above, untouched, byte-for-byte as-is, for backward-compat / any
+    other caller; this function now calls generate_query_embeddings_
+    batch() instead.
 
     (EMBEDDING-MATCH QUERY/LOGGING CLEANUP) Two small, purely additive/
     non-behavioral follow-ups live inside this function now: the Mongo
@@ -707,15 +807,16 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     `$exists: True`), and — only when DEBUG logging is enabled — a single
     log.debug() line reports this call's candidate-pool size, the current
     similarity threshold, how many candidates cleared it, and the top 5
-    raw similarity scores seen across the whole pool, keyed by
-    topic_key. Neither change affects the return value, the matching
-    decision, or anything else about this function.
+    raw (max, across all query embeddings) similarity scores seen across
+    the whole pool, keyed by topic_key. Neither change affects the return
+    value, the matching decision, or anything else about this function.
 
-    (QUERY-EMBEDDING CACHING) Step 1 above (generating this call's own
-    query embedding from keywords + match_phrases) is now cache-aware,
-    so a topic being polled repeatedly (e.g. stream_answer()'s ~2s
-    polling loop, or repeated follow-ups on the same topic) doesn't hit
-    the OpenAI embeddings API on every single call:
+    (QUERY-EMBEDDING CACHING, updated shape by the PER-PHRASE EMBEDDING
+    MATCHING FIX) Step 1 above (generating this call's own per-item query
+    embeddings from keywords + match_phrases) is cache-aware, so a topic
+    being polled repeatedly (e.g. stream_answer()'s ~2s polling loop, or
+    repeated follow-ups on the same topic) doesn't hit the OpenAI
+    embeddings API on every single call:
       - This caching layer is keyed on the SAME document the per-chat
         evidence-posts cache (get_cached_topic_evidence() / save_topic_
         evidence_cache()) already maintains for this topic — i.e. the
@@ -723,39 +824,42 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
         {"chat_id": chat_id, "topic_key": topic_key} — so the two caches
         can never drift onto two different documents for what is really
         the same (chat, topic) pair.
-      - `chat_id` (new optional parameter, default None, always LAST in
-        this function's signature so every existing caller that doesn't
-        pass it behaves exactly as before) controls this entirely: when
-        a `chat_id` IS given, before calling generate_query_embedding(),
-        this function computes a signature for this call's own keywords
-        + match_phrases (via _compute_query_signature() — order-
-        independent, so the same set in a different order still
+      - `chat_id` (optional parameter, default None, always LAST in this
+        function's signature so every existing caller that doesn't pass
+        it behaves exactly as before) controls this entirely: when a
+        `chat_id` IS given, before calling generate_query_embeddings_
+        batch(), this function computes a signature for this call's own
+        keywords + match_phrases (via _compute_query_signature() —
+        order-independent, so the same set in a different order still
         matches) and looks up topic_evidence_cache_collection for the
         {"chat_id": chat_id, "topic_key": topic_key} document that
-        already has a "query_embedding" field whose saved
-        "query_embedding_signature" matches. If found, that SAVED
-        embedding is reused directly — generate_query_embedding() is
-        never called at all for this call. On a cache miss (new topic in
-        this chat, or keywords/match_phrases changed since the last
-        cached embedding), generate_query_embedding() is called exactly
-        as before, and — best-effort — the fresh embedding + its
-        signature (plus "chat_id") are saved back onto that same
-        {"chat_id": chat_id, "topic_key": topic_key} document in
+        already has a "query_embedding" field (now a LIST of vectors —
+        one per keyword/phrase, in the same order as query_items below)
+        whose saved "query_embedding_signature" matches. If found, that
+        SAVED list of embeddings is reused directly —
+        generate_query_embeddings_batch() is never called at all for
+        this call. On a cache miss (new topic in this chat, or
+        keywords/match_phrases changed since the last cached embeddings),
+        generate_query_embeddings_batch() is called exactly as before,
+        and — best-effort — the fresh list of embeddings + its signature
+        (plus "chat_id") are saved back onto that same {"chat_id":
+        chat_id, "topic_key": topic_key} document in
         topic_evidence_cache_collection for next time.
       - When NO `chat_id` is given (the default — e.g. an older/direct
         caller that doesn't pass one, or an unfiltered call), this
         caching layer is skipped ENTIRELY: no Mongo read, no Mongo
-        write, and generate_query_embedding() is called fresh, uncached,
-        exactly as if this feature didn't exist. This avoids ever
-        writing an orphan/ambiguous document that isn't scoped to a real
-        chat.
+        write, and generate_query_embeddings_batch() is called fresh,
+        uncached, exactly as if this feature didn't exist. This avoids
+        ever writing an orphan/ambiguous document that isn't scoped to a
+        real chat.
       - FAIL-SAFE: every Mongo read/write in this caching layer is
         wrapped in its own try/except; ANY failure (missing collection,
         connection hiccup, malformed cached doc, etc.) silently falls
-        back to the original, uncached generate_query_embedding() call —
-        this caching layer can never cause matching to fail, return
-        different results, or crash. The existing "no query embedding at
-        all -> return []" safety behavior is completely unchanged.
+        back to the original, uncached generate_query_embeddings_batch()
+        call — this caching layer can never cause matching to fail,
+        return different results, or crash. The existing "no query
+        embeddings at all -> return []" safety behavior is completely
+        unchanged.
       - This is purely an optimization on top of Step 1's OWN embedding
         generation — it has nothing to do with, and never touches, the
         separate per-chat evidence-posts cache (get_cached_topic_
@@ -825,8 +929,8 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     `chat_id` parameter), RETURN SHAPE, and every existing caller are
     exactly as they were before — it has no idea whether `keywords` came
     from Claude's router call or the old fuzzy-template fallback; it now
-    just uses them (plus match_phrases) to build the query text for its
-    own embedding instead.
+    just uses them (plus match_phrases) to build the per-item query
+    embeddings for its own matching instead.
 
     (SECOND-COLLECTION MERGE) `signals_collection_2`, default None: an
     optional second Mongo collection handle. When provided, its docs are
@@ -913,24 +1017,23 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
         except Exception as exc:
             log.warning(f"signals_collection_2 fetch failed (skipping second collection): {exc}")
 
-    # (EMBEDDING-BASED MATCHING CHANGE) Build the single query embedding
-    # for this call from keywords + match_phrases combined. Fail-safe:
-    # if no embedding can be generated at all, return [] — the same
-    # "no keywords -> no results" safety behavior this function already
-    # had, just triggered by a different failure mode.
-    query_text_parts = list(keyword_list)
-    if phrase_list:
-        query_text_parts.extend(phrase_list)
-    query_text = " ".join(query_text_parts).strip()
+    # (PER-PHRASE EMBEDDING MATCHING FIX) Build the query ITEMS list for
+    # this call: every keyword AND every match_phrase, kept as SEPARATE
+    # items — never joined into one combined string. Each item gets its
+    # own embedding below (via generate_query_embeddings_batch(), one
+    # batched OpenAI call), so a document only has to strongly match ONE
+    # of these items to be picked up, instead of being scored against a
+    # single diluted/averaged embedding of everything combined.
+    query_items = list(keyword_list) + list(phrase_list)
 
-    # (QUERY-EMBEDDING CACHING) Reuse a previously-generated, saved query
-    # embedding for this (chat_id, topic_key) pair when it was built from
-    # this exact same set of keywords + match_phrases — avoids hitting
-    # the OpenAI embeddings API on every repeated call for the same topic
-    # (e.g. a ~2s polling loop). Entirely best-effort and fail-safe — any
-    # Mongo hiccup here just falls through to the original, uncached
-    # generate_query_embedding() call below, exactly as if this caching
-    # layer didn't exist.
+    # (QUERY-EMBEDDING CACHING) Reuse a previously-generated, saved list
+    # of query embeddings for this (chat_id, topic_key) pair when it was
+    # built from this exact same set of keywords + match_phrases —
+    # avoids hitting the OpenAI embeddings API on every repeated call for
+    # the same topic (e.g. a ~2s polling loop). Entirely best-effort and
+    # fail-safe — any Mongo hiccup here just falls through to the
+    # original, uncached generate_query_embeddings_batch() call below,
+    # exactly as if this caching layer didn't exist.
     #
     # (KEYING-MISMATCH FIX) Keyed on {"chat_id": chat_id, "topic_key":
     # topic_key} — the SAME document get_cached_topic_evidence() /
@@ -938,10 +1041,14 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     # the embedding cache and the evidence-posts cache can never end up
     # on two different documents. When no chat_id is given at all, this
     # entire caching layer is skipped (no Mongo read/write) and a fresh,
-    # uncached embedding is generated instead — never writes an
+    # uncached set of embeddings is generated instead — never writes an
     # ambiguous, chat-less document.
+    #
+    # (PER-PHRASE EMBEDDING MATCHING FIX) The cached/stored
+    # "query_embedding" field now holds a LIST of vectors (one per
+    # query_items entry, in the same order) instead of a single vector.
     query_signature = _compute_query_signature(keyword_list, phrase_list)
-    query_embedding = None
+    query_embeddings = None
 
     if chat_id:
         cached_embedding_doc = None
@@ -959,18 +1066,20 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             and cached_embedding_doc.get("query_embedding")
             and cached_embedding_doc.get("query_embedding_signature") == query_signature
         ):
-            query_embedding = cached_embedding_doc["query_embedding"]
+            # Already a list-of-lists (per-keyword/per-phrase vectors),
+            # saved this same shape by the cache-write branch below.
+            query_embeddings = cached_embedding_doc["query_embedding"]
 
-        if not query_embedding:
-            query_embedding = generate_query_embedding(query_text)
-            if query_embedding:
+        if not query_embeddings:
+            query_embeddings = generate_query_embeddings_batch(query_items)
+            if query_embeddings:
                 try:
                     topic_evidence_cache_collection.update_one(
                         {"chat_id": chat_id, "topic_key": topic_key},
                         {"$set": {
                             "chat_id": chat_id,
                             "topic_key": topic_key,
-                            "query_embedding": query_embedding,
+                            "query_embedding": query_embeddings,
                             "query_embedding_signature": query_signature,
                         }},
                         upsert=True,
@@ -983,15 +1092,17 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
         # than ever writing a chat-less, ambiguous document. Falls back
         # to generating fresh, uncached, exactly as if this caching
         # feature didn't exist.
-        query_embedding = generate_query_embedding(query_text)
+        query_embeddings = generate_query_embeddings_batch(query_items)
 
-    if not query_embedding:
+    if not query_embeddings:
         return []
 
-    # (EMBEDDING-BASED MATCHING CHANGE) Score every candidate doc against
-    # the query embedding; anything below the threshold is not a match at
-    # all and is dropped here, before any of the existing downstream
-    # checks run.
+    # (EMBEDDING-BASED MATCHING CHANGE, MAX-SIMILARITY BY THE PER-PHRASE
+    # EMBEDDING MATCHING FIX) Score every candidate doc against EVERY
+    # query embedding and keep the MAX similarity — a document only has
+    # to strongly match ONE keyword/phrase to be picked up. Anything
+    # below the threshold is not a match at all and is dropped here,
+    # before any of the existing downstream checks run.
     scored_docs = []
     for doc in raw_docs:
         # (TIME-WINDOW FEATURE) Defensive second check: if a cutoff is
@@ -1009,7 +1120,11 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             if doc_created < cutoff:
                 continue
 
-        similarity = _cosine_similarity(doc.get("embedding"), query_embedding)
+        doc_embedding = doc.get("embedding")
+        similarity = max(
+            (_cosine_similarity(doc_embedding, qe) for qe in query_embeddings),
+            default=0.0,
+        )
         if similarity < SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD:
             continue
 
@@ -1030,7 +1145,13 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     if log.isEnabledFor(logging.DEBUG):
         try:
             all_scores = sorted(
-                (_cosine_similarity(doc.get("embedding"), query_embedding) for doc in raw_docs),
+                (
+                    max(
+                        (_cosine_similarity(doc.get("embedding"), qe) for qe in query_embeddings),
+                        default=0.0,
+                    )
+                    for doc in raw_docs
+                ),
                 reverse=True,
             )
             log.debug(
