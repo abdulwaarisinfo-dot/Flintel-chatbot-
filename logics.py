@@ -83,12 +83,30 @@ both scoped to inside get_matched_signals() only:
      SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD (config.py) — it changes no
      return value, no filtering, no caching, nothing else about this
      function's behavior.
+
+(QUERY-EMBEDDING CACHE KEYING-MISMATCH FIX) get_matched_signals() now
+takes an additional optional `chat_id` parameter (last in the signature,
+default None, so every existing caller that doesn't pass it behaves
+exactly as before). It exists purely so the QUERY-EMBEDDING CACHING
+block (inside this function) keys its Mongo document the SAME way the
+existing per-chat evidence-posts cache (get_cached_topic_evidence() /
+save_topic_evidence_cache()) already does — {"chat_id": chat_id,
+"topic_key": topic_key} — instead of "topic_key" alone, so the two
+caches can never end up on two different documents for what is really
+the same (chat, topic) pair. When `chat_id` isn't given at all, the
+embedding-cache lookup/write is skipped entirely (uncached, exactly as
+if this caching feature didn't exist) rather than ever writing an
+ambiguous, chat-less document. get_evidence_with_topup() was updated to
+pass its own `chat_id` through to matcher_fn() (get_matched_signals())
+so the real production polling path stays cache-consistent; nothing
+else about either function changed.
 """
 
 import re
 import json
 import time
 import math
+import hashlib
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
@@ -606,10 +624,40 @@ def _cosine_similarity(vec_a, vec_b) -> float:
         return 0.0
 
 
+def _compute_query_signature(keywords: list, match_phrases: list) -> str:
+    """(QUERY-EMBEDDING CACHING) Deterministic, order-independent
+    fingerprint of a given keywords + match_phrases combination — used
+    to decide whether a previously-cached query embedding for a topic
+    (stored on topic_evidence_cache_collection, see get_matched_
+    signals()'s own updated docstring) is still valid for THIS call's
+    keywords/match_phrases, or whether they've changed enough that a
+    fresh embedding must be generated instead.
+
+    Both lists are lowercased/trimmed and SORTED before hashing, so the
+    exact same set of keywords/phrases in a different order (e.g. a
+    router call that returns the same terms in a different sequence)
+    still produces the identical signature, and a cached embedding is
+    correctly reused rather than needlessly regenerated. Returns a
+    short hex sha256 digest; never raises — any unexpected input just
+    hashes down to a (still valid, still comparable) signature for an
+    effectively-empty query."""
+    try:
+        kw_part = "|".join(sorted(
+            k.strip().lower() for k in (keywords or []) if isinstance(k, str) and k.strip()
+        ))
+        ph_part = "|".join(sorted(
+            p.strip().lower() for p in (match_phrases or []) if isinstance(p, str) and p.strip()
+        ))
+        combined = f"kw:{kw_part}::ph:{ph_part}"
+    except Exception:
+        combined = ""
+    return hashlib.sha256(combined.encode("utf-8")).hexdigest()
+
+
 def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str = "all",
                          limit: int = None, since_days: int = None, unfiltered: bool = False,
                          match_phrases: list = None, loose: bool = False,
-                         signals_collection_2=None) -> list:
+                         signals_collection_2=None, chat_id: str = None) -> list:
     """Reads `flintel_signals` and keeps only the signals that are
     genuinely relevant to this job's topic. topic_key match is
     intentionally NOT required: Background Service #1 may store its own
@@ -662,6 +710,61 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     raw similarity scores seen across the whole pool, keyed by
     topic_key. Neither change affects the return value, the matching
     decision, or anything else about this function.
+
+    (QUERY-EMBEDDING CACHING) Step 1 above (generating this call's own
+    query embedding from keywords + match_phrases) is now cache-aware,
+    so a topic being polled repeatedly (e.g. stream_answer()'s ~2s
+    polling loop, or repeated follow-ups on the same topic) doesn't hit
+    the OpenAI embeddings API on every single call:
+      - This caching layer is keyed on the SAME document the per-chat
+        evidence-posts cache (get_cached_topic_evidence() / save_topic_
+        evidence_cache()) already maintains for this topic — i.e. the
+        topic_evidence_cache_collection document keyed on
+        {"chat_id": chat_id, "topic_key": topic_key} — so the two caches
+        can never drift onto two different documents for what is really
+        the same (chat, topic) pair.
+      - `chat_id` (new optional parameter, default None, always LAST in
+        this function's signature so every existing caller that doesn't
+        pass it behaves exactly as before) controls this entirely: when
+        a `chat_id` IS given, before calling generate_query_embedding(),
+        this function computes a signature for this call's own keywords
+        + match_phrases (via _compute_query_signature() — order-
+        independent, so the same set in a different order still
+        matches) and looks up topic_evidence_cache_collection for the
+        {"chat_id": chat_id, "topic_key": topic_key} document that
+        already has a "query_embedding" field whose saved
+        "query_embedding_signature" matches. If found, that SAVED
+        embedding is reused directly — generate_query_embedding() is
+        never called at all for this call. On a cache miss (new topic in
+        this chat, or keywords/match_phrases changed since the last
+        cached embedding), generate_query_embedding() is called exactly
+        as before, and — best-effort — the fresh embedding + its
+        signature (plus "chat_id") are saved back onto that same
+        {"chat_id": chat_id, "topic_key": topic_key} document in
+        topic_evidence_cache_collection for next time.
+      - When NO `chat_id` is given (the default — e.g. an older/direct
+        caller that doesn't pass one, or an unfiltered call), this
+        caching layer is skipped ENTIRELY: no Mongo read, no Mongo
+        write, and generate_query_embedding() is called fresh, uncached,
+        exactly as if this feature didn't exist. This avoids ever
+        writing an orphan/ambiguous document that isn't scoped to a real
+        chat.
+      - FAIL-SAFE: every Mongo read/write in this caching layer is
+        wrapped in its own try/except; ANY failure (missing collection,
+        connection hiccup, malformed cached doc, etc.) silently falls
+        back to the original, uncached generate_query_embedding() call —
+        this caching layer can never cause matching to fail, return
+        different results, or crash. The existing "no query embedding at
+        all -> return []" safety behavior is completely unchanged.
+      - This is purely an optimization on top of Step 1's OWN embedding
+        generation — it has nothing to do with, and never touches, the
+        separate per-chat evidence-posts cache (get_cached_topic_
+        evidence() / save_topic_evidence_cache() / get_evidence_with_
+        topup()), which keeps its own existing fields and behavior on
+        the very same Mongo documents untouched (this function only ever
+        adds/reads the "query_embedding" / "query_embedding_signature" /
+        "chat_id" fields on that document — it never reads or writes
+        "posts", "post_urls_seen", "evidence_count", etc.).
 
     `targeting_platform` (the same "all" | "reddit" | "x_twitter" |
     "linkedin" | "facebook" value already stored on the job/message) is
@@ -718,7 +821,8 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 
     COMPLETELY UNCHANGED BY THE KEYWORD-GENERATION SWAP: this function's
     SIGNATURE (aside from the earlier, optional, default-None
-    `since_days` parameter), RETURN SHAPE, and every existing caller are
+    `since_days` parameter, and the newer, optional, default-None
+    `chat_id` parameter), RETURN SHAPE, and every existing caller are
     exactly as they were before — it has no idea whether `keywords` came
     from Claude's router call or the old fuzzy-template fallback; it now
     just uses them (plus match_phrases) to build the query text for its
@@ -818,7 +922,69 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     if phrase_list:
         query_text_parts.extend(phrase_list)
     query_text = " ".join(query_text_parts).strip()
-    query_embedding = generate_query_embedding(query_text)
+
+    # (QUERY-EMBEDDING CACHING) Reuse a previously-generated, saved query
+    # embedding for this (chat_id, topic_key) pair when it was built from
+    # this exact same set of keywords + match_phrases — avoids hitting
+    # the OpenAI embeddings API on every repeated call for the same topic
+    # (e.g. a ~2s polling loop). Entirely best-effort and fail-safe — any
+    # Mongo hiccup here just falls through to the original, uncached
+    # generate_query_embedding() call below, exactly as if this caching
+    # layer didn't exist.
+    #
+    # (KEYING-MISMATCH FIX) Keyed on {"chat_id": chat_id, "topic_key":
+    # topic_key} — the SAME document get_cached_topic_evidence() /
+    # save_topic_evidence_cache() already read/write for this topic, so
+    # the embedding cache and the evidence-posts cache can never end up
+    # on two different documents. When no chat_id is given at all, this
+    # entire caching layer is skipped (no Mongo read/write) and a fresh,
+    # uncached embedding is generated instead — never writes an
+    # ambiguous, chat-less document.
+    query_signature = _compute_query_signature(keyword_list, phrase_list)
+    query_embedding = None
+
+    if chat_id:
+        cached_embedding_doc = None
+        try:
+            cached_embedding_doc = topic_evidence_cache_collection.find_one(
+                {"chat_id": chat_id, "topic_key": topic_key},
+                {"_id": 0, "query_embedding": 1, "query_embedding_signature": 1},
+            )
+        except Exception as exc:
+            log.warning(f"Query-embedding cache read failed for chat_id={chat_id} topic_key={topic_key}: {exc}")
+            cached_embedding_doc = None
+
+        if (
+            cached_embedding_doc
+            and cached_embedding_doc.get("query_embedding")
+            and cached_embedding_doc.get("query_embedding_signature") == query_signature
+        ):
+            query_embedding = cached_embedding_doc["query_embedding"]
+
+        if not query_embedding:
+            query_embedding = generate_query_embedding(query_text)
+            if query_embedding:
+                try:
+                    topic_evidence_cache_collection.update_one(
+                        {"chat_id": chat_id, "topic_key": topic_key},
+                        {"$set": {
+                            "chat_id": chat_id,
+                            "topic_key": topic_key,
+                            "query_embedding": query_embedding,
+                            "query_embedding_signature": query_signature,
+                        }},
+                        upsert=True,
+                    )
+                except Exception as exc:
+                    log.warning(f"Query-embedding cache save failed for chat_id={chat_id} topic_key={topic_key}: {exc}")
+    else:
+        # (KEYING-MISMATCH FIX) No chat_id given at all — skip the
+        # embedding cache entirely (no Mongo read, no Mongo write) rather
+        # than ever writing a chat-less, ambiguous document. Falls back
+        # to generating fresh, uncached, exactly as if this caching
+        # feature didn't exist.
+        query_embedding = generate_query_embedding(query_text)
+
     if not query_embedding:
         return []
 
@@ -1014,7 +1180,16 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
 
     `matcher_fn` is get_matched_signals() itself, passed in via dependency
     injection, so this function never duplicates its own matching-query
-    logic — it is purely the caching/top-up decision layer on top of it."""
+    logic — it is purely the caching/top-up decision layer on top of it.
+
+    (KEYING-MISMATCH FIX) `chat_id` is now also passed straight through to
+    matcher_fn() as its own `chat_id` keyword argument, so get_matched_
+    signals()'s own QUERY-EMBEDDING CACHING block shares the exact same
+    {"chat_id": chat_id, "topic_key": topic_key} document this function's
+    own evidence-posts cache (get_cached_topic_evidence() / save_topic_
+    evidence_cache()) already reads/writes — the two caches can never end
+    up on two different Mongo documents for the same (chat, topic) pair.
+    Nothing else about this function changed."""
     cached = get_cached_topic_evidence(chat_id, topic_key)
     cached_posts = (cached or {}).get("posts") or []
     cached_count = len(cached_posts)
@@ -1033,7 +1208,7 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
         topic_key, keywords, targeting_platform=targeting_platform,
         since_days=since_days, unfiltered=unfiltered,
         match_phrases=match_phrases, limit=fetch_limit,
-        signals_collection_2=signals_collection_2,
+        signals_collection_2=signals_collection_2, chat_id=chat_id,
     )
 
     # De-dup: old cached posts + new posts, keyed on post_url.
@@ -3662,7 +3837,12 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
     fetched (via get_matched_signals, injected as matcher_fn) otherwise.
     get_matched_signals() itself, and its matching rules, are completely
     untouched by this — get_evidence_with_topup() is purely a caching
-    layer on top of it.
+    layer on top of it. (KEYING-MISMATCH FIX: get_evidence_with_topup()
+    already has this call's own `chat_id` in scope and now passes it
+    straight through to matcher_fn(), so get_matched_signals()'s own
+    query-embedding cache stays keyed on the same {chat_id, topic_key}
+    document as this evidence-posts cache — nothing needed to change
+    here.)
 
     (RESPONSE_TIMEOUT'S NEW ROLE) By the time this is called,
     _fill_in_message_outputs() already confirmed the merged
