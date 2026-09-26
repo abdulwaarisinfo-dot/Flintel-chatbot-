@@ -528,7 +528,10 @@
   .post-label { color: #d1d0cf; font-size: 17px; font-weight: 600; font-style: italic; line-height: 26px; margin-bottom: 40px; }
   .post-field { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
   .post-field:last-child { margin-bottom: 0; }
-  .post-field .field-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.35); flex-shrink: 0; margin-top: 8px; }
+  /* margin-top 8px -> 6px: the dot was sitting visibly below the vertical
+     center of the bullet text's first line — nudged up 2px to optically
+     center it against the text. */
+  .post-field .field-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.35); flex-shrink: 0; margin-top: 6px; }
   .post-field .field-text { color: rgba(255,255,255,0.7); font-size: 17px; font-weight: 500; line-height: 26px; }
   .field-text.truncatable-summary {
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
