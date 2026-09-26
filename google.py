@@ -1,7 +1,7 @@
 """
 FLINTEL — GOOGLE SEARCH (RAPIDAPI) REDDIT-POST DISCOVERY
 ============================================================================ 
-Self-contained module, following the EXACT same one-way-dependency
+Self-contained module, following the EXACT same one-way-dependency 
 pattern as website_intelligence.py and flintel.py: nothing here imports
 from or modifies index.py, flintel.py, or website_intelligence.py — those
 files may import FROM this file, never the other way around. This file
