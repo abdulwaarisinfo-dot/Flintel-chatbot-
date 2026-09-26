@@ -5,7 +5,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>{{ chat.title or 'Chat' }} — Flintel</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"> 
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style id="app-styles">
   /* =========================================================================
@@ -470,7 +470,10 @@
   .answer-rendered li { margin-bottom: 8px; }
   .answer-rendered strong { color: #fff; font-weight: 700; }
   .answer-rendered h1, .answer-rendered h2, .answer-rendered h3, .answer-rendered h4 {
-    color: #fff; font-weight: 600; font-size: 17px; line-height: 26px; margin: 20px 0 12px 0;
+    /* margin-bottom 12px -> 16px: more decent breathing room between a
+       heading (e.g. "About this website") and the paragraph right under
+       it, across every rendered answer platform-wide. */
+    color: #fff; font-weight: 600; font-size: 17px; line-height: 26px; margin: 20px 0 16px 0;
   }
   .answer-rendered h1:first-child, .answer-rendered h2:first-child,
   .answer-rendered h3:first-child, .answer-rendered h4:first-child { margin-top: 0; }
@@ -742,8 +745,23 @@
      new section starting. :first-child zeroes the top gap when a
      heading opens a wrapper/the whole answer, so it doesn't float away
      from the top edge. */
-  .metrics-section-title { color: #fff; font-size: 17px; font-weight: 600; line-height: 26px; margin-top: 40px; margin-bottom: 20px; }
-  .metrics-section-title:first-child { margin-top: 0; }
+  .answer-rendered .metrics-section-title {
+    /* (SPACING FIX) This must be scoped with the .answer-rendered prefix,
+       not just ".metrics-section-title" — these headings are rendered as
+       plain <p class="metrics-section-title"> elements (see
+       renderWebsiteContext() etc. further down), and ".answer-rendered p"
+       above (margin-bottom:14px) has HIGHER CSS specificity (class+tag)
+       than a bare ".metrics-section-title" (class only), so it was
+       silently winning and capping every one of these headings' bottom
+       margin at 14px regardless of what was written here — the real
+       cause of "About this website" and its paragraph looking cramped
+       despite this rule already saying 20px/24px. Scoping it this way
+       (class+class) is more specific than ".answer-rendered p" and
+       actually wins. margin-bottom raised 20px -> 24px on top of that,
+       for a genuinely more decent gap to the text right under it. */
+    color: #fff; font-size: 17px; font-weight: 600; line-height: 26px; margin-top: 40px; margin-bottom: 24px;
+  }
+  .answer-rendered .metrics-section-title:first-child { margin-top: 0; }
   .metrics-table { background: #1e1d1c; border: 0.5px solid #343434; border-radius: 12px; overflow: hidden; margin-bottom: 40px; }
   .metrics-row { display: grid; height: 47px; }
   .metrics-row.header { background: #252422; }
@@ -755,9 +773,27 @@
      40px "new section" gap lives on the WRAPPER, not the title — the
      title's own margin-top collapses to 0 via :first-child. */
   .interpretation-block, .trend-block, .takeaways-block { margin-top: 40px; margin-bottom: 40px; }
-  .block-title { color: #fff; font-size: 17px; font-weight: 600; line-height: 26px; margin-top: 40px; margin-bottom: 14px; }
-  .block-title:first-child { margin-top: 0; }
-  .block-text { color: #d1d0cf; font-size: 17px; font-weight: 500; line-height: 26px; margin-bottom: 20px; }
+  .answer-rendered .block-title {
+    /* (SPACING FIX) Same specificity bug as .answer-rendered
+       .metrics-section-title above, same fix: these render as plain
+       <p class="block-title"> (see e.g. the "Key Takeaways" / trend /
+       interpretation call sites further down), and a bare
+       ".block-title" (class only) loses to ".answer-rendered p"
+       (class+tag, higher specificity) — capping the real margin-bottom
+       at 14px however this rule reads. Prefixing with .answer-rendered
+       makes this the more specific one, so it actually wins.
+       margin-bottom raised 14px -> 18px for a decent gap to the
+       paragraph under it (Interpretation, Trend, Key Takeaways, etc.). */
+    color: #fff; font-size: 17px; font-weight: 600; line-height: 26px; margin-top: 40px; margin-bottom: 18px;
+  }
+  .answer-rendered .block-title:first-child { margin-top: 0; }
+  .answer-rendered .block-text {
+    /* Same specificity fix as above — ".answer-rendered p" was capping
+       every .block-text at 14px too (only the one call site that set an
+       inline style.marginBottom was working around it; every other
+       .block-text wasn't). 20px now actually applies everywhere. */
+    color: #d1d0cf; font-size: 17px; font-weight: 500; line-height: 26px; margin-bottom: 20px;
+  }
   /* (SPACING FIX) renderWebsiteContext()'s divider sat with zero margin —
      fine for the sidebar's own .divider (spaced by its parent's padding),
      but inside the streamed answer it landed flush against the text
