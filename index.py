@@ -7,7 +7,7 @@ session setup, Google OAuth registration), password hashing, and every
 accounts, chat sessions, message bookkeeping, the busy-lock, the  
 background-trigger orchestration for Google-fallback/search-progress,
 and the two functions that decide when a message's answer is ready to  
-fill in).
+fill in). 
 
 Every constant this module used to define directly now lives in
 config.py (imported here via `from config import *`, so every existing
