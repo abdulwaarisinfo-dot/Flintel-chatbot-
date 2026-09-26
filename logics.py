@@ -60,6 +60,29 @@ untouched, but are now dead code as far as get_matched_signals() itself
 is concerned — nothing else in this file, or in the rest of the product
 (router, Claude prompts, evidence cache, timeout fallback, website-
 intelligence, keyword/phrase generation), was touched by this change.
+
+(EMBEDDING-MATCH QUERY/LOGGING CLEANUP) Two small, purely additive/
+non-behavioral follow-ups to the EMBEDDING-BASED MATCHING CHANGE above,
+both scoped to inside get_matched_signals() only:
+  1. The Mongo existence guard on the "embedding" field now reads
+     {"$ne": None, "$exists": True} instead of just {"$ne": None} — a
+     bare "$ne: None" can, depending on driver/version behavior, also
+     match documents where the field is simply absent, and
+     _cosine_similarity() already safely scores any such doc's missing
+     embedding as 0.0 (getting dropped by the threshold check either
+     way) — so this isn't a bug fix, just making the query's intent
+     explicit/clean.
+  2. A single log.debug() line (never info/warning, so silent unless
+     DEBUG logging is explicitly enabled) right after scored_docs is
+     sorted, reporting — for this call's topic_key — the candidate pool
+     size, the current SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD value, how
+     many candidates cleared it, and the top 5 raw cosine-similarity
+     scores across the whole candidate pool (computed purely for this
+     log line, never used for matching/filtering). This exists only to
+     give real production data to inform future tuning of
+     SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD (config.py) — it changes no
+     return value, no filtering, no caching, nothing else about this
+     function's behavior.
 """
 
 import re
@@ -603,8 +626,9 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
          (produced ahead of time by the background service — never
          regenerated here) are even considered as candidates — this is
          now enforced directly in the Mongo query itself
-         (`{"embedding": {"$ne": None}}`), on top of the existing
-         time-window cutoff (see TIME-WINDOW FEATURE below, unchanged).
+         (`{"embedding": {"$ne": None, "$exists": True}}`), on top of the
+         existing time-window cutoff (see TIME-WINDOW FEATURE below,
+         unchanged).
       3. Each candidate document's cosine similarity against the query
          embedding is computed (_cosine_similarity()); a document whose
          similarity falls below SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD is
@@ -628,6 +652,16 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     any_phrase, _phrase_matches_text) are no longer used by this
     function — they remain defined above, untouched, as harmless dead
     code.
+
+    (EMBEDDING-MATCH QUERY/LOGGING CLEANUP) Two small, purely additive/
+    non-behavioral follow-ups live inside this function now: the Mongo
+    "embedding" existence guard is explicit (`$ne: None` AND
+    `$exists: True`), and — only when DEBUG logging is enabled — a single
+    log.debug() line reports this call's candidate-pool size, the current
+    similarity threshold, how many candidates cleared it, and the top 5
+    raw similarity scores seen across the whole pool, keyed by
+    topic_key. Neither change affects the return value, the matching
+    decision, or anything else about this function.
 
     `targeting_platform` (the same "all" | "reddit" | "x_twitter" |
     "linkedin" | "facebook" value already stored on the job/message) is
@@ -720,7 +754,14 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     # time-window cutoff, plus a new filter requiring a saved, non-null
     # "embedding" field, so only documents the background service has
     # already embedded are ever considered as candidates.
-    mongo_query = {"embedding": {"$ne": None}}
+    #
+    # (EMBEDDING-MATCH QUERY/LOGGING CLEANUP) "$exists": True added
+    # alongside "$ne": None to make the existence guard explicit — purely
+    # a query-clarity change, not a behavior change (a missing embedding
+    # field was already effectively excluded downstream, since
+    # _cosine_similarity() safely scores it as 0.0, which never clears
+    # SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD).
+    mongo_query = {"embedding": {"$ne": None, "$exists": True}}
 
     # (TIME-WINDOW FEATURE) Compute an optional cutoff and AND it onto the
     # embedding-existence clause via $and, so a time window narrows the
@@ -812,6 +853,27 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     # first, BEFORE per-platform cap / overall limit are applied — so the
     # best-matching posts are always kept when a cap trims the list.
     scored_docs.sort(key=lambda pair: pair[0], reverse=True)
+
+    # (EMBEDDING-MATCH QUERY/LOGGING CLEANUP) Purely additive, observability-
+    # only debug logging — guarded by log.isEnabledFor() so the extra
+    # similarity computation across the whole raw_docs pool (done here
+    # only for the log line's own top-5 view, separate from scored_docs'
+    # threshold-filtered scores above) never runs at all unless DEBUG
+    # logging is explicitly enabled. Never touches scored_docs, matched,
+    # or any return value — silent, side-effect-free otherwise.
+    if log.isEnabledFor(logging.DEBUG):
+        try:
+            all_scores = sorted(
+                (_cosine_similarity(doc.get("embedding"), query_embedding) for doc in raw_docs),
+                reverse=True,
+            )
+            log.debug(
+                f"Embedding-match debug | topic_key={topic_key} | pool_size={len(raw_docs)} "
+                f"| similarity_threshold={SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD} "
+                f"| passed_threshold={len(scored_docs)} | top5_scores={all_scores[:5]}"
+            )
+        except Exception as exc:
+            log.debug(f"Embedding-match debug logging failed for topic_key={topic_key}: {exc}")
 
     matched = []
     seen_urls = set()
