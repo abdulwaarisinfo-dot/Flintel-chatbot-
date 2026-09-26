@@ -307,7 +307,8 @@
      (that one stays exactly as-is, opened only by the sidebar "Sign In"
      link / topbar "Sign up" button, unchanged). This one shows itself
      automatically, once, the first time a signed-out visitor loads the
-     app (localStorage flag "flintel_welcome_dismissed" — see the JS
+     app (sessionStorage flag "flintel_welcome_dismissed", reset each new
+     browsing session — see the JS
      block near the other overlay's JS), and never shows again once
      closed via its own X button. All colors/sizes/spacing below are
      taken directly from the Figma node, not estimated. ---------- */
@@ -933,7 +934,8 @@
 
 <!-- First-visit welcome (login/signup) card — built from Figma node 45:120.
      Additive/separate from the auth-overlay modal above (untouched). Only
-     rendered for signed-out visitors; shown once via localStorage flag,
+     rendered for signed-out visitors; shown once per browsing session via
+     sessionStorage flag,
      see the JS block below. -->
 {% if not user %}
 <div class="welcome-overlay" id="welcome-overlay">
@@ -1200,19 +1202,22 @@
   // sidebar just links to "/" for sign-in, unchanged) — so here, Apple and
   // the email "Continue" button both simply send the visitor to "/", where
   // the real sign-in/signup options live, instead of doing nothing.
+  // Dismissing via X hides it for the rest of THIS browsing session only
+  // (sessionStorage, not localStorage) — closing the tab/browser starts a
+  // fresh session, so a still-signed-out visitor sees it again next time.
   (function initWelcomeCard() {
     const overlay = document.getElementById('welcome-overlay');
     if (!overlay) return;
     const DISMISS_KEY = 'flintel_welcome_dismissed';
     try {
-      if (!localStorage.getItem(DISMISS_KEY)) {
+      if (!sessionStorage.getItem(DISMISS_KEY)) {
         overlay.classList.add('visible');
       }
     } catch (e) {}
 
     function dismissWelcome() {
       overlay.classList.remove('visible');
-      try { localStorage.setItem(DISMISS_KEY, '1'); } catch (e) {}
+      try { sessionStorage.setItem(DISMISS_KEY, '1'); } catch (e) {}
     }
     const closeBtn = document.getElementById('welcome-close-btn');
     if (closeBtn) closeBtn.addEventListener('click', dismissWelcome);
