@@ -34,6 +34,16 @@ index.py's namespace too. `__all__` below makes the exported surface
 explicit and limits it to the actual config constants — nothing else
 changes; every existing name index.py already relies on is still here,
 unchanged.
+
+(EMBEDDING CONFIG) EMBEDDING_PROVIDER / EMBEDDING_MODEL / OPENAI_API_KEY /
+EMBEDDING_TIMEOUT / EMBEDDING_MAX_CHARS mirror the embedding config already
+used by the background-service files (index.py and both flintel.py's own
+embedding config block) name-for-name and default-for-default, so both
+sides of the system embed with the same model/settings. SIGNAL_EMBEDDING_
+CANDIDATE_POOL and SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD are new, web-
+service-only constants for this service's own matching step (the
+background service has no equivalent step, so no mirrored constant is
+needed for these two).
 """
 
 import os
@@ -97,6 +107,15 @@ __all__ = [
     "CLAUDE_MODEL",
     "CLAUDE_API_URL",
     "CLAUDE_API_VERSION",
+    # Embedding config (mirrors background-service embedding config)
+    "EMBEDDING_PROVIDER",
+    "EMBEDDING_MODEL",
+    "OPENAI_API_KEY",
+    "EMBEDDING_TIMEOUT",
+    "EMBEDDING_MAX_CHARS",
+    # Signal-matching embedding config (web-service only)
+    "SIGNAL_EMBEDDING_CANDIDATE_POOL",
+    "SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD",
     # Secondary MongoDB (signals mirror)
     "MONGODB2",
     # Tertiary MongoDB (everything except flintel_signals)
@@ -234,6 +253,30 @@ ANTHROPIC_API_KEY   = os.getenv("ANTHROPIC_API_KEY")
 CLAUDE_MODEL        = os.getenv("CLAUDE_MODEL", "claude-haiku-4-5-20251001")
 CLAUDE_API_URL      = "https://api.anthropic.com/v1/messages"
 CLAUDE_API_VERSION  = os.getenv("CLAUDE_API_VERSION", "2023-06-01")
+
+# ── Embedding config (mirrors background-service embedding config —
+#    index.py and both flintel.py's own embedding config block — name-for-
+#    name and default-for-default, so both sides of the system embed with
+#    the same model/settings) ──────────────────────────────────────────────
+EMBEDDING_PROVIDER  = os.getenv("EMBEDDING_PROVIDER", "openai")
+EMBEDDING_MODEL     = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
+OPENAI_API_KEY      = os.getenv("OPENAI_API_KEY", "")
+EMBEDDING_TIMEOUT   = int(os.getenv("EMBEDDING_TIMEOUT", "20"))
+EMBEDDING_MAX_CHARS = int(os.getenv("EMBEDDING_MAX_CHARS", "8000"))
+
+# ── Signal-matching embedding config (web-service only — the background
+#    service has no equivalent matching step, so no mirrored constant is
+#    needed here) ───────────────────────────────────────────────────────
+# Mongo se time-window/platform filter ke baad kitne candidate docs fetch
+# karke unka embedding compare karna hai — cosine similarity calculation
+# ye size tak hi chalegi, is se bara pool kabhi nahi banega (cost/latency
+# safety ceiling, MAX_MATCHED_RESULTS jaisa hi concept).
+SIGNAL_EMBEDDING_CANDIDATE_POOL = int(os.getenv("SIGNAL_EMBEDDING_CANDIDATE_POOL", "500"))
+
+# Minimum cosine similarity score jispar ek candidate document "match"
+# count hota hai. Is se neeche wale docs discard honge, chahe wo pool
+# mein aaye hi kyun na hon.
+SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD = float(os.getenv("SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD", "0.35"))
 
 # ── Secondary signals-only MongoDB (READ-ONLY mirror of flintel_signals) ──
 MONGODB2 = os.getenv("MONGODB2", "")
