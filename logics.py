@@ -46,11 +46,26 @@ were updated to match this new prompt's actual wording (the old ones
 were written against the old prompt's phrasing and would have silently
 stopped injecting MAX_CHAT_EVIDENCE_POSTS otherwise) — see the comment
 right above those calls.
+
+(EMBEDDING-BASED MATCHING CHANGE) get_matched_signals()'s own internal
+"is this signal a match" decision (non-unfiltered branch only) has been
+swapped from keyword/title/text substring matching to embedding cosine-
+similarity matching against a single query embedding built from this
+call's own keywords + match_phrases. This function's SIGNATURE, RETURN
+SHAPE, and every caller are completely unchanged — see its own updated
+docstring below for the full mechanism. The old keyword/phrase substring
+helpers (_signal_keyword_matches, _text_matches_keyword,
+_text_matches_any_phrase, _phrase_matches_text) are left defined,
+untouched, but are now dead code as far as get_matched_signals() itself
+is concerned — nothing else in this file, or in the rest of the product
+(router, Claude prompts, evidence cache, timeout fallback, website-
+intelligence, keyword/phrase generation), was touched by this change.
 """
 
 import re
 import json
 import time
+import math
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
@@ -80,6 +95,10 @@ from config import (
     MAX_WEBSITE_PAGES, WEBSITE_DISCOVERY_PATH_HINTS,
     WEBSITE_EVIDENCE_CACHE_TTL_DAYS, WEBSITE_EVIDENCE_MAX_TOKENS,
     WEBSITE_INSIGHT_MAX_TOKENS,
+    # (EMBEDDING-BASED MATCHING CHANGE) mirrors the background service's
+    # own embedding config, name-for-name — see config.py's own docstring.
+    EMBEDDING_MODEL, OPENAI_API_KEY, EMBEDDING_TIMEOUT, EMBEDDING_MAX_CHARS,
+    SIGNAL_EMBEDDING_CANDIDATE_POOL, SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD,
 )
 
 import logging
@@ -267,6 +286,13 @@ def get_signals(topic_key: str, limit: int = 25):
 # on how Background Service #1 writes them, so this reads a small list of
 # likely candidates for each field instead of hard-coding a single name.
 # Adjust FIELD candidates below if your signals schema differs.
+#
+# (EMBEDDING-BASED MATCHING CHANGE) The helper functions in this section
+# (_signal_keyword_matches, _text_matches_keyword, _text_matches_any_
+# phrase, _phrase_matches_text) are left fully intact below — they are
+# simply no longer called from inside get_matched_signals()'s own
+# non-unfiltered matching decision (see that function's own updated
+# docstring). Harmless dead code, kept for now rather than deleted.
 # ─────────────────────────────────────────────────────────────────────────────
 
 _KEYWORD_FIELD_CANDIDATES  = ["search_keyword", "keyword", "matched_keyword", "query_keyword", "keywords"]
@@ -330,7 +356,10 @@ def _signal_keyword_matches(doc: dict, keyword_set: set) -> bool:
     UNCHANGED from v3/v4/v5/v6/v7 and UNCHANGED by the keyword-generation
     swap — this exact-field check is completely untouched; it still works
     exactly as it always has, regardless of where `keyword_set` came
-    from."""
+    from.
+
+    (EMBEDDING-BASED MATCHING CHANGE) No longer called from inside
+    get_matched_signals() — left intact, unused, harmless dead code."""
     if not keyword_set:
         return True  # no keyword filter to apply -> don't exclude anything
 
@@ -371,7 +400,10 @@ def _text_matches_keyword(text: str, keyword_set: set) -> bool:
     word-boundary regex instead, so a keyword only counts as a match when
     it appears as a genuine whole word/phrase in the text, not as a
     fragment glued onto other letters. Signature, return type, and every
-    caller are otherwise unchanged."""
+    caller are otherwise unchanged.
+
+    (EMBEDDING-BASED MATCHING CHANGE) No longer called from inside
+    get_matched_signals() — left intact, unused, harmless dead code."""
     if not text or not isinstance(text, str):
         return False
     text_lower = text.lower()
@@ -408,7 +440,10 @@ def _phrase_matches_text(phrase: str, text: str, loose: bool = False) -> bool:
     used ONLY for the tier-3 "closest match" candidate pool, never for
     the normal/primary match path.
 
-    Returns False immediately if either `phrase` or `text` is falsy."""
+    Returns False immediately if either `phrase` or `text` is falsy.
+
+    (EMBEDDING-BASED MATCHING CHANGE) No longer called from inside
+    get_matched_signals() — left intact, unused, harmless dead code."""
     if not phrase or not text or not isinstance(phrase, str) or not isinstance(text, str):
         return False
 
@@ -437,7 +472,10 @@ def _phrase_matches_text(phrase: str, text: str, loose: bool = False) -> bool:
 def _text_matches_any_phrase(text: str, phrases: list, loose: bool = False) -> bool:
     """(PHRASE-MATCHING FEATURE) True if _phrase_matches_text() is True
     for ANY phrase in `phrases`. Returns False immediately if `text` or
-    `phrases` is falsy — never raises."""
+    `phrases` is falsy — never raises.
+
+    (EMBEDDING-BASED MATCHING CHANGE) No longer called from inside
+    get_matched_signals() — left intact, unused, harmless dead code."""
     if not text or not phrases:
         return False
     return any(_phrase_matches_text(phrase, text, loose=loose) for phrase in phrases)
@@ -463,44 +501,146 @@ def _infer_platform_from_url(url: str):
     return None
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# EMBEDDING-BASED MATCHING — helpers used by get_matched_signals()'s own
+# non-unfiltered matching decision (see that function below). Mirrors the
+# background service's own embedding config/client/generation logic
+# name-for-name (see config.py's own docstring for the mirrored
+# constants) — this is ONLY for generating the single QUERY embedding for
+# a given call's keywords + match_phrases; document embeddings themselves
+# are generated and saved onto flintel_signals.embedding by the
+# background service, never regenerated here.
+# ─────────────────────────────────────────────────────────────────────────────
+
+_openai_client = None
+
+
+def _get_openai_client():
+    """Lazy OpenAI client, built once and reused — mirrors the background
+    service's own _get_openai_client() exactly: returns None (never
+    raises) when OPENAI_API_KEY isn't set, so every caller can treat a
+    missing key as "no embeddings available" rather than a crash."""
+    global _openai_client
+    if not OPENAI_API_KEY:
+        return None
+    if _openai_client is None:
+        try:
+            from openai import OpenAI
+            _openai_client = OpenAI(api_key=OPENAI_API_KEY)
+        except Exception as exc:
+            log.warning(f"OpenAI client init failed: {exc}")
+            return None
+    return _openai_client
+
+
+def generate_query_embedding(text: str):
+    """Generates a single embedding (list[float]) for `text` using
+    EMBEDDING_MODEL — mirrors the background service's own
+    generate_embedding() logic exactly: truncates to EMBEDDING_MAX_CHARS,
+    wraps the API call in try/except, and returns None on ANY failure
+    (missing key, client init failure, API error, timeout, empty text)
+    rather than ever raising. This is ONLY for embedding a QUERY string
+    (this call's own keywords + match_phrases joined together) — document
+    embeddings are already generated and saved by the background service
+    and are never regenerated here."""
+    if not text or not isinstance(text, str):
+        return None
+    client = _get_openai_client()
+    if not client:
+        return None
+    try:
+        truncated = text[:EMBEDDING_MAX_CHARS]
+        response = client.embeddings.create(
+            model=EMBEDDING_MODEL,
+            input=truncated,
+            timeout=EMBEDDING_TIMEOUT,
+        )
+        return response.data[0].embedding
+    except Exception as exc:
+        log.warning(f"Query-embedding generation failed: {exc}")
+        return None
+
+
+def _cosine_similarity(vec_a, vec_b) -> float:
+    """Plain-Python cosine similarity (dot product / (magnitude_a *
+    magnitude_b)) — no numpy dependency, so no new requirement is added.
+    Returns 0.0 (never raises) whenever either vector is missing/empty,
+    or the two vectors' lengths don't match, so a single corrupt/missing
+    embedding on a document only ever drops that one document out of
+    contention — it can never crash the whole matching function."""
+    if not vec_a or not vec_b:
+        return 0.0
+    if len(vec_a) != len(vec_b):
+        return 0.0
+    try:
+        dot = sum(a * b for a, b in zip(vec_a, vec_b))
+        mag_a = math.sqrt(sum(a * a for a in vec_a))
+        mag_b = math.sqrt(sum(b * b for b in vec_b))
+        if mag_a == 0.0 or mag_b == 0.0:
+            return 0.0
+        return dot / (mag_a * mag_b)
+    except Exception:
+        return 0.0
+
+
 def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str = "all",
                          limit: int = None, since_days: int = None, unfiltered: bool = False,
                          match_phrases: list = None, loose: bool = False,
                          signals_collection_2=None) -> list:
-    """Reads `flintel_signals` and keeps only the signals that match this
-    job's generated keywords. topic_key match is intentionally NOT
-    required: Background Service #1 may store its own topic_key for a
-    signal, but what decides a match here is purely the keyword-matching
-    rules below.
+    """Reads `flintel_signals` and keeps only the signals that are
+    genuinely relevant to this job's topic. topic_key match is
+    intentionally NOT required: Background Service #1 may store its own
+    topic_key for a signal, but what decides a match here is purely the
+    relevance check described below.
 
-    A signal counts as a match if ANY ONE of these is true (v7: this is
-    now three OR'd conditions instead of just the first one):
-      1. its search-keyword field matches one of our generated keywords
-         (see _signal_keyword_matches() — UNCHANGED, still exact/perfect,
-         same as v3-v7), OR
-      2. (v7, word-boundary tightened by BUGFIX PACK #2) one of our
-         generated keywords appears as a whole-word/phrase match inside
-         its OWN title, OR
-      3. (v7, word-boundary tightened by BUGFIX PACK #2) one of our
-         generated keywords appears as a whole-word/phrase match inside
-         its OWN post_text.
-    Matching via more than one of these at once still only ever produces
-    ONE entry in the results (de-duplicated by post_url exactly as
-    before) — this only widens WHICH signals can match, it never changes
-    how a matched signal is de-duplicated or shaped.
+    (EMBEDDING-BASED MATCHING CHANGE) The core "is this signal a match"
+    decision is now EMBEDDING COSINE-SIMILARITY based, not keyword/title/
+    text substring based:
+      1. `keywords` + `match_phrases` (when given) are joined into a
+         single query string, and a single query embedding is generated
+         for this call via generate_query_embedding().
+      2. Only documents that already have a saved `embedding` field
+         (produced ahead of time by the background service — never
+         regenerated here) are even considered as candidates — this is
+         now enforced directly in the Mongo query itself
+         (`{"embedding": {"$ne": None}}`), on top of the existing
+         time-window cutoff (see TIME-WINDOW FEATURE below, unchanged).
+      3. Each candidate document's cosine similarity against the query
+         embedding is computed (_cosine_similarity()); a document whose
+         similarity falls below SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD is
+         not considered a match at all.
+      4. Candidates that clear the threshold are sorted by similarity
+         score, HIGHEST FIRST, before the platform filter, per-platform
+         cap, and overall `limit` below are applied — so the
+         best-matching posts are always the ones kept when a cap trims
+         the list. (The existing `created_utc` descending sort still
+         governs the Mongo-level FETCH stage only, purely to pick which
+         SIGNAL_EMBEDDING_CANDIDATE_POOL-sized pool of recent-first
+         candidates gets its similarity computed in the first place.)
+      5. If a query embedding cannot be generated at all for this call
+         (e.g. OPENAI_API_KEY is missing, or the embeddings API call
+         fails), this function fails safe and returns an empty list —
+         exactly the same "no keywords -> no results" safety behavior
+         this function already had before this change, just triggered by
+         a different failure mode.
+    The OLD keyword-field / title-substring / phrase-substring matching
+    rules (_signal_keyword_matches, _text_matches_keyword, _text_matches_
+    any_phrase, _phrase_matches_text) are no longer used by this
+    function — they remain defined above, untouched, as harmless dead
+    code.
 
     `targeting_platform` (the same "all" | "reddit" | "x_twitter" |
     "linkedin" | "facebook" value already stored on the job/message) is
-    applied on top: "all" pulls a match from whichever platform it came
-    from, exactly as before; any specific platform restricts matches to
-    signals from that platform only — the user's dropdown choice decides
-    this, nothing else.
+    still applied on top, completely UNCHANGED: "all" pulls a match from
+    whichever platform it came from; any specific platform restricts
+    matches to signals from that platform only — the user's dropdown
+    choice decides this, nothing else.
 
     (v7) PER-PLATFORM CAP: on top of the existing overall `limit`
     (MAX_MATCHED_RESULTS by default — still respected, still the same
     variable/behavior as before), each individual platform can
     contribute AT MOST MAX_POSTS_PER_PLATFORM matches to this call's
-    results (default 3).
+    results (default 3). UNCHANGED.
 
     (EVIDENCE-BUDGET FEATURE) `limit` is no longer always the static
     MAX_MATCHED_RESULTS default — a caller may now also pass a dynamic
@@ -523,13 +663,17 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     than assumed to pass). `since_days=None` (the default, and what every
     call site used before this feature) means NO time filtering at all —
     behavior is then 100% identical to before this feature. The time
-    window is purely a narrowing on top of keyword matching: a signal
-    still has to satisfy the exact same keyword rules 1-3 above; the time
-    window can only ever exclude MORE signals, never match one that
-    wouldn't otherwise match on keywords.
+    window is purely a narrowing on top of the embedding-similarity
+    match: a signal still has to clear the similarity threshold above;
+    the time window can only ever exclude MORE signals, never match one
+    that wouldn't otherwise match on similarity. UNCHANGED by this
+    change other than being combined with the new embedding-existence
+    Mongo filter instead of the old keyword $or.
 
-    Results are sorted by `created_utc` DESCENDING (most recent first)
-    before the caps above are applied.
+    Results are sorted by embedding similarity DESCENDING (best match
+    first) before the caps above are applied (previously sorted by
+    `created_utc` descending at this stage — that sort is now used only
+    at the earlier Mongo-fetch stage, to pick the candidate pool).
 
     Returns {title, post_text, post_url, platform} for each match — this
     is the only signal-derived output ever shown to the user (via post
@@ -539,28 +683,12 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     or the raw `signals` list returned by get_signals().
 
     COMPLETELY UNCHANGED BY THE KEYWORD-GENERATION SWAP: this function's
-    SIGNATURE (aside from the new, optional, default-None `since_days`
-    parameter), RETURN SHAPE, matching rules, and every existing caller
-    are exactly as they were in v7 — it has no idea whether `keywords`
-    came from Claude's router call or the old fuzzy-template fallback.
-
-    (PHRASE-MATCHING FEATURE) When `match_phrases` (a list of short,
-    natural 4-10 word phrases — see the router's own "match_phrases"
-    field) is provided and non-empty, conditions 2/3 above (title/text
-    matching) switch from single-keyword word-boundary matching to
-    _text_matches_any_phrase() against these phrases instead — this is
-    what stops a single generic keyword like "agents" from matching a
-    post that only shares that one bare word with no other topical
-    overlap. `loose=True` lowers the phrase-match threshold (40% instead
-    of 70% of a phrase's meaningful words) — used ONLY by the tier-3
-    "closest match" fallback, never the normal/primary match path.
-    When `match_phrases` is empty/None (e.g. an older cached message
-    from before this feature, or a code path out of scope for it), this
-    gracefully falls back to the EXISTING _text_matches_keyword()-based
-    word-boundary check against `keywords`, completely unchanged, so
-    nothing breaks for those cases. Condition 1 (_signal_keyword_matches
-    against the signal's own search_keyword field) is UNTOUCHED either
-    way.
+    SIGNATURE (aside from the earlier, optional, default-None
+    `since_days` parameter), RETURN SHAPE, and every existing caller are
+    exactly as they were before — it has no idea whether `keywords` came
+    from Claude's router call or the old fuzzy-template fallback; it now
+    just uses them (plus match_phrases) to build the query text for its
+    own embedding instead.
 
     (SECOND-COLLECTION MERGE) `signals_collection_2`, default None: an
     optional second Mongo collection handle. When provided, its docs are
@@ -568,7 +696,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     docs — see the inline comments below at both call sites (the
     `unfiltered` branch's flintel.get_unfiltered_matched_signals() call,
     and the primary `raw_docs` fetch) for exactly how. Every matching
-    rule downstream (keyword match, phrase match, platform filter,
+    rule downstream (embedding-similarity match, platform filter,
     text-required check, dedup, per-platform cap, limit) is completely
     unchanged and applies identically to docs from either collection."""
     if unfiltered:
@@ -583,50 +711,43 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 
     limit = limit or MAX_MATCHED_RESULTS
     keyword_list = [k for k in (keywords or []) if k]
-    keyword_set = {k.strip().lower() for k in keyword_list}
-    if not keyword_set:
+    phrase_list = [p for p in (match_phrases or []) if p]
+    if not keyword_list and not phrase_list:
         return []
 
-    # (v7) Widen the Mongo query itself: previously this only ever
-    # filtered on the keyword field(s) with $in. Now it ALSO fetches any
-    # doc whose title/text field candidates contain one of our keywords
-    # as a case-insensitive substring (via a single combined regex per
-    # field), so documents that would only match via title/text (and
-    # never had a matching search_keyword field) are actually retrieved
-    # here in the first place, instead of being invisible to the query
-    # before the Python-side check below even gets a chance to run. This
-    # remains an intentionally LOOSE superset fetch — the real, tightened
-    # accept/reject decision happens in the Python loop below via
-    # _text_matches_keyword() (see BUGFIX PACK #2), so leaving this query
-    # loose never causes a false positive to slip through.
-    or_conditions = [{field: {"$in": keyword_list}} for field in _KEYWORD_FIELD_CANDIDATES]
-    escaped_keywords = [re.escape(k) for k in keyword_list if k]
-    if escaped_keywords:
-        combined_pattern = "|".join(escaped_keywords)
-        for field in _TITLE_FIELD_CANDIDATES + _TEXT_FIELD_CANDIDATES:
-            or_conditions.append({field: {"$regex": combined_pattern, "$options": "i"}})
-    mongo_query = {"$or": or_conditions}
+    # (EMBEDDING-BASED MATCHING CHANGE) Mongo query now carries NO
+    # keyword-based $or conditions at all — only the (unchanged)
+    # time-window cutoff, plus a new filter requiring a saved, non-null
+    # "embedding" field, so only documents the background service has
+    # already embedded are ever considered as candidates.
+    mongo_query = {"embedding": {"$ne": None}}
 
     # (TIME-WINDOW FEATURE) Compute an optional cutoff and AND it onto the
-    # existing $or clause via $and, so a time window narrows the keyword
-    # match instead of replacing it. since_days is sanity-clamped between
-    # 1 and MAX_TIME_WINDOW_DAYS — anything else (None, 0, negative,
-    # absurdly large) means "no time filter", handled the exact same way
-    # this function always behaved before this feature.
+    # embedding-existence clause via $and, so a time window narrows the
+    # embedding-similarity match instead of replacing it. since_days is
+    # sanity-clamped between 1 and MAX_TIME_WINDOW_DAYS — anything else
+    # (None, 0, negative, absurdly large) means "no time filter", handled
+    # the exact same way this function always behaved before this
+    # feature.
     cutoff = None
     if isinstance(since_days, int) and since_days > 0:
         clamped_days = min(since_days, MAX_TIME_WINDOW_DAYS)
         cutoff = datetime.now(timezone.utc) - timedelta(days=clamped_days)
         mongo_query = {"$and": [mongo_query, {"created_utc": {"$gte": cutoff}}]}
 
-    # Fetch a larger pool than `limit` since matches are now filtered
-    # further (per-platform caps below), same spirit as the old `limit *
-    # 5` headroom, just bumped up a bit since the query itself is now
-    # broader too.
+    # (EMBEDDING-BASED MATCHING CHANGE) Candidate pool size is now
+    # SIGNAL_EMBEDDING_CANDIDATE_POOL instead of `limit * 10` — still
+    # sorted by created_utc descending, so recent docs are preferred when
+    # the pool size itself has to be capped.
     raw_docs = list(
-        signals_collection.find(mongo_query, {"_id": 0})
+        signals_collection.find(mongo_query, {"_id": 0, "embedding": 1, **{
+            f: 1 for f in (
+                _TITLE_FIELD_CANDIDATES + _TEXT_FIELD_CANDIDATES +
+                _URL_FIELD_CANDIDATES + _PLATFORM_FIELD_CANDIDATES + ["created_utc"]
+            )
+        }})
         .sort("created_utc", -1)
-        .limit(limit * 10)
+        .limit(SIGNAL_EMBEDDING_CANDIDATE_POOL)
     )
 
     # (SECOND-COLLECTION MERGE) Same combine-pattern already used in
@@ -641,20 +762,31 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             raw_docs_2 = list(
                 signals_collection_2.find(mongo_query, {"_id": 0})
                 .sort("created_utc", -1)
-                .limit(limit * 10)
+                .limit(SIGNAL_EMBEDDING_CANDIDATE_POOL)
             )
             raw_docs.extend(raw_docs_2)
         except Exception as exc:
             log.warning(f"signals_collection_2 fetch failed (skipping second collection): {exc}")
 
-    matched = []
-    seen_urls = set()
-    platform_counts = {}  # (v7) per-platform running count for this call
+    # (EMBEDDING-BASED MATCHING CHANGE) Build the single query embedding
+    # for this call from keywords + match_phrases combined. Fail-safe:
+    # if no embedding can be generated at all, return [] — the same
+    # "no keywords -> no results" safety behavior this function already
+    # had, just triggered by a different failure mode.
+    query_text_parts = list(keyword_list)
+    if phrase_list:
+        query_text_parts.extend(phrase_list)
+    query_text = " ".join(query_text_parts).strip()
+    query_embedding = generate_query_embedding(query_text)
+    if not query_embedding:
+        return []
 
+    # (EMBEDDING-BASED MATCHING CHANGE) Score every candidate doc against
+    # the query embedding; anything below the threshold is not a match at
+    # all and is dropped here, before any of the existing downstream
+    # checks run.
+    scored_docs = []
     for doc in raw_docs:
-        title     = _first_present(doc, _TITLE_FIELD_CANDIDATES)
-        post_text = _first_present(doc, _TEXT_FIELD_CANDIDATES)
-
         # (TIME-WINDOW FEATURE) Defensive second check: if a cutoff is
         # active, make sure this doc's own created_utc actually satisfies
         # it too (guards against a doc with a missing/odd created_utc
@@ -670,46 +802,40 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             if doc_created < cutoff:
                 continue
 
-        # (v7) A signal matches if EITHER its search_keyword field matches
-        # (unchanged, exact match), OR the topic shows up genuinely in its
-        # own title, OR inside its own post_text.
-        # (PHRASE-MATCHING FEATURE) When match_phrases is available, the
-        # title/text check uses _text_matches_any_phrase() instead of the
-        # old single-keyword word-boundary check — a phrase carries
-        # several meaningful words, so a post sharing just one generic
-        # bare word with `keywords` (e.g. "agents") no longer counts as a
-        # match on its own. Falls back to the old keyword-based check
-        # when match_phrases is empty/None, unchanged from before.
-        if match_phrases:
-            title_or_text_match = (
-                _text_matches_any_phrase(title, match_phrases, loose=loose)
-                or _text_matches_any_phrase(post_text, match_phrases, loose=loose)
-            )
-        else:
-            title_or_text_match = (
-                _text_matches_keyword(title, keyword_set)
-                or _text_matches_keyword(post_text, keyword_set)
-            )
-        is_match = (
-            _signal_keyword_matches(doc, keyword_set)
-            or title_or_text_match
-        )
-        if not is_match:
+        similarity = _cosine_similarity(doc.get("embedding"), query_embedding)
+        if similarity < SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD:
             continue
+
+        scored_docs.append((similarity, doc))
+
+    # (EMBEDDING-BASED MATCHING CHANGE) Sort by similarity, highest
+    # first, BEFORE per-platform cap / overall limit are applied — so the
+    # best-matching posts are always kept when a cap trims the list.
+    scored_docs.sort(key=lambda pair: pair[0], reverse=True)
+
+    matched = []
+    seen_urls = set()
+    platform_counts = {}  # (v7) per-platform running count for this call
+
+    for _similarity, doc in scored_docs:
+        title     = _first_present(doc, _TITLE_FIELD_CANDIDATES)
+        post_text = _first_present(doc, _TEXT_FIELD_CANDIDATES)
+
         if not _signal_platform_matches(doc, targeting_platform):
             continue
 
         # (TEXT-REQUIRED AT PICK-TIME) post_text is mandatory — a doc
         # with no post_text is never counted as a match, even if it
-        # matched on title/keyword. This check has to live HERE, inside
-        # the matching loop, rather than later in build_claude_post_
-        # context() (logics.py's own Claude-context builder): doing it
-        # here means an evidence_required budget (e.g. 50) is always
-        # sized against text-guaranteed posts, and the timeout/Google-
-        # fallback "did we actually find anything" check (which looks at
-        # whether this function's own result is empty) is always judged
-        # against real, analyzable posts rather than title-only stubs
-        # that would silently get dropped downstream anyway.
+        # cleared the embedding-similarity threshold. This check has to
+        # live HERE, inside the matching loop, rather than later in
+        # build_claude_post_context() (logics.py's own Claude-context
+        # builder): doing it here means an evidence_required budget
+        # (e.g. 50) is always sized against text-guaranteed posts, and
+        # the timeout/Google-fallback "did we actually find anything"
+        # check (which looks at whether this function's own result is
+        # empty) is always judged against real, analyzable posts rather
+        # than title-only stubs that would silently get dropped
+        # downstream anyway.
         if not post_text:
             continue
 
