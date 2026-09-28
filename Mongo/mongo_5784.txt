@@ -1,0 +1,416 @@
+    "username": "mitsuphoria",
+    "title": "which is better?",
+    "text": "which is better?\n\nhi! i’m currently an ip16 user with the plans to shift back to android and my friend recommended google pixel but seeing the mixed reviews on reddit, i’m now confused :’))    i was initially contemplating between google pixel 10 pro (xl maybe) or google pixel 11 pro but now i’m stumped whether or not should i pursue google pixel at all :((   for context, i’m not particularly looking for a phone with all the great specs since what matters to me are the following: storage, screen size, camera, and price    i’m in desperate need of help, thank you for those who are willing to share their experiences🥹🫰       submitted by     /u/mitsuphoria     to     r/GooglePixel       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GooglePixel/comments/1wgqilg/which_is_better/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:43:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:44:15.693Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cd1f6508d45f3d2c954b"
+    },
+    "message_id": "reddit_t3_1wgqikw",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "WRX",
+    "username": "twine09",
+    "title": "Anyone know the part number to this wiring and harness? Or if I can buy it aftermarket?",
+    "text": "Anyone know the part number to this wiring and harness? Or if I can buy it aftermarket?\n\nI’ve got the subwoofer, just no wiring or harness. Does anyone know the Subaru OEM part number or if not, is a replacement sold by an aftermarket company? Thanks!       submitted by     /u/twine09     to     r/WRX       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WRX/comments/1wgqikw/anyone_know_the_part_number_to_this_wiring_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:43:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:44:15.895Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cd206508d45f3d2c954c"
+    },
+    "message_id": "reddit_t3_1wgqiku",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "SlabOS",
+    "username": "PieInternational3312",
+    "title": "Countertop inventory software compared: SlabOS vs. Stonify, Moraware, ActionFlow and Stone Profit Systems",
+    "text": "Countertop inventory software compared: SlabOS vs. Stonify, Moraware, ActionFlow and Stone Profit Systems\n\nA slab marked “available” means very little if nobody can find it, it’s damaged, or somebody already promised it to another job.   That’s the question behind this comparison:  how well does the software connect what’s physically in the yard with what the office is buying, promising and selling?    The full PDF includes 27 sources. Here are the findings that matter.    Follow one delivery through the shop    Consider an illustrative scenario: order eight slabs, receive six, find damage on one, reserve two for a quote, convert that quote into a job, cut the material and return a usable remnant.   Then discover that the inventory count disagrees with the yard.   Every vendor should be able to walk through that sequence and show what happened to the material, its availability and its cost.    SlabOS: the connection between the yard, office and crew is its strongest case    SlabOS’s  visual warehouse map  connects buildings, bays and racks to searchable slab records. A crew member can look for the material’s recorded physical location.   Those records include serial identification, lot/bundle, material, finish, thickness, dimensions, supplier, cost, photographs, condition information and job assignment.   The supplied implementation also supports:     Partial purchase-order receiving and individually identified stock.   Holds on specific slabs for quotes, conflict checks and transfer of commitments into jobs.   Native iOS crew workflows for receiving, photography, warehouse lookup and QR/barcode scanning.   Count and move sessions that distinguish missing, duplicate, unknown and changed items.   Separately identified remnants linked to their original slab.   Custom inventory labels and separate production-piece labels carrying drawings and job information.     That last part deserves attention. Identifying the original slab is only one stage. The cut pieces still need to reach the correct job with the correct information.   SlabOS documents  QR, barcode and RFID options . However, compatible RFID hardware and availability in the customer’s app need demonstration. The supplied Piece Labels interface is marked  Demo beta .   The limits matter too: a warehouse map depends on recorded movements. Source-level conflict checks do not prove that simultaneous-user behavior is flawless. Automatic irregular-remnant outline capture and complete receipt-to-remnant financial reconciliation remain unverified. The  Slabsmith bridge  is early access.    Stonify: substantial inventory and financial workflows    Stonify documents individual identification, supplier lots, bundles, dimensions, bins, transfers, damage photographs and landed costs. Its drawing workflow connects selected slabs to quote holds and deal allocations.  Inventory documentation .   Its release notes also address stock changing during an inventory audit and  damage credits affecting landed cost . Those are practical operating details.   Its  remnant-dimension synchronization  uses Horus or Slabsmith. Buyers should distinguish that integration from native functionality.    Moraware: evaluate the actual product combination    The relevant comparison is  Moraware Inventory with Systemize . CounterGo is the separate drawing and quoting product.   Moraware documents ordering, receiving, allocation, consumption and remnant creation. Releasing unused material restores availability while preserving the job’s unmet material requirement. That helps prevent an outstanding need from disappearing when an allocation changes.  Inventory workflow ,  release behavior .   Manual irregular-remnant records use dimensions, photographs and notes. Scanner integration requires compatible provider setup and a paid API user. Existing Systemize shops should evaluate that expansion before assuming replacement is necessary.    ActionFlow: production coordination and reporting    ActionFlow documents purchasing, allocations, remnant return and mobile barcode inventory checks. Its reports cover receiving, transfers, material usage, waste, adjustments, valuation and job costs.  Inventory features ,  reporting reference .   Inventory is included in Process; Performance adds multi-facility capability. Confirm the package, Windows application requirements and integrations against your actual setup.  Packages .    Stone Profit Systems: purchasing and accounting deserve serious attention    SPS has the strongest public purchasing-and-accounting documentation in this review. It describes partial deliveries, supplier paperwork, serialized material, freight costs, specific slab allocations, remnants and valuation.   One operational detail worth checking: allocating specific slabs affects availability, while invoicing removes them from current inventory. Make sure that timing matches how your business handles cutting and installation.  Receiving ,  allocation behavior .   Its Fabricator and Distributor offerings address different operating needs.    My takeaway    SlabOS belongs high on the demo list for fabrication shops trying to connect warehouse visibility, material commitments and crew activity.   Stonify deserves direct comparison for integrated inventory and finance. Moraware deserves attention from existing Systemize users. ActionFlow has a clear production/reporting case. SPS deserves particular attention when complex purchasing, distribution or accounting drives the decision.   Before buying, have two users request the same slab. Move material during a count. Record damage. Create a remnant. Reconcile the costs.    https://countertoptechreview.com/articles/countertop-software-inventory-comparison-2026        submitted by     /u/PieInternational3312     to     r/SlabOS       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SlabOS/comments/1wgqiku/countertop_inventory_software_compared_slabos_vs/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:43:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:44:16.095Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cd206508d45f3d2c954e"
+    },
+    "message_id": "reddit_t3_1wgqik1",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "reselling",
+    "username": "Ok_Appearance_7559",
+    "title": "I gave AI 40+ product photos and it turned them into 11 real eBay drafts. 10/11 needed no intervention.",
+    "text": "I gave AI 40+ product photos and it turned them into 11 real eBay drafts. 10/11 needed no intervention.\n\nListing inventory is probably one of the biggest time sinks in reselling, so I’ve been testing how much of it I can realistically hand off to AI.  Last night I finally ran a full batch instead of testing individual items.   40+ product photos → 11 different products → 11 actual drafts created in eBay Seller Hub.   After reviewing them,  10/11 were ready to move forward without intervention.   The other one stopped for manual review because the estimated shipping crossed a $50 threshold I set. It did save the otherwise completed draft for review in my eBay.  Nothing was automatically published. I’m deliberately keeping a human between “AI finished the listing” and “customer can buy it” while I figure out where this breaks.  The whole batch took about  38 minutes . That wasn’t all work time as described. It had to wait for approval on several things as I was not letting it do everything on its first try without permission.  What I’m trying to get as close as possible to is:   User take photos → A.I. identify/research → build listing → eBay draft → quick human review → publish   Obviously AI can’t source, inspect, photograph, store, pack or ship the physical inventory. But there’s a lot of repetitive work between those steps that I’m starting to think doesn’t need nearly as much human time.  I’m going to keep increasing the batch sizes and tracking where it screws up. Also plan to start automating cross listing in general, and give it a platform to do so from.   For people who actually resell: what part of creating a listing would you never trust AI to handle?        submitted by     /u/Ok_Appearance_7559     to     r/reselling       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/reselling/comments/1wgqik1/i_gave_ai_40_product_photos_and_it_turned_them/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:43:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:44:16.498Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cd216508d45f3d2c9551"
+    },
+    "message_id": "reddit_t3_1wgqijq",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "Piska92",
+    "title": "Curious Appetite and Garlic Butter Baked Oysters",
+    "text": "Curious Appetite and Garlic Butter Baked Oysters\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Piska92     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wgqijq/curious_appetite_and_garlic_butter_baked_oysters/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:43:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:44:17.090Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cd216508d45f3d2c9552"
+    },
+    "message_id": "reddit_t3_1wgqijb",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "BusinessPH",
+    "username": "Due-Employment-2696",
+    "title": "We’re Sponsoring Events & Businesses in Manila. NOT SELLING",
+    "text": "We’re Sponsoring Events & Businesses in Manila. NOT SELLING\n\nHi everyone!  We’re currently sponsoring events, businesses, and community activities  and are looking to connect with organizations that may be interested in partnering with us.   We can provide  stay vouchers, accommodation discounts, and special partnership perks  that can be used for:     Event giveaways & raffles   Community events   Corporate/team-building activities   Prizes & promotions   Business collaborations     Please DM if interested!        submitted by     /u/Due-Employment-2696     to     r/BusinessPH       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BusinessPH/comments/1wgqijb/were_sponsoring_events_businesses_in_manila_not/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:43:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:44:17.289Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cd216508d45f3d2c9553"
+    },
+    "message_id": "reddit_t3_1wgqija",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Logical-Valuable-956",
+    "title": "What was the best meal of your life and where did you eat it?",
+    "text": "What was the best meal of your life and where did you eat it?\n\nsubmitted by     /u/Logical-Valuable-956     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wgqija/what_was_the_best_meal_of_your_life_and_where_did/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:43:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:44:17.488Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cd216508d45f3d2c9554"
+    },
+    "message_id": "reddit_t3_1wgqiiw",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "VietNam",
+    "username": "myrd22",
+    "title": "How to get VAT refund in Vietnam when buying a laptop?",
+    "text": "How to get VAT refund in Vietnam when buying a laptop?\n\nHi all, I work in Cambodia and I plan to buy a laptop in Vietnam because it’s cheaper than Thailand. I want to buy Zenbook S14/16 or LG Gram which are not available in Cambodia. Anyone know the process of getting VAT refund in Vietnam?       submitted by     /u/myrd22     to     r/VietNam       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/VietNam/comments/1wgqiiw/how_to_get_vat_refund_in_vietnam_when_buying_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:43:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:44:17.688Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cd216508d45f3d2c9555"
+    },
+    "message_id": "reddit_t3_1wgqihz",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "eyenoahway1",
+    "title": "What is the best way to win over a woman?",
+    "text": "What is the best way to win over a woman?\n\nsubmitted by     /u/eyenoahway1     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wgqihz/what_is_the_best_way_to_win_over_a_woman/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:43:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:44:17.903Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cd226508d45f3d2c9556"
+    },
+    "message_id": "reddit_t3_1wgqih1",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "CriticalStateGlobal",
+    "username": "Dillonisom",
+    "title": "[Checkpoint Charlie] Hey I’m Dillon — Let In or Turn Away?",
+    "text": "[Checkpoint Charlie] Hey I’m Dillon — Let In or Turn Away?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Dillonisom     to     r/CriticalStateGlobal       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CriticalStateGlobal/comments/1wgqih1/checkpoint_charlie_hey_im_dillon_let_in_or_turn/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:43:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:44:18.113Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cd226508d45f3d2c9557"
+    },
+    "message_id": "reddit_t3_1wgqigs",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "privatehealthcoveruk",
+    "username": "wecovr",
+    "title": "International PMI Allianz vs Cigna Compared",
+    "text": "International PMI Allianz vs Cigna Compared\n\nHi all,   I've seen a few questions pop up here about health cover for moving or working abroad, so I thought it might be useful to share a summary of the key differences between standard UK PMI and International Private Medical Insurance (IPMI).   The main thing to understand is that IPMI is specifically designed for people living outside their home country for extended periods (usually 6+ months). It's not the same as a travel insurance policy or a domestic UK plan.   Some of the core features that set IPMI apart from a typical UK policy are:      Global or Regional Coverage:  You're covered for treatment in a wide geographical area, not just within the UK.    Medical Evacuation:  This is a crucial one. It covers the cost of transporting you to the nearest suitable medical facility, or even back home, if local care is inadequate.    24/7 Multilingual Support:  Essential for when you need assistance in a different country and time zone.    Direct Billing Networks:  Insurers have agreements with hospitals worldwide to settle bills directly, so you're not left with a massive out-of-pocket expense.     A critical point that applies to both UK and international PMI is how they treat existing health issues. These policies are almost always designed to cover acute conditions (like a broken bone or appendicitis) that arise  after  your policy starts. They will not typically cover pre-existing conditions or the ongoing management of chronic conditions like diabetes or asthma. Getting this wrong can be a very costly mistake.   These plans are generally for anyone spending significant time overseas, such as expats, digital nomads, international students, or businesses with a global workforce.   Full disclosure: these insights are from a guide I work on that compares two of the major providers in this space, Allianz and Cigna.   This got me thinking: For those here who've made the switch from a UK plan to an international one, what was the biggest surprise or challenge you faced with the underwriting or claims process?    https://wecovr.com/guides/international-pmi-allianz-vs-cigna-compared?utm_source=reddit&utm_medium=social&utm_campaign=rd-community        submitted by     /u/wecovr     to     r/privatehealthcoveruk       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/privatehealthcoveruk/comments/1wgqigs/international_pmi_allianz_vs_cigna_compared/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:43:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:44:18.313Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cd5b6508d45f3d2c9559"
+    },
+    "message_id": "reddit_t3_1wgqjcm",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "3dshomebrew",
+    "username": "Narwhalsaman44",
+    "title": "Help with altering personal mii gender on o3ds (homebrewed)",
+    "text": "Help with altering personal mii gender on o3ds (homebrewed)\n\nHi everyone, looking for help with dumping extdata through homebrew launcher. I’ve been referring to this post :  https://www.reddit.com/r/3dshacks/s/SUKaeTTwIE    I want to alter the gender of my personal mii using the information from that post, but when I go to dump extdata in the config of the extdata dump tool it says “could not open archive”.    any ideas on how to fix this and be able to make these changes? I have been desperately trying to change this data without having to reformat the entire system. I have homebrew installed and this is the first real hang up I have had. Much thanks to anyone who can assist!        submitted by     /u/Narwhalsaman44     to     r/3dshomebrew       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/3dshomebrew/comments/1wgqjcm/help_with_altering_personal_mii_gender_on_o3ds/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:45:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:45:15.253Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cd5b6508d45f3d2c955a"
+    },
+    "message_id": "reddit_t3_1wgqjaq",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "LastWarMG_Buy_Sell",
+    "username": "Slow_War4813",
+    "title": "Server 1061 - 1188",
+    "text": "Server 1061 - 1188\n\nMy name is Penguin,  Mod told me to repost my account so here I go again to reposting it I do have a ton of verified - legit sales look me up on discord or what not if needed everyone knows me gone1_today   Server range 1061 - 1188   Total hero power 490m   Individual power 600m +   Missile - 118.24m  Air - 107.52m  Tank - 107.55m  Mixed - 95.55m   VIP 18 Base already designed   If wanna see base dm me   Serious buyers only don’t waste my time   60 - 50k dm me if interested       submitted by     /u/Slow_War4813     to     r/LastWarMG_Buy_Sell       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LastWarMG_Buy_Sell/comments/1wgqjaq/server_1061_1188/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:44:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:45:15.474Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cd5b6508d45f3d2c955b"
+    },
+    "message_id": "reddit_t3_1wgqjad",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "Jujutsufolk",
+    "username": "watchrrr",
+    "title": "\"If Sukuna didn't have the ten shadows-\" Is the media illiterate defence of Gojo",
+    "text": "\"If Sukuna didn't have the ten shadows-\" Is the media illiterate defence of Gojo\n\nTL;DR: Sukuna planned to obtain the ten shadows for months, and its unfair to discuss the fight without both of them at their then-current power, including their life experiences.    What is a technique?  Its usually an engraved, supernatural ability in a sorcerer's body/soul, gained at birth. With few exceptions, this is not something you chose, however depending on certain clans, you might wind up with a specific technique.    Why does $ukuna get the ten(10) shadows?  After witnessing how intriguing it is, he spends several months planning to take over Megumi's body, so he can get the upper hand on the new jujutsu world.    Now tell me, what did Gojo ever do to get his technique?   Not: \"how did he justify being the honoured one after birth?\" or \"did he deserve the CT?\".  If the discussion of Gojo SHOULD have won, comes down to their innate technique and not how they chose to live their life, you might as well make the point that its unfair that Gojo trained his limitless.   This is a core issue with power scaling discussions, it takes into consideration some life experiences for the sake of being a puritan, but excludes others because they're too vital or life-altering.  What about Gojo's near death experience where he learned RCT, do we just exclude that from the conversation because its too major of a life experience?   $ukuna made a gamble and won with a full house of 10 shadows, and I will never wanna hear \"well if he didn't have it\", well he did. Thats why $ukuna is the fucking goat.       submitted by     /u/watchrrr     to     r/Jujutsufolk       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Jujutsufolk/comments/1wgqjad/if_sukuna_didnt_have_the_ten_shadows_is_the_media/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:44:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:45:15.688Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cd5b6508d45f3d2c955c"
+    },
+    "message_id": "reddit_t3_1wgqja1",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "millennialandlost",
+    "title": "We always joke about never using high school math in real life, but what’s one random thing you learned back then that you still think about today?",
+    "text": "We always joke about never using high school math in real life, but what’s one random thing you learned back then that you still think about today?\n\nsubmitted by     /u/millennialandlost     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wgqja1/we_always_joke_about_never_using_high_school_math/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:44:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:45:15.899Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cd5c6508d45f3d2c955d"
+    },
+    "message_id": "reddit_t3_1wgqj9p",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FitTheWord",
+    "username": "Alarmed_Coat7972",
+    "title": "🟨 Unscramble This 5-Letter Word (by u/Alarmed_Coat7972)",
+    "text": "🟨 Unscramble This 5-Letter Word (by u/Alarmed_Coat7972)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Alarmed_Coat7972     to     r/FitTheWord       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FitTheWord/comments/1wgqj9p/unscramble_this_5letter_word_by_ualarmed_coat7972/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:44:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:45:16.112Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cd5c6508d45f3d2c955e"
+    },
+    "message_id": "reddit_t3_1wgqj9m",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "elgato",
+    "username": "Alone-Travel4843",
+    "title": "I built DeckBridge for DaVinci Resolve: live playback and Fairlight controls on Stream Deck",
+    "text": "I built DeckBridge for DaVinci Resolve: live playback and Fairlight controls on Stream Deck\n\nIf you already use a Stream Deck with DaVinci Resolve, I built DeckBridge to give it live feedback from Resolve.   Keys show playback state, follow your active keyboard shortcuts, and change with Resolve's pages. On a Stream Deck with dials, you can also see timecode and control Fairlight track levels, mute and solo.   It works with Resolve Free and Studio on macOS and Windows 11, with starting profiles for the supported Stream Deck models.   It's a paid plugin, released on the Elgato Marketplace on September 11. I'm looking for the first editor to try it and tell me where the setup or everyday controls need work.    DeckBridge on Elgato Marketplace    Which Stream Deck model do you use, and which Resolve control would you most want on it? I can check whether it's supported before you buy.       submitted by     /u/Alone-Travel4843     to     r/elgato       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/elgato/comments/1wgqj9m/i_built_deckbridge_for_davinci_resolve_live/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:44:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:45:16.323Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cd5c6508d45f3d2c9560"
+    },
+    "message_id": "reddit_t3_1wgqj9i",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "Naruto",
+    "username": "Triple-Star-Hunter",
+    "title": "Come up with some (non overpowered) major clans for the hidden villages of the other four great nations",
+    "text": "Come up with some (non overpowered) major clans for the hidden villages of the other four great nations\n\nKonoha has a disproportionate number of named clans in the series due to their relevance to the story and its one of the many things that irked me about the series despite how much I like it   I've been trying to brainstorm some clans for them and im wondering if you guys have any ideas too?   Try to link them to their village in some capacity if possible   Also dont make them monsterously overpowered. We dont need an Uchiha/Senju adjacent level clan in every nation    Im thinking something like the Akimichi or Aburame clans, strong enough to produce many high level shinobi for their village and have their own powerful gereditary techniques. But nothing Sharingan level.       submitted by     /u/Triple-Star-Hunter     to     r/Naruto       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Naruto/comments/1wgqj9i/come_up_with_some_non_overpowered_major_clans_for/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:44:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:45:16.743Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cd5c6508d45f3d2c9561"
+    },
+    "message_id": "reddit_t3_1wgqj93",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SurveyZone",
+    "username": "Euphoric-Ebb5019",
+    "title": "Short survey on everyday wellbeing, routines & supplements — adults 18+, any country",
+    "text": "Short survey on everyday wellbeing, routines & supplements — adults 18+, any country\n\nHi everyone — I’m running a short consumer survey as part of early-stage market research into everyday wellbeing, daily routines, vitamins and supplements.   It takes about  5–7 minutes , and you don’t need to use supplements regularly to take part.  It’s open to  adults aged 18+ from any country .    Nothing is being sold, and I’m especially interested in honest and critical responses — including if supplements aren’t really part of your routine.    Take the survey here:     https://docs.google.com/forms/d/e/1FAIpQLSe7T\\_iCKMQlXELgYV\\_EAL-ZWNdPKMN-LdI7u11j58V9305GUg/viewform?usp=pp\\_url&entry.937028664=Reddit+%E2%80%94+r/SampleSize     Thanks very much for taking part!       submitted by     /u/Euphoric-Ebb5019     to     r/SurveyZone       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SurveyZone/comments/1wgqj93/short_survey_on_everyday_wellbeing_routines/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:44:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:45:16.959Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cd5d6508d45f3d2c9562"
+    },
+    "message_id": "reddit_t3_1wgqj90",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",

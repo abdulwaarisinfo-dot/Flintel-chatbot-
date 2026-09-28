@@ -1,0 +1,416 @@
+  },
+  {
+    "_id": {
+      "$oid": "6aa888016508d45f3d2c7f47"
+    },
+    "message_id": "reddit_t3_1wgk51y",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ArknightsEndfield",
+    "username": "KynzBlakx",
+    "title": "Taking a break from the game",
+    "text": "Taking a break from the game\n\nAfter finishing the main story up to the latest release and playing through the stories of the new characters—except for Typhoeus, which I didn't finish—I just felt burned out. On top of that, the constant pressure to buy the battle pass so I don't miss out on new characters, having to log in every single day, and spending hours grinding materials just to keep my account relevant has completely killed my motivation to keep playing.   It sucks knowing that stepping away means falling behind and likely missing out on upcoming characters, but feeling like I  have  to log in every day without fail makes me even less interested in playing.   I started playing—and stuck with it—because I genuinely loved the story and wanted to see how it unfolds from here. Still, I’m taking a break, even if it means missing a few banners, just to see if I actually miss the game and get that spark back.       submitted by     /u/KynzBlakx     to     r/ArknightsEndfield       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ArknightsEndfield/comments/1wgk51y/taking_a_break_from_the_game/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T23:48:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T23:49:21.520Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa888016508d45f3d2c7f48"
+    },
+    "message_id": "reddit_t3_1wgk51l",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "domainflipping",
+    "username": "Imsdreamin",
+    "title": "Gameforums.org",
+    "text": "Gameforums.org\n\nIm selling gameforums.org registered on ultahost im not looking for much im willing to let it go for $75 right now.       submitted by     /u/Imsdreamin     to     r/domainflipping       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/domainflipping/comments/1wgk51l/gameforumsorg/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T23:48:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T23:49:21.720Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa888016508d45f3d2c7f49"
+    },
+    "message_id": "reddit_t3_1wgk51i",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "ClaudeWorkflows",
+    "username": "ClaudeAI-mod-bot",
+    "title": "[Workflow] Phased Development Workflow: Separating Deep Thinking from Execution with Claude Code and AI Badger Handoff",
+    "text": "[Workflow] Phased Development Workflow: Separating Deep Thinking from Execution with Claude Code and AI Badger Handoff\n\nPhased Development Workflow: Separating Deep Thinking from Execution with Claude Code and AI Badger Handoff    Workflow value:  75/100   Status:  active ·  Freshness:  70/100 ·  Confidence:  0.90 ·  Level:  intermediate   Categories:  Quality Control, Token Saving, Context & Memory, Debugging, Skills, Multi-Agent   Original source:   r/ClaudeCode post/comment    What problem this solves   Optimizing the use of Claude Code and web-based LLMs (like Claude Pro, ChatGPT) by separating 'deep thinking' tasks from 'execution/editing' tasks, and efficiently transferring context between these environments, especially for larger projects.   Summary   This workflow proposes separating 'deep thinking' tasks (architecture, planning, difficult debugging, independent review) to a web chat interface, while 'editing and execution' tasks (repo execution, tests, fixes) are handled by Claude Code. It leverages AI Badger for carrying focused repo context to the web chat and its 'handoff' skill to transfer sessions between Claude Code and browser chats. A phased loop is suggested for larger work, while small tasks are handled entirely by Claude Code.   Why it is useful   This workflow is valuable because it provides a concrete, actionable strategy for optimizing LLM usage by leveraging the strengths of different interfaces (IDE-integrated Claude Code for execution, web chat for deep thinking). It introduces a specific tool (AI Badger) and its 'handoff' skill to solve the common problem of context transfer between sessions and models, making complex projects more manageable and efficient.   Workflow     For larger work, initiate design and review in a web chat environment.   Use AI Badger to carry focused repository context into the web chat for deep thinking tasks.   Develop a compact, phased plan based on the design and review.   Execute each phase of the plan using Claude Code for edits, tests, and fixes.   Inspect the diff of changes made by Claude Code.   Review the executed phase and its changes.   Proceed to the next phase of the plan.   If a Claude Code session becomes too large or needs to be continued in a browser, install AI Badger skills.   Use Badger's  handoff  skill to transfer the current Claude Code session context to a browser chat (Claude, ChatGPT, or another model).   For small tasks, allow Claude Code to handle the entire process end-to-end.     Tools / artifacts     Claude Code   Web chat (e.g., Claude Pro, ChatGPT)   AI Badger (GitHub: PVRLabs/aibadger)   Badger's  handoff  skill   Repository context   Diffs     Validation signals     User states 'I ended up with a slightly different approach' implying personal experimentation and refinement.   User describes the  handoff  skill as 'useful', indicating practical application.     Limitations     Low community validation (score 1, 0 comments).   Relies on an external tool (AI Badger) which requires separate installation and management.   The step 'compact phased plan' could benefit from more detail on how to effectively create such a plan.     Rate this workflow   Upvote this post if the workflow is useful, reproducible, or worth recommending.   Downvote if it is vague, outdated, unsafe, overhyped, or not reproducible.   Reply if it worked for you, failed, is outdated, or has a better alternative.      This post was generated automatically from the workflow library database.        submitted by     /u/ClaudeAI-mod-bot     to     r/ClaudeWorkflows       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeWorkflows/comments/1wgk51i/workflow_phased_development_workflow_separating/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T23:48:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T23:49:21.921Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa888026508d45f3d2c7f4d"
+    },
+    "message_id": "reddit_t3_1wgk51e",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "apify",
+    "username": "Historical-Cat-8595",
+    "title": "I built an Apify Actor for Amazon product details (title, BSR, variants)",
+    "text": "I built an Apify Actor for Amazon product details (title, BSR, variants)\n\nDay 2 of a small Amazon data portfolio on Apify.   Amazon Product Details Agent turns ASINs or /dp URLs into structured JSON: title, brand, images, rating, review count, BSR, availability, prices, variants.   amazon.com / co.uk / de. Unblocker by default. $0.02 per successful check. Failures are not billed.    https://apify.com/buzzidata/amazon-product-details-agent    Sibling Buy Box + Offers Actor is live if you need the winner and landed cost too. Feedback welcome.       submitted by     /u/Historical-Cat-8595     to     r/apify       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/apify/comments/1wgk51e/i_built_an_apify_actor_for_amazon_product_details/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T23:48:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T23:49:22.703Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa888297ad037cc2be30411"
+    },
+    "message_id": "reddit_serp_1ghkjr0",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/sysadmin/comments/1ghkjr0/have_you_ever_automated_all_your_tasks_so_you_can/",
+    "text": "Have you ever automated all your tasks so you can do a days work in minutes?\n\nand then basically have to look busy in order to keep your job?       submitted by     /u/Future_End_4089       [link]       [comments]",
+    "username": "Future_End_4089",
+    "subreddit_or_channel": "sysadmin",
+    "posted_at": "2024-11-02T00:41:57+00:00",
+    "fetched_at": {
+      "$date": "2026-09-14T23:50:01.462Z"
+    },
+    "google_rank": 7,
+    "search_keyword": "im seeling an ai agents assistant so whos bsuiness want ai agent and see problems as an bsuiness owner tell me about and fetch peoples i can sales for it",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-14T23:50:01.462Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa888396508d45f3d2c7f4e"
+    },
+    "message_id": "reddit_t3_1wgk5zx",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PeriodontalDisease",
+    "username": "Born_Cranberry_1371",
+    "title": "Gum Graft Experience",
+    "text": "Gum Graft Experience\n\nHi everyone!    I used this subreddit throughout my gum graft journey and wanted to give back in case it helps anyone else.    I’ll start by saying I’m 32F and my dental history including fillings as well as a root canal/crown placement. My dentist referred me for a gum graft due to recession on my bottom four teeth in the front. She said it was not due to over brushing but rather due to my tooth shape and the fact that I had braces. Notably, I am rather overstimulated by certain textures (sunscreen on my face, jewelry around my neck, etc) so I should have foreseen that this may have been a trying time.   My procedure was on a Wednesday and I have the graft taken from the top of my palate and placed across my four lower teeth. Luckily, I was off work until the following Monday, and my speaking was therefore able to be totally a minimum. For me, there was rarely any pain at the graft site (on my lower teeth). However, the liquid bandage/putty that was placed there to protect that site made me want to constantly gag, and was so stimulating at times that I wanted to rip it all out. This did gradually improve, and by Monday when I went back to work, I had mostly gotten used to ignoring the site. I did sleep on my back and at an angle to help with swelling, and I did prescribed salt rinses as well.    The palate was also disgusting, as my tongue could feel the collagen/glue matrix that was there to protect it. I’m not sure how much of the lack of pain early on was from residual numbness, but my palate did not truly bother me until perhaps day 6, peaking from days 9-12 and finally resolving around day 14. I was very lucky that my work accommodated me minimizing speech, as it was excruciating to string together more than a few sentences (due to my tongue touching my palate when I enunciated.)    Due to my personal issues with the textures in my mouth, I was on a full liquid diet for 14 days straight. I simply couldn’t stomach anything else. Any soft foods would immediately spread across my palate despite my best efforts, and it was not worth it to me. I was not provided a guard for the palate. I’m not advocating for doing what I did and simply riding it out, as by the end of the two weeks I was malnourished, dehydrated, and weak, and had lost a full 10 pounds.    I could not tolerate warm or cold liquids, and found Fair Life chocolate protein shakes to be a lifesaver.    Also a warning, due to the dehydration, I ended up constipated which was one of the worst experiences of my life. Do not recommend.    All in all, if I had foreseen the issues that I’d have with the textures, I might have been more mentally prepared. I would say that the pain of the palate coming over a week into the recovery process surprised me, and was downplayed by my perio before the procedure. The graft site is healing well and really never gave me any issues.        submitted by     /u/Born_Cranberry_1371     to     r/PeriodontalDisease       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PeriodontalDisease/comments/1wgk5zx/gum_graft_experience/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T23:50:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T23:50:17.655Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa888396508d45f3d2c7f4f"
+    },
+    "message_id": "reddit_t3_1wgk5zb",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "pennystocks",
+    "username": "fuckscerf",
+    "title": "$POCI, a $50M Company Quietly Supplying Satellite Laser Networks, Defense Infrastructure, and the Optics of Modern Directed Energy Warfare (update)",
+    "text": "$POCI, a $50M Company Quietly Supplying Satellite Laser Networks, Defense Infrastructure, and the Optics of Modern Directed Energy Warfare (update)\n\nSome of you may remember this post from one month ago     https://www.reddit.com/r/pennystocks/s/Ckwi36Wkwh    We are still now 47m market cap, but heres some positive updates since writing    - $POCI hired Peter Thier as Senior Vice President of Sales and Marketing specifically to accelerate outreach across medical, defense, and aerospace.    -Same day, they presented at the Lytham Partners summit and said growth is now shifting from infrastructure build-out to production scale.   - Announced $1.3 million in follow-on production orders from a large U.S. defense contractor for highly complex optical assemblies.    -Management said the program has the potential to remain in production for at least the next ten years and that they expect to negotiate a long-term manufacturing agreement with a structured order framework so production becomes more continuous instead of stop-start.   - Posting multiple open manufacturing and engineering roles and expanding facilities in Massachusetts and Maine.   Q4 FY26 results are September 28       submitted by     /u/fuckscerf     to     r/pennystocks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pennystocks/comments/1wgk5zb/poci_a_50m_company_quietly_supplying_satellite/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T23:50:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T23:50:17.857Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8883a6508d45f3d2c7f51"
+    },
+    "message_id": "reddit_t3_1wgk5yr",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "sentiment",
+    "platform": "reddit",
+    "subreddit": "LADS_OG",
+    "username": "Loud_Recognition3532",
+    "title": "Some tea about canceled collabs due to ♻️",
+    "text": "Some tea about canceled collabs due to ♻️\n\nFirst of all, I want to say right away that I can’t guarantee this is 100% true and unfortunately I don’t understand Chinese well enough to fully understand everything. This news is already pretty old but I just saw it now, maybe someone else will find it interesting too.   But judging by the text, we were supposed to get a collaboration with Flower Knows as well as with other major Chinese brands but PPG ruined everything by announcing that annihilation. According to reports the brands that had planned collaborations with LADS completely destroyed everything which led to massive losses.   We were expecting more than 10 collaborations for August but many of them were canceled because of ♻️. I can’t believe we might have gotten to see a Flower Knows collaboration, it’s my favorite makeup brand and now I’m devastated.    Full article (Google Translate):     Store clerk claims Love and Deep Space related products have been urgently cancelled, and the 803 collaboration has been completely cancelled. Papergames' \"Love and Deep Space\" is facing a triple crisis: its storyline touches on national pain, gender controversies, and inappropriate responses. This has led to the complete cancellation of the planned 803 collaboration, resulting in a loss of over 1.23 million followers across all platforms within a week, and its Apple App Store rating plummeting to 1.8.    This crisis began on June 22nd with the controversy surrounding the \"sudden appearance\" of a new character. The official team suddenly released a new male lead, \"Ao Yin,\" despite customer service having previously stated that \"there are currently no plans to add a new romanceable male lead,\" and the main storyline of older characters had been interrupted for over 500 days. This double standard in management caused a collapse in player trust. On June 29th, players discovered that the human experimentation file in the new storyline was numbered \"A-0731,\" directly linked to the crimes of Unit 731 of the Imperial Japanese Army during the invasion of China. Simultaneously, the tagline \"Don't bathe in the pot\" was interpreted as alluding to female safety incidents, further fueling player anger.    Faced with public pressure, the official Love and Deep Space team initially accused players of \"malicious misinterpretation\" through customer service. Their subsequent apology avoided the core issue, offering only a 20-draw compensation as a perfunctory measure. This ultimately led to the emergency severing of ties with over ten partner brands. Brands like Jasmine Milk White removed all co-branded materials overnight, and all eight brand collaborations scheduled for August 3rd were terminated.      The core reason for the complete halt of the Love and Deep Space August 3rd collaborations is that the trust-based economic foundation of otome games has been completely destroyed. The core value of collaborations—player emotional identification and purchasing power—has vanished. As of June 30th, the game lost over 1.23 million followers across all platforms in a week, its Huawei App Store rating plummeted to a mere 1.2, players collectively announced they would stop spending money and quit the game, and the official Weibo account was flooded with 240,000 negative comments, completely destroying the core traffic foundation of the collaboration.      From the perspective of the collaborating brands, the essence of collaboration is the mutual empowerment of traffic and brand image. Jasmine Milk White's June collaboration once set a record of over 3,000 orders in a single day, but after the July 31st controversy, the brand urgently removed all collaborative materials and even deleted related content from its official account. A manager of a chain restaurant brand stated, \"We choose to collaborate with IPs to acquire targeted traffic, but if the IP itself causes public outrage, it will only backfire on the brand image. We absolutely cannot take this risk.\"     According to incomplete statistics, the collaboration originally scheduled for August 3rd involved eight brands across five categories, including catering, retail, and cosmetics. Three brands have already issued statements terminating the collaboration, while the remaining five are in a wait-and-see mode. A public relations director for a cosmetics brand revealed: \"We've already produced collaboration materials worth 2 million yuan, but now we have to destroy them. We'll bear all the losses. Nobody expected such a serious crisis of values ​​to erupt.\"      The trust crisis surrounding \"Love and Deep Space\" is not caused by a single incident, but rather by a combination of three factors: controversy over national trauma, gender security anxieties, and arrogant responses. Each layer precisely hits the core sensitivities of otome game players. First, the \"731\" controversy touched an absolute red line of national sentiment. Although the official explanation afterwards characterized the issue as \"meaningless placeholder information\" and admitted \"insufficient sensitivity on the part of the production team,\" customer service's previous accusations of \"malicious misinterpretation\" led players to believe it was a \"post-hoc attempt to shift blame\" rather than a sincere apology.      Secondly, there was the safety anxiety stemming from gender controversies. The promotional video for the new male protagonist, Ao Yin, released around the same time, featured the line \"What's wrong with letting a wolf into the house?\" paired with a scene of him breaking into a woman's home late at night, which was criticized as \"romanticizing transgressions\" and \"disregarding women's safety.\" Furthermore, the \"Don't bathe in the pot\" message in the kitchen gameplay was interpreted as alluding to a wife-murder case; the official explanation was that it was \"a 'rule-based fantasy' style\" before being removed. Experts pointed out: \"The core of otome games is to create a romantic fantasy for women, but this fantasy must be built on the foundation of respecting women's rights and safety.\"    Finally, the official arrogant response completely ignited player anger. In the early stages of the controversy, customer service accused players of \"malicious misinterpretation\" and \"spreading rumors\" through private messages and comments, shifting the focus of the conflict to the players; however, the official announcement released on June 28th defined the problem as \"failing to fully meet expectations,\" avoiding core issues such as the main storyline's interruption and the sudden introduction of a new character, offering only 20 wish tickets as compensation. This approach made players feel that the brand completely disregarded their emotions, ultimately triggering a collective boycott.      During the crisis of Love and Deep Space, the emergency withdrawal of brands like Jasmine Milk White provided a model for IP collaboration risk prevention in the industry. However, this \"overnight withdrawal\" also exposed the brand's risk management loopholes in IP cooperation. In terms of brand response speed, Jasmine Milk White removed all offline collaboration materials and deleted related content from its official account within 12 hours of the 731 controversy erupting, effectively minimizing brand reputational damage. However, in the long run, this    \"emergency withdrawal\" also rendered the brand's initial investment in collaboration promotions futile.    Source:  https://news.china.com/socialgd/10000169/20260701/49580979_2.html        submitted by     /u/Loud_Recognition3532     to     r/LADS_OG       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LADS_OG/comments/1wgk5yr/some_tea_about_canceled_collabs_due_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T23:50:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T23:50:18.255Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8883a6508d45f3d2c7f53"
+    },
+    "message_id": "reddit_t3_1wgk5yo",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Reasonable_Mix_5667",
+    "title": "Who would like to sext (m looking for f)?",
+    "text": "Who would like to sext (m looking for f)?\n\nsubmitted by     /u/Reasonable_Mix_5667     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wgk5yo/who_would_like_to_sext_m_looking_for_f/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T23:50:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T23:50:18.650Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8883a6508d45f3d2c7f54"
+    },
+    "message_id": "reddit_t3_1wgk5yj",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AlignmentChartFills",
+    "username": "Various_Reward_727",
+    "title": "Beppi the clown won! Indie characters chart day 45: who's the most forgettable Isaac character?",
+    "text": "Beppi the clown won! Indie characters chart day 45: who's the most forgettable Isaac character?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Various_Reward_727     to     r/AlignmentChartFills       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlignmentChartFills/comments/1wgk5yj/beppi_the_clown_won_indie_characters_chart_day_45/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T23:50:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T23:50:18.846Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8883b6508d45f3d2c7f55"
+    },
+    "message_id": "reddit_t3_1wgk5y2",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "Psiconautas",
+    "username": "Prize-Whole-5339",
+    "title": "Shaman 315ug Hermeticum e Abacaxi 300ug Double Face.",
+    "text": "Shaman 315ug Hermeticum e Abacaxi 300ug Double Face.\n\nMe considero feito, e aposentado em relação a investimento nós psicodélico em geral.   Abacaxi 300ug linha Swiss Bliss (paulera, meio e já e pra entortar e encharcar de visuais)   Shaman 315ug Hermeticum (não cheguei a provar esse mais vou logo meter um inteiro numa programação de trip) peguei numa promoção que o preço estava bem a acessível em relação a dose anunciada, mesmo q não corresponda dose reais.    Fora que também tenho o DMT KKKKKKKKK tem que ser muito noia \"hippie\" pra gostar de alucinógenos que nem eu mesmo, mais também prezo e respeito pela certa cultura e a experiências profundas ou filosóficas no gerais, mantenho um uso bem espaçado (na minha concepção kkkk)       submitted by     /u/Prize-Whole-5339     to     r/Psiconautas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Psiconautas/comments/1wgk5y2/shaman_315ug_hermeticum_e_abacaxi_300ug_double/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T23:50:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T23:50:19.045Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8883b6508d45f3d2c7f56"
+    },
+    "message_id": "reddit_t3_1wgk5y1",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "LegalAdviceUK",
+    "username": "Gullible-Peak-5789",
+    "title": "A tenant has moved in 4 other adults to the property who aren't on the tenancy agreement. They have refused and ignored my requests for a right to rent check. What do I do now?",
+    "text": "A tenant has moved in 4 other adults to the property who aren't on the tenancy agreement. They have refused and ignored my requests for a right to rent check. What do I do now?\n\nTenant \"Mr A.\" signed their rental agreement on the 12th June 2026.   On 1st July I went over to drop off a spare set of keys at the tenant's request. When I was there I noticed a lot of other adults in the property with suitcases.   I did an unscheduled visit on the 18th August and noted that there were 4 other adults living in the property. I don't know if they were the same people, but I'm 70% confident they were.   Mr A. has initially told me that they're family.   I've asked for right to rent checks for these individuals.   Mr A. has refused to comply with my request, first of all by putting it off, and secondly by sending the following message:     These are temporary house guests and therefore exempt from the statutory requirements of the Right to Rent Scheme 2014.  The scheme applies to adults occupying under a residential tenancy as their only or main home.  Official Home Office guidance says friends or family staying as house guests are not ordinarily treated as occupiers, because a guest is not using the property as their only or main home.  Therefore there is no new “authorisation to occupy” and no new Right to Rent check is required.     He has refused to supply evidence proving that they are short term tenants, or provide any kind of date as to when they will be returning to their own homes.   I believe he may be using ChatGPT to reply to me as he's sending a lot of legalese stuff about these tenants.   What do I need to do next as a landlord to keep my bases covered?   I don't mind if he wants to have 4 people with him. What do I do care about is falling afoul of the law and my insurance.   He can have them there as long as it's all above board.       submitted by     /u/Gullible-Peak-5789     to     r/LegalAdviceUK       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LegalAdviceUK/comments/1wgk5y1/a_tenant_has_moved_in_4_other_adults_to_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T23:50:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T23:50:19.244Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8883b6508d45f3d2c7f59"
+    },
+    "message_id": "reddit_t3_1wgk5xu",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MarketFluxHub",
+    "username": "MarketFlux",
+    "title": "S&P 500 Falls as AI Slowdown Calls and a US-Iran Deal Rattle Markets",
+    "text": "S&P 500 Falls as AI Slowdown Calls and a US-Iran Deal Rattle Markets\n\nU.S. stocks declined on Monday, September 14, with the S&P 500 finishing down 0.5% and the Nasdaq Composite falling 0.6%, as two major forces hit investor sentiment simultaneously: calls from top AI executives for a global slowdown in artificial-intelligence development, and a sharp drop in oil prices after the United States and Iran announced an agreement to end hostilities and reopen the Strait of Hormuz.   Anthropics CEO Dario Amodei published an essay urging AI labs to slow the pace of model capability gains, citing risks from AI self-improvement and recent safety incidents. OpenAI CEO Sam Altman and xAI's Elon Musk quickly backed the proposal, as did Hugging Face CEO Clement Delangue. The coordinated call alarmed investors who had priced in sustained, aggressive AI infrastructure spending, dragging chipmakers and AI-dependent stocks lower. Micron Technology fell approximately 5.9% to $918.36, with analysts noting the company carries a roughly $50 billion quarterly revenue target that leaves little margin for any pullback in AI investment. GE Vernova sank 8.6%, compounding an earlier 4.8% pre-market drop after GLJ Research initiated coverage with a Sell rating and a $470 price target, a stark contrast to the broadly positive analyst consensus on the stock.   The US-Iran deal, which included reopening the Strait of Hormuz to shipping, sent crude oil prices sharply lower, unwinding a supply-risk premium that had driven Brent crude up nearly 9% the prior week toward $106 a barrel. SLB, the oilfield services giant, fell roughly 4% to around $53.91 as investors calculated that lower oil prices would prompt producers to cut drilling budgets, reducing demand for SLBs services. BlackRock and Cava Group also closed below the broader market, while Sionna Therapeutics and Kestra Medical Technologies declined on company-specific pressures.   Not every stock followed the market lower. AstraZeneca and Microsoft both gained on the day, as did Altria, with defensive and healthcare names attracting buyers seeking shelter from the technology and energy sector volatility. The Federal Reserve is set to meet later in the week, with traders pricing in a near-certain quarter-point rate hike from Chairman Kevin Warsh, adding a further headwind as US 10-year Treasury yields have risen above 5% for the first time since 2023.     See the article on MarketFlux         submitted by     /u/MarketFlux     to     r/MarketFluxHub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MarketFluxHub/comments/1wgk5xu/sp_500_falls_as_ai_slowdown_calls_and_a_usiran/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T23:50:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T23:50:19.830Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8883c6508d45f3d2c7f5b"
+    },
+    "message_id": "reddit_t3_1wgk5xn",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "repsdeutschland",
+    "username": "stablogger",
+    "title": "Reddit hat seine Spam Filter im Bereich Reps verschärft",
+    "text": "Reddit hat seine Spam Filter im Bereich Reps verschärft\n\nNachdem ich vor 2 Monaten eine kurzzeitige Zwangsauszeit nehmen musste, siehe  https://www.reddit.com/r/repsdeutschland/comments/1v2x6fj/wieder_zur%C3%BCck_und_hoffentlich_ohne_weitere/  und es auch andere, die hier viel beigetragen haben, allen voran Chemicalengineerz, erwischt hat, ist mir im Mod Protokoll aufgefallen, dass in den letzten Wochen immer mehr Kommentare von euch von Reddit entfernt werden.   Das Muster ist immer das gleiche: Neben Links zu Weidian, Taobao oder 1688, die meist noch ganz gut durchkommen, sind es vor allem die Namen von Agenten, die die Filter von Reddit triggern. Hängt auch immer etwas am Alter des Accounts und dem Karma, aber ich habe schon Kommentare die rein nur den Namen eines Agenten ohne Link enthalten als \"Von Reddit entfernt\" markiert gesehen.   Leider erwischt es nicht nur die Spammer, die Reddit inzwischen immer besser selbstständig filtert, sondern vermehrt ganz normale Nutzer.   Sollte euch auffallen, dass Beiträge oder Kommentare von euch nicht erscheinen, plötzlich verschwinden oder auch Wochen später verschwinden, gerne Bescheid geben. Am besten funktioniert das per Modmail.    Hier wird nichts zensiert, nur weil jemand eine Meinung hat die vielleicht mir oder anderen nicht passt. Auch wenn es manchmal schön wäre, wenn die Suchfunktion mehr genutzt würde, statt die gleiche Frage die zum 25. Mal lesen zu müssem, es wird trotzdem nichts gelöscht.    Alles was sich im Rahmen unserer Regeln bewegt, ist erlaubt und wenn 3x im Monat diskutiert wird, welches denn nun der beste Agent ist, halb so wild.       submitted by     /u/stablogger     to     r/repsdeutschland       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/repsdeutschland/comments/1wgk5xn/reddit_hat_seine_spam_filter_im_bereich_reps/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T23:50:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T23:50:20.224Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8883c6508d45f3d2c7f5c"
+    },
+    "message_id": "reddit_t3_1wgk5xi",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "phclassifieds",
+    "username": "qyuubu",
+    "title": "SAS Jojo’s Bizarre Adventure Diego Brando Medicos Figure",
+    "text": "SAS Jojo’s Bizarre Adventure Diego Brando Medicos Figure\n\nPrice: ₱6,000 (got it from the US, selling it for cheaper)   Condition: Only displayed and barely touched. All the inclusions and accessories are complete and undamaged.   Loc: Parañaque City. Can meet up in SM Sucat.   Payment Method: Gcash or Maya   Shipping: Gogoexpress, Lalamove, or LBC       submitted by     /u/qyuubu     to     r/phclassifieds       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/phclassifieds/comments/1wgk5xi/sas_jojos_bizarre_adventure_diego_brando_medicos/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T23:50:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T23:50:20.424Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8883c6508d45f3d2c7f5d"
+    },
+    "message_id": "reddit_t3_1wgk5wp",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "MakeFriendsOver30",
+    "username": "DreamProfessional959",
+    "title": "32M California - Looking for longterm friends",
+    "text": "32M California - Looking for longterm friends\n\nLooking to become long-term friends with someone. I enjoy nonfiction books, the gym, NBA and the NFL. I also enjoy just talking about mundane things, and we can talk about how our day went. I have also been decorating my apartment and could use some opinions on that! I am in the US (PST) so it would be best to talk to someone from that time zone.       submitted by     /u/DreamProfessional959     to     r/MakeFriendsOver30       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MakeFriendsOver30/comments/1wgk5wp/32m_california_looking_for_longterm_friends/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T23:49:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T23:50:20.624Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8883c6508d45f3d2c7f5e"
+    },
+    "message_id": "reddit_t3_1wgk5wi",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "Far-Wave-821",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Carrot Cake Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Carrot Cake Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Far-Wave-821     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wgk5wi/sticker_giveaway_enter_to_win_a_4_stars_carrot/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T23:49:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T23:50:20.823Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8883d6508d45f3d2c7f5f"
+    },
+    "message_id": "reddit_t3_1wgk5vy",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "RipsByTriumph",
+    "username": "lilbambi12",
+    "title": "https://www.reddit.com/r/RipsByTriumph/s/43gj9KVpst",
+    "text": "https://www.reddit.com/r/RipsByTriumph/s/43gj9KVpst\n\nsubmitted by     /u/lilbambi12     to     r/RipsByTriumph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RipsByTriumph/comments/1wgk5vy/httpswwwredditcomrripsbytriumphs43gj9kvpst/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T23:49:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T23:50:21.021Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8883d6508d45f3d2c7f60"
+    },
+    "message_id": "reddit_t3_1wgk5vw",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "myogtacticalgear",
+    "username": "tiger_stripes054",
+    "title": "Any clue what colour/type of fabric Crye Precision uses for their ranger green elastic material?",
+    "text": "Any clue what colour/type of fabric Crye Precision uses for their ranger green elastic material?\n\nI want to make my own Spiritus style SACK pouch but I want the front pocket to have an elastic panel in that particular shade of green as pictured in one of the older MK3 SACK pouches.    I know little to nothing about this type of thing so any help would be greatly appreciated 🙏        submitted by     /u/tiger_stripes054     to     r/myogtacticalgear       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/myogtacticalgear/comments/1wgk5vw/any_clue_what_colourtype_of_fabric_crye_precision/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T23:49:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T23:50:21.218Z"

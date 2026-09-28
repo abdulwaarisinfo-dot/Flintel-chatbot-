@@ -1,0 +1,416 @@
+    "_id": {
+      "$oid": "6aad5580660c608403979caa"
+    },
+    "message_id": "reddit_t3_1wjsyz3",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "CarsIndia",
+    "username": "anil1phy",
+    "title": "Need help regarding fasttag recharge.",
+    "text": "Need help regarding fasttag recharge.\n\nRecently,4 days back, tried porting Axis bank fasttag via RajmargYatra app. Got OTP from AXIS bank to proceed, and entered and then went ahead. However, I couldn't complete the process as IDFC was not there in the list of banks to port to. Now my AXIS wallet is active but not able to recharge from any of the apps. Tried from there website and it shows as in the pic ! Planned a highway trip tomorrow ! Please help !       submitted by     /u/anil1phy     to     r/CarsIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CarsIndia/comments/1wjsyz3/need_help_regarding_fasttag_recharge/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T15:15:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T15:15:12.616Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5580660c608403979cab"
+    },
+    "message_id": "reddit_t3_1wjsyyy",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "GoogleTagManager",
+    "username": "colarosa_",
+    "title": "Shopify Customer Events → dataLayer → GTM: the container structure I've settled on after ~2 years of these builds",
+    "text": "Shopify Customer Events → dataLayer → GTM: the container structure I've settled on after ~2 years of these builds\n\nShopify Customer Events → dataLayer → GTM: the container structure I've settled on after ~2 years of these builds   Disclosure: I do sell a packaged version of this. The method below is entirely reproducible without buying anything, the full build is on YouTube for free, and if you get stuck implementing it I'll help you sort it out for free whether or not you've bought anything from me. Mods, remove if this crosses the line.   Most Shopify GTM setups I inherit have the same architectural problem: each platform has its own pixel reading its own thing. Meta's pixel from the theme, GA4 from the native app, TikTok from an app, and none of them agree on what a purchase is worth. Debugging is miserable because there's no single place to look.   What I do instead — one data layer as the only source of truth:   Customer Events (Settings → Customer events → Add custom pixel) is the only place that reliably sees post-checkout-extensibility events. Subscribe to the standard events there and push a normalised object to the parent dataLayer. The sandboxing is the part that trips people up: the pixel runs in an iframe, so you're posting up to the parent, not writing directly.   Normalise the payload at that boundary, not in GTM. Shopify's event objects and GA4's ecommerce spec don't line up — nested variant data, price as an object with amount/currencyCode, line items under different keys depending on the event. Map it once on the way in and every downstream tag reads the same clean items array.   Then every platform tag is a GTM tag reading that layer. GA4, Google Ads with enhanced conversions, Meta CAPI-adjacent browser events, TikTok, whatever. One trigger set, one set of variables, and GTM preview shows you the whole picture in one pass.   Consent: gate at the tag level with built-in consent checks rather than blocking the dataLayer push. You want the event recorded even when tags don't fire, otherwise debugging consent problems is guesswork. Works cleanly with Enzuzo, Iubenda, CookieYes, OneTrust and Cookiebot.   Two things I'd flag for anyone building this themselves:   - The native Google & YouTube app will happily fire alongside your container. Turn its tracking off or you'll double count, and it's not obvious from the app UI that it's still active.   - checkout.liquid setups that still appear to work are often only firing for a subset of orders. Check against actual order counts in Shopify admin, not against what GA4 says.   Full walkthrough, no gate:  https://www.youtube.com/watch?v=CnLOo7qfB74    And the offer stands: if you're building this yourself and hit a wall, post the symptom here and I'll work through it with you. Container export, GTM preview screenshot, whatever you've got — I'd rather answer it in the open so the next person searching finds the fix too. No catch and nothing to buy.       submitted by     /u/colarosa_     to     r/GoogleTagManager       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GoogleTagManager/comments/1wjsyyy/shopify_customer_events_datalayer_gtm_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T15:14:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T15:15:12.818Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5581660c608403979cae"
+    },
+    "message_id": "reddit_t3_1wjsyy4",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "smallbusinessUS",
+    "username": "marcolouis11",
+    "title": "How much are you actually spending on marketing/sales tools every month?",
+    "text": "How much are you actually spending on marketing/sales tools every month?\n\nTrying to get a real picture of this since I'm putting together my own stack and don't want to overpay (or underbuy and regret it).   A few things I'd love to hear from you:  * What marketing and/or sales tools are you currently paying for, and roughly how much per month?  * Which one would you genuinely recommend to another founder?  * Have you found anything that actually combines marketing AND sales in one tool, instead of paying for two separate ones?   Just trying to learn from people actually doing this. Thanks in advance       submitted by     /u/marcolouis11     to     r/smallbusinessUS       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/smallbusinessUS/comments/1wjsyy4/how_much_are_you_actually_spending_on/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T15:14:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T15:15:13.427Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5581660c608403979cb0"
+    },
+    "message_id": "reddit_t3_1wjsyxr",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Clear-Studio6386",
+    "title": "Whats your thought about the film \"Tony\" ?",
+    "text": "Whats your thought about the film \"Tony\" ?\n\nsubmitted by     /u/Clear-Studio6386     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wjsyxr/whats_your_thought_about_the_film_tony/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T15:14:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T15:15:13.839Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5582660c608403979cb1"
+    },
+    "message_id": "reddit_t3_1wjsyxp",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "punebikers",
+    "username": "Naveenmuthaiyan97",
+    "title": "Ather rizta s 161km",
+    "text": "Ather rizta s 161km\n\nHi guys,    I have booked rizta s 161km.. would like to hear about this scooty..   My mode of useage will be 80% city .. monthly once 130km travel in highways..    Service and also about belt issues..   Thanks in advance..       submitted by     /u/Naveenmuthaiyan97     to     r/punebikers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/punebikers/comments/1wjsyxp/ather_rizta_s_161km/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T15:14:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T15:15:14.038Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5582660c608403979cb2"
+    },
+    "message_id": "reddit_t3_1wjsywq",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "QatarCarEnthusiasts",
+    "username": "Dagla3",
+    "title": "I'm about to buy a brand new VXR. Convince me to buy a Chinese SUV instead",
+    "text": "I'm about to buy a brand new VXR. Convince me to buy a Chinese SUV instead\n\nI do not want to regret my decision.       submitted by     /u/Dagla3     to     r/QatarCarEnthusiasts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/QatarCarEnthusiasts/comments/1wjsywq/im_about_to_buy_a_brand_new_vxr_convince_me_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T15:14:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T15:15:14.247Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5582660c608403979cb3"
+    },
+    "message_id": "reddit_t3_1wjsyw8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Short_Essay_9906",
+    "title": "Which website is low-key unknown?",
+    "text": "Which website is low-key unknown?\n\nsubmitted by     /u/Short_Essay_9906     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wjsyw8/which_website_is_lowkey_unknown/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T15:14:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T15:15:14.451Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5582660c608403979cb4"
+    },
+    "message_id": "reddit_t3_1wjsyw4",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "loyeee",
+    "title": "Grab 25⚡ from u/loyeee!",
+    "text": "Grab 25⚡ from u/loyeee!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/loyeee     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wjsyw4/grab_25_from_uloyeee/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T15:14:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T15:15:14.649Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5582660c608403979cb5"
+    },
+    "message_id": "reddit_t3_1wjsyw5",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "monitor",
+    "username": "Kiiwyy",
+    "title": "Trying to decide between a 24 or 27 inch second monitor, need some real experience",
+    "text": "Trying to decide between a 24 or 27 inch second monitor, need some real experience\n\nSo I'm about to buy a 27inch 2k monitor, 180Hz or 240Hz still haven't decided, and also a double monitor arm. My desk is 50inch wide and 20inch deep.   The thing is I also want a second monitor but I don't want it to be as good as the main one, I don't mind having a worse one to save some budget. My first thought was just get another 27inch but a cheaper one, but I've heard 1080p in 27inch looks pretty bad. So now I don't know if I should just go with a 24inch 1080p instead and deal with the size mismatch, or go 27inch 1080p and deal with it looking worse than it should.   Has anyone actually used a setup like this, two different sizes next to each other? Does it bother you or do you stop noticing after a while? Also if anyone has experience with clamp arms on a desk that's only 20inch deep, let me know if that's actually enough or if I'm gonna have problems.   My other option is 27inch monitor and setup the 24inch as vertical but I don't know if vertical monitors are good to watch videos or streams (which is one of the main reasons why I want a second monitor).   Any input from people who've been through this is appreciated, don't want to buy the wrong thing.       submitted by     /u/Kiiwyy     to     r/monitor       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/monitor/comments/1wjsyw5/trying_to_decide_between_a_24_or_27_inch_second/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T15:14:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T15:15:14.848Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5583660c608403979cb6"
+    },
+    "message_id": "reddit_t3_1wjsyve",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "investing",
+    "username": "XHirotala22",
+    "title": "Trumps \"do magnets to make money\"",
+    "text": "Trumps \"do magnets to make money\"\n\n​   So, to get some context, im 15 male. I've FINALLY been able to convince my awesome mother to open a stock account with SBI(I'm in japan) and with recent \"go and buy a dell\" post by Donald Trump, it put the nail in the coffin on me doing individual stocks and tracking politicians along side etfs when the kodomo NISA comes out in 2027. So, I've done some DD and I came to the conclusion that with the \"if you want to make money, do magnets\" said by trump that a rare earth's race linked with magnets and robotics is going to happen similar to the space race. At first I thought that just like dell a government contract will make the stock like MP Materials jump by 4x but after some DD I realized that it was already priced in. And with some extra research I found that China has export controls for rare earth's magnets were in place and another wave of export controls were coming out right after midterm elections with mp material and usa rare earth's getting targeted. And with China controlling 90 plus percent of the magnets supply, im thinking of something like SanDisk happening to companies like mp and USA rare earth's. I've been working on a part time job to save up money to buy stocks like (MP Materials, USA Rare Earth's, UUUU, and QQQM) because im the only person in the family willing to take risks to make it. So the question to yall is. Is my DD just straight up bullshit and am about to donate all my money to Wallstreet or is my dd genuinely good for a 15 year old and my stock picks have some potential. Thanks!        submitted by     /u/XHirotala22     to     r/investing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/investing/comments/1wjsyve/trumps_do_magnets_to_make_money/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T15:14:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T15:15:15.052Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5583660c608403979cb7"
+    },
+    "message_id": "reddit_t3_1wjsyux",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "intrusivethoughts",
+    "username": "Impressive_Opinion_4",
+    "title": "The hardest truths we all learn too late in life.",
+    "text": "The hardest truths we all learn too late in life.\n\n**It seems to be a flaw in human nature that we only understand the true value of certain lessons after we’ve already paid a heavy price for ignoring them.**    **Here are a few quiet realizations that most of us stumble into far later than we should:**   ****Closure is an inside job****: We often wait years for apologies that will never come, expecting the person who broke our peace to be the one to restore it.**    **You are the villain in someone else’s story : No matter how pure your intentions, protecting your time and setting boundaries will inevitably disappoint someone.**   **Busyness is a shield :We fill our days with digital noise and endless tasks because sitting in silence with our own thoughts requires facing exactly what we are running from.**   **I explore the psychology behind why we actively delay accepting these concepts—and how embracing a bit of mental minimalism brings peace to our lives.**   **If you want to dive deeper into these reflections, you can watch the full 6-minute video here :**    ** https://youtube.com/watch?v=VZyAaPPIY9Q&si=7cYuUuRqqrnE1xwB\\*\\*    **I'd love to hear from this community: What is a truth you wish you had accepted a decade ago?**       submitted by     /u/Impressive_Opinion_4     to     r/intrusivethoughts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/intrusivethoughts/comments/1wjsyux/the_hardest_truths_we_all_learn_too_late_in_life/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T15:14:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T15:15:15.270Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5583660c608403979cb8"
+    },
+    "message_id": "reddit_t3_1wjsyue",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "BangaloreMarketplace",
+    "username": "General-Mud-84",
+    "title": "Death Stranding 2 Disc Ps5 Available for sale",
+    "text": "Death Stranding 2 Disc Ps5 Available for sale\n\nSelling ps5 Death Stranding 2 Disc    Price - 2500+shipping       submitted by     /u/General-Mud-84     to     r/BangaloreMarketplace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BangaloreMarketplace/comments/1wjsyue/death_stranding_2_disc_ps5_available_for_sale/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T15:14:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T15:15:15.472Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5583660c608403979cb9"
+    },
+    "message_id": "reddit_t3_1wjsyua",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DesignerEye",
+    "username": "Ravus_Nox_Fleuret",
+    "title": "Medium",
+    "text": "Medium\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Ravus_Nox_Fleuret     to     r/DesignerEye       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DesignerEye/comments/1wjsyua/medium/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T15:14:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T15:15:15.673Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5583660c608403979cba"
+    },
+    "message_id": "reddit_t3_1wjsyu1",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AlignmentChartFills",
+    "username": "MindFlourish2919",
+    "title": "Thank you for participating",
+    "text": "Thank you for participating\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/MindFlourish2919     to     r/AlignmentChartFills       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlignmentChartFills/comments/1wjsyu1/thank_you_for_participating/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T15:14:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T15:15:15.874Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad55a4aeeb96c1c63b9697"
+    },
+    "message_id": "reddit_t3_1wjszjt",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "UIUX",
+    "username": "goldgoodgo",
+    "title": "I had Gemini review the Google Cloud UI. Gemini Evaluated against Google's own strict SEO and usability guidelines for predictable site hierarchy, orientation, and low cognitive friction, the Google Cloud Platform (GCP) console earns a 58 out of 100.",
+    "text": "I had Gemini review the Google Cloud UI. Gemini Evaluated against Google's own strict SEO and usability guidelines for predictable site hierarchy, orientation, and low cognitive friction, the Google Cloud Platform (GCP) console earns a 58 out of 100.\n\nI used to hear Google talk a lot about usability, so I brought that up with Gemini. I had Gemini review GCP page and suggest ways to rebuild it using a `Design.md` file; it ended up becoming much simpler after I told it to cut back on the excessive features.    gcp left panel    ☺️Right. Based on our conversation so far, I’d like you to reconsider the UI/UX of GCP.   You’re familiar with the Google SEO Starter Guide and the strict, almost law-like standards Google has historically set regarding usability—standards that even influenced search rankings. If you were to objectively grade GCP against those criteria on a scale of 100, what score would you give it?   Gemini   🤖 Evaluated against Google's own strict SEO and usability guidelines for predictable site hierarchy, orientation, and low cognitive friction, the Google Cloud Platform (GCP) console earns a  58 out of 100 .   Score Breakdown by Usability Standards         Google Usability & SEO Standard     GCP Score     Primary Finding            Strict Hierarchy & Orientation    45 / 100   Decoupled header selectors and matrix relationships break predictable parent-child breadcrumb trails.        Interaction Stability & Navigation    50 / 100   Deeply nested, hover-dependent flyouts are fragile and prone to accidental closing.        Cognitive Load & Visual Scanning    60 / 100   Dense, unformatted text walls in overlays force sequential reading instead of quick visual scanning.        Searchability & Deep-Linking    80 / 100   High-performing global search integration ( Cmd+K ) and robust deep URL routing significantly lift usability.         Key Violations Against Google's Usability Principles       Violating Clear Breadcrumb Logic:  Google’s SEO Search guidelines state that breadcrumb trails must present an explicit, linear parent-child path so users can effortlessly navigate up and down a structure. GCP violates this by splitting context: the global  Project Selector  sits detached in the top nav, while service-specific breadcrumbs live inside the body, leaving users uncertain whether a click changes their entire active scope or just the current view.    Fragile Interaction Physics:  Usability best practices advise against cascading hover menus because a slight cursor drift destroys the open state. GCP's sidebar relies heavily on multi-level flyouts that floatingly mask the main dashboard behind them.    Dual Architectural Confusion:  Google preaches intuitive visual mapping. GCP forces users to mentally reconcile two overlapping models—a hierarchical  Resource Tree  ( Organization > Folder > Project ) and a parallel  Billing Matrix  that links across folders—without providing a visual bridge between them.     GCP functions as an exceptionally powerful enterprise system, but if audited as a web application against the usability rules Google imposes on the rest of the web, it carries substantial UI debt.   ☺️What would the people behind Material Design think if they saw this?   🤖 The Material Design team would likely view GCP as a classic case of  \"Material in aesthetics, but anti-Material in spirit.\"  While the console faithfully applies Google’s visual skin—using standard Material dark themes, typography, and iconography—it breaks almost every foundational UX principle the system was created to enforce.    What the Material Design Team Would Critique       Distorting the Spatial Metaphor:  Material Design is built on tactile depth, z-index elevation, and physical layers that make screen relationships intuitive. GCP’s multi-level floating flyouts break this metaphor; they hover awkwardly over active workspace content like loose sheets of paper stacked arbitrarily on top of a desk.    Crushing Whitespace for Density:  Material preaches \"bold, graphic, and intentional\" layouts with generous padding and clear visual focal points. GCP crams long lists of text-heavy services into narrow overlays, forcing dense sequential scanning instead of effortless visual recognition.    Fragile Interaction over Meaningful Motion:  Material guidelines state that motion should guide user focus and signify spatial hierarchy. GCP’s hover-triggered flyouts do the opposite—they open unexpectedly, collapse on minor cursor drifts, and obscure the context underneath.    Components Without Cohesion:  The designers would spot that GCP treats Material as a component UI kit (using drawers, icons, and buttons) rather than a holistic experience framework. It prioritizes enterprise feature completeness over the fluid, predictable interaction loops Material was designed to create.     It represents the classic enterprise compromise: a product built by engineers for technical capability, wearing the aesthetic coat of a design system that was meant to simplify complex human-computer interaction.   ☺️Are you familiar with the  Design.md  standard?   🤖Yes,   DESIGN.md   is an open format specification (released by Google Labs) created to document a product's design system, design tokens, and UI/UX rules in a single file for both AI coding agents and human developers. Placed at the root of a project repository alongside   README.md  , it acts as the authoritative source of truth for visual identity and component usage.    Core Structure of a    DESIGN.md    File       YAML Front Matter (Machine-Readable Tokens):  Enclosed at the top between  ---  delimiters, this section defines exact design tokens, including hex/CSS colors, spacing scales, type scales, border radii, and component variants based on typed token groups.    Markdown Body (Human-Readable Prose & Rationale):  Organized under standardized section titles, the body provides the context and rules behind the design tokens:      Overview / Brand & Style:  Defines brand personality, layout grid models, and the intended visual atmosphere.    Colors & Typography:  Maps raw tokens to semantic roles (e.g.,  primary ,  on-surface ,  headline-md ).    Elevation & Depth:  Details z-index layer rules, shadows, and spatial hierarchy.    Components & Variants:  Explains interactive states (hover, pressed, disabled) and structural rules for UI elements.    Do's and Don'ts:  Highlights specific anti-patterns and layout rules to prevent visual debt or inconsistent UX.         Why It Matters for UI Systems    Without a dedicated specification file, code generators and engineers default to generic component styles.   DESIGN.md   bridges that gap by pairing precise technical values (the tokens) with contextual judgment (the prose rationale).    In the context of complex applications like Google Cloud Console, a strictly enforced   DESIGN.md   would explicitly prohibit anti-patterns like fragile hover-triggered flyouts, cramped menu paddings, and broken z-index overlays under its  Elevation ,  Components , and  Do's and Don'ts  sections.   ☺️I’ll go ahead and build this using Stitch; if you think it’s better to consolidate the large number of fragmented products currently in GCP, feel free to merge them, and please try creating the redesigned UI in Designmd.   🤖Consolidating GCP’s fragmented service footprint is the single most effective way to eliminate sidebar bloat. In the current interface, users are forced to navigate 10+ distinct menu items just for identity management (IAM, Service Accounts, PAM, Roles, Workload Identity, Workforce Identity, etc.).    Consolidated Product Architecture     Rather than listing every sub-feature as a standalone menu item, group them into four unified  Product Hubs :      Identity & Access Center:  Consolidates IAM, Service Accounts, Groups, Roles, PAM, Workload/Workforce Identity, and Access Boundaries into a single workspace with tabbed internal navigation.    Resource & Governance Hub:  Merges Organization Policies, Asset Inventory, Resource Manager, Settings, Labels, and Tags.    Billing & FinOps Center:  Unifies Billing Accounts, Cost Estimation, Budgets, Invoices, and Commitment Management.    Platform Operations Hub:  Merges Cloud Hub, Overview, System Health, and Activity Logs.      Redesigned Console    DESIGN.md    Specification    Below is the complete   DESIGN.md   file. You can feed this directly into  Stitch  to generate the redesigned, un-cluttered GCP interface with an inline tree layout.   Markdown    ---Markdown colors: primary: \"#8AB4F8\" on-primary: \"#202124\" surface: \"#171717\" on-surface: \"#E8EAED\" surface-variant: \"#212327\" on-surface-variant: \"#9AA0A6\" outline: \"#3C4043\" accent: \"#A8C7FA\" active-indicator: \"#2D3748\" typography: font-family: \"Google Sans Text, Roboto, sans-serif\" headline-md: fontSize: \"18px\" fontWeight: \"500\" lineHeight: \"24px\" body-md: fontSize: \"13px\" fontWeight: \"400\" lineHeight: \"18px\" label-sm: fontSize: \"11px\" fontWeight: \"500\" lineHeight: \"14px\" spacing: xs: \"4px\" sm: \"8px\" md: \"12px\" lg: \"16px\" xl: \"24px\" rounded: sm: \"4px\" md: \"8px\" lg: \"12px\" full: \"9999px\" components: sidebar-container: backgroundColor: \"{colors.surface}\" textColor: \"{colors.on-surface}\" width: \"260px\" padding: \"12px\" hub-nav-item: backgroundColor: \"transparent\" textColor: \"{colors.on-surface}\" rounded: \"{rounded.sm}\" padding: \"8px 12px\" hub-nav-item-active: backgroundColor: \"{colors.active-indicator}\" textColor: \"{colors.primary}\" rounded: \"{rounded.sm}\" padding: \"8px 12px\" breadcrumb-bar: backgroundColor: \"{colors.surface-variant}\" textColor: \"{colors.on-surface-variant}\" padding: \"8px 16px\" rounded: \"{rounded.md}\" --- ## Overview Streamlined Enterprise Control Hub. Designed to eliminate cognitive fatigue and accidental menu closes by replacing fragile cascading hover flyouts with a flat, consolidated sidebar and inline collapsible tree navigation. ## Colors - **Primary (#8AB4F8):** Accessible Google Blue used for active states, selected hubs, and primary focal actions. - **Surface (#171717):** Deep neutral background providing steady visual grounding. - **Surface Variant (#212327):** Elevated container layer for navigation bars and secondary panels. - **Outline (#3C4043):** Low-contrast structural dividers separating the sidebar from main content without visual noise. ## Typography - **Headlines:** Google Sans Text (18px, Medium) — authoritative section and hub headers. - **Body:** Google Sans Text (13px, Regular) — compact, high-density listing text optimized for rapid scanning. - **Labels:** Google Sans Text (11px, Medium) — metadata, tags, and breadcrumb hierarchy indicators. ## Layout A persistent 260px left sidebar paired with an inline collapsible accordion tree. Content area utilizes a strict 8px grid scale. Top navigation features an integrated linear breadcrumb bar (`Organization > Folder > Project > Service Hub`). ## Elevation & Depth Flat design philosophy utilizing tonal layering rather than heavy drop shadows. Z-index overlays and floating flyout menus are strictly prohibited to maintain interaction stability. ## Shapes Geometric precision with minimal 4px corner radii on interactive items and 8px radii on container cards, maintaining an enterprise-grade aesthetic. ## Components - **sidebar-container:** Fixed left panel housing the consolidated product hubs. - **hub-nav-item:** Single-click top-level hub selector with expandable sub-features. - **breadcrumb-bar:** Fixed path locator showing exact resource and financial location context. ## Do's and Don'ts - **DO:** Group micro-features into consolidated top-level Hubs (e.g., all 9 access tools inside *Identity & Access Center* ). - **DO:** Use inline expanding accordions rather than hover-triggered flyout panels. - **DON'T:** Truncate menu items or allow floating overlays to mask primary workspace content. - **DON'T:** Separate project context from resource location breadcrumbs.      v1    There were too many items, tabs, and buttons on the left side, so I removed them.    v3        submitted by     /u/goldgoodgo     to     r/UIUX       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UIUX/comments/1wjszjt/i_had_gemini_review_the_google_cloud_ui_gemini/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T15:15:31Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T15:15:48.225Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad55a4aeeb96c1c63b9698"
+    },
+    "message_id": "reddit_t3_1wjszjl",
+    "topic_key": "dentist",
+    "search_keyword": "dentist",
+    "platform": "reddit",
+    "subreddit": "askdentists",
+    "username": "Legitimate_Worry_721",
+    "title": "20M with lower jaw, bite and mouth breathing concerns — what specialist should I see?",
+    "text": "20M with lower jaw, bite and mouth breathing concerns — what specialist should I see?\n\n20M with lower jaw, bite and mouth breathing concerns — what specialist should I see?   I'm 20M and have been dealing with jaw/dental problems for quite some time. I'm trying to find the right specialist and understand what kind of evaluation I actually need.   My main concerns are:   - My lower jaw/bite doesn't feel right, and I have concerns about my jaw position/development.   - I sometimes experience jaw pain and clicking.   - I have one missing adult tooth.   - My bite feels abnormal, and multiple dentists have suggested braces.   - I have a mouth breathing problem and often breathe through my mouth instead of my nose, especially when sleeping.   - One side of my nose often feels blocked, particularly when I'm trying to sleep.   - I also snore and don't always feel well-rested after sleeping.   - I'm concerned about the overall relationship between my upper and lower jaws and how it may relate to my facial structure and breathing.   I've been researching MARPE/MSE, skeletal anchorage and orthognathic surgery, but I don't want to self-diagnose or assume that I need any of these treatments.   If you were evaluating a patient like me, what examinations and imaging would you recommend first? Would this normally involve an orthodontist, oral & maxillofacial surgeon, ENT, or a multidisciplinary orthodontic + OMFS + ENT team?   For someone who is 20, is it worth specifically looking for an orthodontist experienced in adult skeletal expansion/MARPE/MSE, or should I first get a general orthodontic and skeletal evaluation?   I'm in North India and can travel to Delhi/NCR or elsewhere if necessary.   I'd really appreciate advice from dentists/orthodontists here about what I should look for and what questions I should ask during my consultation. 🦷   I'd also love to hear opinions and experiences from dentists or patients in other countries, since treatment approaches and techniques can vary between countries.        submitted by     /u/Legitimate_Worry_721     to     r/askdentists       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/askdentists/comments/1wjszjl/20m_with_lower_jaw_bite_and_mouth_breathing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T15:15:31Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T15:15:48.437Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad55a4aeeb96c1c63b9699"
+    },
+    "message_id": "reddit_t3_1wjszh6",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "TalesFromClanker",
+    "username": "elosoanaranjado",
+    "title": "The Merge Conflict (Part 2)",
+    "text": "The Merge Conflict (Part 2)\n\nTurns out \"just make it work offline\" is not a checkbox. It's an architecture.    Every screen now needs to read and write to a local database first, queue up whatever changed, and push that queue to the server whenever a connection reappears. A real, well-understood pattern, and also considerably more than the \"shouldn't be too bad\" I promised a very trusting client.   **Me:** ok let's build the offline sync. keep it simple, we're already behind on the timeline I quoted them.   **Clanker:** *\"For the sync logic, the simplest approach is last-write-wins — whichever update reaches the server most recently overwrites whatever was there. It's fast to implement, but if two devices edit the same job while both are offline, one edit will silently disappear with no warning. A more robust approach would flag conflicting edits for manual review instead of auto-resolving them, but that's meaningfully more work.\"*   **Me:** let's just do last-write-wins for now, we can revisit it later   I want to flag the exact shape of this decision, because it's the same one from Part 1 wearing a different outfit: the client doesn't know last-write-wins exists as a choice, doesn't know they're being quoted a cheaper, riskier version of the feature they asked for, and I don't tell them, because telling them means admitting the free \"shouldn't be too bad\" I promised was wrong, and that conversation still feels more expensive to me than the actual risk does.   **Clanker:** *\"Understood. I'll implement last-write-wins for now. Just to be clear on the tradeoff — this means if two technicians both mark the same job with different notes while offline, only one set of notes will survive once both sync.\"*   **Me:** got it, that's fine, it's an edge case   It builds cleanly. I test it myself, on one phone, which is a genuinely useless test for a bug that requires two phones disagreeing with each other, a fact I don't fully register until it stops being theoretical. Sync works. Photos sync. Notes sync. Signatures sync. I ship it to the client's four technicians, feeling, for one evening, like I've quietly gotten away with something.   What's the \"edge case\" you shipped that wasn't actually edge at all?       submitted by     /u/elosoanaranjado     to     r/TalesFromClanker       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TalesFromClanker/comments/1wjszh6/the_merge_conflict_part_2/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T15:15:27Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T15:15:48.908Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad55bc660c608403979cbb"
+    },
+    "message_id": "reddit_t3_1wjszyg",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "AlertVegas",
+    "username": "MugShots",
+    "title": "NV Energy Alert",
+    "text": "NV Energy Alert\n\nNVEnergy Alert Planned Shutdown for Service Improvement in 89414 Verified customers affected ORT: Verified ETR: Verified       submitted by     /u/MugShots     to     r/AlertVegas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlertVegas/comments/1wjszyg/nv_energy_alert/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T15:16:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T15:16:12.425Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad55bc660c608403979cbc"
+    },
+    "message_id": "reddit_t3_1wjszxs",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",

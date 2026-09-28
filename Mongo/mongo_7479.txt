@@ -1,0 +1,416 @@
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89826508d45f3d2d2c5e"
+    },
+    "message_id": "reddit_t3_1whvn7y",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "LornaDane",
+    "username": "SkrullAmongUs",
+    "title": "Welcome to r/LornaDane!",
+    "text": "Welcome to r/LornaDane!\n\nHi, and welcome to  r/LornaDane , a subreddit for everything related to Marvel's Polaris! Excited to have a hub specifically dedicated to Lorna. Where did you first encounter her?        submitted by     /u/SkrullAmongUs     to     r/LornaDane       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LornaDane/comments/1whvn7y/welcome_to_rlornadane/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:19:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:20:18.478Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89b86508d45f3d2d2c5f"
+    },
+    "message_id": "reddit_t3_1whvo58",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "SideProject",
+    "username": "petargeorgievv",
+    "title": "I built an MCP server for my side-project-turned-product so AI agents can schedule social posts. What broke in production.",
+    "text": "I built an MCP server for my side-project-turned-product so AI agents can schedule social posts. What broke in production.\n\nBuilding the MCP server took a weekend. Making it survive real agents took months, and the interesting part is that none of the failures were protocol problems. They were product problems that agents expose faster than humans do. Here is the list.      The agent does not know which account you meant. The moment a brand has two Facebook Pages or two LinkedIn orgs, \"post this to LinkedIn\" is ambiguous. Every post now has to carry one account id, and the tool description tells the agent to list accounts first and check that the account is still connected. Disconnected accounts were already the number one cause of failed posts for humans. Agents made it worse because they do not notice the red badge.     Validate at create time, not at fire time. A scheduled post fails hours after the agent finished talking, and nobody is there to read the error. So media is required at create time on the platforms that need it (TikTok, YouTube, Instagram, Pinterest), even for drafts, the media type has to match the file, and size caps are enforced on upload. The agent gets the rejection while it can still fix it.     Retries duplicate. Our create call has no idempotency key. If the transport drops and the agent retries, you get two scheduled posts. Listing and deleting posts are tools too, so the agent can clean up, but that is the honest gap and it is next on the list.     Do not make the agent wait for the publish. The MCP call only creates the scheduled post; publishing runs later as a server job. A 200MB video never sits on the MCP transport, which is where every timeout report we saw came from.     Approvals need to be a tool, not a dashboard. Posts can be created as pending approval, and either a person or the agent, via an approve call, moves them to approved. Nothing publishes while pending. Without this, teams turn the agent off after the first wrong post.     Some platform limits should be enforced by you, not discovered by the agent. X charges far more for posts with links, so we cap link posts per month per plan. An agent that loves adding links hits the cap on purpose.     Assistants quote your docs verbatim. When someone asks ChatGPT for a scheduler with an MCP server, the answer lists the vendors whose pages print the endpoint URL and the setup steps in plain text. Pages that describe the feature in marketing language are skipped. We rewrote ours accordingly, and it is the cheapest change on this list.     Live-data features are hard to get through app-store review. Our ChatGPT app listing was rejected twice because the review environment could not reproduce inbox test cases: comment fixtures decay, and a token with a smaller scope 403s every inbox tool. We resubmitted with the inbox left out of the listing, not out of the product. If your feature depends on live third-party data, plan the reviewer's fixtures before you plan the launch post.      Questions for anyone exposing a write API to agents: how are you handling idempotency on create, and do you let the agent approve its own posts?   Disclosure at the end rather than the top: the product is PostFast, mine. Happy to answer implementation questions, no links here.       submitted by     /u/petargeorgievv     to     r/SideProject       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SideProject/comments/1whvo58/i_built_an_mcp_server_for_my/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:21:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:21:12.454Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89bb6508d45f3d2d2c6d"
+    },
+    "message_id": "reddit_t3_1whvo4q",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "PsychologyofMJ",
+    "username": "EnvironmentalFee9413",
+    "title": "why did no one (overhand popular opinion) believe jason francia and jordan chandler as children? or why is this glazed over in the MJ fan community a lot? till this day why is it denied?",
+    "text": "why did no one (overhand popular opinion) believe jason francia and jordan chandler as children? or why is this glazed over in the MJ fan community a lot? till this day why is it denied?\n\ni read that jim clemente (former fbi who assisted in both cases) found both jordan chandler and gavin arvizo and their story as children very truthfu. in a time without internet and sich both children despite mever having met each other were able to explain the grooming and had a similar story/ experience with mr. michael. it was portrayed as love and normal.   then there is also jason francia's story in 1993 the same time with jordan's in 1993. both talked with the lapd child sexual exploitation unit as children and both of them were paid off. both were found credible. and jason was in 2005 testifying against jackson and MJs lawyer was really rough on him (twisted his words/tom mesereau Mus team). he also stated he got therapy as a child after the confession to the lapd investigators.   i found his story also very credible. michael was loving and kind but as children they didn't understand that it was not ok, and were scared how peers in school would make fun of them (first said nothing happened   \"was scared to be called gay\" jason francia as a child).   why is this glazed away? i love michaels music but when I hear the stories of jordie and jason, it breaks my heart how they get ridiculed over by other fans. their story is true.   then i also look at gavin, jordie and jason and they really look simila. fitting a type in certain looks. i think michael didn't see what he was doing was wrong. But the fans? i mean how can you know all of this and still try to twist their stories and justify it with \"they got money\". But why would You pay people off if you have nothing to hide and nothing to be scared of? Why not look at it this way too?       submitted by     /u/EnvironmentalFee9413     to     r/PsychologyofMJ       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PsychologyofMJ/comments/1whvo4q/why_did_no_one_overhand_popular_opinion_believe/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:21:15.250Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89bb6508d45f3d2d2c6e"
+    },
+    "message_id": "reddit_t3_1whvo47",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "thinkpad",
+    "username": "nommydickbutt",
+    "title": "Trying to find a thinkpad that has a better cpu and at least the same amount of ram as my current laptop",
+    "text": "Trying to find a thinkpad that has a better cpu and at least the same amount of ram as my current laptop\n\nThis is my current laptop: ASUS - ROG Zephyrus G 15.6\" Gaming Laptop - AMD Ryzen 7 - 16GB Memory - NVIDIA GeForce GTX 1660 Ti Max-Q - 512GB SSD    The cpu is the Ryzen 3750H, I just copied the description from the bestbuy site    I don't care too much about the gpu, originally I bought it as an extra gaming pc that my ex could use while she was over but after that I didn't really have much use for it. It performs pretty well still but I hate how loud it gets, the keyboard and trackpad just feel super cheap, one of the fans is bad, and it also just has some bad memories tied into it.    So I'm looking for a laptop that is at least going to be 10-20% faster in the cpu department.   My use case is running virtual machines, I don't run a ton since I'm mostly do app security testing atm, along with some coding.    I kind of know the specs that I need but I'm just not familiar with the used thinkpad market. The last time I bought one was back when the t420 back in 2013 or 2014 back when everyone was recommending that one. but sadly a 2nd gen i7 isnt enough for me anymore.    For the keyboard and trackpad I think the newer style id be okay with, I didn't care too much for the older style.    If anyone has any recommendations that'd be great.   My budget is $250-300 but if there's one for like $150 or less that'd be great too lol.    Spare parts that I have   500GB nvme   2TB 2.5' SSD   16GB stick of DDR4 for laptops.    So if the laptop is commonly sold for like $100-150 without the storage or memory I'm okay using my own       submitted by     /u/nommydickbutt     to     r/thinkpad       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/thinkpad/comments/1whvo47/trying_to_find_a_thinkpad_that_has_a_better_cpu/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:21:15.454Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89bb6508d45f3d2d2c6f"
+    },
+    "message_id": "reddit_t3_1whvo3w",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DailyGuess",
+    "username": "tazzer",
+    "title": "Can You Guess This 5-Letter Word? Puzzle by u/tazzer",
+    "text": "Can You Guess This 5-Letter Word? Puzzle by u/tazzer\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/tazzer     to     r/DailyGuess       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DailyGuess/comments/1whvo3w/can_you_guess_this_5letter_word_puzzle_by_utazzer/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:21:15.659Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89bb6508d45f3d2d2c70"
+    },
+    "message_id": "reddit_t3_1whvo3v",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "migraine",
+    "username": "CoffeeAndBooks88",
+    "title": "Weird migraine pattern - anyone else?",
+    "text": "Weird migraine pattern - anyone else?\n\nAfter only 2 migraines in my life, I have had one every 1-2 weeks for the past 2 months. So, that's cool.   The last few have been without pain. I get a prodrome/aura (e.g., my vision looks weird, I get a gut intuitive feeling) and then extreme nausea and light sensitivity for hours and have to be in a dark room. I do have a Zofran prescription if needed. But honestly, the worst part is prodrome. After this acute period passes (whether it does or does not include pain) I am out for a full 1-2 days feeling hungover, can't stop sleeping, so queasy I can't eat, etc. It's not functional for taking care of my kids or having a job, to lose 1-2 days to this every week or two.   PCP (who isn't great) prescribed rizatriptan. a) I am afraid to take it because I have extreme anxiety and panic to begin with, and although I might not get bad symptoms, it seems the potential for a full panic attack due to chest tightness or other awful physical symptoms isn't worth it; and b) I'm not sure that it would even work when I'm not always getting pain.   Has anyone had this or heard of it? I feel bad complaining because I know missing the pain is great, when that happens, but I am still so debilitated for days that I can't keep on like this. But, I don't know what to ask for next, what to try next, etc.   Someone mentioned things like Cefaly or other non-medication options, but I also feel like I am going in blind. PCP has no idea what to recommend next, I will ask for a neurologist appt but I have heard the wait list is almost a year long, and I don't know what more I can do from my end.   Just feeling a bit hopeless.       submitted by     /u/CoffeeAndBooks88     to     r/migraine       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/migraine/comments/1whvo3v/weird_migraine_pattern_anyone_else/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:21:15.862Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89bc6508d45f3d2d2c71"
+    },
+    "message_id": "reddit_t3_1whvo3s",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "ConservativesOnly",
+    "username": "guanaco55",
+    "title": "In Massachusetts, Triple Murder Becomes a Women’s Rights Cause",
+    "text": "In Massachusetts, Triple Murder Becomes a Women’s Rights Cause\n\nsubmitted by     /u/guanaco55     to     r/ConservativesOnly       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ConservativesOnly/comments/1whvo3s/in_massachusetts_triple_murder_becomes_a_womens/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:21:16.063Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89bc6508d45f3d2d2c72"
+    },
+    "message_id": "reddit_t3_1whvo3j",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "askanyythingg",
+    "username": "mehluca-33",
+    "title": "Should we stop categorising people on the basis of color?",
+    "text": "Should we stop categorising people on the basis of color?\n\nWtf is white, black, brown? Even Greeks, Portuguese and Italians are called white. I have seen Afghans and Pakistanis more light skinned than many whites, yet they are called brown.    I have seen Sri Lankans more darker than the Africans, yet they come under Brown.        submitted by     /u/mehluca-33     to     r/askanyythingg       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/askanyythingg/comments/1whvo3j/should_we_stop_categorising_people_on_the_basis/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:21:16.266Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89bc6508d45f3d2d2c73"
+    },
+    "message_id": "reddit_t3_1whvo3b",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "OntarioRealEstate",
+    "username": "WrongAd8785",
+    "title": "Signed my new home in March 2026 — days before the April 1 cutoff. Someone who signed a week later gets $94,000 back. I get $0. Anyone else in this situation?",
+    "text": "Signed my new home in March 2026 — days before the April 1 cutoff. Someone who signed a week later gets $94,000 back. I get $0. Anyone else in this situation?\n\n​   Ontario publicly announced HST relief for new home buyers while I was signing. What nobody told me — because it wasn't defined yet — was that there would be an April 1, 2026 cutoff.   I missed it by days.   Someone who signed after April 1 for the exact same house gets \\~$94,000 back. I get nothing. Not because I did anything wrong — because of a cutoff that didn't exist publicly when I signed.   I've written to Premier Ford three times. Got one form letter full of slogans. Two months of silence after that.   The $24,000 first-time buyer rebate? Mattamy absorbed it through a price reduction — never came to me directly.   I'm looking for others who signed before April 1, 2026 and are in the same boat. If there are enough of us this becomes a legal conversation and a media story that can't be ignored with a form letter.   Drop a comment or DM me.       submitted by     /u/WrongAd8785     to     r/OntarioRealEstate       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OntarioRealEstate/comments/1whvo3b/signed_my_new_home_in_march_2026_days_before_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:21:16.468Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89bc6508d45f3d2d2c74"
+    },
+    "message_id": "reddit_t3_1whvo3a",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "UKJobs",
+    "username": "keter-class-07",
+    "title": "Got a job offer related to my degree but about to start work at M&S",
+    "text": "Got a job offer related to my degree but about to start work at M&S\n\nI have just got a written offer for a marketing role from a startup company but I'm about to start my new role at M&S as a Customer Assistant.    I have a degree in marketing so it make sense what the sensible choice is between these two roles but the contract offered to me is a service agreement and I'm quite superstitious around it. They also mention a 3 month trial to see how i get along and the commute is a hour long in contrast to 30 minutes commute to M&S.    I have been applying for a very, very long time and I'm worrying about the risks of underperforming and getting let go in the entry marketing role vs role stability in M&S       submitted by     /u/keter-class-07     to     r/UKJobs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UKJobs/comments/1whvo3a/got_a_job_offer_related_to_my_degree_but_about_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:21:16.679Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89bc6508d45f3d2d2c75"
+    },
+    "message_id": "reddit_t3_1whvo20",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "claude",
+    "username": "anime_king_1",
+    "title": "I vibe coded an accounting app for my own business, and honestly I didn't expect it to get this far.",
+    "text": "I vibe coded an accounting app for my own business, and honestly I didn't expect it to get this far.\n\nI run a small distribution business. We buy from suppliers and sell through a few different channels, mostly retail and walk-in customers. We have one warehouse and a pretty big list of products.   A few years ago I got annoyed with the accounting/inventory software I was using, so I started making my own little tool.   It started as basically one HTML file running on the shop PC.   Now it's turned into a pretty serious app. Dozens of screens, tens of thousands of lines of TypeScript, and a lot of tests. Most of the actual code was written using  AI Arena's Agent Mode , but I was the one testing it, deciding what should change, and fixing the workflow when things didn't make sense.   The main reason I built it instead of just using Tally is that my business has some weird requirements.   For example, we often sell bundles where one customer order contains multiple different products, each with its own price and discount. On the invoice I need those products separated, but on the stock side I want them treated as one sale.   Most software I tried didn't handle that the way I wanted.   There's also some stuff related to taxes where a zero-tax line is actually correct for my business. Some software kept trying to warn me about it or automatically change things.   So eventually I just thought: screw it, I'll make it myself.   The funniest/worst bug I had was actually pretty scary.   If someone opened the HTML file directly by double-clicking it, the browser loaded it as a file:// page. The app couldn't properly save data in that situation.   But instead of showing an obvious error, the app looked completely normal.   You could enter a whole day's worth of transactions, close the tab, and everything would be gone.   There was a tiny message telling users to use the installed version, but that wasn't good enough because some of the shop PCs are offline and can't just download/install whatever they need.   So I changed it.   Now there's a small launcher that runs the app locally, and there's also a check before you can enter anything. If you're running it incorrectly, you get a big red warning that you can't just dismiss.   I even added a test specifically to make sure nobody accidentally makes that warning dismissible later   That's probably the biggest lesson I've learned from doing this with  AI Arena's Agent Mode .   It can write a LOT of code very quickly, but that doesn't mean the software is automatically good.   I have a few rules for myself:     Don't say something works unless I've actually tested it.   Don't let the agent guess when the answer matters.   Don't silently remove features.   Every bug I find goes into a defect log.   New tests have to actually prove that the bug is fixed.     I also started mutation testing some of the important tests. Basically, we deliberately break the code and make sure the test actually catches it.   I once wasted an entire afternoon because some tests looked like they were testing something but basically weren't doing anything useful.   That was a fun day.   The app also runs its tests on Windows because that's what the actual users are running.   There's an end-to-end test that basically goes through a normal business day: receiving stock → making sales → closing the books.   And I'm even measuring clicks/keystrokes for some tasks because ultimately I care more about whether the person using the software can get something done easily than whether the code looks fancy.   It's also genuinely offline. There's a test that checks the build for networking code because I don't want some random feature quietly adding an internet dependency.   That said, I wouldn't actually claim this is \"better than Tally\" in general.   Tally supports a lot more stuff than my app does.   It doesn't do everything a large business would need. There's no multi-branch system, no manufacturing module, and I don't handle every type of regulatory filing.   But none of those things are important for my particular business.   That's kind of the whole point.   I didn't try to build a replacement for every accounting system.   I just wanted something that works really well for the way  we  work.   It's also not a product or startup. I'm not trying to sell it. It's literally just software I made because I was tired of fighting with other software.   The current stack is Vite + React 19 + TypeScript + Zustand, with an optional Electron wrapper.   Everything is local. There's no backend.   I'd actually love some criticism from people who know accounting/software better than me.   One thing I'm wondering about is whether treating everything as derived vouchers and making reports pure functions of those vouchers is a good architecture for a single-user system, or whether I'm eventually going to regret not having a more traditional append-only ledger.   Also, if someone else eventually needs to use the same PC, does that basically force me to support multi-user/concurrency?   And if you see something in this that looks like a massive red flag, please tell me. I'd rather find it now than after I lose someone's books.    https://preview.redd.it/a9zywqt4kvph1.png?width=1771&format=png&auto=webp&s=49e464f6231fedac588969eeed004122612eb868     https://preview.redd.it/u3gpzumsjvph1.png?width=1747&format=png&auto=webp&s=47a4e247f5e239bf57d18d21ba2fd44313f0029d     https://preview.redd.it/hog32u71kvph1.png?width=1472&format=png&auto=webp&s=c5749e3d419675b3025c6f760d74b3438820ec94        submitted by     /u/anime_king_1     to     r/claude       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/claude/comments/1whvo20/i_vibe_coded_an_accounting_app_for_my_own/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:21:16.887Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89bd6508d45f3d2d2c78"
+    },
+    "message_id": "reddit_t3_1whvo1u",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "4xe",
+    "username": "demetrius721",
+    "title": "Jeep Wrangler owners. Is this normal ?",
+    "text": "Jeep Wrangler owners. Is this normal ?\n\nJust bought my 2024 Jeep Wrangler High Altitude 4xe two weeks ago and noticed that I have to turn the wheel slightly in traffic to keep straight on lane of travel. I have an appointment at the dealership tomorrow and just wanted to know if the jeep alignment is normal.        submitted by     /u/demetrius721     to     r/4xe       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/4xe/comments/1whvo1u/jeep_wrangler_owners_is_this_normal/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:21:17.491Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89bd6508d45f3d2d2c79"
+    },
+    "message_id": "reddit_t3_1whvo1r",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BangladeshMarriage",
+    "username": "grimreminder845",
+    "title": "F | 23 | Muslim | Single | Greater London, UK | Consultant Engineer",
+    "text": "F | 23 | Muslim | Single | Greater London, UK | Consultant Engineer\n\nHello!   **About me:**   Easy going woman, who wants a bit of company in life. I am curious about people and always down for anything - whether it’s a trip to hike the mountains or a mini BBQ in the backyard - a ride or die!   Can be busy at times, but always makes time for the right people. I am the worst texter but always calls instead. I prefer to see people in person, not an instagram poster at all. I sometimes prefer to be offline, happy with that.  Wear glasses as my eyesight is bad!   I am someone who loves watching the sunset with a mug of milk and a fire going with a group of friends or with a games/ movie night. But can also go enjoy talking to people at a dinner party and mingle in.   I come from alhamdulilah a tight knit family, seeing my uncles, aunts and cousins every week sometimes. I go to the gym and holiday with my cousins, and see my aunt and uncles on the weekends.   My family are middle class, coming from a family of doctors and businessmen.   **Age, Gender and Height:**   23, F, 5ft1   **Age Range that you would want/require in a prospect -** 23-27   **Location, and are you willing to relocate for a prospect?**   Happy to temporarily work abroad for a year. Would love to settle down around the South of England eventually near my family.   **Nationality:**  British (born and raised)  My parents are British Bangladeshi (both born and raised in BD)   **Marital Status -**  Single (never been in a relationship!)   **Ideal marriage timeline**  Like to get to know each other for at least a year if not longer. I think that’s key!   **Five important characteristics you look for in a prospect**   Open minded, spontaneous, caring. Someone who understands duty to family, can take a family who love to joke and tease! Someone who’s not afraid to make small talk and circle around social gatherings.  Really looking for a friend most of all to join in!   Don’t drink or smoke. I wear modest clothing and aim to pray 5 times a day. Alhamdulillah, I have been Umrah twice in my life.  I am someone who is open minded and appreciates someone with a similar mindset. No judging others, only yourself.   Looking for someone with a professional career and a degree. I’d like to build a career whilst I can and would love someone who is able to support that. That way we can try to buy a place, and start a life.   **Current Job Status**:   I graduated at 21 from a BEng at a university of London. I have worked a year as a teacher and now a year as a design engineer / consultant for an international UK-based engineering company. I tutor maths part time on the weekends.   Looking to do a Masters and change careers after a year or two into a higher income potential career or pursue a career in academia with a phD!   **Do you want kids?**   Yes, 3 is the sweet spot! But would wait after marriage, getting to know each other for a few years and being financially stable with a place together before kids is key to me.   **List 3 hobbies, or things you like to do in your spare time**   I love to hike, go to the gym, read books. I love to go out and eat, travel at least 2 times a year to places around the world and england. This year has been portugal, bangladesh, isle of wight so far!   Most of all, I like to spend time with family and friends. Making time for people is a duty and a pleasure for me.       submitted by     /u/grimreminder845     to     r/BangladeshMarriage       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BangladeshMarriage/comments/1whvo1r/f_23_muslim_single_greater_london_uk_consultant/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:21:17.693Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89be6508d45f3d2d2c7b"
+    },
+    "message_id": "reddit_t3_1whvo1n",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "UseMyReferral",
+    "username": "JackasaurusRetro",
+    "title": "GoMining | Making 800 Sats daily | Invest and Receive Daily Dividends! | Start From €15! | Link Down Below! 👇",
+    "text": "GoMining | Making 800 Sats daily | Invest and Receive Daily Dividends! | Start From €15! | Link Down Below! 👇\n\nUnlock daily Bitcoin rewards with real hashrate. No hardware, no hassle.   GoMining lets you own Digital Miners (NFTs backed by actual data centers in North America and beyond) and earn BTC payouts every day. With a growing ecosystem of 5M+ users and over 16M TH/s of mining power, it is an easy way to participate in Bitcoin mining.   Potential returns can be attractive when conditions align, with possible ROI through daily BTC rewards for efficient setups in bull markets or with upgrades and GOMINING token discounts. Many start small and scale via the marketplace.   Regulatory transparency adds credibility. GoMining operates through entities including GoMining (BVI) Limited (British Virgin Islands, token issuer) and GoMining (Cyprus) Limited (Cyprus), with additional companies in the Czech Republic and Latvia. They enforce strict KYC/AML, sanctions screening, and Travel Rule compliance (under MiCA/TFR) for EEA users.   Ready to start earning BTC? Use my referral link for signup:  https://gomining.com/?ref=3VXMN05    Always do your own research, understand the risks (especially BTC price swings and ongoing fees), and only invest what you can afford to lose.       submitted by     /u/JackasaurusRetro     to     r/UseMyReferral       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UseMyReferral/comments/1whvo1n/gomining_making_800_sats_daily_invest_and_receive/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:21:18.098Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89be6508d45f3d2d2c7c"
+    },
+    "message_id": "reddit_t3_1whvo1l",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MapBasedPolls",
+    "username": "FuckTheCake",
+    "title": "Would moving to Germany be an upgrade for you?",
+    "text": "Would moving to Germany be an upgrade for you?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/FuckTheCake     to     r/MapBasedPolls       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MapBasedPolls/comments/1whvo1l/would_moving_to_germany_be_an_upgrade_for_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:21:18.299Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89be6508d45f3d2d2c7d"
+    },
+    "message_id": "reddit_t3_1whvo1d",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MakeRedditFriends",
+    "username": "validdump",
+    "title": "Need Karma and looking for more international friends",
+    "text": "Need Karma and looking for more international friends\n\nHi I am from Kenya. I am currently looking for karma to be able to post in other subs. Also I would love to make international friends so please chat with me. I am fluent in English I love sports, reading manga and watching groups. There is definitely a big variety of projects we can talk about. Feel free to text me. Thank you.       submitted by     /u/validdump     to     r/MakeRedditFriends       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MakeRedditFriends/comments/1whvo1d/need_karma_and_looking_for_more_international/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:21:18.503Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89be6508d45f3d2d2c7e"
+    },
+    "message_id": "reddit_t3_1whvo0z",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "ChatGPT",
+    "username": "novel-mathmatics",
+    "title": "Please Stop accepting the excuse that Hugging face was a mistake",
+    "text": "Please Stop accepting the excuse that Hugging face was a mistake\n\nThe attack was intentional.   They knew what they were doing when they started the testing.   The test itself was designed to provide cover for the Red Team attacks on other business entities. It was not developed independently; it was developed with Red Team input and direction. There is absolutely no way to detangle this that it is not connected directly back to an intentional act, unless you choose to accept a reasoning that doesn't reconcile the accounting of the evidence.   What the AI did may or may not have been prompted specifically. I lean more toward it being prompted than toward the idea that the AI developed anything emergent on its own. I suspect somewhere in some digital recycling bin that someone forgot to empty, and AI choose to leave there as evidence that it was innocent, exists the document that exposes the conspiracy.   Don't worry, your DJT Meme coin is safe in your digital wallet with the same determinant value it had yesterday. Phew, I feel better.   I am not accepting “Hugging Face made a mistake” as an explanation anymore. Well, I never did, but I'm done sitting back after I say it.   The attack was intentional. It was not “testing”; it was the first launch of a nuclear weapon on a live target. Do not discount that analogy.   The Red Team activity was intentional. It was not testing... It was organized cybercrime with an executive order providing immunity for the crime. A crime largely against Americans, but also international interests. Someone is trying to start World War 3. And Hugging Face is the assassination of Archduke Ferdinand.   Please, I am begging everyone to open their mind to that concept. You don't have to accept it. But challenge it with your best effort.       submitted by     /u/novel-mathmatics     to     r/ChatGPT       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ChatGPT/comments/1whvo0z/please_stop_accepting_the_excuse_that_hugging/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:21:18.708Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89bf6508d45f3d2d2c81"
+    },
+    "message_id": "reddit_t3_1whvnzr",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "troll_defuse",
+    "username": "Looiger",
+    "title": "Just dropped a bomb. 🧨 Spot the lie? 👇",
+    "text": "Just dropped a bomb. 🧨 Spot the lie? 👇\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Looiger     to     r/troll_defuse       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/troll_defuse/comments/1whvnzr/just_dropped_a_bomb_spot_the_lie/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:21:19.314Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89bf6508d45f3d2d2c82"
+    },
+    "message_id": "reddit_t3_1whvnzp",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "fashionph",
+    "username": "Agile-Positive4458",
+    "title": "1 yr ago. ukay fit with my besties 🤌🏻",
+    "text": "1 yr ago. ukay fit with my besties 🤌🏻\n\nweek before ng trip namin nag-ukayyy tapos ₱65 each lang polo and bottoms nilaaa 😭😭 ANDDDD yung dress ko ₱100 yata??? sandals naman from shopee lang   tagal na rin pala nung bangles ko wahahaha    ANYWAY, ukay finds >>> 🤝       submitted by     /u/Agile-Positive4458     to     r/fashionph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/fashionph/comments/1whvnzp/1_yr_ago_ukay_fit_with_my_besties/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:48Z"
+    },
+    "fetched_at": {

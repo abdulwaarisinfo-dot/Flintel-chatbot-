@@ -1,0 +1,416 @@
+    "text": "How is it 2026 and we still don’t have a serious self-hosted POS?\n\nI’m genuinely confused.   Every other category has strong open-source / self-hosted options now:     CRM → tons   Analytics → tons   Dev tools → infinite   Even Reddit alternatives exist (Lemmy, etc.)     But POS? Still basically locked into:     Shopify / Square (cloud-first, subscription)   Lightspeed, Toast, etc.   Closed systems with limited extensibility     And yet the need is obvious:     Businesses don’t want their sales data locked in SaaS   Fees keep increasing (per terminal, per transaction, per feature…)   Integrations are often painful or limited   Offline / edge cases are still messy     I know there are some “open source” POS projects, but:     Most feel abandoned or outdated   Weak ecosystems (plugins, APIs, integrations)   Not really production-grade for serious businesses     So what’s the real reason?   Is it:     Hardware complexity (printers, scanners, payments)?   Compliance (tax, fiscalization, country rules)?   Payment provider lock-in?   Lack of dev interest?   Or just that SaaS margins are too good to disrupt?     Curious what people here think:     Have you found a  real  self-hosted POS that works at scale?   Or is this still an open opportunity?         submitted by     /u/LegitimateRip3134       [link]       [comments]",
+    "username": "LegitimateRip3134",
+    "subreddit_or_channel": "POS",
+    "posted_at": "2026-03-26T22:10:53+00:00",
+    "fetched_at": {
+      "$date": "2026-09-08T03:31:03.143Z"
+    },
+    "google_rank": 3,
+    "search_keyword": "certified POS",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-08T03:31:03.143Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f817ff0819e6636a944ba"
+    },
+    "message_id": "reddit_t3_1wad68c",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "SimCity",
+    "username": "KalElReturns89",
+    "title": "SimCopter Remake 1.0 release, out now!",
+    "text": "SimCopter Remake 1.0 release, out now!\n\nThe first feature-complete version of SimCopter Remake is here, ready for general release!   This release adds flight replays, restores the original intro movies, and brings major improvements to career progression, rescues, controller controls, police work, and traffic.   Changes since **v0.9.5**:   ## New replay system   - Record your flights, name your clips, and save them to watch again.   - Pause, scrub through recordings, and adjust playback speed from **0.1× to 4×**.   - Watch from chase, orbit, rescue, and cockpit views, or explore the scene with a free camera.   - Hide the HUD and replay controls for a clear view while recording or watching.   - Add bookmarks and see mission events on the timeline.   Press **Tab** in a city to open the replay controls.   ## Career progression and saving   - Moving to the next career city now keeps your money, owned helicopters, equipment, and remaining tear gas. Your helicopter arrives repaired and refuelled.   - Fixed problems that could leave a career stuck between cities, award the completion bonus twice, or mishandle the final level.   - **Save Game** now updates a dedicated **Quick Save**. Choosing to save when leaving updates a separate **Exit Save**.   - **Save Game As** keeps named checkpoints separate, so ordinary saving no longer overwrites the named game you loaded.   - Career and user-city games each have their own Quick Save and Exit Save.   - You can now sell your only helicopter to help buy a replacement, provided the sale leaves you enough money to afford another.   ## Better rescues and medical missions   - Transport passengers no longer give up and disappear after boarding your helicopter.   - Pickup markers and reminders now clear once everyone has been collected. Rescue and transport missions no longer penalize you simply for carrying passengers to safety.   - Fixed paramedics transferring patients into the helicopter and boarding again after a pickup.   - Patient portraits now reflect their health immediately and update as their condition changes.   - Fixed dying patients unexpectedly returning to full health. Patients who die aboard remain available for removal by a paramedic.   - Improved patient animations during hospital handoffs, including keeping surviving patients distinct from those who died.   - Rooftop survivors now appear on usable roof space instead of water tanks, vents, and other rooftop objects.   - Safely dropping a rescue or transport passenger can now complete their delivery when they land uninjured at a valid location.   ## Improved controller controls   - Updated helicopter controls: **RT or A** to climb, **LT or B** to descend, and **X** to use the selected tool.   - Hold **LB** for the tool wheel or **RB** for the dispatch wheel. Select with the right stick and release the shoulder button to confirm.   - Redesigned both wheels with clearer segments and highlights, corrected selection directions, and layouts that fit smaller screens.   - Added a separate **Police (Chase)** option to the dispatch wheel.   - Release a wheel with the stick centred, or press **B**, to cancel. In the dispatch wheel, **A** sends the selected service immediately and **Y** recalls all dispatched vehicles.   - Open passenger selection with **LB + X**.   - Fixed menu confirmations and cancellations accidentally triggering climb or descent. The triggers remain available for altitude control while using either wheel.   - Takeoff hints now switch between keyboard and controller instructions as you change devices and reflect your current bindings.   ## More reliable missions and police   - Higher difficulty levels now allow the same response time as the easiest level, while still increasing the number and difficulty of emergencies.   - Arsonists now start nearby building fires regularly, making them a more active threat.   - Burning wreckage from crashes and vehicle fires can now spread fire to nearby buildings correctly.   - Riots now start on streets with enough participants to avoid immediately ending on their own.   - Fixed rioters becoming unresponsive to crowd-control tools and mission progress counting the same person more than once.   - Police and arrested criminals return to their vehicles more reliably, retrying blocked routes instead of becoming stranded or disappearing early.   - Officers waiting on police-station roofs stay available for pickup. Deployed officers begin looking for criminals even while your helicopter remains landed.   ## Flight, traffic, and city improvements   - Slowed raising and lowering the water bucket and rescue harness to one-quarter of their previous speed for finer control. Bucket filling speed stays the same.   - Fixed invisible barriers beneath bridges, overhead power lines, and other raised structures. Helicopter collisions now fit the selected aircraft more closely.   - Improved pedestrian movement around buildings and obstacles, reducing people getting stuck or standing partly inside walls.   - Added tumbling and recovery reactions when people are struck by cars or helicopters.   - Traffic slows down and tries to steer around riot crowds.   - Vehicles now travel through connected tunnels and emerge at the other end. Fixed tunnel entrances, road height, and markings.   - Trees sit more naturally on uneven terrain, and power poles on slopes have corrected heights.   - Refined character models and proportions.   ## Controls, sound, and presentation   - Restored both original startup movies, including their original audio. They play once when you launch the game and can be skipped individually with a key, controller button, mouse click, or touch.   - Added the original animated loading screen and status messages.   - Fixed the camera sweeping across the city from a temporary starting position when a game loads.   - Added a takeoff prompt explaining which control to hold and how to get out.   - Simplified engine and lift controls so rebinding them no longer creates conflicting controls.   - Clicking cockpit buttons, menus, or replay controls no longer interrupts held flight keys.   - Helicopter engine audio now stops when you get out.   - Speech and sound effects no longer cut off other sounds.   - Improved smoke, fire effects, and dispatch-marker visibility around dawn, dusk, and nighttime.    https://preview.redd.it/82lin8acu7oh1.png?width=2559&format=png&auto=webp&s=1546d02ba13ddf6a44dba4961b553dd78473768b     https://preview.redd.it/px43g7acu7oh1.png?width=2559&format=png&auto=webp&s=119c4db11f88dceedac64b4fd17114fa48a5dc05     https://preview.redd.it/tb2yk7acu7oh1.png?width=2559&format=png&auto=webp&s=11df527fbe7821f2ec33be2d6eeb0fc494a153ad     https://preview.redd.it/2g6gf8acu7oh1.png?width=2559&format=png&auto=webp&s=0fab1accb4e5323ab1ffbf4fa5615267f9d90060     https://preview.redd.it/ywac5bacu7oh1.png?width=2559&format=png&auto=webp&s=852240779799b6f6120c6ae4d36478a4ed197c7c     https://preview.redd.it/jxg188acu7oh1.png?width=2559&format=png&auto=webp&s=8b501cbb1f268c00b902504dd87d10f59b35e88a     Download here:    https://github.com/JamesIV4/sim-copter-remake/releases/latest         submitted by     /u/KalElReturns89     to     r/SimCity       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SimCity/comments/1wad68c/simcopter_remake_10_release_out_now/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T03:30:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T03:31:11.005Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f817ff0819e6636a944bb"
+    },
+    "message_id": "reddit_t3_1wad678",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "LegionGo",
+    "username": "Wor3q",
+    "title": "Do I need Losesess Scaling on Go 2 with Steam OS?",
+    "text": "Do I need Losesess Scaling on Go 2 with Steam OS?\n\nI'm a bit confused about scaling and framegen Decky plugins. Before buying the Legion, I was using a LCD Steam Deck with loseless scaling plugin.   But after switching to Go 2, I can simply turn FSR on in game settings.    What's the point of the plugin in that case?        submitted by     /u/Wor3q     to     r/LegionGo       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LegionGo/comments/1wad678/do_i_need_losesess_scaling_on_go_2_with_steam_os/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T03:30:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T03:31:11.208Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f817ff0819e6636a944bc"
+    },
+    "message_id": "reddit_t3_1wad65i",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BangaloreSocial",
+    "username": "inclass_usingphone",
+    "title": "SCAM ALERTTTTTT in BANGALORE be cautious. Towel scam",
+    "text": "SCAM ALERTTTTTT in BANGALORE be cautious. Towel scam\n\n​   Would you pay 1500 rs for a towel?   A towel which is made of different materials in each side, One for face and another for body.   Ofc it's 1500 rs towel so materials used are peak goated stuff. Not getting too technical question is simple would you buy?   Yes or no    If yes i might actually manufacture it 🫡   towel scam sounds funny - I might even name the product as towelscam   How about dr.towelscam ?       submitted by     /u/inclass_usingphone     to     r/BangaloreSocial       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BangaloreSocial/comments/1wad65i/scam_alertttttt_in_bangalore_be_cautious_towel/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T03:30:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T03:31:11.409Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f817ff0819e6636a944bd"
+    },
+    "message_id": "reddit_t3_1wad64v",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "HaloInfinity",
+    "username": "GameProfessional",
+    "title": "💫 Halo Infinity | Mens L Pa Rappa The Rappa T-shirt",
+    "text": "💫 Halo Infinity | Mens L Pa Rappa The Rappa T-shirt\n\nMens L Pa Rappa The Rappa T-shirt    ![Men’s L Pa Rappa The Rappa T-shirt]( https://i0.wp.com/i.ebayimg.com/images/g/sCUAAeSwGS5qTUlk/s-l1600.jpg?w=1290&ssl=1 )  ![Men’s L Pa Rappa The Rappa T-shirt](https://i0.wp.com/i.ebayimg.com/images/g/sCUAAeSwGS5qTUlk/s-l1600.jpg?w=1290&ssl=1)    Listing type:  Fixed price   Best offer:  Available   Seller:  groversfinestitems (99.2% positive feedback)   Location:  US   Condition:  Pre-owned – Good   Price:  7.76 USD   Shipping cost:  Free   Buy It Now     Buy it on eBay    In the evolving world of streetwear, the Mens L Pa Rappa The Rappa T-shirt stands out as a deliberate fusion of nostalgia and modern style. Rooted in a character that defined a generation, this piece transcends mere apparel to become a wearable statement about culture, creativity, and personal expression.   Design and Aesthetic The T-shirt leverages a bold graphic that pays homage to PaRappa the Rapper, harmonizing vibrant hues with clean typography. The Mens L cut provides a contemporary silhouette that pairs well with a variety of outfits, from oversized denim and sneakers to minimalist chinos and leather jackets. The choice of fabric emphasizes comfort and durability, ensuring that the graphic remains crisp wash after wash.   Cultural Resonance PaRappa the Rapper isn’t just a game character; he represents a specific era of gaming and music that many fans remember vividly. Wearing a T-shirt that echoes that energy creates a bridge between retro charm and current style sensibilities. This piece invites conversations about memory, influence, and the enduring appeal of cross-media icons in streetwear.   Quality and Craftsmanship Attention to detail is evident in the T-shirt’s print method, stitch integrity, and colorfast materials. A high-quality screen print or DTG finish ensures the PaRappa motif remains sharp, while reinforced seams and a balanced neckline contribute to longevity. For buyers, this translates into a reliable staple that can be worn daily or displayed as part of a curated wardrobe.   Styling and Versatility – Layer with a denim jacket, cargo pants, and high-top sneakers for a casual, retro-inspired look. – Pair with a blazer and slim trousers to reinterpret the character’s energy in a more polished setting. – Use as a focal piece in monochrome outfits to let the graphic stand out boldly. The versatility of the Mens L Pa Rappa T-shirt makes it suitable for casual weekends, creative work environments, and social events alike.   Care Guidelines To preserve color and print integrity, follow standard care recommendations: – Turn the shirt inside out before washing. – Use cold or warm water and mild detergent. – Avoid high-heat drying; air dry when possible or use a low-heat setting. – Do not iron directly over the graphic.   Conclusion The Mens L Pa Rappa The Rappa T-shirt is more than apparel; it’s a thoughtful intersection of memory, design, and personal style. It offers wearer confidence through a familiar character rendered in a contemporary, highly wearable format. For collectors and casual fans alike, this T-shirt provides a reliable, stylish way to celebrate a cultural touchstone while remaining firmly within the current fashion conversation.    ![](https://i0.wp.com/247videogame.com/wp-content/uploads/2026/09/s-l1600.jpg-196.jpeg?resize=1024%2C1024&ssl=1 \"s-l1600-jpg-196-jpeg\")                                            September 7, 2026 at 11:27PM   More Information   Follow for more content like this.   24/7 Video Game   All of the best video games, all of the time.   YouTube    Twitch    Kick    Facebook    Instagram    Reddit    TikTok    X    Up Game Shop   Donate To   St. Jude's Children's Research Hospital        submitted by     /u/GameProfessional     to     r/HaloInfinity       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HaloInfinity/comments/1wad64v/halo_infinity_mens_l_pa_rappa_the_rappa_tshirt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T03:30:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T03:31:11.609Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f817ff0819e6636a944be"
+    },
+    "message_id": "reddit_t3_1wad64l",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "GearsOfWars",
+    "username": "GameProfessional",
+    "title": "⚙️ Gears Of Wars | Mens L Pa Rappa The Rappa T-shirt",
+    "text": "⚙️ Gears Of Wars | Mens L Pa Rappa The Rappa T-shirt\n\nMens L Pa Rappa The Rappa T-shirt    ![Men’s L Pa Rappa The Rappa T-shirt]( https://i0.wp.com/i.ebayimg.com/images/g/sCUAAeSwGS5qTUlk/s-l1600.jpg?w=1290&ssl=1 )  ![Men’s L Pa Rappa The Rappa T-shirt](https://i0.wp.com/i.ebayimg.com/images/g/sCUAAeSwGS5qTUlk/s-l1600.jpg?w=1290&ssl=1)    Listing type:  Fixed price   Best offer:  Available   Seller:  groversfinestitems (99.2% positive feedback)   Location:  US   Condition:  Pre-owned – Good   Price:  7.76 USD   Shipping cost:  Free   Buy It Now     Buy it on eBay    In the evolving world of streetwear, the Mens L Pa Rappa The Rappa T-shirt stands out as a deliberate fusion of nostalgia and modern style. Rooted in a character that defined a generation, this piece transcends mere apparel to become a wearable statement about culture, creativity, and personal expression.   Design and Aesthetic The T-shirt leverages a bold graphic that pays homage to PaRappa the Rapper, harmonizing vibrant hues with clean typography. The Mens L cut provides a contemporary silhouette that pairs well with a variety of outfits, from oversized denim and sneakers to minimalist chinos and leather jackets. The choice of fabric emphasizes comfort and durability, ensuring that the graphic remains crisp wash after wash.   Cultural Resonance PaRappa the Rapper isn’t just a game character; he represents a specific era of gaming and music that many fans remember vividly. Wearing a T-shirt that echoes that energy creates a bridge between retro charm and current style sensibilities. This piece invites conversations about memory, influence, and the enduring appeal of cross-media icons in streetwear.   Quality and Craftsmanship Attention to detail is evident in the T-shirt’s print method, stitch integrity, and colorfast materials. A high-quality screen print or DTG finish ensures the PaRappa motif remains sharp, while reinforced seams and a balanced neckline contribute to longevity. For buyers, this translates into a reliable staple that can be worn daily or displayed as part of a curated wardrobe.   Styling and Versatility – Layer with a denim jacket, cargo pants, and high-top sneakers for a casual, retro-inspired look. – Pair with a blazer and slim trousers to reinterpret the character’s energy in a more polished setting. – Use as a focal piece in monochrome outfits to let the graphic stand out boldly. The versatility of the Mens L Pa Rappa T-shirt makes it suitable for casual weekends, creative work environments, and social events alike.   Care Guidelines To preserve color and print integrity, follow standard care recommendations: – Turn the shirt inside out before washing. – Use cold or warm water and mild detergent. – Avoid high-heat drying; air dry when possible or use a low-heat setting. – Do not iron directly over the graphic.   Conclusion The Mens L Pa Rappa The Rappa T-shirt is more than apparel; it’s a thoughtful intersection of memory, design, and personal style. It offers wearer confidence through a familiar character rendered in a contemporary, highly wearable format. For collectors and casual fans alike, this T-shirt provides a reliable, stylish way to celebrate a cultural touchstone while remaining firmly within the current fashion conversation.    ![](https://i0.wp.com/247videogame.com/wp-content/uploads/2026/09/s-l1600.jpg-196.jpeg?resize=1024%2C1024&ssl=1 \"s-l1600-jpg-196-jpeg\")                                            September 7, 2026 at 11:27PM   More Information   Follow for more content like this.   24/7 Video Game   All of the best video games, all of the time.   YouTube    Twitch    Kick    Facebook    Instagram    Reddit    TikTok    X    Up Game Shop   Donate To   St. Jude's Children's Research Hospital        submitted by     /u/GameProfessional     to     r/GearsOfWars       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GearsOfWars/comments/1wad64l/gears_of_wars_mens_l_pa_rappa_the_rappa_tshirt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T03:30:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T03:31:11.811Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f8180f0819e6636a944bf"
+    },
+    "message_id": "reddit_t3_1wad649",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Tekkens",
+    "username": "GameProfessional",
+    "title": "🥋 Tekkens | Mens L Pa Rappa The Rappa T-shirt",
+    "text": "🥋 Tekkens | Mens L Pa Rappa The Rappa T-shirt\n\nMens L Pa Rappa The Rappa T-shirt    ![Men’s L Pa Rappa The Rappa T-shirt]( https://i0.wp.com/i.ebayimg.com/images/g/sCUAAeSwGS5qTUlk/s-l1600.jpg?w=1290&ssl=1 )  ![Men’s L Pa Rappa The Rappa T-shirt](https://i0.wp.com/i.ebayimg.com/images/g/sCUAAeSwGS5qTUlk/s-l1600.jpg?w=1290&ssl=1)    Listing type:  Fixed price   Best offer:  Available   Seller:  groversfinestitems (99.2% positive feedback)   Location:  US   Condition:  Pre-owned – Good   Price:  7.76 USD   Shipping cost:  Free   Buy It Now     Buy it on eBay    In the evolving world of streetwear, the Mens L Pa Rappa The Rappa T-shirt stands out as a deliberate fusion of nostalgia and modern style. Rooted in a character that defined a generation, this piece transcends mere apparel to become a wearable statement about culture, creativity, and personal expression.   Design and Aesthetic The T-shirt leverages a bold graphic that pays homage to PaRappa the Rapper, harmonizing vibrant hues with clean typography. The Mens L cut provides a contemporary silhouette that pairs well with a variety of outfits, from oversized denim and sneakers to minimalist chinos and leather jackets. The choice of fabric emphasizes comfort and durability, ensuring that the graphic remains crisp wash after wash.   Cultural Resonance PaRappa the Rapper isn’t just a game character; he represents a specific era of gaming and music that many fans remember vividly. Wearing a T-shirt that echoes that energy creates a bridge between retro charm and current style sensibilities. This piece invites conversations about memory, influence, and the enduring appeal of cross-media icons in streetwear.   Quality and Craftsmanship Attention to detail is evident in the T-shirt’s print method, stitch integrity, and colorfast materials. A high-quality screen print or DTG finish ensures the PaRappa motif remains sharp, while reinforced seams and a balanced neckline contribute to longevity. For buyers, this translates into a reliable staple that can be worn daily or displayed as part of a curated wardrobe.   Styling and Versatility – Layer with a denim jacket, cargo pants, and high-top sneakers for a casual, retro-inspired look. – Pair with a blazer and slim trousers to reinterpret the character’s energy in a more polished setting. – Use as a focal piece in monochrome outfits to let the graphic stand out boldly. The versatility of the Mens L Pa Rappa T-shirt makes it suitable for casual weekends, creative work environments, and social events alike.   Care Guidelines To preserve color and print integrity, follow standard care recommendations: – Turn the shirt inside out before washing. – Use cold or warm water and mild detergent. – Avoid high-heat drying; air dry when possible or use a low-heat setting. – Do not iron directly over the graphic.   Conclusion The Mens L Pa Rappa The Rappa T-shirt is more than apparel; it’s a thoughtful intersection of memory, design, and personal style. It offers wearer confidence through a familiar character rendered in a contemporary, highly wearable format. For collectors and casual fans alike, this T-shirt provides a reliable, stylish way to celebrate a cultural touchstone while remaining firmly within the current fashion conversation.    ![](https://i0.wp.com/247videogame.com/wp-content/uploads/2026/09/s-l1600.jpg-196.jpeg?resize=1024%2C1024&ssl=1 \"s-l1600-jpg-196-jpeg\")                                            September 7, 2026 at 11:27PM   More Information   Follow for more content like this.   24/7 Video Game   All of the best video games, all of the time.   YouTube    Twitch    Kick    Facebook    Instagram    Reddit    TikTok    X    Up Game Shop   Donate To   St. Jude's Children's Research Hospital        submitted by     /u/GameProfessional     to     r/Tekkens       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Tekkens/comments/1wad649/tekkens_mens_l_pa_rappa_the_rappa_tshirt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T03:30:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T03:31:12.013Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f8180f0819e6636a944c0"
+    },
+    "message_id": "reddit_t3_1wad63y",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "UpGameShop",
+    "username": "GameProfessional",
+    "title": "⬆️ Game Shop | Mens L Pa Rappa The Rappa T-shirt",
+    "text": "⬆️ Game Shop | Mens L Pa Rappa The Rappa T-shirt\n\nMens L Pa Rappa The Rappa T-shirt    ![Men’s L Pa Rappa The Rappa T-shirt]( https://i0.wp.com/i.ebayimg.com/images/g/sCUAAeSwGS5qTUlk/s-l1600.jpg?w=1290&ssl=1 )  ![Men’s L Pa Rappa The Rappa T-shirt](https://i0.wp.com/i.ebayimg.com/images/g/sCUAAeSwGS5qTUlk/s-l1600.jpg?w=1290&ssl=1)    Listing type:  Fixed price   Best offer:  Available   Seller:  groversfinestitems (99.2% positive feedback)   Location:  US   Condition:  Pre-owned – Good   Price:  7.76 USD   Shipping cost:  Free   Buy It Now     Buy it on eBay    In the evolving world of streetwear, the Mens L Pa Rappa The Rappa T-shirt stands out as a deliberate fusion of nostalgia and modern style. Rooted in a character that defined a generation, this piece transcends mere apparel to become a wearable statement about culture, creativity, and personal expression.   Design and Aesthetic The T-shirt leverages a bold graphic that pays homage to PaRappa the Rapper, harmonizing vibrant hues with clean typography. The Mens L cut provides a contemporary silhouette that pairs well with a variety of outfits, from oversized denim and sneakers to minimalist chinos and leather jackets. The choice of fabric emphasizes comfort and durability, ensuring that the graphic remains crisp wash after wash.   Cultural Resonance PaRappa the Rapper isn’t just a game character; he represents a specific era of gaming and music that many fans remember vividly. Wearing a T-shirt that echoes that energy creates a bridge between retro charm and current style sensibilities. This piece invites conversations about memory, influence, and the enduring appeal of cross-media icons in streetwear.   Quality and Craftsmanship Attention to detail is evident in the T-shirt’s print method, stitch integrity, and colorfast materials. A high-quality screen print or DTG finish ensures the PaRappa motif remains sharp, while reinforced seams and a balanced neckline contribute to longevity. For buyers, this translates into a reliable staple that can be worn daily or displayed as part of a curated wardrobe.   Styling and Versatility – Layer with a denim jacket, cargo pants, and high-top sneakers for a casual, retro-inspired look. – Pair with a blazer and slim trousers to reinterpret the character’s energy in a more polished setting. – Use as a focal piece in monochrome outfits to let the graphic stand out boldly. The versatility of the Mens L Pa Rappa T-shirt makes it suitable for casual weekends, creative work environments, and social events alike.   Care Guidelines To preserve color and print integrity, follow standard care recommendations: – Turn the shirt inside out before washing. – Use cold or warm water and mild detergent. – Avoid high-heat drying; air dry when possible or use a low-heat setting. – Do not iron directly over the graphic.   Conclusion The Mens L Pa Rappa The Rappa T-shirt is more than apparel; it’s a thoughtful intersection of memory, design, and personal style. It offers wearer confidence through a familiar character rendered in a contemporary, highly wearable format. For collectors and casual fans alike, this T-shirt provides a reliable, stylish way to celebrate a cultural touchstone while remaining firmly within the current fashion conversation.    ![](https://i0.wp.com/247videogame.com/wp-content/uploads/2026/09/s-l1600.jpg-196.jpeg?resize=1024%2C1024&ssl=1 \"s-l1600-jpg-196-jpeg\")                                            September 7, 2026 at 11:27PM   More Information   Follow for more content like this.   24/7 Video Game   All of the best video games, all of the time.   YouTube    Twitch    Kick    Facebook    Instagram    Reddit    TikTok    X    Up Game Shop   Donate To   St. Jude's Children's Research Hospital        submitted by     /u/GameProfessional     to     r/UpGameShop       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UpGameShop/comments/1wad63y/game_shop_mens_l_pa_rappa_the_rappa_tshirt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T03:30:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T03:31:12.215Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f8180f0819e6636a944c1"
+    },
+    "message_id": "reddit_t3_1wad63q",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "247videogame",
+    "username": "GameProfessional",
+    "title": "🌐 24/7 Video Game | Mens L Pa Rappa The Rappa T-shirt",
+    "text": "🌐 24/7 Video Game | Mens L Pa Rappa The Rappa T-shirt\n\nMens L Pa Rappa The Rappa T-shirt    ![Men’s L Pa Rappa The Rappa T-shirt]( https://i0.wp.com/i.ebayimg.com/images/g/sCUAAeSwGS5qTUlk/s-l1600.jpg?w=1290&ssl=1 )  ![Men’s L Pa Rappa The Rappa T-shirt](https://i0.wp.com/i.ebayimg.com/images/g/sCUAAeSwGS5qTUlk/s-l1600.jpg?w=1290&ssl=1)    Listing type:  Fixed price   Best offer:  Available   Seller:  groversfinestitems (99.2% positive feedback)   Location:  US   Condition:  Pre-owned – Good   Price:  7.76 USD   Shipping cost:  Free   Buy It Now     Buy it on eBay    In the evolving world of streetwear, the Mens L Pa Rappa The Rappa T-shirt stands out as a deliberate fusion of nostalgia and modern style. Rooted in a character that defined a generation, this piece transcends mere apparel to become a wearable statement about culture, creativity, and personal expression.   Design and Aesthetic The T-shirt leverages a bold graphic that pays homage to PaRappa the Rapper, harmonizing vibrant hues with clean typography. The Mens L cut provides a contemporary silhouette that pairs well with a variety of outfits, from oversized denim and sneakers to minimalist chinos and leather jackets. The choice of fabric emphasizes comfort and durability, ensuring that the graphic remains crisp wash after wash.   Cultural Resonance PaRappa the Rapper isn’t just a game character; he represents a specific era of gaming and music that many fans remember vividly. Wearing a T-shirt that echoes that energy creates a bridge between retro charm and current style sensibilities. This piece invites conversations about memory, influence, and the enduring appeal of cross-media icons in streetwear.   Quality and Craftsmanship Attention to detail is evident in the T-shirt’s print method, stitch integrity, and colorfast materials. A high-quality screen print or DTG finish ensures the PaRappa motif remains sharp, while reinforced seams and a balanced neckline contribute to longevity. For buyers, this translates into a reliable staple that can be worn daily or displayed as part of a curated wardrobe.   Styling and Versatility – Layer with a denim jacket, cargo pants, and high-top sneakers for a casual, retro-inspired look. – Pair with a blazer and slim trousers to reinterpret the character’s energy in a more polished setting. – Use as a focal piece in monochrome outfits to let the graphic stand out boldly. The versatility of the Mens L Pa Rappa T-shirt makes it suitable for casual weekends, creative work environments, and social events alike.   Care Guidelines To preserve color and print integrity, follow standard care recommendations: – Turn the shirt inside out before washing. – Use cold or warm water and mild detergent. – Avoid high-heat drying; air dry when possible or use a low-heat setting. – Do not iron directly over the graphic.   Conclusion The Mens L Pa Rappa The Rappa T-shirt is more than apparel; it’s a thoughtful intersection of memory, design, and personal style. It offers wearer confidence through a familiar character rendered in a contemporary, highly wearable format. For collectors and casual fans alike, this T-shirt provides a reliable, stylish way to celebrate a cultural touchstone while remaining firmly within the current fashion conversation.    ![](https://i0.wp.com/247videogame.com/wp-content/uploads/2026/09/s-l1600.jpg-196.jpeg?resize=1024%2C1024&ssl=1 \"s-l1600-jpg-196-jpeg\")                                            September 7, 2026 at 11:27PM   More Information   Follow for more content like this.   24/7 Video Game   All of the best video games, all of the time.   YouTube    Twitch    Kick    Facebook    Instagram    Reddit    TikTok    X    Up Game Shop   Donate To   St. Jude's Children's Research Hospital        submitted by     /u/GameProfessional     to     r/247videogame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/247videogame/comments/1wad63q/247_video_game_mens_l_pa_rappa_the_rappa_tshirt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T03:30:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T03:31:12.416Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f818a1790aa25e94b8bb4"
+    },
+    "message_id": "reddit_t3_1wad6dw",
+    "topic_key": "psychiatrist",
+    "search_keyword": "psychiatrist",
+    "platform": "reddit",
+    "subreddit": "brisbane",
+    "username": "Standard-Vacation-38",
+    "title": "Psychiatrist in Brisbane",
+    "text": "Psychiatrist in Brisbane\n\nLooking for a recommendation for a psychiatrist preferably around CBD/fortitude valley area, or the inner southeast-ish    For treatment resistant anxiety. Preferably a female, but would consider a male doctor if he was really warm and compassionate.    Thanks        submitted by     /u/Standard-Vacation-38     to     r/brisbane       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/brisbane/comments/1wad6dw/psychiatrist_in_brisbane/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T03:31:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T03:31:22.759Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f818a1790aa25e94b8bb5"
+    },
+    "message_id": "reddit_t3_1wad6cm",
+    "topic_key": "painter",
+    "search_keyword": "painter",
+    "platform": "reddit",
+    "subreddit": "ASCII",
+    "username": "jkennedy1998",
+    "title": "what if we graphically compared each available character of a typeface at build time so we could interpolate between them at runtime? 👉👈",
+    "text": "what if we graphically compared each available character of a typeface at build time so we could interpolate between them at runtime? 👉👈\n\nthis is a very raw post, i just am very excited to finally get this piece of the program working!  ( also a sneak peek of some layer + \"keyframe\" + ease tweaking for my ascii editor. )   this is the thaum painter.  it uses my typeface thaum mono,  the renderer will release as the thaum-renderer   will all be free and open source, not an ad as much as a geek out       submitted by     /u/jkennedy1998     to     r/ASCII       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ASCII/comments/1wad6cm/what_if_we_graphically_compared_each_available/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T03:31:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T03:31:22.992Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f818b1790aa25e94b8bb6"
+    },
+    "message_id": "reddit_t3_1wad6az",
+    "topic_key": "makeup artist",
+    "search_keyword": "makeup artist",
+    "platform": "reddit",
+    "subreddit": "DesiWeddingVenues",
+    "username": "WebringOne",
+    "title": "Wedding Venue Booking? Check These Hidden Details First...",
+    "text": "Wedding Venue Booking? Check These Hidden Details First...\n\nA venue can look perfect online and still cause very real problems on the actual wedding day. Before booking have a read through these few hidden details and go beyond the basic questions and check the small things that can actually affect the experience.   Note the     Power backup and generator support.   Real AC cooling, not just “AC available.”   Easy vendor access for decor, catering, and photo teams.   Music rules and sound cut-off timing.   Clean washrooms throughout the event, not just before it starts.   Smooth entry for the bride, groom, and baraat.   Staff who answer clearly and do not hide charges.   A proper rain or weather backup plan.   Chair, sofa, and table quality.   Mobile network and Wi-Fi.   Space for vendor staff, drivers, and makeup artists.   Cleanup rules after the event.   Extra charges for overtime, electricity, security, or valet.     A good venue is not just about looks. It is about how smoothly the whole event runs when guests start arriving.       submitted by     /u/WebringOne     to     r/DesiWeddingVenues       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DesiWeddingVenues/comments/1wad6az/wedding_venue_booking_check_these_hidden_details/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T03:31:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T03:31:23.232Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f81bbf0819e6636a944c2"
+    },
+    "message_id": "reddit_t3_1wad6t3",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MalaysianPF",
+    "username": "PuzzleheadedBuy6279",
+    "title": "Property price. So many people got it wrong including banks.",
+    "text": "Property price. So many people got it wrong including banks.\n\nIt could be asking price , listing price , reserve price. But none focus on transacted price which is usually lower.       submitted by     /u/PuzzleheadedBuy6279     to     r/MalaysianPF       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MalaysianPF/comments/1wad6t3/property_price_so_many_people_got_it_wrong/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T03:31:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T03:32:11.694Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f81bbf0819e6636a944c3"
+    },
+    "message_id": "reddit_t3_1wad6t2",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "baseballcards",
+    "username": "Odd_Conversation8901",
+    "title": "A few more",
+    "text": "A few more\n\nCurious if these are kind of basic run of the mill cards or are these valuable cards. I'm very unfamiliar with any kind of collectibles or things of this nature. I have quite a few more of these cards and I'm curious if it is worth the effort in trying to find a buyer or should I find them a happy home with someone in my community for free.       submitted by     /u/Odd_Conversation8901     to     r/baseballcards       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/baseballcards/comments/1wad6t2/a_few_more/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T03:31:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T03:32:11.893Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f81bcf0819e6636a944c4"
+    },
+    "message_id": "reddit_t3_1wad6su",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "xbox",
+    "username": "Woman_Respector_788",
+    "title": "A series S is $650 in Canada now... what?",
+    "text": "A series S is $650 in Canada now... what?\n\nAre you kidding me man, I swear this was under $400 like in 2024? I always wanted to buy it to upgrade to the new gen but I was hoping for a price drop as the console got older, instead it doubled in the cost for a new console?   I guess I'm never upgrading to the next gen, this sucks       submitted by     /u/Woman_Respector_788     to     r/xbox       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/xbox/comments/1wad6su/a_series_s_is_650_in_canada_now_what/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T03:31:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T03:32:12.093Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f81bcf0819e6636a944c5"
+    },
+    "message_id": "reddit_t3_1wad6sf",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "fragranceswap",
+    "username": "AccountParty755",
+    "title": "[WTB] Amber Teutonic - D.S & Durga (Bottle)",
+    "text": "[WTB] Amber Teutonic - D.S & Durga (Bottle)\n\nLooking to either buy or trade for Amber Teutonic.   Can trade:   Ds & Durga: Grapefruit Generation, Radio Bombay, Debaser, Big Sur Eucalyptus   Hermes: Un Jardin a Mediteranee, Un Jardin a Cythere   Serge Lutens: Chergui       submitted by     /u/AccountParty755     to     r/fragranceswap       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/fragranceswap/comments/1wad6sf/wtb_amber_teutonic_ds_durga_bottle/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T03:31:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T03:32:12.292Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f81e51790aa25e94b8bb7"
+    },
+    "message_id": "reddit_t3_1wad7b8",
+    "topic_key": "technical co-founder",
+    "search_keyword": "technical co-founder",
+    "platform": "reddit",
+    "subreddit": "Bangalorestartups",
+    "username": "United_Milk7307",
+    "title": "Looking for a Technical Co-Founder in Bangalore | Building a Hyperlocal Commerce Marketplace",
+    "text": "Looking for a Technical Co-Founder in Bangalore | Building a Hyperlocal Commerce Marketplace\n\nHi everyone,   I'm based in Bangalore and currently building an early-stage startup in the hyperlocal commerce space, and I'm looking for a technical co-founder to build it with me from 0→1.   Intrested people kindly reach out to me we can discuss this in detail       submitted by     /u/United_Milk7307     to     r/Bangalorestartups       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Bangalorestartups/comments/1wad7b8/looking_for_a_technical_cofounder_in_bangalore/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T03:32:24Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T03:32:53.173Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f81ec91bc12a96dd63fe9"
+    },
+    "message_id": "reddit_serp_175e0fk",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/rails/comments/175e0fk/which_provider_for_sending_sms_messages_is_the/",
+    "text": "Which provider for sending SMS messages is the best?\n\nWe are about to add a feature for sending SMS messages, so now we have to choose an SMS provider. Which one is the best in your opinion? Which one can you recommend to not regret in the future?       submitted by     /u/Sea-Vermicelli-6446       [link]       [comments]",
+    "username": "Sea-Vermicelli-6446",
+    "subreddit_or_channel": "rails",
+    "posted_at": "2023-10-11T13:27:32+00:00",
+    "fetched_at": {
+      "$date": "2026-09-08T03:33:00.882Z"
+    },
+    "google_rank": 5,
+    "search_keyword": "certified SMS marketing",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-08T03:33:00.882Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f81f8f0819e6636a944c6"
+    },
+    "message_id": "reddit_t3_1wad7me",
+    "topic_key": "nike",
+    "search_keyword": "Nike",
+    "platform": "reddit",
+    "subreddit": "gamefaqscurrentevents",
+    "username": "AzhdarianHomie",
+    "title": "Nike on the path to Broke from going Woke!",
+    "text": "Nike on the path to Broke from going Woke!\n\nsubmitted by     /u/AzhdarianHomie     to     r/gamefaqscurrentevents       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/gamefaqscurrentevents/comments/1wad7me/nike_on_the_path_to_broke_from_going_woke/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T03:32:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T03:33:12.097Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f81f9f0819e6636a944cc"
+    },
+    "message_id": "reddit_t3_1wad7m6",
+    "topic_key": "give me today top three conversation about e commerce",
+    "search_keyword": "ecommerce",

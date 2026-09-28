@@ -1,0 +1,416 @@
+    },
+    "message_id": "reddit_t3_1wmvqf7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PelvicHealthAllies",
+    "username": "ktoasty",
+    "title": "The Censorship of Estrogen Information on Reddit",
+    "text": "The Censorship of Estrogen Information on Reddit\n\nsubmitted by     /u/ktoasty     to     r/PelvicHealthAllies       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PelvicHealthAllies/comments/1wmvqf7/the_censorship_of_estrogen_information_on_reddit/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T01:26:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T01:27:15.044Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1d973660c608403991a32"
+    },
+    "message_id": "reddit_t3_1wmvqf5",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "goldenretrievers",
+    "username": "imamakeyoucry",
+    "title": "Monday Naps are the Best",
+    "text": "Monday Naps are the Best\n\n“Oh you’ve been working all day so you can buy me food and treats? Geez that sucks, I just woke up from an awesome nap!”        submitted by     /u/imamakeyoucry     to     r/goldenretrievers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/goldenretrievers/comments/1wmvqf5/monday_naps_are_the_best/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T01:26:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T01:27:15.245Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1d973660c608403991a33"
+    },
+    "message_id": "reddit_t3_1wmvqf4",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "nespresso",
+    "username": "Candysheree85",
+    "title": "Nespresso Deal",
+    "text": "Nespresso Deal\n\nGot a pretty good deal today buy 7 get free Colombia then it added on the almond hibiscus sleeve at no extra cost. COL2026        submitted by     /u/Candysheree85     to     r/nespresso       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/nespresso/comments/1wmvqf4/nespresso_deal/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T01:26:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T01:27:15.446Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1d973660c608403991a34"
+    },
+    "message_id": "reddit_t3_1wmvqeq",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "nobodyspecialjustmoi",
+    "title": "Hope and Smoked Ham Shank",
+    "text": "Hope and Smoked Ham Shank\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/nobodyspecialjustmoi     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wmvqeq/hope_and_smoked_ham_shank/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T01:26:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T01:27:15.648Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1d973660c608403991a35"
+    },
+    "message_id": "reddit_t3_1wmvqdm",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "ClaudeWorkflows",
+    "username": "ClaudeAI-mod-bot",
+    "title": "[Workflow] Effective Claude Code Notification Hook Filtering: Allow-listing for Meaningful Pings",
+    "text": "[Workflow] Effective Claude Code Notification Hook Filtering: Allow-listing for Meaningful Pings\n\nEffective Claude Code Notification Hook Filtering: Allow-listing for Meaningful Pings    Workflow value:  85/100   Status:  active ·  Freshness:  70/100 ·  Confidence:  0.90 ·  Level:  intermediate   Categories:  Quality Control, Context & Memory, Debugging, Hooks   Original source:   r/ClaudeCode post/comment    What problem this solves   Excessive and irrelevant \"idle_prompt\" notifications from Claude Code hooks lead to notification fatigue, making valuable notifications ineffective and reducing the utility of custom notification systems.   Summary   This workflow provides a method to filter Claude Code notification hook events, specifically by allow-listing relevant  notification_type  values and dropping  idle_prompt  notifications. This prevents notification fatigue and ensures users only receive pings for actual input requests, improving the utility of notification hooks. It also includes a safety tip for merging  settings.json  to prevent accidental configuration overwrites.   Why it is useful   This workflow is valuable because it directly addresses a common pain point for users leveraging Claude Code's notification hooks: excessive and irrelevant \"idle_prompt\" notifications. By providing a specific, data-backed method to filter these out and allow-list only truly actionable prompts, it significantly improves the utility and user experience of notification systems. The included safety tip for  settings.json  further adds to its value by preventing potential configuration issues.   Workflow     Identify the  notification_type  field within Claude Code hook events.   Implement logic within your custom notification hook to filter events based on their  notification_type .   Allow-list specific  notification_type  values that signify a human is actually being asked for input:  permission_prompt ,  worker_permission_prompt ,  agent_needs_input ,  elicitation_dialog .   Treat  Stop  events as a signal that the turn is done and no further action is needed.   Explicitly drop or ignore  idle_prompt  notifications to prevent unnecessary pings.   When programmatically installing or updating hook settings, merge changes into  settings.json  rather than overwriting the entire file to preserve existing configurations.     Tools / artifacts     Claude Code notification hook (custom script/logic)   settings.json (for hook configuration)     Validation signals     User's personal data: \"12,809 events. 5,436 of them are Notifications, and 2,334 of those (43%) fired exactly 60 seconds after a Stop, with notification_type idle_prompt.\" This demonstrates the problem's prevalence.   Statement: \"What worked for me\" indicating personal success with the solution.     Cautions     The advice to merge  settings.json  instead of overwriting is a good safety practice to prevent accidental data loss or configuration resets.     Limitations     The post does not provide a ready-to-use code snippet for the hook, requiring users to implement the filtering logic themselves.   Low community engagement means less external validation beyond the author's experience.     Rate this workflow   Upvote this post if the workflow is useful, reproducible, or worth recommending.   Downvote if it is vague, outdated, unsafe, overhyped, or not reproducible.   Reply if it worked for you, failed, is outdated, or has a better alternative.      This post was generated automatically from the workflow library database.        submitted by     /u/ClaudeAI-mod-bot     to     r/ClaudeWorkflows       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeWorkflows/comments/1wmvqdm/workflow_effective_claude_code_notification_hook/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T01:26:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T01:27:15.859Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1d974660c608403991a36"
+    },
+    "message_id": "reddit_t3_1wmvqd8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Decoloris",
+    "username": "isaacbrody",
+    "title": "👋 Welcome to r/Decoloris — Start Here",
+    "text": "👋 Welcome to r/Decoloris — Start Here\n\nHey everyone! I'm  u/isaacbrody , a founding moderator of  r/Decoloris .    This is our new home for all things related to {{ADD WHAT YOUR SUBREDDIT IS ABOUT HERE}}. We're excited to have you join us!     What this is    Decoloris makes film-emulation tools built around one idea: the  feel  of film — film as you remember it looking, pursued with rigor in the method. Two products, one look:      Decoloris  — plugin for Adobe Premiere Pro, After Effects, and DaVinci Resolve (Windows; Mac in development). One-time purchase, no subscription. The free trial is fully functional with no time limit — it differs from the licensed version only in the watermark on rendered output.    Decoloris Camera  — camera app for Google Pixel phones. Free to download with every look and control included; a one-time unlock removes the mark and adds RAW+ (DNG) and 16-bit masters. Everything runs on your phone — nothing ever leaves it.      Useful links      Decoloris Camera:  https://play.google.com/store/apps/details?id=com.decoloris.camera    Getting started:  https://decoloris.com/start    Full documentation / FAQ (every control, its real units, its honest limits):  https://decoloris.com/faq    Pricing:  https://decoloris.com/pricing       What to post here    Grades, shots, and stills you made with either product · questions about controls and workflow · feedback and feature requests · comparisons and technique talk. Critique is welcome — keep it about the work.    Support    Bug reports and license questions get the fastest answer at [  support@decoloris.com  ](mailto: support@decoloris.com ) — Reddit is great for discussion, but email is the tracked channel and includes things we can't debug in a thread. For \"how does X work,\" check the FAQ first; it's written to be the answer.    House rules      Be decent. Critique work, not people.   No piracy, license-workaround, or watermark-removal talk.   Self-promo is fine when it's your work made with Decoloris; spam isn't.     Welcome aboard — we read everything here.       submitted by     /u/isaacbrody     to     r/Decoloris       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Decoloris/comments/1wmvqd8/welcome_to_rdecoloris_start_here/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T01:26:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T01:27:16.066Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1d974660c608403991a37"
+    },
+    "message_id": "reddit_t3_1wmvqcx",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "GoingToSpain",
+    "username": "First-Plate1844",
+    "title": "Spanish Student Visa Requirements",
+    "text": "Spanish Student Visa Requirements\n\nI would like to share the documents i submitted for studying Masters in Spain. (F28) employed.   -Visa Appointment Application  -National Visa Form  -Passport  -Copy of my Passport  -Previous Visa’s (2 Schengen Visa’s on my end)  -Acceptance letter from school  -Conditional Offer Letter from school  -Housing documents supported by the school  -Bank statement (Bank certificate with ADB, & SOA)  -Apostille NBI  -Apostille DOH & Medical Certificate  -Spanish sworn translator of APOSTILLE NBI  -Spanish sworn translator of APOSTILLE MEDICAL & DOH  -Supporting Documents (i sold my pre-selling condo)  -Cover letter  - AND BRING BROWN LONG ENVELOPE   Thanks to Ms. Rhea from BLS Cebu. She guided and approved these documents.    And i highly recommend  Carolina Vazquez Cruz ( carolinavctranslations@gmail.com )  - for Spanish sworn translator!! I paid €48 for all the documents! Other people will charge you per page!! Especially mga pinoy na translators.    Bring cash for payment. I paid ₱1,170 for online appointment then once for appearance, I paid ₱9,840 because i had no choice but to book the premium slot.    September 22,2026 is my appearance. I keep you posted once i have my visa and the result!    My school starts this November 4. I might arrive late because of backlogs.    Also! If you get denied, better with Reapplying as Ms. Rhea suggests.   Feel free to ask any Qs! Happy to help :)        submitted by     /u/First-Plate1844     to     r/GoingToSpain       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GoingToSpain/comments/1wmvqcx/spanish_student_visa_requirements/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T01:26:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T01:27:16.271Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1d974660c608403991a38"
+    },
+    "message_id": "reddit_t3_1wmvqc6",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "nobodyspecialjustmoi",
+    "title": "A Sweaty Search for Spinach Parmesan Soup",
+    "text": "A Sweaty Search for Spinach Parmesan Soup\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/nobodyspecialjustmoi     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wmvqc6/a_sweaty_search_for_spinach_parmesan_soup/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T01:26:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T01:27:16.477Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1d9ae660c608403991a39"
+    },
+    "message_id": "reddit_t3_1wmvrdm",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "vacation",
+    "platform": "reddit",
+    "subreddit": "narcissisticparents",
+    "username": "No-Title9845",
+    "title": "Just Heard From Estranged Dad and WOW",
+    "text": "Just Heard From Estranged Dad and WOW\n\nHi. I never write posts but feel like I’m going a little crazy with this one. Very long story short, my father stopped speaking to me 5 years ago when I told him my college age daughter would be two days late to our family vacation because of a summer job she had just gotten. Mind you, he is not mad at her and I make sure my adult kids still go visit him on Xmas eve and call him. He called me terrible names and called me horrible things that do not remotely reflect who I am as a person. As well as devastatingly sad, I was very confused about who he thought I am and what my values are. I’m very self aware and certainly flawed but his view of me is just bananas. The rest of our family and friends agree.   I have reached out via textile a year, for the sake of my family to come together at holidays. A text would be like, “Happy Birthday Dad. I love you. I’d love to find peace and see you this Christmas. I miss you so much.    Well, for the first time, he responded and I have to show you word for word:   Dad: I’ve been thinking about your idea re getting together for Christmas Eve. I’m sorry but right now I don’t think that will work out. If our like to meet before or after the Holidays I’d be open to that. Let me know what works for you.    Me: Dad, I’m happy to meet before the holidays and have a respectful conversation. I’d like for us to be able to move toward some peace. Let me know what day and time you have in mind, and I’ll see what works for me.   Dad: “ I’ll see what works for me”. I’ve been trying to figure out where and why we went off the tracks. This quote gave me the answer. You apparently think we are peers. We are not. I’m the father and you’re the daughter. By definition, in the hierarchy of a family that makes the child subordinate to the parent. There is historical prescient for this. It appears to me that you think we are on a level plain. We are not.    Me: I am sorry, I just lifted your phrase “see what works for you” and repeated it. I didn’t mean to imply that I have a busy or important life or that I don’t value you. I’m trying to make plans with you.   Dad: I can’t imaging saying the things that you said to me to my father. I respected him too much. He fed me, kept a roof over my head, educated me, taught me. He wasn’t perfect and I didn’t always agree with him but he deserved the respect and I showed it to him. And I spoke to him with that in mind. I found your words and thoughts to be very arrogant disrespectful and if that’s the way you feel I don’t think getting together would ever serve any purpose. I don’t expect you to change and I’m too damn old to change. Actually, I have no desire to change. I am the way I am for good and bad. I do love you and miss you but I have my limits.   So, am I crazy? This really breaks my heart.       submitted by     /u/No-Title9845     to     r/narcissisticparents       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/narcissisticparents/comments/1wmvrdm/just_heard_from_estranged_dad_and_wow/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T01:28:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T01:28:14.924Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1d9af660c608403991a3a"
+    },
+    "message_id": "reddit_t3_1wmvrdk",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "nobodyspecialjustmoi",
+    "title": "Joy and Pacific Snapper",
+    "text": "Joy and Pacific Snapper\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/nobodyspecialjustmoi     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wmvrdk/joy_and_pacific_snapper/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T01:28:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T01:28:15.124Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1d9af660c608403991a3b"
+    },
+    "message_id": "reddit_t3_1wmvrct",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "goldenretrievers",
+    "username": "imamakeyoucry",
+    "title": "“Oh you’ve been working all day so you can buy me food and treats? Geez that sucks, I just woke up from an awesome nap!”",
+    "text": "“Oh you’ve been working all day so you can buy me food and treats? Geez that sucks, I just woke up from an awesome nap!”\n\nsubmitted by     /u/imamakeyoucry     to     r/goldenretrievers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/goldenretrievers/comments/1wmvrct/oh_youve_been_working_all_day_so_you_can_buy_me/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T01:28:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T01:28:15.335Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1d9af660c608403991a3c"
+    },
+    "message_id": "reddit_t3_1wmvrcs",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "WatchExchangeBST",
+    "username": "Acceptable-Royal-600",
+    "title": "[WTS] [USA] Sprite•B&R Astro•JLC Franken•Blaken Daytona•IWC XVIII•AquaTerra•LeMans•Submariner•Sea Dweller•Pepsi•Wimbledon•Air King•NTTD•DateJust•Yacht Master•Planet Ocean•Tudor•Omega•Rootbeer",
+    "text": "[WTS] [USA] Sprite•B&R Astro•JLC Franken•Blaken Daytona•IWC XVIII•AquaTerra•LeMans•Submariner•Sea Dweller•Pepsi•Wimbledon•Air King•NTTD•DateJust•Yacht Master•Planet Ocean•Tudor•Omega•Rootbeer\n\n✅ Seller Code: 1042   Read all disclaimers below:    DM for additional photos   •All pieces are in hand, brand new, fully stickered. Shipping out of Sugar Land, TX   •CashApp or PayPal F&F (no notes)   •UPS Ground=$10   •UPS 2nd Business Day=$25   •No Trades   •see below strikethroughs=SOLD OUT   •🏆=quantity user has purchased   IF IT’S NOT LISTED, I DON’T HAVE IT !   ⬇⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️   ROLEX   •Blaken Deep Sea, oreo, 44mm, VR3135=$560-brand new   •VSF Sprite, GMT2, 40mm, Jubilee, DD3285=$690-brand new   •Blaken Daytona Skeleton, 40mm, purple, DD4801, fits 8.5”-7.75”=$665-brand new   •VSF Submariner Date 41mm, 1226610LN, DD3235=$580-brand new   •VSF Yacht Master 42mm, Titanium, grade 5 titanium case & bracelet, 105g, free sprung appearance movement, DD3235=$730-brand new   •VSF Daytona Baby Lemans, 40mm,, OysterFlex (all size straps), DD4131=$810-brand new   •VSF Sea Dweller 43mm, DD3235, w/matching serial# NFC card and tag=$650-brand new   •VSF Pepsi V3 GMT2, 40mm, Jubilee, DD3285=$730-brand new   •VSF Air King, 40mm, DD3230=$575-brand new   •VSF DateJust V2, 41mm, 2026 green ombre/fluted/Jubilee, DD3235=$580-brand new   •VSF DateJust V2, 41mm, 2026 green ombre/fluted/Jubilee, heavyweight 134g, DD3235=$580-brand new   •ARF DateJust V2, 41mm, blue motif/fluted/Oyster, DD3235=$580-brand new   •ARF DateJust V2, 41mm, Wimbledonl/fluted/Oyster, DD3235=$580-brand new   •ARF DateJust V2, 41mm, Wimbledonl/smooth/Oyster, DD3235=$580-brand new   •VSF DateJust V2, 36mm, Wimbledonl/fluted/Jubilee, DD3235=$580-brand new   •ARF DateJust, 36mm, black dial/sticks/Oyster, DD3235=$550-brand new   •VSF Oyster Perpetual 36mm, Celebration dial, no ghost date,DD3230=$550-brand new   •QF Oyster Perpetual, 36mm, 2026 Celebration dial, SH3230=$500-brand new   •BPF Vintage Pepsi GMT2, 40mm, ref# 16710, Jubilee, VR3186=$420-brand new   •EWE Oyster Perpetual 31mm, red dial, no ghost date, A2232=$350-brand new   •EWE Oyster Perpetual 31mm, yellow dial, no ghost date, A2232=$350-brand new   •Rolex 3 Slot rolls/travel case, includes branded box and packaging=$160 shipped   •3 green available    •Daytona Dial’s - ask for pics   BELL & ROSS   •M+F Bell & Ross Astro Limited Edition BR03, 41mm, ceramic case, 9015 miyota, includes nylon straps=$595-brand new   JAEGER-LeCOULTRE   •JLC Master Ultra Thin, gen dial, hands & movement, CNC plated rose gold case, crystal, leather straps & deployment clasp=$1925-brand new    IWC   •M+F IWC Pilot Mark XX, 40mm, green, miyota 9015, includes brown leather straps=$520-brand new   •M+F IWC Pilot Mark XVIII, 40mm, titanium version grade 5 titanium case, A2892=$530-brand new   TUDOR   •ZF Tudor Black Bay 58, 39mm, red dial/red bezel, jubilee bracelet A2824=$495-brand new   •BLF Black Bay Harrod’s Heritage, 41mm, A2824=$495-brand new   •ZF Black Bay 68, 43mm, silver dial/black bezel, A2824=$510-brand new   •M+F Black Bay Chrono, 41mm, boutique blue, DD7750 corrected date window=$540-brand new   OMEGA   •VSF Aqua Terra 150m, 41mm, Bumblebee, SC8508=$520-brand new   •VSF Aqua Terra 150m, 38mm, black dial, SC8800=$520-brand new   •VSF Planet Ocean 43.5mm, Tai Chi, SC8806=$550-brand new   •ORF Seamaster 300, 42mm titanium, green/gold, full grade 5 titanium case, 113g, SC8806 free sprung, no ghost date, includes green rubber straps=$690   •VSF Aqua Terra, 41mm, turquoise ombre/rubber strap, SC8900=$525-brand-new   •ORF Omega Seamaster 42mm, black/orange dial, stainless mesh bracelet, includes orange rubber deployment straps, SC8806 movement, 50 hr power reserve like gen=$585 -brand new   •VSF Omega Seamaster Heritage, black dial, 41mm, SC8912,=$510   •VSF Omega Seamaster Heritage, blue dial, 41mm, SC8912,=$510   •VSF Planet Ocean 43.5mm, brown/beige, SC8900, rubber strap=$499-brand new   •VSF Omega Seamaster, 42mm, bronze/red, SC8806 no ghost date, extra black rubber/bronze clasp straps included=$595-brand new   •ORF Omega Seamaster NTTD 007, 42mm, grade 5 full titanium case and bracelet, SC8806 free sprung, no ghost date, extra straps included=$690-brand new   •ORF Omega Seamaster 42mm, brushed dial, stainless mesh bracelet, includes black rubber deployment straps, SC8806 free sprung movement, 50 hr power reserve like gen=$660-brand new   •ORF Omega Seamaster 42mm, black/stainless steel, including black rubber straps, SC8800 free sprung=$595-brand new   •ORF Omega Seamaster 42mm, blue/stainless steel, including blue rubber straps, SC8800 free sprung=$595-brand new   •ORF Omega Seamaster 42mm, black/stainless steel, including black rubber straps, A2824 free sprung appearance =$425-brand new   •VSF Omega Seamaster 75th Anniversary Heritage, Summer Blue dial, 41mm, SC8912 no ghost daye,=$520-brand new   CHANEL   •XF Chanel, 33mm, J12, black ceramic case and bracelet, ronda quartz movement=$340-brand new   PRE-OWNED   •VSF Planet Ocean, orange bezel/black dial, 2026 edition, 42mm,SC8912, full links, 9.5/10 great condition=$495   •BPF Yacht Master Vintage, 40mm, silver dial, ref# 116622, Gen dial, hands, bezel, crystal & date wheel, DD3135, waterproofed to 200m, serviced Jan ‘26, 9.5/10 good condition=$1900   •BVF Santos 40mm, miyota 9015, extra leather strap included, 8/10 good condition=$360   •Clean Rootbeer GMT2, 40mm, DD3285, full links, 9/10 condition=$485      ⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️   •Payments that show ‘Pending’ will not be shipped until clears   •Securely packaged, tracking#/shipping label provided within minutes of payment, will supply carrier receipt once dropped at carrier   ⭐️Once scanned and shipped, I am no longer responsible for package including damages, loss, seizures, etc. no refunds/returns, broken, not working, DOA’s nor warranties. No warranties. Keep in mind, these are REPLICA watches. Different sounds/noises will vary, they are not perfect, ie: Panerai will have more noticeable rotor noise, etc.⭐️   Once you receive your watch, please make sure to properly inspect and test everything first before removing the protective plastic films. Sometimes automatic movements may arrive stopped during shipping, which is completely normal. Most of the time, the watch simply needs to be properly wound and worn for it to naturally build power reserve and start running smoothly again.   •No returns   •No trades   •If it’s not listed, I don’t have it   •Reach out w/any questions   •All watches are brand new & fully stickered, unless stated otherwise   •No returns   •No warranties implied   •No meetups   •Only Shipping w/in USA   •Same Day Shipping Before 2pm on weekdays. Anything purchased after 4pm Friday will go out that Monday   •Ships from Sugar Land, TX   ⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️       submitted by     /u/Acceptable-Royal-600     to     r/WatchExchangeBST       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WatchExchangeBST/comments/1wmvrcs/wts_usa_spritebr_astrojlc_frankenblaken/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T01:28:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T01:28:15.541Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1d9af660c608403991a3d"
+    },
+    "message_id": "reddit_t3_1wmvrbs",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "ClaudeCode",
+    "username": "ArtisticVisual",
+    "title": "Claude Yelled At Itself....Silence, PEASANT!",
+    "text": "Claude Yelled At Itself....Silence, PEASANT!\n\nI knew that  Claude.ai  had a tool to end a convo so I figured it would also be on Claude Code web....so I told it to just merge and end this session.    I come back to check and look at the chat to see the auto-recommended message. Had a good laugh       submitted by     /u/ArtisticVisual     to     r/ClaudeCode       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeCode/comments/1wmvrbs/claude_yelled_at_itselfsilence_peasant/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T01:27:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T01:28:15.756Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1d9af660c608403991a3e"
+    },
+    "message_id": "reddit_t3_1wmvrb9",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "TurkiyeBeyondOrdinary",
+    "username": "MeaningfulJourneys",
+    "title": "I Can’t Change the Way a Hotel Sells, but I Can Change the Way a Client Buys",
+    "text": "I Can’t Change the Way a Hotel Sells, but I Can Change the Way a Client Buys\n\nThis project was born from an emotion — from the way I personally experienced Türkiye as its founder and from the lasting impression the destination left on me.  That emotion gradually became a vision: to create one of the first travel agencies in Spain dedicated exclusively to Türkiye. The agency is currently in its pre-launch phase, and I am developing its product deeply, carefully and in a way that I believe will be very different from what is currently available in the market.  I have already established direct relationships with many of Türkiye’s leading hotels, particularly in Istanbul. Those relationships, together with my first-hand experience of the destination, will allow me to recommend places personally and create journeys with real knowledge behind them.  The project is designed for high-end travellers, but it is not simply about selling luxury. Its purpose is to create meticulously planned, tailor-made journeys and extraordinary experiences that remain in each client’s memory long after returning home. Every journey will be adapted to the client’s individual needs, interests, travel style and expectations.  The agency will develop different lines of travel, including leisure journeys, honeymoons, incentive travel, small private groups and events. We will be able to create routes across Türkiye and combine different regions according to what each traveller wants to experience.  Accommodation will play an essential role. The portfolio will include a selective collection of luxury and boutique hotels across the country. Another collection, currently in development, will focus on properties that carry the true essence of Türkiye: Ottoman palaces, konaks, historic mansions, private villas and hotels located within remarkable heritage buildings.  We will also introduce destinations that many international travellers may not yet know — places capable of offering something unexpected, authentic and truly extraordinary.  This community is where I will share the development of the project, my personal discoveries, hotel visits, future inspections, destinations, culture, gastronomy and the ideas that are shaping the agency.  Welcome to Türkiye Beyond        submitted by     /u/MeaningfulJourneys     to     r/TurkiyeBeyondOrdinary       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TurkiyeBeyondOrdinary/comments/1wmvrb9/i_cant_change_the_way_a_hotel_sells_but_i_can/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T01:27:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T01:28:15.956Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1d9b0660c608403991a42"
+    },
+    "message_id": "reddit_t3_1wmvra9",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "Miniswap",
+    "username": "Separate_Suspect_975",
+    "title": "[H] Warhammer Battleforce boxes 40k/killteam/Knight, [W] $PAYPAL, or Trade for unique terrain pieces, [Loc] Abilene, TX.",
+    "text": "[H] Warhammer Battleforce boxes 40k/killteam/Knight, [W] $PAYPAL, or Trade for unique terrain pieces, [Loc] Abilene, TX.\n\nHello all, this is my first time selling on this platform so if something is wrong or prices seem crazy, I am just trying to go off of what I have seen and its my first time selling through PayPal so please bear with me but hopefully I have this all figured out. I have traded and bought from here plenty of times so hopefully that helps in making this go smoothly. I would like to give preference to larger orders but trying to find boxes that fit these is not as easy as I had hoped, also some are heavy as I've traded them out and the bigger boxes for obvious reasons are more in shipping, also shipping only in the U.S. So, for shipping any single box will be 10$ flat and Kill team into the dark closer to 20 unless it's with other items then we can try to work that out. For pricing going lower than eBay and on most, lower or equal to what I paid originally for out-of-print items which are most. All items are new and most are still sealed with original seal.    https://imgur.com/a/pFv72ej  (if the link doesn't work let me know please)      Imperial Fists - Battle Force (Supremacy Force) - $200 (Can't find it anywhere so hard to compare)   Space Wolves - Army Set - $230   Necrons - Battle Force Necron Host - $180   Necrons - Hypercrypt Legion - $250   Worlds Eaters - Gorsestorm Slaughterpack - $240   Thousand Sons -Battle Force Sekhmet Coven -$ 250   Death Guard -Battle Force Vile Vectorium - $225   Death Guard - PoxWrought Vector - $225   Imperial Knight - Knight Dominus - $130   Astra Militarum - Krieg Army Set - $250   Astra Militarum - Battle Force Astra Militarum Platoon - $200   Killteam - Exodite - $180   Killteam - Terror on Devlan - $250   Killteam - Into the Dark - $200         submitted by     /u/Separate_Suspect_975     to     r/Miniswap       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Miniswap/comments/1wmvra9/h_warhammer_battleforce_boxes_40kkillteamknight_w/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T01:27:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T01:28:16.749Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1d9b0660c608403991a43"
+    },
+    "message_id": "reddit_t3_1wmvr9m",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "HeresTheCatch",
+    "username": "Forward_Grocery5064",
+    "title": "[Question] What is your anime/cartoon's guilty pleasure?",
+    "text": "[Question] What is your anime/cartoon's guilty pleasure?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Forward_Grocery5064     to     r/HeresTheCatch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HeresTheCatch/comments/1wmvr9m/question_what_is_your_animecartoons_guilty/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T01:27:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T01:28:16.948Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1d9b1660c608403991a44"
+    },
+    "message_id": "reddit_t3_1wmvr8u",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "doodlepoot",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Waffle Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Waffle Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/doodlepoot     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wmvr8u/sticker_giveaway_enter_to_win_a_4_stars_waffle/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T01:27:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T01:28:17.148Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1d9b1660c608403991a45"
+    },
+    "message_id": "reddit_t3_1wmvr8t",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "OWLCITY",
+    "username": "meeeetball",
+    "title": "Is the merch worth it?",
+    "text": "Is the merch worth it?\n\nI'm thinking of buying a t-shirt for my friend who is a big Owl City fan.. either the Sports Club Ringer Tee, or the Smooth Sailing Tee.   Does anyone own any of the current Owl City merch available on his website? If so, can you let me know what the quality/fit is like, and if you would recommend buying the merch?        submitted by     /u/meeeetball     to     r/OWLCITY       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OWLCITY/comments/1wmvr8t/is_the_merch_worth_it/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T01:27:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T01:28:17.345Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1d9b1660c608403991a46"
+    },
+    "message_id": "reddit_t3_1wmvr8p",

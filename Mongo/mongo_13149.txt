@@ -1,0 +1,416 @@
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "IllustriousMove9818",
+    "title": "Level: 601~620 2⭐ Weapons Market #10471",
+    "text": "Level: 601~620 2⭐ Weapons Market #10471\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/IllustriousMove9818     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wlhr6b/level_601620_2_weapons_market_10471/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T13:56:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T13:56:29.758Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafe60d660c6084039877c8"
+    },
+    "message_id": "reddit_t3_1wlhr68",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "CustomROMsGuide",
+    "username": "Successful-Peace-547",
+    "title": "Fastboot limitations and lk / (bootloader) partition edits to fix it 🧐",
+    "text": "Fastboot limitations and lk / (bootloader) partition edits to fix it 🧐\n\nFor those who have seen my other posts, you would know that I prompt AI frequently for summarised needs/elaborated queries to see how to get around niche problems that aren't well documented online (doing most of the scraping for me).   Hence I ask here one of those semi niche issues to see how feesable they are, and the IRL experienced procedures done by real people.   I have once b4 flashed similar (system/recovery) rom I found online (for another phone carrier vendor same model). The phone blipped for a second and asked for factory reset options in recovery mode, since then I have ever seen such menu to allow my stock rom to be unbricked. Hence the query:   Does anyone have experience in modifying the 'little kernel' blob/partition?   I have flashed another lk b4 and restoration isnlt the issue, but it didn't occur until now, that with what fastboot module version it packs, i found it very off that i can't even use have the commands without permission errors, which AI confirmed derives from the LK.   --------   Worked for 1m 30s · 1 step   Clarification: An \"unlocked bootloader\" with LK verification still enabled means the LK checks boot image signatures/structure before loading. You need to patch LK to disable verification or replace it with a \"development\" LK that skips checks.   Why LK Blocks Your Images Even with \"unlocked\" status, LK performs:   Boot image header verification (checks magic, checksums) MTK certificate verification (the ASN.1 DER signatures we discussed) AVB (Android Verified Boot) - checks dm-verity status Anti-rollback - prevents downgrades Your custom images fail because:   Missing/corrupt MTK certificates (stripped by magiskboot) Different certificate chain than expected Header modified (ramdisk size changed) How to Patch LK (High-Risk) Step 1: Extract Current LK bash   Via mtkclient (safest)   python  mtk.py  r lk lk.bin   Or via dd if rooted   dd if=/dev/block/platform/bootdevice/by-name/lk of=lk.bin bs=1M Step 2: Analyze LK Structure LK is an ARM binary with:   Aboot (Android Boot) module handling boot_linux_from_storage() Fastboot module handling command tables Certificate verification functions bash   Disassemble LK   arm-none-eabi-objdump -b binary -m arm -D lk.bin > lk.asm   # Search for verification strings strings lk.bin | grep -i \"verify\\|cert\\|signature\\|avb\" Step 3: Find Verification Function Look for these patterns in disassembly:   arm   Typical verification check   BL verify_boot_image # Call verification CMP R0, #0 # Check result BNE error_handler # Branch if failed Common offsets to patch (MTK 6739 example):   0x12345: verify_sha256() - NOP this 0x23456: cert_compare() - Force return 0 0x34567: avb_verify() - Skip call Step 4: Patch Binary bash   Patch to skip verification (replace conditional branch with NOP)   Original: BNE error (0x1A 0xXX 0xXX)   Patched: NOP (0x00 0x00 0x00 0x00)   printf '\\x00\\x00\\x00\\x00' | dd of=lk.bin bs=1 seek=$((0x12345)) conv=notrunc   Or use hexedit   hexedit lk.bin   Navigate to offset, change bytes, save   Step 5: Flash Patched LK bash   CRITICAL: Test first with fastboot boot lk.bin (if supported)   If not supported, you MUST flash:   python  mtk.py  w lk lk_patched.bin   ---------   I want to confirm any other missing searches to edit the asembly code (i should assume .asm means) in linux?   Ndk v27 on phone.   Android 8.1.   The fastboot commands around the similar version range. (Will update this upon a response)   Point being, the commands done get rejected based on permission, yet the options there are open in the module itself and function. (Examples if desired will be given)       submitted by     /u/Successful-Peace-547     to     r/CustomROMsGuide       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CustomROMsGuide/comments/1wlhr68/fastboot_limitations_and_lk_bootloader_partition/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T13:56:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T13:56:29.958Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafe60e660c6084039877c9"
+    },
+    "message_id": "reddit_t3_1wlhr5z",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Meowi",
+    "username": "oldlizardvmd",
+    "title": "[Monkeys Paw] Is this real life?",
+    "text": "[Monkeys Paw] Is this real life?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/oldlizardvmd     to     r/Meowi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Meowi/comments/1wlhr5z/monkeys_paw_is_this_real_life/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T13:56:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T13:56:30.159Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafe60e660c6084039877ca"
+    },
+    "message_id": "reddit_t3_1wlhr5y",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "GamingLaptops",
+    "username": "Ambitious-Mistake-91",
+    "title": "Can you guys help me decide",
+    "text": "Can you guys help me decide\n\nis it better to buy a gaming laptop with an i9 12900h cpu and 3060 gpu or a i71050h cpu with a 2070 gpu?        submitted by     /u/Ambitious-Mistake-91     to     r/GamingLaptops       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GamingLaptops/comments/1wlhr5y/can_you_guys_help_me_decide/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T13:56:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T13:56:30.356Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafe60e660c6084039877cb"
+    },
+    "message_id": "reddit_t3_1wlhr5f",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Meowi",
+    "username": "tieavenger",
+    "title": "[Choose] Choose a girlfriend",
+    "text": "[Choose] Choose a girlfriend\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/tieavenger     to     r/Meowi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Meowi/comments/1wlhr5f/choose_choose_a_girlfriend/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T13:56:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T13:56:30.555Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafe60e660c6084039877cc"
+    },
+    "message_id": "reddit_t3_1wlhr4z",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "promotereddit",
+    "username": "Civil-Top1641",
+    "title": "r/AlreadyEnough — for people tired of treating themselves like projects",
+    "text": "r/AlreadyEnough — for people tired of treating themselves like projects\n\nMost self-improvement spaces begin with what you should fix.    r/AlreadyEnough  starts somewhere else: you can want change without making your present self the enemy.   It’s a new discussion community for honest stories, boundaries, reassurance and perspective—with one unusual rule: advice should be invited.   If you’ve ever needed company more than correction, you’re welcome:    https://www.reddit.com/r/AlreadyEnough/        submitted by     /u/Civil-Top1641     to     r/promotereddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/promotereddit/comments/1wlhr4z/ralreadyenough_for_people_tired_of_treating/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T13:56:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T13:56:30.759Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafe60e660c6084039877cd"
+    },
+    "message_id": "reddit_t3_1wlhr4w",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "motiv_ation2222",
+    "title": "Which University is the best for studying?",
+    "text": "Which University is the best for studying?\n\nsubmitted by     /u/motiv_ation2222     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wlhr4w/which_university_is_the_best_for_studying/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T13:56:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T13:56:30.957Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafe60f660c6084039877ce"
+    },
+    "message_id": "reddit_t3_1wlhr4j",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "travelchina",
+    "username": "ManiLoveSpiders",
+    "title": "Where can I find replacement pods for Uwell Caliburn G3 Pro?",
+    "text": "Where can I find replacement pods for Uwell Caliburn G3 Pro?\n\nHi everyone,   I'm trying to find replacement pods (cartridges) for my Uwell Caliburn G3 Pro. I only need the pods, not a new device.   I'm specifically looking for [0.6 ohm / 0.9 ohm / veya tercih ettiğiniz ohm değeri] resistance, but I'm open to any that fit the G3 Pro.   I'm located in SuZhou. I've checked local shops and some Chinese vendors (like WeChat sellers), but couldn't find the exact ones in stock.   Does anyone know a reliable online store, website, or vendor that ships to [Ülkeniz] and has these in stock? Any recommendations would be greatly appreciated!   Thanks in advance!       submitted by     /u/ManiLoveSpiders     to     r/travelchina       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/travelchina/comments/1wlhr4j/where_can_i_find_replacement_pods_for_uwell/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T13:56:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T13:56:31.158Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafe60f660c6084039877cf"
+    },
+    "message_id": "reddit_t3_1wlhr4g",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Cameras",
+    "username": "TreeIll339",
+    "title": "site to buy used cameras",
+    "text": "site to buy used cameras\n\nHey guys I'm thinking of getting a used sony camera but there is no stock in cashify, can you suggest me best sites that can provide great quality of cam....       submitted by     /u/TreeIll339     to     r/Cameras       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Cameras/comments/1wlhr4g/site_to_buy_used_cameras/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T13:56:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T13:56:31.356Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafe60f660c6084039877d0"
+    },
+    "message_id": "reddit_t3_1wlhr3z",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "TeenMusicFun",
+    "username": "freakyjudas",
+    "title": "Blind Ranking fave albums current rotation",
+    "text": "Blind Ranking fave albums current rotation\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/freakyjudas     to     r/TeenMusicFun       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TeenMusicFun/comments/1wlhr3z/blind_ranking_fave_albums_current_rotation/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T13:56:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T13:56:31.555Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafe614aeeb96c1c63ba5d3"
+    },
+    "message_id": "reddit_t3_1wlhrai",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "Preply",
+    "username": "Small-Macaroon5949",
+    "title": "Should I block this student?",
+    "text": "Should I block this student?\n\nHi everyone, I've been teaching on Preply for about two years and it's my first time being in a situation like this so any advice would be appreciated.    I just had a student reactivate their subscription after not taking lessons for just over a year. My current rate is 150% higher than what it was back then. The student resubscribed at their old rate, I sent them a message explaining that my rate has gone up and asking whether they'd accept my new rate or would like to look for another tutor.    I happened to be on Preply at the time they subscribed and booked lessons, so I sent them the message in about two minutes. It's now been about 12 hours and the student hasn't even seen the message and their first lesson is supposed to be in two days.    I'm not sure whether I should wait a bit more for a reply or simply block them. I'm well aware that not everyone is checking their phone/messages constantly however I realize there's also a chance the student might give me a bad review. They were a really nice student, however I don't really know how they might react to this, especially since we're talking about a big price increase.    I'm not going to teach them at my old rate, that's for sure. I'm just not sure how to proceed, would you block this student? I probably would have done this had I known they wouldn't reply, however as I've now sent this message it feels a bit awkward to block them and take away their chance to reply whenever they see the message.        submitted by     /u/Small-Macaroon5949     to     r/Preply       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Preply/comments/1wlhrai/should_i_block_this_student/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T13:56:20Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T13:56:36.497Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aafe614aeeb96c1c63ba5d4"
+    },
+    "message_id": "reddit_t3_1wlhrac",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "learnarabic",
+    "username": "salvadordaliprint",
+    "title": "I found a Levantine Arabic learning opportunity!",
+    "text": "I found a Levantine Arabic learning opportunity!\n\n***I am not a tutor or looking for a tutor, I’m just hoping to share this resource since I struggled to find a Levantine learning course!!   Hi everyone, I’ve been working with a school in Amman to set up a Levantine Arabic class that works with my schedule (located in America, CDT) and we finally have one posted!   It’s M-Th from 3-5pm Amman time. This would be mornings for most Americans, and anyone from anywhere is welcome. It’s a structured immersion course via zoom. You can find more info  here ! It’s group B starting in October. I’d love to have some people in my time zone in the course!       submitted by     /u/salvadordaliprint     to     r/learnarabic       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/learnarabic/comments/1wlhrac/i_found_a_levantine_arabic_learning_opportunity/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T13:56:20Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T13:56:36.703Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aafe614aeeb96c1c63ba5d5"
+    },
+    "message_id": "reddit_t3_1wlhr98",
+    "topic_key": "data engineer",
+    "search_keyword": "data engineer",
+    "platform": "reddit",
+    "subreddit": "Daily_TechJobs_India",
+    "username": "ReadyProfessor9654",
+    "title": "Looking for a data engineer job with AI skills role at any mnc company",
+    "text": "Looking for a data engineer job with AI skills role at any mnc company\n\nHi Everyone, I have been laid off and I have 2 years of experience as data engineer at Statestreet. If anyone is recruiting or hiring or could even give referral please reach out to me       submitted by     /u/ReadyProfessor9654     to     r/Daily_TechJobs_India       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Daily_TechJobs_India/comments/1wlhr98/looking_for_a_data_engineer_job_with_ai_skills/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T13:56:17Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T13:56:36.974Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aafe649660c6084039877d1"
+    },
+    "message_id": "reddit_t3_1wlhs29",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "kraw",
+    "username": "Sprigatina",
+    "title": "HOBI showed up on time today.",
+    "text": "HOBI showed up on time today.\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Sprigatina     to     r/kraw       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/kraw/comments/1wlhs29/hobi_showed_up_on_time_today/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T13:57:17Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T13:57:29.115Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafe649660c6084039877d2"
+    },
+    "message_id": "reddit_t3_1wlhs1u",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "RepTime",
+    "username": "Delicious_Ad9692",
+    "title": "VSF in china?",
+    "text": "VSF in china?\n\nCan anyone recommend where to buy a VSF Aqua Terra in Shanghai?   I will be there two to three times a year.   Thank you!       submitted by     /u/Delicious_Ad9692     to     r/RepTime       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RepTime/comments/1wlhs1u/vsf_in_china/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T13:57:16Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T13:57:29.316Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafe649660c6084039877d3"
+    },
+    "message_id": "reddit_t3_1wlhs11",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Rikko77",
+    "title": "What's the most random thing you know how to do?",
+    "text": "What's the most random thing you know how to do?\n\nsubmitted by     /u/Rikko77     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wlhs11/whats_the_most_random_thing_you_know_how_to_do/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T13:57:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T13:57:29.521Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafe649660c6084039877d4"
+    },
+    "message_id": "reddit_t3_1wlhs0q",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "writers",
+    "username": "misteregent",
+    "title": "Your honest thoughts?",
+    "text": "Your honest thoughts?\n\nThere was a rabbit the other day out on the lawn. I just sat on the ground and watched him, maybe her, chew away at the lawn. Must have been some good-tasting grass, for he, or she, was there for at least fifteen minutes, I’d say. Then he, or she, hopped off.   Slowly, I got up. When I stood, I stretched my legs to make sure they weren’t stiff from having sat on the ground for so long. Not easy growing older. The joints don’t work as well as they used to, you know?   Some people don’t work as well as they used to either. You go in the stores nowadays and realize that you, the customer, are doing the work. You can check out your purchases, you can bag them, in your own bags, of course, but you don’t get a discount for doing the work. But the employees ask to be paid more, while they do less work.   Wouldn’t it be nice to be paid more to do less? That must be a wonderful way to look at the world. Imagine how the business owners are feeling. At some point, they may end up paying their employees to just stay home. That’s about the least amount of work someone could do, right?   Unless maybe someone works from home already. Then they are doing so much. But if they have children, then maybe it’s good they work from home, at least for the children. The children get to see their parents more often. Might be easier on the parent, or parents, to work from home. Save on gas.   And if you want cheap gas nowadays? Best advice I could give you for that would be to buy a bottle of soda and drink away. Soda will give you plenty of free gas, if you know what I mean! And I’m sure you do. If you don’t know what I mean, then where have you been all these years? Have you not been paying attention?   No, you haven’t been paying attention. How do I know? Because I took you on a trip that you didn’t realize you were going to go on. You fell for it! Congratulations! I hope you enjoyed your trip down…the rabbit hole.       submitted by     /u/misteregent     to     r/writers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/writers/comments/1wlhs0q/your_honest_thoughts/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T13:57:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T13:57:29.722Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafe64a660c6084039877d6"
+    },
+    "message_id": "reddit_t3_1wlhs0m",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "LickItToGrowIt",
+    "title": "What do you think about the new Resident Evil movie?",
+    "text": "What do you think about the new Resident Evil movie?\n\nsubmitted by     /u/LickItToGrowIt     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wlhs0m/what_do_you_think_about_the_new_resident_evil/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T13:57:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T13:57:30.121Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafe64a660c6084039877d7"
+    },
+    "message_id": "reddit_t3_1wlhs0c",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "GATEtard",
+    "username": "BetAny3572",
+    "title": "Need guidance",
+    "text": "Need guidance\n\nI am doing BE/BTech from Ramaiah Bangalore in AI & DS. I am currently in 3rd sem (2nd year). I need help to prepare for gate CS and DA. I want to do get a PSU Job. Currently I have dbms as a subject in my course curriculum this sem. I will be doing it properly through gate smashers lecture but I feel confused I don’t know how to carry it forward and what all I have to do. Whether I should buy a course or everything can be done for free from youtube. A guidance/roadmap would be really helpful.       submitted by     /u/BetAny3572     to     r/GATEtard       [link]       [comments]",

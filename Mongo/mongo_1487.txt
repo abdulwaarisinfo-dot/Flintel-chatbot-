@@ -1,0 +1,416 @@
+      "$date": "2026-09-07T19:59:11.888Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1790f0819e6636a93d3e"
+    },
+    "message_id": "reddit_t3_1wa2p5z",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "lsatdemon",
+    "username": "GurMaster3426",
+    "title": "Is this shade? 👀",
+    "text": "Is this shade? 👀\n\nI haven't actually watched the video lol so I don't know what they actually say but interesting title for an episodeeeeee       submitted by     /u/GurMaster3426     to     r/lsatdemon       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/lsatdemon/comments/1wa2p5z/is_this_shade/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:59:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:59:12.284Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1790f0819e6636a93d3f"
+    },
+    "message_id": "reddit_t3_1wa2p53",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "PhobiesGame",
+    "username": "absuz7",
+    "title": "Think they will realize?",
+    "text": "Think they will realize?\n\nI am thinking about putting my Heavo here so they can get points for the event (it was the closest I could get it). Their Ace only has 1391 health left, so I definitely could have just finished them off with my Ray right then. Think they will realize and take it?        submitted by     /u/absuz7     to     r/PhobiesGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PhobiesGame/comments/1wa2p53/think_they_will_realize/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:58:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:59:12.485Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1790f0819e6636a93d40"
+    },
+    "message_id": "reddit_t3_1wa2p50",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Pen_Swap",
+    "username": "zaydia",
+    "title": "[WTS] Wancher Kyoto Urushi Kasane-iro - Yukinoshita <F> [A2]",
+    "text": "[WTS] Wancher Kyoto Urushi Kasane-iro - Yukinoshita <F> [A2]\n\nVerification link and photos     Beautiful Pink Wancher True Urushi pen for sale. This model includes the Wancher-branded solid 18k Shogun nib with an ebonite feed. Comes with box and papers including Certificate of authenticity, guarantee certificate, handful of cartridges, and converter. No micro scratches or any other signs of wear. [A2] since I can’t guarantee it was never used. $795 shipped within the US.    International shipping at cost, taxes and tariffs are responsibility of the buyer.    All sub rules apply- PayPal goods and services only.        submitted by     /u/zaydia     to     r/Pen_Swap       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Pen_Swap/comments/1wa2p50/wts_wancher_kyoto_urushi_kasaneiro_yukinoshita_f/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:58:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:59:12.685Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1790f0819e6636a93d41"
+    },
+    "message_id": "reddit_t3_1wa2p4q",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "spokenly",
+    "username": "Longjumping-Tea8842",
+    "title": "Issues with Gemini 3.5 Transcribe and MAI-Transcribe-2 (OpenRouter) in Spokenly",
+    "text": "Issues with Gemini 3.5 Transcribe and MAI-Transcribe-2 (OpenRouter) in Spokenly\n\nHey everyone,   I’ve been trying to use two of the newer high-quality transcription models in Spokenly and ran into blockers with both. Sharing the details in case others hit the same thing or the team wants to look into better support.     Gemini 3.5 Transcribe (Google provider)     When using a Gemini API key with the Google provider and selecting Gemini 3.5 Transcribe, I get this error:   ```json   {   \"error\": {   \"message\": \"Developer instruction is not enabled for this model\",   \"status\": \"INVALID_ARGUMENT\",   \"code\": 400   }   }   ```   From what I can tell, Spokenly is sending a system/developer instruction (which makes sense for cleanup/rewriting modes), but Gemini 3.5 Transcribe is a dedicated STT model and does **not** support system instructions. That’s why the API rejects the request.   Is there a way to disable the system prompt for specific models, or any plans to add native support for `gemini-3.5-transcribe` / `gemini-3.5-transcribe-live`?     MAI-Transcribe-2 via OpenRouter     When trying `microsoft/mai-transcribe-2` through OpenRouter I get:   ```json   {   \"error\": {   \"message\": \"microsoft/mai-transcribe-2 is a transcription model and cannot be used with the chat/completions endpoint. Use the /api/v1/audio/transcriptions endpoint instead.\",   \"code\": 400   }   }   ```   OpenRouter requires a dedicated endpoint (`/api/v1/audio/transcriptions`) for pure transcription models like MAI-Transcribe-2. Spokenly currently seems to route OpenRouter requests through the normal chat/completions path, so the call fails.   Questions / Feature requests   - Can Spokenly detect dedicated transcription models and route them to the correct endpoint (especially for OpenRouter)?   - Is there a setting to turn off system instructions for models that don’t support them (like Gemini 3.5 Transcribe)?   - Any plans to add first-class support for Gemini 3.5 Transcribe and Microsoft MAI-Transcribe-2?   These two models look really strong on recent benchmarks, so it would be awesome to use them inside Spokenly.   Thanks!       submitted by     /u/Longjumping-Tea8842     to     r/spokenly       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/spokenly/comments/1wa2p4q/issues_with_gemini_35_transcribe_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:58:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:59:12.884Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1791f0819e6636a93d43"
+    },
+    "message_id": "reddit_t3_1wa2p4o",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "cinematography",
+    "username": "_Octave_",
+    "title": "should I buy an Arri Alexa Classic?",
+    "text": "should I buy an Arri Alexa Classic?\n\nI’m considering upgrading to an Arri Alexa classic: the price is $9500 and it has 19,000 hours. I’ve always wanted to own an Arri and I’m thinking of getting into short films and personal projects. I already own a manfrotto fluid head tripod.   Based on my research, Arri cameras can rent for about $1500/day, so I should make my money back pretty quickly by consigning it at a rental house (I’m based in Topeka).   Right now I only shoot about 6 jobs a year but I think this would help me level up. (I shoot weddings solo and the occasional reel for local restaurants.) I currently use a DJI Osmo.       submitted by     /u/_Octave_     to     r/cinematography       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cinematography/comments/1wa2p4o/should_i_buy_an_arri_alexa_classic/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:58:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:59:13.280Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1791f0819e6636a93d45"
+    },
+    "message_id": "reddit_t3_1wa2p4n",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "ForeverAloneDating",
+    "username": "IllustriousKritz",
+    "title": "24 [M4F] #Portugal/Online – Looking for a real connection",
+    "text": "24 [M4F] #Portugal/Online – Looking for a real connection\n\nHey! As the title says, I’m honestly just looking for a real, genuine connection with someone. Not into games or anything superficial. I’d really like to get to know someone and see where things go, naturally.   About me: I’m pretty much your typical nerd. I enjoy gaming, watching anime, and anything tech-related. I love tinkering with technology, fixing things, and understanding how stuff works behind the scenes. If it involves tech, I’m probably curious about it.   At the same time, I’m very much into simple things too. I enjoy calm plans like going for a walk by the sea, riding my motorcycle, photography, just talking, enjoying the moment, and keeping life uncomplicated.   If you’re someone who values real conversations, shared interests (or even different ones!), and is also looking for something meaningful, feel free to reach out. I’m open, chill, and genuinely interested in getting to know you.   Looking forward to hearing from you!       submitted by     /u/IllustriousKritz     to     r/ForeverAloneDating       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ForeverAloneDating/comments/1wa2p4n/24_m4f_portugalonline_looking_for_a_real/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:58:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:59:13.675Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1792f0819e6636a93d47"
+    },
+    "message_id": "reddit_t3_1wa2p4i",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "NarcissisticMothers",
+    "username": "Doffy_Mingo111",
+    "title": "How did you Handle the guilt of leaving?",
+    "text": "How did you Handle the guilt of leaving?\n\nI’m 18M, in college, currently dealing with severe anxiety and depression. I’m starting to believe my mother may be a narcissist, who’s been making things very hard for me.   She even forced me to drop out of high school as a freshmen and go to college early, just because she wanted me to be like her cousins(who graduated college but never high-school). I had to get my GED completely on my own.   I was doing well in high school, had many friends, but ever since I dropped out and started college, everything changed. I barely talk to anyone anymore.    My mother honestly doesn’t care about my mental well being, every time I admit to her that I was depressed and had anxiety, she just yells, threatens and insults me.    I’ve been considering that maybe after I graduate university, I’d leave and go low contact. but it feels so wrong   I grew up in a strict religious household, where it says you need to respect your parents no matter what and must stay with your parents all your life.   Which is why I feel so guilty about wanting to leave.  For those who did leave, how did you handle the guilt?       submitted by     /u/Doffy_Mingo111     to     r/NarcissisticMothers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NarcissisticMothers/comments/1wa2p4i/how_did_you_handle_the_guilt_of_leaving/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:58:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:59:14.071Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1792f0819e6636a93d48"
+    },
+    "message_id": "reddit_t3_1wa2p46",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "CreditToTheArtist",
+    "username": "Fickle-Structure7740",
+    "title": "Trying to find artist to let them know they’ve been stolen from",
+    "text": "Trying to find artist to let them know they’ve been stolen from\n\nHello, I’m trying to find the artist behind this piece to let them know that there is a tumblr account using stolen artwork of theirs to promote commissions. They have the art as their banner, and two other stolen pieces that I already contacted the creators of.  I think there is a signature on the gun thing, but it’s too blurry to make out. I tried reverse image searching as well but got nothing.       submitted by     /u/Fickle-Structure7740     to     r/CreditToTheArtist       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CreditToTheArtist/comments/1wa2p46/trying_to_find_artist_to_let_them_know_theyve/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:58:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:59:14.270Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1792f0819e6636a93d49"
+    },
+    "message_id": "reddit_t3_1wa2p3z",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "GenZ",
+    "username": "congratsurhiredTA",
+    "title": "Why I can't stand millennials",
+    "text": "Why I can't stand millennials\n\nPretty frequently I see Millennials genuinely confused as to why Gen Z seems to dislike them. Normally our answer is just \"millennial cringe\" or \"we don't hate you, we just think you're embarrassing\". When I was a kid, it was cool to be a Millennial. I think we all feel a little jealous of the whimsy and lack of shame they have, where our culture is now more jaded. As we've all gotten older, my feelings toward them have really changed.   I wanted to give a comprehensive answer to this question using my personal feelings about millennials as a Gen Z born in 2003. Not all Gen Z will agree with what I have to say about Millennials, but I'm hoping this shares some valuable perspective.     1. Their consumer habits   We all know the trope of the Disney adult or the Harry Potter adult. Millennials will often be ideologically anti-consumerism but still obsessed with buying random shit. They're supposedly sooo literate, but don't see the problem in spending a shit ton of money on what is essentially garbage.    2. Their conduct on social media   Millennials get very up in arms about grammar, spelling, and punctuation on social media. It makes them come across as out of touch. You would think the generation that used flip phones would understand shorthand typing. Playing grammar police makes them feel very superior, to the annoyance of Gen Z.     3. They are pussies   Researchers claim that Gen Z was raised to be more independent than Millennials, and I think that explains this feeling that we have about them. Can you imagine scrapping with a Millennial? They're the type to say, \"Don't go there buddy, my uncle is a cop\" at 31 years old. They're pussies. Their early adulthood was very stomp-clamp Buzzfeed, ours has been a giant uncertain piece of shit for as long as we can remember.    4. They genuinely think they're the best and smartest generation   Researchers found that millennials tend to greatly overestimate their information evaluation skills.    5. They are constantly self-victimizing about how every other generation hates them   Yes, every generation hates Millennials, because Millennials have all of the worst parts of every recent generation. They have the disdain for newer generations and consumption habits of their Boomer parents, without any of the grit, independence, or discipline. They have the moral grandstanding and obsession with social media that Gen Z has, but no concern for the future or attachment to reality (Researchers found that Millennials think in terms of right now, while Gen Z is more concerned about the future).    I believe Millennials are frustrated that Gen Z seems to have disdain for them because we seem to have a lot in common generationally. Truthfully though, I believe Gen Z has more in common with Gen X. Though we do mobilize for social justice, we are not as uber-sensitive as other generations seem to think. We are hardworking and independent.     6. They created iPad kids   Millennial parents love to shove a stupid iPad in front of their Gen Alpha kids with no concern of how this will affect our future generation.       submitted by     /u/congratsurhiredTA     to     r/GenZ       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GenZ/comments/1wa2p3z/why_i_cant_stand_millennials/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:58:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:59:14.470Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1793f0819e6636a93d4c"
+    },
+    "message_id": "reddit_t3_1wa2p3j",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "PokemonGoRaids",
+    "username": "hyttfvb",
+    "title": "Wb shadow giratina 204097783832",
+    "text": "Wb shadow giratina 204097783832\n\nsubmitted by     /u/hyttfvb     to     r/PokemonGoRaids       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PokemonGoRaids/comments/1wa2p3j/wb_shadow_giratina_204097783832/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:58:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:59:15.071Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1793f0819e6636a93d4d"
+    },
+    "message_id": "reddit_t3_1wa2p3h",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "amIuglyBrutallyHonest",
+    "username": "xosolitaire",
+    "title": "17f what can I improve?",
+    "text": "17f what can I improve?\n\nI just want advice on what to improve about my face and hair, which is why I didn’t post my full body or outfits. I already know eyebrows should be done, but I don’t know what kind of eyebrows. I don’t like wearing makeup so I really just need tips for ANYTHING else I can do.    Don’t tell me to smile, because I’m not constantly smiling irl. This is my resting face.   And finally, the real question, am I ugly?       submitted by     /u/xosolitaire     to     r/amIuglyBrutallyHonest       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/amIuglyBrutallyHonest/comments/1wa2p3h/17f_what_can_i_improve/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:58:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:59:15.270Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1793f0819e6636a93d4e"
+    },
+    "message_id": "reddit_t3_1wa2p38",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "geography",
+    "username": "Shutter_Stuck",
+    "title": "1941 vs 2004 view of the Muir Glacier, Alaska.",
+    "text": "1941 vs 2004 view of the Muir Glacier, Alaska.\n\nsubmitted by     /u/Shutter_Stuck     to     r/geography       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/geography/comments/1wa2p38/1941_vs_2004_view_of_the_muir_glacier_alaska/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:58:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:59:15.469Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1793f0819e6636a93d4f"
+    },
+    "message_id": "reddit_t3_1wa2p36",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "BandShirts",
+    "username": "SirPicklus",
+    "title": "Looking for this School of Fish band shirt",
+    "text": "Looking for this School of Fish band shirt\n\nSchool of Fish was a one-hit-wonder alt-rock band that I really enjoyed. I've already purchased their No-Album Tour shirt, which looks similar, but it's black instead of white and has the tour name on it. I've only seen two people wear this shirt: this guy and the guy who did the singing in the tribute video of 3 Strange Days after the lead singer's passing. Can you guys let me know where I can find these, or if they were only made for people close to the band?    https://preview.redd.it/x1tjtkhvl5oh1.png?width=1080&format=png&auto=webp&s=3c12e21446a2556f995d7e00849bef74ac594f4d        submitted by     /u/SirPicklus     to     r/BandShirts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BandShirts/comments/1wa2p36/looking_for_this_school_of_fish_band_shirt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:58:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:59:15.668Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1793f0819e6636a93d50"
+    },
+    "message_id": "reddit_t3_1wa2p2t",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "cgandlittlematchgroup",
+    "username": "Expensive_Air_6653",
+    "title": "29 [F4M] Maryland/DMV little seeking forever Daddy :)",
+    "text": "29 [F4M] Maryland/DMV little seeking forever Daddy :)\n\nHi all! I’m a 29 year old cis woman who’s looking for their forever Daddy :)    I’m currently in Maryland but open to relocating for the right person. I enjoy staying in and enjoying a good movie, show, or video game (mostly cozy ones), but I also like getting out into nature or going on walks. Like a good mini adventure too around the area just checking out something new! I’d say I’m a naturally curious person who likes learning new things.    Appearance-wise, I’m 5’7” and about 150 lbs. Long brown hair and blue eyes. I have two old orange cats who are affectionately known as my potatoes. Not looking for someone with a dog. I’m also very committed to a healthy lifestyle! Eat healthy and exercise as much as I can due to a chronic condition of mine. It does leave me with limitations, but I’m always doing my best to live life the way I want to. Also don’t drink or smoke. Fine if you drink but not so much the smoking.    I’m looking for a long term relationship that leads to marriage. Very monogamous! I’m also liberal, not religious, and don’t want kids. I’d say I’m naturally submissive. Looking for someone who likes leading. Not looking to switch. I’m also naturally silly and clingy when comfortable. Looking for a Daddy to adore. DDlg is my main interest. I like things to be more gentle. More interested in a soft dom. Generally a kinky person though.    If that sounds like something you’re interested in, I hope you come say hi! :)       submitted by     /u/Expensive_Air_6653     to     r/cgandlittlematchgroup       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cgandlittlematchgroup/comments/1wa2p2t/29_f4m_marylanddmv_little_seeking_forever_daddy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:58:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:59:15.867Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1794f0819e6636a93d51"
+    },
+    "message_id": "reddit_t3_1wa2p2s",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Litbuy",
+    "username": "Neat_Insurance_8202",
+    "title": "QC ASICS K14 GL or pass?",
+    "text": "QC ASICS K14 GL or pass?\n\nsubmitted by     /u/Neat_Insurance_8202     to     r/Litbuy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Litbuy/comments/1wa2p2s/qc_asics_k14_gl_or_pass/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:58:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:59:16.066Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1794f0819e6636a93d52"
+    },
+    "message_id": "reddit_t3_1wa2p2r",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "MovingtoDenver",
+    "username": "Vast_One_8662",
+    "title": "Vibes in different areas",
+    "text": "Vibes in different areas\n\nMy family is moving to Denver (or maybe a suburb) this winter. What neighborhoods and/or surrounding cities have certain reputations/stereotypes/stigmas?   Like where are the woke areas? Where are the hipsters (are they still a thing)? Diverse neighborhoods? MAGA people? Etc.   FWIW, we have a son who loves baseball and will definitely be trying out for the high school team at wherever we end up.       submitted by     /u/Vast_One_8662     to     r/MovingtoDenver       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MovingtoDenver/comments/1wa2p2r/vibes_in_different_areas/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:58:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:59:16.265Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1794f0819e6636a93d53"
+    },
+    "message_id": "reddit_t3_1wa2p2a",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "CanadianVisaReform",
+    "username": "Mens__Rea__",
+    "title": "Far-right victory in Germany expected to send shockwaves throughout the world | CBC News",
+    "text": "Far-right victory in Germany expected to send shockwaves throughout the world | CBC News\n\nI’m enjoying the pearl-clutching and handwringing of the establishment media as they reflect on this electoral outcome, while obstinately refusing to acknowledge the growing unpopularity of the neoliberal agenda being force fed to all of us in the West.        submitted by     /u/Mens__Rea__     to     r/CanadianVisaReform       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CanadianVisaReform/comments/1wa2p2a/farright_victory_in_germany_expected_to_send/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:58:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:59:16.463Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1794f0819e6636a93d54"
+    },
+    "message_id": "reddit_t3_1wa2p29",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "hatethissmug",
+    "username": "Suspicious-Battle536",
+    "title": "I hate this stan culture of harassing pop girls' exes to the point they Will even invalidate women who are actual victims",
+    "text": "I hate this stan culture of harassing pop girls' exes to the point they Will even invalidate women who are actual victims\n\nEveryone was mad at me for saying I hate pop female singers' fans... I'm telling y'all they DO stand out as top 5 worst type of fandoms. This babying of female popstars needs to end, the harassment of their exes needs to end, and what can I even say about the Rihanna and Chris Brown part... Female popstars fandoms are so toxic they don't know limits and will equate their idol having a breakup to a woman being brutally abused. Shawn Mendes, The Weeknd or even Harry Styles fans are not like this, and they do hate on people sometimes like every fandom. Like the toxicity you find in pop male singers' fandoms is something you can say \"all fandoms have a toxic part\", but they don't cross these lines in general       submitted by     /u/Suspicious-Battle536     to     r/hatethissmug       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hatethissmug/comments/1wa2p29/i_hate_this_stan_culture_of_harassing_pop_girls/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:58:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:59:16.662Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1794f0819e6636a93d55"
+    },
+    "message_id": "reddit_t3_1wa2p28",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "fantasyfootballadvice",
+    "username": "ztennen11",
+    "title": "Drake London or George Pickens in full PPR?",
+    "text": "Drake London or George Pickens in full PPR?\n\nLondon's season was cut short due to injuries but he's as talented as almost any receiver in the league.   Pickens is coming off a monster year that he could perhaps build off.   Which WR is the better option in full PPR and why?       submitted by     /u/ztennen11     to     r/fantasyfootballadvice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/fantasyfootballadvice/comments/1wa2p28/drake_london_or_george_pickens_in_full_ppr/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:58:53Z"

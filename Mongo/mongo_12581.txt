@@ -1,0 +1,416 @@
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:31:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:32:14.949Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf61cf660c6084039848e8"
+    },
+    "message_id": "reddit_t3_1wl74sk",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "jdragonz",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Carrot Cake Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Carrot Cake Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/jdragonz     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wl74sk/sticker_giveaway_enter_to_win_a_4_stars_carrot/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:31:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:32:15.155Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf61cf660c6084039848e9"
+    },
+    "message_id": "reddit_t3_1wl74si",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "EmpiresAndPuzzles",
+    "username": "Sematy5",
+    "title": "Finally got a Veggie! Should I replace Fungustine with Broseph?",
+    "text": "Finally got a Veggie! Should I replace Fungustine with Broseph?\n\nHi! Just got Broseph! Now, I know he's better overall given he's a Veggie and is newer than Fungustine, but I'd like your opinion on whether I should replace Fungustine with him once I finish leveling him up.    I know he'll be a great assist to Emilie since he's a Fast healer, but I'll lose the boosted health and steal buffs in exchange. I also just used all my Druid emblems leveling Bernadette I maxed from Hero Coach, so I won't be able to emblem him immediately either. 😓   What do you guys think? 🤔   Thanks in advance! 😁       submitted by     /u/Sematy5     to     r/EmpiresAndPuzzles       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/EmpiresAndPuzzles/comments/1wl74si/finally_got_a_veggie_should_i_replace_fungustine/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:31:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:32:15.362Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf61cf660c6084039848ea"
+    },
+    "message_id": "reddit_t3_1wl74sd",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "UnaAI",
+    "username": "JudgmentRequired",
+    "title": "How to Apply Segregation of Duties to AI Agents in Finance: A Controls Framework",
+    "text": "How to Apply Segregation of Duties to AI Agents in Finance: A Controls Framework\n\nTLDR:  Segregation of duties rests on one rule, which is that whoever initiates a transaction does not also approve it or record it. An agent with write access to a financial system holds all three roles at once, and it usually holds them under a human's credentials, so it never appears as a row in the quarterly user access review. Gartner predicts that by 2027, 40 percent of enterprises will demote or decommission autonomous AI agents because of governance gaps found only after a production incident, and the root cause it identifies is organizations failing to separate what an agent is permitted to do from the access it was granted. The corrections are unglamorous: a distinct identity per agent, entitlements attached to a declared autonomy level rather than to a use case, an aggregate exposure limit per period in place of a per-transaction dollar threshold, and a named owner recorded before anything reaches production.   One identity proposes the entry, posts it, and drafts the explanation the reviewer reads   Every control framework in accounting separates four activities: authorizing a transaction, executing it, recording it, and reviewing the record. A close-automation agent typically performs all four inside a single run. It reads the sub-ledger, determines the accrual is required, posts the journal, and then generates the flux commentary that the controller reads when deciding whether the entry looks reasonable. The reviewer is therefore reading an explanation written by the party being reviewed, which is the precise arrangement the separation was designed to prevent, and no one in the deployment meeting raised it because the conversation was about close-cycle days.   Each capability was approved on its own merits and by a different person, which is why the conflict never surfaced in any single approval. Read access to the sub-ledger came from the data team. Write access to the general ledger came from the ERP administrator as a role assignment. The commentary generation was never an access decision at all, because generating text requires no entitlement. Finance controls are designed around entitlements, and an agent assembles a duties conflict out of three grants that are individually defensible.   The quarterly access review has no row for the agent, because the agent runs on an analyst's login   Access reviews enumerate users. An agent deployed on a human's credentials or on a shared service account inherits that identity's entitlements and inherits its line in the review, which reads exactly as it did the year before. The reviewer confirms that a senior FP&A analyst holds journal entry rights, approves the row, and has certified an agent without knowing one exists. Any finance team that cannot produce a list of non-human identities with write access to financial systems has this gap open right now, and the gap widens every time a business user connects an agent to a system through a credential they already hold.   Closing it requires three things that sit outside the normal finance workstream:      One identity per agent instance, never per agent type.  Two instances of the same accrual agent running against two entities are two actors, and collapsing them into one identity destroys the ability to attribute an entry to a run.    The agent registered in the same identity system as employees , so the segregation-of-duties ruleset tests it automatically rather than requiring someone to remember it exists.    Key custody held outside the team that operates the agent.  Whoever can rotate the credential can reassign the authority, which makes credential custody a duties question in its own right.     Licensing is the obstacle that stops most of this before it starts. Several major ERPs price identities per named user, so a distinct account for every agent instance carries a recurring cost that no business case anticipated, and the shortcut is a shared service account that posts everything under one anonymous name. A general ledger populated by an entity called SVC_AUTOMATION cannot answer which run produced which entry, which means the audit trail exists and proves nothing. Negotiating non-human identity pricing into the ERP renewal is cheaper than discovering at the next audit that agent activity is unattributable, and the renewal is where finance has leverage that the security team does not.   The 25,000 dollar approval threshold was calibrated for a human posting a dozen entries a day   Approval thresholds encode an assumption about volume that nobody writes down. A limit set at 25,000 dollars per entry works because a person posting manually produces ten or twelve entries in a day, which bounds the total value moving below the review line at somewhere near 300,000 dollars a day in the worst case. That ceiling is what makes the threshold a control rather than a formality, and it comes from human throughput rather than from anything in the policy. An agent posting 340 entries in a close week breaks the assumption without breaching a single limit, because the policy governs the size of each action and says nothing about how many actions occur. The threshold survives intact while the exposure it was meant to bound increases by an order of magnitude.   Consider a recurring-accrual agent granted write access for entries under 25,000 dollars across two entities. In month three a vendor shifts from monthly to semi-monthly billing. The agent's duplicate-detection logic keys on invoice date, the new cadence produces two invoices in the same window, and the agent posts 41 duplicate accruals totaling roughly 680,000 dollars. Not one of them exceeded the threshold, so not one of them routed to a human. Those figures are illustrative. The mechanism behind them is ordinary arithmetic, in which a per-item limit multiplied by a machine transaction rate produces an aggregate exposure nobody authorized. The control that catches this is a period exposure cap, which counts the total value an agent has moved since the last human review and halts the agent when the total crosses a stated number.   A workable version of that control looks like this, and it takes an afternoon to specify:      Declare the blast radius in dollars per period , not per transaction. State the maximum total the agent may post between human reviews, and set it at the materiality threshold used for the financial statements rather than at the journal approval limit.    Enumerate the accounts the agent may write to, and the accounts it may never touch.  Revenue, equity, and any account feeding a covenant calculation belong on the second list regardless of how the agent performs.    Install a circuit breaker on rate, not only on value.  An agent posting three times its normal volume is either responding to a real business change or malfunctioning, and both cases warrant a stop rather than a log entry.    Require reversibility inside the open period and prove it once.  Reversing a posted entry after the period closes is a prior-period adjustment with its own disclosure consequences, which means a rollback capability that has only been tested in a sandbox has not been tested.    Assign one named human owner, recorded in the agent register.  Accountability for agent behavior stays with the organization, and an agent without a person's name attached is an exposure with no one to call.    Run a reconstruction test before production.  The team should be able to reproduce what the agent planned, what data it accessed, and what it produced for any single run. Gartner's finance practice recommends measuring a first agent pilot by exactly this standard rather than by return on investment.      https://preview.redd.it/x7r9ogu1slqh1.png?width=1672&format=png&auto=webp&s=31f91ac3b0dcc8b3e6860c0211277fa9a74c748b    Entitlements belong to the autonomy level, not to the use case   Gartner's May 2026 guidance sorts agents into four autonomy levels and matches control weight to each, and the classification maps cleanly onto controls finance already operates. Level 1 agents observe, holding read-only access with output visible to the requester. Level 2 agents advise, producing recommendations a human executes manually, still with no write access anywhere. Level 3 agents act with explicit human approval on every action. Level 4 agents act independently inside defined guardrails, with humans reviewing exceptions and aggregate outcomes rather than individual decisions. Applying identical controls across all four produces two problems at once: simple agents get over-restricted, which pushes analysts to run unsanctioned versions on desktop exports, while the genuinely autonomous ones get under-restricted because the review process treated them as ordinary software.   Attaching entitlements to the level rather than to the business case changes who decides what. A use case framed as automating recurring accruals invites an argument about scope and savings. An agent proposed at Level 3 invites a different question, which is whether the approval step will hold under volume. That question has an answer sitting in the workflow logs already, since every approval system records how long an approver spent on each item and how often an item was rejected. An approver handling 340 agent-generated entries in a close week clears them faster than one handling twelve, and Gartner's own guidance names approval fatigue as the point where a Level 3 control stops being a control and starts producing a false sense of safety. The degradation is predictable enough to design around by capping how many approvals one person receives in a period and by routing a random sample to a second reviewer who does not know which items were sampled.   The monitoring that makes agent limits real requires a view no single system holds   An exposure cap stated in dollars per period is only enforceable if the total is visible while the period is open. That total spans systems by construction. The agent reads from a sub-ledger, writes to the general ledger, and its actions carry consequences in a treasury position, a covenant calculation, and a revenue schedule maintained elsewhere. Assembling that picture after the close from four exports is how a 680,000 dollar aggregate becomes a finding rather than an alert. Una's data and integrations layer exists for this constraint, unifying revenue, operations, and finance data into a single live source of truth so that agent activity can be measured against a running total rather than reconstructed from system logs after the fact. Without a joined live view, every agent limit written into the deployment document is a number no one is positioned to enforce.   This work slows the first deployment by several weeks and produces no savings of its own, which is a real cost and not a rhetorical one. A team that skips it moves faster and lands in the population Gartner expects to demote or decommission their agents, having discovered the gap through an incident rather than through a design review. The cultural cost is heavier than the schedule cost. Requiring a named owner, a distinct identity, and a period exposure cap makes sanctioned agent deployment look bureaucratic beside the analyst who connected one to a spreadsheet export in an afternoon, and that analyst is producing visible output while the control design is still in draft. Over-restriction of the simple cases is what drives that unsanctioned version, which is why the autonomy classification matters as much for what it permits as for what it stops.   The first finance agent is a controls build that happens to produce savings   Finance already owns the vocabulary for every problem an agent introduces. Authority limits, delegation of authority, maker and checker, materiality, reversibility, and named accountability are controls the function has operated for decades against human actors. Applying them to a non-human actor requires no new framework and no vendor category, only the decision to treat an agent as an actor in the control environment rather than as a piece of software that the IT security review already cleared. The security review confirmed the agent cannot reach data it should not see, and said nothing about what the agent is permitted to do with the data it can reach, which is a separate question that a separate team should have been asked to answer. Finance is that team, and the window to ask closes the day the agent enters production.    https://preview.redd.it/utkrxeb7slqh1.png?width=1672&format=png&auto=webp&s=4702ef1b05f4363bc055ea118292a24d4f0c9272    Can your organization produce, today, a list of every AI agent with write access to a financial system, the human who owns each one, and the total dollar value each could post before a person would see it?       submitted by     /u/JudgmentRequired     to     r/UnaAI       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UnaAI/comments/1wl74sd/how_to_apply_segregation_of_duties_to_ai_agents/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:31:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:32:15.563Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf61d2660c6084039848f7"
+    },
+    "message_id": "reddit_t3_1wl74s4",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "smallbusinessowner",
+    "username": "Final-Border4743",
+    "title": "Looking for Stripe SMB owners/Ops leads to test a plain-language payout timeline prototype for Capstone Project",
+    "text": "Looking for Stripe SMB owners/Ops leads to test a plain-language payout timeline prototype for Capstone Project\n\nsubmitted by     /u/Final-Border4743     to     r/smallbusinessowner       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/smallbusinessowner/comments/1wl74s4/looking_for_stripe_smb_ownersops_leads_to_test_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:31:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:32:18.138Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf61d2660c6084039848f8"
+    },
+    "message_id": "reddit_t3_1wl74rp",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "SacramentoBuyNothing",
+    "username": "Same_Cod_1224",
+    "title": "ISO expired or used carseat",
+    "text": "ISO expired or used carseat\n\nin search of any old carseats/carseat bases for target trade in event!        submitted by     /u/Same_Cod_1224     to     r/SacramentoBuyNothing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SacramentoBuyNothing/comments/1wl74rp/iso_expired_or_used_carseat/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:31:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:32:18.338Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf61d2660c6084039848f9"
+    },
+    "message_id": "reddit_t3_1wl74re",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "r4r",
+    "username": "CuteCoatHanger",
+    "title": "32 [M4F] -Australia/Anywhere - Looking for the bane to my existence",
+    "text": "32 [M4F] -Australia/Anywhere - Looking for the bane to my existence\n\nI'm only half joking...   Anyway, thanks for clicking, reading (and subsequently enjoying) my post. In short (heh) I normally have a full enough social, work and hobby calendar going on but this recent cold-ish weather has been not enjoyable or overly conducive to that. I live alone so the monotony of routine can sometimes get a little... well... monotonous? My plants have thus far proven to be poor conversationalists and my robot vacuum is reticent to engage in much chit chat with me these days and has actually withdrawn and gotten quite bitter. It is not a healthy relationship. I'm basically mostly after someone I can message with during the day and perhaps the evenings. Happy to voice/video chat as well if the vibes feel right.    About me      Puts the fun in dysfunctional (that's a joke I am emotionally and life-stylistically stable)   I have the comedic range of an ocean (something something depth) and the wit of a freshly sharpened Crayola©️   I am able to be attentive and understanding of your needs, preferences and boundaries   I am open to taking a contrarian stance on most subject matters in the interest of debate (fight me)   I can ramble for the both of us, conversely I can lend a receptive ear and insert gasps and probing questions where needed   I have very strong opinions on pizza toppings      What I can offer you      A genuine want to learn about you and see if our personalities match   The ability to whip up a restaurant quality meal (the restaurant is Dominos)   I will say and do increasingly stupid things to try and make you laugh   Will humour you when you tell me you enjoy bad things   Will apologise when I call you out for liking those bad things after I can't keep a straight face anymore   I enjoy eatingᵒᵘᵗ   A plethora of board/card/video/mind games   The willingness to engage in just about anything at least once   A constant positive impression with a balance of logical solutions/ideas and emotional pick me ups/reinforcement      Just so you know what you're getting yourself I have added a bonus section of pink coloured flags that I'm constantly trying to dilute with white      Sometimes I struggle to broach serious stern topics without at some point resorting to humour   I have the resting facial expressiveness of a dull rock/mineral   I am trying to be more forthright and open with myself and my feelings instead of bottling it all in without an escape valve   I can sometimes be obtusely impatient in search of short term gratification over long term progress   I will eat the last slice of pizza without remorse     I understand people are in different stages of life and searching for different things so am welcoming of just short lived fun time or something ongoing. That said I do however have a very stringent non-negotiable requirement for you     Exists     If it sounds like we might get along then send me a message and we can take it from there...       submitted by     /u/CuteCoatHanger     to     r/r4r       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/r4r/comments/1wl74re/32_m4f_australiaanywhere_looking_for_the_bane_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:31:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:32:18.540Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf61d2660c6084039848fa"
+    },
+    "message_id": "reddit_t3_1wl74rc",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SoulThieves",
+    "username": "threecrow_",
+    "title": "threecrow_ beat this tower in 30.098 seconds. Can you do it faster?",
+    "text": "threecrow_ beat this tower in 30.098 seconds. Can you do it faster?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/threecrow_     to     r/SoulThieves       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SoulThieves/comments/1wl74rc/threecrow_beat_this_tower_in_30098_seconds_can/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:31:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:32:18.741Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf61d2660c6084039848fb"
+    },
+    "message_id": "reddit_t3_1wl74r9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "nightnunight",
+    "title": "A homeless man gave you lottery numbers and you won $23 million dollars, how much you giving him? Why?",
+    "text": "A homeless man gave you lottery numbers and you won $23 million dollars, how much you giving him? Why?\n\nsubmitted by     /u/nightnunight     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wl74r9/a_homeless_man_gave_you_lottery_numbers_and_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:31:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:32:18.940Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf61d3660c6084039848fc"
+    },
+    "message_id": "reddit_t3_1wl74q7",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "esp32",
+    "username": "TravelDizzy3660",
+    "title": "daijin: an ESP32-S3 voice companion with Claude as the brain. It feeds my cat and pops a balloon in a park.",
+    "text": "daijin: an ESP32-S3 voice companion with Claude as the brain. It feeds my cat and pops a balloon in a park.\n\nI built a friend. Its name is daijin.   Press a button, talk. It listens, thinks, acts. Feeds my cat. Sets off a device I planted in a park.   Set up in advance. Command when I want.   **How it works**   An ESP32-S3 (Freenove kit) with an INMP441 mic, a PCM5102 amp + speaker, and an SSD1306 face. Audio goes over MQTT (HiveMQ Cloud, TLS) to my Mac: whisper.cpp transcribes, Claude Code decides and runs shell tools, ElevenLabs speaks. Other ESP32-S3 nodes are the hands and feet: a servo with a needle, a stepper turning a treat dispenser. Each node can sit on a different network; everything rendezvous at the broker.   **Things that bit me**   - The free broker is in the EU, ~300 ms RTT from Korea. ESP32's lwIP receive window is ~5.7 KB, so max throughput is ~19 KB/s. Raw 16 kHz PCM needs 32 KB/s. No code fixes physics, so IMA ADPCM 4:1 it is.   - INMP441 must be read as 32-bit I2S frames or you get full-scale white noise.   - `WiFi.setSleep(false)` or RX throughput collapses to ~12 KB/s.   - MQTT QoS1 gates every chunk on a broker round trip. QoS0 and let TCP stream.   Honest latency: 6–22 s per round trip. The video is cut for pace.   Video:  https://www.youtube.com/watch?v=fOtuGAdvkmQ    Code:  github.com/nonasking/daijin        submitted by     /u/TravelDizzy3660     to     r/esp32       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/esp32/comments/1wl74q7/daijin_an_esp32s3_voice_companion_with_claude_as/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:31:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:32:19.144Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf61d3660c6084039848fe"
+    },
+    "message_id": "reddit_t3_1wl74pn",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "Ok-Bet-3507",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Maggie Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Maggie Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Ok-Bet-3507     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wl74pn/sticker_giveaway_enter_to_win_a_4_stars_maggie/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:31:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:32:19.543Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf61f2aeeb96c1c63ba27a"
+    },
+    "message_id": "reddit_t3_1wl75bh",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "softwarearchitecture",
+    "username": "lnaoedelixo42",
+    "title": "Got as \"unexperienced\" for going against queues",
+    "text": "Got as \"unexperienced\" for going against queues\n\nHell this looks dumb. But some mouths ago I tried explaining why putting a queue in front of a service wouldn't really help it.   Basically it's an API that calculated points given rules, and needs some consistency and very strong logs.   Yeah it's mongo for some reason, and yeah it got state, but it should be easily retriable, and instead they (my boss and seniors) insisted on putting RabbitMQ \"for security\"?   It technically hurted idempotency, 1/5d the throughput, 10x'd latency, added another single point of failure, and if Rabbit fails we got inconsistence on the database and a user gets 409 for a 100% valid operation.   I really don't know how to approach this kind of stuff, because like, I got 1/8th of their time in the market, but it seams they don't know that mongo also got unique indexes. What would you do in this situation?       submitted by     /u/lnaoedelixo42     to     r/softwarearchitecture       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/softwarearchitecture/comments/1wl75bh/got_as_unexperienced_for_going_against_queues/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:32:35Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:32:50.697Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaf6209660c6084039848ff"
+    },
+    "message_id": "reddit_t3_1wl75m6",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "DHgateRepSquad",
+    "username": "SadElevator254",
+    "title": "Can anyone please help I wanna make a haul but my budget is only $500 please read desc",
+    "text": "Can anyone please help I wanna make a haul but my budget is only $500 please read desc\n\nBasically like I wanna buy alot of stuff with 500 dollars I wanna buy good designer like chrome hearts and that’s about it ngl or hellstar too would work but my budget is 500 so can someone send like cheap good high quality items for me I don’t care if it’s your affiliate code I just want something good and I want to see the quality pictures       submitted by     /u/SadElevator254     to     r/DHgateRepSquad       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DHgateRepSquad/comments/1wl75m6/can_anyone_please_help_i_wanna_make_a_haul_but_my/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:33:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:33:13.534Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf6209660c608403984900"
+    },
+    "message_id": "reddit_t3_1wl75li",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "Robyn",
+    "username": "MightyGenius8",
+    "title": "LA Wed 9/23 - Selling 2 Tickets",
+    "text": "LA Wed 9/23 - Selling 2 Tickets\n\nI'm no longer able to go on Wednesday and am selling my pair of tickets for the Wednesday, 9/23 show at the Kia Forum. I've posted on Ticketmaster but would prefer to avoid the silly fees and would sell it under face value. Sec 210, Row 9. Originally paid $180 for both. I'm going on Thursday instead now, cannot wait :)       submitted by     /u/MightyGenius8     to     r/Robyn       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Robyn/comments/1wl75li/la_wed_923_selling_2_tickets/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:33:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:33:13.736Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf6209660c608403984901"
+    },
+    "message_id": "reddit_t3_1wl75ke",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "wordgrind",
+    "username": "SensitiveWeekend8417",
+    "title": "Translate — what's \"hola\" in English?",
+    "text": "Translate — what's \"hola\" in English?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/SensitiveWeekend8417     to     r/wordgrind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wordgrind/comments/1wl75ke/translate_whats_hola_in_english/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:32:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:33:13.939Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf620a660c608403984902"
+    },
+    "message_id": "reddit_t3_1wl75k2",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "Trophies",
+    "username": "North_Sand1236",
+    "title": "[discussion] What should I platinum next?",
+    "text": "[discussion] What should I platinum next?\n\nJust hit my 30th!       submitted by     /u/North_Sand1236     to     r/Trophies       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Trophies/comments/1wl75k2/discussion_what_should_i_platinum_next/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:32:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:33:14.139Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf620a660c608403984903"
+    },
+    "message_id": "reddit_t3_1wl75gx",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "cfs",
+    "username": "fraidybug",
+    "title": "in a crash for past 2+ weeks after taking a trip. mod-severe .have nobody. could use some words of encouragement rn",
+    "text": "in a crash for past 2+ weeks after taking a trip. mod-severe .have nobody. could use some words of encouragement rn\n\nidk if this is the right flair. if not i’m sorry pls fix it. im still new here getting used to flairs so i’m sorry.   this is not a useful post. just not sure where to go to ask. i dont have the strength to speak out loud so i cant use a helpline. just want some encouraging words. i feel like i am existing in a vacuum of agony rn all alone.   if ur wondering how i managed a trip with this level i took lots of steroids and other medications and was extremely stupidly determined to have one little bit of happiness and i shouldn’t have done it. i just didn’t know when the last time ill be able to do something like that would be so i forced it. now i really think i can never do it again.   3 years mild, suddenly progressed to moderate-severe a year ago. refused to seek out community bc i was scared of accepting reality until recently.    im not even sure if this is ok i probably shouldn’t pos it. but i just need someone to tell me to hold on. pls tell me its worth it somehow. i feel like i’m in hell already       submitted by     /u/fraidybug     to     r/cfs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cfs/comments/1wl75gx/in_a_crash_for_past_2_weeks_after_taking_a_trip/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:32:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:33:14.365Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf620a660c608403984904"
+    },
+    "message_id": "reddit_t3_1wl75ga",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "CUTCO",
+    "username": "gurgle528",
+    "title": "👋 Welcome to r/CUTCO - Introduce Yourself and Read First!",
+    "text": "👋 Welcome to r/CUTCO - Introduce Yourself and Read First!\n\nHey everyone! I'm  u/gurgle528 , a pirate moderator of  r/CUTCO .    This is our new home for all things related to {{ADD WHAT YOUR SUBREDDIT IS ABOUT HERE}}. We're excited to have you join us!     What to Post   Feel free to share your thoughts, photos, or questions about Cutco.     Community Vibe   Angsty-Informative    How to Get Started      Introduce yourself in the comments below.   Post something today! Even a simple question can spark a great conversation.   If you know someone who would love this community, invite them to join.   Interested in helping out? We're always looking for new moderators, so feel free to reach out to me to apply.     Thanks for being part of the very first wave. Together, let's make  r/CUTCO  amazing.       submitted by     /u/gurgle528     to     r/CUTCO       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CUTCO/comments/1wl75ga/welcome_to_rcutco_introduce_yourself_and_read/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:32:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:33:14.570Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf620a660c608403984905"
+    },
+    "message_id": "reddit_t3_1wl75f5",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "Quote_to_Cash",
+    "username": "JK-TurnstileAdvocate",
+    "title": "An Inventory of What the Billing Spreadsheet Covers",
+    "text": "An Inventory of What the Billing Spreadsheet Covers\n\nSegregation of duties rests on one rule, which is that whoever initiates a transaction does not also approve it or record it. An agent with write access to a financial system holds all three roles at once, and it usually holds them under a human's credentials, so it never appears as a row in the quarterly user access review. Gartner predicts that by 2027, 40 percent of enterprises will demote or decommission autonomous AI agents because of governance gaps found only after a production incident, and the root cause it identifies is organizations failing to separate what an agent is permitted to do from the access it was granted. The corrections are unglamorous: a distinct identity per agent, entitlements attached to a declared autonomy level rather than to a use case, an aggregate exposure limit per period in place of a per-transaction dollar threshold, and a named owner recorded before anything reaches production.   One identity proposes the entry, posts it, and drafts the explanation the reviewer reads   Every control framework in accounting separates four activities: authorizing a transaction, executing it, recording it, and reviewing the record. A close-automation agent typically performs all four inside a single run. It reads the sub-ledger, determines the accrual is required, posts the journal, and then generates the flux commentary that the controller reads when deciding whether the entry looks reasonable. The reviewer is therefore reading an explanation written by the party being reviewed, which is the precise arrangement the separation was designed to prevent, and no one in the deployment meeting raised it because the conversation was about close-cycle days.   Each capability was approved on its own merits and by a different person, which is why the conflict never surfaced in any single approval. Read access to the sub-ledger came from the data team. Write access to the general ledger came from the ERP administrator as a role assignment. The commentary generation was never an access decision at all, because generating text requires no entitlement. Finance controls are designed around entitlements, and an agent assembles a duties conflict out of three grants that are individually defensible.   The quarterly access review has no row for the agent, because the agent runs on an analyst's login   Access reviews enumerate users. An agent deployed on a human's credentials or on a shared service account inherits that identity's entitlements and inherits its line in the review, which reads exactly as it did the year before. The reviewer confirms that a senior FP&A analyst holds journal entry rights, approves the row, and has certified an agent without knowing one exists. Any finance team that cannot produce a list of non-human identities with write access to financial systems has this gap open right now, and the gap widens every time a business user connects an agent to a system through a credential they already hold.   Closing it requires three things that sit outside the normal finance workstream:      One identity per agent instance, never per agent type.  Two instances of the same accrual agent running against two entities are two actors, and collapsing them into one identity destroys the ability to attribute an entry to a run.    The agent registered in the same identity system as employees , so the segregation-of-duties ruleset tests it automatically rather than requiring someone to remember it exists.    Key custody held outside the team that operates the agent.  Whoever can rotate the credential can reassign the authority, which makes credential custody a duties question in its own right.     Licensing is the obstacle that stops most of this before it starts. Several major ERPs price identities per named user, so a distinct account for every agent instance carries a recurring cost that no business case anticipated, and the shortcut is a shared service account that posts everything under one anonymous name. A general ledger populated by an entity called SVC_AUTOMATION cannot answer which run produced which entry, which means the audit trail exists and proves nothing. Negotiating non-human identity pricing into the ERP renewal is cheaper than discovering at the next audit that agent activity is unattributable, and the renewal is where finance has leverage that the security team does not.   The 25,000 dollar approval threshold was calibrated for a human posting a dozen entries a day   Approval thresholds encode an assumption about volume that nobody writes down. A limit set at 25,000 dollars per entry works because a person posting manually produces ten or twelve entries in a day, which bounds the total value moving below the review line at somewhere near 300,000 dollars a day in the worst case. That ceiling is what makes the threshold a control rather than a formality, and it comes from human throughput rather than from anything in the policy. An agent posting 340 entries in a close week breaks the assumption without breaching a single limit, because the policy governs the size of each action and says nothing about how many actions occur. The threshold survives intact while the exposure it was meant to bound increases by an order of magnitude.   Consider a recurring-accrual agent granted write access for entries under 25,000 dollars across two entities. In month three a vendor shifts from monthly to semi-monthly billing. The agent's duplicate-detection logic keys on invoice date, the new cadence produces two invoices in the same window, and the agent posts 41 duplicate accruals totaling roughly 680,000 dollars. Not one of them exceeded the threshold, so not one of them routed to a human. Those figures are illustrative. The mechanism behind them is ordinary arithmetic, in which a per-item limit multiplied by a machine transaction rate produces an aggregate exposure nobody authorized. The control that catches this is a period exposure cap, which counts the total value an agent has moved since the last human review and halts the agent when the total crosses a stated number.   A workable version of that control looks like this, and it takes an afternoon to specify:      Declare the blast radius in dollars per period , not per transaction. State the maximum total the agent may post between human reviews, and set it at the materiality threshold used for the financial statements rather than at the journal approval limit.    Enumerate the accounts the agent may write to, and the accounts it may never touch.  Revenue, equity, and any account feeding a covenant calculation belong on the second list regardless of how the agent performs.    Install a circuit breaker on rate, not only on value.  An agent posting three times its normal volume is either responding to a real business change or malfunctioning, and both cases warrant a stop rather than a log entry.    Require reversibility inside the open period and prove it once.  Reversing a posted entry after the period closes is a prior-period adjustment with its own disclosure consequences, which means a rollback capability that has only been tested in a sandbox has not been tested.    Assign one named human owner, recorded in the agent register.  Accountability for agent behavior stays with the organization, and an agent without a person's name attached is an exposure with no one to call.    Run a reconstruction test before production.  The team should be able to reproduce what the agent planned, what data it accessed, and what it produced for any single run. Gartner's finance practice recommends measuring a first agent pilot by exactly this standard rather than by return on investment.     Entitlements belong to the autonomy level, not to the use case   Gartner's May 2026 guidance sorts agents into four autonomy levels and matches control weight to each, and the classification maps cleanly onto controls finance already operates. Level 1 agents observe, holding read-only access with output visible to the requester. Level 2 agents advise, producing recommendations a human executes manually, still with no write access anywhere. Level 3 agents act with explicit human approval on every action. Level 4 agents act independently inside defined guardrails, with humans reviewing exceptions and aggregate outcomes rather than individual decisions. Applying identical controls across all four produces two problems at once: simple agents get over-restricted, which pushes analysts to run unsanctioned versions on desktop exports, while the genuinely autonomous ones get under-restricted because the review process treated them as ordinary software.   Attaching entitlements to the level rather than to the business case changes who decides what. A use case framed as automating recurring accruals invites an argument about scope and savings. An agent proposed at Level 3 invites a different question, which is whether the approval step will hold under volume. That question has an answer sitting in the workflow logs already, since every approval system records how long an approver spent on each item and how often an item was rejected. An approver handling 340 agent-generated entries in a close week clears them faster than one handling twelve, and Gartner's own guidance names approval fatigue as the point where a Level 3 control stops being a control and starts producing a false sense of safety. The degradation is predictable enough to design around by capping how many approvals one person receives in a period and by routing a random sample to a second reviewer who does not know which items were sampled.   The monitoring that makes agent limits real requires a view no single system holds   An exposure cap stated in dollars per period is only enforceable if the total is visible while the period is open. That total spans systems by construction. The agent reads from a sub-ledger, writes to the general ledger, and its actions carry consequences in a treasury position, a covenant calculation, and a revenue schedule maintained elsewhere. Assembling that picture after the close from four exports is how a 680,000 dollar aggregate becomes a finding rather than an alert. Una's data and integrations layer exists for this constraint, unifying revenue, operations, and finance data into a single live source of truth so that agent activity can be measured against a running total rather than reconstructed from system logs after the fact. Without a joined live view, every agent limit written into the deployment document is a number no one is positioned to enforce.   This work slows the first deployment by several weeks and produces no savings of its own, which is a real cost and not a rhetorical one. A team that skips it moves faster and lands in the population Gartner expects to demote or decommission their agents, having discovered the gap through an incident rather than through a design review. The cultural cost is heavier than the schedule cost. Requiring a named owner, a distinct identity, and a period exposure cap makes sanctioned agent deployment look bureaucratic beside the analyst who connected one to a spreadsheet export in an afternoon, and that analyst is producing visible output while the control design is still in draft. Over-restriction of the simple cases is what drives that unsanctioned version, which is why the autonomy classification matters as much for what it permits as for what it stops.   The first finance agent is a controls build that happens to produce savings   Finance already owns the vocabulary for every problem an agent introduces. Authority limits, delegation of authority, maker and checker, materiality, reversibility, and named accountability are controls the function has operated for decades against human actors. Applying them to a non-human actor requires no new framework and no vendor category, only the decision to treat an agent as an actor in the control environment rather than as a piece of software that the IT security review already cleared. The security review confirmed the agent cannot reach data it should not see, and said nothing about what the agent is permitted to do with the data it can reach, which is a separate question that a separate team should have been asked to answer. Finance is that team, and the window to ask closes the day the agent enters production.       submitted by     /u/JK-TurnstileAdvocate     to     r/Quote_to_Cash       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Quote_to_Cash/comments/1wl75f5/an_inventory_of_what_the_billing_spreadsheet/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:32:45Z"

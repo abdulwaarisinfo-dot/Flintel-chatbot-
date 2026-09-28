@@ -1,0 +1,416 @@
+    "_id": {
+      "$oid": "6aa8d6526508d45f3d2c98a5"
+    },
+    "message_id": "reddit_t3_1wgra3l",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "amazfit",
+    "username": "quadflight",
+    "title": "I wanted to understand my Amazfit data better. Nine months later............",
+    "text": "I wanted to understand my Amazfit data better. Nine months later............\n\nEarlier this year I posted about a health project I was planning to open source. That project got a little out of hand.   What started as a weekend project to understand my own weight-loss plateau turned into about nine months of building a full health analytics platform. I’ve been in software for more than 20 years, so once I started digging into the data problem, I kept going. And yes, there has been plenty of AI-assisted / vibe-coded development along the way. But the backend architecture, database design, data pipelines, algorithms, infrastructure, integrations, models, and implementation decisions were built and put together by me. So no, this is not just another vibe-coded health-data wrapper where an LLM reads Health Connect and gives you a motivational paragraph.   I currently have  8 active testers  and I’m looking for about  12 more Android users  before I close this beta round.   1. Why I Built It   I hit a stubborn weight-loss plateau. I was tracking food, calories, workouts, sleep, weight, and doing everything more or less by the book. But the numbers were not lining up with what was actually happening. One thing that kept bothering me was calorie burn and TDEE estimation. Different apps and devices were giving me very different numbers, and in some cases the estimates looked way too high compared with my real-world results. I'm not pointing fingers at any particular app or wearable. Consumer health data is messy. Energy expenditure is difficult to estimate. Every platform makes assumptions. But that was the rabbit hole.   I also genuinely want to thank Amazfit for being the thing that pushed me down this rabbit hole. I used Samsung wearables for years and mostly just glanced at the daily summaries. With Amazfit, I started actually looking at the data, questioning the numbers, comparing patterns, and trying to understand what was happening underneath the scores. That curiosity eventually became this entire project.   2. What TrueMOS Actually Is   The basic philosophy is simple:   Your health data should be compared primarily against you.   Not just against population averages. Your resting HR, HRV, sleep timing, glucose response, workout recovery, food patterns, supplement response, and medication response all become more useful as your own longitudinal baseline grows. There is an LLM chat/explanation agent called  Kiro , but most of the actual health engine is not LLM-based.  The heavy lifting is:     deterministic logic   mathematical models   longitudinal analysis   ML   lag analysis   anomaly detection   source arbitration   personal baselines   pharmacokinetic modeling   signal correlation     The LLM is mainly the translation layer.  Nobody wants to read:   HRV Δ -14.8%, z = -1.31, confidence = 0.86   The system does the calculation first, then explains the result in normal language using the user's own underlying data.   3. The Signals Engine   This is probably the part I find most interesting. Logging that you did something is easy. Figuring out whether it actually appeared to help  you  is much harder.  Say you start taking  magnesium glycinate  for sleep. Most health apps can record:   Magnesium taken at 9:15 PM.   The signals engine asks:   Did anything actually change afterward?   There are separate models looking at shorter-term and longer-term effects.  Over time, a signal can move toward:     likely positive   likely negative   no meaningful change   inconsistent   not enough data yet     And this isn't limited to supplements.  The engine can investigate things like:   Do I sleep better after higher-carb dinners?    Do high-fat meals affect my recovery?    Does eating late increase my overnight resting HR?    Does magnesium consistently improve sleep efficiency or HRV?    What happens to recovery 3–5 days after high-intensity training?    Does Zone 2 produce a different recovery or glucose response than strength training?    Does something look useful short-term but become neutral over several months?   This is an ongoing process. As more observations accumulate, confidence can increase, decrease, or completely change.  And there is an important limitation:   There is no straight line from machine learning or math to human biochemistry.   If magnesium nights correlate with better sleep, the software cannot prove magnesium caused it. There can be confounders. What it can do is estimate, to the best of our ability from the available data, whether a repeatable relationship appears to exist in  your own history .   4. High-Resolution Wearable Data   I currently daily-drive development using an  Amazfit Helio Strap and Active 3 Premium .  One thing I didn't want to do was throw away useful data just because many health platforms work primarily with minute-level summaries.   If a source provides higher-resolution observations, the backend preserves them. That includes  sub-second HR observations when the device actually sends them . That becomes useful when several sources overlap. You might have strap HR, watch HR, workout HR, sleep HR, Health Connect, CGM, or another wearable. The backend has source-arbitration logic that determines which stream should be preferred for a given metric and time period instead of blindly averaging everything together.   5. Sleep: Personal Baseline Over an Arbitrary 8 Hours   Sleep is one area where I intentionally did things differently.  I didn't want:   8 hours = good    6 hours = bad   Duration matters, but I don't think it should automatically overpower everything else.  The sleep engine looks separately at:     duration   efficiency   timing   consistency   fragmentation   wake events   REM / deep / light distribution   personal baseline   personal sleep debt     One distinction I especially wanted was  personal sleep debt versus an arbitrary 8-hour reference . For example, one of my recent nights was:   6h 24m sleep    6.4h personal target    0.2h personal sleep debt    1.6h gap vs. an 8-hour reference   Those are two very different pieces of information. If someone sleeps around 6½ hours with strong efficiency, stable timing, reasonable architecture, little fragmentation, and they're close to their established personal requirement, I don't think the system should automatically destroy their score because they missed 8 hours. Likewise, sleeping 8 hours doesn't automatically make it a great night. I'm also not pretending consumer wearable sleep staging is medical-grade measurement. A lot of the value is in  longitudinal change within the same person and device ecosystem .   6. Food Logging and Meal Telemetry   Food can currently be logged through:     photo   natural language   barcode     Then the system analyzes considerably more than calories and macros.  Per-meal telemetry includes:     nutrient density   satiety   metabolic load   processing level   protein density   added sugar   sodium   micronutrient gaps   food vs. supplement nutrient sources     The scoring is explainable too. Instead of:   Food score: 72   I want you to be able to see what actually helped or hurt the score.This circles back to why I built the project in the first place. Calories still matter. But if you're trying to understand why your weight, appetite, glucose, sleep, and recovery are behaving the way they are, one calorie number doesn't tell the whole story.   The logging can be done in-app or can ingest anything that gets in to health connect and goes through a waterfall enrichment process to get detailed data for food items before storing in DB.   7. CGM and Metabolic Analytics   If you use a CGM, this gets fairly deep.  Current analytics include:     tight Time in Range such as 70–140 mg/dL   glucose stability   metabolic strain   meal response   workout glucose response   pre-workout glucose   HR vs. glucose relationships   metabolic stability   insulin-sensitivity-related trends     One thing I'm especially interested in is treating workout and CGM data as one dataset rather than two unrelated screens.  For example:   At what workout intensity does my glucose behavior start changing?    Does strength training affect me differently than Zone 2?    Does pre-workout glucose change the response?    8. Workout and Recovery Analytics   Workout analysis currently includes things like:     HR zones   TRIMP   intensity density   cardiac drift   aerobic decoupling   heart-rate recovery   aerobic / anaerobic training effect   Zone 2 distribution   workout efficiency   post-workout HRV effects     And because of the signals engine, the analysis doesn't necessarily stop when the workout ends. A high-intensity workout might look great that day but correlate with worse recovery over the following 3–5 days. That's the kind of relationship I'm trying to uncover.   9. Sickness and Recovery Detection   I didn't want one bad night of sleep to immediately generate:  You may be getting sick.   The system uses two layers. The first looks for acute changes such as resting HR drift, HRV suppression, respiratory-rate changes, and sleep disruption. The second looks at whether multiple metrics are diverging together across rolling windows. The idea is to distinguish ordinary noise—hard training, bad sleep, late meals, alcohol, etc.—from something genuinely unusual for that person.   One caveat, sadly Zepp does not export temperature data to health connect so a major modifier is missing from calculation even though core engine is ready and already wired.   10. Medications and GLP-1s   The platform can model medication exposure rather than simply recording a dose on a calendar. For GLP-1 medications, for example, it can generate estimated pharmacokinetic exposure curves and compare those with appetite, food intake, glucose, weight, sleep, training, and side effects. Again, these are  models and estimates , not blood measurements.  But they give the signals engine another dimension to work with.   11. Biological Age and Resilience   There is also a biological-age / physiological-resilience model. I'm deliberately treating this as an  estimate , not a magic number. A stronger biological-age model will ultimately benefit from blood-work data, and I plan to expand that side later. I'm also working toward allowing manual entry of certain useful metrics and biomarkers.   For me, the more useful question isn't:   What is my biological age today?   It is:   Is my physiology moving in a better or worse direction over time?    12. Predictive Routines, Nudges & Alerts   TrueMOS has ML models that continuously learn your normal routines from your own history—when you typically weigh yourself, work out, eat, take medications or supplements, log certain metrics, and other repeated behaviors. You don't have to manually build a schedule for everything. As the system learns your patterns, it can predict when something would normally happen and send context-aware nudges and alerts through Firebase Cloud Messaging (FCM) when appropriate.  The important distinction is that these aren't just recurring alarms set for 8:00 AM every day. The timing is learned from your actual behavior and continues adapting as your routine changes. The goal is for the app to become progressively less work to use the longer you use it.   13. Privacy and Data Isolation   Since this is health data, user isolation is not something I wanted to bolt on later.  The database stack uses  row-level security (RLS)  and the usual layered authentication/authorization controls so one user's data is isolated from another user's data at the database level, not just hidden by the UI. I'm not claiming any system is magically invulnerable. But privacy and data isolation are part of the architecture from the start.   14. Pricing   Originally I genuinely wanted this to stay completely free. I don't think that's realistic anymore. The amount of time-series storage, high-resolution processing, ML inference, correlation analysis, and backend compute involved in the advanced features gets expensive.  So:   There will be a free tier.   I'm going to try to keep as much of the useful core app free as I reasonably can. But advanced analytics and heavier compute will eventually have to be subscription-based.  I'd rather be transparent about that now than advertise everything as free and change the story later. The people helping me with this early closed beta will get  lifetime access to the advanced features .   15. Beta Details   The Android beta is currently distributed through  Firebase App Distribution as an APK .  For this round I'm  only looking for Android testers . I currently have  8 active testers (some are devs in other areas)  and I'm looking for about  12 more  before closing this round. I'm not looking for iOS testers yet.   16. Who I'm Looking For   You definitely do not need every wearable and a CGM. I'm looking for people who already track some combination of:     sleep   workouts   food   weight   wearables   CGM   supplements   medications / GLP-1s     Most importantly, I want people who will actually use the app and tell me:   This makes sense.    This makes no sense.    This is useful.    This is useless.    Your calculation looks wrong.    That is much more valuable to me right now than having a huge beta.  I would rather have  12 active testers than 500 downloads .  If you're interested, comment or DM me with:   1. What Android phone you use    2. What wearable(s) you use    3. What health data you currently track    4. If Helio strap, do you start the workout on the phone or use activity detection     Who This Is For    I also want to be clear that this is  not going to be everyone’s cup of tea , and it was never meant to be. TrueMOS is built for people who actually enjoy diving into the details—looking at trends, relationships, recovery patterns, sleep architecture, glucose behavior, training response, and how different variables interact over time. If you just want a simple daily score and a quick “you’re doing great” summary, the current version will probably feel like too much. That said, I am working on a  simplified experience  that sits on top of the same engine and gives people the important takeaways without requiring them to dig through every metric. The deep data will still be there for people who want it. The goal is just to make the platform useful at more than one level. Also all means and methods are internal calculations from raw data. Example TM uses mean HRV instead of average HRV so it will not match 1:1 with the companion app.   Beta Expectations   One thing I want to set expectations on: this is  not an overnight project , and I’m not treating the beta like one. I’m moving slowly and methodically because there are a lot of interconnected systems underneath the app. A change that looks small on the surface can affect ingestion, scoring, baselines, signals, alerts, historical data, or other downstream models. So if you report a bug or suggest a change, please don’t expect an instant patch just for the sake of shipping quickly. Before I change or augment something, I want to understand the  full blast radius , make sure I’m not fixing one thing while quietly breaking three others, and then implement it properly. That means some fixes may take longer, but the tradeoff is a much more stable system over time.   I'm also happy to discuss the technical approach, methodology, and higher-level architecture  within reason . I'm obviously not going to publish the full backend implementation or proprietary details in a Reddit thread, but I'm happy to have a real technical discussion about how the system approaches these problems.       submitted by     /u/quadflight     to     r/amazfit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/amazfit/comments/1wgra3l/i_wanted_to_understand_my_amazfit_data_better/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T05:23:19Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T05:23:30.973Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8d6536508d45f3d2c98a7"
+    },
+    "message_id": "reddit_t3_1wgra35",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CanadaStocks",
+    "username": "NazzDaxx",
+    "title": "Streetwise Covers StrikePoint Gold (SKP.v STKXF) Agreeing to Buy Newmont's Northumberland Deposit for US$70 Million Upfront",
+    "text": "Streetwise Covers StrikePoint Gold (SKP.v STKXF) Agreeing to Buy Newmont's Northumberland Deposit for US$70 Million Upfront\n\nPosted on behalf of StrikePoint Gold Inc - Most of the attention on the Northumberland transaction has gone to the ounces already counted. The more interesting line in the Streetwise Reports write-up from August 20 is the one about what has not been tested: exploration on the property stopped around 2010, and it has sat quiet ever since. SKP.v, listed in the US as STKXF, has signed a definitive agreement to buy the project from subsidiaries of Newmont. Signed, not closed.    The Untested Side Of Northumberland      No exploration on the property since approximately 2010 (See Aug 18, 2026 NR)   Untested targets include extensions of the known mineralization, plus near-pit and property-wide targets   The deposit is described as open in multiple directions, with any expansion of the resource subject to the results of further exploration   Five separate drill permits already in place, expected to facilitate rig mobilization on both private and public land following closing, subject to permit transfer or replacement requirements   The resource draws on 1,511 RC and 37 core holes drilled by prior operators including Cyprus Mines, Western States Minerals, Newmont USA and Fronteer Development. StrikePoint has not yet drilled or explored at the project      What It Starts From    The independent initial resource estimate, prepared by SLR Consulting (Canada) Ltd. with an effective date of July 31, 2026 and reported within an optimized pit shell, stands at 67 Mt at 1.33 g/t AuEq for 2.86 Moz AuEq indicated and 31 Mt at 1.58 g/t AuEq for 1.57 Moz AuEq inferred. Mineral resources are not mineral reserves and do not have demonstrated economic viability.   One note for anyone reading the article now: it was published August 20, when the bought deal was still marketed at C$140 million. It closed September 9 at C$190,000,000 gross. Closing of the acquisition itself is anticipated end of September 2026, subject to TSXV approval and customary conditions, and shares remain halted until then. The Streetwise piece is worth a read for the full framing.   A brownfields deposit with permits in hand and fifteen years of untested ground around it is an unusual starting line for a junior, and it gives StrikePoint somewhere to go the moment the deal closes.       submitted by     /u/NazzDaxx     to     r/CanadaStocks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CanadaStocks/comments/1wgra35/streetwise_covers_strikepoint_gold_skpv_stkxf/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T05:23:18Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T05:23:31.571Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8d6536508d45f3d2c98a8"
+    },
+    "message_id": "reddit_t3_1wgra2u",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "forgeris",
+    "title": "Which smell instantly takes you back to childhood?",
+    "text": "Which smell instantly takes you back to childhood?\n\nsubmitted by     /u/forgeris     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wgra2u/which_smell_instantly_takes_you_back_to_childhood/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T05:23:18Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T05:23:31.774Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8d6536508d45f3d2c98a9"
+    },
+    "message_id": "reddit_t3_1wgra2r",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "smallworddofine319",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Otis Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Otis Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/smallworddofine319     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wgra2r/sticker_giveaway_enter_to_win_a_4_stars_otis/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T05:23:18Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T05:23:31.973Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8d6546508d45f3d2c98aa"
+    },
+    "message_id": "reddit_t3_1wgra25",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "No_Development_4383",
+    "title": "Creamy Alfredo Spaghetti and Rare Mosses",
+    "text": "Creamy Alfredo Spaghetti and Rare Mosses\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/No_Development_4383     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wgra25/creamy_alfredo_spaghetti_and_rare_mosses/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T05:23:16Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T05:23:32.173Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8d6546508d45f3d2c98ab"
+    },
+    "message_id": "reddit_t3_1wgra1p",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "automationContentCom",
+    "username": "lss_web_1444",
+    "title": "Rich text link post 1789449785262",
+    "text": "Rich text link post 1789449785262\n\nhyperlink to reddit.com        submitted by     /u/lss_web_1444     to     r/automationContentCom       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/automationContentCom/comments/1wgra1p/rich_text_link_post_1789449785262/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T05:23:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T05:23:32.372Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8d6546508d45f3d2c98ac"
+    },
+    "message_id": "reddit_t3_1wgra1g",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "MIsterBison",
+    "title": "What celebrity had the worst downfall?",
+    "text": "What celebrity had the worst downfall?\n\nsubmitted by     /u/MIsterBison     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wgra1g/what_celebrity_had_the_worst_downfall/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T05:23:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T05:23:32.571Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8d6546508d45f3d2c98ad"
+    },
+    "message_id": "reddit_t3_1wgra0z",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "worklifebalancetrack",
+    "username": "Original_Error_8880",
+    "title": "👋 Welcome to r/worklifebalancetrack - Introduce Yourself and Read First!",
+    "text": "👋 Welcome to r/worklifebalancetrack - Introduce Yourself and Read First!\n\nHi everyone!    I’m the person behind WorkLifeBalance, and I recently joined Reddit to connect with people interested in work-life balance, productivity, wellbeing, and self-improvement.   I started working on WorkLifeBalance because I felt that most productivity tools focus heavily on work and tasks, while the other parts of life—health, relationships, habits, finances, personal goals, and wellbeing—often get overlooked.   I’m exploring how tracking these different areas together can help people notice patterns and make better decisions over time.   I’m new to Reddit, so I’m here to learn, participate, and hear honest opinions from the community.   Looking forward to connecting with everyone!       submitted by     /u/Original_Error_8880     to     r/worklifebalancetrack       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/worklifebalancetrack/comments/1wgra0z/welcome_to_rworklifebalancetrack_introduce/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T05:23:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T05:23:32.783Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8d6546508d45f3d2c98ae"
+    },
+    "message_id": "reddit_t3_1wgr9zm",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FitTheWord",
+    "username": "AnniPanniJapanni",
+    "title": "Rank these people (created by u/AnniPanniJapanni)",
+    "text": "Rank these people (created by u/AnniPanniJapanni)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/AnniPanniJapanni     to     r/FitTheWord       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FitTheWord/comments/1wgr9zm/rank_these_people_created_by_uannipannijapanni/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T05:23:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T05:23:32.995Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8d6556508d45f3d2c98af"
+    },
+    "message_id": "reddit_t3_1wgr9zk",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "automationContentCom",
+    "username": "lss_web_1444",
+    "title": "Rich text paragraph 1789449769921",
+    "text": "Rich text paragraph 1789449769921\n\nThis paragraph exercises inline formatting. It includes  bold text ,  italic text ,   bold italic combined  ,  strikethrough . Here is a  hyperlink to reddit.com  and a bare URL  https://en.wikipedia.org/wiki/Markdown  that some editors will auto-link.  Inline code snippet  lives here. Superscript: E = mc 2 .       submitted by     /u/lss_web_1444     to     r/automationContentCom       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/automationContentCom/comments/1wgr9zk/rich_text_paragraph_1789449769921/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T05:23:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T05:23:33.193Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8d6556508d45f3d2c98b0"
+    },
+    "message_id": "reddit_t3_1wgr9zh",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "Interrail",
+    "username": "Glittering-Junket666",
+    "title": "How do you book to ensure you get a confirmed ticket?",
+    "text": "How do you book to ensure you get a confirmed ticket?\n\nI'm still doing through travel agents who are charging a hefty fee. How do you all book tickets considering how the irctc site functions?       submitted by     /u/Glittering-Junket666     to     r/Interrail       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Interrail/comments/1wgr9zh/how_do_you_book_to_ensure_you_get_a_confirmed/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T05:23:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T05:23:33.392Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8d6556508d45f3d2c98b1"
+    },
+    "message_id": "reddit_t3_1wgr9z8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "wow",
+    "username": "adamyoungr",
+    "title": "Those wanting positive discourse and constructive discussions on lore and race - r/skyborne has been created.",
+    "text": "Those wanting positive discourse and constructive discussions on lore and race - r/skyborne has been created.\n\nr/skyborne    Obviously not everyone’s favourite cup of tea; but for those interested - a dedicated sub has been created just for you. All welcome.       submitted by     /u/adamyoungr     to     r/wow       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wow/comments/1wgr9z8/those_wanting_positive_discourse_and_constructive/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T05:23:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T05:23:33.591Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8d6556508d45f3d2c98b2"
+    },
+    "message_id": "reddit_t3_1wgr9z4",
+    "topic_key": "give me today top three conversation about e commerce",
+    "search_keyword": "ecommerce",
+    "platform": "reddit",
+    "subreddit": "CBSECommerce",
+    "username": "star0bliterator",
+    "title": "7 chapters of maths in three days, how do I study to score 75+?",
+    "text": "7 chapters of maths in three days, how do I study to score 75+?\n\nChapters 1-7 (till exercise 7.5), I have all basics clear and I can do a good amount of trick questions too. How do I revise so that I can score well for my half yearly?   There are a total of four days, but I wish to leave the last day for reviewing formulas.       submitted by     /u/star0bliterator     to     r/CBSECommerce       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CBSECommerce/comments/1wgr9z4/7_chapters_of_maths_in_three_days_how_do_i_study/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T05:23:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T05:23:33.790Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8d6556508d45f3d2c98b3"
+    },
+    "message_id": "reddit_t3_1wgr9y3",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "AskTeachers",
+    "username": "Sea_Papaya_419",
+    "title": "How many ADHD/ADD diagnoses’ do you think are misdiagnosed?",
+    "text": "How many ADHD/ADD diagnoses’ do you think are misdiagnosed?\n\nHi! I have an associates in education and used to work as a FT preschool teacher, now I’m a nanny for a 14 month old and work at a preschool 1 day a week. I’ve been looking into how to raise children with low stim things such as low stim toys, tv ect and I found some interesting things. I mainly went to Google looking up, can raising your child to hunt, fish, and ride dirt bikes make it harder for them to sit still and or make them more aggressive and the research shows that yes this is true. It basically says that children who are constantly put in front of high stimulating TV shows or introduced to high stimulating activities like riding a dirtbike need more stimulation have a hard time focusing in class, which makes the teacher reach out to the parents and say hey I think this might be ADHD and then when the parents do the survey, they say oh they’re showing all the signs of ADHD but is it actually adhd or are they just not getting the amount of stimulation they’re used to? I’d love to hear everyone’s perspective and opinions on this especially from different grade levels!        submitted by     /u/Sea_Papaya_419     to     r/AskTeachers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskTeachers/comments/1wgr9y3/how_many_adhdadd_diagnoses_do_you_think_are/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T05:23:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T05:23:33.990Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8d6566508d45f3d2c98b4"
+    },
+    "message_id": "reddit_t3_1wgr9xw",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "mercedes",
+    "username": "Suspicious_Sugar2020",
+    "title": "Looking to buy a c200 w206",
+    "text": "Looking to buy a c200 w206\n\nAs the tile says I'm looking to buy a w206 form 2022 (this year because it's in my budget).  Looking at the 1.5 petrol variant with 120k.  Are there any things I should look out for when looking at these?   Also I would really like to get the AMG styling version but I read that the ride is not as comfy as the avantgarde. Anyone have any experience with these?       submitted by     /u/Suspicious_Sugar2020     to     r/mercedes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mercedes/comments/1wgr9xw/looking_to_buy_a_c200_w206/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T05:23:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T05:23:34.189Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8d6566508d45f3d2c98b5"
+    },
+    "message_id": "reddit_t3_1wgr9wo",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "askdentists",
+    "username": "blurroverblurrover",
+    "title": "Why do dentists have different opinions on what is a cavity and what isn’t?",
+    "text": "Why do dentists have different opinions on what is a cavity and what isn’t?\n\nTwo weeks ago I went to a new dentist (moved cities). The dentist who did my exam said I have 8 cavities that all need fillings. I have had two cavities in my entire life (both about 15 years ago) and don’t have any pain in my mouth. I was a little shocked by this but chalked it up to just aging or whatever.    The dentist office said they would send me a quote and treatment plan once they heard back from my insurance. Well, turns out my insurance isn’t accepted at their office anymore.    So today, I went to a different dentist office. I told them I had a cleaning a few weeks ago but they ultimately didn’t accept my insurance so I was here for an exam. I did not tell them how many (or any for that matter) cavities the first dentist said I had.    Well, the new office says I only have three cavities and none need fillings. They prescribed me a fluoride toothpaste. But here’s where I’m most perplexed- only one of them is overlapping between the two dentists? So in other words, between the two dentists they found 11 cavities, but only agree upon one.    So my question is, what’s up with that? I haven’t had enough dental work done in my life to really understand what’s happening here but obviously I’m a little confused. I was under the assumption that a cavity is a cavity. Can someone please give me some more intel about all of this?        submitted by     /u/blurroverblurrover     to     r/askdentists       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/askdentists/comments/1wgr9wo/why_do_dentists_have_different_opinions_on_what/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T05:23:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T05:23:34.395Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8d6566508d45f3d2c98b6"
+    },
+    "message_id": "reddit_t3_1wgr9w6",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Bitcoin Avalanche Bridged - 15 Sep 2026 @ 01:19 -> $77 357",
+    "text": "Buy Signal Bitcoin Avalanche Bridged - 15 Sep 2026 @ 01:19 -> $77 357\n\nTicker:  BTC.BUSD    Exchange:  CRYPTO    Time:  15 Sep 2026 @ 01:19    Price:  $77 357    Link:  https://getagraph.com/AAA/crypto-currencies/BTC.BUSD/ENG        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wgr9w6/buy_signal_bitcoin_avalanche_bridged_15_sep_2026/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T05:23:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T05:23:34.596Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8d6716508d45f3d2c98b7"
+    },
+    "message_id": "reddit_t3_1wgraef",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "exmormon",
+    "username": "booboy92",
+    "title": "History discussion: The LDS ban on alcohol is a relic of the US Prohibition era, it has nothing do with the \"word of god\" or \"obedience.\"",
+    "text": "History discussion: The LDS ban on alcohol is a relic of the US Prohibition era, it has nothing do with the \"word of god\" or \"obedience.\"\n\nI was reading up today about the history of US prohibition.    Please excuse me in advance for any potential ignorance on the topic, for I am British.   One thing I learnt was that mounting opposition to alcohol in America came from a form of evangelical protestant zealotry, which ultimately accumulated in national prohibition by 1921.   While Joseph Smith had his \"revelation\" on the Word of Wisdom long before prohibition, anyone who is clued up on church history will know that it was a guideline and not a worthiness based rule.    Evidence? Joseph Smith drunk alcohol himself.    Thus, while opposition to alcohol undoubtedly grew within the church and American religious culture through the rest of the 19th century, the church itself did not implement a total ban on alcohol, and thus impose the word of wisdom as mandatory, until  1921 .   This wasn't revelation, it came immediately line with the US prohibition law. The LDS President who advocated it, Heber J. Grant, was also an advocate of the law.   Essentially, the LDS church followed the line of prohibition,  built upon American religious cultural opposition to alcohol , and then did not row back once it was lifted.   Thus, the policy in the church, that worthiness is contingent on abstinence, this is a  fossil  of a cultural era in America that no longer exists in the mainstream.   And of course, the LDS church followed a number of American \"mainstream\" values of a foregone era, including on matters of race, gender and sexuality.    The difference is that while alcohol/tobacco are private matters, the other three are moral issues pertaining to the treatment of other human beings and thus pressure is exerted on the church.   The final point? It shows that the church's values are not really coming from god at all, but the social climate of the time they were established in.  God apparently does change his mind .       submitted by     /u/booboy92     to     r/exmormon       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/exmormon/comments/1wgraef/history_discussion_the_lds_ban_on_alcohol_is_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T05:23:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T05:24:01.052Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8d6716508d45f3d2c98b8"
+    },
+    "message_id": "reddit_t3_1wgraeb",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "referralcodes",
+    "username": "premiumstyle",
+    "title": "Brim Referral Code 2026 - Get $10 sign up bonus. 19538 - The Low-Fee Foreign Exchange Card (Canada)",
+    "text": "Brim Referral Code 2026 - Get $10 sign up bonus. 19538 - The Low-Fee Foreign Exchange Card (Canada)\n\nSign up with Brim Financial Mastercard and earn unlimited rewards – Get 1 point in rewards on every two dollars spent. Plus, enjoy low 1.5% foreign transaction fees, no annual fees, no late fees, and complimentary Boingo Wi-Fi. This is the best no fee travel card out there.       The basic card is 0.5% on everything with 2x the points for Spotify, and Netflix purchases.       Use the link below or use the Brim Code 19538 during sign up to get $10 worth of points for free!     Code does not expire and is unlimited. Enjoy         https://brimfinancial.com/?code=19538            submitted by     /u/premiumstyle     to     r/referralcodes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/referralcodes/comments/1wgraeb/brim_referral_code_2026_get_10_sign_up_bonus/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T05:23:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T05:24:01.267Z"
+    }

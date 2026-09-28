@@ -1,0 +1,416 @@
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MiniRacerGame",
+    "username": "Ok-Celebration-5650",
+    "title": "Can you beat 40.053s on Number Seven?",
+    "text": "Can you beat 40.053s on Number Seven?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Ok-Celebration-5650     to     r/MiniRacerGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MiniRacerGame/comments/1wkk9kt/can_you_beat_40053s_on_number_seven/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:55:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:56:05.421Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae7855660c60840397fe98"
+    },
+    "message_id": "reddit_t3_1wkk9kp",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789818941171",
+    "text": "[PROBE] 1789818941171\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wkk9kp/probe_1789818941171/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:55:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:56:05.620Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae7855660c60840397fe99"
+    },
+    "message_id": "reddit_t3_1wkk9kn",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "OpenAI",
+    "platform": "reddit",
+    "subreddit": "devtools",
+    "username": "Mcborov00",
+    "title": "My AI coding agent kept reading my .env. I got sick of it and fixed it",
+    "text": "My AI coding agent kept reading my .env. I got sick of it and fixed it\n\nEvery AI coding agent I use has full read access to my working directory. So nothing stops it from reading the  .env  next to my code —  OPENAI_API_KEY ,  AWS_SECRET_ACCESS_KEY , DB creds, prod tokens, all plaintext.   Devs have been taught \"never commit your  .env \". Git never sees it. Fine. But the agent does. So does every process I run.   Meet SecureVault — this isn't \"another password manager.\" It's a  .env   replacement  for developers. Your secrets stay in the OS keychain, and instead of a file, you get one command that injects them as env vars only into the process that needs them, only for that run:    securevault run --profile dev -- node server.js securevault run --profile production -- docker compose up securevault run --profile aws -- terraform apply     Your app already reads the same env vars ( process.env.OPENAI_API_KEY , etc.) — just no file on disk holding them. Nothing to grep, nothing to accidentally commit, nothing for an agent to read.   Where they actually live:     macOS → Keychain   Windows → Credential Manager   Linux → Secret Service (libsecret)     There's a tiny local UI to set up which secrets map to which env vars (profiles). It only ever shows a short prefix like  sk-pr••••  so you can confirm the right token is there —  the raw value is never returned by any API .   Since the whole thing started with the agent problem, it ships an opt-in skill for Claude Code, Copilot, and Codex that teaches your agent to  securevault run --profile …  instead of reaching for  .env :    securevault install-skill # opt-in, auto-detects your agents, prints what it writes      Honest scope:  this kills  accidental  exposure (agents grepping the repo,  .env  in a backup/screenshare, commit-by-mistake). It's  not  protection against malware already running as you — anything running as your user can hit the keychain too.   MIT, no telemetry, no cloud.    npm i -g @mcborov01/securevault     https://github.com/andriyshevchenko/SecureVault     https://preview.redd.it/rw5iw9biugqh1.png?width=1280&format=png&auto=webp&s=b32347a369d58f61d473764a2d12c15544dd8768        submitted by     /u/Mcborov00     to     r/devtools       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devtools/comments/1wkk9kn/my_ai_coding_agent_kept_reading_my_env_i_got_sick/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:55:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:56:05.820Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae7856660c60840397fe9b"
+    },
+    "message_id": "reddit_t3_1wkk9kl",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "Subject-Command1054",
+    "title": "Visit Subject-Command1054's farm!",
+    "text": "Visit Subject-Command1054's farm!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Subject-Command1054     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wkk9kl/visit_subjectcommand1054s_farm/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:55:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:56:06.214Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae7856660c60840397fe9c"
+    },
+    "message_id": "reddit_t3_1wkk9kg",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "IllustriousMove9818",
+    "title": "Level: 601~620 2⭐ New Eden #9856",
+    "text": "Level: 601~620 2⭐ New Eden #9856\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/IllustriousMove9818     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wkk9kg/level_601620_2_new_eden_9856/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:55:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:56:06.412Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae7856660c60840397fe9d"
+    },
+    "message_id": "reddit_t3_1wkk9kf",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "FranceTravel",
+    "username": "Jdlvdb",
+    "title": "Quel hôtel ou chambre d'hôtes sur Marseille ?",
+    "text": "Quel hôtel ou chambre d'hôtes sur Marseille ?\n\nBonjour,   Quel hôtel ou chambre d'hôtes choisir sur Marseille pour 3 personnes pour environ 40 euros par personne avec le petit déjeuner ?   Merci pour vos retours.       submitted by     /u/Jdlvdb     to     r/FranceTravel       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FranceTravel/comments/1wkk9kf/quel_hôtel_ou_chambre_dhôtes_sur_marseille/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:55:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:56:06.610Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae7856660c60840397fe9e"
+    },
+    "message_id": "reddit_t3_1wkk9jf",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ageofsigmar",
+    "username": "Robot_Dinosaur_2000",
+    "title": "I Can't Unsee it",
+    "text": "I Can't Unsee it\n\nI really wanted to love the new dwarves and if you like them, I'm glad you do. But this is gonna be a no from me. I didn't need to buy a 5th army anyway.       submitted by     /u/Robot_Dinosaur_2000     to     r/ageofsigmar       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ageofsigmar/comments/1wkk9jf/i_cant_unsee_it/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:55:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:56:06.817Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae7857660c60840397fe9f"
+    },
+    "message_id": "reddit_t3_1wkk9j2",
+    "topic_key": "can you find me top posts on reddit which has over 10k views per month from ai tech industry",
+    "search_keyword": "AI technology",
+    "platform": "reddit",
+    "subreddit": "SmallCapStocks",
+    "username": "MrFaUsT7",
+    "title": "GOAI (EVA Live) – The next mini AI technology conglomerate.",
+    "text": "GOAI (EVA Live) – The next mini AI technology conglomerate.\n\nsubmitted by     /u/MrFaUsT7     to     r/SmallCapStocks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SmallCapStocks/comments/1wkk9j2/goai_eva_live_the_next_mini_ai_technology/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:55:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:56:07.018Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae7857660c60840397fea0"
+    },
+    "message_id": "reddit_t3_1wkk9iz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "HENRYUK",
+    "username": "RoadNo7935",
+    "title": "(Female) breadwinners",
+    "text": "(Female) breadwinners\n\nI’m the main breadwinner in our house - TC is about £200-240k depending on bonus; my husband earns about £28k.    My work is an almost constant source of conflict. I’m in a big FMCG so I don’t work crazy hours, usually 50-60 per week, and I travel once a quarter. I do the kids school run 3 days a week, I do all the household laundry (about 12 loads a week), the food shopping and I usually have both kids for a full day on my own at the weekend. I also own the kids social admin - all the clubs, play dates, birthdays, holidays camps etc.    My husband does more of the cooking and life admin, so at the weekend when I have the kids he’s doing house viewings as we’re currently looking to buy. If we have issues with our rental he sorts them out. But he does have more free time than me; I’m often catching up on work 8-9pm whilst he’s watching a film.    I feel like I just can’t win though. I do so much more at home than any of my male colleagues. Some of them will do the school run occasionally, but they’re much less present and active. I miss a lot of work social events to ensure I’m back for bath and bedtime, which I’m fine with.    But it’s never enough for my husband. He gets so angry that I’m not doing more cooking or family admin. He’s furious if I’m ever late back. This week he called me some appalling names in the middle of the night because I rolled over and woke him up accidentally.    I can’t help but feel some of it is the power or gender imbalance of our earning. All our money goes into one pot and I know I couldn’t earn what I do without him having taken a step back so that he would be more present at home. But I feel like he pins all of that blame on me and kind of expects me to be both a stay at home mum and breadwinner. No matter how present I am it’s never enough.    I went for dinner with friends a couple of months ago, and out of the 8 of us, every single couple where the woman was the lead earner has ended in divorce. It feels like the dual burden of society + work burden is just too much. Personally I feel exhausted and overwhelmed.    Is it me? Is it my bubble? Do guys feel like this too? I’m trying to get my husband into marriage counselling but he’s resistant. Any advice from women who’ve been in a similar situation? It feels rather lonely.       submitted by     /u/RoadNo7935     to     r/HENRYUK       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HENRYUK/comments/1wkk9iz/female_breadwinners/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:55:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:56:07.215Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae7857660c60840397fea3"
+    },
+    "message_id": "reddit_t3_1wkk9iu",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "wordgrind",
+    "username": "saintlouisdono",
+    "title": "Translate — what's \"goodness\" in Spanish?",
+    "text": "Translate — what's \"goodness\" in Spanish?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/saintlouisdono     to     r/wordgrind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wordgrind/comments/1wkk9iu/translate_whats_goodness_in_spanish/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:55:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:56:07.804Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae7890660c60840397fea4"
+    },
+    "message_id": "reddit_t3_1wkkag8",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CivicSi",
+    "username": "GloriaIngram3188",
+    "title": "Where do you guys buy genuine Honda parts online? Got burned last time and trying to avoid this with Civic Si",
+    "text": "Where do you guys buy genuine Honda parts online? Got burned last time and trying to avoid this with Civic Si\n\nI’ve got a 2016 Civic si with around 98k miles and I’m trying to replace the front wiper motor.   Last month I ordered some side mirror glass that was supposed to be Honda. It had the Honda logo and the part number looked right, so I figured I was good. But Noo. It showed up for the wroong side and I ended up paying $18 just to return it. I was actually a little bit upset.   Not trying to do that again lol. Is buying from an online store run by a Honda dealer usually the best and safest option? Or is there something specific you guys check before ordering??       submitted by     /u/GloriaIngram3188     to     r/CivicSi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CivicSi/comments/1wkkag8/where_do_you_guys_buy_genuine_honda_parts_online/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:56:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:57:04.542Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae7890660c60840397fea5"
+    },
+    "message_id": "reddit_t3_1wkkafi",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "savagebrattt",
+    "title": "What's a food combination that sounds absolute criminal but is actually amazing in taste?",
+    "text": "What's a food combination that sounds absolute criminal but is actually amazing in taste?\n\nsubmitted by     /u/savagebrattt     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wkkafi/whats_a_food_combination_that_sounds_absolute/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:56:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:57:04.742Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae7890660c60840397fea6"
+    },
+    "message_id": "reddit_t3_1wkkaf0",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "IllustriousMove9818",
+    "title": "Level: 601~620 3⭐ Weapons Market #9861",
+    "text": "Level: 601~620 3⭐ Weapons Market #9861\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/IllustriousMove9818     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wkkaf0/level_601620_3_weapons_market_9861/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:56:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:57:04.943Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae7891660c60840397fea7"
+    },
+    "message_id": "reddit_t3_1wkkaei",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Watches",
+    "username": "antoinegp",
+    "title": "Celebrating cancer remission (22yo M) with a lifetime retro diver, but Is the 42mm Tudor Pelagos too big for my wrist ?",
+    "text": "Celebrating cancer remission (22yo M) with a lifetime retro diver, but Is the 42mm Tudor Pelagos too big for my wrist ?\n\nHi everyone,   I'm 22 and recently went into cancer remission. To mark this milestone, I want to buy a \"buy-it-for-life\" retro-inspired diver that I can keep forever.   I fell in love with the Tudor Pelagos LHD for its vintage tool-watch vibe. I haven't been able to try the LHD in person yet, so the attached photo shows the standard 42mm Pelagos on my wrist. Due to my illness, I’ve lost a lot of weight, on top of having naturally small wrists.   Two quick questions for the community       Fit check:  Does this 42mm size look OK on my small wrist (17cm / 6,75 inches) , or is it crossing the line into \"too big\"?    Alternatives:  I love watches, but I'm no expert. Do you have any alternative recommendations for a durable, retro-style diver that could fit a smaller wrist and serve as a lifelong milestone watch?     Thanks in advance, I really need help and honest opinions from real watch enthusiasts here, not salespeople :-)       submitted by     /u/antoinegp     to     r/Watches       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Watches/comments/1wkkaei/celebrating_cancer_remission_22yo_m_with_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:56:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:57:05.145Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae7891660c60840397fea9"
+    },
+    "message_id": "reddit_t3_1wkkae2",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "bestredditIPTV",
+    "username": "AutoModerator",
+    "title": "Which IPTV Service Truly Deserves Your Attention in 2026?",
+    "text": "Which IPTV Service Truly Deserves Your Attention in 2026?\n\nPicking the best IPTV service in 2026 can feel genuinely tricky because the market is now crowded with countless providers all loudly competing for viewer attention across every social platform imaginable. Instead of getting hooked purely on flashy channel counts advertised across bold banners, it's honestly far smarter to carefully evaluate streaming stability, device support, content variety, customer service responsiveness, pricing options, and overall subscription flexibility.   One provider genuinely worth researching further right now is Xerquvatv, which currently advertises around 41,000+ live TV channels, 210,000+ movies and series on demand, up to 4K streaming quality, and six simultaneous device connections across its available subscription plans.   What Should You Actually Prioritise in an IPTV Provider?   A truly reliable IPTV subscription should quietly deliver a solid mix of practical features and a smooth viewing experience right from the very first stream. Start by carefully reviewing the available live TV channels and on-demand library to confirm they genuinely match the type of content you love watching on a regular basis. Streaming quality is another critical consideration, especially if you frequently follow live sports events, blockbuster movies, or major live broadcasts throughout the week.   Device compatibility deserves equal attention too.   Xerquvatv   states that its platform supports a wide range of devices and operating systems including Smart TVs, Firestick, Android, iOS, Windows, Mac, and MAG boxes, which comfortably covers most typical American household entertainment setups without any complicated workarounds required.   Streaming Quality and Long-Term Reliability   For most everyday viewers,  buffering interruptions and stream stability  quickly become the two biggest deal-breakers when committing to a long-term IPTV provider.  Xerquvatv  advertises  4K and Full HD streaming , high-speed private server infrastructure, anti-freeze technology, and a stated  99.9% uptime figure . These are, of course, claims published directly by the provider itself and should always be independently tested during a proper trial window rather than blindly accepted upfront.   Pricing and Trial Options   Pricing plays a significant role when comparing  IPTV services in the USA for 2026 .  Xerquvatv  currently offers monthly, six-month, and yearly subscription options, and its website also promotes a  24-hour free trial  alongside a  7-day money-back guarantee  for new users who want to genuinely test the platform before fully committing to a longer subscription plan.   Final Thoughts   At the end of the day, choosing the  best IPTV service  genuinely depends on your personal viewing habits, preferred devices, content requirements, monthly budget, and local availability.  Xerquvatv  is one option genuinely worth comparing if you're specifically looking for  live TV, sports coverage, on-demand movies, international programming, and multi-device streaming  all neatly bundled together in one accessible platform.   Before subscribing to any IPTV provider, always double-check that the service holds the necessary  content distribution rights within your country , and carefully review the most current terms, pricing structure, and refund policy directly on the official website. 🎯       submitted by     /u/AutoModerator     to     r/bestredditIPTV       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/bestredditIPTV/comments/1wkkae2/which_iptv_service_truly_deserves_your_attention/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:56:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:57:05.555Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae7891660c60840397feaa"
+    },
+    "message_id": "reddit_t3_1wkkado",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "KitchenStack",
+    "username": "messycrumb64",
+    "title": "No door panel in the box with the KoolMore built in dishwasher",
+    "text": "No door panel in the box with the KoolMore built in dishwasher\n\nThe KM-DW2445-PR went in three weeks ago, in a kitchen rebuilt into a room that was never meant to be one. This KoolMore built in dishwasher is the most expensive thing in this class I have bought, dearer than a comparable Midea and getting close to Bosch territory, which the panel ready front is supposed to justify. Working out what a listing is quietly not telling you is the bit of shopping I enjoy, and this one had a gap in it.   The door panel is the gap, and it is a big one.   This arrives with no outer door cover at all, the manufacturer does not sell one, and you either build a panel yourself or pay a joiner to make one that matches your cabinets. Budget for that before you buy, because a machine that hides in the run is only cheap if you can make the front yourself. Fitting it is otherwise straightfoward for anyone who has plumbed a built in dishwasher in before, though 93 lb wants two people and a bit of planning to get it up onto the feet. The 24 by 23.9 by 33.9 inch body sits in a standard opening, the brackets are where you expect, and attaching a panel once you have one is a ten minute job.   8 cubic feet of tub takes more than I expected for a narrow dishwasher, bigger inside than it looks. A full day of dishes for two, pans included, goes in one load without any puzzle solving. Three weeks of that and the cleaning has been solid, including the eco cycle which is shorter than the normal one and still gets everything clean. Soft water and a plain tab is all I use, no rinse aid, and nothing has come out needing another go. The buttons are pictograms with no words, so what half of them do is still a mystery.   45 dB is low without being silent, and behind a wooden panel this built in dishwasher goes quieter still. Standing in the next room I cannot hear it at all, which is the point of hiding it in the cabinetry.   Build quality is what I am watching, because the door and the upper rack are where the bad reports cluster. Upper spray arms dropping down every time the top rack is pulled out turns up more than once, and on a 4.2 average sitting on 27 reviews, one or two bad ones is a big share. Mine has not leaked or dropped anything so far. Running it costs nothing noticable on 120 volts and a normal socket, and the stainless interior has stayed clean on soft water and a mild tab. Whether that holds with hard water I could not say. How long did yours last before the top rack started dropping the spray arm, for the people that happened to?       submitted by     /u/messycrumb64     to     r/KitchenStack       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/KitchenStack/comments/1wkkado/no_door_panel_in_the_box_with_the_koolmore_built/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:56:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:57:05.758Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae7891660c60840397feab"
+    },
+    "message_id": "reddit_t3_1wkkadl",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "WhyChooseAuthors",
+    "username": "Draft-in-Calico",
+    "title": "Authors, I'd Like to Hear About One of Your Characters",
+    "text": "Authors, I'd Like to Hear About One of Your Characters\n\nIt can be one of your main characters, a villain, or a side character; from your primary WIP, a side project, or a future project. You can be as descriptive or as vague as you'd like!   Who are they, what motivates them, and what have they been up to lately?      Please remember this is a why-choose subreddit and that the characters discussed on this post should be why-choose characters. If you don't know what that is, please read    About Us    before participating.        submitted by     /u/Draft-in-Calico     to     r/WhyChooseAuthors       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WhyChooseAuthors/comments/1wkkadl/authors_id_like_to_hear_about_one_of_your/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:56:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:57:05.960Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae7892660c60840397feac"
+    },
+    "message_id": "reddit_t3_1wkkadc",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "TeenIndia",
+    "username": "lwkXlegend",
+    "title": "Am I thinking too much 😭 or study rather than doing this",
+    "text": "Am I thinking too much 😭 or study rather than doing this\n\nBasically, I just got into a college for B.Tech. On the very first day of induction and orientation, I saw a girl who was so pretty that I couldn’t stop looking at her.   Once our classes started, my school best friend and I were in the same college, but our sections got divided, so we ended up in different sections. Luckily, I got the same section as the girl I saw during the induction ceremony.   The problem is, now I’m completely alone in my class, and I have no idea how to talk to her. Her best friend is also the class representative, and she’s the topper of her school, which honestly makes me even more nervous.   I regularly go to class just to see her because she’s a hosteller and obviously attends classes regularly, while I travel around 50 km from my house to college. I even daily sit on the bench next to her, but I still can’t find the confidence to actually start a conversation.   So, do you guys have any advice on how I can approach her and start talking to her without making it awkward? 😭       submitted by     /u/lwkXlegend     to     r/TeenIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TeenIndia/comments/1wkkadc/am_i_thinking_too_much_or_study_rather_than_doing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:56:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:57:06.162Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae7892660c60840397fead"
+    },
+    "message_id": "reddit_t3_1wkkacb",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",

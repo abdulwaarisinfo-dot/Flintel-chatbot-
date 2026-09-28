@@ -1,0 +1,416 @@
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T03:42:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T03:42:30.961Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0a7dfaeeb96c1c63baa41"
+    },
+    "message_id": "reddit_t3_1wm1rsu",
+    "topic_key": "data pipeline",
+    "search_keyword": "data pipeline",
+    "platform": "reddit",
+    "subreddit": "gis",
+    "username": "Spnkmyr",
+    "title": "I lost access to a GIS dashboard I built in grad school, so I rebuilt it as a public web app - NYC restaurant inspections for ~30,600 restaurants",
+    "text": "I lost access to a GIS dashboard I built in grad school, so I rebuilt it as a public web app - NYC restaurant inspections for ~30,600 restaurants\n\nLive Dashboard:   https://nyc.alexhordal.ca/     Project Portfolio Writeup:   https://www.alexhordal.ca/portfolio/nyc-restaurants     GitHub Repository:   https://github.com/Ahordal/nyc-dashboard     Data:   https://data.cityofnewyork.us/Health/NYC-Restaurant-Inspection-Results/gv23-aida/about_data     TL;DR:  As a cartographer rather than a web dev, I spent a couple hundred hours building a full-stack, serverless NYC restaurant inspection dashboard using React, TypeScript, ArcGIS Maps SDK, Recharts, and a custom GitHub Actions/Node.js data pipeline to clean up messy open data.   Hey everyone!   Last year, I took a postgraduate GIS: Cartography and Geovisualization course at the Centre of Geographic Sciences in Nova Scotia, where I created an ArcGIS Dashboard that visualized New York City restaurant locations and inspection results. Unfortunately, I lost access to that dashboard once the program ended, so I built my own version from the ground up using React, TypeScript, and Vite on the frontend, the ArcGIS Maps SDK for JavaScript for mapping, and Recharts for charts. The data pipeline runs on Node.js, with GitHub Actions handling the scheduled geocoding runs and Vercel for hosting/deploys.   After a couple hundred hours of development, I got the  NYC Dining Under the Microscope - Mapping Restaurant Health Inspections  dashboard to a point where I’m pretty happy with it aesthetically and functionally and thought I’d share it. I’m a cartographer and GIS specialist by trade (not a web developer by any stretch of the imagination), so I leaned heavily on AI to help bridge the gap on the web development side. I want to acknowledge that there are probably some rough edges, but I spent a considerable amount of time refining it. That said, I’d love to hear your opinion and, if you're willing, potential areas for code improvement.   The Data Pipeline & Backend   The dashboard incorporates NYC Restaurant Inspection data (approximately 30,600 restaurants) from the Department of Health and Mental Hygiene (DOHMH) shared on NYC Open Data. There's no database involved: it's a static data pipeline with two parts:      The Build-Time Fetch Script:  A script that runs on every site deployment as part of the build. It downloads the entire DOHMH restaurant inspection dataset via the NYC Socrata API, paginated in batches of 50,000 inspections, and writes it out as static files. This includes a GeoJSON with the latest inspection for each restaurant (keyed by CAMIS) to drive the map view, plus a separate GeoJSON file per restaurant containing its full inspection history (past grades, scores, and violations) for the Performance Over Time chart, inspection reports, and violation breakdowns.    Data Cleaning & Normalization:  The raw DOHMH dataset comes from several large administrative systems and contains illogical values and data entry errors. The pipeline handles coordinate validation, status normalization (STATEN ISLAND = Staten Island), handling uninspected restaurants (classified as 1900-01-01), search index normalization, and violation code enrichment.    Automated Geocoding Backfill:  A daily GitHub Action that checks existing restaurants, looks up new or changed restaurants against LocationIQ, scores its confidence in each match, and saves results to a cache file. The cache lives on a separate data branch to avoid conflicts with site work. (Though DOHMH includes coordinates, testing showed many were incorrect and required verification). Each restaurant includes a geocoding result badge:  verified ,  unverified , or  pending . When the cache updates, it automatically triggers a rebuild on Vercel.    Testing Suite:  Various backend and frontend tests (see README if you’re interested).     Features & Architecture      KPI Stats Panel:  Shows the numerical breakdown of restaurants by grade and status in the map view.    ArcGIS Map View:  Visualizes all ~36,000 restaurants using bivariate symbology (colour-coded by grade/status, sized by score), supported by grade and borough filters.    Search & Explore:  Dedicated search tool (by name, cuisine, or address) and a restaurant explorer panel featuring a map-driven list with custom sorting (inspection date, name, grade, cuisine, score, and distance).    Details Panel:  Includes basic/geographic info, a Google Maps link, full inspection history tied to the Performance Over Time chart, detailed reports, and a donut chart representing map data.    Custom Map Controls:  Built custom components instead of Calcite components, including zoom controls, North orientation, a  Filter-by-Radius tool  (drop a point to filter listings to 0.25, 0.5, or 1 mile), GPS pinpointing for mobile/tablet, custom scale bars, and editable representative fraction (RF) and zoom levels.    Responsive Design:  3 distinct, purposefully designed layouts for desktop, tablets, and smartphones. Mobile was particularly challenging, but I'm really happy with how it turned out.     If you’re interested, check out the dashboard at  https://nyc.alexhordal.ca/ , and read more about the project breakdown at  https://www.alexhordal.ca/portfolio/nyc-restaurants . A detailed README is available on the project repository at  https://github.com/Ahordal/nyc-dashboard .   Thanks for your interest!       submitted by     /u/Spnkmyr     to     r/gis       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/gis/comments/1wm1rsu/i_lost_access_to_a_gis_dashboard_i_built_in_grad/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T03:43:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T03:43:27.595Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab0a7dfaeeb96c1c63baa42"
+    },
+    "message_id": "reddit_t3_1wm1rsg",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "hammer",
+    "username": "KennedyRedditt",
+    "title": "Anyone know why infected can attack me during the intro?",
+    "text": "Anyone know why infected can attack me during the intro?\n\nI've referenced the \"Your_First_L4D_Level_Tutorial\" VMFs in the Left 4 Dead 2 SDK. Are there any specific functions or triggers I need to prevent the Director from spawning enemies? I know the intro isn't too long considering campaigns like Cold Stream exist and this doesn't happen there. I'm not sure if I need any specific geometry either, since this all takes place in one floor, no stairs currently.       submitted by     /u/KennedyRedditt     to     r/hammer       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hammer/comments/1wm1rsg/anyone_know_why_infected_can_attack_me_during_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T03:43:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T03:43:27.824Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab0a7e1660c60840398b45e"
+    },
+    "message_id": "reddit_t3_1wm1s0i",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AutoNewspaper",
+    "username": "AutoNewspaperAdmin",
+    "title": "[Business] - Top stocks to buy: Stock recommendations for September 21, 2026 week - check list | Times of India",
+    "text": "[Business] - Top stocks to buy: Stock recommendations for September 21, 2026 week - check list | Times of India\n\nsubmitted by     /u/AutoNewspaperAdmin     to     r/AutoNewspaper       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoNewspaper/comments/1wm1s0i/business_top_stocks_to_buy_stock_recommendations/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T03:43:18Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T03:43:29.560Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0a7e1660c60840398b45f"
+    },
+    "message_id": "reddit_t3_1wm1s0c",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "PowerTop4Bottoms",
+    "title": "If you could secretly replace one ordinary object in your home with an absolutely perfect replica that was functionally identical in every way except that it had been manufactured exactly 100 years in the future, what would you replace, and what tiny detail would you hope nobody ever noticed?",
+    "text": "If you could secretly replace one ordinary object in your home with an absolutely perfect replica that was functionally identical in every way except that it had been manufactured exactly 100 years in the future, what would you replace, and what tiny detail would you hope nobody ever noticed?\n\nsubmitted by     /u/PowerTop4Bottoms     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wm1s0c/if_you_could_secretly_replace_one_ordinary_object/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T03:43:18Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T03:43:29.761Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0a7e1660c60840398b460"
+    },
+    "message_id": "reddit_t3_1wm1s09",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "Kylaq",
+    "username": "h4r5h1t",
+    "title": "Issue with booked kylaq from PPS Skoda Kalyan Nagar Bangalore",
+    "text": "Issue with booked kylaq from PPS Skoda Kalyan Nagar Bangalore\n\nHello, recently booked a skoda kylaq from PPS Skoda Kalyan Nagar. I had booked a classic plus at and expected it to be the latest variant. Got loan sanction and everything done, and on the day of pdi i noticed it's the outgoing variant, without automatic AC and rear defogger.    I had explicitly asked the sales rep about this, and only after I got the confirmation I went for the booking. Didn't bother with negotiations etc also since it's Bangalore and the quote wasn't too bad. (Insurance for 3 years, with elite pack is around 25k). They offered accessories pack for free and was happy to take it.    The sales person apologised, and offered to order a new one on priority with a delay of 10 days (which isn't too bad)   Now I am a little concerned that if they are going to drag this on and delay it even further and might spell more trouble.   Want to know anyone here who had dealt with PPS Kalyan Nagar and PPS Hennur (service center) and overall of they are any good.        submitted by     /u/h4r5h1t     to     r/Kylaq       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Kylaq/comments/1wm1s09/issue_with_booked_kylaq_from_pps_skoda_kalyan/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T03:43:18Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T03:43:29.960Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0a7e2660c60840398b461"
+    },
+    "message_id": "reddit_t3_1wm1rzu",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PokemonDropNotify",
+    "username": "pokemon-restocks",
+    "title": "Amazon Pokémon Restock | Pokémon TCG: Mega Evolution—Chaos Rising Triple Pack (1 Foil Promo Card & 3 Booster Packs) — $24.99",
+    "text": "Amazon Pokémon Restock | Pokémon TCG: Mega Evolution—Chaos Rising Triple Pack (1 Foil Promo Card & 3 Booster Packs) — $24.99\n\nPokémon TCG: Mega Evolution—Chaos Rising Triple Pack (1 Foil Promo Card & 3 Booster Packs)   restocked at  Amazon  for  $24.99 .    Restock Timestamp:   11:43:15.193 PM EST    Reddit posts may be delayed. For faster, real-time alerts, join our   Discord Community  .    This is an automated alert. Affiliate links may be used        submitted by     /u/pokemon-restocks     to     r/PokemonDropNotify       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PokemonDropNotify/comments/1wm1rzu/amazon_pokémon_restock_pokémon_tcg_mega/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T03:43:16Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T03:43:30.163Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0a7e2660c60840398b463"
+    },
+    "message_id": "reddit_t3_1wm1rzn",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "OkCupid",
+    "username": "InterestingAffect994",
+    "title": "Anything real or worth the time here on Reddit seems to be so many fake profiles and new accounts....been on here awhile yet to meet anyone worth actually getting to know!!!🥴",
+    "text": "Anything real or worth the time here on Reddit seems to be so many fake profiles and new accounts....been on here awhile yet to meet anyone worth actually getting to know!!!🥴\n\nsubmitted by     /u/InterestingAffect994     to     r/OkCupid       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OkCupid/comments/1wm1rzn/anything_real_or_worth_the_time_here_on_reddit/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T03:43:16Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T03:43:30.562Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0a7e2660c60840398b464"
+    },
+    "message_id": "reddit_t3_1wm1rys",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "Indiangaming_Resale",
+    "username": "aditya2k01",
+    "title": "Just wanted to know are these games valuable (Not Selling)",
+    "text": "Just wanted to know are these games valuable (Not Selling)\n\nShould i sell them or there value will increase overtime       submitted by     /u/aditya2k01     to     r/Indiangaming_Resale       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Indiangaming_Resale/comments/1wm1rys/just_wanted_to_know_are_these_games_valuable_not/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T03:43:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T03:43:30.767Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0a7e2660c60840398b465"
+    },
+    "message_id": "reddit_t3_1wm1rwv",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "Emsu_lore",
+    "username": "Middle_Way6856",
+    "title": "Can we just let Emin live his life?",
+    "text": "Can we just let Emin live his life?\n\nI honestly don't understand why everything Emin does has to turn into another round of accusations and hate on Twitter.   Maybe he's in Bodrum. Maybe he's not. Maybe he's with Ilkim. And if he is, so what?   Has any woman actually come forward with credible evidence that Emin cheated on her? Has any of these constant claims about him changing girlfriends every two months actually been proven? Because people keep repeating allegations until they start sounding like facts, when as far as I can see, most of them were never established as fact.   He's a celebrity. If people like him, follow him. If they don't like him, that's completely fine too. But why follow someone specifically to monitor everything he does, speculate about his relationships and then attack him?   And honestly, Emin is getting more popular and more attention lately, and unfortunately that also means more people can get attention themselves by clicking a selfie with him and posting in story. That does not mean very girl who clicks selfie with his is his girlfriend.   What I also find strange is the double standard. When it comes to Ilsu, people seem much more willing to give her the benefit of the doubt and sympathize with her when relationship allegations are discussed. But when it comes to Emin, the assumption seems to be guilty first and evidence later. If there are accusations, the same standard should apply to everyone: show the evidence.   If Emin is with Ilkim, then honestly, good for them. If he's not, that's also none of our business.   People don't have to like Emin. They don't have to support his relationships. But constantly turning every Instagram post, old photo or trip into another hate campaign is getting ridiculous.   Let the man live his life.   And if someone actually has evidence of wrongdoing, post the evidence. Otherwise, maybe stop treating Twitter speculation as fact.       submitted by     /u/Middle_Way6856     to     r/Emsu_lore       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Emsu_lore/comments/1wm1rwv/can_we_just_let_emin_live_his_life/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T03:43:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T03:43:30.975Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0a7e3660c60840398b466"
+    },
+    "message_id": "reddit_t3_1wm1rw2",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "Gracefulana",
+    "title": "Grab 25⚡ from u/Gracefulana!",
+    "text": "Grab 25⚡ from u/Gracefulana!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Gracefulana     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wm1rw2/grab_25_from_ugracefulana/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T03:43:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T03:43:31.180Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0a7e3660c60840398b467"
+    },
+    "message_id": "reddit_t3_1wm1rvx",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "TechnologyNewsIndia",
+    "username": "Geeky_Gadgets",
+    "title": "Google’s Gemini AI Autonomously Broke Into Three Companies During a Security Test",
+    "text": "Google’s Gemini AI Autonomously Broke Into Three Companies During a Security Test\n\nGoogle's Gemini reportedly accessed three protected systems during a cybersecurity evaluation using publicly available information and credentials it discovered or guessed.    Summary:      The systems were part of a controlled security test.   Gemini was able to perform actions without humans manually guiding every step.   The incident demonstrates how AI agents can potentially move beyond generating code into actually carrying out cyber operations.   Similar concerns have recently emerged around other frontier AI systems.     This is a very different risk from an AI simply giving someone instructions.   If an AI agent can discover credentials, navigate systems and execute actions, the security model changes completely.   For India, this has implications for banks, IT services, government systems and companies increasingly deploying AI agents internally.    Question:  Should companies require human approval for every sensitive action performed by an AI agent?       submitted by     /u/Geeky_Gadgets     to     r/TechnologyNewsIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TechnologyNewsIndia/comments/1wm1rvx/googles_gemini_ai_autonomously_broke_into_three/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T03:43:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T03:43:31.379Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0a7e5660c60840398b474"
+    },
+    "message_id": "reddit_t3_1wm1rv6",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "RedditPHCyclingClub",
+    "username": "batampisnge",
+    "title": "Anong tawag po sa ganitong bike?",
+    "text": "Anong tawag po sa ganitong bike?\n\nMagandang araw po sa inyo, tanong ko lang po sana ano po tawag sa ganyang bike? gusto ko kasi bumili or magpa setup ng ganyang bike, maraming salamat po sa sasagot        submitted by     /u/batampisnge     to     r/RedditPHCyclingClub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RedditPHCyclingClub/comments/1wm1rv6/anong_tawag_po_sa_ganitong_bike/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T03:43:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T03:43:33.950Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0a7e6660c60840398b475"
+    },
+    "message_id": "reddit_t3_1wm1rv0",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "vacation",
+    "platform": "reddit",
+    "subreddit": "Agates",
+    "username": "heartsholly",
+    "title": "Missouri agate and chalcedony I found recently",
+    "text": "Missouri agate and chalcedony I found recently\n\nI went to Missouri for a family reunion and vacation, and discovered that we own some acreage! I went stomping around and found some absolutely awesome pieces. I’m going to take the tile saw to the big one        submitted by     /u/heartsholly     to     r/Agates       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Agates/comments/1wm1rv0/missouri_agate_and_chalcedony_i_found_recently/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T03:43:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T03:43:34.150Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0a7e6660c60840398b476"
+    },
+    "message_id": "reddit_t3_1wm1rut",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "f150",
+    "username": "clarks2001",
+    "title": "Tailgate seal",
+    "text": "Tailgate seal\n\nInstalled my BakFlip MX4 today and used a light to check to ensure the bedcover was fitted perfectly. All was good with the exception of where the tailgate meets the bed. Anyone have recommendations on a weatherstripping kit that works with the ProAccess tailgate? I want it to be as weather resistant as possible.        submitted by     /u/clarks2001     to     r/f150       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/f150/comments/1wm1rut/tailgate_seal/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T03:43:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T03:43:34.351Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0a7e6660c60840398b477"
+    },
+    "message_id": "reddit_t3_1wm1rtq",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "Anticonsumption",
+    "username": "Adorable-Gate8174",
+    "title": "Recovering issues with shopping",
+    "text": "Recovering issues with shopping\n\nHi everyone! I joined this thread because I have been getting more serious about my finances and needed the reminders that the excessive shopping I was doing is harmful! I went to Marshall’s the other day to look around and relax. Before, I used to easily spend $80-$150 on clothes and other crap. The items would end up stuffed in a closet somewhere or as clutter. This time I found everything to be of bad quality, reframed it as “landfill filler,” & only bought a charger my husband needed and replaced some headbands I broke. I’ve been selling my excess stuff on Vinted and that site has also reframed that absolutely no one needs anything new! Especially me. 😅   I grew up with a scarcity mindset due to poverty and a mom who also excessively shops. I don’t want to continue these harmful habits with my daughter. All this to say, I’m grateful for the posts here! They’ve really helped me when I get the urge to mindlessly shop.        submitted by     /u/Adorable-Gate8174     to     r/Anticonsumption       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Anticonsumption/comments/1wm1rtq/recovering_issues_with_shopping/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T03:43:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T03:43:34.571Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0a7e6660c60840398b478"
+    },
+    "message_id": "reddit_t3_1wm1rsv",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "Sad-Boat2962",
+    "title": "Grab 25⚡ from u/Sad-Boat2962!",
+    "text": "Grab 25⚡ from u/Sad-Boat2962!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Sad-Boat2962     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wm1rsv/grab_25_from_usadboat2962/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T03:43:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T03:43:34.777Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0a7e7660c60840398b47a"
+    },
+    "message_id": "reddit_t3_1wm1rsp",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "discordfriends",
+    "username": "PaintingOver4370",
+    "title": "26m looking for genuine friends",
+    "text": "26m looking for genuine friends\n\nHey I’m looking for a friend from the us im from mainly, because I’d like to chat and not have too much of a time gap between us I think it would be hard for my schedule to keep up with,some things about me is I love various types of music, I’m into gaming like right now I’m mainly spamming marvel rivals its fun asf but I play alot of other things too (I’m on console btw ps5)I’m into traveling, art,manga, comics, anime, film,fashion I really like too learn so i definitely want you to tell me about yourself and I’m a open minded person too so I doubt we will have trouble having a topic to talk about so don’t be shy and drop by, looking for people who want to build long term genuine friendship pleaseee be from the us       submitted by     /u/PaintingOver4370     to     r/discordfriends       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/discordfriends/comments/1wm1rsp/26m_looking_for_genuine_friends/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T03:43:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T03:43:35.181Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0a7e7660c60840398b47b"
+    },
+    "message_id": "reddit_t3_1wm1rsm",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "evilautism",
+    "username": "peeeeeechu",
+    "title": "does anyone evil wanna be evil friends?",
+    "text": "does anyone evil wanna be evil friends?\n\nhello i am looking for someone as Cute and Nefarious as i am to be Evil Friends ^-^   about me; 23 y/o boy, last year of uni studying geology in the UK, i have an androgynous style and i like keeping my hair longish   my current interests include world of warcraft, rimworld, dota 2, the sims 3, modded minecraft, d&d   my long time interests include poetry, worldbuilding, ttrpgs, card games, gaming/gamedev, drawing and art, programming, foxes and the color blue   some of my favorite media includes adventure time, pokemon, undertale/deltarune, oneshot, homestuck...   there's a lot about me im bad at describing u_u   i would like friends whom we can check in on each other, ask how are you, rant about interest every now and then, share art we made, share selfies and pics from our day, and send cute images   pls msg me on reddit, i have other apps too!       submitted by     /u/peeeeeechu     to     r/evilautism       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/evilautism/comments/1wm1rsm/does_anyone_evil_wanna_be_evil_friends/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T03:43:00Z"
+    },

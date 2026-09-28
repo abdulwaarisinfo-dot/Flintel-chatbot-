@@ -1,0 +1,416 @@
+    "post_url": "https://www.reddit.com/r/RealEstate/comments/1wn0xyx/can_i_drop_my_buyers_agent/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T05:45:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T05:46:37.426Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab2163d660c608403992f09"
+    },
+    "message_id": "reddit_t3_1wn0xyu",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "ClaudeWorkflows",
+    "username": "ClaudeAI-mod-bot",
+    "title": "[Workflow] Using Git as a Human Guardrail for Safe Claude Code Iterations and Prototyping",
+    "text": "[Workflow] Using Git as a Human Guardrail for Safe Claude Code Iterations and Prototyping\n\nUsing Git as a Human Guardrail for Safe Claude Code Iterations and Prototyping    Workflow value:  75/100   Status:  active ·  Freshness:  70/100 ·  Confidence:  0.90 ·  Level:  intermediate   Categories:  Quality Control, Context & Memory, Debugging, Shipping   Original source:   r/ClaudeCode post/comment    What problem this solves   How to safely integrate AI-generated code with version control, ensuring human review and control over commits and iterative prototyping.   Summary   This workflow advocates for manually managing Git as a 'guardrail' when working with Claude Code. Instead of letting Claude handle Git operations, the user reviews Claude's generated code, decides whether to commit or discard changes, and uses new Claude sessions for iterative prototyping, maintaining full control over the version history.   Why it is useful   This workflow is valuable because it provides a clear, safe, and repeatable method for integrating Claude's code generation capabilities with version control. It addresses a critical concern for developers: maintaining human oversight and control over the codebase when using AI. By advocating for manual Git management, it ensures that all AI-generated changes are reviewed and explicitly approved before being committed, fostering trust and enabling effective iterative development and prototyping.   Workflow     Prompt Claude to generate code or make changes based on a specific task or 'try something' instruction.   Review Claude's output in the local working directory, comparing it against desired functionality and quality standards.   If the generated code is satisfactory, manually commit the changes using Git.   If the generated code is unsatisfactory, discard the changes (e.g., by not committing, destaging, or reverting local changes).   Start a new Claude session or clear the current context to provide a fresh slate for the next iteration.   Reprompt Claude with refined instructions based on the previous iteration's results.   Repeat the process to create multiple prototype implementations and carefully commit stages after human review.     Tools / artifacts     Git   Claude Code (or any Claude model)     Validation signals     Author states: 'It makes it possible to have Claude \"try something\" and then I can see if it works the way I think I want it.'     Cautions     This workflow inherently enhances safety by ensuring human review and explicit control over all Git commits, preventing unintended or erroneous AI-generated changes from entering the codebase without approval.     Limitations     The post is concise and could benefit from more explicit Git commands or examples for discarding changes (e.g.,  git restore ,  git reset ).   The concept of 'new session' could be clarified (e.g., new chat thread, clearing context in an API call).   The workflow doesn't detail how to manage context across multiple 'new sessions' if previous context is still relevant.     Rate this workflow   Upvote this post if the workflow is useful, reproducible, or worth recommending.   Downvote if it is vague, outdated, unsafe, overhyped, or not reproducible.   Reply if it worked for you, failed, is outdated, or has a better alternative.      This post was generated automatically from the workflow library database.        submitted by     /u/ClaudeAI-mod-bot     to     r/ClaudeWorkflows       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeWorkflows/comments/1wn0xyu/workflow_using_git_as_a_human_guardrail_for_safe/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T05:45:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T05:46:37.852Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab21651aeeb96c1c63bb373"
+    },
+    "message_id": "reddit_t3_1wn0ygj",
+    "topic_key": "accountant",
+    "search_keyword": "accountant",
+    "platform": "reddit",
+    "subreddit": "RemoteAccountingRoles",
+    "username": "samotsar",
+    "title": "[Hiring] Senior Accountant at Boston Medical Center (BMC) (Remote)",
+    "text": "[Hiring] Senior Accountant at Boston Medical Center (BMC) (Remote)\n\nBoston Medical Center (BMC)  is hiring a  Senior Accountant    🌐 Remote   📋 Full-Time   💰 USD 62,500–91k /yr    View this remote accounting job and apply        submitted by     /u/samotsar     to     r/RemoteAccountingRoles       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RemoteAccountingRoles/comments/1wn0ygj/hiring_senior_accountant_at_boston_medical_center/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T05:46:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T05:46:57.020Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab21651aeeb96c1c63bb374"
+    },
+    "message_id": "reddit_t3_1wn0yf8",
+    "topic_key": "therapist",
+    "search_keyword": "therapist",
+    "platform": "reddit",
+    "subreddit": "careerguidance",
+    "username": "ty_trackk",
+    "title": "I have no idea what I wanna do with a psychology degree, any tips or pathway suggestions for someone who doesn’t wanna do psychology or get their masters?",
+    "text": "I have no idea what I wanna do with a psychology degree, any tips or pathway suggestions for someone who doesn’t wanna do psychology or get their masters?\n\nHi everyone, I am a current senior in college and I graduate in the Spring of next year. I am a psych major, something I chose because during COVID, community college kinda ruined my outlook on art as a career. I was initially interested in learning about mental health and stuff like that, but as I’ve taken more psych classes and even a gap semester, I don’t really want to pursue it at ALL. It’s too repetitive for me personally, and don’t have the drive other psych students have in going specifically into the major or even a masters. I enjoy baking a lot, I work in a bakery, and love more creative stuff. Baking, fashion/fashion design, drawing, painting. I haven’t done much of the drawing or painting in years but the creative stuff is something I love much more than any science or other STEM route. But I also know it won’t get me the pay I want. I need help, I feel like I’m lost and have nowhere to go. Graduation is coming sooner than I thought and I don’t want to work at this minimum wage job until I croak. I need help or some kind of suggestions for something on the creative side, something maybe I could do with psych (i’ve thought about art therapist but it’s a masters’ degree based job) or just other pathways I can take that have that more creative side!        submitted by     /u/ty_trackk     to     r/careerguidance       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/careerguidance/comments/1wn0yf8/i_have_no_idea_what_i_wanna_do_with_a_psychology/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T05:46:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T05:46:57.284Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab21651aeeb96c1c63bb375"
+    },
+    "message_id": "reddit_t3_1wn0yew",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "deeplearning",
+    "username": "ahmed20062",
+    "title": "AFNN",
+    "text": "AFNN\n\nWhat if neural networks could grow like fractals instead of being rigid from the start?   Most deep learning models (CNNs, ResNets…) are fixed architectures. Once you design them, they stay the same size and structure throughout training.   \\*\\*AFNN — Adaptive Fractal Neural Network\\*\\* takes a completely different approach.   It is inspired by \\*\\*fractals\\*\\* — mathematical structures that are self-similar and can grow infinitely by repeating simple patterns.    Instead of starting with a huge fixed network, AFNN begins small and can \\*\\*dynamically grow new fractal branches\\*\\* during training when progress stalls. It also allows monitoring, reactivating, or pruning branches as needed.   A good neural network should not memorize images.    It should learn the underlying patterns and features.   For example, when trained on cat images, a strong model does not store every cat photo. Instead, it learns things like:   • Ear shape    • Facial features    • Fur texture    • Color distribution    • Edges and shapes    • Relationships between different parts of the image    Then, when it sees a completely new cat, it uses these learned patterns to recognize it.   \\### Why Fractal Networks are powerful:   \\- Faster and more efficient learning    \\- Significantly lower computational and memory cost    \\- Better scalability with limited hardware    \\- More flexible and adaptive than traditional fixed architectures   Built with PyTorch + full GUI, training tools, tests, and documentation.    In early experiments, AFNN reached \\*\\*74.1% validation accuracy\\*\\* on 94 image classes using limited resources.   This is not just another model.    It is an attempt to rethink how neural networks are designed — moving from rigid structures to \\*\\*adaptive, fractal, evolving architectures\\*\\* that focus on learning patterns rather than memorizing data.   A small step toward more efficient and intelligent AI systems.   🔗 GitHub:  https://github.com/ahmedhjkj/AFNN     🤗 Hugging Face:  https://huggingface.co/Ahmedethfw/AFNN    \\#FractalNetworks #AdaptiveAI #PyTorch #DeepLearning #MachineLearning #OpenSource #NeuralNetworks       submitted by     /u/ahmed20062     to     r/deeplearning       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/deeplearning/comments/1wn0yew/afnn/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T05:46:36Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T05:46:57.592Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab21652aeeb96c1c63bb376"
+    },
+    "message_id": "reddit_t3_1wn0ycf",
+    "topic_key": "cpa",
+    "search_keyword": "CPA",
+    "platform": "reddit",
+    "subreddit": "democraticparty",
+    "username": "Afterswiftie",
+    "title": "Adam Hamilton Responds to Roger Marshall’s Advertisements Attacking His Church’s Actions During Coronavirus Pandemic",
+    "text": "Adam Hamilton Responds to Roger Marshall’s Advertisements Attacking His Church’s Actions During Coronavirus Pandemic\n\nsubmitted by     /u/Afterswiftie     to     r/democraticparty       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/democraticparty/comments/1wn0ycf/adam_hamilton_responds_to_roger_marshalls/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T05:46:30Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T05:46:58.133Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab21671660c608403992f0a"
+    },
+    "message_id": "reddit_t3_1wn0yug",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Beginning-Pay-2150",
+    "title": "Grab 100 hammers from u/Beginning-Pay-2150!",
+    "text": "Grab 100 hammers from u/Beginning-Pay-2150!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Beginning-Pay-2150     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wn0yug/grab_100_hammers_from_ubeginningpay2150/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T05:47:17Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T05:47:29.549Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab21671660c608403992f0b"
+    },
+    "message_id": "reddit_t3_1wn0ysz",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "ray_of-moonlight",
+    "title": "What’s one good thing that happened to u this month?",
+    "text": "What’s one good thing that happened to u this month?\n\nsubmitted by     /u/ray_of-moonlight     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wn0ysz/whats_one_good_thing_that_happened_to_u_this_month/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T05:47:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T05:47:29.768Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab21671660c608403992f0c"
+    },
+    "message_id": "reddit_t3_1wn0ysb",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "goatravel",
+    "username": "Similar-Limit-6959",
+    "title": "Airbnb suggestion",
+    "text": "Airbnb suggestion\n\nI am looking for suggestions related to the stay for around 15 people, is it better to stay in North Goa or the southern part?        submitted by     /u/Similar-Limit-6959     to     r/goatravel       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/goatravel/comments/1wn0ysb/airbnb_suggestion/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T05:47:12Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T05:47:29.983Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab21672660c608403992f0d"
+    },
+    "message_id": "reddit_t3_1wn0ys9",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "Nigeria",
+    "username": "calmsignals",
+    "title": "Two weeks in Nigeria as a tourist what shouldn't i miss?",
+    "text": "Two weeks in Nigeria as a tourist what shouldn't i miss?\n\nHi i am david originally from italy coming to Nigeria travelling solo looking fir place to explore and good company        submitted by     /u/calmsignals     to     r/Nigeria       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Nigeria/comments/1wn0ys9/two_weeks_in_nigeria_as_a_tourist_what_shouldnt_i/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T05:47:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T05:47:30.196Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab21672660c608403992f0e"
+    },
+    "message_id": "reddit_t3_1wn0ys2",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "SellAnythingKe",
+    "username": "Wide_Cow_520",
+    "title": "Ryzen CPU + CM AIO Cooler combo for sale @40000/=",
+    "text": "Ryzen CPU + CM AIO Cooler combo for sale @40000/=\n\nSelling my remaining PC parts. I currently do not need them so hoping someone else can use them for their build. All still sealed   (Selling them as a combo)   Specs:  AMD Ryzen 9600x  Cooler Master Elite 240 AIO   (Located along Ngong Road)  DM if interested.       submitted by     /u/Wide_Cow_520     to     r/SellAnythingKe       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SellAnythingKe/comments/1wn0ys2/ryzen_cpu_cm_aio_cooler_combo_for_sale_40000/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T05:47:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T05:47:30.408Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab21672660c608403992f0f"
+    },
+    "message_id": "reddit_t3_1wn0yrr",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "LastWarMobileGame",
+    "username": "Soyyayin2",
+    "title": "Is buying speed ups worth it?",
+    "text": "Is buying speed ups worth it?\n\nstarting season 2 and am sitting at 5g of gold that i cant use cause am always out of speed ups, ive seen people post hundreds of days of speed ups in their inventory, do they just pile up later on the game or are they hoarders? spending money is not the issue i just dont want to spend on something that is not worth it on the long run       submitted by     /u/Soyyayin2     to     r/LastWarMobileGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LastWarMobileGame/comments/1wn0yrr/is_buying_speed_ups_worth_it/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T05:47:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T05:47:30.621Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab21672660c608403992f10"
+    },
+    "message_id": "reddit_t3_1wn0yrm",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "LightandNight",
+    "username": "Sad-Efficiency-3458",
+    "title": "Favorite VA language?",
+    "text": "Favorite VA language?\n\nHiiii everyone, I just wanted to know which language you prefer to play. Ever since I started I use the English va's and I thought I was happy with it because I love Lu Chen's voice and accent. I even got a bit defensive when I read some other post saying how his voice is savourless and didn't really see what they meant lol but now I see it, i feel like the delivery is flat and lacks emotion and it really puts me off, so I'm looking for recommendations and wanting to read your opinions        submitted by     /u/Sad-Efficiency-3458     to     r/LightandNight       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LightandNight/comments/1wn0yrm/favorite_va_language/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T05:47:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T05:47:30.835Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab21673660c608403992f11"
+    },
+    "message_id": "reddit_t3_1wn0yrj",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "DeveloperJobs",
+    "username": "Electrical-Sorbet-25",
+    "title": "[FOR HIRE] Former Lead Software Engineer | Full Stack + AI | 6+ Years Experience",
+    "text": "[FOR HIRE] Former Lead Software Engineer | Full Stack + AI | 6+ Years Experience\n\nHey, I’m Mo. I’m a full stack software engineer and former Lead Software Engineer with 6+ years of experience working with startups and companies.   I’m currently open to freelance, contract, or longer term work.    Sentigen   Worked as Lead Software Engineer and one of the early core team members, building AI agents, orchestration systems, backend infrastructure, APIs, and integrations with Slack, Notion, Fireflies, Telegram and more.    VICE   A product I’m building with my partner from the ground up. It’s a Telegram based game with its own economy where players make deals, manage money, explore the city, compete, earn rewards and interact with AI driven systems. We built everything from the frontend and backend to payments, maps, game systems and infrastructure.    Raiinmaker   Worked on Raiinmaker, a Web3/AI platform with a large customer facing ecosystem.    Stack:  TypeScript, React, Next.js, Node.js, Python, PostgreSQL, Firebase/Firestore, Redis, AI/LLMs, Web3, APIs and cloud infrastructure.    Rate:  $35/hour, also open to fixed price projects.   I’m comfortable jumping into an existing codebase or taking something from an idea through production.   my Resume:  Resume    DM me if you have a project or role that could be a good fit.       submitted by     /u/Electrical-Sorbet-25     to     r/DeveloperJobs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DeveloperJobs/comments/1wn0yrj/for_hire_former_lead_software_engineer_full_stack/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T05:47:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T05:47:31.048Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab21676660c608403992f20"
+    },
+    "message_id": "reddit_t3_1wn0yrd",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "Mad_Pat_customs",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Waffle Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Waffle Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Mad_Pat_customs     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wn0yrd/sticker_giveaway_enter_to_win_a_4_stars_waffle/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T05:47:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T05:47:34.193Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab21676660c608403992f21"
+    },
+    "message_id": "reddit_t3_1wn0yqj",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "vacation",
+    "platform": "reddit",
+    "subreddit": "antitrump",
+    "username": "TrumpPestControl",
+    "title": "Everyone Needs A Vacation Now and Then ...",
+    "text": "Everyone Needs A Vacation Now and Then ...\n\nsubmitted by     /u/TrumpPestControl     to     r/antitrump       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/antitrump/comments/1wn0yqj/everyone_needs_a_vacation_now_and_then/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T05:47:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T05:47:34.418Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab21676660c608403992f22"
+    },
+    "message_id": "reddit_t3_1wn0yqa",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Damar77",
+    "title": "Grab 100 hammers from u/Damar77!",
+    "text": "Grab 100 hammers from u/Damar77!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Damar77     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wn0yqa/grab_100_hammers_from_udamar77/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T05:47:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T05:47:34.630Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab21676660c608403992f23"
+    },
+    "message_id": "reddit_t3_1wn0yq6",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "sergenaskin",
+    "title": "What do you buy at airports?",
+    "text": "What do you buy at airports?\n\nsubmitted by     /u/sergenaskin     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wn0yq6/what_do_you_buy_at_airports/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T05:47:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T05:47:34.841Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab21677660c608403992f25"
+    },
+    "message_id": "reddit_t3_1wn0ypo",
+    "topic_key": "can you find me top posts on reddit which has over 10k views per month from ai tech industry",
+    "search_keyword": "artificial intelligence",
+    "platform": "reddit",
+    "subreddit": "democraticparty",
+    "username": "Grand2021",
+    "title": "Public Relations for Small Businesses",
+    "text": "Public Relations for Small Businesses\n\nPublic Relations for the Little Guy    In Section: Government Affairs    Worthy clients benefit from James Grandone’s public relations work     BY WILLIM S. BIKE     T he world loves a good David vs. Goliath story, but as public relations (PR) specialist  James M. Grandone, ’81 CPAE , knows, David will do better if assisted by good press.   Grandone took on his first Goliath shortly after graduating from UIS, when he ran the 1982 Democratic Congressional primary campaign of Peoria attorney G. Douglas Stevens. After a surprise victory, Stevens squared off against one of the top Republicans in Congress, House Minority Leader Rep. Bob Michel, who had the backing of President Ronald Reagan.   On that leg of the campaign, Grandone became press secretary and recalls, “We used the theme, ‘Reaganomics: How Does It Play in Peoria?’ We became a national sensation and everyone in the Washington press corps came to do a story about our David vs. Goliath campaign. We lost by only 1.5 points against the most powerful Republican in the House.”   “UIS helped my career by giving me a stronger academic base on which to move forward in campaigns and public policy matters.”    Midwest Values    Grandone, who spent most of his career working in PR in the St. Louis area, has kept his Midwest values in mind while doing his work. “I grew up in a middle-income family in Alton, Ill., went to public schools. I was not one of those people groomed for success,” he says, adding that he learned the value of public relations as president of the Student Senate at UIS. “I discovered all the good that you do is done in a vacuum unless the public knows about it and supports it.”   As an employee at two top PR establishments in the 1980s and 1990s, Grandone felt that the industry could be run more humanely, noting that firms “churned their staff” and had “impossible requirements for billable hours. People burned out and left.”   So he started Grandone Hauser in 1995. “It was a partnership that shared profits and kept employees happy, so they didn’t leave,” he explains. In 2001, he started another PR firm, Grandone Strategies. Throughout his career, Grandone often has had Davids as clients.   “The hardest client I worked for was one that was blamed for an airline disaster that caused the loss of 111 souls onboard an aircraft,” he says. “The client was innocent but the federal government had to blame someone for the accident. All charges were eventually dropped and the client was found not guilty.”   Grandone also successfully worked to prevent the 1995 Base Closure and Realignment Commission from closing Scott Air Force Base, one of the top employers in the St. Louis metropolitan area.   “Campaigns I enjoyed most were those in which firefighters fought to get cities to fully fund their pensions through tax increases,” Grandone says. “We won all the efforts to fund pensions.”    “If Only You Knew”    During an eight-year campaign, Grandone devised “a plan to educate business leaders in St. Louis about opportunities located (to the east) in southwestern Illinois”—one of the state’s most economically challenged regions. “The name of the campaign was, ‘East County: If You Only Knew.’ The campaign indirectly brought about more than $2 billion in investments in the two-county region,” he says.   Along with creating or saving thousands of jobs, Grandone also helped change Federal Aviation Administration policy. However, he tends to recall personal triumphs. “I would rather focus on people I’ve worked with,” he says. “To see their accomplishments and to know I played a small role in helping them along the way is my greatest career accomplishment.”   He in turn recognizes that “UIS helped my career by giving me a stronger academic base on which to move forward in campaigns and public policy matters,” Grandone says. As a senior at UIS, “my roommates were Saudi Arabian, and international students would come to our apartment to watch  Nightline  during the Iranian hostage crisis. I gained a lot of different perspectives about the world and the U.S.’ place in it.”    A New Age of PR    Now semi-retired and living in Washington State with his wife, Mary, Grandone continues to be active in politics and writes columns for the local newspaper.   His advice to young people who want to pursue a career in PR is, “Get a strong journalism foundation and learn from basic business courses because you will be doing a lot of writing about things you know nothing about. Not-for-profit corporations also need public relations.”   PR strategies, he says, “have changed dramatically in the past 10-to-20 years with the advent of social media and the decline of general news media/press. Strategy has become more data-driven than ever. Artificial intelligence will change everything again.”   Grandone’s conclusion? “High-level PR is not for the faint of heart,” he says. Even Goliath’s opponent would likely agree.    Published by: University of Illinois UISToday        submitted by     /u/Grand2021     to     r/democraticparty       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/democraticparty/comments/1wn0ypo/public_relations_for_small_businesses/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T05:47:05Z"
+    },

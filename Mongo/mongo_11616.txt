@@ -1,0 +1,416 @@
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae6d5e660c60840397fac0"
+    },
+    "message_id": "reddit_t3_1wkjdyy",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "RepLadiesRehomes",
+    "username": "Gymgirl114",
+    "title": "FS (US) catch and release",
+    "text": "FS (US) catch and release\n\nBV Maxi tote  TS:Doris  Factory: Jing  Condition: New  Paid: $396  RFS: it’s way too big for my frame.  Selling :$350 with USPS tracked shipping. Please note it is a large bag.  location: US  Thoughts: this bag is drop dead gorgeous. It feels like it hugs you in an amazing soft leather and smell. It fits a laptop comfortably!  My loss your gain.  PSP and pop:  https://imgur.com/a/8aIqPUD   PayPal F&F or PayPal G&S for an additional $3.99        submitted by     /u/Gymgirl114     to     r/RepLadiesRehomes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RepLadiesRehomes/comments/1wkjdyy/fs_us_catch_and_release/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:08:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:09:18.403Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae6d5e660c60840397fac1"
+    },
+    "message_id": "reddit_t3_1wkjdys",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "FictionalMoustaches",
+    "username": "Beneficial_Focus_910",
+    "title": "Hakan, Street Fighter",
+    "text": "Hakan, Street Fighter\n\nFather, olive oil baron and champion turkish wrestler, Hakan enters the fourth Street Fighter game fiercely and loudly. Hakan is short tempered, attacking a man in his story's intro for spying on him with coded messages disguised as a shopping list, showing he is paranoid too. As well as a strong belief that his own fighting style is the best in the world. He loves his family above all else and has a strong friendship with E Honda, being one of the few characters to call him Edmond.   Hakan is the president of one of the world's leading edible oil manufacturers and a leader in Turkey's national sport of Yağlı güreş or Oil Wrestling. He enters the S.I.N. tournament to showcase his skills, while also travelling the world in search of inspiration for a new oil recipe, an obsession that continues in his ending, showing him planning to travel to Japan, a fantastically oily country by his estimations and deciding to head their to expand his business.   Though his last playable appearance was in the Street Fighter 4 subseries, he has continued to make cameos in further games. He appears in the SFV stories of Rashid as one of his social media contacts, meets with G on his world tour and a simultaion of him teams with Honda to face Alex.   His biggest on screen contribution to Street Fighter 5 comes in Honda's arcade ending. Hakan throws him into a meteor that is heading toward Earth, where he uses his Sumo Headbutt to destroy it.   Bring him back Capcom.       submitted by     /u/Beneficial_Focus_910     to     r/FictionalMoustaches       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FictionalMoustaches/comments/1wkjdys/hakan_street_fighter/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:08:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:09:18.602Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae6d67aeeb96c1c63b9d37"
+    },
+    "message_id": "reddit_t3_1wkje9c",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "pythoncoding",
+    "username": "_7xen_on",
+    "title": "Building a low-latency Win32 keyboard hook daemon in Python to map Bluetooth HID remotes to Google Antigravity",
+    "text": "Building a low-latency Win32 keyboard hook daemon in Python to map Bluetooth HID remotes to Google Antigravity\n\nBuilt a lightweight Python utility on Windows that intercepts keypresses from generic BLE HID shutter buttons (AB Shutter 3 etc.) and turns them into push-to-talk and dispatch triggers for Google Antigravity.   Key architectural details from the implementation: 1. Low-level keyboard hook: Implemented using ctypes with SetWindowsHookExW (WH_KEYBOARD_LL) to capture hardware scan codes globally without taking input focus from active applications prematurely. 2. Window management & input injection: Uses AttachThreadInput and SetForegroundWindow to cleanly focus the target Antigravity process window before emitting key combinations. 3. Debouncing & timing buffer: Hardware clicker buttons often fire multiple duplicate packets in a burst. Implemented a monotonic timestamp debounce (350ms default) and an 80ms buffer between mic shutdown (Ctrl+M) and prompt dispatch (scan code 0x1C Enter) to allow the speech-to-text pipeline to flush into the prompt box. 4. Suppressing volume OSD: Intercepted VK_VOLUME_UP / VK_VOLUME_DOWN are swallowed by returning 1 from the hook proc unless the Shift key is held, preserving standard multimedia keyboard adjustments. 5. Concurrency & single instance: Uses a Win32 named kernel mutex (CreateMutexW) to prevent duplicate daemons from running concurrently.   Repository is open-source under MIT license:  https://github.com/X7xenon/antigravity-bluetooth-remote        submitted by     /u/_7xen_on     to     r/pythoncoding       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pythoncoding/comments/1wkje9c/building_a_lowlatency_win32_keyboard_hook_daemon/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:09:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:09:27.833Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aae6d68aeeb96c1c63b9d38"
+    },
+    "message_id": "reddit_t3_1wkje6p",
+    "topic_key": "concierge service",
+    "search_keyword": "concierge service",
+    "platform": "reddit",
+    "subreddit": "whiteoutsurvival",
+    "username": "AR1197",
+    "title": "Concierge service",
+    "text": "Concierge service\n\nHey everyone, hope someone can help me answer my question. I recently got the concierge service after having spent 4.100€, I tracked every Midasbuy, Lootbar and in Game transaction and that’s the exact amount. Some people say you have to spend at least 6.3K usd, others say 10k usd or 400m top up points or 4m gems. How come I got the concierge? And no it’s not 10k usd, I tracked every single transaction. Thanks for the answers.        submitted by     /u/AR1197     to     r/whiteoutsurvival       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/whiteoutsurvival/comments/1wkje6p/concierge_service/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:09:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:09:28.227Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aae6d96660c60840397fac2"
+    },
+    "message_id": "reddit_t3_1wkjess",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "NFLv2logs",
+    "username": "open-mod",
+    "title": "u/[ unavailable ] removed a comment from r/NFLv2",
+    "text": "u/[ unavailable ] removed a comment from r/NFLv2\n\nOn 19/9/2026, at approximately 11:07, u/[ unavailable ] removed a comment from  r/NFLv2    Complete Mod Log        Action   Moderator   Details   Description          removecomment   Anti-Evil Operations              Original Comment     [ Removed by Reddit ]     Permalink      https://reddit.com/r/NFLv2/comments/1whkzxy/nfl_punishes_texans_star_yet_again_for/paqvehu/         This content was automatically generated, and correct at the time of posting. Changes to the referenced content, such as edits or deletions, may not be reflected here. All times are in UTC.        submitted by     /u/open-mod     to     r/NFLv2logs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NFLv2logs/comments/1wkjess/u_unavailable_removed_a_comment_from_rnflv2/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:10:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:10:14.326Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae6d96660c60840397fac3"
+    },
+    "message_id": "reddit_t3_1wkjesl",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Dubai_Real_Estate",
+    "username": "Abundancemee",
+    "title": "Off plan Specialist here",
+    "text": "Off plan Specialist here\n\nHi. I’m an off-plan specialist in Dubai Real estate. If you’re looking into buying an off-plan property, let me know and I could recommend the right property/project based on your strategy, location, price and payment plan.  This of course is free consultation. 😊       submitted by     /u/Abundancemee     to     r/Dubai_Real_Estate       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Dubai_Real_Estate/comments/1wkjesl/off_plan_specialist_here/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:10:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:10:14.526Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae6d96660c60840397fac4"
+    },
+    "message_id": "reddit_t3_1wkjeqz",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "GuitarAmps",
+    "username": "dreemingdumbguy",
+    "title": "amp upgrade",
+    "text": "amp upgrade\n\nhey guys this is my first time using reddit and stuff so don't hate.   so I've been playing guitar for a bit over 2 years now and I've been using a fender Frontman 10G , wich is honestly absolute shit. so obviously I've been thinking about switching and getting a better one . I have about 200 bucks to spend and maybe a bit more of I sell my current one. Im looking for something nice that has a master volume so I can get good gain out of it while still having it in a low volume since my neighbours seem to hate me. I've only been playing at home but I'll want something that could handle a little band playing too, just in case. maybe a headphone jack too but its not that important.   thanks for your help!       submitted by     /u/dreemingdumbguy     to     r/GuitarAmps       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GuitarAmps/comments/1wkjeqz/amp_upgrade/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:09:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:10:14.735Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae6d96660c60840397fac5"
+    },
+    "message_id": "reddit_t3_1wkjeqt",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "📢 Pepsico [HIRING] a Lead Ai Engineer!",
+    "text": "📢 Pepsico [HIRING] a Lead Ai Engineer!\n\nCompany: Pepsico   Location: Plano, TX 📍   Date Posted: September 18, 2026 📅   Categories: #AI #engineer #senior #python #fulltime   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=aiengineerjobs.com&rurl=aHR0cHM6Ly9haWVuZ2luZWVyam9icy5jb20vam9icy9sZWFkLWFpLWVuZ2luZWVyLTkwM2VhNWNi    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wkjeqt/pepsico_hiring_a_lead_ai_engineer/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:09:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:10:14.935Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae6d97660c60840397fac6"
+    },
+    "message_id": "reddit_t3_1wkjeqc",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "SoloTravel_India",
+    "username": "ImpossibleYogurt413",
+    "title": "Bali in November - good idea?",
+    "text": "Bali in November - good idea?\n\nSo i am planning to take a solo trip somewhere. I am strictly looking for 6N/7D in November second week (no flexibility in dates unfortunately) and I have been wanting to go to Bali for a long time. I heard November is wet season in Bali which is why I have not made the bookings yet.    Btw, I’m 28, Male, run my own business and have been really busy for the past 1 year and this is my first getaway after a LONG time and also my 1st international trip. My budget is INR 100k-125k and flight tickets to and fro are costing INR 50k roughly. I am left with INR 75k (USD 780 // 1100 AUD)   I have 2 expectations from this trip -       I want to party. Relive my college days and have the best time drinking, dancing and socialising with people and make some good friends.     Relax and explore - Have a nice time by the beach (drop your suggestions for THE most serene spots) and also visit the local villages and learn about their culture.       Thats it. Daytime - exploring, nighttime partying. Pretty simple   Now here is the tricky part. Everyone said to me you cannot explore Bali in just 6N and it’s too big and I would end up rushing to one place after another.   So my dear fellow travellers, can you all curate your best experiences for me and drop your best recommendations here.   Also appreciate any advice you might have me for me. What to expect in November, things to carry, things not to carry, any precautions i should take?    TIA!!       submitted by     /u/ImpossibleYogurt413     to     r/SoloTravel_India       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SoloTravel_India/comments/1wkjeqc/bali_in_november_good_idea/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:09:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:10:15.137Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae6d97660c60840397fac8"
+    },
+    "message_id": "reddit_t3_1wkjeq7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Meowi",
+    "username": "Mortivoreeee",
+    "title": "[Spin] Name an animal with this color",
+    "text": "[Spin] Name an animal with this color\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Mortivoreeee     to     r/Meowi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Meowi/comments/1wkjeq7/spin_name_an_animal_with_this_color/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:09:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:10:15.536Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae6d97660c60840397fac9"
+    },
+    "message_id": "reddit_t3_1wkjeq2",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "IllustriousMove9818",
+    "title": "Level: 601~620 4⭐ Seaside Cliffs #9660",
+    "text": "Level: 601~620 4⭐ Seaside Cliffs #9660\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/IllustriousMove9818     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wkjeq2/level_601620_4_seaside_cliffs_9660/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:09:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:10:15.736Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae6d97660c60840397faca"
+    },
+    "message_id": "reddit_t3_1wkjenx",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "WordGameArcade",
+    "username": "H4XX0R-787",
+    "title": "🟨 Unscramble This 8-Letter Word (by u/H4XX0R-787)",
+    "text": "🟨 Unscramble This 8-Letter Word (by u/H4XX0R-787)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/H4XX0R-787     to     r/WordGameArcade       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WordGameArcade/comments/1wkjenx/unscramble_this_8letter_word_by_uh4xx0r787/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:09:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:10:15.950Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae6d98660c60840397facb"
+    },
+    "message_id": "reddit_t3_1wkjenk",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "cleandndai",
+    "username": "KorhanRal",
+    "title": "New subreddit for structural worldbuilding and AI: r/WorldbuildingandAI",
+    "text": "New subreddit for structural worldbuilding and AI: r/WorldbuildingandAI\n\nsubmitted by     /u/KorhanRal     to     r/cleandndai       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cleandndai/comments/1wkjenk/new_subreddit_for_structural_worldbuilding_and_ai/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:09:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:10:16.152Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae6d98660c60840397facc"
+    },
+    "message_id": "reddit_t3_1wkjeng",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AlignmentChartFills",
+    "username": "Aware_Fan1109",
+    "title": "What is blue, and is blue?",
+    "text": "What is blue, and is blue?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Aware_Fan1109     to     r/AlignmentChartFills       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlignmentChartFills/comments/1wkjeng/what_is_blue_and_is_blue/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:09:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:10:16.353Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae6d98660c60840397facd"
+    },
+    "message_id": "reddit_t3_1wkjemv",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "[HIRING] [REMOTE] a Forward Deployed Engineer (ai First Delivery)! in Dhan Ai",
+    "text": "[HIRING] [REMOTE] a Forward Deployed Engineer (ai First Delivery)! in Dhan Ai\n\nCompany: Dhan Ai   Date Posted: September 18, 2026 📅   Categories: #remote #engineer #entrylevel #AI #fullstack   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=aiengineerjobs.com&rurl=aHR0cHM6Ly9haWVuZ2luZWVyam9icy5jb20vam9icy9mb3J3YXJkLWRlcGxveWVkLWVuZ2luZWVyLWFpLWZpcnN0LWRlbGl2ZXJ5LWJjZDdiNTQz    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wkjemv/hiring_remote_a_forward_deployed_engineer_ai/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:09:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:10:16.557Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae6d98660c60840397face"
+    },
+    "message_id": "reddit_t3_1wkjemg",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "True-Commercial6703",
+    "title": "Austrian Empire Cape by u/True-Commercial6703",
+    "text": "Austrian Empire Cape by u/True-Commercial6703\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/True-Commercial6703     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wkjemg/austrian_empire_cape_by_utruecommercial6703/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:09:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:10:16.759Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae6d98660c60840397facf"
+    },
+    "message_id": "reddit_t3_1wkjelt",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "newreddits",
+    "username": "Boring-Dig4583",
+    "title": "Welcome to r/ImaginarySolarSystems! Share your imaginary solar systems here aswell as ones from pop-culture!",
+    "text": "Welcome to r/ImaginarySolarSystems! Share your imaginary solar systems here aswell as ones from pop-culture!\n\nsubmitted by     /u/Boring-Dig4583     to     r/newreddits       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/newreddits/comments/1wkjelt/welcome_to_rimaginarysolarsystems_share_your/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:09:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:10:16.962Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae6d99660c60840397fad0"
+    },
+    "message_id": "reddit_t3_1wkjele",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "HairTransplants",
+    "username": "69Ggg69",
+    "title": "Second HT",
+    "text": "Second HT\n\nDont know why my last post got deleted but I post it again.   Hey brothers,   Just wanted to give you a little background to this post. In January 2025, I had my first hair transplant (4,500 grafts). I was fairly happy with the result, but there were some areas that didn’t grow as well as I had hoped.  After some discussion with my clinic, they agreed to offer me a complimentary touch-up session with 2,000 grafts. The main focus was the frontal area.  So here we are, 12 days after the procedure, and I thought I’d take you along on my journey from here on out.   Feel free to ask any questions about my journey and the procedures I’ve had. I’m more than happy to share my experiences and help in any way I can.       submitted by     /u/69Ggg69     to     r/HairTransplants       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HairTransplants/comments/1wkjele/second_ht/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T11:09:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T11:10:17.164Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {

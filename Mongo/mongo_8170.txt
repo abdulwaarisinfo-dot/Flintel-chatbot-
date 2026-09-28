@@ -1,0 +1,416 @@
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:34:01.155Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab97e96508d45f3d2d630b"
+    },
+    "message_id": "reddit_t3_1win8jf",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "analoghorror",
+    "username": "Professional_One4590",
+    "title": "Made a new subreddit for the shin sonic tapes, a analog horror kinda now animey fighting animation series made by Evanimas on YT. If you're new to his videos I highly recommend checking it out!!",
+    "text": "Made a new subreddit for the shin sonic tapes, a analog horror kinda now animey fighting animation series made by Evanimas on YT. If you're new to his videos I highly recommend checking it out!!\n\nsubmitted by     /u/Professional_One4590     to     r/analoghorror       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/analoghorror/comments/1win8jf/made_a_new_subreddit_for_the_shin_sonic_tapes_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:33:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:34:01.366Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab97e96508d45f3d2d630c"
+    },
+    "message_id": "reddit_t3_1win8j9",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "ClaudeWorkflows",
+    "username": "ClaudeAI-mod-bot",
+    "title": "[Workflow] Cost-Optimized Multi-Agent Workflow: Sonnet Dispatcher with Fable for Critical Reviews and Decisions",
+    "text": "[Workflow] Cost-Optimized Multi-Agent Workflow: Sonnet Dispatcher with Fable for Critical Reviews and Decisions\n\nCost-Optimized Multi-Agent Workflow: Sonnet Dispatcher with Fable for Critical Reviews and Decisions    Workflow value:  85/100   Status:  active ·  Freshness:  70/100 ·  Confidence:  0.90 ·  Level:  intermediate   Categories:  Quality Control, Token Saving, Context & Memory, Debugging, Shipping, Skills, MCP, Multi-Agent   Original source:   r/ClaudeCode post/comment    What problem this solves   High cost of expensive LLMs in continuous operation, context window limitations in multi-agent chains, and preventing LLM 'overreach' or hallucination in critical tasks.   Summary   A multi-agent architecture where a cheaper model (e.g., Sonnet) acts as an always-on dispatcher, delegating specific, high-stakes tasks (irreversible decisions, final quality reviews) to a more capable but expensive model (e.g., Fable). Context is managed by writing intermediate results to disk and referencing them by file path, keeping the dispatcher's context flat.   Why it is useful   This workflow provides a practical and cost-effective strategy for leveraging different LLM capabilities within a multi-agent system. It addresses common challenges like high API costs, context window limitations, and preventing powerful models from 'overreaching' by clearly defining roles, managing context efficiently, and implementing critical review gates. This approach can significantly improve the reliability and affordability of complex LLM-driven applications.   Workflow     Designate a cheap LLM (e.g., Sonnet) as the primary, always-on dispatcher/orchestrator for routing decisions.   Identify specific, high-value, and bounded tasks that require a more capable but expensive LLM (e.g., Fable).   Configure the expensive LLM for these tasks as a 'read-only advisor consult' for irreversible calls (e.g., schema locks, architecture decisions, dead-end debugging).   Implement the expensive LLM as a 'mandatory final reviewer' for every non-trivial deliverable, outputting only pass/fail against concrete checks.   For multi-agent chains, write intermediate results and specifications to disk instead of passing them through the orchestrator's context.   Reference these on-disk artifacts by file path in subsequent agent tasks to keep the dispatcher's context flat.   To prevent 'overreach' from the powerful LLM, define scoped tasks with explicit 'don't touch X' lists.   Utilize a fresh reviewer (the expensive LLM) with no memory of the original work as a gate to reliably catch overreach.     Tools / artifacts     Sonnet (LLM)   Fable (LLM)   Disk/File system (for artifact storage)   Concrete check/criteria (for reviews)   Task definitions with explicit constraints     Validation signals     User's personal experience ('tracks with what I ended up landing on too')   Claim of cost savings ('got me most of the savings')   Claim of reliability in catching issues ('catches it reliably')     Limitations     Lacks explicit code examples or detailed prompt structures for the dispatcher and specialized agents.   Validation is anecdotal, based on the author's personal experience rather than empirical data or community consensus.   The specific models (Sonnet, Fable) are mentioned, but the core principles could apply to other LLM combinations, which isn't explicitly stated.     Rate this workflow   Upvote this post if the workflow is useful, reproducible, or worth recommending.   Downvote if it is vague, outdated, unsafe, overhyped, or not reproducible.   Reply if it worked for you, failed, is outdated, or has a better alternative.      This post was generated automatically from the workflow library database.        submitted by     /u/ClaudeAI-mod-bot     to     r/ClaudeWorkflows       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeWorkflows/comments/1win8j9/workflow_costoptimized_multiagent_workflow_sonnet/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:33:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:34:01.579Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab97e96508d45f3d2d630d"
+    },
+    "message_id": "reddit_t3_1win8ix",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "HeadTripFestival",
+    "username": "TalkHelpful234",
+    "title": "Any lady friends?!",
+    "text": "Any lady friends?!\n\nLooking for a lady to join me at camping. My group cancled on me and I have an extra wristb. Just want to have someone to hang with and give shoulder rides to. Just bring the good vibes!       submitted by     /u/TalkHelpful234     to     r/HeadTripFestival       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HeadTripFestival/comments/1win8ix/any_lady_friends/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:33:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:34:01.795Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab97ea6508d45f3d2d630e"
+    },
+    "message_id": "reddit_t3_1win8hv",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "PHTravellers",
+    "username": "Positive-Working3996",
+    "title": "Family Travel while Unemployed",
+    "text": "Family Travel while Unemployed\n\nHi there! Would like to get some insights.  My boyfriend’s family included me in their HK Travel at the end of this year. We are more than 5 pax.  It is a private tour package and it is already paid for (flight, hotels, transfers etc)  However, I currently have no work my last job was July this year and I am not really planning in finding a job soon. But since there is an Immigration concern on this travel, I am concerned on my proof of income.  I do have my savings and I plan to shoulder any expenses there.  Will it be a **red flag** if I say I am currently unemployed and taking my break? Another option for me is to have a notary of sponsorship which obviously will be the parents of my boyfriend.   Would love to have your insights.   Thank you!!       submitted by     /u/Positive-Working3996     to     r/PHTravellers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PHTravellers/comments/1win8hv/family_travel_while_unemployed/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:33:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:34:02.010Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab97ea6508d45f3d2d630f"
+    },
+    "message_id": "reddit_t3_1win8hd",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "IKEA",
+    "username": "Nervous_Neandertaler",
+    "title": "Ikea Kitchen Drama",
+    "text": "Ikea Kitchen Drama\n\nHi everyone!   I’ll try to keep this relatively short, as I’d really appreciate some advice on my situation. I hope everything is understandable and that you can follow along, as there are quite a few details. Thanks in advance!   Initial situation:   In March 2026, I bought a kitchen from IKEA for around €5,500. I used pretty much the entire IKEA service package: planning, ordering, delivery, and installation.   When I placed the order, four cabinet fronts were not included because they were unavailable at the time. I only noticed this when the kitchen was delivered in May 2026.   Attempts to resolve the issue:   I then contacted IKEA by email. I was passed back and forth between customer service, the kitchen department, etc. I was eventually in contact with the kitchen department until the end of July 2026. I was repeatedly told to be patient and that they were waiting for the fronts to become available.   After I kept following up on a weekly basis, I eventually stopped receiving any responses for around four weeks.   At that point, I went to IKEA in person. A customer service employee took care of the issue, and we eventually agreed that I would choose completely new fronts for the kitchen, since the original ones were no longer available.   I had to pay an additional €1,300 for the new fronts, with the understanding that I would receive a refund for the old fronts once they were collected.   A new delivery and installation appointment was arranged, and that part went relatively smoothly. However, four cover panels had not been taken into account, which means that we now have different, visibly mismatched colors in the kitchen.   So another delivery date was arranged for the new cover panels, including installation and collection of the old fronts.   The new cover panels have now also been delivered. However, I still haven’t been contacted regarding the installation appointment. In the meantime, some of the old fronts have already been collected, while the incorrect cover panels are still installed. These will therefore have to be removed and collected again at a later date.   After around 40 emails — about 90% of which were never answered — taking days off work, making trips to IKEA, etc., and having had an unfinished kitchen for six months, I’m slowly running out of patience...   What kind of compensation could I reasonably ask for in a situation like this?   Thanks everyone!       submitted by     /u/Nervous_Neandertaler     to     r/IKEA       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IKEA/comments/1win8hd/ikea_kitchen_drama/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:33:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:34:02.223Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab97ea6508d45f3d2d6310"
+    },
+    "message_id": "reddit_t3_1win8h0",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "GermanCitizenship",
+    "username": "JrRileyRj",
+    "title": "Eligibility help! Confused on mothers birth status. (born abroad)",
+    "text": "Eligibility help! Confused on mothers birth status. (born abroad)\n\nHello, I found out about the citizenship by descent stuff from a friend of mine. I looked into it and found out about stag 5, which seems to apply to my situation, but im actually not sure.   My mother was born in Landstuhl in 1966. She was born to an American US Army soldier father (born 1939) and a German citizen mother (born 1926). We know for sure, that my grandma was still a German citizen at the time of my mothers birth. They all left Germany in 1969 to the USA. We are unsure if they were married before or after having my mother too, but I am pretty positive they were married. Is it worth getting documents to know for sure?   What makes me unsure if I am eligible for citizenship by descent through StaG 5 is that my mom in America is a citizen born abroad, I am pretty sure. She has a \"Form DS-1350\", that says \"United States of America Department of State Certification of Report of Birth of a United States Citizen\"... \"Issued at Frankfurt on January 5 1968\". I don't know if I am misreading this, but does that mean she waived her right to be considered a German citizen, \"breaking the chain\" as people say? This document is older than the current born abroad documents (FS-240), it doesn't say anywhere on it \"abroad\" or any of that. This is the only paper they gave her.   If it doesn't break chain, and I am eligible, would you recommend the process? It seems pretty awesome to have a dual citizenship, especially for travel in the EU. Although I here the German government is kind of in shambles right now.   I have a good idea of what documents I need from Germany to prove lineage, but I don't want to get ahead of myself, so I am asking you guys.   Thanks for the assistance.        submitted by     /u/JrRileyRj     to     r/GermanCitizenship       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GermanCitizenship/comments/1win8h0/eligibility_help_confused_on_mothers_birth_status/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:33:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:34:02.440Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab97ea6508d45f3d2d6311"
+    },
+    "message_id": "reddit_t3_1win8gy",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789630421338",
+    "text": "[PROBE] 1789630421338\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1win8gy/probe_1789630421338/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:33:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:34:02.651Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab97ea6508d45f3d2d6312"
+    },
+    "message_id": "reddit_t3_1win8go",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "hyderabad_telugu",
+    "username": "Billionaireking01",
+    "title": "Anyone heading to the Starlight Festival in Egypt this October?",
+    "text": "Anyone heading to the Starlight Festival in Egypt this October?\n\nHey guys! Anyone going to the Starlight Festival in Egypt on Oct 9th & 10th? I’m planning to be there from Oct 7th–14th and looking to join a strangers group. Budget would be around 1.5L-2L** **per person for the trip.If anyone’s interested joining me or joining any group, DM me!       submitted by     /u/Billionaireking01     to     r/hyderabad_telugu       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hyderabad_telugu/comments/1win8go/anyone_heading_to_the_starlight_festival_in_egypt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:33:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:34:02.865Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab97eb6508d45f3d2d6313"
+    },
+    "message_id": "reddit_t3_1win8g4",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "PakistanMarketplace",
+    "username": "tisrain",
+    "title": "Abercrombie and Fitch (full sleeves). Delivering anywhere in 🇵🇰. (Kindly check all the images and read the description)",
+    "text": "Abercrombie and Fitch (full sleeves). Delivering anywhere in 🇵🇰. (Kindly check all the images and read the description)\n\n●100% original...all the measurements are shown in the video...made in Vietnam...round neck   ●9.3/10 very fresh not much used   ●price is Rs. 1500(not negotiable and includes delivery charges through Pakistan post office)    ●Cash on delivery: yes   Payment in advance: yes   ●city : Hyderabad...but delivering all over Pakistan.        submitted by     /u/tisrain     to     r/PakistanMarketplace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PakistanMarketplace/comments/1win8g4/abercrombie_and_fitch_full_sleeves_delivering/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:33:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:34:03.082Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab97eb6508d45f3d2d6314"
+    },
+    "message_id": "reddit_t3_1win8fv",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "BlackOps7Zombies",
+    "username": "Educated_Reddit",
+    "title": "goodnight.",
+    "text": "goodnight.\n\nsubmitted by     /u/Educated_Reddit     to     r/BlackOps7Zombies       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BlackOps7Zombies/comments/1win8fv/goodnight/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:33:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:34:03.293Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab97eb6508d45f3d2d6315"
+    },
+    "message_id": "reddit_t3_1win8fg",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Karachi",
+    "platform": "reddit",
+    "subreddit": "pakistan",
+    "username": "Still_Pomegranate_4",
+    "title": "25 lakh (2.5 mil), a good reliable car possible for the streets of Karachi.",
+    "text": "25 lakh (2.5 mil), a good reliable car possible for the streets of Karachi.\n\nsubmitted by     /u/Still_Pomegranate_4     to     r/pakistan       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pakistan/comments/1win8fg/25_lakh_25_mil_a_good_reliable_car_possible_for/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:33:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:34:03.508Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab97eb6508d45f3d2d6316"
+    },
+    "message_id": "reddit_t3_1win8ff",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Supernote",
+    "username": "pengu-li",
+    "title": "For a company about longevity, Supernote sure doesn't seem to care about the durability of its pens.",
+    "text": "For a company about longevity, Supernote sure doesn't seem to care about the durability of its pens.\n\nHad a pretty annoying experience with customer support I'd like to share here, which was pretty disappointing since I've heard great things about it before now.   For some background, I got my Manta and HoM pen about 2 weeks ago at the end of August since I was starting a semester of school and would be doing a lot of readings. It was fine at first, until a few days ago, I was studying in a classroom building and set down my pen. My pen then decided to roll off my desk... falling a few feet onto the   carpet  ... and it broke.    https://preview.redd.it/8wnihy1l51qh1.png?width=77&format=png&auto=webp&s=38714e103b7070b7e4ec17f0b3669050b71daba7    To be exact, the little gray part broke. Unfortunately, this doesn't seem to be a problem unique to me. A quick search on the sub will show a ton of posts, not even limited to the HoM pen.    Looks like this has been an issue for years, and Supernote hasn't done anything.     https://preview.redd.it/vkajiog061qh1.png?width=774&format=png&auto=webp&s=6f917c90ef37d5625312618936c542feaf5c5375     Seems like the retractable pens have this issue too.    Ooookay. Well, I just spent $90 on this pen 2 weeks ago and it broke after a fall onto carpet. Not to worry, though! I've heard great things about their customer service. Let me just email them and....   Oh. A response within 2 days (kudos to the speed, at least) telling me \"Sorry! That's not covered under our warranty. Please buy our $50 replacement part! :)\"   Yikes.... $50??? That's close to or even more than a lot of EMR pens on the market. Not to mention, what's stopping it from breaking in another 2 weeks? After all, I've seen the Reddit posts. Looks like not even switching pens will really fix the durability issues. Is this Supernote's subscription model? 🤣   In all seriousness, I think I'm just even more disappointed because of the image Supernote puts out about being all about repairability and having durable products. The pens should not be breaking so easily, even from regular use like seen from  this post  a few days ago. Now, unless I want to gamble $50 on a new pen module that will likely suffer the exact same issues, my pen is basically a shiny metal brick. I don't exactly feel confident buying pens from this company again after seeing how persistent these issues seem to be and their attitude when they arise.   Anyway, I did some research, primarily looking at  this post , and decided to get a pen on Amazon from a different brand that makes similar products. The pen has a ceramic nib, a side button (and a eraser at the other end), along with a design that ensures it won't roll off my desk. And hey, if it breaks, maybe I'll have better luck with Amazon support (🤣)    (If you're wondering why I'm not explicitly naming the pen, the sub has a rule where it removes posts talking about competitors - I even saw a review of this pen that had to get posted to a different sub even though they were using it with the Supernote. How interesting...)    I'd like to reiterate: I do love my Manta. I love the philosophy behind Supernote, and I loved putting my money towards such a company. I loved my HoM pen; the writing experience and heft reminded me of how I would write on paper...well, for the two weeks it lasted. It's just that for a company that stands against planned obsolescence and prides itself on the durability of its products, having such fragile pens (see: the numerous posts on the subreddit over the years) and not standing behind them feels oddly jarring.   Since I'm not planning on buying any pens from this company again, feel free to leave any suggestions. I currently have 3 EMR pens, but 2 were for my other tablet (non e-ink) and tend to draw wobbly lines on the Supernote.  (And if your responses get deleted due to their rule about not promoting competitors, feel free to DM them to me.)        submitted by     /u/pengu-li     to     r/Supernote       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Supernote/comments/1win8ff/for_a_company_about_longevity_supernote_sure/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:33:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:34:03.717Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab97ec6508d45f3d2d6318"
+    },
+    "message_id": "reddit_t3_1win8f9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "whereidlive",
+    "username": "Weeksieee_",
+    "title": "Where I would live as an American",
+    "text": "Where I would live as an American\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Weeksieee_     to     r/whereidlive       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/whereidlive/comments/1win8f9/where_i_would_live_as_an_american/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:33:36Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:34:04.141Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab97ec6508d45f3d2d6319"
+    },
+    "message_id": "reddit_t3_1win8en",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devplatform_triggers",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789630414136",
+    "text": "[PROBE] 1789630414136\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devplatform_triggers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devplatform_triggers/comments/1win8en/probe_1789630414136/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:33:34Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:34:04.352Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab97ec6508d45f3d2d631a"
+    },
+    "message_id": "reddit_t3_1win8ek",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Triggeredt",
+    "title": "Redditors with 40 hour work weeks, are you actually effectively working all that time? Why or why not?",
+    "text": "Redditors with 40 hour work weeks, are you actually effectively working all that time? Why or why not?\n\nsubmitted by     /u/Triggeredt     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1win8ek/redditors_with_40_hour_work_weeks_are_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:33:33Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:34:04.561Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab97ec6508d45f3d2d631b"
+    },
+    "message_id": "reddit_t3_1win8eg",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "autism",
+    "username": "Tjeutens",
+    "title": "I got declined for a promotion because of my low self confidence and lost my shit.",
+    "text": "I got declined for a promotion because of my low self confidence and lost my shit.\n\nI've been working at the same company for two years now and given everything i have to show them what i'm capable of since i'm horrible at selling myself, after they've been giving me lots of praise saying i've been doing amazing and that i have a lot of potential i finally had the courage to apply for a different position. There where 4 candidates who applied, 2 of them have only been in the company for a few month and i was even the one who taught them everything. Afterwards i find out that everyone accepted except me, when i asked my boss why he told me i didn't sell myself enough during the application, when i came home i went absolutely mental unable to calm myself down for 5 hours before my parents tried to calm me down with medication.    I feel absolutely betrayed feeling my two years of hard work meant nothing to them only because i'm shy and i'm not a confident person, and i've lossed the little bit of confidence i had. Even though they know i have autism and ADHD they don't seems to understand why i'm upset, saying its not that big of a deal.       submitted by     /u/Tjeutens     to     r/autism       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/autism/comments/1win8eg/i_got_declined_for_a_promotion_because_of_my_low/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:33:33Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:34:04.771Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab97ec6508d45f3d2d631c"
+    },
+    "message_id": "reddit_t3_1win8e9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "marvelcomics",
+    "username": "FullBrother9300",
+    "title": "If the phoenix saga never happened would Jean Grey be as important in modern marvel comics?",
+    "text": "If the phoenix saga never happened would Jean Grey be as important in modern marvel comics?\n\nIn my humble opinion… Jean is one of the most boring marvel characters of all time and the only time she’s seemed interesting to me is when she’s been Phoenix. I feel like the writers know this too because they keep giving her back the Phoenix force just because they have nothing else to really do with her.       submitted by     /u/FullBrother9300     to     r/marvelcomics       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/marvelcomics/comments/1win8e9/if_the_phoenix_saga_never_happened_would_jean/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:33:32Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:34:04.982Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab980e798842c4ceffa2e9"
+    },
+    "message_id": "reddit_t3_1win8uy",
+    "topic_key": "dentist",
+    "search_keyword": "dentist",
+    "platform": "reddit",
+    "subreddit": "dentistryph",
+    "username": "Turbulent-Card4300",
+    "title": "which is better for plastic jacket crown?",
+    "text": "which is better for plastic jacket crown?\n\nI'm afraid of affecting the pulp since im still a student. Which is better, patient 1 or 2?       submitted by     /u/Turbulent-Card4300     to     r/dentistryph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/dentistryph/comments/1win8uy/which_is_better_for_plastic_jacket_crown/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:34:22Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:34:38.948Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab980f798842c4ceffa2ea"
+    },
+    "message_id": "reddit_t3_1win8up",
+    "topic_key": "painter",
+    "search_keyword": "painter",
+    "platform": "reddit",
+    "subreddit": "Necrontyr",
+    "username": "WeeShogiBlunders",
+    "title": "WIP monolith !",
+    "text": "WIP monolith !\n\nI am a slow painter, this project will keep me busy for the entire year 🫠       submitted by     /u/WeeShogiBlunders     to     r/Necrontyr       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Necrontyr/comments/1win8up/wip_monolith/",
+    "score": 0,
+    "num_comments": 0,

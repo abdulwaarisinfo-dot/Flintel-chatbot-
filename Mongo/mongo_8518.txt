@@ -1,0 +1,416 @@
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-16T14:58:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:39:41.913Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd17e42dd0e95b5bab8e3"
+    },
+    "message_id": "twitter_2100192707964723244",
+    "topic_key": "enterprise customer service software",
+    "search_keyword": "enterprise customer service software",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "MR_MRR4",
+    "title": "Most VIP Club stores wait for confused customers to email them…🤔\n\nA properly built Help Centre answers their questions before they need to contact you\n\nIt can help reduce support tickets, refunds, disputes and confusion when customers see their recurring membership charge\n\nOnce created, you can link it throughout your:\n\n• Website footer\n• Membership confirmation emails (if you send any)\n• Customer service email replies\n• Email flows\n\nThe software is easy enough to set up, and I have included a video showing you how\n\nThe important part is knowing exactly what questions to include and how to answer them properly\n\nSo I have created an 18-page copy-and-paste guide covering every section, question and answer used in my own VIP Club Help Centre\n\nCharges (The important one), cancellations, membership benefits, tracking, delivery problems, returns, replacements and customer support are all included\n\nCustomers (especially Karen’s) want answers quickly. Giving them an instant, clear answer can prevent disputes and save your customer service team hours of back-and-forth emails\n\nThe full guide is now available inside the Whop for all members 🤝",
+    "text": "Most VIP Club stores wait for confused customers to email them…🤔\n\nA properly built Help Centre answers their questions before they need to contact you\n\nIt can help reduce support tickets, refunds, disputes and confusion when customers see their recurring membership charge\n\nOnce created, you can link it throughout your:\n\n• Website footer\n• Membership confirmation emails (if you send any)\n• Customer service email replies\n• Email flows\n\nThe software is easy enough to set up, and I have included a video showing you how\n\nThe important part is knowing exactly what questions to include and how to answer them properly\n\nSo I have created an 18-page copy-and-paste guide covering every section, question and answer used in my own VIP Club Help Centre\n\nCharges (The important one), cancellations, membership benefits, tracking, delivery problems, returns, replacements and customer support are all included\n\nCustomers (especially Karen’s) want answers quickly. Giving them an instant, clear answer can prevent disputes and save your customer service team hours of back-and-forth emails\n\nThe full guide is now available inside the Whop for all members 🤝",
+    "post_url": "https://twitter.com/MR_MRR4/status/2100192707964723244",
+    "score": 24,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-16T11:58:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:39:42.125Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd17e42dd0e95b5bab8e6"
+    },
+    "message_id": "twitter_2098061625995432298",
+    "topic_key": "enterprise customer service software",
+    "search_keyword": "enterprise customer service software",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "e_opore",
+    "title": "How AWS Relational Database Service (RDS) Manages Databases\n\nManaging a database in production involves much more than simply storing data. Teams have to handle provisioning, backups, patching, scaling, monitoring, security, and high availability.\n\nAmazon Relational Database Service (Amazon RDS) simplifies these responsibilities by providing a managed environment for running relational databases in the AWS Cloud.\n\nWhat Is Amazon RDS?\n\nAmazon Relational Database Service (RDS) is a managed database service that makes it easier to set up, operate, and scale relational databases.\n\nInstead of managing the underlying database servers yourself, AWS handles many of the routine infrastructure and maintenance tasks while you focus on your applications and data.\n\nRDS supports popular database engines such as:\n\n• Amazon Aurora\n• PostgreSQL\n• MySQL\n• MariaDB\n• Oracle Database\n• Microsoft SQL Server\n\nHow RDS Manages Databases\n\nWhen you create an RDS database, AWS provisions the required infrastructure and configures the database engine according to your selected settings.\n\nThe typical workflow looks like this:\n\n1️⃣ Choose a database engine\n\n2️⃣ Select the required compute and storage configuration\n\n3️⃣ Configure networking through an Amazon VPC\n\n4️⃣ Set database credentials and security settings\n\n5️⃣ Launch the database instance\n\n6️⃣ Connect your application to the database\n\n7️⃣ RDS handles many ongoing operational tasks\n\nThis allows developers to create production-ready database environments without manually managing database servers.\n\nKey RDS Capabilities\n\n1. Automated Backups\n\nRDS can automatically back up your database and retain backups according to your configuration.\n\nThis helps protect against accidental data loss and provides recovery options when something goes wrong.\n\n2. Automated Patching\n\nRDS can apply supported database software patches during configured maintenance windows, reducing the operational effort required to keep database environments maintained.\n\n3. High Availability\n\nFor supported configurations, Amazon RDS Multi-AZ deployments can maintain a standby database in another Availability Zone.\n\nIf the primary database becomes unavailable, RDS can automatically fail over to the standby.\n\n4. Scaling\n\nRDS allows you to modify database compute and storage resources as application requirements change.\n\nYou can scale your database environment without rebuilding the entire application architecture.\n\n5. Monitoring\n\nAmazon RDS integrates with AWS monitoring services such as Amazon CloudWatch, allowing teams to observe database performance and resource utilization.\n\nRDS and Amazon Aurora\n\nAmazon Aurora is a cloud-optimized relational database engine available through Amazon RDS.\n\nAurora is designed to provide high performance and availability while integrating closely with AWS services.\n\nIt is compatible with PostgreSQL and MySQL, making it possible for organizations to use familiar database technologies while taking advantage of AWS-managed infrastructure.\n\nRDS Security\n\nRDS provides several mechanisms for securing database environments:\n\n• Amazon VPC network isolation\n\n• Security Groups\n\n• IAM integration for supported features\n\n• Encryption at rest\n\n• Encryption in transit\n\n• Database authentication and authorization\n\n• Automated backup protection\n\nSecurity should be designed using the principle of least privilege and by keeping databases inaccessible directly from the public internet whenever possible.\n\nCommon Use Cases\n\nAmazon RDS is commonly used for:\n\n• Web applications\n\n• E-commerce platforms\n\n• Enterprise applications\n\n• Content management systems\n\n• SaaS applications\n\n• Transactional workloads\n\n• Backend APIs\n\n• Business applications\n\n📘 Grab AWS Ebook:\n\nhttps://t.co/G3pdEOq4DK",
+    "text": "How AWS Relational Database Service (RDS) Manages Databases\n\nManaging a database in production involves much more than simply storing data. Teams have to handle provisioning, backups, patching, scaling, monitoring, security, and high availability.\n\nAmazon Relational Database Service (Amazon RDS) simplifies these responsibilities by providing a managed environment for running relational databases in the AWS Cloud.\n\nWhat Is Amazon RDS?\n\nAmazon Relational Database Service (RDS) is a managed database service that makes it easier to set up, operate, and scale relational databases.\n\nInstead of managing the underlying database servers yourself, AWS handles many of the routine infrastructure and maintenance tasks while you focus on your applications and data.\n\nRDS supports popular database engines such as:\n\n• Amazon Aurora\n• PostgreSQL\n• MySQL\n• MariaDB\n• Oracle Database\n• Microsoft SQL Server\n\nHow RDS Manages Databases\n\nWhen you create an RDS database, AWS provisions the required infrastructure and configures the database engine according to your selected settings.\n\nThe typical workflow looks like this:\n\n1️⃣ Choose a database engine\n\n2️⃣ Select the required compute and storage configuration\n\n3️⃣ Configure networking through an Amazon VPC\n\n4️⃣ Set database credentials and security settings\n\n5️⃣ Launch the database instance\n\n6️⃣ Connect your application to the database\n\n7️⃣ RDS handles many ongoing operational tasks\n\nThis allows developers to create production-ready database environments without manually managing database servers.\n\nKey RDS Capabilities\n\n1. Automated Backups\n\nRDS can automatically back up your database and retain backups according to your configuration.\n\nThis helps protect against accidental data loss and provides recovery options when something goes wrong.\n\n2. Automated Patching\n\nRDS can apply supported database software patches during configured maintenance windows, reducing the operational effort required to keep database environments maintained.\n\n3. High Availability\n\nFor supported configurations, Amazon RDS Multi-AZ deployments can maintain a standby database in another Availability Zone.\n\nIf the primary database becomes unavailable, RDS can automatically fail over to the standby.\n\n4. Scaling\n\nRDS allows you to modify database compute and storage resources as application requirements change.\n\nYou can scale your database environment without rebuilding the entire application architecture.\n\n5. Monitoring\n\nAmazon RDS integrates with AWS monitoring services such as Amazon CloudWatch, allowing teams to observe database performance and resource utilization.\n\nRDS and Amazon Aurora\n\nAmazon Aurora is a cloud-optimized relational database engine available through Amazon RDS.\n\nAurora is designed to provide high performance and availability while integrating closely with AWS services.\n\nIt is compatible with PostgreSQL and MySQL, making it possible for organizations to use familiar database technologies while taking advantage of AWS-managed infrastructure.\n\nRDS Security\n\nRDS provides several mechanisms for securing database environments:\n\n• Amazon VPC network isolation\n\n• Security Groups\n\n• IAM integration for supported features\n\n• Encryption at rest\n\n• Encryption in transit\n\n• Database authentication and authorization\n\n• Automated backup protection\n\nSecurity should be designed using the principle of least privilege and by keeping databases inaccessible directly from the public internet whenever possible.\n\nCommon Use Cases\n\nAmazon RDS is commonly used for:\n\n• Web applications\n\n• E-commerce platforms\n\n• Enterprise applications\n\n• Content management systems\n\n• SaaS applications\n\n• Transactional workloads\n\n• Backend APIs\n\n• Business applications\n\n📘 Grab AWS Ebook:\n\nhttps://t.co/G3pdEOq4DK",
+    "post_url": "https://twitter.com/e_opore/status/2098061625995432298",
+    "score": 66,
+    "num_comments": 6,
+    "created_utc": {
+      "$date": "2026-09-10T14:50:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:39:42.756Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd17f42dd0e95b5bab8e8"
+    },
+    "message_id": "twitter_2098462042873315827",
+    "topic_key": "enterprise customer service software",
+    "search_keyword": "enterprise customer service software",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Shawn_hurst42",
+    "title": "#2134679514, 2134625253, Shawn Hurst at Clark rd Sarasota FL  customer service been Jerked around, lied to and shunned\n\n@Enterprise",
+    "text": "#2134679514, 2134625253, Shawn Hurst at Clark rd Sarasota FL  customer service been Jerked around, lied to and shunned\n\n@Enterprise",
+    "post_url": "https://twitter.com/Shawn_hurst42/status/2098462042873315827",
+    "score": 3,
+    "num_comments": 6,
+    "created_utc": {
+      "$date": "2026-09-11T17:21:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:39:43.177Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd17f42dd0e95b5bab8ea"
+    },
+    "message_id": "twitter_2098358434894680185",
+    "topic_key": "enterprise customer service software",
+    "search_keyword": "enterprise customer service software",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "blue_prism",
+    "title": "Our Managed Customer Complaint Handling Agent helps financial institutions reduce manual effort, accelerate case handling and free people to focus on the cases that need them most.\n\nCheck out the full agent catalog: https://t.co/X2W6CCiyiv\n#AgenticAI #FinancialServices https://t.co/v12nXGvK15",
+    "text": "Our Managed Customer Complaint Handling Agent helps financial institutions reduce manual effort, accelerate case handling and free people to focus on the cases that need them most.\n\nCheck out the full agent catalog: https://t.co/X2W6CCiyiv\n#AgenticAI #FinancialServices https://t.co/v12nXGvK15",
+    "post_url": "https://twitter.com/blue_prism/status/2098358434894680185",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T10:30:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:39:43.608Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd18642dd0e95b5bab8ed"
+    },
+    "message_id": "twitter_2098376489775595884",
+    "topic_key": "enterprise customs broker",
+    "search_keyword": "enterprise customs broker",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "EICIIndia",
+    "title": "What does it take to make cross-border trade faster while maintaining strong Customs control? India’s Express Cargo Clearance System (ECCS) offers a compelling answer.\n\nBy bringing together paperless processing, bulk electronic filing, risk-based clearance, real-time monitoring and non-intrusive inspection, ECCS enables legitimate express shipments to move efficiently while allowing Customs to focus on higher-risk consignments.\n\nThe transformation is significant, with declarations increasing from 4.6 million in FY2019–20 to 19.5 million in FY2023–24. ECCS has also helped lower barriers for MSMEs and exporters in Tier-2 and Tier-3 cities, supporting their access to global e-commerce markets.\n\nAs India moves towards a more integrated Customs ecosystem, the next opportunity is to deepen real-time data exchange, Partner Government Agency clearances and technology-led risk and compliance capabilities, including AI-enabled X-ray and document intelligence.\n\nThe larger message is clear: trade facilitation and enforcement can work together. A well-designed digital Customs ecosystem can help legitimate trade move faster while strengthening the ability to identify high-risk consignments.\n\nFaster legitimate trade. Stronger control. Smarter Customs.\n#EICI #ECCS #ExpressLogistics #CrossBorderTrade #ExpressCargo #DigitalCustoms #ECommerce",
+    "text": "What does it take to make cross-border trade faster while maintaining strong Customs control? India’s Express Cargo Clearance System (ECCS) offers a compelling answer.\n\nBy bringing together paperless processing, bulk electronic filing, risk-based clearance, real-time monitoring and non-intrusive inspection, ECCS enables legitimate express shipments to move efficiently while allowing Customs to focus on higher-risk consignments.\n\nThe transformation is significant, with declarations increasing from 4.6 million in FY2019–20 to 19.5 million in FY2023–24. ECCS has also helped lower barriers for MSMEs and exporters in Tier-2 and Tier-3 cities, supporting their access to global e-commerce markets.\n\nAs India moves towards a more integrated Customs ecosystem, the next opportunity is to deepen real-time data exchange, Partner Government Agency clearances and technology-led risk and compliance capabilities, including AI-enabled X-ray and document intelligence.\n\nThe larger message is clear: trade facilitation and enforcement can work together. A well-designed digital Customs ecosystem can help legitimate trade move faster while strengthening the ability to identify high-risk consignments.\n\nFaster legitimate trade. Stronger control. Smarter Customs.\n#EICI #ECCS #ExpressLogistics #CrossBorderTrade #ExpressCargo #DigitalCustoms #ECommerce",
+    "post_url": "https://twitter.com/EICIIndia/status/2098376489775595884",
+    "score": 3,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T11:41:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:39:50.228Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd18642dd0e95b5bab8ef"
+    },
+    "message_id": "twitter_2100502932202684468",
+    "topic_key": "enterprise customs broker",
+    "search_keyword": "enterprise customs broker",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "gurgaonibs",
+    "title": "CBIC Plans Wider AI Use to Simplify Customs Compliance\n\nWhat happened?\nThe Central Board of Indirect Taxes and Customs (CBIC) plans to expand the use of AI, machine learning and real time analytics in customs processes. The move aims to reduce compliance costs and make customs clearance more efficient.\n\nCBIC has also proposed a unified portal that would give businesses a consolidated view of their compliance history across indirect taxes.\n\nWhy does this matter?\nGreater use of technology could reduce manual processes and make customs clearance faster for businesses. A consolidated compliance record could also support easier access to trade facilitation programmes.\n\nKey Highlights\n• India has signed Authorised Economic Operator (AEO) mutual recognition arrangements with 11 countries.\n• CBIC plans greater support for smaller businesses and MSMEs.\n• The Eligible Manufacturer Importer scheme allows deferred monthly payment of customs duty.\n• Around 1,000 businesses have joined the importer scheme so far.\n\nImpact on India\nThe initiative can improve ease of doing business and strengthen digital customs infrastructure. It also supports India’s broader focus on technology driven governance and smoother integration with global trade.\n\n#Customs #AI #DigitalIndia #Trade #MSMEs #IndianEconomy #Business #IBSGurgaon",
+    "text": "CBIC Plans Wider AI Use to Simplify Customs Compliance\n\nWhat happened?\nThe Central Board of Indirect Taxes and Customs (CBIC) plans to expand the use of AI, machine learning and real time analytics in customs processes. The move aims to reduce compliance costs and make customs clearance more efficient.\n\nCBIC has also proposed a unified portal that would give businesses a consolidated view of their compliance history across indirect taxes.\n\nWhy does this matter?\nGreater use of technology could reduce manual processes and make customs clearance faster for businesses. A consolidated compliance record could also support easier access to trade facilitation programmes.\n\nKey Highlights\n• India has signed Authorised Economic Operator (AEO) mutual recognition arrangements with 11 countries.\n• CBIC plans greater support for smaller businesses and MSMEs.\n• The Eligible Manufacturer Importer scheme allows deferred monthly payment of customs duty.\n• Around 1,000 businesses have joined the importer scheme so far.\n\nImpact on India\nThe initiative can improve ease of doing business and strengthen digital customs infrastructure. It also supports India’s broader focus on technology driven governance and smoother integration with global trade.\n\n#Customs #AI #DigitalIndia #Trade #MSMEs #IndianEconomy #Business #IBSGurgaon",
+    "post_url": "https://twitter.com/gurgaonibs/status/2100502932202684468",
+    "score": 1,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:31:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:39:50.648Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd18642dd0e95b5bab8f0"
+    },
+    "message_id": "twitter_2100132188209471813",
+    "topic_key": "enterprise customs broker",
+    "search_keyword": "enterprise customs broker",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "FNB_Botswana",
+    "title": "Simplify your Customs Duties and Tax Payments with FNB Online Banking Enterprise.​\n\nWith the BURS Customs Duties and Taxes integration, your details are pre-filled and ready for approval, helping you save time and avoid unnecessary errors. https://t.co/wb4meVJkcE",
+    "text": "Simplify your Customs Duties and Tax Payments with FNB Online Banking Enterprise.​\n\nWith the BURS Customs Duties and Taxes integration, your details are pre-filled and ready for approval, helping you save time and avoid unnecessary errors. https://t.co/wb4meVJkcE",
+    "post_url": "https://twitter.com/FNB_Botswana/status/2100132188209471813",
+    "score": 3,
+    "num_comments": 2,
+    "created_utc": {
+      "$date": "2026-09-16T07:58:26Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:39:50.859Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd18742dd0e95b5bab8f1"
+    },
+    "message_id": "twitter_2099880406073889148",
+    "topic_key": "enterprise customs broker",
+    "search_keyword": "enterprise customs broker",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "jamaicacustoms",
+    "title": "The Jamaica Customs Agency invites members of the broker community to join a special virtual forum on the AEO Programme using the link here: https://t.co/g8L5KDfOLc https://t.co/NB3nqU85mI",
+    "text": "The Jamaica Customs Agency invites members of the broker community to join a special virtual forum on the AEO Programme using the link here: https://t.co/g8L5KDfOLc https://t.co/NB3nqU85mI",
+    "post_url": "https://twitter.com/jamaicacustoms/status/2099880406073889148",
+    "score": 2,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T15:17:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:39:51.070Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd18742dd0e95b5bab8f3"
+    },
+    "message_id": "twitter_2098064692652495353",
+    "topic_key": "enterprise customs broker",
+    "search_keyword": "enterprise customs broker",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ConaLog_Mexico",
+    "title": "¿El cumplimiento aduanero definirá el e-commerce con China? 🌐\nElsa Muñoz, North America Customs Manager de AliExpress, habla sobre regulación aduanera, uso de IA y su experiencia logística en gigantes asiáticos.\n▶️ https://t.co/fRdT7QGFL8\n🎧 https: https://t.co/naDmsKUfuC https://t.co/uBz7ODSjEF",
+    "text": "¿El cumplimiento aduanero definirá el e-commerce con China? 🌐\nElsa Muñoz, North America Customs Manager de AliExpress, habla sobre regulación aduanera, uso de IA y su experiencia logística en gigantes asiáticos.\n▶️ https://t.co/fRdT7QGFL8\n🎧 https: https://t.co/naDmsKUfuC https://t.co/uBz7ODSjEF",
+    "post_url": "https://twitter.com/ConaLog_Mexico/status/2098064692652495353",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T15:02:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:39:51.490Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd18742dd0e95b5bab8f4"
+    },
+    "message_id": "twitter_2100548091934040466",
+    "topic_key": "enterprise customs broker",
+    "search_keyword": "enterprise customs broker",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "knnindia",
+    "title": "CBIC Proposes Faster AEO Processing With Uniform Procedure, Time-Bound Approvals To Ease Compliance\n\n#AEO #AuthorisedEconomicOperator #AEOProgramme #Customs #CustomsAdministration #CustomsReforms #TradeFacilitation #EaseOfDoingBusiness #CustomsCompliance #MSME @cbic_india \n\nhttps://t.co/k2YlCkgoMz",
+    "text": "CBIC Proposes Faster AEO Processing With Uniform Procedure, Time-Bound Approvals To Ease Compliance\n\n#AEO #AuthorisedEconomicOperator #AEOProgramme #Customs #CustomsAdministration #CustomsReforms #TradeFacilitation #EaseOfDoingBusiness #CustomsCompliance #MSME @cbic_india \n\nhttps://t.co/k2YlCkgoMz",
+    "post_url": "https://twitter.com/knnindia/status/2100548091934040466",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T11:31:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:39:51.701Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd18742dd0e95b5bab8f5"
+    },
+    "message_id": "twitter_2099837806486990882",
+    "topic_key": "enterprise customs broker",
+    "search_keyword": "enterprise customs broker",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ottojosed",
+    "title": "🚢¿Necesitas importar o exportar sin complicaciones?\nEn Intergo Impo-Expo hacemos que tu logística internacional sea más fácil, rentable y segura, sin dolores de cabeza.\n\n🔍 Con +25 años de experiencia, te ayudamos a lograr operaciones eficientes con tecnología, estrategia y acompañamiento experto.\n✅ Coordinamos tu logística y aduana\n✅ Automatizamos tus operaciones\n✅ Te conectamos con zonas francas y Plan Vallejo\n✅ Creamos tu sociedad de comercialización internacional\n\n📞 Agenda una asesoría sin costo y descubre cómo simplificar tu comercio exterior \n👉 https://t.co/Mhqi8JXGUI\n📍 Bogotá - Barranquilla / Colombia\n📲 WhatsApp: +57 322 538 3393\n#importaciones #exportaciones #colombia",
+    "text": "🚢¿Necesitas importar o exportar sin complicaciones?\nEn Intergo Impo-Expo hacemos que tu logística internacional sea más fácil, rentable y segura, sin dolores de cabeza.\n\n🔍 Con +25 años de experiencia, te ayudamos a lograr operaciones eficientes con tecnología, estrategia y acompañamiento experto.\n✅ Coordinamos tu logística y aduana\n✅ Automatizamos tus operaciones\n✅ Te conectamos con zonas francas y Plan Vallejo\n✅ Creamos tu sociedad de comercialización internacional\n\n📞 Agenda una asesoría sin costo y descubre cómo simplificar tu comercio exterior \n👉 https://t.co/Mhqi8JXGUI\n📍 Bogotá - Barranquilla / Colombia\n📲 WhatsApp: +57 322 538 3393\n#importaciones #exportaciones #colombia",
+    "post_url": "https://twitter.com/ottojosed/status/2099837806486990882",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:28:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:39:51.919Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd18842dd0e95b5bab8f6"
+    },
+    "message_id": "twitter_2100463362908057614",
+    "topic_key": "enterprise customs broker",
+    "search_keyword": "enterprise customs broker",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "APEDADOC",
+    "title": "The Trade Facilitation Portal, developed by the Consulate General of India, New York, provided a technology-enabled platform for business matchmaking, product discovery, enquiries, virtual exhibitions and direct commercial linkages between Indian exporters and U.S.-based buyers",
+    "text": "The Trade Facilitation Portal, developed by the Consulate General of India, New York, provided a technology-enabled platform for business matchmaking, product discovery, enquiries, virtual exhibitions and direct commercial linkages between Indian exporters and U.S.-based buyers",
+    "post_url": "https://twitter.com/APEDADOC/status/2100463362908057614",
+    "score": 0,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-17T05:54:25Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:39:52.141Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd18842dd0e95b5bab8f8"
+    },
+    "message_id": "twitter_2100094839098413286",
+    "topic_key": "enterprise customs broker",
+    "search_keyword": "enterprise customs broker",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "DMCCTeaCentre",
+    "title": "Better market intelligence leads to better business decisions. Through collaboration with Dubai Customs, DMCC Tea Centre members gain access to valuable trade data and market insights that help them stay ahead of industry trends.\n\nDiscover the benefits: https://t.co/tB36ffpjE9 https://t.co/N1iDRrlIWi",
+    "text": "Better market intelligence leads to better business decisions. Through collaboration with Dubai Customs, DMCC Tea Centre members gain access to valuable trade data and market insights that help them stay ahead of industry trends.\n\nDiscover the benefits: https://t.co/tB36ffpjE9 https://t.co/N1iDRrlIWi",
+    "post_url": "https://twitter.com/DMCCTeaCentre/status/2100094839098413286",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T05:30:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:39:52.560Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd18842dd0e95b5bab8f9"
+    },
+    "message_id": "twitter_2098367711860666684",
+    "topic_key": "enterprise customs broker",
+    "search_keyword": "enterprise customs broker",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Mahindralog_MLL",
+    "title": "Changing regulations, customs processes and documentation can make cross-border movement complex. With expertise across customs clearance, freight movement and final-mile coordination, we help keep cargo moving seamlessly across borders.\n\n#MahindraLogistics #FreightForwarding https://t.co/KE3uDLVXkI",
+    "text": "Changing regulations, customs processes and documentation can make cross-border movement complex. With expertise across customs clearance, freight movement and final-mile coordination, we help keep cargo moving seamlessly across borders.\n\n#MahindraLogistics #FreightForwarding https://t.co/KE3uDLVXkI",
+    "post_url": "https://twitter.com/Mahindralog_MLL/status/2098367711860666684",
+    "score": 2,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T11:07:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:39:52.771Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd18942dd0e95b5bab8fc"
+    },
+    "message_id": "twitter_2055287370451198224",
+    "topic_key": "enterprise customs broker",
+    "search_keyword": "enterprise customs broker",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "DailyDarkWeb",
+    "title": "🇦🇷 A threat actor is advertising alleged access to the HQ operations mail system of a large Argentinian trade company.\n\nAccording to the underground post, the actor claims to possess:\n• operational email access\n• headquarters-level mail access\n• access tied to a large international and national trade organization\n• additional “proof” available privately to buyers\n\nWhile the post itself provides limited technical detail, access-to-email listings are highly significant in underground markets because compromised corporate mailboxes are often used for:\n• business email compromise (BEC)\n• invoice fraud\n• credential harvesting\n• internal espionage\n• supply-chain targeting\n• lateral movement inside enterprise environments\n• ransomware initial access operations\n\nOperational or HQ mail access can provide attackers visibility into:\n• executive communications\n• financial workflows\n• procurement operations\n• vendor relationships\n• legal documentation\n• logistics coordination\n• authentication reset workflows\n• internal infrastructure references\n\nThreat actors frequently monetize corporate email access by:\n• selling credentials directly\n• auctioning mailbox access\n• partnering with ransomware affiliates\n• conducting wire-transfer fraud\n• harvesting internal documents and contacts\n\nIn many modern intrusions, mailbox access acts as:\n• an entry point for deeper compromise\n• persistence after endpoint remediation\n• an intelligence collection mechanism\n• a trust-abuse platform for phishing campaigns\n\nTrade and logistics-related organizations are particularly attractive targets because they often manage:\n• international supplier ecosystems\n• financial transactions\n• customs/import-export workflows\n• shipping and operational coordination\n• partner and customer communications\n\nEven a single compromised operations mailbox can potentially enable:\n• fraudulent payment requests\n• spoofed executive communications\n• supplier impersonation\n• malware delivery to trusted contacts\n• credential reset abuse\n• internal reconnaissance\n\nThe actor’s statement offering “proof” privately is also common in underground access markets. Threat actors frequently avoid publishing evidence publicly to:\n• preserve operational value\n• avoid immediate credential revocation\n• increase buyer confidence selectively\n• reduce detection timelines\n\nAt this time:\n• the authenticity of the alleged access has NOT been independently verified\n• the affected organization has not been publicly identified\n• the compromise vector remains unknown\n• it is unclear whether MFA protections were bypassed\n\nOrganizations should monitor for:\n• suspicious mailbox login activity\n• impossible-travel authentication events\n• abnormal forwarding rules\n• unauthorized OAuth application grants\n• invoice or payment anomalies\n• internal phishing attempts\n• mailbox persistence mechanisms\n\nRecommended defensive actions include:\n• enforcing MFA across all mail systems\n• auditing mailbox forwarding rules\n• reviewing OAuth integrations\n• monitoring privileged accounts closely\n• implementing conditional access policies\n• rotating credentials after suspected exposure\n• reviewing mail access logs for persistence indicators\n\nThis incident also reflects a continuing underground trend:\ninitial-access sales are increasingly replacing direct malware distribution as a preferred monetization model for threat actors.\n\nRather than deploying ransomware immediately, actors now frequently:\n• sell access to other criminals\n• broker compromised environments\n• auction enterprise credentials\n• monetize persistence quietly\n\nDDW is continuing to monitor\n\n#CyberSecurity #ThreatIntelligence #Argentina #BEC #InitialAccess #DarkWeb #CyberCrime #EmailSecurity #DDW #Intelligence",
+    "text": "🇦🇷 A threat actor is advertising alleged access to the HQ operations mail system of a large Argentinian trade company.\n\nAccording to the underground post, the actor claims to possess:\n• operational email access\n• headquarters-level mail access\n• access tied to a large international and national trade organization\n• additional “proof” available privately to buyers\n\nWhile the post itself provides limited technical detail, access-to-email listings are highly significant in underground markets because compromised corporate mailboxes are often used for:\n• business email compromise (BEC)\n• invoice fraud\n• credential harvesting\n• internal espionage\n• supply-chain targeting\n• lateral movement inside enterprise environments\n• ransomware initial access operations\n\nOperational or HQ mail access can provide attackers visibility into:\n• executive communications\n• financial workflows\n• procurement operations\n• vendor relationships\n• legal documentation\n• logistics coordination\n• authentication reset workflows\n• internal infrastructure references\n\nThreat actors frequently monetize corporate email access by:\n• selling credentials directly\n• auctioning mailbox access\n• partnering with ransomware affiliates\n• conducting wire-transfer fraud\n• harvesting internal documents and contacts\n\nIn many modern intrusions, mailbox access acts as:\n• an entry point for deeper compromise\n• persistence after endpoint remediation\n• an intelligence collection mechanism\n• a trust-abuse platform for phishing campaigns\n\nTrade and logistics-related organizations are particularly attractive targets because they often manage:\n• international supplier ecosystems\n• financial transactions\n• customs/import-export workflows\n• shipping and operational coordination\n• partner and customer communications\n\nEven a single compromised operations mailbox can potentially enable:\n• fraudulent payment requests\n• spoofed executive communications\n• supplier impersonation\n• malware delivery to trusted contacts\n• credential reset abuse\n• internal reconnaissance\n\nThe actor’s statement offering “proof” privately is also common in underground access markets. Threat actors frequently avoid publishing evidence publicly to:\n• preserve operational value\n• avoid immediate credential revocation\n• increase buyer confidence selectively\n• reduce detection timelines\n\nAt this time:\n• the authenticity of the alleged access has NOT been independently verified\n• the affected organization has not been publicly identified\n• the compromise vector remains unknown\n• it is unclear whether MFA protections were bypassed\n\nOrganizations should monitor for:\n• suspicious mailbox login activity\n• impossible-travel authentication events\n• abnormal forwarding rules\n• unauthorized OAuth application grants\n• invoice or payment anomalies\n• internal phishing attempts\n• mailbox persistence mechanisms\n\nRecommended defensive actions include:\n• enforcing MFA across all mail systems\n• auditing mailbox forwarding rules\n• reviewing OAuth integrations\n• monitoring privileged accounts closely\n• implementing conditional access policies\n• rotating credentials after suspected exposure\n• reviewing mail access logs for persistence indicators\n\nThis incident also reflects a continuing underground trend:\ninitial-access sales are increasingly replacing direct malware distribution as a preferred monetization model for threat actors.\n\nRather than deploying ransomware immediately, actors now frequently:\n• sell access to other criminals\n• broker compromised environments\n• auction enterprise credentials\n• monetize persistence quietly\n\nDDW is continuing to monitor\n\n#CyberSecurity #ThreatIntelligence #Argentina #BEC #InitialAccess #DarkWeb #CyberCrime #EmailSecurity #DDW #Intelligence",
+    "post_url": "https://twitter.com/DailyDarkWeb/status/2055287370451198224",
+    "score": 8,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-05-15T14:01:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:39:53.400Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd19042dd0e95b5bab900"
+    },
+    "message_id": "twitter_2062920937495040163",
+    "topic_key": "enterprise dropshipping",
+    "search_keyword": "enterprise dropshipping",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "anujcodes_21",
+    "title": "Running 3 online stores is a shortcut to burnout. Not profit.\n\nManaging one Shopify store is a full-time job.\nAdd eBay, Amazon, and Google… and you’ve just hired yourself into a nightmare of:\n\n↳ Listings, ads, pricing, suppliers, support, returns — all screaming for attention.\n\nMost “automation” tools just add more dashboards.\n\nNot SellerClaw by @Seller_AI.\n\nIt’s not another plugin.\nIt’s a team of AI agents that runs your stores for you.\n\nHere’s what that actually looks like:\n\n➟ One agent sources winning products (real margins, not guesses)\n➟ Another builds sellable listings from a spreadsheet or supplier link\n➟ Another manages ads, pricing, and fulfillment across channels\n➟ A supervisor agent you actually direct — approvals, limits, autonomy levels\n\nYou stay in control. Every action is visible.\nBut the work? It just… happens.\n\nAnd yeah — you can start free.\n\nThis turns your “second job” back into a business:\n\n✓ Dropshipping? Agent sources, lists, fulfills.\n✓ Private label? Agent runs ads and adjusts pricing.\n✓ Resellers? Invoices → product pages → live selling.\n✓ Enterprise? Custom workflows at scale.\n\n👉 No extra team. No coding required. Just tell it what to sell.\n\nCall to action (soft + clickable):\n📌 See how an agent runs your store → https://t.co/HPtGrif5Do\n\nSellerClaw by @Seller_AI  is live on ProductHunt right now:\nhttps://t.co/GPM63gzsEJ\n\n🔄 Repost if you’re tired of juggling 5 tabs just to ship one order.\n\n—\n#Ecommerce #AI #Automation #SellerClaw #GhostWriter",
+    "text": "Running 3 online stores is a shortcut to burnout. Not profit.\n\nManaging one Shopify store is a full-time job.\nAdd eBay, Amazon, and Google… and you’ve just hired yourself into a nightmare of:\n\n↳ Listings, ads, pricing, suppliers, support, returns — all screaming for attention.\n\nMost “automation” tools just add more dashboards.\n\nNot SellerClaw by @Seller_AI.\n\nIt’s not another plugin.\nIt’s a team of AI agents that runs your stores for you.\n\nHere’s what that actually looks like:\n\n➟ One agent sources winning products (real margins, not guesses)\n➟ Another builds sellable listings from a spreadsheet or supplier link\n➟ Another manages ads, pricing, and fulfillment across channels\n➟ A supervisor agent you actually direct — approvals, limits, autonomy levels\n\nYou stay in control. Every action is visible.\nBut the work? It just… happens.\n\nAnd yeah — you can start free.\n\nThis turns your “second job” back into a business:\n\n✓ Dropshipping? Agent sources, lists, fulfills.\n✓ Private label? Agent runs ads and adjusts pricing.\n✓ Resellers? Invoices → product pages → live selling.\n✓ Enterprise? Custom workflows at scale.\n\n👉 No extra team. No coding required. Just tell it what to sell.\n\nCall to action (soft + clickable):\n📌 See how an agent runs your store → https://t.co/HPtGrif5Do\n\nSellerClaw by @Seller_AI  is live on ProductHunt right now:\nhttps://t.co/GPM63gzsEJ\n\n🔄 Repost if you’re tired of juggling 5 tabs just to ship one order.\n\n—\n#Ecommerce #AI #Automation #SellerClaw #GhostWriter",
+    "post_url": "https://twitter.com/anujcodes_21/status/2062920937495040163",
+    "score": 47,
+    "num_comments": 10,
+    "created_utc": {
+      "$date": "2026-06-05T15:34:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:40:00.771Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd19042dd0e95b5bab901"
+    },
+    "message_id": "twitter_2064970158645367190",
+    "topic_key": "enterprise dropshipping",
+    "search_keyword": "enterprise dropshipping",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ashercrw",
+    "title": "A CHINESE TEAM JUST BUILT A 30-MAC-MINI AGENT FARM IN A RESIDENTIAL APARTMENT AND IT'S RUNNING AN ENTIRE COMPANY WITH ZERO EMPLOYEES.\n\nOne human plugs in the power strip. Thirty silicon \"brains\" handle the rest. 24/7. No salaries. No PTO. No HR.\n\nWelcome to what a Solo Unicorn looks like in 2026.\n\nThe photo is genuinely something. A stripped-down room with floor-to-ceiling racks. Thirty-plus Mac Minis stacked like server blades, each one humming on its own, each one running an independent agent instance. No data center cooling. No raised floor. Just a residential apartment with the AC cranked and a guy somewhere off-frame drinking tea while the machines do business.\n\nThis is not a Bitcoin mine. Macs are terrible at mining. The economics would be insane. What you're looking at is something far more interesting.\n\nYou're looking at an agent farm.\n\nHere's the working theory of what each machine does. None of it is confirmed. All of it is plausible.\n\nUnits 1 through 10 are the content division. Each one runs autonomous agents that generate, schedule, and post across thousands of niche social accounts. Faceless YouTube channels. Pinterest boards. TikTok pages dedicated to obscure hobbies with strong purchase intent. Each Mac manages its own roster of identities, each identity posts on its own cadence, each cadence is calibrated to whatever the algorithm rewards that week.\n\nUnits 11 through 20 are e-commerce. Each one scrapes trend data, identifies products before they peak, spins up Shopify stores, writes the listings, generates the product photography, runs the ads, processes the orders, and shuts the store down when momentum dies. The whole dropshipping lifecycle compressed into a script that never sleeps.\n\nUnits 21 through 30 are operations. Customer support emails. Refund negotiations. Influencer outreach for whatever the e-comm side just launched. Vendor sourcing on Alibaba. Negotiating ad placements with smaller publishers. Translating support tickets across twelve languages because every store sells globally and none of them have a single human on the other end of the chat\n\nOne operator. Thirty employees. None of them human. All of them working in parallel.\n\nLet me put real numbers to this for a second.\n\nEach Mac Mini, optimized, draws roughly 100 watts under load. Thirty machines is 3kW continuous. Industrial electricity in southern China runs around 8 cents per kWh. We're talking under $200 a month in power to run an entire enterprise\n\nA traditional version of this same operation, ten years ago, would have required a content team, a marketing team, a customer support BPO, a dropshipping ops manager, and at minimum half a million dollars in annual payroll to do the same volume worse.\n\nThe cost collapse is so violent it's not even funny\n\nNow think about what this means for the labor market. Every white-collar job that consists of \"respond to messages, write copy, manage a dashboard, monitor a feed\" is now a candidate for getting silently replaced by a Mac Mini in a rack in Guangzhou. The person running this farm is not waiting for permission. They are not pitching investors. They are not hiring. They just plugged in another machine and the company got 3% more productive overnight.\n\nThis is the part of the AI revolution nobody put on the keynote slides\n\nIt's not flashy. It's not OpenAI announcing a new model. It's not a TED talk about AGI. It's some operator in a residential building who looked at the price of a Mac Mini, the price of an electricity bill, and the price of a human employee, and did the math\n\nThe math is unforgiving\n\nThe question the photo asks at the end is the right one. Would you fire your staff to build this rack?\n\nBecause someone already did. And they're not posting about it. They're too busy watching thirty dashboards print money in thirty different niches while you're still debating whether AI will \"take jobs.\"\n\nThe future is not coming. It's already humming away in someone's spare bedroom in Shenzhen",
+    "text": "A CHINESE TEAM JUST BUILT A 30-MAC-MINI AGENT FARM IN A RESIDENTIAL APARTMENT AND IT'S RUNNING AN ENTIRE COMPANY WITH ZERO EMPLOYEES.\n\nOne human plugs in the power strip. Thirty silicon \"brains\" handle the rest. 24/7. No salaries. No PTO. No HR.\n\nWelcome to what a Solo Unicorn looks like in 2026.\n\nThe photo is genuinely something. A stripped-down room with floor-to-ceiling racks. Thirty-plus Mac Minis stacked like server blades, each one humming on its own, each one running an independent agent instance. No data center cooling. No raised floor. Just a residential apartment with the AC cranked and a guy somewhere off-frame drinking tea while the machines do business.\n\nThis is not a Bitcoin mine. Macs are terrible at mining. The economics would be insane. What you're looking at is something far more interesting.\n\nYou're looking at an agent farm.\n\nHere's the working theory of what each machine does. None of it is confirmed. All of it is plausible.\n\nUnits 1 through 10 are the content division. Each one runs autonomous agents that generate, schedule, and post across thousands of niche social accounts. Faceless YouTube channels. Pinterest boards. TikTok pages dedicated to obscure hobbies with strong purchase intent. Each Mac manages its own roster of identities, each identity posts on its own cadence, each cadence is calibrated to whatever the algorithm rewards that week.\n\nUnits 11 through 20 are e-commerce. Each one scrapes trend data, identifies products before they peak, spins up Shopify stores, writes the listings, generates the product photography, runs the ads, processes the orders, and shuts the store down when momentum dies. The whole dropshipping lifecycle compressed into a script that never sleeps.\n\nUnits 21 through 30 are operations. Customer support emails. Refund negotiations. Influencer outreach for whatever the e-comm side just launched. Vendor sourcing on Alibaba. Negotiating ad placements with smaller publishers. Translating support tickets across twelve languages because every store sells globally and none of them have a single human on the other end of the chat\n\nOne operator. Thirty employees. None of them human. All of them working in parallel.\n\nLet me put real numbers to this for a second.\n\nEach Mac Mini, optimized, draws roughly 100 watts under load. Thirty machines is 3kW continuous. Industrial electricity in southern China runs around 8 cents per kWh. We're talking under $200 a month in power to run an entire enterprise\n\nA traditional version of this same operation, ten years ago, would have required a content team, a marketing team, a customer support BPO, a dropshipping ops manager, and at minimum half a million dollars in annual payroll to do the same volume worse.\n\nThe cost collapse is so violent it's not even funny\n\nNow think about what this means for the labor market. Every white-collar job that consists of \"respond to messages, write copy, manage a dashboard, monitor a feed\" is now a candidate for getting silently replaced by a Mac Mini in a rack in Guangzhou. The person running this farm is not waiting for permission. They are not pitching investors. They are not hiring. They just plugged in another machine and the company got 3% more productive overnight.\n\nThis is the part of the AI revolution nobody put on the keynote slides\n\nIt's not flashy. It's not OpenAI announcing a new model. It's not a TED talk about AGI. It's some operator in a residential building who looked at the price of a Mac Mini, the price of an electricity bill, and the price of a human employee, and did the math\n\nThe math is unforgiving\n\nThe question the photo asks at the end is the right one. Would you fire your staff to build this rack?\n\nBecause someone already did. And they're not posting about it. They're too busy watching thirty dashboards print money in thirty different niches while you're still debating whether AI will \"take jobs.\"\n\nThe future is not coming. It's already humming away in someone's spare bedroom in Shenzhen",
+    "post_url": "https://twitter.com/ashercrw/status/2064970158645367190",
+    "score": 6,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-06-11T07:17:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:40:00.985Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd19142dd0e95b5bab905"
+    },
+    "message_id": "twitter_2099434747919544622",
+    "topic_key": "enterprise dropshipping",
+    "search_keyword": "enterprise dropshipping",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "NicolasCopy",
+    "title": "15 marques e-com à étudier si tu veux passer d'une boutique de dropshipping à une vraie marque\n\nElles utilisent chacune un levier différent pour augmenter leur LTV et réduire leur dépendance aux ads\n\nThread 🧵👇 https://t.co/5LsC1yj7aP",
+    "text": "15 marques e-com à étudier si tu veux passer d'une boutique de dropshipping à une vraie marque\n\nElles utilisent chacune un levier différent pour augmenter leur LTV et réduire leur dépendance aux ads\n\nThread 🧵👇 https://t.co/5LsC1yj7aP",
+    "post_url": "https://twitter.com/NicolasCopy/status/2099434747919544622",
+    "score": 4,
+    "num_comments": 2,
+    "created_utc": {
+      "$date": "2026-09-14T09:47:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:40:01.823Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd19242dd0e95b5bab907"
+    },
+    "message_id": "twitter_2098435878456897683",
+    "topic_key": "enterprise dropshipping",
+    "search_keyword": "enterprise dropshipping",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "everestchris6",
+    "title": "hermes + gpt astra can now run a b2b dropship agency on autopilot\n\n- researches what products a category would buy\n- finds every shop in a city that is ideal\n- shows each owner the product in their shop\n- builds each owner a page they order from\n- the supplier ships straight to their door\n- you never hold stock + they pay you monthly\n\njust wrote the whole guide on how you can set this up:",
+    "text": "hermes + gpt astra can now run a b2b dropship agency on autopilot\n\n- researches what products a category would buy\n- finds every shop in a city that is ideal\n- shows each owner the product in their shop\n- builds each owner a page they order from\n- the supplier ships straight to their door\n- you never hold stock + they pay you monthly\n\njust wrote the whole guide on how you can set this up:",

@@ -1,0 +1,416 @@
+    "username": "Hawkinns",
+    "title": "Tales from '85 - S02E10 - Episode Discussion",
+    "text": "Tales from '85 - S02E10 - Episode Discussion\n\nSeason 2 Episode 10:  TBA    Synopsis:  TBA    Please keep all discussions about this episode or previous, and do not discuss later episodes as they will spoil it for those who have yet to see them. * Report any comments that break this rule.***      Netflix  |  IMDb  |  Discord  |  Tales from '85 Discussion Hub  | [Tales from '85 Season 2 Discussion Thread]()       submitted by     /u/Hawkinns     to     r/StrangerThings       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/StrangerThings/comments/1wimppn/tales_from_85_s02e10_episode_discussion/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:02:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:03:22.860Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab90bb6508d45f3d2d6170"
+    },
+    "message_id": "reddit_t3_1wimpph",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "StrangerThings",
+    "username": "Hawkinns",
+    "title": "Tales from '85 - S02E09 - Episode Discussion",
+    "text": "Tales from '85 - S02E09 - Episode Discussion\n\nSeason 2 Episode 9:  TBA    Synopsis:  TBA    Please keep all discussions about this episode or previous, and do not discuss later episodes as they will spoil it for those who have yet to see them. * Report any comments that break this rule.***      Netflix  |  IMDb  |  Discord  |  Tales from '85 Discussion Hub  | [Next Ep Discussion >]()       submitted by     /u/Hawkinns     to     r/StrangerThings       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/StrangerThings/comments/1wimpph/tales_from_85_s02e09_episode_discussion/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:02:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:03:23.072Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab90bb6508d45f3d2d6171"
+    },
+    "message_id": "reddit_t3_1wimppg",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Tickets",
+    "username": "Visible_Point8473",
+    "title": "Harry Styles tickets Berlin",
+    "text": "Harry Styles tickets Berlin\n\nHi, I have 3 tickets for the Berlin show 2nd of July in section B1. I bought them in panic mode because I couldn’t find any other free ones, but because I actually needed 4 tickets I was able to find 4 tickets next to each other later so I also purchased them, so now I have 7 tickets 3 of which I don’t need. I bought them for 214€ each and I’m selling them at the same price or a bit lower. I know that there are tickets left and you can buy directly from ticketmaster but please if you are interested in these type of tickets you would be doing me a huge favor if you bought them from me so that I don’t waste the money 😔       submitted by     /u/Visible_Point8473     to     r/Tickets       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Tickets/comments/1wimppg/harry_styles_tickets_berlin/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:02:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:03:23.283Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab90bb6508d45f3d2d6173"
+    },
+    "message_id": "reddit_t3_1wimppf",
+    "topic_key": "httpswarisdevisadev its my web so find me for customers",
+    "search_keyword": "AI assistant",
+    "platform": "reddit",
+    "subreddit": "ReactNextPL",
+    "username": "Great-Anybody-2508",
+    "title": "What's new in Next.js 16? Full summary of changes",
+    "text": "What's new in Next.js 16? Full summary of changes\n\n# Co nowego w Next.js 16? Pełne podsumowanie zmian Next.js 16 (wydany październik 2025) to framework, który przejął ciężar cachowania, memoizacji i bundlowania od developera — i wbudował to w siebie. **Kluczowe zmiany:** **Turbopack jako domyślny bundler** - Fast Refresh: poniżej 10ms dla większości zmian - Buildy produkcyjne: 2–5× szybciej niż Next.js 15 - Koniec z Webpackiem jako domyślnym (możliwy opt-back-in) **`use cache` — granularne cachowanie** - Cachejesz na poziomie komponentu, funkcji lub layoutu - Kompilator automatycznie generuje klucze cache na podstawie propsów - Koniec z ISR gymnastics i route-level `export const revalidate` **Layout Deduplication** - Shared layouty (np. dashboard sidebar) nie są re-fetchowane ani re-renderowane przy nawigacji - Aplikacje zachowują się jak natywne **PPR (Partial Pre-rendering) — teraz stable** - Statyczny shell dla szybkiego FCP i SEO - Dynamiczny content streamowany do użytkownika - Nie wymaga już per-route opt-inów **React Compiler zintegrowany** - Automatyczna memoizacja przy kompilacji - Nie potrzebujesz już ręcznego `useMemo` / `useCallback` **Breaking changes do zapamiętania:** - `middleware.ts` → `proxy.ts` (inny runtime — pełny Node.js zamiast Edge) - `headers()`, `cookies()`, `params` są teraz async (muszą być awaitowane) - Node.js minimum: 20.9.0 (Node 18 dropped) - React 19 required **DevTools MCP:** AI asystent (Cursor, Copilot) może teraz bezpośrednio czytać routing, logi błędów i drzewo komponentów twojej apki — bez zgadywania. Źródło: https://devanddeliver.com/blog/development/next-js-16-what-s-new-what-are-the-new-features Next.js 16 (released October 2025) is a framework that took the work of caching, memoisation, and bundling off the developer's plate and built it into itself. **Key changes:** **Turbopack as the default bundler** - Fast Refresh: under 10ms for most changes - Production builds: 2–5× faster than Next.js 15 - Webpack is no longer the default (opt-back-in available) **`use cache` — granular caching** - Cache at the component, function, or layout level - Compiler auto-generates cache keys based on props - No more ISR gymnastics or route-level `export const revalidate` **Layout Deduplication** - Shared layouts (e.g. dashboard sidebar) are no longer re-fetched or re-rendered on navigation - Apps feel native **PPR (Partial Pre-rendering) — now stable** - Static shell for fast FCP and SEO - Dynamic content streamed to the user - No per-route opt-ins required anymore **React Compiler integrated** - Automatic memoisation at compile time - No more manual `useMemo` / `useCallback` **Breaking changes to know:** - `middleware.ts` → `proxy.ts` (different runtime — full Node.js instead of Edge) - `headers()`, `cookies()`, `params` are now async (must be awaited) - Node.js minimum: 20.9.0 (Node 18 dropped) - React 19 required **DevTools MCP:** Your AI assistant (Cursor, Copilot) can now directly read your app's routing, error logs, and component tree — no more guessing. Full article: https://devanddeliver.com/blog/development/next-js-16-what-s-new-what-are-the-new-features         submitted by     /u/Great-Anybody-2508     to     r/ReactNextPL       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ReactNextPL/comments/1wimppf/whats_new_in_nextjs_16_full_summary_of_changes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:02:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:03:23.706Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab90bc6508d45f3d2d6175"
+    },
+    "message_id": "reddit_t3_1wimppd",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "StrangerThings",
+    "username": "Hawkinns",
+    "title": "Tales from '85 - S02E08 - Episode Discussion",
+    "text": "Tales from '85 - S02E08 - Episode Discussion\n\nSeason 2 Episode 8:  Count to Five    Synopsis:  TBA    Please keep all discussions about this episode or previous, and do not discuss later episodes as they will spoil it for those who have yet to see them. * Report any comments that break this rule.***      Netflix  |  IMDb  |  Discord  |  Tales from '85 Discussion Hub  | [Tales from '85 Season 2 Discussion Thread]()       submitted by     /u/Hawkinns     to     r/StrangerThings       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/StrangerThings/comments/1wimppd/tales_from_85_s02e08_episode_discussion/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:02:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:03:24.130Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab90bc6508d45f3d2d6176"
+    },
+    "message_id": "reddit_t3_1wimpoz",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "StrangerThings",
+    "username": "Hawkinns",
+    "title": "Tales from '85 - S02E07 - Episode Discussion",
+    "text": "Tales from '85 - S02E07 - Episode Discussion\n\nSeason 2 Episode 7:  The Golem    Synopsis:  TBA    Please keep all discussions about this episode or previous, and do not discuss later episodes as they will spoil it for those who have yet to see them. * Report any comments that break this rule.***      Netflix  |  IMDb  |  Discord  |  Tales from '85 Discussion Hub  | [Next Ep Discussion >]()       submitted by     /u/Hawkinns     to     r/StrangerThings       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/StrangerThings/comments/1wimpoz/tales_from_85_s02e07_episode_discussion/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:02:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:03:24.342Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab90bc6508d45f3d2d6177"
+    },
+    "message_id": "reddit_t3_1wimpoy",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "howimetyourmother",
+    "username": "StrongOpinion028",
+    "title": "The Funk, the Whole Funk, and Nothing but the Funk have dropped from the Ed Sheeran tour",
+    "text": "The Funk, the Whole Funk, and Nothing but the Funk have dropped from the Ed Sheeran tour\n\nsubmitted by     /u/StrongOpinion028     to     r/howimetyourmother       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/howimetyourmother/comments/1wimpoy/the_funk_the_whole_funk_and_nothing_but_the_funk/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:02:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:03:24.555Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab90bc6508d45f3d2d6178"
+    },
+    "message_id": "reddit_t3_1wimpot",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "StrangerThings",
+    "username": "Hawkinns",
+    "title": "Tales from '85 - S02E06 - Episode Discussion",
+    "text": "Tales from '85 - S02E06 - Episode Discussion\n\nSeason 2 Episode 6:  The Lich    Synopsis:  TBA    Please keep all discussions about this episode or previous, and do not discuss later episodes as they will spoil it for those who have yet to see them. * Report any comments that break this rule.***      Netflix  |  IMDb  |  Discord  |  Tales from '85 Discussion Hub  | [Next Ep Discussion >]()       submitted by     /u/Hawkinns     to     r/StrangerThings       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/StrangerThings/comments/1wimpot/tales_from_85_s02e06_episode_discussion/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:02:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:03:24.767Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab90bc6508d45f3d2d6179"
+    },
+    "message_id": "reddit_t3_1wimpon",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "Indiangaming_Resale",
+    "username": "clumzy_blumzy",
+    "title": "Razer Kishi V3 unsued Rs 6300",
+    "text": "Razer Kishi V3 unsued Rs 6300\n\nRazer Kishi V3 Phantom White edition unsued with original box.    Original price is $119.99 my cousin got it in the US.   Selling it for Rs 6300 so about 50% discounted.   Reason for selling is i already got another controller and have no use for this one.    Payment and delivery (free) either through Resellpur or direct upi + delhivery for faster process        submitted by     /u/clumzy_blumzy     to     r/Indiangaming_Resale       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Indiangaming_Resale/comments/1wimpon/razer_kishi_v3_unsued_rs_6300/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:02:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:03:24.980Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab90bd6508d45f3d2d617a"
+    },
+    "message_id": "reddit_t3_1wimpok",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "StrangerThings",
+    "username": "Hawkinns",
+    "title": "Tales from '85 - S02E05 - Episode Discussion",
+    "text": "Tales from '85 - S02E05 - Episode Discussion\n\nSeason 2 Episode 5:  Split the Party    Synopsis:  TBA    Please keep all discussions about this episode or previous, and do not discuss later episodes as they will spoil it for those who have yet to see them. * Report any comments that break this rule.***      Netflix  |  IMDb  |  Discord  |  Tales from '85 Discussion Hub  | [Next Ep Discussion >]()       submitted by     /u/Hawkinns     to     r/StrangerThings       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/StrangerThings/comments/1wimpok/tales_from_85_s02e05_episode_discussion/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:02:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:03:25.193Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab90bd6508d45f3d2d617b"
+    },
+    "message_id": "reddit_t3_1wimpoc",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "StrangerThings",
+    "username": "Hawkinns",
+    "title": "Tales from '85 - S02E04 - Episode Discussion",
+    "text": "Tales from '85 - S02E04 - Episode Discussion\n\nSeason 2 Episode 4:  The Séance    Synopsis:  TBA    Please keep all discussions about this episode or previous, and do not discuss later episodes as they will spoil it for those who have yet to see them. * Report any comments that break this rule.***      Netflix  |  IMDb  |  Discord  |  Tales from '85 Discussion Hub  | [Next Ep Discussion >]()       submitted by     /u/Hawkinns     to     r/StrangerThings       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/StrangerThings/comments/1wimpoc/tales_from_85_s02e04_episode_discussion/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:02:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:03:25.406Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab90f26508d45f3d2d617c"
+    },
+    "message_id": "reddit_t3_1wimqf8",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "AlertVegas",
+    "username": "MugShots",
+    "title": "NV Energy Alert",
+    "text": "NV Energy Alert\n\nNVEnergy Alert Shutdown for Active Wildfire in 89414 Verified customers affected ORT: Verified ETR: Verified       submitted by     /u/MugShots     to     r/AlertVegas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlertVegas/comments/1wimqf8/nv_energy_alert/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:04:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:04:18.784Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab90f26508d45f3d2d617d"
+    },
+    "message_id": "reddit_t3_1wimqf7",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "samsunggalaxy",
+    "username": "LuxVux",
+    "title": "S24 Plus Worst Phone Ever (moisture warning while never been near water + battery life + P30 had better camera)",
+    "text": "S24 Plus Worst Phone Ever (moisture warning while never been near water + battery life + P30 had better camera)\n\nI'm buying Samsung smartphones since Samsung Galaxy Core (2013) and I think I will never again buy Samsung phone, ever!!! Girlfriend had Huawei p30 for years. That phone had some amazing camera. With this samsung, I'm trying hard to even take photo of something to be readable or not out of focus on the edges of the screen.   Had warranty for 2 years on this phone, after exactly 2 years issues just started coming up. Battery life is miserable, like without even using a phone, half a day and it has to go on the charger.   Moisture warning ?! Constantly waking up with discharged mobile phone, put it on charger and then can't charge it up for whole day cuz it says that there is moisture in charging port, while there is NOT. There are so many issues with this NOT SO CHEAP smartphone, that i will never ever buy another samsung product, ever....       submitted by     /u/LuxVux     to     r/samsunggalaxy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/samsunggalaxy/comments/1wimqf7/s24_plus_worst_phone_ever_moisture_warning_while/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:04:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:04:18.999Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab90f36508d45f3d2d617e"
+    },
+    "message_id": "reddit_t3_1wimqf1",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DailySolitaire",
+    "username": "LegendPhilou",
+    "title": "[Daily Challenge 2026-09-17 - Time Limited] Just crushed this deck in 147s! Can you do better? 🏆",
+    "text": "[Daily Challenge 2026-09-17 - Time Limited] Just crushed this deck in 147s! Can you do better? 🏆\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/LegendPhilou     to     r/DailySolitaire       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DailySolitaire/comments/1wimqf1/daily_challenge_20260917_time_limited_just/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:04:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:04:19.228Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab90f36508d45f3d2d617f"
+    },
+    "message_id": "reddit_t3_1wimqev",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "FoodTripTayo",
+    "username": "Wild_Pomegranate7451",
+    "title": "TGIF iced caramel macchiato🧋",
+    "text": "TGIF iced caramel macchiato🧋\n\nsubmitted by     /u/Wild_Pomegranate7451     to     r/FoodTripTayo       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FoodTripTayo/comments/1wimqev/tgif_iced_caramel_macchiato/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:04:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:04:19.452Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab90f36508d45f3d2d6180"
+    },
+    "message_id": "reddit_t3_1wimqed",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "GermanRoaches",
+    "username": "DesperateWest9320",
+    "title": "German Roach sightings - should i be worried?",
+    "text": "German Roach sightings - should i be worried?\n\nI've been seeing roaches, about one roach a week to one roach every two weeks, for about 4 months. In the past 48 hours I've seen 2 in my bathroom.    First time I saw a nymph in my apartment was before leaving for a trip. But out bait traps, dried out my apartment, and upon return, found a larger dead one in my kitchen. Confirmed it was a german roach. Last month, I saw a roach in the building lobby. Submitted a maintenance request, exterminator came and kinda lightly sprayed the baseboards in the kitchen and bathroom. He put down glue traps, which have been clear other than one roach for about two months.   I know it's a building issue because leasing company confirmed they've been treating other units. They've been clearing out other tenants' apartments (throwing things out for tenants leaving/moving). They've also shut down the water once a month for the past two months to do pipe maintenance, which is around the time when I see more roaches. I live in an older city apartment (pre-1970s), so not much to be done there. My building trash room is pretty awful. It's inside the building, opening into vent shaft under one of my windows, and routinely overflowing with trash.   I'm worried because the roaches I've seen have gotten bigger. I bought Alpine WSG and have been spraying my bathroom with a 20oz/gal. ratio. Got new glue traps, too.    Don't want the problem to get worse. Should I be concerned? Is there anything else I can be doing?       submitted by     /u/DesperateWest9320     to     r/GermanRoaches       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GermanRoaches/comments/1wimqed/german_roach_sightings_should_i_be_worried/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:04:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:04:19.673Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab90f36508d45f3d2d6181"
+    },
+    "message_id": "reddit_t3_1wimqe9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DigitalSeptic",
+    "username": "ConsistentEvader",
+    "title": "A Reddit Mod you say?",
+    "text": "A Reddit Mod you say?\n\nsubmitted by     /u/ConsistentEvader     to     r/DigitalSeptic       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DigitalSeptic/comments/1wimqe9/a_reddit_mod_you_say/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:04:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:04:19.900Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab90f46508d45f3d2d6182"
+    },
+    "message_id": "reddit_t3_1wimqdq",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "dealsforindia",
+    "username": "Expensive_Figure_157",
+    "title": "Travel Neck Pillow at 190. Check Comment.",
+    "text": "Travel Neck Pillow at 190. Check Comment.\n\nsubmitted by     /u/Expensive_Figure_157     to     r/dealsforindia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/dealsforindia/comments/1wimqdq/travel_neck_pillow_at_190_check_comment/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:04:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:04:20.117Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab90f46508d45f3d2d6183"
+    },
+    "message_id": "reddit_t3_1wimqcy",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CheatingGF",
+    "username": "hihowareyoubye",
+    "title": "Got cheated 2nd time",
+    "text": "Got cheated 2nd time\n\nI got married in 2021 when I was 29 and she was 23. I initially thought she was a good person, but after one year, while I was grinding day and night to get a major promotion at Amazon that would double my salary, she admitted she had cheated on me with her manager. She felt remorseful because of how loving I was, reasoning that I used to be emotionally unavailable, which is why she did it. She cried, which melted my heart, so I said it was okay and suggested we focus on our relationship since we would be financially stable after my promotion. We also decided to have a baby to strengthen our bond. Two months later, she became pregnant, but one day I saw her chats with the other guy. I confronted her and was furious; she cried and apologized, and I forgave her again. This time, however, something broke inside me; I could not focus on work, I could not sleep, and the depression was overwhelming. After my wife gave birth to a wonderful baby girl, she claimed to have postpartum depression and demanded that I buy her expensive jewelry and diamond rings to satisfy her which I did since she said she was feeling suicidal. I eventually got fired from Amazon, so we packed everything up and moved back to our home state, where, despite trying, I was unable to secure a job at my previous pay scale. After one year, my wife decided to work at a nearby hospital. Two months after she joined, I caught her chats and ChatGPT questions regarding another guy she works with. I was furious and confronted her, but she told me to leave her alone, claiming I was not giving her enough attention compared to me taking care of our 2 y.o daughter. I almost confirmed that I was going to file for divorce, but again felt something holding me back, the thought of my daughter. My wife clearly stated that she prefers to have physical relations with other men rather than me, but they were not serious and she wishes to remain married to me. I swallowed my pride, and next week I am moving to Dubai to look for a job. I do not know what this change will bring to my family now, but my wife insists that once I get a job and bring them to Dubai, everything will be okay. She is undergoing therapy for depression and numbness, and she always brings this up whenever I confront her about her mistakes. At times, she says that she feels remorseful and feels like she has been using me. I am basically on a roller coaster ride with her attitude. Regardless, I have decided to go to Dubai to make money and provide a comfortable and happy life for my daughter. Our daughter loves both of us a lot, so it would cause her a great deal of pain and trauma if we were to separate. I will keep moving forward for my little one, as that is all I can see now. Right now, I feel so alone and pain is suffocating. I never cheated, never even flirted with another. Also, my wife was my first gf, first kiss and first everything. I truly wish she changes and comes back to me. I know that sounds weak, but I genuinly love her despite everything. I wish I chose better, but feels it is too late now.       submitted by     /u/hihowareyoubye     to     r/CheatingGF       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CheatingGF/comments/1wimqcy/got_cheated_2nd_time/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:04:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T07:04:20.336Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab90f56508d45f3d2d6187"
+    },
+    "message_id": "reddit_t3_1wimqcm",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",

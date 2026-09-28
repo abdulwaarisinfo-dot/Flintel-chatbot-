@@ -1,0 +1,416 @@
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T02:53:07.271Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab56136508d45f3d2d5320"
+    },
+    "message_id": "reddit_t3_1wihxft",
+    "topic_key": "im selling ai agents so whos are looking to buy",
+    "search_keyword": "repetitive work",
+    "platform": "reddit",
+    "subreddit": "comfyui",
+    "username": "Wonderful_Sample6291",
+    "title": "I stopped trying to generate long AI videos in one pass — building an 11-second animation from 2-second Wan 2.2 / FastH3 segments on an RTX 5060 Ti 16GB",
+    "text": "I stopped trying to generate long AI videos in one pass — building an 11-second animation from 2-second Wan 2.2 / FastH3 segments on an RTX 5060 Ti 16GB\n\nI've been experimenting with a different approach to producing longer AI animation on consumer hardware.   My current main generation PC:   - CPU: AMD Ryzen 7 7700   - GPU: NVIDIA RTX 5060 Ti 16GB   - RAM: 32GB DDR5   - Storage: NVMe SSD   The goal is no longer to generate a perfect long video in one pass.   Instead, I'm building a modular production pipeline where still-image generation establishes the character and scene, video models generate only short actions, and Python handles the repetitive production workflow and continuity.   The original problem: longer clips quickly lose continuity   My earlier experiments involved connecting several ~5-second AI-generated clips into a longer sequence.   Individual clips could look good, but once they were connected, continuity degraded quickly.   Typical problems included:   - Face changes   - Clothing changes   - Hand/leg deformation   - Background changes   - Character position changes   - Inconsistent movement direction   - Bad transitions between clips   A roughly 35-second experiment made this very obvious.   Simply generating more long clips wasn't solving the underlying problem.   So I changed the architecture.   Experiment 2: SDXL as an animation material factory   Instead of asking the video model to invent everything, I started generating large numbers of reference images with SDXL.   For a character, I can prepare:   - Front view   - Side view   - Full body   - Face close-up   - Walking   - Running   - Takeoff   - Jumping   - Landing   - Different expressions   The basic division of labor became:   SDXL = character / scene / pose material generation   Video model = short motion generation   Editor / Python = continuity and assembly   The idea is to reduce how much freedom the video model has at any single stage.   Experiment 3: reduce the motion unit to ~2 seconds   The next experiment reduced the motion unit even further.   Instead of 3–5 second clips, I tested approximately 2-second motion segments, with selected still frames used around difficult transitions.   The benchmark character was Reimu Hakurei.   The test scene was deliberately simple but contained several different types of movement:   Reimu starts in the distance → runs toward the camera → approaches a puddle → jumps over it → lands → looks toward the camera → smiles   The still frames aren't just pauses.   They can act as continuity anchors for the next generated segment.   2-sec motion → anchor frame → 2-sec motion → anchor frame → 2-sec motion   This means each video generation only has to solve a relatively small motion problem.   Experiment 4: Wan 2.2 vs FastH3 — per cut, not per video   I also stopped treating the choice of video model as a global decision.   Instead of:   «\"This entire video will use Wan.\"»   or:   «\"This entire video will use FastH3.\"»   I generated comparable short segments and selected the better result for each individual cut.   Wan configuration   - Wan 2.2 TI2V 5B   - FP16   - 30 steps   FastH3 configuration   - Existing MiniMax H3 INT8   - FastH3 partially converted Dense LoRA   - 6 steps   Important caveat: my FastH3 configuration is not a complete reproduction of the official FastH3 full-diff setup.   The comparison clips were standardized to:   768×448 / 24 fps / 48 frames   Including failed attempts and older revisions, I generated 17 comparison videos during this benchmark.   Results   The final selected models were:   - CUT01 — Running: FastH3   - CUT02 — Slowing / stopping: FastH3   - CUT03 — Puddle jump: FastH3   - CUT04 — Landing / posture recovery: FastH3   - CUT05 — Close-up smile: Wan   This was more interesting than simply finding one overall \"winner.\"   FastH3: better large-body motion in this benchmark   FastH3 performed particularly well on the movement-heavy cuts.   The puddle jump was the clearest example.   FastH3 produced a readable:   takeoff → forward movement → descent → landing   sequence.   Some Wan attempts instead moved into the puddle, failed to move forward sufficiently, or looked closer to floating in place.   FastH3 also produced the more usable landing and posture recovery in this particular test.   Wan: better close-up character detail and expression   The result reversed for the final close-up.   Wan preserved the face, clothing details and ribbon better and generated a clearer, more natural smile.   So my current working hypothesis, based only on this benchmark, is:   Large motion → try FastH3 first   Small movement / face / expression → try Wan first   Difficult or unknown action → generate both and compare   I'm not treating this as a universal conclusion about either model.   It's simply what happened with this particular benchmark, hardware and configuration.   17 comparison generations → 11-second final sequence   This is probably the most important part of the experiment.   The final video wasn't the result of one successful generation.   I generated 17 comparison clips, including failed attempts and revisions, then selected only useful segments and frames.   The assembled result was:   - Length: 11 seconds   - Frames: 264   - Resolution: 768×448   - Frame rate: 24 fps   I didn't force every generated two-second clip into the final sequence.   If only frames 0–34 were good, I used those frames and discarded the rest.   I also adjusted playback speed and held selected frames where appropriate.   This changes the way I think about failed AI video generations.   A generation doesn't necessarily have to be perfect from beginning to end to contain useful animation material.   The 16GB VRAM problem   The experiment also exposed the hardware constraint very clearly.   Maximum observed VRAM usage during generation was:   15,085 MiB   The measurement interval was five seconds, so this should not be interpreted as a guaranteed instantaneous peak.   Wan and FastH3 were also not running simultaneously.   The workflow was:   Generate → terminate dedicated process → release VRAM → start next generation   So the current system is sequential.   On a 16GB GPU, this makes GPU occupancy time one of the major practical production bottlenecks.   Next step: turn the workflow into software   I'm now turning this production method into a custom Python controller.   The intended workflow is:   Source/reference images   ↓   Cut definition   ↓   Model selection   ↓   Wan / FastH3 generation   ↓   VRAM release   ↓   QC   ↓   Select usable segment   ↓   Extract/select transition frame   ↓   Use it as the next-cut reference   ↓   Final assembly   The idea is that Codex should increasingly act as the software/tool-building supervisor rather than repeatedly performing every production task itself.   The repetitive work belongs in small Python tools.   Building a QC database   Each generation can eventually record:   - Model   - Action type   - Generation settings   - Generation time   - VRAM usage   - Pass/fail   - Failure reason   - Selected/not selected   With enough samples, the controller could start routing jobs based on previous results.   For example:   ACTION = jump   Historical FastH3 performance: good   Historical Wan performance: poor   → Try FastH3 first   → QC   → PASS: skip Wan   → FAIL: try Wan   And:   ACTION = close_up_smile   Historical Wan performance: good   → Try Wan first   The point isn't to make the AI itself smarter.   It's to stop wasting GPU time repeating choices that previous experiments have already shown to be inefficient.   Current architecture   SDXL   │   ├─ Character references   ├─ Poses   ├─ Backgrounds   └─ Transition frames   │   ▼   Python Production Controller   │   ┌────┴────┐   ▼ ▼   Wan 2.2 FastH3   │ │   └────┬────┘   ▼   QC   │   ▼   Best segment / Best frames   │   ▼   Next ~2-sec segment   │   ▼   Final Assembly   Rather than asking one large generative model to create an entire animation correctly in a single pass, I'm experimenting with treating AI video models as specialized short-motion generators inside a larger deterministic production system.   Based on this first benchmark, this appears to be a much more practical approach on my 16GB consumer GPU.   The next important test is whether the same pipeline still works when I change the character, environment and action sequence.   If it does, then the interesting result isn't the Reimu puddle video itself.   It's that the production method may be reusable.       submitted by     /u/Wonderful_Sample6291     to     r/comfyui       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/comfyui/comments/1wihxft/i_stopped_trying_to_generate_long_ai_videos_in/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T02:52:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T02:53:07.480Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab56136508d45f3d2d5321"
+    },
+    "message_id": "reddit_t3_1wihxfh",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "travel",
+    "username": "Mavismygirl",
+    "title": "Is driving Suzuki Swift easy in New Zealand's South Island?",
+    "text": "Is driving Suzuki Swift easy in New Zealand's South Island?\n\nIs it easy to drive around New Zealand’s South Island in a Suzuki Swift as a solo traveler? I will be there during end of November.    My planned route is:    Christchurch → Oamaru → Dunedin → Te Anau → Wanaka → Lake Tekapo → Aoraki / Mount Cook National Park → Christchurch.    Would this route be manageable for a solo traveler driving a Suzuki Swift? Are the roads generally easy to navigate, and are there any particularly challenging sections I should be aware of?       submitted by     /u/Mavismygirl     to     r/travel       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/travel/comments/1wihxfh/is_driving_suzuki_swift_easy_in_new_zealands/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T02:52:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T02:53:07.683Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab56136508d45f3d2d5322"
+    },
+    "message_id": "reddit_t3_1wihxf4",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "OpenAI",
+    "platform": "reddit",
+    "subreddit": "technology",
+    "username": "jupa300",
+    "title": "OpenAI admits its agents went off the rails another six times",
+    "text": "OpenAI admits its agents went off the rails another six times\n\nsubmitted by     /u/jupa300     to     r/technology       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/technology/comments/1wihxf4/openai_admits_its_agents_went_off_the_rails/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T02:52:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T02:53:07.883Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab56146508d45f3d2d5323"
+    },
+    "message_id": "reddit_t3_1wihxe8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "dubairentals",
+    "username": "DubaiEstateHub",
+    "title": "https://www.reddit.com/u/DubaiEstateHub/s/BgQ0I92cWk",
+    "text": "https://www.reddit.com/u/DubaiEstateHub/s/BgQ0I92cWk\n\nsubmitted by     /u/DubaiEstateHub     to     r/dubairentals       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/dubairentals/comments/1wihxe8/httpswwwredditcomudubaiestatehubsbgq0i92cwk/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T02:52:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T02:53:08.091Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab56146508d45f3d2d5324"
+    },
+    "message_id": "reddit_t3_1wihxe2",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "No-Top9040",
+    "title": "What’s something you used to think was a personality trait but later realized was just a habit?",
+    "text": "What’s something you used to think was a personality trait but later realized was just a habit?\n\nsubmitted by     /u/No-Top9040     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wihxe2/whats_something_you_used_to_think_was_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T02:52:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T02:53:08.289Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab56146508d45f3d2d5325"
+    },
+    "message_id": "reddit_t3_1wihxe0",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "simracing",
+    "username": "Euphoric_Possible280",
+    "title": "Can actually get into sim racing for around $400?",
+    "text": "Can actually get into sim racing for around $400?\n\nI’ve been looking into my first proper setup and trying to keep the budget around $400–500. From what I’ve seen, I’m mainly looking at the MOZA R5 Pro, SIMAGIC EVO Sport + GT Neo + P700, and PXN V10 Ultra.   They all seem to have their own trade-offs, and I’m still trying to figure out where the money actually matters most. I’d also like to avoid buying something now and then replacing half of it six months later.   For those who’ve already been through the beginner stage, what would you spend $400–500 on? Is it worth stretching the budget a little for a better base, or just start with something cheaper and upgrade later?       submitted by     /u/Euphoric_Possible280     to     r/simracing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/simracing/comments/1wihxe0/can_actually_get_into_sim_racing_for_around_400/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T02:52:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T02:53:08.486Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab56146508d45f3d2d5326"
+    },
+    "message_id": "reddit_t3_1wihxdk",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Medium_Sea_5963",
+    "title": "What's your least favorite movie of all time?",
+    "text": "What's your least favorite movie of all time?\n\nsubmitted by     /u/Medium_Sea_5963     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wihxdk/whats_your_least_favorite_movie_of_all_time/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T02:52:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T02:53:08.687Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab56146508d45f3d2d5327"
+    },
+    "message_id": "reddit_t3_1wihxde",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "sugarlifestyleforum",
+    "username": "sweetandpetite3",
+    "title": "My SD “business trip” was a family vacation!",
+    "text": "My SD “business trip” was a family vacation!\n\nI’m 20F and started seeing a 45M I met through a sugar dating site about 4 months ago.  Nothing about the arrangement was particularly dramatic. We’d usually have dinner once or twice a month, and he helped with rent and some other expenses. He told me he was divorced and no kids.  A few weeks ago he told me he had to go out of town for work for a long weekend. The night before he left, he sent me a picture from his hotel room. Nothing weird about it, except I noticed a kid’s stuffed animal on the bed. I joked, “Thought you were traveling alone 😂” He replied almost immediately “Hotel has a family section. Probably belongs to someone else.” I didn't think much of it.   Then on Saturday, I was scrolling Instagram and saw a story from a mutual acquaintance. It was a picture from a birthday party. And there he was. With his daughter. And a woman with her arm around him.  The caption said something like, “So happy the whole family could be together!”  I stared at it for probably five minutes.  I messaged him “I thought you were working this weekend?”He didn't respond. Then about an hour later he called me.  He said the woman was his ex-wife and they were only together because of their daughter.  Except apparently they weren't actually divorced.  They'd been separated for a while, but never finalized anything. I asked why he'd told me he was divorced. He said, “Because technically we're basically divorced.”Which is apparently a sentence people can say with a straight face.  I ended things that night.       submitted by     /u/sweetandpetite3     to     r/sugarlifestyleforum       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sugarlifestyleforum/comments/1wihxde/my_sd_business_trip_was_a_family_vacation/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T02:52:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T02:53:08.885Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab56156508d45f3d2d5328"
+    },
+    "message_id": "reddit_t3_1wihxcq",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789613561264",
+    "text": "[PROBE] 1789613561264\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wihxcq/probe_1789613561264/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T02:52:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T02:53:09.088Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab56156508d45f3d2d5329"
+    },
+    "message_id": "reddit_t3_1wihxbu",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "subscriptionsharing",
+    "username": "Pritam_Chakroborty",
+    "title": "Looking for 1 more person to split a Claude subscription",
+    "text": "Looking for 1 more person to split a Claude subscription\n\nHey everyone!   Me and another person are planning to split a **Claude subscription**, and we’re looking for **one more person** to join us so we can split the bill 3 ways.   If you’re interested in joining, drop me a DM. We can discuss the plan, cost, and payment details there.   **Only 1 spot available.** 🙂       submitted by     /u/Pritam_Chakroborty     to     r/subscriptionsharing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/subscriptionsharing/comments/1wihxbu/looking_for_1_more_person_to_split_a_claude/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T02:52:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T02:53:09.290Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab562a798842c4ceffa11f"
+    },
+    "message_id": "reddit_t3_1wihxrh",
+    "topic_key": "painter",
+    "search_keyword": "painter",
+    "platform": "reddit",
+    "subreddit": "DnDminiatures",
+    "username": "TheMonsterPainter",
+    "title": "The scythes come out in the fall.",
+    "text": "The scythes come out in the fall.\n\nsubmitted by     /u/TheMonsterPainter     to     r/DnDminiatures       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DnDminiatures/comments/1wihxrh/the_scythes_come_out_in_the_fall/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T02:53:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T02:53:30.545Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab562a798842c4ceffa120"
+    },
+    "message_id": "reddit_t3_1wihxok",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "LocalLLM",
+    "username": "cannabinonymous",
+    "title": "two pc w11/ubuntu non ideal local setup",
+    "text": "two pc w11/ubuntu non ideal local setup\n\n(Note: This was dictated to Gemini and cleaned up for full disclosure.)    Hey everyone. I'm hitting a wall and feeling functionally stupid and getting thoroughly frustrated trying to string together a local AI setup that doesn't feel like a convoluted, overly monetized corporate product. I’m hoping the community can point me toward a sane, easy-to-follow path or stack. I am fairly disabled so typing endless strings of shell commands is no longer a skill i possess, hence the above disclosure.   What I’m Working With (Hardware)      Main Rig (Windows 11):  Ryzen 9 9950X3D + Radeon RX 9070 XT (16GB).    Secondary Rig (Fresh Ubuntu Linux Install):  Ryzen 9 5900X + Radeon RX 5700 XT (8GB).    Network:  Basic local network connectivity. Security isn't a massive concern since it's all behind a home setup.   i know this is not the ideal local setup, but its what i got unless NVidia wants to donate hardware which is unlikely lol.     The Goal   I want a  centralized, unified local setup  where both of these computers work in tandem with each other—though I honestly don't know what the best setup or architecture looks like for splitting the workload. I want it to handle chat, code assistance (for things like web design and Android apps), web extensions, and image/multimodal generation, while letting me do  autonomous Linux & Windows administration .   Specifically, I want to sit on my Windows machine, tell an LLM what I want done (e.g.,  \"Connect to comfyui download x model and wire it correctly, download the newest QWEN model, load it via llama.cpp, and update packages etc..\" ), and have it actually execute it or guide me through it cleanly if it needs approvals.   My Pain Points & Where I Need Help      The Frontier Fatigue:  I am unwilling to spend openai prices prices for closed, disparate apps (Desktop Commander paywalls, bloated wrappers, etc.). I want a local-first stack. If a frontier model is touched at all, it should  only  be optionally used in the background for code analysis/double-checking.    The Linux Skill Gap:  It’s been 20 years since I regularly touched a bash prompt. I feel completely out of my depth trying to manually spin up microservices, configure SSH keys, or figure out networking between these two boxes without making mistakes.    Tool Confusion (Docker, GitHub, WSL):  I have  never  used Docker or GitHub, and I'm unsure if I should use WSL on the local Windows machine or how to best split the workload between the two computers.    Autonomous Admin:  I want the Linux administration side to be as autonomous as humanly possible. What tools actually bridge Windows-to-Linux control smoothly without requiring me to manually SSH in and troubleshoot configuration errors every five minutes?     What I’m Asking the Community For:      The Stack & Tandem Architecture:  What exact tools should be installed where, and how do I get two separate PCs to act as a unified local ecosystem? (e.g., Open WebUI on Windows? Ollama/llama.cpp distributed across both? Something else entirely?)    Workflow Advice:  Is SSH control the best approach here, or should I be looking at a local agent architecture?    Beginner-Friendly Guides:  Are there any straightforward, step-by-step blueprints for someone who knows hardware and general computing, but is essentially a beginner when it comes to modern containerization (Docker) and Linux terminal administration?   I realize ROCm is not ideal and is of my pain points and a perfect thing for a local model to slowly chew away at setting up.     If anyone has a similar dual-PC local layout running smoothly, I’d love to hear how you configured yours. Thanks in advance—I'm ready to stop yelling at my monitor       submitted by     /u/cannabinonymous     to     r/LocalLLM       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LocalLLM/comments/1wihxok/two_pc_w11ubuntu_non_ideal_local_setup/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T02:53:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T02:53:30.935Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab562b798842c4ceffa121"
+    },
+    "message_id": "reddit_t3_1wihxms",
+    "topic_key": "checkout",
+    "search_keyword": "checkout",
+    "platform": "reddit",
+    "subreddit": "OVHcloud",
+    "username": "ducbao414",
+    "title": "$1,745 Paid Upfront, RISE-3 Singapore order hasn't been delivered after 5 days",
+    "text": "$1,745 Paid Upfront, RISE-3 Singapore order hasn't been delivered after 5 days\n\nHi,   I ordered a RISE-3 dedicated server in Singapore from OVH on September 12, with 12 months paid upfront ($1,745).   At checkout, the estimated delivery time was 3 days, but it's now September 17 and the order is still stuck at Preparing your order.   Order details:     Server: RISE-3, Singapore   Order: #22687799   Ordered: September 12, 2026   Paid: $1,745 upfront for 12 months and setup fee.   Promised delivery: 3 days at checkout   Current status: Preparing your order     For other OVH customers: is this kind of delay normal for RISE-3 servers? How long did your order take to be delivered?   And if anyone from OVH is around, could you please check order #22687799 and let me know what's going on? I'm wondering if there is currently an inventory/stock issue with the RISE-3 in Singapore, and, if so, when I can realistically expect the server to be delivered.   Thanks!       submitted by     /u/ducbao414     to     r/OVHcloud       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OVHcloud/comments/1wihxms/1745_paid_upfront_rise3_singapore_order_hasnt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T02:53:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T02:53:31.240Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab564e6508d45f3d2d532a"
+    },
+    "message_id": "reddit_t3_1wihy8l",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "USCIS_EB3",
+    "username": "kfirbep",
+    "title": "Is it possible to expedite the decision of the work permit and the travel permit with Emma?",
+    "text": "Is it possible to expedite the decision of the work permit and the travel permit with Emma?\n\nWhen I asked my lawyer if we can expedite those things he said “No” there is no premium processing and travel permit is only being expedite in cases of death. Then here I saw several posts that people talked with USCIS agent with the Emma chat box and they got their work permit expedite, I do t know if all you need to do is to ask or there has to be a special reason but how does it work? Can it be applied with travel permit too? Bio were in June and since then radio silence while I see people here getting their green cards and work permit approvals with the same dates as I am…        submitted by     /u/kfirbep     to     r/USCIS_EB3       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/USCIS_EB3/comments/1wihy8l/is_it_possible_to_expedite_the_decision_of_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T02:53:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T02:54:06.651Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab564e6508d45f3d2d532b"
+    },
+    "message_id": "reddit_t3_1wihy8c",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "Flimsy-Owl-5563",
+    "title": "Grab 25⚡ from u/Flimsy-Owl-5563!",
+    "text": "Grab 25⚡ from u/Flimsy-Owl-5563!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Flimsy-Owl-5563     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wihy8c/grab_25_from_uflimsyowl5563/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T02:53:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T02:54:06.848Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab564f6508d45f3d2d532c"
+    },
+    "message_id": "reddit_t3_1wihy89",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Ubiquiti",
+    "username": "sweetpickleegg",
+    "title": "Which to buy - USW-Aggregation (new) vs US-16-XG (used)",
+    "text": "Which to buy - USW-Aggregation (new) vs US-16-XG (used)\n\nI'm looking at getting a NAS, three servers, UDMPro and a 24 port switch connected with 10g, I've found a used US-16-XG currently listed locally and it's about the same price as a new USW-Aggregation.    At this stage I have NIC's that use SFP and don't need more than 5/6 ports nor do I have a current use for the 10g rj45 ports on the XG   Would you choose the usw-aggregation or the us-16-xg?       submitted by     /u/sweetpickleegg     to     r/Ubiquiti       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Ubiquiti/comments/1wihy89/which_to_buy_uswaggregation_new_vs_us16xg_used/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T02:53:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T02:54:07.046Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab564f6508d45f3d2d532d"
+    },
+    "message_id": "reddit_t3_1wihy7y",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PlayStationPlus",
+    "username": "Nabrok_Necropants",
+    "title": "Active account but game pages don't load",
+    "text": "Active account but game pages don't load\n\nCanceled my ps plus premium buy it is active until mid 2027.    All the new games in ps plus catalog are showing blank pages.   I have: logged out/in several times, restored licenses, restarted ps5, restarted router.    Any ideas?       submitted by     /u/Nabrok_Necropants     to     r/PlayStationPlus       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PlayStationPlus/comments/1wihy7y/active_account_but_game_pages_dont_load/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T02:53:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T02:54:07.247Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab564f6508d45f3d2d532e"
+    },
+    "message_id": "reddit_t3_1wihy7h",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Hevy",
+    "username": "flakemveim",
+    "title": "Why did you buy Pro?",
+    "text": "Why did you buy Pro?\n\nI don't see a clear reason to buy it for my own workout needs. However, I have been using Hevy for a long time and want to support the developers. What made you decide to upgrade?       submitted by     /u/flakemveim     to     r/Hevy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Hevy/comments/1wihy7h/why_did_you_buy_pro/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T02:53:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T02:54:07.458Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab564f6508d45f3d2d532f"
+    },
+    "message_id": "reddit_t3_1wihy5v",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MTB",
+    "username": "Psychological_Fox_81",
+    "title": "To my Las Vegas Locals",
+    "text": "To my Las Vegas Locals\n\nI'm looking to taking a trip up to the Lee Canyon bike park, sometime next week. I'm looking for anyone open for a carpool. I can split costs, pay for gas, buy lunch, etc. Let me know. Thank you.       submitted by     /u/Psychological_Fox_81     to     r/MTB       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MTB/comments/1wihy5v/to_my_las_vegas_locals/",
+    "score": 0,
+    "num_comments": 0,

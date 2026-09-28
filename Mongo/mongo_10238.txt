@@ -1,0 +1,416 @@
+    "text": "Clorinde C2R1 Testing Data\n\nNote: I accidentally got my previous post removed as I didn't know you can not link Reddit threads together for historical test tracking...    This testing was inspired by today’s livestream and the announcement of two free constellations this year. With so many players planning to jump from C0 to C2, I wanted to do the same kind of deep testing I’ve done for Varka, Wriothesley, and Arlecchino but this time for Clorinde.   I wanted to see how many matchups she could realistically handle as a viable DPS option across IT, Fearless, and Abyss. I still have skill issues. I still have Wi‑Fi issues (especially switching characters on controller and dealing with input registration), but I kept her rotations as consistent as possible across every test to keep things fair. The goal was to understand her ceiling, her floor, and how she behaves in both meta and non‑meta environments.   (Alot of it ended up being Durin Nicole T_T )   My last year I invested into HEX for my older teams and Alice.   If there are some other team comps please let me know.   Every team in this list was tested for fun and for pure data reference. Not every comp is meta, and that’s intentional. I wanted to explore her flexibility, her synergy spread, and how she scales with different buffers, drivers, and enablers.   The character breakdown (builds, weapons, constellations) will be listed under the Test Data section for anyone who wants full transparency.   Here is the tier list:   SS Tier (AVG ≥ 220)   Clorinde / Durin / Nicole / Chevuse — AVG 255 / MAXR 290  Clorinde / Durin / Emily / Nicole — AVG 250 / MAXR 285  Clorinde / Durin / Iansan / Nicole — AVG 240 / MAXR 260  Clorinde / Durin / Fischl / Nicole — AVG 240 / MAXR 250  Clorinde / Durin / Klee / Nicole — AVG 235 / MAXR 255  Clorinde / Durin / Prune / Nicole — AVG 235 / MAXR 250  Clorinde / Durin / Mona / Nicole — AVG 225 / MAXR 235  Clorinde / Durin / Columbina / Nicole — AVG 220 / MAXR 255  Clorinde / Durin / Xilonen / Nicole — AVG 220 / MAXR 240   S Tier (AVG 200–219)   Clorinde / Durin / Nicole / Bennet — AVG 215 / MAXR 225  Clorinde / Durin / Lauma / Nicole — AVG 210 / MAXR 220  Clorinde / Durin / Furina / Nicole — AVG 205 / MAXR 225  Clorinde / Durin / Ineffa / Nicole — AVG 205 / MAXR 220  Clorinde / Durin / Alyosha / Nicole — AVG 205 / MAXR 220  Clorinde / Durin / Aino / Nicole — AVG 200 / MAXR 230  Clorinde / Durin / Sucrose / Nicole — AVG 200 / MAXR 215  Clorinde / Durin / Beidou / Nicole — AVG 200 / MAXR 210  Clorinde / Durin / Navia / Nicole — AVG 200 / MAXR 200   A Tier (AVG 150–199)   Clorinde / Durin / Nicole / Bennet — AVG 195 / MAXR 200  Clorinde / Durin / Fischl / Chevuse — AVG 185 / MAXR 210  Clorinde / Durin / Iansan/ Chevuse — AVG 180 / MAXR 185  Clorinde / Durin / Mona / Columbina — AVG 170 / MAXR 185  Clorinde / Durin / Mona / Emily — AVG 165 / MAXR 175  Clorinde / Nicole / Fischl / Chevuse — AVG 165 / MAXR 185  Clorinde / Durin / Odette / Alyosha — AVG 160 / MAXR 200  Clorinde / Durin / Iansan / Fischl — AVG 160 / MAXR 165  Clorinde / Nicole / Odette / Alyosha — AVG 155 / MAXR 190  Clorinde / Durin / Fischl / Columbina — AVG 155 / MAXR 170  Clorinde / Durin / Ineffa / Columbina — AVG 155 / MAXR 170  Clorinde / Nicole / Ineffa / Columbina — AVG 155 / MAXR 160  Clorinde / Durin / Emily / Chevuse — AVG 155 / MAXR 165  Clorinde / Durin / Emily / Prune — AVG 155 / MAXR 160  Clorinde / Durin / Mona / Prune — AVG 150 / MAXR 160   B Tier (AVG 100–149)   Clorinde / Durin / Odette / Beidou — AVG 145 / MAXR 175  Clorinde / Durin / Xilonen / Fischl — AVG 145 / MAXR 150  Clorinde / Durin / Mona / Lauma — AVG 140 / MAXR 150  Clorinde / Durin / Xilonen / Prune — AVG 135 / MAXR 140  Clorinde / Durin / Klee / Bennet — AVG 135 / MAXR 140  Clorinde / Durin / Columbina / Lauma — AVG 130 / MAXR 140  Clorinde / Nicole / Columbina / Lauma — AVG 125 / MAXR 135  Clorinde / Durin / Alyosha / Emily — AVG 125 / MAXR 130         Character     LVL / T1 / T2 / T3     Con’s     Set                     Clorinde   95 / 13 / 10 / 7   C2 R1   Hunter’s + Signature       Durin   90 / 1 / 9 / 10   C2 R1   Winds + Signature       Nicole   90 / 1 / 10 / 10   C2 R1   Gift + Signature       Aino   71 / 1 / 7 / 9   C6 R0   SMS + Insight       Alyosha   70 / 1 / 6 / 4   C6 R0   2‑PC ER / No Feather + Beginner’s       Beidou   80 / 6 / 11 / 11   C6 R0   Noblesse + Nagamasa       Bennet   80 / 2 / 8 / 11   C6 R0   NO + Skyward       Columbina   90 / 1 / 10 / 9   C0 R1   Nefer Sig + SMS       Emily   90 / 6 / 9 / 8   C1 R0   Burning Set + PJS       Fischl   81 / 6 / 11 / 9   C6 R0   Golden + Great Magic       Furina   81 / 6 / 8 / 8   C0 R0   THoM + Favonius       Ineffa   90 / 1 / 9 / 6   C0 R0   Abade + Ballad       Lauma   90 / 1 / 9 / 8   C0 R0   Burning Set / Dendro Shred       Mona   81 / 1 / 5 / 12   C4 R0   Gift + TTDS       Navia   90 / 6 / 9 / 9   C0 R1   Sig + Set       Prune   81 / 1 / 11 / 12   C6 R0   VV + Purity       Sucrose   80 / 4 / 8 / 9   C6 R0   VV + TTDS       Xilonen   80 / 6 / 8 / 6   C2 R0   Instructor’s + Favonius       Odette   90 / 1 / 10 / 8   C2 R0   Furnace + Splendor       Chevreuse   80 / 1 / 9 / 6   C6 R0   Song + Black       Klee   80 / 6 / 8 / 8   C2 R0   Noblesse + TTDS       Iansan   80 / 1 / 8 / 10   C6 R0   TNO + Scroll            submitted by     /u/Pretty-Reason-5575     to     r/clorindemains       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/clorindemains/comments/1wjng17/clorinde_c2r1_testing_data/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:19:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:20:07.492Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad1e67660c6084039789e3"
+    },
+    "message_id": "reddit_t3_1wjng11",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "New_Broccoli1412",
+    "title": "What signs indicate that you are beautiful?",
+    "text": "What signs indicate that you are beautiful?\n\nsubmitted by     /u/New_Broccoli1412     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wjng11/what_signs_indicate_that_you_are_beautiful/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:19:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:20:07.718Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad1e67660c6084039789e4"
+    },
+    "message_id": "reddit_t3_1wjng0z",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "techsales",
+    "username": "Typical_Charity5416",
+    "title": "Best companies to be a UK Sales Engineer for",
+    "text": "Best companies to be a UK Sales Engineer for\n\nI’m currently a Sales Engineer at a decent sized UK tech company. It’s not a massive household name, but it’s a good company and I’m getting solid experience. I’m not looking to move straight away, but I’m trying to get a better idea of where SEs can go long term.   For people working as SEs in the UK, or people who know SEs:  Which companies are actually good for progression?  What sort of salaries are people seeing at junior, mid, senior, principal/staff and management levels? Would be interested in base vs OTE and how realistic the OTE actually is.   What’s the actual WLB like? When people say good WLB, are you genuinely working 35 to 45 hours or does it end up being 50+ once you include prep, travel and customer calls?   Which areas of tech would you recommend getting into for the next 10 to 15 years? Cloud, cyber, data/AI, enterprise software, DevOps, networking, fintech etc.  Are there any areas where SEs tend to hit a ceiling fairly quickly?   Basically, if you were starting out as a UK SE and wanted good long term earning potential without working IB-style hours, what companies or sectors would you look at?       submitted by     /u/Typical_Charity5416     to     r/techsales       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/techsales/comments/1wjng0z/best_companies_to_be_a_uk_sales_engineer_for/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:19:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:20:07.939Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad1e68660c6084039789e5"
+    },
+    "message_id": "reddit_t3_1wjng0w",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "Ljubljana",
+    "username": "Square_Active1051",
+    "title": "Hello everyone. I plan to travel from Koper to Novo Mesto this Sunday. Do trains run from Koper on Sundays in Slovenia? And which is more budget-friendly—the train or the bus?",
+    "text": "Hello everyone. I plan to travel from Koper to Novo Mesto this Sunday. Do trains run from Koper on Sundays in Slovenia? And which is more budget-friendly—the train or the bus?\n\nKoper to Novo Mesto?       submitted by     /u/Square_Active1051     to     r/Ljubljana       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Ljubljana/comments/1wjng0w/hello_everyone_i_plan_to_travel_from_koper_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:19:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:20:08.160Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad1e68660c6084039789e6"
+    },
+    "message_id": "reddit_t3_1wjng0i",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Gold_Owl_3557",
+    "title": "How can you tell that a person grew up in a home where feelings were ignored?",
+    "text": "How can you tell that a person grew up in a home where feelings were ignored?\n\nsubmitted by     /u/Gold_Owl_3557     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wjng0i/how_can_you_tell_that_a_person_grew_up_in_a_home/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:19:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:20:08.384Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad1e68660c6084039789e7"
+    },
+    "message_id": "reddit_t3_1wjng0g",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "indianbeautyyappers",
+    "username": "Visual-Basis3400",
+    "title": "does anyone else's hair product end up on their oily forehead by lunch",
+    "text": "does anyone else's hair product end up on their oily forehead by lunch\n\ni use a serum on my lengths, never near the roots, and by midday there is a shine along my hairline that is different from the oily skin shine i get everywhere else. thicker, sits on top.   and the breakouts follow the same line. a strip across the top of my forehead and nothing below it, which is exactly where my hair touches when i lean over a laptop.   the hairspray version of this is worse. i used it for a function and the next morning there was a rash of small bumps in a curve matching where the spray had drifted.   tying my hair back at a desk fixed about half of it. washing my hands after applying anything to my hair fixed another chunk.   does anyone actually use hair product and have a clear forehead. what is the trick       submitted by     /u/Visual-Basis3400     to     r/indianbeautyyappers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/indianbeautyyappers/comments/1wjng0g/does_anyone_elses_hair_product_end_up_on_their/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:19:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:20:08.603Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad1e68660c6084039789e8"
+    },
+    "message_id": "reddit_t3_1wjnfy4",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "Bilaspur",
+    "username": "TechieTitty_08",
+    "title": "Selling Galaxy Buds 3 pro",
+    "text": "Selling Galaxy Buds 3 pro\n\nsubmitted by     /u/TechieTitty_08     to     r/Bilaspur       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Bilaspur/comments/1wjnfy4/selling_galaxy_buds_3_pro/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:19:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:20:08.835Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad1e69660c6084039789e9"
+    },
+    "message_id": "reddit_t3_1wjnfy0",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789730381227",
+    "text": "[PROBE] 1789730381227\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wjnfy0/probe_1789730381227/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:19:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:20:09.054Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad1e69660c6084039789ea"
+    },
+    "message_id": "reddit_t3_1wjnfxm",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "Advice",
+    "username": "Ksenya_Melocoton",
+    "title": "Need advice for my artist name. Which one is better?",
+    "text": "Need advice for my artist name. Which one is better?\n\nHey, everyone! I'm a singer and my artist name has been pretty hard to pronounce and I really want to change it to something easier. My name is Ksenia (I'm Russian) and I have two ideas: Ksenel and Ksendra. I'd like to know your opinion:      Which one is easier to pronounce?     Which one sounds more unique?     Which one is more likely to be remembered?      Thank you for your answers! If you have any other ideas on how I can turn my name into an artist nickname I would highly appreciate if you share them with me. Have a good day!       submitted by     /u/Ksenya_Melocoton     to     r/Advice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Advice/comments/1wjnfxm/need_advice_for_my_artist_name_which_one_is_better/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:19:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:20:09.276Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad1ea2660c6084039789eb"
+    },
+    "message_id": "reddit_t3_1wjngtx",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "TrueUnpopularOpinion",
+    "username": "New-Conversation3246",
+    "title": "The Pro Israel side would win in court",
+    "text": "The Pro Israel side would win in court\n\nEvery day there are hundreds of posts recycling the same disingenuous talking points. My contention is simple. If there were a proceeding that followed court protocols (only valid evidence, no hearsay, no “muh genocide” distractions, no slogans and sockpuppets in place of exhibits, just authenticated facts) the pro-Israel side would win hands down.  “Win” here means the core case: the Jewish people have a legitimate historical and legal claim to a state in that land, Israel is not a 1948 pop-up colonial project, and October 7 plus the wars, rockets, and intifadas that followed cannot be memory-holed by changing the subject. It does not mean every Israeli policy is beyond criticism. Specific allegations against Israel come in too, if they can be authenticated.  In that proceeding, no valid evidence could be suppressed. The October 7 tapes would be entered in full. The 3,000-year Jewish presence in the land, backed by thousands of artifacts, would be entered. The history of religious conquest in the region would be entered. The current land mass of the Jewish state, roughly 0.3% of the Middle East versus 99.7%, would be a material geopolitical exhibit. That figure does not, by itself, settle every West Bank or Gaza dispute. It does show how absurd it is to treat Israel as the regional Goliath occupying “the Middle East.” The Balfour Declaration, the Mandate record, the intifadas, the rockets, the wars: all of it.  Palestinian deeds, Ottoman records, UN votes, casualty data, and specific claims of Israeli misconduct come in on the other side as well. The rule is not “only Israel gets exhibits.” The rule is that a claim does not count unless it can survive authentication and cross-examination.  No screaming over each other. Both sides calmly litigate the case. The judges could be a panel of nonpartisan experts, or, even better, a model trained on law, logic, and fairness.       submitted by     /u/New-Conversation3246     to     r/TrueUnpopularOpinion       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TrueUnpopularOpinion/comments/1wjngtx/the_pro_israel_side_would_win_in_court/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:20:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:21:06.551Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad1ea2660c6084039789ec"
+    },
+    "message_id": "reddit_t3_1wjngtw",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Water-Bringer",
+    "title": "Grab 100 hammers from u/Water-Bringer!",
+    "text": "Grab 100 hammers from u/Water-Bringer!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Water-Bringer     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wjngtw/grab_100_hammers_from_uwaterbringer/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:20:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:21:06.750Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad1ea2660c6084039789ed"
+    },
+    "message_id": "reddit_t3_1wjngtn",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SpecialOpsLioness",
+    "username": "DarekThomasMMC",
+    "title": "Interview: Elizaveta Neretin (Oleksandra). Thank you for the awesome questions Reddit.",
+    "text": "Interview: Elizaveta Neretin (Oleksandra). Thank you for the awesome questions Reddit.\n\nAwesome questions, thank you.       submitted by     /u/DarekThomasMMC     to     r/SpecialOpsLioness       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SpecialOpsLioness/comments/1wjngtn/interview_elizaveta_neretin_oleksandra_thank_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:20:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:21:06.950Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad1ea3660c6084039789ee"
+    },
+    "message_id": "reddit_t3_1wjngt2",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "USvsEU",
+    "username": "Idolon1240",
+    "title": "Hank, what the fuuuuuuuuuuuuuuuck?",
+    "text": "Hank, what the fuuuuuuuuuuuuuuuck?\n\nLook where the YouTube Algorithm took me! I know the US historically had a very liberal look on owning another human being, but selling fucking orphans at a fucking auction is a new fucking low, even for a state that allows prison camps for children. WTF? Tell me this is banned by now. Please.   And please punch your local representative or whoever allows this absolute fucking travesty to happen in the face for me. Repeatedly.   Signed,    - a very angry Hans       submitted by     /u/Idolon1240     to     r/USvsEU       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/USvsEU/comments/1wjngt2/hank_what_the_fuuuuuuuuuuuuuuuck/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:20:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:21:07.151Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad1ea3660c6084039789ef"
+    },
+    "message_id": "reddit_t3_1wjngsj",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "indianhaircareaddicts",
+    "username": "Glittering-Cry-8694",
+    "title": "Reddit application pe koi aisa insan hai jo finastride 5 saal ya usse jyada saal tak lagataar istemaal kiya ho aur kiya hai to kya koi dikkat hua hai",
+    "text": "Reddit application pe koi aisa insan hai jo finastride 5 saal ya usse jyada saal tak lagataar istemaal kiya ho aur kiya hai to kya koi dikkat hua hai\n\nsubmitted by     /u/Glittering-Cry-8694     to     r/indianhaircareaddicts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/indianhaircareaddicts/comments/1wjngsj/reddit_application_pe_koi_aisa_insan_hai_jo/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:20:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:21:07.351Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad1ea3660c6084039789f0"
+    },
+    "message_id": "reddit_t3_1wjngs8",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "britishshorthair",
+    "username": "AllThingsScary2026",
+    "title": "Is $1800 AUD a good price for a cream BS.",
+    "text": "Is $1800 AUD a good price for a cream BS.\n\nI know someone that is selling a cream coloured British Shorthair kittan in australia for $1800. Is that a good price because I hear they can go for $3500 here. I have pictures and photos the seller has sent me and they look legit but should i be cautious?       submitted by     /u/AllThingsScary2026     to     r/britishshorthair       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/britishshorthair/comments/1wjngs8/is_1800_aud_a_good_price_for_a_cream_bs/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:20:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:21:07.550Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad1ea3660c6084039789f1"
+    },
+    "message_id": "reddit_t3_1wjngru",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "whatwasthiscar",
+    "username": "Redditgamer1849",
+    "title": "What kind of busses were these?",
+    "text": "What kind of busses were these?\n\nCould either be Van Hool or VDL?       submitted by     /u/Redditgamer1849     to     r/whatwasthiscar       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/whatwasthiscar/comments/1wjngru/what_kind_of_busses_were_these/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:20:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:21:07.764Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad1ea3660c6084039789f2"
+    },
+    "message_id": "reddit_t3_1wjngrm",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "ChineseBL",
+    "username": "Jazzlike-Cod488",
+    "title": "[On-Air] 末誓 The Last Oath 🧟 | Episode 9 & 10",
+    "text": "[On-Air] 末誓 The Last Oath 🧟 | Episode 9 & 10\n\nSynopsis -    A zombie virus sweeps across the globe, and Lin Zai tragically discovers he carries an immunity, making him targeted by multiple factions. A-Lie, a cold-blooded assassin, is ordered to hunt him down, but when he is critically wounded, Lin Zai saves his life, and the two end up bound to each-other in a post-apocalyptic world.    ~Gaga     📅  When       Synopsis -    A zombie virus sweeps across the globe, and Lin Zai tragically discovers he carries an immunity, making him targeted by multiple factions. A-Lie, a cold-blooded assassin, is ordered to hunt him down, but when he is critically wounded, Lin Zai saves his life, and the two end up bound to each-other in a post-apocalyptic world.    ~Gaga     📅  When     Fridays and Saturdays | 20:00 (GMT+8)   📺   Where to Watch      Youtube  | Viki | Gagaoolala    Trailer 1  |  Trailer 2       24 Episodes        Cast |      MDL       Chen Liang 陈梁  as Lin Zai |  Insta  |  Weibo  |  Xhs  |  Douyin     Chen Minghao 陈名豪  as A-Lie |  Insta  |  Weibo  |  Xhs  |  Douyin     Lu Lu 陆路  (Support Role) |  Weibo     Wang Chao Yang 王朝阳  (Support Role) |  Weibo      SNS   |  Weibo  |  Insta  |  X     🎮    Play while watching      Think you'll get a Bingo today? Continue playing with your previous Bingo card (last picture) while watching!!    Shutout to u/AsForTheRest_Well--- for making the Bingo card!!     Previous Discussions   |  Ep.1 & Ep.2  |  Ep.3 & Ep.4  |  Ep.5 & Ep.6  |  Ep.7 & Ep.8  |       submitted by     /u/Jazzlike-Cod488     to     r/ChineseBL       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ChineseBL/comments/1wjngrm/onair_末誓_the_last_oath_episode_9_10/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:20:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:21:07.977Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad1ea4660c6084039789f3"
+    },
+    "message_id": "reddit_t3_1wjngr8",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "Dragon_Traveler",
+    "username": "Crunchy-Leaf",
+    "title": "How did Artemis win this?",
+    "text": "How did Artemis win this?\n\nI was resigned to a draw because I couldn’t be bothered to refill the team after they died in the previous battle but Artemis solo’d the team?! Artemis really is Her.    (Team 2 dropped the ball)        submitted by     /u/Crunchy-Leaf     to     r/Dragon_Traveler       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Dragon_Traveler/comments/1wjngr8/how_did_artemis_win_this/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:20:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:21:08.177Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad1ea4660c6084039789f4"
+    },
+    "message_id": "reddit_t3_1wjngpk",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "HaloInfinity",
+    "username": "GameProfessional",
+    "title": "💫 Halo Infinity | Top Gear Pocket 2 – Nintendo Game Boy Color – Authentic – Manual Only",
+    "text": "💫 Halo Infinity | Top Gear Pocket 2 – Nintendo Game Boy Color – Authentic – Manual Only\n\nTop Gear Pocket 2 – Nintendo Game Boy Color – Authentic – Manual Only     ![Top Gear Pocket 2 - Nintendo Game Boy Color - Authentic - Manual Only](https://i0.wp.com/i.ebayimg.com/images/g/7UsAAOSwzj5lCT-2/s-l1600.jpg?w=1290&ssl=1)    Listing type:  Fixed price   Seller:  tech_224 (99.4% positive feedback)   Location:  US   Condition:  Very Good   Price:  13.00 USD   Shipping cost:  Free   Buy It Now    Sponsored    Buy it on eBay    In the world of handheld gaming, the Top Gear Pocket 2 stands as a noteworthy entry in the Game Boy Color library, emblematic of a period when portable racing titles balanced accessibility with a surprising depth of play. This piece examines the authentic manual-only presentation of Top Gear Pocket 2, exploring what makes the experience distinctive, even when the physical manual is the sole surviving guide.   Overview and context Top Gear Pocket 2 arrived during an era when Nintendo’s ecosystem fostered a diverse array of driving simulations tailored for on-the-go play. The game emphasizes straightforward arcade-style racing, delivering bite-sized tracks, responsive controls, and a clear progression system that rewards practice and familiarity with the course layouts. As with many cartridge-based titles of its time, the manual served as a crucial bridge between the player and the racing world, detailing controls, car specifications, track features, and a basic narrative context that underpins the racing scenarios.   Why the manual matters For collectors and enthusiasts, the manual is not merely a supplement but a core conduit to the intended experience. In Top Gear Pocket 2, the manual typically covers: – Controls: How to accelerate, brake, steer, and use any available optional features such as nitro boosts or itemized power-ups. – Vehicle performance: Descriptions of car types, handling characteristics, and how tuning or selecting different vehicles affects acceleration, top speed, and traction on various surfaces. – Tracks and environments: A breakdown of track layouts, difficulty cues, and recommended strategies for overtaking opponents and preserving tire wear or fuel (where applicable). – Game modes and progression: An outline of the competitive framework, including time trials, head-to-head racing, or season-like structures that gradually increase challenge. – Tips and troubleshooting: Practical guidance for beginners, including learning curves, practice routines, and common pitfalls to avoid.   Authenticity and presentation The authenticity of a manual from this era lies in its tactile, diagram-rich presentation. Expect fold-out pages, iris-open diagrams of track layouts, and clear, concise prose that translates into intuitive in-game actions. The manual often doubles as a quick-reference guide during sessions, allowing players to optimize their approach without rummaging through on-screen menus. This hands-on accessibility is a hallmark of the cartridge-driven experience and contributes to a more immersive, disciplined approach to racing.   Gameplay feel and design philosophy Top Gear Pocket 2 adheres to a design philosophy that rewards practice and precision. While not the most technologically ambitious title on the Game Boy Color, it achieves a satisfying sense of speed and competitive tension through well-tuned controls and responsive feedback. The absence of complex modern mechanics places emphasis on core racing skills: line selection, braking discipline, cornering efficiency, and strategic use of power-ups or boosts if available in the specific configuration. The manual’s guidance aligns with this philosophy by teaching players how to translate basic inputs into reliable lap times and position management.   Preservation and value for collectors From a preservationist standpoint, owning a complete package with the authentic manual provides an authentic snapshot of the user experience intended by the developer. Manuals often contain not only gameplay instructions but also contextual notes, warranty information, and artwork that enrich the historical narrative of handheld racing games. For enthusiasts, a complete set can enhance display value, resale potential, and the satisfaction of engaging with the game as it was originally encountered.   Closing thoughts Top Gear Pocket 2 for the Game Boy Color embodies a slice of handheld racing history where simplicity, clarity, and tactile guides converge. The manual remains an indispensable companion, guiding players through the nuances of handling, strategy, and progression in a compact, era-defining format. For collectors, historians, and players seeking an authentic retro racing experience, the manual-only presentation offers a focal point for appreciating how information design shaped gameplay during the handheld golden era.    ![](https://i0.wp.com/247videogame.com/wp-content/uploads/2026/09/s-l1600.jpg-502.jpeg?resize=1024%2C1024&ssl=1 \"s-l1600-jpg-502-jpeg\")                                            September 18, 2026 at 07:16AM   More Information   Follow for more content like this.   24/7 Video Game   All of the best video games, all of the time.   YouTube    Twitch    Kick    Facebook    Instagram    Reddit    TikTok    X    Up Game Shop   Donate To   St. Jude's Children's Research Hospital        submitted by     /u/GameProfessional     to     r/HaloInfinity       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HaloInfinity/comments/1wjngpk/halo_infinity_top_gear_pocket_2_nintendo_game_boy/",

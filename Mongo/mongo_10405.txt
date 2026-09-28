@@ -1,0 +1,416 @@
+      "$date": "2026-09-18T14:09:17.855Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad460e660c6084039797ac"
+    },
+    "message_id": "reddit_t3_1wjr935",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "pwnhub",
+    "username": "_cybersecurity_",
+    "title": "OpenAI internal code exposed via AI-built exploit and sign-in flaw",
+    "text": "OpenAI internal code exposed via AI-built exploit and sign-in flaw\n\nResearchers used Claude to build an exploit for an image-processing bug that, when chained with a sign-in token flaw, allowed access to OpenAI employee accounts and internal code repositories.     Key Points:      Hacktron used Claude Opus 4.8 and 5 to create a working exploit for an unpatched libheif vulnerability in the ImageMagick library used by OpenAI's Discourse forum.   The exploit enabled remote code execution on the forum, which was chained with a flaw where sign-in tokens carried excessive permissions, allowing takeover of ChatGPT and Codex accounts.   The vulnerability affected any user or employee who logged into the community forum, with theoretical exposure extending to connected services like GitHub, Slack, and email.   Hacktron demonstrated access by opening a pull request in an internal OpenAI GitHub repository, while OpenAI confirmed limited reads of private-repository metadata and commits.   OpenAI fixed the token permission issue within 14 hours of the report, and Discourse patched the image-processing flaw within two days, adding sandboxing as an extra defense layer.     The incident began with a vulnerability in the libheif library, which is used by ImageMagick to decode HEIC and HEIF image formats. This bug had been fixed upstream a year prior but was not flagged as a security issue, so it never received a CVE and was missed during standard patching cycles. Because OpenAI's community forum, built on Discourse, did not natively support these formats, uploads were passed to ImageMagick, exposing the unpatched flaw. Security firm Hacktron used Claude to develop a reliable exploit that allowed remote code execution on the forum.   Once code execution was achieved on the forum, the researchers leveraged a separate flaw in OpenAI's sign-in system. Tokens generated for the community forum carried excessive permissions, granting full API access to associated ChatGPT and Codex accounts. This meant that anyone who logged into the forum could have their accounts taken over. Since these accounts are often linked to other services, the potential impact extended to GitHub, Slack, and email. Hacktron demonstrated the severity by using a taken-over employee account to open a pull request in an internal OpenAI repository.   OpenAI responded quickly, narrowing the permissions on community sign-in tokens and revoking affected sessions within 14 hours of the report. Discourse also addressed the image-processing issue within two days by patching the flaw and adding sandboxing. OpenAI paid Hacktron a $6,500 bounty for the OpenAI-side finding, while the libheif flaw was reported to Discourse through HackerOne.   How often do unflagged upstream fixes lead to missed security patches in third-party dependencies?    Learn More:   Security Week     Want to stay updated on the latest cyber threats?     👉   Subscribe to /r/PwnHub         submitted by     /u/_cybersecurity_     to     r/pwnhub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pwnhub/comments/1wjr935/openai_internal_code_exposed_via_aibuilt_exploit/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:08:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:09:18.062Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad460e660c6084039797af"
+    },
+    "message_id": "reddit_t3_1wjr933",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Sea_Art2995",
+    "title": "What countries actually have a higher quality of life than foreigners assume?",
+    "text": "What countries actually have a higher quality of life than foreigners assume?\n\nsubmitted by     /u/Sea_Art2995     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wjr933/what_countries_actually_have_a_higher_quality_of/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:08:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:09:18.651Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad460e660c6084039797b0"
+    },
+    "message_id": "reddit_t3_1wjr92n",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "royalcaribbean",
+    "username": "reggie_doodle",
+    "title": "Boarding",
+    "text": "Boarding\n\nWe’re sailing on Legend from Civitavecchia next Thursday. On previous sailings, we’ve left from the main embarkation port. I was wondering if anyone who has boarded here (and not Barcelona) could tell me how strict they have been with boarding times? We had initially taken a time to suit travelling in from Rome morning of sailing but we’ve now decided just to head out to Civitavecchia when we arrive on the Wednesday. If we can’t board earlier, can we leave luggage at the port? We have an apartment so unfortunately can’t leave it there. Also wondering if anyone could give me an idea of how full recent sailings have been? I know all are different, I’m just curious! Thanks for any advice        submitted by     /u/reggie_doodle     to     r/royalcaribbean       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/royalcaribbean/comments/1wjr92n/boarding/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:08:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:09:18.852Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad460f660c6084039797b1"
+    },
+    "message_id": "reddit_t3_1wjr92l",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "CoE5",
+    "username": "Insect_lover2002",
+    "title": "That wasn't so bad",
+    "text": "That wasn't so bad\n\nWhile I was playing a game as the Voice of El my Arch bishop managed to charm a priest king in the early game. At first I thought I should just place him on a frozen sea tile and wait for him to drown because his greater ceremony ritual has a chance to strengthen your blessing and unlike with bolster devotion the cost doesn't increase when you use it.   Until I realised there was also a Senator in my game and that's when I had the idea of conquering every plane (excluding the Void) with the power of  polytheism . Converting the senator was pretty easy due to his low magic resistance and I even managed to charm two guildmasters meaning I had a way to transport armies long distances with the help of guild portals and could use mercenary/thieves guilds to deal with any spirits or horrors wandering Elysium.   Everything was going great! I managed to obtain scrolls that teleport you to Hades and Inferno as well as getting some powerful artifacts for my god emperor, but at around year 23 I noticed the game was taking a long time to process wandering unit turns. I didn't think too much about it since I thought it was due to me just visiting every plane, until I checked Elysium and saw greedy adventures and thieves were   everywhere  . So, realising that it's only going to get worse I needed to find a way to shorten the distance my army would need to travel to get to the Celestial plane.   Luckily a group of brigands managed to find a Granite citadel in Agartha giving me a easier path to the primal plane, but even with that route it still took my army almost two hours to arrive because after I end my turn it would take ≈ 40 seconds just to start my second turn.    What was the enemy faction doing during all of this? well, the kobolds managed to spawn an elder dragon with a crystal heart and a illusion magic boosting item making it basically unkillable even for my blessed units, so they embraced their inner dwarf and stayed in their kobold lair this entire time.       submitted by     /u/Insect_lover2002     to     r/CoE5       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CoE5/comments/1wjr92l/that_wasnt_so_bad/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:08:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:09:19.052Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad460f660c6084039797b2"
+    },
+    "message_id": "reddit_t3_1wjr92a",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskRedditors",
+    "username": "OutrageousWinner9057",
+    "title": "Why do ads and content in Reddit fall under different policies?",
+    "text": "Why do ads and content in Reddit fall under different policies?\n\nI saw an ad for a somewhat different dating app on Reddit. Went to the Reddit AI search thing and asked it for reviews and Redditor’s opinion on the app, which to my surprise said that this question is against community and content policy.    Wouldn’t it make sense to NOT advertise something that goes against your policies?       submitted by     /u/OutrageousWinner9057     to     r/AskRedditors       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskRedditors/comments/1wjr92a/why_do_ads_and_content_in_reddit_fall_under/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:08:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:09:19.250Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad4622aeeb96c1c63b963f"
+    },
+    "message_id": "reddit_t3_1wjr9j2",
+    "topic_key": "solar installer",
+    "search_keyword": "solar installer",
+    "platform": "reddit",
+    "subreddit": "ThisWeekInSolar",
+    "username": "AJNichols93",
+    "title": "Plug-In Solar Will Be Legal in New Jersey March 1st. Landlords Can't Say No.",
+    "text": "Plug-In Solar Will Be Legal in New Jersey March 1st. Landlords Can't Say No.\n\nIf you’re a landlord, property manager, or sit on an HOA board, there’s something you need to be paying attention to here:      The Garden State Balcony Solar Act specifically strips landlords, homeowners’ associations, condo associations, and co-op boards of the power to prohibit plug-in solar.      You will retain the right to set reasonable rules about size and placement, but you will lose the right to say no to plug-in solar.     Energy costs are high in New Jersey, and there’s a lot of building excitement from residents about this new ability to lower energy bills without approval. It’s the same set of conditions that made plug-in solar take off like a rocket in Europe. Energy got really expensive because of the Russia-Ukraine war, and people wanted more control in their lives, so they bought small solar energy systems and started putting them up everywhere.     There’s a good chance this will take off in New Jersey. You have two options. You can just wait to see what people buy and hang on March 2nd, or you can get ahead of this.     Last week we interviewed Craig Morris, who runs Germany’s plug-in solar association. Germany passed exactly the same law, prohibiting landlords from denying renters the right to own these systems (there are more than a million of these systems operational in Germany now).     He told us that the smart property managers in Germany all do the same thing: they work with a reliable solar installer, pick one approved product for the whole building, and have it installed properly on all balconies/outdoor areas at the same time. This keeps everyone happy.     The residents get lower bills, and they don’t have to figure out plug-in solar themselves. The property owners and managers get to approve the aesthetics, and don’t have residents randomly buying different panels and putting them up on their balconies.     This approach is also much less expensive for the property owners and the solar installers, because there are no associated permitting costs. The systems are quick and easy to install and pay for themselves much faster.     If you own, manage, or sit on the board of a property in New Jersey and you want plug-in solar installed on your whole property at once so that it’s uniform (rather than letting residents install a hodgepodge of parts), you need to contact Exact Solar. We’d love to help you prepare for what’s coming.        submitted by     /u/AJNichols93     to     r/ThisWeekInSolar       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ThisWeekInSolar/comments/1wjr9j2/plugin_solar_will_be_legal_in_new_jersey_march/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:09:26Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:09:38.721Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad4622aeeb96c1c63b9640"
+    },
+    "message_id": "reddit_t3_1wjr9ip",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "LocalLLaMA",
+    "username": "External_Mood4719",
+    "title": "China’s mysterious AI company Naive AI is valued at over $1.4 billion and could release its first open-source llm model as early as this month.",
+    "text": "China’s mysterious AI company Naive AI is valued at over $1.4 billion and could release its first open-source llm model as early as this month.\n\nAccording to people familiar with the matter, Naive AI, an AI startup founded in February this year by Tsinghua University professor Dai Jifeng, has completed three funding rounds totaling $400 million, bringing its valuation to more than $1.4 billion and earning it unicorn status. Its investors include Tencent, IDG Capital, Matrix Partners China, and Sequoia China.   It is understood that Naive AI raised $100 million in its first funding round, $180 million in its second, and $120 million in its recently completed third round, at a post-money valuation of $1.42 billion. Although the company has been around for more than seven months, it has kept a low profile, with fewer than 100 employees.   People familiar with the matter said Naive AI will launch its first large language model, also named Naive, as early as this month, releasing it as an open-weight model.   In terms of technical approach, Naive AI did not choose the costly option of pretraining from scratch. Instead, it is modifying the architecture of existing china open-weight models and then continuously optimizing them through processes such as mid-training, post-training, and reinforcement learning, in hopes of achieving better performance on multiple tasks. It is not yet possible to confirm which specific base model it uses.   In addition, Naive AI is also researching recursive self-improvement technology. That is, the ability of AI models to automatically iterate and upgrade themselves.    https://www.theinformation.com/articles/tsinghua-professors-stealth-llm-startup-hits-1-4-billion-valuation        submitted by     /u/External_Mood4719     to     r/LocalLLaMA       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LocalLLaMA/comments/1wjr9ip/chinas_mysterious_ai_company_naive_ai_is_valued/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:09:25Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:09:38.990Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad4623aeeb96c1c63b9641"
+    },
+    "message_id": "reddit_t3_1wjr9h4",
+    "topic_key": "checkout",
+    "search_keyword": "checkout",
+    "platform": "reddit",
+    "subreddit": "CryptoHelp",
+    "username": "Known_Sugar_2539",
+    "title": "Adding a virtual debit card to Apple Pay without identity verification?",
+    "text": "Adding a virtual debit card to Apple Pay without identity verification?\n\nI’m trying to use a verification virtual debit card for a couple online checkouts next month, but I’d rather not do the whole identity verification thing if I don’t have to. Has anyone here actually gotten one of these cards into Apple Pay, or does wallet always kick it back until the issuer verifies you? I’m mostly worried about setting it up and then finding out it only works by typing the card number in manually, not through Apple Pay.        submitted by     /u/Known_Sugar_2539     to     r/CryptoHelp       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CryptoHelp/comments/1wjr9h4/adding_a_virtual_debit_card_to_apple_pay_without/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:09:22Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:09:39.307Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad4623aeeb96c1c63b9642"
+    },
+    "message_id": "reddit_t3_1wjr9gj",
+    "topic_key": "data engineer",
+    "search_keyword": "data engineer",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "📢 Flash Group [HIRING] a Senior Data Engineer (western Cape) At Flash Group!",
+    "text": "📢 Flash Group [HIRING] a Senior Data Engineer (western Cape) At Flash Group!\n\nCompany: Flash Group   Date Posted: September 18, 2026 📅   Level: Senior 👵   Categories: #engineer #data #senior #fulltime   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=jobs.freshtalent.africa&rurl=aHR0cHM6Ly9qb2JzLmZyZXNodGFsZW50LmFmcmljYS9qb2JzL3Nlbmlvci1kYXRhLWVuZ2luZWVyLXdlc3Rlcm4tY2FwZS1hdC1mbGFzaC1ncm91cC00YWYzMzBjMA==    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wjr9gj/flash_group_hiring_a_senior_data_engineer_western/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:09:21Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:09:39.590Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad4647660c6084039797b3"
+    },
+    "message_id": "reddit_t3_1wjra3d",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "introvert",
+    "username": "PhineasFacingCamera",
+    "title": "Barbershops should have a “Do not speak to me” option like Uber.",
+    "text": "Barbershops should have a “Do not speak to me” option like Uber.\n\nI’ve been avoiding a haircut for weeks because I hate going so much. It’s not that I don’t actually want a haircut, I do. I understand that they are friendly to earn tips, but I don’t go to a barbershop to make friends. I go there because I need a haircut. I left my last barber because he kept telling me I should move to Dubai and if I got tired of having to tip someone who was actively annoying the shit out of me every time I saw them. I don’t care, I don’t know you, shut up and cut my hair.    If I had a silent barber that would probably triple my tip for them.        submitted by     /u/PhineasFacingCamera     to     r/introvert       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/introvert/comments/1wjra3d/barbershops_should_have_a_do_not_speak_to_me/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:10:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:10:15.816Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad4648660c6084039797b4"
+    },
+    "message_id": "reddit_t3_1wjra2u",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "HWK_Bets",
+    "username": "Vain64",
+    "title": "[TA] Hugh Mungus HWK falling wedge",
+    "text": "[TA] Hugh Mungus HWK falling wedge\n\nhttps://preview.redd.it/jneyt5wkdaqh1.png?width=3090&format=png&auto=webp&s=d46cea214f7b5d399b098e1f12cd1b636c9dfa33    last opportunity to get rich in this life. Buy. HWK       submitted by     /u/Vain64     to     r/HWK_Bets       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HWK_Bets/comments/1wjra2u/ta_hugh_mungus_hwk_falling_wedge/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:10:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:10:16.032Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad4648660c6084039797b5"
+    },
+    "message_id": "reddit_t3_1wjra2t",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Feulas89",
+    "title": "What's the best thing that happened to you this week and how did it happen?",
+    "text": "What's the best thing that happened to you this week and how did it happen?\n\nsubmitted by     /u/Feulas89     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wjra2t/whats_the_best_thing_that_happened_to_you_this/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:10:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:10:16.244Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad4648660c6084039797b6"
+    },
+    "message_id": "reddit_t3_1wjra2q",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal INNIO NV Ordinary Shares - 18 Sep 2026 @ 10:08 -> $20.57",
+    "text": "Buy Signal INNIO NV Ordinary Shares - 18 Sep 2026 @ 10:08 -> $20.57\n\nTicker:  INIO    Exchange:  NASDAQ    Time:  18 Sep 2026 @ 10:08    Price:  $20.57    Link:  https://getagraph.com/AAA/trading/NASDAQ/INIO/analysis/signals        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wjra2q/buy_signal_innio_nv_ordinary_shares_18_sep_2026/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:10:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:10:16.457Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad4648660c6084039797b7"
+    },
+    "message_id": "reddit_t3_1wjra2m",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "TrueChristian",
+    "username": "CathodoxChristian",
+    "title": "Guess What Chad Got Banned From r/Christianity",
+    "text": "Guess What Chad Got Banned From r/Christianity\n\nMe on my first post thats gotta be an achievement.    Atheists are so funny, they have a script for everyone, \"something something did you know there's slavery in the bible something something you're an ist and a phobe\" but honestly their moral framework goes something like \"as an agent I can't enforce my will on other agents\" or something, then they're gonna get all mad at you over a thought crime. Lets assume I did think slavery was moral, unless I'm enslaving people I have hurt literally no one.    I was just saying atheists in the 90s were the moral-anti-realist edgelords who would disregard societal norms in favour of being logical free thinkers. Yeah WHAT HAPPENED TO ATHEISM? Now atheists are the ones trying to trap Christians into admitting taboo moral things so they can get all offended, clutch their pearls, and shame them like grannies. Now anything you think is bad because they will just call it homophobic or something, now you should feel shame and be in silence, because don't you feel bad for the easily offended or something?   This is pathetic, what changed? Was it reddit? Did reddit culture ruin atheism? Are the memes founded? (yes).    Anyway the post was in regards to the entire sub constantly validating homosexuality. Like fine whatever I'm not even straight myself, but why do people try and pass bible verses off as something they are not? Why do people just make up Christianity as they go along instead of referring to the historical church? Like idk maybe if an interpretation hasn't existed anywhere before 1800 its not actually a Christian belief its a niche interpretation.    What do you guys think?       submitted by     /u/CathodoxChristian     to     r/TrueChristian       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TrueChristian/comments/1wjra2m/guess_what_chad_got_banned_from_rchristianity/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:10:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:10:16.671Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad4648660c6084039797b8"
+    },
+    "message_id": "reddit_t3_1wjra2k",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "libros",
+    "username": "eContento",
+    "title": "Relato gratuito de ciencia ficción dura: «Malditos americanos»",
+    "text": "Relato gratuito de ciencia ficción dura: «Malditos americanos»\n\nLa idea con este relato corto y gratuito es atraer a potenciales lectores que descubran qué historias escribo y cómo lo hago.  :-)    Sinopsis    «La EUS Terror y la EUS Erebus regresan a la Tierra tras cumplir con éxito la primera misión tripulada en Marte, pero su regreso no está exento de problemas. En las proximidades de nuestro planeta ha surgido un contratiempo que no estaba ahí cuando emprendieron la misión. La capitana Sara García, de la Agencia Espacial Europea, se verá obligada a tomar importantes decisiones para salvaguardar la vida de su tripulación».     Descarga gratuita :      Amazon:   https://www.amazon.es/dp/B0HHZQZ8DR/     Google Play:   https://play.google.com/store/books/details?id=l5bZEQAAQBAJ     Apple Books:   https://books.apple.com/es/book/malditos-americanos/id6780023668     Kobo   https://www.kobo.com/es/es/ebook/malditos-americanos     ebuki   https://ebuki.es/book/221       A ver qué os parece.        submitted by     /u/eContento     to     r/libros       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/libros/comments/1wjra2k/relato_gratuito_de_ciencia_ficción_dura_malditos/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:10:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:10:16.885Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad4649660c6084039797b9"
+    },
+    "message_id": "reddit_t3_1wjra25",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "OpenAI",
+    "platform": "reddit",
+    "subreddit": "OpenAI",
+    "username": "Buff-Tooth",
+    "title": "Thoughts?",
+    "text": "Thoughts?\n\nhttps://m.youtube.com/watch?v=cu59YscYFhk&pp=iggUQAFKEDloRW8tZ2Q1anZiOUxwNUU%3D&ra=m        submitted by     /u/Buff-Tooth     to     r/OpenAI       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OpenAI/comments/1wjra25/thoughts/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:10:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:10:17.103Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad4649660c6084039797ba"
+    },
+    "message_id": "reddit_t3_1wjra1p",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "rusAskReddit",
+    "username": "gore-2024",
+    "title": "Как я полюбил команду КВН с дурацким названием Фёдор Двинятин",
+    "text": "Как я полюбил команду КВН с дурацким названием Фёдор Двинятин\n\nПосмотрел видео под названием \"Они не стали чемпионами но стали легендами\" и решил рассказать как я полюбил эту команду. В 2007 году я после продолжительного перерыва в 7 лет... вернулся в интернет и то ли сразу то ли год спустя начал искать видео в разных местах из передачи Аншлаг! Аншлаг!, с каким то комиком который ничего не говорил но показывал сценки, понтамима это что ли называется. Имени артиста я не знал и искал по описанию, там он выступал с резиновым шлангом и напивал при этом какую то мелодию. Видео я не нашёл. В 2012 году я публиковался в ЖЖ и получил комментарий от какого то пользователя, ник которого был в виде фамилии как у какого то знаменитого человека, кажется mironov как у великого актёра, этот юзер написал что это он этот артист и кинул видео которое я так долго искал. Я его поблагодарил и написал как я рад встрече, после чего проник к нему в журнал из которого узнал что он живёт в Берлине и работает в цирке, и там же впервые увидел видео с выступлением Фёдора Двинятина, это была сценка Собачье сердце в стиле Дюти фри и она мне не понравилась, я очень люблю фильм Собачье сердце... Прошёл год меня снова прокомментировал этот человек и я снова проник к нему и посмотрел у него ещё какое то видео с ФД которое мне очень понравилось и я загуглил ФД на Ютюбе и посмотрел все видео с ними какие нашёл. С тех пор и пересматриваю их снова и снова. Вот так и полюбил       submitted by     /u/gore-2024     to     r/rusAskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/rusAskReddit/comments/1wjra1p/как_я_полюбил_команду_квн_с_дурацким_названием/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:10:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:10:17.322Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad4649660c6084039797bb"
+    },
+    "message_id": "reddit_t3_1wjra1o",
+    "topic_key": "nike",
+    "search_keyword": "Nike",
+    "platform": "reddit",
+    "subreddit": "SneakersIndia",
+    "username": "GoldBee741",
+    "title": "Mira Road factory oulets",
+    "text": "Mira Road factory oulets\n\nI have came across these Mira Road factory outlets of brands like nike, puma, adidas etc. They are offering massive discounts. Are these stores legit and are the products original ?        submitted by     /u/GoldBee741     to     r/SneakersIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SneakersIndia/comments/1wjra1o/mira_road_factory_oulets/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:10:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:10:17.544Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {

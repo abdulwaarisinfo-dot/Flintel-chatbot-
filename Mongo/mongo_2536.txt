@@ -1,0 +1,416 @@
+    "text": "Extending shelf life of opened C41 concentrate.\n\nHi all,   I am looking to buy a 1ltr C41 kit for home use, as I have 6 rolls ready to develop (3 x 35mm and 3 x 120).    I want to buy a kit that I can split all the concentrates in half, so that I can mix up and develop the 6 rolls now, and then mix up the other half when I have 6 more rolls to develop.. I will be using a Jobo 2520 tank in rotary mode, so only need 300ml of solution to develop..    I was looking at the Adox C41 kit, as it is available in the UK and it says in the instructions that it can be split into 2. The unused opened concentrate supposedly has a shelf life of 12 weeks, but I wanted to see if I can make it last possibly 6 months. Are there any tips and tricks I can use to see if I can push the unused concentrate to 6 months? I already have glass amber bottles, PET amber bottles, glass marbles (to remove as much oxygen in the bottles as possible) as well as a argon gas cannister (sold as a Wine Preserver), that I use to remove oxygen from other film chemical bottles to help with reducing oxidization.. I have also managed in the past to vac pac bottles in bags to really stop any oxygen getting to it.. Any help, tips or tricks will be greatly appreciated.   Thanks.        submitted by     /u/EquivalentTip4103     to     r/Darkroom       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Darkroom/comments/1wceoj2/extending_shelf_life_of_opened_c41_concentrate/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T09:55:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T09:55:20.928Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa27e89035b0f36efcc90a8"
+    },
+    "message_id": "reddit_t3_1wceogd",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "php",
+    "platform": "reddit",
+    "subreddit": "DelawareRiverBoaters",
+    "username": "raveneyes77",
+    "title": "Delaware River conditions, Thursday, September 10 2026",
+    "text": "Delaware River conditions, Thursday, September 10 2026\n\nTides at Philadelphia   High 1:07 AM, 7.1 ft  Low 8:07 AM, 0.5 ft  High 1:36 PM, 6.6 ft  Low 8:19 PM, 0.6 ft    Water temperature  81 F, reading taken 4:24 AM at the Philadelphia gauge.    Sun  Sunrise 6:37 AM. Sunset 7:17 PM. Dusk 7:45 PM.    Wind and weather  Today: partly sunny, high near 88, west wind 5 to 10 mph. Tonight: mostly cloudy, low around 69, 40 percent chance of showers mainly after midnight. Northwest wind around 5 mph going calm after midnight. Friday: partly sunny, high near 82, north wind around 5 mph.    https://preview.redd.it/uh2usq4s0ooh1.jpg?width=600&format=pjpg&auto=webp&s=8a7990bed7d1bb4caf378be1968f15554e539831     Downriver note  Small Craft Advisory on Delaware Bay until 8 AM, and Cape May to Fenwick Island until 10 AM. Mount Holly has the bay at southwest 15 to 20 knots gusting 25 this morning, easing to west 5 to 10, seas 2 to 3 feet, with showers likely tonight. That is bay water, not river water. At Philadelphia it is west 5 to 10 mph and nothing else. If you run south, the forecast changes under you.   Good day to be out. Hot, mostly sunny, and the afternoon high lands just after lunch. Wind is thin, so if you want to sail rather than motor, bring patience or bring fuel.    Assembled from NOAA and NWS data. Corrections welcome.    Sky over the basin, GOES-19 GeoColor:  https://www.star.nesdis.noaa.gov/GOES/sector.php?sat=G19&sector=ne        submitted by     /u/raveneyes77     to     r/DelawareRiverBoaters       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DelawareRiverBoaters/comments/1wceogd/delaware_river_conditions_thursday_september_10/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T09:54:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T09:55:21.146Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa27e89035b0f36efcc90a9"
+    },
+    "message_id": "reddit_t3_1wceog8",
+    "topic_key": "give me today top three conversation about e commerce",
+    "search_keyword": "ecommerce",
+    "platform": "reddit",
+    "subreddit": "WebScrapingInsider",
+    "username": "typicalyawa",
+    "title": "Best tool for scraping JavaScript rendered sites in 2026? I tested Playwright vs Firecrawl on 50 SPAs",
+    "text": "Best tool for scraping JavaScript rendered sites in 2026? I tested Playwright vs Firecrawl on 50 SPAs\n\nScraping static HTML with Cheerio or Requests is easy but scraping modern JavaScript-rendered sites (Next.js hydration, React SPAs, infinite scroll, shadow DOMs) is where things usually break down.   You either end up with an empty      shell, or you're forced to maintain a cluster of headless browsers that constantly crash from memory leaks and proxy bans.   I tested the 2 most common tools across 50 notoriously annoying JS-heavy sites (dynamic dashboards, lazy-loaded ecommerce tables, and Cloudflare-guarded pages) to see what works reliably.   Here is what I found:   I) Playwright (Self-hosted) is the gold standard for raw control if you need to click complex interactive UI, solve custom drag-and-drop elements or handle multi-step logins, it does the job.   The downside is infra maintenance: running headless Chromium instances at scale eats server RAM like crazy and you still have to write your own parser to turn that rendered DOM into clean markdown for LLMs.   III) Firecrawl is the most seamless if you just want to hand over a URL and get back clean markdown or structured JSON without running your own browser servers. Its  smart wait  handled React hydration automatically and waited for lazy-loaded elements and bypassed Cloudflare challenges without me having to configure residential proxy pools. Out of the 50 test SPAs, it successfully extracted full content on 47 of them.   So if you’ve a dedicated DevOps team and need deep UI scripting: Playwright   If you want an API that handles JS execution, proxies and gives you clean LLM-ready markdown in one call: Firecrawl is the best solution overall       submitted by     /u/typicalyawa     to     r/WebScrapingInsider       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WebScrapingInsider/comments/1wceog8/best_tool_for_scraping_javascript_rendered_sites/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T09:54:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T09:55:21.360Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa27e89035b0f36efcc90aa"
+    },
+    "message_id": "reddit_t3_1wceog0",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BuyFromEU",
+    "username": "smilelyzen",
+    "title": "International Space Summit: Remarks by President von der Leyen",
+    "text": "International Space Summit: Remarks by President von der Leyen\n\nInternational Space Summit: Remarks by President von der Leyen            submitted by     /u/smilelyzen     to     r/BuyFromEU       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BuyFromEU/comments/1wceog0/international_space_summit_remarks_by_president/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T09:54:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T09:55:21.574Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa27e89035b0f36efcc90ab"
+    },
+    "message_id": "reddit_t3_1wceoep",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "hometheater",
+    "username": "Commune-Designer",
+    "title": "Is the layout worth it?",
+    "text": "Is the layout worth it?\n\nHello good people of r/ hometheater.   I am in need of advice and hope this is the right place to find it. As you can see in the attached image, my \"theater\" is more of a nook or an alcove if you like. Its rather weird in dimensions and the more I read up on the placement of speakers, the more i realise, that its anything but optimal for building a multi speaker setup. Heres my thinking so far:   Ive a lovley 65 inch OLED Bravia. I am hooked to its picture and cant imagine buying something else. I also consider it enough for the watching distance of rougly 3 meters. An additional Beamer setup might eventually happen, but the TV is one limiting factor for the setup, since it leaves me with 27.5 centimeters distance for an in wall speaker. From my research I can tell thats enough space. But when I draw in the 60 degree dispersion angle, it seems to me, the combination of distance and length of wall leaves me with an ideal listening position for exactly one person and one person only.   This of course is less a theater and more of a glorified gaming setup and when I add the fact, that rear speakers are impossible, since that wall behind the listening position is massive, I am left with ceiling and sourround speakers. I am not sure if this is enough or even practical. I have no way of listening to a setup remotley close to what I am about to sink a lot of money into to realise and this makes it feel a bit risky tbh.    Another option would be to move the TV a bit to the left and then have three of four seats for the setup, but i fear that this would render the sourround speakers more or less usless. Also the symmetry is somewhat important to me.    All this leads me to the inevitable question of: Is it worth it or should I stick to - excuse my french - a s*undbar? Mind you: I have yet to listen to one I consider good sound quality, but anything is better than TV sound, so theres that.       submitted by     /u/Commune-Designer     to     r/hometheater       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hometheater/comments/1wceoep/is_the_layout_worth_it/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T09:54:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T09:55:21.790Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa27ebc47709d84b65c022b"
+    },
+    "message_id": "reddit_serp_tps___www_reddit_com_r_freelanceWriters_",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/freelanceWriters/",
+    "text": "How To Make the Most Out of this Subreddit: Introduce Yourself and Meet the Mods & Community!\n\nWelcome to the  /r/freelancewriters  subreddit, a subreddit for freelance writers of all backgrounds, types, and skill levels.   Here's how to get the most out of this sub:   Read the Rules   Our  Rules  have been written to be as simple as possible while still allowing for free discussion, debate, and sharing. Please familiarize yourself with them  before  you start participating here. We're generally pretty lax with enforcement and bans, but we also expect you to follow the rules no matter how long you've been here and we will remove posts/ban users as necessary and depending on the violation (and its severity).   Bear in mind that the  Reddit Content Policy  supersedes any of the subreddit rules, so you're also responsible for following its guidelines.   If you're interested in our approach to how we moderate this subreddit, please see our post  Keeping this community valuable - Explaining our role and approach as moderators  and  learn more about the health of the community here.     Read the Wiki   The  subreddit Wiki  is comprised of a wealth of community-generated advice, guidance, information, and help that's been vetted and built upon over time. While it's not guaranteed to cover everything, we ask that you please look it over before you make a new post, especially if you're looking for help about something basic, like how to start freelancing or where to find clients.   Use the Search Function   Chances are your question has been asked before, especially if you're asking if a certain company is legitimate.  Use the search function  before you post to see if your question's been answered before. If it hasn't -- or your question hasn't been asked recently -- feel free to go ahead and make a post (as long as it follows the rules!).   Include Relevant Context in Your Posts   The community can only help you as much as you allow us to. Posts without sufficient and relevant context are difficult to respond to, so it's hard for anyone to provide you with actionable advice.   Don't correct posters' grammar, spelling, punctuation, or similar unless they request it   We all have to stay on top of our typos, grammar, etc. in our freelance careers, and writers shouldn't have to do that here. We don't police those areas in this sub, so unless a writer specifically requests a critique of these areas (e.g. in the feedback thread), please don't respond to posts or comments pointing out spelling, grammar, or similar issues.   Report Offending Posts   Please use the report function to report posts that violate the subreddit's rules. This gives the moderators a little \"alert\" that helps us easily find potential violations vs. reading through each thread. Similarly, please don't attack or otherwise abuse those you perceive to be breaking the rules. Report them and move on; we'll get to it :)   If Your Post is Automatically Removed...   The subreddit uses a bot called  /u/Automoderator  to automatically process some moderator functions based on a ruleset we've written. But the bot's functionality is limited and the only way for it to work effectively means it sometimes catches otherwise permissible posts.   If your post is automatically removed, please read the removal notice that you should receive within a few minutes of removal. This will be a comment in response to your post and will explain why your post was removed. If you believe the removal was in error, please  use ModMail  to let us know and we'll manually review your post ASAP.   Please note that there is also a \"karma\" limit in place. This means that newer members or those without sufficient \"Reddit karma\" may have their posts and comments automatically removed despite following all rules. This is a spam prevention method that helps fight most bots, spammers, and other ne'er-do-wells. If you fall into this gap, please  use ModMail  to contact us so we can manually review your post.   If You're Shadowbanned...   Some Reddit accounts are shadowbanned site-wide. This means that, though you can participate in a subreddit, no one else can see your posts other than yourself and moderators -- and your profile is inaccessible to everyone but yourself (and Reddit staff).  There is nothing we, as moderators, can do about this.  If your account is shadowbanned, please consult  /r/shadowban  for guidance, but you may just have to make a new account (which may or may not get shadowbanned).   Use ModMail to Contact the Moderators   The moderators of the subreddit ( /u/GigMistress  and  /u/DanielMattiaWriter ) are responsible for ensuring the subreddit runs smoothly. Please bear in mind that we're only ever acting officially when we \"distinguish\" our comments by changing our usernames to green (old Reddit) or adding a \"MOD\" designation alongside a little shield (new Reddit). In all other cases, we are acting and speaking as individuals and members of the community -- the same as anyone else.   If you have an issue with moderation or a question about the rules/another user's behavior/anything else, please don't spam the report button or cause drama in the thread and between other users. Instead, please use  ModMail  to contact us so we can resolve the situation. Similarly,  do not PM us directly : we don't respond to moderation requests via personal PMs, so your problem or question will go unresolved and unanswered.   Additionally, we welcome feedback and ideas, so feel free to shoot any over via ModMail! We're committed to continually improving and growing the subreddit and it's ultimately up to the community to dictate how that happens.   Meet the Moderators   Finally, the subreddit is moderated and overseen by two moderators, each of whom is an active freelance writer.    /u/GigMistress , or Tiffany, has been a freelancer writer for 34 years, across a wide range of subject matter and types of writing, ranging from local newspaper reporting to music history, parenting, business, and consumer finance. For the past 15+ years, she has written exclusively in the legal and legal technology arenas.    /u/DanielMattiaWriter  has been a freelance writer since January 2017, and primarily writes about insurance/insurtech, personal finance, startups, SaaS, and ecommerce. He also has two rescue cats, one of whom likes to meow loudly during meetings and interviews.       submitted by     /u/AutoModerator       [link]       [comments]",
+    "username": "AutoModerator",
+    "subreddit_or_channel": "freelanceWriters",
+    "posted_at": "2026-07-06T14:45:08+00:00",
+    "fetched_at": {
+      "$date": "2026-09-10T09:56:12.640Z"
+    },
+    "google_rank": 1,
+    "search_keyword": "affordable case study writer",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-10T09:56:12.640Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa27ec4035b0f36efcc90ac"
+    },
+    "message_id": "reddit_t3_1wcep6e",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "AlertVegas",
+    "username": "MugShots",
+    "title": "NV Energy Alert",
+    "text": "NV Energy Alert\n\nNVEnergy Alert Planned Shutdown for Service Improvement in 89445 Verified customers affected ORT: Verified ETR: Verified       submitted by     /u/MugShots     to     r/AlertVegas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlertVegas/comments/1wcep6e/nv_energy_alert/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T09:56:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T09:56:20.888Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa27ec5035b0f36efcc90ad"
+    },
+    "message_id": "reddit_t3_1wcep1n",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BuyFromEU",
+    "username": "smellydiscodiva",
+    "title": "Can anyone recommend a toothpaste that tastes like this Colgate one?",
+    "text": "Can anyone recommend a toothpaste that tastes like this Colgate one?\n\nI'm quite particular with my Toothpaste, and I've used this one for years because I really like the taste. I have tried different toothpastes but I always end up going back to this one because I like how it tastes. However, I've been told that colgate isn't actually good for your teeth, and I would like to try a European alternative, does anyone have any recommendations?       submitted by     /u/smellydiscodiva     to     r/BuyFromEU       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BuyFromEU/comments/1wcep1n/can_anyone_recommend_a_toothpaste_that_tastes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T09:55:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T09:56:21.113Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa27eec47709d84b65c022c"
+    },
+    "message_id": "reddit_serp_1e2wrrt",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/freelanceWriters/comments/1e2wrrt/i_havent_found_a_decent_writing_job_since_march/",
+    "text": "I haven’t found a decent writing job since March\n\nTo give you some background, I've been a freelance writer since 2020. I've worked for many clients, mainly in the tech space. At the beginning of the year, I was working for two major clients. But since March, there’s been a decline.   The first client “paused” my job because Google removed their site from search results, leading to zero traffic. I absolutely loved that job and did my best work there, but for some reason, Google didn’t like it. I'm technically still on the team, but I've given up hope that I'll ever be able to continue working there.   Shortly after, the second client told me I should focus on research and use AI tools to write the articles. Of course, I was told I’d be paid less because of this. But that’s not even the point. I became a writer because I love to write. What’s the use if I let AI do that for me? So, I left that job.   In May, I started working as content writer for a blog. I wrote a few articles for them, which they liked, but then they, too, said the same thing: use AI to do most of the writing, just focus on research. I am okay with using AI as a tool that assists me in my work, but they were telling me to use it for all of the writing, which I just don’t agree with. So, I left that job, too.   I admit I've always had a short fuse when it comes to my work. If I don't like a job, I leave it. I value my life too much to be doing work I don’t enjoy or believe in. In the past, it was possible for me to hold on to that standard because if I didn't like a job, I could find another one. But now there just doesn't seem to be enough jobs available.   Currently, I don't have any clients. I updated my website and LinkedIn, I visit job boards daily, I’ve published new articles on Medium, and I also send cold emails to startups. But none of it has led to any opportunities so far.   Thanks for reading about my experience. It felt good to share it. I’d love to hear any advice you may have that can help me get back on track.       submitted by     /u/againstbaalveer       [link]       [comments]",
+    "username": "againstbaalveer",
+    "subreddit_or_channel": "freelanceWriters",
+    "posted_at": "2024-07-14T07:52:20+00:00",
+    "fetched_at": {
+      "$date": "2026-09-10T09:57:00.939Z"
+    },
+    "google_rank": 4,
+    "search_keyword": "affordable case study writer",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-10T09:57:00.939Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa27f01035b0f36efcc90ae"
+    },
+    "message_id": "reddit_t3_1wcepsu",
+    "topic_key": "hello",
+    "search_keyword": "Hello!",
+    "platform": "reddit",
+    "subreddit": "VWMK7",
+    "username": "FlicK8911",
+    "title": "Macan rims fitment on Mk7 Golf",
+    "text": "Macan rims fitment on Mk7 Golf\n\nHello!   I found myself some base model 19\" macan rims and plan on running them on my Mk7 R Line.    Wondering if anybody has any advice or what I should do to make them fit my car ? Also heard I needed to run camber on the rear.    Any advice ?       submitted by     /u/FlicK8911     to     r/VWMK7       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/VWMK7/comments/1wcepsu/macan_rims_fitment_on_mk7_golf/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T09:57:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T09:57:21.283Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa27f01035b0f36efcc90af"
+    },
+    "message_id": "reddit_t3_1wcepsb",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "carsales",
+    "username": "Bailey7724",
+    "title": "Car salesman advice",
+    "text": "Car salesman advice\n\nHey everyone, I work in a big car supermarket and we sell GardX additional products. We’ve got paint and fabric protection, tyre and alloy protection, and scratch protection. I was wondering if you guys had any advice on how I can encourage people to buy these, and what I should do if someone says “no I don’t want it”.  I’ve been in the car sales industry for 4 months now, and I’m not doing as good as other people who joined with me.  I’m too nice of a person to be like “no you ain’t having the car without this” as a lot of my colleagues do.  We also have an extended RAC warranty which I can sell ok, but again I’m not that good.  I was wondering what you guys say during the qualifying stage to plant seeds about buying these products, and if they actually work, or what you say when trying to encourage the customer to spend extra to have this protection on their vehicle.       submitted by     /u/Bailey7724     to     r/carsales       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/carsales/comments/1wcepsb/car_salesman_advice/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T09:57:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T09:57:21.528Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa27f01035b0f36efcc90b0"
+    },
+    "message_id": "reddit_t3_1wcepsa",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "nintendo",
+    "username": "Wolffel",
+    "title": "Open Letter to Nintendo Regarding Scalping and Limited Edition Zelda Reservations",
+    "text": "Open Letter to Nintendo Regarding Scalping and Limited Edition Zelda Reservations\n\nDear Nintendo Team and   r/Nintendo   community  ,    I am writing to you as a long-time Nintendo fan and, in particular, as a dedicated follower of  The Legend of Zelda  series. The purpose of this letter is to express my deep disappointment and concern regarding the reservation process for some of your most recent products, especially the  Nintendo Switch 2 Zelda 40th Anniversary Edition  console and the physical edition of  The Legend of Zelda: Ocarina of Time  for Nintendo Switch 2.   Within an extremely short period of time, less than 48 hours, reservations for these products were completely sold out. However, shortly after they became unavailable through official channels, numerous units began appearing on second-hand marketplaces at prices significantly higher than their original retail value, in some cases being resold for double the original price. You can verify this yourselves on Spanish marketplaces such as Wallapop or on international platforms such as eBay.   As both a consumer and a supporter of your products, I believe this situation seriously harms fans who genuinely wish to purchase these items to enjoy and preserve them, rather than for speculative purposes. The impression this creates is that a significant portion of the available stock ends up in the hands of resellers seeking quick profits by taking advantage of the enthusiasm and loyalty of the gaming community.   I fully understand that Nintendo cannot control the actions of third parties once a product has been legitimately purchased. However, I do believe there are measures that could significantly help reduce this issue, including:     Strictly limiting the number of units that each customer can reserve.   Linking certain reservations to verified Nintendo accounts.   Giving priority to users with active accounts and a genuine history of using Nintendo services.   Implementing lottery-based systems or phased access for particularly limited editions.   Strengthening measures to detect and prevent automated purchases made through bots.     Many fans devote considerable time to following Nintendo news, actively participate in the Nintendo ecosystem, and have supported your products for many years. It is frustrating to see that, despite this loyalty, access to certain editions is becoming increasingly difficult due to speculators whose sole intention is to resell them at inflated prices.   For this reason, I respectfully ask that you consider implementing additional measures to protect legitimate consumers and help ensure that products of this nature reach, as much as possible, the players and collectors for whom they were originally intended.   Thank you for taking the time to read this letter. I sincerely hope that my opinion, which I believe is shared by many other fans, will be taken into consideration for future reservation campaigns and product launches.    Fans remember the games they buy for many years, but they also remember the experience they had trying to obtain them.    Yours faithfully,    u/Woffel        submitted by     /u/Wolffel     to     r/nintendo       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/nintendo/comments/1wcepsa/open_letter_to_nintendo_regarding_scalping_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T09:57:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T09:57:21.771Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa27f02035b0f36efcc90b1"
+    },
+    "message_id": "reddit_t3_1wceps6",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AusPropertyChat",
+    "username": "sunnysideupslide",
+    "title": "Recent buyers, how are you feeling?",
+    "text": "Recent buyers, how are you feeling?\n\nAfter watching the Australian property market with a mixture of disgust and amazement ever since I moved here 4 years ago, with my permanent residency finally coming in we were ready to get in on the grift ourselves and bought a place in Perth for close to a million. I staunchly believe Australian real estate is massively overpriced but looked at it as an investment in our future.   A month later the property tax reform got announced.   We had a full plan ready: refinance as soon as possible, buy as many properties as quickly as possible, do what has been the fool proof way to build wealth in Australia since forever. That’s not going to happen now - just had our home evaluated and it came back as worth slightly less than what we paid for it.    It’s fine, we’re just chilling in our very own house and my in-laws can move in with us and stop working so much, which is nice. They’ll chip in and we’ll just chuck that extra money in the offset account until we have enough for a deposit for the next property.    I will never forget meeting my new (boomer) neighbour and she went on this little rant about how expensive our house was and how shocked she was at the price guide and then pointed to hers and said “I got this for under 250k” as if she was trying to say how much smarter she was. There is this lingering feeling that boomers well and truly had everything handed to them on a silver platter.    How’s everyone else who bought recently going?        submitted by     /u/sunnysideupslide     to     r/AusPropertyChat       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AusPropertyChat/comments/1wceps6/recent_buyers_how_are_you_feeling/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T09:57:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T09:57:22.016Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa27f02035b0f36efcc90b2"
+    },
+    "message_id": "reddit_t3_1wcepqb",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Osana",
+    "username": "Burnt_future",
+    "title": "had a dream yandere was complete",
+    "text": "had a dream yandere was complete\n\ni had a dream yandere sim was complete , yandev went to therapy and decided to complete the game as quick as possible , he added new features and removed ones like the pantie pics . anyway , i dont remember all the new feature but i remember there was things like   the opposite gender mode  yaoi mode  yuri mode    goth mode : its just make the whole game in gothic style , it can be applied beside any mode    aftermath mode : which will open after you eliminate all the rivals while keeping your rep and senapi sanity high , you kinda just become a hitman for some reason?    the panties system was replaced with favors from info chan (like buying tips/lessons on how to make your apologies effective or leaving less blood puddles) info points were gained by : pranking certain students / teachers or js doing the bounty thing    also you could like leave fake bully messages in your own locker and then blame a rival for it and for some reason you needed the rival fingerprints on them? or you could leave the bully messages in your rivals locker but it wont be effective unless their reputation is lower by half at least    also you could eat your rivals meat , cannibalism yay!! , there is also ransom option for kidnapped rich students    and you could become one of the bullies but you had to give them lipstick and make up weekly for some reason lmao?    anyway , this all i remember . i think some of them would be nice if actually added in the game but they need more improvement (since dream ideas dont always make sense) what do you think guys?        submitted by     /u/Burnt_future     to     r/Osana       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Osana/comments/1wcepqb/had_a_dream_yandere_was_complete/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T09:56:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T09:57:22.265Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa27f02035b0f36efcc90b3"
+    },
+    "message_id": "reddit_t3_1wcepoz",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "NoidaWale",
+    "username": "Aggressive-Leg-9919",
+    "title": "Laundry around sec135",
+    "text": "Laundry around sec135\n\nI'm seeking advice on how to effectively expand our laundry services in areas like Sector 135, 90, 142, and nearby locations such as Supertech Ecociti, Paras Tieria, Ajnara Daffodil, and the Logix area. We offer various services, including laundry, shoe cleaning, dry cleaning, and saree draping, all while focusing on quality and customer satisfaction. Our packaging is appealing, similar to larger brands, and we prioritize timely delivery.   While our prices are competitive, I've noticed the need to increase our order volume. Any tips or insights on how to reach more customers and grow our business would be greatly appreciated! Thank you!       submitted by     /u/Aggressive-Leg-9919     to     r/NoidaWale       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NoidaWale/comments/1wcepoz/laundry_around_sec135/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T09:56:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T09:57:22.512Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa27f3547709d84b65c022d"
+    },
+    "message_id": "reddit_serp_1ik8i1k",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/freelanceWriters/comments/1ik8i1k/is_starting_to_freelance_in_writing_is_worth_it/",
+    "text": "IS Starting to Freelance in Writing is worth it anymore or is it dead?\n\nI am a new freelancer. I have accounts on all three major freelancing platforms (Fiverr, Upwork, Freelancer). I have been trying my luck on them for a while, so you could say I’m not very new. The problem is I cannot get any clients on any of the platforms. I major in Psychology and have a great interest in game development and tech. I can write very good informative articles on many topics, though I usually focus on mental health and tech-related articles. My articles do get 9+ SEO scores on SEMrush. I can also make resumes and handle other tasks.   The problem is I am not getting clients anywhere. I recently stopped buying connects on my Upwork account because it felt like a constant drain on my wallet without any result. I work in a software house, where I also use the Freelancer platform for getting writing clients. I wanted to go solo. I don’t really understand it. The place where I work, we do get clients, but mostly because we bid on everything, like grants and other complex tasks, and they have a large production team for it, which, of course, is something I cannot do alone.   So, what should I do in today's era to start a career in freelance? How do I market myself to get clients, or is it just useless now?       submitted by     /u/SamGame1997Dev       [link]       [comments]",
+    "username": "SamGame1997Dev",
+    "subreddit_or_channel": "freelanceWriters",
+    "posted_at": "2025-02-07T23:06:03+00:00",
+    "fetched_at": {
+      "$date": "2026-09-10T09:58:13.464Z"
+    },
+    "google_rank": 8,
+    "search_keyword": "affordable case study writer",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-10T09:58:13.464Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa27f3e035b0f36efcc90b4"
+    },
+    "message_id": "reddit_t3_1wceqfm",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "AlertVegas",
+    "username": "MugShots",
+    "title": "NV Energy Alert",
+    "text": "NV Energy Alert\n\nNVEnergy Alert Planned Shutdown for Service Improvement in 89445 Verified customers affected ORT: Verified ETR: Verified       submitted by     /u/MugShots     to     r/AlertVegas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlertVegas/comments/1wceqfm/nv_energy_alert/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T09:58:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T09:58:22.087Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa27f3e035b0f36efcc90b5"
+    },
+    "message_id": "reddit_t3_1wceqdk",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "sahamAS",
+    "username": "Puzzled_Cookie778",
+    "title": "Apakah Bubble AI Terjadi di 2026? Ini Bukti Data Laporan Keuangan $NVDA & Salesforce",
+    "text": "Apakah Bubble AI Terjadi di 2026? Ini Bukti Data Laporan Keuangan $NVDA & Salesforce\n\nAkhir-akhir ini sering banget liat postingan dan diskusi tentang spekulasi jilid dua eforia AI yang tingga nunggu waktu buat meledak. Gw nyoba tarik data dari laporan keuangan kuartalan terbaru ($NVDA & $CRM) yang rilis akhir Agustus kemarin untuk melihat apakah kekhawatiran pasar ini beralasan.   Kalau merujuk pada definisi klasiknya, bubble itu terjadi saat harga melonjak tanpa diimbangi fundamental atau pendapatan riil. Tapi kalau kita beda metrik utamanya, situasinya saat ini justru didorong oleh Real Cash Flow:     Nvidia Earnings & Massive Free Cash Flow: Pada rilis Q2 FY2027 (26 Agustus 2026), pendapatan $NVDA melonjak 106% ke $96,2 miliar. Yang paling krusial, FCF mereka tembus $21,3 miliar dalam satu kuartal. Ini murni uang tunai bersih dari operasional pelanggan, bukan hasil utang atau gelembung akuntansi   Valuasi Price to Sales (P/S) Masih Rasional: Dengan run rate pendapatan disetahunkan ~$384,8 miliar dibanding market cap ~$5 triliun, rasio P/S Nvidia berada di kisaran 13x. Buat perusaahn yang tumbuh >100% YoY dengan gross margin ~75%, multiple ini relatif terukur dibanding growth stocks era 2021-2021   Monetisasi Software & Agentic AI ($CRM): Salesforce ($CRM) yang rilis di hari yang sama mencatat fitur AI agent (Agentforce) mereka meroket 240%. Meskipun kontribusinya baru ~3% dari total revenue, angka RPO (sisa kewajiban kinerja/kontrak) mereka naik 14%, menandakan adopsi enterprise mulai jalan   Next Wave: Embodied AI & Humanoid Robots: Infrastruktur cloud AI sekarang mulai meluas ke bentuk fisik (Embodied AI). Di ajang World Humanoid Robot Games Agustus 2026 lalu jumlah robot trading melonjak 4x lipat (2.056 unit), di mana Tiongkok menguasai 97% pasar pengiriman global. Sementara US (via Tesla Optimus Gen 3/Grok) memimpin di ranah software/brain AI     Angka-angka ini menunjukan bahwa alokasi modal di sektor AI saat ini sudah berada di fase penyerapan uang tunai riil bukan murni spekulasi tanpa dasar. Risikonya sekarang tinggal nunggu pembuktian ROI dari capex Big Tech atau kalian liat ada faktor makro lain yang bisa ngerem rally AI ini?       submitted by     /u/Puzzled_Cookie778     to     r/sahamAS       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sahamAS/comments/1wceqdk/apakah_bubble_ai_terjadi_di_2026_ini_bukti_data/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T09:58:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T09:58:22.290Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa27f3f035b0f36efcc90b8"
+    },
+    "message_id": "reddit_t3_1wceqcb",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "ThailandTourism",
+    "username": "Bogdan2014",
+    "title": "How do you guys usually plan your hotels when traveling around Thailand?",
+    "text": "How do you guys usually plan your hotels when traveling around Thailand?\n\nI’m curious how other people do it, because I’ve always booked pretty much everything in advance.   For example, on my previous trips to Thailand, I would book a flight and then something like 4 nights in Sukhumvit, 3 nights around Khao San Road, a few nights in Chinatown, then Pattaya, etc. Basically, I had the whole trip and all the hotels booked before I even arrived.   But I keep seeing people saying that it’s better to only book the first 2–3 nights and then book hotels as you go.   I can understand the advantage of being flexible, but honestly, I feel like it would be pretty stressful for me. If I’m traveling with a big suitcase, I don’t really want to arrive somewhere, drag my luggage around, and then spend time looking for a hotel.   So how do you guys actually do it?   Do you book the whole trip in advance, book each hotel a few days before you arrive, or literally just arrive somewhere and find a place when you get there?   And does booking last minute actually save money, or is it mostly just about having more flexibility?   I’d especially like to hear from people who travel around Thailand regularly rather than just backpackers staying in hostels.   What’s your preferred way of doing it?       submitted by     /u/Bogdan2014     to     r/ThailandTourism       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ThailandTourism/comments/1wceqcb/how_do_you_guys_usually_plan_your_hotels_when/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T09:57:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T09:58:23.087Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa27f3f035b0f36efcc90b9"
+    },
+    "message_id": "reddit_t3_1wceqbn",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "gtbuyshipping",
+    "username": "Realistic-Damage7348",
+    "title": "Ralph Lauren polo T-shirts",
+    "text": "Ralph Lauren polo T-shirts\n\nNot sure about the color tbh. Looks slightly different from the listing pics.       submitted by     /u/Realistic-Damage7348     to     r/gtbuyshipping       [link]       [comments]",

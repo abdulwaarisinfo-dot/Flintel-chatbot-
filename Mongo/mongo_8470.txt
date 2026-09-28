@@ -1,0 +1,416 @@
+    "text": "This is what an optimized checkout page should look like.\n\nThe checkout isn’t just the place where people enter their card details. It’s the final CRO layer before the purchase.\n\nA few things I’d want here:\n\n→ Countdown / reservation messaging, creates a reason to finish the order now instead of “coming back later.”\n\n→ “Free shipping reached” confirmation, removes uncertainty and reinforces that the customer has already unlocked additional value.\n\n→ Shipping protection / reassurance, tackles one of the last remaining anxieties: “What happens if my package gets lost or damaged?” And adds between $3-$5 to your bottom line revenue.\n\n→ Brand USPs beside the order summary, customers are still evaluating the purchase during checkout. Reminding them *why* they chose you can reduce second thoughts. \n\nAlso fun to call out facts here, X amount of orders shipped, X amount of happy customers, etc. \n\n→ Reviews directly in checkout, last-minute social proof at the exact point where hesitation tends to show up.\n\nAnd one thing I’d add to this example:\n\n→ FAQs inside the checkout.\n\nShipping times. Returns. Guarantee. Sizing. Subscriptions. Whatever the biggest pre-purchase objections are for that brand.\n\nWe’ve been testing FAQs in checkout heavily recently (shoutout @dtcpages for the inspo), and they’ve been a winner in ~95% of the tests we’ve run.\n\nA customer reaching checkout doesn’t mean the sale is done.\n\nThere’s still a lot you can optimize between “I want this” and “Place order.”",
+    "post_url": "https://twitter.com/DaveDiederen/status/2100177890046509344",
+    "score": 404,
+    "num_comments": 25,
+    "created_utc": {
+      "$date": "2026-09-16T11:00:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:27:44.018Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabceb042dd0e95b5bab4e2"
+    },
+    "message_id": "twitter_2100270160250806350",
+    "topic_key": "custom shipping software",
+    "search_keyword": "custom shipping software",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "startupideaspod",
+    "title": "My new favorite way to build with agents is to organize them into a factory.\n\nThis is the 4-step workflow:\n\n1) Station. \n- A custom order gets its own station, so the order does not interfere with the rest of production. \n- In software, this station is a branch or a work tree.\n\n2) Assembly line. \n- The agent writes code, changes files, and adds structure.\n\n3) Quality control. \n- Does it turn on? \n- Does it fit? \n- Does it break under pressure? \n- In software, you run tests, open a preview, and read the logs and screenshots.\n\n4) Shipping. \n- The product goes out the door. \n- You merge, deploy the PR, and write release notes.\n\nIf a product fails quality control, you send feedback to the product team.\n\nThen you do the loop again.\n\nWrite each step of your agent workflow as a factory job.",
+    "text": "My new favorite way to build with agents is to organize them into a factory.\n\nThis is the 4-step workflow:\n\n1) Station. \n- A custom order gets its own station, so the order does not interfere with the rest of production. \n- In software, this station is a branch or a work tree.\n\n2) Assembly line. \n- The agent writes code, changes files, and adds structure.\n\n3) Quality control. \n- Does it turn on? \n- Does it fit? \n- Does it break under pressure? \n- In software, you run tests, open a preview, and read the logs and screenshots.\n\n4) Shipping. \n- The product goes out the door. \n- You merge, deploy the PR, and write release notes.\n\nIf a product fails quality control, you send feedback to the product team.\n\nThen you do the loop again.\n\nWrite each step of your agent workflow as a factory job.",
+    "post_url": "https://twitter.com/startupideaspod/status/2100270160250806350",
+    "score": 94,
+    "num_comments": 5,
+    "created_utc": {
+      "$date": "2026-09-16T17:06:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:27:44.233Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabceb042dd0e95b5bab4e4"
+    },
+    "message_id": "twitter_2100239562547016076",
+    "topic_key": "custom shipping software",
+    "search_keyword": "custom shipping software",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Emaasit",
+    "title": "A supplier shipment leaves a paper trail, and every piece of it arrives somewhere different.\n\nThe purchase order goes out by email. The delivery shows up with a paper Goods Received Note that the receiving clerk counts and initials at the dock. A week later the invoice arrives as a PDF attachment, or a photo on WhatsApp when the supplier is in a hurry.\n\nThat's three documents across three channels for one purchase. Until the AP clerk matches all of them, line by line, the supplier doesn't get paid.\n\nThe work arrives outside any system. The record it needs to become lives in the ERP. The distance between the two is hours of typing and matching, every single week.\n\nThis stretch between the dock, the inbox, and the ERP is what our AI managed services close.\n\nThe Procurement agent reads supplier documents wherever they arrive: a WhatsApp photo, an email attachment, a scan of a form that was never meant to be scanned. It pulls out the vendor, the items, the quantities, the prices, with 95%+ accuracy even on handwritten or low-quality scans. Then it matches what it read against the vendor master, the item catalog, and the open purchase orders already in the ERP.\n\nWhat comes back is a pre-filled record. The purchasing clerk checks it and clicks approve, and the purchase order, the GRN, or the invoice exists in QuickBooks or SAP without anyone re-typing a thing. The agent also runs the three-way match across the purchase order, the GRN, and the invoice, so a quantity that disagrees shows up before the payment run, while there's still time to fix it. Anything it isn't sure about goes to our Supply Chain Specialists, with the source document attached.\n\nIt reads in bulk too, 100 documents in parallel, for the Monday morning when a week of deliveries came in at once.\n\nI qualify distributors for a living, and supplier paperwork is one of my favorite questions to ask. What happens to the delivery note after the truck leaves? If the answer is a stack of GRNs waiting to be typed in, I know exactly where the gap is.\n\nAI SaaS is dead. Long live AI services.\n\nThe first sample is free. We take one supplier invoice, or one scanned delivery note, and return it as a finished record matched against the open purchase order.\n\nP.S\n\nWe run the coordination work between your channels and your systems. Orders, product catalogs, procurement, invoices, dock schedules, reconciled numbers. Give us access to the channels where that work arrives and we hand you back finished records in the ERP you already use.",
+    "text": "A supplier shipment leaves a paper trail, and every piece of it arrives somewhere different.\n\nThe purchase order goes out by email. The delivery shows up with a paper Goods Received Note that the receiving clerk counts and initials at the dock. A week later the invoice arrives as a PDF attachment, or a photo on WhatsApp when the supplier is in a hurry.\n\nThat's three documents across three channels for one purchase. Until the AP clerk matches all of them, line by line, the supplier doesn't get paid.\n\nThe work arrives outside any system. The record it needs to become lives in the ERP. The distance between the two is hours of typing and matching, every single week.\n\nThis stretch between the dock, the inbox, and the ERP is what our AI managed services close.\n\nThe Procurement agent reads supplier documents wherever they arrive: a WhatsApp photo, an email attachment, a scan of a form that was never meant to be scanned. It pulls out the vendor, the items, the quantities, the prices, with 95%+ accuracy even on handwritten or low-quality scans. Then it matches what it read against the vendor master, the item catalog, and the open purchase orders already in the ERP.\n\nWhat comes back is a pre-filled record. The purchasing clerk checks it and clicks approve, and the purchase order, the GRN, or the invoice exists in QuickBooks or SAP without anyone re-typing a thing. The agent also runs the three-way match across the purchase order, the GRN, and the invoice, so a quantity that disagrees shows up before the payment run, while there's still time to fix it. Anything it isn't sure about goes to our Supply Chain Specialists, with the source document attached.\n\nIt reads in bulk too, 100 documents in parallel, for the Monday morning when a week of deliveries came in at once.\n\nI qualify distributors for a living, and supplier paperwork is one of my favorite questions to ask. What happens to the delivery note after the truck leaves? If the answer is a stack of GRNs waiting to be typed in, I know exactly where the gap is.\n\nAI SaaS is dead. Long live AI services.\n\nThe first sample is free. We take one supplier invoice, or one scanned delivery note, and return it as a finished record matched against the open purchase order.\n\nP.S\n\nWe run the coordination work between your channels and your systems. Orders, product catalogs, procurement, invoices, dock schedules, reconciled numbers. Give us access to the channels where that work arrives and we hand you back finished records in the ERP you already use.",
+    "post_url": "https://twitter.com/Emaasit/status/2100239562547016076",
+    "score": 5,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-16T15:05:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:27:44.661Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabceb142dd0e95b5bab4e9"
+    },
+    "message_id": "twitter_2095222663924822402",
+    "topic_key": "custom shipping software",
+    "search_keyword": "custom shipping software",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ARKInvest",
+    "title": "https://t.co/Hc5k4Mm6wB",
+    "text": "https://t.co/Hc5k4Mm6wB",
+    "post_url": "https://twitter.com/ARKInvest/status/2095222663924822402",
+    "score": 1165,
+    "num_comments": 73,
+    "created_utc": {
+      "$date": "2026-09-02T18:49:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:27:45.738Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabceb142dd0e95b5bab4ea"
+    },
+    "message_id": "twitter_2100269217312383018",
+    "topic_key": "custom shipping software",
+    "search_keyword": "custom shipping software",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Emaasit",
+    "title": "A distributor is three weeks from launching a new Shopify site. Their ERP export has 2,800 products in it, and that export is the whole project.\n\nThe catalog team opens the file and the line stalls. One column has the part number. The description column reads like a filing code. Units say \"EA\" on some rows and \"CASE\" on others, and about 400 products have no image at all.\n\nEvery wholesale distributor that has moved online knows this file. The store itself is easy to set up. Getting the catalog ready is what slows the launch.\n\nWe run AI services for exactly this. The intake takes the ERP export as it is, no template, because suppliers and ERPs never send the same format twice. Resolution works out what each row actually is, the manufacturer, the MPN, the UPC, and which rows are the same product twice. Research and enrichment fill in what's missing: the real product title, the description, the specs, the images. Normalization puts every field into one format so \"EA\" and \"CASE\" finally agree. Validation flags the duplicate UPC, the weight that can't be right, the variant that doesn't match its siblings.\n\nThen our Supply Chain Specialists take the exceptions, around 6% of the file, and make the call on each flagged row. Approved records publish straight to Shopify and sync back to the ERP. The export that stopped the launch becomes a finished catalog in days instead of the weeks the team would have spent on it by hand.\n\nThat is what it means when the deliverable is the finished catalog. You hire the outcome, and the software underneath just makes the next batch faster.\n\nAI SaaS is dead. Long live AI services.\n\nThe first cleanup is free. We take one file from your backlog and return it finished, ready for the store.\n\nP.S\n\nWe run the coordination work between your channels and your systems. Orders, product catalogs, procurement, invoices, dock schedules, reconciled numbers. Give us access to the channels where that work arrives and we hand you back finished records in the ERP you already use.",
+    "text": "A distributor is three weeks from launching a new Shopify site. Their ERP export has 2,800 products in it, and that export is the whole project.\n\nThe catalog team opens the file and the line stalls. One column has the part number. The description column reads like a filing code. Units say \"EA\" on some rows and \"CASE\" on others, and about 400 products have no image at all.\n\nEvery wholesale distributor that has moved online knows this file. The store itself is easy to set up. Getting the catalog ready is what slows the launch.\n\nWe run AI services for exactly this. The intake takes the ERP export as it is, no template, because suppliers and ERPs never send the same format twice. Resolution works out what each row actually is, the manufacturer, the MPN, the UPC, and which rows are the same product twice. Research and enrichment fill in what's missing: the real product title, the description, the specs, the images. Normalization puts every field into one format so \"EA\" and \"CASE\" finally agree. Validation flags the duplicate UPC, the weight that can't be right, the variant that doesn't match its siblings.\n\nThen our Supply Chain Specialists take the exceptions, around 6% of the file, and make the call on each flagged row. Approved records publish straight to Shopify and sync back to the ERP. The export that stopped the launch becomes a finished catalog in days instead of the weeks the team would have spent on it by hand.\n\nThat is what it means when the deliverable is the finished catalog. You hire the outcome, and the software underneath just makes the next batch faster.\n\nAI SaaS is dead. Long live AI services.\n\nThe first cleanup is free. We take one file from your backlog and return it finished, ready for the store.\n\nP.S\n\nWe run the coordination work between your channels and your systems. Orders, product catalogs, procurement, invoices, dock schedules, reconciled numbers. Give us access to the channels where that work arrives and we hand you back finished records in the ERP you already use.",
+    "post_url": "https://twitter.com/Emaasit/status/2100269217312383018",
+    "score": 3,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-16T17:02:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:27:45.953Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabceb242dd0e95b5bab4ec"
+    },
+    "message_id": "twitter_2100457850338160841",
+    "topic_key": "custom shipping software",
+    "search_keyword": "custom shipping software",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "BabaDev_",
+    "title": "CODING APPS IS EASY NOW.\n\nAnyone can ship.\n\nAlmost nobody can sell.",
+    "text": "CODING APPS IS EASY NOW.\n\nAnyone can ship.\n\nAlmost nobody can sell.",
+    "post_url": "https://twitter.com/BabaDev_/status/2100457850338160841",
+    "score": 11,
+    "num_comments": 7,
+    "created_utc": {
+      "$date": "2026-09-17T05:32:30Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:27:46.382Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabceb242dd0e95b5bab4ed"
+    },
+    "message_id": "twitter_2099925406426018143",
+    "topic_key": "custom shipping software",
+    "search_keyword": "custom shipping software",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "kyonax_on_tech",
+    "title": "A couple of months ago, I started building a tool to speed up my workflow. I realized my bottleneck was now shipping and version management.\n\nThis tool helped me solve that. Here’s a small look at how I’ve been using it, now implemented as an Omarchy plugin to make everything more visual and easier to track.\n\nshipwright, in short:\n· scheduled auto-commits\n· repo rules via contracts\n· direct push or PR\n· AI writes commit messages (based on repo-context)\n· tests gate every commit\n· recipes for stacked PRs\n· squash review commits\n· one inbox, every PR\n· agent fixes PR blockers\n· \"why didn't it ship?\"\n· version bumps + changelog\n· diff + revert any run\n· desktop + phone alerts\n· pause, arm, disarm",
+    "text": "A couple of months ago, I started building a tool to speed up my workflow. I realized my bottleneck was now shipping and version management.\n\nThis tool helped me solve that. Here’s a small look at how I’ve been using it, now implemented as an Omarchy plugin to make everything more visual and easier to track.\n\nshipwright, in short:\n· scheduled auto-commits\n· repo rules via contracts\n· direct push or PR\n· AI writes commit messages (based on repo-context)\n· tests gate every commit\n· recipes for stacked PRs\n· squash review commits\n· one inbox, every PR\n· agent fixes PR blockers\n· \"why didn't it ship?\"\n· version bumps + changelog\n· diff + revert any run\n· desktop + phone alerts\n· pause, arm, disarm",
+    "post_url": "https://twitter.com/kyonax_on_tech/status/2099925406426018143",
+    "score": 1,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T18:16:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:27:46.597Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabceb242dd0e95b5bab4ee"
+    },
+    "message_id": "twitter_2100536730755420425",
+    "topic_key": "custom shipping software",
+    "search_keyword": "custom shipping software",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "greensock",
+    "title": "💚 Site of the Day - LxL Creative\n\nJordan Gilroy — @jordangilroy\n\n⚙️ ScrollTrigger, Observer, DrawSVG, Draggable, Inertia, CustomEase\n\nsite → https://t.co/Fue6AldA4J\nshowcase → https://t.co/zGjV9MxQ0f https://t.co/qYtCc5sDBA",
+    "text": "💚 Site of the Day - LxL Creative\n\nJordan Gilroy — @jordangilroy\n\n⚙️ ScrollTrigger, Observer, DrawSVG, Draggable, Inertia, CustomEase\n\nsite → https://t.co/Fue6AldA4J\nshowcase → https://t.co/zGjV9MxQ0f https://t.co/qYtCc5sDBA",
+    "post_url": "https://twitter.com/greensock/status/2100536730755420425",
+    "score": 11,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T10:45:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:27:46.821Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabceb342dd0e95b5bab4ef"
+    },
+    "message_id": "twitter_2097855912119529701",
+    "topic_key": "custom shipping software",
+    "search_keyword": "custom shipping software",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "d_bo_ss28",
+    "title": "Long may you reign, My King! 👑🦅\n\n​Permit me to share a vision that can expand the reach of Eleniyan Gadgets beyond the physical showroom and tap directly into the digital space.\n\n​Imagine a dedicated, high-performance web platform tailored exclusively for Eleniyan Gadgets, similar to @JumiaNigeria and @shoptemu , but built specifically for your brand:\n​📲 Automated Ordering: Customers browse, select, and purchase genuine phones and accessories 24/7.\n\n​💳 Secure Payment Gateway: Direct online payments straight to your business accounts.\n\n​🚚 Seamless Nationwide Shipping: Customers order from anywhere in Nigeria without needing to visit the physical store.\n\n​As a software engineer and student, I rely on my technical skills to build legitimate, high-value digital systems for businesses. \n\nI am not asking for a handout, My King, I am asking for the opportunity to build a custom prototype and demonstrate what I can deliver for your empire.\n\n​May your reign continue to be long, peaceful, and prosperous! ⚔️👑\n\nPlease watch the video and see what I can do, a quote or retweet will go a long way.🙏🏻🙏🏻 @30bgmillitary @Smooth_Diary @Bankemaestro @melanietonii",
+    "text": "Long may you reign, My King! 👑🦅\n\n​Permit me to share a vision that can expand the reach of Eleniyan Gadgets beyond the physical showroom and tap directly into the digital space.\n\n​Imagine a dedicated, high-performance web platform tailored exclusively for Eleniyan Gadgets, similar to @JumiaNigeria and @shoptemu , but built specifically for your brand:\n​📲 Automated Ordering: Customers browse, select, and purchase genuine phones and accessories 24/7.\n\n​💳 Secure Payment Gateway: Direct online payments straight to your business accounts.\n\n​🚚 Seamless Nationwide Shipping: Customers order from anywhere in Nigeria without needing to visit the physical store.\n\n​As a software engineer and student, I rely on my technical skills to build legitimate, high-value digital systems for businesses. \n\nI am not asking for a handout, My King, I am asking for the opportunity to build a custom prototype and demonstrate what I can deliver for your empire.\n\n​May your reign continue to be long, peaceful, and prosperous! ⚔️👑\n\nPlease watch the video and see what I can do, a quote or retweet will go a long way.🙏🏻🙏🏻 @30bgmillitary @Smooth_Diary @Bankemaestro @melanietonii",
+    "post_url": "https://twitter.com/d_bo_ss28/status/2097855912119529701",
+    "score": 22,
+    "num_comments": 2,
+    "created_utc": {
+      "$date": "2026-09-10T01:13:20Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:27:47.052Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabceb942dd0e95b5bab4f1"
+    },
+    "message_id": "twitter_2092349048917270679",
+    "topic_key": "custom storefront builder",
+    "search_keyword": "custom storefront builder",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ridark_eth",
+    "title": "I genuinely don't understand why everyone isn’t using this yet.\n\nElon Musk, founder of X, shared a simple idea: use this exact Empire Builder setup to build five micro-businesses that run completely without you.\n\nFive fully automated micro-empires on the desk, $180 a month in tools, replacing the $400K–$600K a year it normally costs to hire a full ops team, marketers, support staff and product builders.\n\nThe daily stand-up is at 9am. I am not in it.\n\n> NICHE finds proven demand in print-on-demand, online courses, local services, SaaS-wrappers and digital products before the competition even notices  \n\n> PRODUCT builds the digital or physical offer in days (AI + no-code + POD partners)  \n\n> SITE launches the complete storefront, payment system and funnel in one evening  \n\n> MARKETING runs organic + paid traffic (Reels, SEO, Meta) on autopilot  \n\n> SALES converts visitors, handles upsells and reorders without human input  \n\n> SUPPORT answers customers 24/7 through bots and a $7/hour VA only when needed  \n\n> SCALER spins up the next micro-empire the moment the current one hits $2–3k clean  \n\n> HEAD OF EMPIRE never touches operations, just routes the weekly P&L and brings me the one decision that needs a human\n\n47 niches scanned, 11 products built, 5 businesses live and generating while I was offline.\n\nEvery piece has its own cloud workspace, memory and automation stack. The entire floor stays active with my laptop shut.\n\nThe setup is dumber than it looks:\n\n1. Download the Empire Builder framework and create your Head of Empire.  \n2. Give the remaining 7 systems clear job descriptions like you’re briefing new hires.  \n3. Run the workflow once on your screen while they watch.  \n4. Hook up Stripe, Telegram or Discord alerts and the VA dashboard.  \n5. No VPS, no custom code, no waiting on developers.\n\nA real business used to mean 16-hour days, hiring headaches and constant burnout.  \n\nMine took one evening to set up and now runs five profit streams on its own.\n\nSave this before your next “I’ll start a business someday”.  \n\nSave GUIDE.",
+    "text": "I genuinely don't understand why everyone isn’t using this yet.\n\nElon Musk, founder of X, shared a simple idea: use this exact Empire Builder setup to build five micro-businesses that run completely without you.\n\nFive fully automated micro-empires on the desk, $180 a month in tools, replacing the $400K–$600K a year it normally costs to hire a full ops team, marketers, support staff and product builders.\n\nThe daily stand-up is at 9am. I am not in it.\n\n> NICHE finds proven demand in print-on-demand, online courses, local services, SaaS-wrappers and digital products before the competition even notices  \n\n> PRODUCT builds the digital or physical offer in days (AI + no-code + POD partners)  \n\n> SITE launches the complete storefront, payment system and funnel in one evening  \n\n> MARKETING runs organic + paid traffic (Reels, SEO, Meta) on autopilot  \n\n> SALES converts visitors, handles upsells and reorders without human input  \n\n> SUPPORT answers customers 24/7 through bots and a $7/hour VA only when needed  \n\n> SCALER spins up the next micro-empire the moment the current one hits $2–3k clean  \n\n> HEAD OF EMPIRE never touches operations, just routes the weekly P&L and brings me the one decision that needs a human\n\n47 niches scanned, 11 products built, 5 businesses live and generating while I was offline.\n\nEvery piece has its own cloud workspace, memory and automation stack. The entire floor stays active with my laptop shut.\n\nThe setup is dumber than it looks:\n\n1. Download the Empire Builder framework and create your Head of Empire.  \n2. Give the remaining 7 systems clear job descriptions like you’re briefing new hires.  \n3. Run the workflow once on your screen while they watch.  \n4. Hook up Stripe, Telegram or Discord alerts and the VA dashboard.  \n5. No VPS, no custom code, no waiting on developers.\n\nA real business used to mean 16-hour days, hiring headaches and constant burnout.  \n\nMine took one evening to set up and now runs five profit streams on its own.\n\nSave this before your next “I’ll start a business someday”.  \n\nSave GUIDE.",
+    "post_url": "https://twitter.com/ridark_eth/status/2092349048917270679",
+    "score": 196,
+    "num_comments": 30,
+    "created_utc": {
+      "$date": "2026-08-25T20:31:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:27:53.269Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabceb942dd0e95b5bab4f2"
+    },
+    "message_id": "twitter_2100544899590267076",
+    "topic_key": "custom storefront builder",
+    "search_keyword": "custom storefront builder",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Shopify",
+    "title": "Your next sale could start from a pair of AR glasses\n\nAnd you don't have to build anything. Catalog already has your 3D models.",
+    "text": "Your next sale could start from a pair of AR glasses\n\nAnd you don't have to build anything. Catalog already has your 3D models.",
+    "post_url": "https://twitter.com/Shopify/status/2100544899590267076",
+    "score": 4,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-17T11:18:24Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:27:53.484Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabceb942dd0e95b5bab4f3"
+    },
+    "message_id": "twitter_2098450747595575324",
+    "topic_key": "custom storefront builder",
+    "search_keyword": "custom storefront builder",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "aminuiex",
+    "title": "Here’s the new hero i designed and built in @framer for @shopiframe, our shopify integration for framer.\n\nand yes, that little store actually works. https://t.co/OylnsQmVeL",
+    "text": "Here’s the new hero i designed and built in @framer for @shopiframe, our shopify integration for framer.\n\nand yes, that little store actually works. https://t.co/OylnsQmVeL",
+    "post_url": "https://twitter.com/aminuiex/status/2098450747595575324",
+    "score": 11,
+    "num_comments": 3,
+    "created_utc": {
+      "$date": "2026-09-11T16:37:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:27:53.712Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabceba42dd0e95b5bab4f7"
+    },
+    "message_id": "twitter_2099880749331611751",
+    "topic_key": "custom storefront builder",
+    "search_keyword": "custom storefront builder",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "GalaxxyStudio",
+    "title": "#1 on Framer Marketplace. 🥇\n32K impressions • 46 remixes • 2 sales\nAll in just 4 hours.\nSeeing this template reach #1 has been crazy.\nThank you to everyone who checked it out and remixed it.\nYou can remix it for free and launch your own website within 24 hours\nDm for remix https://t.co/2e2cfGK8nO",
+    "text": "#1 on Framer Marketplace. 🥇\n32K impressions • 46 remixes • 2 sales\nAll in just 4 hours.\nSeeing this template reach #1 has been crazy.\nThank you to everyone who checked it out and remixed it.\nYou can remix it for free and launch your own website within 24 hours\nDm for remix https://t.co/2e2cfGK8nO",
+    "post_url": "https://twitter.com/GalaxxyStudio/status/2099880749331611751",
+    "score": 33,
+    "num_comments": 11,
+    "created_utc": {
+      "$date": "2026-09-15T15:19:19Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:27:54.567Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabceba42dd0e95b5bab4f8"
+    },
+    "message_id": "twitter_2100346884871094734",
+    "topic_key": "custom storefront builder",
+    "search_keyword": "custom storefront builder",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "MichaelHeckert",
+    "title": "My first @Shopify app is live on the app store!\n\nGive your customers a hyper realistic preview of their personalized items before purchase with Coordinate Studio https://t.co/7aE31spBH4\n\nTry it and give me feedback im new and building solo 🫡",
+    "text": "My first @Shopify app is live on the app store!\n\nGive your customers a hyper realistic preview of their personalized items before purchase with Coordinate Studio https://t.co/7aE31spBH4\n\nTry it and give me feedback im new and building solo 🫡",
+    "post_url": "https://twitter.com/MichaelHeckert/status/2100346884871094734",
+    "score": 3,
+    "num_comments": 3,
+    "created_utc": {
+      "$date": "2026-09-16T22:11:34Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:27:54.782Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabceba42dd0e95b5bab4f9"
+    },
+    "message_id": "twitter_2098742787965624695",
+    "topic_key": "custom storefront builder",
+    "search_keyword": "custom storefront builder",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ecomstoregalaxy",
+    "title": "✨ A Premium look online store doesn’t need a premium theme. FREE Shopify themes can use custom banners, rich graphics &amp; dynamic menus to build a strong fashion store. 🚀🛍️\n\nNeed similar store? 🙌\nFree Consultation: https://t.co/YypqHHmcu3 👈\n&gt;&lt;&gt;&lt;&gt;&lt;\n\nWeb Designer\nShopify https://t.co/fq3GXmlMBi",
+    "text": "✨ A Premium look online store doesn’t need a premium theme. FREE Shopify themes can use custom banners, rich graphics &amp; dynamic menus to build a strong fashion store. 🚀🛍️\n\nNeed similar store? 🙌\nFree Consultation: https://t.co/YypqHHmcu3 👈\n&gt;&lt;&gt;&lt;&gt;&lt;\n\nWeb Designer\nShopify https://t.co/fq3GXmlMBi",
+    "post_url": "https://twitter.com/ecomstoregalaxy/status/2098742787965624695",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T11:57:28Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:27:54.998Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcebb42dd0e95b5bab4fb"
+    },
+    "message_id": "twitter_2100254102945190180",
+    "topic_key": "custom storefront builder",
+    "search_keyword": "custom storefront builder",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "muzammilkhanjpj",
+    "title": "Built this from scratch instead of using another boring template.\n\nIf you want a website that actually looks like this for your brand, drop a comment or DM me. https://t.co/XYAjS9AKzj",
+    "text": "Built this from scratch instead of using another boring template.\n\nIf you want a website that actually looks like this for your brand, drop a comment or DM me. https://t.co/XYAjS9AKzj",
+    "post_url": "https://twitter.com/muzammilkhanjpj/status/2100254102945190180",
+    "score": 1,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-16T16:02:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:27:55.426Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcebb42dd0e95b5bab4fd"
+    },
+    "message_id": "twitter_2100514955590062404",
+    "topic_key": "custom storefront builder",
+    "search_keyword": "custom storefront builder",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Theadedamola_",
+    "title": "Designed and built an add new shop flow for an ecommerce management dashboard https://t.co/wxzqVX83KJ",
+    "text": "Designed and built an add new shop flow for an ecommerce management dashboard https://t.co/wxzqVX83KJ",
+    "post_url": "https://twitter.com/Theadedamola_/status/2100514955590062404",
+    "score": 3,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T09:19:25Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:27:55.859Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcebc42dd0e95b5bab501"
+    },
+    "message_id": "twitter_2100325589894693035",
+    "topic_key": "custom storefront builder",
+    "search_keyword": "custom storefront builder",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "theigorsilva",
+    "title": "Most Shopify stores optimize checkout while the cart still runs on theme defaults.\n\nThe cart is where customers build the order and decide whether to continue.\n\nSmall configuration issues there can create friction long before checkout.\n\nThat’s where we look in Profit Sprint.",
+    "text": "Most Shopify stores optimize checkout while the cart still runs on theme defaults.\n\nThe cart is where customers build the order and decide whether to continue.\n\nSmall configuration issues there can create friction long before checkout.\n\nThat’s where we look in Profit Sprint.",
+    "post_url": "https://twitter.com/theigorsilva/status/2100325589894693035",
+    "score": 1,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T20:46:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:27:56.923Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcebd42dd0e95b5bab502"
+    },
+    "message_id": "twitter_2099483667076718725",
+    "topic_key": "custom storefront builder",
+    "search_keyword": "custom storefront builder",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "WebsiteStoreNYC",
+    "title": "Your website should look like your business, not everybody else’s.\n\nWebsite Store builds custom websites from the ground up. No cookie-cutter templates, just something that actually feels like you.\n\nhttps://t.co/iAxBF1TYYD \n\n#WebsiteStore #Miami #NYC #PalmCity #PortStLucie https://t.co/wcuCgwa2Ku",
+    "text": "Your website should look like your business, not everybody else’s.\n\nWebsite Store builds custom websites from the ground up. No cookie-cutter templates, just something that actually feels like you.\n\nhttps://t.co/iAxBF1TYYD \n\n#WebsiteStore #Miami #NYC #PalmCity #PortStLucie https://t.co/wcuCgwa2Ku",
+    "post_url": "https://twitter.com/WebsiteStoreNYC/status/2099483667076718725",
+    "score": 1,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T13:01:27Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:27:57.157Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcec342dd0e95b5bab503"
+    },
+    "message_id": "twitter_2074915210087854562",
+    "topic_key": "custom subscription billing",
+    "search_keyword": "custom subscription billing",
+    "platform": "twitter",
+    "subreddit": "",

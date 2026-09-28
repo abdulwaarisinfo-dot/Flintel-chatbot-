@@ -1,0 +1,416 @@
+    "title": "Remote VA - Ongoing Casual",
+    "text": "Remote VA - Ongoing Casual\n\nWe're looking for a virtual assistant to join remotely to support a company director in New Zealand.   You device must meet the following technical requirements:     Your own PC running Windows 11 (Shared PCs cannot be used due to confidentiality and data protection policies)   At least Intel i5 or Ryzen 5 processor   At least 8GB RAM   A headset if there is a lot of background noise   Fully-functional webcam (Required for internal and client meetings)   Stable, high-speed internet (Preferably fibre)   BONUS - External monitor (not required)     You must be able to comfortably use the following apps:     Microsoft 365 suite (Teams, Outlook, Word, Excel, and PowerPoint)   Slack   Canva   Our web-based CRM (Full training will be provided)   Web-based apps     You should be able to do the following tasks with minimal or no supervision:     Create accurate technical meeting minutes - This is critical to your success and eligibility for the role (Template will be provided)   Draft documents on company letterhead   Do in-depth research on the company's request   Reach out to clients via email and softphone to confirm details, schedule meetings, etc.   Write and send out emails (including replies) to customers and internal stakeholders   Categorise and tag emails using Microsoft Outlook   Create graphics for articles using Canva and stock photos   Other administration tasks to support the Director's daily work and the company's interests     You should be available for work from 12 PM NZT, which is 8 AM PHT and be responsive to messages on Teams and Slack.   Full training will be provided to successful candidates and shortlisted candidates will be required to attend an interview online through Teams. Due to bad experiences in the past, the training session is unpaid. Payment will be to a bank account or Gcash (using Wise) monthly for hours billed and approved.       submitted by     /u/Strong-Kangaroo-7622     to     r/VirtualAssistantPH       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/VirtualAssistantPH/comments/1wc4ojw/remote_va_ongoing_casual/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T01:22:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T01:23:16.715Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa206b947709d84b65c002c"
+    },
+    "message_id": "reddit_serp_1utvcvj",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/PowerBI/comments/1utvcvj/following_up_on_last_week_i_actually_built_the_0/",
+    "text": "Following up on last week: I actually built the $0 Enterprise CI/CD pipeline for Power BI (Architecture Discussion)\n\nLast week , I posted about the pain points of relying on manual .pbix deployments. Thank you to everyone who jumped into the comments, I learned a lot just from reading through how you all handle version control, PBIP, and REST APIs. The discussions around PBIP, Direct Lake limitations, and REST APIs gave me a lot to think about.    As promised, I spent some time over the weekend actually building this out and documenting it.    Link to full article here    To keep things clean and modular, I’m splitting this framework across three separate repos (Semantic Model, Thin Reports, Composite Models). Today is just about  Repo 1: The Core Semantic Model (Import Mode) .   Here is the actual setup I’m running using GitHub Actions, Tabular Editor 2, and the Fabric XMLA endpoint to do this without spending a dime on Premium deployment pipelines:    1. Synthetic Data (So we don't leak PROD)  Rather than messing with real business data and dealing with compliance headaches while running pipelines, I wrote a quick Python script to load synthetic data into a Fabric Lakehouse trial. It gives us a clean, predictable isolated space to verify XMLA deployments and refreshes safely.    2. Ditching the .PBIX for Model.bim  Git is useless with binary files. So, I connected Tabular Editor directly to the Lakehouse SQL endpoint and extracted the metadata as a pure JSON Model.bim file. This text file is what actually gets committed. Git becomes the source of truth, not a file sitting on someone's desktop.    3. CI Gates (Blocking bad DAX)  Automating deployments is a disaster if you're just automating bad code shipping faster. I set up a GitHub Action so that when a PR hits the develop branch, a headless TE2 script runs the BPA (Model Analyzer) via PowerShell. If someone pushes unformatted DAX, forgets to hide a foreign key, or breaks a core rule, the workflow aborts and the merge button gets locked.    4. Deploying via XMLA + REST APIs  No hardcoded passwords. Everything pulls dynamically from GitHub Environment Secrets using an Entra ID SPN.      DEV (Automated):  Merging to develop auto-triggers the TE2 CLI. It pushes the XMLA (using -O -P -R flags so it doesn't nuke existing partitions or roles) and fires a REST API call to trigger a recalculation via an MSAL token.    UAT & PROD (Manual):  These are strictly workflow_dispatch manual triggers. The CI pipeline proves the code compiles safely, but pushing to PROD should always be a deliberate human click, not a blind auto-deploy.      For the folks doing this at scale:  For teams running similar XMLA or SPN-driven setups, how are you handling environment-specific parameters (like switching server/database pointers from DEV to PROD)? Are you mutating the parameters during the deployment script, or just leaning into Fabric's native workspace Git integration?   I put together a full write-up with the visual architecture diagram and the workflow screenshots over on LinkedIn if you want to see exactly how it looks under the hood. I already shared the link to the article, but here's also the link to the post as well-  Building a Zero-Cost Enterprise Power BI CI/CD Blueprint: Part 1 (The Semantic Model)        submitted by     /u/um_whattttt       [link]       [comments]",
+    "username": "m_whattttt",
+    "subreddit_or_channel": "PowerBI",
+    "posted_at": "2026-07-11T20:51:30+00:00",
+    "fetched_at": {
+      "$date": "2026-09-10T01:24:09.983Z"
+    },
+    "google_rank": 3,
+    "search_keyword": "enterprise CI/CD pipeline",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-10T01:24:09.983Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa206c0035b0f36efcc84b7"
+    },
+    "message_id": "reddit_t3_1wc4pkt",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "carbuying",
+    "username": "Cheerhthr",
+    "title": "Admin Fee - North Carolina",
+    "text": "Admin Fee - North Carolina\n\nOn the bill of sale there is a $789 admin fee. On the same bill of sale there is a disclosure saying “an administrative fee is not an official fee and is not required by law but may be charged by the dealer”.   My question is should I negotiate this fee?        submitted by     /u/Cheerhthr     to     r/carbuying       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/carbuying/comments/1wc4pkt/admin_fee_north_carolina/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T01:24:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T01:24:16.686Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa206c0035b0f36efcc84b8"
+    },
+    "message_id": "reddit_t3_1wc4pk3",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CapitalOne_",
+    "username": "infinitefen",
+    "title": "Capital One closes account ???",
+    "text": "Capital One closes account ???\n\nI have mutiple Capital one cards. I also had a very good credit score. So over the past year every capital one card I have was breached, had balance paid off which was a whopping $687 left on card 1 card 2 had less then that so like $458 never been late. Never had issues accept with the auto pay feature which seemed to always have some issue so I had them set it up and the guy reads me a 3200 words in miracle time and ask if I agree. He does the same process for card 2 and records me saying I understand and do want auto pay on from such and such bank ect. He says that's to take care of all the problems well just long story short it did not take care of all the problems and it ended it up like having one of them would work with the other one would not as soon as long as it was like oh my gosh so I'd always have to watch it like a hawk but finally they comes and they get it going and it's fine and it starts working and all is well so so overtime you know I was like okay it is nice and easy here we go you know I'd always sneak in there and check like a couple like a day before and make sure everything was on and going and call them and talk to them and make sure everything was well and everything was always well before the dates came up like I say I would say perfect customer as for you know paying payments and even look like you know lower credit balances stuff like that and I don't know why but this individual basically hacked into or whatever however the cards ended up out there or whatever however he got a hold of these card numbers I don't know but he ended like taking my regular payment card out of the slot where that's the card for main payments to that account and this account every month always had been that card through my bank and utilized some sort of other type of bank card but I didn't know really all this is happening I'm kind of getting ahead of myself but the thick finish that story part now the guy would put in those cards he would pay the difference off and then the balances of like rub out to zero and then he would like try to go on a spinning spree until basically that other card that he'd substituted in would hit and basically come on back of the line is stolen funds and then hit my account like for skyrocketed in my account right way back up and so I had no idea this is actually going on in the real time it was going on at is Capital One did nothing to call me nothing they didn't shut the card off they didn't say anything they just let it happen and then would sit there and I would like like I said I was I got so into my auto pay and trusted it by that point you know I would always make sure prior to the payment hey everything's good and then after that you know I didn't really check so you know that 20 of us do that type of thing I mean it's never been a problem before so I should be now anyways this happened not only to one card but the other card and he did it so basically twice in a row but so the first one he did and then it's like I don't know if a monster or whatever something happened and then so I'm still I'm like paying like I think I'm paying normally on mine but obviously it wasn't being paid so you know I didn't I didn't hear a peep out of Capital One not a peep and so and all this is going on now so it happens again long story short happens again and obviously there's a protocol that takes place here because when it happened again the second time they shut all all the cards down right and then they so on my end they they say closed accounts closed accounts so I'm like calling them I'm like wait what did you do why are you closing my accounts and they were like not for non-payment and I'm like what are you talking about non-payment and I'm like it's set on auto get paid right now this is spelled before so let's see what's going on so we got to go into the account and that's when I start noticing this one card was in there and I was like what the heck is this and so I don't know how you did it if you did the one card first the first month and then the second card he did like the second month or the third month I'm not sure how exactly the timeline runs into it because then I'm walking out of my account I can't see anything I can't go into it I can't look at it so I'm on the phone with them I'm saying to them you know like right before that like when I still could go into the accounts without you know that I noticed something was wrong and I think there's something in seriously like a problem and I'm very like I guess I'm comfortable right now because his card sitting in my thing that they do not belong to me and also now I'm seeing like what you're talking about when it's like the account was zeroed out and now it's back and then in the meantime they like tried to pay like buy things like crypto and whatever so like I don't know and gift cards and b******* like that I believe I'm not 100% sure on it but so you know I talked to them like pretty extensively about this situation and basically I said I think that I have like something that's been something's wrong yeah I'm not like a professional here because I'm not a credit card professional I don't know what goes on with these things I do a totally different job in this world I'm very busy I don't have time to look into little things like this when you have like this big huge car company says to be like protecting you you know from the smallest forms of anything you know to protect themselves if you like and like obviously it took a while for me to put the whole picture together but I'm seeing it like to you guys really fast for you to understand so they close the accounts out basically they tell me it's for it's still good with the thing that it's for non-payment I told him I think it's a fraud thing I said can you please help me check this stuff out I don't understand what I'm doing they say you know basically you know we still have to have the money how would you like to pay and at that point in time because you're not helping me understand what's going on me and your things for non-payment since when did credit card companies like shut a car down for one non-payment I've never ever seen that happen in my life that point I don't even think it was really even late yet that I don't they have like some sort of grease. Or something anyways after that because I always see all of my stuff on time all the time so you're going to tell me for one non-payment on this one and one non payment on that one you're going to shut both cars down I have never heard of that before so and then I said okay so these cards are sitting in the seat right now I don't even know cuz I couldn't see the names on the cards all I can see was who the card company they belong to and I'm just like look at that I don't have these you know what I pay with and it's this card you know to this bank it's always been it's never been anything different not ever and look at my record I have years in years and years of paying on time and keeping a little balance sometimes I would get my balance up there but I would quit as quickly as I could pay it back down you know I'm not perfect but I did have a good credit score and ever since all of this stuff happened it's like you know I went ahead and disputed it once and immediately like the score shut up like 77 points derogatory remarks were removed from this so-called Clues to count because basically the closed account was closed on my side open on their side but they told me it was closed on me so they locked me out of the account all kinds of stuff. They blatantly lied to me they told me my account was closed was actually open on there in the back end but closed on my end in the front end they changed dates around you know to where I was closed in on this month but no oh wait look here it is it was closed on this month you know and I had like screenshots of all that stuff and if this is very bothersome when they clearly have a Purdue call that they were doing for security reasons but they would not allow me the account holder know what was going on even when I was begging them for help they just left me there to sit out to dry and then when the derogatory remarks were removed they throw them right back on how could you like okay so obviously somebody over at that place said okay we don't agree and then after that Capital One just went and sat there and went and redid the file and threw more derogatory marks up on it even after it had been shot down basically from the credit bureau I mean does that make any sense to you I mean like I said if anybody understands how this stuff works better than me please assist me I'm sorry I didn't talk to text cuz you see how long this thing is I hope that you can read it if you have any questions or confusion please go ahead and reach out and I'll go ahead and elaborate better       submitted by     /u/infinitefen     to     r/CapitalOne_       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CapitalOne_/comments/1wc4pk3/capital_one_closes_account/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T01:24:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T01:24:16.887Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa206c1035b0f36efcc84b9"
+    },
+    "message_id": "reddit_t3_1wc4pjz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CosplayHelp",
+    "username": "MyNameIsN0thing",
+    "title": "Guy wanting to try Makeup for the first time",
+    "text": "Guy wanting to try Makeup for the first time\n\nBasically the title, I’m a guy which has never really touched the idea of makeup before. I've always been interested, but with a comic con near me coming around i figured I'd dip my toe in. I'm a pussy so I'm too scared to ask my mother for help so I figured this would be the right place... I've attached a few images of the style I'm going for, though it's highly unlikely I'll get near that ever lol.   What I'm asking for is just any tips anyone can bring and what I should buy to get started. I'm trying to keep my expectations realistic but I'm hoping this will help. For anyone wondering, I'm planning on cosplaying Makoto Yuki from Persona 3 (the guy on the second slide).       submitted by     /u/MyNameIsN0thing     to     r/CosplayHelp       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CosplayHelp/comments/1wc4pjz/guy_wanting_to_try_makeup_for_the_first_time/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T01:24:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T01:24:17.294Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa206c1035b0f36efcc84ba"
+    },
+    "message_id": "reddit_t3_1wc4pji",
+    "topic_key": "hello",
+    "search_keyword": "Hello!",
+    "platform": "reddit",
+    "subreddit": "VisitingIceland",
+    "username": "ImpossibleWestern650",
+    "title": "Native stone jewelry",
+    "text": "Native stone jewelry\n\nHello! I will be coming to Iceland soon and would love a ring or earrings with Icelandic lava or other stone known in Iceland. Any recommendations for locally made jewelry with local stones?        submitted by     /u/ImpossibleWestern650     to     r/VisitingIceland       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/VisitingIceland/comments/1wc4pji/native_stone_jewelry/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T01:24:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T01:24:17.495Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa206ec47709d84b65c002d"
+    },
+    "message_id": "reddit_serp_1vemtk5",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/CRM/comments/1vemtk5/founder_or_business_looking_for_a_crm/",
+    "text": "Founder or Business looking for a CRM\n\nI recently built a CRM it has a lot of the features and functions as an enterprise CRM. I was wondering if anyone might be in need of this that is willing to try it out at no cost to help me beta test it and build out more features and custom functions for your specific business. If you're interested please DM me and happy to jump on a call and explain more.        submitted by     /u/According_Penalty700       [link]       [comments]",
+    "username": "According_Penalty700",
+    "subreddit_or_channel": "CRM",
+    "posted_at": "2026-08-03T19:09:24+00:00",
+    "fetched_at": {
+      "$date": "2026-09-10T01:25:00.771Z"
+    },
+    "google_rank": 8,
+    "search_keyword": "enterprise CRM",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-10T01:25:00.771Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa206fd035b0f36efcc84bb"
+    },
+    "message_id": "reddit_t3_1wc4qg1",
+    "topic_key": "hello",
+    "search_keyword": "Hello!",
+    "platform": "reddit",
+    "subreddit": "INDIE_CROSS_SERIES",
+    "username": "MandB_Diaries",
+    "title": "Finished Game Art",
+    "text": "Finished Game Art\n\n​   Hello! I finally finished the art for my Indie Cross Slides game, I thought it'd be better to use the fanart tag since I don't have any game updates besides this. So the art is finished and I hope you like it.   This game is a google slides game. It will be released via PDF's available for free download everywhere when finished.       submitted by     /u/MandB_Diaries     to     r/INDIE_CROSS_SERIES       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/INDIE_CROSS_SERIES/comments/1wc4qg1/finished_game_art/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T01:25:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T01:25:17.196Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa206fd035b0f36efcc84bc"
+    },
+    "message_id": "reddit_t3_1wc4qem",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal DeXe USD - 9 Sep 2026 @ 21:21 -> $1.790",
+    "text": "Buy Signal DeXe USD - 9 Sep 2026 @ 21:21 -> $1.790\n\nTicker:  DEXEUSD    Exchange:  CRYPTO    Time:  9 Sep 2026 @ 21:21    Price:  $1.790    Link:  https://getagraph.com/AAA/crypto-currencies/DEXEUSD/ENG        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wc4qem/buy_signal_dexe_usd_9_sep_2026_2121_1790/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T01:25:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T01:25:17.414Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2073247709d84b65c002e"
+    },
+    "message_id": "reddit_serp_1phhb48",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/Flowgear/comments/1phhb48/unlock_your_data_publish_any_flowgear_workflow_as/",
+    "text": "Unlock Your Data: Publish Any Flowgear Workflow as an Enterprise REST API\n\nIn today’s fast-paced digital environment, seamless integration is no longer a luxury, it’s a requirement. However, building and maintaining custom APIs to expose your core business logic and data can be time-consuming and resource intensive.   The good news? If you’re using Flowgear, you already have the power to create a robust, production-ready  Enterprise API  with minimal effort. This powerful feature transforms any Flowgear workflow you build into a published, secured RESTful web endpoint.   Want to see it in action? Watch the quick  “Bite Size — Enterprise API”  video:    https://youtu.be/YP0uvGuuVko?si=oCQY_1g-KeCS5iB9     What is Flowgear’s Enterprise API Feature?    Simply put, the  Enterprise API  feature allows you to take any existing Flowgear  workflow  from a simple data lookup to a complex multi-step integration and expose it as a consumable  API bound endpoint  [ 00:20 ].   This means you can instantly give third-party applications or external partners, controlled access to the functionality or data managed within your Flowgear integrations.   For example, as demonstrated in the video, you can create a workflow that:      Extracts  information from a database (like SQL).    Maps  that information into a standardized data structure (like a JSON payload).    Exposes  that payload via a unique URL [ 00:45 ].     This is integration automation made instantly accessible to the world (securely, of course!).    Common Applications for Published Workflows    Publishing a Flowgear workflow as a REST API is a flexible capability with a wide range of use cases beyond simple data exposure:      Webhook Receivers:  Easily set up endpoints to act on  real-time events  triggered by third-party applications and services.    HTTP Proxies:  Intercept calls to  legacy SOAP or REST endpoints  to embed additional business logic, modify payloads, or interface with multiple underlying systems before passing the request along.    API Mediation:  Create  mashups of internal datasets  from disparate systems (e.g., combining customer data from your CRM and order history from your ERP) and expose them through a single, clean endpoint.    Enterprise API Suites:  Publish a complete suite of documented APIs for your customers and suppliers that are  not tightly coupled  to your underlying source systems, ensuring future flexibility.     Ready to dive deeper and implement your own Enterprise API? For a complete step-by-step guide and troubleshooting tips, visit the official documentation:    Flowgear API Documentation:   https://help.flowgear.net/articles/api/api        submitted by     /u/Limp-Ask4233       [link]       [comments]",
+    "username": "Limp-Ask4233",
+    "subreddit_or_channel": "Flowgear",
+    "posted_at": "2025-12-08T16:44:45+00:00",
+    "fetched_at": {
+      "$date": "2026-09-10T01:26:10.920Z"
+    },
+    "google_rank": 3,
+    "search_keyword": "enterprise REST API",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-10T01:26:10.920Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa20739035b0f36efcc84bd"
+    },
+    "message_id": "reddit_t3_1wc4r9v",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "relationshipproblems",
+    "username": "Yuneverknw",
+    "title": "I (26F) pay for all of our bills and my partner (24M) has not worked in about a year",
+    "text": "I (26F) pay for all of our bills and my partner (24M) has not worked in about a year\n\nI (26F) have just started working full-time after 3 months of unemployment and using up all my savings to survive during that time. Before that, I was still working full-time. My partner (24M) has stopped working about a year ago right after we started dating. I have been handling all the expenses ever since. I initially had no problem doing that for a while because he was going through a rough patch and wanted to be there for him and show him my support. But it's been a while since the issue that he's been dealing with has been resolved. He has not went back to working, not putting in any effort to apply to any jobs and does not sound like he has any plans for it either. I work almost everyday and actively looking for a second job at the moment to support us. I had to fully move in with him when I resigned from my previous job so we now live in his room at his parents house. I am paying for groceries and my bills (bus fair, phone, Spotify and my credit card). He uses the rest of the pay check on weed, smoking and games. All my salary gets used up and I cannot save up any money cause all of it is used of what I mentioned on eating out. He does try to help by driving me sometimes or preparing the frozen food we buy. I have already mentioned multiple times that I am really struggling financially and that my mental health has been horrible because of the stress it's causing me. He keeps saying he will help and he will look for something to do but everyday is the same. He wakes up, plays games all day with his friends and not paying any attention to me and spending any time with me, even on weekends when I'm home all day. I'm struggling so much that I don't have any money to at least spend on myself and do things I need to or even for self care. I really don't know what to do. I really love him and don't want to lose him.    Please give me some advice on what to do in this situation.       submitted by     /u/Yuneverknw     to     r/relationshipproblems       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/relationshipproblems/comments/1wc4r9v/i_26f_pay_for_all_of_our_bills_and_my_partner_24m/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T01:26:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T01:26:17.424Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa20739035b0f36efcc84be"
+    },
+    "message_id": "reddit_t3_1wc4r86",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "growgreenoutdoor",
+    "username": "Independent_Task_952",
+    "title": "Harvest?",
+    "text": "Harvest?\n\nTerps across 3 different plants. Good to harvest or wait another week or so? Also I have absolutely zero indoor space to dry is it ok the hang in a covered garden shed with decent air flow but no water can get in or get them wet ? I’m running low on options and don’t wanna have to buy something to dry in if at all possible        submitted by     /u/Independent_Task_952     to     r/growgreenoutdoor       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/growgreenoutdoor/comments/1wc4r86/harvest/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T01:26:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T01:26:17.642Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa20739035b0f36efcc84bf"
+    },
+    "message_id": "reddit_t3_1wc4r80",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "yugiohshowcase",
+    "username": "FishEye_11",
+    "title": "Got lucky with my first two boxes",
+    "text": "Got lucky with my first two boxes\n\nI hope I didn't waste all of my luck on pulling this after only buying my first two boxes. I plan on buying more if I can find them for MSRP. Sorry for the blurry pic. I couldn't wait to secure it.    Quick question about Grandmasters. Are they pulled in the promo pack or the actual set packs? Only asking because I've seen nothing but ultra rare cards coming out of the actual packs.    Happy hunting, everyone.        submitted by     /u/FishEye_11     to     r/yugiohshowcase       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/yugiohshowcase/comments/1wc4r80/got_lucky_with_my_first_two_boxes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T01:26:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T01:26:17.856Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2073a035b0f36efcc84c0"
+    },
+    "message_id": "reddit_t3_1wc4r6c",
+    "topic_key": "hello",
+    "search_keyword": "Hello!",
+    "platform": "reddit",
+    "subreddit": "sandiego",
+    "username": "elle2014",
+    "title": "Botox",
+    "text": "Botox\n\nHello! I am looking for recommendations for dermatologists/clinics in SD that do Botox. I need a little before a big trip and my regular dermatologist is unavailable. Thanks so much!!!        submitted by     /u/elle2014     to     r/sandiego       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sandiego/comments/1wc4r6c/botox/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T01:25:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T01:26:18.074Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2073a035b0f36efcc84c1"
+    },
+    "message_id": "reddit_t3_1wc4r5j",
+    "topic_key": "hello",
+    "search_keyword": "Hello!",
+    "platform": "reddit",
+    "subreddit": "MakeNewFriendsHere",
+    "username": "The_lemur0201",
+    "title": "18F looking for friends that last!",
+    "text": "18F looking for friends that last!\n\nHello! I’m 18yo from Brazil and I’m looking to make actual long term friends! Before I talk a bit about my interests I first wanna talk about why I’m here looking for friends in the first place.    I recently moved to a different city for uni, and in the 8 months I’ve been here I haven’t met one person who I’d consider a genuine friend. I have acquaintances and people I interact frequently with but they aren’t close enough to be my friends. I have close IRL friends from my old city but we only interacted IRL because none of them like using their phones. So I’m not as close as I used to be with them leaving me with few friends. I’m very bad at talking to people IRL and find online to be much easier.    SOOOOO I’m here looking for people who are frequently online and even if they don’t answer immediately they don’t message me once a day. I want to randomly update them on my day and they do the same thing. I genuinely just want a friend to chat with.    NOW interests. I like reading, both books and fanfic, but currently mostly fanfic with books sprinkled in. I know a bit about programming and wanna learn more and I love to both talk about music share songs and learn new songs. One of the ways I love to connect to people is by showing songs I like and listening to songs they like. To learn more about me just talk to me!    I have very few asks before you DM me!  -Under 30  -Don’t be creepy  -Sometimes message first  -Be online relatively frequently       submitted by     /u/The_lemur0201     to     r/MakeNewFriendsHere       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MakeNewFriendsHere/comments/1wc4r5j/18f_looking_for_friends_that_last/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T01:25:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T01:26:18.289Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2073a035b0f36efcc84c2"
+    },
+    "message_id": "reddit_t3_1wc4r3y",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "COents",
+    "username": "Ok_Mobile_4006",
+    "title": "Visiting Colorado Springs soon",
+    "text": "Visiting Colorado Springs soon\n\nSo has the title reads I’m visiting Colorado Springs for 5 days, and have been interested in the 710 labs disposables. I have found them around $60 before tax, but I’m more of a actual rig person when it comes to smoking rosin, so I’m just trying to get a opinion do I buy a little set up while I’m out there or just go with the easy disposable, any advice or opinions would be appreciated thanks in advance    Also I’m staying in a hotel if that helps  (Also have never had the chance to experience CO hash rosin before and just want to get the best experience)       submitted by     /u/Ok_Mobile_4006     to     r/COents       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/COents/comments/1wc4r3y/visiting_colorado_springs_soon/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T01:25:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T01:26:18.507Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2076847709d84b65c002f"
+    },
+    "message_id": "reddit_serp_ndm7gu",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/userexperience/comments/ndm7gu/how_do_i_get_into_consumer_ux_as_an_enterprise_ux/",
+    "text": "[deleted]\n\n[deleted]         [link]       [comments]",
+    "username": "nknown",
+    "subreddit_or_channel": "userexperience",
+    "posted_at": "2021-05-16T11:20:06+00:00",
+    "fetched_at": {
+      "$date": "2026-09-10T01:27:04.102Z"
+    },
+    "google_rank": 2,
+    "search_keyword": "enterprise UX designer",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-10T01:27:04.102Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa20776035b0f36efcc84c3"
+    },
+    "message_id": "reddit_t3_1wc4s2f",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "pcmasterrace",
+    "username": "hatetoseeit11",
+    "title": "need suggestions",
+    "text": "need suggestions\n\nHi all, I am in need of suggestions for cordless air dusters in an effort to stop buying compressed air from the store.   Thanks in advance        submitted by     /u/uhatetoseeit11     to     r/pcmasterrace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pcmasterrace/comments/1wc4s2f/need_suggestions/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T01:27:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T01:27:18.091Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa20776035b0f36efcc84c4"
+    },
+    "message_id": "reddit_t3_1wc4ryz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PokemonGoRaids",
+    "username": "fashionrepbuyer1",
+    "title": "Zacian Blue 022514300028",
+    "text": "Zacian Blue 022514300028\n\nsubmitted by     /u/fashionrepbuyer1     to     r/PokemonGoRaids       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PokemonGoRaids/comments/1wc4ryz/zacian_blue_022514300028/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T01:26:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T01:27:18.315Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa20776035b0f36efcc84c5"
+    },
+    "message_id": "reddit_t3_1wc4rxi",
+    "topic_key": "nike",
+    "search_keyword": "Nike",
+    "platform": "reddit",
+    "subreddit": "Newbalance",
+    "username": "ShrekMemes420",
+    "title": "What’s the closest to 520 V8?",
+    "text": "What’s the closest to 520 V8?\n\nDaily walker. I must have bought four pairs of shoes (brooks, asics, and Nike) and they all don’t fit as well as the old 520 V8.    Any opinion on trying the 680 V9? My most recent expensive purchase was a brooks ghost max 3 and my normal size 13 (4E) left somehow an extra inch in the shoe length wise and no amount of insoles or tying fixed it. I sized down to 12 4E and now I have horrible metatarsal pain. Just trying to get some input before I spend even more money.        submitted by     /u/ShrekMemes420     to     r/Newbalance       [link]       [comments]",

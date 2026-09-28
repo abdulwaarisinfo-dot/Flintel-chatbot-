@@ -1,0 +1,416 @@
+    "text": "2x10 and front derailleur chain rubbing\n\nAre 2x10 bikes normally supposed to have the chain not rubbing against the front derailleur in any of the gear combinations?   I've upgraded almost all parts but the triple crankset FC-TY30 and its front derailleur FD-TY30, want to try and see if I can leverage this crankset by using it as 2x only using only the smallest chainring and the middle one.   Front shifter upgraded to 2x SL-M5100   Rear shifter is 10s    Cassette is M4100 10s 42T   Chain is 10s   Rear derailleur M5120 (this can work as 2x10 or 2x11 at 42T)   And this is what I noticed when adjusting this 3x front derailleur, because the cage is wider than a 2x, when setting the low limit I had to brake the rule of having the front derailleur like 1-2mm away from the chain and set it to more like 4-5mm, because if I set it 1-2mm away from the chain then the front derailleur would not be able to shift the chain from the middle chainring to the small one becaus the cage is wider and the barrell adjuster would not make a difference.   What I did was, set the low limit like 5mm away from the chain (while in smallest chainring and biggest cog) and then set the high limit with chain on middle chainring and smallest cog, this way it I am able to use both chainring with great shifting but the only downside is that I have to avoid crosschaining.   The chain rubbing against the front derailleur only when the chain is in middle chainring and largest cog or small chainring and smallest cog.   I don't know if this can be fixed with this crankset and front deraileur, I think not because of the wider cage of the front derailleur.       submitted by     /u/r34dingwhite     to     r/bikewrench       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/bikewrench/comments/1wizkhc/2x10_and_front_derailleur_chain_rubbing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:56:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:57:13.871Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1c09aeeb96c1c63b8ec5"
+    },
+    "message_id": "reddit_t3_1wizl49",
+    "topic_key": "insurance broker",
+    "search_keyword": "insurance broker",
+    "platform": "reddit",
+    "subreddit": "ycombinator",
+    "username": "narsaraieght_",
+    "title": "One year, two enterprise clients, zero marketing — and now my biggest client is leaving to build it in-house. Is my go-to-market broken or is the pain not big enough?",
+    "text": "One year, two enterprise clients, zero marketing — and now my biggest client is leaving to build it in-house. Is my go-to-market broken or is the pain not big enough?\n\nI run a B2B SaaS company in Peru. We digitize third-party access control for industrial plants — every supplier, transporter, contractor, and visitor who walks onto a site. Right now that's handled with paper logbooks, basic spreadsheets, or a bare-bones module bundled into whatever ERP they already run. Whoever's at the gate that day decides who gets in and writes it down by hand, if at all.   That's not just clunky, it's a real security gap. In this market, industrial sites deal with two kinds of exposure: external visitors who get unsupervised access they shouldn't, and systematic internal theft, organized and repeated, that a paper log simply can't catch. When nobody can say with certainty who was on-site, when, and who they met, you don't find out there's a problem until it's already cost you.    What we built:  one platform, invitation to exit. Identity and company info validate automatically against government registries (national ID and tax ID databases) instead of someone typing a name off a card. Every approval logged, every entry/exit timestamped, full audit trail. One thing I was deliberate about from day one: the UI/UX. This isn't a tool that needs training sessions or a manual — a guard at a gate, a security manager, or a visitor filling out an invitation form all figure it out in minutes, not days.    Pricing:  per location, not per user or per visitor. Started at $500/mo per plant, raised it to $1,000/mo because $500 undersold the problem — we replace what would otherwise take about 5 dedicated security staff, at roughly $1,000/mo each. Annual prepay is $10k/year per location instead of $12k. It's genuinely not expensive relative to the problem it solves.    The traction, honestly stated:  two clients since July last year. One, single location, month-to-month, renewed for a second year without blinking. The other, five locations, paid the full year upfront — and just told me they're only extending 5 more months because they've decided to build it in-house.   That second one hurts more than it should, because it's not a \"they hated it\" loss. I've personally interviewed people at both companies about day-to-day use, and the feedback wasn't polite — it was specific. Faster gate processing. Approvers who stopped chasing paperwork. Security teams who dropped their shadow spreadsheets entirely. It works, and they told me it works. They're just choosing to build their own version anyway.    How I'm actually prospecting.  I have personal contacts across Peru, so a chunk of my pipeline comes through warm introductions — people who can get me directly in front of owners at large and mid-sized companies. The rest is cold calling and cold emailing companies I have no relationship with at all. No marketing, no campaigns, nothing inbound.    What actually happens with most of the pipeline:       Silence, recurrently.  No objection, no price question, nothing to argue with. Just no reply.    \"Call me in a month,\" recurrently.  They tell me they're interested, that NILO will genuinely help — and every time I follow up, it's some version of \"we're dealing with other things, can't prioritize this right now.\" Then a month later, the same thing.    The slow fade after real engagement.  This is the pattern that bothers me most. We have a genuinely good first meeting. They seem to like it, sometimes explicitly say so. Then it becomes \"we should talk again\" — and it just never happens. Not a no. Not a real objection. Just an ongoing, low-priority \"later.\"     Across all of it, I don't think people dislike the product. I think they like it, and don't find it necessary. That's a different problem than the one I thought I had.    Here's what's actually confusing me.  I believe, genuinely, that almost every industrial plant or warehouse in Peru and LatAm has this exact problem and would benefit from something like NILO. Security is a constant, visible issue in this region — it's not a niche concern, it's a headline topic. The product isn't expensive relative to what it replaces, it makes the process smoother, and it makes it more secure. My two clients confirm all of that with real, day-to-day use. So why doesn't liking the product translate into treating it as necessary? Why does a good first meeting evaporate into indefinite \"later\" instead of a decision either way?   And more practically: how do other SaaS companies get to real scale — big deal counts, fast sales cycles — when I'm stuck at two clients doing founder-led cold calls and warm intros one at a time? What am I missing about how this is supposed to work at volume? Is it a different sales motion entirely (channel partners, insurance brokers, industry associations, content and inbound instead of outbound), a pricing/packaging change, or something more fundamental about how a \"liked but not necessary\" security product gets adopted broadly?   I genuinely believe this shouldn't stop at industrial plants. Any property with a high volume of visitors and a real security stake — warehouses, logistics hubs, distribution centers, ports, anywhere with a gate and people who don't work there walking through it — has some version of this same problem. I believe in this enough that I'm willing to do whatever it takes to make it work: change how I sell, change who I target, change the pricing model, build partnerships I haven't considered, whatever gets this in front of the people who need it. I just don't yet know which of those is the actual lever.   So I'm asking directly: if you've built or sold something like this, or sat on the buying side of a decision like this, what would you do in my position? What am I not seeing?    TL;DR:  B2B SaaS, industrial access control in Peru, 2 clients in a year (both from warm intros, both genuinely happy, zero churn). Everyone else either goes silent, keeps saying \"call me next month,\" or has a good first meeting that just fades into \"we should talk again\" — never a real no, never a yes. No marketing, no inbound. I believe almost every plant or high-traffic property in LatAm needs this and it's not expensive — so why does \"liked\" never become \"necessary,\" and what would you do differently to make this scale? Genuinely open to any advice.       submitted by     /u/narsaraieght_     to     r/ycombinator       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ycombinator/comments/1wizl49/one_year_two_enterprise_clients_zero_marketing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:57:29Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:57:45.687Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aac1c0aaeeb96c1c63b8ec6"
+    },
+    "message_id": "reddit_t3_1wizl2o",
+    "topic_key": "ai video generator",
+    "search_keyword": "AI video generator",
+    "platform": "reddit",
+    "subreddit": "Dreams",
+    "username": "CEKUS1300",
+    "title": "Crystal clear insanely detailed hyper realistic \"developer mode\" style fully conscious controllable lucid dreaming or something I have no idea lol",
+    "text": "Crystal clear insanely detailed hyper realistic \"developer mode\" style fully conscious controllable lucid dreaming or something I have no idea lol\n\nQuite the title I know but I have to write this down. This has never happened to me before.   So I woke up in the morning very early for no reason and I wanted to go back to sleep. So I closed my eyes and after a few seconds I felt locked out of my body then out of nowhere a scenery started to form and it became a crystal clear scene of a field with blue sky, grass, some trees basically I was out in nature. I was fully aware of what was happening and I was very confused. I knew this was just some kind of vision and it was just WAY too realistic and way too clear. I even spend some time just looking at the things seeing how detailed everything was. Everything had sound and physics and acted exactly like in real life. I also noticed black borders on the sides like I was looking at a monitor. I even tried to get rid of them but I just couldn't. I could still kinda hear the noises from the real world a little bit like a few cars passing by (My windows were open) but I was hearing the sounds of the scenery of my \"dream\" aswell. I did not have a body I was just like a floating camera and I could not feel anything. I just knew that I was in control somehow and felt very peaceful.   I wanted a room and wanted someone to be there. It turned into a nice clear office kinda looking room with the orange sun shining in from the windows behind me lightning it all up. A few seconds later I hear footsteps from the right. I look and I see a woman calmly walking from the right in my direction and then stop in front of me facing left with her body. She was wearing an office style outfit. I was very suprised and confused at the same time and wanted her to face towards me and 2 seconds later she literally just does that. She just turned towards me in a very realistic natural calm manner. I got scared a bit lol and wanted to stop this. So I just decided to end the session. The scene slowly blurred away then there was just darkness for like 3 to 4 seconds then I felt I gained access to my body again and opened my eyes. I was absolutely speechless just processing what the hell just happened, but I still wanted to sleep for a bit so I tried to go back to sleep again and guess what...    IT HAPPENED AGAIN. The scene was bit different though.    So I started experimenting with it and it was EXACTLY like giving prompts to an AI video generator but in real time like a continuous video generator waiting for my instructions. I could also think and imagine things in my head without affecting the dream. I could do anything I wanted to  BUT I   COULD NOT MAKE IT NOT REALISTIC  no matter how hard I tried. My ideas that did not make any sense were either ignored or rewritten making them happen in a way that made it make sense so there were some laws I guess.... It felt like I was running an actual simulation in my head lol. Every idea that I had would be processed then simulated 2.5 to 5 seconds later. I remember getting a bit impatient at first lol expecting things to happen immediately.   But not everything was in my hands though. Sometimes it would kinda do it's own thing like when a character just looked at me and said something out of nowhere. The face expressions always were on point and everyone had different personalities and acted naturally according to the given scenario. It scared me sometimes. I felt like I was just the instructor and my unconscious mind was the unmoddable game engine. I could quit any time and go back If I wanted to.    I also started to think about some scary things too and things slowly got out of hand. The scene slowly got more and more darker, faded, washed out, eventually ended up looking like an abandoned building at night from the inside and I started hearing some kind of noises. I wanted to get jumpscared and attacked by a monster and I was kinda scared not gonna lie lol. Luckily this idea ended up being rejected due to me not having a body I guess, so the monster has nothing to attack... But I did get a slight jumpscare with a black figure speeding across my vision from right to left in front of me with a scary sound effect XD   I have done this multiple times just this morning BUT I JUST WANTED TO SLEEP BROOO. Whatever it was good time. I'll build a city next time. Or tune cars.   Has anyone experienced something like this? I definetly didn't...       submitted by     /u/CEKUS1300     to     r/Dreams       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Dreams/comments/1wizl2o/crystal_clear_insanely_detailed_hyper_realistic/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:57:26Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:57:46Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aac1c22660c60840397348e"
+    },
+    "message_id": "reddit_t3_1wizlm8",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "AmItheAsshole",
+    "username": "AniThingButShy",
+    "title": "AITA for reporting a grocery store employee to his manager, resulting in him losing his job?",
+    "text": "AITA for reporting a grocery store employee to his manager, resulting in him losing his job?\n\nThrowaway account for obvious reasons.   I 43F am a single mom to my daughter (7). Her dad hasnt been in the picture for a few years, so it's usually just the two of us running errands, including our weekly grocery trip.   For the past couple of months one of the employees at our regular store (I guess hes in his mid-20s) has been overly flirty with me every single time I was there. Complimenting my appearance, finding excuses to walk over to whatever aisle I'm in, asking if I'm single while my daughter is standing right next to the cart. I brushed it off the first few times, gave short answers, tried to signal I was not interested. It didnt change a thing.   What finally got to me was two weeks ago. My daughter asked me in the car why \"that man always talks to us\" and I realized shed been noticing this the whole time. That's when I decided enough was enough.   I went to the store manager and explained what had been happen. the repeated comments, that I tried to shut it down myself and it didn't work and that it was starting to affect my daughter's comfort in a store we go to every week. The manager apologized and said he will look into it.   A few days later I found out the employee was fired. Some of the other staff have been noticeably cold to me since and one of them audibly muttered \"way to ruin a guy's job for just being nice\" when I walked past. Now I am second-guessing whether I overreacted and should have just kept managing it myself instead of escalating it to management.    I wouldn't have cared if my daughter was not around but as soon as I learned she didn't feel comfy anymore I had to do something. Right…? AITA?       submitted by     /u/AniThingButShy     to     r/AmItheAsshole       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AmItheAsshole/comments/1wizlm8/aita_for_reporting_a_grocery_store_employee_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:57:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:58:10.536Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1c22660c60840397348f"
+    },
+    "message_id": "reddit_t3_1wizlm7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "SkibidiDiscussion",
+    "username": "BallerforeverRare634",
+    "title": "My friend said he was only searching up titan cameraman...",
+    "text": "My friend said he was only searching up titan cameraman...\n\nsubmitted by     /u/BallerforeverRare634     to     r/SkibidiDiscussion       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SkibidiDiscussion/comments/1wizlm7/my_friend_said_he_was_only_searching_up_titan/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:57:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:58:10.753Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1c22660c608403973490"
+    },
+    "message_id": "reddit_t3_1wizlkl",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "recruitinghell",
+    "username": "General-Coffee1493",
+    "title": "Just Mildly Shocked (Vent)",
+    "text": "Just Mildly Shocked (Vent)\n\nBackground : Been intentionally interviewing for 7 months so in other words, feeling comfortable with interview etiquette.   I finished a virtual interview with a company and it was such an odd experience.       Red Flag #1:  I politely asked the interviewer if they could put the questions in the chat since it had multiple parts. He smiled and refused immediately. I shared how I wanted to ensure I answered all the parts of his question but okay, I will manually write it down instead which will take some time (despite all my other virtual interviews either doing that by default or being okay to do so per request).    Red Flag #2:  This company had recruiters from different recruiting companies pinging me and dropping off. Therefore, I heard different information regarding the role. Once it was my turn to ask questions, I asked for clarification regarding travel for onboarding, timeline, and so forth so I could plan due to the conflicting info I was told. The direct company could not provide answers to most of my questions, defaulted to the recruiter to give me information regarding the role (never heard of this one before but happy to learn why the recruiter would be a default), and cut me off during my questions at the end.     Orange Flags : One of the interviewers kept messing up names and even turned their camera off to eat lunch which is fine by me however, given the whole experience, it came off off-putting. I sat there and was like, \"Wow, if I treated someone like that throughout their entire experience, I would feel like a dick.\"     I've been through shitty jobs and the classic \"toxic\" work environments. I am happily being more intentional with finding a good work environment and found this experience so odd from the other interviews over the past few months. I emailed them a short professional email stating that I want to be respectful of everyones' time and that I am going to pursue other opportunities (thankfully have other job offers as back-ups), thank you for your time, etc and get an response back saying not to email the company through that thread.    I personally haven't dealt with too many recruiters sitting on a high horse but it is just laughable how we are taught to be proactive with communication, respectful, and so forth and here I'm trying to do so. Clearly, my email is showing an end to communication since I'm withdrawing my application and that was their response? I'm trying hard not to judge because we're all human. I get names wrong, people could be having a bad day, etc. But I am pretty firm on \"character\" and this was a series of events that came off as child's play.        submitted by     /u/General-Coffee1493     to     r/recruitinghell       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/recruitinghell/comments/1wizlkl/just_mildly_shocked_vent/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:57:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:58:10.989Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1c23660c608403973491"
+    },
+    "message_id": "reddit_t3_1wizlkd",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "incremental_games",
+    "username": "TheeNux",
+    "title": "INCREMAZE - I made a incremental game about a anti-virus bot fighting a infected PC - Check out demo on Steam",
+    "text": "INCREMAZE - I made a incremental game about a anti-virus bot fighting a infected PC - Check out demo on Steam\n\nGame Title:  INCREMAZE    Playable Link:   Play the Steam Demo  (Only tested on Windows)    Description:   I work in IT, so naturally I decided to spend my free time making a game about malware.   INCREMAZE is an incremental/idle game where you deploy an antivirus bot into infected sectors, kill malware, upgrade and automate it, and try to stop the drive from completely shitting itself.   I finally have a playable Steam demo up and I'd love some outside eyes on it. Particularly curious whether the early progression feels good and whether anything is confusing or drags.   It's just me making it, so feel free to absolutely tear it apart.   - Steam trailer is outdated. Will make a new one. Any feedback on how I can improve it?   AI disclosure: used chatgpt for store page translation        submitted by     /u/TheeNux     to     r/incremental_games       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/incremental_games/comments/1wizlkd/incremaze_i_made_a_incremental_game_about_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:57:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:58:11.204Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1c23660c608403973494"
+    },
+    "message_id": "reddit_t3_1wizlk2",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "RedditGames",
+    "username": "Bublovesdabs",
+    "title": "[Choose] Better pet",
+    "text": "[Choose] Better pet\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Bublovesdabs     to     r/RedditGames       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RedditGames/comments/1wizlk2/choose_better_pet/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:57:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:58:11.837Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1c24660c608403973495"
+    },
+    "message_id": "reddit_t3_1wizljv",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "oslo",
+    "username": "MacramezingCreations",
+    "title": "Looking for cozy rental recommendations (ideally with a hot tub) over Christmas!",
+    "text": "Looking for cozy rental recommendations (ideally with a hot tub) over Christmas!\n\nHei! My wife and I are Americans who moved to Copenhagen last year. Since we don’t have any family here, we figured it might be fun to take a vacation over Christmas. I’m really homesick and am missing the easy access of staying in a secluded cabin in the mountains. However, we don’t own a car so we’re pretty limited with where we can go, and I think Norway seems like the best place we can reasonably enjoy some nice countryside views and maybe some rolling hills!    I’m looking for either specific rental recommendations, or leads on cute, quiet, quaint, cozy towns nearby that would be a nice place to spend the holiday.    Some important notes:   •a cabin would be ideal, but I refuse to support one of those big companies that buy up all of the local properties and push the locals out (hence why I’m using the hard way to find this instead of simply going to Airbnb). So I’m looking for a private renter/someone who rents out an extra home when they aren’t using it; otherwise a hotel with a decent view is fine!   •We’re a lesbian couple, so somewhere queer-friendly is a must   •we will  not  have pets with us   •we will not have a car. So something within walking distance or a reasonable taxi/bus ride from an airport or train station is necessary   •a hot tub and/ or a fireplace would absolutely kick ass       submitted by     /u/MacramezingCreations     to     r/oslo       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/oslo/comments/1wizljv/looking_for_cozy_rental_recommendations_ideally/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:57:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:58:12.049Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1c24660c608403973497"
+    },
+    "message_id": "reddit_t3_1wizljo",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "php",
+    "platform": "reddit",
+    "subreddit": "sanantonio",
+    "username": "charliej102",
+    "title": "News from our neighbor in Austin regarding future of light rail.",
+    "text": "News from our neighbor in Austin regarding future of light rail.\n\nSome news from MYSA today regarding Austin's light rail project. Nice to see public transit moving forward.  https://www.mysanantonio.com/news/local/traffic/article/austin-texas-project-connect-light-rail-22422231.php        submitted by     /u/charliej102     to     r/sanantonio       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sanantonio/comments/1wizljo/news_from_our_neighbor_in_austin_regarding_future/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:57:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:58:12.475Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1c24660c608403973498"
+    },
+    "message_id": "reddit_t3_1wizlj7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "OnePiece",
+    "username": "MaciprimeOfficial",
+    "title": "The true identity of the One Piece.",
+    "text": "The true identity of the One Piece.\n\nAfter years of discussion and debate (and feel free to criticise my thoughts), I believe I know what the once piece is.   First, what we know:   •The One Piece is a physical item (Confirmed by Oda)   •When discovered by Roger, he laughed at the One Piece   •Oda has said that one piece will end with a \"Big Party\"   •Roger stated that he wished he lived in the same era as Joyboy after discovering the One Piece   •(THIS IS ONLY THEORY) We can assume that Imu and Joyboy were close or at the very least, knew eachother in the void century.   And so, without further a due.   The One Piece's true identity is:   A BOWL OF SAKE   Hear me out. We of course know the one piece is a physical thing. As shown after just about every single arc, the characters drink sake to celebrate (The \"Big Party\" ending), Roger wished he was around in the void century to Party with these major historical figures AND the reason Roger laughed was because he was drunk.   In one of the recent chapters, we see a silhouette of Imu and Joyboy sitting across from eachother, supposedly having some kind of chat. We know from Luffy, About and Ace that sharing a cup of Sake makes you brothers, close friends (backed by the parties at the end of almost every arc). I believe that the reason Imu hates joyboy is because something happened that caused Imu to feel betrayed by his brother. I am of course implying that Imu, Joyboy and maybe Nefertari Lily shared a bowl of Sake, made the brotherly vow and fell apart, caused a betrayal of trust among the 2 brothers.   I am kind of spitballing but if anyone has any contradictions or additions to add, please feel free to.       submitted by     /u/MaciprimeOfficial     to     r/OnePiece       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OnePiece/comments/1wizlj7/the_true_identity_of_the_one_piece/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:57:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:58:12.692Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1c24660c608403973499"
+    },
+    "message_id": "reddit_t3_1wizlj5",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SoulSpeakReadings",
+    "username": "Putrid_Lie_3028",
+    "title": "✨ Bridge the Gap to Your Spirit: Tarot & Channeled Readings & Transformation Coaching Sessions with Medium Lucy ✨(BOOK NOW VIA DM)",
+    "text": "✨ Bridge the Gap to Your Spirit: Tarot & Channeled Readings & Transformation Coaching Sessions with Medium Lucy ✨(BOOK NOW VIA DM)\n\nHey Beautiful Souls, it’s Lucy! Hi, As a medium and spiritual analyst, I bridge the gap between Spirit and your everyday life. I work as a multi-sensory intuitive channel, receiving downloads, visuals, and deep emotional knowing to deliver clear, honest, and grounded guidance. I’m here to help you gain the clarity and perspective you need to move forward on this journey we call life.   Whether you're looking for quick clarity on a specific question, deep dive tarot & astrological insight, or ongoing transformation through 1:1 coaching, there's an offering designed for your journey.   ✨Quick Readings & Specials (fast insight)  Perfect for fast clarity, seasonal energy check-ins, or trying out a reading for the first time!  Quick 1-Question Insight: $20.00 (1 Tarot Card, 1 Affirmation)  Full Moon Reading: $15.55 (Quick energy clarity)  New Moon Reading: $15.55 (New cycle & intention clarity)  Birthday Reading: $33.33 (3 Tarot Cards, 1 Oracle, 1 Affirmation, 1 Angel Number + Solar Return Map)  The Great Awakener (Uranus in Gemini 7-Year Forecast): $88.88 (3 Cards, 3 Questions, 1 Affirmation, 1 Oracle, 1 Angel Number)   ✨Focused Path Readings  Deep-dive channeled messages for specific areas of life.  Clarity Reading: $22.22 (Mini Spirit Message & Seasonal Clarity — 2 Tarot Cards, 1 Affirmation)  General Guidance Path: $44.44 (Spirit-Led Deep Message — 3 Tarot Cards, 1 Affirmation)  Love, Life & Timing: $55.00 (Heart Insight & Energy Forecast — 3 Tarot Cards, 1 Oracle, 1 Affirmation)  Career & Purpose: $85.00 (Channeled Career Path & Alignment — 2 Tarot Cards, 2 Oracle Cards, 1 Affirmation)   ✨Channeled Message Packages  Delivered via Voice Memo & Written Transcript for future reference!  Package 1 (15-Minute Channeling): $25.00  Package 2 (30-Minute Channeling w/ Photo): $45.00  Package 3 (1-Hour Deep Channeling): $85.00   ✨ Premium Transformational Experiences  High-touch, long-term spiritual guidance and coaching support.   Premium Alignment & Transformation: $99.99 / $150.00 Monthly (4 Tarot Cards, 1 Oracle, 1 Affirmation, 1 Angel Number + Timeline & Seasonal Clarity)   Package 1: Intuition Starter Coaching: $200.00/mo (One 1:1 Session, Mini Astrology Reading, Digital Guide, 1-Week Follow-Up, Free SoulSpeak Journal)   Package 2: Alignment & Abundance Coaching: $350.00/mo (Three 1:1 Sessions, Transit Report, Guided Ritual & Planner, 3-Week Support, Free SoulSpeak Journal)   Package 3: Spiritual Growth Premier Coaching: $650.00/mo (Six 1:1 Zoom Sessions, Full Natal Chart Reading, Custom Soul Forecasts, Weekly Affirmation Guides, Ongoing Check ins)   💳 How to Book & Payment Methods  📌 Book directly via DM on Reddit   Accepted Payment Methods:  Chime: ⁠$SoulSpeak8888⁠  Venmo: ⁠@SoulSpeak555⁠  PayPal: ⁠CreshonnaPhillips721⁠  Cash App: ⁠$SOULSPEAK8888⁠  Revolut: ⁠revolut.me/soulspeak5555⁠   Clarification Policy: All sales are final. Energy and time are non-refundable. If a message feels unclear, a one-time clarification is offered to ensure the guidance is fully understood.   Disclaimer: For entertainment and spiritual growth purposes only. Guidance should not replace professional legal, financial, or medical advice.cone       submitted by     /u/Putrid_Lie_3028     to     r/SoulSpeakReadings       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SoulSpeakReadings/comments/1wizlj5/bridge_the_gap_to_your_spirit_tarot_channeled/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:57:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:58:12.911Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1c25660c60840397349a"
+    },
+    "message_id": "reddit_t3_1wizlj1",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "MindAlteringSitch",
+    "title": "Visit MindAlteringSitch's farm!",
+    "text": "Visit MindAlteringSitch's farm!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/MindAlteringSitch     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wizlj1/visit_mindalteringsitchs_farm/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:57:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:58:13.126Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1c25660c60840397349b"
+    },
+    "message_id": "reddit_t3_1wizlhg",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "sales",
+    "username": "jsnuggz",
+    "title": "Good mid day Spots",
+    "text": "Good mid day Spots\n\nHello, I'm a territory representative, I do a mix of local travel and working from my office. I find I tend to end my day at the office but it's not productive the Internet is garbage, I could go home but the same, I get pulled into a bunch of my spouse's things. I've done the truck but a mix of poor connection (I have to hotspot my iPad off my work phone) and other ergonomic reasons make it pretty crappy.   Im looking for spots to pull into and crush a 1&2 hour dial block / email blast and grab lunch or eat a lunch from home. I find Starbucks plays their music too loud.   I work in Ontario, what are some good places you can plug an iPad in grab a bite and crush some calls.   I'm 6'3 I've tried the do it from the truck method and I find it messes with my back, is too crammed and honestly just not productive. Spending most of my day in it as well, I'd like to try something else for a refresh.       submitted by     /u/jsnuggz     to     r/sales       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sales/comments/1wizlhg/good_mid_day_spots/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:57:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:58:13.346Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1c25660c60840397349c"
+    },
+    "message_id": "reddit_t3_1wizlgz",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "CostaRicaAskALocal",
+    "username": "Wildpapagayo",
+    "title": "Costa Rica Over Christmas & New Year — What Should You Book Before You Arrive? 🇨🇷🎄",
+    "text": "Costa Rica Over Christmas & New Year — What Should You Book Before You Arrive? 🇨🇷🎄\n\nChristmas and New Year can be a beautiful time to visit Costa Rica, but it is also one of those periods when a little planning makes a big difference.  If you are flying into Liberia and splitting your trip between the Pacific coast, rainforest and volcano areas, I would not arrive assuming you can book everything as you go.  Late December and early January are part of Costa Rica’s busiest travel season, especially in Guanacaste and other popular destinations.  A few things I would strongly consider booking ahead:  your most important tours  national park entries where reservations are required  hot springs if you have a specific property in mind  popular restaurants for Christmas Eve or New Year’s Eve  any special holiday activities  airport transportation if you are not picking up your rental car immediately  You do not necessarily need every day scheduled.  In fact, I would leave some flexibility.  But if there is one experience you would be really disappointed to miss, I would not leave that until the last minute.  Another thing visitors sometimes ask is:   “Will everything be closed on Christmas or New Year’s Day?”   Not necessarily.  Tourism does not completely stop, especially in places like Guanacaste, but  December 25 and January 1 are official Costa Rican holidays , so individual businesses may operate reduced hours or close altogether. Always check directly with restaurants, supermarkets, attractions and tour operators rather than assuming normal hours.  The atmosphere can also be quite different depending on where you are.  Beach areas can feel very busy and festive, while smaller towns may have a much more local family atmosphere.  One planning tip I would add:  If you are doing volcano or rainforest days midweek, think carefully about driving time.  Costa Rica is small on the map, but moving between the Pacific coast, mountain areas and rainforest can take longer than expected.  For anyone who has visited Costa Rica over Christmas or New Year:   What did you wish you had booked earlier?   And was there anything you expected to be closed that was actually open — or vice versa?   Pura vida 🇨 🇷       submitted by     /u/Wildpapagayo     to     r/CostaRicaAskALocal       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CostaRicaAskALocal/comments/1wizlgz/costa_rica_over_christmas_new_year_what_should/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:57:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:58:13.559Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1c25660c60840397349e"
+    },
+    "message_id": "reddit_t3_1wizlgn",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "coastFIRE",
+    "username": "Nice_Ambition_2861",
+    "title": "Talk me out of using Margin, 25M, 240k NW",
+    "text": "Talk me out of using Margin, 25M, 240k NW\n\nHello, I recently moved my taxable brokerage(129k VT) and Roth IRA (33k VT) to Robinhood to capture a 3% and 1% transfer bonus. I am completely aware of Robinhoods gimmicks and UI being addictive with the gambling and stuff, but I don’t gamble. I am a long term investor but I can’t help to think this margin scenario I want to do needs to be done. Help me understand why the risk is too high.   I have a settled margin balance of 129,655 available to use. For example I want to use 50k and buy QQQM, or even VT. From what I understand every 30 days I’ll be charged 4.75% interest on that50k, so roughly 200 dollars a month. But that 50k should easily return more than. That, if not 2-3 fold especially with QQQm over the next few years. I genuinely understand the risk, but I think it’s worth it, unless I’m missing something. Even if the market crashes 50%, I would still be above my maintenance ratio of 25-30% of the margin I used. The world Literally has to end for my stocks to get liquidated. Otherwise, it will be profit overtime.    What am I missing?   Thanks        submitted by     /u/Nice_Ambition_2861     to     r/coastFIRE       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/coastFIRE/comments/1wizlgn/talk_me_out_of_using_margin_25m_240k_nw/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:57:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:58:13.981Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1c26660c60840397349f"
+    },
+    "message_id": "reddit_t3_1wizlgh",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "AccountantsEire",
+    "username": "Mean_Kaleidoscope235",
+    "title": "Pay after FAE",
+    "text": "Pay after FAE\n\nHi I just passed my FAE’s I’m working in industry and I’m on 38K with 2 years experience I just asked for a raise because I have started interviewing and applying for other places and they just basically said to me that there’s nothing they can do for me salary wise until June 2027 feeling a bit like I’m being shafted what does everybody think? would appreciate some opinions.       submitted by     /u/Mean_Kaleidoscope235     to     r/AccountantsEire       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AccountantsEire/comments/1wizlgh/pay_after_fae/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:57:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:58:14.192Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1c26660c6084039734a0"
+    },
+    "message_id": "reddit_t3_1wizlg9",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Outboards",
+    "username": "MiroTheMighty",
+    "title": "Suzuki DF20AL remote commands or starter kit",
+    "text": "Suzuki DF20AL remote commands or starter kit\n\nHi, I recently bought a boat with a Suzuki DF20AL, it's pull to start, I can't charge the battery with it (need the 12A regulator?) and I want remote commands for it.   It's still under warranty for around 3 month and has 72 engine hours so almost brand new.   The issue I have is that the motor itself new is 3400€ and the only electric start kit I can find is 2500€ and remote commands are 1200€. Are those normal prices or am I looking in the wrong places because they cost almost more than the motor itself. If I were to buy a new one with all of this installed it would be the same price or even cheaper than buying the kit...   Do you have any proposals maybe for third party kits and what should they contain? I'm in Europe.   Thank you!       submitted by     /u/MiroTheMighty     to     r/Outboards       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Outboards/comments/1wizlg9/suzuki_df20al_remote_commands_or_starter_kit/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:57:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:58:14.406Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1c26660c6084039734a1"
+    },
+    "message_id": "reddit_t3_1wizlfz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "baseball",
+    "username": "Far_Suggestion_7203",
+    "title": "In the event of another Dodgers/Yankees World Series this year, who do baseball fans end up rooting for? Who does everyone hate more?",
+    "text": "In the event of another Dodgers/Yankees World Series this year, who do baseball fans end up rooting for? Who does everyone hate more?\n\nFirst off I don't think this is going to happen, but I keep seeing these comments come up on other threads about predictions, just curious which way the mood was leaning (outside of Boston).   I'm a Yankee fan by the way, and I can't explain how badly we want guys like Judge and Stanton to get a ring. But I get it. George Steinbrenner was a tyrant, and too many Yankee fans are hostile assholes too much of the time. I stopped watching as a kid when home grown guys were traded for aging superstars to buy wins, but came back in 2017 or so with Judge and that class of guys.   The clear villain of the moment feels like the Dodgers, handing out absolutely awful contracts to the biggest free agents of the year and it barely even affecting their season. Not to mention the deferred contracts and whatever shady financial shit the owners are up to.   But their players are very likeable, they're also well coached and play good baseball, so I find it hard to hate the game the team plays specifically.   Curious how the average baseball fan outside of Boston feels about it.   Very curious   how Blue Jays fans would handle it.       submitted by     /u/Far_Suggestion_7203     to     r/baseball       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/baseball/comments/1wizlfz/in_the_event_of_another_dodgersyankees_world/",
+    "score": 0,
+    "num_comments": 0,

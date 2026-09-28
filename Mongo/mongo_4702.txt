@@ -1,0 +1,416 @@
+    "message_id": "reddit_t3_1wfvn8s",
+    "topic_key": "can you find me top posts on reddit which has over 10k views per month from ai tech industry",
+    "search_keyword": "artificial intelligence",
+    "platform": "reddit",
+    "subreddit": "DeadInternetTheory",
+    "username": "eternaclarity",
+    "title": "A Rant About Everyone Using AI To Post On Social Media",
+    "text": "A Rant About Everyone Using AI To Post On Social Media\n\nNothing says to me “AI is running this account” faster than a post full of em—dashes.   No, an em dash does not prove artificial intelligence wrote something. Humans have used them forever. That is not the point.   Pew Research Center looked at 490,000 webpages and found em dashes showing up about twice as often as they were in 2023. They also noted that AI models use them more than humans typically do.   People notice patterns.   If every post, reply and DM has the same punctuation, perfect little lists and polished AI cadence, people start wondering whether there is actually a person behind the account.   That is a bad look for a business.   Use AI. I use it constantly. But if you are speaking for your business, read what it gives you and make damn sure it still sounds like you.   I may have been guilty of it at first too admittedly haha.   But stop and think for a second, who wants to live in a world where everyone's social media is just AI speaking to AI.   Also, we are missing something critical here gang. Who is going to purchase your service or product? AI? Or a human. There is a massive disconnect happening.   Let me know what you guys think? Have you also been noticing the same thing everywhere? Once you notice the em dashes you can't unsee them.   Rant over. 😂       submitted by     /u/eternaclarity     to     r/DeadInternetTheory       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DeadInternetTheory/comments/1wfvn8s/a_rant_about_everyone_using_ai_to_post_on_social/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T06:28:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T06:29:20.677Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa794406508d45f3d2c35bb"
+    },
+    "message_id": "reddit_t3_1wfvn7d",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "TreasureGrid",
+    "username": "Icy-Bat7558",
+    "title": "Treasure Grid · Silver Marsh",
+    "text": "Treasure Grid · Silver Marsh\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Icy-Bat7558     to     r/TreasureGrid       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TreasureGrid/comments/1wfvn7d/treasure_grid_silver_marsh/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T06:28:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T06:29:20.883Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa794416508d45f3d2c35bc"
+    },
+    "message_id": "reddit_t3_1wfvn7c",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "CLI",
+    "username": "Strange-Art-3256",
+    "title": "Seven coding CLIs in one viewer, and the skills audit found 18 duplicates I didn't know I had",
+    "text": "Seven coding CLIs in one viewer, and the skills audit found 18 duplicates I didn't know I had\n\nI bounce between Claude Code and Codex, plus a couple of others depending on the day. Every one of them writes sessions into its own directory in its own flavour of JSONL, so \"what was I doing last Tuesday\" always started with \"wait, which CLI was that in.\" That question is why I built this: a desktop app (Tauri 2 + Vue 3 + Rust) that reads all of them into the same project → session → conversation view.   Repo:  Sessions viewer    Seven so far: Claude Code, Codex, Grok Build, Kimi Code, Pi, Antigravity CLI, opencode.   The four things I actually open it for:    Tokens and cost.  Prices come from LiteLLM, so the numbers track the real rate card instead of whatever I last remembered it costing. Spend splits by project, model and tool, and Today / 7d / 30d sits in the menu bar. Mine for the last 30 days, all agents combined: 33,305 calls, 5.5B cached tokens, 93.6% cache hit. I mostly look at it to feel bad.    Skills.  This is the part I didn't know I needed. Each agent keeps skills in its own folder and none of them know the others exist, so I'd quietly accumulated 34 skills: 18 duplicated, 12 that were a link pointing at another link, and one pointing at a directory I deleted months ago. No idea, none of it. The panel shows which agents can see each skill and where the real file lives, and it reads SKILL.md for things like  rm -rf  and  curl | sh  (a match sitting inside prose gets downgraded, otherwise everything is red and red stops meaning anything). Every fix, whether that's moving a skill to a shared store, flattening a symlink chain, or deleting it, shows you the exact paths it's about to touch. Cancel and nothing on disk moved.    Reading and resuming sessions.  Thinking blocks, tool calls paired with their results, structured diffs, pasted images, all rendered the way they happened instead of as a wall of JSON. Cmd+Shift+F searches every project and jumps to the message. From there you can pick the session back up in an embedded terminal, hand it off to Terminal.app / iTerm2 / Ghostty / Warp / cmux, or just keep talking in an in-app chat, with model, reasoning effort and permission mode as live controls.    Git diff.  Working changes, or any of the last 50 commits, opened as a tab right beside the session they came out of. Split the pane and you get the conversation and the diff it produced side by side, which is how I usually work out what an agent did versus what it told me it did.   Two things it deliberately won't do: it never writes to your original transcripts, and deleting moves a session into a shared trash instead of calling  rm . It's all local. Nothing gets uploaded anywhere.   macOS, Windows and Linux. MIT.       submitted by     /u/Strange-Art-3256     to     r/CLI       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CLI/comments/1wfvn7c/seven_coding_clis_in_one_viewer_and_the_skills/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T06:28:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T06:29:21.085Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa794416508d45f3d2c35bd"
+    },
+    "message_id": "reddit_t3_1wfvn73",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SlovenijaFIRE",
+    "username": "Adventurous-Foot-828",
+    "title": "Preden začnem investirat",
+    "text": "Preden začnem investirat\n\nZravo vsem,   trenutno veliko časa posvečam temu subredditu, ker se mi zdi ideja FIRE super, prebiram stare poste, linke in vse kar ste predlagali - torej upoštevam nasvet da novinci ne smetimo z vprašanji, ki so že bila postavljena.    Imam pa vseeno vprašanje oziroma potrebujem nasvet;   Je kdo od vas tak, ki že dolgo vlaga, kupuje ETF - torej več kot 10 let? Ste se v tem obdobju soočili s kakimi nepredvidljivimi težavami? Ali vse poteka tako, kot ste si zamislili?   Pa še tole,   nisem prepričan kolikšen del plače bi investiral.. mesečno mi ostane približno 50 % plače (po vseh stroških, nakupih ...), verjetno je smiselno čim večji delež tega investirat.. nisem ravno skeptik, vseeno pa je prisoten nek strah v ozadju, češ, kaj če gre nekaj narobe, in mi ne ostane nič... vem da je trg in borza živa zadeva in se lahko zgodi marsikaj, vem tudi da je na dolgi rok (več kot 15 let) načeloma dobiček, pa vendar... je smiselno investirati preostalih 40-50 % plače? Kako ste se vi odločili glede zneska? Je neumno, če vsak mesec pač vložim drugačen znesek?       submitted by     /u/Adventurous-Foot-828     to     r/SlovenijaFIRE       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SlovenijaFIRE/comments/1wfvn73/preden_začnem_investirat/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T06:28:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T06:29:21.286Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa794416508d45f3d2c35be"
+    },
+    "message_id": "reddit_t3_1wfvn6v",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "octopusnotes",
+    "username": "TopEntity",
+    "title": "Layers? and Shapes!",
+    "text": "Layers? and Shapes!\n\nChangelog:     Draw & Hold now snaps stars, diamonds (rhombi) and polygons (pentagon, hexagon, …) too.   New double-headed arrow shape.   Whiteboard now remembers your last location.   LAYERS!!!   Extended shape recognition.   Snap to shape.   Fixed app crash due to OOM errors when importing large pdfs.   User Requests section: Has setting to show eraser and lasso at the same place.   Natural scrolling implemented. Threshold can be chosen in settings.   Added opacity slider for ghost that appears in the original place when moving a selection   I forgot mentioning many MANY because my pc fucked up and wayland stopped working. I had to reinstall OS 😑.   Optimised code of whiteboard to a much better cache usage. It should now lag less.   Fixed Screenshot tools capture area   added a static toolbar in dev options.   Fixed sudden disappearance of some strokes when written fast. This happened due to a stray line of code in which triple taps undid/removed recent strokes. I had dropped this feature and forgot to remove the stray code. Sorry.     I was about to upload to play but it is still reviewing my old one. 😑       submitted by     /u/TopEntity     to     r/octopusnotes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/octopusnotes/comments/1wfvn6v/layers_and_shapes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T06:28:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T06:29:21.488Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa794416508d45f3d2c35bf"
+    },
+    "message_id": "reddit_t3_1wfvn6u",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CarsIndia",
+    "username": "Former_Divide8039",
+    "title": "What’s the best 5/7-seater car under ₹23 lakh new or ₹20 lakh used in India?",
+    "text": "What’s the best 5/7-seater car under ₹23 lakh new or ₹20 lakh used in India?\n\nI’m looking to buy a car and my budget is around  ₹23 lakh for a new car , or around  ₹20 lakh for a second-hand one .   I’d prefer a  5-seater or bigger , and my main priorities are  safety, features, comfort and overall value for money .   I’m open to SUVs, MPVs or anything else that makes sense. For the used option, I’m also open to getting a higher-end car that has depreciated into this price range.   What would you guys personally pick in these two budgets? Also interested in knowing  which cars I should avoid and why , especially when buying used.       submitted by     /u/Former_Divide8039     to     r/CarsIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CarsIndia/comments/1wfvn6u/whats_the_best_57seater_car_under_23_lakh_new_or/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T06:28:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T06:29:21.688Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7947a6508d45f3d2c35c0"
+    },
+    "message_id": "reddit_t3_1wfvo2t",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "headphonesindia",
+    "username": "Lyon_1726",
+    "title": "Headphones under 10k recommendations.",
+    "text": "Headphones under 10k recommendations.\n\nI'm looking to buy headphones. 10k budget. My main concern is the comfort. I wanna use headphones for long hours during lectures, could y'all please suggest some good ones?       submitted by     /u/Lyon_1726     to     r/headphonesindia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/headphonesindia/comments/1wfvo2t/headphones_under_10k_recommendations/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T06:30:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T06:30:18.983Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7947b6508d45f3d2c35c1"
+    },
+    "message_id": "reddit_t3_1wfvo2f",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "jelleysauce",
+    "title": "Grab 100 hammers from u/jelleysauce!",
+    "text": "Grab 100 hammers from u/jelleysauce!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/jelleysauce     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wfvo2f/grab_100_hammers_from_ujelleysauce/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T06:30:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T06:30:19.199Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7947b6508d45f3d2c35c2"
+    },
+    "message_id": "reddit_t3_1wfvo26",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "blanks",
+    "username": "Dad_Boss_Inc",
+    "title": "Fill in the blanks: i love you ___.",
+    "text": "Fill in the blanks: i love you ___.\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Dad_Boss_Inc     to     r/blanks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/blanks/comments/1wfvo26/fill_in_the_blanks_i_love_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T06:30:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T06:30:19.415Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7947b6508d45f3d2c35c3"
+    },
+    "message_id": "reddit_t3_1wfvo1x",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "BlindRankings",
+    "username": "NoAverage9216",
+    "title": "Blind Ranking these actors",
+    "text": "Blind Ranking these actors\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/NoAverage9216     to     r/BlindRankings       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BlindRankings/comments/1wfvo1x/blind_ranking_these_actors/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T06:30:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T06:30:19.634Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7947b6508d45f3d2c35c4"
+    },
+    "message_id": "reddit_t3_1wfvo1j",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "TheFireRisesMod",
+    "username": "Pale_Coconut2554",
+    "title": "what is actual Differences between GMAC and APLA Anarchists?",
+    "text": "what is actual Differences between GMAC and APLA Anarchists?\n\nI’ve seen some discussion on this topic before, and it always seemed to boil down to the argument that “APLA anarchists are fake ass LARPers, while GMAC are the real anarchists.” While I agree with this conclusion to some extent, I think it’s likely to change since APLA is set to undergo a major revamp. Instead of such a biased conclusion, could you explain the differences more clearly?       submitted by     /u/Pale_Coconut2554     to     r/TheFireRisesMod       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TheFireRisesMod/comments/1wfvo1j/what_is_actual_differences_between_gmac_and_apla/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T06:30:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T06:30:19.850Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7947c6508d45f3d2c35c5"
+    },
+    "message_id": "reddit_t3_1wfvo13",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "KSBKBT",
+    "username": "Inevitable-Gas-7591",
+    "title": "So, Shankar committed suicide? Wouldn't an investigation into his murder as well as his financials reveal Tripti's involvement? But as we are logical beings, watching an Ekta Kapoor show means leaving logic and our brains at the door.",
+    "text": "So, Shankar committed suicide? Wouldn't an investigation into his murder as well as his financials reveal Tripti's involvement? But as we are logical beings, watching an Ekta Kapoor show means leaving logic and our brains at the door.\n\nSo Shankar committed suicide out of fear of Tripti's threats? Well wouldn't the investigation into his financials already prove that Tripti is involved in his death since he is been receiving 3L per month for over 10 years now? But as we are logical beings watching Ekta show means, keeping logic and brains outside home.        submitted by     /u/Inevitable-Gas-7591     to     r/KSBKBT       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/KSBKBT/comments/1wfvo13/so_shankar_committed_suicide_wouldnt_an/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T06:30:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T06:30:20.069Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7947c6508d45f3d2c35c6"
+    },
+    "message_id": "reddit_t3_1wfvnzy",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DokkanBattleReddit",
+    "username": "1llestj",
+    "title": "BEST TEAMS FOR EZA TUR TEQ SUPER SAIYAN TRUNKS!!",
+    "text": "BEST TEAMS FOR EZA TUR TEQ SUPER SAIYAN TRUNKS!!\n\nsubmitted by     /u/1llestj     to     r/DokkanBattleReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DokkanBattleReddit/comments/1wfvnzy/best_teams_for_eza_tur_teq_super_saiyan_trunks/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T06:30:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T06:30:20.288Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7947c6508d45f3d2c35c7"
+    },
+    "message_id": "reddit_t3_1wfvnzo",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BangaloreMarketplace",
+    "username": "UnitedWraps",
+    "title": "Looking to buy an iPhone 14/15 PM. Can buy immediately.",
+    "text": "Looking to buy an iPhone 14/15 PM. Can buy immediately.\n\nsubmitted by     /u/UnitedWraps     to     r/BangaloreMarketplace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BangaloreMarketplace/comments/1wfvnzo/looking_to_buy_an_iphone_1415_pm_can_buy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T06:30:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T06:30:20.504Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7947c6508d45f3d2c35c8"
+    },
+    "message_id": "reddit_t3_1wfvnz3",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Plastic_Shock_6790",
+    "title": "Grab 100 hammers from u/Plastic_Shock_6790!",
+    "text": "Grab 100 hammers from u/Plastic_Shock_6790!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Plastic_Shock_6790     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wfvnz3/grab_100_hammers_from_uplastic_shock_6790/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T06:30:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T06:30:20.720Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7947c6508d45f3d2c35c9"
+    },
+    "message_id": "reddit_t3_1wfvnyu",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FitTheWord",
+    "username": "victoriam200",
+    "title": "🟨 Unscramble This 5-Letter Word (by u/victoriam200)",
+    "text": "🟨 Unscramble This 5-Letter Word (by u/victoriam200)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/victoriam200     to     r/FitTheWord       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FitTheWord/comments/1wfvnyu/unscramble_this_5letter_word_by_uvictoriam200/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T06:29:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T06:30:20.939Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7947d6508d45f3d2c35ca"
+    },
+    "message_id": "reddit_t3_1wfvnyj",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Pixelary",
+    "username": "Mindless_Skill_5084",
+    "title": "What did u/Mindless_Skill_5084 draw?",
+    "text": "What did u/Mindless_Skill_5084 draw?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Mindless_Skill_5084     to     r/Pixelary       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Pixelary/comments/1wfvnyj/what_did_umindless_skill_5084_draw/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T06:29:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T06:30:21.159Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7947d6508d45f3d2c35cb"
+    },
+    "message_id": "reddit_t3_1wfvnx1",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "QueerSFF",
+    "username": "Siavahda",
+    "title": "An Ex-Harpy vs Fascism: A Dubious Clamor by Marissa Lingen!",
+    "text": "An Ex-Harpy vs Fascism: A Dubious Clamor by Marissa Lingen!\n\nA Dubious Clamor  by Marissa Lingen   Genres:  Adult, Fantasy, Historical Fantasy   Representation:  Sapphic MC, secondary nonbinary character, major biracial character   PoV:  First-person, past-tense   Published on:  15th September 2026   ISBN:  1998390241     I received this book for free from the publisher in exchange for an honest review. This does not affect my opinion of the book or the content of my review.     Oh, how I ADORED this!   I did not realise this was Historical Fantasy until I started reading, but it is: set sometime during the Victorian era, I think? Well, it’s England and there’s a queen, anyway. Women don’t have the vote yet. But this is not our world’s Victorian (or something) era, because magic exists and everyone knows that it does. Harpies exist! In fact, our protagonist  was  a harpy for two years, and that is extremely plot-relevant, even though she managed to break the curse a while before the start of the book.       So: there’s a magic sword, and it is Not Happy. Turns out, it’s unhappy for very good reason: parliament wants to pass a law, which is also a spell, that will make everyone in the UK ‘certain of their place in life’. This is obviously terrible if you think about it for .2 seconds, but it’s even worse than it sounds, because if you don’t have a clear ‘place’, this spell…well, no one’s sure if it will kill you, or ‘only’ make you walk out into the ocean, or what, but you won’t be staying in the UK. And by the definitions of this spell, almost  nobody  has a clear place –  everyone  is many things! If you have a job, but also a family? Oops, that’s two ways of categorising you, you have a problem.   And it’s going to be much, much worse for human immigrants, or magical creatures, or gods forbid anybody nonbinary.       The sword wants this spell stopped. So does Jules, and almost everyone else Jules knows. (Alas, not the friend who brought Jules the sword in the first place, which is a source of heartbreaking tension throughout the story.) Figuring out HOW to stop it is not the simplest thing in the world – especially because it’s important that well-known ‘foreigners’ not be seen to be involved, for fear of legal issues later. And the most badass magicians Jules knows? Happen to be ‘foreign’. She has to do this without their help, somehow.   Eek.   Lingen’s prose is both brisk and delicate, absolutely lovely, and Jules’ first-person narration was an utter delight: she’s such a  practical  sort of person, someone who has  been shoved  stepped outside of the role society cast her in and made a very good home there, and even when she’s feeling overwhelmed and helpless, she’s very no-nonsense about it in a way that made me admire her. Plus, she’s just really fun: I loved her appreciation for fancy cakes, and her humour, and her sense of justice, and the genuine passion she has for her community of misfits and outcasts. She decides she can’t keep addressing the sword as Sword, and names it Grandmother. Like. I approve  so much!    The prose and pacing keep things moving along, but this is a novella with teeth, that’s tackling some big questions, even some borderline frightening ones. It’s very much a story about – the sort of people Society disapproves of, or at best doesn’t know what to do with, and the forces rallied against them.  Dubious Clamor  is about how too much certainty can be a terrible thing – and so can the  desire  for too much certainty. There’s a really great exploration of – or contrast between? – the villains who have written and introduced this law-spell…and the weak, pathetic ‘unintentional’ villains who will let evil happen for the sake of chasing certainty. Lingen actually spends more time focussing on the latter, which I think is both really smart and really effective, especially in a story that’s basically about preventing fascism (what else do you call total certainty + a disdain for anybody ‘different’?) Fascists can’t do their thing if the cowards don’t support them, you know?   But it’s not just about fascism. Lingen explores how even in completely different contexts, unqualified certainty can be a huge problem. And there are just so  many  ways it can be a problem, whether we’re talking small-picture issues like parents who disapprove of their daughter’s paintings, or much bigger things like how to steer a nation. I’m not sure this is an issue/theme I’ve seen in Fantasy before, but I love it and would like so much more of it, please! (The ending of  Dubious Clamor  leaves things very open for sequels, and I hope we get a BUNCH because, um, HELLS YES I want Jules questing to find the other swords of uncertainty! LET’S GO LET’S GO LET’S GO!) It’s definitely left me with lots of thinky-thoughts; there’s so much that I think Lingen managed to articulate really well, and  convey  well – lots of stories are very preachy or info-dumpy with their messaging, but this one isn’t. Lingen is too good a writer for that.       I love everything about this novella – I love how Lingen centred immigrant communities in this story, I love that a ‘flock’ of dandies were vital in saving the day, and I  adored  the harpies! (Including Jules’ ex, the harpy she was romantically ‘with’ while she was under her harpy-curse, and whom she now has a bittersweet but beautiful dynamic with.) I loved that, FOR ONCE, a protagonist had a good, believable reason for choosing Justice over Vengeance – it’s not that Jules is a milksop, the kind of wishy-washy do-gooder who makes me roll my eyes, all ‘Violence is never the answer!’ Nope, Jules is fine with violence, actually, but she has great reasoning for declining the Road of Vengeance and I think her call is the right one. (And if you know me, you know how rarely I say THAT!) I love that we got glimpses of Finnish mythology, and even Welsh, towards the end (neither of which get enough page-time in modern Fantasy, imo). There’s all these gorgeous little details – like the mention of aniline in the above quote! Or Jules and her mother speaking Swedish together, or her mother’s servants having Opinions…   I could go on and on, honestly. This is a brilliant, clever,  deeply  delightful novella that pushes back at the foundation of fascism, puts the Power of Friendship front-and-centre, and had me giggling as often as it had me gasping. It’s dazzling, so completely original and  distinct . It’s left me with so much to think about, but it’s also left me feeling hopeful about the world and other people. It sparks joy.   Instant new fave. MORE, PLEASE!   (And to make sure we GET more, you should go preorder it – it comes out this Tuesday!)    Applicable   r/QueerSFF   bingo squares:  Queer Families, Intersectional Cubed    You can find more of my reviews, rec lists, and weekly publishing roundups at    Every Book a Doorway   !         submitted by     /u/Siavahda     to     r/QueerSFF       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/QueerSFF/comments/1wfvnx1/an_exharpy_vs_fascism_a_dubious_clamor_by_marissa/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T06:29:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T06:30:21.384Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7947d6508d45f3d2c35cc"
+    },
+    "message_id": "reddit_t3_1wfvnwg",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Few_Ranger7227",
+    "title": "What's a skill you wish schools taught everyone?",
+    "text": "What's a skill you wish schools taught everyone?\n\nsubmitted by     /u/Few_Ranger7227     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wfvnwg/whats_a_skill_you_wish_schools_taught_everyone/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T06:29:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T06:30:21.606Z"
+    }
+  },
+  {
+    "_id": {

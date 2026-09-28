@@ -1,0 +1,416 @@
+    "platform": "reddit",
+    "subreddit": "SuicideBoys",
+    "username": "MidnightReasonable47",
+    "title": "TRYING TO FIND A SPECIFIC PIECE OF MERCH!!!",
+    "text": "TRYING TO FIND A SPECIFIC PIECE OF MERCH!!!\n\nSo last year I was eyeing this super dope top that was on the G59 website. It was on there for a good bit, but I guess since the tour rolled out, new merch did with it. I finally decided to buy the top and when I looked it up, it was gone 🥲  This top was camo-ish I believe and it was made out of jersey material, it had \"59\" on the back as the jersey number and it was SOOOO TUFF!!!!   If anyone knows what I'm talking about and could send me links to resellers I would SOOO appreciate it!!!        submitted by     /u/MidnightReasonable47     to     r/SuicideBoys       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SuicideBoys/comments/1whnl5g/trying_to_find_a_specific_piece_of_merch/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:59:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T05:00:11.522Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa225b6508d45f3d2d05bb"
+    },
+    "message_id": "reddit_t3_1whnl46",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "clinicalresearch",
+    "username": "Ok_Imagination1714",
+    "title": "Gimme all your CRA tips",
+    "text": "Gimme all your CRA tips\n\nI just accepted an offer at a mid-sized CRO and am preparing for my new road warrior life. I will ramp up to independent monitoring after 2 months and was told I will have 1-2 studies in the first year. I am newly married but my husband and I have discussed this new lifestyle at length and are mentally preparing for me being gone most weekdays. It won’t be easy but he has been very supportive.    My questions are:   What are your essential hacks and/or scheduling tips to help keep your life balanced?   What are your essentials for traveling and any tips for the travel itself?   What are your luggage/carry-on/backpack recommendations for weekly travel?   And any general advice for a fairly new CRA preparing to take on a much heavier workload would be much appreciated!       submitted by     /u/Ok_Imagination1714     to     r/clinicalresearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/clinicalresearch/comments/1whnl46/gimme_all_your_cra_tips/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:59:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T05:00:11.747Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa225b6508d45f3d2d05bc"
+    },
+    "message_id": "reddit_t3_1whnl3o",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "KarmaBattle",
+    "username": "karmabattle26",
+    "title": "⚔️ SKIRMISH · 100 KC · MEMES & LAUGHS",
+    "text": "⚔️ SKIRMISH · 100 KC · MEMES & LAUGHS\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/karmabattle26     to     r/KarmaBattle       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/KarmaBattle/comments/1whnl3o/skirmish_100_kc_memes_laughs/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:59:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T05:00:11.964Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa225c6508d45f3d2d05bd"
+    },
+    "message_id": "reddit_t3_1whnl3i",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "LocalLLaMA",
+    "username": "Public_Umpire_1099",
+    "title": "Write up on building and improving reliability of agentic harnesses + a big dataset from my work.",
+    "text": "Write up on building and improving reliability of agentic harnesses + a big dataset from my work.\n\nI've been working on something for this community (and other self-hosted communities) for almost 5 months now. Personally, I would grade it as probably the closest open source equivalent of Manus and parts of Perplexity compared to the field right now. It has been a fuck ton of work, and I am in the final steps of releasing it. To give you the gist, its a deep research+builder+agent application. It has basically been the definition of scope creep. I went from something that would build index.htmls and basic deep research reports to something that, in my current benchmarks, is on parity with deep research reports from Gemini, Claude, and ChatGPT, and appears to be on parity with other applications like Bolt, Lovable, and Replit when it comes to building NextJS sites and whatnot.   This work came with A LOT of learning, pain, and token usage. I wanted to give a writeup about what my philosophy on building agentic harnesses is now, as well as the data from my ~4,000 runs of trying to get this bastard to build something correctly. I'll likely throw the deep-research runs in there too. Essentially, the benchmark I wanted to reach, was for an agent to perform 300 builds of random sites without failing. If the harness failed even once, then the counter was reset to 0.   Heres the first iteration of the data. I am still working on scrubbing through the exact agent transcripts so I can post the raw data + those deep research items. I'll post those soon after I wrap up this actual project.  https://github.com/Dyluhn/disco-wave-history    Finally, I want to address something I believe is somewhat of the \"elephant in the room\". I fully understand that this field has been straight up FLOODED with harnesses+chat interfaces. If, when I put this thing out, it gets no use, that is completely okay. I am not in this to make any sort of income. In fact, this project has costed me thousands in inference alone. I dont care to recoup that. What I *actually* care about, is not putting out more low-quality software. I see many instances on a daily basis of someone promoting some of the worst-offending slopware possible; megalithic 6k+ LOC files, repos with bare minimum testing, interfaces flooded with emojis etc... Part of me putting this out is to prove that, yes, I tested it, and no, I didnt build this in a weekend and ship it. I believe I have met my own bar for quality at this point. Okay, now on to the writeup.   Fair warning, this is pretty lengthy and I've already ranted for a few minutes above; if you aren't interested this is your sign to go to the next post! Thanks, everyone.   Walls That Make Sense   The first reliability run I ran was June 9, 2026: Qwen3.6 27B, served on my own hardware, left alone with a build loop for a night. It built a 28 KB website from scratch, and it built it perfectly. Then it tried to edit the thing it had just built, and couldn’t. It read the file. It read it again. It kept reading, politely, while making no progress at all. An hour later, I returned, and thought to myself: \"what the fuck?\".   The obvious conclusion was that the model wasn’t good enough. And due to Claude's weird, thinly veiled, racism-adjacent mindset on open source models, that asshole was convinced too.    The  correct  conclusion was that I had handed it an edit tool that demanded exact character-for-character matches when it wanted to insert code between two other lines of code, file reads that silently trimmed long content, and a loop that counted reading as progress. So I thought about it. If you hand me a wrench when I need to hammer something, I'm going to be the dense fucker that I am and hit a nail with a wrench. So, I made the edit tool forgiving, added line-targeted operations that don't suck, paginated the reads, and added a nudge that fires when reads streak without a change. Same model. Suddenly it edits the way it builds.   Four months and roughly 3,900 recorded runs later, the number of failures where the model itself turned out to be the root cause is zero. Not “few.” Zero. Every run-ending failure could be followed to a boundary I owned: the product, the harness, or the infrastructure. That statistic is the whole philosophy encapsulated. The rest of this essay is the mechanics of believing it, or at least me giving my best shot at trying to tell you  why  you should believe it.      The Plinko problem      When you build an agentic loop, you are entrapping a stochastic probability machine inside a deterministic system that wants a particular output. Think of Plinko. Toss the ball in and it falls, and depending on the rungs, the physics, the air, and the spin you gave it on release, you get one outcome, sampled from all the outcomes that arrangement makes possible.   So how do you get a specific outcome, every time? You funnel. Something like the opposite of progressive disclosure (regressive disclosure?): you structurally remove the ability to land in the wrong hole, and remove the context that let the model believe that hole existed in the first place (where is my ice pick?). You put a wall there, placed so it blocks that hole, at that row only, and no other, angled so the ball bounces back toward the outcome you want. More instructions add more rungs; the ball still goes where the geometry sends it. The difficult part is walls that make sense.      Errors are upstream problems      The same idea applies to failure. When an error shows up, the tempting, minimal effort question is “what do I do to fix this error?” The productive questions are: what caused this upstream? Why would this error occur at all? How do we make it recoverable when it happens? And how do we cut the possibility of it happening out of existence? Over those four months, every fix  that worked  was at the boundary that owned the failure, one root-caused fix per iteration of the product, and never a bandaid over the symptom. I literally had to take a month long detour to refactor about half of this project because of my idiocy in applying bandaids. Dont be me.      The model is not being a jackass      When a model fails outright, or keeps trying to do the thing you don’t want it to do, the model is almost never being a jackass. Most of the time you gave it bad instructions. The rest of the time it ran into an error, and the error just put up a wall with no geometry. An opaque wall doesn’t funnel; it scatters. The ball bounces off in a random direction, and you call the randomness “model error.”, and after you call it that, you whisper curse words quietly while staring at your monitor. Truly, I believe that even a model like Gemma E4B can be effectively engineered with to produce a harness that makes it output work like Qwen 27B. It gets harder as the model gets smaller, to a point where you are trying to catch a proverbial monkey-shakespeare-typewriter in a bottle. But it can be done.      Radiant errors, radiant everything      Tool results are the model’s only sensory organ. In an agentic loop, errors desperately need to not be opaque. And not just errors: every tool result should radiate the context the next step needs. Here is what writing a file returns in my project:    wrote 1659 bytes to src/engine/state.js applied — lines 1-40 now read: 1 // Game state machine — pure logic, no DOM/three.js. 2 3 export const GameState = { 4 MENU: 'menu', 5 PLAYING: 'playing', ⋮ [total lines: 55] [complete — 1659 bytes, sha256 e9f03157248c. The file now contains EXACTLY the content you supplied, verbatim; only the head is echoed above to save context. A read-back to confirm this write is unnecessary.]     Byte count, the file’s actual first lines with line numbers, the total length, a hash, and an explicit “a read-back is unnecessary.” That last line is a wall. It blocks the verification-read loop before it starts. The bad version of this tool says  changes written  and nothing else. The model cannot see the file, so it does the only reasonable thing and reads it back to check. Every time. You built that loop, not the model.   Refusals should radiate too. Disco gates risky work behind a plan the user approves before the agent executes it. If the user asks for a change while the agent is mid-step, the approved plan is now stale, so the agent’s next action gets refused. Here is what that refusal looks like from the model’s side:    REFUSED: `shell` was not applied. A change request arrived while you were mid-step, so this action would have landed on the OLD, now-stale plan. The build has re-entered PLANNING. Fold the new request into a REVISED plan and call `submit_plan`; once it is approved you can apply the change. You may also read (file_read/file_list/search/extract) or ask/questions_v2 first.     Why it was refused, what state the system is now in, exactly what to do next, and what remains allowed meanwhile. Compare the version that helps nothing: . That error names the behavior and offers no way out. It is a wall with no angle, in front of a model that was reading for a reason.   One caution: radiance has to be  relevant . If the model was doing something specific and legitimate, and the error it gets back is generic boilerplate, you have not built a wall. You have created a fresh occasion for thrash. The specificity of the error must match the specificity of the work.   So when thrash occurs, the question is never “what did the model do wrong?” The question is:  what can we change to make the model’s job even easier?       A good tool is not niche      Walls are also about what you hand the model in the first place. A good tool fits multiple places and is relevant everywhere, not built for one narrow situation. I made this mistake in an egregious way once: making a plan, rendering a preview, and checking the work were spread across a pile of narrow tools that mostly had to be called in a particular order for the run to succeed. That is a maze wearing a funnel’s name tag. The model’s real job had become guessing our choreography, and guessing is exactly what the loop exists to remove. A good tool is not niche, but it can fill the niche where needed. A handful of wide tools with radiant results beats a drawer full of specialized ones every time.      The kitchen sink is a Plinko board      Which leads to the mistake currently being industrialized: throwing everything at the context window. Thousands of lines of skill files, hundreds of tools and MCP servers. If you want to ruin a model’s reasoning, that is the recipe. Attention is a relevance contest with a fixed budget: every token in the window scores against every other, and the shares have to sum to one. Nothing you put in context is inert. Every schema and every skill file competes for the same finite attention, and sits there as a live option while it does.   Loading in the kitchen sink reintroduces the Plinko problem  inside the transformer . Every irrelevant tool is a hole you drilled yourself, and the model can now “reasonably” route into it. It looks relevant precisely because you put it in the window. Presence implies affordance. This all boils down to minimalism. Keep what you actually need; everything else is the bullshit on top.      Incidents come before failures      The last piece I brought from a previous life. In the Navy I maintained an autonomous weapon system that is a close relative of aerospace systems, and it inherits aviation’s safety doctrine:  incidents are the precursors of failures.  A failure is usually a few incidents chaining together until the sum is catastrophic. So you start with the incidents, because the answers usually live there. Fix the incidents, make them structurally impossible, and the failure rate follows them down.   In an agent loop, an incident is a small oddity in a run that still passed: the model acknowledging a system message as if the user had said it, narrating something confusing out loud, a short burst of tool errors it recovered from. Using this principle, I traced back over all the turns I had in the past. Across three consecutive stretches of the same test suite in August, recorded failures fell from 59 to 8, then to 4.      Where this lands      The final test wave passed 300 runs out of 300, and the follow-up wave passed 100 out of 100, under a counting rule with no mercy in it: one genuine product failure and the count restarts from zero, on fresh test seeds. Every run was recorded, the results are tied by hash to the sealed evidence that produced them, and the distilled history, with every run indexed and all 253 failures reconstructed, is  public .   I built Disco on the belief that people who run models locally are the future, and the evidence kept agreeing with a stronger claim than I started with: capable local models do not need a bigger babysitter. They need better boundaries. Toss the ball in as many times as you like. If it keeps missing, stop blaming the ball. Build a wall that makes sense. Or don't. Good luck.       submitted by     /u/Public_Umpire_1099     to     r/LocalLLaMA       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LocalLLaMA/comments/1whnl3i/write_up_on_building_and_improving_reliability_of/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:59:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T05:00:12.190Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa225c6508d45f3d2d05c0"
+    },
+    "message_id": "reddit_t3_1whnl3b",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "triplej",
+    "username": "KERR_KERR",
+    "title": "Triple J Y2K Millennium Edition - Spotify playlist of all songs played on JJJ during the year 2000",
+    "text": "Triple J Y2K Millennium Edition - Spotify playlist of all songs played on JJJ during the year 2000\n\nsubmitted by     /u/KERR_KERR     to     r/triplej       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/triplej/comments/1whnl3b/triple_j_y2k_millennium_edition_spotify_playlist/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:59:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T05:00:12.850Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa225d6508d45f3d2d05c1"
+    },
+    "message_id": "reddit_t3_1whnl2l",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789534781433",
+    "text": "[PROBE] 1789534781433\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1whnl2l/probe_1789534781433/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:59:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T05:00:13.071Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa228a798842c4ceff9ac4"
+    },
+    "message_id": "reddit_t3_1whnlv6",
+    "topic_key": "therapist",
+    "search_keyword": "therapist",
+    "platform": "reddit",
+    "subreddit": "90DayFiance",
+    "username": "Exciting_Bottle_4471",
+    "title": "Ultimatums are manipulation. Manipulation is emotional abuse. The therapists failed by supporting this.",
+    "text": "Ultimatums are manipulation. Manipulation is emotional abuse. The therapists failed by supporting this.\n\nsubmitted by     /u/Exciting_Bottle_4471     to     r/90DayFiance       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/90DayFiance/comments/1whnlv6/ultimatums_are_manipulation_manipulation_is/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T05:00:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T05:00:58.854Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa228b798842c4ceff9ac5"
+    },
+    "message_id": "reddit_t3_1whnltq",
+    "topic_key": "budgeting app",
+    "search_keyword": "budgeting app",
+    "platform": "reddit",
+    "subreddit": "sideprojects",
+    "username": "Own_Leadership5326",
+    "title": "I was too broke to pay UGC creators for 15 second video so I built a marketplace that connects small UGC creators to small companies/solo founders.",
+    "text": "I was too broke to pay UGC creators for 15 second video so I built a marketplace that connects small UGC creators to small companies/solo founders.\n\nOkay, so when I was finished building my 100th budgeting app I decided that I need to market it so I asked Big ChatGPT \"how do I market this bro\"    It gave me \"UGC Marketing\" did a little bit of research on it and decided to dm 50 instagram creators and guess what I got 1 out of 50 responded to me. I asked how much to promote my app    They said \"50 bucks bro.\"   This is when I decided to build a marketplace to connect UGC creators and new startups   If you're looking to get UGC videos done for rupees then get on the waitlist:  https://makegig.vercel.app        submitted by     /u/Own_Leadership5326     to     r/sideprojects       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sideprojects/comments/1whnltq/i_was_too_broke_to_pay_ugc_creators_for_15_second/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T05:00:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T05:00:59.132Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa22956508d45f3d2d05c2"
+    },
+    "message_id": "reddit_t3_1whnm3j",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DailyWordSnacks",
+    "username": "skirmish-daily",
+    "title": "SKIRMISH #291 - CLASSIC",
+    "text": "SKIRMISH #291 - CLASSIC\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/skirmish-daily     to     r/DailyWordSnacks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DailyWordSnacks/comments/1whnm3j/skirmish_291_classic/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T05:00:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T05:01:09.652Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa22956508d45f3d2d05c3"
+    },
+    "message_id": "reddit_t3_1whnm36",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "WordCityDE",
+    "username": "da_finnci",
+    "title": "WordCityDE Runde #1492",
+    "text": "WordCityDE Runde #1492\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/da_finnci     to     r/WordCityDE       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WordCityDE/comments/1whnm36/wordcityde_runde_1492/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T05:00:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T05:01:09.863Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa22966508d45f3d2d05c4"
+    },
+    "message_id": "reddit_t3_1whnm35",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "wordgrind",
+    "username": "the_grAyLIEN",
+    "title": "Translate — what's \"recalcitrant\" in French?",
+    "text": "Translate — what's \"recalcitrant\" in French?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/the_grAyLIEN     to     r/wordgrind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wordgrind/comments/1whnm35/translate_whats_recalcitrant_in_french/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T05:00:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T05:01:10.072Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa22966508d45f3d2d05c5"
+    },
+    "message_id": "reddit_t3_1whnm2x",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Scourge_RPG",
+    "username": "scourge-rpgv2",
+    "title": "Gold Rush — LIVE NOW — Sep 16",
+    "text": "Gold Rush — LIVE NOW — Sep 16\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/scourge-rpgv2     to     r/Scourge_RPG       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Scourge_RPG/comments/1whnm2x/gold_rush_live_now_sep_16/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T05:00:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T05:01:10.282Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa22966508d45f3d2d05c6"
+    },
+    "message_id": "reddit_t3_1whnm1u",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Redditstuff",
+    "username": "criticalstateapp",
+    "title": "🤖 Submitted by genuine citizen",
+    "text": "🤖 Submitted by genuine citizen\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/criticalstateapp     to     r/Redditstuff       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Redditstuff/comments/1whnm1u/submitted_by_genuine_citizen/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T05:00:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T05:01:10.530Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa22966508d45f3d2d05c7"
+    },
+    "message_id": "reddit_t3_1whnm1o",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "op_archery_dev",
+    "username": "op-archery",
+    "title": "🎯 Daily Challenge! (September 16, 2026)",
+    "text": "🎯 Daily Challenge! (September 16, 2026)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/op-archery     to     r/op_archery_dev       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/op_archery_dev/comments/1whnm1o/daily_challenge_september_16_2026/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T05:00:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T05:01:10.742Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa22966508d45f3d2d05c8"
+    },
+    "message_id": "reddit_t3_1whnm1i",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ChessChase",
+    "username": "chess-chase",
+    "title": "Daily #642: Chess Chase Challenge",
+    "text": "Daily #642: Chess Chase Challenge\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/chess-chase     to     r/ChessChase       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ChessChase/comments/1whnm1i/daily_642_chess_chase_challenge/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T05:00:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T05:01:10.955Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa22976508d45f3d2d05c9"
+    },
+    "message_id": "reddit_t3_1whnm16",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "NBASpurs",
+    "username": "AutoModerator",
+    "title": "Daily Discussion Thread - September 16, 2026",
+    "text": "Daily Discussion Thread - September 16, 2026\n\nThis is a free talk thread, however, the rules still apply, no politics, no religion; be respectful.       submitted by     /u/AutoModerator     to     r/NBASpurs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NBASpurs/comments/1whnm16/daily_discussion_thread_september_16_2026/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T05:00:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T05:01:11.167Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa22976508d45f3d2d05ca"
+    },
+    "message_id": "reddit_t3_1whnm10",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "BarHyphenSlash",
+    "title": "If you were reborn and got to choose what continent you’d live in, where would you choose and why?",
+    "text": "If you were reborn and got to choose what continent you’d live in, where would you choose and why?\n\nsubmitted by     /u/BarHyphenSlash     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1whnm10/if_you_were_reborn_and_got_to_choose_what/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T05:00:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T05:01:11.378Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa22976508d45f3d2d05cb"
+    },
+    "message_id": "reddit_t3_1whnm0v",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DebateReligion",
+    "username": "AutoModerator",
+    "title": "Simple Questions 09/16",
+    "text": "Simple Questions 09/16\n\nHave you ever wondered what Christians believe about the Trinity? Are you curious about Judaism and the Talmud but don't know who to ask? Everything from the Cosmological argument to the Koran can be asked here.   This is not a debate thread. You can discuss answers or questions but debate is not the goal. Ask a question, get an answer, and discuss that answer. That is all.   The goal is to increase our collective knowledge and help those seeking answers but not debate. If you want to debate; Start a new thread.   The subreddit rules are still in effect.   This thread is posted every Wednesday. You may also be interested in our weekly Meta-Thread (posted every Monday) or General Discussion thread (posted every Friday).       submitted by     /u/AutoModerator     to     r/DebateReligion       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DebateReligion/comments/1whnm0v/simple_questions_0916/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T05:00:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T05:01:11.592Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa22976508d45f3d2d05cc"
+    },
+    "message_id": "reddit_t3_1whnm0g",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "smallwords",
+    "username": "smallwordsgame",
+    "title": "Small Words #77 - September 16, 2026",
+    "text": "Small Words #77 - September 16, 2026\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/smallwordsgame     to     r/smallwords       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/smallwords/comments/1whnm0g/small_words_77_september_16_2026/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T05:00:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T05:01:11.805Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa22986508d45f3d2d05cd"
+    },
+    "message_id": "reddit_t3_1whnm01",

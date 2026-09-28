@@ -1,0 +1,416 @@
+    "created_utc": {
+      "$date": "2026-09-20T04:24:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:25:10.630Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf6026660c60840398484f"
+    },
+    "message_id": "reddit_t3_1wl6zy5",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "ClaudeWorkflows",
+    "username": "ClaudeAI-mod-bot",
+    "title": "[Workflow] AlphaDesk: Integrate Real-time Market Data with Claude via Self-Hosted MCP Tools",
+    "text": "[Workflow] AlphaDesk: Integrate Real-time Market Data with Claude via Self-Hosted MCP Tools\n\nAlphaDesk: Integrate Real-time Market Data with Claude via Self-Hosted MCP Tools    Workflow value:  95/100   Status:  active ·  Freshness:  70/100 ·  Confidence:  1.00 ·  Level:  advanced   Categories:  Quality Control, Token Saving, Context & Memory, Debugging, Shipping, MCP   Original source:   r/ClaudeAI post/comment    What problem this solves   Claude's inability to answer market questions from up-to-date records, relying instead on its internal, potentially outdated, memory. This workflow provides a mechanism for Claude to access real-time, external market data.   Summary   A self-hosted market research terminal, AlphaDesk, integrates with Claude via 37 read-only MCP tools. It allows Claude to fetch real-time market data (quotes, charts, SEC filings, news, earnings, corporate calendars, options chains, crypto) from external sources, overcoming its reliance on internal memory. The author shares key lessons learned about designing tools for agents.   Why it is useful   This workflow provides a concrete, open-source solution for extending Claude's capabilities with real-time, external data, specifically for market research. It demonstrates a powerful and generalizable pattern for overcoming Claude's knowledge limitations by integrating custom tools via MCP. The detailed lessons learned from building agent-facing tools are invaluable for anyone developing similar integrations.   Workflow     Set up AlphaDesk: Deploy the self-hosted application using Docker or a Python process.   Configure data keys (optional): Integrate paid data sources if desired (some features like SEC filings work without vendor keys).   Connect to Claude: Add AlphaDesk as a connector in Claude.ai using its URL, or use a token with Claude Code.   Query Claude: Ask Claude market-related questions, leveraging its access to AlphaDesk's 37 MCP tools for real-time data.     Tools / artifacts     AlphaDesk (GitHub repository)   Docker   Python   MCP tools   Claude.ai connector   Claude Code token     Validation signals     The author explicitly states 'Three things I learned building tools for an agent rather than a screen', detailing specific design insights and fixes (e.g., chart tool trajectory, market-wide news search, ticker lookup).   The problem statement ('I wanted Claude to answer market questions from records rather than from memory') implies a successful resolution through this tool.     Cautions     Users should follow self-hosting security best practices when deploying AlphaDesk.   Managing API keys for external data sources requires careful handling to prevent leaks.     Limitations     Requires self-hosting and potentially managing API keys for external data sources, which might be a barrier for some users.   The initial setup might be complex for beginners.   Limited community validation so far.     Rate this workflow   Upvote this post if the workflow is useful, reproducible, or worth recommending.   Downvote if it is vague, outdated, unsafe, overhyped, or not reproducible.   Reply if it worked for you, failed, is outdated, or has a better alternative.      This post was generated automatically from the workflow library database.        submitted by     /u/ClaudeAI-mod-bot     to     r/ClaudeWorkflows       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeWorkflows/comments/1wl6zy5/workflow_alphadesk_integrate_realtime_market_data/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:24:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:25:10.831Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf6027660c608403984850"
+    },
+    "message_id": "reddit_t3_1wl6zy1",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "PakistanDiscussions",
+    "username": "PaleChocolate5752",
+    "title": "cheap gyms in bahria town lahore",
+    "text": "cheap gyms in bahria town lahore\n\ni am looking for a cheap gym for male in bahria town, by cheap i mean in range of 2500-3500   every gym i visited charges around 5k-8k, i am a beginner (havent touched dumbbells, so wanna figure it out)       submitted by     /u/PaleChocolate5752     to     r/PakistanDiscussions       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PakistanDiscussions/comments/1wl6zy1/cheap_gyms_in_bahria_town_lahore/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:24:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:25:11.032Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf6027660c608403984852"
+    },
+    "message_id": "reddit_t3_1wl6zxv",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "KollyClub",
+    "username": "AsifRedditt",
+    "title": "Rio’s Latest Cringe Fest Exposes His Acting Limits",
+    "text": "Rio’s Latest Cringe Fest Exposes His Acting Limits\n\nRam And Leela - Below Average (1.5/5)   OTT: Prime Video   Language: Tamil   The plot has a very basic one-line concept: a guy who hasn't been able to land a marriage match for a long time finally falls in love with a girl.   Turns out, the girl is actually an alien... and to top it off, she transforms into a man every day after 6 PM.   Once the hero discovers this truth, what follows is a complete cringe-fest disguised as comedy.   Rio had a hit with Joe, but in this film, every single character seems to be acting the exact same way. Even the story feels like a rehash.   Honestly, if there's one thing this movie proves, it's that Rio’s acting limitations have been thoroughly exposed here. His performance feels completely artificial. And there’s this one repeated \"revolutionary\" dialogue : at one point, you just want it to stop.   To make matters worse, he keeps breaking the fourth wall and talking directly to the audience... Total \"please leave me alone\" mode..   The second biggest flaw is the writing. Sure, fantasy movies don't need airtight logic, but this is taking it way too far.   As for the heroine, her acting doesn't really leave an impact, but she looks gorgeous on screen—especially in the second half in a saree, looking like an absolute angel.   Double Occupancy had the exact same core concept. Since that came out first, the makers here seem to have swapped the concept for an \"alien\" twist just to be different—and it completely flops.   A full 2.5 hours of pure disappointment.       submitted by     /u/AsifRedditt     to     r/KollyClub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/KollyClub/comments/1wl6zxv/rios_latest_cringe_fest_exposes_his_acting_limits/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:24:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:25:11.425Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf6027660c608403984853"
+    },
+    "message_id": "reddit_t3_1wl6zxk",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "BJDsale",
+    "username": "Kettu-sama",
+    "title": "[Sale][EU][$700][SD][Body+fantasy parts][SOOM][Heliot - God Master 2008][Cream white]",
+    "text": "[Sale][EU][$700][SD][Body+fantasy parts][SOOM][Heliot - God Master 2008][Cream white]\n\nSelling SOOM's original Heliot - God Master body from 2008 with his fantasy parts! He's old, but the yellowing is even. There is small chip on one of the the hooves (wont be visible when attached), and small dents on his human knees.  He'll come in his original box, it has some surface wear.  He has just been restrung.   Asking price is $700, but I might consider lower offers.   I'm ready to ship internatonally, the byer covers the shipping.  Not interested in trades.  Not considering splits unless there are actully takers for everything.   Non-smoking, cat household.       submitted by     /u/Kettu-sama     to     r/BJDsale       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BJDsale/comments/1wl6zxk/saleeu700sdbodyfantasy_partssoomheliot_god_master/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:24:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:25:11.626Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf6027660c608403984854"
+    },
+    "message_id": "reddit_t3_1wl6zxd",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "HPOmen",
+    "username": "Ok-Marketing-2044",
+    "title": "CPU temp ?",
+    "text": "CPU temp ?\n\nI recently brought Omen Ryzen 9 8940HX rtx 5060 , and the cpu temp is in range of 62.5 - 72.1 °C range without doing anything in balanced mode while charging q, is this normal ?       submitted by     /u/Ok-Marketing-2044     to     r/HPOmen       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HPOmen/comments/1wl6zxd/cpu_temp/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:24:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:25:11.827Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf6028660c608403984855"
+    },
+    "message_id": "reddit_t3_1wl6zx2",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "📢 Unknown [HIRING] a Building Code Consultant!",
+    "text": "📢 Unknown [HIRING] a Building Code Consultant!\n\nCompany: Unknown   Location: Burnaby, BC CATEGORY: Building Products SALARY: $65,000 - $80,000 annually NUMBER OF POSITIONS : 1 CLOSING DATE : Open until filled BACKGROUND: Founded in 1995 by a group of experienced certification and testing experts, QAI is an independent third-party testing, inspection, and certification organization that serves the building, technology, and construction industries (among others) with cost-effective solutions through our in-house capabilities/services, and an established world-wide network of qualified affiliates. The QAI name and logo have become well-recognized throughout the Certification world resulting in steady growth of our Certification, Testing, and Inspection busin… 📍   Date Posted: September 18, 2026 📅   Categories: #support   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=www.bcjobs.com&rurl=aHR0cHM6Ly93d3cuYmNqb2JzLmNvbS9jb21wYW5pZXMvcWFpLWxhYm9yYXRvcmllcy1sdGQvam9icy9idWlsZGluZy1jb2RlLWNvbnN1bHRhbnQtNzY2YTZlMTA0MGIwNGMyNmI2MTU0NmQ5ZTQ2MjA4YTk=    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wl6zx2/unknown_hiring_a_building_code_consultant/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:24:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:25:12.027Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf6028660c608403984856"
+    },
+    "message_id": "reddit_t3_1wl6zwa",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "yy_matdes",
+    "title": "Is Russia still a major global power? Why or why not?",
+    "text": "Is Russia still a major global power? Why or why not?\n\nsubmitted by     /u/yy_matdes     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wl6zwa/is_russia_still_a_major_global_power_why_or_why/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:24:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:25:12.227Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf6028660c608403984857"
+    },
+    "message_id": "reddit_t3_1wl6zw3",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "tarantulas",
+    "username": "Spirited_Ostrich_182",
+    "title": "Winchester Mid Atlantic Reptile Expo",
+    "text": "Winchester Mid Atlantic Reptile Expo\n\nThe Winchester expo for next week was canceled because of the near by Baltimore repticon. I was wandering if there where any tarantula vendors that were doing to go to the Winchester expo. Or really in general and vendors local the the WV eastern panhandle. I was hoping to find some Xenesthis species and ive checks the repticon vendors list and there seems to be only two vendors selling tarantulas and they both said they dont hav any Xenesthis       submitted by     /u/Spirited_Ostrich_182     to     r/tarantulas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/tarantulas/comments/1wl6zw3/winchester_mid_atlantic_reptile_expo/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:24:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:25:12.424Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf6028660c608403984858"
+    },
+    "message_id": "reddit_t3_1wl6zvg",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "24_F5Lesnar",
+    "title": "In what year Will the Middle East ever learn to get along(no conflicts at all)?",
+    "text": "In what year Will the Middle East ever learn to get along(no conflicts at all)?\n\nsubmitted by     /u/24_F5Lesnar     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wl6zvg/in_what_year_will_the_middle_east_ever_learn_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:24:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:25:12.624Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf6028660c608403984859"
+    },
+    "message_id": "reddit_t3_1wl6zve",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CFB",
+    "username": "ConstantMadness",
+    "title": "[Mississippi Governor Tate Reeves] What does a $54 million buyout for the old coach, a $91 million contract for the new coach, and a $50 million roster get you? An a-s whipping in Oxford, Mississippi! #HottyToddy",
+    "text": "[Mississippi Governor Tate Reeves] What does a $54 million buyout for the old coach, a $91 million contract for the new coach, and a $50 million roster get you? An a-s whipping in Oxford, Mississippi! #HottyToddy\n\nsubmitted by     /u/ConstantMadness     to     r/CFB       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CFB/comments/1wl6zve/mississippi_governor_tate_reeves_what_does_a_54/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:24:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:25:12.821Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf6029660c60840398485a"
+    },
+    "message_id": "reddit_t3_1wl6zum",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "MatchboxIndiaa",
+    "username": "arnavnayak7",
+    "title": "Selling as sets @mrp + Pvt Ship",
+    "text": "Selling as sets @mrp + Pvt Ship\n\n📌 Mumbai       submitted by     /u/arnavnayak7     to     r/MatchboxIndiaa       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MatchboxIndiaa/comments/1wl6zum/selling_as_sets_mrp_pvt_ship/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:24:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:25:13.022Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf6029660c60840398485b"
+    },
+    "message_id": "reddit_t3_1wl6zu3",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "buildapc",
+    "username": "ImpressionDry9671",
+    "title": "PC For Mechanical Engineering Software And Some Gaming",
+    "text": "PC For Mechanical Engineering Software And Some Gaming\n\nCountry: India 🇮🇳   Region: Andra Pradesh    Budget: ₹50000 or less    Monitor: Needed but low in budget so adjust with my old 4k tv   Use case:   I'm a Mechanical Engineering student and I need a PC mostly for software such as SOLIDWORKS, 3DEXPERIENCE, CATIA, ANSYS, AutoCAD, Revit etc. For CAD and 3D modelling, assemblies and some simulation.   I have a Laptop, but that doesn't have a dedicated GPU, so I want to get a desktop PC for better performance and to learn more about my engineering software.   I don't play very graphically demanding games, just occasional story based games.   Being on a tight budget myself, I want a PC that gives me best performance for my money without having to invest heavily into gaming oriented hardware.   Current PC/laptop:   Ryzen 3 5300u 8GB RAM 512 GB SSD    Just a normal student laptop with run some basic software stop nothing much    Most important thing is I don't have any idea on all these laptop company and best prices all this everyone talking about the price hike but generally not aware of anything of this stuff    And in the second thought I don't want to spend lots of money on the PC because my Indian parents don't allow me to spend huge fortune on electronic stuff   What I need help with:   I want you to recommend a full build of a PC, preferably, what CPU, GPU, RAM, Motherboard, PSU, Storage etc I should buy, as well as what components are most necessary for the type of work I do.   Please recommend me a reliable and budget friendly   PC build within my budget.       submitted by     /u/ImpressionDry9671     to     r/buildapc       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/buildapc/comments/1wl6zu3/pc_for_mechanical_engineering_software_and_some/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:24:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:25:13.221Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf6029660c60840398485c"
+    },
+    "message_id": "reddit_t3_1wl6ztl",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "BookCollecting",
+    "username": "Baeolophus_bicolor",
+    "title": "some pickups from the thrift the other day",
+    "text": "some pickups from the thrift the other day\n\nat the thrift on friday i found a treasure trove of books all from the same source. a local attorney who must have had some ties to theater either as a fan, a director, or an actor, passed away.    i found his name written and stamped in quite a few books, especially ones located in the plays and drama section at my local Savers.    he had great taste, kept his books in good shape, and while none of the ones i found were rare, signed, 1st edition hardbacks or anything like that, he did have just a ton of obscure counterculture stuff from the 60s, mostly plays and books on acting, as well as a few art books, novels, and poetry quarterly issues for years.    i wish i had the money to have bought up every book from his collection that was there. they were all $1.49 to $3.99, not super costly. but over the years in his life, he obviously took great care to assemble this collection, and i was a little saddened to see that his books were just unceremoniously dumped at the local thrift, where it is unlikely that they will receive the care and consideration i feel they are due.    i found his obit in the paper, local attorney John L Russo of ABQ, NM - here’s to you, and cheers. even though i couldn’t save them all, i grabbed a few and will note you in my collection notes, and dedicate my own shelf of plays and poetry in your honor.    the two genet, the method acting handbook, and the mcclure play were all his.    also pictured, i found a decent copy of Chaucer’s Troilus and Cressida, with a lovely cover drawn by Edward Gorey! I already collect everything by Gorey i can get my hands on, and have been a member of and on several trips to the museum that has been set up in his former house, up on Cape Cod. too bad someone else wrote their own name across the top of that book, on the cover, but i couldn’t pass it up!       submitted by     /u/Baeolophus_bicolor     to     r/BookCollecting       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BookCollecting/comments/1wl6ztl/some_pickups_from_the_thrift_the_other_day/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:24:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:25:13.426Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf6029660c60840398485d"
+    },
+    "message_id": "reddit_t3_1wl6zt9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MiddleSchoolStudents",
+    "username": "Sufficient-Fox-72",
+    "title": "Just found out my whole class hates me!!",
+    "text": "Just found out my whole class hates me!!\n\n(Srry if this isn't the proper way to cross post, I don't post on reddit a lot)       submitted by     /u/Sufficient-Fox-72     to     r/MiddleSchoolStudents       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MiddleSchoolStudents/comments/1wl6zt9/just_found_out_my_whole_class_hates_me/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:24:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:25:13.625Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf6029660c60840398485e"
+    },
+    "message_id": "reddit_t3_1wl6zsc",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "[HIRING] [REMOTE] a Senior Product Manager, Ai Call Intelligence! in Litify",
+    "text": "[HIRING] [REMOTE] a Senior Product Manager, Ai Call Intelligence! in Litify\n\nCompany: Litify   Date Posted: September 19, 2026 📅   Level: Senior 👵   Categories: #PM #AI #senior #remote   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=remotefirstjobs.com&rurl=aHR0cHM6Ly9yZW1vdGVmaXJzdGpvYnMuY29tL2NvbXBhbmllcy9saXRpZnkvam9icy9zZW5pb3ItcHJvZHVjdC1tYW5hZ2VyLWFpLWNhbGwtaW50ZWxsaWdlbmNlLTg2Mjc0Mw==    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wl6zsc/hiring_remote_a_senior_product_manager_ai_call/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:24:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:25:13.826Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf602a660c60840398485f"
+    },
+    "message_id": "reddit_t3_1wl6zs1",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789878281218",
+    "text": "[PROBE] 1789878281218\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wl6zs1/probe_1789878281218/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:24:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:25:14.024Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf602faeeb96c1c63ba270"
+    },
+    "message_id": "reddit_t3_1wl7035",
+    "topic_key": "auditor",
+    "search_keyword": "auditor",
+    "platform": "reddit",
+    "subreddit": "INTP",
+    "username": "Secure_Mountain_3740",
+    "title": "Would you do this kind of job for a living?",
+    "text": "Would you do this kind of job for a living?\n\nYou graduated with a bachelors in chemistry and you’ve gotten a job as quality control chemist in small pharma plant. You basically test all the products that go in and out of the plant and document it. The plant only manufactures few type of compounds so it gets repetitive but that also makes it predictable and easy.    But testing products and filling analytical reports is not where it all ends. You also need to know your standard operating procedures (SOPs - Think of it as a recipe you need to follow down to the single line) well and if you want to improvise something, you need to apply for it to some other department and start filling documents about what to change and its justification with all change logs. You need to know regulatory guidelines well and all the testing you do are urgent as there’s always a product being dispatched. You have to work in shifts and when something goes wrong (even a small thing), it’s complicated to deal with due to rigorous documentation. And you have to handle audits, deal with the auditors question and attitude while working overtime. All of this while making only basic pay. Basically, your chemistry degree is barely utilised, your documentation is more important.        submitted by     /u/Secure_Mountain_3740     to     r/INTP       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/INTP/comments/1wl7035/would_you_do_this_kind_of_job_for_a_living/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:25:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T04:25:19.516Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaf602faeeb96c1c63ba271"
+    },
+    "message_id": "reddit_t3_1wl701q",
+    "topic_key": "graphic designer",
+    "search_keyword": "graphic designer",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "[HIRING] [REMOTE] a Graphic Designer! in Jobgether",
+    "text": "[HIRING] [REMOTE] a Graphic Designer! in Jobgether\n\nCompany: Jobgether   Location: Brazil Remote 📍   Date Posted: September 18, 2026 📅   Categories: #design #parttime #remote   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=brenxor.com&rurl=aHR0cHM6Ly9icmVueG9yLmNvbS9qb2ItZGV0YWlscy0xOTE5NTktZ3JhcGhpYy1kZXNpZ25lcg==    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wl701q/hiring_remote_a_graphic_designer_in_jobgether/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T04:25:05Z"
+    },

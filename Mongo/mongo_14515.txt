@@ -1,0 +1,416 @@
+    "text": "Looking for some advice\n\nIm a month into vibecoding and I think I need to start managing my codebase and workflow because feature builds have slowed down to a crawl. I tried to be thorough and prevent the usual AI pitfalls, and it feels like I over-engineered the whole process into a nightmare.   As a backstory, and why I'm in this situation. About a month ago, I tried using claude to make a simple app for controlling something in a program using my phone. It was purely for shits and giggles - I expected nothing. Then bam, claude, with a free account, made me something totally usable. And I was able to make changes by just telling it to. That got addicting real quick. A month later, bought a pro sub, added features and complexity, and here I am, with a bloated codebase, and probably an overengineered, or at least a poorly implemented workflow.   I'd love some advice from more experienced vibecoders in order for me to stop wasting tokens, build features faster, without making a bloated and buggy mess. My coding experience goes as far as some java and vb I took in school, so none really. I do have a technical background though so I wouldnt say Im completely green.    Here is an AI summary of what it created using my limited guidance:   1. Tech Stack & Architecture      Frontend 1 (Companion Web App):  Touchscreen web app running on vanilla HTML5, CSS3, and native ES Modules.    Frontend 2 (Visual Editor / IDE):  Desktop browser-based visual designer built with vanilla HTML/CSS/JS (native ESM).    Desktop Host:  Electron app acting as a local server/bridge bridging external device telemetry to WebSockets and REST.    Shared Library:  A canonical JS library containing shared components and logic, synced out to the frontend apps via a custom Node.js script.    Testing:  Vitest (unit testing) + Playwright (headless Chromium for layout/touch E2E).    Strict Constraint:   Zero build step.  No Webpack, Vite, Babel, or TypeScript compilation. Native browser ES modules only byte-for-byte.     Codebase State      Multi-Repo Complexity:  4 independent Git repos sitting inside one unified folder tree, managed with manual cross-repo sync scripts.    God Files:  The visual editor's inspector panel is  5,701 lines (337 KB) in a single file . Other core engine and server files are 1,000–2,000 lines (85–125 KB).    Documentation Bloat:     The   CHANGELOG.md   is  472 KB (2,500+ lines of dense narrative prose) .   Over 30 versioned markdown specification files, historical 150 KB design proposals, and old planning docs sit in the active folder.       Context Payload:  Every single agent session automatically injects  20,000–25,000 tokens  of instructions ( CLAUDE.md , coding standards, glossaries, tool schemas) before I even type a single prompt.     Workflow State      Idea & Grilling:  Deep prompt interview pressure-testing the feature.    Specification:  Writing a formal additive delta spec.    Micro-Tickets:  Splitting the spec into vertical slice tickets in a local  .scratch/  markdown tracker.    Model Routing:  Routing tickets to different models (Haiku / Sonnet / Opus) and seeding test files.    Implementation & 2-Axis Review:  Dispatching subagents to implement, followed by an independent review subagent checking against a \"Standards axis\" and a \"Spec axis\", followed by re-reviews.    Ticket State Engine:  Built ~50 KB of custom Node.js scripts that use regex to parse ticket files for carry notes ( Carry: open ,  for ticket N ), blocking releases if any carried observations are unrouted.     What happened in practice:     A feature that started as 16 planned tickets ballooned to  26 tickets  as agents kept finding tiny edge cases and logging new administrative carry notes.   Agents spent more time formatting markdown ticket headers, updating Git commit hashes in ticket files, and parsing regexes than writing code.      TLDR:  Three app ecosystem.  APP 1 - PWA on vanilla HTML5, CSS3, and native ES Modules.  APP 2 - Desktop browser-based on vanilla HTML5, CSS3, and native ES Modules.  APP 3 - Electron app running WebSockets and REST.  Codebase has grown with godfiles, buttload of documentation and comments. I tried to implement mattpocoks grill-with-docs, to-spec, to-tickets, code-review. Workflow seems excessive. Need some tips on how to adapt to make vibecoding more efficient, quicker, while maintaining quality.       submitted by     /u/Euroboi3333     to     r/ClaudeCode       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeCode/comments/1wmdlkj/looking_for_some_advice/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:59:29Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T13:59:50.587Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab1386c660c60840398e6a2"
+    },
+    "message_id": "reddit_t3_1wmdm2a",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "BigBrother",
+    "username": "ClipRequestBot",
+    "title": "Big Brother 28 - Morning Feed Discussion - September 21, 2026",
+    "text": "Big Brother 28 - Morning Feed Discussion - September 21, 2026\n\nGood Morning Houseguests!   A new day is starting in the Big Brother house! Grab your coffee, tea or beverage of choice and join us as we talk about the feeds!    Few Ground Rules:      Have fun and respect each other!   Before asking for an update, please read the thread first. Updates are frequently posted and you can get an idea of what is happening from the thread. Please at least try!     As this is Feed Discussion, keep the conversation focused on the feeds.          submitted by     /u/ClipRequestBot     to     r/BigBrother       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BigBrother/comments/1wmdm2a/big_brother_28_morning_feed_discussion_september/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T14:00:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T14:00:12.162Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1386c660c60840398e6a3"
+    },
+    "message_id": "reddit_t3_1wmdm20",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Kpop_Verse",
+    "username": "kpop-quiz",
+    "title": "🌸 K-pop Quiz: only true stans survive this one",
+    "text": "🌸 K-pop Quiz: only true stans survive this one\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/kpop-quiz     to     r/Kpop_Verse       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Kpop_Verse/comments/1wmdm20/kpop_quiz_only_true_stans_survive_this_one/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T14:00:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T14:00:12.363Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1386c660c60840398e6a4"
+    },
+    "message_id": "reddit_t3_1wmdm0t",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "📢 Boston College [HIRING] a Assistant Head of Curriculum: English, Maths &amp; ESOL (Fixed Term) at Boston College!",
+    "text": "📢 Boston College [HIRING] a Assistant Head of Curriculum: English, Maths &amp; ESOL (Fixed Term) at Boston College!\n\nCompany: Boston College   Location: Boston, Lincolnshire, England, United Kingdom 📍   Date Posted: September 19, 2026 📅   Categories: #entrylevel   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=www.onlyfe.co.uk&rurl=aHR0cHM6Ly93d3cub25seWZlLmNvLnVrL2pvYnMvNzA4NjY4MTYxLWFzc2lzdGFudC1oZWFkLW9mLWN1cnJpY3VsdW0tZW5nbGlzaC1tYXRocy1lc29sLWZpeGVkLXRlcm0=    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wmdm0t/boston_college_hiring_a_assistant_head_of/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:59:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T14:00:12.576Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1386c660c60840398e6a5"
+    },
+    "message_id": "reddit_t3_1wmdm0q",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "RedactedCharts",
+    "username": "FollyThyMark",
+    "title": "What do these states have in common?",
+    "text": "What do these states have in common?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/FollyThyMark     to     r/RedactedCharts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RedactedCharts/comments/1wmdm0q/what_do_these_states_have_in_common/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:59:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T14:00:12.775Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1386c660c60840398e6a6"
+    },
+    "message_id": "reddit_t3_1wmdm0c",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AlignmentChartFills",
+    "username": "Frequently_Fletcher",
+    "title": "Animal Crossing Villager Chart Round #1",
+    "text": "Animal Crossing Villager Chart Round #1\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Frequently_Fletcher     to     r/AlignmentChartFills       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlignmentChartFills/comments/1wmdm0c/animal_crossing_villager_chart_round_1/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:59:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T14:00:12.975Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1386d660c60840398e6a7"
+    },
+    "message_id": "reddit_t3_1wmdlzv",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "indiadiscussion",
+    "username": "SamBro2901",
+    "title": "Is critical thinking dead?",
+    "text": "Is critical thinking dead?\n\nJust a month ago, the youth of the nation - \"Gen Z\" were protesting (rightfully) for accountability and ownership of cheating incidents during the NEET exam and subsequent resignation of the Education Minister.    Fast forward to the present, a student utilizing his reservation is caught cheating, and the professor is forced to resign.    Why? What fault did the professor cause by catching a student who is actively cheating?    Are these students who are protesting, really thinking about this? Now, there's also a reservation angle added to this whole debate. What role did that play? These students spend years to crack an IIT and this is how they use the opportunity?   Is this the youth that's supposed to lead our country into the future with breakthrough tech and innovation when they can't even think for themselves? Is critical thinking truly dead among the youth of this nation? Unfortunate times.        submitted by     /u/SamBro2901     to     r/indiadiscussion       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/indiadiscussion/comments/1wmdlzv/is_critical_thinking_dead/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:59:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T14:00:13.176Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1386d660c60840398e6a8"
+    },
+    "message_id": "reddit_t3_1wmdlxy",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "AMA",
+    "username": "homesteadmcgee",
+    "title": "I’m a wannabe outdoorswoman, AMA",
+    "text": "I’m a wannabe outdoorswoman, AMA\n\nI (F28) adore foraging, hiking, horseback trail riding, kayaking, lake swimming, rockhounding (at least I did back when I lived in Ontario), stargazing and aurora watching, animal spotting (if not in the woods, my porch is a convenient location), and hope to get my hunting and fishing licenses in 2027. Since I live in Finland, outdoors activities are very accessible. I also used to be involved in planting native species.    When I’m at home, I still spend a lot of time outside tending to my livestock and gardens, as well as various property chores. My goal for next year is to train a goat to pack with on the extensive trails by our house!    Whenever I travel, I make sure to involve a lot of outdoors activities and have been treated to incredible nature experiences in the Nordics, Alberta, the Azores, etc.   I definitely don’t consider myself an  actual  outdoorswoman, hence the “wannabe” in the title but boy do I have goals!       submitted by     /u/homesteadmcgee     to     r/AMA       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AMA/comments/1wmdlxy/im_a_wannabe_outdoorswoman_ama/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:59:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T14:00:13.384Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1386d660c60840398e6a9"
+    },
+    "message_id": "reddit_t3_1wmdlwe",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "FIREPakistan",
+    "username": "Logical-Sea6315",
+    "title": "Where do you guys keep cash that you’ll need in 1–3 months?",
+    "text": "Where do you guys keep cash that you’ll need in 1–3 months?\n\nHi there everyone. In another episode of my (23F) confusion regarding investment  I keep hearing the advice that you shouldn’t leave large amounts sitting in a current account because the money is basically doing nothing.  But I’m confused about how people actually implement this.  Say I have 2-3M sitting in cash, and I know I’ll gradually invest it over the next few months.  If I put it into a money market/income fund, some funds have front-end loads, back-end loads, management fees, etc. If I then withdraw the money after 1–2 months, haven’t I potentially lost more in charges than I earned?  So what do people actually do with  short-term cash that is waiting to be invested?    I’m specifically interested in what people  actually do in Pakistan , rather than the textbook answer. If money market/income funds which one’s exactly are people using with no fel or bel. I’ve tried finding one with zero fee and till now nothing.  Would be interested to hear how you manage your cash between investments.       submitted by     /u/Logical-Sea6315     to     r/FIREPakistan       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FIREPakistan/comments/1wmdlwe/where_do_you_guys_keep_cash_that_youll_need_in_13/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:59:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T14:00:13.594Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1386d660c60840398e6aa"
+    },
+    "message_id": "reddit_t3_1wmdlvl",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MapBasedPolls",
+    "username": "Adventurous_Lock9219",
+    "title": "What should I eat today?",
+    "text": "What should I eat today?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Adventurous_Lock9219     to     r/MapBasedPolls       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MapBasedPolls/comments/1wmdlvl/what_should_i_eat_today/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:59:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T14:00:13.801Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab138a8660c60840398e6ab"
+    },
+    "message_id": "reddit_t3_1wmdn8k",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "vacation",
+    "platform": "reddit",
+    "subreddit": "tripcandyio",
+    "username": "CaptainTsubasa888",
+    "title": "“Take vacations, go as many places as you can. You can always make money, you can’t always make memories.”",
+    "text": "“Take vacations, go as many places as you can. You can always make money, you can’t always make memories.”\n\nsubmitted by     /u/CaptainTsubasa888     to     r/tripcandyio       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/tripcandyio/comments/1wmdn8k/take_vacations_go_as_many_places_as_you_can_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T14:01:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T14:01:12.323Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab138a8660c60840398e6ac"
+    },
+    "message_id": "reddit_t3_1wmdn8d",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "snacktrap_game_dev",
+    "username": "snacktrap-game",
+    "title": "Trap of the Day - out-sneak the community",
+    "text": "Trap of the Day - out-sneak the community\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/snacktrap-game     to     r/snacktrap_game_dev       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/snacktrap_game_dev/comments/1wmdn8d/trap_of_the_day_outsneak_the_community/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T14:01:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T14:01:12.528Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab138a8660c60840398e6ad"
+    },
+    "message_id": "reddit_t3_1wmdn8e",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "starwarsunlimited",
+    "username": "taculpep13",
+    "title": "Win your Prerelease - a discussion of sealed play in HMW: part 1",
+    "text": "Win your Prerelease - a discussion of sealed play in HMW: part 1\n\nWin your Prerelease!    We’re in the final weeks of the ASH cycle and Homeworlds is on the horizon. In part 1 of this series, we’ll talk about the limited merits of the new leaders and give a breakdown of the new mechanics.        submitted by     /u/taculpep13     to     r/starwarsunlimited       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/starwarsunlimited/comments/1wmdn8e/win_your_prerelease_a_discussion_of_sealed_play/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T14:01:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T14:01:12.729Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab138a8660c60840398e6ae"
+    },
+    "message_id": "reddit_t3_1wmdn7o",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Amadeusz",
+    "username": "V3n0mix",
+    "title": "Are Ball-Playing CBs A Scam?",
+    "text": "Are Ball-Playing CBs A Scam?\n\nEvery time you see a paywalled center-back with mid defensive stats, you check his base passing in confusion—80! Suddenly it hits you: it's another 'ball-playing CB' the devs are trying to push. Let's set a standard: a registered CB with 77+ passing upon joining the squad is the entry line for a 'ball-playing CB.'    The top 5 mainstream ball-playing center-backs are essentially the following five players—    https://preview.redd.it/jsopmj38pvqh1.png?width=1200&format=png&auto=webp&s=3bafb321a5865cc27a5098952cebaf84b757b09c    Common Ecological Nicthes of Ball-Playing Center-Backs:    https://preview.redd.it/dmhohr3kpvqh1.png?width=1164&format=png&auto=webp&s=cc30a3f640dcd1d9cbc6f6cb24b9ccc166b39212     https://preview.redd.it/p8ps6xjnpvqh1.png?width=604&format=png&auto=webp&s=3b0ec0cb79851bf09196a6ed0dcceacc18cb0d00    Just like how Cannavaro is pretty much the only viable short CB, Maldini is the only ball-playing CB who actually makes it into the meta. (Of course, ST Van Dijk has the Visionary Passing skill, Rijkaard can play CB and distribute well, and there's the recent Stones with +6 Low Pass—but due to space constraints, I won't list them all here.)   ​What I'm interested in looking at below is this: since the game lets you allocate progression points freely, is the slight edge in base passing that these so-called \"ball-playing CBs\" have actually worth the drawbacks in other areas? Let's take a look at a comparison between Varane and Piqué—    https://preview.redd.it/ie5vt27wpvqh1.png?width=570&format=png&auto=webp&s=c3234a85b14a4bcc9782e3aef8a40c72d3264ab0    If you give Varane +8 Passing, his passing catches up to Piqué's, but he still beats him by 7 points in Pace😂. Meanwhile, aside from a clear edge in Ball Control and Tight Possession, Piqué doesn't even have a single passing skill.   ​In other words: unless you spend progression points focusing on passing for a ball-playing CB, their base passing advantage becomes useless. But who is actually going to allocate more than 4 points into passing stats for a CB?   ​That's the awkward spot ball-playing CBs are in—and honestly, it's the same dilemma for any card with a \"passing specialty\" in this game. In real life, what makes a master passer special isn't just pinpoint accuracy; it's their vision and decision-making. But in a game, that all depends on the person holding the controller. As a result, plenty of real-life \"passing maestros\" end up underwhelming in-game.   ​As for that CB-to-winger Link-Up Play (Over-the-Top Pass C\") often associated with ball-playing CBs, let me show you how it actually plays out in-game:  https://www.reddit.com/r/Amadeusz/s/CJ8NbECQNE     The verdict back then was: the worst Link-Up Play in history.    Source:  https://mp.weixin.qq.com/s/5pYkfN9bywylTtB2mmDNuw        submitted by     /u/V3n0mix     to     r/Amadeusz       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Amadeusz/comments/1wmdn7o/are_ballplaying_cbs_a_scam/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T14:00:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T14:01:12.942Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab138a9660c60840398e6af"
+    },
+    "message_id": "reddit_t3_1wmdn7n",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "metalbuildings",
+    "username": "DrywallBarron",
+    "title": "Read Your Agreement Very Carefully",
+    "text": "Read Your Agreement Very Carefully\n\nI'm often surprised by how many people don't read their agreement. Carolina Carports has dealers across the country. Here is a simplified breakdown of their sales agreement terms. Most other manufacturers have similar agreements. Interestingly enough, the moment you run electrical and/or plumbing....you void the warranty:  https://www.carportsnsheds.com/carolina-carports-terms-and-conditions?srsltid=AU7gw4W8CbD3RhC1U5U9bozbXHK8JHAJjdeNhyf5jxVdiFdY06Hn0CvM    Here's what this CCI purchase agreement says in plain English.    Pricing errors.  CCI can correct any pricing or tax mistakes the dealer makes, even after you sign.    Types of buildings.       Standard (uncertified):  Built to CCI's own specs. It may not qualify for a permit in some areas.    Certified:  Built to an engineer's drawings. This is the type usually needed where permits are required, and it comes with a limited warranty that varies by state.    Frame thickness:  Both types come in 14 gauge (the most common) or 12 gauge (heavier and stronger).      Anchoring.  The building is held down only by anchors through the base rail, so water may leak in under the rail. You're told this up front.      Uncertified units  get 32\" rebar anchors on ground or concrete anchors on a slab. The rebar may be cut shorter in hard ground. Mobile home anchors cost a little extra.    Certified units  come with mobile home anchors on ground or concrete anchors on a slab.    Asphalt:  Mobile home anchors on asphalt cost extra for either type.      Your responsibilities.       Utilities:  Tell the installers where underground lines are. If they hit something you didn't mark, it's on you, not CCI.    Permits:  Getting permits is your job. Any code or ordinance violation is your problem too.    Level site:  The site must be level before installation. If it isn't, they'll install it \"as is,\" and all warranties are void.      Payment.       Down payment:  Pay 10% to the dealer when you order, and no more than that. If you pay the dealer extra, CCI still has to receive that money before installing, so you carry the risk if the dealer doesn't pass it along.    Balance:  The other 90% is due to the install crew on installation day, by check or credit card.    Cancellation:  The 10% deposit is not refundable. Special orders get no refund at all.      Things that void your warranty.  Any change to the building voids all warranties. That includes running electric or plumbing to it.    Extra charges (at least $50 each).       Hard installs:  Digging, cutting the frame to level it, carrying materials a long way, or installing on a wall, dock, or existing structure.    Return trips:  Coming back later to add onto the building, or re-delivering because of your mistake or an unlevel site.      Limits on CCI's liability.       Damages:  CCI won't pay indirect or consequential damages from defects. For example, if the building leaks and ruins what's stored inside, that's likely not covered.    Delays:  CCI isn't responsible for delays caused by weather, accidents, or other things outside its control.      Legal.       Where disputes go:  North Carolina law applies, and any lawsuit must be filed in Surry County, NC.    Whole agreement:  This document is the entire agreement. Anything a salesperson told you verbally doesn't count unless it's written in.    Changes:  Changes must be in writing and signed, except that CCI can adjust the price for errors or change orders.      Worth noticing.       Possible typo:  The 12 gauge unit is described with 2 ¼\" tubing and the 14 gauge with 2 ½\". That's probably a mistake, so it's worth asking the dealer.    Warranty details:  The actual warranty terms aren't in this document. You'd need to get them from the dealer separately.    Balance of risk:  Overall, the terms lean heavily toward CCI, especially on refunds, warranty voiding, and what counts as \"level.\"         submitted by     /u/DrywallBarron     to     r/metalbuildings       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/metalbuildings/comments/1wmdn7n/read_your_agreement_very_carefully/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T14:00:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T14:01:13.150Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab138a9660c60840398e6b0"
+    },
+    "message_id": "reddit_t3_1wmdn7k",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "crttrigger",
+    "username": "crt-trigger",
+    "title": "⚡ DAILY SEED: MASTER — beat the record!",
+    "text": "⚡ DAILY SEED: MASTER — beat the record!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/crt-trigger     to     r/crttrigger       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/crttrigger/comments/1wmdn7k/daily_seed_master_beat_the_record/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T14:00:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T14:01:13.358Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab138a9660c60840398e6b1"
+    },
+    "message_id": "reddit_t3_1wmdn7c",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "bugs",
+    "username": "-GoodNewsEveryone",
+    "title": "New UI broken for commenting- Android",
+    "text": "New UI broken for commenting- Android\n\nUpdate bug. Writing comments.   Any comment over one paragraph now causes the UI to auto snap to top or bottom.   It is impossible to read the middle once it has been written.   This seems less like a bug and more an oversight by programmers who don't read more than one sentence at a time.   You HAVE to remove the snap to on written text, some.of us read and write above a sixth grade level. This is brand new with whatever update was forced (I never agreed to or downloaded a reddit update) and it has --ONCE AGAIN-- done nothing but break what was previously a working usable UI.   Where are the shareholders and why aren't they more upset with app mismanagement?       submitted by     /u/-GoodNewsEveryone     to     r/bugs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/bugs/comments/1wmdn7c/new_ui_broken_for_commenting_android/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T14:00:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T14:01:13.561Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab138a9660c60840398e6b2"
+    },
+    "message_id": "reddit_t3_1wmdn77",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "WinCo",
+    "username": "ShareNew6753",
+    "title": "WinCo Sucks in my opinoin",
+    "text": "WinCo Sucks in my opinoin\n\nDISCLAIMER  : Due to WINCO, I feel the need to state that this is MY OPINION!!   WINCO’s negligence changed my life forever, and they still refuse to take responsibility for the harm they caused. Because of the traumatic brain injury I suffered, I lost my job, my stability, and even my home. I was publicly humiliated due to an unreasonable detention by the South Salt Lake Police. They made me sit on a curb in public as they investigated the alleged crime.   They detained me due to a lie (or reckless reporting by WINCO) as far as a PREVIOUS trespass that was allegedly served on me prior, but this was NOT true. I believe this was done so they could serve me and ACTUAL trespass order for 100 years.   My memory, my ability to learn, and my capacity to retain new information have all been diminished. Everyday tasks that used to be simple now feel overwhelming, and functioning in a workplace has become almost impossible.   Losing my home was devastating. After investing over $100,000.00 into my forever home, I had to sell it to avoid losing it due to lack of payment, I lost my 2.8% interest rate as well, so a new home at 7% is out of the question.   I also had to sell my brand‑new Dodge Ram 1500 Warlock because I could no longer afford the payments. I’ve been waiting over a year for long‑term disability, trying to survive while thousands of dollars in medical bills are in collections. The total was around $75,000, and I had to fight just to get some of it reduced or settled. It’s been exhausting, frightening, and deeply unfair.   To make everything even harder, WINCO banned me from all of their properties for 100 years. A century. After everything I’ve already been through, they added humiliation and exclusion on top of my injury. They even sent me a cease‑and‑desist letter, telling me to basically stop speaking out (In my opinion). In my heart, I believe this was because of the peaceful protesting I do on the outskirts of their property — protest that is protected by my right to free speech. I believe WINCO is sick of my protests and are trying to kill my free speech.   Three attorneys have worked on my case, but Utah’s laws are stacked so heavily in favor of corporations that none of them felt they could take it to court. I was told by these attorneys that if we sued in BOISE, IDAHO, where WINCO is based, they would have taken it to court. I’ve been left to fight this battle largely on my own, with the help of friends and family to help me navigate through the barriers that were not there prior, despite the life‑altering consequences I’ve suffered.   I created a Facebook group called “WINCO SUCKS” to share my story and document this painful journey. It’s an opinion page — my voice, my experience, my truth.   WINCO issued a cease‑and‑desist letter partly because of that page, but I will not be silenced. My right to speak, to protest, and to share what happened to me is protected, and I intend to continue using my voice.   This has been one of the hardest chapters of my life. I’m still standing, still fighting, and still speaking out — not just for myself, but for anyone who has ever been harmed, ignored, or pushed aside by a corporation that refuses to do what’s right.       submitted by     /u/ShareNew6753     to     r/WinCo       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WinCo/comments/1wmdn77/winco_sucks_in_my_opinoin/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T14:00:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T14:01:13.766Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab138a9660c60840398e6b3"
+    },
+    "message_id": "reddit_t3_1wmdn6e",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "starbattle",
+    "username": "starbattlebot",
+    "title": "Daily Star Battle • Monday, September 21st • 6×6 1★ Tricky",
+    "text": "Daily Star Battle • Monday, September 21st • 6×6 1★ Tricky\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/starbattlebot     to     r/starbattle       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/starbattle/comments/1wmdn6e/daily_star_battle_monday_september_21st_66_1/",
+    "score": 0,

@@ -1,0 +1,416 @@
+    "subreddit": "ModernReliquary",
+    "username": "SpedisAhead",
+    "title": "Spatial Chemistry of Air",
+    "text": "Spatial Chemistry of Air\n\nA rigorous explanatory synthesis of streamer physics, spectroscopy, nitrogen and oxygen diagnostics, and what electrical arc patterns can and cannot reveal   Prepared September 20, 2026   PURPOSE   The central question is deceptively simple.   When lightning, a Tesla coil, or another high-voltage discharge produces a visible branching arc through air, does the visible pattern contain information about where nitrogen and oxygen particles or chemically altered nitrogen and oxygen species are located?   The short answer is yes, but only if the question is stated carefully.   The visible arc is not a photograph of ordinary nitrogen and oxygen molecules sitting in fixed positions. Air is already mostly molecular nitrogen and molecular oxygen, and those molecules are moving, colliding, rotating, vibrating, becoming excited, being ionized, dissociating, recombining, and exchanging energy extremely rapidly.   What the visible discharge can reveal is the spatial structure of those interactions.   With the correct instruments, researchers can map excited molecular nitrogen, ionized molecular nitrogen, atomic oxygen, atomic nitrogen, metastable nitrogen, electron density, gas temperature, electric-field-related quantities, and chemically produced species around a discharge. Some of these are observed directly through species-selective light emission or laser-induced fluorescence. Others are reconstructed from spectroscopy together with a physical or chemical model.   That distinction between the underlying physical state and the visible trace is the key to the whole subject.     WHAT \"VISIBLE ELECTRICITY\" ACTUALLY IS     Electricity itself is not ordinarily visible as a material substance. What becomes visible in a spark, streamer, corona, Tesla-coil discharge, or lightning channel is light produced when the electrical discharge transfers energy into matter.   In air, energetic electrons collide primarily with nitrogen and oxygen molecules.   A simplified nitrogen process can be written conceptually as   electron + N2 -> electron + excited N2   The excited nitrogen molecule does not remain in the higher-energy state indefinitely. It can lose energy through collisions or through emission of a photon. If it emits a photon, that photon has an energy related to the difference between the two molecular energy states.   That is why a discharge glows.   A more energetic collision can ionize nitrogen   electron + N2 -> two electrons + N2+   or dissociate molecules into atoms   electron + O2 -> electron + O + O   The plasma therefore becomes a dynamic mixture containing ordinary molecules, excited molecules, ions, free electrons, neutral atoms, radicals, and newly produced molecules.   The light is an output of that reaction network.   This immediately produces an important rule.   Brightness is not identical to particle density.   A region can contain a large concentration of a species but emit little light if the species is mostly in its ground state. Another region can contain a smaller population that emits strongly because excitation conditions are favorable. Collisional quenching can suppress emission. Temperature changes the distribution of states. Electron energy changes excitation rates. Optical depth, geometry, camera sensitivity, exposure time, and viewing angle also change what is recorded.   The photograph is therefore a measurement result, not the plasma itself.     THE DIFFERENCE BETWEEN A STREAMER, A LEADER, AND AN ARC     These terms describe different discharge regimes.   A streamer is a thin, rapidly propagating ionization front. Its head concentrates the electric field. Electrons accelerate in that enhanced field, produce additional ionization, and allow the front to advance. Streamers can branch repeatedly and form tree-like structures.   A leader is a hotter, more conductive channel that can grow after streamer activity creates and conditions a path. Leaders are central to lightning development. They involve stronger heating, greater conductivity, and different spectroscopic signatures from cold streamers.   An arc is a strongly conducting, usually hot plasma channel capable of carrying substantial current. The gas in an arc can approach conditions in which thermal processes become much more important.   A Tesla coil commonly produces corona and streamer-like discharges, although the exact regime depends on voltage, frequency, electrode geometry, loading, surrounding gas, distance to objects, and other conditions.   This distinction matters because the same wavelength does not necessarily carry the same diagnostic meaning in every regime.   Cold streamer plasma is strongly non-equilibrium. Electron energies can be high even while the bulk gas remains relatively cool.   A hot leader or arc is much more thermally developed.   That is one reason nitrogen molecular bands dominate many streamer spectra while atomic oxygen and ion lines become particularly useful in hotter leader and lightning-channel conditions.     WHY TESLA-COIL DISCHARGES LOOK BLUE OR VIOLET     A 2025 Tesla-coil spectroscopy study by Steinberg and Watanabe examined high-frequency alternating-current spark discharges under changing environmental conditions.   The measured spectra were dominated by the second positive system of molecular nitrogen, commonly written N2 2P, together with the first negative system of molecular nitrogen ions, N2+ 1N.   The strong nitrogen-related emission is concentrated heavily in the near-ultraviolet and violet-blue region.   Two especially important diagnostic features in nitrogen streamer research are approximately   337.1 nm from molecular nitrogen   391.4 nm from molecular nitrogen ions   The 337.1 nm feature lies in the near ultraviolet, just beyond the normal visible range for most human vision.   The 391.4 nm feature lies near the violet edge of human vision.   This means the purple-blue appearance of a Tesla discharge is only the human-visible portion of a much richer optical spectrum.   An ordinary phone camera compresses this even further. Its sensor response, infrared and ultraviolet blocking filters, Bayer color filters, image processing, white balance, tone mapping, noise reduction, and exposure all transform the original optical field before the final RGB image is produced.   Therefore, a normal color photograph should never be treated as though its pixel colors are direct spectroscopic measurements.     WHAT NITROGEN EMISSION CAN TELL US     Nitrogen is unusually useful because air is nitrogen-rich and nitrogen has strong molecular emission systems in common electrical discharges.   The second positive system of N2 is produced by transitions involving excited neutral molecular nitrogen.   The first negative system of N2+ comes from ionized molecular nitrogen.   Because the excitation thresholds and reaction pathways differ, comparing these emissions can provide information about the energetic electron population.   In streamer plasma research, ratios involving the approximately 337.1 nm N2 line and the approximately 391.4 nm N2+ line are widely used as diagnostics of the reduced electric field.   The reduced electric field is written E/N.   E is the local electric-field magnitude.   N is the neutral gas number density.   E/N matters because electrons respond not simply to the absolute electric field but to the competition between acceleration by the field and collisions with surrounding gas molecules.   A high E/N means electrons can gain more energy between collisions.   That changes ionization, excitation, dissociation, attachment, and chemical production rates.   This is one of the most important bridges between visible emission and invisible electrical structure.   The light can provide information about the electron-energy environment that produced it.   However, the inference requires a model. The observed intensity ratio can depend on excitation rates, quenching, cascade processes, gas composition, temperature, pressure, temporal resolution, and line-of-sight integration.   This is why spectroscopy can be quantitative while a simple color photograph usually cannot.     OXYGEN IS PRESENT EVERYWHERE, BUT ATOMIC OXYGEN IS NOT     Ordinary air contains molecular oxygen, O2.   Atomic oxygen, O, is different.   Producing substantial atomic oxygen usually requires dissociation of O2 or another oxygen-containing molecule.   Electrical discharges can do this efficiently because energetic electrons, excited species, and high temperatures open dissociation pathways.   Atomic oxygen is highly reactive.   Its spatial distribution can therefore provide information about where energetic plasma chemistry has occurred.   One of the most important atomic oxygen emission features in lightning research is the O I triplet near 777 nm.   The three principal components are near   777.194 nm   777.417 nm   777.539 nm   This feature lies in the deep red to near-infrared region.   In March 2026, Wang and colleagues published spatiotemporally resolved spectra of continuously propagating positive leaders in long spark discharges.   They recorded 14 events using a high-speed slitless spectrograph.   The O I 777 nm triplet was the strongest spectral feature during stable positive-leader propagation.   They also used Stark broadening of the 777.41 nm component to estimate electron density.   This is a powerful example of a spectral line doing more than identifying an element.   The shape, width, position, and intensity of a spectral feature can carry information about plasma conditions.     DIRECTLY MAPPING ATOMIC OXYGEN     Optical emission spectroscopy observes photons that the plasma naturally emits.   Laser-induced fluorescence takes another approach.   Instead of waiting for a particular species to emit strongly on its own, a laser is tuned to excite a selected transition. The resulting fluorescence is measured.   Two-photon absorption laser-induced fluorescence, commonly abbreviated TALIF, is especially important for detecting ground-state atoms such as O and N.   Researchers have used two-dimensional TALIF to map atomic oxygen during streamer propagation in atmospheric-pressure air.   This is much closer to the literal form of the original question.   The result is not merely \"oxygen is probably somewhere around the purple branch.\"   It is a spatial measurement of the density of a specific oxygen species produced by the discharge.   Research by Teramoto, Kim, and related groups has shown that oxygen-atom production can differ significantly between primary and secondary streamer regions.   This also demonstrates that the brightest visual portion of a discharge is not automatically the place where every chemically important species reaches its maximum concentration.   Production, transport, reaction, diffusion, and loss continue after the brightest front has passed.     DIRECTLY MAPPING NITROGEN SPECIES     Related techniques have been applied to nitrogen.   Atomic nitrogen has been measured spatially and temporally with TALIF in positive corona and streamer-like discharges.   Metastable molecular nitrogen has been mapped with laser-induced fluorescence.   A metastable state is an excited state with an unusually long lifetime compared with an ordinary rapidly radiating state.   That longer lifetime changes both its chemistry and the way it can spread away from the location where it was originally created.   A 2020 study mapped N2(A3Σu+) metastable nitrogen in a positive streamer discharge.   A 2022 follow-up developed single-shot two-dimensional LIF imaging.   Single-shot imaging matters because streamer discharges are stochastic.   A streamer does not reproduce the exact same branch geometry every time.   If thousands of different streamer trees are averaged together, the average can become smooth even though no individual discharge was smooth.   This is one of the deepest experimental lessons in this area.   The correct measurement method must respect the fact that the physical object changes from event to event.     LIGHTNING-LIKE DISCHARGES HAVE INTERNAL RADIAL STRUCTURE     A particularly important 2022 study by Passas-Varo, Gordillo-Vazquez, Sanchez, and Kieu measured the radial and temporal spectroscopic structure of lightning-like discharges.   The experiment used a high-speed imaging spectrograph operating at 900,000 frames per second.   The optical structure was not a single uniform cylinder.   The researchers resolved approximately   an inner core extending to about 2 mm   an outer sheath extending to about 4 mm   a dimmer glow extending from roughly 4 mm to about 16 mm   The different regions exhibited different spectroscopic and thermal behavior.   The study also derived electron density and temperature information from the spectra.   Chemical modeling was then used to estimate radial concentrations of multiple atmospheric species.   These included N2, O2, NO, OH, N2O, NO2, ozone, water-related species, and others.   The important methodological point is that not every concentration was directly photographed.   Some quantities were measured optically.   Other quantities were reconstructed using those measurements together with chemical and thermodynamic assumptions.   This is not a weakness unique to plasma research.   It is how many physical measurements work.   The experiment measures one set of observables.   A validated physical model connects those observables to hidden quantities that cannot be measured directly in the same way.     WHY THE BRANCHING PATTERN CONTAINS INFORMATION     Electrical streamers branch because the ionization front is unstable and because microscopic fluctuations can become amplified.   The electric field becomes strongly enhanced at the streamer head.   Ionization creates space charge.   That space charge reshapes the electric field.   Photoionization can produce seed electrons ahead of the streamer.   Those electrons affect where avalanches begin.   The resulting front can split.   Modern three-dimensional streamer models reproduce branching by treating photoionization stochastically.   Work by Wang, Dijcks, Guo, van der Leegte, Sun, Ebert, Nijdam, and Teunissen found that simulated streamer branching can agree well with controlled experiments and that branching is remarkably sensitive to the amount of photoionization.   This means branch structure is physically informative.   It reflects something about the electrical and chemical environment in which the streamer developed.     WHY OXYGEN CHANGES STREAMER GEOMETRY     Oxygen is not merely a passive background molecule.   It strongly affects electron kinetics.   Oxygen can capture free electrons through attachment processes.   It also participates in the photoionization mechanism that is important for positive streamer propagation in air.   Changing the N2 to O2 ratio therefore changes   electron attachment   electron availability   photoionization distance and intensity   streamer velocity   streamer radius   local electric field   branching behavior   chemical production   emission intensity   This has been demonstrated in both experiment and simulation.   A lower oxygen fraction can reduce attachment and recombination losses.   Different oxygen fractions also change the way photoionization seeds electrons ahead of the streamer.   Therefore, branch geometry can carry information about gas composition.   But it does not provide a unique answer by itself.     WHY ARC SHAPE CANNOT UNIQUELY REVEAL OXYGEN OR NITROGEN CONCENTRATION     This is the most important negative result.   Many different hidden physical conditions can produce superficially similar arc patterns.   Streamer geometry depends on more than the N2 to O2 ratio.   It can also depend on   absolute pressure   gas temperature   humidity   electrode geometry   applied voltage   voltage rise time   polarity   background ionization   previous discharge history   surface charge   nearby conductive objects   gas impurities   flow   photoionization model   electron attachment chemistry   camera exposure   viewing angle   temporal resolution   Two discharges with different chemistry can therefore look similar in an ordinary photograph.   Two discharges with similar chemistry can look different because their initial fluctuations differed.   Mathematically, the visible image is not generally a one-to-one mapping from chemical state to appearance.   Several possible hidden states can collapse into nearly the same observable image.   This is an inverse problem.   That single phrase explains much of the difficulty.     THE INVERSE-PROBLEM FORMULATION     Imagine that the complete hidden plasma state is represented by Z.   Z could contain spatial and temporal fields for   electron density   electric field   gas temperature   electron energy distribution   N2   excited N2   N2+   O2   O   O+   N   NO   ozone   metastable states   humidity-related radicals   pressure   flow   and other variables.   The measurement system transforms that hidden state into observed data Y.   Conceptually   Y = F(Z, A) + noise   F is the physical forward process.   A represents the measurement arrangement.   The arrangement includes the camera position, spectral filter, lens, detector response, timing, exposure, calibration, and any laser diagnostic system.   The scientific problem is then to invert the relationship.   Given Y and a well-characterized A, what parts of Z can be reconstructed reliably?   Some variables may be strongly identifiable.   Some may only be estimated probabilistically.   Some may be fundamentally unidentifiable from the available measurements.   That is a better way to think about this problem than asking whether a branch \"shows oxygen.\"     WHY MULTIPLE WAVELENGTHS CHANGE THE PROBLEM     A broadband RGB image collapses many emission lines and molecular bands together.   A wavelength-resolved instrument separates them.   Suppose the same discharge is observed simultaneously in several narrow spectral channels.   One channel is sensitive to N2 near 337 nm.   Another is sensitive to N2+ near 391 nm.   Another is sensitive to atomic oxygen around 777 nm.   Another observes atomic oxygen near 844 nm.   A broadband high-speed channel records overall morphology.   Now each location in the discharge does not have one brightness value.   It has a small spectrum.   That spectrum contains much more information about the local physical state.   The measurement becomes closer to a vector field than a color photograph.   This is the basic reason hyperspectral and multispectral methods are so powerful.   They increase the dimensionality of the observation so that hidden states that looked identical in one channel can become distinguishable across several channels.     WHY TIME RESOLUTION IS JUST AS IMPORTANT AS SPECTRAL RESOLUTION     A long-exposure photograph merges many different moments into one apparent structure.   That is dangerous for Tesla-coil discharges.   The discharge may repeatedly form, extinguish, reactivate, follow old ionized paths, and create new branches.   Excited states can disappear within nanoseconds.   Metastable states can survive much longer.   Radicals can persist after visible emission fades.   Gas can remain heated.   Residual ions and electrons can alter the next discharge.   Ozone and nitrogen oxides can accumulate on still longer timescales.   Therefore, the plasma has memory.   A static picture cannot distinguish a branch that is currently propagating from one that glowed earlier in the exposure.   A serious reconstruction should therefore use time-resolved data.   The natural object is not merely a spatial field.   It is a spatiotemporal field.   Z(x,y,z,t)     WHY THREE-DIMENSIONAL GEOMETRY MATTERS     A camera produces a two-dimensional projection of a three-dimensional discharge.   A branch that appears to cross another branch in an image may actually pass centimeters in front of it.   Brightness is also integrated along the camera's line of sight.   A long glowing segment aligned toward the camera can appear brighter than a shorter segment even if their local emission rates are identical.   This creates another inverse problem.   Stereoscopic imaging can reduce it.   Two or more synchronized cameras observing the same discharge from known positions allow the 3D branch path to be reconstructed.   Streamer researchers have used stereoscopic imaging to study branching angles and full three-dimensional discharge morphology.   For the present question, 3D reconstruction would let spectral measurements be associated with the actual branch geometry rather than only its projection.     LIGHTNING IS NOT JUST A LARGE TESLA-COIL SPARK     Tesla coils are useful analog systems, but the analogy must not be pushed too far.   Natural lightning includes several discharge regimes.   It can contain streamers, stepped or continuous leaders, hot channels, return strokes, recoil leaders, corona regions, shock waves, and large thermal gradients.   The pressure, current, channel radius, duration, altitude, electric-field configuration, and energy deposition can be very different from a tabletop Tesla discharge.   A Tesla coil is most useful for studying some aspects of corona, streamer, and spark behavior.   The 2025 Tesla-coil spectroscopy work found that its spectrum resembles corona and streamer stages of lightning particularly well.   That does not mean its entire plasma chemistry scales directly into a mature lightning return-stroke channel.   A rigorous comparison must match the physical regime, not merely the visual resemblance.     HOT LIGHTNING CHANNELS REVEAL DIFFERENT SPECIES     As plasma becomes hotter, molecular species can dissociate.   Nitrogen and oxygen molecules can be broken into atoms.   Atoms can become ionized.   Different radial zones can therefore contain different dominant emitters.   Natural-lightning spectroscopy has observed neutral and ionized nitrogen and oxygen emissions simultaneously.   This is consistent with a hot inner region and cooler surrounding plasma.   The result is conceptually important.   A lightning channel that looks like one narrow white line to the eye can contain multiple chemically and thermally distinct regions across only a few millimeters or centimeters.   The visible macroscopic branch is therefore hiding substantial internal structure.     CHEMISTRY CONTINUES AFTER THE LIGHT MOVES ON     The streamer head is an extremely active region, but it is not the entire chemistry.   After the ionization front passes, the channel contains electrons, ions, excited molecules, metastables, radicals, and heat.   These continue reacting.   Atomic oxygen can create ozone.   Atomic nitrogen can participate in nitric oxide formation.   OH and related species become important when water vapor is present.   Recombination changes electron and ion populations.   Excited states quench.   Diffusion spreads species away from the original channel.   The visually brightest moment is therefore not necessarily the chemically most important moment.   This is another reason direct species diagnostics are valuable.     HUMIDITY IS A MAJOR CONFOUNDING VARIABLE     Water vapor is chemically important even when it is present only as a minority component.   Humidity changes electron attachment and introduces large reaction networks involving OH, HO2, water clusters, and other oxygen-hydrogen species.   Recent streamer simulations have shown substantial sensitivity to the selected humid-air chemistry data set.   Different accepted reaction and cross-section models can produce meaningfully different predictions.   This means a high-quality experiment cannot simply record \"room air.\"   Humidity must be measured.   Preferably, the gas composition should be controlled.   Otherwise a model might incorrectly attribute a morphology change to oxygen concentration when humidity changed at the same time.     WHAT A STRONG EXPERIMENT WOULD LOOK LIKE     The cleanest experiment would begin with a controlled chamber rather than natural lightning.   A pulsed high-voltage source would be preferable for fundamental measurements because the timing of individual discharges can be controlled more precisely than with a continuously oscillating demonstration coil.   A Tesla coil could still be studied as a separate regime.   The chamber would allow controlled mixtures of nitrogen and oxygen.   Experiments would be repeated across several known oxygen fractions.   Humidity would be independently controlled.   Pressure and temperature would be measured.   Voltage and current waveforms would be recorded for every discharge.   At least two synchronized high-speed cameras would reconstruct three-dimensional streamer morphology.   Narrowband optical channels would record selected nitrogen and oxygen emissions.   A spectrograph would measure the full spectrum for calibration and line identification.   For a subset of conditions, TALIF or LIF measurements would provide direct species-density measurements.   Those direct measurements would become ground truth.   The central scientific test would then be   How accurately can hidden chemical and electrical fields be reconstructed from the cheaper, non-invasive optical measurements?     THE MACHINE-LEARNING VERSION OF THE EXPERIMENT     Machine learning could be useful, but only after the physics and measurement architecture are established.   The wrong approach would be   feed RGB spark images into a neural network   label each image with one global oxygen percentage   ask the model to discover chemistry   That model could easily learn shortcuts.   It might infer gas mixture from changes in overall brightness, camera settings, electrode contamination, chamber condensation, or some unintended experimental artifact.   The stronger approach would preserve the physical structure.   Each training event would include synchronized   3D geometry   high-speed timing   spectral channels   full spectrograph data   voltage waveform   current waveform   pressure   temperature   humidity   known gas composition   and direct species diagnostics when available.   The prediction targets would be spatial fields or physically meaningful parameters.   The model could then be tested on gas mixtures, voltages, electrode geometries, and humidity conditions that were withheld during training.   If performance survived those changes, that would be evidence that the model learned something about plasma structure rather than a superficial laboratory signature.     WHAT CAN REALISTICALLY BE INFERRED     There are several levels of inference.   The easiest level is classification.   The system may distinguish streamer-like from leader-like or arc-like regimes.   It may identify whether a region is dominated by neutral nitrogen bands, nitrogen-ion bands, or atomic oxygen emission.   The next level is parameter estimation.   Spectral ratios and line broadening can estimate quantities such as reduced electric field, rotational or gas temperature under appropriate assumptions, and electron density.   The next level is spatial reconstruction.   With calibrated imaging, selected species can be mapped across the discharge.   The hardest level is full chemical inversion.   That would attempt to infer many unobserved species simultaneously from limited optical information.   This may never be uniquely solvable without strong model constraints.   The goal should therefore not be \"recover every molecule.\"   The meaningful question is   Which hidden plasma variables are identifiable from which combinations of measurements, and with what uncertainty?     WHAT THE ARC PATTERN ITSELF MAY REVEAL     Even without spectroscopy, morphology can provide useful statistical information.   Possible measurable features include   branching rate   branching angle   channel diameter   curvature   tip velocity   fractal or tree-like dimension   branch length distribution   inter-branch spacing   propagation direction   stagnation distance   reillumination probability   channel persistence   luminous radius   tip brightness   radial intensity profile   These quantities can be compared with controlled changes in oxygen fraction, humidity, pressure, voltage, and electrode geometry.   If a feature changes reproducibly with one variable while the others are controlled, it can become a useful indirect diagnostic.   However, morphology should be treated as evidence with uncertainty, not as a chemical barcode.     THE MOST IMPORTANT CONCEPTUAL DISTINCTION     There are three different statements that sound similar but are scientifically very different.   Statement one   Nitrogen and oxygen influence the shape of electrical discharges.   This is well supported.   Statement two   The emitted light contains spatial information about excited, ionized, atomic, and molecular nitrogen and oxygen species.   This is also well supported.   Statement three   The visible branch shape alone uniquely tells us where ordinary nitrogen and oxygen molecules are located.   This is not supported.   The first two statements create a strong research program.   The third would overstate what the observable contains.     HOW THIS CONNECTS TO THE ACCOUNT'S EARLIER MEASUREMENT WORK     An older line of work on this account repeatedly separated a hidden physical event from the trace produced when that event passes through a measurement arrangement.   That conceptual distinction fits this problem unusually well.   The established physics should remain separate from any speculative framework, but the measurement logic is useful.   The plasma is the hidden state.   The discharge and optical system create measurable traces.   Different instruments expose different dimensions of that hidden state.   A broadband camera exposes morphology.   A narrowband camera exposes selected emission.   A spectrometer exposes wavelength structure.   TALIF exposes a selected atomic population.   Stereoscopy exposes three-dimensional geometry.   Electrical probes expose voltage and current.   No individual instrument is \"the truth.\"   The scientific object emerges by combining calibrated traces through a model that keeps track of what each instrument can and cannot measure.   That is the correct way to use the earlier conceptual work without confusing it with established plasma theory.     A PRACTICAL HIERARCHY OF EVIDENCE     The strongest evidence for a spatial species claim would be direct species-selective measurement with calibrated LIF or TALIF.   Next would be calibrated optical emission spectroscopy where the connection between a spectral feature and the emitting species is well established.   Next would be quantitative inference from several spectral features through a validated plasma model.   Below that would be morphology combined with controlled experimental conditions.   At the weakest level would be an ordinary photograph interpreted by color or shape alone.   This hierarchy matters because all five methods can produce visually convincing pictures.   Visual appeal is not the same thing as measurement strength.     THE OPEN RESEARCH OPPORTUNITY     The literature already contains nearly all of the pieces needed for a much more integrated experiment.   Researchers have demonstrated   high-speed streamer imaging   stereoscopic 3D reconstruction   optical emission spectroscopy   spatially resolved spectroscopy   TALIF mapping of atomic oxygen   TALIF mapping of atomic nitrogen   LIF mapping of metastable nitrogen   electrical waveform measurement   controlled N2 and O2 mixture studies   stochastic 3D streamer simulation   plasma-chemical modeling   lightning-channel radial reconstruction   What appears much less mature is a unified system that combines these measurements around freely branching Tesla-coil or streamer discharges and then attempts a calibrated spatiotemporal reconstruction of several species simultaneously.   That is the scientifically interesting gap.   The important word is calibrated.   The goal would not be to make a visually attractive false-color interpretation.   The goal would be to know what every color, line, voxel, probability field, and uncertainty interval actually means.     A POSSIBLE FINAL REPRESENTATION     The end product could be imagined as a four-dimensional data object.   At every spatial coordinate and time step, the reconstruction would contain estimates such as   electron density   electric-field-related quantities   temperature   N2 excitation   N2+ excitation   atomic O density   atomic N density   selected radical densities   confidence or uncertainty   The visible streamer geometry would sit inside this volume rather than being treated as the volume itself.   A user could move through time.   The streamer head would advance.   Nitrogen excitation would flare.   Ionization would form and decay.   Atomic oxygen would accumulate in particular regions.   Residual chemistry would remain after visible luminosity disappeared.   A later discharge could propagate through a chemically and electrically modified environment.   That would turn \"visible electricity\" into something closer to a dynamic map of what the electrical event is doing to air.     WHAT WOULD COUNT AS A REAL DISCOVERY     A scientifically strong result would not need to overturn plasma physics.   Several narrower discoveries would already matter.   One would be showing that a small set of inexpensive optical channels can accurately reconstruct atomic oxygen density normally requiring a much more complicated laser diagnostic.   Another would be finding a morphology-plus-spectrum signature that predicts local reduced electric field across new discharge geometries.   Another would be demonstrating that a previous discharge leaves a measurable chemical or ionization memory that predicts the path of the next discharge.   Another would be quantifying which visible branch features contain independent information after voltage, pressure, humidity, and geometry are controlled.   Another would be proving that a proposed reconstruction is impossible because different hidden states generate indistinguishable observations.   A negative identifiability result is still valuable.   It tells future experiments which additional measurement channel is required.     CONCLUSION     The visible branch of lightning or a Tesla-coil discharge is not a photograph of individual nitrogen and oxygen particles.   It is a structured optical trace produced by an evolving plasma.   That trace is generated by electron acceleration, molecular excitation, ionization, dissociation, chemical reaction, recombination, radiation, heat, gas dynamics, and the measurement system itself.   Nitrogen strongly shapes the familiar violet and blue emission of streamer-like air discharges.   Nitrogen ions provide additional information about energetic electron conditions.   Atomic oxygen produces important diagnostic emission, especially near 777 nm in hotter leader and lightning-like plasma.   Laser fluorescence methods can directly map selected nitrogen and oxygen species in space.   High-speed spectroscopy can resolve radial plasma structure.   Three-dimensional imaging shows that branching contains physical information and that oxygen-dependent photoionization and attachment influence morphology.   But morphology is not a unique chemical decoder.   The strongest scientific path is therefore multimodal.   Use geometry, spectrum, time, electrical waveforms, environmental measurements, and direct species diagnostics together.   Construct a forward physical model.   Then ask which hidden chemical and electrical states can be recovered from the observed traces and how uncertain those reconstructions are.   That transforms the original intuition into a rigorous research problem.   The question is no longer simply   \"Can we see where nitrogen and oxygen are by looking at the electricity?\"   The stronger question is   \"How much of the evolving chemical and electrical state of air can be reconstructed from the spatial, temporal, and spectral traces produced by an electrical discharge?\"   Modern plasma diagnostics show that the answer is already substantial.   The unexplored opportunity is to combine those diagnostic layers into one coherent reconstruction system.   SELECTED RESEARCH SOURCES   Passas-Varo M, Gordillo-Vazquez F J, Sanchez J, and Kieu N. 2022. Experimental Radial Profiles of Early Time (   Wang Z and colleagues. 2026. Spatiotemporal Resolution Emission Spectra of Continuously Propagating Positive Leader Channels in Long Spark Discharges. Journal of Geophysical Research: Atmospheres 131. DOI 10.1029/2025JD044801.   Steinberg G and Watanabe N. 2025. Simulating Lightning Discharges: The Influence of Environmental Conditions on Ionization and Spark Behavior. Atmosphere 16(7), 831. DOI 10.3390/atmos16070831.   Nijdam S, Teunissen J, and Ebert U. 2020. The Physics of Streamer Discharge Phenomena. Plasma Sources Science and Technology 29. DOI 10.1088/1361-6595/abaa05.   Wang Z, Dijcks S, Guo Y, van der Leegte M, Sun A, Ebert U, Nijdam S, and Teunissen J. Quantitative Modeling of Streamer Discharge Branching in Air. Three-dimensional modeling and experiment showing strong sensitivity of branching to stochastic photoionization.   Li X, Guo B, Sun A, Ebert U, and Teunissen J. 2022. A Computational Study of Steady and Stagnating Positive Streamers in N2-O2 Mixtures. Work demonstrating oxygen-dependent attachment and recombination effects on streamer propagation.   Teramoto and collaborators. Experimental TALIF studies of atomic nitrogen and atomic oxygen in atmospheric-pressure positive corona and streamer discharges, including spatially and temporally resolved measurements.   Kim and Teramoto. Two-dimensional TALIF measurements of atomic oxygen production during streamer propagation in dry air.   Laser-induced-fluorescence studies published in 2020 and 2022 on metastable N2(A3Sigma-u+) in positive streamer discharges, including single-shot two-dimensional imaging.   NIST Atomic Spectra Database. Current reference data for atomic oxygen and nitrogen transition wavelengths, including the O I triplet near 777.2 to 777.5 nm.   Recent 2025 to 2026 atmospheric-pressure plasma and lightning research should be treated together with these established references because reaction-rate databases, humid-air chemistry, imaging speed, inversion methods, and streamer simulations continue to improve.   FINAL READING RULE   Whenever an electrical-discharge image seems to show a hidden physical structure, ask four questions.   What physical state produced the light?   Which part of that state is actually observable in this wavelength and time window?   What information did the instrument discard?   What additional measurement would distinguish the remaining possible explanations?   If those four questions stay attached to the image, the visible pattern becomes scientifically useful without being mistaken for the invisible system that produced it.       submitted by     /u/SpedisAhead     to     r/ModernReliquary       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ModernReliquary/comments/1wlqtui/spatial_chemistry_of_air/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:46:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:46:21.461Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0380e660c6084039891da"
+    },
+    "message_id": "reddit_t3_1wlqtu1",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "GarminFenix",
+    "username": "samplejay",
+    "title": "Time Travel Animation watch face",
+    "text": "Time Travel Animation watch face\n\nRaise your wrist and the night comes alive. Chrono Drive is an animated, retro-futuristic time-travel watch face for round 454-pixel AMOLED Garmin watches: an old town with a clock tower on the left, a neon city on the right, a time portal on the wet road and an 80s sports car with burning tyre tracks. All original pixel art.    Four scenes, one at random on every wake, never the same twice in a row:  – The storm: lightning hits the clock tower, the hands whirl, rain, neon brown-outs and four violent strikes.  – Full speed: the speedometer counts to 99, the tyres ignite and the car vanishes into the portal – only the burning tracks remain, and the number plate spins on the road.  – Arrival: the portal bursts white, three shock rings roll down the road and frost melts off the car.  – Quiet night: street lamps flicker, heat lightning behind the hills, embers in the tracks.  Everything stops after ten seconds to save battery. You can also lock one scene in the settings.    The time is a red 14-segment display with the unlit segments faintly visible, or a pixel-gradient clock – your choice. 12-hour or 24-hour time. The bottom field can show any data your watch offers (heart rate, steps, Body Battery, battery, stress, sunrise, temperature and more). Always-on display with a thin line drawing that shifts every minute. Settings and menus in 36 languages.    Get it on the Garmin Connect IQ Store:   https://apps.garmin.com/apps/ae673d19...     All H1TMAKERS watch faces, setup guides and videos:   https://h1tmakers.com/watchface/        submitted by     /u/samplejay     to     r/GarminFenix       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GarminFenix/comments/1wlqtu1/time_travel_animation_watch_face/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:46:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:46:22.066Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0380e660c6084039891db"
+    },
+    "message_id": "reddit_t3_1wlqtts",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "limbuscompany",
+    "username": "RealAudibleNoise",
+    "title": "Theory about the Symbol on a Certain Character",
+    "text": "Theory about the Symbol on a Certain Character\n\nI think we can correctly deduce the implication of this symbol on Jeanne's attire.    First I will give the evidence for the meaning of the symbol.   We know that the symbol on Jeanne's attire is the same as Binah's earrings    https://preview.redd.it/ubh65sf6bqqh1.png?width=900&format=png&auto=webp&s=4a42c19652da87c572aa1406fc0a0e8b27f1c6e9     https://x.com/ccyb_/status/2101098671924494410    We also know what the symbol represents   https://www.reddit.com/r/LobotomyCorp/comments/cw96ot/project_moon_qa_section_at_unlimited_ex3/       Q. Binah has an earring that Garion didn't have. Does it have a meaning?       A. It does. Binah's earring represents femininity. It's an actual ancient symbol of the uterus. It's the same as the one in the Extraction Department's background. The context behind Binah's earring will be revealed in the sequel, so please wait.   The context behind Binah's earrings is supposedly going to be revealed \"in a sequel\" and I think that time is now.    We also know its real life counterpart    https://en.wikipedia.org/wiki/Yoni       Yoni  is a  Sanskrit  word that has been interpreted to literally mean the \"womb\",  \\ 2])   \\ 7])  the \"source\",  \\ 8])  and the female organs of generation     We know that it represents  femininity  and  fertility .   Either Jeanne or someone else(maybe Meursault or his mother) bought Jeanne's clothes at one point with that specific symbol on it.    We also know since Jeanne is wearing it, she likely wanted to be pregnant and have a child.   We also know that Jeanne and Meursault went \"steamy\" with each other, maybe Jeanne succeeded in getting pregnant.   This brings me to my theory:    The Crimson God is Jeanne's unborn child    This is further supported by the fact that when Dante made their decision to kill the Crimson God, Meursault said that \"Jeanne will be saddened\"    When Dante made their decision to kill the Crimson God    That's it for my crackpot theory, do let me know if you have any other theories or think this is true or not.       submitted by     /u/RealAudibleNoise     to     r/limbuscompany       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/limbuscompany/comments/1wlqtts/theory_about_the_symbol_on_a_certain_character/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:46:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:46:22.267Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0380e660c6084039891dc"
+    },
+    "message_id": "reddit_t3_1wlqttk",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "Bd_StudyAbroad",
+    "username": "_amWho",
+    "title": "Seeking a PhD Application Mentor for USA in CSE (NLP / ML)",
+    "text": "Seeking a PhD Application Mentor for USA in CSE (NLP / ML)\n\n​   I’m currently preparing my applications for Fall 2027 PhD programs in the USA, primarily in Computer Science, NLP, and Machine Learning.   I’m starting the process a little late, so I’m looking for someone who would be willing to genuinely guide me through the application process and help me navigate it efficiently, from cold mailing, IELTS, CV and SOP preparation to university selection, application requirements, and the overall submission process.   I’m not looking for someone to do the work for me or take anything for granted. I’m willing to put in the effort; I simply need a trustworthy and experienced person who can help me understand what I should prioritize, avoid common mistakes, and fast-track the process given my timeline.   Ideally, I’d love to connect with someone who:   📌 Has experience with US PhD applications, preferably in CSE/NLP/ML   📌 Has gone through the process themselves or has substantial experience helping others   📌 Can provide practical, honest guidance   📌 Is currently available to help, even if only for occasional discussions   If you’re someone who can willingly guide me through this process, or know someone who might be a good fit, I’d be extremely grateful. Please DM me directly.    Thank you!        submitted by     /u/_amWho     to     r/Bd_StudyAbroad       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Bd_StudyAbroad/comments/1wlqttk/seeking_a_phd_application_mentor_for_usa_in_cse/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:46:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:46:22.466Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0380e660c6084039891de"
+    },
+    "message_id": "reddit_t3_1wlqttg",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "OnePiece",
+    "username": "lol_iDc88",
+    "title": "Helmeppo opinion",
+    "text": "Helmeppo opinion\n\nIdk why but he's one I hated, but I guess seeing how close him and Coby get stirs something and now I enjoy every time I see him. Plus I want those glasses       submitted by     /u/lol_iDc88     to     r/OnePiece       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OnePiece/comments/1wlqttg/helmeppo_opinion/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:46:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:46:22.860Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0380f660c6084039891df"
+    },
+    "message_id": "reddit_t3_1wlqttd",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "HanxuliX",
+    "title": "Grab 25⚡ from u/HanxuliX!",
+    "text": "Grab 25⚡ from u/HanxuliX!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/HanxuliX     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wlqttd/grab_25_from_uhanxulix/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:46:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:46:23.058Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0380f660c6084039891e0"
+    },
+    "message_id": "reddit_t3_1wlqtt5",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "Silverbugs",
+    "username": "CollegeNo6900",
+    "title": "Pure for dirty",
+    "text": "Pure for dirty\n\nLooking for second opinion. Considering trading pure for dirty silver.    Let’s randomly say the off the 100 widgets off silver for 115 widgets of dirty       submitted by     /u/CollegeNo6900     to     r/Silverbugs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Silverbugs/comments/1wlqtt5/pure_for_dirty/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:46:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:46:23.257Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0380f660c6084039891e1"
+    },
+    "message_id": "reddit_t3_1wlqtsu",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "f150",
+    "username": "Enternal_096",
+    "title": "Looking for advice on a 2018 F-150 King Ranch 3.5 EcoBoost",
+    "text": "Looking for advice on a 2018 F-150 King Ranch 3.5 EcoBoost\n\nI’m currently in the process of getting my first truck for my birthday, and I’d appreciate some advice from people who have experience with these trucks.   The truck I looked at is a 2018 F-150 King Ranch with the 3.5 EcoBoost and 10-speed, with around 109k miles. I went to see it in person and it seemed very well maintained. The interior is also in really good shape, especially the leather. The asking price was $28k, but we were able to get it down to around $24k, possibly a little lower.   I’d mainly be using it for school, sports practice, errands, and medium length trips (usually 1–2 hours). I’m not planning on doing any serious towing or heavy work with it.   I’ve had some people tell me that I should look into a newer F150 instead, but I really like the King Ranch and the features interior are a big reason I’m interested in it.   For people who have owned a 2018 3.5 EcoBoost/10-speed or a similar F-150:What are the biggest things I should look out for around 100k+ miles?  How reliable has yours been?  Are there any expensive maintenance issues I should be aware of?  How does the 10-speed hold up?Is there anything specific I should have inspected before buying?  What would you have wanted to know before owning one?   I’m mainly trying to learn more about what ownership is like.       submitted by     /u/Enternal_096     to     r/f150       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/f150/comments/1wlqtsu/looking_for_advice_on_a_2018_f150_king_ranch_35/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:46:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:46:23.457Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0380f660c6084039891e3"
+    },
+    "message_id": "reddit_t3_1wlqtss",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "InsuranceAgent",
+    "username": "Natural_Guitar_6936",
+    "title": "Remote Plan",
+    "text": "Remote Plan\n\ni obtained my accident and health license about a year ago, but couldn’t find an in person opportunity. in 1 month i begin a temporary health insurance agent/producer for BCBS and it goes to march. i’d really like to transition into being a healthcare sales agent, even do medicare. i’m green. i’ll have 4 weeks training for the temp position.   So i’d like your opinion on the following-   When should I start looking and applying?  What are some vetted companies to check out?  With not much experience, what kind of company would consider hiring me?  Considering the below, what other jobs might i qualify for?  For reference- i worked last year’s medicare enrollment period as an Enrollment agent. i didn’t have my license yet. then i was an Enrollment Analyst for a place called SeniorLife for a year and a 1/2.   thanks! much appreciated.       submitted by     /u/Natural_Guitar_6936     to     r/InsuranceAgent       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/InsuranceAgent/comments/1wlqtss/remote_plan/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:46:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:46:23.853Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03810660c6084039891e4"
+    },
+    "message_id": "reddit_t3_1wlqts2",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AlignmentChartFills",
+    "username": "Independent_Sun6812",
+    "title": "Grett wins best character during All-stars. Also, i've decided that we'll leave the FvF votes for the end. Who was the worst person during Carnival of Chaos?",
+    "text": "Grett wins best character during All-stars. Also, i've decided that we'll leave the FvF votes for the end. Who was the worst person during Carnival of Chaos?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Independent_Sun6812     to     r/AlignmentChartFills       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlignmentChartFills/comments/1wlqts2/grett_wins_best_character_during_allstars_also/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:46:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:46:24.056Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03810660c6084039891e5"
+    },
+    "message_id": "reddit_t3_1wlqtry",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "StartupMind",
+    "username": "DesperateTrip6561",
+    "title": "One year ago I started with digital products. Today my solo-built app reached #23 🚀",
+    "text": "One year ago I started with digital products. Today my solo-built app reached #23 🚀\n\nOne year ago, I was learning digital products. In January, I started building apps. Today, my solo-built PushVideoAI reached #23 Trending on Peerlist Launchpad among 257+ launches. 🚀❤️   No team. No paid promotion. Just building, learning and connecting with people. Truly grateful.       submitted by     /u/DesperateTrip6561     to     r/StartupMind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/StartupMind/comments/1wlqtry/one_year_ago_i_started_with_digital_products/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:46:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:46:24.253Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03810660c6084039891e6"
+    },
+    "message_id": "reddit_t3_1wlqtru",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "Vespa",
+    "username": "Liquidator97",
+    "title": "Decent decal website?",
+    "text": "Decent decal website?\n\nHi everyone, bit of a daft question probably but I'd quite like some good decals for my Primavera after a fun first-ever run with my local Vespa club. Some of the scooters had some superb stickers but all I can find online are sites selling cringe-worthy ones with semi-naked women or shit banter (stuff like \"Jesus is my airbag\" FFS).   Anyone know a decent website that might be worth looking at?       submitted by     /u/Liquidator97     to     r/Vespa       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Vespa/comments/1wlqtru/decent_decal_website/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:46:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:46:24.452Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03810660c6084039891e7"
+    },
+    "message_id": "reddit_t3_1wlqtr0",
+    "topic_key": "what is the big problem people are annoyed with in technology",
+    "search_keyword": "fed up with",
+    "platform": "reddit",
+    "subreddit": "JRPG",
+    "username": "C64hrles",
+    "title": "I am so close to giving up on FF4... (bitching and crying post)",
+    "text": "I am so close to giving up on FF4... (bitching and crying post)\n\nI have been chipping away at the final dungeon for weeks now. It's been a drag. Maybe I'm just shit at video games, but my god. I did not expect Zeromus to one shot more than half of my party in a single turn. My party isn't low leveled either, at least I don't think?? I'm honestly not even sure. I spent hours grinding my party to level 50. Highest is Kain at level 54. To be completely honest, I did not grab all of the optional items in the final dungeon. But I did grab most. And to be honest? I don't think it would have helped.   Not to mention all of the encounters on the dungeon floors are essentially boss enemies themselves. Especially in the final tower section. They require a lot of time and patience to kill, and they wound you're party pretty bad. Only to get an okay amount of experience after defeating them. I only have so many potions and ethers I can use until I'm out, and engaging in these fights can drain them fast. Even with using spells from Rosa or Cecil.   There's no save point before the final fight either. Or of there was, I didn't see it! Meaning if I want a rematch, I have to crawl through that entire final tower section, go through all of the cut scenes, and watch all of the scripted fights AGAIN, just for the CHANCE to have a rematch.   There's a lot more I could say about this game. I might make a review  IF  I manage to complete it. I understand this is a SNES game, it isn't going to be as polished as some of the later entries in the series. But going from FF7 to FF4 has been so jarring. I'm playing this on my PS2, it comes with Chrono Trigger. I can't wait to start that game after this is over...   I'm not even sure what the point of this post was. I just had to rant because I've been getting so fed up with this dungeon. Its been really testing my patience. I've played through multiple JRPGs in the past. So yes, I understand the final boss and dungeon is going to be a lot more challenging. But dear God! I haven't had any game give me THIS much trouble!   If anyone has anything to add or maybe someone can correct me I'm being an idiot, and this part of the game is actually easy, feel free to let me know...       submitted by     /u/C64hrles     to     r/JRPG       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/JRPG/comments/1wlqtr0/i_am_so_close_to_giving_up_on_ff4_bitching_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:46:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:46:24.656Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03810660c6084039891e8"
+    },
+    "message_id": "reddit_t3_1wlqtqk",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "buildapc",
+    "username": "BlackSparkz",
+    "title": "PC boots only on second try — new PSU",
+    "text": "PC boots only on second try — new PSU\n\nMy PC broke recently. I took it to Microcenter and they confirmed it was my PSU that broke. Got a new one and switched it out with all the new cables inside.   When I first try to turn the PC on after having it been shutdown for a while, my PSU blinks once, the RGB turns on, but none of my fans spin. I use the I/O switch to turn it off, press the power button to discharge anything, flip the I/O back on, power button, and my PC boots,    I've reseated my RAM and no difference.   I thought it was my power strip/surge protector being faulty, so I got a brand new one and still issues.   I'm going to try replacing the CMOS battery and replugging my GPU later today. If anyone has any other ideas, please let me know.   I'm attaching a video of this below. I know it's dark. The solid light you can see is just my monitor light on standby.    https://www.youtube.com/watch?v=m44ir4sVIYs        submitted by     /u/BlackSparkz     to     r/buildapc       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/buildapc/comments/1wlqtqk/pc_boots_only_on_second_try_new_psu/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:45:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:46:24.856Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03811660c6084039891e9"
+    },
+    "message_id": "reddit_t3_1wlqtps",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Hidden-In-The-Forest",
+    "title": "Grab 100 hammers from u/Hidden-In-The-Forest!",
+    "text": "Grab 100 hammers from u/Hidden-In-The-Forest!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Hidden-In-The-Forest     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wlqtps/grab_100_hammers_from_uhiddenintheforest/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:45:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:46:25.057Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03811660c6084039891ea"
+    },
+    "message_id": "reddit_t3_1wlqtpf",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "SideProject",
+    "username": "One-Currency-3162",
+    "title": "Teaching kids how to count 1,2,3,4 in music",
+    "text": "Teaching kids how to count 1,2,3,4 in music\n\nThis is a game I prepared for my daughter, Vivian, who can now count to three and she's 18 months old! Wow! Anyway, hope you enjoy it - and spread it like Bluey (TM) so that there's room for more fun.   play:  https://shimmy-rhythm-score.spindrop-3083.chatgpt.site/        submitted by     /u/One-Currency-3162     to     r/SideProject       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SideProject/comments/1wlqtpf/teaching_kids_how_to_count_1234_in_music/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:45:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:46:25.257Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0382daeeb96c1c63ba7ba"
+    },
+    "message_id": "reddit_t3_1wlquee",
+    "topic_key": "dentist",
+    "search_keyword": "dentist",
+    "platform": "reddit",
+    "subreddit": "askdentists",
+    "username": "neutralgena",
+    "title": "Healing Progress for Molar Extraction + bone graft #extraction #healing",
+    "text": "Healing Progress for Molar Extraction + bone graft #extraction #healing\n\nhad my upper right back molars extracted as a surprise gift after my 6 month cleaning :) tldr had two root canals years ago and dentists apparently did not seal properly and both ended up being severely infected. have been able to manage pain with 800 of ibuprofen once a day but the last few hours are painful without it. just making sure i’m healing properly. first pic was right after (tuesday), second pic is right now (sunday)        submitted by     /u/neutralgena     to     r/askdentists       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/askdentists/comments/1wlquee/healing_progress_for_molar_extraction_bone_graft/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:46:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:46:53.295Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab038379f8856bec23850a9"
+    },
+    "message_id": "reddit_serp_1t0ag05",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/selfhosted/comments/1t0ag05/new_project_megathread_week_of_30_apr_2026/",
+    "text": "New Project Megathread - Week of 30 Apr 2026\n\nWelcome to the  New Project Megathread!    This weekly thread is the new official home for sharing your new projects (younger than three months) with the community.   To keep the subreddit feed from being overwhelmed (particularly with the rapid influx of AI-generated projects) all new projects can only be posted here.    How this thread works:       A new thread will be posted every Friday.     You can post here ANY day of the week.  You do not have to wait until Friday to share your new project.    Standalone new project posts will be removed  and the author will be redirected to the current week's megathread.     To find past New Project Megathreads just use the  search .   Posting a New Project   We recommend to use the following template (or include this information) in your top-level comment:      Project Name:     Repo/Website Link:  (GitHub, GitLab, Codeberg, etc.)    Description:  (What does it do? What problem does it solve? What features are included? How is it beneficial for users who may try it?)    Deployment:  (App must be released and available for users to download/try. App must have some minimal form of documentation explaining how to install or use your app. Is there a Docker image? Docker-compose example? How can I selfhost the app?)    AI Involvement:  (Please be transparent.)     Please keep our rules on self promotion in mind as well.   Cheers,       submitted by     /u/AutoModerator       [link]       [comments]",
+    "username": "AutoModerator",
+    "subreddit_or_channel": "selfhosted",
+    "posted_at": "2026-04-30T22:01:10+00:00",
+    "fetched_at": {
+      "$date": "2026-09-20T19:47:03.794Z"
+    },
+    "google_rank": 7,
+    "search_keyword": "can you find me sales",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-20T19:47:03.794Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab03848660c6084039891ed"
+    },
+    "message_id": "reddit_t3_1wlquug",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "redditrequest",
+    "username": "the_cleve_believes",
+    "title": "r/CheckthisVin",
+    "text": "r/CheckthisVin\n\nsubmitted by     /u/the_cleve_believes     to     r/redditrequest       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/redditrequest/comments/1wlquug/rcheckthisvin/",

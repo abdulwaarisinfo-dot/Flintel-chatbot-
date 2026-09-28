@@ -1,0 +1,416 @@
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "BreakUps",
+    "username": "Plastic_Profile9637",
+    "title": "Letter to you",
+    "text": "Letter to you\n\nGod I didn’t want to write here at all but I just can’t keep quiet now. I’m tired of pretending to be strong for myself.    I miss you a lot. I miss everything that we did together. I miss how we literally grew up together. This is the longest we’ve been apart not talking with each other. I can’t express how much I’m in love with you.    I feel like you’re breaking me down every passing day. First you tell me so hurtful things then you never care to apologise and then you come back from your trip and then you tell me to take back my gift. How can you do this? Is this how much you hate me? You can’t contact me, you can’t talk with me, you can’t do anything for me.    Then you say it’s best that we stay apart- we weren’t meant to be- and god knows what. How can you not feel guilty for even once when you type that? When you know that the person you hurt is in the same batch as you? Same college as you? And you don’t even care to check on her when you hurt her? And then you make it all about you that “maybe we weren’t meant to be” “that you love me soo soo much but you don’t want to prove me anything”. No you deliberately want to hurt me so bad that I’ll never be able to trust anyone ever fucking again in my life. You deliberately want to hurt me so bad as if I’ve done something so so so seriously wrong with you.    You don’t want me in your life that’s what the harsh truth is and you’re trying your best to hide it. You don’t like me at all that’s the harsh truth. Tell it to yourself everyday. Stop hiding that from yourself. Nobody in their right mind would’ve done this to anybody who they would’ve at least liked.    I just wish I wish for my life that you get to experience the heartbreak that I experienced where you’ll be waiting for someone you love so much to come back to fight for you but they wouldn’t care and they’d blame everything on the universe and not themselves. I hope that you get to experience the same thing that you did.        submitted by     /u/Plastic_Profile9637     to     r/BreakUps       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BreakUps/comments/1wldra1/letter_to_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T10:42:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T10:43:14.247Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafb8c2660c6084039868be"
+    },
+    "message_id": "reddit_t3_1wldr9x",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "LLMDevs",
+    "username": "Dazzling_Cancel4505",
+    "title": "Self-Hosted LLM Code Review Agent (a single docker container)",
+    "text": "Self-Hosted LLM Code Review Agent (a single docker container)\n\nHey guys   I'm running my GitLab instance on my homelab but it was hard to find tool for code review   So I built one. called Proval.   Open source and only got docker image   It's basically just a self-hosted docker app. Works with GitHub, and also GitLab and Forgejo too, so you can connect with your self hosted instance. Proval supports chat completion API and anthropic API, If you running Local LLM, you can connect it through chat completion API   Review quality is quite good(at lteast for me). multiple agents automatically reviews each file group scope.   I ran the 50-problem Martian offline benchmark a month ago and scored F1 0.427 with the minimax-m3, which ranked 7th out of 21 at the time. (If you check now, newer models have come out so the ranking is lower.) I'll release new result with better model soon   The goal was to make something lightweight, easy to use, and genuinely useful. you just need to configure the model, webhook, and Git Host access API on the web dashboard, and setup is done. It's built on Bun, the frontend uses SvelteKit, and the database is SQLite per instance. The Docker image is compiled to a Bun binary so the size is pretty small.   Feature   - Reviews on PR open or first push  - Inline comments on PRs  - Replies to PR comments (can set to only respond when mentioned)  - Reviews when an issue is opened (also checks for duplicate issues)  - Replies to comments on issues  - Restricts replies based on repo permissions like Developer or Maintainer  - Admin login, or you can disable auth entirely and leave it open   I ran the 50-problem Martian offline benchmark a month ago and scored F1 0.427 with the minimax-m3, which ranked 7th out of 21 at the time. (If you check now, newer models have come out so the ranking is lower.) I'll release new result with better model soon   It's not a vibe-coded slop. I took a lot of time thinking through the architecture, implementing it. You can check the code in the repo   It's open source (AGPL-3.0) and you can just pull Docker image, connect your LLM API and set webhook. That's all. takes about 3 min   and.. It's my personal project, not a marketing or selling something.    demo:  https://demo.proval.app    repo:  https://github.com/seoes/proval    website:  https://proval.app        submitted by     /u/Dazzling_Cancel4505     to     r/LLMDevs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LLMDevs/comments/1wldr9x/selfhosted_llm_code_review_agent_a_single_docker/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T10:42:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T10:43:14.447Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafb8c2660c6084039868c0"
+    },
+    "message_id": "reddit_t3_1wldr9w",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "WorkingStudentPh",
+    "username": "Single_Discussion625",
+    "title": "PART-TIME JOBS AROUND BACOLOD",
+    "text": "PART-TIME JOBS AROUND BACOLOD\n\nHello, I'm a student, 18 years old, 1st Year College. I badly need a part-time job SAT & SUN.    I need a job to support my education. Please comment here if you have an offer.    Preferably around Bacolod only.    Respect this post.        submitted by     /u/Single_Discussion625     to     r/WorkingStudentPh       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WorkingStudentPh/comments/1wldr9w/parttime_jobs_around_bacolod/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T10:42:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T10:43:14.843Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafb8c3660c6084039868c1"
+    },
+    "message_id": "reddit_t3_1wldr9g",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "pandabuy_jerseys",
+    "username": "MaximumControl",
+    "title": "AAPEXHUB 2026 Juventus White Special Edition Player Version",
+    "text": "AAPEXHUB 2026 Juventus White Special Edition Player Version\n\nI won this jersey in a giveaway and I'm very impressed with the quality.  I was even allowed to add a personalized name and number.   Size is L and the person wearing is 180cm and ~70kg.   The jersey feels very high quality and I can't tell a difference to an original.   Shipping was fast and contact with the seller is friendly and professional.   I would definitely recommend AAPEXHUBs shop.       submitted by     /u/MaximumControl     to     r/pandabuy_jerseys       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pandabuy_jerseys/comments/1wldr9g/aapexhub_2026_juventus_white_special_edition/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T10:42:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T10:43:15.045Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafb8c3660c6084039868c2"
+    },
+    "message_id": "reddit_t3_1wldr9d",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DumbThoughts",
+    "username": "SlimShady989",
+    "title": "This is a dumb thought",
+    "text": "This is a dumb thought\n\nI think Reddit is getting very boring        submitted by     /u/SlimShady989     to     r/DumbThoughts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DumbThoughts/comments/1wldr9d/this_is_a_dumb_thought/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T10:42:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T10:43:15.244Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafb8c3660c6084039868c3"
+    },
+    "message_id": "reddit_t3_1wldr8x",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PixelGun",
+    "username": "Subject_Scarcity1769",
+    "title": "NOTIK or shadow spell to mythic?",
+    "text": "NOTIK or shadow spell to mythic?\n\nAnd I know my armor is ahhh but in 20h i can buy ruby clan armor so that will be fixed        submitted by     /u/Subject_Scarcity1769     to     r/PixelGun       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PixelGun/comments/1wldr8x/notik_or_shadow_spell_to_mythic/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T10:42:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T10:43:15.444Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafb8faaeeb96c1c63ba4c9"
+    },
+    "message_id": "reddit_t3_1wlds1n",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "AiEditorialPrompts",
+    "username": "Imposter_RITchie",
+    "title": "Kitchen Light, 11:43",
+    "text": "Kitchen Light, 11:43\n\nIdentity-locked subject in a quiet apartment kitchen late at night. 4:5 portrait orientation, environmental mid-shot from counter height; 50mm lens. Background includes a softly lit backsplash, a kettle and a single glass on the counter, and a faint city-window reflection—kept uncluttered and purposeful.   Color discipline restricted to: Warm bone #F2ECE4 Soft espresso #3B2F2A Muted olive #7B8472 Warm metal tone #C6A85C No additional dominant hues.   Outfit architecture: Base: Espresso satin corset top (#3B2F2A) with visible seam architecture and a clean straight neckline, structured but not stiff. Layer: Cropped ivory cardigan (#F2ECE4) in fine knit, worn open and slightly slipped off one shoulder to soften the lines. Lower: High-waisted muted olive satin cargo skirt (#7B8472), midi length with subtle utilitarian pocket structure and a clean front slit for movement. Footwear not emphasized; barefoot or minimal house slides implied.   Jewelry strategy: Primary: Sculptural warm-gold statement earrings (#C6A85C), compact but bold, framing the jawline. Secondary: No necklace (neckline remains clean). Tertiary: One thin ring only.   Pose: Leaning lightly against the counter, hip angled. One hand resting near the glass, fingers relaxed; the other hand grazing the cardigan edge at collarbone. Chin slightly lowered, gaze soft and off-camera, expression calm and unreadable.   Lighting: Single warm under-cabinet practical light as key source, creating gentle highlights along cheekbone and collarbone and soft shadow transitions across the face. Subtle bounce from the countertop lifts shadows without flattening. Controlled specular on satin and metal; natural skin texture preserved.   Depth: Foreground counter edge softly blurred; subject sharp; background falls off into warm haze with faint window reflections.       submitted by     /u/Imposter_RITchie     to     r/AiEditorialPrompts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AiEditorialPrompts/comments/1wlds1n/kitchen_light_1143/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T10:43:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T10:44:10.594Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aafb8fbaeeb96c1c63ba4ca"
+    },
+    "message_id": "reddit_t3_1wldrwy",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "EDH",
+    "username": "LabManEDH",
+    "title": "What are you building from Reality Fracture?",
+    "text": "What are you building from Reality Fracture?\n\nWhat are yall building, or wanting to build, from the set? It seems to be the most interesting set this year. I'd like to get ideas for what to build but also share one of my own. Deck idea for deck idea ;)   I am working on this and would love any advice on it. Goal is to use the Empower Jace \"Way of\" Legendary enchantments. Then, use various cards to give the Jace token more abilities. The way of cards do that, but so do cards like [[Kiora of salt and sea]]. There are also the Talent Auras like [[Teferi's Talent]] that do it as well. Sissay is one of various possible commanders, just tutors out the enchantments. Open to ideas tho    https://moxfield.com/decks/dcakE0mnqUufuXeUsGFr2Q        submitted by     /u/LabManEDH     to     r/EDH       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/EDH/comments/1wldrwy/what_are_you_building_from_reality_fracture/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T10:43:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T10:44:11.011Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aafb8fb660c6084039868c4"
+    },
+    "message_id": "reddit_t3_1wlds3n",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PocoPhones",
+    "username": "aboygoodguy",
+    "title": "Thinking of buying Poco m8 5g",
+    "text": "Thinking of buying Poco m8 5g\n\nIt fits by budget        submitted by     /u/aboygoodguy     to     r/PocoPhones       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PocoPhones/comments/1wlds3n/thinking_of_buying_poco_m8_5g/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T10:44:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T10:44:11.960Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafb8fc660c6084039868c5"
+    },
+    "message_id": "reddit_t3_1wlds3g",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "cebur4r_dating",
+    "username": "Pleasant_Peanut_8483",
+    "title": "28 [F4A] looking for a bestie/s!",
+    "text": "28 [F4A] looking for a bestie/s!\n\nneed new friends nga maka go ug sponty hike, gym, bouldering (first time) and anything! ganahan ko mag side quest maxxing as clearly wala koy bf atp! HAHHAHAHAHAH PLS PLS PLS!    next plan is...  1. Hike at Lataban hills, liloan  2. Run cclex  3. Resistance training  4. Camotes trip  5. Bantayan Island   kanang dili init ug ulo, jolly, go for unlimited pictures, dili mag inarte sa accom or commute, fun to be with, open for kkb or sharing!        submitted by     /u/Pleasant_Peanut_8483     to     r/cebur4r_dating       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cebur4r_dating/comments/1wlds3g/28_f4a_looking_for_a_besties/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T10:44:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T10:44:12.162Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafb8fc660c6084039868c6"
+    },
+    "message_id": "reddit_t3_1wlds34",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FUTMobile",
+    "username": "TemporaryRedditAcco",
+    "title": "This was rough",
+    "text": "This was rough\n\nOnly did this cuz I thought even if I got 10%, 80k is a lot but the kind of shit one does as f2p       submitted by     /u/TemporaryRedditAcco     to     r/FUTMobile       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FUTMobile/comments/1wlds34/this_was_rough/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T10:44:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T10:44:12.364Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafb8fc660c6084039868c7"
+    },
+    "message_id": "reddit_t3_1wlds2c",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Cricket-astrologer",
+    "title": "Where did you planned your first date ?",
+    "text": "Where did you planned your first date ?\n\nsubmitted by     /u/Cricket-astrologer     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wlds2c/where_did_you_planned_your_first_date/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T10:43:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T10:44:12.594Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafb8fc660c6084039868c8"
+    },
+    "message_id": "reddit_t3_1wlds28",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "hukuk",
+    "username": "At_gibisin",
+    "title": "Komşuluk ve TCK 123/A",
+    "text": "Komşuluk ve TCK 123/A\n\nMerhaba değerli Reddit sakinleri,   Komşumla yaşadığımız bir olaydan bahsetmek istiyorum istanbulda bunlarla ilgilenen bir avukat var ise direkt olarak kendisi ile de iletişime geçebiliriz.   Sorun ve sorum şu ki üst komşum balkonda sigara içmemden rahatsız; anlayabiliyorum camını kapat deyip geçmek istemiyorum ben de ne gerekiyorsa onları rahatsız etmemek için yapmaya hazırım ama dün odamda hava temizleyici açıkken sigara içiyor olmama rağmen balkondan bağırıp çağırmaya başladı. Senin yüzünden uyku uyuyamıyoruz hem sigaran hem sesin vs gibi. Abarttığını düşünüyorum çünkü eşi ile konuştuğumda biz senden hiç şikayetçi değiliz sadece sigara demişti ben de bir oluruna bakalım nasıl yaparız demiştim.    Yalnız kadın artık durmadan balkondan bağırarak taciz ediyor resmen. Dün eşine mesaj attım dilerseniz mahkemeye verin ama bu şekilde bağırmak hoş olmuyor diye. Kadınla balkondan bağırarak tartışmaya girecek değilim. Söylediği sözler arasında güzellikten anlamıyor musun illa kavga mı edelim? Sigara zıkkımlanıyorsun vs gibi söylemler var.   Ez cümle; kadının psikolojisi bozuk ve eşini vs de sindirdiğini düşünüyorum. Yalnız ben komşuluk hakkıdır alttan alayım dedikçe de tepeme çıkmaya çalışıyor ve bağırmanın şiddetini arttırıyor. Tüm komşuların duyabileceği yerde bağırıyor. Bence tehdit ve tahrik ediyor beni kavga mı edelim vs diyerek.    Ne yapmam gerekir? Anlaşılan oluruna bakarak bu iş çözülemeyecek. Avukat arkadaşlarımdan yardım istemeli miyim yoksa polise mi şikayet etmeliyim?   Bu şekilde sürdürebilir bir şey değil kafasına estiğinde bağırıp çağırmasına müsade edemem.   Hukukçu arkadaşların özellikle geri dönüşleri için şimdiden teşekkür ederim.   Saygılar DEV        submitted by     /u/At_gibisin     to     r/hukuk       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hukuk/comments/1wlds28/komşuluk_ve_tck_123a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T10:43:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T10:44:12.796Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafb8fc660c6084039868c9"
+    },
+    "message_id": "reddit_t3_1wlds1u",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "PakistanFashionAdvice",
+    "username": "babewithbite2",
+    "title": "Mountains fit check",
+    "text": "Mountains fit check\n\nSomewhere in mountains        submitted by     /u/babewithbite2     to     r/PakistanFashionAdvice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PakistanFashionAdvice/comments/1wlds1u/mountains_fit_check/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T10:43:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T10:44:12.999Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafb8fd660c6084039868cb"
+    },
+    "message_id": "reddit_t3_1wlds1a",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ClashOfClans",
+    "username": "Born_Swimmer_6676",
+    "title": "Why does this guy has more defence trophy when we use the same Ranked base in Same bracket?",
+    "text": "Why does this guy has more defence trophy when we use the same Ranked base in Same bracket?\n\n1st one is my base ,just tilted horizontally ,and 2nd is that guy with vertically ,how does he get more defence anyways ,i dont thing being fully max brings more trophy ,as my main core defences are also maxxed   Cause some Redditor ,who was more rushed than me gave me this base ,even he reached legend 3 ,sooooo whyyyy i am not getting any defences to promote   Is my Luck really that bad?       submitted by     /u/Born_Swimmer_6676     to     r/ClashOfClans       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClashOfClans/comments/1wlds1a/why_does_this_guy_has_more_defence_trophy_when_we/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T10:43:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T10:44:13.404Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafb8fd660c6084039868cc"
+    },
+    "message_id": "reddit_t3_1wlds0x",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "NMisquith",
+    "title": "Grab 100 hammers from u/NMisquith!",
+    "text": "Grab 100 hammers from u/NMisquith!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/NMisquith     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wlds0x/grab_100_hammers_from_unmisquith/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T10:43:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T10:44:13.608Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafb8fd660c6084039868cd"
+    },
+    "message_id": "reddit_t3_1wlds0r",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "Entrepreneurs",
+    "username": "ozzymirza",
+    "title": "What Can I Do With 100+ Website Backups?",
+    "text": "What Can I Do With 100+ Website Backups?\n\nI had more than 100 websites built for different niches, with templates and content ready to publish.   Unfortunately, due to some financial issues, I couldn’t renew all the domains, so most of the domains have expired. I still have the complete website backups and content.   I’m wondering what would be the best way to use or sell them instead of letting them sit on my hard drive.   I’m thinking about selling the whole collection to someone who can install them on new domains and use/customize them.   Any suggestions on where or how I could sell these?        submitted by     /u/ozzymirza     to     r/Entrepreneurs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Entrepreneurs/comments/1wlds0r/what_can_i_do_with_100_website_backups/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T10:43:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T10:44:13.809Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafb8fe660c6084039868ce"
+    },
+    "message_id": "reddit_t3_1wldrz7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Miirps",
+    "username": "miirps-app",
+    "title": "Cutesy enters the ring screaming \"Boop boop!\"",
+    "text": "Cutesy enters the ring screaming \"Boop boop!\"\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/miirps-app     to     r/Miirps       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Miirps/comments/1wldrz7/cutesy_enters_the_ring_screaming_boop_boop/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T10:43:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T10:44:14.014Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aafb8fe660c6084039868cf"
+    },
+    "message_id": "reddit_t3_1wldryw",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "HeresTheCatch",

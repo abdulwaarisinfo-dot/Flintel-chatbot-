@@ -1,0 +1,416 @@
+    },
+    "message_id": "reddit_t3_1w9is42",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "ClaudeCode",
+    "username": "stype",
+    "title": "I gave Claude Code a rules file for video editing, and the rules turned out to be the whole product",
+    "text": "I gave Claude Code a rules file for video editing, and the rules turned out to be the whole product\n\nI record talking-head videos and the editing was costing me about two hours per twenty minutes of footage. So I built it as a skill. The interesting part wasn't wiring up ffmpeg — it was that the first dozen versions produced edits that were technically correct and obviously machine-made.   How it's put together:    Claude never watches the video.  whisper.cpp transcribes locally, a script packs the result into a phrase-level reading view, and Claude reads that as text and writes cut decisions into an EDL. Audio is the only reliable clock — cut boundaries come from silence detection and word onsets, never from eyeballing frames. This also means a two-hour source costs the same context as its transcript.    Two hard stop gates.  It renders a rough cut and refuses to build captions, motion or sound until I approve it, because every downstream timestamp is derived from the cut and a late change invalidates all of them. Second gate is after the full render.    The verify pass is where most of the value is.  Two defects survive every automated check and both get noticed by viewers: a word left said twice at a seam, and a clause cut mid-thought so a sentence inverts its own meaning. So it re-transcribes the  rendered  cut in short windows aligned to each join, specifically hunting for those. A whole-file transcript hides both.    Proof is captured, never mocked up.  If the script names a repo or an article, Playwright opens the real page, screenshots it, and a zoom-and-highlight move composes over the cut. There's a gate that fails the build if a real URL was named and nothing was captured — because the tempting failure mode for an LLM is to generate something that  looks  like a screenshot.   What I'd actually flag as the lesson: every craft rule in the repo exists because I threw away a render. Captions appeared a beat before I spoke, so there's now a rule that they start 0.08s  after  the word onset, never before. Sound effects passed every level check and were still inaudible under my voice, so \"not clipping\" was replaced with \"measurably audible against a voice-only baseline\". Roughly forty of those, each written next to the failure it prevents. Handing Claude the tools produced a mediocre editor; handing it the list of mistakes produced a decent one.   Runs locally — whisper, ffmpeg, HyperFrames for compositions. No API key beyond Claude itself. MIT.    https://github.com/ranahaani/i-hate-editing    I'd genuinely like to know where it falls over on someone else's footage. It's been tuned on one person's talking-head videos and I assume there are whole categories of failure I haven't hit.       submitted by     /u/ustype     to     r/ClaudeCode       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeCode/comments/1w9is42/i_gave_claude_code_a_rules_file_for_video_editing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:10:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:11:13.070Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e4772f0819e6636a8d5b5"
+    },
+    "message_id": "reddit_t3_1w9is3g",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "manifestingSP",
+    "username": "little_Witch9",
+    "title": "NC for more about 6 months now. Been manifesting but today I broke down",
+    "text": "NC for more about 6 months now. Been manifesting but today I broke down\n\nI just couldn't do it anymore. I cried like a baby even after so long. The guilt of it all is klling me. I am tired he should be here he said he will never leave me. Please help me I feel like giving up and it hurts so much my chest aches I can feel this weird pain. I want to scream and cry loudly.       submitted by     /u/little_Witch9     to     r/manifestingSP       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/manifestingSP/comments/1w9is3g/nc_for_more_about_6_months_now_been_manifesting/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:10:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:11:14.456Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e4773f0819e6636a8d5bb"
+    },
+    "message_id": "reddit_t3_1w9is29",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "Thunderstorms",
+    "username": "TNBackyardBolts",
+    "title": "My complete 14 minute 3AM tornado close encounter film (Lebanon, TN) | Part 16 Finale",
+    "text": "My complete 14 minute 3AM tornado close encounter film (Lebanon, TN) | Part 16 Finale\n\nWe have officially reached the grand finale! I just finished packing all 16 chronological parts of that crazy night into one complete 14 minute and 54-second widescreen movie.   It covers the entire event exactly as it happened: the midnight sirens waking us up, the continuous ground strikes, the severe wind shifts, the massive tornado cone physically vacuuming up the torrential downpour across the street, and the final strobe-lightning storm aftermath. We moved from California earthquakes to a Tennessee supercell factory, and this film shows the whole ride.  Thank you all so much for following this series!       submitted by     /u/TNBackyardBolts     to     r/Thunderstorms       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Thunderstorms/comments/1w9is29/my_complete_14_minute_3am_tornado_close_encounter/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:10:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:11:15.656Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e4774f0819e6636a8d5bd"
+    },
+    "message_id": "reddit_t3_1w9is1w",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "FischTradingHub",
+    "username": "RenZuko3967",
+    "title": "Trading 10 cosmic relics for shiny sparkling shrouded angler lantern",
+    "text": "Trading 10 cosmic relics for shiny sparkling shrouded angler lantern\n\nsubmitted by     /u/RenZuko3967     to     r/FischTradingHub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FischTradingHub/comments/1w9is1w/trading_10_cosmic_relics_for_shiny_sparkling/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:10:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:11:16.051Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e4774f0819e6636a8d5c1"
+    },
+    "message_id": "reddit_t3_1w9is0y",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "Redditdating",
+    "username": "FollowerOfRher",
+    "title": "23 [M4A] North Eastern Kentucky, looking for someone.",
+    "text": "23 [M4A] North Eastern Kentucky, looking for someone.\n\nA little about me, I like to cook, read, play video games, I'm a full time factory worker, I was previously a chef at a restaurant but it really wasn't for me, cooking is still one of my biggest passions so I'd like to share that with you if interested. I'm really into science fiction, philosophical, and Post-Apocalyptic books, so if you like to chew my ear about it give me a shout. In terms of Politics I'm left leaning, so if you are overly conservative we probably won't gel well, I'm Atheist/Agnostic and don't really have a strong opinion on Religion as long as it's not a point of contention I am fine with whatever. I'm Bisexual with a Feminine preference, probably a 2/3 on the Kinsey scale if that gives a frame of reference though with a preference for women for obvious reasons I am attracted to feminine guys too. In terms of my appearance I'm 6'1\", Caucasian, slightly overweight, blue eyes, dark brown hair though I often shave my head.   In terms of what I'm looking for, could be long or short term doesn't bother me, I'm interested in someone who is 21-30 (Early 30s is fine it just depends if we would be compatible despite the age difference), not a huge smoker or drinker, the occasional smoke or drink is fine by me I even partake a little myself, I personally don't care about Marijuana or THC but hard narcotics is a major turn off, preferably employed and able to drive if we were to meet up and doesn't expect to go 100-0 on every bill though I personally don't mind paying the bill most of the time on dates, I'm looking for someone who's from around Kentucky on the East Coast, United States such as Indiana or Ohio though I don't mind long distance if meeting in person is possible in the near future, can't really do long term contactle LDR personally.    Sorry for the long read, just wanted to be concise, feel free to DM me if you are interested.       submitted by     /u/FollowerOfRher     to     r/Redditdating       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Redditdating/comments/1w9is0y/23_m4a_north_eastern_kentucky_looking_for_someone/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:10:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:11:16.844Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e4775f0819e6636a8d5c3"
+    },
+    "message_id": "reddit_t3_1w9is0h",
+    "topic_key": "hello",
+    "search_keyword": "hello",
+    "platform": "reddit",
+    "subreddit": "UPSC",
+    "username": "Simple_Television676",
+    "title": "How can one cover current affairs (Sharing my experience from giving 2 CSE Interviews)",
+    "text": "How can one cover current affairs (Sharing my experience from giving 2 CSE Interviews)\n\nHello everyone,   Current affairs is something none of us can ignore during UPSC preparation. We all know how important it is, yet reading the newspaper often feels like one of the most hectic parts of the process.   I wanted to share how I approached it during my preparation.   I gave my first attempt in 2021 and prepared entirely from home. Since I had the habit of waking up around 5 or 5:30 in the morning, I kept newspaper reading as my first proper study slot. As soon as the newspaper arrived, usually around 7, I would begin reading it.   Initially, I read the newspaper from cover to cover. I started with Page 1, gave less importance to state specific news, and skipped the editorials during the first reading. I completed the remaining sections, including international relations, and returned to the editorials at the end.   During the first few months, this took me around one and a half hours. With practice, it gradually came down to about 45 minutes to one hour.   I usually read all the editorials. For regular news articles, however, I learnt to choose what deserved attention and what could be skipped. This judgement develops naturally once you read the newspaper consistently and understand the demands of the examination.   Reading the newspaper was only the first step. The more important step was extracting useful information from it.   I kept OneNote open and noted only material that could add value to my answers. I organised the notes into sections and pages based on the UPSC syllabus. This included useful data, examples, committee recommendations, court judgments, reports, case studies and arguments that could improve a Mains answer.   If you read the newspaper and consistently extract relevant information, you will gradually build a strong repository for Mains answer writing. These small value additions can make a genuine difference and help you move towards scoring 400 plus in General Studies.   A common question is: how do we identify what is useful and what should be left out?   My suggestion is simple. First, read your standard books. They help you understand the basic structure of each subject. But that contributes only around 10 per cent to this ability.   The remaining 90 per cent comes from studying toppers’ answer copies and writing answers yourself. The more answers you write, the better you become at distinguishing between information that adds value and information that merely adds length.   This ability is not developed in a day. It comes through repeated reading, note making and answer writing.   Please share any questions you have about newspaper reading, note making or current affairs preparation. I would be happy to answer them.       submitted by     /u/Simple_Television676     to     r/UPSC       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UPSC/comments/1w9is0h/how_can_one_cover_current_affairs_sharing_my/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:10:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:11:17.243Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e4781f3d11795a689ecff"
+    },
+    "message_id": "reddit_t3_1w9ishh",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "AirTravelIndia",
+    "username": "Rule_Ct_5293",
+    "title": "Typical Diwali inflation (normal price is 6k), anyone know how I can get maximum possible discount to make my journey more affordable?",
+    "text": "Typical Diwali inflation (normal price is 6k), anyone know how I can get maximum possible discount to make my journey more affordable?\n\nTrain tickets are out of stock so that's not an option anymore.       submitted by     /u/Rule_Ct_5293     to     r/AirTravelIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AirTravelIndia/comments/1w9ishh/typical_diwali_inflation_normal_price_is_6k/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:11:18Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:11:29.655Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e4781f3d11795a689ed00"
+    },
+    "message_id": "reddit_t3_1w9ishf",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "AusRenovation",
+    "username": "licoriceallsort",
+    "title": "Advice: Acoustic barrier/box for hot water heat pump",
+    "text": "Advice: Acoustic barrier/box for hot water heat pump\n\nHi there   My Neopower All-in-one hot water pump is super noisy, and unfortunately the system has been set up with the fan directly pointed at my bedroom window, which also reflects the sound to my neighbour. I can hear it on the other side of my house, and from the footpath a good 15m away. (Obviously not as loud as in the bedroom, where I've measured it at 79dB (around 10:30pm at night, so intense), and it runs around 59dB, 17dB higher than advertised in their specs sheet (42dB), and now only 6dB higher than the website advises. I've reached out and been ignored both by the company that installed (fobbed me off to Neopower, who only reached out with an email they forwarded that laughed at my set up).    I am planning on installing a double glazed window to help insulate the noise but that matter to nothing if I open the window.    I'm thinking of an acoustic box, but I'm wary of the heat the system will put out and that a box will stifle that. Anyone had any experience with this and have success?    I'm almost at the point of throwing out the 2.5yr old system and buying one with a separate fan/compressor box like a reverse cycle (which it's supposed to run at the sound level of).    TIA team!       submitted by     /u/licoriceallsort     to     r/AusRenovation       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AusRenovation/comments/1w9ishf/advice_acoustic_barrierbox_for_hot_water_heat_pump/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:11:18Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:11:29.868Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e4782f3d11795a689ed01"
+    },
+    "message_id": "reddit_t3_1w9isft",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "AmItheAsshole",
+    "username": "Frequent-Doubt-1677",
+    "title": "AITA for helpimg my daughter with her school presentation?",
+    "text": "AITA for helpimg my daughter with her school presentation?\n\nMy daughter is 7 and just went back to school. Her mom and I share custody, so she spends alternate weeks with each of us.   Her teacher assigned the class a presentation about different countries and my daughter got India.   She was really excited, so I helped her with it during my week. I didn't actually write her presentation for her. We made a poster, some notes for her to read from, and I printed some additional information because I thought it would be useful. I also included a reference list because I wanted her to understand where information comes from.   The presentation itself was pretty basic. We covered geography, food, religion, history, traditions, and some things about everyday life and society. I wanted her to understand that countries are more complicated than just their tourist attractions.   Apparently this was a huge mistake.   Her teacher was extremely unhappy with the presentation and my daughter was suspended for three days. According to my ex, the teacher said some of the material was completely inappropriate for a seven-year-old and that my daughter clearly didn't understand some of what she was saying.   My ex is furious with me. She says I should have known that a first-grader isn't supposed to be discussing certain social issues in front of her class. I don't really agree. Everything I gave her was factual and came from legitimate sources.   I honestly don't see why the teacher is acting like I taught my daughter something terrible. I never told her these things were good or bad. I just wanted her to present an honest picture instead of making India sound like a collection of colorful festivals and famous buildings.   My ex says I completely failed to use common sense and that our daughter got punished because I couldn't resist turning a simple school project into something much more complicated.   I think I was just helping my daughter learn but now she is also upset over getting suspended and having her class presentation cut short.   AITA?       submitted by     /u/Frequent-Doubt-1677     to     r/AmItheAsshole       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AmItheAsshole/comments/1w9isft/aita_for_helpimg_my_daughter_with_her_school/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:11:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:11:30.120Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e4782f3d11795a689ed02"
+    },
+    "message_id": "reddit_t3_1w9isfs",
+    "topic_key": "accountant",
+    "search_keyword": "accountant",
+    "platform": "reddit",
+    "subreddit": "AusLegal",
+    "username": "normal_man_11",
+    "title": "Anybody have experience with those DIY legal will kits? Also inheritance taxes etc",
+    "text": "Anybody have experience with those DIY legal will kits? Also inheritance taxes etc\n\nWill-wise: I know Citizens Advice Bureau's lawyer can whip something up for ~$300, but I'm wondering if the DIY kits are good enough for a simple estate   Taxes-wise: are there tax implications to using those kits? ATO says we don't have inheritance taxes in Australia but I don't trust them   Reddit-wise: I know I can talk to a lawyer, an accountant, etc, etc, I'm just seeing what you jokers have to say       submitted by     /u/normal_man_11     to     r/AusLegal       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AusLegal/comments/1w9isfs/anybody_have_experience_with_those_diy_legal_will/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:11:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:11:30.334Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e4782f3d11795a689ed03"
+    },
+    "message_id": "reddit_t3_1w9isfj",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "MakeNewFriendsHere",
+    "username": "SweetLikeeHoneyy",
+    "title": "25F, I’m half Mexican and half Filipina, come get to know me!",
+    "text": "25F, I’m half Mexican and half Filipina, come get to know me!\n\nLife is an endless cycle of laundry, dish washing, and oil changes on our cars. That’s also means that life is an endless cycle of stylish fits, yummy food, and road trips with good music. Let’s do all of them together! I'm pretty chill and laid back. I’m usually busy with work, working out, and doing chores but I'd LOVE to have someone to talk to during my free time. For whoever's reading this, i'd love to get to know you!    Here's some random fun facts about me. Yes I’m trilingual. I can speak English, Spanish, and Tagalog. I live in the Bay Area in California. I love going on walks and going on drives, especially through the hills here in the bay. I especially love sitting by the ocean and watching the waves. I enjoy spending time on the beach in itty bitty bikinis. I LOVEEE watching and admiring sunsets. On my free time I also help my mom with gardening in our backyard. Caring for plants and flowers brings such a calming feeling. I love listening to music in different ways: I love playing cd's in my car, l love listening to music through my speaker at home, and I can go hours just wearing my headphones. I love dancing bachata or reggaeton while I’m making some food. I also love listening to chill music, like The Internet and The Marias while I go on a drive to see the ocean. I love going to concerts, and I'm going to so many more concerts this year. That's the goal hehe. As for concerts, a concert I went to earlier this year was Thee Sacred Souls last January. I also went to see Raveena back in May. I also went to see The Marias perform this summer, and in October I went to see Giveon and Chance the Rapper in San Francisco. It was such a beautiful experience. It was amazing. My favorite song ever is \"close to you\" by Frank Ocean. I love music, especially rnb. I’ll listen to anything besides edm and country music.   I also really love 2000's rnb. Autumn is my favorite season, but l'm also starting to fall in love with spring. Also i'm 420 friendly :) I'm okay with nsfw stuff if it leads to it, but it's not a dealbreaker for me. If we get into some nsfw stuff, then so be it, hehe we're all humans. that's about it for this post, if you'd like to get to know me feel free to hit me up! :)        submitted by     /u/SweetLikeeHoneyy     to     r/MakeNewFriendsHere       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MakeNewFriendsHere/comments/1w9isfj/25f_im_half_mexican_and_half_filipina_come_get_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:11:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:11:30.560Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e4782f3d11795a689ed04"
+    },
+    "message_id": "reddit_t3_1w9isfg",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "c64",
+    "username": "OrbisMaximus",
+    "title": "Building a BASIC where the REU is the machine",
+    "text": "Building a BASIC where the REU is the machine\n\nI was thinking that a new BASIC for the C64 could be really interesting if it was designed around the REU from the beginning, instead of treating the REU as extra memory you access through special commands.   That is basically the idea behind Orbis 64.   The REU becomes the native memory of the environment. BASIC code, strings, arrays, images, music, samples and other data can all live there. The normal C64 RAM is more like a fast cache where the interpreter keeps whatever it currently needs to execute.   So from BASIC you would not constantly LOAD things from the REU. They would simply be there.   I am trying the same idea with graphics. Instead of only having the usual bitmap commands, I want something that feels more like a real framebuffer from BASIC, even though underneath it obviously still has to deal with the VIC II.   Part of that is my own Fli based image format, meant for the higher colour graphics mode Orbis uses. Images can live in the REU as normal program assets and be moved into the active graphics memory when needed, rather than treating every picture as a separate disk file.   Another idea I really like is a PUBLISH command that creates a speed optimized REU snapshot for cassette. You could load that directly from the Datasette into the REU and start the program from there.   My thinking is that new C64 floppy disks are basically no longer being manufactured, while audio cassettes still are. So maybe cassette distribution could actually become interesting again if the tape contains a fast sequential snapshot instead of using the normal slow Commodore tape format.   I have also started branching the same idea to the C128, as a real native 8502 version rather than just switching into C64 mode.   That gives it Bank 1, 2 MHz operation and especially the VDC with its own video RAM. I think it could be interesting to treat that memory as another native part of the environment too, with proper double buffered VDC screens while the REU holds the program and larger assets.   So I am curious what people would prefer.   Should Orbis 128 stay very close to Orbis 64 and mostly use the extra hardware transparently, or should it really become its own C128 BASIC with VDC graphics, double buffering, Bank 1 and 2 MHz features exposed directly?   Sorry for the long post. I just had a lot of ideas around this and I really need some feedback on whether something like this is actually interesting to people...       submitted by     /u/OrbisMaximus     to     r/c64       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/c64/comments/1w9isfg/building_a_basic_where_the_reu_is_the_machine/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:11:12Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:11:30.774Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e4782f3d11795a689ed05"
+    },
+    "message_id": "reddit_t3_1w9isey",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "matcha_ph",
+    "username": "curiouscat_1309",
+    "title": "FS/IC: Affordable MK Wakatake and MK Isuzu Patingi (With Matcha Freebies)",
+    "text": "FS/IC: Affordable MK Wakatake and MK Isuzu Patingi (With Matcha Freebies)\n\nSequel to this post:  https://www.reddit.com/r/matcha_ph/s/AnMzGo42SC    I am once again openting “hatian/tingi” for MK Wakatake (100g at ₱10/g available) and MK Isuzu (140g at ₱28/g)!   Please see my IG stories for proof of legitimacy. You may also message me for full disclosure or if you have more inquiries regarding this transaction.   @theperfectmatcha.ph       submitted by     /u/curiouscat_1309     to     r/matcha_ph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/matcha_ph/comments/1w9isey/fsic_affordable_mk_wakatake_and_mk_isuzu_patingi/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:11:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:11:30.998Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e4783f3d11795a689ed06"
+    },
+    "message_id": "reddit_t3_1w9iser",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "Gamingnewsandleaks",
+    "username": "chusskaptaan",
+    "title": "PS5 emulator running GTA 5 shows GTA 6 might be possible on PC before official release",
+    "text": "PS5 emulator running GTA 5 shows GTA 6 might be possible on PC before official release\n\nsubmitted by     /u/chusskaptaan     to     r/Gamingnewsandleaks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Gamingnewsandleaks/comments/1w9iser/ps5_emulator_running_gta_5_shows_gta_6_might_be/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:11:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:11:31.213Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e4783f3d11795a689ed07"
+    },
+    "message_id": "reddit_t3_1w9ise7",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "ConvExTests",
+    "username": "ios_feed_tests_user",
+    "title": "[TDM] PDP_Gateway/test_loadPost",
+    "text": "[TDM] PDP_Gateway/test_loadPost\n\nTest Data Manager (TDM) created this test post on Sep 7, 5:11 AM UTC.       submitted by     /u/ios_feed_tests_user     to     r/ConvExTests       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ConvExTests/comments/1w9ise7/tdm_pdp_gatewaytest_loadpost/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:11:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:11:31.445Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e4783f3d11795a689ed08"
+    },
+    "message_id": "reddit_t3_1w9ise6",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "WordFusions",
+    "username": "Wifudad",
+    "title": "Make a 🔞 Blowjob Gone Wild?",
+    "text": "Make a 🔞 Blowjob Gone Wild?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Wifudad     to     r/WordFusions       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WordFusions/comments/1w9ise6/make_a_blowjob_gone_wild/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:11:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:11:31.658Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e4783f3d11795a689ed09"
+    },
+    "message_id": "reddit_t3_1w9isdt",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "pesmobile",
+    "username": "ImagineCrayons7",
+    "title": "What the hell is going on in Divisions?",
+    "text": "What the hell is going on in Divisions?\n\nWhen efootball 27 started the servers were freaking horrible Literally couldn't play a decent game and reached D2 and stopped playing thats why my win percentage is low but when it was decent I resumed.   Before I played the Italian event I reached 1910 in Diviision 1 and thought that was enough then left the game for some few days and played the Italian event with 4 hours left and it wasn't easy, I mostly faced Division 1 players and 2 draws where actually faced stacked P2W teams, after that i moved to divisions to maybe play for a safer rank for Maddison and it was complete hell   First off I can't dribble at all, like my opponents seem to tight mark me every time, double touch gets blocked any time i try, i'm getting shoulder charged from the back and its not a foul yet my opponents are dribbling with ease and have space all the time.   I'm conceeding the wildest goals, stunning shots shot 35 yards, near post shots, losing most headers and almost all my opponents through balls are going through but when I try to attack, it seems like every players my opponent's players has are sitting deep, have 100 defensive awareness and tacking its insane.   My defenders are getting phased though and its like I have to work 100 times harder to score a goal. I kid you not, in one game i conceeded 3 consecutive long balls in a row and my defenders just watched.   I dont know man like if its indeed a \"skill issue\" I should have struggled in the Italian event where again I faced Division 1 players.    Also i'm not new player btw, I've slightly above average, I've reached D1 plenty of times and almost qualified to the later Manchester United Cup stage but i've never experienced anything like this.   Is this happening to anyone else?       submitted by     /u/ImagineCrayons7     to     r/pesmobile       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pesmobile/comments/1w9isdt/what_the_hell_is_going_on_in_divisions/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:11:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:11:31.877Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e4784f3d11795a689ed0a"
+    },
+    "message_id": "reddit_t3_1w9isdm",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "CrownCoinsOfficial",
+    "username": "Jolly-Possession5642",
+    "title": "Sc 1",
+    "text": "Sc 1\n\nWhere can I get free SC?        submitted by     /u/Jolly-Possession5642     to     r/CrownCoinsOfficial       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CrownCoinsOfficial/comments/1w9isdm/sc_1/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:11:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:11:32.093Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e4784f3d11795a689ed0b"
+    },
+    "message_id": "reddit_t3_1w9isdg",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "📢 Robots & Pencils [HIRING] a Staff UX/UI Designer!",
+    "text": "📢 Robots & Pencils [HIRING] a Staff UX/UI Designer!\n\nCompany: Robots & Pencils   Location: Remote Colombia 📍   Date Posted: August 31, 2026 📅   Categories: #design #senior #remote #fulltime   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=uiuxjobsboard.com&rurl=aHR0cHM6Ly91aXV4am9ic2JvYXJkLmNvbS9qb2IvMTU4MzAyNi1yZW1vdGUtY29sb21iaWEtc3RhZmYtdXgtdWktZGVzaWduZXI=    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1w9isdg/robots_pencils_hiring_a_staff_uxui_designer/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:11:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:11:32.314Z"
+    }
+  },
+  {

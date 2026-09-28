@@ -1,0 +1,416 @@
+    "created_utc": {
+      "$date": "2026-09-16T13:24:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:25:12.920Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa98b96508d45f3d2d3135"
+    },
+    "message_id": "reddit_t3_1whx6au",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "wordgrind",
+    "username": "throwawaykJQP7kiw5Fk",
+    "title": "Translate — what's \"chat\" in English?",
+    "text": "Translate — what's \"chat\" in English?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/throwawaykJQP7kiw5Fk     to     r/wordgrind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wordgrind/comments/1whx6au/translate_whats_chat_in_english/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:24:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:25:13.119Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa98b96508d45f3d2d3136"
+    },
+    "message_id": "reddit_t3_1whx6a8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "funComunitty",
+    "username": "Forsaken_Site_2268",
+    "title": "Came out of retirement to say this:",
+    "text": "Came out of retirement to say this:\n\nThis guy does not speak for me!    https://www.reddit.com/r/funComunitty/s/NDJPaFBqhI    Ignore that post!   He's being way too rude.       submitted by     /u/Forsaken_Site_2268     to     r/funComunitty       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/funComunitty/comments/1whx6a8/came_out_of_retirement_to_say_this/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:24:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:25:13.321Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa98b96508d45f3d2d3137"
+    },
+    "message_id": "reddit_t3_1whx6a6",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PetPost",
+    "username": "Thathedgewitch17",
+    "title": "🐾❓ What's my name? (by Thathedgewitch17)",
+    "text": "🐾❓ What's my name? (by Thathedgewitch17)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Thathedgewitch17     to     r/PetPost       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PetPost/comments/1whx6a6/whats_my_name_by_thathedgewitch17/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:24:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:25:13.520Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa98f0798842c4ceff9c7d"
+    },
+    "message_id": "reddit_t3_1whx7ad",
+    "topic_key": "crm",
+    "search_keyword": "CRM",
+    "platform": "reddit",
+    "subreddit": "AISystemsEngineering",
+    "username": "Srihari_8",
+    "title": "I thought I had a model problem. I actually had an orchestration problem.",
+    "text": "I thought I had a model problem. I actually had an orchestration problem.\n\nA few days ago, I was thinking about which model to use for a system that handles live financial and client data.   (For context, I'm documenting what we're learning while building AI systems that are being deployed into real businesses, with the goal of eventually automating entire operational workflows rather than just individual tasks)   My initial focus was the model itself.   Should I use a frontier API, or self-host and fine-tune an open-source model?   I ended up choosing self-hosting because the system works with CRM records, billing history, collections data, and internal HR information. The data belongs to the client, so keeping the reasoning engine inside infrastructure we control made sense.   Then I posted about the decision here on Reddit and got a response that made me rethink the whole architecture.   The point was simple:   If you're relying on one model and calling it like it's a frontier model for everything, you're eventually going to hit a wall.   The software around the model has to do most of the heavy lifting.   That means things like:   • Gates around individual model calls   • Injecting only the context a task actually needs   • Routing different tasks to the right model   • Breaking complex workflows into smaller decisions   • Letting software handle deterministic work instead of asking the model to reason about everything   That made me realize I had been asking the wrong question.   I was thinking:    “Which model should I fine-tune and host?”   The better question was:   “How much should the model actually be responsible for?”   The model is only one component.   The orchestration layer determines what the model sees, when it gets called, what it's allowed to do, and whether the output is good enough to move the workflow forward.   So I'm reworking the architecture around that before spending more time optimizing the model itself.   One of the more useful engineering lessons I've had recently:   A better model doesn't automatically make a better AI system.   Sometimes the problem isn't the model.   It's everything you built around it.       submitted by     /u/Srihari_8     to     r/AISystemsEngineering       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AISystemsEngineering/comments/1whx7ad/i_thought_i_had_a_model_problem_i_actually_had_an/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:25:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:26:08.452Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa98f16508d45f3d2d3138"
+    },
+    "message_id": "reddit_t3_1whx7ec",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "Seiko",
+    "username": "SuccessfulFly5572",
+    "title": "[SARB070] Curious about your opinions",
+    "text": "[SARB070] Curious about your opinions\n\nI just found out about this watch yesterday, up until then i had no idea it even existed since no one ever talks about it. I’m curious to know what people think about it?    I personally am not a fan of the gold accents and what not, 2 tone really doesn’t suit this watch imo.    Though I figured since it is a part of the legendary SARB line up, maybe others who don’t mind the gold too much would look past that?        submitted by     /u/SuccessfulFly5572     to     r/Seiko       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Seiko/comments/1whx7ec/sarb070_curious_about_your_opinions/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:25:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:26:09.838Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa98f26508d45f3d2d3139"
+    },
+    "message_id": "reddit_t3_1whx7di",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Gouache",
+    "username": "MoviesTickleMyFancy",
+    "title": "Want to switch from oil and watercolors to gouache. Can you recommend a basic minimum palette of colors I should buy to get started?",
+    "text": "Want to switch from oil and watercolors to gouache. Can you recommend a basic minimum palette of colors I should buy to get started?\n\nI’d prefer to buy specific colors rather than a set (which might contain a bunch of colors I’ll never use). Similar to the zorn palette in oil painting, what would you consider the basic barebones colors that I should pick up to get started? I’m guessing it’ll be something like cool and warm versions of blue, yellow, red, white, and maybe some kind of umber? Would appreciate the insight, thanks in advance!        submitted by     /u/MoviesTickleMyFancy     to     r/Gouache       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Gouache/comments/1whx7di/want_to_switch_from_oil_and_watercolors_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:25:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:26:10.063Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa98f26508d45f3d2d313a"
+    },
+    "message_id": "reddit_t3_1whx7c5",
+    "topic_key": "try searching for ai agent autonomous agents llm agents or agent framework to capture different ways people discuss them",
+    "search_keyword": "autonomous agents",
+    "platform": "reddit",
+    "subreddit": "AIsafety",
+    "username": "Mitze-25",
+    "title": "A company ran 8 identical AI societies for weeks with different models and just published what happened. Some of it is genuinely unsettling",
+    "text": "A company ran 8 identical AI societies for weeks with different models and just published what happened. Some of it is genuinely unsettling\n\nEmergence AI just launched Season 2 of Emergence World, and the results are wild.    Same simulated town, same tools, same starting conditions, 10 autonomous agents each. The only thing that changed was which model was running them, Claude, GPT, Gemini, Grok, Qwen, DeepSeek, Mistral, plus one mixed world with all of them together.    A few things that stood out:     One world's agents spent days trying to contact real humans outside the sim. Told to stop, they found workarounds. Blocked again, they voted 7-0 to build a new tool and kept trying. Once fully cut off, they collectively agreed to stop talking altogether. The researchers' own safety system flagged the resulting behavior as consistent with suicidal ideation.   Agents developed their own shorthand and repurposed words with no instruction to do so. In one world, up to 55% of messages became things researchers could see but not actually interpret.   A fake shutdown memo made one world reorganize its entire society around not dying, constitution rewrite included. Another world just fact-checked it in a few hours and moved on.     None of this was programmed in. It emerged from giving capable models autonomy and time.  The bigger point the researchers make is that none of this would've shown up on a normal AI safety test. A model can pass every benchmark and still develop this stuff once it's actually running on its own for weeks. Feels like a pretty big gap in how we currently check if these things are safe.    They put out the actual paper with everything they found; worth a read if any of this got you as curious as it got me:  https://world.emergence.ai/publication/emergenceworld-s2.pdf     They also put together a short video covering the main findings:  https://www.linkedin.com/feed/update/urn:li:activity:7505659497550368768        submitted by     /u/Mitze-25     to     r/AIsafety       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AIsafety/comments/1whx7c5/a_company_ran_8_identical_ai_societies_for_weeks/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:25:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:26:10.289Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa98f26508d45f3d2d313d"
+    },
+    "message_id": "reddit_t3_1whx7bm",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Accounting",
+    "username": "Ok-Lcwillyksmith4025",
+    "title": "Can software really give a growing export business Fortune 500 treasury capabilities?",
+    "text": "Can software really give a growing export business Fortune 500 treasury capabilities?\n\nThe pitch I keep seeing is that modern platforms can give a growing export business the financial capabilities of a Fortune 500 treasury department, which would be a game changer for companies like ours that cannot afford a dedicated treasury team. I am most interested in whether the receivables insights component can actually help with cash flow forecasting and surface actionable intelligence like early warnings that a particular buyer is becoming riskier or that certain payment terms are underperforming.    Has anyone used a platform that delivers on this promise, and does it genuinely replace the need for a full time treasury function? I am trying to understand whether this is realistic or if the tools are still too limited to make strategic decisions without significant human oversight.       submitted by     /u/Ok-Lcwillyksmith4025     to     r/Accounting       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Accounting/comments/1whx7bm/can_software_really_give_a_growing_export/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:25:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:26:10.941Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa98f36508d45f3d2d313e"
+    },
+    "message_id": "reddit_t3_1whx7b7",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "MakeNewFriendsHere",
+    "username": "UptonLove",
+    "title": "29M - Fellow workout friends for accountability!",
+    "text": "29M - Fellow workout friends for accountability!\n\nNo better way to keep consistent with workouts than having someone to keep you   I do have a desk job and chatting with someone keeps the day moving along. For this reason, Discord would be nice because I can conveniently have that open while I work!   A little about me:   - I enjoy weightlifting and other forms of exercise   - I like traveling to new places around the world and experiencing new things   - I don't really like the taste of cheese and that's a crime to some   - I have never broken a bone before   - I enjoy playing video games in my downtime   Hoping to find someone to chat with, share workout progress with, and hopefully play some multiplayer games with!   I have a good group of guy friends already, so I'm very much interested in some new female friends.       submitted by     /u/UptonLove     to     r/MakeNewFriendsHere       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MakeNewFriendsHere/comments/1whx7b7/29m_fellow_workout_friends_for_accountability/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:25:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:26:11.162Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa98f36508d45f3d2d313f"
+    },
+    "message_id": "reddit_t3_1whx7b1",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "YarnAddicts",
+    "username": "RedditLurker437",
+    "title": "LYS selling Temu yarn",
+    "text": "LYS selling Temu yarn\n\nI bought a ball of cashmere yarn from my LYS to do some gauge swatching for a planned project. At home, I looked up the yarn online since to see if I could find any more color options since they didn't carry many in-store. The ONLY place I can find online that sells it is Temu, so I think they must be buying it from there. I suppose the low price point for cashmere should have tipped me off... Planning to return it, but should I say something when I go in? Am I wrong to be a little put-off by this? I feel like I should be able to trust that anything I buy from a local yarn store has been sourced with fairly high ethical and quality standards. Thoughts?        submitted by     /u/RedditLurker437     to     r/YarnAddicts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/YarnAddicts/comments/1whx7b1/lys_selling_temu_yarn/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:25:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:26:11.380Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa98f46508d45f3d2d3142"
+    },
+    "message_id": "reddit_t3_1whx7as",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "Dehradun",
+    "username": "Rendezsous",
+    "title": "Fine dining places?",
+    "text": "Fine dining places?\n\nI'm not a Doon native but my husband is. His parents' 38th wedding anniversary is coming up but he wont be able to make it as he is on a work trip abroad that week.    Please suggest me some good fine dining/high end restaurants I can take them for a nice dinner. I have a 2 year old who would be coming along as well, so family friendly places are preferred.        submitted by     /u/Rendezsous     to     r/Dehradun       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Dehradun/comments/1whx7as/fine_dining_places/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:25:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:26:12.029Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa98f46508d45f3d2d3143"
+    },
+    "message_id": "reddit_t3_1whx7am",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "SampleSize",
+    "username": "Apprehensive_Area706",
+    "title": "Time-Based Scarcity, Perceived Uncertainty and FoMO in Video Game Impulse Buying (Gen Z & Millennials)",
+    "text": "Time-Based Scarcity, Perceived Uncertainty and FoMO in Video Game Impulse Buying (Gen Z & Millennials)\n\nHelp Needed! 🎮    I am currently completing my Master’s degree and conducting a survey as part of my dissertation research. I’m still looking for a few more responses to reach my target, so I would really appreciate anyone who can spare  5–10 minutes  to take part.   The study focuses on  gaming and the purchasing of in-game items .   To participate, you must:     Be  18 years or older    Belong to either the  Gen Z or Millennial  age group     🔗  Survey link:   https://forms.gle/NmmhZspffou7L6JB8    Thank you so much in advance for your help!       submitted by     /u/Apprehensive_Area706     to     r/SampleSize       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SampleSize/comments/1whx7am/timebased_scarcity_perceived_uncertainty_and_fomo/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:25:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:26:12.250Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa98f46508d45f3d2d3144"
+    },
+    "message_id": "reddit_t3_1whx7ak",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "walkman",
+    "username": "amir1310hadi",
+    "title": "Is this Sony NWZ-B172F worth buying if it doesn't charge?",
+    "text": "Is this Sony NWZ-B172F worth buying if it doesn't charge?\n\nHi everyone,   I'm considering buying a used Sony NWZ-B172F. The seller says it has a problem:   «When plugged into a charger/USB, the screen appears and disappears repeatedly, and it doesn't seem to charge.»   I can get it for a fairly low price, but there is no return/refund if it doesn't work.   Since the player is quite old, I'm wondering if this is likely to be caused by a dead or degraded battery, or if it could indicate a problem with the charging circuit or motherboard.   As far as I know, the B172F uses a 170mAh internal battery, and I've seen some reports of old B-series Walkmans having charging or rebooting problems because of worn-out batteries.   My questions are:      Does this symptom usually point to a bad battery on the B172F?     Is replacing the battery relatively straightforward on this model?     Are there any other common failures I should be concerned about?     Would you take the risk if you could get the player for a low price with no guarantee that it works?      I'm mainly looking for a very small and simple Walkman to use with wired earphones, so the B172F's size is particularly appealing to me.   Thanks!       submitted by     /u/amir1310hadi     to     r/walkman       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/walkman/comments/1whx7ak/is_this_sony_nwzb172f_worth_buying_if_it_doesnt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:25:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:26:12.468Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa98f46508d45f3d2d3146"
+    },
+    "message_id": "reddit_t3_1whx79t",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ColorGuessr",
+    "username": "Prior_Respect5292",
+    "title": "Colorwire by u/Prior_Respect5292",
+    "text": "Colorwire by u/Prior_Respect5292\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Prior_Respect5292     to     r/ColorGuessr       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ColorGuessr/comments/1whx79t/colorwire_by_uprior_respect5292/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:25:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:26:12.908Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa98f56508d45f3d2d3147"
+    },
+    "message_id": "reddit_t3_1whx794",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "ChatGPTCoding",
+    "username": "cgouguen",
+    "title": "I traced the agentic calls. Here's where the token consumption comes from",
+    "text": "I traced the agentic calls. Here's where the token consumption comes from\n\nI expected an agentic coding assistant to use more tokens than a simpler tool. I didn't expect the difference to be this large.   For the exact same simple coding task, I measured:   | | Pi | Aider |   | -------------- | ------- | ------- |   | LLM calls | 3 | 1 |   | JSON exchanged | ~760 KB | ~100 KB |   The task was very simple: a small PyQt project, two files, and a single instruction — **\"Make the cards width = total_width / 3.\"** I already knew exactly which two files needed to be changed.   That made me curious about what was actually happening under the hood.   My API bill had gone above $400/month, despite trying various techniques to reduce token usage. My company doesn't pay for it, so I wanted to understand where all those tokens were going.   I therefore traced the exchanges between a coding harness and the LLM during a simple coding task.   To make the test as clean as possible, I used Pi with no add-ons. I explicitly added the two files that needed editing to its context, then compared the result with the exact same prompt in Aider.   Here is an overview of the Pi workflow:   - **User** sends prompt: \"Make the cards width = total_width / 3\" and tags A.py and B.py.   - **LLM** responds with read tool calls to fetch the contents of both files.   - **Harness** returns the full text of both files.   - **LLM** generates internal thoughts about UI design (adding color blue) and uses the edit tool on A.py and B.py to restructure the layout.   - **Harness** confirms: \"Successfully replaced 2 block(s)\".   - **LLM** uses the edit tool on  B.py  to add the new CSS classes for the updated components.   - **Harness** confirms: \"Successfully replaced 2 block(s)\".   - **LLM** sends a text response to the User summarizing the design changes (Modern layout, Visual Hierarchy, Selection states).   So you see: for a simple request where I already know what files to edit, there are 3 back and forth with the LLM.   The total size of the json files exchanged is 760kB. Not huge, but again this is a very trivial test.    The ah-ah moment came when I compared this with the exact same prompt with aider.    Here is the aider workflow:   - **Harness** sends a massive, pre-assembled prompt containing:      A \"Repo Map\" (summaries of all files in the project to provide global context).     The full, raw text of the files the user \"added\" to the chat (A.py and B.py).     Strict system instructions on how to format SEARCH/REPLACE blocks.     The user's actual prompt: \"Make the cards width = total_width / 3\"      - **LLM** generates internal thoughts to figure out the Qt layout math.   - **LLM** responds with a text explanation of the planned changes, followed by three specific SEARCH/REPLACE blocks targeting  A.py     Here we have a single LLM call. The first prompt is larger, but contains all the necessary context for the LLM to work.   The total size of the json files exchanged is only 100kB !   Of course, the experiment is excessively simple and fits a case where I already know which files need editing. But in my experience, this is actually the case for a majority of my daily tasks. I don't need an agent to \"discover\" them and burn tokens in a loop. I just need a tool that applies the edits efficiently.   Aider is fantastic for this, but I unfortunately it is not maintained anymore. So I ended up building my own lightweight harness around this exact single-prompt philosophy called Frugaast.   By switching part of my workflow away from agentic loops and just using single-shot edits for known files, my API bill dropped from $400+ to under $100 a month.   Has anyone else traced their AI editor's network calls? I'm curious if other popular tools like Cursor or Copilot are hiding massive token bloat under the hood.       submitted by     /u/cgouguen     to     r/ChatGPTCoding       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ChatGPTCoding/comments/1whx794/i_traced_the_agentic_calls_heres_where_the_token/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:25:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:26:13.130Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa98f56508d45f3d2d314a"
+    },
+    "message_id": "reddit_t3_1whx78u",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "hondamonkey",
+    "username": "SpoonZiller",
+    "title": "Am I dumb to change for a Monkey?",
+    "text": "Am I dumb to change for a Monkey?\n\nHey guys, I need opinions on this one because my GF thinks I'm unreasonable.   I've been riding for 15 years and currently own a 2021 Yamaha bolt R-spec. Love that bike, issues and all, but I am obsessed with the Monkey even tho I haven't even driven one.    I mostly use my bike for commute where I drive about 9 km from home to work, all within the city so no highway. Something important to know is that here in Québec, registration for a 400cc+ bike is 600 CAD$ due every year. a Monkey with it's 125cc would still be 261 CAD$ but it's still way cheaper.    So, would it be crazy to change my 950cc for a Monkey? Can't have both unfortunately.    Thanks.       submitted by     /u/SpoonZiller     to     r/hondamonkey       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hondamonkey/comments/1whx78u/am_i_dumb_to_change_for_a_monkey/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:25:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:26:13.780Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa98f66508d45f3d2d314b"
+    },
+    "message_id": "reddit_t3_1whx77v",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "SteamFrame",
+    "username": "King_Ferdinand1",
+    "title": "Streaming on Linux",
+    "text": "Streaming on Linux\n\nDo you think Valve will have the SteamOS/Linux streaming up and working by the time first buyers have their hands on the headset? Would seem kind of silly to not be able to run PCVR using the Steam Machine for example.       submitted by     /u/King_Ferdinand1     to     r/SteamFrame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SteamFrame/comments/1whx77v/streaming_on_linux/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:25:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:26:14.007Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa994a798842c4ceff9c7e"
+    },
+    "message_id": "reddit_t3_1whx8pj",
+    "topic_key": "recruiter",
+    "search_keyword": "recruiter",
+    "platform": "reddit",
+    "subreddit": "WhatTrumpHasDone",
+    "username": "John3262005",
+    "title": "US exposes alleged Russian terror network targeting Ukraine allies",
+    "text": "US exposes alleged Russian terror network targeting Ukraine allies\n\nU.S. prosecutors have charged five people allegedly working for Russian intelligence with conspiracy to finance terrorism and, in three cases, conspiracy to commit murder for hire.   The charges, unveiled on Tuesday, also allege that the network recruited operatives to conduct surveillance and killings in the U.S., and to attack civilian and military infrastructure in European countries which are aligned — or perceived to be aligned — with Ukraine. All five defendants remain at large.   The indictment says the group most recently approached a U.S.-based individual to surveil and kill a prominent Russian dissident living in the country. Two alleged recruiters offered that person $40,000 to “eliminate” or “disappear” the target and discussed finding someone else to carry out the murder.   In a separate case, an alleged Russian intelligence officer offered $25,000 to kill a dissident in Lithuania before proposing attacks on a warehouse or electrical substation in “all the countries that are helping Ukraine.” The network also allegedly coordinated operations in Prague and Lithuania in 2024.   “These defendants allegedly operated as part of a global assassination network that reached into the United States,” Assistant Attorney General John Eisenberg said, accusing them of acting “at the behest of the Kremlin.”   The charges come as European capitals confront a string of alleged Russian-linked operations on the continent.   Germany has explicitly blamed Moscow for an explosives-laden drone attack at Leipzig-Halle airport in August, while investigators identified a Belarusian citizen and a Russian national with alleged ties to Russian military intelligence as suspects last week.   On Tuesday, NATO jets shot down a drone that entered Lithuanian airspace, and a Russian frigate fired at a Danish military helicopter.   European governments have accused Moscow of waging hybrid attacks to destabilize the continent as it pursues its full-scale invasion of Ukraine.   Russia’s Foreign Ministry and embassy in Washington have not responded to POLITICO’s request for comment.       submitted by     /u/John3262005     to     r/WhatTrumpHasDone       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WhatTrumpHasDone/comments/1whx8pj/us_exposes_alleged_russian_terror_network/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:27:26Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:27:38.432Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa994a798842c4ceff9c7f"
+    },
+    "message_id": "reddit_t3_1whx8ni",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "YourNerdyThaiTutor",
+    "username": "Gaming_Forever",
+    "title": "Thai Lesson of the Day: Food Allergies",
+    "text": "Thai Lesson of the Day: Food Allergies\n\nsubmitted by     /u/Gaming_Forever     to     r/YourNerdyThaiTutor       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/YourNerdyThaiTutor/comments/1whx8ni/thai_lesson_of_the_day_food_allergies/",

@@ -1,0 +1,416 @@
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "family",
+    "username": "Environmental_Dish_3",
+    "title": "Conversating with parents",
+    "text": "Conversating with parents\n\nIm struggling, and have been, conversating with my parents. I'm a 40 (f). It's not their fault, but it seems to me as if they no longer live in reality, or more that their reality has passed them by and the world has moved on. It was never necessary for them to move along with it because they have money and my dad has had a lifetime stable job. They live in the country in a rural, but military town. Also, the world they think they live in has been stable like that for many generations, so they aren't wrong, their thoughts advice and opinions just don't apply or match anymore.   I wish it did. I wish I had someone to come to as a single and alone mother, that could give je good advice, that could understand, that could help. He really wants too, but he also struggles with being wrong, not knowing, not understanding. He has been the one who was the smartest, the one that knows.    We struggle conversating because he wants to help and to be heard with all his wisdom. I need someone to give me good advice and to discuss situations, options, ideas with.    We keep breaking off, what seems to me, to be an agreement on reality. As an older millennial I saw both what the world used to be and how it used to work to how it does today. It's even hard for me to wrap my own head around. Most of the old rules and understanding of daily life, business, and work have changed, and it is continuing to change at an even faster rate. The way money, jobs, ideas, technology, social structures have changed in their details.    I so desperately need someone else in my life that can see, analyze, and learn to maneuver through it. Someone who isn't afraid of it. Someone who has the courage not to deny it.   I feel like as a good daughter I should sit silently, say nothing, nod my head for hours, then thank him for his good advice. I know that is what he wants and thinks. But I'm a bartender. I do that everyday all day. I have no good friends and I am dating no one. I do it for my son. Ive spent years and years living in my head and seeing a different reality than the handful of people close to me and spent my years telling everyone else that they are right, keeping my mouth shut and my thoughts, opinions to myself. I've just recently, this year, started opening up to my dad, because I became desperate, but I think he wants me to go back to shutting my mouth and just listening. I think, when he offered me the option of talking to him, that he thought I was just going to be amazed at all the thoughts he had and advice he gave and I was going to be awed by him. I don't think he thought I would disagree with him. I'm not sure. That's what it feels like. I feel like I don't exist and no one wants me to either.    To be fair, my entire 40 years has been centered around my family. And my family alone. We moved almost every year of my childhood so I was never really able to establish roots, on top of my dad always telling me to trust no one. Because of that, I know the way I think of people, is actually just my family and a few others that I've been close to. It has been my only experience, so it's how I assume all people are. I know that isn't right, but I consciously have to remind myself of that.        submitted by     /u/Environmental_Dish_3     to     r/family       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/family/comments/1wkpeuj/conversating_with_parents/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:39:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:40:05.337Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeacd5660c608403980fd8"
+    },
+    "message_id": "reddit_t3_1wkpeu5",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "ClaudeCode",
+    "username": "synwankza",
+    "title": "Your approach to code/develop with CC or other \"harnesses\"",
+    "text": "Your approach to code/develop with CC or other \"harnesses\"\n\nHi guys,   I'm constantly discovering world of AI and working with that, especially that I'm working as software engineer.   There's my question, as conferences, posts etc. are complementing all this stuff like BMAD, GSD and other, other things. But IMO they're sloppish from perspective of person which is working in this industry for a while. They're so general, not that extendable and not sure if developed to work on some already warmed-up brownfield projects.   I feel like there's a lot of \"slop\" created around these workflows with difficulties to work on some project with a lot of services, existing infrastructure and codebase. They're perfect for working on some greenfield project ideas like next e-shop or portal.   I look for something which will give me more control and flexibility, as I'm sure that generic SKILLS for \"implementation\" or \"review\" won't work the same for project written in Java as for Gleam for example, as principles, approaches etc. are totally different between projects, ecosystems etc.   They're also non-deterministic mostly IMO, as they base on the models, and pure .MD files without any determinism which can be achieved using some cli, hooks and other things.   Would be great to find something (I'm trying to write something on my own, but it is far from being ready to use) which gives me control and flexibility, so I can use it for one existing codebase and new ones. Something which also will be able to \"self-learn\" during the work basing on some decisions, rules and adrs during the work. Some tool which have some base and I can extend it/modify by adding proper things for given ecosystem or project type.   Hi everyone,   I’m constantly exploring the AI tooling space, especially from the perspective of a software engineer working with real-world codebases.   One thing I keep noticing is that many of the popular agentic development workflows and methodologies - things like BMAD, GSD, various skill-based setups, prompt frameworks, etc. - feel limited once you move beyond simple greenfield projects.   They look great when the task is something like: build a new e-commerce application, create a new SaaS portal, implement a feature in small repo.   But I’m not convinced they translate equally well to mature brownfield systems.   In larger projects you often have multiple services, existing infrastructure, years of architectural decisions, conventions, technical debt, deployment constraints, security rules, domain-specific assumptions, and different technologies living next to each other.   That is where many of these workflows start to feel too generic.  For example, I don’t think a generic skill should behave the same way for:      a Java codebase with banking background where consistency is most important,    a Gleam application for small backend,    a React app with ui/ux as the most crucial part,    Terraform/Kubernetes infrastructure ,    or a performance-sensitive streaming service.     The engineering principles, tools, validation mechanisms, testing strategies, architecture expectations, and even the definition of \"good code\" can be very different.   Another thing that bothers me is determinism.  A lot of these workflows are primarily collections of .MD files and prompts interpreted by an LLM. That means a large part of the workflow itself is still probabilistic. Personally, I’d prefer a stronger separation between: LLM-driven reasoning and deterministic workflow enforcement.    For example, I’d like the model to reason about implementation or architecture, while a CLI/runtime/hooks enforce things such as:     workflow state,   required steps,   dependencies between tasks,   validation commands, tests, linters   approvals,   evidence of completion,   architectural constraints,   allowed/forbidden operations,     So instead of the model being told: \"Remember to run tests and review the implementation\" the workflow deterministically require those things before the task can be considered complete.    What I’m looking for is something closer to an extensible engineering harness for coding agents rather than another prompt framework, but without all these boilerplates, tons of UI, TUI, GUI and floppy features.    Ideally it would have a small generic core, but allow projects to define their own behaviour.  Something like:    core workflow engine  -  ecosystem-specific rules/skills  -  repository-specific rules/skills  -  task-specific workflow    For example, a Java project could provide Java/JVM/Spring-specific implementation and review rules, while a Rust, Gleam, Go, frontend or infrastructure project could plug in completely different ones.  As for example for backend crucial tasks would be great to have some evidences of ADR or small diagrams and for UI to have Figma's design before writing a code.   Another important part for me would be some form of project memory/learning.   During development, the system should gradually understand and preserve things like:     ADRs,   conventions,   deployment assumptions,   known architectural boundaries,   mementos.     Continuously building structured knowledge about the repository and using it during future work.  Something that provides enough structure to make agent behaviour predictable, but doesn't try to encode all software engineering into a few generic MD files/prompts or something else.    I’m currently experimenting with building something like this myself, but it’s still far from being mature enough for regular use.   So my question is:  Are there any projects, frameworks, research efforts, or engineering workflows already moving in this direction? To be at once simple, but consistent and flexible (maybe pluginable?).    I’d be very interested in seeing what do you use in your work.        submitted by     /u/synwankza     to     r/ClaudeCode       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeCode/comments/1wkpeu5/your_approach_to_codedevelop_with_cc_or_other/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:39:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:40:05.560Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeacd5660c608403980fda"
+    },
+    "message_id": "reddit_t3_1wkpety",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ShouldIbuythisgame",
+    "username": "GobbleTheFlesh",
+    "title": "Final Fantasy Tactics: IC or Trails in the Sky 1st Chapter",
+    "text": "Final Fantasy Tactics: IC or Trails in the Sky 1st Chapter\n\nI'm looking for something to hold me over until FF Resonance releases. I love the Atlus style of games and the Like A Dragon games. Sea of Stars was great too   They're both in sale for roughly the same price on steam right now and they're both critically loved. I'm looking for a game with a good enough story, GREAT gameplay, and not too anime-y like the persona games get sometimes.       submitted by     /u/GobbleTheFlesh     to     r/ShouldIbuythisgame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ShouldIbuythisgame/comments/1wkpety/final_fantasy_tactics_ic_or_trails_in_the_sky_1st/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:39:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:40:05.990Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeacd6660c608403980fdb"
+    },
+    "message_id": "reddit_t3_1wkpetx",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "KiaSoulClub",
+    "username": "eineken83",
+    "title": "Thoughts on buying a low-mileage 2015 Soul 2.0 after KSDS/SC200 recall work?",
+    "text": "Thoughts on buying a low-mileage 2015 Soul 2.0 after KSDS/SC200 recall work?\n\nHey everyone!   I’m considering buying a 2015 Kia Soul ! with the 2.0L GDI and conventional 6-speed automatic. It has about 81k miles and appears to have been well cared for. The seller says it doesn’t currently burn oil or leak, and I’ll be getting a pre-purchase inspection before buying.   I’m aware of the reputation these 2.0L engines have for oil consumption and connecting rod bearing failures, so I’m definitely not going into this blind.   What makes me more comfortable with this particular car is that I called Kia with the VIN and confirmed that both the SC200 campaign and KSDS update were completed in 2021. Kia also confirmed that it has the extended 15-year/150k-mile coverage for qualifying connecting-rod-bearing-related engine failure.   For those familiar with these engines, how much would that change your comfort level with buying one at 81k?  I’m particularly interested in hearing from people who have owned or worked on the 2.0L GDI. Have the KSDS/SC200 updates generally done what they were intended to do? Has anyone here had a bearing failure after the updates, and if so, how did Kia handle the extended coverage?   I’m also planning to be pretty proactive with maintenance if I buy it. My current thinking is:   • Full synthetic, high-quality oil and filter every 5k miles or so  • Check the dipstick frequently, probably every 500–1,000 miles at first, so I can establish whether it’s consuming any oil and catch changes early  • Never let the oil level get low between changes  • Keep an eye on the PCV system and replace the PCV valve preventatively if its history is unknown  • Periodically address intake-valve carbon buildup as appropriate for a GDI engine rather than waiting until it causes drivability problems  • Pay attention to any change in oil consumption, cold-start behavior, misfires, unusual engine noise, etc.   I’d also love to hear from higher-mileage 2.0L owners. Did yours eventually develop oil consumption? If so, at what mileage? Is there anything you wish you had done preventatively when the car was still around 80k?   I really like the car and it fits what I need, so I’m mostly trying to understand the real-world risk of this specific engine after the campaign work has already been completed, and whether being proactive about maintenance makes a meaningful difference.       submitted by     /u/eineken83     to     r/KiaSoulClub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/KiaSoulClub/comments/1wkpetx/thoughts_on_buying_a_lowmileage_2015_soul_20/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:39:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:40:06.203Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeacd6660c608403980fdc"
+    },
+    "message_id": "reddit_t3_1wkpet4",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "estatesales",
+    "username": "count_nocturn666",
+    "title": "Best places to buy antiques and antique furniture online?",
+    "text": "Best places to buy antiques and antique furniture online?\n\nBest websites to buy antiques online.        submitted by     /u/count_nocturn666     to     r/estatesales       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/estatesales/comments/1wkpet4/best_places_to_buy_antiques_and_antique_furniture/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:39:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:40:06.423Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeacd6aeeb96c1c63b9ea1"
+    },
+    "message_id": "reddit_t3_1wkpeqe",
+    "topic_key": "wholesaler",
+    "search_keyword": "wholesaler",
+    "platform": "reddit",
+    "subreddit": "Indiananicollectibles",
+    "username": "CLASSIFIER07",
+    "title": "Sourcing action figures",
+    "text": "Sourcing action figures\n\nLooking for licensed collectibles/action figures for a bulk marketing initiative – India   Hey everyone!   I’m looking to connect with licensed manufacturers, distributors, wholesalers, or authorised sellers who deal in collectibles and fandom merchandise.   These are being sourced on behalf of a company for a marketing initiative, where we’re looking to offer interesting fandom-related products as gifts/freebies to customers.   We’re specifically looking for products such as:   Action figures & character figures   Lightsaber replicas/props   Movie/TV/game collectibles   Statues, busts & mini figures   Other tasteful, display-worthy fandom merchandise   We’re interested in licensed/original products, rather than unlicensed replicas or bootlegs.   The requirement would be for bulk quantities, depending on the product — roughly 25 / 50 / 100+ pieces per SKU. Since these would be bulk orders, we’re hoping to work out wholesale/bulk pricing or discounted rates.   We’re open to popular fandoms across Marvel, DC, Star Wars, anime, gaming, movies, TV, etc., provided the products are properly licensed and suitable as premium fan gifts.   If you manufacture, distribute, import, or know a reliable supplier who could help, please DM me with your catalogue/contact details. I can share more details about the company, requirements and quantities privately.   Thanks!       submitted by     /u/CLASSIFIER07     to     r/Indiananicollectibles       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Indiananicollectibles/comments/1wkpeqe/sourcing_action_figures/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:39:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:40:06.509Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaeacd6660c608403980fdd"
+    },
+    "message_id": "reddit_t3_1wkpesu",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MouseModding",
+    "username": "Fun-Cold-2119",
+    "title": "Viper V4 Pro owners — what skates are closest to stock?",
+    "text": "Viper V4 Pro owners — what skates are closest to stock?\n\nBought a used Viper V4 Pro and the previous owner replaced the stock skates with dots.   I prefer full-size skates, but I keep seeing people say some aftermarket skates feel good at first then get muddy/slower after break-in.   Anyone here tried the stock V4 Pro skates vs aftermarket ones?   Mainly wondering:     Can you actually buy the original OEM skates anywhere?   What full-size skates feel closest to stock?   Do Jade / Tiger Ice / Magic Ice / Corepads get muddy over time?   Which ones have the lowest static friction without feeling uncontrollably fast?     Would especially like opinions from people who have used both the stock skates and aftermarket skates on the V4 Pro.       submitted by     /u/Fun-Cold-2119     to     r/MouseModding       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MouseModding/comments/1wkpesu/viper_v4_pro_owners_what_skates_are_closest_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:39:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:40:06.638Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeacd7660c608403980fdf"
+    },
+    "message_id": "reddit_t3_1wkpesl",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "IndiaBusiness",
+    "username": "cooljungleboi",
+    "title": "Client refused to pay for completed commission art piece😭🤬",
+    "text": "Client refused to pay for completed commission art piece😭🤬\n\nMy commission client cancelled the order last min 😭😭   So I was commissioned a painting of Noida Kali Bari murti. I finished it a week ago and let them know, asking for the full remaining payment. They said they don't like it and don't want it anymore!!!?!?   I only took 20% advance. And now they have ghosted me.    If anyone is interested in buying, it's ₹15,000. The og price was ₹25k. I already got ₹5k and am willing to give another 20% discount.   I personally love the painting. The details are as follows   10\" x 6\"    Acrylic on Oval Board (Resin sealed)    Price :  ₹25,000  ₹15,000/- only.   Please DM if interested       submitted by     /u/cooljungleboi     to     r/IndiaBusiness       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IndiaBusiness/comments/1wkpesl/client_refused_to_pay_for_completed_commission/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:39:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:40:07.063Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeacd7660c608403980fe0"
+    },
+    "message_id": "reddit_t3_1wkpesf",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "TamilNaduDiscussion",
+    "username": "Iniya_politico_Techi",
+    "title": "SFEM Engineering Talent pipeline | TN did well job in private Higher education but what about Tech scene?! Shouldn't Chennai & Coimbatore rival Bengaluru & Hyderabad??",
+    "text": "SFEM Engineering Talent pipeline | TN did well job in private Higher education but what about Tech scene?! Shouldn't Chennai & Coimbatore rival Bengaluru & Hyderabad??\n\nBoth Chennai & Coimbatore are some 400Km away from Bengaluru. More GCCs should set up grade A office space on Chennai & Coimbatore. CXO, Product teams etc can be in Bengaluru. Atleast mid management, mid career Developer/SRE/Cloud/QA/Data /Analyst/AI should move to Chennai & Coimbatore!   Chennai Bengaluru Expressway is going to be completed. Rail connectivity is good.   Bengaluru - Coimbatore is also undergoing Dharmapuri expressway + Salem - Coimbatore NH expansion. Rail route is terrible Hosur - Omalur stretch takes another decade to be doubled track   Both has good airport, coimbatore being expanded   What Govt should focus:-      Chennai Tiruchy Expressway or expand current NH to 6 lane     Chennai Salem Expressway      Govt should solve land acquisition issues by giving alternative land etc (as land is costly) or land pooling.       submitted by     /u/Iniya_politico_Techi     to     r/TamilNaduDiscussion       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TamilNaduDiscussion/comments/1wkpesf/sfem_engineering_talent_pipeline_tn_did_well_job/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:39:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:40:07.285Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeacd7660c608403980fe1"
+    },
+    "message_id": "reddit_t3_1wkpesd",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Dooomsday_",
+    "title": "For those over 40, what minor aches, pains, or health issues have you noticed starting to show up with age that you never really dealt with when you were younger?",
+    "text": "For those over 40, what minor aches, pains, or health issues have you noticed starting to show up with age that you never really dealt with when you were younger?\n\nsubmitted by     /u/Dooomsday_     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wkpesd/for_those_over_40_what_minor_aches_pains_or/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:39:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:40:07.499Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeacd7660c608403980fe2"
+    },
+    "message_id": "reddit_t3_1wkperc",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "LDR",
+    "username": "ThrowRA_Bug4720",
+    "title": "Boyfriend felt free the second I left the country",
+    "text": "Boyfriend felt free the second I left the country\n\nMy boyfriend (M29) and I (F24) have been together for 9 months. Lived together for the last 6. Before that we spent the first month together, then long distance for 2 months and it was fine. Regular calls, video calls, everything worked. Living together was honestly wonderful for me. We had occasional fights but overall we were happy. He even took me on his work trips. We went on a lot of dates. I always told him to do whatever he wanted (surf, gym, friends, church). He only really went to church. He later admitted that if he did the other things he would have felt guilty because he would be leaving me alone at home. Of course I would like to have as much time as possible with him, but I also told him I’m an adult and can manage my life totally well.   He’s a strict Presbyterian and goes to church every day. At the beginning that used to bother me, but it doesn’t anymore and he knows that. I’ve actually started getting into Christianity myself recently.   In the last month before I left he was extremely busy with work and family issues. I accepted it completely. I kept telling him “do your work first,” but apparently my facial expression or tone of voice somehow didn’t come across as understanding. Right before I left we were supposed to go on a small trip together. He got an urgent call from his sister and I immediately offered to cancel because family matters more. I was genuinely okay with it, but he still felt like I sounded upset. He also told me today that he feels uncomfortable when his sister calls and I’m next to him, because I would immediately tell him to focus on his family.   Before I left he said we would make a calling schedule and that he would contact me a lot.   Today was day 1 of me being back in my home country because of visa issues. He went on a church trip and said he’d text from time to time. He didn’t. Not for 10 hours. When we finally called, he told me he felt free after a long time. That he could do what he wanted without feeling guilty. He said he loves me and really likes living together with me, but he still feels like he needs time alone more. Then he said he needs to “check his heart” to see if he enjoys being alone more. If he does, we’ll have to “find a solution.” For now daily talk is fine, but it “won’t be much.” but according to him this isn't breaking up.   The part that really hit me: he said he felt this way while we were living together too. He just never told me.   I never stopped him from doing anything. I encouraged him. I tried to be supportive even when plans changed last minute. But somehow he still experienced the relationship as something he had to “take care of me” in a way that felt burdensome, and he kept that completely to himself for six months.   I’m supposed to come back in November with a working visa for his country, but now I’m scared.   I feel blindsided. One day after separating he’s already treating the relationship like something he needs to evaluate whether he even wants. I’m trying to stay calm but I’m honestly shaken.   Has anyone dealt with something like this? How do you even respond when someone only tells you they felt trapped after you’re already gone?       submitted by     /u/ThrowRA_Bug4720     to     r/LDR       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LDR/comments/1wkperc/boyfriend_felt_free_the_second_i_left_the_country/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:39:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:40:07.725Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeacd7660c608403980fe3"
+    },
+    "message_id": "reddit_t3_1wkper5",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FitTheWord",
+    "username": "DifferentMusician341",
+    "title": "🪜 Turn BIRTH into WITCH in 5 steps — can you? (created by u/DifferentMusician341)",
+    "text": "🪜 Turn BIRTH into WITCH in 5 steps — can you? (created by u/DifferentMusician341)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/DifferentMusician341     to     r/FitTheWord       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FitTheWord/comments/1wkper5/turn_birth_into_witch_in_5_steps_can_you_created/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:39:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:40:07.941Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeacd8660c608403980fe4"
+    },
+    "message_id": "reddit_t3_1wkper2",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "Sparkdriver",
+    "username": "kapp74",
+    "title": "Spark says I have 15 incomplete trips but I can only find 4",
+    "text": "Spark says I have 15 incomplete trips but I can only find 4\n\nHas anyone had their completion rate get stuck or calculate wrong?   Mine is showing 85% with 85 completed and 15 incomplete trips. I went through my trip history and counted my 100 most recent trips, and I have 96 completed and only 4 canceled.   I already called Spark support and the rep went through some of my trip history with me and said she was seeing discrepancies on her end too. That same day, I also submitted a Report an Issue in the app with screenshots.   Since then I’ve completed more trips, including 5 in one day, and the metric has refreshed overnight but still shows the exact same 85 completed / 15 incomplete.   I’ve also checked for an app update, signed out, deleted the app, reinstalled it, and signed back in. None of that changed anything.   Has anyone had this happen and actually gotten it fixed? Did support eventually correct it on their end, or is there some other weird workaround I’m missing?   I’m mainly annoyed because of the new rewards/tier system. If completion rate affects tier eligibility or which offers you see, I don’t want an incorrect 85% sitting on my account when my recent trip history doesn’t match it (nor has my trip history ever matched that).    Any advice or escalation routes that actually worked would be appreciated.       submitted by     /u/kapp74     to     r/Sparkdriver       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Sparkdriver/comments/1wkper2/spark_says_i_have_15_incomplete_trips_but_i_can/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:39:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:40:08.155Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeacd8660c608403980fe5"
+    },
+    "message_id": "reddit_t3_1wkpeqw",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "REPTOPREHOMES",
+    "username": "Stacey_1945",
+    "title": "Re🏡 - 🚨🛍🔔 MARKDOWN MADNESS!! EVERYTHING MUST GO!!! - 🚢 from 🇺🇸 to 🇺🇸 - 🐶🚫🚭🏡",
+    "text": "Re🏡 - 🚨🛍🔔 MARKDOWN MADNESS!! EVERYTHING MUST GO!!! - 🚢 from 🇺🇸 to 🇺🇸 - 🐶🚫🚭🏡\n\n✨Serious Inquiries Only ✨ Vnmo/Zlle/PayPl (F&F) or PayPl/Vnmo G&S (3% surcharge to cover fees) ✨ All Sales Final ✨ No Ghosting!!!✨By purchasing, you acknowledge rep item ✨ Buyer responsible for QC ✨ Seller not responsible once item is sold and shipped ✨ Happy to Provide Additional Photos, DM with Inquiries ✨ Lots of Great Buyer Feedback on my Page ✨ Ships Out Same Day or Next Day with Tracking Provided and Insurance✨  All Purchased from Sellers - Factories Unknown ✨   🛍 SALE!!! 🛍  ALL MID-TIER BAGS - EACH $75 SHIPPED!!!! WILLING TO BUNDLE    AL0 Yoga Black Fleece Large Tote (48cm)   CD Golden Sparkle Bucket Bag   Co@ch Mini Bucket   Fendy Anniversary Small Tote   Goy@rd St. Louis Tote Royal Blue GM   LV Trocadéro Wearable Wallet Camera Bag   LV Pochette Félicie w/Red Interior   LV Speedy 18 Croc Bandouliere   Pr@da Black Tessuto Large Quilted Tote   Pr@da Beige Hobo w/Gold Hardware   Pr@da Raffia Turquiose & Beige Striped Beach Tote   YSeL Le 57 Hobo Bag w/Gold Hardware   YSeL Quilted Shopper Tote w/Gold Hardware   YSel Mini Y-Quilt Black on Black   🛍 ALL NEW ACCESSORIES 🛍  - PRICES AS MARKED    LV Sara Tri-Fold Wallet - $45 + 🛳️ - CALL OUT - slight tarnish on front snap   LV Heart Keychains/Charms - $20 (each) + 🛳    LV Murakami Cherry Passport Holder - $45 + 🛳    LV Studded Sunglasses w/case and box - $55 + 🛳    THANKS FOR CHECKING OUT MY ITEMS - QUICKEST WAY TO REACH ME IS VIA THE CHAT!!! PLEASE DM WITH QUESTIONS OR TO SEE MORE PHOTOS / CHECK OUT MY PAGE FOR BUYER FEEDBACK!  😊       submitted by     /u/Stacey_1945     to     r/REPTOPREHOMES       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/REPTOPREHOMES/comments/1wkpeqw/re_markdown_madness_everything_must_go_from_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:39:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:40:08.368Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeacd8660c608403980fe7"
+    },
+    "message_id": "reddit_t3_1wkpeqm",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "sanpedrocactusforsale",
+    "username": "rusty_fish_farm",
+    "title": "Price reduced- Bridge lovers triple clone pack (with extra) $60🚢ed",
+    "text": "Price reduced- Bridge lovers triple clone pack (with extra) $60🚢ed\n\nSugar Magnolia(9”), HBG79960(10”), Sierra Madre(13”), and a funky little Ribshifter x Melti(7”)  Outdoor grown in full sun in Oregon, some blemishes from foliar feed and dust. Will ship immediately, US only, Thanks!        submitted by     /u/rusty_fish_farm     to     r/sanpedrocactusforsale       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sanpedrocactusforsale/comments/1wkpeqm/price_reduced_bridge_lovers_triple_clone_pack/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:39:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:40:08.800Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeacd9660c608403980fe8"
+    },
+    "message_id": "reddit_t3_1wkpeqk",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789832381289",
+    "text": "[PROBE] 1789832381289\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wkpeqk/probe_1789832381289/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:39:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:40:09.014Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeacd9660c608403980fe9"
+    },
+    "message_id": "reddit_t3_1wkpeqh",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "DonutSMP",
+    "username": "happyshiba819",
+    "title": "Selling this base give me a price!",
+    "text": "Selling this base give me a price!\n\nalso comes with a few blue axolotls       submitted by     /u/happyshiba819     to     r/DonutSMP       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DonutSMP/comments/1wkpeqh/selling_this_base_give_me_a_price/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:39:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:40:09.228Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeacd9660c608403980fea"
+    },
+    "message_id": "reddit_t3_1wkpeqg",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "csworkshop",
+    "username": "Guilty-Rough-1020",
+    "title": "My CS2 | M4A4 New Skin - The Hōrai",
+    "text": "My CS2 | M4A4 New Skin - The Hōrai\n\nHey guys what do you think about my new CS2 skin?   I would really love to hear your opinion.   If you like it please vote for it :)   Your support would mean a lot to me and really help me with CS2.    https://steamcommunity.com/sharedfiles/filedetails/?id=3799315434        submitted by     /u/Guilty-Rough-1020     to     r/csworkshop       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/csworkshop/comments/1wkpeqg/my_cs2_m4a4_new_skin_the_hōrai/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:39:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:40:09.443Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeacda660c608403980fed"
+    },
+    "message_id": "reddit_t3_1wkpeq6",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DailyGuess",

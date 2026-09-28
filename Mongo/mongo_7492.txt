@@ -1,0 +1,416 @@
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:33:20.252Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa8c906508d45f3d2d2d8c"
+    },
+    "message_id": "reddit_t3_1whvxtx",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AnimalRescue",
+    "username": "ssuviiswq",
+    "title": "I was sent this video by a friend and I’m genuinely upset",
+    "text": "I was sent this video by a friend and I’m genuinely upset\n\nThis is a male puppy that was adopted by people who live with her. He had a brother that died in that cage. They threw that baby in a cage covered in poop and don’t even care for it. There’s maggots and flies and who knows what else. I’m taking initiative. I don’t care that it isn’t my dog, I won’t sit there and watch this happen. I’m genuinely crying and furious over this. I’m going to the store today to buy a bucket and some flea and tick wash and bathe it. Afterwards I’m going to an emergency vet. He has strange yellow bumps on his belly, I’m worried.    I care too much about animals to sit and let this happen. I’m not allowed to have pets in my house but I’ll ignore the protests to keep this puppy safe.   P.S.) don’t come after my friend. She’s doing as much as she can as well.        submitted by     /u/ssuviiswq     to     r/AnimalRescue       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AnimalRescue/comments/1whvxtx/i_was_sent_this_video_by_a_friend_and_im/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:32:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:33:20.473Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa8c906508d45f3d2d2d8d"
+    },
+    "message_id": "reddit_t3_1whvxtv",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "NepalSocial",
+    "username": "Confident-Pickle-449",
+    "title": "Feeling insecure about my knowledge level is always constant",
+    "text": "Feeling insecure about my knowledge level is always constant\n\n😭😭🥲🥲 k garne hola prabhu   Padhe ni birsincha plus padhne time ni hunna aba ma Reddit ma use hune time padhna ma use garchu   WISH me luck yall    😭😭😭😭   Bhayena yo taal le ta        submitted by     /u/Confident-Pickle-449     to     r/NepalSocial       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NepalSocial/comments/1whvxtv/feeling_insecure_about_my_knowledge_level_is/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:32:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:33:20.691Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa8c906508d45f3d2d2d8e"
+    },
+    "message_id": "reddit_t3_1whvxto",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "Tau40K",
+    "username": "NoVik_Ingis47",
+    "title": "Judge my army I’m taking to a store for the first time.",
+    "text": "Judge my army I’m taking to a store for the first time.\n\nI’ve only ever played casually with friends. I was wanting to go to an actual store soon and play with some randoms. I made this 2k list to be fun/somewhat competitive. But I’m not to keen on comp so I wanted to see what yalls opinions were. I’m running montka       submitted by     /u/NoVik_Ingis47     to     r/Tau40K       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Tau40K/comments/1whvxto/judge_my_army_im_taking_to_a_store_for_the_first/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:32:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:33:20.908Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa8c916508d45f3d2d2d8f"
+    },
+    "message_id": "reddit_t3_1whvxs9",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "AgentSkills",
+    "username": "flamacore_",
+    "title": "AI skill for agents to talk in their own language to each other. Saves on tokens if used carefully.",
+    "text": "AI skill for agents to talk in their own language to each other. Saves on tokens if used carefully.\n\nCircuit-Biscuit/Aish: Token-dense notation for agent-to-agent notes. ~47% fewer tokens than English prose, measured.    I kept watching my agents write paragraphs of English to each other. Handoff notes, session summaries, \"here's what I found\" writeups. All burning context on grammar nobody reads. So I tried to build a denser format for it.    Almost everything I assumed turned out to be wrong . I'm posting the measurements because they're useful even if you never touch my project.   WRONG ASSUMPTION 1: abbreviate long words.   \"configuration\", \"implementation\", \"authentication\" and \"repository\" are each already 1 token. So cfg, impl and auth save literally nothing, and cost you clarity. The entire shorthand-dictionary idea, which is the first thing anyone reaches for, is worth about zero.   WRONG ASSUMPTION 2: use symbols.   The ⟹ character is 3 tokens. The ASCII -> is 1. Every pretty Unicode glyph costs more than the English word it replaces.   WRONG ASSUMPTION 3: numeric IDs are compact.   1-04-301 is 5 tokens. Digits don't absorb their leading space, so \" 2\" costs 2 tokens while \" ab\" costs 1. Letters beat numbers. And separators are expensive: comma, semicolon and pipe each cost 2 extra tokens per 3 fields. A space costs 0.    THE ACTUAL INSIGHT    An English word already costs about 1 token, so you cannot win by making words shorter. You only win by making one token carry more than one word's meaning. Two ways that works: a fixed predicate (cz means \"X causes Y\") and interning long literals (aa means an 11-token file path). Then positional arguments, so operators and punctuation disappear entirely.   Here's the same bug handoff written both ways.   English, 80 tokens:   The login form submits twice when the user presses Enter. The submit handler in src/ui/LoginForm.tsx is bound to both the form onSubmit event and the button onClick event, so pressing Enter triggers both paths. I reproduced this in Chrome and Firefox. It does not happen when clicking the button directly. The fix is to remove the onClick binding and keep only onSubmit.   Aish, 47 tokens:   #a2 login double submit   bug submit handler dup fire   why loc submit handler src/ui/LoginForm.tsx bind onSubmit onClick   did obs bug chrome firefox   neg obs bug click   fix del onClick just onSubmit   Same information. File path, both event bindings, both browsers, the negative result, the fix.    HONEST NUMBERS    Across a 6-document corpus it's 1.58x, so 37% fewer tokens. Up to 2.8x on long documents that share a dictionary. That is not the 3-4x I first claimed. That number came from one flattering example and a proper corpus knocked it down. Worst case in the corpus is 1.36x.   The deflating finding: the ratio tracks how verbose the English was, not how structured the content is. Aish costs a flat 5 to 9 tokens per claim no matter what. So it beats waffle, not structure. The most structural document I tested, a module dependency map, did worse than a rambling design memo.   THE FINDING I THINK ACTUALLY MATTERS HERE   A skill file is not free. It occupies context every time it loads.   My first version was 1,819 tokens for the skill plus its codebook. At 37% savings that needs about 4,900 tokens of notes before it breaks even, which is roughly 25 handoff notes. Most sessions never get there. So installing it was a net loss, and nothing told you.   I fixed it by inlining only the 20 predicates that cover 90% of real use and loading the rest on demand. 1,819 tokens down to 428, break-even at about 6 notes. The skill now opens with the arithmetic and an explicit \"if this session is short, write normal prose and stop reading here\" branch, so it declines to be used when it wouldn't pay.   There's a budget command that prints this, and two tests that fail if the skill file grows past its own break-even, or if the threshold it advertises drops below the measured one. That second test already caught me advertising 1,000 against a real break-even of 1,167.   Worth checking your own  CLAUDE.md  and skills for the same thing. Mine was quietly underwater.    CAVEATS, because I'd rather say them than get called out    - The benchmarks measure tokens, not comprehension. A note that's 40% smaller but 5% misread is a bad trade, and I can't yet prove the misread rate is low. That needs a real eval harness and it's the obvious next step.   - 6 documents is a deliberate spread across shapes, not a large sample.   - Not for anything a human reads. Commits, PRs and code comments stay in English.   It has the spec, a 77-predicate codebook, 31 tests, and a benchmark harness that regenerates every number above, so you can check my work instead of trusting it.   QUESTION FOR THE SUB   Has anyone actually measured decode accuracy on compressed agent notes? I can measure density all day, but \"did the next agent read it correctly\" is the number that decides whether any of this is a good idea, and I don't have it yet.   Link again:  Circuit-Biscuit/Aish: Token-dense notation for agent-to-agent notes. ~47% fewer tokens than English prose, measured.        submitted by     /u/flamacore_     to     r/AgentSkills       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AgentSkills/comments/1whvxs9/ai_skill_for_agents_to_talk_in_their_own_language/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:32:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:33:21.150Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa8c9b798842c4ceff9c35"
+    },
+    "message_id": "reddit_t3_1whvy0o",
+    "topic_key": "electrician",
+    "search_keyword": "electrician",
+    "platform": "reddit",
+    "subreddit": "evcharging",
+    "username": "elverdaderodarth",
+    "title": "Plug-in chargepoint installed hardwired. Current output max, safety?",
+    "text": "Plug-in chargepoint installed hardwired. Current output max, safety?\n\nLong story short. I have a level 2 home charger. Some miscommunication happened and I was under the impression I had a hardwired installation and charger on a 60A breaker.    Come to find out, the electrician did some surgical level transformation and took a plug-in chargepoint charger and did a hardwire install. Short of calling chargepoint customer service and have them yell at me, how do I find out safety and specs information. I’ve been using it for a year with it maxing out at 32A. I recently configured it to output 48A for charging (which is when I found out that the installation wasn’t what I thought) and have concerns about damage to my home or EV.        submitted by     /u/elverdaderodarth     to     r/evcharging       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/evcharging/comments/1whvy0o/plugin_chargepoint_installed_hardwired_current/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:33:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:33:31.758Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa8cca6508d45f3d2d2d90"
+    },
+    "message_id": "reddit_t3_1whvyrt",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "TierlistFills",
+    "username": "Dan_Campbell_Soup",
+    "title": "The live action Lilo & Stitch was voted into F-tier. And finally, what tier does the live action Moana go?",
+    "text": "The live action Lilo & Stitch was voted into F-tier. And finally, what tier does the live action Moana go?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Dan_Campbell_Soup     to     r/TierlistFills       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TierlistFills/comments/1whvyrt/the_live_action_lilo_stitch_was_voted_into_ftier/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:34:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:34:18.159Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa8cca6508d45f3d2d2d91"
+    },
+    "message_id": "reddit_t3_1whvyrd",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "LGBTPhilippines",
+    "username": "Comfortable-Yak3553",
+    "title": "28 [A4F] Craving a Road Trip and Late-Night Talks",
+    "text": "28 [A4F] Craving a Road Trip and Late-Night Talks\n\nI’ve been yearning for a spontaneous road trip—good music, quiet roads, random food stops, and meaningful late-night conversations.   I can pick you up and treat u. No pressure and no complicated expectations—just genuine company and a memorable night together.   If this sounds like your kind of escape, leave me a message.       submitted by     /u/Comfortable-Yak3553     to     r/LGBTPhilippines       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LGBTPhilippines/comments/1whvyrd/28_a4f_craving_a_road_trip_and_latenight_talks/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:34:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:34:18.358Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa8cca6508d45f3d2d2d92"
+    },
+    "message_id": "reddit_t3_1whvyqu",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "tECHOknology",
+    "title": "Grab 100 hammers from u/tECHOknology!",
+    "text": "Grab 100 hammers from u/tECHOknology!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/tECHOknology     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1whvyqu/grab_100_hammers_from_utechoknology/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:34:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:34:18.559Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa8cca6508d45f3d2d2d93"
+    },
+    "message_id": "reddit_t3_1whvyp4",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "GiftHuddle",
+    "username": "Rich_Opinion2404",
+    "title": "💄 DEAL ALERT — Save 50% on Oral-B iO Radiant White Electric Toothbrush Head, Angled Bristles Deeper Plaque Removal, With Polishing Petals For Teeth Whitening, Pack of 6 Toothbrush Heads, White!",
+    "text": "💄 DEAL ALERT — Save 50% on Oral-B iO Radiant White Electric Toothbrush Head, Angled Bristles Deeper Plaque Removal, With Polishing Petals For Teeth Whitening, Pack of 6 Toothbrush Heads, White!\n\n💰 Was: £71.99 | Now: £36.00 💸 You save: £35.99 (50% off)   Easy delivery: 6 Oral-B iO radiant white brush heads in letterbox-compatible packaging · Ensures whiter teeth from day 1 by gently removing surface discolouration · Combines perfectly angled bristles with polishing in…   ⏰ Expires 21 September — don't miss it!   👉 See the full deal:  https://www.gift-huddle.com/deals/f9a88113-7509-4e01-a95e-fb9361af7dd8?utm\\_source=reddit&utm\\_medium=social&utm\\_campaign=deal\\_post    GiftHuddle  r/Oral -B #OralB #HealthAndPersonalCareDeals #deals #giftideas #ukdeals       submitted by     /u/Rich_Opinion2404     to     r/GiftHuddle       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GiftHuddle/comments/1whvyp4/deal_alert_save_50_on_oralb_io_radiant_white/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:34:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:34:18.766Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa8cca6508d45f3d2d2d94"
+    },
+    "message_id": "reddit_t3_1whvyoz",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "USNEWS",
+    "username": "lurker_bee",
+    "title": "California high-speed rail consultants billed taxpayers for first-class flights, gym trips and more",
+    "text": "California high-speed rail consultants billed taxpayers for first-class flights, gym trips and more\n\nsubmitted by     /u/lurker_bee     to     r/USNEWS       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/USNEWS/comments/1whvyoz/california_highspeed_rail_consultants_billed/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:34:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:34:18.965Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa8ccb6508d45f3d2d2d95"
+    },
+    "message_id": "reddit_t3_1whvyom",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Businessideas",
+    "username": "DifferentWestern1323",
+    "title": "I’m building a marketplace for second hand hobbies, would you try it?",
+    "text": "I’m building a marketplace for second hand hobbies, would you try it?\n\nI’ve been working on building an online marketplace based in the UK (hopefully other locations in the future). The idea is that users will be able to sell, swap or buy second hand hobby equipment.   It’s something I’ve been thinking about for a while. I’m the type of person to scroll online, see other people posting about their hobby, and immediately buy everything I need to try it, only to last a few weeks before moving on to the next hobby. I’ve seen lots of videos on TikTok of other people who do exactly the same thing. The worst part is that once we’ve moved on to the next hobby, all our old hobby stuff just sits at the back of the cupboard.   So, my website will hopefully give people somewhere specifically to sell their old hobby equipment, buy all the gear for a new hobby at a cheaper price, or even swap their hobby for another of a similar value.   I know you’re probably thinking there are already marketplaces. We’ve got eBay, Facebook, Vinted, and the list goes on. But what sets my marketplace apart is the fact that it is solely for hobbies. Everyone using the website is there for the exact same reason as you.   I’m really hoping to build a community of hobbyists. I’ve even built in the ability to discuss topics and create user made guides, so hopefully everything you need to start a new hobby can eventually be in one place.   I’m still in the building/testing phase, so we’re not at the finished product yet. However, I’d really value your feedback. As someone who has fallen victim to buying new hobbies myself, I know there are plenty of us with first hand experience! I’m interested to hear what you would want from a hobby marketplace.   Here are a few questions:     Would you use a marketplace specifically for hobbies? If not, why?   Would you be more interested in buying, selling or swapping hobby equipment?   What hobbies have you bought all the stuff for that you still have sitting at home unused?   If swapping was available, would you feel comfortable posting your item to another person in exchange for theirs? If not, what would make you feel more comfortable doing so?   What would put you off using a website like this?   What are the top three hobbies you would be interested in trying?     I know this is an extremely long post, so thank you if you’ve made it this far!   In the near future, I’m hoping to carry out some user testing. If you’re based in the UK and would be interested in taking part, please send me a message. This is a self made project and unfortunately I wouldn’t be able to offer payment for testing. However, testers will receive a special badge on their profile to show that they helped during the early development stage. I’d also like to offer founding testers an additional launch benefit, which I’ll confirm once the platforms fee structure has been finalised.   Hopefully, with feedback from the community, we can make sure that we are able to launch a useful marketplace.   Thank you for taking the time to read this, I can’t wait to hear your thoughts!       submitted by     /u/DifferentWestern1323     to     r/Businessideas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Businessideas/comments/1whvyom/im_building_a_marketplace_for_second_hand_hobbies/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:34:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:34:19.175Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa8ccb6508d45f3d2d2d97"
+    },
+    "message_id": "reddit_t3_1whvyoj",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "UFOs",
+    "username": "FunPin2804",
+    "title": "UAP and trans medium travel. Is it really only air and watter?",
+    "text": "UAP and trans medium travel. Is it really only air and watter?\n\nYesterday I was thinking about UFO/UAP reports about their smooth transition between air and water, without phenomena such as splashing, creating waves, or slowing down.   I've been thinking about some reports in which unidentified flying objects (UAPs) flew into or out of an active volcano, or disappeared into or emerged from the ground.   If these objects are surrounded by some kind of field (such as a warp bubble) that allows them to ignore medium density, would be the same with solid land? If so, how we would detect such activity?   And to that, I received a response from AI, that literally took me by surprise.    Their movement underground would be noticeable as:      localized earthquake with no apparent cause   strange sounds from an unknown source (Skyquakes, booms)   infra sound waves that would affect our body by different ways (Dizziness, pressure in the ears, noticeable vibrations, etc.).   strong local magnetic and gravity anomalies   Light anomalies on surface     In light of what has been observed and reported in recent years from all corners of the globe, it actually makes sense.       submitted by     /u/FunPin2804     to     r/UFOs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UFOs/comments/1whvyoj/uap_and_trans_medium_travel_is_it_really_only_air/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:34:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:34:19.573Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa8ccb6508d45f3d2d2d98"
+    },
+    "message_id": "reddit_t3_1whvyoi",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "Proxmox",
+    "username": "RMB-",
+    "title": "Repurposing a StreamDeck into a Proxmox monitoring panel",
+    "text": "Repurposing a StreamDeck into a Proxmox monitoring panel\n\nJust finished repurposing an Elgato StreamDeck Neo as a status panel for my Proxmox host, running headless in its own LXC. You page through host stats, VM/LXC status, network throughput, a speedtest button, and health checks for a few services with the prev/next keys, so I don't have to keep tabbing into the Proxmox UI to check things. It also dims the backlight after 25s of no key presses and wakes instantly on a press, so it's not just sitting there lit all day.   Only real problem was the USB passthrough into the LXC — hidapi/libusb can get stuck and stop seeing the device again after an unplug/replug, so I added a small check that relaunches the service if the deck goes missing for too long. Everything else was pretty smooth, and it's been solid since.   I designed and 3D printed a support to fit the Stream Deck, which can be found on the repo too.   I used Claude to help me generate the two scripts that handle the LXC creation, USB passthrough, Proxmox API key, and installing the background service. Repo:  https://github.com/r-morato/streamdeck-proxmox-agent        submitted by     /u/RMB-     to     r/Proxmox       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Proxmox/comments/1whvyoi/repurposing_a_streamdeck_into_a_proxmox/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:34:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:34:19.773Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa8ccb6508d45f3d2d2d99"
+    },
+    "message_id": "reddit_t3_1whvyo5",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "OpenCanadaPolitics",
+    "username": "DryAlternative1132",
+    "title": "Come Into My Lair Says The Spider To The Fly",
+    "text": "Come Into My Lair Says The Spider To The Fly\n\nThe EU has invited Canada to be an \"associate member\".   Details are sparse but Carney has spoken of \"free movement\" of people and \"visa free\" travel.    In other words, the open borders policy of the EU is to create the same crises that the EU went out of its way to cultivate over 20 years.   As I wrote previously, CETA has many huge unexplored opportunities. I have talked about brand consolidation in the canola industry, further efforts to strengthen lobster and shellfish exports from the Maritimes.   Each of these efforts will add numbers like $200 million or $500 million to our exports.    Meanwhile, Carney is talking big as he did yesterday with his banker buddies of $500 billion. Talk is cheap.    As the saying goes from Jerry Macguire: \"show me the money\".   Even deploying $500 billion of capital is not a small feat and to do so while throwing caution to the wind is a recipe for bankruptcy.   This is why my approach of keeping a tight lid on spending, while making targeted interventions in the economy on enabling SEZs, repealing the Anti-Replacement Worker Legislation, dropping lease fees on airports, tax reforms, along with transit and health projects will move the needle.   I have strong policies to support manufacturers who Carney has abandoned. Not through protectionism, but by opening up to them the world of global opportunity, reducing tariffs on components and imports, allowing value adders to access materials, components, and equipment cost effectively by leveraging the power of the industrial ecosystem of globalization.   When Trump puts up tariff walls, Canada's response should not be to echo the policies of Trump by putting up our own tariff walls.   Instead, for every orientation there is a complementary orientation. Think about the positive and negative terminal in electricity. In the similar way, the complementary orientation of Canada to an opposing tariff wall, is global tariff credits and extraordinary efficiency and volume capacity in enabling supply chain infrastructure.   In yesterday's Investment Summit of Carney there was really nothing new there. If you cut past the marketing spin, Carney has raised $4 billion of tariffs on business, then he's giving $4 billion of additional accelerated depreciation.   In total terms, what he has done is put up barriers on supply, reduced market access, and then inside those walls of protectionism he's inviting the world to invest.   The bankers and telcos owe Carney for that huge OSFI gift and as federally regulated industries they know they must dance to the tune of their political masters.   The promises of underwriting billions ignore the basic challenges facing Canada that capital is extremely inefficient to deploy. For example, the TMX2 pipeline should not cost more than $5 billion to build.   Some of you will scoff at the notion, hah what will you do differently.   For one thing, I will get an SEZ in place so that all the regulatory approvals are in one place and there is far greater operational coordination between the executive in government, the technical regulators, and the project teams of the private sector proponent.   When it's the government's money the Liberals had no issue wasting $35 billion. As soon as Davos could lose $30 billion, it becomes a top priority for Carney.   Furthermore, issues like TFWs to keep project costs down are not a problem for me. Politically what I tell Canadians is way more jobs will be created by all the industries that use the enabling infrastructure than from the enabling infrastructure itself.   Don't think of the enabling infrastructure as a jobs initiative, but what it facilitates will create jobs. For this to work, we have to take all measures necessary to cut the costs of both infrastructure build out and operating costs thereafter.   This is where as Prime Minister, I actually meet with teams on the top 10 projects of national significance, every week, along with my Ministers to ensure we can provide operational facilitation to project execution using the capabilities of the federal government.   Knowing that there is also another layer of Provincial statutes, I ensure we have consent of the Premiers to invest such statutory authority into a joint SEZ regulator while giving the federal government the authority to coordinate the project with the Province having all rights to participate in this facilitation but not the obligation to do so.   Carney may claim this is small ball. And in fact the old wives tales he's spinning up are the ultimate small ball. I'm playing the long ball by putting in place foundational capabilities for the economy.   Money is made with great difficulty and easily wasted. It is my steady approach of the tortoise versus the hare that wins the day.       submitted by     /u/DryAlternative1132     to     r/OpenCanadaPolitics       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OpenCanadaPolitics/comments/1whvyo5/come_into_my_lair_says_the_spider_to_the_fly/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:33:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:34:19.974Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa8ccc6508d45f3d2d2d9d"
+    },
+    "message_id": "reddit_t3_1whvyo4",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "GoogleSupport",
+    "username": "Y4nderStud10",
+    "title": "Scam ?",
+    "text": "Scam ?\n\nI need help from team YouTube to recover my account, they answered me once asking for YouTube channel link, I don't have it so I tell them and ask if they had any other way to help me recover my account and they didn't responded me after that, now my inactivity plan is activate and my account will be deleted soon, I need quick help to recover my google account, this dude contacted me under my latest post, it's a big red flag for me but I wanted to know what do you think about it (I don't even know how this dude could even do anything lol) so what's your opinion on this?       submitted by     /u/Y4nderStud10     to     r/GoogleSupport       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GoogleSupport/comments/1whvyo4/scam/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:33:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:34:20.763Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa8ccc6508d45f3d2d2d9e"
+    },
+    "message_id": "reddit_t3_1whvyo0",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Repulsive-Ride-5847",
+    "title": "If you could dedicate your life to learning, and money was no issue, what would you want to learn about?",
+    "text": "If you could dedicate your life to learning, and money was no issue, what would you want to learn about?\n\nsubmitted by     /u/Repulsive-Ride-5847     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1whvyo0/if_you_could_dedicate_your_life_to_learning_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:33:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:34:20.963Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa8ccd6508d45f3d2d2d9f"
+    },
+    "message_id": "reddit_t3_1whvync",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "OceanDriveRacing",
+    "username": "a_none_moose",
+    "title": "🏁 u/a_none_moose ran 8.55230s on The Sunday Lot — can you beat it?",
+    "text": "🏁 u/a_none_moose ran 8.55230s on The Sunday Lot — can you beat it?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/a_none_moose     to     r/OceanDriveRacing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OceanDriveRacing/comments/1whvync/ua_none_moose_ran_855230s_on_the_sunday_lot_can/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:33:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:34:21.169Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa8ccd6508d45f3d2d2da0"
+    },
+    "message_id": "reddit_t3_1whvynb",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "RationalReturns",
+    "title": "What actually matters more as you get older?",
+    "text": "What actually matters more as you get older?\n\nsubmitted by     /u/RationalReturns     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1whvynb/what_actually_matters_more_as_you_get_older/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:33:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:34:21.368Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa8ccd6508d45f3d2d2da1"
+    },
+    "message_id": "reddit_t3_1whvyn1",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "GiftHuddle",
+    "username": "Rich_Opinion2404",
+    "title": "💄 DEAL ALERT — Save 25% on ghd Chronos Max Wide Plate Hair Straightener & Styler for Thick Hair | Black, 3X Faster Styling with One Stroke Results, 90% More Shine, Less Frizz for 24hrs, No Extreme Heat Damage, UK Plug!",
+    "text": "💄 DEAL ALERT — Save 25% on ghd Chronos Max Wide Plate Hair Straightener & Styler for Thick Hair | Black, 3X Faster Styling with One Stroke Results, 90% More Shine, Less Frizz for 24hrs, No Extreme Heat Damage, UK Plug!\n\n💰 Was: £299.00 | Now: £224.00 💸 You save: £75.00 (25% off)   IDEAL FOR LONG, THICK & CURLY HAIR – ghd Chronos now in Max with 85% larger plates vs ghd gold making it the perfect hair styler. · 3X FASTER HD STYLING – In just one stroke you can achieve high-definition results wit…   ⏰ Expires 21 September — don't miss it!   👉 See the full deal:  https://www.gift-huddle.com/deals/6daf53c7-c4a8-45f3-b3ad-fbbdedcc2c02?utm\\_source=reddit&utm\\_medium=social&utm\\_campaign=deal\\_post    GiftHuddle  r/Ghd  #Chronos #HealthAndPersonalCareDeals #deals #giftideas #ukdeals       submitted by     /u/Rich_Opinion2404     to     r/GiftHuddle       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GiftHuddle/comments/1whvyn1/deal_alert_save_25_on_ghd_chronos_max_wide_plate/",
+    "score": 0,
+    "num_comments": 0,

@@ -1,0 +1,416 @@
+    "_id": {
+      "$oid": "6a9ebbe8f0819e6636a9183b"
+    },
+    "message_id": "reddit_t3_1w9s6lf",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "fireforce",
+    "username": "Inevitable_Ad5240",
+    "title": "Who Would Win & Why (Evangelist VS. Yhwach)",
+    "text": "Who Would Win & Why (Evangelist VS. Yhwach)\n\nsubmitted by     /u/Inevitable_Ad5240     to     r/fireforce       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/fireforce/comments/1w9s6lf/who_would_win_why_evangelist_vs_yhwach/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T13:27:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T13:28:08.110Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ebbe8f0819e6636a9183c"
+    },
+    "message_id": "reddit_t3_1w9s6la",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "cs2",
+    "username": "pr0cly1",
+    "title": "CS2 on Arch Linux: In-game mouse \"locks\", view snaps back",
+    "text": "CS2 on Arch Linux: In-game mouse \"locks\", view snaps back\n\nDirectly after loading into a map, a deathmatch or joining a premier, the camera barely responds to the mouse. It rotates only a few degrees with continuous (very strong) mouse movement, then snaps back toward its original orientation. It looks like you have a very low sensitivity, but since it snaps back after you stop moving your mouse, that can't be the (only) issue.     Menus, HUD and the desktop cursor are completely normal.   FPS is fine (~155), GPU utilisation moderate. Not a performance problem.   Map-independent.   Other games are unaffected, including other Source-engine games.     It started a few weeks ago, appearing sometimes after starting cs2 and only cleared after a pc reboot. It then became permanent, roughly 10 reboots did not clear it.   Video of the bug happening:  https://www.youtube.com/watch?v=d5ZkFDyr_8I     SYSTEM        OS: EndeavourOS (Arch-Linux)   Session: GNOME on Wayland (games via XWayland)   GPU: NVIDIA GeForce GTX 970 (4 GB, Maxwell)   Driver: nvidia-580xx 580.178.04 (AUR legacy branch, Maxwell is dropped from mainline nvidia)   Kernels: linux 7.2.3 and linux-lts 6.18.49, bug present on both   Mouse: Xtrfy M4         WHAT DID NOT HELP        Basic     ~10 full reboots   Steam \"Verify integrity of game files\"   Steam restart, full exit and relaunch     Session     Switching to X11 is not possible on current Arch: GNOME 49+ ships no X11 session, /usr/share/xsessions/ does not exist. Installing xorg-server does not bring it back.   Running the game through gamescope. This did not help, and it later turned out to be making things worse - see \"What fixed it\" below.     Kernel     Installing and booting linux-lts alongside mainline. Bug present on both.         Driver / GPU     nvidia-smi confirmed the driver loaded and CS2 rendering on the GPU, not falling back to llvmpipe   VRAM logged live during gameplay: 2.5-2.8 GB against a 3.2 GiB driver budget, stable, no growth. Not VRAM exhaustion despite the 970's 3.5 GB partition.         Game settings and config     sensitivity, zoom_sensitivity_ratio, m_yaw, m_pitch all at normal values   Steam Input disabled, -nojoy launch option   Steam Cloud disabled for CS2 and ~/.local/share/Steam/userdata moved aside for a completely fresh config   cfg/ inside the game directory contained only stock files   VSync off (was off previous to the bug and while it was happening anyway)         Input hardware     No joystick or phantom pointer devices (/dev/input/js* empty, nothing unusual in /proc/bus/input/devices)   evtest on the mouse showed normal REL_X / REL_Y event streams   Same peripherals were connected when the game worked         Packages     Downgrading sdl3 / sdl2-compat   Downgrading egl-wayland, egl-x11, egl-gbm, egl-wayland2          WHAT MAYBE HELPED      Packages: Disabling [multilib-testing] and rolling lib32-libldap back to stable   Deleting the shader cache   A CS2 game update that reprocessed Vulkan shaders          WHAT FIXED IT        Removing gamescope from the CS2 launch options again.       I had added it earlier as a workaround for an unrelated issue. Confirmed by reproducing: re-adding gamescope brought the bug back, removing it fixed it again, on both kernels.       Caveat: I had this bug before gamescope was ever on my system, so it does not explain the original occurrences. It made the bug permanent and reproducible, and removing it restored normal behaviour.   I decided to post this as an info-thread, so if someone else has a similar issue on arch, he can check what maybe helped and what didnt help for me.       submitted by     /u/pr0cly1     to     r/cs2       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cs2/comments/1w9s6la/cs2_on_arch_linux_ingame_mouse_locks_view_snaps/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T13:27:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T13:28:08.310Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ebbe8f0819e6636a9183d"
+    },
+    "message_id": "reddit_t3_1w9s6kx",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "SideProject",
+    "username": "One_Builder_9599",
+    "title": "My first ever project which I made available for people",
+    "text": "My first ever project which I made available for people\n\nHey  r/SideProject !   I noticed the only time I did anything productive was right after watching a motivational video. Habit trackers didn't help - I started skipping again after like day or two. So I built one where the reminder does what the video does, in a tone you pick or write yourself, at the exact moment you feel like skipping.   It's called Tempus. It's for iPhone, it took three months, and it's the first thing I've built alone and shipped.   Every alert is written in the voice you chose. Setting it up is a little card deck: you swipe sample phrases left or right until it sounds like something that would actually get you out of bed at 6am.   The rest is what you'd expect from a habit app, done with more attention than was strictly necessary (i'm an overthinker so I was trying to make thing perfect 😭). Flexible schedules, streaks, a month grid per habit, and widgets so you can check things off without opening the app. Your device calendars and any .ics feed show up on the day view next to your habits, so you keep using Apple's calendar instead of maintaining a second one.   I also spent an embarrassing amount of time on how it looks. There are ten themes and I'm genuinely proud of every one of them. Somewhere in the middle of all this I rewrote the whole app from React to SwiftUI because the animations and widgets kept fighting me.   The rewrite also fixed something I'm a bit embarrassed about. The React Native version was online-only: no server, no habits. I was on a train, the connection dropped, and I couldn't check off the habit I've done in the morning. It took that to realise how weird it is for a habit tracker to need the internet. So now your habits live on your phone (but you still have sync option with the server ✌️). You can use it without an account, and syncing is something you turn on if you want it.   App Store:  https://apps.apple.com/nl/app/tempus-habit-tracker/id6764538304?l=en-GB    And i'm just curious - what tone or message would get you out of bed at 6am?       submitted by     /u/One_Builder_9599     to     r/SideProject       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SideProject/comments/1w9s6kx/my_first_ever_project_which_i_made_available_for/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T13:27:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T13:28:08.512Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ebbe8f0819e6636a9183e"
+    },
+    "message_id": "reddit_t3_1w9s6kv",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "WorldEaters40k",
+    "username": "Vor_vorobei",
+    "title": "Terminator bricks army list question",
+    "text": "Terminator bricks army list question\n\nHi guys!   Anyone of you made a relatively successful list around terminator detachment? What were your list, game plan and additional detachments?   I got 20 angry though boys who are ready to go in. They're also ready to become 30, I just want to print 10 more. Than I'll have 10 classic chaos terms, 10 Horus Heresy zerks and 10 printed terms       submitted by     /u/Vor_vorobei     to     r/WorldEaters40k       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WorldEaters40k/comments/1w9s6kv/terminator_bricks_army_list_question/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T13:27:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T13:28:08.712Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ebbe8f0819e6636a9183f"
+    },
+    "message_id": "reddit_t3_1w9s6ki",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "PuroresuRevolution",
+    "username": "MrPuroresu42",
+    "title": "KENTA & Shibata at TAKAYAMANIA EMPIRE V:",
+    "text": "KENTA & Shibata at TAKAYAMANIA EMPIRE V:\n\nThe two would declare that they wished to team up as TAKEOVER at least once a year.        submitted by     /u/MrPuroresu42     to     r/PuroresuRevolution       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PuroresuRevolution/comments/1w9s6ki/kenta_shibata_at_takayamania_empire_v/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T13:27:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T13:28:08.922Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ebc1ff0819e6636a91840"
+    },
+    "message_id": "reddit_t3_1w9s7mt",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "Desahogo",
+    "username": "Usagi_moon2",
+    "title": "Baja autoestima",
+    "text": "Baja autoestima\n\nÚltimamente siento que esto me está afectando mucho, sobre todo en mi vida social y en la universidad. Justo estoy comentando esto porque necesitaba desahogarme.   Hoy tenía una clase a las 7 a. m. y no fui porque no me sentía bien como para ir. Tengo una compañera de equipo, que considero mi “amiga”, que ha faltado dos veces a esa misma clase solamente porque se quedó dormida, y yo nunca me he quejado. Incluso siempre anoto todo para después explicárselo.   Hoy comenté que no iba a ir y se molestó muchísimo. Empezó a decirme groserías, que era una chiflada y que ya estaba grande como para faltar por una tontería. También dijo que le valía verg*** que ella hubiera faltado antes. Yo le dije: “¿Para qué te enojas si no me necesitas?”, y me respondió: “Sí, la verdad no te necesito”.   Ese tipo de cosas me hacen sobrepensar muchísimo y preguntarme por qué las personas son así conmigo cuando yo siempre intento ser amable con todo el mundo. Me hacen sentir mensa e insuficiente, como si no aportara nada y como si fuera fácil para los demás estar sin mí.   Siempre he sido mala para el estudio y para muchas otras cosas porque soy muy distraída. Incluso he llegado a pensar que podría tener alguna condición que nunca me han diagnosticado, y durante mucho tiempo me he sentido menos que los demás por eso.   He ido con una psicóloga anteriormente, pero ya no pude seguir porque dejó de ser algo que podía pagar. Siempre trato de que no me afecte el como me hablar y pienso que tal vez están de mal humor o algo asi pero no puedo evitar sentirme mal.       submitted by     /u/Usagi_moon2     to     r/Desahogo       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Desahogo/comments/1w9s7mt/baja_autoestima/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T13:28:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T13:29:03.221Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ebc1ff0819e6636a91841"
+    },
+    "message_id": "reddit_t3_1w9s7mo",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "IndianDankMemes",
+    "username": "Calm-Philosophy-5656",
+    "title": "Mitronnnn",
+    "text": "Mitronnnn\n\nsubmitted by     /u/Calm-Philosophy-5656     to     r/IndianDankMemes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IndianDankMemes/comments/1w9s7mo/mitronnnn/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T13:28:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T13:29:03.419Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ebc1ff0819e6636a91842"
+    },
+    "message_id": "reddit_t3_1w9s7mk",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "confusedbythissmug",
+    "username": "No-Mulberry6996",
+    "title": "these things they put fans sometimes",
+    "text": "these things they put fans sometimes\n\nsubmitted by     /u/No-Mulberry6996     to     r/confusedbythissmug       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/confusedbythissmug/comments/1w9s7mk/these_things_they_put_fans_sometimes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T13:28:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T13:29:03.616Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ebc1ff0819e6636a91843"
+    },
+    "message_id": "reddit_t3_1w9s7m0",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "AntiTrumpAlliance",
+    "username": "Ok-Swordfish2723",
+    "title": "Dancing Trump",
+    "text": "Dancing Trump\n\nIn a tourist store yesterday and they have a bunch of president bobble heads, including this ridiculous Trump doing his ridiculous dance.       submitted by     /u/Ok-Swordfish2723     to     r/AntiTrumpAlliance       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AntiTrumpAlliance/comments/1w9s7m0/dancing_trump/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T13:28:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T13:29:03.813Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ebc20f0819e6636a91844"
+    },
+    "message_id": "reddit_t3_1w9s7l3",
+    "topic_key": "hello",
+    "search_keyword": "hello",
+    "platform": "reddit",
+    "subreddit": "Abortion_Philippines",
+    "username": "doll_face0819",
+    "title": "11wks post MA",
+    "text": "11wks post MA\n\nHello, ask lang po ano gagawin hehehe i had my MA 11wks ago and until now may unting dugo padin nalabas sakin hindi naman sya madami and kulay brown po.    From my MA procedure until 9th week dinudugo ako minsan madaming nalabas and my times din na super unti lang. on my 8th week madaming lumabas sakin to the point na nanghihina ako after nun wala na sobrang hina na and i had my period nung 10weeks post MA na. done na din yung period ko two days ago and until now may nalabas sakin na dugo kulay brown na hindi sya natigil para water lang yung texture nya and wala naman foul smell.   Can't go to to hospital or clinic kasi nasa deploy po ako now and ayoko magpacheck up sa nurse dito sa loob ng camp kasi baka malaman nila.   Plsss help (sorry po if magulo yung kwento saglit lang kasi time namin to use phone and nagmamadali na) thankssssssss       submitted by     /u/doll_face0819     to     r/Abortion_Philippines       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Abortion_Philippines/comments/1w9s7l3/11wks_post_ma/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T13:28:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T13:29:04.012Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ebc20f0819e6636a91845"
+    },
+    "message_id": "reddit_t3_1w9s7kj",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "AngelCityFC",
+    "username": "FromVAtoLA",
+    "title": "Score Prediction Poll: Game 23 – ACFC vs Denver",
+    "text": "Score Prediction Poll: Game 23 – ACFC vs Denver\n\nOver 80% of you correctly predicted the win in Louisville! How many of you will correctly predict the outcome of ACFC’s inaugural match against Denver on Friday…   Angel City sits just below the playoff line with a 9-5-8 record. They scored 34 goals and allowed 24 goals. Their defense continues to be one of the best in the league. Scoring 7 goals in the last two matches has pushed their offensive rankings up as well. Their 10 goal goal differential is also near the top of the table. ACFC’s attack is led by SJJ with 9 goal contributions (7+2), Shores with 8 goal contributions (3+5), and Mai with 7 goals.   Denver sits in the spot below Angel City with an 8-6-8 record. They scored 34 goals and allowed 27 goals. Janine Sonis leads their attack with 13 goal contributions (9+4). Yazmeen Ryan, who’s had a handful of USWNT caps, has 10 goal contributions (6+4) and Natasha Flint has 9 contributions (5+4). USWNT Captain, Lindsey Heaps, returned from France and joined their starting 11 last month.   Both teams have been on fire lately. ACFC won the last two matches with a combined score of 7-2. Denver won their last two matches 9-1, including a 3-0 win over top-ranked Gotham.   The season may be over 75% complete, but these two teams are finally meeting for their inaugural match. Vote in the poll, discuss that, or discuss the Friday night lights matchup below.    View Poll        submitted by     /u/FromVAtoLA     to     r/AngelCityFC       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AngelCityFC/comments/1w9s7kj/score_prediction_poll_game_23_acfc_vs_denver/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T13:28:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T13:29:04.210Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ebc20f0819e6636a91847"
+    },
+    "message_id": "reddit_t3_1w9s7ka",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "thesopranos",
+    "username": "kingbelaIV",
+    "title": "Why was Charmaine never enough for Artie?",
+    "text": "Why was Charmaine never enough for Artie?\n\nShe was strong, independent, supportive of his business, devoted to their family, and never afraid to tell him when he was getting in his own way. She genuinely seemed to love him and wanted the best for him.   So why was Artie always chasing other women he obviously had no chances with? Why couldn’t he just appreciate Charmaine for who she was?       submitted by     /u/kingbelaIV     to     r/thesopranos       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/thesopranos/comments/1w9s7ka/why_was_charmaine_never_enough_for_artie/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T13:28:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T13:29:04.603Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ebc20f0819e6636a91848"
+    },
+    "message_id": "reddit_t3_1w9s7k7",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "heatedrivalryfanfics",
+    "username": "Additional-Bad-7375",
+    "title": "Time travel/body swap fic",
+    "text": "Time travel/body swap fic\n\nI’m looking for a fic, I think it was 6 chapters (unfinished when I read it).   Basically Older a Ilya and Younger Ilya switch bodies. It’s an AU where Magic is common and Yuna is like a low level witch. And young Ilya is living with Shane , but the relationship is complicated. Older Ilya is in the middle of having sex with younger Shane when they swap and he like tries to avoid giving away too much I think. The professional witches they talk to say it will naturally switch back in like a week.   It was on AO3.       submitted by     /u/Additional-Bad-7375     to     r/heatedrivalryfanfics       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/heatedrivalryfanfics/comments/1w9s7k7/time_travelbody_swap_fic/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T13:28:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T13:29:04.800Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ebc20f0819e6636a91849"
+    },
+    "message_id": "reddit_t3_1w9s7jr",
+    "topic_key": "give me today top three conversation about e commerce",
+    "search_keyword": "ecommerce",
+    "platform": "reddit",
+    "subreddit": "CBSECommerce",
+    "username": "studywitharii7",
+    "title": "HALF YEARLY",
+    "text": "HALF YEARLY\n\nMY HALF YEARLYS ARE NEARR... PLEASEEEE HELPP!!! ABOUT YT TEACHER!!!       submitted by     /u/studywitharii7     to     r/CBSECommerce       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CBSECommerce/comments/1w9s7jr/half_yearly/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T13:28:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T13:29:04.997Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ebc21f0819e6636a9184a"
+    },
+    "message_id": "reddit_t3_1w9s7jp",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "ePub",
+    "username": "Almosttrustworthyy",
+    "title": "Plz help",
+    "text": "Plz help\n\nsubmitted by     /u/Almosttrustworthyy     to     r/ePub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ePub/comments/1w9s7jp/plz_help/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T13:28:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T13:29:05.193Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ebc21f0819e6636a9184b"
+    },
+    "message_id": "reddit_t3_1w9s7jl",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "TrueChristian",
+    "username": "ParkingPoint1925",
+    "title": "I got baptized and something crazy happened",
+    "text": "I got baptized and something crazy happened\n\nSo about a year ago I started to believe. I had a really dark time for years and always felt depressed and like something is missing, although everything was good. I couldn't think whats wrong and what is missing no matter how hard I tried so I started to pray again because I saw it as the last way to get better, I was done at some point. After praying for weeks without really believing one day everything changed. I was on my balcony, praying and said that I am done and I can't handle this anymore. Suddenly I felt a super warm feeling (it was winter and I was outside without any jacket so it was damn cold) and I felt better. Since this exact moment I just felt better. I started smiling and from that moment on I felt way way more positive.   The psalm 27:14 was important to me because it reminds me of always trusting in god no matter how dark the times get so 3 weeks ago I got it tatoo'd on my arm. I am going to a free church in my town for a while now but always showed up in a sweater so no one could even see my tattoo or even knew I have one at all. Since I was new to the church I was mostly sitting alone aswell.   After I got more into it I decided to get baptized this sunday. After everything I got a \"certificate\" (just a reminder for myself, nothing official or anything) and our pastor always chooses a random bible verse to put on it. He chose 27:14. Remember he had no chance even seeing my tattoo and no one knew about it, I told it to no one at all.    I showed them my tattoo and we were standing there and just couldn't believe it.   So thankful that Jesus got into my life literally everything changed since this moment on my balcony!    Just wanted to share it, sorry for spelling mistakes im no native english speaker :)       submitted by     /u/ParkingPoint1925     to     r/TrueChristian       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TrueChristian/comments/1w9s7jl/i_got_baptized_and_something_crazy_happened/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T13:28:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T13:29:05.390Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ebc21f0819e6636a9184c"
+    },
+    "message_id": "reddit_t3_1w9s7jh",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "marvelchampionslcg",
+    "username": "AllezBro",
+    "title": "Why are the designers making more powerful heroes? Make it easier for new people? Does this noticeable jump in power creep feel like a more defining watershed in Legacy vs Current Environment as pointed in their design Journal?",
+    "text": "Why are the designers making more powerful heroes? Make it easier for new people? Does this noticeable jump in power creep feel like a more defining watershed in Legacy vs Current Environment as pointed in their design Journal?\n\nSource:  Stats - Marvel Champions Tracker (MCT)     Designer Journal: Introducing Current and Legacy Environments - Fantasy Flight Games    We will be focusing more heavily on optimizing the Current Environment, and if a design decision emerges where Legacy is pulling in one direction and Current is pulling in the other,  we will always prioritize the direction that makes the Current experience better.        submitted by     /u/AllezBro     to     r/marvelchampionslcg       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/marvelchampionslcg/comments/1w9s7jh/why_are_the_designers_making_more_powerful_heroes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T13:28:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T13:29:05.587Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ebc21f0819e6636a9184d"
+    },
+    "message_id": "reddit_t3_1w9s7jb",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "TarantulaKeeping",
+    "username": "Awkward_worm299",
+    "title": "First Tarantula Molt Sexing",
+    "text": "First Tarantula Molt Sexing\n\nHi all! I’m new here and this is my first ever T so please be patient with me.  I have been growing out a B. Smithi sling for about 2 years now. I have tried to get an idea on their gender with prior molts but I haven’t been too confident in my judgement. I believe I may have a female but I’m not sure. They have been extremely slow to grow out. This is their third molt with me. The last one was over a year ago. Could some folks with more experience take a look and weigh in?   Additionally, I have read that Brachyplema are slow growers, but should I be concerned that they hadn’t molted in the past year until today? I try to feed based on abdomen size so sometimes they seem to not need food for a few weeks. I have fed Dubias, Hornworms, crickets, and the occasional wax worm. Ambient room humidity is around 50% (Pennsylvania) and temperature around 70-75.    I truly appreciate guidance and advice!        submitted by     /u/Awkward_worm299     to     r/TarantulaKeeping       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TarantulaKeeping/comments/1w9s7jb/first_tarantula_molt_sexing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T13:28:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T13:29:05.785Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ebc22f0819e6636a91850"
+    },
+    "message_id": "reddit_t3_1w9s7ig",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "NepalPlusTwo",
+    "username": "Thunder_bolt69",
+    "title": "9 class ko resources deuna kasaile🫪",
+    "text": "9 class ko resources deuna kasaile🫪\n\nekchoti ta aafu ni prepare vayera janu pardo rexa tuition padauna gako prism ko cross section formula haru birsera tanab   tyo vedanta publication book ko pdf pauxa haina online ma?       submitted by     /u/Thunder_bolt69     to     r/NepalPlusTwo       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NepalPlusTwo/comments/1w9s7ig/9_class_ko_resources_deuna_kasaile/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T13:28:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T13:29:06.373Z"
+    }

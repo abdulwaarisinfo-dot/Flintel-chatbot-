@@ -1,0 +1,416 @@
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T00:28:18.877Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e0526f0819e6636a8b0e0"
+    },
+    "message_id": "reddit_t3_1w9d04i",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "LetMeHelpYouOut",
+    "username": "Total_Community_5591",
+    "title": "small business/anime cosplay competition",
+    "text": "small business/anime cosplay competition\n\nHi guys 🤗 how are you guys doing so If someone can help me with buying me the crepe pan I have on my wishlist I'd really appreciate it it's for a small business I want to start I want to start making pancakes    or a cosplay competition there's a anime convention going on and I'd never had or wore a cosplay before so I'd really appreciate it if someone can help me out    I have a black and green wig I think or the white one if u scroll further down on my list and a school anime uniform    Here's my wishlist:    https://www.amazon.com/hz/wishlist/ls/2AGNVUGA59TWY?ref\\_=wl\\_share        submitted by     /u/Total_Community_5591     to     r/LetMeHelpYouOut       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LetMeHelpYouOut/comments/1w9d04i/small_businessanime_cosplay_competition/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T00:27:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T00:28:22.651Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e0526f0819e6636a8b0e1"
+    },
+    "message_id": "reddit_t3_1w9d03o",
+    "topic_key": "nike",
+    "search_keyword": "Nike",
+    "platform": "reddit",
+    "subreddit": "MelbourneTrains",
+    "username": "shniken",
+    "title": "Grog for Gunzels: Transit Orientated Pubs & Bars in Melbourne – Part 2 The Frankston Line",
+    "text": "Grog for Gunzels: Transit Orientated Pubs & Bars in Melbourne – Part 2 The Frankston Line\n\nsubmitted by     /u/shniken     to     r/MelbourneTrains       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MelbourneTrains/comments/1w9d03o/grog_for_gunzels_transit_orientated_pubs_bars_in/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T00:27:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T00:28:22.851Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e0545f3d11795a689dfa2"
+    },
+    "message_id": "reddit_t3_1w9d0n9",
+    "topic_key": "rest api",
+    "search_keyword": "REST API",
+    "platform": "reddit",
+    "subreddit": "zotero",
+    "username": "Emilio_M4ti4s",
+    "title": "Guia Completa: Conectar Hermes Agent (Nobara Linux) a Aplicacion Movil Android via Tailscale",
+    "text": "Guia Completa: Conectar Hermes Agent (Nobara Linux) a Aplicacion Movil Android via Tailscale\n\nGuia detallada paso a paso para diagnosticar, liberar puertos, ejecutar el servidor API de Hermes Agent en Nobara Linux y exponerlo de forma segura mediante Tailscale MagicDNS hacia una app movil (Conduit / Hermes Client).   ---   ## 1. Requisitos del Sistema   * Servidor: Nobara Linux con Hermes Agent instalado en el entorno virtual (`~/.hermes/hermes-agent/venv/`).   * Red Privada: Tailscale instalado y activo en el PC Linux y en el telefono movil Android.   * Dominio MagicDNS: `nobara-pc-1.tailb81316.ts.net`   * Llave de API (API Key): `138314e0f3999c544a5574b79b9507c1`   ---   ## 2. Diagnostico y Limpieza de Procesos en Conflicto   Antes de iniciar la API de Hermes, es necesario identificar y cerrar cualquier proceso secundario (como DeepSeek Harness) u otras instancias de Hermes que ocupen puertos de red.   ### Paso 2.1: Identificar procesos activos   ```bash   ps aux | grep -i hermes   ss -tulpn | grep python   ```   ### Paso 2.2: Detener servicios en el puerto 3088 (Harness)   Si el puerto 3088 esta ocupado por la interfaz web de Harness:   ```bash   sudo fuser -k 3088/tcp   ```   ### Paso 2.3: Finalizar instancias previas de Hermes   ```bash   pkill -f \"hermes_cli.main\"   ```   ---   ## 3. Iniciar el Servidor API de Hermes Agent   Inicia el proceso principal Gateway de Hermes en segundo plano forzando la escucha local en el puerto 8642.   ### Paso 3.1: Ejecutar Hermes Gateway en segundo plano   ```bash   nohup /home/emilio/.hermes/hermes-agent/venv/bin/python -m hermes_cli.main gateway run --host  127.0.0.1  --port 8642 > ~/.hermes/hermes.log 2>&1 &   ```   ### Paso 3.2: Verificar ejecucion y salud del servidor local   ```bash   curl [ http://127.0.0.1:8642/health\\](http://127.0.0.1:8642/health)    ```   Respuesta esperada:   ```json   {\"status\": \"ok\", \"platform\": \"hermes-agent\", \"version\": \"0.21.0\"}   ```   ---   ## 4. Configuracion del Firewall en Nobara Linux (firewalld)   Habilita el puerto 8642 en el cortafuegos de Nobara Linux para autorizar la entrada de trafico de red.   ```bash   # Permitir puerto 8642 TCP de forma permanente   sudo firewall-cmd --add-port=8642/tcp --permanent   # Recargar la configuracion del firewall   sudo firewall-cmd --reload   # Confirmar puertos habilitados   sudo firewall-cmd --list-ports   ```   ---   ## 5. Exponer el Servidor via Tailscale Serve (MagicDNS)   Enruta el trafico entrante del dominio privado de Tailscale hacia el puerto local de Hermes.   ### Paso 5.1: Iniciar el proxy de Tailscale   ```bash   sudo tailscale serve --bg --http=8642 [ http://127.0.0.1:8642\\](http://127.0.0.1:8642)    ```   ### Paso 5.2: Verificar el estado de la configuracion de Tailscale   ```bash   sudo tailscale serve status   ```   Salida esperada:   ```text   Available within your tailnet:   [ http://nobara-pc-1.tailb81316.ts.net:8642/\\](http://nobara-pc-1.tailb81316.ts.net:8642/)    |-- proxy [ http://127.0.0.1:8642\\](http://127.0.0.1:8642)    ```   ---   ## 6. Pruebas de Conectividad   ### Paso 6.1: Verificacion en la terminal del PC   Prueba el punto de enlace utilizando el nombre de dominio MagicDNS:   ```bash   curl [ http://nobara-pc-1.tailb81316.ts.net:8642/health\\](http://nobara-pc-1.tailb81316.ts.net:8642/health)    ```   Respuesta esperada:   ```json   {\"status\": \"ok\", \"platform\": \"hermes-agent\", \"version\": \"0.21.0\"}   ```   ### Paso 6.2: Verificacion en el telefono movil (Android)      Asegurate de que la aplicacion Tailscale este activa y conectada en tu celular.     Abre el navegador Chrome en el telefono e ingresa a:      ` http://nobara-pc-1.tailb81316.ts.net:8642/health\\`      Debes visualizar la misma respuesta JSON con `status: \"ok\"`.     ---   ## 7. Configuracion de la Aplicacion Movil (Conduit / Hermes Client)   Ingresa los datos exactos de la API en los ajustes de conexion de tu aplicacion movil:   * URL del Servidor / Base URL: ` http://nobara-pc-1.tailb81316.ts.net:8642\\`    * Endpoint REST API (si la app lo requiere): ` http://nobara-pc-1.tailb81316.ts.net:8642/v1\\`    * Clave API / API Key: `138314e0f3999c544a5574b79b9507c1`   ---   ## 8. Notas de Mantenimiento   * Los comandos ejecutados con `--bg` en Tailscale persisten entre sesiones siempre que el servicio `tailscaled` continue ejecutandose en el sistema operativo.   * Si el servicio de Hermes se interrumpe tras reiniciar la PC, vuelve a ejecutar el comando de inicio de Hermes Gateway (Seccion 3.1).   ```   ```       submitted by     /u/Emilio_M4ti4s     to     r/zotero       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/zotero/comments/1w9d0n9/guia_completa_conectar_hermes_agent_nobara_linux/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T00:28:32Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T00:28:53.151Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e0561f0819e6636a8b0fe"
+    },
+    "message_id": "reddit_t3_1w9d101",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PDXBuyNothing",
+    "username": "galateadreams",
+    "title": "Offer 6 treadle loom",
+    "text": "Offer 6 treadle loom\n\nOffering:   6 treadle loom and accessories.        submitted by     /u/galateadreams     to     r/PDXBuyNothing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PDXBuyNothing/comments/1w9d101/offer_6_treadle_loom/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T00:28:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T00:29:21.800Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e059bf0819e6636a8b117"
+    },
+    "message_id": "reddit_t3_1w9d1w0",
+    "topic_key": "hello",
+    "search_keyword": "hello",
+    "platform": "reddit",
+    "subreddit": "plantID",
+    "username": "Mariannatupatrona",
+    "title": "Plant ID help",
+    "text": "Plant ID help\n\nHello, I want to know if someone has information about this plant. I haven't found enough information to be 100% sure about what it is. I've found that maybe is papalo quelite but not too sure. The essential oil that it produces smells extremely good. It's location is Morelos, México.        submitted by     /u/Mariannatupatrona     to     r/plantID       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/plantID/comments/1w9d1w0/plant_id_help/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T00:30:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T00:30:19.806Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e059cf0819e6636a8b11b"
+    },
+    "message_id": "reddit_t3_1w9d1uj",
+    "topic_key": "hello",
+    "search_keyword": "hello",
+    "platform": "reddit",
+    "subreddit": "CleaningTips",
+    "username": "AliceBangz",
+    "title": "Help me identify these paper towels?",
+    "text": "Help me identify these paper towels?\n\nHello! I have this single roll of paper towels a stranger gave me when I was camping months ago. Ive been holding onto it because its the BEST paper towels I've ever used in my life and I need help identifying it. They're way better then bounty which is what im used to buying. Theres no identifying features or name on it but its super thick and soft, very absorbent with a wave like pattern with dots. Its basically like a paper blanket plz I need to make sure I can buy more of these and never go back to bounty again helpppp        submitted by     /u/AliceBangz     to     r/CleaningTips       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CleaningTips/comments/1w9d1uj/help_me_identify_these_paper_towels/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T00:30:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T00:30:20.597Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e059df3d11795a689dfaa"
+    },
+    "message_id": "reddit_t3_1w9d1ys",
+    "topic_key": "graphic designer",
+    "search_keyword": "graphic designer",
+    "platform": "reddit",
+    "subreddit": "Adobe",
+    "username": "Standard_Flan_128",
+    "title": "My Thoughts on Adobe",
+    "text": "My Thoughts on Adobe\n\nI am a graphic designer at Salesfoce and we have been re-evaluating our usage of Adobe. We have found that we don't need Adobe to make edits and Astra is more than good enough. Just wanted to let all of you know that Adobe is not looking so great for the near future.        submitted by     /u/Standard_Flan_128     to     r/Adobe       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Adobe/comments/1w9d1ys/my_thoughts_on_adobe/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T00:30:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T00:30:21.949Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e059ef0819e6636a8b124"
+    },
+    "message_id": "reddit_t3_1w9d1sb",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "COD",
+    "username": "SleepEffective7885",
+    "title": "Which COD should I purchase",
+    "text": "Which COD should I purchase\n\nThis will be my first COD game so I’m not too sure which one to buy. These are my options:   BO6  Cold War  Black ops 3  Modern warfare 2  Modern warefare    I’m open to anything but like realistic immersive gameplay.        submitted by     /u/SleepEffective7885     to     r/COD       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/COD/comments/1w9d1sb/which_cod_should_i_purchase/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T00:29:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T00:30:22.368Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e059ef0819e6636a8b125"
+    },
+    "message_id": "reddit_t3_1w9d1qz",
+    "topic_key": "hello",
+    "search_keyword": "hello",
+    "platform": "reddit",
+    "subreddit": "roleplaying",
+    "username": "enigmaticallycorrect",
+    "title": "[FpM4F] slice of life // romance roleplay 21+",
+    "text": "[FpM4F] slice of life // romance roleplay 21+\n\nhello there! i am 21+ and all characters and participants must be 21+ as well!    slice of life is my favorite genre and i love adding in drama, tension, angst, romance, heartbreak, trauma, growth, insurmountable odds! love it all. i am even open minded to some fantasy/supernatural aspects for an interesting flair. it is important to note that while i am female/afab, i will be portraying a MALE CHARACTER for this roleplay.    i write in third person perspective and in past tense, i thrive on details and world building, i can write 3-5 chunky paragraphs at a time (depending on what is currently happening within the story/scene — dialogue heavy scenes will be a bit shorter for obvious reasons) but i will always do my best to put forth effort and give my partner something worthy of replying to. yes, i am open to 18+ content.    as for me personally, i reside in the central standard timezone, i work in retail and often have to work early in the morning which means i am in bed early most nights but i do enjoy staying up on my off days. ooc chat is great, i aim to be friendly and communicative with my partner, always let them know if i will be absent for a lengthy time. oh, and i do use discord as well.    i hope to hear back from you.       submitted by     /u/enigmaticallycorrect     to     r/roleplaying       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/roleplaying/comments/1w9d1qz/fpm4f_slice_of_life_romance_roleplay_21/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T00:29:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T00:30:22.567Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e059ff3d11795a689dfb3"
+    },
+    "message_id": "reddit_t3_1w9d1uu",
+    "topic_key": "dermatologist",
+    "search_keyword": "dermatologist",
+    "platform": "reddit",
+    "subreddit": "AskDermatologists",
+    "username": "Creepy-Step8455",
+    "title": "Help! What is this? Im a safe? Lol",
+    "text": "Help! What is this? Im a safe? Lol\n\nWhat are these dark spots? I just noticed them appearing on my body. There are a lot of them on my arms. By the way im 36 years old.       submitted by     /u/Creepy-Step8455     to     r/AskDermatologists       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskDermatologists/comments/1w9d1uu/help_what_is_this_im_a_safe_lol/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T00:30:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T00:30:23.870Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e05a0f0819e6636a8b12d"
+    },
+    "message_id": "reddit_t3_1w9d1pf",
+    "topic_key": "hello",
+    "search_keyword": "hello",
+    "platform": "reddit",
+    "subreddit": "cgandlittlematchgroup",
+    "username": "Strict-Top9954",
+    "title": "[trans f 24] for mommy or daddy",
+    "text": "[trans f 24] for mommy or daddy\n\nHello I’m looking for a mommy or daddy that’s kind respectful and happy to play wif me   Big me like trains and soccer    Little me likes playing with my stuffys and watching science channels on YouTube    Please reach out if you think you’d be a good fit       submitted by     /u/Strict-Top9954     to     r/cgandlittlematchgroup       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cgandlittlematchgroup/comments/1w9d1pf/trans_f_24_for_mommy_or_daddy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T00:29:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T00:30:24.138Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e05d7f0819e6636a8b137"
+    },
+    "message_id": "reddit_t3_1w9d2pg",
+    "topic_key": "hello",
+    "search_keyword": "hello",
+    "platform": "reddit",
+    "subreddit": "JapaneseWoodworking",
+    "username": "Slayedthetelltaylor",
+    "title": "Chisels! Identify/value",
+    "text": "Chisels! Identify/value\n\nHello lovely people!    I have 14 beautiful vintage chisels from a range of makers, I’ve identified some (Ichihiro, Konobu, Nagahiro, Munemitsu etc) and I’m looking to identify and value the rest! 6 of these are original hand crafted handles, including a set of two kensaki nomi with a curled over tip. I’d love some help confirming what I’ve identified (correctly I hope) and identifying the others/valuing them, I’ll probably look to sell some as well. Can take/send more photos if it helps or adjust my technique!   Thank you so much for your help!        submitted by     /u/Slayedthetelltaylor     to     r/JapaneseWoodworking       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/JapaneseWoodworking/comments/1w9d2pg/chisels_identifyvalue/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T00:31:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T00:31:19.882Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e05d8f0819e6636a8b13a"
+    },
+    "message_id": "reddit_t3_1w9d2pb",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Herocantare",
+    "username": "IceWolfPercy",
+    "title": "Hero Cantare Rebirth Update",
+    "text": "Hero Cantare Rebirth Update\n\nA little update on the current project Rebirth,   This week there won't be too many updates to the game itself with Haiko having personal things going on so it'll be a bit slower this week, but the current thing being worked on is getting 1v1 arena up and running, at least with fighting against npcs for personal accounts not in a server.    We are currently making a list of working and not working mechanics in the game, and how high their priority is with getting that fixed, a few examples of that would be claiming Awakening Passives, Changing Nickname, Main Hero in the background, Changing the Background, and the Frame around your character. Those are just a few examples of issues that are currently not working. Here is a list though of mechanics working or mostly working.     Leveling of your Character   Awakening Tree for Characters   Starring up your Characters   Upgrading Skills   Equipping Gear   Equipping Exclusive Equipment   Using Hero Memory (Though Gacha is currently not running so you would have to go into your dashboard and add it to your account.)   Seeing Gear in your Inventory   Seeing Exclusive Equipment in your Inventory   Seeing Items in your main Inventory   Seeing Limited Event Items in your Inventory   Creating a Guild (Though it freezes your game so restarting the game you'll be able to see the guild you created and sorta interact with it.)   Guild Buff (This technically works, your able to donate Level-up Material for Guild Funds and use them for Guild Buffs, but it doesn't use up your Guild Funds.)   Using the Guild Store   Buying Costumes from the Store (You will have to go into your dashboard and give yourself Costume Coins to purchase most skins, some cost Gems.)   Story Mode Battling Works properly   City Search (It is working but every 10 ish seconds it resets, so don't count on getting any material from it right now.)   As of now, all of Season .0 works, even if your not gaining stars for the levels (Hard Mode does not work currently though.)     This is everything that either for sure works or for the most part does. A lot of items that you would normally get isn't possible to get through normal means, most of it currently needs to be added through your dashboard to your account.   I'll try to make another update later this week on what new is working, what is being worked on, and what to expect in the future for what will be focused on afterwards.   As always, thank you Haiko, Yukio (Specialist_Elk_4704), and the others working together to make this game great again.       submitted by     /u/IceWolfPercy     to     r/Herocantare       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Herocantare/comments/1w9d2pb/hero_cantare_rebirth_update/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T00:31:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T00:31:20.472Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e05d9f0819e6636a8b141"
+    },
+    "message_id": "reddit_t3_1w9d2o9",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BeermoneyNL",
+    "username": "WoodFiredPidza",
+    "title": "Lendermarket - €75 bij een investering van €500 of meer",
+    "text": "Lendermarket - €75 bij een investering van €500 of meer\n\nLendermarket is een P2P-leenplatform dat zich richt op kortlopende leningen.  Het heeft soms hoge rentes, maar daar zit uiteraard ook bijbehorend risico aan vast.   Ze bieden het volgende:     Buyback-garantie   Gemiddeld 13.46% rendement per jaar   Er zijn investeringsperiodes van minder dan 60 dagen, soms minder dan 30.   Een auto invest systeem waarbij je een portfolio kunt samenstellen op basis van bedragen en filters die je zelf kiest.     Stappen voor de referral bonus:     Meld je aan via  mijn link . Als er om een code gevraagd wordt, vul dan  6dqz4sqx  in.   Stort en investeer €500. Je kunt het beste storten via bankoverschrijving, zodat je deze rekening kunt gebruiken om later weer op te nemen. Deze €500 moet  ten minste 30 dagen  geïnvesteerd blijven.   Je mag de investering spreiden over meerdere leningen. Auto invest is hier een goede manier voor. Hier kun je een max bedrag per lening aangeven (minimaal €10). Op dit moment zijn er leningen bij een Creditstar Spain waarbij de looptijd korter is dan 60 dagen. Deze partij heeft op lendermarket een goede risicoscore, maar je kunt voor meer spreiding je investering natuurlijk ook verdelen over meerdere partijen. Zie een voorbeeld voor auto-invest  hier . Belangrijk is dat je voor het minimum aantal dagen dus een aantal kiest dat 30 dagen of hoger is.   Nadat het geld geïnvesteerd is ontvang je na 30 dagen de €75 bonus in je account. De bonus is daarna direct opneembaar. Het duurde ongeveer 1 werkdag voordat ik het op mijn bankrekening had.     Voorwaarden van de actie:   https://assets.lendermarket.com/docs/Lendermarket-Limited-Referral-Program-Terms-July-2026.pdf    Mocht je vragen hebben laat het dan gerust weten.   Disclaimer: Dit is geen beleggingsadvies. Bij mij zelf werd alles netjes op tijd uitbetaald, maar zoals altijd zit er risico vast aan investeren. Doe vooral je eigen research en ken de risico's voordat je hieraan begint.       submitted by     /u/WoodFiredPidza     to     r/BeermoneyNL       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BeermoneyNL/comments/1w9d2o9/lendermarket_75_bij_een_investering_van_500_of/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T00:31:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T00:31:21.870Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e05dbf0819e6636a8b149"
+    },
+    "message_id": "reddit_t3_1w9d2no",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "XboxSeriesS",
+    "username": "Akumaismycopilot",
+    "title": "Anything I Need To Know Before I Buy a Second Xbox?",
+    "text": "Anything I Need To Know Before I Buy a Second Xbox?\n\nAt the moment, I own a PS5 Pro & an Xbox One X. Kinda want to start picking up current-gen games for Xbox, but I’m not ready to retire my One X. I put a lot of work into cleaning & repasting it, installing an internal ssd, etc. Also, I generally prefer to play One X games on a One X. One X is a beast even today. Series S doesn’t get One X patches, so a lot of older games still look better on One X (imo).   I’m thinking about picking up used Series S on eBay and using them both. Apparently, it’s fine to have them both signed into my account, so is there anything I need to know before I try this? Any issues I might not be aware of? I’d like to keep signed into both of them. I wouldn’t be using them both at the same time. I might swap external SSD’s from one console to the next, but I have several SSD’s laying around I can use so it seems easier to just keep the two libraries separate. I assume there’s no issue with downloading the same game to two separate SSD’s?   I’ve done some research, so I don’t think there’s any problems I am unaware of. Will I be able to keep myself automatically signed into my account on both, or will using one console sign me out of the other even if the other console is off?   Thanks.       submitted by     /u/Akumaismycopilot     to     r/XboxSeriesS       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/XboxSeriesS/comments/1w9d2no/anything_i_need_to_know_before_i_buy_a_second_xbox/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T00:31:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T00:31:23.439Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e05dbf0819e6636a8b14a"
+    },
+    "message_id": "reddit_t3_1w9d2ng",
+    "topic_key": "hello",
+    "search_keyword": "hello",
+    "platform": "reddit",
+    "subreddit": "nimona",
+    "username": "Vicline36",
+    "title": "Piercing help - Nimona's spikes.",
+    "text": "Piercing help - Nimona's spikes.\n\nHello everyone! I was wondering If Nimona's ear spikes on her right ear are possible to have in real life. I can't find the name for this type of piercing anywhere, maybe I'm blind.   I've been to a piercer and they wasn't really sure what i meant when I asked if it was possible to have the spikes facing truly horizontal, not forward or angled in a weird way.   Would love to know your thoughts or advice. Thanks in advance!       submitted by     /u/Vicline36     to     r/nimona       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/nimona/comments/1w9d2ng/piercing_help_nimonas_spikes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T00:30:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T00:31:23.637Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e05fbf3d11795a689dfc9"
+    },
+    "message_id": "reddit_t3_1w9d31p",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "20AndroidTesters",
+    "username": "Zealousideal-Arm7993",
+    "title": "Teste o petkiko",
+    "text": "Teste o petkiko\n\nPassamos os últimos meses construindo o PetKiko para aparelhos Android, e ele finalmente está de pé com várias funcionalidades e contando: check-in e check-out dos pets, controle de vagas por área, aviso de vacina vencendo, boletim do dia para o tutor e as cobranças da casa. Tudo funcionando, num app de verdade para celular e tablet.   Antes de abrir para o público, o Google nos pediu para testar ele com um grupo pequeno de usuários. Então gostaria de contar com sua ajuda para definir como o produto final fica.   Participe Grupo :  https://groups.google.com/g/petkiko-testers    Web :  https://play.google.com/apps/testing/br.com.fmhotelpet.petcare    Android :  https://play.google.com/store/apps/details?id=br.com.fmhotelpet.petcare    Terei prazem em testar o seu app tambem.        submitted by     /u/Zealousideal-Arm7993     to     r/20AndroidTesters       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/20AndroidTesters/comments/1w9d31p/teste_o_petkiko/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T00:31:29Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T00:31:55.659Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e0614f0819e6636a8b165"
+    },
+    "message_id": "reddit_t3_1w9d3gq",
+    "topic_key": "hello",
+    "search_keyword": "hello",
+    "platform": "reddit",
+    "subreddit": "Living_in_Korea",
+    "username": "plssndhlpimlst",
+    "title": "Is this racist or should I ignore it?",
+    "text": "Is this racist or should I ignore it?\n\nHello, I have been living and working in the same office in Korea for the last 5 years. Everyone here sees me every day. I work in the office.... Well they sent out the monthly birthday announcements and the picture used for me was..... well not me. It was just an AI generated white guy with somewhat similar features but clearly not me. I actually feel really hurt because everyone here knows me and should recognize me. Then I thought about if it was reversed. If it was a white country and instead of a real picture they just used a random AI generated asian person in the picture what would people say? I'm not sure if I should say something or just ignore it but it actually really hurts my feelings and feels pretty racist.        submitted by     /u/plssndhlpimlst     to     r/Living_in_Korea       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Living_in_Korea/comments/1w9d3gq/is_this_racist_or_should_i_ignore_it/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T00:32:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T00:32:20.883Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e0616f0819e6636a8b16b"
+    },
+    "message_id": "reddit_t3_1w9d3g8",
+    "topic_key": "hello",
+    "search_keyword": "hello",
+    "platform": "reddit",
+    "subreddit": "VintageRadios",
+    "username": "AttitudeBitter8759",
+    "title": "Unknown Motorola Turntable and Speaker Set",
+    "text": "Unknown Motorola Turntable and Speaker Set\n\nHello everyone!   I am new to this group as I just got this beauty from a family member.    I am preparing to start the journey through this restoration, but before I can start, I have already hit the first snag. The identification sticker has been partially removed and I can’t figure out for the life of me what model this is.    Anyone have any insight that can help me figure out the model number is?   The information I know:    1) It’s Motorola.  2) It has an external AM/FM receiver.  3) It had some lovely tenants living inside of it for awhile, but it looks like they were nice enough to not chew through anything!   Any information about this machine would be super appreciated! Looking forward to starting this journey!        submitted by     /u/AttitudeBitter8759     to     r/VintageRadios       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/VintageRadios/comments/1w9d3g8/unknown_motorola_turntable_and_speaker_set/",
+    "score": 0,
+    "num_comments": 0,

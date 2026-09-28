@@ -1,0 +1,416 @@
+      "$date": "2026-09-20T22:24:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T22:24:23.345Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab05d17660c608403989db1"
+    },
+    "message_id": "reddit_t3_1wluulj",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "UmamusumeFFS",
+    "username": "EatTheDust02",
+    "title": "Welp. Reddit logged me out of bunch of accounts.",
+    "text": "Welp. Reddit logged me out of bunch of accounts.\n\nAnd I don't even remember the paswords... Great.   Well, time to wait like 5 days to get them back.   (At least the only account I was really active on that got lodged out if  u/FairyKing-  and my trainer accounts are both fine.)   On an unrelated note, I cant change profile pics. Anyone know why?       submitted by     /u/EatTheDust02     to     r/UmamusumeFFS       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UmamusumeFFS/comments/1wluulj/welp_reddit_logged_me_out_of_bunch_of_accounts/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T22:24:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T22:24:23.551Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab05d17660c608403989db2"
+    },
+    "message_id": "reddit_t3_1wluul8",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "gptimage2prompts",
+    "username": "Big_Maximum_92",
+    "title": "How to Recreate Almost Any AI UGC Photo with GPT Image 2.5? Full JSON Prompt Below!",
+    "text": "How to Recreate Almost Any AI UGC Photo with GPT Image 2.5? Full JSON Prompt Below!\n\nGPT Image 2.5 is honestly insane for creating realistic AI UGC.   I tested it by taking a reference photo and converting every visible detail into a structured JSON prompt—including the subject’s pose, expression, hair, outfit, lighting, camera angle, framing, background, and smartphone-camera aesthetic.   The key is to prioritize the details in this order:     Overall composition and crop   Subject placement and body position   Face, expression, and hair   Outfit and accessories   Background geometry   Lighting and camera characteristics   Negative prompts for text, UI elements, anatomy issues, and unwanted style changes     I also explicitly instructed the model to remove captions, buttons, watermarks, timestamps, logos, and other interface elements from the reference.   The result looks much closer to an authentic UGC frame than a polished AI photoshoot.   Full JSON prompt below:   \"{ \"prompt_type\": \"photorealistic_reference_reconstruction\", \"objective\": \"Recreate the supplied reference photograph as closely as possible as a clean vertical smartphone portrait. Match the subject's pose, facial expression, long wavy hair, outfit, jewelry, kitchen environment, lighting, camera perspective, crop, body positioning, colors, and casual social-media aesthetic. Completely ignore and remove all text, captions, buttons, interface graphics, timestamps, watermarks, logos, and any other screen elements.\", \"reference_fidelity\": { \"target\": \"extremely high visual similarity\", \"priority_order\": [ \"overall composition and vertical crop\", \"subject scale and centered placement\", \"facial proportions and neutral expression\", \"very long wet-look wavy hair\", \"gray fitted camisole\", \"patterned low-rise bottoms\", \"kitchen background geometry\", \"soft bright frontal daylight\", \"jewelry and wrist accessories\", \"smartphone-camera texture\" ] }, \"canvas\": { \"orientation\": \"portrait\", \"aspect_ratio\": \"approximately 736:1308\", \"framing\": \"vertical smartphone photo or paused social-media video frame\", \"crop\": \"medium portrait from top of head to approximately upper thighs/hips\", \"subject_alignment\": \"centered\", \"headroom\": \"moderate amount of kitchen ceiling visible above the head\", \"bottom_crop\": \"cuts off below hips and upper thighs\", \"left_margin\": \"kitchen cabinets and built-in appliances visible\", \"right_margin\": \"refrigerator, counters, and cabinets visible\", \"perspective\": \"natural slightly wide smartphone perspective\" }, \"scene\": { \"location\": \"small modern residential kitchen\", \"time_of_day\": \"daytime\", \"mood\": \"casual, quiet, relaxed, selfie-style lifestyle image\", \"visual_style\": \"authentic social-media smartphone portrait\", \"background_complexity\": \"moderate but uncluttered\", \"environment\": { \"walls\": \"warm off-white to pale cream\", \"ceiling\": \"soft light gray-beige\", \"floor\": \"dark charcoal speckled or stone-effect flooring\", \"cabinetry\": \"white or pale cream modern flat-panel cabinetry\", \"lighting_source\": \"bright natural daylight coming from directly in front of subject, likely from a window behind the camera\" } }, \"subject\": { \"description\": \"young adult woman facing the camera directly\", \"position\": \"centered and seated or standing immediately behind a dark countertop\", \"body_visibility\": \"head, shoulders, chest, torso, waist, hips, and upper thighs\", \"pose\": { \"head\": \"upright with very slight natural tilt\", \"torso\": \"front-facing\", \"shoulders\": \"relaxed\", \"arms\": \"resting downward with both hands near the front edge of the counter\", \"hands\": \"partially visible near bottom corners\", \"posture\": \"upright but casual\" }, \"expression\": { \"overall\": \"neutral, calm, slightly pouty\", \"mouth\": \"closed\", \"lips\": \"full and relaxed\", \"gaze\": \"directly toward the camera\", \"brows\": \"neutral\", \"emotion\": \"composed and serene\" }, \"skin\": { \"tone\": \"light-to-medium warm beige with golden undertone\", \"finish\": \"smooth, luminous, soft-glow complexion\", \"texture\": \"lightly beauty-filtered but still realistic\", \"highlights\": \"soft sheen across forehead, cheeks, nose bridge, shoulders, and upper chest\", \"blush\": \"subtle peach-pink warmth on cheeks\", \"retouching\": \"moderate social-media smoothing without plastic texture\" }, \"face\": { \"shape\": \"soft oval\", \"forehead\": \"medium height\", \"cheeks\": \"smooth and softly rounded\", \"jaw\": \"gently tapered\", \"chin\": \"small rounded chin\", \"symmetry\": \"high but natural\", \"eyes\": { \"shape\": \"large almond-shaped eyes\", \"color\": \"very light green-gray / pale hazel-green\", \"size\": \"prominent\", \"lashes\": \"long, curled, dark and clearly defined\", \"eyeliner\": \"minimal or very subtle lash-line definition\", \"catchlights\": \"bright frontal window reflections\" }, \"eyebrows\": { \"shape\": \"soft medium arch\", \"color\": \"medium-dark brown\", \"density\": \"full but groomed\" }, \"nose\": { \"shape\": \"small straight nose\", \"bridge\": \"softly defined\", \"tip\": \"rounded\", \"highlight\": \"gentle frontal highlight\" }, \"lips\": { \"shape\": \"full, softly rounded\", \"upper_lip\": \"defined cupid's bow\", \"lower_lip\": \"slightly fuller\", \"color\": \"natural muted rosy pink\", \"finish\": \"glossy satin\", \"expression\": \"closed and slightly pouty\" } } }, \"hair\": { \"color\": \"medium-to-dark brown\", \"length\": \"very long, extending below the chest and toward the waist\", \"texture\": \"wet-look loose waves\", \"part\": \"center part\", \"volume\": \"moderate, flatter near scalp and fuller through lengths\", \"front_sections\": \"slightly pulled away from face with soft wave definition\", \"wave_pattern\": \"long S-shaped waves and loose crimped sections\", \"surface\": \"glossy and slightly damp-looking\", \"placement\": \"falls symmetrically down both shoulders and chest\", \"ends\": \"long, irregular, softly wavy\", \"styling\": \"natural, slightly tousled, beach-wave texture\" }, \"clothing\": { \"top\": { \"type\": \"fitted sleeveless camisole / tank top\", \"color\": \"cool medium gray / slate gray\", \"neckline\": \"deep scoop neckline\", \"straps\": \"thin shoulder straps\", \"fit\": \"tight and body-contouring\", \"length\": \"long enough to cover most of torso but ending around waist\", \"material\": \"smooth stretchy synthetic or cotton-blend fabric\", \"finish\": \"matte to slight satin sheen\", \"wrinkles\": \"subtle horizontal tension folds around waist\" }, \"bottom\": { \"type\": \"low-rise lounge shorts or fitted bottoms\", \"base_color\": \"light cream / pale beige\", \"pattern\": \"dark brown or gray leopard-style animal print\", \"waistline\": \"low rise, visible beneath camisole\", \"fit\": \"close-fitting around hips\", \"visibility\": \"only waistband and upper hip area prominently visible\" } }, \"jewelry_and_accessories\": { \"necklace\": { \"type\": \"very delicate fine chain\", \"material\": \"gold or pale warm metal\", \"pendant\": \"tiny minimal charm\", \"placement\": \"centered high on upper chest\", \"appearance\": \"subtle, almost understated\" }, \"left_wrist\": { \"accessories\": [ \"stacked beaded bracelets\", \"metallic bracelet\", \"turquoise/aqua-toned bracelet\" ], \"style\": \"casual layered wrist stack\", \"finish\": \"mixed glossy beads and small metallic reflections\" }, \"right_wrist\": { \"accessories\": [ \"thin white or pale bracelets\", \"delicate metallic bracelet\" ], \"appearance\": \"lighter and more minimal than left wrist\" } }, \"hands\": { \"visibility\": \"partially visible near bottom edge\", \"position\": \"resting near or on a countertop surface\", \"fingers\": \"slender and relaxed\", \"nails\": { \"length\": \"medium\", \"shape\": \"soft almond or rounded\", \"color\": \"pale nude or soft pink\", \"finish\": \"clean glossy manicure\" } }, \"kitchen_background\": { \"left_side\": { \"cabinetry\": { \"color\": \"white / cream\", \"style\": \"modern flat-panel or lightly beveled doors\", \"hardware\": \"slim silver metal handles\" }, \"built_in_appliances\": [ { \"type\": \"built-in oven\", \"position\": \"mid-left\", \"color\": \"black glass with dark stainless trim\", \"shape\": \"horizontal rectangular appliance\" }, { \"type\": \"second built-in oven or microwave below/above\", \"position\": \"lower-left\", \"color\": \"black glass and stainless trim\" } ] }, \"center_back\": { \"wall\": \"warm off-white\", \"small_device\": { \"type\": \"small square wall-mounted control panel or intercom\", \"color\": \"light gray / white\", \"position\": \"slightly right of center behind subject\" }, \"radiator\": { \"type\": \"vertical white radiator\", \"position\": \"center-right background\", \"visibility\": \"partially obscured by subject\" } }, \"right_side\": { \"refrigerator\": { \"type\": \"tall silver-gray refrigerator\", \"position\": \"mid-right background\", \"surface\": \"matte metallic\", \"door\": \"covered with many small magnets, notes, and photo-like objects\", \"instruction\": \"recreate as abstract, non-readable clutter with no legible text\" }, \"lower_cabinets\": { \"color\": \"medium gray\", \"hardware\": \"metal handles\" }, \"counter\": { \"color\": \"dark charcoal or black\", \"visibility\": \"partial\", \"objects\": \"minimal small kitchen items, soft and indistinct\" } }, \"ceiling\": { \"light_fixture\": { \"type\": \"long rectangular flush-mounted ceiling light\", \"color\": \"white\", \"position\": \"top-center-left\", \"shape\": \"simple elongated rectangle\" } }, \"counter_foreground\": { \"position\": \"bottom edge of frame\", \"material\": \"dark polished stone or laminate\", \"color\": \"black / charcoal\", \"appearance\": \"narrow horizontal strip\" } }, \"lighting\": { \"type\": \"soft frontal natural daylight\", \"primary_source\": \"large bright window directly in front of subject\", \"direction\": \"front and slightly above\", \"quality\": \"very soft and diffused\", \"contrast\": \"low\", \"face\": \"evenly illuminated with almost no harsh shadows\", \"eyes\": \"bright catchlights and slightly enhanced iris color\", \"hair\": \"soft highlights tracing wet waves\", \"skin\": \"subtle glow on cheeks, nose, shoulders, and collarbones\", \"background\": \"slightly darker than subject\", \"color_temperature\": \"neutral-warm daylight\", \"shadow_style\": \"soft and natural\" }, \"camera\": { \"device\": \"modern smartphone front-facing camera\", \"orientation\": \"vertical portrait\", \"lens\": \"standard wide selfie lens\", \"focal_length_equivalent\": \"approximately 24-28mm\", \"camera_height\": \"approximately eye level\", \"distance\": \"approximately 0.8 to 1.2 meters\", \"perspective\": \"mild wide-angle but natural\", \"focus\": \"sharpest on face, eyes, and hair\", \"depth_of_field\": \"moderately deep; kitchen remains clearly recognizable\", \"image_quality\": \"high-resolution smartphone still\", \"processing\": \"subtle HDR and moderate beauty filtering\", \"sharpness\": \"clean digital sharpness without excessive edge enhancement\", \"compression\": \"slight social-media compression\", \"motion_blur\": \"none\" }, \"composition_geometry\": { \"face_center\": \"approximately x=50%, y=34%\", \"eye_line\": \"approximately y=31%\", \"head_top\": \"approximately y=17%\", \"shoulder_line\": \"approximately y=48%\", \"waistline\": \"approximately y=83%\", \"hair_left\": \"long dark wavy mass extending from head to lower-left torso\", \"hair_right\": \"matching long wavy mass extending down right side\", \"counter_edge\": \"thin dark horizontal band along bottom\", \"refrigerator\": \"right-middle background\", \"built_in_ovens\": \"left-middle background\", \"visual_balance\": \"highly centered subject with asymmetric kitchen equipment on both sides\" }, \"color_palette\": { \"dominant_colors\": [ \"cool gray\", \"warm beige\", \"dark brown\", \"off-white\", \"charcoal\", \"soft silver\", \"muted leopard print\" ], \"skin\": \"warm golden beige\", \"hair\": \"deep brown\", \"top\": \"slate gray\", \"bottoms\": \"cream with dark brown-gray spots\", \"kitchen\": \"white, cream, black, silver-gray\", \"floor\": \"dark charcoal\", \"overall_saturation\": \"moderate\", \"contrast\": \"soft\", \"white_balance\": \"neutral-warm\" }, \"beauty_processing\": { \"strength\": \"moderate\", \"skin_smoothing\": \"moderate-to-high\", \"eye_brightness\": \"slightly enhanced\", \"iris_color\": \"clear pale green-gray\", \"lip_definition\": \"subtle\", \"facial_shape_adjustment\": \"minimal\", \"overall_result\": \"polished social-media beauty look while retaining photorealism\" }, \"micro_details\": { \"skin\": \"subtle pores and tonal variation\", \"hair\": \"individual damp strands and wave clumps\", \"eyes\": \"clear catchlights and detailed irises\", \"tank_top\": \"smooth stretch-fabric texture and gentle wrinkles\", \"bracelets\": \"tiny reflective beads and metal highlights\", \"kitchen_cabinets\": \"soft matte painted finish\", \"floor\": \"fine speckled stone texture\", \"refrigerator\": \"small colorful magnet-like shapes without readable text\" }, \"photographic_style\": { \"genre\": \"casual indoor lifestyle selfie\", \"aesthetic\": \"social-media beauty portrait in a home kitchen\", \"realism\": \"extreme photorealism\", \"retouching\": \"moderate but believable\", \"production_value\": \"simple home setup\", \"desired_result\": \"looks like an authentic paused smartphone video or front-camera selfie taken in a kitchen\" }, \"negative_prompt\": [ \"text\", \"captions\", \"subtitles\", \"logos\", \"watermarks\", \"social media UI\", \"buttons\", \"play icon\", \"pause icon\", \"timestamp\", \"progress bar\", \"interface graphics\", \"extra people\", \"different camera angle\", \"side profile\", \"three-quarter face\", \"heavy head tilt\", \"short hair\", \"straight dry hair\", \"tight curls\", \"blonde hair\", \"red hair\", \"side part\", \"hair tied back\", \"missing long waves\", \"heavy makeup\", \"dramatic eyeliner\", \"red lipstick\", \"large smile\", \"open mouth\", \"different outfit\", \"white top\", \"black top\", \"long sleeves\", \"jacket\", \"dress\", \"jeans\", \"high-waisted bottoms\", \"different kitchen\", \"bedroom background\", \"outdoor setting\", \"night scene\", \"studio backdrop\", \"dramatic cinematic lighting\", \"hard flash\", \"extreme bokeh\", \"fisheye distortion\", \"DSLR portrait look\", \"overexposed skin\", \"plastic skin\", \"anime\", \"cartoon\", \"illustration\", \"3D render\", \"CGI\", \"oversaturated colors\", \"extra fingers\", \"deformed hands\", \"distorted anatomy\" ], \"final_generation_instruction\": \"Generate one highly photorealistic vertical smartphone portrait matching the reference composition as closely as possible. Center a young adult woman in a compact modern kitchen, framed from the top of her head to the upper thighs. Give her extremely long dark-brown center-parted hair with a damp, glossy, loose-wave texture falling symmetrically down both sides of her chest. She looks directly into the camera with pale green-gray eyes, long lashes, softly groomed brows, full natural rosy lips, warm luminous skin, and a calm neutral expression. Dress her in a tight slate-gray scoop-neck camisole and low-rise cream lounge bottoms with a dark leopard-style pattern. Add a delicate tiny gold necklace and stacked bracelets on both wrists. Keep both hands relaxed near the bottom edge on or beside a dark countertop. Preserve the kitchen details: white cabinetry and two dark built-in ovens on the left, warm pale walls, a small wall-mounted control panel, a white radiator, a silver-gray refrigerator covered with small non-readable magnets and photo-like objects on the right, gray lower cabinetry, dark stone flooring, and a long rectangular ceiling light. Use bright soft frontal daylight, subtle HDR, realistic smartphone sharpness, moderate beauty filtering, natural proportions, and an authentic social-media lifestyle look. Completely omit all readable text, buttons, captions, watermarks, timestamps, interface elements, and logos.\" }\"   Share your similar AI UGC results below!       submitted by     /u/Big_Maximum_92     to     r/gptimage2prompts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/gptimage2prompts/comments/1wluul8/how_to_recreate_almost_any_ai_ugc_photo_with_gpt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T22:24:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T22:24:23.764Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab05d18660c608403989db3"
+    },
+    "message_id": "reddit_t3_1wluul7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "BenNek_Ambassador",
+    "title": "Grab 25⚡ from u/BenNek_Ambassador!",
+    "text": "Grab 25⚡ from u/BenNek_Ambassador!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/BenNek_Ambassador     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wluul7/grab_25_from_ubennek_ambassador/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T22:24:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T22:24:24.169Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab05d18660c608403989db4"
+    },
+    "message_id": "reddit_t3_1wluukr",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "clydetr",
+    "title": "[Sticker Giveaway] Enter to win a 5 Stars Mango Tree Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 5 Stars Mango Tree Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/clydetr     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wluukr/sticker_giveaway_enter_to_win_a_5_stars_mango/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T22:24:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T22:24:24.374Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab05d18660c608403989db5"
+    },
+    "message_id": "reddit_t3_1wluukp",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "hockeycardswap",
+    "username": "BruceJack6",
+    "title": "Little Preseason Sale",
+    "text": "Little Preseason Sale\n\nSorry, wrote the nite last night and realized I shouldn’t list and go to bed 😂 . All prices USD, open to offers, buyer pays shipping. Will ship to CAN    Suzuki Showmanship: $150  Day with the Cup Barkov: $25  Lucas Raymond 4 Nations Mega Patch: $160  Brzustewicz rookie auto patch: $15  McCann Metal Universe 1/1: $55  Vilardi FWPA: $190  Celebrini/Michkov outburst YG checklist: $90   On IG for my business side @brucejackwax, feel free to message me there as well. Thanks and Pumped to watch hockey tonight!       submitted by     /u/BruceJack6     to     r/hockeycardswap       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hockeycardswap/comments/1wluukp/little_preseason_sale/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T22:24:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T22:24:24.575Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab05d18660c608403989db6"
+    },
+    "message_id": "reddit_t3_1wluukk",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AnalogCircleJerk",
+    "username": "Lumpy-Knee-1406",
+    "title": "Perky or Puffy?",
+    "text": "Perky or Puffy?\n\nHey guys. Predicament here. Im really looking for A LOT of reddit upvotes and was wondering if you think perky or puffy shaboingboings would bring in more or less? Also if anyone can point me in the direction of a female that is okay with tasteful nudie pics then please let me know. Thanks!        submitted by     /u/Lumpy-Knee-1406     to     r/AnalogCircleJerk       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AnalogCircleJerk/comments/1wluukk/perky_or_puffy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T22:24:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T22:24:24.778Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab05d18660c608403989db7"
+    },
+    "message_id": "reddit_t3_1wluuk7",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "HomeNetworking",
+    "username": "TranslatorMotor6578",
+    "title": "TP-Link AX72 Pro vs AX73 vs AXE75 — which would you choose at the same price?",
+    "text": "TP-Link AX72 Pro vs AX73 vs AXE75 — which would you choose at the same price?\n\nI'm trying to choose between three TP-Link routers on Amazon Canada, and they're all priced very close to each other, so I'd like to ignore price and focus purely on which one is the better buy.   The three models are:      Archer AX73     Archer AX72 Pro     Archer AXE75      My main productivity device is a  MacBook Air M4 purchased in Canada , which supports Wi-Fi 6E. Most of my usage is normal productivity work, web browsing, cloud storage, video calls, downloads/uploads, etc. I'm not currently planning to run anything extremely complicated on the router, but I do care about reliability, wireless performance, and keeping it useful for the next few years.   As I understand it, the main trade-offs are roughly:    AX73      Wi-Fi 6   5 GHz 4x4 / 160 MHz   No 6 GHz   No 2.5GbE   Broadcom platform   High-power FEM      AX72 Pro      Wi-Fi 6   5 GHz 4x4 / 160 MHz   2.5GbE port   No 6 GHz   Qualcomm platform   High-power FEM      AXE75      Wi-Fi 6E   5 GHz 2x2 / 160 MHz   6 GHz 2x2 / 160 MHz   The Amazon.ca version I'm looking at appears to be the older V1, so it only has Gigabit Ethernet rather than 2.5GbE   1.7 GHz quad-core Broadcom CPU   High-power FEM     The part I'm having trouble judging is how much these differences actually matter in real-world use.   For example, since my MacBook Air is only a 2x2 client, would the AX72 Pro/AX73's  4x4 5 GHz radio  still provide a meaningful advantage in range, stability, or multi-device performance?   Or, since the M4 MacBook Air supports Wi-Fi 6E, would I get more practical benefit from the AXE75's  6 GHz band , even though its 5 GHz radio is only 2x2?   I'm also wondering how much weight I should give to:     4x4 vs 2x2   2.5GbE   6 GHz / Wi-Fi 6E   Qualcomm vs Broadcom   CPU performance   FEM / radio performance   range through walls   long-term firmware/support reliability     I'm not particularly interested in choosing based on advertised AX5400 numbers — I'm more interested in actual wireless quality, stability and real-world performance.   If all three cost roughly the same,  which one would you choose and why?    I'd especially appreciate input from anyone who has actually used two or more of these models, or who knows the hardware/radio differences between them.       submitted by     /u/TranslatorMotor6578     to     r/HomeNetworking       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HomeNetworking/comments/1wluuk7/tplink_ax72_pro_vs_ax73_vs_axe75_which_would_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T22:24:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T22:24:24.981Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab05d19660c608403989db8"
+    },
+    "message_id": "reddit_t3_1wluuk4",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "AskBalkans",
+    "username": "StefanR05",
+    "title": "What do you think about \"Sarmiswilldoit\"/\"Glory to Romania\" guy?",
+    "text": "What do you think about \"Sarmiswilldoit\"/\"Glory to Romania\" guy?\n\nAs a German student in my 2nd year of med uni, I try to accommodate with the culture, language people etc.   Friends usually send me reels or short content on my socials of Romanian \"infuencers\" – for me those help a lot with the references/jargon/vocab etc. (take this with a grain of salt, but not all content is \"quality\" most of the time I notice stupidity on these but \"some are funny to a certain degree\")   Amongst many others, when I think about \"representing the glorious state of Romania\" this guy Sarmis comes to mind...   Although I do not know much about the guy, my personal opinion on him is that he \"has a content\" or fanbase – I don't tell you the contrary, but he tries too much or drags it, as he makes repetitive jokes about the stereotypes (wallets and gastronomy and whatnot) and it kinda gives a bad reputation towards you guys – and make no mistake , most of you are awesome:) – and even so people do support him...   On the other half, maybe he is trying to put his country on display while having fun, in his own way, no mistake in doing that...maybe I'm just not used to this type of content.   Now I do not expect much from a guy that does thing for views&clicks(as with any other content creator on that matter) , but that is my opinion, right or wrong, who knows... What do you guys think?   Am I too harsh on a subject that should not be serious?   Maybe so Anyway, thank you for any kind of interaction or information,cheers 🍻 🇩🇪!       submitted by     /u/StefanR05     to     r/AskBalkans       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskBalkans/comments/1wluuk4/what_do_you_think_about_sarmiswilldoitglory_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T22:24:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T22:24:25.186Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab05d19660c608403989db9"
+    },
+    "message_id": "reddit_t3_1wluujd",
+    "topic_key": "what problems do small business owners mention repeatedly even when they arent explicitly asking for a solution",
+    "search_keyword": "overwhelmed with",
+    "platform": "reddit",
+    "subreddit": "RandomActsofCards",
+    "username": "midnitedancer_",
+    "title": "[Offer] vintage notecards [US to WW]",
+    "text": "[Offer] vintage notecards [US to WW]\n\nHello all. 👋 I have some old notecards given to me by my mom I'd like to send out. Only 10 please, I have a tendency to get a little overwhelmed with a lot of takers. Drop a comment and I'll shoot you a dm. Happy mail! 💌       submitted by     /u/midnitedancer_     to     r/RandomActsofCards       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RandomActsofCards/comments/1wluujd/offer_vintage_notecards_us_to_ww/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T22:24:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T22:24:25.391Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab05d19660c608403989dba"
+    },
+    "message_id": "reddit_t3_1wluuj2",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "furniturerefinishing",
+    "username": "PigLemonade",
+    "title": "What type of finish should I use?",
+    "text": "What type of finish should I use?\n\nI know some people told me to strip the sides first, but I was impatient and wanted to see what the top looked like underneath. It’s even better than I expected. I still have to strip the sides and sand it. I won’t need anything too harsh I believe. Maybe a 120 grit? Let me know if I’m wrong there.    I’m not sure what the best finisher to use would be. So if anyone has any recommendations that would be awesome. I’m not sure what kinda wood I’m looking at honestly, so if you know let me know what it could be!       submitted by     /u/PigLemonade     to     r/furniturerefinishing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/furniturerefinishing/comments/1wluuj2/what_type_of_finish_should_i_use/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T22:24:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T22:24:25.594Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab05d19660c608403989dbb"
+    },
+    "message_id": "reddit_t3_1wluuin",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "astrocartography",
+    "username": "tealfeels0",
+    "title": "Looking for new city to live in w/ current chart, natal chart, relocation charts",
+    "text": "Looking for new city to live in w/ current chart, natal chart, relocation charts\n\nHi there, I will try to keep this brief! If anyone would be willing to give some insight into my chart I would be super grateful.    I am 31 F lost in life you could say. I'm not super well versed in astrology (although I respect and believe) but I believe I just completed my Saturn return this year and it was a doozy. Striped of identity, friends, my last job... So I'm unemployed, unsure what to do for work or where to go. Sure I'd love to know where I could meet romantic partners and more importantly friendship/community, yet I don't even know where to start to begin to get my life together.   If there's any additional information I could provide please let me know. I just spent the last 6 years in Austin, TX and always felt like it wasn't my place and eventually I moved back to my hometown last year. I'm itching for a change.   Relocation charts are in 3 places. If there are places that would make more sense I'm open to it   Los Angeles - love the weather, always believed I'd live in California at some point, appreciate the politics more so than Texas, I understand my sun sign is there.   Chicago- love the city, the food, have friends that live there, I don't see this as my forever place but perhaps somewhere to launch me?   NYC- my biggest pipe dream. I don't know if I see this as my forever either however I'm just so drawn to it and I don't believe I have any lines through there. I'm obsessed with watching apartment tours in NY and movies that are set there. I just think it's the most romantic city but it scares the living sh*t out of me financially and loneliness wise...   Okay TLDR if anyone might could point me in a direction I would so greatly appreciate it       submitted by     /u/tealfeels0     to     r/astrocartography       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/astrocartography/comments/1wluuin/looking_for_new_city_to_live_in_w_current_chart/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T22:23:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T22:24:25.799Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab05d1a660c608403989dbc"
+    },
+    "message_id": "reddit_t3_1wluuig",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "RedditGames",
+    "username": "Fantastic_Fall_267",
+    "title": "[Fill the blank] Why is the ___ gone?",
+    "text": "[Fill the blank] Why is the ___ gone?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Fantastic_Fall_267     to     r/RedditGames       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RedditGames/comments/1wluuig/fill_the_blank_why_is_the_gone/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T22:23:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T22:24:26.001Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab05d1a660c608403989dbd"
+    },
+    "message_id": "reddit_t3_1wluuib",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "asktransgender",
+    "username": "AlertGeologist1713",
+    "title": "Struggling to date as a 26 year old trans woman.",
+    "text": "Struggling to date as a 26 year old trans woman.\n\nI live in a pretty queer city, but get very little attention from women/dating apps (relevant because I identify as a demisexual lesbian). I'm a year into my transition and am definitely femme presenting. It's been months since my last date and two years since the last time I had sex (which is a whole other thing, I'm really curious how sex will work now lol). Worth noting, I have no plans to get bottom surgery (I fear this will FURTHER impact my dating prospects).   I put myself out there as often as I can (many times a week) engaging in hobbies and going to cafes. I feel confident in myself and I have many, many friends to support me. I know I'm not entitled to any amount of attention/interest from others, but it would be nice. I do get a fair amount of compliments on my appearance, but it never goes further than that.   I don't have any dysphoria, but I do have concerns. I'm concerned with how dry the dating scene feels right now. I'm concerned that I'm engaging in online echo chambers that differ from reality (in other words, I fear that reddit and tumblr are lying!!). I'm concerned with how much I'm narrowing my own dating pool. I'm concerned with asking questions about these kinds of things to others/online (I know these types of things get discussed a lot and I've discussed this very issue elsewhere and was met with a negative reception). Should I \"give up\" on identifying as a lesbian? The prospect of that breaks my heart.   I don't really know what I'm asking here, but I'd love advice/feedback/reality checks. Toss in a few success stories and I'd be very happy!       submitted by     /u/AlertGeologist1713     to     r/asktransgender       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/asktransgender/comments/1wluuib/struggling_to_date_as_a_26_year_old_trans_woman/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T22:23:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T22:24:26.213Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab05d1a660c608403989dbe"
+    },
+    "message_id": "reddit_t3_1wluuh7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "shortstory",
+    "username": "latinacupcake92",
+    "title": "Amazon Publishing",
+    "text": "Amazon Publishing\n\nHey guys, I am starting the process of writing my book in October and I want to plan ahead at looking into publishing companies. Or self publishing. Has anyone published with Amazon? I've seen mainly good reviews. I would like some opinions and advice. Gracias!       submitted by     /u/latinacupcake92     to     r/shortstory       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/shortstory/comments/1wluuh7/amazon_publishing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T22:23:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T22:24:26.419Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab05d2caeeb96c1c63ba884"
+    },
+    "message_id": "reddit_t3_1wluuve",
+    "topic_key": "cpa",
+    "search_keyword": "CPA",
+    "platform": "reddit",
+    "subreddit": "CustomPCBuilding",
+    "username": "Trozkat",
+    "title": "Need help with pc parts/first time choosing and building desktop",
+    "text": "Need help with pc parts/first time choosing and building desktop\n\nJust joined this subreddit, and was wondering if someone/few people would'nt mind talking a look at my pc part picker list to make sure everything actually makes sense of just some overall adjustments i could make. Due to as title states this is my first time really looking at parts and choosing them for a PC, did get some help from friends but just wanted to make sure everything least would work well together for my list.    I am generally not wanting to spend more than what this build is, but dont have a rough or hardset price range, I was just trying to make a decent (or for me a decent) pc that i could least upgrade in the next few years and it still be supported to where I would not have to deal with upgrading motherboard, ram, and cpu in a short amount of time due to poor planning on my part.    But the biggest thing for me is that idk if the ram speed is good for the cpu or not and that is my biggest concern, and again sorry if the list is poorly made I am very new to compnents and parts, so this could easily be very wrong and I am wanting to stick with AMD for the GPU and CPU due to being generally cheaper for least the GPU, and hearing some iffy things with Intel for 1-2 generations of their CPUs in the last few years. But the list will be below and tysm for anyone who helps!!    https://ca.pcpartpicker.com/list/RxrYmL        submitted by     /u/Trozkat     to     r/CustomPCBuilding       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CustomPCBuilding/comments/1wluuve/need_help_with_pc_partsfirst_time_choosing_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T22:24:23Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T22:24:44.497Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab05d2caeeb96c1c63ba885"
+    },
+    "message_id": "reddit_t3_1wluuv2",
+    "topic_key": "dentist",
+    "search_keyword": "dentist",
+    "platform": "reddit",
+    "subreddit": "ufc",
+    "username": "DentistLegitimate229",
+    "title": "ESPN can’t accept that he lost",
+    "text": "ESPN can’t accept that he lost\n\nsubmitted by     /u/DentistLegitimate229     to     r/ufc       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ufc/comments/1wluuv2/espn_cant_accept_that_he_lost/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T22:24:22Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T22:24:44.701Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab05d3c9f8856bec2385118"
+    },
+    "message_id": "reddit_serp_1gckrl2",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/travelagents/comments/1gckrl2/becoming_a_travel_agent_for_myself/",
+    "text": "Becoming a travel agent for myself\n\nI am sure this question has been asked, but I haven't found the thread.   We travel very frequently, and will only do more so in the future. We almost never work with travel agents because we prefer independent travel, enjoy doing our own research and planning, and are generally not a great fit for most luxury agents.   I am considering whether to become my own agent. Not to earn back commissions, (we don't really care about that although we do spend well into 6 figures on personal travel per year, so a few bucks would be nice), but to gain access to local DMCs, most of whom only work B2B. It seems it would be easier to get services we are looking for that way (guides and experiences, mostly).   This is strictly for personal travel - I never plan to do it professionally in any way. It looks like something along the lines of  https://worldviatravelnetwork.com/  would work, but I would appreciate your thoughts and recommendations.       submitted by     /u/playful_explorers       [link]       [comments]",
+    "username": "playful_explorers",
+    "subreddit_or_channel": "travelagents",
+    "posted_at": "2024-10-26T13:11:32+00:00",
+    "fetched_at": {
+      "$date": "2026-09-20T22:25:00.984Z"
+    },
+    "google_rank": 4,
+    "search_keyword": "httpsphptravelscom i have shared a website scrap all the details and let me know if you can find users for me to grow my business",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-20T22:25:00.984Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab05d52660c608403989dbf"
+    },
+    "message_id": "reddit_t3_1wluvia",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "CrossTrading_inRoblox",
+    "username": "ApplicationAny459",
+    "title": "Selling shadow dragon for $230 only on cashapp",
+    "text": "Selling shadow dragon for $230 only on cashapp\n\nDesperate to get rid of since I bought it for $300 a few years ago when it was so popular       submitted by     /u/ApplicationAny459     to     r/CrossTrading_inRoblox       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CrossTrading_inRoblox/comments/1wluvia/selling_shadow_dragon_for_230_only_on_cashapp/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T22:25:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T22:25:22.837Z"
+    },
+    "reddit_comments": 0

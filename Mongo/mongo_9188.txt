@@ -1,0 +1,416 @@
+    "topic_key": "can you find me top posts on reddit which has over 10k views per month from ai tech industry",
+    "search_keyword": "deep learning",
+    "platform": "reddit",
+    "subreddit": "Germany_Jobs",
+    "username": "Salty_Ad_7567",
+    "title": "Is doing a Master's in Germany in 2027 a good path for me?",
+    "text": "Is doing a Master's in Germany in 2027 a good path for me?\n\nHi everyone,   I'm looking for some advice about my career and long-term plans. My goal is to eventually  settle abroad in a developed country , and I'm currently considering Germany.   A little about me:     BTech CSE graduate,  2025    CGPA:  8.2/10    Good understanding of core CSE subjects and programming   Worked on  Deep Learning projects  during my BTech and have a research publication   Know  Python and Java , and I regularly practice LeetCode/DSA   Good knowledge of  AWS Cloud    Unemployed for around 7 months after graduation   Joined  Cognizant in January 2026    After around 3 months, moved to  TCS Prime , currently at around  ₹9.1 LPA      At TCS, I was allocated to an  SAP BTP-related role . I'm learning SAP BTP, SAP Build Process Automation and Joule/AI automation. I wasn't originally planning for SAP, but I've actually become  genuinely interested in it , so I want to keep both paths open —  Python/Java development + DSA/Cloud , along with  SAP BTP/AI automation .   I'm also learning German and currently have around  A1 . My goal is to reach  B1 by August 2027  and hopefully be around B2 during my Master's.   I'm considering applying for a  Master's in Germany for Winter 2027 (October 2027) .   My dilemma is:    Option 1:  Continue working in India for 3–5 years, build experience and German skills, and try to move to Germany directly.    Option 2:  Go for a Master's in Germany in 2027, build local experience/network, improve my German, and then look for a job there.   Do you think doing a Master's in Germany in 2027 makes sense given my current situation, or would staying in India and gaining more experience be the better route?   I'd especially like to hear from people who have  studied/worked in Germany or moved there from India , particularly in CS/IT/SAP.       submitted by     /u/Salty_Ad_7567     to     r/Germany_Jobs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Germany_Jobs/comments/1wj0by6/is_doing_a_masters_in_germany_in_2027_a_good_path/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T17:24:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T17:24:22.347Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac2246660c6084039736ad"
+    },
+    "message_id": "reddit_t3_1wj0by0",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "AlertVegas",
+    "username": "MugShots",
+    "title": "NV Energy Alert",
+    "text": "NV Energy Alert\n\nNVEnergy Alert Planned Shutdown for Service Improvement in 89460 Verified customers affected ORT: Verified ETR: Verified       submitted by     /u/MugShots     to     r/AlertVegas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlertVegas/comments/1wj0by0/nv_energy_alert/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T17:24:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T17:24:22.549Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac2246660c6084039736ae"
+    },
+    "message_id": "reddit_t3_1wj0bx2",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "waydroid",
+    "username": "Biupildamian",
+    "title": "I built an agentless Android dashboard for my Linux servers — free until Sept 22",
+    "text": "I built an agentless Android dashboard for my Linux servers — free until Sept 22\n\n**I'd rather have honest reviews than €4.99.**   I built this for myself first. I run a few VPS boxes and never got on with the apps I tried — I wanted to glance at a host, restart a container and get out, without typing three commands on a phone keyboard. That turned into **Server Control**, and eventually onto Google Play.   It is a €4.99 one-time purchase, and honestly that has been the problem: I am asking people to pay upfront for an app they cannot try, from a developer they have never heard of, with almost no reviews to go on. That is a bad deal and I do not blame anyone for skipping it.   So it is **100% off until 22 September** — free on the Play Store right now, no promo code, no trial, no account. Install it and it stays in your library permanently, updates included.   **Play Store:** [ https://play.google.com/store/apps/details?id=com.damianslab.servercontrol\\](https://play.google.com/store/apps/details?id=com.damianslab.servercontrol)    Everything runs over a standard SSH connection to your own machine. Nothing is installed on the server: no agent, no daemon, no extra port open, no account with me.   **What it does**   * **Telemetry dashboard** — live CPU, RAM and disk charts, plus up/down throughput read from `/proc/net/dev`. Set thresholds (e.g. CPU > 85%) and get a notification when a host crosses one. Those background alerts cover every server you have saved, not just the one on screen. * **Docker** — running/stopped/paused containers, live CPU/memory/IO from `docker stats`, logs, start/stop/restart/kill. * **systemd** — status for nginx, MySQL, PostgreSQL, cron and friends, `journalctl` logs, start/stop/restart/reload. * **SSH terminal** — output streams line by line while the command runs. Ctrl+C signals the remote *process group* over a second channel rather than just dropping the connection, so a pipeline actually dies instead of carrying on without you. Esc, Ctrl+D, a KILL button, path-aware `cd`, command history on the keypad. * **Remote file editing** — `nano  ` opens a native editor. Content travels base64 encoded, the file is truncated in place so owner and permissions survive, and a save is refused if the file changed on the server since you opened it. * **Long jobs survive** — command timeout is separate from connection timeout (5 min default, up to 30), and a foreground service keeps a running deploy alive when the screen switches off. * **Mail server panel** — Postfix/Dovecot status, queue inspect/flush, DNSBL checks against Spamhaus, Barracuda, SORBS and Spamcop. * **Security** — credentials encrypted on-device with AES/GCM via the Android Keystore, optional biometric lock, TOFU host key verification, ED25519/Curve25519 support. Zero analytics, zero telemetry, no ads. Your IPs, keys and logs never leave the phone.   **\"Why not just use Termius / JuiceSSH / Netdata / Portainer?\"**   Fair question, and mostly they are not doing the same job:   * **Terminal apps** (Termius, JuiceSSH, ConnectBot, Termux) are very good at being terminals. This is a dashboard first — Docker, systemd and mail are lists with buttons, and the terminal is there for when you actually do need a shell. * **Monitoring stacks** (Netdata, Zabbix, Grafana, Uptime Kuma) beat this at history, alerting and whole fleets. If you already run one, keep it. The trade is that they want something installed on the host and usually a web port open. This installs nothing and opens nothing. * **Web panels** (Portainer, Cockpit) — same trade: more powerful, and one more service to patch and expose.   If you already have a setup you like, this probably is not for you, and that is fine.   **What it does not do**, so nobody wastes a download:   * The dashboard shows one server at a time — you switch hosts from the selector, there is no single screen showing your whole fleet at once. (Background threshold and unreachable alerts do cover every saved server — hourly by default, and off until you enable it in Settings.) * No SFTP or file browser. You can open and edit a single remote file, but there is no file manager. * No port forwarding, no tunnels, no ProxyJump/bastion support. * Private keys with a passphrase are not supported — key auth needs an unencrypted key. * Android only, and it is closed source.   **And what I already know is weak:** the icon needs redesigning — I have been told so bluntly and they were right — and \"Server Control\" is about as generic as a name gets.   I am one person, I use this on my own servers every day, and what I need right now is not downloads but people who actually run servers telling me where it falls over. That is what the giveaway is for. Tear it apart in the comments — I read and reply to everything.       submitted by     /u/Biupildamian     to     r/waydroid       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/waydroid/comments/1wj0bx2/i_built_an_agentless_android_dashboard_for_my/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T17:24:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T17:24:22.758Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac2246660c6084039736af"
+    },
+    "message_id": "reddit_t3_1wj0bws",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "mohawkcollege",
+    "username": "Affectionate-Dot-492",
+    "title": "Selling HSR Bus Passes (1 YEAR)",
+    "text": "Selling HSR Bus Passes (1 YEAR)\n\nIf interested let me know for $280       submitted by     /u/Affectionate-Dot-492     to     r/mohawkcollege       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mohawkcollege/comments/1wj0bws/selling_hsr_bus_passes_1_year/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T17:24:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T17:24:22.959Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac2247660c6084039736b0"
+    },
+    "message_id": "reddit_t3_1wj0bwj",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal SoundHound AI Inc - 17 Sep 2026 @ 13:22 -> $6.02",
+    "text": "Buy Signal SoundHound AI Inc - 17 Sep 2026 @ 13:22 -> $6.02\n\nTicker:  SOUN    Exchange:  NASDAQ    Time:  17 Sep 2026 @ 13:22    Price:  $6.02    Link:  https://getagraph.com/AAA/trading/NASDAQ/SOUN/analysis/signals        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wj0bwj/buy_signal_soundhound_ai_inc_17_sep_2026_1322_602/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T17:24:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T17:24:23.158Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac2247660c6084039736b1"
+    },
+    "message_id": "reddit_t3_1wj0bw1",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "fotbal",
+    "username": "Ok_Trip_4819",
+    "title": "Câte biIete s-au vândut pentru România - Suedia, meci din Liga Națiunilor - 25.000",
+    "text": "Câte biIete s-au vândut pentru România - Suedia, meci din Liga Națiunilor - 25.000\n\nÎn acest sens, partida cu Suedia de la București a stârnit interes printre fanii români. Joi, la 13 zile de la punerea în vânzare a biletelor, Federația Română de Fotbal a anunțat că s-au vândut 25.000 de tichete.   „Suntem deja 25.000 pe Arena Națională la meciul cu Suedia, din 5 octombrie! Jumătate din biletele disponibile pentru acest meci au fost procesate. Hai și tu pe stadion la primul meci oficial cu spectatori acasă al noului selecționer Gheorghe Hagi!”, este mesajul postat pe pagina de Facebook a  Echipei naționale de fotbal a României .       submitted by     /u/Ok_Trip_4819     to     r/fotbal       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/fotbal/comments/1wj0bw1/câte_biiete_sau_vândut_pentru_românia_suedia_meci/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T17:24:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T17:24:23.357Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac2247660c6084039736b2"
+    },
+    "message_id": "reddit_t3_1wj0bw0",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "L0rddaniel",
+    "title": "Grab 100 hammers from u/L0rddaniel!",
+    "text": "Grab 100 hammers from u/L0rddaniel!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/L0rddaniel     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wj0bw0/grab_100_hammers_from_ul0rddaniel/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T17:24:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T17:24:23.554Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac2247660c6084039736b3"
+    },
+    "message_id": "reddit_t3_1wj0bv1",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "OhHeyDintSeeYouThere",
+    "title": "[Sticker Giveaway] Enter to win a 5 Stars Pickle Jar Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 5 Stars Pickle Jar Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/OhHeyDintSeeYouThere     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wj0bv1/sticker_giveaway_enter_to_win_a_5_stars_pickle/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T17:24:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T17:24:23.758Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac2260aeeb96c1c63b8eed"
+    },
+    "message_id": "reddit_t3_1wj0chr",
+    "topic_key": "painter",
+    "search_keyword": "painter",
+    "platform": "reddit",
+    "subreddit": "mkd",
+    "username": "Sea-Painter-8398Sk",
+    "title": "F25 i M26 baraat F, prvenstveno za muabet, pa kako ke progresira",
+    "text": "F25 i M26 baraat F, prvenstveno za muabet, pa kako ke progresira\n\nPisete       submitted by     /u/Sea-Painter-8398Sk     to     r/mkd       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mkd/comments/1wj0chr/f25_i_m26_baraat_f_prvenstveno_za_muabet_pa_kako/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T17:24:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T17:24:48.999Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aac2261aeeb96c1c63b8eee"
+    },
+    "message_id": "reddit_t3_1wj0ccv",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "KashmiriHindus",
+    "username": "architectering",
+    "title": "Business and allied opportunities....",
+    "text": "Business and allied opportunities....\n\nGuys i have been involved with multiple business and want to partner up with fellow kps who have a vision and background experience in different domains to expand and diversify ito financially viable streams in domains like   Manufacturing, consultancy, service providing, construction and other disciplines.   I am open to ideas and can sit down for offline meetings with people who tick the right boxes.   Everything will happen legally on paper.   If required we can also pick up funding and due mentorship can be arranged in the said fields.   Would love to see what can be done.   I am located in ncr right now.       submitted by     /u/architectering     to     r/KashmiriHindus       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/KashmiriHindus/comments/1wj0ccv/business_and_allied_opportunities/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T17:24:29Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T17:24:49.794Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aac2281660c6084039736b4"
+    },
+    "message_id": "reddit_t3_1wj0d0c",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BingX",
+    "username": "BingXOfficial",
+    "title": "How to Buy Bitcoin and Crypto with Revolut on BingX | Card and Bank Transfer",
+    "text": "How to Buy Bitcoin and Crypto with Revolut on BingX | Card and Bank Transfer\n\nRevolut has become one of the most popular financial apps in the world, with more than 65 million users across Europe, Asia and the Americas. It started as a simple way to send and spend money abroad but has since grown into a full digital finance platform that includes multi-currency accounts, stock trading and cryptocurrency services.    As crypto adoption continues to grow, Revolut’s easy interface and fast payment options make it a natural choice for anyone entering the market. Many users now connect their Revolut account to trusted exchanges like BingX to fund their wallets and start trading digital assets.    In this guide, you will learn how to buy crypto with Revolut on BingX. You can pay by card through Quick Buy for a near-instant purchase or send EUR via SEPA or SEPA Instant to your Fiat Account and convert it into BTC, ETH or USDT. Revolut’s smooth banking experience and support for multiple payment options make it one of the easiest ways to move funds into crypto.    If you prefer person-to-person trading, BingX also offers a P2P marketplace where verified merchants accept payment apps and bank transfers. Depending on the seller, Revolut may be one of the accepted payment methods.   Key Considerations   • Know Your Customer (KYC) is required before you can use card payments or fiat deposits.    • Cards: BingX supports Visa and Mastercard via Quick Buy partners. Your card needs 3-D Secure and online payments enabled.    • EU transfers: EUR deposits support SEPA and SEPA Instant to your Fiat Account, then you convert to crypto.    • P2P: You buy from a merchant with escrow protection. You choose a payment method shown in the ad and follow the in-platform flow. Some merchants hide their exact method until you pass a quick verification step.    • Revolut compatibility: Revolut lists certain crypto payment gateways such as MoonPay among supported merchants, and BingX’s Quick Buy often routes card purchases through such partners. Results still vary by account and region.   How to Buy Crypto with Revolut Card   Here's one way you can buy crypto on BingX using your Revolut card or bank transfer.   Option A: Buy Crypto with Revolut via Quick Buy (Web)   Best for smaller or time-sensitive buys.   Step by step      Log in to BingX and complete KYC if needed.      Go to Buy Crypto → Quick Buy. Pick the coin, then enter the amount in EUR.      Choose Bank Card. You will see a partner checkout.      Pay with your Revolut Visa or Mastercard. Make sure 3-D Secure is enabled.     Review the rate, fees and final amount, then authorize the payment. Your crypto is credited once the partner confirms the charge.       Note :  If your Revolut card declines, try a smaller test amount or a different Quick Buy partner shown at checkout. Regional rules and issuer checks can affect approval.   Option A: Buy Crypto with Revolut via Quick Buy (App)   Best for smaller or time-sensitive buys.   Step by step    1. Log in to the BingX app and complete KYC if needed  Open the BingX app, sign in, and make sure your identity verification (KYC) is completed in your profile.     2. Go to Quick Buy  On the home screen, tap \"Quick Buy\". Pick the coin you want to buy (for example BTC, ETH or USDT), then enter the amount in EUR.     3. Choose Bank Card as the payment method  Select \"Credit/Debit Card\" under \"Payment Method\" and click \"Add\". You will then see how much cryptocurrency, USDT in this case, you will receive.     4. Pay with your Revolut Visa or Mastercard  Enter your Revolut Visa or Mastercard details and make sure 3-D Secure is enabled in your Revolut app or card settings so the payment can be authorized.     5. Review and authorize the payment  Check the rate, fees and final amount shown in the app, then confirm the payment. Your crypto will be credited to your BingX wallet once the payment partner confirms the charge.   How to Buy Crypto with Revolut Card or Transfer   Option B: Buy Crypto with Revolut via Bank Transfer (Web)   Best for larger amounts and clearer fee visibility.   Step by step      Log in, then open Buy Crypto → Fiat Deposit.      Choose EUR and select SEPA or SEPA Instant. Copy the beneficiary details exactly.     Send the transfer from your Revolut app, including the exact reference provided by BingX’s fiat provider.      When your Fiat Account shows the credited EUR, use Quick Buy to purchase BTC, ETH or USDT. You can also place an order on Spot such as BTC/USDT.        Note:  SEPA usually takes one to two business days. SEPA Instant is designed for near real-time crediting where supported.   Option B: Buy Crypto with Revolut via Bank Transfer (App)   Best for larger amounts and clearer fee visibility.   Step by step    1. Open Fiat Deposit in the app  Log in to the BingX app.   • Go to \"Assets\" and select \"Deposit'. Then click on \"Fiat\".     2. Choose EUR and get the SEPA details  Select EUR as the fiat currency and choose SEPA or SEPA Instant, depending on what your Revolut account supports. Copy the beneficiary details and reference exactly as shown in the app.     3. Send the transfer from your Banking app  Open the Revolut app and make a bank transfer in EUR to the bank details provided by BingX’s fiat provider. Make sure you include the exact payment reference shown in the BingX app to ensure the deposit is matched correctly.     4. Wait for your EUR to arrive, then buy crypto  Once your Fiat Account in BingX shows the credited EUR, go back to \"Buy Crypto\" → \"Quick Buy\" in the app. Use your EUR balance to buy BTC, ETH or USDT. You can also use the Spot market in the app and place an order such as BTC/USDT.     Note:    • SEPA transfers usually take one to two business days.   • SEPA Instant is designed for near real-time crediting where both banks support it.   Buy Crypto with Revolut via P2P on BingX   P2P means that you buy from a merchant who receives your payment outside of the exchange and then releases the cryptocurrency held in escrow to your BingX account. You must follow the steps on the platform and only pay using the method shown in the advert or by the merchant after verification.   How Can You Buy Crypto with Revolut using P2P Trading?     Go to Buy Crypto → P2P Trading and pick Buy. Set your fiat currency and desired amount. Filter for payment methods if the page offers it, or open several ads to check accepted options.      2. Choose a merchant with solid completion statistics and limits that match your requirements. Read the listing carefully.     Start the order. If the merchant uses the hidden-method feature, you may see a verification tag. Complete the quick check and the exact payment method will be shown.      4. Pay from your Revolut account exactly as instructed by the ad. Do not use a different name or account. Keep the payment proof.     Return to the order and tap I have paid. Wait for the merchant to confirm receipt and release the crypto from escrow to your BingX wallet.     Where Revolut Fits Into P2P Trading on BingX   With P2P, the exchange does not handle your money. Instead, you send funds directly to the merchant via their preferred payment method. Many P2P merchants in the EU and UK accept modern banking apps or local transfers. Depending on the merchant and your region, Revolut may appear among the accepted methods. If Revolut is not listed in the ad, message the merchant via the order chat or select an ad that explicitly lists it.   How to Stay Safe When You Buy Crypto with Revolut using P2P Trading   For P2P trades, keep all communication inside the BingX order chat and never move the deal to private messengers. Pay only the exact recipient shown in the ad and make sure the names match. Do not click Paid until your Revolut transfer has gone through, and include a clear payment reference if the merchant asks for one.    If anything goes wrong, open an appeal inside the order so escrow can keep your crypto safe while support reviews. After you buy, check whether your assets are in Spot or Funding and move them if needed for spot or futures. Turn on 2FA, add withdrawal whitelists, and consider using a cold wallet for part of your holdings. Finally, save receipts for your trading history and tax records.   FAQs on Buy Crypto With Revolut on BingX   1. Can I buy crypto with Revolut without KYC?   No. KYC is required for card purchases and EUR deposits via SEPA. You can only use those after verification.   2. Is Revolut specifically listed in P2P methods?   P2P methods are set by each merchant. You will see the accepted method in the ad or after a quick verification if the merchant chose to hide it. Pick an ad that lists a method you can use.   3. How fast can I buy crypto on the P2P market via a Revolut transfer?   Speed depends on the method used in the ad and on both banks. Internal app-to-app transfers can be quick, but always wait for the merchant’s confirmation before you click Paid.   4. Are there any limits for purchasing crypto using Revolut?   Yes. Card, transfer and P2P limits vary by region, verification level and provider. You will see the valid minimums and maximums during the flow.   5. Does BingX charge P2P buyer fees?   BingX has run periods with zero buyer fees on P2P. Check the P2P page during your order for the current terms.       submitted by     /u/BingXOfficial     to     r/BingX       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BingX/comments/1wj0d0c/how_to_buy_bitcoin_and_crypto_with_revolut_on/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T17:25:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T17:25:21.914Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac2282660c6084039736b5"
+    },
+    "message_id": "reddit_t3_1wj0d03",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CarbarnAU",
+    "username": "Zealousideal_Bad2236",
+    "title": "What import costs surprised you after the auction win?",
+    "text": "What import costs surprised you after the auction win?\n\nI had a buyer ask this week why the auction price wasn’t the final number, and it’s a fair question if you haven’t imported before. After the bid there’s the Japan agent and service fees, then freight, GST, duty, port charges and possibly LCT, with tyres, ADR items, lights or repairs during compliance quoted separately. Which of those caught you out most on your first import?       submitted by     /u/Zealousideal_Bad2236     to     r/CarbarnAU       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CarbarnAU/comments/1wj0d03/what_import_costs_surprised_you_after_the_auction/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T17:25:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T17:25:22.126Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac2282660c6084039736b6"
+    },
+    "message_id": "reddit_t3_1wj0czp",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "travel",
+    "username": "Civil_engineer_7185",
+    "title": "Recommendations for a 2027 trip",
+    "text": "Recommendations for a 2027 trip\n\nHi all   So last year me and the hubs did a big trip to Malaysia about 2 weeks and we loved it!   We want to plan another big trip for 2027 but not sure where but with similar vibes (pretty beaches, vibrant cities, activities).   At the moment Thailand is looking like the likely option but was wondering if anyone had any other recommendations       submitted by     /u/Civil_engineer_7185     to     r/travel       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/travel/comments/1wj0czp/recommendations_for_a_2027_trip/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T17:25:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T17:25:22.331Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac2282660c6084039736b7"
+    },
+    "message_id": "reddit_t3_1wj0cyu",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "AndroidQuestions",
+    "username": "oliviadog",
+    "title": "Weird Camera Issues",
+    "text": "Weird Camera Issues\n\nMy phone is taking photos and screenshots on its own. Sometimes it duplicates or triples photos on its own too! Takes me hours to delete them. Help please!       submitted by     /u/oliviadog     to     r/AndroidQuestions       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AndroidQuestions/comments/1wj0cyu/weird_camera_issues/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T17:25:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T17:25:22.535Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac2282660c6084039736b8"
+    },
+    "message_id": "reddit_t3_1wj0cys",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "HeadTripFestival",
+    "username": "IntrepidPeak481",
+    "title": "Shuttle pass!",
+    "text": "Shuttle pass!\n\nHii, selling 2 shuttle passes, both for $120 :) i’m based in OC can meet up prior or we can meet up in palm springs/indio friday!        submitted by     /u/IntrepidPeak481     to     r/HeadTripFestival       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HeadTripFestival/comments/1wj0cys/shuttle_pass/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T17:25:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T17:25:22.736Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac2283660c6084039736ba"
+    },
+    "message_id": "reddit_t3_1wj0cyp",
+    "topic_key": "give me today top three conversation about e commerce",
+    "search_keyword": "ecommerce",
+    "platform": "reddit",
+    "subreddit": "eBayCanada",
+    "username": "ValuableSpinach6811",
+    "title": "Two Packages in Same DHL Container, Only One “Received” by TForce",
+    "text": "Two Packages in Same DHL Container, Only One “Received” by TForce\n\nHad two packages traveling in the same container from DHL eCommerce clear Canadian customs at the exact same time (same timestamps and departure scans).   One was marked as “received” by TForce, but the other hasn’t been.   I’ve had DOZENS of packages processed by DHL and then TForce, and in my experience, packages traveling in the same container are usually scanned as “received” in close succession (within hours).   This is the first time I’ve seen a discrepancy where one package was marked “received” while the other wasn’t, despite presumably traveling from DHL together. Has anyone else experienced this?       submitted by     /u/ValuableSpinach6811     to     r/eBayCanada       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/eBayCanada/comments/1wj0cyp/two_packages_in_same_dhl_container_only_one/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T17:25:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T17:25:23.135Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac2283660c6084039736bc"
+    },
+    "message_id": "reddit_t3_1wj0cy7",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "PokemonTCG",
+    "username": "Successful-Middle-51",
+    "title": "LUGIA IS A FIGHTER 😭",
+    "text": "LUGIA IS A FIGHTER 😭\n\nI’ve seen post crash this Lugia has been climbing back up the fastest. I understand the print has been expanded and will be massive for this set, and pull rates aren’t too crazy for this, but there’s something people aren’t getting. This is the first reprint of Aquapolis Lugia, that card is a highly sought after grail but is notoriously hard to find and grade because of how old it is. They can print 2 billion copies of this card, and there still won’t be enough to fulfill the market’s demand for this card. Especially once copies start getting graded and selling…       submitted by     /u/Successful-Middle-51     to     r/PokemonTCG       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PokemonTCG/comments/1wj0cy7/lugia_is_a_fighter/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T17:25:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T17:25:23.539Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac2283660c6084039736bd"
+    },
+    "message_id": "reddit_t3_1wj0cxt",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "PUPians",
+    "username": "No_Squirrel_2048",
+    "title": "hear me out: academic challenges",
+    "text": "hear me out: academic challenges\n\nhello sa inyo!! currently taking grad school for 2 years and also on a full-time job rin. my daily schedule goes like this: 8-6 sa work tapos 6-9 naman para sa grad school (attending class and studying kapag walang class). i have been wanting to share my experience in grad school and i want to hear opinions rin if we are somehow on the same boat lol. i'm not gonna make it long pero classes in some of my courses (actually majority lol) in grad school is not really interesting for me because of this reason: i really hate is making the grad student REPORTING/PRESENTING the topic sa class. siguro okay lang sakin mag reporting kung college tanggap ko pa pero grad students making us report is not really effective. kasi after all the presentation, the professor will let the next student present the next topic. very speedrun hahaha. ewan ko, pero i really prefer na nanggagaling yung insights sa professor ko kasi expert naman na nila yun. on a positive note, nagbibigay naman sila ng insights after the reporting pero i feel like sobrang bitin lang kasi kapag patapos na yung class, may kaunting wrap up lang about sa topics tapos class dismissed na and next week present ulit yung grad student. tapos yung presentation namin ayun yung isa sa mga requirements namin to pass the course.   nasabi ko lang to kasi I had an experience with one professor and na compare ko lang kasi hindi kami pinagreporting and lahat ng topics siya nagturo plus there are real-life situations na applied dun sa mga tinuro niya. then after ng class, dun siya magbibigay ng tasks to be submitted before the next class. the only thing na pinagpresent lang kami is output namin dun sa isang task na binigay. the tasks given to us was very challenging pero alam niyo yung feeling na after ng class, you can already make a draft na ng isusubmit mo. idk or maybe iba-iba lang talaga learning approach natin haha.   i used to think nga na maybe part rin siya ng pagiging grad student pero minsan kasi i find it very lazy approach sa pagturo. ako lang ba 'to? huhu       submitted by     /u/No_Squirrel_2048     to     r/PUPians       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PUPians/comments/1wj0cxt/hear_me_out_academic_challenges/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T17:25:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T17:25:23.743Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac2283660c6084039736be"
+    },
+    "message_id": "reddit_t3_1wj0cxm",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "vacation",
+    "platform": "reddit",
+    "subreddit": "mourningderps",

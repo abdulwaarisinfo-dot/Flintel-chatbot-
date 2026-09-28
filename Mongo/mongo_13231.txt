@@ -1,0 +1,416 @@
+    "platform": "reddit",
+    "subreddit": "LLMDevs",
+    "username": "kristiyanstoyanovAI",
+    "title": "I extended my structured vs unstructured project for agentic coding experiment with more data",
+    "text": "I extended my structured vs unstructured project for agentic coding experiment with more data\n\nI posted an earlier version of this experiment  here . I've now made a video covering the original results, plus an extended version of the experiment.   If you dont know the previous post, essentially I had my agent write two versions of the same application, in one of the projects I gave it no architecture requirements and left it on its own, and in the second I gave it a hexagonal/ports-adapters architecture + architecture tests to enforce the boundaries. Then I added more and more features to both of the projects and recorded how long and how many tokens it took, to see if having structure would benefit the agent - the initial results showed that actually it made it harder for the agent to reason about the repo, resulting in more tool calls, more tokens used etc.   My biggest doubt about the first experiment, was that the repositories were very small in size, so I did 15 more features for both and reaching 12k and 15k production code lines at the end.   And one more thing I wanted to test out was if I gave a change specifically designed to benefit for ports and adapters architecture   Here are the times to acceptance. These are campaign totals except for the last row.         Work   Flat   Hexagonal          F1–F9: nine cumulative features   165.9 min   228.6 min       C1–C6: six independent challenges (higher complexity changes)   161.6 min   174.2 min       S01–S15: fifteen more cumulative features (the extension wanting to increase the scale of the projects)   298.9 min   389.5 min       S16: add PostgreSQL, retain SQLite   71.3 min   38.9 min        By S15, the flat project had 11,709 production Java lines across 84 files. Hexagonal had 15,205 across 239 files. Those line counts include comments and blanks, and exclude tests and dependencies.    The database task changed the result. Hexagonal needed 45.4% less time, and the change stayed outside its core application and domain code.    That win saved 32.3 minutes. The earlier S01–S15 gap was 90.6 minutes, so it didn't recover the whole gap.    The report with the measurements:  https://zenodo.org/records/22806994     So tell me what you think, does this show we must re-think the use of some architectural patterns, or perhaps stop actually using these architecture for smaller-scale/less-critical systems?   Disclosure: this is my experiment and video. AI tools helped prepare the evaluator, orchestrate runs, make charts and draft this post. The measured application changes were made by the local model.        submitted by     /u/kristiyanstoyanovAI     to     r/LLMDevs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LLMDevs/comments/1wljwpc/i_extended_my_structured_vs_unstructured_project/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:23:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:24:05.963Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffa96660c608403987e9f"
+    },
+    "message_id": "reddit_t3_1wljwoq",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "FIlm",
+    "username": "spiveypoint",
+    "title": "Purely subjective but my favourite movie year is 1987.",
+    "text": "Purely subjective but my favourite movie year is 1987.\n\nAs an eighties kid growing up in cinemas and video stores, 1987 has got to be the best year for movies.  Just think what came out in 1987, it’s an incredible year:   Over The Top  Mannequin  The Color Purple  A Nightmare On Elm Street 3  Some Kind of Wonderful  Angel Heart  Lethal Weapon  Evil Dead II  Raising Arizona  Withnail and I  Police Academy 4  Creepshow 2  Beverly Hills Cop II  Harry and the Hendersons  The Untouchables  Predator  The Witches of Eastwick  Roxanne  Dragnet  Spaceballs  Adventures in Babysitting  Innerspace  Full Metal Jacket  Robocop  The Living Daylights  The Lost Boys  Stakeout  The Monster Squad  Dirty Dancing  Fatal Attraction  Hellraiser  Near Dark  The Princess Bride  The Secret of My Success  Prince of Darkness  The Running Man  Planes, Trains and Automobiles  Three Men and a Baby  Wall Street  Overboard  Good Morning Vietnam   And those are just some of the big hitters, what about…   Critical Condition  Wanted: Dead or Alive  The Stepfather  Outrageous Fortune  Tin Men  Burglar  Blind Date  Project X  The Gate  Revenge of the Nerds II  Jaws: The Revenge  La Bamba  Summer School  Superman IV  Masters of the Universe  Who’s That Girl  Can’t Buy Me Love  Disorderlies  No Way Out  The Garbage Pail Kids Movie  The Fourth Protocol  Hamburger Hill  House II  The Principal  Like Father Like Son  Someone to Watch Over Me  Three o’clock High  Suspect  Baby Boom  Fatal Beauty  The Hidden  Death Wish 4  Flowers in the Attic  The Last Emperor  Throw Momma from the Train  *batteries not included  Moonstruck  Broadcast News  Empire of the Sun   I also love The Kindred, Silent Night, Deadly Night part 2, American Ninja 2, Malone, Russkies and Steel Dawn amongst others.   Can anyone beat 1987?       submitted by     /u/spiveypoint     to     r/FIlm       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FIlm/comments/1wljwoq/purely_subjective_but_my_favourite_movie_year_is/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:23:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:24:06.172Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffa96660c608403987ea0"
+    },
+    "message_id": "reddit_t3_1wljwoi",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "PakistanAutoHub",
+    "username": "OutlandishnessLast71",
+    "title": "Dashcam recommendation",
+    "text": "Dashcam recommendation\n\nPlease suggest best budget friendly dashcam for Passo 2014.       submitted by     /u/OutlandishnessLast71     to     r/PakistanAutoHub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PakistanAutoHub/comments/1wljwoi/dashcam_recommendation/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:23:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:24:06.373Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffa96660c608403987ea1"
+    },
+    "message_id": "reddit_t3_1wljwns",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "teenagers",
+    "username": "ziaaaaaaaaaaaaaaaaaa",
+    "title": "Guys, I'm saving up to buy an iPhone 17, any ideas how I could get money? (besides chores and those things, my parents don't do that.)",
+    "text": "Guys, I'm saving up to buy an iPhone 17, any ideas how I could get money? (besides chores and those things, my parents don't do that.)\n\nsubmitted by     /u/ziaaaaaaaaaaaaaaaaaa     to     r/teenagers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/teenagers/comments/1wljwns/guys_im_saving_up_to_buy_an_iphone_17_any_ideas/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:23:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:24:06.574Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffa96660c608403987ea2"
+    },
+    "message_id": "reddit_t3_1wljwn0",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "TaylorSwiftAutographs",
+    "username": "Select-Oven2249",
+    "title": "Selling TS Collection - updated prices in body!!",
+    "text": "Selling TS Collection - updated prices in body!!\n\nUpdated Prices:  Folklore Signed $120 (Plus Ship)  Lover Signed $675 (Plus Ship)  Midnights Signed $150 (Plus Ship)  TTPD Signed $75 (Plus Ship)  TLOAS Deluxe Set $80 (Plus Ship)  TLOAS Signed Set $90 (Plus Ship)  TTPD Deluxe Set $70 (Plus Ship)  The Fate of Ophelia Vinyl $90 (Plus Ship)  Lover Dice $140 (Plus Ship)  August Christmas Ornament $60 (Plus Ship)  Lover Neon Sign Ornament $100 (Plus Ship)  He Did It Keychain $100 (Plus Ship)  F*ck the Patriarchy Keychain $70 (Plus Ship)  Beautiful Things Keychain $50 (Plus Ship)  Opalite Keychain $70 (Plus Ship)  IKIIKY Sheriff Badge Vinyl $90 (Plus Ship)  Champagne Problems Ornament $200 (Plus Ship)   PAYPAL G&S ONLY  SHIPPING FROM GEORGIA  Shipping tends to be $5-10 to most states*   My husband and I recently found out we’re having a baby!!!!! Help a girl out with this huge expense!!  Thanks you!!       submitted by     /u/Select-Oven2249     to     r/TaylorSwiftAutographs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TaylorSwiftAutographs/comments/1wljwn0/selling_ts_collection_updated_prices_in_body/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:23:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:24:06.779Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffad0660c608403987ea3"
+    },
+    "message_id": "reddit_t3_1wljxqi",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "dailygames",
+    "username": "UnGatoComeEmpanadas",
+    "title": "Reddit Writes a Story: One Word Per Day [Day 57]",
+    "text": "Reddit Writes a Story: One Word Per Day [Day 57]\n\nRULES   — One word per day.  — Top comment wins.  — Only downvote in rare cases.  — No changing the past.  — Grammar is optional.  — Sanity is optional.  — Next word must make sense with the current story (Don't say random words that make the sentence nonsensical).  — You can use punctuation such as periods and commas to separate sentences (before and/or after your word)  — We are probably creating peak fiction.            submitted by     /u/UnGatoComeEmpanadas     to     r/dailygames       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/dailygames/comments/1wljxqi/reddit_writes_a_story_one_word_per_day_day_57/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:24:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:25:04.638Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffad0660c608403987ea4"
+    },
+    "message_id": "reddit_t3_1wljxpv",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Vadodaraunfiltered",
+    "username": "sailor199701",
+    "title": "Looking for a Female Sales Executive to join our Real Estate team in Vadodara 🏡",
+    "text": "Looking for a Female Sales Executive to join our Real Estate team in Vadodara 🏡\n\nHey everyone! 👋  We’re a growing real-estate firm based in  New Alkapuri, Vadodara , and we’re looking for a motivated  female candidate (18–26)  to join our team.   What you’ll be doing:   • Speaking with property buyers/tenants and understanding their requirements  • Calling and following up with leads  • Showing properties to clients  • Coordinating property visits  • Helping clients find suitable properties  • Maintaining basic lead/follow-up records   Who we’re looking for:   • Freshers are absolutely welcome  • Good communication and a confident personality  • Willingness to learn and grow in sales  • Should know Vadodara or be willing to learn the local areas  •  Own bike/two-wheeler is required   • Company provides  fuel expenses   💰  Salary + Good Performance Incentives   📈 Growth opportunities based on performance  🕙  10 AM – 6 PM   📍  New Alkapuri, Vadodara   If you’re someone who enjoys  meeting people, talking to clients and wants to learn how the real-estate business works , feel free to DM me.  Please send your  name, age, area of residence and a short introduction/resume .   Only serious candidates, please.        submitted by     /u/sailor199701     to     r/Vadodaraunfiltered       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Vadodaraunfiltered/comments/1wljxpv/looking_for_a_female_sales_executive_to_join_our/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:24:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:25:04.845Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffad1660c608403987ea5"
+    },
+    "message_id": "reddit_t3_1wljxpu",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "TrSC2",
+    "username": "Available_Strike9175",
+    "title": "https://www.reddit.com/r/TurkOyunSektoru/s/OnayC0jkyT",
+    "text": "https://www.reddit.com/r/TurkOyunSektoru/s/OnayC0jkyT\n\nsubmitted by     /u/Available_Strike9175     to     r/TrSC2       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TrSC2/comments/1wljxpu/httpswwwredditcomrturkoyunsektorusonayc0jkyt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:24:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:25:05.047Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffad1660c608403987ea6"
+    },
+    "message_id": "reddit_t3_1wljxps",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "SmoothProcedure8176",
+    "title": "Grab 100 hammers from u/SmoothProcedure8176!",
+    "text": "Grab 100 hammers from u/SmoothProcedure8176!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/SmoothProcedure8176     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wljxps/grab_100_hammers_from_usmoothprocedure8176/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:24:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:25:05.248Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffad1660c608403987ea7"
+    },
+    "message_id": "reddit_t3_1wljxpm",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "chrome_extensions",
+    "username": "PrizeBlueberry4053",
+    "title": "I built a powerful and scalable tab manager & workspace organizer extension for Chrome - Tabforce.com",
+    "text": "I built a powerful and scalable tab manager & workspace organizer extension for Chrome - Tabforce.com\n\nSite:   Tabforce.com     Chrome Extension Link:    https://chromewebstore.google.com/detail/tabforcehq-tab-manager-wo/oclngfcabheopmiinijfecfchhgfhmep    Started the site a month ago and currently 24 users.    Overview:   The ultimate tab manager and workspace organizer. Group tabs, save sessions, boost productivity with powerful spaces and folders.   🚀 TABFORCEHQ - POWERFUL TAB MANAGER & WORKSPACE ORGANIZER    Take total control of your browser. Organize tabs into structured project spaces, sync instantly across devices, navigate using our ultra-fast NavRail & Sidebar, and secure you and your team with enterprise domain governance.       💡 WHY TABFORCEHQ?    Are you drowning in 50+ open browser tabs? Losing critical research links? Frustrated by browser crashes or slow computer performance?    TabForceHQ is the ultimate alternative built for modern teams, developers, real estate professionals, investors, and enterprise organizations. Whether you are juggling client projects, deep-dive research, or daily workflows, TabForceHQ turns tab chaos into structured, lightning-fast productivity.       ✨ CORE APP FEATURES & ECOSYSTEM    🧭 3-TIER NAVRAIL & SIDEBAR NAVIGATION  • Context-Driven Rail Modes: Instantly toggle between Home Launchpad [H], Assigned Folders [F], and Projects Matrix [P].  • Lightning Sidebar: Access active workspaces, custom folder hierarchies, and system tools at a glance.  • Fluid Drag & Drop: Move spaces across projects and folders with sub-second responsiveness.    ⭐ FAVORITES & QUICK LAUNCHPAD  • Starred Spaces: Pin high-frequency spaces to your Favorites bar for instant 1-click access.  • Space Notes & Resources: Store rich text project notes and key reference links directly inside each space.    📁 COMPLETE ASSET & WORKSPACE MANAGEMENT  • Manage Assets Matrix (/manage-assets): Centralized control panel for space reassignment, bulk tagging, and asset filtering across folders.  • Starter Templates (/templates): Instantly spin up curated space and workspace layouts for research, sprints, or client onboarding.  • Shared Assets Hub (/shared): Manage team-shared spaces, generate secure secret links, and track recipient access permissions.  • Staging & Batch Launch Queue (/queue): Queue up spaces, folders, and projects for sequential review sessions on your schedule, reorder launch priorities via drag-and-drop, and batch-launch entire workspace sets in 1 click.    🔄 ARCHIVE & DELETION RECOVERY  • Workspace Archive (/archive): Freeze and archive inactive spaces without cluttering your active workspace matrix.  • Recently Deleted / Trash (/recently-deleted): Soft-delete recovery system to restore accidentally closed spaces, folders, and tabs.    🛡️ ENTERPRISE GOVERNANCE & ADMIN PORTAL  • Admin Governance (/admin): Manage company domain whitelisting (@yourcompany.com), member permissions, and platform health telemetry.  • Role-Based Security: Domain-level sign-in guards restrict access strictly to authorized team members.  • SOC-Ready Infrastructure: AES-256 cloud encryption at rest and TLS in transit.    🔄 1-CLICK MIGRATION IMPORTER  • Switch in Seconds (/data-management): Built-in importer for tab manager alternatives and Chrome Bookmarks / HTML files with interactive tree previews.  • Flexible Migration: Choose whether to merge imported spaces into existing folders or create new custom folders.    🎨 THEMES & PERFORMANCE  • Visual Themes: Select from Light, Dark, and Sunset themes to match your preferred desktop aesthetic. More to come!  • Sub-Second Dual-Bridge Sync: Direct page-to-extension messaging delivers instant tab-grouping and window state sync without network round-trip delays.  • Lazy Tab Loading: Large spaces load tabs on demand via background scripts, saving RAM and keeping your browser running blazingly fast.  • Optimistic UI Engine: Enjoy instant visual feedback when dragging, reordering, or reassigning spaces, folders, and tabs.  • Real-Time Cloud Snapshot Streaming: Firebase-powered sync keeps multi-device workspaces and team edits updated in under a second.       🛠️ HOW IT WORKS IN 3 SIMPLE STEPS      Install your TabForceHQ extension & open your workspace dashboard app in your browser.    Create your first Space or import existing tabs from alternative tab managers or your bookmarks.    Use the NavRail and Sidebar to launch, organize, and share tab groups effortlessly!         🔥 WHY USERS ARE SWITCHING TO TABFORCEHQ    • Lighter, faster, includes a cleaner 3-tier NavRail interface, and provides strict company domain security controls.  • Adds deep multi-level project folders, real-time team cloud sync, and enterprise domain governance.  • Adds real-time cross-device sync, background task queues, and 1-click team asset sharing.       🔐 PRIVACY & SECURITY FIRST    • Zero Unapproved Data Selling: Your browsing data and tabs are yours alone.  • Domain Security Guards: Protect your team workspace with restricted domain authorization.  • Encrypted Cloud Sync: Enterprise-grade security keeps your workspace assets safe.       🌟 PERFECT FOR:    • Equity & Debt Investors: Organize deal flow pipelines, due diligence packages, underwriting models, and portfolio monitoring links cleanly by transaction or asset.  • Real Estate Brokers & Investors: Keep property listings, market comps, zoning databases, escrow docs, and client research organized by active deal or neighborhood.  • Accountants & Financial Advisors: Group client portfolios, tax filing portals, audit working papers, compliance documentation, and financial reports cleanly by client or tax year.  • Developers & Engineers: Group docs, GitHub repositories, and Jira tickets per feature branch.  • Project Managers & Teams: Manage client workspaces, roadmaps, and research tabs effortlessly.  • Designers & Creators: Organize inspiration boards, assets, and project links in dedicated spaces.  • Researchers & Students: Save study sessions, articles, and citations without browser slowdowns.       💬 SUPPORT & RESOURCES    • Website:  https://tabforcehq.com   • Support & Feedback: [ support@tabforcehq.com ](mailto: support@tabforcehq.com )    Transform your browser into a high-performance workspace machine today. Install TabForceHQ now! 🎉    https://preview.redd.it/gy8hzltmzoqh1.png?width=1280&format=png&auto=webp&s=95acaaab447169ea161daf341bb9c3d6efd06c64     https://preview.redd.it/yeho2mtmzoqh1.png?width=1280&format=png&auto=webp&s=a8ef6cbb4314f3dd384b2af5d9bccaa6f83ce48d     https://preview.redd.it/9q2spltmzoqh1.png?width=1280&format=png&auto=webp&s=f8d927877a9c5e04b0bf7962d0d076e3619a33b2     https://preview.redd.it/5rzy7ntmzoqh1.png?width=1280&format=png&auto=webp&s=3f9549706bbdb147c800f1f4bcf24839a133e22e     https://preview.redd.it/e51v3ntmzoqh1.png?width=1280&format=png&auto=webp&s=4c76fba7a722e40e90d2fc396b5c4d88bf80d0d8        submitted by     /u/PrizeBlueberry4053     to     r/chrome_extensions       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/chrome_extensions/comments/1wljxpm/i_built_a_powerful_and_scalable_tab_manager/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:24:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:25:05.454Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffad1660c608403987ea9"
+    },
+    "message_id": "reddit_t3_1wljxpe",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskRedditespanol",
+    "username": "Yosita-vip",
+    "title": "Si me dieras un consejo aleatorio de vida justo ahora, cuál sería?",
+    "text": "Si me dieras un consejo aleatorio de vida justo ahora, cuál sería?\n\nDe esos consejos que aplicas a diario o que te habría gustado aprender antes. Prometo leerlos todos y aplicar los mejores.       submitted by     /u/Yosita-vip     to     r/AskRedditespanol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskRedditespanol/comments/1wljxpe/si_me_dieras_un_consejo_aleatorio_de_vida_justo/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:24:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:25:05.862Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffad2660c608403987eaa"
+    },
+    "message_id": "reddit_t3_1wljxox",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "IllustriousMove9818",
+    "title": "Level: 601~620 4⭐ Weapons Market #10851",
+    "text": "Level: 601~620 4⭐ Weapons Market #10851\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/IllustriousMove9818     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wljxox/level_601620_4_weapons_market_10851/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:24:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:25:06.065Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffad2660c608403987eab"
+    },
+    "message_id": "reddit_t3_1wljxov",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "kitchener",
+    "username": "Malinder",
+    "title": "Recommendations for a buying agent in Kitchener",
+    "text": "Recommendations for a buying agent in Kitchener\n\nHi,   We are moving to Kitchener from Guelph and are looking for a buying agent to represent us.   Looking for recommendations on buying agents in kitchener that you have had a good experience with.   Thanks in advance!       submitted by     /u/Malinder     to     r/kitchener       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/kitchener/comments/1wljxov/recommendations_for_a_buying_agent_in_kitchener/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:24:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:25:06.265Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffad2660c608403987eac"
+    },
+    "message_id": "reddit_t3_1wljxnv",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "WatchEnthusiastIndia",
+    "username": "sunster777",
+    "title": "Best Place in Mumbai to buy Rado, Longines...",
+    "text": "Best Place in Mumbai to buy Rado, Longines...\n\nsubmitted by     /u/sunster777     to     r/WatchEnthusiastIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WatchEnthusiastIndia/comments/1wljxnv/best_place_in_mumbai_to_buy_rado_longines/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:24:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:25:06.475Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffad2660c608403987ead"
+    },
+    "message_id": "reddit_t3_1wljxm6",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "IRCCDiscussion",
+    "username": "Own_Comfortable7431",
+    "title": "PR application",
+    "text": "PR application\n\nsubmitted by     /u/Own_Comfortable7431     to     r/IRCCDiscussion       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IRCCDiscussion/comments/1wljxm6/pr_application/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:24:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:25:06.685Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffad2660c608403987eae"
+    },
+    "message_id": "reddit_t3_1wljxlu",
+    "topic_key": "nike",
+    "search_keyword": "Nike",
+    "platform": "reddit",
+    "subreddit": "WhatsThisShoe",
+    "username": "Flaming_Sunroom",
+    "title": "Bought these a few years ago. What Nikes are they?",
+    "text": "Bought these a few years ago. What Nikes are they?\n\nI bought these shoes a few years ago (2019-2020?). I would love another pair. Anyone know what these are??       submitted by     /u/Flaming_Sunroom     to     r/WhatsThisShoe       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WhatsThisShoe/comments/1wljxlu/bought_these_a_few_years_ago_what_nikes_are_they/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:24:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:25:06.887Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffad5660c608403987eb9"
+    },
+    "message_id": "reddit_t3_1wljxlb",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "TravelBuddiesIndia",
+    "username": "basedagha",
+    "title": "Anyone Up for ABC in Oct 21?",
+    "text": "Anyone Up for ABC in Oct 21?\n\nsubmitted by     /u/basedagha     to     r/TravelBuddiesIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TravelBuddiesIndia/comments/1wljxlb/anyone_up_for_abc_in_oct_21/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:24:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:25:09.069Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffad5660c608403987eba"
+    },
+    "message_id": "reddit_t3_1wljxkw",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MiniRacerGame",
+    "username": "NeenerNeenerNeener1",
+    "title": "Can you beat 12.221s on Knife's Edge?",
+    "text": "Can you beat 12.221s on Knife's Edge?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/NeenerNeenerNeener1     to     r/MiniRacerGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MiniRacerGame/comments/1wljxkw/can_you_beat_12221s_on_knifes_edge/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:24:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:25:09.277Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffad5660c608403987ebb"
+    },
+    "message_id": "reddit_t3_1wljxkp",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "wordgrind",

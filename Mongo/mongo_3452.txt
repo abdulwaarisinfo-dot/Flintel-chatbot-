@@ -1,0 +1,416 @@
+    },
+    "message_id": "reddit_t3_1wec975",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "SaasDevelopers",
+    "username": "fishdev814",
+    "title": "One of my customers says: \"I will get up at midnight to use this!\". Please help me to check if it can help the common \"talking to user\" problem?",
+    "text": "One of my customers says: \"I will get up at midnight to use this!\". Please help me to check if it can help the common \"talking to user\" problem?\n\nHey guys so the background is   Talking to user is important. If you know how users are actually using your product, like what's their real workflow, what's their real use case, what's their real opinion and feeling about your product, you can position and shape your product a lot better.   But many people seems having problem to reach users. I collected a bunch of reddit threads (figure 1). For now I haven't heard founders get a second way to invite users to talk besides email, and email has a very low response rate according to them.   And I talked with one customer and built FounderPing (figure 2), it basically does two things:      When you are online, you can ping a user and talk with them. And you will get notified if a new visitor comes onboard (that's the feature that made him say: \"I will get up at midnight to use this!\").     When you are offline, you can dispatch your AI stand-in to have deep conversations with users, with predefined triggers, context and direction.      And everything will be summarized and tagged with priorities.   I think the key is the vibe: users hate to talk with customer support and chatbots. They would rather talk to the founder, the CEO, personally. So FounderPing may bring that trust.   Timing is also very important: email users three days later and they already forgot the experience. So talking in the app, where the moment is happening, is crucial for the response rate.   Founders can make use of this to cover a bunch of topics: user acquisition, use case learning, churn reasons, bug reports, feature requests, etc.   So my questions are      How do you talk to users? Is there any other way than emails?     What's your story of talking to users helping shape the product? How much value do you think it has?     What's your opinion about FounderPing? Do you think it might help?      PS I am still looking for beta testers, all cost on me.       submitted by     /u/fishdev814     to     r/SaasDevelopers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SaasDevelopers/comments/1wec975/one_of_my_customers_says_i_will_get_up_at/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T13:10:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T13:10:21.377Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa54f3d6508d45f3d2bc7a2"
+    },
+    "message_id": "reddit_t3_1wec93m",
+    "topic_key": "top web dev jobs all platforms",
+    "search_keyword": "frontend developer",
+    "platform": "reddit",
+    "subreddit": "css",
+    "username": "VolodymyrMoskvin",
+    "title": "I built Pin-op to connect inspected elements in DevTools to their CSS/SCSS in VS Code",
+    "text": "I built Pin-op to connect inspected elements in DevTools to their CSS/SCSS in VS Code\n\nHey  r/webdev ! Sharing a developer tool I’m working on for Showoff Saturday.   Pin-op connects a browser window to a VS Code window so you can trace an element’s styles back to your workspace files.    https://preview.redd.it/jwh7lfbf53ph1.jpg?width=1921&format=pjpg&auto=webp&s=14c668b82571498ae44bc54e0537fccc5d1cbed9    The workflow is straightforward: select an element on the page or in the DOM tree, inspect its matched rules, and see the corresponding ranges highlighted in your editor. Clicking a rule’s source location opens that block. When source maps establish the original location, it resolves to the authored SCSS.   A few implementation decisions that might interest other frontend developers:     Inspection preserves editor focus. Selecting different elements highlights matches in the active document. Opening another file requires clicking a source location.   Source locations need evidence. If the original SCSS location cannot be verified, the inspector makes that uncertainty visible.   Element and parent matches are separate. Rules matching the selected element are distinguished from those matching its immediate parent.   Pairing is explicit. A short code links one browser window to one VS Code window, which keeps the connection scoped when several projects are open.     The browser extension adds a DevTools panel. The VS Code extension resolves rules against the current workspace. They communicate through a WebSocket bound to  127.0.0.1 ; there’s no hosted backend, account, or telemetry.   It also supports :hover/:focus previews and stylesheet refresh on save.   Currently available for Firefox, Chrome/Chromium, and VS Code. Both extensions are free, and the source is MIT-licensed.   To use it, install the VS Code extension and the extension for your browser:     VS Code:  Visual Studio Marketplace    Chrome / Chromium:  Chrome Web Store    Firefox:  Firefox Add-ons       Project page  ·  Source code    Happy to discuss the implementation, particularly source-map resolution and keeping browser inspection useful without constantly interrupting the editor workflow.       submitted by     /u/VolodymyrMoskvin     to     r/css       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/css/comments/1wec93m/i_built_pinop_to_connect_inspected_elements_in/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T13:10:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T13:10:21.595Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa54f3d6508d45f3d2bc7a3"
+    },
+    "message_id": "reddit_t3_1wec93k",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "gamingindian",
+    "username": "Traditional_Egg_8408",
+    "title": "Planning to sell my asus gaming v16 rtx 4050 laptop",
+    "text": "Planning to sell my asus gaming v16 rtx 4050 laptop\n\nHow much should i sell my rtx 4050 asus gaming v16 laptop with intel core 5 14th gen and 512gb ssd..it's in flawless condition and only 9 months old..the 3050 version of the same laptop is selling for 1 lakh 30 thousand new        submitted by     /u/Traditional_Egg_8408     to     r/gamingindian       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/gamingindian/comments/1wec93k/planning_to_sell_my_asus_gaming_v16_rtx_4050/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T13:10:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T13:10:21.794Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa54f796508d45f3d2bc7a4"
+    },
+    "message_id": "reddit_t3_1wec9x1",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "malaysia",
+    "username": "Past-Ad3276",
+    "title": "Does SHEIN somehow make your order more expensive when you buy everything together?",
+    "text": "Does SHEIN somehow make your order more expensive when you buy everything together?\n\nsubmitted by     /u/Past-Ad3276     to     r/malaysia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/malaysia/comments/1wec9x1/does_shein_somehow_make_your_order_more_expensive/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T13:11:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T13:11:21.960Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa54f7a6508d45f3d2bc7a5"
+    },
+    "message_id": "reddit_t3_1wec9wa",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PortfolioAnalyst",
+    "username": "MyPortfolio7139",
+    "title": "Weekly Macro Briefing Week ending September 11, 2026",
+    "text": "Weekly Macro Briefing Week ending September 11, 2026\n\nMacro Strategist (A Hedge Fund) Investment Committee Briefing     Date:  Friday, September 11, 2026     Tactical horizon:  3–6 months     Base case:  Stagflationary pressure persists through the autumn; the Fed stays restrictive, long-end yields remain elevated, and equity leadership rotates toward cash-flow durability, energy, and non-U.S. value rather than broad beta.    Macro Context      Policy:  The Fed target range is  3.50%–3.75% , unchanged at the July 28–29 meeting. The September 15–16 FOMC is the immediate catalyst; markets are assigning roughly a  53% probability of a 25 bp hike  after the recent inflation and energy shocks.     Inflation:  August CPI rose  0.4% m/m and 3.4% y/y ; core CPI rose  0.3% m/m and 2.4% y/y . Gasoline rose  3.9% m/m and 27.4% y/y . The monthly core beat is the more important signal for the next three months.     Rates:  The U.S. 10-year Treasury yield was approximately  4.96%  on September 11, near 5%; the 30-year was approximately  5.28%  on the latest available September 10 observation. The curve is pricing fiscal, term-premium, and inflation risk rather than an imminent growth collapse.     Growth:  Real GDP grew  1.5% annualized in Q2  after  2.1% in Q1 . Atlanta Fed GDPNow was  4.75% annualized for Q3  on September 3, while the Philadelphia Fed professional forecasters put 2026 full-year growth around  2.2% . The message is a sharp near-term rebound but slowing full-year momentum.     Equities and earnings:  The S&P 500 closed at  7,657  on September 11, roughly  +11.7% YTD on a total-return basis  through September 10. FactSet reported expected S&P 500 earnings growth of approximately  30% for calendar 2026 , with Q3 and Q4 estimates around  27.4% and 25.2% ; Goldman Sachs cited 2026 EPS of  $340 , up 24%. Expectations are powerful but leave valuation and duration exposed to a higher discount rate.     Credit/liquidity:  ICE BofA U.S. high-yield OAS was approximately  2.66% , exceptionally tight by historical standards. Credit is not confirming a recession, but it is priced for resilience and offers little cushion if oil, rates, or geopolitical risk intensify.     This week’s macro shock:  Oil traded above  $100/bbl , with Brent around  $107–108 , as U.S.–Iran tensions and threats to Middle East shipping routes raised supply-disruption risk. The week also delivered hot wholesale-price pressure, a four-session equity selloff, and then a Friday rebound after CPI was interpreted as “not worse than feared.”    1. Direction of interest rates: Significantly higher    The directional risk remains up, particularly at the long end. A 10-year yield near 5% and a 30-year near 5.3% reflect an unfavorable combination of sticky inflation, oil-driven term-premium risk, heavy Treasury supply, and uncertainty over the Fed’s reaction function. The next move need not be a straight line, but the 3–6 month distribution is skewed toward a further 25–50 bp rise rather than a durable rally. Front-end rates can rally briefly on growth scares; that is not the dominant macro trade.    Trade expression:  Short 10-year and 30-year Treasury futures; receive 2-year versus pay 10-year only as a tactical curve-steepener hedge.    2. Inflation expectations: Rising    Headline CPI is already 3.4% y/y, core is 2.4%, and the August monthly core increase of 0.3% came in hotter than expected. The key is the transmission mechanism: oil above $100 raises transport and input costs, while market psychology can broaden a temporary energy shock into services and wage expectations. Inflation expectations are therefore rising even though the annual core number has not reaccelerated materially. The market is underpricing the persistence risk because it is anchored to the year-over-year data.    Trade expression:  Long front-end inflation breakevens and energy; own payer swaptions against a further upside inflation surprise.    3. Equity markets outlook: Moderately bearish    Earnings momentum is strong, but the index is priced for execution while the discount rate is moving against it. A roughly 12% YTD gain, tight credit spreads, elevated long yields, and concentrated growth leadership create asymmetric downside if the Fed hikes into an energy shock or if earnings estimates begin to roll over. We expect a volatile, range-bound-to-lower index over the next quarter, not a systemic bear market. The better risk/reward is rotation within equities, not outright indiscriminate shorting.    Trade expression:  Underweight broad U.S. beta; pair short Nasdaq/long energy and quality value, with downside put spreads financed by call overwrites.    4. Credit conditions: Tightening    Credit spreads remain extremely tight at roughly 266 bp, but the marginal direction is tightening as higher Treasury yields raise all-in borrowing costs and oil threatens weaker issuers. The absence of a large spread blowout does not mean conditions are easing; it means credit has not yet caught up with the rates and geopolitical repricing. Refinancing windows are less forgiving, especially for lower-quality cyclicals and energy consumers. Investment-grade balance sheets remain more resilient than high yield.    Trade expression:  Reduce CCC and highly leveraged cyclicals; prefer IG over HY and buy protection on CDX HY against an oil-driven widening episode.    5. Economic growth: Slow growth    The economy is not in recession, but the clean headline Q3 rebound overstates the underlying trajectory. Q2 growth slowed to 1.5%, full-year 2026 expectations are near 2.2%, and high real rates plus energy costs will weigh on consumption and capex into year-end. The result is a two-speed economy: investment and selected technology remain firm while rate-sensitive households and smaller businesses face pressure. This is slow growth with stagflationary characteristics, not a deep contraction.    Trade expression:  Long quality/large-cap balance sheets and defense; short small-cap domestic cyclicals and consumer discretionary.    6. Portfolio emphasis: Reduce risk    The risk-reward has deteriorated because three major markets—long-duration bonds, crowded growth equities, and tight high yield—are vulnerable to the same shock: higher-for-longer inflation. We recommend reducing gross and beta while retaining targeted exposure to earnings and commodities that benefit from nominal growth and supply scarcity. This is not a call to move fully defensive; it is a call to stop being paid for correlated risk. Capital preservation is the edge until the rates impulse turns.    Trade expression:  Cut broad equity and HY beta by 10–15%; redeploy into cash, energy, gold, and quality minimum-volatility equities.    7. Sectors/regions: Positive / Negative / Neutral          Asset / sector     View     Positioning rationale              US    Negative    High valuation, long-duration concentration, and rising discount rates outweigh strong earnings.          International    Positive    Cheaper valuations, less crowded positioning, and greater value/energy exposure provide relative protection.          Emerging Markets    Neutral    Commodity exporters and select Asia benefit, but a strong dollar and higher U.S. yields cap broad EM upside.          Tech    Negative    Earnings are strong, but duration and crowded positioning make the sector vulnerable to real-yield upside.          Healthcare    Positive    Defensive cash flows and lower economic sensitivity; use quality pharmaceuticals and managed-care selectivity.          Energy    Positive    Supply risk and oil above $100 create the clearest nominal-growth and geopolitical hedge.          Financials    Neutral    Higher yields help net interest income, but curve volatility, credit losses, and weaker loan demand offset the benefit.          Bonds    Negative    Avoid duration; front-end carry is preferable to long-end price exposure.          Cash    Positive    T-bill yields are competitive and provide optionality into volatility and better entry points.            Cross-asset opportunities:  Long Brent/energy equities versus short long-duration tech; long European/Japanese value versus short U.S. growth; long gold versus short real-duration bonds; long front-end T-bills versus 10-year duration.     Trade expression:  Build a diversified relative-value book: long XLE/healthcare and ex-U.S. value, short QQQ/long Treasuries, with a modest long-gold overlay.    8. Cash and liquidity preference: Hold more cash    Cash is no longer dead money: front-end government yields are attractive, and liquidity has option value with the S&P near record territory and high yield spreads near cycle tights. We want more dry powder because the principal opportunity is likely to appear after either a rates overshoot or an equity volatility event. Cash also reduces forced selling risk if correlations rise across stocks and bonds. The increase should be deliberate, not a wholesale liquidation.    Trade expression:  Add 5–10 percentage points to T-bills/overnight instruments and fund it from long-duration bonds and crowded growth exposure.    9. Major risks and concerns     Selected risks:      Inflation/energy shock:  Brent remains above $100 or moves toward $120, broadening from gasoline into services and expectations.     Fed policy error:  The Fed hikes or stays restrictive while growth is already slowing, triggering a sharper credit and small-cap drawdown.     Fiscal/term-premium shock:  Treasury supply, political pressure, or foreign demand weakness drives the 10-year decisively above 5%.     Equity valuation and concentration:  AI/mega-cap earnings disappoint or capex monetization fails, causing a duration-led equity de-rating.     Geopolitics:  U.S.–Iran escalation, Strait of Hormuz/Bab el-Mandeb disruption, Ukraine escalation, or a wider Middle East conflict.     Credit event:  Tight spreads reverse abruptly in CCCs, private credit, commercial real estate, or leveraged loans.     Dollar/liquidity squeeze:  A stronger dollar and higher real yields pressure EM, commodities ex-energy, and global risk assets.    What breaks the view:  A rapid de-escalation in the Middle East that takes oil below $85, several consecutive soft core-inflation prints, a Fed pivot toward easing, and a sustained 10-year move below 4.5% would invalidate the higher-yields/defensive-rotation thesis. In that scenario, breadth should improve, long-duration growth should regain leadership, and we would cover shorts aggressively. Conversely, an oil move above $120 with core inflation above 0.4% m/m would make this view more bearish and require a larger cash and hedging allocation.     Trade expression:  Own convexity: buy equity index put spreads and payer swaptions, funded partly by selling rich upside volatility in crowded mega-cap names.    10. Confidence level: High    Confidence is high in the direction of the risk asymmetry, not in a precise week-to-week index path. Multiple independent signals—core CPI, oil, near-5% 10-year yields, a 5.3% 30-year, tight credit, and crowded equity positioning—point to the same conclusion: duration and broad beta are poorly compensated. Growth remains positive and earnings remain strong, which argues against an outright crash call and supports relative-value implementation. The thesis has clear invalidation levels, making it tradable rather than merely descriptive.    Trade expression:  Maintain a high-conviction barbell: cash/T-bills, energy, healthcare, gold, and selective international value against reduced U.S. duration and growth beta.    Summary Investment Committee One-Pager          Decision     Base case     Portfolio action              Rates   Significantly higher   Short long-end duration; favor front-end carry          Inflation   Rising   Own energy and inflation protection          Equities   Moderately bearish   Reduce broad U.S. beta; rotate to value/defensives          Credit   Tightening   Prefer IG; trim HY/CCC; hedge CDX HY          Growth   Slow growth   Long quality; short small-cap cyclicals          Risk budget   Reduce risk   Cut correlated stock/bond/HY exposure 10–15%          Regional/sector leaders   International, healthcare, energy   Fund from U.S. tech and long-duration bonds          Liquidity   Hold more cash   Add 5–10 pp T-bills          Main catalyst   Sept. 15–16 FOMC and oil   Trade volatility around policy/energy headlines          Invalidation   Oil    Cover shorts; re-add duration and growth                   submitted by     /u/MyPortfolio7139     to     r/PortfolioAnalyst       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PortfolioAnalyst/comments/1wec9wa/weekly_macro_briefing_week_ending_september_11/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T13:11:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T13:11:22.184Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa54f7a6508d45f3d2bc7a7"
+    },
+    "message_id": "reddit_t3_1wec9us",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "jenova_ai",
+    "username": "Rude-Result7362",
+    "title": "AI Fashion Mockup Studio: Photorealistic Product Photography",
+    "text": "AI Fashion Mockup Studio: Photorealistic Product Photography\n\nFashion Mockup Studio   helps you produce photorealistic fashion photography by mocking garments on models with studio-grade lighting, styling, and market-specific visual language. While traditional shoots require booking talent, renting space, and waiting on post-production, this AI studio turns a garment photo or description into campaign-ready images.     ✅ Photorealistic garment-on-model mockups that read as real studio or location photographs   ✅ Market-aware casting, lighting, and styling for US, Europe, Seoul, Tokyo, China, the Gulf, and South/Southeast Asia   ✅ Output presets for e-commerce, editorial, social, campaign heroes, and digital lookbooks   ✅ Fabric-accurate drape, construction detail, and styling coherence — not generic AI clothing renders     Fashion visuals decide whether a shopper trusts the product, understands the fit, and completes the purchase. To see why so many brands still ship catalogs that underperform, it helps to look at the production bottleneck itself.   Quick Answer: What Is Fashion Mockup Studio?     Fashion Mockup Studio    is a photorealistic fashion photography studio that mocks garments on models to produce campaign-ready images in minutes.  It is built for brands, creative directors, and sellers who need on-model photography without a physical shoot.    Key capabilities:      Studio, lifestyle, and editorial mockups from a garment photo, description, or mixed brief   Market archetype defaults covering model profile, lighting, posing, and styling conventions   Platform-ready aspect ratios for listings, Instagram, Stories/Reels/TikTok, lookbooks, and web heroes   Iteration on pose, lighting, background, and model archetype without rebooking a crew     Creative Challenges Facing Fashion Visual Production   In fashion e-commerce, the photograph is the product experience. Shoppers cannot touch the cloth, check the drape, or walk around the silhouette — they decide from pixels.      75% of online shoppers  consider product photos  crucial to their purchasing decisions , and professional images are associated with conversion lifts of roughly  30–33% .     That pressure collides with a brutal cost structure. Apparel also carries some of the highest return rates in retail.      20–30% of online fashion purchases  are returned, according to  The State of Fashion , while a 2025 National Retail Federation tally put total US retail returns at  $849.9 billion .    22% of product returns  happen because  the item looks different than expected  — a visual accuracy problem, not just a logistics problem.    Fit issues account for 53%  of  apparel returns globally , and some reports put average  online clothing return rates near 30% , with certain segments much higher.     But producing photography that actually shows cut, cloth, and proportion is still frustratingly difficult:      Shoot economics do not scale with SKU count.  Every colorway, size run, and seasonal drop multiplies model days, studio time, styling, and retouching.    Flat lays and ghost mannequins hide the garment.  They are cheaper, but they fail at drape, volume, and how a hem or shoulder actually sits on a body.    One visual language does not travel.  A Seoul e-commerce look, a Gulf modest-luxury frame, and a European editorial campaign are different productions — not a filter swap.    Generic image tools break fashion's hardest details.  Silk that ignores gravity, prints that smear across seams, and anatomy that collapses at the hands are enough to kill shopper trust.     Photoroom's 2025 survey of more than 1,000 US and UK clothing brands found that   30% of fashion professionals already use AI for visual content  , while  75% of clothing brands mix multiple photography styles  in a single listing. The demand is not for more images. It is for images that behave like real clothes under real light.   This is exactly what this  fashion photography studio  was built for.   How Fashion Mockup Studio Works   You work with a creative director, not a blank prompt box. Share the garment, name the market and output, then iterate until the frame could hang in a lookbook.    Step 1: Brief the Garment   Upload a product photo, describe the piece, or combine both. Include fabric, construction, and any brand constraints you already have — color rules, model age range, no visible logos, or a specific silhouette.      \"Mock this bias-cut silk midi in ivory. Show true drape and weight, no stiffness. E-commerce front view, 3:4.\"       Step 2: Set Market, Model, and Output   Choose the geography and the job the image has to do. US commercial, European luxury, Seoul, Tokyo, mainland China, Gulf, and South/Southeast Asia each carry different casting, lighting, and posing defaults. You can override any element.      \"European luxury editorial, 2:3. Tall angular model, high-contrast architectural background, garment as sculpture. Minimal expression.\"      If you still need help deciding how the outfit should read — formal/casual mix, hem balance, accessory load —  Fashion Consultant  can pressure-test styling before you lock a visual direction.    Step 3: Generate the Photograph   The studio composes camera, lighting, fabric behavior, and environment so the result reads as a photograph: natural skin texture, real shadow falloff, and cloth that holds or flows the way that textile should. Switch image models from the App control under the chat input when you want a different quality, style, or speed profile.      \"Same coat, Seoul e-commerce default: bright diffused light, luminous skin, clean pastel set, oversized proportion, 3:4 listing crop.\"       Step 4: Iterate Like a Shoot   Ask for the change, not a full re-description — warmer key light, three-quarter turn, outdoor street cast, different age range. Keep the garment locked while you explore pose, set, and model archetype.      \"Keep garment and model. Swap to natural window light, add a rim for shoulder separation, crop 4:5 for Instagram.\"       Step 5: Deliver to Format   Pull the frame into the ratio the channel needs: 3:4 or 4:5 for listings, 9:16 for Stories/Reels/TikTok, 16:9 or 21:9 for campaign heroes, 2:3 for lookbook pages. Batch additional SKUs against the same lighting and grade so the grid stays consistent.   Try this AI studio free — no credit card required.   Creative Showcase: From Sketch to Campaign-Ready Images   🛍️ Full-SKU E-Commerce Catalog Without a Studio Day    Scenario:  A DTC shirt brand launches 18 colorways and needs on-model front, side, and detail frames before paid traffic goes live.    Traditional Approach:  Cast a model, book a studio, style every color, then retouch for days. Adding a late SKU means another call sheet.     Fashion Mockup Studio   :  Upload one hero sample (or a tight technical description), lock lighting and pose, then generate the remaining colorways with the same camera height and crop.     Fabric structure stays consistent so poplin does not suddenly look like jersey   White-studio and lifestyle frames can sit in the same listing —  75% of clothing brands already mix styles    New color drops do not wait on another shoot calendar     If you already have photos that need background cleanup, color correction, or marketplace formatting rather than a new mockup,  Product Photo Editor  is the better next step for the existing files.   📱 Mobile-First Social Drop in 9:16    Scenario:  A streetwear label needs Stories, Reels, and TikTok stills tonight for a hoodie drop. The founder is briefing from a phone between packing orders.    Traditional Approach:  A social shoot plus crop-and-regrade for every vertical format, or leftover 3:4 e-commerce images that look cramped on a full-screen story.    This AI studio:  Generate the same hoodie as a 9:16 vertical with movement-aware posing, then a 4:5 feed crop that keeps the logo and hem honest.     Brief and review on iOS or Android with the same session memory as desktop   Lighting can shift from daylight street to night rim without recasting   Output matches how  mobile already carries about 70% of e-commerce traffic      When those stills need to become paid units — Meta placements, copy-on-image, batch variations —  Digital Ad Designer  can turn the mockup into conversion-oriented ad creatives without restarting the garment work.   🌍 One Garment, Three Market Languages    Scenario:  A modest-luxury abaya and a matching tailored jacket must sell in Gulf e-commerce, a Seoul lookbook, and a US campaign hero — same construction, different visual contract with the shopper.    Traditional Approach:  Three casts, three lighting packages, three styling teams. Most small labels ship one \"global\" image and hope it converts everywhere.    The studio:  Apply each market's default package — model profile, lighting, posing, and set — then override any single variable.        Market   What changes in the mockup          Gulf / modest luxury   Warm architectural light, composed pose, coverage as design, material quality in close detail       Seoul commercial   Bright diffusion, polished grooming, clean or pastel ground, coordinated oversized proportion       US campaign   Lifestyle authenticity, mixed casting, natural light, accessible posing          Cultural precision is treated as production craft, not a skin-tone slider   You can keep the garment identical while the photograph's grammar changes   Creative teams can review three heroes in one conversation instead of three vendors     📖 Lookbook Compilation From a Capsule    Scenario:  An emerging label has a four-piece capsule and needs a digital lookbook PDF for wholesale appointments by Friday.    Traditional Approach:  A two-day editorial plus layout in-house, or a freelancer queue that slips past market week.    The studio:  Generate editorial heroes and clean e-commerce fronts per piece, lock a shared grade from the first approved frame, then compile the set.     Visual lock across coat, trouser, blouse, and belt so the collection feels shot in one day   2:3 or 3:4 pages sized for screen presentations   Iteration stays cheap when a buyer asks for a different model archetype after the first PDF     Examining current production data shows why this workflow is spreading:  AI image generators were the fastest-growing AI category in 2024, up 441% year over year , and estimates put the  AI-generated fashion photography market at $1.8 billion in 2025 . The brands that benefit are the ones that still obsess over seam, drape, and cast — they just stop waiting on a call sheet for every SKU.   Frequently Asked Questions   Is Fashion Mockup Studio free?   Yes. A free plan includes core features with limited monthly usage. Paid tiers start at $20/month (Plus) and scale through Premium, Pro, Max, Ultra, and Enterprise if you are producing full catalogs or running heavier iteration. Usage resets on your billing date with no daily cap, so a launch week can use the full allotment on day one.   How is this different from a generic AI image generator?   Generic models guess at \"clothes on a person.\" This studio is directed at garment accuracy: construction, fabric physics, print continuity, and market-specific photography language. You brief like a creative director — output style, model archetype, lighting, and crop — then iterate on the change rather than regenerating a new fantasy outfit. A beautiful image of the wrong garment is treated as a failed mockup.   Can Fashion Mockup Studio match my brand guidelines?   Yes. When you provide palette, photography style, logo rules, or model demographics, those constraints are treated as production law. If a guideline fights visual impact — for example, a lighting rule that flattens texture — the studio flags the conflict and recommends a fix instead of silently drifting. With no guidelines, aesthetic direction is inferred from the garment itself.   Does it work on mobile?   Yes. Full feature parity across web, iOS, and Android, with settings synced across devices. That matters for fashion because a large share of briefing, approval, and social publishing already happens on a phone. You can upload a garment photo from the factory floor and review a 9:16 story crop before the sample leaves the table.   How accurate are the garments and fabrics?   Accuracy is the point of the workflow: color, silhouette, construction details, and how that specific cloth should drape or hold shape. Prints, stripes, and hardware are checked as failure points because they are where fake fashion images usually collapse. If a result misses a critical detail, say so and iterate — do not ship a \"close enough\" listing image. Photorealism is the quality bar, not a slogan.   Can I produce images for more than one market or format at once?   Yes. The same garment can be mocked for multiple markets with separate casting, lighting, and styling packages, or batched across e-commerce, editorial, and social ratios. Multi-garment lookbooks and systematic catalog runs are supported so a drop stays visually consistent instead of looking like twelve unrelated prompts.   From Sample to Shoot-Ready Without the Call Sheet   High-converting fashion imagery has always been expensive because it had to be. Models, light, cloth, and cultural fluency do not assemble themselves — and shoppers punish listings that cannot show how a garment actually lives on a body.   90% of online shoppers   name photo quality as the most important factor in a buying decision, while fashion's conversion rates still lag other retail verticals.    Fashion Mockup Studio  compresses that production stack into a brief: garment in, market and format named, photograph out — then refined until the fabric, fit, and frame are honest enough to sell. Try it on the next SKU that would have waited for a studio day.   Explore more at  Jenova .    For Developers:  Fashion Mockup Studio is available programmatically via the  Jenova API  — integrate photorealistic garment-on-model fashion photography into your application with a single API call.  Full documentation →        submitted by     /u/Rude-Result7362     to     r/jenova_ai       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jenova_ai/comments/1wec9us/ai_fashion_mockup_studio_photorealistic_product/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T13:11:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T13:11:22.631Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa54f7b6508d45f3d2bc7a9"
+    },
+    "message_id": "reddit_t3_1wec9tq",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "growgreenoutdoor",
+    "username": "Decent_Willow3627",
+    "title": "Keep your pimp hand strong!!",
+    "text": "Keep your pimp hand strong!!\n\nA Masterclass in Micro-Managing the Ladies in Your Life (For Maximum Output)   Let’s be honest with ourselves, gentlemen. We spend thousands of dollars on these ladies, investing in top-tier environments, expensive meals, and premium accessories. But we aren't doing it out of pure, unconditional love. We have ulterior motives. We want one thing, and one thing only: maximum extraction.   If you want a lady who is strong, resilient, and highly productive, you cannot just let her grow wild. You need absolute control. Here is my definitive guide to micro-managing your ladies to ensure they reach peak performance under your watch.     Perfecting the Environment & Pampering (With Intent)     Before you start demanding results, you have to set the stage. A controlled environment is the secret to total compliance.   Premium Upkeep: You buy them expensive specialty drinks, treat them to high-end meals, and set up the perfect, climate-controlled atmosphere.   The Look: You take them for fancy, expensive haircuts to keep them looking exactly how you want. But remember: this isn't a gift. Keeping them trim ensures that energy isn't wasted on unnecessary fluff, directing all focus to the areas that actually deliver value.   Constant Monitoring: Keep them under bright, intense lights 18 hours a day if you have to. Never let them sit in the dark for too long, or they might start changing on you before you’re ready.     Strategic Bending and Training     A strong woman doesn't just happen; she is shaped. You have to gently but firmly manipulate her direction to maximize her potential.   Low-Stress Adjustments: Tie them down when necessary. Secure their positions so they expand horizontally rather than just shooting straight up. By spreading them out, you ensure every single part gets equal exposure to the resources you provide.   Building Resilience: Sometimes, you have to apply a little high-stress pressure. A gentle pinch here, a calculated bend there. It sounds strict, but it forces them to develop thick, sturdy knuckles. It builds character and creates a framework that can handle a massive load later on.     Handling Irregularities & Moving On     You are running a tight operation, and there is absolutely no room for unexpected surprises or deviations from the plan.   Zero Tolerance for \"Baggage\": You must monitor them daily for any signs of instability. Heaven forbid one of your ladies starts growing \"balls\" or showing unexpected traits that could ruin the rest of your lineup. If she acts up or introduces unwanted variables, she is cut off immediately. Get rid of her, clear the space, and leave no trace behind.   The Final Extraction: Once they have reached peak maturity and you’ve extracted everything you possibly can, the relationship has served its purpose. You harvest the rewards, wrap things up, and move straight on to the next one.       submitted by     /u/Decent_Willow3627     to     r/growgreenoutdoor       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/growgreenoutdoor/comments/1wec9tq/keep_your_pimp_hand_strong/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T13:10:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T13:11:23.083Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa54f7b6508d45f3d2bc7aa"
+    },
+    "message_id": "reddit_t3_1wec9t6",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "FractalDesign",
+    "username": "__Cereall_",
+    "title": "Anyone else kinda dissapointed in the define one?",
+    "text": "Anyone else kinda dissapointed in the define one?\n\nAs a current define 7 user (with a fan config that recently got publically shat on here)... I really don't like this as a define series case.   My issue is mostly that Fractal seems to be shifting its mainstream form factors into what was formerly considered \"compact\", which AFAIK were always hated to some degree. I'm happy for people that would rather have a smaller footprint, but the define series has always served people who were inclined to build HDD columns and dual-GPU setups with an eatx xeon motherboard.   It's long been the pinnacle home server case for many many generations and Fractal has just given that market up. These are the very people who probably want a deadened case, because it's either in an office, or running 24/7 in somebody's bedroom.   HDDs are still far from dead and I'm disappointed on behalf of the entire datahoarder community that when we finally got a successor to the define 7 it's a deadened gaming PC case. I'm sure a lot of people will think it's cool and buy it, but gamers are one of the groups that deadening is most detrimental to and the groups that need it miss everything else they need from a case.   I'm not angry, just kinda dissapointed and I think this is another mood. Honestly the mood at least had a purpose, this feels like a define for the sake of releasing a define       submitted by     /u/__Cereall_     to     r/FractalDesign       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FractalDesign/comments/1wec9t6/anyone_else_kinda_dissapointed_in_the_define_one/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T13:10:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T13:11:23.306Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa54fb66508d45f3d2bc7ab"
+    },
+    "message_id": "reddit_t3_1wecarr",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "mtgfinance",
+    "username": "golden-chickens",
+    "title": "What rates are people buying singles to be profitable",
+    "text": "What rates are people buying singles to be profitable\n\nHi all,   For context I am based in Australia, I feel like the market is quite different here compared to the states.    Starting out trying to make some money by flipping some collections. I’m having some trouble trying to acquire cards - I’m not entirely sure what I should be paying for certain ranges of cards and what sort of margins I should be looking to make.    I have a scanner on the way and will get some AI assisted eBay store generation assistance to maximise what I get for each card. What are the best ranges of cards to purchase and flip in your experience ?    2.49-3.50?  10-20?  20^?        submitted by     /u/golden-chickens     to     r/mtgfinance       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mtgfinance/comments/1wecarr/what_rates_are_people_buying_singles_to_be/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T13:12:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T13:12:22.288Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa54fb66508d45f3d2bc7ac"
+    },
+    "message_id": "reddit_t3_1wecapr",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "GoingToSpain",
+    "username": "Choice_Panic_8834",
+    "title": "Salary for a Customer Success Manager in Barcelona",
+    "text": "Salary for a Customer Success Manager in Barcelona\n\nHi! I’m 25 and I have 3 years of experience at the same small B2B SaaS company.  Until January, I worked in Customer Support with a €22k gross annual salary + bonus. In January, I moved to Barcelona and transitioned into a Customer Success Manager role, with my salary increasing to €30k + bonus.  As a CSM, I’m responsible for:  managing clients and client relationships;  analyzing KPIs and performance;  upselling;  operational and strategic meetings;  coordinating with internal teams and the product roadmap.  I manage more than 5 Italian clients and speak Italian, Spanish, and English fluently.  In your opinion, is €30k + €1.5k per year for on-call availability a fair salary for a CSM with around 1 year of experience in Barcelona?  If I were to switch companies, what salary range would make sense to target?       submitted by     /u/Choice_Panic_8834     to     r/GoingToSpain       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GoingToSpain/comments/1wecapr/salary_for_a_customer_success_manager_in_barcelona/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T13:12:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T13:12:22.499Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa54ff26508d45f3d2bc7ad"
+    },
+    "message_id": "reddit_t3_1wecbm0",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "IMadeThis",
+    "username": "Dopamo_ADHD_HELPER",
+    "title": "I hit burnout and decided to build Dopamo—an app engineered for executive dysfunction and dopamine-seeking brains.",
+    "text": "I hit burnout and decided to build Dopamo—an app engineered for executive dysfunction and dopamine-seeking brains.\n\nHey everyone!   I’m an indie dev with ADHD. Standard productivity apps always triggered a massive shame spiral for me. When you miss a day, the UI turns red, you lose your 50-day streak, and you abandon the app for months.   I hit burnout and decided to build Dopamo—an app engineered for executive dysfunction and dopamine-seeking brains.   Here is what makes it different:      **Life as an RPG:** Completing tasks gives you EXP. You level up and unlock perks (Double EXP, Lucky Drops).     **Streak Shields 🛡️:** You can spend your earned EXP to buy a Streak Shield. If you have a bad mental health day, you activate it. It freezes your streak for 24 hours. No guilt, no shame, no resetting to zero.     **Family Token Economy:** You can assign family chores for Tokens/Pocket Money to stop the endless \"nagging\".     **Anti-ADHD Tax Tools:** It has a built-in Pantry Tracker (so you stop buying duplicates) and a secure Vault for documents you'd otherwise lose.      It’s completely free to try. My goal is to hit 10,000 users this month to prove this concept works. I’d love for this community to tear it apart and give me feedback!   Link:  linktr.ee/dopamo        submitted by     /u/Dopamo_ADHD_HELPER     to     r/IMadeThis       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IMadeThis/comments/1wecbm0/i_hit_burnout_and_decided_to_build_dopamoan_app/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T13:13:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T13:13:22.584Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa54ff26508d45f3d2bc7ae"
+    },
+    "message_id": "reddit_t3_1wecbln",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "resellpur",
+    "username": "Lumpy_Buy_6221",
+    "title": "#WTS/WTT Moondrop space travel 2 tws for 2.2k plus shipping",
+    "text": "#WTS/WTT Moondrop space travel 2 tws for 2.2k plus shipping\n\n​   📦 Original box & accessories: Included   🎧 Condition: Excellent / fully working   🛡️ Warranty: 5 days remaining   📸 Pictures attached are of the actual unit   📍 Shipping available / location can be discussed   Selling because I’m not using it enough.   Interested? Comment or DM me.   Can provide additional photos/videos and details if needed.   Payment/shipping: Prefer a safe, trackable transaction.   It got cool waifu sound features and iem audio equing also       submitted by     /u/Lumpy_Buy_6221     to     r/resellpur       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/resellpur/comments/1wecbln/wtswtt_moondrop_space_travel_2_tws_for_22k_plus/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T13:13:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T13:13:22.785Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa54ff36508d45f3d2bc7b0"
+    },
+    "message_id": "reddit_t3_1wecbj7",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "playcrimsonmoon",
+    "username": "Worried-Long9057",
+    "title": "Hi ! I want to buy it on my PS5 but i have some questions for owners...",
+    "text": "Hi ! I want to buy it on my PS5 but i have some questions for owners...\n\nI need a game to invest time in it.   How the loot works? It s like Diablo ?   How many build variety ?   How much content ?   How is the performance on PS5 ? 4k 60 ?   How much content ?   Worth 20 bucks ?   I know it s AA and janky but i have high toleranxe if the progression is good and it will be updated with new content over time..       submitted by     /u/Worried-Long9057     to     r/playcrimsonmoon       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/playcrimsonmoon/comments/1wecbj7/hi_i_want_to_buy_it_on_my_ps5_but_i_have_some/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T13:13:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T13:13:23.194Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa54ff36508d45f3d2bc7b1"
+    },
+    "message_id": "reddit_t3_1wecbic",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "lego",
+    "username": "Enough-Resolution184",
+    "title": "Why do I always get so many CMF duplicates?",
+    "text": "Why do I always get so many CMF duplicates?\n\nI sometimes buy CMFs, today I bought 6 of these new Shrek ones and got three Lord Farquaads and three Fairy Godmothers…  Are some figs more common? Are there some kind of ”pull rates”?  I have earlier this year bought other CMFs as well and the same has happened with series 29, for example: I got only 3 different figs from 10 packs.  I mean it just isn’t fun opening up many of these because I always end up getting lots of the least desirable ones and never the coolest ones. I can’t scan the codes either, doesn’t work.  I always buy them after they have just arrived to the store, so I don’t see a reason the best ones would have already been scanned or something.       submitted by     /u/Enough-Resolution184     to     r/lego       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/lego/comments/1wecbic/why_do_i_always_get_so_many_cmf_duplicates/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T13:13:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T13:13:23.400Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa54ff36508d45f3d2bc7b2"
+    },
+    "message_id": "reddit_t3_1wecbi7",
+    "topic_key": "top web dev jobs all platforms",
+    "search_keyword": "backend developer",
+    "platform": "reddit",
+    "subreddit": "GreeceDevs",
+    "username": "UnconventionalDev",
+    "title": "Μισθός junior-mid java dev",
+    "text": "Μισθός junior-mid java dev\n\nHello everybody.   Είμαι java backend developer και δουλεύω σε banking sector σε legacy application JavaEE 8.   Ο καθαρός μισθός μου είναι 1380 + 120 διστακτική + 80 expenses card (για βενζινα, λογαριασμό ίντερνετ και φαγητό/efood).   Έχω αλλάξει ήδη μια δουλειά.    Τώρα ειμαι στα 2.5 χρόνια από τότε που ξεκίνησα και μισό χρονο στην current εταιρία. Πιστεύεται παίρνω καλά χρήματα ή λίγα?    ΥΓ Πάω στο γραφείο μια φορά στις 2 εβδομάδες άρα πρακτικά είναι remote.       submitted by     /u/UnconventionalDev     to     r/GreeceDevs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GreeceDevs/comments/1wecbi7/μισθός_juniormid_java_dev/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T13:13:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T13:13:23.601Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa5502f6508d45f3d2bc7b3"
+    },
+    "message_id": "reddit_t3_1weccfq",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "GTACarMeetMarket",
+    "username": "No_Employ_2363",
+    "title": "LTB PC Enhanced — Übermacht Cypher with Negative Speed Demon livery. Want it for an NFS Most Wanted M3 GTR build. Can meet at LSCM.",
+    "text": "LTB PC Enhanced — Übermacht Cypher with Negative Speed Demon livery. Want it for an NFS Most Wanted M3 GTR build. Can meet at LSCM.\n\nPlatform: PC (Enhanced Edition)    Looking for: I'm trying to recreate the 2005 NFS Most Wanted M3 GTR. I need an Übermacht Cypher that has the event-exclusive \"Negative Speed Demon\" livery already applied.    Build details: I don't care about the wheels or other mods, just need that specific livery.    I have the cash ready to buy the copy at the LS Car Meet.  My Social Club: Kovlibly       submitted by     /u/No_Employ_2363     to     r/GTACarMeetMarket       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GTACarMeetMarket/comments/1weccfq/ltb_pc_enhanced_übermacht_cypher_with_negative/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T13:14:12Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T13:14:23.181Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa5502f6508d45f3d2bc7b4"
+    },
+    "message_id": "reddit_t3_1wecceb",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Tech_Philippines",
+    "username": "pcrlyn",
+    "title": "Best place to buy an Ipad cellular with a sim slot?",
+    "text": "Best place to buy an Ipad cellular with a sim slot?\n\nMy office gave me a work sim with free data and I want to use it on an ipad. Need ko kasi to be mobile most of the time and I need my phone as well for other tasks. Wifi only is not enough for me and I can't convert my work sim to e-sim. Baka may nagbebenta diyan lol.        submitted by     /u/pcrlyn     to     r/Tech_Philippines       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Tech_Philippines/comments/1wecceb/best_place_to_buy_an_ipad_cellular_with_a_sim_slot/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T13:14:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T13:14:23.400Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa5502f6508d45f3d2bc7b5"
+    },
+    "message_id": "reddit_t3_1weccdw",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "uvtrade",
+    "username": "Rep7icant",
+    "title": "(Offer) My list (Request) Your list or specific trade proposals",
+    "text": "(Offer) My list (Request) Your list or specific trade proposals\n\nCodes for personal and immediate redemption, not for retrading or selling:     American Gangster (Extended Edition) (2007) | HD | MA   Coming to America (1988) | HD | FAN   Gemini Man (2019) | HD | FAN   Jurassic World (2015) | HD | MA   Prometheus (2012) | HD | MA / FAN    Sicario (2015) | 4K | MA   Silence (2016) | HD | FAN   Snow White and The Seven Dwarfs (1937) | HD | MA   Star Trek Beyond (2016) | HD | FAN   The Hunger Games: Mockingjay Part 1 (2014) | HD | MA / FAN / GP   The Hunger Games: Mockingjay Part 2 (2015) | HD | MA / FAN / GP   The Twilight Saga: Breaking Dawn - Part 2 (2012) | HD | FAN   Warcraft (2016) | HD | MA     For those who are interested, please leave a comment on this post. Thank you for checking out my list.       submitted by     /u/Rep7icant     to     r/uvtrade       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/uvtrade/comments/1weccdw/offer_my_list_request_your_list_or_specific_trade/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T13:14:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T13:14:23.614Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa5502f6508d45f3d2bc7b6"
+    },
+    "message_id": "reddit_t3_1weccda",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "AlfaRomeo",
+    "username": "the_need_for_tweed",
+    "title": "Talk me out of selling my 156 twin spark",
+    "text": "Talk me out of selling my 156 twin spark\n\nI bought a 2001 156 2.0 Twin Spark very recently - extensive service history, super clean, car is damn near perfect given its age. There are two problems that are making me scratch my head and consider selling it:      The gear shift. Heal toe down shifts are easy in terms of pedal placement, but the actual shift makes me want to rip my hair out. Rubbery, vague, just not what you want.      The power. Admittedly, I’ve been spoiled. I’ve owned/driven plenty of cars a good amount more powerful than my 156, so that’s just something I miss.       Please talk me out of selling this car 😂       submitted by     /u/the_need_for_tweed     to     r/AlfaRomeo       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlfaRomeo/comments/1weccda/talk_me_out_of_selling_my_156_twin_spark/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T13:14:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T13:14:23.831Z"
+    }
+  },
+  {

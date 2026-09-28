@@ -1,0 +1,416 @@
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:41:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:42:20.603Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0371c660c608403989192"
+    },
+    "message_id": "reddit_t3_1wlqpv3",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskIndianWomen",
+    "username": "Fresh_Suggestion_574",
+    "title": "Anyone who is into making Fashion boards on Pinterest?",
+    "text": "Anyone who is into making Fashion boards on Pinterest?\n\nHeyy, This isnt really a serious question as such. I am up late at night unable to sleep, and thought of trying to find someone to chit chat with on here. I am hugely into fashion, so we could discuss fashion related stuff together. It is quite difficult to find people you vibe with in the modern day big cities. I think the concept of Parks or libraries being reduced to limited areas in big cities has cause a certain level of friction in interacting with strangers for people like me. Which is why I think i struggle on making new friends. So I thought reddit could help me in that aspect.       submitted by     /u/Fresh_Suggestion_574     to     r/AskIndianWomen       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskIndianWomen/comments/1wlqpv3/anyone_who_is_into_making_fashion_boards_on/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:41:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:42:20.805Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0371faeeb96c1c63ba7b7"
+    },
+    "message_id": "reddit_t3_1wlqpyz",
+    "topic_key": "painter",
+    "search_keyword": "painter",
+    "platform": "reddit",
+    "subreddit": "PharmaRepCollectables",
+    "username": "Popular_Painter_9744",
+    "title": "OxyContin digital clock - rare?",
+    "text": "OxyContin digital clock - rare?\n\nI am a doctor and my colleague has a large rectangular OxyContin digital clock in his office. It’s been there for many years and still in use.    The plastic casing is gray and blue, it is LCD screen, and has little buttons to adjust the timer etc. the OxyContin branding and blurb is along the bottom. It is battery operated (we had to change the batterie recently LOL). I would need to ensure it but it’s probably 12 inches across.   When I asked AI, it said they are no record of an OxyContin digital clock and they never made one. I replied that’s not true, because there is one in our office. I thought I’d ask the collector experts here if you guys know anything about OxyContin digital clocks? I’ve only ever seen round analog OxyContin clocks online.    I’ll take a photo of it when I get back into the office on Tuesday. 🙂       submitted by     /u/Popular_Painter_9744     to     r/PharmaRepCollectables       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PharmaRepCollectables/comments/1wlqpyz/oxycontin_digital_clock_rare/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:42:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:42:23.532Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab037459f8856bec23850a5"
+    },
+    "message_id": "reddit_serp_1pztwxa",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/vibecoding/comments/1pztwxa/how_i_vibecoded_a_productiongrade_web_app/",
+    "text": "How I vibecoded a Production-Grade web app.\n\nsuperfecta.club screenshot    I'm a real software engineer with over 15 years of experience. I still code \"by hand\" on my day-to-day job, but also do AI-assisted coding sessions. I wanted to vibecode a complete web app and productionize it, but I never had an idea for an app until now.   The idea of the app is a Football (Soccer) Pool; the concept is similar to a Football Fantasy League, but instead of picking players, you make predictions about results. Then you get points for how accurate your predictions are, and you sum them up, with the player with the highest score winning the pool.    I started actually using the Claude desktop app, since I don't have access to Opus in my Claude Code subscription tier. The prompt was to write a development plan for this app, basically based on the paragraph above. I also gave the AI some educated guidance to use my preferred stack (FastAPI/Python for the backend and React/JS for the front). I also did some previous research on Claude Desktop on the best data provider for Football matches and betting odds. The only other guidance I gave was to start with the data model, since that's usually where you should start when building an app. The summarized result was this one (each item was broken down into 4-5 tasks):    # Football Pools MVP - Development Plan ## Phase 1: Foundation & Infrastructure ### 1.1 Database Schema Design ### 1.2 API-Football Integration Setup ## Phase 2: Backend API Development ### 2.1 Authentication Enhancement ### 2.2 API-Football Data Endpoints ### 2.3 Pool Management Endpoints ### 2.4 Picks Management Endpoints ## Phase 3: Background Jobs & Scripts ### 3.1 Data Population Scripts ### 3.2 Match Update Jobs ### 3.3 Scoring & Points Calculation ## Phase 4: Frontend Development ### 4.1 Authentication UI ### 4.2 Pool Management UI ### 4.3 Matches & Picks UI ### 4.4 Leaderboard & Standings UI ### 4.5: Pool Invites ## Phase 5: Configuration & Deployment Prep ### 5.1 Cache Configuration System ### 5.2 Environment & Deployment ## Phase 6: Testing & Documentation     Then I started implementing one by one using VSCode with the Claude Code extension using Sonnet with simple prompts like this:    Enter plan mode and implement Phase 4.2 Pool Management UI     As you can see in the initial plan, Testing and Documentation were the last phases, but since the initial prompt to start building Phase 1.1, I told the AI to write tests and document each feature. I even made multiple mentions of that in the  CLAUDE.md  file. By the time I reached deployment, everything was documented and tested. I have more than 1000 tests across front and back, and multiple Markdown files documenting each feature. Also, once I finished this MVP, I built more features, for example, adding the betting odds for each match. After this feature was completed, I asked CC to update the docs and tests for it.   I haven't coded a single line of code, but I have to admit that at one point I had to \"debug\" an error manually. Once I found the root cause, I explained it to CC, and he fixed it. For deployment, I just asked to build Docker images, and from there, it's just clicking buttons in your favorite cloud provider. I know that can be done programmatically, but that's a problem to solve when I have 1000s of users.   Here's the link to the app  superfecta.club        submitted by     /u/a-vibe-coder       [link]       [comments]",
+    "username": "a-vibe-coder",
+    "subreddit_or_channel": "vibecoding",
+    "posted_at": "2025-12-30T21:12:17+00:00",
+    "fetched_at": {
+      "$date": "2026-09-20T19:43:01.215Z"
+    },
+    "google_rank": 10,
+    "search_keyword": "can you find me sales",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-20T19:43:01.215Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab03756660c608403989193"
+    },
+    "message_id": "reddit_t3_1wlqr0a",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "CharacterRant",
+    "username": "KittyCutieSparkle",
+    "title": "Not having to do with any Character...",
+    "text": "Not having to do with any Character...\n\nThis has nothing to do with any character, but this has been on my mind ever since I have seen this subreddit. Why is the subreddit's poster Benjamin Franklin when Benjamin was a real guy and this subreddit is about fictional characters? Was Benjamin Franklin a writer, or am I missing a key detail?       submitted by     /u/KittyCutieSparkle     to     r/CharacterRant       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CharacterRant/comments/1wlqr0a/not_having_to_do_with_any_character/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:43:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:43:18.423Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03756660c608403989194"
+    },
+    "message_id": "reddit_t3_1wlqqzf",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "Tunisia",
+    "username": "SpiritedFruit7492",
+    "title": "So i need travel insurance for type D visa ?",
+    "text": "So i need travel insurance for type D visa ?\n\nI have visa Schengen, and I'm going to Switzerland for 4 days for work.    Do I need a travel insurance? I asked my employer and they said no need.       submitted by     /u/SpiritedFruit7492     to     r/Tunisia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Tunisia/comments/1wlqqzf/so_i_need_travel_insurance_for_type_d_visa/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:43:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:43:18.637Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03756660c608403989195"
+    },
+    "message_id": "reddit_t3_1wlqqyo",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "f150",
+    "username": "scholarsintl",
+    "title": "Truck Comparison",
+    "text": "Truck Comparison\n\nOpen to any comments, thoughts, opinions, or preferences regarding a comparison between these two 2025 F-150 xlt options...   Main difference is that one is all black and the other has chrome on the bumpers, fender vent covers, door handles, and rims.        submitted by     /u/scholarsintl     to     r/f150       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/f150/comments/1wlqqyo/truck_comparison/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:43:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:43:18.855Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03757660c608403989196"
+    },
+    "message_id": "reddit_t3_1wlqqyl",
+    "topic_key": "can you find me top users who are disscussing ai websites",
+    "search_keyword": "AI tools",
+    "platform": "reddit",
+    "subreddit": "DragQueenMusic",
+    "username": "SaintEvenPlaying",
+    "title": "Wiggidy Wiggidy Wig — Original Music",
+    "text": "Wiggidy Wiggidy Wig — Original Music\n\nDropping one of my originals here —  Wiggidy Wiggidy Wig . 💗👑   The premise is pretty simple:  new hair, new woman, same queen.    Blonde for brunch. Brunette for business. Red for revenge. Platinum for attention. Pink when subtlety has officially left the building.   For this release, I put together  four different mixes of the same song , each giving  Wiggidy Wiggidy Wig  its own personality while keeping the same campy, playful attitude at the center. It’s been fun hearing how the same ridiculous little idea can transform just by changing the production, energy and style.   I came up with the concept, wrote and shaped the lyrics, and developed the creative direction for the release, then used AI tools to help bring the music and production to life across the different mixes. It’s become a really fun way for me to take these ridiculous little song ideas and explore just how many directions I can take them.   Would love to know what you think. And more importantly:    What color wig are you wearing for revenge?  😂💅       submitted by     /u/SaintEvenPlaying     to     r/DragQueenMusic       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DragQueenMusic/comments/1wlqqyl/wiggidy_wiggidy_wig_original_music/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:43:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:43:19.055Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03757660c608403989197"
+    },
+    "message_id": "reddit_t3_1wlqqxz",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "Italia",
+    "username": "margheritaprovolona7",
+    "title": "Quale magistrale scegliere?",
+    "text": "Quale magistrale scegliere?\n\nBuonasera sto per finire la triennale in Economia e management e devo scegliere un corso magistrale da seguire.   Il mio dipartimento di Economia Aziendale di Pescara consiglia di seguire o la magistrale in Economia e Management o Digital Marketing.  A me personalmente incuriosisce anche il CLEBA (e conomia e business analytics) solo che sono preoccupato per la matematica nella quale non ho una grande preparazione oltre che nell informatica non ho basi praticamente   Vorrei avere opinioni di altri studenti che hanno fatto il mio stesso percorso   ho scritto anche sul reddit universitaly       submitted by     /u/margheritaprovolona7     to     r/Italia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Italia/comments/1wlqqxz/quale_magistrale_scegliere/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:43:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:43:19.264Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03757660c608403989199"
+    },
+    "message_id": "reddit_t3_1wlqqxq",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "beermoneyuk",
+    "username": "OrionBroker",
+    "title": "First Direct/HSBC double dip??",
+    "text": "First Direct/HSBC double dip??\n\nAnyone who has previously had a First Direct bonus tried again to double dip, or maybe triple dip on this one? Or tried for the HSBC switch cash even if they've previously had First Direct?   I've double dipped with FD in the past, so don't want to overplay my hand if I try again with them of HSBC       submitted by     /u/OrionBroker     to     r/beermoneyuk       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/beermoneyuk/comments/1wlqqxq/first_directhsbc_double_dip/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:43:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:43:19.660Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03757660c60840398919a"
+    },
+    "message_id": "reddit_t3_1wlqqxh",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "sentiment",
+    "platform": "reddit",
+    "subreddit": "chrome_extensions",
+    "username": "Normal_Interview6621",
+    "title": "I built a community node for Jev (TypeSafe AI) — typed decisions with probabilities instead of LLM + JSON parsing",
+    "text": "I built a community node for Jev (TypeSafe AI) — typed decisions with probabilities instead of LLM + JSON parsing\n\nI kept hitting the same pattern in my workflows: a step that needs a decision, not prose. Which queue does this ticket go to, how frustrated is this customer, is this prompt trying to jailbreak my LLM step.   The usual approach is an LLM node + Structured Output Parser + an IF node to catch replies that don't match the schema. It works, but the failure mode is annoying and the model gives you no usable signal when it's unsure.   So I wrapped Jev by TypeSafe AI ( https://typesafe.ai/blog/introducing-system-one-models-and-jev ) into a community node. It doesn't generate text — it returns typed values with probabilities.   Three operations:   - Choice — one of your labels (up to 255), with a probability per label + confidence   - Score — position on an ordered rubric you write (2–10 levels), returns a fractional score + confidence   - Noul — probability that a yes/no statement is true (no separate confidence value; the probability is the answer)   You can batch multiple questions of the same type into one API call. Output includes the raw API answers, a normalized decisions object for expressions, the model version that answered, token usage, and measured latency. Your original input stays under input so nothing gets clobbered.   The part I actually find useful: you can threshold on confidence and send the uncertain items to a human instead of acting on a coin flip.   {{ $json.decisions.department.value }}   {{ $json.decisions.department.confidence    {{ $json.decisions.urgent.value }}   Three importable example workflows in examples/:      Email triage — Choice for department + Noul for urgency, with a confidence gate     Support tickets — sentiment + frustration as two Score questions in one call     Prompt-injection guard — Noul gating a Basic LLM Chain, with pass/review/block branches      Caveats, because they matter:   - It can return the wrong valid value. Type safety kills parsing errors, not judgment errors. Test thresholds on your own data.   - Requires a TypeSafe account and API key (console.typesafe.ai). Early access, so availability isn't on me.   - Text only. Pre-process anything else.   - Self-hosted only. It has a runtime dependency (the official SDK), and n8n's verification rules currently prohibit those — so it won't show up as a verified node on Cloud.   - The npm name is n8n-nodes-typesafe-jev, not n8n-nodes-jev — that one's a different project by someone else.   Install: Settings → Community Nodes → Install → n8n-nodes-typesafe-jev   - GitHub:  https://github.com/rahulthakore16/n8n-nodes-jev    - npm:  https://www.npmjs.com/package/n8n-nodes-typesafe-jev        submitted by     /u/Normal_Interview6621     to     r/chrome_extensions       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/chrome_extensions/comments/1wlqqxh/i_built_a_community_node_for_jev_typesafe_ai/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:43:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:43:19.869Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03758660c60840398919b"
+    },
+    "message_id": "reddit_t3_1wlqqws",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "deficientvegans",
+    "username": "plantbasedpatissier",
+    "title": "Do you do any activism or does it interest you?",
+    "text": "Do you do any activism or does it interest you?\n\nI'd like to start by saying activism can look like a lot of things. Pressure campaigns, handing out leaflets, having calm civil discussions, leaving up stickers or flyers, even recommending vegan alternatives over nonvegan ones. I'm potentially hosting a vegan food tasting in Chicago to introduce and familiarize people with vegan food in the hopes that it can ease the stigma.   I crossposted some free printable materials from  r/VeganActivismNow  earlier but am interested into how we can get more vegans into more forms of activism. I think online actions like writing letters to legislators or other bodies can also be surprisingly high impact but relatively low effort and want to leverage these more.       submitted by     /u/plantbasedpatissier     to     r/deficientvegans       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/deficientvegans/comments/1wlqqws/do_you_do_any_activism_or_does_it_interest_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:43:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:43:20.083Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03758660c60840398919c"
+    },
+    "message_id": "reddit_t3_1wlqqw9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "EU_Economics",
+    "username": "Full-Discussion3745",
+    "title": "🇷🇴 Romania: A Strategic Choice for Investors. 30 Years of French-Romanian Partnership: The Way Forward",
+    "text": "🇷🇴 Romania: A Strategic Choice for Investors. 30 Years of French-Romanian Partnership: The Way Forward\n\nFrance is Romania's third-largest trading partner, with investments exceeding €12.9 billion and bilateral trade reaching €11.7 billion in 2024.   Source:  https://www.romania-insider.com/business/romania-strategic-choice-investors-30-years-french-romanian        submitted by     /u/Full-Discussion3745     to     r/EU_Economics       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/EU_Economics/comments/1wlqqw9/romania_a_strategic_choice_for_investors_30_years/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:43:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:43:20.285Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03758660c60840398919d"
+    },
+    "message_id": "reddit_t3_1wlqqv1",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "AskTheWorld",
+    "username": "OliveOk612",
+    "title": "How strong is your passport? What places can you go to easily?",
+    "text": "How strong is your passport? What places can you go to easily?\n\nI hold an American passport and thanks to my very Scottish father, I’m eligible for a UK passport. I have a veeeery strong passport that allows me to travel to all but maybe 5-6 countries in the world (like North Korea) and I only really have to apply for (e)visas to countries with historically strained relations. (China, Russia, Iran, Cuba, etc) Despite issues with my nation I feel VERY fortunate to be able to travel to over 70% of the globe freely. And with a UK passport it’d allow me to go to quite a few places visa-free, thankfully. What about your country(ies)?       submitted by     /u/OliveOk612     to     r/AskTheWorld       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskTheWorld/comments/1wlqqv1/how_strong_is_your_passport_what_places_can_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:42:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:43:20.491Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03758660c60840398919e"
+    },
+    "message_id": "reddit_t3_1wlqqu9",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "DarjeelingCity",
+    "username": "ResponsibleChest7093",
+    "title": "Darjiling trip",
+    "text": "Darjiling trip\n\nsubmitted by     /u/ResponsibleChest7093     to     r/DarjeelingCity       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DarjeelingCity/comments/1wlqqu9/darjiling_trip/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:42:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:43:20.694Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03758660c60840398919f"
+    },
+    "message_id": "reddit_t3_1wlqqtq",
+    "topic_key": "nike",
+    "search_keyword": "Nike",
+    "platform": "reddit",
+    "subreddit": "askcroatia",
+    "username": "Anketkraft",
+    "title": "Biste li podržali da vaša općina financira vrtić koji radi non-stop?",
+    "text": "Biste li podržali da vaša općina financira vrtić koji radi non-stop?\n\nDakle vrtić koji pokriva roditelje koji žele raditi drugu smjenu, treću smjenu, terenski rad, vikende, prekovremene, službena putovanja, izaslane radnike itd.?   Zašto da i zašto ne?        submitted by     /u/Anketkraft     to     r/askcroatia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/askcroatia/comments/1wlqqtq/biste_li_podržali_da_vaša_općina_financira_vrtić/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:42:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:43:20.897Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0378b9f8856bec23850a6"
+    },
+    "message_id": "reddit_serp_1ew2gfv",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/QualityAssurance/comments/1ew2gfv/what_field_are_you_in/",
+    "text": "What field are you in?\n\nHi guys! I have been in QA four 4 years now, bur have been in fintech. I am curious what other fields are out there. Thanks :)       submitted by     /u/LuciferHummingbird       [link]       [comments]",
+    "username": "LuciferHummingbird",
+    "subreddit_or_channel": "QualityAssurance",
+    "posted_at": "2024-08-19T13:56:27+00:00",
+    "fetched_at": {
+      "$date": "2026-09-20T19:44:11.870Z"
+    },
+    "google_rank": 6,
+    "search_keyword": "can you find me sales",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-20T19:44:11.870Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab03793660c6084039891aa"
+    },
+    "message_id": "reddit_t3_1wlqryj",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AffairsR4R",
+    "username": "LetComprehensive5630",
+    "title": "61 [M4F] #Phoenix Searching for a Real, Long-Term Affair",
+    "text": "61 [M4F] #Phoenix Searching for a Real, Long-Term Affair\n\nI am looking for what seems to be something rare and elusive on here. I’m a married man in a failing marriage, and have been trying to meet a real, genuine woman for a connection that starts with friendship, and then builds into a long term emotional and physical relationship.    I want to meet a woman that wants to chat throughout the day - and yes, I fully understand that family, work, and other obligations take priority, as they do for me. I want to really get to know someone… the basics are important, but I want our conversations to go deeper, more personal… share what we like and dislike… the successes we have enjoyed, and what we are most proud of… the challenges and disappointments we have gone through in our lives… and so much more. I want to get excited to see that notification on my phone, knowing it came from you… I want the “good morning”, “good night”, and “just thinking of you” messages.   Here’s some more about me… I’m 61, a married white male from Arizona, the father of several kids, and work from home for a large corporation. I’m 5’9”, 200 lbs, with brown hair and blue eyes. I’m clean, DDF, non-smoker. When I’m not working, I enjoy walking and hiking, sports (baseball and football are my favorites), and binging a good show online.   I have been on a health journey since August 2024, and have dropped over 130 lbs - down from 337 to 200. I can share more about my journey if you’re interested. My renewed focus on my health and well being has given me a new lease on life, and I’m doing what I can to live life to its fullest.   Discretion is important. Please know that I am a real person - no AI was used in the writing of this post. I am not a buyer (will never send you any money), and will not go to your “special page”. Please be from the U.S., and relatively close to my age.   If any of this resonates with you, I hope you will send me a DM so that we can start talking and getting to know each other better. Thank you for reading my post, and I hope you have a great day!       submitted by     /u/LetComprehensive5630     to     r/AffairsR4R       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AffairsR4R/comments/1wlqryj/61_m4f_phoenix_searching_for_a_real_longterm/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:44:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:44:19.031Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03793660c6084039891ab"
+    },
+    "message_id": "reddit_t3_1wlqry3",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "Drugs",
+    "username": "ManufacturerThick331",
+    "title": "Countries with craziest OTC medications?",
+    "text": "Countries with craziest OTC medications?\n\nCambodia: ketamine, morphine, oxycodone, clonazepam, alprazolam, diazepam, zolpidem, pregablin, methylphenidate all OTC   Colombia: hydrocodone, eszopiclone, pregablin OTC   Mexico was meh - pregablin yes, and I found one pharmacy that sold me some liquid ketamine. Could’ve probs got benzos there too. But would be worried they were fake/laced.   India also pretty meh. A bunch of modafinil/armodafinil, but couldn’t find benzos.   Thailand super meh. Found a few shady pharmacies that sold benzos/zolpidem/ritalin, but everything aside from the Ritalin was bunk. Took 6 10mg “ambien” one night and had some beers, and should have woken up dead the next morning if they were actually real. Easy af to get a benzo script from a hospital here tho.   I heard Guatemala is also wild like Cambodia. Anyone traveled there? Or what about some places in Africa? So far, Cambodia is the only place I’ve come across with actual morphine and benzos galore available OTC.        submitted by     /u/ManufacturerThick331     to     r/Drugs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Drugs/comments/1wlqry3/countries_with_craziest_otc_medications/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:44:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:44:19.236Z"
+    },

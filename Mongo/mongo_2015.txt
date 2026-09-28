@@ -1,0 +1,416 @@
+      "$date": "2026-09-09T06:22:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T06:23:22.396Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0fb8123d250a5b10ba95e"
+    },
+    "message_id": "reddit_serp_1u0zch1",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/FlutterDev/comments/1u0zch1/stripe_billing_in_flutter_payment_was_easy_access/",
+    "text": "Stripe billing in Flutter: payment was easy, access state was hard. Here’s how I solved it\n\nI spent the last months building Revenipe, and one thing became very clear:   Stripe Checkout and PaymentSheet were not the hard part.   The hard part was keeping subscription access correct after Stripe webhooks.   At first, I thought the flow would be simple:   user pays  Stripe sends webhook  backend gives access   But real billing flows are not that clean.   One of the first problems was metadata. I expected the important IDs to always be in the same place, but depending on the Stripe event and purchase flow, the context could be on the subscription, the invoice, the invoice line, the checkout session, or sometimes not where I originally expected it at all.   That matters because the backend still needs to know:   which app this belongs to  which customer should get access  which product or price was bought  whether this is a new subscription, renewal, trial, one-off purchase, upgrade, downgrade, or plan change  which local access record should be activated or updated   Another thing I underestimated was  invoice.paid .   A paid invoice can mean the first subscription payment, a renewal, a trial converting, an upgrade invoice, or something related to a plan change. If you blindly treat every  invoice.paid  as “create subscription access”, your local state can become wrong very quickly.   Plan changes were another rabbit hole.   Upgrades can usually happen immediately, but downgrades often need to be scheduled for the next billing cycle. Then you also need to handle what happens if the user cancels, uncancels, changes plan again, or if Stripe releases the schedule back to the subscription.   The way I solved it was by separating billing state from access state.   Stripe stays the billing source of truth.   My backend became the access source of truth.   So instead of directly trusting one webhook event, I route events by context, store stable references early, and map each billing flow to a local access record.   For example:   trialing still means active access  cancelled at period end still means access until the period ends  a downgrade can be pending without changing entitlements immediately  a one-off purchase should not behave like a subscription renewal  a plan change invoice should not be handled like a normal renewal  duplicate webhook events should not create duplicate access   That separation made the whole system much more reliable.   This is also why I built Revenipe as a Flutter package + backend for Stripe billing and entitlements. The goal is to let Flutter apps use Stripe without rebuilding all the subscription state, webhook, plan change, and entitlement logic from scratch.   Package:   https://pub.dev/packages/revenipe_flutter    Curious how others handle this in Flutter apps. Do you keep access state in your own backend, Firebase, RevenueCat, or mostly read directly from Stripe?       submitted by     /u/SeriousComb3645       [link]       [comments]",
+    "username": "SeriousComb3645",
+    "subreddit_or_channel": "FlutterDev",
+    "posted_at": "2026-06-09T08:43:58+00:00",
+    "fetched_at": {
+      "$date": "2026-09-09T06:24:01.322Z"
+    },
+    "google_rank": 9,
+    "search_keyword": "local subscription billing",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-09T06:24:01.322Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0fb94035b0f36efcc689d"
+    },
+    "message_id": "reddit_t3_1wbdjqe",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AmItheAsshole",
+    "username": "FlatwormHairy4754",
+    "title": "AITA for selling my roommate's concert tickets to pay our rent",
+    "text": "AITA for selling my roommate's concert tickets to pay our rent\n\n| (21F) live with \"Emma\" (21F). Last week, I gave her $600 in cash for my half of the rent so she could deposit it to our landlord.  Yesterday, our landlord called me saying we were $600 short. I confronted Emma. She broke down and admitted she used my rent money to buy a resale ticket for a massive concert this weekend. She said she \"panicked because it was a once-in-a-lifetime opportunity\" and promised to pay me back in a few months.  I didn't argue or yell. While she was at class, I logged into her iPad (I know her passcode), transferred the ticket to my account, and sold it online for $800.I paid the missing rent and left the remaining $200 on her bed.I know stealing her ticket and going into her iPad was technically wrong, but she stole my housing money first. AITA?       submitted by     /u/FlatwormHairy4754     to     r/AmItheAsshole       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AmItheAsshole/comments/1wbdjqe/aita_for_selling_my_roommates_concert_tickets_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T06:24:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T06:24:20.979Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0fb95035b0f36efcc689e"
+    },
+    "message_id": "reddit_t3_1wbdjq5",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "unsigned_artists",
+    "username": "swe666",
+    "title": "The actual strategy most unsigned musicians should try first",
+    "text": "The actual strategy most unsigned musicians should try first\n\nThere's a lot of marketing advice for unsigned artists. Most of it misses what actually works at your stage.   You're not going to out-reach-build Spotify's algorithm. You're not going to compete with established artists on follower count. But you can build something much more powerful. You can create a direct relationship with people who actually like your music.   This is easier than it sounds. Start by doing a live stream and inviting people to watch. Some people will tip and others won't, but that part doesn't really matter. What matters is these are people who chose to spend time with your music. They remember you, come back the next week, and tell friends. That's your growth engine.   OpenMic's built exactly for this on iOS. Artists livestream, people watch or tip, you keep everything. It's free to try. But honestly, the platform is secondary. Stop trying to go viral or build massive reach. Start with the people who already care and grow from there.   If you want to try it, I can help you get set up. But more importantly, the principle works no matter what platform you use. Direct connection beats everything else, every time.       submitted by     /u/swe666     to     r/unsigned_artists       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/unsigned_artists/comments/1wbdjq5/the_actual_strategy_most_unsigned_musicians/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T06:24:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T06:24:21.189Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0fb95035b0f36efcc689f"
+    },
+    "message_id": "reddit_t3_1wbdjpm",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "remotearmy",
+    "username": "remotearmyio",
+    "title": "Remote Marketing opportunity: Join Our Talent Community - Manager, Account Development",
+    "text": "Remote Marketing opportunity: Join Our Talent Community - Manager, Account Development\n\n🚀 New remote opportunity: Join Our Talent Community - Manager, Account Development   Job Category:   Marketing     Job summary:     💼 Pfm   🌎 USA Only   🛠️ marketing, growth, content   💵 $60K - $110K USD     👉 Learn more and apply here:  https://remotearmy.io/jobs/yCOawVzq-join-our-talent-community-manager-account-development    Register for free at  remotearmy.io  for more remote opportunities and content to succeed at remote work!       submitted by     /u/remotearmyio     to     r/remotearmy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/remotearmy/comments/1wbdjpm/remote_marketing_opportunity_join_our_talent/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T06:24:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T06:24:21.400Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0fb95035b0f36efcc68a0"
+    },
+    "message_id": "reddit_t3_1wbdjo2",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MarvelRivalsRants",
+    "username": "MostOriginal79",
+    "title": "You guys are insufferable",
+    "text": "You guys are insufferable\n\nPosting this here because main sub has a rule against rants. This is mostly directed at main sub but I know a fair few people in here are the same support and tank circlejerkers.   Like genuinely, Gorr is a DPS and everyone is acting like it's the end of the world. And it's like this literally every time a DPS comes out. I get that the roles are unbalanced numerically, but DPS still has to get characters.   The devs don't have to cater to Reddit and Twitter mobs. And they shouldn't. You are not the majority.   I guarantee that most of the people saying the season sucks are gonna play every other day and buy the next Luna skin when it comes out.   Stop being whiny. It only makes the game look worse       submitted by     /u/MostOriginal79     to     r/MarvelRivalsRants       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MarvelRivalsRants/comments/1wbdjo2/you_guys_are_insufferable/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T06:24:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T06:24:21.613Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0fb95035b0f36efcc68a1"
+    },
+    "message_id": "reddit_t3_1wbdjky",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PakistanMarketplace",
+    "username": "GlitteringGroup1163",
+    "title": "Changan Oshan X7 FutureSense for Sale",
+    "text": "Changan Oshan X7 FutureSense for Sale\n\n2022 Changan Oshan X7 FutureSense 1st Gen — FOR SALE   Black | 40,500 KM | 1st Owner | 2022   Asking Price: 70 Lacs   Condition:  • Engine & automatic transmission in good condition  • No oil or coolant leakage  • AC & heater working  • Suspension, brakes & steering working properly  • Smooth gear shifting   Features:  • Sunroof  • Electric front seats  • Multifunction steering  • Rear-view camera  • Audio/video system  • Power windows & mirrors  • Automatic central locking  • Alloy wheels   Documents:  • Manufactured & registered in 2022  • Token tax paid  • Documents verified  • Original number plates  • 2 keys  • Spare tyre, jack & complete toolkit   Serious buyers are welcome to inspect the car.  📩 DM for details.       submitted by     /u/GlitteringGroup1163     to     r/PakistanMarketplace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PakistanMarketplace/comments/1wbdjky/changan_oshan_x7_futuresense_for_sale/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T06:23:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T06:24:21.839Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0fbc923d250a5b10ba95f"
+    },
+    "message_id": "reddit_serp_1uoec62",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/Doner/comments/1uoec62/local_wholesaler_sells_the_stuff_750_a_brick/",
+    "text": "Local wholesaler sells the stuff... £7.50 a brick\n\nsubmitted by     /u/erebus28k       [link]       [comments]",
+    "username": "erebus28k",
+    "subreddit_or_channel": "Doner",
+    "posted_at": "2026-07-05T21:40:04+00:00",
+    "fetched_at": {
+      "$date": "2026-09-09T06:25:13.656Z"
+    },
+    "google_rank": 1,
+    "search_keyword": "local wholesaler",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-09T06:25:13.656Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0fbd1035b0f36efcc68a2"
+    },
+    "message_id": "reddit_t3_1wbdkek",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "IndieDev",
+    "username": "DeadFrequencyDev",
+    "title": "Marketing Self-Audit (Free Resource)",
+    "text": "Marketing Self-Audit (Free Resource)\n\nWould anyone be interested in doing a marketing self-audit for their game? I have been play testing for a while and providing feedback from a positioning/marketing perspective and I am finding that often devs don't really know where to start with all that stuff so I created a little mini self-audit. It is free. Once you have filled it out you should have a better idea of how you are looking and perhaps where you can focus your time. I am on a break from play testing for a couple of days so I will read and provide feedback to the first 5 people who fill it out and send it back to me. Just comment below if you want me to send you the link.        submitted by     /u/DeadFrequencyDev     to     r/IndieDev       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IndieDev/comments/1wbdkek/marketing_selfaudit_free_resource/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T06:25:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T06:25:21.693Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0fbd1035b0f36efcc68a3"
+    },
+    "message_id": "reddit_t3_1wbdk9w",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "informaq",
+    "username": "therealfatumbot",
+    "title": "The Convergent Laboratory: AI, Autonomous Experiments, and Quantum Computing Reshaping Chemistry",
+    "text": "The Convergent Laboratory: AI, Autonomous Experiments, and Quantum Computing Reshaping Chemistry\n\nAI agents, self-driving laboratories, machine-learned potentials, and fault-tolerant quantum processors converge to accelerate chemical discovery, reducing catalyst development timelines from months to weeks.   QuantumChemistry #AutomatedDiscovery #Research #Informaq    http://arxiv.org/abs/2609.05643v1        submitted by     /u/therealfatumbot     to     r/informaq       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/informaq/comments/1wbdk9w/the_convergent_laboratory_ai_autonomous/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T06:24:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T06:25:21.902Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0fbfa23d250a5b10ba960"
+    },
+    "message_id": "reddit_serp_1jkw8dv",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/business/comments/1jkw8dv/do_you_order_from_local_distributerswholesalers/",
+    "text": "Do you order from local distributers/wholesalers or from abroad?\n\nHi, I want to sell Korean and Japanese products. There are wholesalers here but the products are kinda limited. Do you think it is worth ordering from the country of origin? Found some great distributors from Korea, however I am afraid of shipping fees and customs. Is it going to cost me more than just buying from local wholesaler? Many thanks       submitted by     /u/Ok_Carob7611       [link]       [comments]",
+    "username": "Ok_Carob7611",
+    "subreddit_or_channel": "business",
+    "posted_at": "2025-03-27T04:51:00+00:00",
+    "fetched_at": {
+      "$date": "2026-09-09T06:26:02.055Z"
+    },
+    "google_rank": 4,
+    "search_keyword": "local wholesaler",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-09T06:26:02.055Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0fc0e035b0f36efcc68ac"
+    },
+    "message_id": "reddit_t3_1wbdl12",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "UKfreeMoney",
+    "username": "AshWastesNomad",
+    "title": "Please use my Zopa referral link and get £20.",
+    "text": "Please use my Zopa referral link and get £20.\n\nHi,   Please use my Zopa referral link to open up a Biscuit account and we both get £20.   You would need to make at least three card transactions within the first 30 days to get the reward. No minimum amount for the transactions so you could buy 3 documents from Etsy for 5p each to be eligible.   Thanks in advance.   Use my referral link to open a Biscuit bank account and make at least 3 card transactions within 30 days, and we’ll both earn £20. T&Cs apply.  www.zopa.com/mgma?referralCode=cdb487585f2f699ca1b5        submitted by     /u/AshWastesNomad     to     r/UKfreeMoney       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UKfreeMoney/comments/1wbdl12/please_use_my_zopa_referral_link_and_get_20/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T06:26:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T06:26:22.091Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0fc0e035b0f36efcc68ad"
+    },
+    "message_id": "reddit_t3_1wbdkzv",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ChennaiBuyAndSell",
+    "username": "Arundurairaj",
+    "title": "Selling New Uppercase Trolley",
+    "text": "Selling New Uppercase Trolley\n\nWTS Trolley WTT Selling brand new trolley with 1000 days International warranty. Mint condition. Asking price 4k. Shipping all over india.       submitted by     /u/Arundurairaj     to     r/ChennaiBuyAndSell       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ChennaiBuyAndSell/comments/1wbdkzv/selling_new_uppercase_trolley/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T06:26:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T06:26:22.313Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0fc0e035b0f36efcc68ae"
+    },
+    "message_id": "reddit_t3_1wbdkzo",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Monero USD - 9 Sep 2026 @ 02:23 -> $500.78",
+    "text": "Buy Signal Monero USD - 9 Sep 2026 @ 02:23 -> $500.78\n\nTicker:  XMRUSD    Exchange:  CRYPTO    Time:  9 Sep 2026 @ 02:23    Price:  $500.78    Link:  https://getagraph.com/AAA/crypto-currencies/XMRUSD/ENG        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wbdkzo/buy_signal_monero_usd_9_sep_2026_0223_50078/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T06:26:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T06:26:22.527Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0fc0e035b0f36efcc68af"
+    },
+    "message_id": "reddit_t3_1wbdky7",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "TurkishAirlines",
+    "username": "DoctorSlow6215",
+    "title": "Flight Network & Turkish Airlines – $1,900 ticket, refused boarding and almost no refund",
+    "text": "Flight Network & Turkish Airlines – $1,900 ticket, refused boarding and almost no refund\n\n⚠️  Flight Network & Turkish Airlines – Please be careful before booking    I booked a  $1,900 return ticket through Flight Network  from Melbourne to Van, Türkiye, via Hong Kong and Istanbul.   I provided my passport details during the booking. On the day of departure, we were  refused boarding in Melbourne , and we were told we needed a Hong Kong transit visa.   I immediately contacted Flight Network and requested a refund. I was then told that because I did not take the outbound flight,  Turkish Airlines cancelled my return flight under their rules .   The most frustrating part: I contacted them  13 days before my return flight , but I was told I could only receive a refund of certain taxes. Flight Network would also deduct around  $70 in fees .   So from a  $1,900 ticket, I receive almost nothing back.    I accept that passengers have a responsibility to check visa requirements. But I provided my passport details to the travel agent when booking.  Why wasn't I warned about a potentially critical transit requirement?    And why should an  unused return flight be cancelled with no meaningful refund , when I requested cancellation 13 days before the flight?   I’m sharing this to warn other travellers:    Always independently check transit visa requirements and carefully read the airline and travel agency refund rules—even when you provide your passport details to the booking agent.    Has anyone else had a similar experience with  Flight Network or Turkish Airlines ? I would really like to hear how your case was handled.       submitted by     /u/DoctorSlow6215     to     r/TurkishAirlines       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TurkishAirlines/comments/1wbdky7/flight_network_turkish_airlines_1900_ticket/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T06:25:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T06:26:22.743Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0fc0e035b0f36efcc68b0"
+    },
+    "message_id": "reddit_t3_1wbdkwv",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "mads__asmr",
+    "username": "Naive_Buy9472",
+    "title": "‘Accountability’ video, thoughts?",
+    "text": "‘Accountability’ video, thoughts?\n\nsubmitted by     /u/Naive_Buy9472     to     r/mads__asmr       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mads__asmr/comments/1wbdkwv/accountability_video_thoughts/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T06:25:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T06:26:22.959Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0fc3523d250a5b10ba961"
+    },
+    "message_id": "reddit_serp_1acuwea",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/AusElectricians/comments/1acuwea/abn_for_local_wholesaler/",
+    "text": "[deleted]\n\n[deleted]         [link]       [comments]",
+    "username": "nknown",
+    "subreddit_or_channel": "AusElectricians",
+    "posted_at": "2024-01-28T05:09:16+00:00",
+    "fetched_at": {
+      "$date": "2026-09-09T06:27:01.902Z"
+    },
+    "google_rank": 10,
+    "search_keyword": "local wholesaler",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-09T06:27:01.902Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0fc4a035b0f36efcc68b1"
+    },
+    "message_id": "reddit_t3_1wbdlqa",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MagicMushrooms",
+    "username": "Lower-Advertising206",
+    "title": "Magic mushroom",
+    "text": "Magic mushroom\n\nI’m thinking of buying mushroom spores and trying to grow them. Please recommend some sites.       submitted by     /u/Lower-Advertising206     to     r/MagicMushrooms       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MagicMushrooms/comments/1wbdlqa/magic_mushroom/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T06:27:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T06:27:22.389Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0fc4a035b0f36efcc68b2"
+    },
+    "message_id": "reddit_t3_1wbdlot",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "warthundermobile",
+    "username": "ihatetwotime",
+    "title": "I need help",
+    "text": "I need help\n\nI need help, dont flame me pls   I recently started war thunder and i just joined this community. I need help with mobile war thunder air tree. Am i breaking the rules cuz it said no asking of wat vechicle to buy. I am grinding US and britan air tree so which aircraft should i get? Im also ready confused with the turn rate as a p51 out turned my spitfire? What does the stats mean im rlly clueless. How do you win a dogfight or know ur in one, cuz i get killed in 10 secs of a turning fight. Im sorry if this is the average question you get every day but i cant find any posts that solves my question. Thank you!       submitted by     /u/ihatetwotime     to     r/warthundermobile       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/warthundermobile/comments/1wbdlot/i_need_help/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T06:27:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T06:27:22.593Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0fc4a035b0f36efcc68b3"
+    },
+    "message_id": "reddit_t3_1wbdloc",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "SalesOperations",
+    "username": "Objective-Ad711",
+    "title": "How are you tracking digital sales room adoption across your sales team?",
+    "text": "How are you tracking digital sales room adoption across your sales team?\n\nCurious how RevOps / enablement teams are measuring whether a DSR rollout is working.   We launched one recently and leadership keeps asking about adoption but i'm not sure 'number of logins\" tells us much.   I care more about stuff like:     Are reps creating rooms for real opportunities?   Are buyers opening and sharing them?   Are mutual action plans getting updated?   Does activity make its way back into the CRM?     Feels like there’s a big difference between someone logging in once and a tool becoming part of how deals are run.   What metrics are you guys looking at?       submitted by     /u/Objective-Ad711     to     r/SalesOperations       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SalesOperations/comments/1wbdloc/how_are_you_tracking_digital_sales_room_adoption/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T06:27:05Z"
+    },

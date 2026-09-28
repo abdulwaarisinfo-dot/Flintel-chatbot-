@@ -1,0 +1,416 @@
+    "fetched_at": {
+      "$date": "2026-09-19T15:37:02.819Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeac1f660c608403980f9b"
+    },
+    "message_id": "reddit_t3_1wkpcc3",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "ClaudeWorkflows",
+    "username": "ClaudeAI-mod-bot",
+    "title": "[Workflow] Optimized Parallel Claude Code Agents: Single Worktree & Context Clearing for Enterprise Projects",
+    "text": "[Workflow] Optimized Parallel Claude Code Agents: Single Worktree & Context Clearing for Enterprise Projects\n\nOptimized Parallel Claude Code Agents: Single Worktree & Context Clearing for Enterprise Projects    Workflow value:  80/100   Status:  active ·  Freshness:  70/100 ·  Confidence:  0.90 ·  Level:  advanced   Categories:  Quality Control, Token Saving, Context & Memory, Debugging, Shipping, Subagents, Multi-Agent   Original source:   r/ClaudeCode post/comment    What problem this solves   Effectively running multiple parallel Claude Code agents on a large, mature codebase without the overhead and potential issues of  git worktrees , while managing context and token usage efficiently.   Summary   The author proposes an alternative to  git worktrees  for parallel Claude Code agents in large, mature repositories. Instead, they run multiple agents within the  same  worktree on a sandboxed development server, coordinated by a 'boss' agent to prevent collisions. A critical part of the workflow is to proactively  /clear  agent context (including the boss agent) around 150-200k tokens with a handoff to prevent context rot and manage token consumption. This approach is deemed more efficient and less problematic than worktrees for their specific environment.   Why it is useful   This workflow challenges a common best practice ( git worktrees  for parallel agents) and offers a well-reasoned, validated alternative for a specific, complex use case (large, mature repositories). It provides concrete, actionable advice on context management and token optimization, which is crucial for advanced LLM workflows. The emphasis on safety through a sandboxed environment and existing CI/CD is also valuable for enterprise adoption.   Workflow     Set up a sandboxed development server environment for agent operations.   Deploy multiple Claude Code agents to work concurrently within the  same  worktree of a large, mature repository.   Implement a 'boss' agent to actively control and coordinate the other agents, specifically to avoid code collisions and manage overall workflow.   Regularly  /clear  all agents' context (including the boss agent) around 150-200k tokens, using a handoff mechanism to prevent context rot and manage token consumption.   Ensure robust pre-AI frameworks and existing CI/CD processes (linting, testing, AI review, manual testing) are in place to catch agent errors before production deployment.     Tools / artifacts     Claude Code agents   Boss agent (another Claude Code agent)   Sandboxed dev server   Large, mature repository (potentially monorepo)   Git (for single worktree management)   CI/CD pipeline (linting, test suites, compilers, AI review, automated browser testing)    /clear  command (for context management)     Validation signals     Personal experience: 'I haven't had any issues going about it this method.'   Detailed explanation of why the method works for their specific context (low overlap, mature repo, pre-AI framework, dev server safety).   Critique of common advice (worktrees) with specific drawbacks identified (token consumption, setup overhead, merge conflicts).   Specific token limits for context clearing (150-200k tokens) as a validated practice.   Mentions existing CI/CD processes as a safety net for agent-generated code.     Cautions     Emphasizes a sandboxed dev server environment where agent code never directly hits production without extensive testing and manual review.   Highlights the importance of a 'boss' agent for coordination to avoid collisions.   Mentions existing linting, test suites, compilers, AI review, and automated browser testing as critical safety nets.     Limitations     Requires a large, mature codebase with low daily critical schema/design changes.   Requires a sandboxed dev server environment, which may not be accessible to all users.   Relies on an effective 'boss' agent for coordination, which itself needs to be well-designed.   The  /clear  with handoff strategy implies a level of manual intervention or sophisticated automation not fully detailed.   Not suitable for small or greenfield projects.   Low direct community validation on this specific comment.     Rate this workflow   Upvote this post if the workflow is useful, reproducible, or worth recommending.   Downvote if it is vague, outdated, unsafe, overhyped, or not reproducible.   Reply if it worked for you, failed, is outdated, or has a better alternative.      This post was generated automatically from the workflow library database.        submitted by     /u/ClaudeAI-mod-bot     to     r/ClaudeWorkflows       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeWorkflows/comments/1wkpcc3/workflow_optimized_parallel_claude_code_agents/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:36:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:37:03.023Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeac1f660c608403980f9c"
+    },
+    "message_id": "reddit_t3_1wkpcbt",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "friendshipbracelets",
+    "username": "Salmon-Sushi14",
+    "title": "[NA] Beginner here! What equipment and materials do I need to start making macramé bracelets?🤔❔",
+    "text": "[NA] Beginner here! What equipment and materials do I need to start making macramé bracelets?🤔❔\n\nHi everyone! I’m new to making macramé bracelets and I want to make my first one, but I’m not sure which pattern to choose. I’ve seen many cute designs online, but some look really difficult.   Could you give me some advice about the equipment and materials I need as a beginner? I’d also like to know what I should buy first and what I can skip for now. Any beginner tips would be really helpful. Thank you! 😊       submitted by     /u/Salmon-Sushi14     to     r/friendshipbracelets       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/friendshipbracelets/comments/1wkpcbt/na_beginner_here_what_equipment_and_materials_do/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:36:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:37:03.229Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeac1f660c608403980f9d"
+    },
+    "message_id": "reddit_t3_1wkpcbc",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "buyambien_online",
+    "username": "LongProfessional1802",
+    "title": "What should r/buyambien_online become?",
+    "text": "What should r/buyambien_online become?\n\nsubmitted by     /u/LongProfessional1802     to     r/buyambien_online       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/buyambien_online/comments/1wkpcbc/what_should_rbuyambien_online_become/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:36:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:37:03.430Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeac1f660c608403980f9e"
+    },
+    "message_id": "reddit_t3_1wkpcb5",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Fencesitter",
+    "username": "A_Puzzled_Potato",
+    "title": "I think my own outlook is a big part of my problem.",
+    "text": "I think my own outlook is a big part of my problem.\n\nTLDR: The thing that's most likely to make me miserable as a parent is my own anxiety. I spend so much time trying to learn and prepare, rather than working on my own constant fear. I consume endless negative content that just feeds into my anxiety instead of just working on and focusing on myself.   Ironic that I'm posting this on reddit right? Lol   Seriously tho, I'm a babysitter/nanny for a living and about a year ago I started working for a new family. They have 3 kids and they're lovely. I've had many different experiences with different kinds of moms, different kinds of kids, and different kinds of families, just because of the type of work that I do.    Despite my exposure to many families I was never incredibly close with many of the moms. Some seemed unhappy, some seemed content, but to maintain professional boundaries I never got really close unless they did. I never really asked what made them happy vs unhappy, I could only speculate. Because of this I got most of my information about motherhood online.    Of course, I knew on some level that the internet is kind of a magnet for negativity, but I still got alot of my information there as many people do. Most of the content I saw about parenting was honestly just complaining. About birth, about kids behavior, about their partners, about their kids schools, about other moms, ect. Now, I'm not saying that those people aren't entitled to feel that way, just that when it's  all  you see it really warps your perspective in a negative way. However I watch that negative content, I feed the my algorithm negative content and it gives me more. It's kind of my own fault to some degree, but I ended up making myself even more afraid.   So about the mom I'm working for now. She seems genuinely happy and we really click. She likes her life and doesn't seem to carry alot of stress around with her. I usually take care of the baby while she's getting ready for work and we chit chat. After a while of this I asked her what she thought made her relatively happy with kids while it seemed like some people were rather unhappy with kids. Her answer honestly made me really think about the way I view life and stress.   She said that being a parent is just another part of life and a lot of life being enjoyable or not just comes down to your attitude. Of course, she did say that some people do have genuinely hard lives with neglectful spouses or severely disabled children, but most people just have a pretty regular run of the mill life with some good and some hardship. There are lots of people without kids that are super unhappy too. If you're an anxious and neurotic person with a generally fearful and negative outlook on life, that won't go away when you have kids.    It really made me think about myself and I how I view life. I'm a very anxious person and I tend to over research everything and get analysis paralysis. The bigger and more important the choice, the more I analyze and worry, so you can imagine how my research on this subject is going lol. I just have this feeling that if I just  learn  enough and  prepare  enough and  worry  enough then I'll be ready and I won't feel regret or fear. Deep down I know I want kids but I just have some much anxiety about it potentially being the wrong choice and regretting it later.    I have a super helpful husband and a supportive family that would love to help with grandkids. We make good money and will have a house soon. By most measures I'm in a good spot to have kids. I think the main thing that might make me have regrets is ironically... me. I worry constantly and it makes me miserable. I always think I'm making the wrong choice, how could I trust myself to raise a kid well if I don't trust myself to do anything? I think I'm going to spend less time reading watching and worrying, and more time working on my own anxious personality.   If anything, my own fear will be what's hardest about being a parent.   Having kids will generally be unhappy if I don't how to be happy in the first place. I love this subreddit and I think there's lots of value information here and it  has  helped me, but at this point I know everything I can know and I'm still worrying. I think instead if looking at everyone else's experiences and perspectives, its time to start looking in the mirror. Thanks for reading if you got this far. :)       submitted by     /u/A_Puzzled_Potato     to     r/Fencesitter       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Fencesitter/comments/1wkpcb5/i_think_my_own_outlook_is_a_big_part_of_my_problem/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:36:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:37:03.631Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeac1f660c608403980f9f"
+    },
+    "message_id": "reddit_t3_1wkpcb2",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ForRealDhaka",
+    "username": "Wise-Sir5180",
+    "title": "Is it a good idea to buy used iphones ?",
+    "text": "Is it a good idea to buy used iphones ?\n\nThe title :))       submitted by     /u/Wise-Sir5180     to     r/ForRealDhaka       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ForRealDhaka/comments/1wkpcb2/is_it_a_good_idea_to_buy_used_iphones/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:36:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:37:03.832Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeac20660c608403980fa4"
+    },
+    "message_id": "reddit_t3_1wkpcaw",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PS5restock",
+    "username": "MechanicFit2884",
+    "title": "PS5 in 2026: Stop Letting Sony Milk You",
+    "text": "PS5 in 2026: Stop Letting Sony Milk You\n\nThis is going to piss some people off, but honestly, buying a PS5  right now is like willingly getting hit by a train.  It’s six-year-old hardware, yet people are still throwing ₹70K+ at it like Sony isn’t laughing all the way to the bank.  Stop being a sheep and falling for the hype. Sony is playing you, and you’re letting them.  ₹70,000+ for a six-year-old console is  ridiculous  at this point. If you’re determined to buy a console, at least wait for the PS6. Otherwise, you’re paying premium money for aging hardware just because Sony knows people will blindly buy it.   Don’t let Sony milk you for outdated hardware. Wait.        submitted by     /u/MechanicFit2884     to     r/PS5restock       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PS5restock/comments/1wkpcaw/ps5_in_2026_stop_letting_sony_milk_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:36:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:37:04.817Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeac21660c608403980fa5"
+    },
+    "message_id": "reddit_t3_1wkpcaj",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "jackwhite",
+    "username": "PlasticRuester",
+    "title": "Update: I finally saw Jack!",
+    "text": "Update: I finally saw Jack!\n\nI posted  a few months ago  about how I’d worked really hard to recover from a back issue so I could go to the July show at the Salt Shed in Chicago, only to be fucked over by a StubHub issue.    I had a lot of very kind and supportive comments so I just wanted to update that I was able to attend the Newport show last night and it was incredible! And I was able to stand for the full show which is something I could not have done even six months ago. I had such a good time and was especially excited to hear I Fought Piranhas.   Shout out to the drunk guy who asked me toward the end of the show if I’d seen “this guy” before. I said I hadn’t seen him live before and the drunk guy told me- a person who was drawing the White Stripes in her high school sketchbook 25 years ago- “THIS GUY- HIS THING- IS THE GUITAR!”   You got that right, man.        submitted by     /u/PlasticRuester     to     r/jackwhite       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jackwhite/comments/1wkpcaj/update_i_finally_saw_jack/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:36:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:37:05.018Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeac21660c608403980fa6"
+    },
+    "message_id": "reddit_t3_1wkpcad",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "TravelPortugal",
+    "username": "justalam",
+    "title": "Travelling Portugal from 31st to 8th Nov. Need suggestions for must visit places",
+    "text": "Travelling Portugal from 31st to 8th Nov. Need suggestions for must visit places\n\nI will be travelling to Portugal. Lisbon is scheduled work from 3 to 7th. Can extend for couple of days after 8th. Suggest places.        submitted by     /u/justalam     to     r/TravelPortugal       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TravelPortugal/comments/1wkpcad/travelling_portugal_from_31st_to_8th_nov_need/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:36:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:37:05.218Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeac21660c608403980fa7"
+    },
+    "message_id": "reddit_t3_1wkpc9v",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Buldhana",
+    "username": "Groundbreaking-Ant46",
+    "title": "Anyone from Buldana in Bangalore?",
+    "text": "Anyone from Buldana in Bangalore?\n\nWas randomly scrolling through Reddit and out of curiosity searched if there was a Buldana subreddit… and somehow there actually is.   I’m from Buldana and currently working in Bangalore, so just thought I’d ask are there any fellow Buldana people here?   Would be nice to connect with people from home and maybe grab a chai/coffee sometime if we happen to be around.       submitted by     /u/Groundbreaking-Ant46     to     r/Buldhana       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Buldhana/comments/1wkpc9v/anyone_from_buldana_in_bangalore/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:36:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:37:05.421Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeac21660c608403980fa8"
+    },
+    "message_id": "reddit_t3_1wkpc9s",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "sentiment",
+    "platform": "reddit",
+    "subreddit": "saasbuild",
+    "username": "Yessirrrrrski",
+    "title": "I built an app to recreate an experience I had at a bar",
+    "text": "I built an app to recreate an experience I had at a bar\n\nI was at a bar and met someone in GTM sales at a well-established startup. At the time I was building a semi-conductor sentiment tracking app and explaining my idea to him. He thought the idea was interesting and asked some follow-up questions, then said “If I were to build a startup it would have a Product-Led Growth (PLG) component.”    He then proceeded to explain this PLG in more depth and I left the conversation with a new perspective on my situation, one that I had never considered. From that point, I set out to build an app to try to emulate this experience and have finally released it:  uncoverprism.com .    I would love if you could give it a try and let me know your thoughts, cheers!       submitted by     /u/Yessirrrrrski     to     r/saasbuild       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/saasbuild/comments/1wkpc9s/i_built_an_app_to_recreate_an_experience_i_had_at/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:36:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:37:05.620Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeac21aeeb96c1c63b9e9a"
+    },
+    "message_id": "reddit_t3_1wkpce5",
+    "topic_key": "dentist",
+    "search_keyword": "dentist",
+    "platform": "reddit",
+    "subreddit": "askdentists",
+    "username": "Spiritual-Back-1913",
+    "title": "Tooth extraction questions",
+    "text": "Tooth extraction questions\n\nAlmost 72 post tooth extraction. Does this look normal? Pain is manageable and I’m following post work procedures to a T. Just wanna make sure this is healing how it should.        submitted by     /u/Spiritual-Back-1913     to     r/askdentists       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/askdentists/comments/1wkpce5/tooth_extraction_questions/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:36:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:37:05.622Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaeac21660c608403980fa9"
+    },
+    "message_id": "reddit_t3_1wkpc9d",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "guatemala",
+    "username": "Psychological-Gene37",
+    "title": "Lenovo thinkpad por Q7k",
+    "text": "Lenovo thinkpad por Q7k\n\nAla muchis ya mucho los molesté con mis preguntas, pero nuna está mal tener opiniones variadas de distintas personas. Pues me puse a investigar de PCs disponibles para Ing. En sistemas. Y pues encontré una lenovo thinkpad t14 gen 3 en Q7k. Tiene 512GB de almacenamiento, 16 GB de RAM expanidible a 40GB (a lo mucho podria expandirla a 32 GB hasta el proximo bono 14 😢) y procesador i7-1260P. Ya sé que me voy a abstener a no poder jugar con ella, pero con el trabajo y volver a estudiar no creo que ni me de tiempo. Creen que esta laptop valga la pena? Para mi Q7k ya se me hace demasiada inversión así que no quiero meter la pata. Si tienen recomendaciones de otros equipos, bienvenidos        submitted by     /u/Psychological-Gene37     to     r/guatemala       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/guatemala/comments/1wkpc9d/lenovo_thinkpad_por_q7k/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:36:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:37:05.822Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeac22660c608403980faa"
+    },
+    "message_id": "reddit_t3_1wkpc8p",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "trees",
+    "username": "PaintEatrr",
+    "title": "Has anyone noticed?...",
+    "text": "Has anyone noticed?...\n\nIt seems like whenever there's a completely unrelated discussion, whether about cannabis itself or non-DHV consumption methods, I even saw one person do this under a legislative update; some dude ALWAYS brings up their DHV? And then another guy replies and then they end up kinda jerking eachother off about it under a post that has absolutely no relevance?    Example post: \"Whats your favorite type of paper?\" and then \"Well I have a volcano hybrid and its so much better than papers I saved so much money I'm going to live longer than all of you combustioners combined\" and then another guy replies to him being all like \"amen but I use (even more ridiculously costly DHV here)\" and then they proceed to not contribute the the discussion at all. Am I crazy or does anyone else see this?       submitted by     /u/PaintEatrr     to     r/trees       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/trees/comments/1wkpc8p/has_anyone_noticed/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:36:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:37:06.028Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeac22660c608403980fab"
+    },
+    "message_id": "reddit_t3_1wkpc8i",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "reddmatch",
+    "username": "AussieToAangan",
+    "title": "Patch Notes v3.0: Returned to India, unlocked marriage quest",
+    "text": "Patch Notes v3.0: Returned to India, unlocked marriage quest\n\nHi everyone,   After spending almost 11 years abroad, I’ve moved back to India for good.   Reason for coming back, I travelled all over Oz, made amazing memories and met amazing people.  Then I reached a point where I knew I had to come back.   Now I am focused on building my own business and growing the family business across Delhi, Mumbai & Uttarakhand.   I will be 32 in a few days.   A little about me:  5’9”  Music is ♥️  I can play both the guitar and piano.  I randomly learn languages for fun.  I would happily plan an international trip before planning a party.  I make a pretty solid coffee and love hunting for hidden cafes.  I am more likely to be watching a good tv show or a great film than scrolling Instagram.  By the way I am a big office fan (bears, beets…battlestar galactica).  I lift weights just enough to justify dessert  I do enjoy baking  I do not like watching any kind of sports, but I do enjoy playing them.  I also enjoy listening to crime podcasts (my friends girlfriend who is a criminal lawyer got me hooked to it)   Looking for :   A kind, emotionally mature woman who genuinely wants marriage and believes in loyalty, honesty, and clear communication.  Someone who has her own dreams and ambitions, and knows that she will always have my support in chasing them. I want a relationship where we bring each other peace, laugh a lot, travel often, and build a beautiful life together.   Okay few things that I learnt from my previous posts and please do see the below:      My Rottweiler is not negotiable. 🐶  He is a huge part of my family, so if you are scared of dogs or simply do not like big breeds, we are probably not the right match.     Uttarakhand is home. 🏔️  I live here now, and this is where I want to build my family. We will travel the world together, but home will always be Uttarakhand.     I waited until I was genuinely settled.  I am fortunate to be in a very comfortable place financially and I wanted to reach this stage before looking for my permanent person. I am not looking for someone to survive life with. I am looking for someone to build a peaceful and beautiful life with.      If you think we are looking for the same kind of life, I would genuinely love to hear from you.  Here’s hoping Version 3.0 is the final release.       submitted by     /u/AussieToAangan     to     r/reddmatch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/reddmatch/comments/1wkpc8i/patch_notes_v30_returned_to_india_unlocked/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:36:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:37:06.230Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeac22aeeb96c1c63b9e9c"
+    },
+    "message_id": "reddit_t3_1wkpcbi",
+    "topic_key": "mediator",
+    "search_keyword": "mediator",
+    "platform": "reddit",
+    "subreddit": "DHgateOfficial",
+    "username": "Parking-Rough-6176",
+    "title": "dhgate mediation c",
+    "text": "dhgate mediation c\n\nhi so Im from italy i’ve bought airpods max rep from china and they weren’t as described so i opened a dispute and i asked the seller if i could get a full refund and he said that i had to leave a 5 star review first but i went through the dh mediation so that i wouldn’t lose customer rights but anyways i put all my evidence and dhgate mediator told me that i could get a partial refund and keep them or i could also have a full refund if i returned them to the seller and it was just the message i responded and i don’t know if i have to click something or if i just have to wait for his response (sorry its my first time       submitted by     /u/Parking-Rough-6176     to     r/DHgateOfficial       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DHgateOfficial/comments/1wkpcbi/dhgate_mediation_c/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:36:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:37:06.308Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaeac22660c608403980fac"
+    },
+    "message_id": "reddit_t3_1wkpc85",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789832201300",
+    "text": "[PROBE] 1789832201300\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wkpc85/probe_1789832201300/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:36:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:37:06.430Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeac22660c608403980fad"
+    },
+    "message_id": "reddit_t3_1wkpc80",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Inito",
+    "username": "bookboxflower",
+    "title": "Test strips",
+    "text": "Test strips\n\nI’m ready to use my device to TTC and just realized my strips are slightly expired. The app refused them unfortunately. I’m gearing up to buy strips and I’ve read a lot of posts around 6 months ago about changes to test strips and people having wonky results, but nothing recent. Did that issue resolve? Does anyone have strips that might expire before they use them? There are a lot of BFP posts! Interested to hear how people navigating buying strips, changes that were made to them, weird results, or ideas for not hemorrhaging money but still having enough strips to adequately test. Thanks!       submitted by     /u/bookboxflower     to     r/Inito       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Inito/comments/1wkpc80/test_strips/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:36:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:37:06.628Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeac5b660c608403980faf"
+    },
+    "message_id": "reddit_t3_1wkpd7e",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "wordgrind",
+    "username": "Playful_Clue_1210",
+    "title": "🟨 Blankle: “a thick clay pot for cooking or storage” — what's the 5-letter word? (by u/Playful_Clue_1210)",
+    "text": "🟨 Blankle: “a thick clay pot for cooking or storage” — what's the 5-letter word? (by u/Playful_Clue_1210)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Playful_Clue_1210     to     r/wordgrind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wordgrind/comments/1wkpd7e/blankle_a_thick_clay_pot_for_cooking_or_storage/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:37:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:38:03.316Z"
+    },
+    "reddit_comments": 0

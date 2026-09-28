@@ -1,0 +1,416 @@
+    "_id": {
+      "$oid": "6ab1c980660c60840399154f"
+    },
+    "message_id": "reddit_t3_1wmu7zo",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "StreetFighter",
+    "username": "Old_Firefighter9938",
+    "title": "Actual Fix for Consistent Frame Drop (~45fps) on Game Launch",
+    "text": "Actual Fix for Consistent Frame Drop (~45fps) on Game Launch\n\nThere's been a long standing issue for some people where sometimes when you launch the game it runs at an unstable 45fps instead of the usual 60. This is the case in menus and in the game and isn't related to specs or any settings (you can confirm if this is your bug by changing the max fps to 120 in the game settings which then changes the menu fps to about 65fps but it will drop back to 45 if you enter training mode). I don't think anyone has seriously looked into this problem because it usually goes away by just closing and reopening the game or at worst restarting your PC so it's unclear how bad the problem is but here's a few examples of people mentioning it:    https://www.reddit.com/r/StreetFighter/comments/1ps96nr/anyone_elses_game_play_in_slow_motionunderwater/     https://www.reddit.com/r/StreetFighter/comments/1s0rul5/sometimes_my_game_runs_in_slow_motion/    https://www.reddit.com/r/StreetFighter/comments/1p4u6o7/sf6_limiting_at_about_4560fps_on_rtx3070/    https://steamcommunity.com/app/1364780/discussions/0/663845090710598831/   And there are a few people mentioning it on page 80 of the support megathread on Steam.   It's affected me occasionally since launch but the other day it happened 5+ times in a row and persisted through a restart so I looked into it more. I tried all the common suggestions and things from the above threads and nothing helped. I know everyone hates AI but I fed in the description of the problem to chatgpt. It matched the problem to this forum post  community.pcgamingwiki.com/files/file/2563-global-timer-resolution-requests-windows-11/    I don't know much about computers but everything in there makes sense and it checked the game process using presentmon ( https://github.com/gametechdev/presentmon ) for a good 60fps instance and a problematic 45fps one which found that the game was using the default windows timer when it was lagging and a much faster timer when it ran at 60fps. There's some kind of bug with it not always requesting the faster timer on start up which is probably the root cause.   You can make a regedit at    HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\kernel HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\kernel     setting    Name: GlobalTimerResolutionRequests Type: DWORD (32-bit) Data: 1     this then allows you to manually change the request timer using a powershell script to call the Windows function  timeBeginPeriod(1)  which sets the request timer to 1ms. The attached vid shows the fps being fixed when the script is run.      Don't do any of this   on my word because I am not a computer professional and I don't know how risky this regedit is. There are probably people who work with computers here who can better advise on how to fix this problem properly or maybe someone who knows more about the game can maybe create a mod making use of this.       submitted by     /u/Old_Firefighter9938     to     r/StreetFighter       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/StreetFighter/comments/1wmu7zo/actual_fix_for_consistent_frame_drop_45fps_on/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T00:18:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T00:19:12.755Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1c981aeeb96c1c63bb168"
+    },
+    "message_id": "reddit_t3_1wmu85m",
+    "topic_key": "checkout",
+    "search_keyword": "checkout",
+    "platform": "reddit",
+    "subreddit": "SneakerDeals",
+    "username": "slacikasac",
+    "title": "[adidas via ShopSimon] adidas Men's Run 70s 2.0 Shoes (2 colors) for $23. Shipping is free for New Customers w/ code FREESHIPSD at checkout, otherwise shipping is $4.95.",
+    "text": "[adidas via ShopSimon] adidas Men's Run 70s 2.0 Shoes (2 colors) for $23. Shipping is free for New Customers w/ code FREESHIPSD at checkout, otherwise shipping is $4.95.\n\nsubmitted by     /u/slacikasac     to     r/SneakerDeals       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SneakerDeals/comments/1wmu85m/adidas_via_shopsimon_adidas_mens_run_70s_20_shoes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T00:19:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T00:19:13.001Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab1c981660c608403991552"
+    },
+    "message_id": "reddit_t3_1wmu7z6",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ComunidadesDeKukito",
+    "username": "KukitoWeb9388438577",
+    "title": "Reddit: La mejor alternativa para crear comunidades de valor",
+    "text": "Reddit: La mejor alternativa para crear comunidades de valor\n\nConstruir una comunidad en internet se ha vuelto un ejercicio de paciencia. Los grupos de Facebook se llenan de ruido, los servidores de Discord exigen moderación constante, los canales de Telegram se convierten en monólogos y las newsletters dependen de un open rate cada vez más castigado. En medio de ese panorama, hay una herramienta que muchos creadores y entusiastas siguen pasando por alto para compartir conocimiento: crear tu propio subreddit.   ¿Qué es exactamente un subreddit?   Un subreddit es una comunidad temática dentro de Reddit centrada en un nicho específico. A diferencia de un foro clásico o una red social tradicional, la conversación no gira en torno al perfil de una persona, sino alrededor del tema y del intercambio de ideas.   En un subreddit puedes publicar textos detallados, enlaces, imágenes o encuestas. Los miembros interactúan mediante un sistema de upvotes y downvotes (votos a favor y en contra) que determina qué contenido escala a la portada y cuál se hunde. Además, puedes configurar reglas de moderación, personalizar la apariencia, añadir flairs (etiquetas) para organizar los temas y sumar a otros usuarios como moderadores para cuidar el espacio.   ¿Por qué funciona para aportar valor real?      La distribución viene incluida : En Discord o en una newsletter empiezas en cero absoluto; cada miembro tiene que llegar por un canal externo. En Reddit, el algoritmo de recomendación y las búsquedas orgánicas muestran las publicaciones a personas que ya interactúan activamente con ese tema, aunque nunca hayan oído hablar de ti.    El formato premia la sustancia : La cultura de Reddit es profundamente analítica. El contenido valorado con upvotes es el que resuelve dudas, aporta datos o genera debates de nivel. No hay stories ni reels; un buen hilo técnico puede seguir recibiendo visitas, comentarios y aprendizajes meses o años después de ser publicado.    Coste y barrera de entrada mínimos : Crear un subreddit toma cinco minutos. No hay infraestructura que mantener, servidores que costear ni herramientas de pago obligatorias.    Contexto público y archivo permanente : Cualquiera que llegue a tu subreddit puede leer todo el archivo histórico de debates antes de decidir si unirse. El historial de publicaciones actúa como una biblioteca de conocimiento permanente.    Foco absoluto en la aportación : Al no estar diseñado como una plataforma de autopromoción, el ecosistema premia de forma natural el análisis riguroso, la ayuda mutua y la resolución de problemas colectivos.     Cómo empezar sin perder el tiempo      Delimita mucho el tema : Hablar de un tema general es un océano; crear un espacio para un nicho muy concreto define una comunidad enfocada. Cuanto más estrecho es el campo, más clara resulta la propuesta de valor para quienes buscan aprender.   Siembra contenido antes de invitar: Nadie se queda en un foro vacío. Aporta entre 10 y 15 publicaciones de alto valor y profundidad antes de abrir el espacio a más participantes.    Alterna formatos : Combina guías en texto largo, análisis de casos de estudio, preguntas abiertas para debate y curación de enlaces relevantes que enriquezcan la discusión.    Fija un ritmo y sostenlo : Dos o tres hilos de calidad a la semana mantenidos durante seis meses generan más tracción y aprendizaje real que veinte publicaciones en tres días y luego el silencio.    Fomenta la conversación en los comentarios : Responde a cada usuario que comente. Una comunidad real se distingue de un canal de difusión cuando el intercambio de ideas crece de manera orgánica entre todos los participantes.     Lo que conviene tener claro   Ningún canal es perfecto y Reddit tiene dinámicas particulares que debes conocer:      No eres el dueño de la audiencia : No controlas el algoritmo ni posees los correos de los miembros. Usa el subreddit como el espacio central de debate y aprendizaje compartido.    Cultura anti-ruido : La comunidad de Reddit detecta y rechaza el contenido vacío o interesado. La regla de oro es aportar sustancia genuina y centrarse en el beneficio de la comunidad.    Ritmo asíncrono : Reddit es ideal para discusiones profundas, documentación e hilos organizados. Si lo que buscas es la inmediatez de un chat en tiempo real, otras herramientas son más adecuadas.     En resumen, crear una comunidad en Reddit destaca por resolver el reto más difícil en internet: conectar con personas afines a través del conocimiento compartido, la sustancia y la conversación real.       submitted by     /u/KukitoWeb9388438577     to     r/ComunidadesDeKukito       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ComunidadesDeKukito/comments/1wmu7z6/reddit_la_mejor_alternativa_para_crear/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T00:18:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T00:19:13.352Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1c981aeeb96c1c63bb169"
+    },
+    "message_id": "reddit_t3_1wmu81s",
+    "topic_key": "auditor",
+    "search_keyword": "auditor",
+    "platform": "reddit",
+    "subreddit": "DebateReligion",
+    "username": "Interesting_Sea_4481",
+    "title": "A Scientific Realist Should Be a Moral Realist Too",
+    "text": "A Scientific Realist Should Be a Moral Realist Too\n\nAll human knowledge is ultimately based on one thing: shared universal human perception. The scientific method, meaning things like predictions, falsifications, measurements by very accurate and sensitive instruments, reproducibility, repeatability, and so on, is, when you think deeply about it, nothing more than extensions, refinements, cross-checks, and repetitions of that same thing: shared human perception.   Take the electron’s negative charge. How do you know it is negatively charged? You perform this and that experiment and observe the result. But ultimately, that result is still just an experience inside your mind. But an Australian team in a different part of the world repeated the experiment and got the same result.\" The same result = the same experience as yours in America. So, in the end, that is just shared perception being cross-checked.   You can then predict that it will repel a positively charged thing. Fine, but how do you know this? Just an observed experience inside your mind of the two repelling, and so on.   So, if you cannot trust shared human perception as indicative of an objective reality, then the entire scientific enterprise becomes, at the deepest level, just a massive high precision human dream. Maybe, in aliens’ minds, for example, reality appears very differently and is governed by very different laws.   If the starting point is a collective dream rather than an objective reality triggering those experiences inside you, then everything based on it is still a dream. You can cross-check, predict, falsify, measure, and reproduce a dream that is being created by your own mind, but you are still doing all of those things within the same experiential framework, rather than establishing an objective reality outside of it that is triggering those experiences inside you. If the Sun is just a shared dream, then predictions of the Sun’s movement, observed effects of its existence, or whatever method you use to verify it are just verification of a shared dream, not of an objective thing.   So, if we trust and say that universal shared human perception of something = it is objective, and that all minds, even alien minds, will agree with us about it, for example, they will agree that the electron is negatively charged, that the Sun burns rather than freezes, etc. Then why not apply the same thing to moral awareness?   Don’t we all humans have a universal moral awareness that justice is good and injustice is bad? Even if we awfully disagree about what is just and what is unjust, we all still agree on the general principle that justice is good and injustice is bad across cultures and times. You will never find someone who says, for example, “Betrayal of trust is a very good thing, bro.” He does it and knows internally that it is wrong. You won’t find anyone who says, “Helping an orphan is a very bad thing to do and is evil,” etc.   We all universally have this kind of universal moral awareness, so why not let it be an objective moral reality triggering those experiences inside of us, rather than something we invented to help us survive and cooperate and nothing else!?   If you say the human mind self-invents these moral illusions for our evolutionary benefits, then why not say the same thing about the sensory experiences your mind produces?   Haven’t evolution alos shaped our auditory cortex, for example? So why not conclude that these auditory things we hear are just illusions as well, like morals, and do not correspond to objective sounds?   What naturalists already say about morality can exactly be said about sensory perception.   The mathematical physicist Chetan Prakash proved a theorem that states that, according to evolutionary theory and natural selection, any organism capable of perceiving truth or reality as it actually is would not be more fit than another organism at the same level of biological complexity that does not perceive anything about reality at all, but is merely programmed to be more efficient.   We have been shaped through natural selection to develop senses that keep us alive. If I see what appears to me to be a snake, I will not grab it; and if I see what appears to me to be a train, I will not stand in front of it, regardless of whether there is actually a train or a snake there or not. These representations evolved to keep us alive, so we have to take them seriously. But it is logically mistaken to think that taking these representations seriously means believing that reality is actually the way it appears to us.   That’s why you have people like Donald Hoffman and his interface theory of perception!   So, in a nutshell, if you trust shared human perception as indicative of objective reality – the Sun is an objective thing out there, and its existence triggers those experiences inside our consciousness, and other alien consciousnesses, for example, they will agree with us that it is very hot plasma, produces heat, revolves around the center of the Milky Way, etc rather than believing that our minds self-create illusions that may appear differently in other minds, that also self-create their own worlds, then you should accept objective moral reality that triggers that same universal, shared human moral awareness as well. So even aliens will agree that justice is good and injustice is bad.   And you cannot bypass this issue through the scientific method whether by predictions, falsifications, measurements, reproducibility, or causal contact between yourself and other objects because all of these approaches ultimately rest on a single assumption: that shared human perception equates to objective reality, triggering experiences within you.   But if shared human perception is instead a shared dream, then from the very start, everything built upon it remains merely a dream. Repetitions, extensions, or cross-checks within that dream do not transform it into objective reality; they merely produce a high-precision dream. Science, then, becomes a high-precision dream, and morality a medium-precision dream but both remain dreams nonetheless.   The mathematical physicist Chetan Prakash proved a theorem that states that, according to evolutionary theory and natural selection, any organism capable of perceiving truth or reality as it actually is would not be more fit than another organism at the same level of biological complexity that does not perceive anything about reality at all, but is merely programmed to be more efficient. It is called fitness-beats-truth theorem.       submitted by     /u/Interesting_Sea_4481     to     r/DebateReligion       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DebateReligion/comments/1wmu81s/a_scientific_realist_should_be_a_moral_realist_too/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T00:18:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T00:19:13.511Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab1c981660c608403991553"
+    },
+    "message_id": "reddit_t3_1wmu7z4",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "DaddyFuntimeFox",
+    "title": "Grab 100 hammers from u/DaddyFuntimeFox!",
+    "text": "Grab 100 hammers from u/DaddyFuntimeFox!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/DaddyFuntimeFox     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wmu7z4/grab_100_hammers_from_udaddyfuntimefox/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T00:18:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T00:19:13.555Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1c981660c608403991554"
+    },
+    "message_id": "reddit_t3_1wmu7xs",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "jerseycity",
+    "username": "grgrackles",
+    "title": "Selling RENT at Art House Productions Tickets 10/1",
+    "text": "Selling RENT at Art House Productions Tickets 10/1\n\nHi! I’m selling two tickets to RENT at Art House Productions on Thursday, October 1st!! Seats are B13 and B14. I sadly cannot make it anymore. Looking to sell at what I paid for them which is $169.70 total.    The tickets are marked for will call, but I can transfer them to you so that they’re under your name. Thanks so much!       submitted by     /u/grgrackles     to     r/jerseycity       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jerseycity/comments/1wmu7xs/selling_rent_at_art_house_productions_tickets_101/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T00:18:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T00:19:13.762Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1c981660c608403991555"
+    },
+    "message_id": "reddit_t3_1wmu7xe",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "aivideos",
+    "username": "oldboi777",
+    "title": "CyberSonīc Dance 🍑 {subliminal messaging}📸",
+    "text": "CyberSonīc Dance 🍑 {subliminal messaging}📸\n\nslow yo scroll and relax a min, weary doomer   chatgpt to kling image to video and image to video motion control. Suno for music. manual edits on In-Shot app. all on iphone   New Character I designed based off old metal-sonic, with some “upgrades”   is it cringe gooner shiny brain rot slop ? maybe, but it was fun to make and watch. Im learning the ropes. I’ll leave it at that       submitted by     /u/oldboi777     to     r/aivideos       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/aivideos/comments/1wmu7xe/cybersonīc_dance_subliminal_messaging/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T00:18:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T00:19:13.962Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1c982660c608403991558"
+    },
+    "message_id": "reddit_t3_1wmu7wz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Boots",
+    "username": "Head-Pomegranate-699",
+    "title": "Pashion Shoes!",
+    "text": "Pashion Shoes!\n\nGet $25 in addition when you buy pashion Shoes! They are a life saver and will elevate your show experience. Got 4 pair of shoes for $500 - they don't hurt my feet at all, trying not to shill but I think it's important to support one another and focus on woman brands rather than LV, etc     https://prz.io/LdErj9bhX        submitted by     /u/Head-Pomegranate-699     to     r/Boots       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Boots/comments/1wmu7wz/pashion_shoes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T00:18:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T00:19:14.556Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1c9dbaeeb96c1c63bb16a"
+    },
+    "message_id": "reddit_t3_1wmu9al",
+    "topic_key": "dentist",
+    "search_keyword": "dentist",
+    "platform": "reddit",
+    "subreddit": "askdentists",
+    "username": "SweetCuriosity_",
+    "title": "Me again 😅",
+    "text": "Me again 😅\n\nI haven’t been diagnosed with anything should I still check off I have low blood pressure?    Sooo I have POTS like symptoms so I can get dizzy when I’m standing which can make my blood pressure low sometimes should I check that on the list? I was supposed to go in to get more testing and such but yk how it is        submitted by     /u/SweetCuriosity_     to     r/askdentists       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/askdentists/comments/1wmu9al/me_again/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T00:20:21Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T00:20:43.720Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab1c9dcaeeb96c1c63bb16b"
+    },
+    "message_id": "reddit_t3_1wmu996",
+    "topic_key": "cpa",
+    "search_keyword": "CPA",
+    "platform": "reddit",
+    "subreddit": "PcBuildHelp",
+    "username": "0jwo",
+    "title": "Will this CPU work in my PC ?",
+    "text": "Will this CPU work in my PC ?\n\nIm planning on upgrading my CPU but one of my friends told me to change the motherboard is it because of the CPU any help because I didn't understand what he meant. Dose these parts work with the new CPU or not and if not any recommendations because I just want to upgrade the CPU only    Part list:    https://pcpartpicker.com/list/HMm2W9        submitted by     /u/0jwo     to     r/PcBuildHelp       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PcBuildHelp/comments/1wmu996/will_this_cpu_work_in_my_pc/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T00:20:18Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T00:20:44Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab1c9df660c608403991559"
+    },
+    "message_id": "reddit_t3_1wmu9im",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Gold",
+    "username": "Cucumberisgood4u",
+    "title": "How to start buying gold?",
+    "text": "How to start buying gold?\n\nWhat are the best ways to buy physical gold to hold as a long term investment? Bars? Coins? I am assuming some methods have higher markups than others?       submitted by     /u/Cucumberisgood4u     to     r/Gold       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Gold/comments/1wmu9im/how_to_start_buying_gold/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T00:20:36Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T00:20:47.621Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1c9df660c60840399155a"
+    },
+    "message_id": "reddit_t3_1wmu9hi",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Luxeladies",
+    "username": "Aliauyi",
+    "title": "Re🏡 for these beauties, just not for me 💗",
+    "text": "Re🏡 for these beauties, just not for me 💗\n\nClearing out these beauties on discounts as I’ve not used them since I got them, and I have a hoarding problem.     Feedback:  https://www.reddit.com/u/Aliauyi/s/ymNcoJHVu3     C25 limited edition mini size perforated bag - XC factory 280$    C25 baby blue size small - GF factory - 370$   Mew mew vivant - light pink (looks like a dusty mauve) - pink factory 250$    Shipping to US & Canada would be an additional 15$   Reasonable offers are welcome!    Based in Canada, but plenty of experience shipping elsewhere. I don’t mind shipping to the US or anywhere if you pay shipping! PPFF only. I encourage you to do your own QC, and I provide as many photos/details as possible. Items are final sale, please respect my time as I respect yours — if you decide to pass, just let me know, no hard feelings at all!    Serious inquiries only. Thanks so much for checking this out ✨       submitted by     /u/Aliauyi     to     r/Luxeladies       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Luxeladies/comments/1wmu9hi/re_for_these_beauties_just_not_for_me/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T00:20:34Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T00:20:47.824Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1c9e0660c60840399155b"
+    },
+    "message_id": "reddit_t3_1wmu9hf",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devplatform_triggers",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1790036434409",
+    "text": "[PROBE] 1790036434409\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devplatform_triggers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devplatform_triggers/comments/1wmu9hf/probe_1790036434409/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T00:20:34Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T00:20:48.023Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1c9e0660c60840399155c"
+    },
+    "message_id": "reddit_t3_1wmu9gk",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "ClaudeCode",
+    "username": "vineetk1998",
+    "title": "Fable 5.1 performance deteriorated?",
+    "text": "Fable 5.1 performance deteriorated?\n\nAre we awaiting any new release, as fable making lot of dumb silly things today.  I think they're redirected some compute or limited this to have noticeable difference in new drop, what do you think?        submitted by     /u/vineetk1998     to     r/ClaudeCode       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeCode/comments/1wmu9gk/fable_51_performance_deteriorated/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T00:20:33Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T00:20:48.229Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1c9e0660c60840399155d"
+    },
+    "message_id": "reddit_t3_1wmu9f9",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "MinnesotaLynx",
+    "username": "ElvisTheBoyCat",
+    "title": "GEICO Partners with WNBA Star and Unrivaled Co-Founder Napheesa Collier",
+    "text": "GEICO Partners with WNBA Star and Unrivaled Co-Founder Napheesa Collier\n\nNEW YORK--( BUSINESS WIRE )--GEICO today announced a new partnership with five-time WNBA All-Star, two-time Olympic gold medalist, Minnesota Lynx forward and Unrivaled Co-Founder, Napheesa Collier.   Building upon existing WNBA and athlete partnerships, GEICO is teaming up with Collier as part of its growing investment in women's basketball. The announcement  follows GEICO's recent partnership with the Minnesota Lynx , further deepening the company's commitment to the sport at both the team and individual level.   The partnership will spotlight the everyday moments behind Collier's life as an athlete, entrepreneur and mom, giving fans a closer look at who she is beyond the game.   \"We've said from the beginning that we don't want to just put our logo on women's basketball. We want to help tell the stories that deserve to be told,\" said Arianna Orpello, GEICO's Chief Marketing Officer. \"Phee is one of the most accomplished players in the game, but she's also a founder, a mom and someone helping shape where the sport goes next. What makes her such a natural partner for GEICO is the people around her, the community she's built and the impact she has far beyond the court. That's what we're excited to be part of.\"    \"It means so much to have GEICO show up for both the Lynx and me,\" said Collier. \"This game has never been about one person. It's always been about the people who help you get there. My family, my teammates and the community that's supported me throughout my career are a huge part of my story. I'm excited to partner with a brand that understands that and wants to tell those stories alongside me.\"    The partnership will come to life across social content, community activations, and appearances throughout the 2026 WNBA playoffs, offseason and Unrivaled season three — carrying fans into the moments they rarely get to see.   Two thoughts....   A. Phee's individual partnership comes on the heels of Geico's partnership with the Lynx. I don't know about y'all, but that sounds like a long-term investment into a shared partnership.   B. Why is Phee announcing this partnership with the playoffs right around the corner? Does she need money? Will she handle this distraction?   (/s)       submitted by     /u/ElvisTheBoyCat     to     r/MinnesotaLynx       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MinnesotaLynx/comments/1wmu9f9/geico_partners_with_wnba_star_and_unrivaled/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T00:20:30Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T00:20:48.445Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1c9e0660c60840399155e"
+    },
+    "message_id": "reddit_t3_1wmu9em",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ProjectPan",
+    "username": "NataliaReads",
+    "title": "Summer Pans Empties ki",
+    "text": "Summer Pans Empties ki\n\nHappy Equinox! I finished quite a few items today - on the last day of Summer. So thought this would be a good time to get my recycling out and look through all the things I panned this summer.    💖= loved, repurchased or will 👍= liked, will not repurchase 👎= disliked, will not repurchase ❌= decluttered, gave up went bad 👍😭= discontinued, from my backups and can no longer repurchase.   Some of the liked products I could see myself repurchasing but have others I am currently using in those categories and don’t need to rebuy now.    Of specific note: it felt really good to finish the whole Nuxe Neroli gift set over the last couple of weeks. I had been “saving it” (including the candle) and decided to use it all up already. I liked everything. Very beautiful spicy neroli scent. Sadly, the perfume doesn’t linger long. The body oil is lovely and was great in my hair too. Not repurchasing, but might one day get the oil again. But have others to use for now.    The Haru Haru Wonder Black Rice Eye Cream made my eyes more wrinkly. It also did not work on my face since it made me break out, so I had to use it on the back of my hands.    What has been working well for my eyes is the LRP HyaluB5 anti-wrinkle cream. It’s been repurchased and I will continue using.    For reference: I have oily, acne-prone, PIH susceptible skin with sensitivity.    Feel free to ask questions about any of these.        submitted by     /u/NataliaReads     to     r/ProjectPan       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ProjectPan/comments/1wmu9em/summer_pans_empties_ki/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T00:20:29Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T00:20:48.649Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1c9e0660c60840399155f"
+    },
+    "message_id": "reddit_t3_1wmu9dy",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "_heavymetalhead_",
+    "title": "[Sticker Giveaway] Enter to win a 5 Stars Gus Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 5 Stars Gus Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/_heavymetalhead_     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wmu9dy/sticker_giveaway_enter_to_win_a_5_stars_gus/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T00:20:28Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T00:20:48.852Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1c9e1660c608403991560"
+    },
+    "message_id": "reddit_t3_1wmu9du",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "LightHouseofTruth",
+    "username": "Wild_Extra_Dip",
+    "title": "Refuting the Common Saying \"Are you more knowledgeable than so and so?!\"",
+    "text": "Refuting the Common Saying \"Are you more knowledgeable than so and so?!\"\n\nبسم الله والحمد لله و الصلاة والسلام على رسول الله و على آله و صحبه ومن اهتدى بهداه   (Repost)    Ignorant laymen and weak faith Muslims who are arguing whilst having no grounds in the argument that they argue for, especially the muqallida (blind followers) have a be all-end all argument that goes \"Sheikh so-and-so said such-and-such, do you know more than him?!\"   As if an individual is an argument, or that certain individuals cannot give arguments because the worth of their arguments depends on their own personal worth, or that their arguments' power rests solely on whether they have been praised by other scholars or not or whether they have put in effort in knowledge or not, which is not true, and Allaah in the Quraan said:    لَّيْسَ عَلَى الضُّعَفَاءِ وَلَا عَلَى الْمَرْضَىٰ وَلَا عَلَى الَّذِينَ لَا يَجِدُونَ مَا يُنفِقُونَ حَرَجٌ إِذَا نَصَحُوا لِلَّهِ وَرَسُولِهِ ۚ مَا عَلَى الْمُحْسِنِينَ مِن سَبِيلٍ ۚ وَاللَّهُ غَفُورٌ رَّحِيمٌ \"   \"There is not upon the weak or upon the ill or upon those who do not find anything to spend any discomfort when they are sincere to Allah and His Messenger. There is not upon the doers of good any cause [for blame]. And Allah is Forgiving and Merciful.\" At-Tawba 91 translation of the meaning   At-Tabari said, explaining this aya: Allaah the most glorious said: There is no prohibition upon the disabled or those incapacitated from travelling and fighting, or upon the ill, or upon the ones who cannot find money to afford what makes them reach their destination of fighting, there is no sin upon them if they advise people for the sake of Allaah and His messenger while they are absent from jihad with the messenger of Allaah peace and blessings upon him.   He then proceeds to mention the stories of two companions who came to the prophet peace and blessings upon him and wanted him to give them money to afford what makes them travel but they could not which, to the context, means there'd be no problem if those that could not fight, would advise people in the religion.   Bukhari and Muslim narrated that the messenger of Allaah peace and blessings upon him prayed Asr and prayed only two rakaas, the companion Thul Yadain may Allaah be pleased with him said: \"Have you shortened prayer, messenger of Allaah, or have you forgotten?\"   The messenger of Allaah peace and blessings upon him said: \" Is Thul Yadain correct? \" meaning: That the prophet peace and blessings upon him only prayed two rakaas shortening the prayer, and the entirety of the companions said \"Yes\" so the messenger of Allaah peace and blessings upon him continued the salah and performed the prostration of forgetfulness [ https://sunnah.com/bukhari:1228  ]   Thul Yadain may Allaah be pleased with him is a companion and he has all the virtues of the companions which means he's better than any Muslim that is not a companion but, he said this in the presence of Abu Bakr and Umar and possibly Uthman may Allaah be pleased with them who are the best Muslims to have ever lived who are infinitely more knowledgeable but most importantly, the messenger of Allaah peace and blessings upon him knew most, yet Allaah inspired him to forget so that we learn the prostration of forgetfulness, and Allaah inspired this Muslim who is not as good or as knowledgeable as the others, to be the one to remind him.   The virtue for Thul Yadain may Allaah be pleased with him here does not mean that he is better than the messenger of Allaah peace and blessings upon him, but means that the one who is better with knowledge can sometimes miss things that an overall inferior Muslim would know.   But when people, such as Sufis, are told that someone made a mistake, they will be told to remain silent because the sheikh is the best, treating him as if he's infallible!   Sheikh al Islam Ibn Taymiyyah may Allaah have mercy on him said:     And when it is said to this seeker of guidance and one seeking the right way, “Are you more knowledgeable, or is such-and-such an imam?” this is a false objection. For that imam was contradicted on this issue by another imam who was his peer. I do not claim to be more knowledgeable than either of them. Rather, the relationship of these scholars to the imams is like the relationship of Abu Bakr, ʿUmar, ʿUthmaan, ʿAli, Ibn Masʿood, Ubayy, Muʿaadh, and others like them to the imams and others.   Just as these Companions were peers of one another in matters where they differed, whenever they disputed over something, they referred the matter in which they differed back to Allaah and the Messenger, even though one of them might have been more knowledgeable than the others in other matters, so too are the areas of disagreement among the imams.   People have, for example, abandoned the opinion of ʿUmar and Ibn Masʿood regarding the tayammum of a person in a state of major ritual impurity, and adopted the opinion of someone below them in rank, such as Abu Moosaa al-Ashʿaree and others, when he produced evidence from the Book and the Sunnah.   Likewise, they abandoned ʿUmar's opinion concerning the blood-money for the fingers and adopted the opinion of Muʿaawiyah because he had with him a Sunnah according to which the Prophet ﷺ said: “These and these are equal.”   Some people used to debate Ibn ʿAbbaas concerning mutʿah, saying to him, “Abu Bakr and ʿUmar said [such-and-such].” Ibn ʿAbbaas replied: “Stones from the heavens may soon descend upon you! I say, ‘The Messenger of Allaah ﷺ said,’ while you say, ‘Abu Bakr and ʿUmar said’?”   Likewise, Ibn ʿUmar, when they asked him about it, instructed them to practice it. They objected to this by citing ʿUmar’s statement. So it became clear to them that ʿUmar had not rejected what they were claiming. Yet they persisted in arguing with him, so he said to them:   “Is the command of the Messenger of Allaah ﷺ more deserving of being followed, or the command of ʿUmar?”   This is despite people’s knowledge that Abu Bakr and ʿUmar were more knowledgeable than those who were above Ibn ʿUmar and Ibn ʿAbbaas in rank.   If this door were opened, it would necessarily lead to turning away from the command of Allaah and His Messenger, and every imam would remain among his followers in the position of the Prophet ﷺ among his nation. This would be an alteration of the religion resembling what Allaah criticized the Christians for when He said:   “They have taken their rabbis and their monks as lords besides Allaah, and the Messiah, son of Maryam. Yet they were commanded only to worship one God; there is no deity worthy of worship except Him. Glory be to Him above what they associate with Him.”   And Allaah, Glorified and Exalted is He, knows best. And all praise belongs to Allaah alone.      End quote from Ibn Taymiyyah's fatawa vol. 20 p.215     و صل اللهم وسلم و بارك على نبينا محمد وعلى آله و صحبه و سلم        submitted by     /u/Wild_Extra_Dip     to     r/LightHouseofTruth       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LightHouseofTruth/comments/1wmu9du/refuting_the_common_saying_are_you_more/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T00:20:27Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T00:20:49.056Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1c9e1660c608403991562"
+    },
+    "message_id": "reddit_t3_1wmu9cr",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "vacation",

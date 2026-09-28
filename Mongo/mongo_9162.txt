@@ -1,0 +1,416 @@
+    "search_keyword": "dermatologist",
+    "platform": "reddit",
+    "subreddit": "tattooadvice",
+    "username": "Carmy244",
+    "title": "Deep-looking grooves in healing tattoo - likely to heal normally or need a touch-up?",
+    "text": "Deep-looking grooves in healing tattoo - likely to heal normally or need a touch-up?\n\nI got this tattoo about a week ago and developed contact dermatitis, most likely from the adhesive film. A dermatologist diagnosed it and I’m now treating it with Triderm.   Most of the tattoo is peeling normally, but the lower section was the most painful area and now has several visible  grooves/depressions that cut through the design . They don’t look like raised scabs - the skin actually seems lower in those spots.   For anyone who has had something similar:  can these areas flatten out and keep the pigment once fully healed, or does this usually mean that part of the tattoo will need a touch-up?        submitted by     /u/Carmy244     to     r/tattooadvice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/tattooadvice/comments/1wizjtb/deeplooking_grooves_in_healing_tattoo_likely_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:56:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:56:15.208Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aac1bafaeeb96c1c63b8ec3"
+    },
+    "message_id": "reddit_t3_1wizjt4",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "LocalLLM",
+    "username": "devil_ozz",
+    "title": "How would you spend $1.5K–$4K on a portable local AI workstation? Mac unified memory vs NVIDIA/CUDA",
+    "text": "How would you spend $1.5K–$4K on a portable local AI workstation? Mac unified memory vs NVIDIA/CUDA\n\nHELP MEEEE.    I made the mistake of taking this way too seriously.   What started as:     “I need a better laptop.”     somehow turned into me voluntarily beating myself over the head with VRAM limits, CUDA, unified memory, ARM, offloading, and whatever new technical problem I discover every time I think I finally understand the last one.   So… below is where I currently stand.    Warning:  I asked way too many questions, and there’s a very real chance I’m about to make that your problem too.    TL;DR:  Budget is roughly  $1.5k–4k . I need one portable machine that can be my main development workstation for the next few years, with heavy local AI/R&D use. I’m stuck between  Apple’s huge unified-memory pool + battery/performance efficiency  and  Windows/NVIDIA/CUDA + the ecosystem I already live in .   Basically, I’m trying to figure out which architecture gives me the most room to keep going deeper before the hardware starts fighting me.   I’m about to make a  pretty stupidly large jump from my current workstation , and instead of spending $1.5k–4k based on benchmark graphs, spec sheets, and some YouTuber yelling “INSANE PERFORMANCE,” I figured I’d ask the people who actually abuse local models.   My current machine was never bought with AI development in mind. (Its 10yrs+)   It has survived considerably more experimentation than it probably consented to, but I’m reaching the point where:    can technically run this and explode    and    can actually build with this    are becoming very different statements.   So the next machine is going to be chosen  specifically around local AI + development + R&D .   And knowing myself, saying:     “I’ll probably just run a model or two.”     is complete bullshit.   If something interests me, I tend to keep pulling on the thread until suddenly I have:    3 terminals 2 models - 11 parrarel agents Docker doing Docker things ( i still dont understand it ) a VM PyTorch eating memory some random GitHub repo compiling something random rendering on the side a test harness 236 browser tabs and absolutely no idea where my Ram is gone And why am bottlenecked.     That is probably a more useful benchmark for me than Cinebench.   I’m mostly interested in  models interacting with systems :   agents, harnesses, orchestration, evaluation, local services, RAG, tool use, fine-tuning eventually, security/sandboxing, and general systems/R&D work.   Less:    generate me a picture    More:    model -> tool -> system ->  BSoD -> why?    Some of my own personal work is also pretty Windows-native and can involve local services, IPC, subprocesses, VMs, networking, security testing, containers, etc.   So basically:   I want a portable laboratory.   The annoying part: it has to be a laptop   Long term, I absolutely want a proper static box.   Something like:    laptop | | SSH / Tailscale / remote dev v big stupid GPU machine     Leave it running 24/7 somewhere and let the laptop become the cockpit.   That makes complete sense to me.    Later.    Right now I don’t have a permanent place where I want to leave my main compute, and connectivity where I am occasionally behaves like TCP/IP is an optional feature. Basically a DLC   I really don’t want:    me -> questionable internet -> home server -> questionable internet -> me    to sit in the critical path of my actual development environment.   So for now, the compute needs to physically travel with me.   The best description I have is:   I want a desktop with hinges.   Weight?    Huge charger?    Fans producing measurable thrust?    Am used to helicopter as a laptop , so all those are fine.   I care much more about having enough headroom to keep experimenting without the hardware becoming the reason I stop.   And then Apple Silicon ruined what should have been an easy decision   I’ve basically always been a  Windows person .   My workflow is Windows.   A lot of the software I use is Windows-first, some of it Windows-only, and plenty of random open-source stuff seems to assume some combination of:    Windows / Linux / x86 / NVIDIA / CUDA    So moving to macOS wouldn’t just be:     “relearn a decade of muscle memory because Apple had other ideas”     It would mean moving my  entire development environment onto an OS I’ve never used .   That’s not nothing.   But Apple unified memory is extremely difficult to ignore.   If I can get 64/96/128 GB of memory available to the GPU, suddenly models that are completely unrealistic on a normal laptop GPU become possible.   And I don’t necessarily care if a giant model gives me ridiculous tokens/sec.   I’d rather have:    big model = slower but actually runs    than:    big model = Hardware vetoed.     For smaller models, though, I  do  care about speed.   Especially if I’m doing something stupid like:    Model A -> planner Model B -> executor Model C -> evaluator embedding model database tool server actual application     all at once.   Which leads to one of the things I’m trying to understand:    Does unified memory actually help this kind of messy multi-model workload as much as it sounds like it should?    Because presumably the model weights aren’t the whole story.   There’s KV cache, context, runtime overhead, multiple processes, memory bandwidth, etc.   So is 128 GB really one giant playground?   Or does some other bottleneck show up and tell me to calm down long before I fill it?   My monkey-brain problem with unified memory   Say I’m comparing something conceptually like:    Windows laptop: 128 GB RAM 24 GB VRAM     vs    Mac: 128 GB unified memory     My monkey brain says:      128 > 24. Mac wins. Mathematics achieved. Logically valid no?      Obviously reality is probably hiding behind a bush with a baseball bat.   Like it sounds soo good on paper that it makes me question it.   The NVIDIA GPU has proper dedicated VRAM.   The Mac has a huge shared memory pool.   So where does  capacity stop mattering more than bandwidth/compute ?   If a model needs 40–50 GB, is the Mac simply the more useful machine because the whole thing fits?   Or can the NVIDIA machine offload the rest into system RAM and still be perfectly usable?   At what point does offloading go from:    a bit slower    to:    I could have learned pottery between tokens ?   That difference matters a lot to me because I don’t necessarily need every workload to be blazing fast.   I need it to be  usable .   Then there’s CUDA   This is probably the biggest thing pulling me back toward Windows/NVIDIA.   I’ve already played around with  PyTorch + CUDA  on my current machine.   Not deeply, ( device gave me BSOD like no tomorrow) but enough to notice that a worrying amount of AI research starts with:    pip install ...     and somewhere in the dependency chain quietly means:    requires NVIDIA because of course it does    NVIDIA seems to have a gravitational field around ML research.   And I’m worried that the deeper I go, CUDA becomes  more important , not less.   Apple has Metal, MPS, MLX, llama.cpp support, and some genuinely nice AI/dev tooling.   But how far does that get you once you leave the polished stuff?   How often do you find an interesting repo and discover that the developer’s definition of “cross-platform” was:     “Ubuntu + RTX 4090 works on my machine.”     Because that is exactly the type of repo I tend to download. ( and some rather shady ones)   Windows + NVIDIA still makes the most intuitive sense to me   The obvious route is basically:    buy the most unreasonable workstation/gaming laptop I can justify.    Something like:    high-end CPU high-end NVIDIA GPU 64–128 GB RAM multiple NVMe drives CUDA WSL2     I keep:     Windows   CUDA   NVIDIA tooling   x86 compatibility   my existing applications   VMs/security tooling   Linux through WSL when I need it   gaming as a side effect     And if I download:     DefinitelyNotMalware.zip     from GitHub at 3 AM, there’s a decent chance the developer was also on NVIDIA.   The problem is still:   VRAM.   System RAM can become ridiculous.   Laptop VRAM… not so much.   And unlike RAM/storage, I can’t exactly open the laptop two years later and say:     “No worries, I’ll just download another 24 GB of VRAM.”     So how limiting is ~24 GB VRAM  in practice  once you stop doing single-model inference?   Does 128 GB system RAM meaningfully soften that limitation?   Or is that mostly cope once the workloads get heavier?   Battery is the other thing messing with this decision   The important part isn’t how long it lasts unplugged. It’s how much of the workstation survives unplugging it   I actually care about  what machine I have when the charger comes out .   A lot of high-end Windows laptops seem to become two different computers:    plugged in: workstation unplugged: workstationn't     And I understand why.   A mobile NVIDIA GPU pulling serious power from a battery is basically asking a chemical rectangle to become a power station.   But this machine is supposed to travel with me.   I don't need to run a 70B model at full tilt for six hours unplugged.   That would be stupid.   What I  do  want is to be able to unplug, move somewhere, keep coding, compile, run smaller local models, test agents, use an IDE, maybe run a VM, and  not feel like someone secretly replaced my workstation with the demo version .   This is one of the strongest arguments for Apple Silicon to me.   The Mac seems much closer to:    same computer, less runtime    rather than:    different performance class entirely    when unplugged.   So I’m genuinely curious:    How bad is the performance drop on modern high-end Windows/NVIDIA laptops when running on battery?    Can you configure them intelligently enough that you still get useful local inference and development performance?   Or does GPU-heavy work basically mean:     find wall socket or perish     And on the Mac side:    How meaningful is the efficiency advantage once you're actually hammering local models?    I know I'm not getting 15 hours of inference.   Physics still exists.   But if both machines are running a smaller model + IDE + browser + local services, is Apple Silicon still dramatically better?   And more importantly:    does the Mac maintain enough performance unplugged that it changes how you actually use the machine?    Because that matters to me more than “18-hour battery life” marketing.   WSL2 is another thing I’m curious about   One reason Windows appeals to me is that I can theoretically have:    Windows host | +-- native Windows apps +-- WSL2 / Linux +-- CUDA +-- Docker +-- VMs +-- Android emulator / ADB     Which sounds like an excellent playground.   But is it actually?   For people using it heavily:   Does WSL2 just fade into the background these days?   Or do you eventually start fighting networking, filesystem performance, GPU/container weirdness, USB/device access, ports, permissions, and all the other little things that turn a five-minute job into a three-hour philosophical crisis?   I could easily see myself running something like:    Windows host Kali VM Ubuntu/WSL Docker local LLM my application test harness network monitoring     Maybe not all simultaneously.    Although knowing me, probably all simultaneously.     So I care quite a bit about how gracefully the machine handles a messy development environment, not just raw inference.   And then NVIDIA made this even more confusing with DGX Spark   Spark keeps sitting in the back of my head.   The headline is basically:    128 GB coherent memory + NVIDIA + CUDA + GB10     And my monkey brain immediately goes:      Mac memory + NVIDIA ecosystem = solved???    128 GB shared memory    and    CUDA… what’s the catch?      Which is usually a sign that I’m missing something important.   It’s ARM.   It’s not a laptop.   It’s obviously a different class of machine.   And whenever a spec sheet looks too perfect, I assume reality is hiding behind another bush with another baseball bat.   So I’m curious:    What is Spark actually like for someone doing local development?    Is it a workstation?   A dev node?   A great second machine?   A weird niche box?   Something people love because it genuinely solves the memory problem?   Or something where  128 GB  is doing most of the seduction?   Long term, I could absolutely imagine something like Spark or a proper GPU server becoming my static node.   I’m just not convinced it solves my problem  today .   What I’m actually trying to understand   I’m not really looking for:     “Mac good”     or     “buy highest RTX number”     I’m trying to understand:   Where does each architecture start fighting me?   Because every machine looks great when the test is:    load model send prompt count tokens/sec     That probably won’t be my machine after six months.   Mine will probably look more like:    LLM another LLM database container VM IDE compiler test harness background services ??? RAM evaporated     So for people here who actually build around local models:      How much would you value CUDA over huge unified memory?     How painful does ~24 GB VRAM become once you start doing more than one-model-at-a-time inference?     How practical is CPU/GPU offloading today?     Does 64–128 GB unified memory genuinely expand what you can experiment with, or do bandwidth/compute limits catch up quickly?     How annoying is Apple Silicon once you start touching obscure research repos, x86 tooling, security software, VMs, etc.?     Would you trust WSL2 as your main Linux/AI environment for the next few years?     For several smaller models running together, what usually becomes the actual bottleneck: VRAM, bandwidth, compute, KV cache, or software?     How usable are high-end Windows AI/workstation laptops when unplugged?     Does Apple Silicon’s battery/performance behavior actually matter as much in real local-LLM development as it looks like it does on paper?     Is DGX Spark genuinely interesting for a future home-lab setup, or am I being hypnotized by the   128 GB   number?      And probably the biggest one:   What don’t I know that I don’t know yet?   I’m early enough in the local-LLM hardware rabbit hole that I can see the obvious tradeoffs.   But I’m almost certain there’s something that someone who has been doing this for years will read and immediately think:     “Oh, this guy is going to discover  X  the hard way.”      Tell me what X is.    I’ll probably build a proper stationary server later if work starts producing enough money to fund increasingly irresponsible GPU purchases.   For now, I need  one machine I can throw in a bag, open somewhere, and have the whole lab sitting in front of me.    Not necessarily the machine that wins one benchmark.   I want the one with the  largest useful experimentation envelope before I start hitting walls .   Budget:  $1.5k–4k.    What would you optimize for?       submitted by     /u/devil_ozz     to     r/LocalLLM       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LocalLLM/comments/1wizjt4/how_would_you_spend_15k4k_on_a_portable_local_ai/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:56:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:56:15.506Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aac1bb0aeeb96c1c63b8ec4"
+    },
+    "message_id": "reddit_t3_1wizjql",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "legaladvicecanada",
+    "username": "PsychologyAble4744",
+    "title": "when lawyers break bad in BC -- and BC could not care less",
+    "text": "when lawyers break bad in BC -- and BC could not care less\n\nIf you were to dream up the worst thing an institutional lawyer could possibly do administratively to ruin the reputation of their unnatural employer, it would be to think they had the authority to falsify their organization's live documents \"to save time.\"    Hubert Lai's wanton disregard of maintaining the integrity of UBC's original documents meant an incompetent lawyer deleted any mention of student harassment protections because of his pattern of behaviour. His office would make substantive edits to both the corporate formality and its procedure on his own accord, then present the document as a version that only needed procedural or housekeeping changes.    One of those changes unlawfully changed the institutional definition of  harassment  to go from negative action against individuals and recognized groups for no bona fide reason to negative action against protected characteristics.    Then, his administration operated as though harassing students for institutionally protected activity was lawful. But that's not even the worst of his legal malpractice. When I filed a complaint with the law society, he falsified the definition of  misconduct  to go from meaning  an unjustified violation of an employment expectation, professional standards or incompetence  to meaning  whatever the administration believes is worth the consequences.     Hubert Lai's actions were unbelieveable, but that does not make them impossible to prove. What made them impossible to prove was a Ministry of Post Secondary Education that had never taken a complaint that a public university has violated the University Act before, so it wasn't going to start now, and that its Education Quality Assurance Policy is Someone Else's Problem (but the Ministry doesn't know or care who.)    A law society believed if it didn't have permission to take undisputable \"evidence\" in single party communication without hearing from both sides, it could grant itself the retroactive right to do so by changing its code of conduct.    And Jay Chalke, the Ombudsperson, believed his office's \"standard of care\" could be unconstitutional and illegal.    UBC's administration operate illegally. The Supreme Court of Canada determined in their Communities Economic Development Fund decision that statutory authorities could not be operated ultra vires. In Blencoe, they stated statutory authorities must comply with the Charter.    Denying UBC members their constitutionally and institutionally protected right to due process is an established administratie pattern of behaviour. But as long as multiple \"regulatory\" bodies believed an unlawful mode of operation was to contact the rogue administration and believe their version of events as absolute fact, UBC and the Ombuds Office of British Columbia operated above the law with the Ministries of Justice and Post Secondary Education's blessing.    I don't want to get into the argument that corporate policies aren't legally binding. The Supreme Court says that they are legitimate expectations. There may be a justified reason why legitimate expectations are not met, but a senior administration refusing to take a complaint regarding the clear cause for termination a senior member of its administration committed is not one of them.    Without a higher court to order deputy ministers to advise their ministers to construe statutes as speaking in compliance with the Interpretation Act, what forces the government to comply with public law, not just the public law UBC's administration and Jay Chalke has not violated?        submitted by     /u/PsychologyAble4744     to     r/legaladvicecanada       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/legaladvicecanada/comments/1wizjql/when_lawyers_break_bad_in_bc_and_bc_could_not/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:55:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:56:16.115Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aac1be6660c60840397347c"
+    },
+    "message_id": "reddit_t3_1wizknm",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "pestcontrol",
+    "username": "Cold_Ad_8391",
+    "title": "Advice",
+    "text": "Advice\n\nPleas tell me your advice about short and long-term affects (on a human) of 6 + liters of various types of insecticide, plus constant concoction of bleach or Lysol mixed with diamacious Earth which is then coated/mopped to completely cover the floor area...oh and lines and piles of it everywhere too. This has all been going on for several months and continues to happen in 400 sq ft apartment. The insecticide gets applied often and bleach, d.e., whatever other chemicals are used on a daily basis. I believe that environment to be extremely toxic but person doing it says it's safe or to wear a mask (the flimsy general kind you buy a box of for 5 bucks). This person regularly floods their apartment from taps left running and believes the poison factor from insecticides is then washed away so reapplication is required. It's absolutely nuts. I need input. I won't even get into the fact that an infestation never really existed in the first place...this seems like an impossible situation.       submitted by     /u/Cold_Ad_8391     to     r/pestcontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pestcontrol/comments/1wizknm/advice/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:56:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:57:10.258Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1be6660c60840397347d"
+    },
+    "message_id": "reddit_t3_1wizkng",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AI_Agents",
+    "username": "AlternativeLimit8551",
+    "title": "Agents say \"done\" when code is missing. Here's our fix",
+    "text": "Agents say \"done\" when code is missing. Here's our fix\n\nA couple of weeks ago, I was coding with Claude Code and other AI IDEs and got completely fed up. The agent kept declaring \"task complete\" with total confidence, but when I looked under the hood, backend routes were missing, UI buttons were unwired, or it was acting like a hero for fixing a bug it created 20 minutes earlier.   I posted a raw rant about it on Reddit expecting maybe two upvotes. Instead, it blew up to over 21K views.   The comments showed me I wasn't crazy everyone from weekend vibe coders to experienced prompt engineers was burning hours manually checking diffs because agents were basically grading their own homework.   Instead of chasing outreach volume or spamming link blasts, I just started having deep 1-on-1 conversations in the comments and DMs with the devs who replied. We talked through their actual workflows, how they manually inspect commits, and what workarounds they'd tried building.   Those deep chats shaped everything for us. Instead of guessing, we built a lightweight local CLI (malveon check) that auto-detects your plan and runs deterministic build, lint, and test commands before git commit. If a check can't be proven, it marks it as NO PROOF instead of letting an LLM guess a pass.   We just released the v0.1.0 terminal build for free beta testing.       submitted by     /u/AlternativeLimit8551     to     r/AI_Agents       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AI_Agents/comments/1wizkng/agents_say_done_when_code_is_missing_heres_our_fix/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:56:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:57:10.470Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1be6660c60840397347f"
+    },
+    "message_id": "reddit_t3_1wizknf",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "Fashion_Design",
+    "username": "Aggravating-Monk2352",
+    "title": "Big leather bag",
+    "text": "Big leather bag\n\nHi everyone! 🤍   I’m on the hunt for a big leather bag that could work both for the airport/travel and everyday use — but still needs to be really spacious and fit a lot.   I’m trying not to break the bank, so ideally I’d like to stay around €350 or less.   For inspiration, I absolutely love the size and shape of the Marge Sherwood Grandma XL and the Balenciaga Rodeo XL. I’m looking for something with a similar oversized vibe, but with good-quality leather.   Please help me find some alternatives!        submitted by     /u/Aggravating-Monk2352     to     r/Fashion_Design       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Fashion_Design/comments/1wizknf/big_leather_bag/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:56:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:57:10.889Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1be7660c608403973480"
+    },
+    "message_id": "reddit_t3_1wizkna",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "whatcarshouldIbuy",
+    "username": "2ek7g5d4",
+    "title": "Large SUV + Towing",
+    "text": "Large SUV + Towing\n\nLooking for a used vehicle I can replace my Nissan Xterra with. 2 main issues : space and towing capacity. Need a 3rd row for lots of space for full family of 5 and a dog, plus luggage, etc. also need more towing capacity. Have to rent a truck to tow my tractor in for service, getting things for our property on my 10k trailer is kind of a joke in my 5000lb tow rated Xterra. (Grabbed a pallet of cinder block recently, wasn't a fun experience).   I prefer a manual transmission as that's what I have in all of my vehicles but I do see the benefit of an auto when towing and I basically have no choice regardless.    My first inclination was a 7.3 Excursion but after 8 months of watching and looking, I'm not so inclined. What's truly a good maintained vehicle with some miles people go crazy on at $30k +.    My friends say I'm crazy and to just get a truck and a suburban or something.    Never really been a truck person, also considering the v-10 excursion, or big block 3/4 ton GMT800's but those also are hard to come by, even more so at a reasonable price    What does Reddit say?        submitted by     /u/2ek7g5d4     to     r/whatcarshouldIbuy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/whatcarshouldIbuy/comments/1wizkna/large_suv_towing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:56:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:57:11.102Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1be7660c608403973482"
+    },
+    "message_id": "reddit_t3_1wizkn4",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PreguntasReddit",
+    "username": "Nanihot8",
+    "title": "Si te dieran la oportunidad de saber la verdad absoluta sobre UN solo misterio sin resolver, ¿cuál elegirías?",
+    "text": "Si te dieran la oportunidad de saber la verdad absoluta sobre UN solo misterio sin resolver, ¿cuál elegirías?\n\nsubmitted by     /u/Nanihot8     to     r/PreguntasReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PreguntasReddit/comments/1wizkn4/si_te_dieran_la_oportunidad_de_saber_la_verdad/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:56:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:57:11.523Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1be7660c608403973483"
+    },
+    "message_id": "reddit_t3_1wizkn3",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "TravelManali",
+    "username": "Top_Conversation_674",
+    "title": "Is it safe to visit manali in first week of october",
+    "text": "Is it safe to visit manali in first week of october\n\nHi me and my cousins are planning to visit manali on the first week of october, has the monsoon ended and is safe to visit at that time?       submitted by     /u/Top_Conversation_674     to     r/TravelManali       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TravelManali/comments/1wizkn3/is_it_safe_to_visit_manali_in_first_week_of/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:56:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:57:11.734Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1be7660c608403973484"
+    },
+    "message_id": "reddit_t3_1wizkmt",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "Metroid",
+    "username": "IkeRadiantHero",
+    "title": "Bruh…😭 Are you serious right now? Why are people so greedy, this is the best selling Metroid game ffs 😭",
+    "text": "Bruh…😭 Are you serious right now? Why are people so greedy, this is the best selling Metroid game ffs 😭\n\nsubmitted by     /u/IkeRadiantHero     to     r/Metroid       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Metroid/comments/1wizkmt/bruh_are_you_serious_right_now_why_are_people_so/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:56:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:57:11.946Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1be8660c608403973485"
+    },
+    "message_id": "reddit_t3_1wizkmq",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "FourEmergencyExits",
+    "title": "What is your most disappointing example of a friend not showing up for you?",
+    "text": "What is your most disappointing example of a friend not showing up for you?\n\nsubmitted by     /u/FourEmergencyExits     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wizkmq/what_is_your_most_disappointing_example_of_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:56:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:57:12.157Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1be8660c608403973486"
+    },
+    "message_id": "reddit_t3_1wizkm8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "Enough_Obligation574",
+    "title": "Visit Enough_Obligation574's farm!",
+    "text": "Visit Enough_Obligation574's farm!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Enough_Obligation574     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wizkm8/visit_enough_obligation574s_farm/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:56:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:57:12.368Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1be8660c608403973487"
+    },
+    "message_id": "reddit_t3_1wizkm5",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "traveltrailers",
+    "username": "findmyrv",
+    "title": "Looking for feedback on the Apex Nano (2023-2027)",
+    "text": "Looking for feedback on the Apex Nano (2023-2027)\n\nsubmitted by     /u/findmyrv     to     r/traveltrailers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/traveltrailers/comments/1wizkm5/looking_for_feedback_on_the_apex_nano_20232027/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:56:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:57:12.579Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1be8660c608403973488"
+    },
+    "message_id": "reddit_t3_1wizkky",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "2011",
+    "username": "Captbluewater93",
+    "title": "MPA vs. RCD: which is the best “budget” 2011s?",
+    "text": "MPA vs. RCD: which is the best “budget” 2011s?\n\nTitle says it all. I always see discussion going back and forth between MPA and RCD, but it’s never been clear which one is better and for what shooter is each one better for.    Thus, let’s hear it! Give us your thoughts!        submitted by     /u/Captbluewater93     to     r/2011       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/2011/comments/1wizkky/mpa_vs_rcd_which_is_the_best_budget_2011s/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:56:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:57:12.796Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1be9660c608403973489"
+    },
+    "message_id": "reddit_t3_1wizkku",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Gemstones",
+    "username": "wayfarer110",
+    "title": "Where to buy real gemstones in England?",
+    "text": "Where to buy real gemstones in England?\n\nHey all,    I live in England and I’m looking for some moonstone jewellery and loose pieces, but I don’t actually know what’s genuine and what’s fake. Where do you buy your genuine gemstones from?    Ideally I’d love to visit a shop, but I’m also open to online accredited shops.        submitted by     /u/wayfarer110     to     r/Gemstones       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Gemstones/comments/1wizkku/where_to_buy_real_gemstones_in_england/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:56:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:57:13.008Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1be9660c60840397348a"
+    },
+    "message_id": "reddit_t3_1wizkkr",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "Starcitizen_trades",
+    "username": "RUMCAJSI",
+    "title": "[WTS]400$ store credit for 240$ (60%)",
+    "text": "[WTS]400$ store credit for 240$ (60%)\n\nSelling 400$ of store credit through PayPal. its in form of aurora upgraded to hercules C2       submitted by     /u/RUMCAJSI     to     r/Starcitizen_trades       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Starcitizen_trades/comments/1wizkkr/wts400_store_credit_for_240_60/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:56:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:57:13.219Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1be9660c60840397348b"
+    },
+    "message_id": "reddit_t3_1wizkjs",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "hardwareswap",
+    "username": "cK_Silent",
+    "title": "[USA-PA][H] ASUS ROG Xbox Ally X, Bulwark Dock, Case + Extras [W] PayPal",
+    "text": "[USA-PA][H] ASUS ROG Xbox Ally X, Bulwark Dock, Case + Extras [W] PayPal\n\nSelling my ROG Xbox Ally X in good condition. Includes the original box, charger, day 1 installed screen protector, NIB MagGlass Matte protector, dbrand thumb grips, ASUS bulwark dock and ASUS ROG Xbox Ally premium case. MFG is 12-2025, warranty until 2/11/2027. Ended up using it more for game streaming, so I bought an Odin 2 Portal instead.   $920 shipped CONUS insured via PayPal. Must comment before sending chat request or I will ignore it. Active on  r/GameSale . Let me know if you have any questions!    Video Timestamp / Pictures        submitted by     /u/cK_Silent     to     r/hardwareswap       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hardwareswap/comments/1wizkjs/usapah_asus_rog_xbox_ally_x_bulwark_dock_case/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:56:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:57:13.436Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1be9660c60840397348c"
+    },
+    "message_id": "reddit_t3_1wizkhy",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "ModelCars",
+    "username": "wauna_b5",
+    "title": "Stripes are on! The rally raid mustang is really taking shape",
+    "text": "Stripes are on! The rally raid mustang is really taking shape\n\nsubmitted by     /u/wauna_b5     to     r/ModelCars       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ModelCars/comments/1wizkhy/stripes_are_on_the_rally_raid_mustang_is_really/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T16:56:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T16:57:13.655Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac1be9660c60840397348d"
+    },
+    "message_id": "reddit_t3_1wizkhc",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "bikewrench",
+    "username": "r34dingwhite",
+    "title": "2x10 and front derailleur chain rubbing",

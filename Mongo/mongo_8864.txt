@@ -1,0 +1,416 @@
+    "message_id": "twitter_2099407551699804287",
+    "topic_key": "commercial code review",
+    "search_keyword": "commercial code review",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "DanKornas",
+    "title": "AI code reviews get expensive when your agent has to read the whole repo.\n\nBetter Code Review Graph is a local-first codebase knowledge graph for developers using AI coding clients to review code.\n\nIt helps you give an MCP client precise, diff-scoped context by parsing your codebase into functions, classes, imports, and their relationships.\n\nKey features:\n\n• Structural graph – uses Tree-sitter to map functions, classes, and imports across a codebase\n• Search + call tracing – supports keyword or semantic search plus caller/callee relationship queries\n• Diff-aware review context – detects changed files from git diff and returns structural summaries, impacted nodes, and source snippets\n• Impact analysis – identifies the blast radius of changed files before you review a change\n• Local semantic search – defaults to a local ONNX model registry, with no API key required for the default setup\n\nIt’s open-source under the Apache License 2.0.\n\nLink in the reply 👇",
+    "text": "AI code reviews get expensive when your agent has to read the whole repo.\n\nBetter Code Review Graph is a local-first codebase knowledge graph for developers using AI coding clients to review code.\n\nIt helps you give an MCP client precise, diff-scoped context by parsing your codebase into functions, classes, imports, and their relationships.\n\nKey features:\n\n• Structural graph – uses Tree-sitter to map functions, classes, and imports across a codebase\n• Search + call tracing – supports keyword or semantic search plus caller/callee relationship queries\n• Diff-aware review context – detects changed files from git diff and returns structural summaries, impacted nodes, and source snippets\n• Impact analysis – identifies the blast radius of changed files before you review a change\n• Local semantic search – defaults to a local ONNX model registry, with no API key required for the default setup\n\nIt’s open-source under the Apache License 2.0.\n\nLink in the reply 👇",
+    "post_url": "https://twitter.com/DanKornas/status/2099407551699804287",
+    "score": 12,
+    "num_comments": 3,
+    "created_utc": {
+      "$date": "2026-09-14T07:59:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:12:28.153Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe73c42dd0e95b5bad971"
+    },
+    "message_id": "twitter_2069773963413340297",
+    "topic_key": "commercial code review",
+    "search_keyword": "commercial code review",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "heynavtoor",
+    "title": "A lawyer in Manhattan gets a 500-page contract. Every clause needs to be searchable. By hand: one week.\n\nAn accountant in Chicago gets 200 scanned invoices. Every number needs to land in a spreadsheet. By hand: four days.\n\nA researcher at Stanford has 50 academic papers. Tables, formulas, charts locked inside PDFs. By hand: two weeks.\n\nEvery one of them is losing days of their life to copy-paste.\n\nNow meet MinerU.\n\nA free and open source tool that reads any PDF, Word doc, PowerPoint, Excel sheet, or scanned image. It pulls out the text in reading order. Tables become clean HTML. Equations become LaTeX. Handwriting handled. 109 languages.\n\nYou give it a 200-page PDF. You get clean Markdown back in 90 seconds.\n\nWhat makes it different from every other PDF tool:\n\n- Multi-column layouts. It reads top to bottom within each column. Not left to right across the page. Like a human reads.\n- Scanned documents. OCR built in. Point it at a photo of a printed page from 1995. Get clean text back.\n- Math formulas. LaTeX-quality recognition. Every equation renders correctly.\n- Tables. Merged cells, multi-row headers, tables that span three pages. All preserved.\n- Ten-thousand-page documents. Sliding window processing. No manual splitting.\n- Batch mode. Point it at a folder of 500 documents. Walk away.\n\nThree ways to use it:\n\n- CLI. One command per document.\n- Python SDK. Five lines of code.\n- Web app at https://t.co/AIC2NNey41. Upload, click, download. No install.\n\nPlugs into Claude Desktop, Cursor, Windsurf, LangChain, LlamaIndex, RAGFlow, Dify, and FastGPT. Feed extracted documents straight to your AI agent.\n\nThe story:\n\nThe OpenDataLab team at Shanghai AI Laboratory needed to extract clean text from millions of scientific documents to train a language model. Existing tools failed. They built their own. Then they open sourced it.\n\n68,551 stars. MinerU Open Source License, built on Apache 2.0. Free for personal and commercial use. Three technical reports on arXiv.\n\nAdobe Acrobat Pro charges $239.88 a year. It still loses your tables.\nABBYY FineReader Corporate charges $165 a year. It still cannot do equations.\nMistral OCR charges $2 per 1,000 pages. Your bill never stops.\n\nMinerU costs $0. Runs on your laptop. Your documents never leave your machine.\n\nHere is the wild part.\n\nThe lawyer got her contract back in 4 minutes. Every clause searchable.\nThe accountant fed 200 invoices in. Every number landed in a spreadsheet in 12 minutes.\nThe researcher fed his 50 papers in. He wrote his literature review on a Sunday afternoon.\n\nThe document your company has been processing by hand for years takes MinerU minutes.\n\nYour documents become text. Your text becomes data. Your data becomes answers.\n\nThe week you used to lose to paperwork is back in your hands.",
+    "text": "A lawyer in Manhattan gets a 500-page contract. Every clause needs to be searchable. By hand: one week.\n\nAn accountant in Chicago gets 200 scanned invoices. Every number needs to land in a spreadsheet. By hand: four days.\n\nA researcher at Stanford has 50 academic papers. Tables, formulas, charts locked inside PDFs. By hand: two weeks.\n\nEvery one of them is losing days of their life to copy-paste.\n\nNow meet MinerU.\n\nA free and open source tool that reads any PDF, Word doc, PowerPoint, Excel sheet, or scanned image. It pulls out the text in reading order. Tables become clean HTML. Equations become LaTeX. Handwriting handled. 109 languages.\n\nYou give it a 200-page PDF. You get clean Markdown back in 90 seconds.\n\nWhat makes it different from every other PDF tool:\n\n- Multi-column layouts. It reads top to bottom within each column. Not left to right across the page. Like a human reads.\n- Scanned documents. OCR built in. Point it at a photo of a printed page from 1995. Get clean text back.\n- Math formulas. LaTeX-quality recognition. Every equation renders correctly.\n- Tables. Merged cells, multi-row headers, tables that span three pages. All preserved.\n- Ten-thousand-page documents. Sliding window processing. No manual splitting.\n- Batch mode. Point it at a folder of 500 documents. Walk away.\n\nThree ways to use it:\n\n- CLI. One command per document.\n- Python SDK. Five lines of code.\n- Web app at https://t.co/AIC2NNey41. Upload, click, download. No install.\n\nPlugs into Claude Desktop, Cursor, Windsurf, LangChain, LlamaIndex, RAGFlow, Dify, and FastGPT. Feed extracted documents straight to your AI agent.\n\nThe story:\n\nThe OpenDataLab team at Shanghai AI Laboratory needed to extract clean text from millions of scientific documents to train a language model. Existing tools failed. They built their own. Then they open sourced it.\n\n68,551 stars. MinerU Open Source License, built on Apache 2.0. Free for personal and commercial use. Three technical reports on arXiv.\n\nAdobe Acrobat Pro charges $239.88 a year. It still loses your tables.\nABBYY FineReader Corporate charges $165 a year. It still cannot do equations.\nMistral OCR charges $2 per 1,000 pages. Your bill never stops.\n\nMinerU costs $0. Runs on your laptop. Your documents never leave your machine.\n\nHere is the wild part.\n\nThe lawyer got her contract back in 4 minutes. Every clause searchable.\nThe accountant fed 200 invoices in. Every number landed in a spreadsheet in 12 minutes.\nThe researcher fed his 50 papers in. He wrote his literature review on a Sunday afternoon.\n\nThe document your company has been processing by hand for years takes MinerU minutes.\n\nYour documents become text. Your text becomes data. Your data becomes answers.\n\nThe week you used to lose to paperwork is back in your hands.",
+    "post_url": "https://twitter.com/heynavtoor/status/2069773963413340297",
+    "score": 2058,
+    "num_comments": 44,
+    "created_utc": {
+      "$date": "2026-06-24T13:25:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:12:28.556Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe74342dd0e95b5bad972"
+    },
+    "message_id": "twitter_2100573036738920621",
+    "topic_key": "commercial cybersecurity audit",
+    "search_keyword": "commercial cybersecurity audit",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "CapitalAreaSIM",
+    "title": "Washington's new private offensive cyber program gives vetted vendors an untested criminal shield while leaving substantial residual risk in private hands. Underwrite that exposure before the operating rules arrive in October. https://t.co/ynwuC5x4yI",
+    "text": "Washington's new private offensive cyber program gives vetted vendors an untested criminal shield while leaving substantial residual risk in private hands. Underwrite that exposure before the operating rules arrive in October. https://t.co/ynwuC5x4yI",
+    "post_url": "https://twitter.com/CapitalAreaSIM/status/2100573036738920621",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:10:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:12:35.031Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe74342dd0e95b5bad974"
+    },
+    "message_id": "twitter_2098438287782285639",
+    "topic_key": "commercial cybersecurity audit",
+    "search_keyword": "commercial cybersecurity audit",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "TCCubed",
+    "title": "CEO Scams, 153M Licenses Stolen, and AI-Powered Threats Target Small Business\n\n#CyberSecurity #SmallBusiness #DataBreach #Ransomware #AISecurity\n\nhttps://t.co/TdoDUlKQ4E https://t.co/qTW1p9OiS1",
+    "text": "CEO Scams, 153M Licenses Stolen, and AI-Powered Threats Target Small Business\n\n#CyberSecurity #SmallBusiness #DataBreach #Ransomware #AISecurity\n\nhttps://t.co/TdoDUlKQ4E https://t.co/qTW1p9OiS1",
+    "post_url": "https://twitter.com/TCCubed/status/2098438287782285639",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T15:47:29Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:12:35.430Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe74342dd0e95b5bad975"
+    },
+    "message_id": "twitter_2100568242464932338",
+    "topic_key": "commercial cybersecurity audit",
+    "search_keyword": "commercial cybersecurity audit",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "lnxsec",
+    "title": "A clean SQL audit does not rule out compromise of the database host.\n\nWhen executable code can run inside PostgreSQL itself, incident scope extends beyond schemas, grants, and queries.\n\n**In practical terms, it is a good time to:**\n- inspect preload-library settings for unexpected entries\n- compare PostgreSQL library files with trusted package metadata\n- review host audit logs for activity under the PostgreSQL service account\n\n#IncidentResponse #Linux #PostgreSQL #ThreatDetection https://t.co/3snKZ1B23k",
+    "text": "A clean SQL audit does not rule out compromise of the database host.\n\nWhen executable code can run inside PostgreSQL itself, incident scope extends beyond schemas, grants, and queries.\n\n**In practical terms, it is a good time to:**\n- inspect preload-library settings for unexpected entries\n- compare PostgreSQL library files with trusted package metadata\n- review host audit logs for activity under the PostgreSQL service account\n\n#IncidentResponse #Linux #PostgreSQL #ThreatDetection https://t.co/3snKZ1B23k",
+    "post_url": "https://twitter.com/lnxsec/status/2100568242464932338",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T12:51:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:12:35.630Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe74442dd0e95b5bad977"
+    },
+    "message_id": "twitter_2100572803275628770",
+    "topic_key": "commercial cybersecurity audit",
+    "search_keyword": "commercial cybersecurity audit",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "snakeyesV1",
+    "title": "Cyber 101: Tonight list every vendor SSO and standing remote access. Kill unused sessions before the Friday freeze. Never approve MFA or a passkey reset from a phone call. https://t.co/R6aKXgrA3G",
+    "text": "Cyber 101: Tonight list every vendor SSO and standing remote access. Kill unused sessions before the Friday freeze. Never approve MFA or a passkey reset from a phone call. https://t.co/R6aKXgrA3G",
+    "post_url": "https://twitter.com/snakeyesV1/status/2100572803275628770",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:09:17Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:12:36.028Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe74442dd0e95b5bad979"
+    },
+    "message_id": "twitter_2100193101411237989",
+    "topic_key": "commercial cybersecurity audit",
+    "search_keyword": "commercial cybersecurity audit",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "City_Business",
+    "title": "Cybersecurity requires more than software licenses. Businesses need MFA, SIEM monitoring, SOC support and ongoing risk management. https://t.co/FC4obNV5TK",
+    "text": "Cybersecurity requires more than software licenses. Businesses need MFA, SIEM monitoring, SOC support and ongoing risk management. https://t.co/FC4obNV5TK",
+    "post_url": "https://twitter.com/City_Business/status/2100193101411237989",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:00:29Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:12:36.426Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe74442dd0e95b5bad97a"
+    },
+    "message_id": "twitter_2100572676729487471",
+    "topic_key": "commercial cybersecurity audit",
+    "search_keyword": "commercial cybersecurity audit",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "TheCyberSecHub",
+    "title": "Unauthenticated attackers are bypassing Cisco ISE’s management interface (CVE-2026-76460) https://t.co/6hzKwEzLMx",
+    "text": "Unauthenticated attackers are bypassing Cisco ISE’s management interface (CVE-2026-76460) https://t.co/6hzKwEzLMx",
+    "post_url": "https://twitter.com/TheCyberSecHub/status/2100572676729487471",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:08:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:12:36.627Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe74442dd0e95b5bad97b"
+    },
+    "message_id": "twitter_2099525377831899482",
+    "topic_key": "commercial cybersecurity audit",
+    "search_keyword": "commercial cybersecurity audit",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "RightHandTech",
+    "title": "A recent data-flow review found teams sharing CUI via email and sketches with subcontractors that lacked required CMMC certification—your weakest link may sit outside your walls.\n&lt;https://t.co/IroVj1lm1s&gt;\n#CMMC #Cybersecurity https://t.co/O5xhEVwAut",
+    "text": "A recent data-flow review found teams sharing CUI via email and sketches with subcontractors that lacked required CMMC certification—your weakest link may sit outside your walls.\n&lt;https://t.co/IroVj1lm1s&gt;\n#CMMC #Cybersecurity https://t.co/O5xhEVwAut",
+    "post_url": "https://twitter.com/RightHandTech/status/2099525377831899482",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T15:47:12Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:12:36.828Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe74542dd0e95b5bad97d"
+    },
+    "message_id": "twitter_2098549904331231249",
+    "topic_key": "commercial cybersecurity audit",
+    "search_keyword": "commercial cybersecurity audit",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "SCMagazine",
+    "title": "Detecting a breach is only the start. Organizations also need to prove what happened, reconstruct the attack and defend their conclusions to regulators, insurers and customers, @Exterro stated in a recent report. #cybersecurity #CISO #infosec https://t.co/ZnTd6z78gp",
+    "text": "Detecting a breach is only the start. Organizations also need to prove what happened, reconstruct the attack and defend their conclusions to regulators, insurers and customers, @Exterro stated in a recent report. #cybersecurity #CISO #infosec https://t.co/ZnTd6z78gp",
+    "post_url": "https://twitter.com/SCMagazine/status/2098549904331231249",
+    "score": 1,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T23:11:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:12:37.226Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe74542dd0e95b5bad97f"
+    },
+    "message_id": "twitter_2100565843067482267",
+    "topic_key": "commercial cybersecurity audit",
+    "search_keyword": "commercial cybersecurity audit",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "TheCyberSecHub",
+    "title": "Cisco drops another exploited zero-day, this time a perfect 10 https://t.co/mZqaBQ8RVS",
+    "text": "Cisco drops another exploited zero-day, this time a perfect 10 https://t.co/mZqaBQ8RVS",
+    "post_url": "https://twitter.com/TheCyberSecHub/status/2100565843067482267",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T12:41:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:12:37.821Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe74642dd0e95b5bad980"
+    },
+    "message_id": "twitter_2100571840527642895",
+    "topic_key": "commercial cybersecurity audit",
+    "search_keyword": "commercial cybersecurity audit",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "it__security",
+    "title": "Die US-Cybersicherheitsbehörde #CISA hat einen neuen Leitfaden zur Implementierung von Cyber-Täuschungssystemen (#CyberDecoys) veröffentlicht, der sich primär an Betreiber kritischer Infrastrukturen richtet. https://t.co/Xi4reOlXrB",
+    "text": "Die US-Cybersicherheitsbehörde #CISA hat einen neuen Leitfaden zur Implementierung von Cyber-Täuschungssystemen (#CyberDecoys) veröffentlicht, der sich primär an Betreiber kritischer Infrastrukturen richtet. https://t.co/Xi4reOlXrB",
+    "post_url": "https://twitter.com/it__security/status/2100571840527642895",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:05:28Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:12:38.021Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe74642dd0e95b5bad983"
+    },
+    "message_id": "twitter_2100570016164847979",
+    "topic_key": "commercial cybersecurity audit",
+    "search_keyword": "commercial cybersecurity audit",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Netwrix",
+    "title": "Booth traffic tells you who's evaluating. It doesn't tell you who's already been breached and doesn't know it yet.\n\nWe're at GISEC Global this week on the CyberKnight stand, showing what that gap looks like in practice: Netwrix Auditor for governance and compliance visibility, Netwrix Identity Manager for identity governance and administration, Netwrix Change Tracker for file integrity and configuration monitoring, and Netwrix 1Secure DSPM for data security posture.\n\nSara Cheblal, Hassan El-Khaldi, Aaron Sloan, Mark Richmond, and Karim Azzouzi are on the stand all week to walk through it. Thanks to CyberKnight for the setup.\n\nWorth a stop if you're at GISEC and want to see where your environment's blind spots actually are. \n\n#Cybersecurity #Compliance #DataSecurity #GISECGlobal",
+    "text": "Booth traffic tells you who's evaluating. It doesn't tell you who's already been breached and doesn't know it yet.\n\nWe're at GISEC Global this week on the CyberKnight stand, showing what that gap looks like in practice: Netwrix Auditor for governance and compliance visibility, Netwrix Identity Manager for identity governance and administration, Netwrix Change Tracker for file integrity and configuration monitoring, and Netwrix 1Secure DSPM for data security posture.\n\nSara Cheblal, Hassan El-Khaldi, Aaron Sloan, Mark Richmond, and Karim Azzouzi are on the stand all week to walk through it. Thanks to CyberKnight for the setup.\n\nWorth a stop if you're at GISEC and want to see where your environment's blind spots actually are. \n\n#Cybersecurity #Compliance #DataSecurity #GISECGlobal",
+    "post_url": "https://twitter.com/Netwrix/status/2100570016164847979",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T12:58:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:12:38.617Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe74642dd0e95b5bad984"
+    },
+    "message_id": "twitter_2098462463305953377",
+    "topic_key": "commercial cybersecurity audit",
+    "search_keyword": "commercial cybersecurity audit",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Halosznn_",
+    "title": "Ongoing Graduate Trainee & Internship Programmes\n\n1. Lifepage Property & Investments - Graduate Trainee Programme 2026\nhttps://t.co/DLJTr5GcPD\n\n2. Schneider Electric - 2027 Graduate Programme\nhttps://t.co/n9glLf89uE\n\n3. Anco Integrated Solutions Ltd, Graduate Trainee 2026\nhttps://t.co/zJKqY08XDQ\n\n4. Toloram Marketing Graduate Trainee - 2026\nhttps://t.co/qlzJN4bEhH\n\n5. Top Talent Graduate Trainee Programme - 2026\nhttps://t.co/SYouSck42z\n\n6. Tincan Island Container Graduate Trainee Programme\nhttps://t.co/gVwYw8Vlly\n\n7. Westmead Farms Graduate Trainee, Ibadan 🌾\nEligible fields: Animal Science, Veterinary Medicine, Crop/Plant Science, Fisheries, Agricultural Economics/Extension.\n💌Apply: Westmeadrecruitment@gmail.com\n\n8. Lush Hair Graduate Trainee Programme - 2026\nMinimum of 2:1, second class upper, NYSC completed \nhttps://t.co/fZiqe2fukf\n\n9. TGI Distri Commercial Trainee Programme - 2027\nhttps://t.co/sR5el3BQTI\n\n10. RoadLamp Limited Graduate Trainee Programme - 2026 \nFinance Graduate Trainee \n💌 Apply: recruitment@roadlamp.com.ng\n\n11. Ouranos Technologies Limited Graduate Trainee Program - 2027\nopportunities across IT, cybersecurity, infrastructure, audit, value management, marketing/customer success, and R&D\nhttps://t.co/ZVrsPTQiKv\n\n12. National Institute of Credit\nAdministration, Graduate Trainee - 2026\nhttps://t.co/8AO67nxezm\n\n13. Zivo Internship Programme - 2026\nhttps://t.co/EVHlyKYjBZ\n\n14. Stockgap Fuel Graduate Internship Programme - 2026\nPort Harcourt | 12 months | Opportunities across: Engineering, Sciences, Social Sciences, Business, Supply chain | 2:1\n💌 Apply: careers@stockgapfuels.com\n\n15. Tranter IT Infrastructure Services - Graduate Trainee | Lagos\nMarketing, Business Admin, Economics, Engineering or related\nDeadline: Sept. 13, 2026\n💌Apply: recruitment@tranter-it.com",
+    "text": "Ongoing Graduate Trainee & Internship Programmes\n\n1. Lifepage Property & Investments - Graduate Trainee Programme 2026\nhttps://t.co/DLJTr5GcPD\n\n2. Schneider Electric - 2027 Graduate Programme\nhttps://t.co/n9glLf89uE\n\n3. Anco Integrated Solutions Ltd, Graduate Trainee 2026\nhttps://t.co/zJKqY08XDQ\n\n4. Toloram Marketing Graduate Trainee - 2026\nhttps://t.co/qlzJN4bEhH\n\n5. Top Talent Graduate Trainee Programme - 2026\nhttps://t.co/SYouSck42z\n\n6. Tincan Island Container Graduate Trainee Programme\nhttps://t.co/gVwYw8Vlly\n\n7. Westmead Farms Graduate Trainee, Ibadan 🌾\nEligible fields: Animal Science, Veterinary Medicine, Crop/Plant Science, Fisheries, Agricultural Economics/Extension.\n💌Apply: Westmeadrecruitment@gmail.com\n\n8. Lush Hair Graduate Trainee Programme - 2026\nMinimum of 2:1, second class upper, NYSC completed \nhttps://t.co/fZiqe2fukf\n\n9. TGI Distri Commercial Trainee Programme - 2027\nhttps://t.co/sR5el3BQTI\n\n10. RoadLamp Limited Graduate Trainee Programme - 2026 \nFinance Graduate Trainee \n💌 Apply: recruitment@roadlamp.com.ng\n\n11. Ouranos Technologies Limited Graduate Trainee Program - 2027\nopportunities across IT, cybersecurity, infrastructure, audit, value management, marketing/customer success, and R&D\nhttps://t.co/ZVrsPTQiKv\n\n12. National Institute of Credit\nAdministration, Graduate Trainee - 2026\nhttps://t.co/8AO67nxezm\n\n13. Zivo Internship Programme - 2026\nhttps://t.co/EVHlyKYjBZ\n\n14. Stockgap Fuel Graduate Internship Programme - 2026\nPort Harcourt | 12 months | Opportunities across: Engineering, Sciences, Social Sciences, Business, Supply chain | 2:1\n💌 Apply: careers@stockgapfuels.com\n\n15. Tranter IT Infrastructure Services - Graduate Trainee | Lagos\nMarketing, Business Admin, Economics, Engineering or related\nDeadline: Sept. 13, 2026\n💌Apply: recruitment@tranter-it.com",
+    "post_url": "https://twitter.com/Halosznn_/status/2098462463305953377",
+    "score": 371,
+    "num_comments": 18,
+    "created_utc": {
+      "$date": "2026-09-11T17:23:33Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:12:38.818Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe76142dd0e95b5bad985"
+    },
+    "message_id": "twitter_2099518866799898755",
+    "topic_key": "commercial data pipeline",
+    "search_keyword": "commercial data pipeline",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "QuantIndicator",
+    "title": "This is fk*ng insane. \n\n@LuxAlgo is quietly open sourcing every major trading software, one repo at a time and it's 100% FREE.\n\nCharting engine. Pine Script® runtime. Indicator encyclopedia. Trading statistics engine. Insider Tracking, Prop Firm Sims, Edge Stats + More\n\nThe Git Hub includes: \n\n→ Vela: a full charting engine with a native WebGL2 renderer, 70+ built-in indicators, drawing tools, multi-chart workspace and a plugin SDK. Apache 2.0, commercial use included.\n\n→ PineTS: run native Pine Script® v6 in Node, Bun, Deno or the browser. 60+ TA functions, live streaming, backtesting, your own data\n→ Vela-pinets: the addon that runs Pine indicators and strategies directly on the chart\n\n→ Edge-stats: ask \"how often did this setup actually work\" over your own bars. gap fills, ORB, initial balance, seasonality, anything you can compose. every number ships with its sample size and a 95% confidence interval\n\n→ luxalgo-mcp-server: the whole encyclopedia of trading & TA as MCP tools your AI agent can call. concepts, formulas, indicators, source code\n\n→ market-trackers: an open pipeline for the public record of US markets. congress trades, insider filings, 13F holdings, short-sale volume, served to your agent over MCP\n\n→ prop-firm-sim: runs 10,000 challenge journeys through a firm's exact ruleset and tells you your real pass odds before you pay\n\nEvery trading platform charges you monthly to rent the same tools. charts, indicators, backtesting, stats. this is all of it, on GitHub.\n\nNo seat licenses. no vendor lock-in. no telemetry. no waiting for a platform to ship the feature you need.\n\nSave this for later. repos below",
+    "text": "This is fk*ng insane. \n\n@LuxAlgo is quietly open sourcing every major trading software, one repo at a time and it's 100% FREE.\n\nCharting engine. Pine Script® runtime. Indicator encyclopedia. Trading statistics engine. Insider Tracking, Prop Firm Sims, Edge Stats + More\n\nThe Git Hub includes: \n\n→ Vela: a full charting engine with a native WebGL2 renderer, 70+ built-in indicators, drawing tools, multi-chart workspace and a plugin SDK. Apache 2.0, commercial use included.\n\n→ PineTS: run native Pine Script® v6 in Node, Bun, Deno or the browser. 60+ TA functions, live streaming, backtesting, your own data\n→ Vela-pinets: the addon that runs Pine indicators and strategies directly on the chart\n\n→ Edge-stats: ask \"how often did this setup actually work\" over your own bars. gap fills, ORB, initial balance, seasonality, anything you can compose. every number ships with its sample size and a 95% confidence interval\n\n→ luxalgo-mcp-server: the whole encyclopedia of trading & TA as MCP tools your AI agent can call. concepts, formulas, indicators, source code\n\n→ market-trackers: an open pipeline for the public record of US markets. congress trades, insider filings, 13F holdings, short-sale volume, served to your agent over MCP\n\n→ prop-firm-sim: runs 10,000 challenge journeys through a firm's exact ruleset and tells you your real pass odds before you pay\n\nEvery trading platform charges you monthly to rent the same tools. charts, indicators, backtesting, stats. this is all of it, on GitHub.\n\nNo seat licenses. no vendor lock-in. no telemetry. no waiting for a platform to ship the feature you need.\n\nSave this for later. repos below",
+    "post_url": "https://twitter.com/QuantIndicator/status/2099518866799898755",
+    "score": 2637,
+    "num_comments": 48,
+    "created_utc": {
+      "$date": "2026-09-14T15:21:19Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:13:05.606Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe76142dd0e95b5bad986"
+    },
+    "message_id": "twitter_2100304060746260483",
+    "topic_key": "commercial data pipeline",
+    "search_keyword": "commercial data pipeline",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "EugBass",
+    "title": "THIS NEW ATLAS ROBOT JUST COMPLETELY BROKE HUMAN ANATOMY \n\nBoston Dynamics and Hyundai are officially terminating the standard rules of humanoid motion\n\nwhile other tech firms are struggling to make machines copy rigid human steps, the newly revealed electric Atlas prototype just turned the exhibition floor into a showcase of hyper-mobility\n\nthe engineering data behind this new production-ready platform shifts the entire global automation meta\n\nthis machine completely eliminates the traditional concept of a blind spot\n\nit utilizes continuous 360-degree joint rotation across its entire chassis, meaning it can spin its torso and limbs indefinitely without turning its base\n\nthe mechanical upgrade significantly scales physical utility\n\nAtlas now carries a routine lifting capacity of thirty-two kilograms and a max deadlift of fifty kilograms, supported by custom bionic fingers that dynamically bend backwards to minimize unnecessary movement\n\nto supercharge the brain infrastructure, developers announced a massive partnership with Google to integrate large-scale Gemini robotics AI models directly into the hardware pipeline\n\nafter testing early models inside car factories for over a year, the company is officially moving this platform into commercial production",
+    "text": "THIS NEW ATLAS ROBOT JUST COMPLETELY BROKE HUMAN ANATOMY \n\nBoston Dynamics and Hyundai are officially terminating the standard rules of humanoid motion\n\nwhile other tech firms are struggling to make machines copy rigid human steps, the newly revealed electric Atlas prototype just turned the exhibition floor into a showcase of hyper-mobility\n\nthe engineering data behind this new production-ready platform shifts the entire global automation meta\n\nthis machine completely eliminates the traditional concept of a blind spot\n\nit utilizes continuous 360-degree joint rotation across its entire chassis, meaning it can spin its torso and limbs indefinitely without turning its base\n\nthe mechanical upgrade significantly scales physical utility\n\nAtlas now carries a routine lifting capacity of thirty-two kilograms and a max deadlift of fifty kilograms, supported by custom bionic fingers that dynamically bend backwards to minimize unnecessary movement\n\nto supercharge the brain infrastructure, developers announced a massive partnership with Google to integrate large-scale Gemini robotics AI models directly into the hardware pipeline\n\nafter testing early models inside car factories for over a year, the company is officially moving this platform into commercial production",
+    "post_url": "https://twitter.com/EugBass/status/2100304060746260483",
+    "score": 287,
+    "num_comments": 29,
+    "created_utc": {
+      "$date": "2026-09-16T19:21:24Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:13:05.822Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe76242dd0e95b5bad989"
+    },
+    "message_id": "twitter_2099306361796673941",
+    "topic_key": "commercial data pipeline",
+    "search_keyword": "commercial data pipeline",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "truonggiangle99",
+    "title": "The bottleneck nobody can buy their way out of\n\nHardware is shipping. Compute is abundant. Foundation models already know how to imitate. What they cannot invent is coverage: the messy, first-person, failure-rich distribution of the real world.\n\nClosed-lab collection is slow, expensive, and geographically thin. A static dataset is a snapshot. Robots do not live in snapshots. They live in kitchens that change, factories that drift, and hands that recover mid-mistake.\n\nAxis names the product category that follows from that fact: a compounding data engine for Physical AI. Not a one-off corpus. A loop.\n\nGenerate the task. Collect at internet scale. Process into golden trajectories. Train. Watch the policy fail. Send humans back in to correct it. Record who contributed what. Collect the next thing the model actually needs.\nData stops being a cost center. It becomes an asset that appreciates.\n\nThree products, one flywheel\n\nThe engine reaches people as surfaces they can touch today.\n\nSimulation Data Platform (web). Teleoperate a robot in the browser. No lab. No GPU tower. No robot in the living room. Axis turns sequential collection into a parallel stream on the order of 10,000 valid trajectories per hour when the network is live.\n\nEgo-centric capture (mobile). Everyday human motion, first-person, from phones and specialized rigs. Simulation gives controllable diversity. Ego-centric data gives the spatial truth of the wild. Neither is enough alone. Together they are the two most scalable sources Physical AI has.\n\nData-to-model pipeline. Raw sessions become filtered, evaluated, provenance-tagged training sets. Open datasets sit next to commercial packages. The same spine serves contributors, model labs, and hardware partners.\n\nUnderneath: a Universal Task Generation Engine that turns a sentence a desk, a kettle, a mug, a pen into families of scenes, layouts, embodiments, and lighting conditions. Diversity is not hoped for. It is generated.\n\nWhy Web3 is infrastructure here, not costume\n\nCrypto is not the starting point. It is how you coordinate strangers at global scale without a single warehouse of motion-capture suits.\n\nOn-chain records bind contributor, task, and quality score. Data IDs make a trajectory auditable. Incentives can be aligned without pretending every useful hour of robot data will be donated out of academic goodwill.\n\nAxis ships this on Base as the primary deployment, with alliance rails into networks like BitRobot. \n\nThe product community already treats it as a live robotics app, not a whitepaper with a token annex. That is rare in this category, and it is the point: Physical AI needs distribution as much as it needs GPUs.\n\nProof, not posture\n\nAs of mid-2026 the public record is specific enough to argue with:\nTens of thousands of global contributors\nMillions of trajectories and matching on-chain records\nA flagship Franka simulation set: 207 tasks, 50,000+ human demos\n\nContinual pretraining of π0.5 on Axis data: 88.8 on LIBERO-Plus versus 83.9 vanilla, and a wide gap over a volume-matched RoboCasa control\n\nPartners span embodiment teams, model labs, and industrial operators from humanoid and mobile-robot names to auto groups using the stack for learning-based automation.\n\nThe claim is not “we have a dataset.” The claim is “the next dataset is determined by the last failure.”\n\nWhat the market should understand\n\nIf you are in AI robotics, Axis is the data layer that sits under your embodiment, not a competing arm vendor.\nIf you are in Web3, Axis is one of the few applications where on-chain provenance is attached to a physical-world production system people can use this week.\n\nIf you are in community, you are not a spectator to a lab. You are how the distribution gets wide enough for robots to generalize.\n\nPhysical AI will not be won by the team with the prettiest demo reel. It will be won by the engine that keeps producing the data the model needs next.\nThat engine is what @axisrobotics is building.",
+    "text": "The bottleneck nobody can buy their way out of\n\nHardware is shipping. Compute is abundant. Foundation models already know how to imitate. What they cannot invent is coverage: the messy, first-person, failure-rich distribution of the real world.\n\nClosed-lab collection is slow, expensive, and geographically thin. A static dataset is a snapshot. Robots do not live in snapshots. They live in kitchens that change, factories that drift, and hands that recover mid-mistake.\n\nAxis names the product category that follows from that fact: a compounding data engine for Physical AI. Not a one-off corpus. A loop.\n\nGenerate the task. Collect at internet scale. Process into golden trajectories. Train. Watch the policy fail. Send humans back in to correct it. Record who contributed what. Collect the next thing the model actually needs.\nData stops being a cost center. It becomes an asset that appreciates.\n\nThree products, one flywheel\n\nThe engine reaches people as surfaces they can touch today.\n\nSimulation Data Platform (web). Teleoperate a robot in the browser. No lab. No GPU tower. No robot in the living room. Axis turns sequential collection into a parallel stream on the order of 10,000 valid trajectories per hour when the network is live.\n\nEgo-centric capture (mobile). Everyday human motion, first-person, from phones and specialized rigs. Simulation gives controllable diversity. Ego-centric data gives the spatial truth of the wild. Neither is enough alone. Together they are the two most scalable sources Physical AI has.\n\nData-to-model pipeline. Raw sessions become filtered, evaluated, provenance-tagged training sets. Open datasets sit next to commercial packages. The same spine serves contributors, model labs, and hardware partners.\n\nUnderneath: a Universal Task Generation Engine that turns a sentence a desk, a kettle, a mug, a pen into families of scenes, layouts, embodiments, and lighting conditions. Diversity is not hoped for. It is generated.\n\nWhy Web3 is infrastructure here, not costume\n\nCrypto is not the starting point. It is how you coordinate strangers at global scale without a single warehouse of motion-capture suits.\n\nOn-chain records bind contributor, task, and quality score. Data IDs make a trajectory auditable. Incentives can be aligned without pretending every useful hour of robot data will be donated out of academic goodwill.\n\nAxis ships this on Base as the primary deployment, with alliance rails into networks like BitRobot. \n\nThe product community already treats it as a live robotics app, not a whitepaper with a token annex. That is rare in this category, and it is the point: Physical AI needs distribution as much as it needs GPUs.\n\nProof, not posture\n\nAs of mid-2026 the public record is specific enough to argue with:\nTens of thousands of global contributors\nMillions of trajectories and matching on-chain records\nA flagship Franka simulation set: 207 tasks, 50,000+ human demos\n\nContinual pretraining of π0.5 on Axis data: 88.8 on LIBERO-Plus versus 83.9 vanilla, and a wide gap over a volume-matched RoboCasa control\n\nPartners span embodiment teams, model labs, and industrial operators from humanoid and mobile-robot names to auto groups using the stack for learning-based automation.\n\nThe claim is not “we have a dataset.” The claim is “the next dataset is determined by the last failure.”\n\nWhat the market should understand\n\nIf you are in AI robotics, Axis is the data layer that sits under your embodiment, not a competing arm vendor.\nIf you are in Web3, Axis is one of the few applications where on-chain provenance is attached to a physical-world production system people can use this week.\n\nIf you are in community, you are not a spectator to a lab. You are how the distribution gets wide enough for robots to generalize.\n\nPhysical AI will not be won by the team with the prettiest demo reel. It will be won by the engine that keeps producing the data the model needs next.\nThat engine is what @axisrobotics is building.",
+    "post_url": "https://twitter.com/truonggiangle99/status/2099306361796673941",
+    "score": 12,
+    "num_comments": 13,
+    "created_utc": {
+      "$date": "2026-09-14T01:16:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:13:06.459Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe76242dd0e95b5bad98a"
+    },
+    "message_id": "twitter_2100095503572603099",
+    "topic_key": "commercial data pipeline",
+    "search_keyword": "commercial data pipeline",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "GabrielsShorts",
+    "title": "Daily Gabriel World Shorts 🌍 | September 16, 2026 – 1-min read\n\n🇸🇦 Saudi air defences intercepted a Houthi drone south of Mecca before it entered restricted airspace. 🛡️\n🇨🇳 China’s defence minister warned against militarism and historical revisionism amid heightened tensions with Japan. 🌏\n🇳🇿 New Zealand’s parliament approved its India free-trade deal, cutting tariffs on most exports. 🤝\n🇰🇷 Seoul postponed a parliamentary briefing on its $350bn U.S. investment pledge. (Apparently $350bn needs another meeting.) 💼\n🇺🇸 U.S. Treasury Secretary Scott Bessent will meet China’s He Lifeng this weekend before the Trump-Xi summit. 🤝\n🇷🇺 The Kremlin backed Trump’s proposed Russia-Ukraine energy truce while demanding sanctions relief. ⚡\n🇺🇦 Moscow also wants commercial-shipping protections included in any energy-infrastructure ceasefire with Ukraine. ⚓\n🇯🇵 The Bank of Japan is set to raise rates to 1.25%, a 31-year high. (Cheap yen enthusiasts, condolences.) 🏦\n🇺🇸 Markets price more than 90% odds of a Federal Reserve rate hike today. 💵\n📈 U.S. 10-year Treasury yields briefly breached 5%, their highest level in three years. 💰\n💵 The dollar held near multi-week highs as traders prepared for a possible U.S. hiking cycle. 💱\n🛢️ Brent fell below $108 after U.S. crude inventories unexpectedly jumped 7.1m barrels. (Oil discovered supply exists.) 📉\n🇸🇦 Saudi Arabia’s Yanbu crude loadings remain suspended following damage to the East-West pipeline. ⚡\n🇱🇾 Three Libyan oilfields stopped operating amid local protests, though national output remained near 1.4m bpd. 🛢️\n🇮🇳 India’s central bank likely intervened again as the rupee approached 96 per dollar. 💱\n📉 India’s rupee has fallen for seven consecutive sessions despite repeated RBI support. (Gravity has a currency desk.) 🇮🇳\n📊 Asian equities stabilised after four losing sessions as investors awaited the Federal Reserve decision. 💹\n🇹🇼 Taiwanese shares rose while Chinese equities declined in cautious Asian trading. 📈\n🇯🇵 Japan’s Nikkei slipped 0.1% ahead of this week’s expected Bank of Japan tightening. 📉\n₿ Bitcoin stabilised near $75,900 after the U.S. Senate blocked major crypto legislation. (Decentralised, except for Congress.) 💰\n🤖 Mark Zuckerberg rejected calls for coordinated AI slowdown, arguing competition and liability incentivise safety. 🧠\n🤖 Meta says most of its computing power targets practical products rather than self-improving AI systems. 🛡️\n🤖 OpenAI is reportedly coordinating with Anthropic and Google DeepMind on artificial-intelligence safety. ⚠️\n🏗️ Anthropic signed its first Australian data-centre deal for a planned 2.16GW campus near Brisbane. (Small server room, then.) 🤖\n🌱 Anthropic’s Australian facility plans renewable power and closed-loop air cooling to minimise water consumption. ⚡\n🇦🇺 Australia’s Reliance Worldwide accepted Brookfield’s roughly $2.9bn takeover offer. 💼\n📈 Reliance Worldwide shares jumped more than 7% after agreeing to Brookfield’s cash bid. 💹\n📱 MediaTek unveiled its Dimensity 9600 Pro, its first smartphone chip built on TSMC’s 2nm process. (Nanometres remain expensive.) 💻\n🤖 MediaTek says its new mobile AI processor delivers 51% faster prompt processing than its predecessor. 📱\n🌫️ Indonesia’s worst wildfire crisis in over a decade is choking Borneo with hazardous haze. 🌍\n🏥 Respiratory cases linked to Indonesia’s wildfire haze surged past 113,000 across affected regions. 🩺\n🔥 More than 12.5m people across Borneo and Sumatra have been exposed to severe wildfire smoke. (Breathing remains compulsory.) 🌡️\n⚾ Milwaukee clinched its fourth consecutive NL Central title after beating Pittsburgh 5–1. 🏆\n⚾ Jacob Misiorowski threw five scoreless innings as Milwaukee secured the division crown. ⚾\n⚾ The Yankees crushed Minnesota 8–1 for their seventh victory in eight games. ⚾\n⚾ Yoshinobu Yamamoto allowed one hit across seven scoreless innings as the Dodgers blanked Cincinnati 4–0. (Rather inconsiderate pitching.) ⚾",
+    "text": "Daily Gabriel World Shorts 🌍 | September 16, 2026 – 1-min read\n\n🇸🇦 Saudi air defences intercepted a Houthi drone south of Mecca before it entered restricted airspace. 🛡️\n🇨🇳 China’s defence minister warned against militarism and historical revisionism amid heightened tensions with Japan. 🌏\n🇳🇿 New Zealand’s parliament approved its India free-trade deal, cutting tariffs on most exports. 🤝\n🇰🇷 Seoul postponed a parliamentary briefing on its $350bn U.S. investment pledge. (Apparently $350bn needs another meeting.) 💼\n🇺🇸 U.S. Treasury Secretary Scott Bessent will meet China’s He Lifeng this weekend before the Trump-Xi summit. 🤝\n🇷🇺 The Kremlin backed Trump’s proposed Russia-Ukraine energy truce while demanding sanctions relief. ⚡\n🇺🇦 Moscow also wants commercial-shipping protections included in any energy-infrastructure ceasefire with Ukraine. ⚓\n🇯🇵 The Bank of Japan is set to raise rates to 1.25%, a 31-year high. (Cheap yen enthusiasts, condolences.) 🏦\n🇺🇸 Markets price more than 90% odds of a Federal Reserve rate hike today. 💵\n📈 U.S. 10-year Treasury yields briefly breached 5%, their highest level in three years. 💰\n💵 The dollar held near multi-week highs as traders prepared for a possible U.S. hiking cycle. 💱\n🛢️ Brent fell below $108 after U.S. crude inventories unexpectedly jumped 7.1m barrels. (Oil discovered supply exists.) 📉\n🇸🇦 Saudi Arabia’s Yanbu crude loadings remain suspended following damage to the East-West pipeline. ⚡\n🇱🇾 Three Libyan oilfields stopped operating amid local protests, though national output remained near 1.4m bpd. 🛢️\n🇮🇳 India’s central bank likely intervened again as the rupee approached 96 per dollar. 💱\n📉 India’s rupee has fallen for seven consecutive sessions despite repeated RBI support. (Gravity has a currency desk.) 🇮🇳\n📊 Asian equities stabilised after four losing sessions as investors awaited the Federal Reserve decision. 💹\n🇹🇼 Taiwanese shares rose while Chinese equities declined in cautious Asian trading. 📈\n🇯🇵 Japan’s Nikkei slipped 0.1% ahead of this week’s expected Bank of Japan tightening. 📉\n₿ Bitcoin stabilised near $75,900 after the U.S. Senate blocked major crypto legislation. (Decentralised, except for Congress.) 💰\n🤖 Mark Zuckerberg rejected calls for coordinated AI slowdown, arguing competition and liability incentivise safety. 🧠\n🤖 Meta says most of its computing power targets practical products rather than self-improving AI systems. 🛡️\n🤖 OpenAI is reportedly coordinating with Anthropic and Google DeepMind on artificial-intelligence safety. ⚠️\n🏗️ Anthropic signed its first Australian data-centre deal for a planned 2.16GW campus near Brisbane. (Small server room, then.) 🤖\n🌱 Anthropic’s Australian facility plans renewable power and closed-loop air cooling to minimise water consumption. ⚡\n🇦🇺 Australia’s Reliance Worldwide accepted Brookfield’s roughly $2.9bn takeover offer. 💼\n📈 Reliance Worldwide shares jumped more than 7% after agreeing to Brookfield’s cash bid. 💹\n📱 MediaTek unveiled its Dimensity 9600 Pro, its first smartphone chip built on TSMC’s 2nm process. (Nanometres remain expensive.) 💻\n🤖 MediaTek says its new mobile AI processor delivers 51% faster prompt processing than its predecessor. 📱\n🌫️ Indonesia’s worst wildfire crisis in over a decade is choking Borneo with hazardous haze. 🌍\n🏥 Respiratory cases linked to Indonesia’s wildfire haze surged past 113,000 across affected regions. 🩺\n🔥 More than 12.5m people across Borneo and Sumatra have been exposed to severe wildfire smoke. (Breathing remains compulsory.) 🌡️\n⚾ Milwaukee clinched its fourth consecutive NL Central title after beating Pittsburgh 5–1. 🏆\n⚾ Jacob Misiorowski threw five scoreless innings as Milwaukee secured the division crown. ⚾\n⚾ The Yankees crushed Minnesota 8–1 for their seventh victory in eight games. ⚾\n⚾ Yoshinobu Yamamoto allowed one hit across seven scoreless innings as the Dodgers blanked Cincinnati 4–0. (Rather inconsiderate pitching.) ⚾",
+    "post_url": "https://twitter.com/GabrielsShorts/status/2100095503572603099",
+    "score": 4,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T05:32:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:13:06.675Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe76242dd0e95b5bad98b"
+    },
+    "message_id": "twitter_2098403832472768777",
+    "topic_key": "commercial data pipeline",
+    "search_keyword": "commercial data pipeline",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "tslaming",
+    "title": "EGINEERING WONDER 📜 The @cybertruck functions less as a conventional pickup and more as a production test bed—a vehicle built to introduce and validate new-to-production technologies on a commercial assembly line 🆒\n\nBeneath its angular geometry, the platform rethinks four core automotive systems: power distribution, digital communication, steering response, and body fabrication 🔥\n\nLove it or hate it, the polarizing exterior is only part of the story. The real intrigue lies in the six high-stakes engineering bets built into the truck's body and running under its skin ⏬\n\n1⃣ 48V ARCHITECTURE\n\nThe truck replaces the auto industry's legacy 12-volt accessory wiring with a dedicated 48-volt distribution network. This low-voltage system powers cabin electronics, onboard computers, and steering actuators.\n\nWhile it operates at a separate voltage level from the high-voltage battery that drives the wheels, it draws its energy through a DC–DC converter—a device that steps the main battery's high voltage down to 48 volts—supported by a compact 48V auxiliary battery.\n\nThe underlying electrical physics and operational mechanics break down into a clear sequence:\n\n⚡ By basic electrical physics (P = V × I), where voltage acts like electrical pressure and current is the rate of flow, quadrupling system pressure to 48 volts cuts the required current flow by 75% for the exact same power demand.\n\n📉 That means a high-demand 240-watt accessory that previously pulled 20 amps across a 12-volt line needs only 5 amps across a 48-volt network.\n\n🔥 Because resistive heat generation scales with current multiplied by itself (I²R), cutting current to one-fourth reduces theoretical heat generation to one-sixteenth at the same wire resistance.\n\n🪶 Engineers can then trade that massive thermal margin to run noticeably thinner conductors, cutting physical copper weight and shrinking the vehicle's bundled wiring harness.\n\nDelivering power at 48 volts allows Tesla to feed high-draw steering motors with significantly less current and much smaller wire sizes.\n\nAcross the wider auto industry, this shift accelerates a transition toward localized vehicle electronics. European automakers spent years limiting 48V mostly to mild-hybrid assists, where a small electric motor assists an internal combustion engine.\n\nNow, the supply chain is responding. Semiconductor suppliers like NXP are introducing dedicated 48V zonal reference systems—pre-packaged hardware-and-software blueprints organized by physical vehicle area that let other carmakers adapt the architecture much faster.\n\n2⃣ STEER-BY-WIRE\n\nSteer-by-wire eliminates the intermediate mechanical shaft linking the steering wheel to the front wheels. A steering column assembly remains inside the cabin to house the wheel and its sensors, but no mechanical steering shaft penetrates the firewall—the structural partition separating the passenger cabin from the front motor and chassis compartment.\n\nThe physical and digital sequence that turns the truck unfolds across a continuous control loop:\n\n🕹️ When the driver turns the wheel, position and movement sensors in the steering column instantly register the input and send data to onboard computers.\n\n🧠 Those computers evaluate hand movements alongside vehicle speed to dynamically adjust the steering ratio, giving the wheel roughly 340 degrees of total rotation lock-to-lock (about 170 degrees each way) for effortless parking maneuvers while softening sensitivity at highway speeds to support stability.\n\n⚙️ Redundant electronic controllers translate those calculated ratios into motor commands on the steering rack, sliding the tie rods back and forth to physically pivot the front wheels.\n\n📳 At the same time, an electric motor at the steering column produces electronically controlled resistance, feeding tactile cues back to the driver's hands as front-tire grip changes.\n\nRedundant sensors, controllers, and motor circuits allow the system to maintain control under specified individual faults. Tesla's documentation notes that detected subsystem issues trigger warnings, reduce drive torque, and instruct the driver to pull over safely.\n\nRemoving the physical steering shaft frees up packaging space around the firewall and turns steering response into a programmable software routine.\n\nAcross the broader market, deploying steer-by-wire without a mechanical backup clutch marks a major milestone. Alongside recent rollouts like Lexus introducing by-wire steering on select European RZ models, it signals that pure electronic steering is finally moving from research labs to commercial production.\n\n3⃣COORDINATED REAR-WHEEL STEERING\n\nAn electromechanical actuator mounted at the rear axle actively steers the rear wheels, electronically synchronizing their angle with the front wheels.\n\nChassis control algorithms orchestrate both axles through a cohesive handling sequence:\n\n🎛️ Chassis software continuously evaluates driver steering inputs and vehicle velocity to calculate a target angle for the rear wheels, allowing up to roughly 10 degrees of rear-axle movement during tight turns while applying subtle micro-adjustments at speed.\n\n🔄 During low-speed maneuvering, the rear actuator steers the back wheels opposite to the front wheels, effectively simulating a shorter wheelbase (the distance between axles) to achieve a 43.5-foot (13.25-meter) curb-to-curb turning circle.\n\n↔️ As velocity climbs onto the highway, the actuator switches to steering the rear wheels in the same direction as the front wheels, stabilizing vehicle yaw (rotation around its vertical axis) to ensure smooth, controlled lane changes.\n\nActive rear steering mitigates the awkward handling and tight-space maneuvering challenges typical of a full-size pickup.\n\nFor other automakers, integrating rear-axle steering natively with front-by-wire controls highlights an engineering opportunity. Brands can digitally tailor low-speed agility and highway stability across large platforms without being bound by conventional steering column geometry.\n\n4⃣ STRUCTURAL STAINLESS-STEEL EXTERIOR\n\nRather than relying purely on an internal frame covered by cosmetic skins, the vehicle's body pairs cold-worked stainless-steel outer panels with traditional internal structures to handle physical forces and environmental exposure.\n\nThe outer skin combines material hardening, structural integration, and natural corrosion defense:\n\n🛡️ Heavy cold working during steel processing creates microscopic crystal defects called dislocations, which hinder how atomic layers slip past one another and drastically increase the metal's yield strength—its resistance to permanent denting.\n\n🏗️ Because the hardened panels fasten directly into surrounding structural connections, they actively carry mechanical loads and boost overall torsional stiffness, which is the body's resistance to twisting along its length.\n\n🧩 To safely disperse collision energy during an accident, these rigid outer plates transfer crash loads into front and rear gigacastings—large, single-piece aluminum parts cast in molds to replace dozens of welded components.\n\n🚫 Finally, the alloy's natural corrosion resistance enables an unpainted finish that eliminates traditional decorative exterior paint lines, though internal joints, fasteners, and structural mounting points still receive protective coatings.\n\nThe bare metal finish establishes a distinct visual identity and eliminates exterior clear-coat operations while offering resilience against minor surface dents.\n\nAcross the industry, however, stainless construction remains an unconventional route. Widespread adoption will depend heavily on factory throughput, stamping die wear, and collision-repair costs rather than body stiffness alone.\n\n5⃣ FULL-HARD STAINLESS AIR BENDING\n\nTo shape its exterior without scuffing the exposed finish, the truck relies on a specialized air-bending process. The panels use \"full-hard\" stainless steel—a term describing a strongly work-hardened material condition rather than a separate alloy.\n\nThe automated manufacturing sequence shapes the unyielding metal while protecting its bare surface finish:\n\n📏 Following general air-bending mechanics, a computer-controlled moving tool (the punch) pushes the sheet into an open supporting cavity (the die) without pressing it against the bottom, controlling the bend angle dynamically through stroke depth.\n\n📐 Because work-hardened stainless possesses high springback and partially unbends when released, the press intentionally over-bends the plate to calculated angles so it relaxes into design tolerances.\n\n💨 To prevent scratches on the unpainted metal during this heavy deformation, pressurized air cushions support the plate like an industrial air-hockey table, letting the steel glide smoothly without scuffing against hard tooling.\n\nDeveloping an air-cushioned forming process allowed Tesla to produce a stubborn, unpainted alloy at scale while keeping the exposed surface clean.\n\nFor manufacturing engineers, it reinforces an essential reality: introducing novel exterior materials often requires adapting industrial tooling and forming processes to match the metal's specific physical behavior.\n\n6⃣ ETHERLOOP\n\nEtherloop is a gigabit-speed Ethernet network backbone—transmitting data at one billion bits per second—connecting distributed vehicle computers, replacing long individual cable runs with localized data collection. The architecture combines two distinct concepts: a zonal layout for gathering wiring, and a ring topology for routing data.\n\nInformation travels across the truck through a streamlined communication pipeline:\n\n🌐 Nearby hardware like door switches, lights, and sensors plugs straight into regional zonal controllers rather than routing individual wires across the entire length of the truck.\n\n💻 Those regional controllers then bundle that local traffic onto a single, high-speed gigabit Ethernet backbone—moving up to one billion bits per second—while legacy CAN networks handle lightweight local tasks.\n\n🔁 Because this gigabit backbone forms a closed bidirectional loop, traffic can travel in either direction, allowing data to instantly reverse course around the ring if a physical cable is cut.\n\n✂️ Passing signals through local hubs and around this shared loop eliminates roughly 70% of the cross-vehicle wires that traditionally clutter an automotive harness, according to Tesla's engineering disclosures.\n\nConsolidating cross-vehicle connections trims physical harness weight and reduces assembly complexity on the production line.\n\nFrom an industry perspective, Etherloop offers a tangible reference point for zonal architectures. It demonstrates how carmakers can combine high-speed Ethernet backbones with proven local networks like CAN to manage the heavy data demands of modern software-defined vehicles.\n\n🔱 FINAL VERDICT\n\nStripped of marketing spin, the Cybertruck is an intentional stress-test on the very definition of an automobile. It throws out the holy cows of legacy manufacturing—paint shops, steering columns, 12V relays, point-to-point wiring looms—and replaces them with raw computing muscle and cold-worked metal.\n\nNot every OEM will follow Tesla down the path of bare stainless steel or air-cushioned brake presses. But on the electronic and software frontier, the paradigm has cracked. The modern vehicle is no longer a mechanical machine stuffed with electronics; it is a distributed supercomputer on wheels.\n\nThe Cybertruck is the opening salvo of that silicon era—loud, abrasive, and completely unapologetic.\n\nhttps://t.co/qscNlnFtKX",
+    "text": "EGINEERING WONDER 📜 The @cybertruck functions less as a conventional pickup and more as a production test bed—a vehicle built to introduce and validate new-to-production technologies on a commercial assembly line 🆒\n\nBeneath its angular geometry, the platform rethinks four core automotive systems: power distribution, digital communication, steering response, and body fabrication 🔥\n\nLove it or hate it, the polarizing exterior is only part of the story. The real intrigue lies in the six high-stakes engineering bets built into the truck's body and running under its skin ⏬\n\n1⃣ 48V ARCHITECTURE\n\nThe truck replaces the auto industry's legacy 12-volt accessory wiring with a dedicated 48-volt distribution network. This low-voltage system powers cabin electronics, onboard computers, and steering actuators.\n\nWhile it operates at a separate voltage level from the high-voltage battery that drives the wheels, it draws its energy through a DC–DC converter—a device that steps the main battery's high voltage down to 48 volts—supported by a compact 48V auxiliary battery.\n\nThe underlying electrical physics and operational mechanics break down into a clear sequence:\n\n⚡ By basic electrical physics (P = V × I), where voltage acts like electrical pressure and current is the rate of flow, quadrupling system pressure to 48 volts cuts the required current flow by 75% for the exact same power demand.\n\n📉 That means a high-demand 240-watt accessory that previously pulled 20 amps across a 12-volt line needs only 5 amps across a 48-volt network.\n\n🔥 Because resistive heat generation scales with current multiplied by itself (I²R), cutting current to one-fourth reduces theoretical heat generation to one-sixteenth at the same wire resistance.\n\n🪶 Engineers can then trade that massive thermal margin to run noticeably thinner conductors, cutting physical copper weight and shrinking the vehicle's bundled wiring harness.\n\nDelivering power at 48 volts allows Tesla to feed high-draw steering motors with significantly less current and much smaller wire sizes.\n\nAcross the wider auto industry, this shift accelerates a transition toward localized vehicle electronics. European automakers spent years limiting 48V mostly to mild-hybrid assists, where a small electric motor assists an internal combustion engine.\n\nNow, the supply chain is responding. Semiconductor suppliers like NXP are introducing dedicated 48V zonal reference systems—pre-packaged hardware-and-software blueprints organized by physical vehicle area that let other carmakers adapt the architecture much faster.\n\n2⃣ STEER-BY-WIRE\n\nSteer-by-wire eliminates the intermediate mechanical shaft linking the steering wheel to the front wheels. A steering column assembly remains inside the cabin to house the wheel and its sensors, but no mechanical steering shaft penetrates the firewall—the structural partition separating the passenger cabin from the front motor and chassis compartment.\n\nThe physical and digital sequence that turns the truck unfolds across a continuous control loop:\n\n🕹️ When the driver turns the wheel, position and movement sensors in the steering column instantly register the input and send data to onboard computers.\n\n🧠 Those computers evaluate hand movements alongside vehicle speed to dynamically adjust the steering ratio, giving the wheel roughly 340 degrees of total rotation lock-to-lock (about 170 degrees each way) for effortless parking maneuvers while softening sensitivity at highway speeds to support stability.\n\n⚙️ Redundant electronic controllers translate those calculated ratios into motor commands on the steering rack, sliding the tie rods back and forth to physically pivot the front wheels.\n\n📳 At the same time, an electric motor at the steering column produces electronically controlled resistance, feeding tactile cues back to the driver's hands as front-tire grip changes.\n\nRedundant sensors, controllers, and motor circuits allow the system to maintain control under specified individual faults. Tesla's documentation notes that detected subsystem issues trigger warnings, reduce drive torque, and instruct the driver to pull over safely.\n\nRemoving the physical steering shaft frees up packaging space around the firewall and turns steering response into a programmable software routine.\n\nAcross the broader market, deploying steer-by-wire without a mechanical backup clutch marks a major milestone. Alongside recent rollouts like Lexus introducing by-wire steering on select European RZ models, it signals that pure electronic steering is finally moving from research labs to commercial production.\n\n3⃣COORDINATED REAR-WHEEL STEERING\n\nAn electromechanical actuator mounted at the rear axle actively steers the rear wheels, electronically synchronizing their angle with the front wheels.\n\nChassis control algorithms orchestrate both axles through a cohesive handling sequence:\n\n🎛️ Chassis software continuously evaluates driver steering inputs and vehicle velocity to calculate a target angle for the rear wheels, allowing up to roughly 10 degrees of rear-axle movement during tight turns while applying subtle micro-adjustments at speed.\n\n🔄 During low-speed maneuvering, the rear actuator steers the back wheels opposite to the front wheels, effectively simulating a shorter wheelbase (the distance between axles) to achieve a 43.5-foot (13.25-meter) curb-to-curb turning circle.\n\n↔️ As velocity climbs onto the highway, the actuator switches to steering the rear wheels in the same direction as the front wheels, stabilizing vehicle yaw (rotation around its vertical axis) to ensure smooth, controlled lane changes.\n\nActive rear steering mitigates the awkward handling and tight-space maneuvering challenges typical of a full-size pickup.\n\nFor other automakers, integrating rear-axle steering natively with front-by-wire controls highlights an engineering opportunity. Brands can digitally tailor low-speed agility and highway stability across large platforms without being bound by conventional steering column geometry.\n\n4⃣ STRUCTURAL STAINLESS-STEEL EXTERIOR\n\nRather than relying purely on an internal frame covered by cosmetic skins, the vehicle's body pairs cold-worked stainless-steel outer panels with traditional internal structures to handle physical forces and environmental exposure.\n\nThe outer skin combines material hardening, structural integration, and natural corrosion defense:\n\n🛡️ Heavy cold working during steel processing creates microscopic crystal defects called dislocations, which hinder how atomic layers slip past one another and drastically increase the metal's yield strength—its resistance to permanent denting.\n\n🏗️ Because the hardened panels fasten directly into surrounding structural connections, they actively carry mechanical loads and boost overall torsional stiffness, which is the body's resistance to twisting along its length.\n\n🧩 To safely disperse collision energy during an accident, these rigid outer plates transfer crash loads into front and rear gigacastings—large, single-piece aluminum parts cast in molds to replace dozens of welded components.\n\n🚫 Finally, the alloy's natural corrosion resistance enables an unpainted finish that eliminates traditional decorative exterior paint lines, though internal joints, fasteners, and structural mounting points still receive protective coatings.\n\nThe bare metal finish establishes a distinct visual identity and eliminates exterior clear-coat operations while offering resilience against minor surface dents.\n\nAcross the industry, however, stainless construction remains an unconventional route. Widespread adoption will depend heavily on factory throughput, stamping die wear, and collision-repair costs rather than body stiffness alone.\n\n5⃣ FULL-HARD STAINLESS AIR BENDING\n\nTo shape its exterior without scuffing the exposed finish, the truck relies on a specialized air-bending process. The panels use \"full-hard\" stainless steel—a term describing a strongly work-hardened material condition rather than a separate alloy.\n\nThe automated manufacturing sequence shapes the unyielding metal while protecting its bare surface finish:\n\n📏 Following general air-bending mechanics, a computer-controlled moving tool (the punch) pushes the sheet into an open supporting cavity (the die) without pressing it against the bottom, controlling the bend angle dynamically through stroke depth.\n\n📐 Because work-hardened stainless possesses high springback and partially unbends when released, the press intentionally over-bends the plate to calculated angles so it relaxes into design tolerances.\n\n💨 To prevent scratches on the unpainted metal during this heavy deformation, pressurized air cushions support the plate like an industrial air-hockey table, letting the steel glide smoothly without scuffing against hard tooling.\n\nDeveloping an air-cushioned forming process allowed Tesla to produce a stubborn, unpainted alloy at scale while keeping the exposed surface clean.\n\nFor manufacturing engineers, it reinforces an essential reality: introducing novel exterior materials often requires adapting industrial tooling and forming processes to match the metal's specific physical behavior.\n\n6⃣ ETHERLOOP\n\nEtherloop is a gigabit-speed Ethernet network backbone—transmitting data at one billion bits per second—connecting distributed vehicle computers, replacing long individual cable runs with localized data collection. The architecture combines two distinct concepts: a zonal layout for gathering wiring, and a ring topology for routing data.\n\nInformation travels across the truck through a streamlined communication pipeline:\n\n🌐 Nearby hardware like door switches, lights, and sensors plugs straight into regional zonal controllers rather than routing individual wires across the entire length of the truck.\n\n💻 Those regional controllers then bundle that local traffic onto a single, high-speed gigabit Ethernet backbone—moving up to one billion bits per second—while legacy CAN networks handle lightweight local tasks.\n\n🔁 Because this gigabit backbone forms a closed bidirectional loop, traffic can travel in either direction, allowing data to instantly reverse course around the ring if a physical cable is cut.\n\n✂️ Passing signals through local hubs and around this shared loop eliminates roughly 70% of the cross-vehicle wires that traditionally clutter an automotive harness, according to Tesla's engineering disclosures.\n\nConsolidating cross-vehicle connections trims physical harness weight and reduces assembly complexity on the production line.\n\nFrom an industry perspective, Etherloop offers a tangible reference point for zonal architectures. It demonstrates how carmakers can combine high-speed Ethernet backbones with proven local networks like CAN to manage the heavy data demands of modern software-defined vehicles.\n\n🔱 FINAL VERDICT\n\nStripped of marketing spin, the Cybertruck is an intentional stress-test on the very definition of an automobile. It throws out the holy cows of legacy manufacturing—paint shops, steering columns, 12V relays, point-to-point wiring looms—and replaces them with raw computing muscle and cold-worked metal.\n\nNot every OEM will follow Tesla down the path of bare stainless steel or air-cushioned brake presses. But on the electronic and software frontier, the paradigm has cracked. The modern vehicle is no longer a mechanical machine stuffed with electronics; it is a distributed supercomputer on wheels.\n\nThe Cybertruck is the opening salvo of that silicon era—loud, abrasive, and completely unapologetic.\n\nhttps://t.co/qscNlnFtKX",
+    "post_url": "https://twitter.com/tslaming/status/2098403832472768777",
+    "score": 42,
+    "num_comments": 4,
+    "created_utc": {
+      "$date": "2026-09-11T13:30:34Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:13:06.890Z"
+    }
+  },
+  {
+    "_id": {

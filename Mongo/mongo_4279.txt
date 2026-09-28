@@ -1,0 +1,416 @@
+    "created_utc": {
+      "$date": "2026-09-13T22:03:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:04:09.281Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa71dd96508d45f3d2c10e2"
+    },
+    "message_id": "reddit_t3_1wfl5fu",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "starvingartists",
+    "username": "iloda_19",
+    "title": "[FOR HIRE] $30 for a full body character with background. If you buy 2 commissions, the second one is half the price!",
+    "text": "[FOR HIRE] $30 for a full body character with background. If you buy 2 commissions, the second one is half the price!\n\nsubmitted by     /u/iloda_19     to     r/starvingartists       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/starvingartists/comments/1wfl5fu/for_hire_30_for_a_full_body_character_with/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:03:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:04:09.511Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa71dd96508d45f3d2c10e3"
+    },
+    "message_id": "reddit_t3_1wfl5fs",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "FirstTimeHomeBuyer",
+    "username": "NopeIDoNotLilkeIt",
+    "title": "Do sellers ever really consider the humans behind the offer?",
+    "text": "Do sellers ever really consider the humans behind the offer?\n\nObviously, I’m sure it happens once in a blue moon. I know cash is king. But for any of you that have sold homes, and you had multiple offers, do you always just go with the highest dollar amount, or are there ever any stories where you really liked the people making the offer even though it was less than others and you decided to go with them? I would just love to know that I might have a chance in the future because I know just about anybody could outbid me. But I work really hard and I’m a good person. Will that ever matter? How can I connect with the sellers? Are they even visible? I feel like you never even meet the sellers. Or am I totally wrong about that? I remember back in the 80’s hearing about the buyer writing a letter to the sellers. Is that still a thing? What can I do to increase my chances of being accepted that isn’t just having more money than I have?       submitted by     /u/NopeIDoNotLilkeIt     to     r/FirstTimeHomeBuyer       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FirstTimeHomeBuyer/comments/1wfl5fs/do_sellers_ever_really_consider_the_humans_behind/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:03:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:04:09.741Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa71dd96508d45f3d2c10e4"
+    },
+    "message_id": "reddit_t3_1wfl5fc",
+    "topic_key": "how is sentiment around notion changing over the last 30 days",
+    "search_keyword": "Notion",
+    "platform": "reddit",
+    "subreddit": "Entrepreneurs",
+    "username": "phantaso635",
+    "title": "Lessons from 1.5 years of building a mobile app with Cursor (It's alive)",
+    "text": "Lessons from 1.5 years of building a mobile app with Cursor (It's alive)\n\nHi everyone, I have been working on a mobile app for a while after coming up with a great idea while talking with my girlfriend. I am normally a professional software engineer but had no experience with mobile app development until then. After ~1.5 years of development, here is a short summary of the stages I went through and what I learned during the development of Pollcy:    Stage 1 - From idea to reality    For easier development and management, after some research and conversation with friends, I decided to use React Native for simultaneous iOS and Android development. For the backend of the project, I used Firebase, which provides a generous free tier and a cheap paid tier option. This was going to be a mobile app that filters controversial daily news and provides summaries along with a question about them, where users were going to vote for one of the given options. At the beginning, backend and app development was pretty straightforward. I was using Cursor to get anything I needed done, with a little audit from my end. I used a monorepo where the Firebase-related code was in the same workspace as the mobile app, which was very useful and easy to maintain. After about 1 week, I had a demo of the app that was promising and impressive to me. My friends and family liked it and supported me in continuing with it. But I felt that my development workflow was not right.    Stage 2 - Improving the app and optimizing the codebase    Even though AI was doing a pretty good job, I was not able to trust what I built properly. Hence, I allocated some time to read the source code thoroughly and understand every piece of it as much as possible. After that point, I realized that until that time, I had been doing the development with short agent sessions where I only asked for the implementation of small features without enough context. When I didn't give enough information to the agent, it was either duplicating code or overwriting some vital parts of the codebase and breaking an important functionality to accomplish its own task(s). Whenever I wanted to provide context, I was explaining the purpose of the project and the module it needed to work on from scratch, each time. When I finally decided to take action against this unsustainable situation, I followed the following steps, which  I highly recommend you read completely :     I documented the project thoroughly in Markdown files, without using a single line of AI-generated text. I explained what exactly this project is, how it works, and all other details   I created a single Markdown file that shows the data structures kept in each Firestore database path. This is probably the best thing I did during the entire development of the project. I made sure that both Python code for the Firebase functions, and the TypeScript code for the mobile app had compatible data models for my design in the documentation. For the models, I coded everything manually without AI support. This was not because AI was not able to implement the models, but because I was able to understand and simulate the entire system in my head when designing it manually   I created an  AGENTS.md  file and defined Cursor rules so that Cursor agents also learned that the markdown files were the single source of truth, and they could only be edited by me unless I asked otherwise.   I created simple bash scripts to be able to execute my routine jobs, such as updating Firebase, deploying the app to the App Store, etc.   I used 2 different Firebase projects, one as production and the other as the development project. This is very practical because, before publishing a feature to prod, I can first publish to the dev project, install a debug version of the app on my phone, and use it for a while to see how it performs.   On the mobile app side, I wrapped Firebase calls with custom counters so that it counts every single Firestore DB interaction for me. This helped me to collect data about the possible cost of a user session, which I then analyzed in detail with the help of a custom Python notebook. The notebook calculates the Firebase costs for different scales of MAU/DAU.      Stage 3 - Releasing the app    After months of development, getting feedback, and re-developing some parts of the app in a better way, I was finally ready to release the app. During this stage, I highly utilized from the following free tools (I am not affiliated with any of them, just sharing because they were useful for me):      https://www.photopea.com/:  A web-based Photoshop-like tool where I did most of my designs for the app icon, advertisements, App Store image creation, etc.    https://app-mockup.com/:  A free App Store image generator. It provides awesome layouts, and all you need to do is upload app screenshots and optionally put some text on the images      Other tools I utilized      Appflowy: A free self-hosted Notion alternative that I used a lot for project management. It also has mobile apps you can connect to your own server as well.   Trello: I use it for my Kanban board to keep track of future features I want to add. Pretty useful on both PC and on a mobile phone.      Stage 4 - Growing the app with user acquisition    Well.... This is the current stage I am at, and I don't have much idea of how it works. I hired an influencer on TikTok and promoted the video as a Spark Ad, but 0 users were gained with a ~$ 100 campaign (I am trying to test with smaller amounts currently). The video was not exactly how I wanted it to be, but that is also my fault. I learned that influencers are not much different than AI, so you should provide them with what you need, but at the same time, you shouldn't put too many restrictions on their workflow. TikTok Business is terrible, btw, unfortunately. It is full of bugs, and they are not so willing to help you when you have an issue. Meta was slightly better and easier, but after a ~$ 100 test campaign in Meta with an image of app screenshots, I gained 0 users from there as well. Without a doubt, this is not a coincidence, and I definitely need to improve something.   I hope it was helpful to you to read my journey. I didn't want to add too many details to not to make it too boring, but if you have any questions, I would be glad to answer.       submitted by     /u/phantaso635     to     r/Entrepreneurs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Entrepreneurs/comments/1wfl5fc/lessons_from_15_years_of_building_a_mobile_app/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:03:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:04:09.974Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa71dda6508d45f3d2c10e6"
+    },
+    "message_id": "reddit_t3_1wfl5fb",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "whatcarshouldIbuy",
+    "username": "Acclimated-Alps696",
+    "title": "‘94 Chevy vs 2000 F250",
+    "text": "‘94 Chevy vs 2000 F250\n\nAlright I’m deciding between these two trucks at the moment. There’s a 1994 Chevy 2500 with the 454 and a 2000 F250 with the 6.8. Both are manual transmissions and pretty rust free, they are within ~$200 of each other.   The Chevy is a long bed extended cab with 122k miles. The ford is a crew cab with 198k miles. I’m getting a 3/4 ton to pull my trailer that me and my wife will be living in until we can buy/build a house.    Likely we will pull the trailer and park it then move it maybe once or twice. I have a truck-bed trailer that I’ll use for moving materials and tools as I’m in construction    I don’t expect anything for fuel economy. What I want is whichever vehicle is gonna be more reliable and easier for me to repair.    I’ve owned a 99 F250 diesel so I’m familiar with that platform and love pulling with it. My grandfather owned a 94 1500 so I’m definitely a bit nostalgic about that model and know the legendary reliability of the GMT400s.   Any insight would be great! I expect that the f250 will be more comfortable as it’s a bigger cab and newer, but I’m happy to work on the Chevy to make it better for my wife       submitted by     /u/Acclimated-Alps696     to     r/whatcarshouldIbuy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/whatcarshouldIbuy/comments/1wfl5fb/94_chevy_vs_2000_f250/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:03:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:04:10.430Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa71dda6508d45f3d2c10e7"
+    },
+    "message_id": "reddit_t3_1wfl5ei",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "daryltuba",
+    "title": "[Sticker Giveaway] Enter to win a 5 Stars Kishmish Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 5 Stars Kishmish Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/daryltuba     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wfl5ei/sticker_giveaway_enter_to_win_a_5_stars_kishmish/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:03:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:04:10.664Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa71ddaa18b546d423dc208"
+    },
+    "message_id": "reddit_serp_1w9j38r",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/visas/comments/1w9j38r/ireland_student_visa_awaiting_decision_delivered/",
+    "text": "Ireland student visa awaiting decision delivered 9th July it’s so frustrating\n\nAnyone else waiting for their Irish student visa ?       submitted by     /u/TieSuspicious6783       [link]       [comments]",
+    "username": "TieSuspicious6783",
+    "subreddit_or_channel": "visas",
+    "posted_at": "2026-09-07T05:27:15+00:00",
+    "fetched_at": {
+      "$date": "2026-09-13T22:04:10.719Z"
+    },
+    "google_rank": 4,
+    "search_keyword": "find me people who are currectly having issues with uk visa becuase we are specilized in providing visa services",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-13T22:04:10.719Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa71dda6508d45f3d2c10e8"
+    },
+    "message_id": "reddit_t3_1wfl5ea",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "aznidentity",
+    "username": "ding_nei_go_fei",
+    "title": "Kopino: Can I Find My Father?",
+    "text": "Kopino: Can I Find My Father?\n\nThe term “Kopino” is a combination of the words “Korean” and “Filipino.” It represents mixed ethnicities who have a Korean father and a Filipino mother. They are also called “New Lai Daihan.”   Lai Daihan   also has a meaning of a person with mixed blood who was born to a Korean father and a Vietnamese mother during the Vietnam War. Currently, it is estimated that there are almost 30,000 Kopino children in the Philippines, including 1,500 in Manila, the capital of the Philippines. According to the statistics, most of their fathers are Korean men in their 20s who studied abroad in the Philippines or some elderly men who had visited the Philippines for business or tourism.   Backgrounds of Kopino   The number of students who go to the Philippines for language training increased rapidly since 2007 ... According to the statistics, almost 40,000 Korean students board a plane bound for the Philippines for an educational purpose every year.   In fact, nine out of ten Kopino fathers were found to be students in their 20s, and this is why the Philippines have more half Koreans when compared to other Southeast Asian nations. Moreover,  the number of Korean men who visit the Philippines with the purpose of tourism or overseas business trips has consistently increased. They often impregnate a Filipino woman through tourism called “Emperor Tourism.” It is a kind of sex tourism in which people go sightseeing with Filipino women in the daytime and have sex with them at night.  The reason why sex tourism was developed in the Philippines is that the regulations on prostitution are relatively loose, and sexual labor is cheaper than other countries - including Korea. However, the most important cause of increasing Kopino is not prostitution, but some Korean men who deceived women by pretending to be sincere with their love and future. These men marry a Filipino woman and start a family. Because over 80 percent of people in the Philippines are Catholics who do not allow contraception and abortion, chances of having babies increase after having a wedding. This made the problem even more difficult to solve.   In regards to the human perception aspect,  Koreans have a tendency to unconsciously believe that they are superior to Filipinos,  especially after Korea achieved a high level of economic growth. This tendency of Koreans having a dismissive attitude toward the Philippines created hostility within the country, and sometimes it led to murder cases targeting Koreans. Another reason is that some Korean men associated with this problem have low morality and a false sense of human rights. Some of the Kopino fathers who started a family already had a family in Korea. Besides, they used Korean slangs for their private information when they registered their marriage in the Philippines. This is because they knew that the Filipino women could not understand their words, and there is no way to punish them even if their wives realize their fraud. A professor at Sungkyunkwan University Law School claimed that these men view females as the object of their pleasure instead of personal beings, and it is necessary for them to receive proper education.   ...   ...   Korean men who simply visited the Philippines for sex tourism were condemned as “ugly Koreans.” They irresponsibly returned to their home after having a wedding and starting a family with a Filipino woman by using a forged document or fake personal details. In addition, they abused the fact that these women were ignorant about the laws. Some Korean men required them to withdraw a suit by giving them a very small amount of money such as 50,000 every month. In the past, there was a social trend called the “Korean Dream” among Filipino women, which meant they could be better off by marrying a Korean man. However, this hope turned into disappointment and hatred feeling toward Korea ...   Movements to Help Kopino   According to Korea’s law, real parents should be responsible for the payment of child maintenance even though they had the baby through prostitution. ...   “Kopinofather” is a website that helps to find Kopino fathers by uploading Korean men’s pictures and private information provided by their family. ...   Tacteen Tomorrow. Tacteen means “a clear view” in Korean. In other words, this organization promotes activities related to youth rights in order to make a bright future for Korea. They started to help Kopino after they heard their miserable stories during the project for international eradication of sexual exploitation of children. ...   The Korean Government   Many organizations have started to assist Kopino families. However, what they really need is continued support from the government. The Korean government has done nothing for Kopino up to this point, ...   ...    https://skt.skku.edu/news/articleView.html?idxno=24        submitted by     /u/ding_nei_go_fei     to     r/aznidentity       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/aznidentity/comments/1wfl5ea/kopino_can_i_find_my_father/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:03:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:04:10.898Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa71ddb6508d45f3d2c10e9"
+    },
+    "message_id": "reddit_t3_1wfl5e9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "nancydrew",
+    "username": "mandiilynne",
+    "title": "Here are some pictures I took during my Florida trip that felt taken out of a Nancy Drew game!",
+    "text": "Here are some pictures I took during my Florida trip that felt taken out of a Nancy Drew game!\n\nI have a few more that also give off Nancy vibes I wasn't able to include here, so I'd be happy to do a part 2 if y'all would like! This is one of my favorite trends in this subreddit, so I'm really happy to have a chance to join along☺️       submitted by     /u/mandiilynne     to     r/nancydrew       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/nancydrew/comments/1wfl5e9/here_are_some_pictures_i_took_during_my_florida/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:03:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:04:11.128Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa71ddb6508d45f3d2c10eb"
+    },
+    "message_id": "reddit_t3_1wfl5dn",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ScamChecker",
+    "username": "Cute_Highlight_3107",
+    "title": "is shoporthevia.com legit or scam?",
+    "text": "is shoporthevia.com legit or scam?\n\nScore : 93/100    Risk Level : High Risk    Domain Age : 170 days   shoporthevia.com is likely  unsafe , check details in screenshot    Full Analysis :  https://websafely.app/analysis/shoporthevia.com?s=reddit     Scanned using  WebSafely   chrome extension .        submitted by     /u/Cute_Highlight_3107     to     r/ScamChecker       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ScamChecker/comments/1wfl5dn/is_shoportheviacom_legit_or_scam/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:03:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:04:11.588Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa71ddb6508d45f3d2c10ec"
+    },
+    "message_id": "reddit_t3_1wfl5dm",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SIBO",
+    "username": "__anger__",
+    "title": "(Long post) Could I have sibo?",
+    "text": "(Long post) Could I have sibo?\n\nMaking a post here since I currently do not have insurance or the time to wait for an official test, however my symptoms are getting unbearable.   I posted before in the histamine intolerance subreddit about how since Wednesday 9/02 I've had a bunch of sudden food sensitivities that I didn't previously have. I had spent the month of August with acid reflux that caused a globus sensation (lump in my throat) and it made it hard for me to eat because the globus made it feel like food would get stuck in my throat sometimes. I had an h pylori test on August 25th and it came back negative, and eventually after doing some home remedies the acid reflux went away. The acid reflux was caused by me skipping breakfast for about half or three quarters of the month.   In the beginning of September I started taking things like zinc carnosine and blended papaya to help heal my gut since I had just spent a month dealing with reflux. Starting on Friday September 4th I started feeling a chest tightness as I ate my lunch, and the tightness peaked on Sunday September 6th. On Monday September 7th I went to the ER because the chest tightness and trouble breathing properly scared me, but they didn't really do anything since my heart rate blood pressure and oxygen was normal. I went home afraid of what would happen because they didn't do anything, however later that day I started to feel better. I realized this was because I immediately went to the ER and didn't drink the papaya or the zinc carnosine. I also know that the papaya was the cause of it because Tuesday I drank it again and started to feel the chest tightness form again. I found out that papaya is a histamine liberator.   Unfortunately I was unaware that apple cider vinegar and the gluten free bread and lactose free milk I had were also high in histamines, and I basically went 3 days straight again eating things that gave me reactions. The scary part is that on Friday September 11th I felt the reaction before I even ate anything. I went to the ER because it scared me and they once again didn't do anything because it was all normal. They ruled out electrolyte definitely and refeeding syndrome though.   The issue now is that I wake up with the shortness of breath, there's no wheezing or cough but it's hard to get a full breath in and it feels like it's progressively getting worse. I know histamine gets produced when you wake up but I never had that kind of reaction before. There's a lot of times where I can breathe through my nose but the chest air hunger remains. And another issue is that now I seem to be reacting to any food, even foods that used to be safe for me.    My symptoms are as follows, food intolerance/food sensitivities I didn't previously have, chest tightness, air hunger, constipation, bloating, excessive burping and loss of appetite.   My less educated guess is that this could be sibo that formed from eating poorly in August, which lowered the vitamins I need to produce the dao enzyme and is making it hard for me to process histamines. OR, the consecutive days of eating food that are histamine liberators overflowed my histamine bucket and since I have low dao enzymes I can't process them all. I have bloodwork tomorrow to check for dao enzyme vitamins and I'm gonna see if I can call to get them to add histamine plasma to the bloodwork. I'm currently on a strict diet of fresh chicken potatoes carrots and zucchini. I'm also taking fexofenadine once a day and famotidine twice a day, once in the morning and once at night. They help manage the symptoms to not progress further but they don't really \"fix\" it.   I hope this is enough for someone smarter than me to help because I'm afraid of this situation progressing further. I'd rather try to treat sibo now than suffer through months of poor breathing for an appointment.        submitted by     /u/__anger__     to     r/SIBO       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SIBO/comments/1wfl5dm/long_post_could_i_have_sibo/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:03:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:04:11.819Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa71ddc6508d45f3d2c10ed"
+    },
+    "message_id": "reddit_t3_1wfl5dd",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "digitalnomadlife",
+    "username": "whosflower",
+    "title": "Anyone here has travelled to Siargao, PH?",
+    "text": "Anyone here has travelled to Siargao, PH?\n\nsubmitted by     /u/whosflower     to     r/digitalnomadlife       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/digitalnomadlife/comments/1wfl5dd/anyone_here_has_travelled_to_siargao_ph/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:03:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:04:12.049Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa71e0ea18b546d423dc209"
+    },
+    "message_id": "reddit_serp_1i7kte9",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/visas/comments/1i7kte9/india_evisa_application_website_issue/",
+    "text": "India e-visa application website issue\n\nI'm trying to apply for an e-visa using the official site  https://indianvisaonline.gov.in/evisa/tvoa.html    But I'm stuck in a loop, can't get past the first page.   I click on \"Apply here for e-visa\", fill out the form and I get the same form again.   I tried multiple devices, browsers, internet connections and form selections.   Is there a trick I'm missing?   Edit: Seems like they fixed the issue, I managed to get to the second page       submitted by     /u/mtgx       [link]       [comments]",
+    "username": "mtgx",
+    "subreddit_or_channel": "visas",
+    "posted_at": "2025-01-22T20:18:04+00:00",
+    "fetched_at": {
+      "$date": "2026-09-13T22:05:02.634Z"
+    },
+    "google_rank": 1,
+    "search_keyword": "find me people who are currectly having issues with uk visa becuase we are specilized in providing visa services",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-13T22:05:02.634Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa71e136508d45f3d2c10ee"
+    },
+    "message_id": "reddit_t3_1wfl6d2",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ScamChecker",
+    "username": "Cute_Highlight_3107",
+    "title": "is 9wolf.pw legit or scam?",
+    "text": "is 9wolf.pw legit or scam?\n\nScore : 89/100    Risk Level : High Risk    Domain Age : 71 days   9wolf.pw is likely  unsafe , check details in screenshot    Full Analysis :  https://websafely.app/analysis/9wolf.pw?s=reddit     Scanned using  WebSafely   chrome extension .        submitted by     /u/Cute_Highlight_3107     to     r/ScamChecker       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ScamChecker/comments/1wfl6d2/is_9wolfpw_legit_or_scam/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:04:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:05:07.841Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa71e146508d45f3d2c10ef"
+    },
+    "message_id": "reddit_t3_1wfl6cl",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "FortniteAccSale",
+    "username": "BloomGloom420",
+    "title": "Selling my personal account. DM offers please.",
+    "text": "Selling my personal account. DM offers please.\n\nCan supply any proof necessary        submitted by     /u/BloomGloom420     to     r/FortniteAccSale       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FortniteAccSale/comments/1wfl6cl/selling_my_personal_account_dm_offers_please/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:04:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:05:08.070Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa71e146508d45f3d2c10f0"
+    },
+    "message_id": "reddit_t3_1wfl6c4",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "Hobbies",
+    "username": "laurifroggy",
+    "title": "I really enjoy traveling, but I think one of the things I love most is visiting places—beyond the usual tourist spots—that strike me as curious or peculiar... I also love anything creepy or mysterious 🖤; I can't quite explain why I'm drawn to such things... Here is a selection of interesting photos.",
+    "text": "I really enjoy traveling, but I think one of the things I love most is visiting places—beyond the usual tourist spots—that strike me as curious or peculiar... I also love anything creepy or mysterious 🖤; I can't quite explain why I'm drawn to such things... Here is a selection of interesting photos.\n\nsubmitted by     /u/laurifroggy     to     r/Hobbies       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Hobbies/comments/1wfl6c4/i_really_enjoy_traveling_but_i_think_one_of_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:04:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:05:08.297Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa71e146508d45f3d2c10f1"
+    },
+    "message_id": "reddit_t3_1wfl6bw",
+    "topic_key": "httpswarisdevisadev its my web so find me for customers",
+    "search_keyword": "LangChain",
+    "platform": "reddit",
+    "subreddit": "LangChain",
+    "username": "Asly97",
+    "title": "Supermemory vs Mem0 vs Vilix AI for agent memory, which one are you actually running?",
+    "text": "Supermemory vs Mem0 vs Vilix AI for agent memory, which one are you actually running?\n\nI've been building agents with LangChain and I need a real memory backend instead of my current hacky setup. I've narrowed it to three: Supermemory, Mem0, and Vilix AI. I already use Vilix AI for personal stuff, connected over MCP to ChatGPT, Claude, and Cursor, and it keeps one shared memory across all of them, which genuinely saves me from re-explaining things. Now I'm wondering if it fits the agent build too, or if Supermemory or Mem0 is the better call for something I call from code. From what I can tell, Mem0 has the bigger community and simpler API, while Supermemory pushes the knowledge graph angle and more content types. What I can't tell from docs is how any of them behave in production. One thing I'd flag for all three: they work over MCP, so the model itself decides when to call the memory tools, and models are lazy about it. Mine regularly skips the call until I explicitly tell it to check memory. Anyone running one of these in production? What made you pick it?       submitted by     /u/Asly97     to     r/LangChain       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LangChain/comments/1wfl6bw/supermemory_vs_mem0_vs_vilix_ai_for_agent_memory/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:04:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:05:08.525Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa71e156508d45f3d2c10f5"
+    },
+    "message_id": "reddit_t3_1wfl6bi",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AlignmentChartFills",
+    "username": "iamepic420",
+    "title": "What’s a Video Game original character that had a race change that was welcomed?",
+    "text": "What’s a Video Game original character that had a race change that was welcomed?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/iamepic420     to     r/AlignmentChartFills       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlignmentChartFills/comments/1wfl6bi/whats_a_video_game_original_character_that_had_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:04:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:05:09.427Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa71e156508d45f3d2c10f6"
+    },
+    "message_id": "reddit_t3_1wfl6ai",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "OnlineFriend",
+    "username": "Southern-Place6368",
+    "title": "M32 EST",
+    "text": "M32 EST\n\nSend a chat! I was off Reddit for a while, so the new account won’t let me message people first       submitted by     /u/Southern-Place6368     to     r/OnlineFriend       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OnlineFriend/comments/1wfl6ai/m32_est/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:04:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:05:09.660Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa71e156508d45f3d2c10f7"
+    },
+    "message_id": "reddit_t3_1wfl69x",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "php",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "📢 Jobgether [HIRING] a Engineering Manager!",
+    "text": "📢 Jobgether [HIRING] a Engineering Manager!\n\nCompany: Jobgether   Location: Canada Remote 📍   Date Posted: September 10, 2026 📅   Categories: #engineer #senior #remote #ruby #php   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=brenxor.com&rurl=aHR0cHM6Ly9icmVueG9yLmNvbS9qb2ItZGV0YWlscy0xODY0MTMtZW5naW5lZXJpbmctbWFuYWdlcg==    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wfl69x/jobgether_hiring_a_engineering_manager/",
+    "score": 0,
+    "num_comments": 0,

@@ -1,0 +1,416 @@
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T01:19:24.882Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa89d1d6508d45f3d2c8635"
+    },
+    "message_id": "reddit_t3_1wgm6xs",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "kyq",
+    "title": "Grab 25⚡ from u/kyq!",
+    "text": "Grab 25⚡ from u/kyq!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/kyq     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wgm6xs/grab_25_from_ukyq/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T01:19:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T01:19:25.082Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa89d1d6508d45f3d2c8636"
+    },
+    "message_id": "reddit_t3_1wgm6x9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Low_Cicada3259",
+    "title": "A cringeful question, though. If someone leaves Reddit, will anyone care that they're gone? What is your point of view?",
+    "text": "A cringeful question, though. If someone leaves Reddit, will anyone care that they're gone? What is your point of view?\n\nsubmitted by     /u/Low_Cicada3259     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wgm6x9/a_cringeful_question_though_if_someone_leaves/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T01:19:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T01:19:25.285Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa89d1d6508d45f3d2c8637"
+    },
+    "message_id": "reddit_t3_1wgm6we",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Vancouver4Friends",
+    "username": "Revolutionary_Fix381",
+    "title": "I want to play soccer at Burnaby/ Richmond",
+    "text": "I want to play soccer at Burnaby/ Richmond\n\nHi I like watching soccer and buying jerseys and would love to have someone to play soccer with. It can be a local amateur soccer team or just casual hangout on the field. I am still a beginner but I know I will be better after like 3 or 4 months. I think soccer and then grab food after will be such a killer combo.        submitted by     /u/Revolutionary_Fix381     to     r/Vancouver4Friends       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Vancouver4Friends/comments/1wgm6we/i_want_to_play_soccer_at_burnaby_richmond/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T01:19:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T01:19:25.485Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa89d1d6508d45f3d2c8638"
+    },
+    "message_id": "reddit_t3_1wgm6wb",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "scryer_media",
+    "username": "nzbman",
+    "title": "Scryer - Release 0.20.0 - The colossal one",
+    "text": "Scryer - Release 0.20.0 - The colossal one\n\nGreetings   Today brought the single largest upgrade to Scryer since its launch! I am humbled that, as of today, Scryer has hit 600 users, from all corners of the globe.   Acknowledgments   As always, I have to start these posts with my sincere appreciation for all the wonderful folks in the Scryer community who help me every day. From bug reports on GH, to Discord members who encourage me and help me troubleshoot tricky issues, this community makes Scryer better!   Highlights   I honestly don't know where to start this time. I had so many things that i had wanted to do and i let myself get a bit carried away. There's SO much here.    Experimental Features      I have added a new concept of experimental features. These are  truly  experimental and expect them to change at any point. None of them will be removed, but do not be upset if they have bugs or change drastically patch to patch. This is why they're disabled by default and require explicit opt-in to see.      Plugin Updates      This one deserves some attention. I am truly sorry for the plugin churn lately and the broken catalog issues. I have a fleet of 50+ plugins and I was carrying 3 generations of plugin dev kits (PDKs) across them. Long story how i got there in just six months... But now the plugins are all standardized on ONE PDK and will stay on that model for the foreseeable future. I also did a very thorough walk through of every. single. plugin. to try and make them work better. There's still bugs (hence many beta plugins), but things should operate a ton smoother      Advanced Indexers - Beta      While this feature is not \"experimental\", it's an early beta. This new plugin lets you use advanced indexers like Prowlarr has, directly inside Scryer. Try it out and please open GH issues if you find your indexers not working right.      Library Moves - Experimental      This is the most hardened of the experimental features and will move into beta soon. This feature allows you to re-assign root folders to media you move, or even allow Scryer to do a managed move of your media for you. When you let Scryer move your media, it creates a very robust pipeline that moves and verifies your files before any deletion happens.      Indexer Search - Experimental      Ever wanted to do a raw search across all your indexers at once? Now you can! Scryer brings a new raw indexer search that let's you find releases and grab them - assigning them to a title. Great to find those releases that the parser just can't find.      Media Lifecycle Rules - Experimental      This one i'm VERY excited about. It's early experimental, expect it to shift drastically over the next month. Think Maintainerr, but inside Scryer. This system rides on top of the highly performant and robust rules engine in Scryer and lets you determine which media needs to be deleted automatically, or monitored, or unmonitored, or even transcoded to an archival AV1 (transcoding coming soon!). All with nearly unlimited power in custom rules based on things like watch history, tags, was it requested, etc.      Request Approval Rules - Experimental      Another huge and exciting feature for me. This is something that I haven't seen anywhere, but think of if you could add custom rules to Seerr. Want to auto approve rated G content your kids request? Want to auto-approve requests from your friends as long as it's deleted after 2 weeks? Want to ensure you review all 4k requests? That is what this system aims to do. Full disclosure - this is the roughest of the experimental features.      Custom Rule Packs - Customizable TRaSH scoring and SeaDex!!      One of the biggest complaints i've received is that the TRaSH guide scoring is not universally loved. I've heard you all and I've finally fixed it in the way I feel brings the best of all worlds. Now in Scoring Rules (formerly \"Rules\"), you will see custom rule packs. TRaSH is still enabled by default, but can be disabled or customized! Also, in Community rule packs you'll now see a SeaDex pack which is a big win for Anime fans. Custom rules will be updated daily and you can set them to auto-update if you prefer.      Proxies 2.0      This is an extravagance i couldn't help building because i think it's cool. In addition to the existing support for Byparr/Trawl, Scryer now supports standard web proxies like SOCKS5 & HTTP. And it also supports SSH and Wireguard! This is no small engineering feat to have an in-app VPN client and i was so excited when i figured out how to really make this work. Why would you use this? Some indexers are VERY picky about you always using the same IP address and folks have dynamic IPs at home. This allows you to access from a static VPN IP, without putting all your Scryer traffic through that same link (like traditional VPN would). You can assign a different VPN per indexer if you want. The SSH proxy tunnel is ideal for folks running seedboxes. Your Scryer can now submit directly to your qBit on your seedbox via an SSH tunnel that Scryer manages easily.      Media Parsing Upgrades      I added about 20k lines of code to the media parser engine to get much better info about your media files and cover many more formats, including ISOs.     Additional   I doubt anyone is still reading this post.... but if you are, there's a ton of other bugfixes in this release. Scoring bands were tweaked to be more accurate. Multilingual titles will match better (umlauts now match, romanji matches cleaner, etc.). I truly hope you enjoy this release!   Roadmap   I'm actually winding down on my roadmap for Scryer. This tool is nearly everything i want it to be. The last big arcs before I focus purely on polishing it are     List integration (MAL, Trakt, Plex Watchlists, etc)   Encoding as part of lifecycle (watch once in remux, encode to av1 for archival)     Ecosystem   If you're interested in integrating with Scryer, please reach out to me! The latest version has an API explorer you can enable, but I'd love to chat with folks on Discord.    Join us on discord  for more realtime discussion about the product, we have a growing and very lively group there!       submitted by     /u/nzbman     to     r/scryer_media       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/scryer_media/comments/1wgm6wb/scryer_release_0200_the_colossal_one/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T01:19:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T01:19:25.685Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa89d1d6508d45f3d2c8639"
+    },
+    "message_id": "reddit_t3_1wgm6wa",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "[HIRING] a Infrastructure Engineer! in Cleveland Metropolitan School District",
+    "text": "[HIRING] a Infrastructure Engineer! in Cleveland Metropolitan School District\n\nCompany: Cleveland Metropolitan School District   Location: East Professional Center, Georgia 📍   Date Posted: September 14, 2026 📅   Categories: #engineer #fulltime   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=sysadminjobs.com&rurl=aHR0cHM6Ly9zeXNhZG1pbmpvYnMuY29tL2pvYnMvaW5mcmFzdHJ1Y3R1cmUtZW5naW5lZXItNjQ4NTU0YjA=    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wgm6wa/hiring_a_infrastructure_engineer_in_cleveland/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T01:19:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T01:19:25.886Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa89d1e6508d45f3d2c863a"
+    },
+    "message_id": "reddit_t3_1wgm6uy",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Flins_Mains",
+    "username": "Kosamy",
+    "title": "Someone convince me if getting C1 Ineffa is worth it or not",
+    "text": "Someone convince me if getting C1 Ineffa is worth it or not\n\nI have a well invested Flins premium team (Flins C2R1, Columbina C2 P. Amber, C2 Xilonen w/ Fav) and C0R1 Ineffa. I’m debating on whether or not I should get her C1. I know it’s not necessary esp with me only doing stygian for the primos only, but something is itching me to pull C1 Ineffa to make my team atronger.   My only plans atm is to get Tsaritsa and her bis team but I really enjoy my Flins team a lot and have been using him majority of the time. I know this is the Flins main subreddit, but realistically is it smarter for me to invest in a new / different team?       submitted by     /u/Kosamy     to     r/Flins_Mains       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Flins_Mains/comments/1wgm6uy/someone_convince_me_if_getting_c1_ineffa_is_worth/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T01:18:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T01:19:26.092Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa89d576508d45f3d2c863b"
+    },
+    "message_id": "reddit_t3_1wgm7s8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "[HIRING] a It Support Specialist! in Southeastern Container Inc",
+    "text": "[HIRING] a It Support Specialist! in Southeastern Container Inc\n\nCompany: Southeastern Container Inc   Location: CANDLER, NC 📍   Date Posted: September 14, 2026 📅   Categories: #support #entrylevel #fulltime   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=sysadminjobs.com&rurl=aHR0cHM6Ly9zeXNhZG1pbmpvYnMuY29tL2pvYnMvaXQtc3VwcG9ydC1zcGVjaWFsaXN0LTliNTE4NWU4    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wgm7s8/hiring_a_it_support_specialist_in_southeastern/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T01:20:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T01:20:23.251Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa89d576508d45f3d2c863c"
+    },
+    "message_id": "reddit_t3_1wgm7s1",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "expedition33",
+    "username": "Alexhk66",
+    "title": "Maelle Statue Bard Studio",
+    "text": "Maelle Statue Bard Studio\n\nThis just arrived. I was a bit anxious waiting for it; it's my first high value statue and just recently began the hobby of collecting the one's I happen to like a lot. It came in perfect condition, all the way from Hong Kong to Puerto Rico. I'm a big fan of the game, and Maelle is an awesome character in my opinion. Here are a few pictures I took. They don't do it justice; looks amazing in person.    Btw, for those who are a lot more knowledgeable than me. Does anybody know what the g266 on the token means? I did I quick search but couldn't find a solid answer. I'll keep looking later.        submitted by     /u/Alexhk66     to     r/expedition33       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/expedition33/comments/1wgm7s1/maelle_statue_bard_studio/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T01:20:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T01:20:23.450Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa89d576508d45f3d2c863d"
+    },
+    "message_id": "reddit_t3_1wgm7rz",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "gayfriendfinder",
+    "username": "OregonSkier32",
+    "title": "36 year old male looking for long-term friends! Please read post before messaging/commenting! Thank you!",
+    "text": "36 year old male looking for long-term friends! Please read post before messaging/commenting! Thank you!\n\nHi, I'm Ryan from Oregon which is located in the Pacific Northwest region of the United States    Distance is not a dealbreaker to me, I'm open to friends from anywhere in the world! Don't feel discouraged if you don't live nearby!   I love sports ( 🏀, ⚾️, 🏈, 🎾, 🎳, ⛳️)   Music (blues, jazz, funk, rock, pop, alt, bluegrass, reggae, classical, etc.)   Movies (Sci-fi, comedy, action adventure, animated, etc.)   TV (The UnXplained, Jeopardy, Wheel Of Fortune, etc.)   Cooking (Italian, mexican, american)   Baking (cookies, brownies, cake, muffins, etc.)   Traveling (Disneyland, San Francisco, Portland, Eugene, Bend, etc.)   Shopping (Marshall's, Ross, Tj Maxx, Burlington, Amazon, Etc.   Being outdoors (Camping, biking, hiking,skiing, etc.)   Spending time with friends!   I only ask 4 rules of anyone interested in chatting!      Please be between the ages of 27 and 36!      If you're a republican/conservative, don't bother messaging me! I don't want to argue about politics!     Please do your best to stay in touch and to not become distant! It'd mean a lot to me!     Please be willing to send a face 📸! I like knowing who I'm talking to is real and not a bot!      Hope to make some lifelong friends!       submitted by     /u/OregonSkier32     to     r/gayfriendfinder       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/gayfriendfinder/comments/1wgm7rz/36_year_old_male_looking_for_longterm_friends/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T01:20:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T01:20:23.649Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa89d576508d45f3d2c863e"
+    },
+    "message_id": "reddit_t3_1wgm7rs",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "AskTeachers",
+    "username": "RecordLegume",
+    "title": "Do you prefer parents ask for schoolwork prior to a trip or not?",
+    "text": "Do you prefer parents ask for schoolwork prior to a trip or not?\n\nWe will be taking a trip in October and my 2nd grader will miss 4 days of school. He is doing well in school, has good grades, good behavior, and is not missing any work. I’m handing in his educational trip (we are allowed 5 days a year for educational trips) form tomorrow and I’d like to touch base with his teacher so she isn’t caught off guard right before we leave. She’s very friendly and approachable. How do I ask her what her policy? is when students miss multiple days in a row? I’m happy to accept schoolwork for my son to do on the trip but I know that sometimes causes more headaches for the teacher. I also don’t want to stay quiet and have her realize my son is just gone for 4 days without any communication. How would you want to be approached in this situation?       submitted by     /u/RecordLegume     to     r/AskTeachers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskTeachers/comments/1wgm7rs/do_you_prefer_parents_ask_for_schoolwork_prior_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T01:20:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T01:20:23.850Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa89d586508d45f3d2c863f"
+    },
+    "message_id": "reddit_t3_1wgm7rr",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "MJInnocentFacts",
+    "username": "Emotional_Ball_5181",
+    "title": "Case File: Chandler — Part 14",
+    "text": "Case File: Chandler — Part 14\n\nWell.     Shit.     We’re back.     Did you miss me? Oh, who am I kidding…of course you did.      Welcome back to the Case Files.     My apologies for being a little MIA, I’ve been busy. But don’t you worry. If you think the Case Files are ending anytime soon…     Guess again.      🚨 If you’re new here, make sure you’re caught up on Parts 1–13.     Part 1:     Case File: Chandler — Part 1     Part 2:     Case File: Chandler — Part 2     Part 3:     Case File: Chandler — Part 3     Part 4:     Case File: Chandler — Part 4     Part 5:     Case File: Chandler — Part 5     Part 6:     Case File: Chandler — Part 6     Part 7:     Case File: Chandler — Part 7     Part 8:     Case File: Chandler — Part 8     Part 9:     Case File: Chandler — Part 9     Part 10:     Case File: Chandler — Part 10     Part 11:     Case File: Chandler — Part 11     Part 12:     Case File: Chandler — Part 12     Part 13:     Case File: Chandler — Part 13     …alright, back to hell we go.     Let’s jump a few years.    In June 2004, the Santa Barbara District Attorney’s Office met with the FBI’s Behavioral Analysis Unit at Quantico to discuss whether a federal case could still be pursued involving Jordan.   According to an FBI memorandum dated September 23rd, 2004, the BAU determined that a federal case could still be pursued.   As a result, the Los Angeles office opened an investigation.    And who did they want to talk to?    Jordan Chandler.   The FBI memorandum states that an agent planned to travel to New York to interview the alleged victim, with the first interview scheduled for September 28th, 2004, at a hotel in New York City. A second interview later that week was also expected.   So investigators went to New York.    So…what happened?    Well, Jordan told them he had  “no interest in testifying against Jackson”  and that he would  “legally fight any attempt to do so (testify).”     Hmm, don’t you find that…oh, I don’t know…pretty fucking interesting?     Jordan wasn’t just declining to participate.    According to the account of the meeting, he was prepared to fight any attempt to make him testify.   Now, okay…maybe people have argued that Jordan refused to testify because he didn’t want the spotlight back on him.    And, sure, that’s possible.    But as we know…Jordan had previously become involved again when he joined his father’s second lawsuit against Michael in 1998, with the Chandlers once again seeking millions of dollars.   Read here:    Case File: Chandler — Part 12     Plus, well…EVANstory.     So the idea that Jordan wanted nothing to do with public attention doesn’t really fit neatly with his previous actions.     Anyway,     Jordan was also able to live under his real name. He attended NYU, and some people there reportedly knew about his previous connection to Michael.    In other words, his identity wasn’t some   secret.    In 2004, while the Arvizo case was moving toward trial, Ray Chandler released All That Glitters, the book we’ve already discussed at length throughout these Case Files.    …stop looking at me, just read them.    So while investigators were trying to revisit the allegations and determine whether Jordan could be involved in a federal case, a book concerning the entire Chandler story was being published.    Odd, I know.     Speaking of Ray…he and that big ass mouth had a few things to say in 2004.     Whether it was through his own words or his retelling of Evan’s story, Ray was making plenty of claims about Michael throughout the year.    And no, it wasn’t just that fan fiction of his.    Ray also participated in multiple nationally televised interviews.   Which is interesting, considering how much emphasis was placed on the supposed media harassment and attention that Jordan had experienced in 1993.    But this is the Chandlers, so we’re not surprised.     Take the 2004 BBC special, The Boy That Michael Jackson Paid Off.   Ray described the situation surrounding the family in extremely dramatic terms:   “Mentally, emotionally and physically it was a siege. There were death threats, lots of them, they started coming in by the dozens a day. There was the time when someone left a rat with its head cut off in a shoe box at the front door. Someone took a couple of shots at the house when the gun went off twice. Everybody was armed — not that we walked about with guns in our belts inside the house but my brother and I never went outside the house without them.”    Oh, Ray…    If the media attention was so dangerous and traumatic for the family, why participate in a television special that would inevitably bring the entire story back into the public eye?    It doesn’t make any sense, hmm?    Then, in September 2004, Ray also appeared in an NBC News report discussing All That Glitters.   This interview gives us some particularly interesting information about how Ray had constructed the book.   The report explained that Ray had been involved with Evan throughout the 1993 events and had sometimes recorded private conversations between the brothers.   According to the report:    “Ray says his brother knew the conversations were being recorded because even then, Ray Chandler was laying the groundwork for a book.”    Ray explained that the recordings were made:    “in order to preserve ideas, in order to preserve what had happened.”     …preserve ideas?     Guys, I thought we were past the screenplay shit?    Ray used those recordings, along with notes and documents, to write and self-publish All That Glitters, which the report described as containing details that had never previously been reported.    And then the interviewer asked him a pretty fucking important question.    Mankiewicz pointed out that if Evan’s son had supposedly told him that Michael was molesting him, why wasn’t Evan’s immediate response to call the police and report a crime?   Ray’s answer?   “Well, the boy’s mother is going to deny it, Michael’s going to deny it. Nobody is going to believe me.”    Okay ...    But then the interview gets even more interesting.    Mankiewicz pointed out that, according to the book, Evan initially seemed more concerned about his estrangement from his family than about the possibility that his son was having sex with Michael.   Mankiewicz asked:   “But estrangement from family, not a crime, sex with children, crime.”   Ray responded:   “Well, right. That’s true, but again, he didn’t know about the sex and didn’t know that they were sleeping together on this consistent basis.”    Here’s the problem…    According to Evan’s account, the thing he actually saw with his own eyes was the alleged “spooning” between Michael and Jordan while they were sleeping.   Read here:    Case File: Chandler — Part 2    This was even brought up during this interview.   So Ray’s explanation that Evan ‘didn’t know about the sex’ becomes difficult to reconcile with Evan’s own account.    Classic Chandlers.     If Evan genuinely believed that his son was being sexually abused, then the alleged conduct he claimed to have personally observed would have been extremely important to that concern.   Yet, as we’ve already discussed, Evan’s behaviour during this period doesn’t exactly look like that of someone focused on protecting his son from an alleged abuser.    Hell, even during the beginning stages of the negotiations, Evan was not only asking Michael for millions of dollars to contribute to fucking screenplays but…he was also HUGGING him.      Yeah.     Read here:    Case File: Chandler — Part 3    Then, in December 2004, Ray Chandler gave yet another interview.   This time, it was Good Morning America.   Once again, Ray complained about the media attention the family had received back in 1993 and 1994, while simultaneously promoting his book and throwing the Chandler “story” out there.    Ray’s argument was that the family hadn’t refused to cooperate with prosecutors.   They had allegedly wanted protection.   He told Good Morning America:   “One of the biggest myths that has been perpetrated since then is that the family refused [to cooperate with prosecutors]. They only refused because they requested protection. They wanted to be put in witness protection program, and that request was refused.”   So, with Ray repeatedly explaining how badly the family had supposedly suffered and how desperately they wanted justice for Jordan, you’d think he’d be eager to cooperate when Michael’s defence came knocking.    Haha, no.    Just days after All That Glitters was released, Ray was served with a subpoena by Michael’s legal team seeking the evidence Ray claimed he and Evan had in the book.   They also wanted Ray to testify.   Ray’s response?   He filed a motion to quash the subpoena.   His argument was that he was a journalist and therefore protected by California’s journalist’s privilege, commonly referred to as the Shield Law.   The filing, submitted in October 2004, identified Raymond Chandler as a third party journalist and asked the court to quash the subpoena seeking his documents.   The motion argued, among other things, that the requested documents were not material to the case and that:   “Raymond Chandler is a journalist protected from complying with this subpoena by the journalists’ privilege.”    Just the sentence “Raymond Chandler is a journalist…” makes me fucking laugh.    It also requested that the court conduct an in camera review of the subpoenaed documents to determine what, if anything, should be turned over to Michael’s defence.    Here’s the funny part…    Ray had spent years talking publicly about what supposedly happened to his nephew.   He had written a book about it.   He had appeared on television repeatedly.   And he had described documents and evidence he claimed to possess.   But now that the defence wanted to actually see that evidence and question him about it, Ray was arguing that he shouldn’t have to provide it because he was a journalist.    …Diane, say goodbye to your “but I’m a journalist!” storyline, Ray Ray needs some screen time.    Now, before anyone jumps into the comments with “BUT THE COURT PROTECTED HIM!”    Yes. We’ll get there.    The point here isn’t that Ray declared himself a journalist and automatically got his way. The defence challenged that characterization and argued that Ray was actually a witness to the events whose unpublished information could not be shielded.   According to Ray’s declaration:    “Within days after Jordan Chandler’s civil lawsuit against Michael Jackson was settled in January, 1994, Raymond Chandler traveled to New York City to seek a publisher for the purpose of putting the information he had gathered in the form of a non-fiction book for dissemination to the public.”     I don’t really give a fuck what anyone says, this is actually insane.    Ray had also already publicly discussed the 1995 Diane Sawyer interview between Michael Jackson and Lisa Marie Presley. In 1998, he published a lengthy report about the interview online, claiming that its purpose was to expose false statements made by Michael, Diane Sawyer, and ABC News.    And, coincidentally enough (not really), 1998 was also the year Evan filed his second lawsuit against Michael.    Ray’s filing stated:   “In 1998 Raymond Chandler posted on the internet for public dissemination a lengthy report concerning an interview of Michael Jackson conducted by Diane Sawyer on the ABC-News television program Prime Time Live. The purpose of that report was to expose false statements made by Mr. Jackson, Ms. Sawyer and ABC News. At that time Raymond Chandler appeared on various television and radio programs to discuss his report, and he publicly stated that he was still considering publishing a book regarding the 1993 lawsuit and scandal.”   So, by Ray’s own account, he was still publicly discussing the 1993 allegations and considering a book years before All That Glitters was eventually published.    So…what exactly did Ray know?    Remember, Ray’s motion to quash was arguing that he should be protected from having to turn over his unpublished material or testify because he was supposedly functioning as a journalist.    But his own declaration made some rather…interesting claims about what his book was actually about.    Ray stated that the purpose of All That Glitters was to:   “expose the modus operandi used by Michael Jackson to molest Jordan Chandler, to reveal that said modus operandi is commonly used by pedophiles, and to expose the involvement of Mr. Jackson’s agents and various media outlets in covering up Mr. Jackson’s crimes.”    …it’s funny, because all I hear is yap yap yap, whatever happened to proof?     That’s where guilters must get it from.      Anyway,    The declaration stated:   “From late August through December of 1993, I lived in the home of Evan and Jordan Chandler in Los Angeles. During that time I talked extensively with Evan Chandler, Jordan Chandler, June Chandler (Jordan’s mother), and other persons directly and indirectly connected with the molestation allegations.”    Alright,    So Ray lived with Evan and Jordan during the period in question. He said he spoke extensively with Evan, Jordan, June, and other people connected to the allegations. He spent years researching and writing about the case. He publicly discussed it. He published a book claiming to reveal the “true facts” and describing Michael’s actions as crimes.   And yet, in that same court document, Ray also stated:    “I was not a witness to, nor do I possess personal knowledge of, the sexual molestation of my nephew, Jordan Chandler, by Michael Jackson.”     There it is.    Ray wasn’t just saying that he didn’t personally witness the alleged sexual contact. But he specifically said he did not possess personal knowledge of the sexual molestation.   Michael’s legal team didn’t just rely on Ray’s declaration when opposing his motion to quash. They went directly after his claim that he qualified as a journalist.   Their argument was that Ray wasn’t a journalist at all. He was a recently admitted attorney who had never worked as a journalist or engaged in news gathering for a media organization.   The opposition stated:   “Petitioner is a ‘witness’ to the 1993-94 events who cannot withhold unpublished information…”   It then pointed out that Ray’s own website described him as someone who had witnessed what happened.   And the website’s description of All That Glitters was pretty damn explicit:   “Inside All That Glitters, Ray Chandler, the boy’s uncle, provides the hard evidence. From the day the boy met Michael, through six months of frenzied publicity, and into the scarring years that followed, this is a story told by one who witnessed the events as they unfolded, and he has the proof to back it up.”   Ray’s court declaration said he was not a witness to the alleged sexual molestation and did not possess personal knowledge of it.   His own promotional material, however, presented him as someone who had witnessed the events as they unfolded and had the proof to back it up.    So…a witness without actually witnessing anything.     Perfect!    The defense highlighted that contradiction directly, pointing out that Ray’s own declaration said he had lived in the Chandler home and spoken extensively with the people involved.   The opposition also quoted Ray’s website asking:   “Did the King of Pop sexually molest a thirteen-year-old boy in 1993?”   And then immediately described the book as an account in which “the master of reinvention is unmasked.”   So Ray was presenting himself as someone who had witnessed the events and possessed the proof, while telling the court that he did not possess personal knowledge of the alleged molestation.    …yeah.     Anyway,     Everyone, say goodbye to Ray and that god awful book.      If anyone actually takes it seriously, please laugh at them.      I’ll see you in Part 15! 👋🏼     My previous case files:     Sneddon:     Case File: Sneddon     Dimond:     Case File: Dimond     Gutierrez:     Case File: Gutierrez     Francia:     Case File: Francia     Neverland Five:     Case File: Neverland Five     Chandler — Part 1:     Case File: Chandler — Part 1     Chandler — Part 2:     Case File: Chandler — Part 2     Chandler — Part 3:     Case File: Chandler — Part 3     Chandler — Part 4:     Case File: Chandler — Part 4     Chandler — Part 5:     Case File: Chandler — Part 5     Chandler — Part 6:     Case File: Chandler — Part 6     Chandler — Part 7:     Case File: Chandler — Part 7     Chandler — Part 8:     Case File: Chandler — Part 8     Chandler — Part 9:     Case File: Chandler – Part 9     Chandler — Part 10:     Case File: Chandler — Part 10     Chandler — Part 11:     Case File: Chandler — Part 11     Chandler — Part 12:     Case File: Chandler — Part 12     Chandler — Part 13:     Case File: Chandler — Part 13     Sources and additional information:     https://turningthetableonthechandlerallegations.wordpress.com     https://themichaeljacksonallegationsblog.wordpress.com/2016/12/26/evan-chandlers-1996-lawsuit-against-michael-jackson/     https://themichaeljacksonallegationsblog.wordpress.com/the-1993-allegations/     https://themichaeljacksonallegationsblog.wordpress.com/2016/12/26/taped-phone-conversations-between-evan-chandler-and-david-schwartz-on-july-8-1993/     https://turningthetableonthechandlerallegations.wordpress.com     https://vindicatemj.wordpress.com/2010/08/14/ray-chandler-subpoena-happy-end-for-the-dear-old-uncle/     https://themichaeljacksonallegationsblog.wordpress.com/wp-content/uploads/2021/02/102504verobjsnonpty.pdf     https://m.youtube.com/watch?v=-eSC997_HH0     https://vault.fbi.gov/Michael%20Jackson/Michael%20Jackson%20Part%2007/view     https://themichaeljacksonallegationsblog.wordpress.com/wp-content/uploads/2021/02/102504verobjsnonpty.pdf     https://themichaeljacksonallegationsblog.wordpress.com/wp-content/uploads/2021/02/110504mjoppmotchandsub.pdf     https://themichaeljacksonallegationsblog.wordpress.com/wp-content/uploads/2021/02/1108043rdptyrcrepdftopp.pdf     https://medium.com/@ruckerjael/how-come-nobody-ever-apologizes-to-michael-jackson-june-chandler-takes-the-stand-68bd26e4d458     https://themichaeljacksonallegationsblog.wordpress.com/2016/12/26/the-chandlers-monetary-demands/     https://m.youtube.com/watch?v=ZxNDb2PVcoM&ra=m     https://m.youtube.com/watch?v=6-52dk3jGyE&ra=m     https://mjjtruthnow.wordpress.com/2014/05/20/was-michael-jackson-framed-the-defining-1994-gq-article-by-mary-a-fischer-that-set-the-record-straight-on-the-1993-allegations/     https://vindicatemj.wordpress.com/reference-materials/history-vs-evanstory-the-1993-allegations-parts-1-3     Important posts:     Some people need Michael Jackson to be guilty      Comparing Michael Jackson’s Trial to O.J. Simpson’s Is Lazy.     Talking in circles      What Would You Do for $20 Million?     “There’s no way all 11 people are lying.”     Fact vs Fiction: Common Claims About Michael Jackson     A Media Assassination: The Case of Michael Jackson     Not Everyone Is a Narcissist     The Word “Grooming” Has Lost Its Meaning     Where There’s Smoke, There’s Fire…But What If It’s Just Smoke?     The Power Of A Story…And The Danger Of Forgetting The Evidence        submitted by     /u/Emotional_Ball_5181     to     r/MJInnocentFacts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MJInnocentFacts/comments/1wgm7rr/case_file_chandler_part_14/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T01:20:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T01:20:24.064Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa89d586508d45f3d2c8640"
+    },
+    "message_id": "reddit_t3_1wgm7rc",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "php",
+    "platform": "reddit",
+    "subreddit": "Thief",
+    "username": "Material_Leading7262",
+    "title": "Newdark 1.29 release by Le Corbeau",
+    "text": "Newdark 1.29 release by Le Corbeau\n\nCheck it out here:  https://www.ttlg.com/forums/showthread.php?t=153456    The optional rendering improvements are  insane .    Newdark HWTL variant    ====================      The HWTL (hardware transform & lighting) variant of newdark performs vertex transforms on the GPU    instead of the CPU. This enables a range of new pixel-shader effects, such as soft shadows and    normal mapping. The SWTL path is still used for newsky and inventory models, so both rendering    paths remain available in the engine. You can switch between them at runtime with the    \\ toggle_hwtl_enable` command. SWTL is broadly similar to mainline newdark, but it's not the same,   and may be incomplete and less performant.`     Hardware requirements are naturally higher for HWTL rendering. Many early DX9-era GPUs do not meet    the minimum requirements. For good performance, a relatively modern CPU and GPU, with solid DX9    support is recommended. The HWTL variant may run on Windows 7 or later, but Windows 10 or later is    recommended.      This variant includes a \\ mods/hwtl` mod with a few small T2-specific tweaks that balance   certain lights in the OMs. It also provides normal-mapped reflective water, which works with T1,   T2, and SS2. The mod must be activated by the usual means, and it is recommended that it be   given the highest priority. The new effects may appear exaggerated without additional tuning.   Modders are encouraged to experiment with the new config variables and DML parameters to find the   best settings.`     Only dynamic lights and anim lights are supported as HWTL lights. For a better HWTL experience,    many OMs and FMs need to be relit after the AnimLight property has been added to selected lights.      New features    ------------      - Percentage-Closer Soft Shadows (PCSS)    - Normal mapping    - Parallax Occlusion Mapping (POM)    - Screen Space Ambient Occlusion (SSAO)    - Dynamic environment mapping    - Soft particles    - Materials: normal map, height map (for POM), specular map: intensity, glossiness, environment    reflection, self-illumination    - Water: normal map, environment reflection, incidence alpha, air-to-water refraction    - Volumetric effects: fog, light volumes, underwater light shafts    - Underwater distance blur    - Post-processing    - Light streaks (star)    - Luminance adaptation    - Hardware-rendered loadout in Thief    - Alternative object highlight (outline) in Thief    - Experimental / hack    - Player shadow    - AI awareness of player shadow         submitted by     /u/Material_Leading7262     to     r/Thief       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Thief/comments/1wgm7rc/newdark_129_release_by_le_corbeau/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T01:20:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T01:20:24.467Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa89d586508d45f3d2c8641"
+    },
+    "message_id": "reddit_t3_1wgm7pa",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "pierce_k12",
+    "title": "Grab 100 hammers from u/pierce_k12!",
+    "text": "Grab 100 hammers from u/pierce_k12!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/pierce_k12     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wgm7pa/grab_100_hammers_from_upierce_k12/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T01:20:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T01:20:24.695Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa89d586508d45f3d2c8642"
+    },
+    "message_id": "reddit_t3_1wgm7o9",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "ThriftIndia",
+    "username": "ajja_203",
+    "title": "Selling y2k tops",
+    "text": "Selling y2k tops\n\nSize s (32-34)     Size s (32-34)     Size s (34)     Size s/m (34-36)     Size s (34)     Size s/m (34-36)     Size s (32-34)     Size S (32-34)      DM to order 📦        submitted by     /u/ajja_203     to     r/ThriftIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ThriftIndia/comments/1wgm7o9/selling_y2k_tops/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T01:20:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T01:20:24.897Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa89d596508d45f3d2c8643"
+    },
+    "message_id": "reddit_t3_1wgm7nd",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "blanks",
+    "username": "Opposite-Science-398",
+    "title": "Fill in the blanks: Q: What time did the chicken cross the road? A: ___.",
+    "text": "Fill in the blanks: Q: What time did the chicken cross the road? A: ___.\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Opposite-Science-398     to     r/blanks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/blanks/comments/1wgm7nd/fill_in_the_blanks_q_what_time_did_the_chicken/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T01:20:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T01:20:25.105Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa89d596508d45f3d2c8644"
+    },
+    "message_id": "reddit_t3_1wgm7na",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MLPIOS",
+    "username": "Easy_Ad9687",
+    "title": "Blue Alicorn Welcomes Yak to Empire!!",
+    "text": "Blue Alicorn Welcomes Yak to Empire!!\n\nGot enough badges to buy Prince Rutherford essentially by upgrading him during the event        submitted by     /u/Easy_Ad9687     to     r/MLPIOS       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MLPIOS/comments/1wgm7na/blue_alicorn_welcomes_yak_to_empire/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T01:20:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T01:20:25.301Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa89d596508d45f3d2c8645"
+    },
+    "message_id": "reddit_t3_1wgm7n9",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "asaprocky",
+    "username": "Sorry_Improvement_27",
+    "title": "PRO CLUB X YAMS DAY 2019",
+    "text": "PRO CLUB X YAMS DAY 2019\n\nWANT TO TARDE FOR SIZE M/L. OR SELLING 120   This is brand new size S        submitted by     /u/Sorry_Improvement_27     to     r/asaprocky       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/asaprocky/comments/1wgm7n9/pro_club_x_yams_day_2019/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T01:20:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T01:20:25.497Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa89d596508d45f3d2c8646"
+    },
+    "message_id": "reddit_t3_1wgm7mq",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "📢 Centegix [HIRING] a Senior Test Engineer!",
+    "text": "📢 Centegix [HIRING] a Senior Test Engineer!\n\nCompany: Centegix   Location: Annapolis, MD 📍   Date Posted: September 14, 2026 📅   Level: Senior 👵   Categories: #senior #test #engineer #fulltime   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=sysadminjobs.com&rurl=aHR0cHM6Ly9zeXNhZG1pbmpvYnMuY29tL2pvYnMvc2VuaW9yLXRlc3QtZW5naW5lZXItOTFlZjdkOTE=    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wgm7mq/centegix_hiring_a_senior_test_engineer/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T01:19:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T01:20:25.696Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa89d946508d45f3d2c8647"
+    },
+    "message_id": "reddit_t3_1wgm8lm",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "LDR",
+    "username": "RedReflection06",
+    "title": "Meeting for the first time in over 4 years. Picking her up from the airport. What is the first move i should make?",
+    "text": "Meeting for the first time in over 4 years. Picking her up from the airport. What is the first move i should make?\n\nWe broke up, that part was mutual. But the bigger picture is we always thought about eachother, stalked eachothers social medias from time to time and kinda knew we'd be together again. She went on to have another bf for a year and half after our initial breakup. And she ended up moving to the next state over. Anyways. She said if I had reached out not long after we broke up, she would have split with that guy. So yeah we've been talking the whole summer. I sent her lonnnnng blocks of blue text on messenger. Asked if we could start over and she called back and we been talking ever since making it more and more official as the months went by.   Now we are about to meet. Im going to pick her up and we're going to spend a few days together. Idk if i should buy her flowers and give them to her after she exits the gate or should I leave them in the car? Give her a warm tight hug and kiss? Ill do that. Short and sweet and then lend a hand to carry something for her. Just nervous. How should I react? Lol.        submitted by     /u/RedReflection06     to     r/LDR       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LDR/comments/1wgm8lm/meeting_for_the_first_time_in_over_4_years/",
+    "score": 0,
+    "num_comments": 0,

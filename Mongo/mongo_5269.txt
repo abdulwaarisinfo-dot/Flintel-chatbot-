@@ -1,0 +1,416 @@
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T18:14:05.012Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8396d6508d45f3d2c683b"
+    },
+    "message_id": "reddit_t3_1wgbaif",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "fplAnalytics",
+    "username": "alimbekovkz",
+    "title": "FDR gives a whole team one number. I split it into attack and defence and checked it against the betting market",
+    "text": "FDR gives a whole team one number. I split it into attack and defence and checked it against the betting market\n\nDisclosure: I built this. It is completely free no paid tier, no premium unlock, no ads, no accounts, no donation link, nothing to buy now or later. I'm not selling anything here. But it is mine, so treat the numbers below as something to poke holes in.   The problem   This season FPL zeroed out the separate attack and defence strength values for every team and builds FDR from a single overall number. Two things follow:   About 45% of fixtures come out as a flat 3.   A team with a great attack and a leaky defence gets one colour for everybody. Brighton are a green fixture for your defenders while sitting near the top of the league for xG.   Attack and defence are different questions. A clean sheet depends on how good the opponent's attack is; goals depend on how bad their defence is. One number can't answer both.   What I did   For every team I take xG and xGA per match from the FPL API and shrink them toward a prior built from the team's overall strength, weighted m/(m+4) so early in the season the prior dominates and the observed numbers take over as matches accumulate. Home advantage is a flat ±10%. Then, for each fixture:   Defensive difficulty = opponent's expected xG ÷ league average (what your keeper and defenders face).   Attacking difficulty = league average ÷ opponent's expected xGA (what your attackers face).   Overall = geometric mean of the two.   Each ratio maps to 1–5 through bands that are symmetric in log space (0.80 = 1/1.25, 0.93 ≈ 1/1.075), so \"25% weaker\" and \"25% stronger\" are mirror images. With linear bands I had 3% easy fixtures against 12% hard ones, which is how you end up with a scale nobody trusts.   In the app, a defender's ticker shows the defensive side, an attacker's shows the attacking side, and you can force a single Attack, Defence or Overall view for all positions.   Does it actually work?   I compared it with bookmaker-implied goal projections for GW4 (20 teams, one gameweek small, I know):   My rating vs the market: rank correlation 0.86, MAE 0.20 goals.   FPL's official FDR vs the same market: 0.53.   Before calibration mine sat at 0.80 with MAE 0.24. Pushing the prior further kept lifting correlation (up to ~0.92) while MAE got worse, so I stopped fitting one gameweek to the last decimal is just overfitting. I'll re-check on GW5–GW6.   Caveats I'd raise if someone else posted this   One gameweek of market data is a weak test. It's a sanity check, not proof.   xG per match from the season totals is coarse: no home/away split in the source data, no adjustment for who they've played.   It says nothing about rotation, injuries or whether your man actually starts.   What else is in it   The difficulty model is the new part, but it feeds the rest, so here's the whole thing.   On every player row (Pick Team and the Transfers list)   Fixture ticker the next 3, 5 or 8 opponents, coloured by the rating above and read by position.   Ownership template vs differential, plus the exact selected-by %.   Price-change arrows ▲ / ▼ on players about to move, straight from FPL's own projection. Only the imminent ones (roughly 5% of the pool), otherwise it's wallpaper.   Hover any fixture tile and you get that match's attack, defence and overall difficulty with the xG / xGA behind them, then stats that fit the position: keepers get saves, xGC and clean-sheet rate instead of meaningless xG; defenders and midfielders get xGC and defensive contribution against their DC threshold on top of xG90 / xA90; everyone gets price, ownership and availability with return chance and the latest news.   Watchlist   Star anyone from the Transfers list. It's keyed per season and survives reloads and gameweek rollovers.   A sparkline you choose: points, xG + xA stacked, defensive output (saves for keepers) or net transfers net transfers are the one that predicts the next price move.   Always the last 5 gameweeks of the current season, never mixing in last season. Minutes sit under the chart and get flagged when someone stops playing.   Price move since the season start, the change since you starred him, and FPL's forecast of the next move. Rows are grouped into price drops vs still watching.   Your team   Team Grade an A–D squad rating from fixtures (using the position-aware difficulty), form & xG, ownership, captaincy and bench balance, each component weighted and shown, not a black box.   Captain compare every starter ranked by expected-points swing against your current armband, with the fixture, start probability and a confidence level.   Head-to-head finds who you actually play this gameweek, shows both scores with transfer hits and the chip in play, which chips each of you still holds, who only you own vs only they own, and the differential swing in expected points. Before the deadline it compares against their last known squad and says so. No H2H league? It falls back to picking a rival from a classic one.   Share card a square or story summary image, rendered on canvas locally.   Boring but relevant   Free, in the boring sense: there is no pro version waiting behind the next update, and no data being sold instead. I wrote it because the fixture colours annoyed me.   Manifest V3, no build step, no external requests, ~120 KB.   Settings and watchlist live in  chrome.storage ; API responses are cached with a TTL and a season key, so it isn't hammering the FPL API.   One toggle hides every widget instantly; right-click it for settings. English and Russian, auto-detected.   Nothing is collected, transmitted or tracked. It runs only on  fantasy.premierleague.com , reads the same public API the site itself uses, and never edits your team or makes transfers.   Happy to go deeper on the maths, and genuinely interested in where you think the model is wrong. If anyone has market data for earlier gameweeks, I'd like to test against it.   It's free, so the only thing I want back is criticism of the model.   Link -  https://chromewebstore.google.com/detail/fpl-insight-%E2%80%94-fantasy-pre/ibpcdmcapdckjgijflciddmnpnfclacd        submitted by     /u/alimbekovkz     to     r/fplAnalytics       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/fplAnalytics/comments/1wgbaif/fdr_gives_a_whole_team_one_number_i_split_it_into/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T18:13:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T18:14:05.444Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8396d6508d45f3d2c683d"
+    },
+    "message_id": "reddit_t3_1wgbai7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "UKweddings",
+    "username": "AliceMorgon",
+    "title": "Hear me out on this - mad dress and bird headpiece?",
+    "text": "Hear me out on this - mad dress and bird headpiece?\n\nOK. First, the story of Mad Grandma.    During WWII, silk was all requisitioned for British parachutes, including from the North of Ireland, and my slightly eccentric grandma was walking through her family’s fields and encountered a crashed German pilot struggling to get out of his parachute while being harassed by curious sheep. He aimed his gun at her, so she shot him. And promptly stole his silk parachute.   When she made her wedding dress out of it, she attached all kinds of crazy Irish folklore s\\_\\_\\_e/her own weird s\\_\\_\\_e to it including about a dozen TAXIDERMIED DOVES. That, yes, she also went out and both shot AND taxidermied herself. It has now been given to me for my US wedding. The dress is a complete madness of dead birds, occasional spots of German blood which is at least MOSTLY hidden under lace she made herself, and many other weird, inexplicable things. Yes, I have added a picture.    TL;DR: Grandma shot a Nazi, made a dress out of his parachute, then attached a bunch of birds and stuff to it.    Anyway, when I first started looking at veils I got the squicks big time. I had no idea why because I definitely didn’t have cold feet. Then I realised it was because I wasn’t being me, and am attaching an awesome one to my Joan Jett hair with a big black velvet bow. I have also added a picture of the veil, the bow, and my usual look, which I’ll be sticking with for the wedding.   However, the veil is very long, so I’m taking it off for the reception. I’m considering replacing the bow with some kind of bird headpiece to go with the birds on the dress (yes, I’m just going to take it and run with it at this point.)    Opinions:    MOH: I like the one with red and black roses.   Bridesmaid 1: WTF NO BIRDS ON YOUR HEAD WHY   Bridesmaid 2: Why would you wear makeup like that let alone with something black for a wedding? At least wear a white bow… (did not comment on birds)   Bridesmaid 3: You’re pretty clumsy, what if you smack someone in the face with a bird fascinator?    What do you guys think?        submitted by     /u/AliceMorgon     to     r/UKweddings       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UKweddings/comments/1wgbai7/hear_me_out_on_this_mad_dress_and_bird_headpiece/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T18:13:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T18:14:05.881Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8396e6508d45f3d2c683e"
+    },
+    "message_id": "reddit_t3_1wgbahn",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "iosmusicproduction",
+    "username": "IcyDragon_10",
+    "title": "Looking for iOS-compatible non-🅰️ℹ️ music splitter",
+    "text": "Looking for iOS-compatible non-🅰️ℹ️ music splitter\n\n>!Had to use emojis to get around the stupid auto-filter!   I’m a complete beginner. Zero prior knowledge of how anything works in the realm of music production. All I know is that I wanna create a cover of a song that has no known stem / off-vocal, using only my phone (*which I’m using to write this post, sorry for any formatting mistakes lmao*), before the task dopamine wears off.   *One small problem*..:   Every music splitter under this goddamn *flaming ball of condensed gases* we call the sun utilizes 🅰️ℹ️. There is not **a sing**le splitter I could find* (even when I p*ut -“🅰️*ℹ️” in the search b*ar!!) that doesn’t isolate instrumentals using 🅰️ℹ️ slop.   Reddit, please help me. I have no idea where to look or what options are available.       submitted by     /u/IcyDragon_10     to     r/iosmusicproduction       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/iosmusicproduction/comments/1wgbahn/looking_for_ioscompatible_nonℹ_music_splitter/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T18:13:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T18:14:06.102Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8396e6508d45f3d2c683f"
+    },
+    "message_id": "reddit_t3_1wgbahj",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ahmedabad",
+    "username": "Ok-Flower-3528",
+    "title": "Hiring at Buk Bites – Sales / Mocktail Counter",
+    "text": "Hiring at Buk Bites – Sales / Mocktail Counter\n\n​   Hey everyone! We’re looking for someone to join us at Buk Bites.   Just putting the details out clearly so there’s no confusion about what the job involves. Please read through everything before applying.   The main work will be a mix of cashier, mocktail counter, and sales.   For sales, this isn’t a job where you just sit at the counter and wait for customers. You’ll need to be comfortable approaching people, talking to them, explaining the products, offering samples/tastings when needed, and actually trying to get them to buy.   You’ll also handle the mocktail counter from start to finish — opening it, setting everything up, making sure ingredients/ice/glasses and other supplies are ready, keeping things organized during the shift, and cleaning/closing everything properly at the end.   Timing:   Start time is generally 6 PM   Weekdays usually finish around 12:30 AM   Weekends can go until around 1:30–2 AM, depending on the rush   During festivals/special occasions, timings can be longer. This would be an exceptional situation, not the normal daily timing.   One important thing to know: Friday, Saturday, Sunday and festival days are working days, since those are usually our busiest days.   For the first month, there won’t be regular weekly offs. This is because you’ll be learning the full operation — products, sales, cashier, mocktails, opening/closing, etc. Genuine emergencies can obviously be discussed.   After the first month, there will be 4 days off per month, generally on weekdays and planned in advance.   If you need time around a festival, let us know beforehand and we can try to work it out depending on the business requirements.   We’re mainly looking for someone who is active, responsible, comfortable talking to strangers/customers, willing to do sales, and able to handle things independently.   You’ll need to take some ownership too. Basically, if you notice that something needs to be cleaned, prepared, arranged or restocked within your responsibilities, you shouldn’t have to wait for someone to tell you.   There is also a 2-month notice period if you decide to leave.   I’m putting all of this upfront because I’d rather be completely clear about the job from day one than have any misunderstandings later.   If this sounds like something you’d be comfortable with, DM me with a little bit about yourself and your previous experience (if any).   Thanks!       submitted by     /u/Ok-Flower-3528     to     r/ahmedabad       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ahmedabad/comments/1wgbahj/hiring_at_buk_bites_sales_mocktail_counter/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T18:13:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T18:14:06.319Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8396e6508d45f3d2c6841"
+    },
+    "message_id": "reddit_t3_1wgbahg",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "[HIRING] a Electrician / Maintenance Technician! in Legends Global",
+    "text": "[HIRING] a Electrician / Maintenance Technician! in Legends Global\n\nCompany: Legends Global   Location: Albany, NY 📍   Date Posted: August 31, 2026 📅   Categories: #fulltime   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=sportstechjobs.com&rurl=aHR0cHM6Ly9zcG9ydHN0ZWNoam9icy5jb20vZWxlY3RyaWNpYW4tbWFpbnRlbmFuY2UtdGVjaG5pY2lhbi1sZWdlbmRzLWdsb2JhbC82YTk1OTI3NTgwODU2ZTVhYjFmNmNiYjc=    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wgbahg/hiring_a_electrician_maintenance_technician_in/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T18:13:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T18:14:06.750Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8396e6508d45f3d2c6842"
+    },
+    "message_id": "reddit_t3_1wgbah2",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "BackgroundThoughtAhh",
+    "title": "What’s something your pet does that irritates you?",
+    "text": "What’s something your pet does that irritates you?\n\nsubmitted by     /u/BackgroundThoughtAhh     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wgbah2/whats_something_your_pet_does_that_irritates_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T18:13:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T18:14:06.968Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8396f6508d45f3d2c6843"
+    },
+    "message_id": "reddit_t3_1wgbafs",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "RedditPregunta",
+    "username": "Fearless_Fruit_7487",
+    "title": "¿Porque cuando dicen les “siéntese” cuando les toca un servicio preguntan “¿dónde?” Si claramente solo hay una silla ?",
+    "text": "¿Porque cuando dicen les “siéntese” cuando les toca un servicio preguntan “¿dónde?” Si claramente solo hay una silla ?\n\nTrabajo en un lugar de atención a cliente y cuando sigue la siguiente cita siempre le indico “pásele, siéntese” sólo hay una silla donde pueden sentarse, porqué me preguntan ¿dónde? Es para generar conversación? O genuinamente creen que les diré que se sienten el piso ? O cómo?        submitted by     /u/Fearless_Fruit_7487     to     r/RedditPregunta       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RedditPregunta/comments/1wgbafs/porque_cuando_dicen_les_siéntese_cuando_les_toca/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T18:13:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T18:14:07.191Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8396f6508d45f3d2c6844"
+    },
+    "message_id": "reddit_t3_1wgbafe",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "Adorable-Bed7032",
+    "title": "Grab 25⚡ from u/Adorable-Bed7032!",
+    "text": "Grab 25⚡ from u/Adorable-Bed7032!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Adorable-Bed7032     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wgbafe/grab_25_from_uadorablebed7032/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T18:13:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T18:14:07.407Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8396f6508d45f3d2c6845"
+    },
+    "message_id": "reddit_t3_1wgbaf8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789409622485",
+    "text": "[PROBE] 1789409622485\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wgbaf8/probe_1789409622485/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T18:13:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T18:14:07.624Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8396f6508d45f3d2c6846"
+    },
+    "message_id": "reddit_t3_1wgbaf3",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FitTheWord",
+    "username": "DramaticExternal3082",
+    "title": "Favourite group (created by u/DramaticExternal3082)",
+    "text": "Favourite group (created by u/DramaticExternal3082)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/DramaticExternal3082     to     r/FitTheWord       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FitTheWord/comments/1wgbaf3/favourite_group_created_by_udramaticexternal3082/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T18:13:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T18:14:07.840Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa839a86508d45f3d2c6847"
+    },
+    "message_id": "reddit_t3_1wgbbid",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "AskTurkey",
+    "username": "Flat_Comfortable_361",
+    "title": "Istanbul Bday dinner",
+    "text": "Istanbul Bday dinner\n\nIm flying to Istanbul next week for a business trip and I’ll be celebrating my birthday on my own so I’m looking to gift myself some good Turkish dinner. Any suggestions? Good views, good food       submitted by     /u/Flat_Comfortable_361     to     r/AskTurkey       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskTurkey/comments/1wgbbid/istanbul_bday_dinner/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T18:14:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T18:15:04.485Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa839a86508d45f3d2c6848"
+    },
+    "message_id": "reddit_t3_1wgbbhw",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "AlertVegas",
+    "username": "MugShots",
+    "title": "NV Energy Alert",
+    "text": "NV Energy Alert\n\nNVEnergy Alert Under Investigation in 89449 Verified customers affected ORT: Verified ETR: Verified       submitted by     /u/MugShots     to     r/AlertVegas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlertVegas/comments/1wgbbhw/nv_energy_alert/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T18:14:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T18:15:04.684Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa839a86508d45f3d2c6849"
+    },
+    "message_id": "reddit_t3_1wgbbh5",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DailyGuess",
+    "username": "Sombracuriosa",
+    "title": "Can You Guess This 5-Letter Word? Puzzle by u/Sombracuriosa",
+    "text": "Can You Guess This 5-Letter Word? Puzzle by u/Sombracuriosa\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Sombracuriosa     to     r/DailyGuess       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DailyGuess/comments/1wgbbh5/can_you_guess_this_5letter_word_puzzle_by/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T18:14:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T18:15:04.887Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa839a96508d45f3d2c684a"
+    },
+    "message_id": "reddit_t3_1wgbbgx",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "vacation",
+    "platform": "reddit",
+    "subreddit": "OwlchemyLabs",
+    "username": "owlchemylabs",
+    "title": "More Ways to Play: Dimensional Double Shift Gets Controller Support as Owlchemy Labs Launches On Steam Frame",
+    "text": "More Ways to Play: Dimensional Double Shift Gets Controller Support as Owlchemy Labs Launches On Steam Frame\n\nEver since Dimensional Double Shift entered Early Access, one request has come up again and again:  Controller support .   Whether it was players looking for another way to enjoy the game, accessibility needs, or simply personal preference, it's been one of the most consistent conversations we've seen across Discord, social media, and player reviews. We always say Early Access is a conversation, and this is one of those moments where we get to say: we heard you.   We’re excited to announce that when Dimensional Double Shift launches on Steam Frame in the near future. To lessen those wait pains, we’re also launching controller support TODAY with update 1.17. Better yet, that support isn't exclusive to one platform, we're bringing controller support to Meta devices, too, so everyone can choose the way they want to play.   Virtual reality isn't a one-size-fits-all experience. Some players love hand tracking. Others prefer controllers for precision, comfort, accessibility, or simply because it's what feels natural to them. There isn't a \"right\" way to enjoy a game, only the way that works best for you.   That's why adding controller support feels like such an important step. It's about opening the doors a little wider so more people can jump into the wonderfully chaotic world of DDS without worrying about how they're interacting with it.   If you've been waiting for controllers before diving into Dimensional Double Shift, your wait is  almost  over.   Of course, that's not the only exciting news.   Steam Frame trailer:  https://youtu.be/pYxeaj8jHq8?si=cGdqB4hPG4Y-advl    Job Simulator, Vacation Simulator, and Cosmonious High Join the Steam Frame Lineup   We're also thrilled to announce that Job Simulator, Vacation Simulator, and Cosmonious High are also making their way to Steam Frame, giving even more players the chance to experience two of the games that helped define room-scale VR. Whether you're reliving your favorite office mishaps, grilling questionable hot dogs on Vacation Island, or clocking into your first shift at Conglomni Corp, there's never been a better time to jump into the Simulatorverse.   Since day one, you've shared your ideas, your feedback, your bug reports, your feature requests, and yes, your controller support reminders. Every conversation has helped us continue shaping the game throughout Early Access, and this update is another example of that collaboration in action.   We can't wait to see what you do with a few more ways to play.   The modern Owlchemy Labs VR library arrives soon with  controller support droppin’ in hot . Get in, squad up, and wave those hands like you just don’t care.        submitted by     /u/owlchemylabs     to     r/OwlchemyLabs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OwlchemyLabs/comments/1wgbbgx/more_ways_to_play_dimensional_double_shift_gets/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T18:14:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T18:15:05.088Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa839a96508d45f3d2c684b"
+    },
+    "message_id": "reddit_t3_1wgbbgu",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "snowboarding",
+    "username": "Triangle-of-Zinthar",
+    "title": "Mega Season - Lookin 4 Locals!",
+    "text": "Mega Season - Lookin 4 Locals!\n\nYalllll, I just booked out what will be two life changing trips. A day at each mountain listed, shred 9-3, work 3-9 🙈. Thankfully there were lots of hostels and cheap hotels still available still, so, I'm car camping way less than planned 🥳. Riding Ikon Base and Indy+   New England - January  PNW - March   If you see your home mountain up here and would be around, I'd love to link up with other boarders (and skiers too!).    I hit a lot of trees when its possible, but just fkin love gliding down a slope no matter what, so no sweat if you prefer not to get taken out by a trunk 😂. Advanced, but like, I dont go for a TON of air, and I'm not a park kid. Grew up on wawa, so anything less that pure ice is like gold.    Will be hitting Mammoth a ton late season and Palisades/LA mtns during Feb for and CA locals!    Down to share instas socials linkedin selfies etc in the dms, but prefer not to post that all publicly        submitted by     /u/Triangle-of-Zinthar     to     r/snowboarding       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/snowboarding/comments/1wgbbgu/mega_season_lookin_4_locals/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T18:14:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T18:15:05.288Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa839a96508d45f3d2c684c"
+    },
+    "message_id": "reddit_t3_1wgbbgi",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "tiktak07555",
+    "title": "Grab 100 hammers from u/tiktak07555!",
+    "text": "Grab 100 hammers from u/tiktak07555!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/tiktak07555     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wgbbgi/grab_100_hammers_from_utiktak07555/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T18:14:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T18:15:05.486Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa839a96508d45f3d2c684d"
+    },
+    "message_id": "reddit_t3_1wgbbge",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "homeworkdoers_",
+    "username": "Ok_Organization7655",
+    "title": "Looking for Someone to Get the Job Done? Hi, I’m Here",
+    "text": "Looking for Someone to Get the Job Done? Hi, I’m Here\n\nFirst time on Reddit, looking for part-time remote work       Hey everyone. This is my first time posting on Reddit, so I thought I’d try something new and put myself out there.       I’m a commerce student looking for part-time remote opportunities. I’m willing to learn, work hard, and take on different kinds of tasks depending on what you need.       A few things I can offer:       Online tutoring. I can help teach school-level subjects and explain things patiently.       Friendly and supportive conversation. If you need someone to talk to, vent to, or simply have a comfortable conversation with, I’m a good listener.       Canva and design work. I can create pamphlets, posters, simple social media graphics, presentations, and similar designs.       Basic writing and editing. I can help with captions, posts, proofreading, and similar tasks.       General online or virtual assistance. I’m also open to learning new things.       I’m mainly looking for legitimate part-time remote work that I can manage alongside my studies.       If you need someone for a small project or think I could be useful to you, feel free to DM me. I’m happy to discuss the work, requirements, and payment.       First Reddit post and first attempt at putting myself out there. Let’s see where this goes.         submitted by     /u/Ok_Organization7655     to     r/homeworkdoers_       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/homeworkdoers_/comments/1wgbbge/looking_for_someone_to_get_the_job_done_hi_im_here/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T18:14:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T18:15:05.684Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa839a96508d45f3d2c684e"
+    },
+    "message_id": "reddit_t3_1wgbbfw",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "sellyourpedals",
+    "username": "Squatbarcurls",
+    "title": "WTS: Browne protein V2.2",
+    "text": "WTS: Browne protein V2.2\n\nSelling the protein V2.2 in white - $190 shipped       submitted by     /u/Squatbarcurls     to     r/sellyourpedals       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sellyourpedals/comments/1wgbbfw/wts_browne_protein_v22/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T18:14:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T18:15:05.884Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa839aa6508d45f3d2c684f"
+    },
+    "message_id": "reddit_t3_1wgbbe0",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "bunnyohare",
+    "title": "Grab 25⚡ from u/bunnyohare!",
+    "text": "Grab 25⚡ from u/bunnyohare!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/bunnyohare     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wgbbe0/grab_25_from_ubunnyohare/",
+    "score": 0,
+    "num_comments": 0,

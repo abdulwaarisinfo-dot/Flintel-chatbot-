@@ -1,0 +1,416 @@
+    "_id": {
+      "$oid": "6a9efc6ef0819e6636a932d6"
+    },
+    "message_id": "reddit_t3_1w9zhy3",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "HunterXHunter",
+    "username": "tortenbestie",
+    "title": "Degradation and Elevation",
+    "text": "Degradation and Elevation\n\nThis post contains spoilers up to chapter 420.    Being humbled means to adjust your self-perception: It’s the realization that you’re not as good at something as you thought you were. In that way it might seem paradoxical at first, that a narcissist can enjoy humiliation. However, great writing can give insights why its completely plausible. There are some prime examples in the work of Dostojewski. And I think Tserriednich’s depiction is also on that level.      https://preview.redd.it/632aghtcy4oh1.png?width=1354&format=png&auto=webp&s=ed5ec31f0b1fe0b93ed43f6ee3521280d3e314b2     After encountering Hisoka Tserriednich is flabbergasted by the echelon’s one could reach with nen and goes from wetting his pants to announcing that he will surpass the monster within moments. A humiliated narcissist transforms degradation into elevation by envisioning an even greater version of himself – possibly much greater than he would have been able to imagine himself without an offense that needs retaliation. Tserriednich’s assumption to stand on top of the world was shattered, and the shattering fuels an already immense ambition to rise beyond what was thought to be possible.      Now, when it comes to nen abilities Tserriednich and Hisoka couldn’t be much further apart. In many aspects of their personalities they seem to be polar opposites. With Laplace Demon Tserriednich aspires control over the entire universe. Hisoka prefers chaos. He tends to actively put himself into unfavorable conditions, maybe out of a little curiosity how he will manage to get out of a pickle. On a side note: Just like Bunge Gum Hisoka is incredibly flexible and I guess you could call a guy who literally survived his own death sticky in a sense that its a real pain to get rid of him (so yes, in a metaphorical way Hisoka himself possesses the properties of both rubber and gum.)     However, there is a big similarity between Hisoka and Tserriednich: Both tend to overestimate themself which leads to putting themselves in danger. The Prince wanted to test a guy that killed a bunch of soldiers before they could shoot. The clown wanted to fight Netero and Ging. When post battle clarity hits him after being killed by Chrollo he even states that the experience was quite humbling.      \\\"Next time make sure to choose your opponent and the location you fight in more carefully\\\"     While Hisoka is clearly aware that it was a dumb idea to give an opponent like Chrollo such a big advantage, his approach on the Black Whale seems to be extremely dangerous once again. In a 1v1 he should be a favorite against most spiders, arguably even (an unprepared) Chrollo. But in the Casino at that spot, playing the pachinko machine, he could easily be surrounded by multiple enemies. Its a central connecting point between tiers 1 and 2. And he seems to be waiting for spiders. Bonolenov doesn’t want to fight him alone. How many spiders does Hisoka think he could handle at once?      https://preview.redd.it/sgsi5vziz4oh1.png?width=980&format=png&auto=webp&s=52dbb7a777bb453d9213b8f7257c92ae185d97ce     Another thought: Until now Tserriednich approached danger due to a lack of experience. After being hit by the humiliation kink he could also lean a little more into unnecessary danger by choice, even showing first signs at the end of 420 by refusing to charge his battery. But how will the desire to overcome impossible odds get along with an ability that longs for complete control?         submitted by     /u/tortenbestie     to     r/HunterXHunter       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HunterXHunter/comments/1w9zhy3/degradation_and_elevation/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:03:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:03:26.998Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9efc6ff0819e6636a932d8"
+    },
+    "message_id": "reddit_t3_1w9zhxy",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "mlops",
+    "username": "No-Plant-5234",
+    "title": "we tested whether our model would describe a table of pure noise. posting the method because the test is too crude",
+    "text": "we tested whether our model would describe a table of pure noise. posting the method because the test is too crude\n\nDisclosure: I work at Schema Labs, we build a model that reads tables. Free tier, paid above it.   If your pipeline asks a model what a table contains, you get an answer whether or not there's anything in it. Meaningless table and meaningful table come back in the same format with the same tone. No error path. That's calibration, not accuracy, and it doesn't show up in any accuracy metric.    Method.  5000 rows of  np.random.rand() , columns c1 through c20, no structure, no target. Asked for domain identification and per-column meaning with confidence.   General-purpose LLMs described it every time. One returned manufacturing sensor readings with suggested correlations. Asking for a confidence number alongside just gets you an invented confidence number. A second model as a check doesn't help, they agree with each other.   Ours returns no domain identified, below threshold. Which is what we wanted, but:    Limitations.  Only catches total noise — a real table where I've mislabelled the domain passes everything.  rand()  is unrealistically structureless, real garbage has a distribution, a repeated default, a truncation artifact, and I didn't test that. Refusal rate on noise says nothing about false refusals on valid data; we measured one and not the other, which is the convenient way round. And the threshold is a knob we set, so \"it refuses\" is partly a statement about where we put the knob.   So: does anyone test their data-understanding step for calibration rather than accuracy? Specifically how you build a realistic negative case instead of  rand() , and whether you track false-refusal rate next to refusal rate, because I'm fairly sure we should be and aren't.    platform.schemalabs.ai  if you want to run it yourself, free tier covers it. I'd rather someone got it to hallucinate a domain than not.       submitted by     /u/No-Plant-5234     to     r/mlops       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mlops/comments/1w9zhxy/we_tested_whether_our_model_would_describe_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:03:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:03:27.392Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9efc6ff0819e6636a932d9"
+    },
+    "message_id": "reddit_t3_1w9zhxt",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "Drawfee",
+    "username": "aBoxofNut",
+    "title": "Looking for an episode",
+    "text": "Looking for an episode\n\nHi everyone! I've been trying to find a specific Drawfee bit the past few weeks, but I have no idea what episode it's been in.   The bit, if you can call it that, is that they're talking about some sort of magician they can't remember the name of, so they initially call him Damian Moneybucks, and he turns out to be a baron.   Anyone know which episode this is from?       submitted by     /u/aBoxofNut     to     r/Drawfee       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Drawfee/comments/1w9zhxt/looking_for_an_episode/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:03:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:03:27.590Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9efc6ff0819e6636a932da"
+    },
+    "message_id": "reddit_t3_1w9zhxe",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "Lofree",
+    "username": "Eriks5",
+    "title": "Flow 2 for Mac order delays (Silver, 84)",
+    "text": "Flow 2 for Mac order delays (Silver, 84)\n\nI ordered on the 15th of August, back when the shipping estimate was still “shipments begin August,” so I assumed it would go out fairly soon after purchase. Then I got an email saying the earliest shipment for the silver 84 would be the 1st of September or later. Technically true, but so is December 2028. Happy to wait, I just wish they were better at communicating this stuff. Anyone else in the same boat?        submitted by     /u/Eriks5     to     r/Lofree       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Lofree/comments/1w9zhxe/flow_2_for_mac_order_delays_silver_84/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:03:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:03:27.788Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9efc6ff0819e6636a932db"
+    },
+    "message_id": "reddit_t3_1w9zhwh",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "PokemonGOBrasil",
+    "username": "Ill_Storm5308",
+    "title": "Como faz isso de hypertreinamento?",
+    "text": "Como faz isso de hypertreinamento?\n\n(Ignora a imagem)        submitted by     /u/Ill_Storm5308     to     r/PokemonGOBrasil       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PokemonGOBrasil/comments/1w9zhwh/como_faz_isso_de_hypertreinamento/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:03:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:03:27.986Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9efc70f0819e6636a932dc"
+    },
+    "message_id": "reddit_t3_1w9zhwa",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "FacebookMarketplace",
+    "username": "FeelPositive8025",
+    "title": "Marketplace buyer left 1 star + racist text",
+    "text": "Marketplace buyer left 1 star + racist text\n\nBuyer came to see a portable washer, didn’t buy it, then left me a 1-star review saying I “lied” about missing parts.    The ad clearly said  drain hose included , and the drain hose was literally attached to the machine in the photos. He apparently expected a separate inlet hose that was never advertised.    Then afterward he texted me, “Must be a cultural phenomenon that you guys are never honest.”    So he is a racist asshole.        submitted by     /u/FeelPositive8025     to     r/FacebookMarketplace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FacebookMarketplace/comments/1w9zhwa/marketplace_buyer_left_1_star_racist_text/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:03:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:03:28.184Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9efc70f0819e6636a932dd"
+    },
+    "message_id": "reddit_t3_1w9zhvp",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "crosstradingroblox",
+    "username": "EnvironmentalZone189",
+    "title": "Looking to buy robux !",
+    "text": "Looking to buy robux !\n\nDM me plz! (preferably looking for trusted ppl and plus users)       submitted by     /u/EnvironmentalZone189     to     r/crosstradingroblox       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/crosstradingroblox/comments/1w9zhvp/looking_to_buy_robux/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:03:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:03:28.382Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9efc70f0819e6636a932de"
+    },
+    "message_id": "reddit_t3_1w9zhvi",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "guitarlessons",
+    "username": "nieeko",
+    "title": "First 4 frets are making buzz sounds",
+    "text": "First 4 frets are making buzz sounds\n\nHi, Im a beginner guitar player and I've noticed that no matter how hard I press the strings on the first 4 frets, the sound they're making is buzzy and not clear. If I go down to 5th fret and below, it sounds much better. It mainly affects the E B G strings. Can someone tell me why is that happening?        submitted by     /u/nieeko     to     r/guitarlessons       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/guitarlessons/comments/1w9zhvi/first_4_frets_are_making_buzz_sounds/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:03:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:03:28.579Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9efc70f0819e6636a932e0"
+    },
+    "message_id": "reddit_t3_1w9zhv6",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "MythicalKitchen",
+    "username": "UnveiledShadow",
+    "title": "What would your ideal Last Meal be? Here's mine.",
+    "text": "What would your ideal Last Meal be? Here's mine.\n\nI tend to think about it a lot whenever a new Last Meal comes out, and if I had the luxury of having it cooked by the wonderful people at MythicalKitchen, I realize, I'd probably go with a  Hobbit's Day of Feasting , but with my ideal version of what I wanted to eat. I have it saved on my computer, and would probably ask that it be the food of choice for a day of feasting if I left my family behind too soon, and I think it speaks volumes about me as a person. But it also made me think that other people have an ideal last meal, too, so I wanted to generate a forum where everyone could share theirs.   Breakfast:   Shiozake salmon   Japanese Rice (tender)   -short grain   Japanese Pickled Cucumber   -Seasoned with Togarashi   Tamagoyaki   Miso soup   -The firmer the tofu, the better   -Add more than you think   -Scallions   -Nori   -White miso   -homemade dashi   -rehydrate some shiitake in there   -maybe even keep the shiitake in the soup   -some bonito flakes and scallion greens on top for garnish   Greek yogurt with honey   Natto (I just wanna make Josh eat it)   -Make sure it's been well stirred   -serve with scallions and soy sauce   Iced Wakoucha Black Tea   -sweetened with high-quality honey   Second Breakfast:   Cinnamon Babka French Toast   -Apple Pie style Compote   -Chantilly Cream   -Whipped Brown Butter   Latte with a sprinkling of cocoa powder   Elevenses:   English Breakfast tea (loose)   -sweetened with the high-quality honey   -freshened with whole milk   Blueberry scone   Luncheon:   Loaded Baked Potato and Leek Soup   Traditional Beef empanadas   Authentic Coney Island Dog   Apple Cider (fresh if possible)   Afternoon Tea:   Earl Grey or Oolong   -honey   Light tea cookies or a biscotti   Dinner:   Wok fired gyudon   -thin sliced beef   -a cheap, tough cut   -velvet marinated like Chinese beef   -dashi   -light soy   -Oyster sauce   -cornstarch   -baking soda   -Mandolin sliced sweet onion   -sear the beef   -remove   -sear the onion   -add the beef   -deglaze   -dark soy   -diluted dashi   -serve over rice   -fold in brunoised pickled ginger   -decorate half of bowl with julienned scallion greens   -decorate other half with crispy fried shallots   -top with wok fried egg   -top THAT with spicy chili crisp   Enjoy with a serving of Sapporo   Supper:   Charcuterie   -Garlic Butter Hokkaido toast points.   -it does NOT have to be fresh baked that morning in the studio   -honey ham, turkey breast   -fold them into a quarter their size   -grape tomatoes sliced into halves   -salted ahead of time and left to rest   -arugula   -aged cheddar   -homemade dill, garlic, and msg pickles   -summer sausage   One glass of Pinot Noir   The Dinner portion is a recipe of my own creation, but not of importance. A simple Gyudon with a wok fried egg and the garnishes would make me just as happy.       submitted by     /u/UnveiledShadow     to     r/MythicalKitchen       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MythicalKitchen/comments/1w9zhv6/what_would_your_ideal_last_meal_be_heres_mine/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:03:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:03:28.971Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9efc71f0819e6636a932e1"
+    },
+    "message_id": "reddit_t3_1w9zhur",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "IndianPCGamers",
+    "username": "charmander_og",
+    "title": "What would be the ideal price to buy a used rtx 2060?",
+    "text": "What would be the ideal price to buy a used rtx 2060?\n\nCame across a listing, trying to find a fair price.        submitted by     /u/charmander_og     to     r/IndianPCGamers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IndianPCGamers/comments/1w9zhur/what_would_be_the_ideal_price_to_buy_a_used_rtx/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:03:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:03:29.169Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9efca9f0819e6636a932e2"
+    },
+    "message_id": "reddit_t3_1w9zj2r",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "bumblebff",
+    "username": "Legitimate-Ad-7480",
+    "title": "Is there any point to adding including men in your search if you genuinely are looking for friends?",
+    "text": "Is there any point to adding including men in your search if you genuinely are looking for friends?\n\nI have no issues being friends with guys- and I have a close friendship with a man already (tho ironically we did meet when I declined a date). But I don’t want to be trying to make friends with someone when they’re secretly looking for fwbs etc. If your a woman whose set your options to all genders what has your experience been? 🙏       submitted by     /u/Legitimate-Ad-7480     to     r/bumblebff       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/bumblebff/comments/1w9zj2r/is_there_any_point_to_adding_including_men_in/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:04:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:04:25.099Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9efca9f0819e6636a932e3"
+    },
+    "message_id": "reddit_t3_1w9zj1x",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "BurlingtonCoatFactory",
+    "username": "Alarming-Spend3471",
+    "title": "Are you joking me",
+    "text": "Are you joking me\n\nSo i pick up shifts and they get approved just for them to take me off the schedule?? Mind you our job is always short staffed and people can hardly go on breaks. They take me off the schedule and then they will call me asking me if i can work like?? You should have kept me on fucking schedule if that was the case. The last time i worked was on 08/31 (I’m ) but they constantly put me in fitting room or on cashier cause half of the cashiers have either quit or just don’t show up        submitted by     /u/Alarming-Spend3471     to     r/BurlingtonCoatFactory       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BurlingtonCoatFactory/comments/1w9zj1x/are_you_joking_me/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:04:12Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:04:25.303Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9efca9f0819e6636a932e4"
+    },
+    "message_id": "reddit_t3_1w9zj1o",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "gaybrosgonemild",
+    "username": "buddyck",
+    "title": "hey bros 🌻",
+    "text": "hey bros 🌻\n\nsubmitted by     /u/buddyck     to     r/gaybrosgonemild       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/gaybrosgonemild/comments/1w9zj1o/hey_bros/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:04:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:04:25.503Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9efca9f0819e6636a932e5"
+    },
+    "message_id": "reddit_t3_1w9zj16",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "LeviStrauss",
+    "username": "Benji2238",
+    "title": "Help ID!!",
+    "text": "Help ID!!\n\nI’ve had this pair of thrifted Levi’s I’ve used for work and otherwise for like 2 years now and they finally tore beyond repair today. I wanna replace them but I can’t see the # from fading, anyone know which line these are from??       submitted by     /u/Benji2238     to     r/LeviStrauss       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LeviStrauss/comments/1w9zj16/help_id/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:04:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:04:25.703Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9efca9f0819e6636a932e6"
+    },
+    "message_id": "reddit_t3_1w9zj14",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "ForzaHorizon",
+    "username": "VtecTurbo02",
+    "title": "Racing Hart CP 035",
+    "text": "Racing Hart CP 035\n\nHey all, I want your guys opinion on what the closest in game wheels are to the Racing Hart CP 035?       submitted by     /u/VtecTurbo02     to     r/ForzaHorizon       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ForzaHorizon/comments/1w9zj14/racing_hart_cp_035/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:04:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:04:25.902Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9efcaaf0819e6636a932e7"
+    },
+    "message_id": "reddit_t3_1w9zj10",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "CriticalState",
+    "username": "k1tty_b0y1",
+    "title": "[Critical Scenario] Corporations own all spaceship programs and etc. so they do Mars colonization faster and built there a city, but it’s THEIR city with their own laws.",
+    "text": "[Critical Scenario] Corporations own all spaceship programs and etc. so they do Mars colonization faster and built there a city, but it’s THEIR city with their own laws.\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/k1tty_b0y1     to     r/CriticalState       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CriticalState/comments/1w9zj10/critical_scenario_corporations_own_all_spaceship/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:04:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:04:26.101Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9efcaaf0819e6636a932e8"
+    },
+    "message_id": "reddit_t3_1w9zj0d",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "OnePunchMan",
+    "username": "Omega_705",
+    "title": "I drew the Bang from the 4th manga cover",
+    "text": "I drew the Bang from the 4th manga cover\n\nBtw any tips on hands? I've seen like 500 tutorials but they still look kind off deformed when I draw them even when I'm imitating        submitted by     /u/Omega_705     to     r/OnePunchMan       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OnePunchMan/comments/1w9zj0d/i_drew_the_bang_from_the_4th_manga_cover/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:04:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:04:26.301Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9efcaaf0819e6636a932e9"
+    },
+    "message_id": "reddit_t3_1w9zj08",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "websiteservices",
+    "username": "clever-coder",
+    "title": "[For Hire] Web developer — just wrapped a project, taking on a new one",
+    "text": "[For Hire] Web developer — just wrapped a project, taking on a new one\n\nI've been freelancing with agencies across India for a while now, mostly building portfolio sites for studios, media houses, and consulting firms. Along the way, I've noticed business owners tend to get stuck at the same few points.   Some buy a domain first and then have no idea what to actually put on it. Others come in with a full plan mapped out but freeze when it's time to start building. And the one I hear most: they assume development will cost a fortune before we've even talked about what they need.   If any of that sounds like where you are, happy to just talk through it, no pressure to hire.   If you do want to build something, here's what I usually help with:     Portfolio and business websites (4–5 pages)   E-commerce stores   Contact forms that send leads straight to your inbox   Social media integration   Basic SEO and performance   Fully mobile-friendly     I also come from a network engineering background, so security and scalability aren't things I bolt on later.    Pricing:  $500–$1200+ depending on scope. Share what you need, and I'll send three options at different price points so you can pick what fits.   Portfolio: mishravishal.in       submitted by     /u/clever-coder     to     r/websiteservices       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/websiteservices/comments/1w9zj08/for_hire_web_developer_just_wrapped_a_project/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:04:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:04:26.501Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9efcaaf0819e6636a932eb"
+    },
+    "message_id": "reddit_t3_1w9zizt",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "Crystals",
+    "username": "Short-Ad-2340",
+    "title": "Is this genuine ?",
+    "text": "Is this genuine ?\n\nHey so what are your views on this florite heart ?       submitted by     /u/Short-Ad-2340     to     r/Crystals       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Crystals/comments/1w9zizt/is_this_genuine/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:04:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:04:26.908Z"
+    }

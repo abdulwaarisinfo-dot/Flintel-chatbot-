@@ -1,0 +1,416 @@
+    "created_utc": {
+      "$date": "2026-09-15T17:38:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:39:06.048Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa982ba6508d45f3d2cd51b"
+    },
+    "message_id": "reddit_t3_1wh75nc",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "Instagram",
+    "username": "Thickktwinkk",
+    "title": "I used to get 1k+ likes on Instagram - now I get much less (see below). Meanwhile, my TikTok just got 18k 🤯 What happened?",
+    "text": "I used to get 1k+ likes on Instagram - now I get much less (see below). Meanwhile, my TikTok just got 18k 🤯 What happened?\n\nI’ve been travelling and posting and I used to get around 1,000+ likes on Instagram and 600+ on Facebook for my travel photos.  Today I posted what I genuinely think is one of my most beautiful travel photos ever.   Instagram: 14 likes.    Facebook: 3 likes.   Yet around the same time, one of my TikTok videos got  18,000 likes .  So I’m struggling to understand what’s going on. 😂  I know content performs differently on different platforms, but the difference feels enormous. Is it simply that my Instagram/Facebook audiences have become inactive or disconnected from my content? Have algorithms changed that much? Or am I missing something obvious?  Has anyone else with an older account experienced this kind of massive engagement drop while doing well on another platform?  I’d genuinely love to hear what happened in your case and whether you managed to rebuild your audience.       submitted by     /u/Thickktwinkk     to     r/Instagram       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Instagram/comments/1wh75nc/i_used_to_get_1k_likes_on_instagram_now_i_get/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:38:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:39:06.260Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa982ba6508d45f3d2cd51c"
+    },
+    "message_id": "reddit_t3_1wh75n4",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MP5",
+    "username": "Pistol_Whippa",
+    "title": "AP5SD inaccuracies with direct thread, barrel alignment issue.",
+    "text": "AP5SD inaccuracies with direct thread, barrel alignment issue.\n\nRecently picked up an AP5SD from a homie. He’s an SOT and planned on converting it but ended up buying a genuine MP5SD transferable so this sat in his gun room in the back of his shop for some months. Never really shot it. Gave me a steal price so I took it from him.   I bought it with the intention of converting it to a genuine SD at some point, but it’s not a a priority right now so I figured I’ll just shoot it with a direct thread can until I do. I put my Milkman with a direct thread adapter connected to an Ecco HUB extension. Took it to the range Saturday to zero in my optic. While zeroing, I noticed that it would hit close to where I zeroed for the first 2 shots, but then I couldn’t tell where the projectile was landing after. Forgot to try shooting without a can as I was zeroing other guns and got too frustrated with the AP5. Brought the gun home and when I looked into it further, I noticed my can leaned more to the right of the handguard and wasn’t centered. I took off my Milkman and tried with my Omega 9k, and it’s even more clear that it’s not aligned as the gap shows more on the left.   Is this a consistent issue? I’ve read about threads not being concentric on these and people claim running tri-lug or another mounting solution would be the best option to remedy. My AP5-LT didn’t have this issue. Would Century even look or warranty this since it was bought second hand? Curious on thoughts.       submitted by     /u/Pistol_Whippa     to     r/MP5       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MP5/comments/1wh75n4/ap5sd_inaccuracies_with_direct_thread_barrel/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:38:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:39:06.471Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa982ba6508d45f3d2cd51d"
+    },
+    "message_id": "reddit_t3_1wh75mv",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "OpenRGB",
+    "username": "Minionguyjproo",
+    "title": "GUIDE: How to Make OpenRGB Take Audio of All Outputs for Audio RGB Effects on Linux",
+    "text": "GUIDE: How to Make OpenRGB Take Audio of All Outputs for Audio RGB Effects on Linux\n\nHello everybody! I wanted to write this guide as I experienced issues with this myself. With the OpenRGB Effects plugin, you can use a lot of cool audio based effects. But the issue is that you can only choose one output to capture it from, so if you want to switch listening to music from your speakers to your headset, this becomes an issue and you would need to set the output manually over and over again.   Luckily, with a bit of help of ChatGPT I'll admit, I was able to find a solution to this problem. What we want to do is create a virtual null sink using PipeWire, then create a script that will be running as service to detect the current default output and then route that directly to the null sink.   Creating Null Sink   First, we need to create the file:    mkdir -p ~/.config/pipewire/pipewire.conf.d nano ~/.config/pipewire/pipewire.conf.d/20-openrgb-dummy-sink.conf     In this file, we can put something like:    context.objects = [ { factory = adapter args = { factory.name = support.null-audio-sink node.name = \"OpenRGB_Dummy_Sink\" node.description = \"OpenRGB Audio Capture\" media.class = \"Audio/Sink\" audio.position = \"FL,FR\" } } ]     Then, we can restart PipeWire:  systemctl --user restart pipewire pipewire-pulse    You'll want to make sure the sink exists. Run:  wpctl status -n    And verify that you can see the OpenRGB_Dummy_Sink listed there.   Creating Script   Second, we need to create the script that will capture the right output to route through our new dummy sink.   First, run the following to create the script:    mkdir -p ~/.local/bin nano ~/.local/bin/openrgb-follow-default.sh     Now, we need to use something similar to the following contents:    #!/usr/bin/env bash set -u SINK=\"OpenRGB_Dummy_Sink\" STATE_FILE=\"${XDG_RUNTIME_DIR:-/tmp}/openrgb-follow-default.module\" current_module=\"\" cleanup() { if [[ -n \"$current_module\" ]]; then pactl unload-module \"$current_module\" 2>/dev/null || true fi rm -f \"$STATE_FILE\" } trap cleanup EXIT INT TERM while true; do default_sink=\"$(pactl get-default-sink 2>/dev/null || true)\" if [[ -z \"$default_sink\" ]]; then sleep 1 continue fi monitor=\"${default_sink}.monitor\" # Only recreate the loopback if the default sink changed. if [[ \"$monitor\" != \"${current_monitor:-}\" ]]; then if [[ -n \"$current_module\" ]]; then pactl unload-module \"$current_module\" 2>/dev/null || true current_module=\"\" fi # Make sure the monitor actually exists. if pactl list short sources | awk '{print $2}' | grep -Fxq \"$monitor\"; then new_module=\"$( pactl load-module module-loopback \\ \"source=$monitor\" \\ \"sink=$SINK\" \\ latency_msec=20 \\ 2>/dev/null )\" if [[ \"$new_module\" =~ ^[0-9]+$ ]]; then current_module=\"$new_module\" current_monitor=\"$monitor\" echo \"$current_module\" > \"$STATE_FILE\" echo \"OpenRGB: following $default_sink\" else current_monitor=\"\" fi else current_monitor=\"\" fi fi sleep 1 done     To fix the permissions, run:  chmod +x ~/.local/bin/openrgb-follow-default.sh    Creating the User Service   To do this, we can create a service file that calls the script, so it can run automatically on a system boot. Run the following to make the service file:    mkdir -p ~/.config/systemd/user nano ~/.config/systemd/user/openrgb-follow-default.service     With the following contents:    [Unit] Description=Follow default audio output for OpenRGB After=pipewire.service pipewire-pulse.service wireplumber.service Wants=pipewire.service pipewire-pulse.service wireplumber.service [Service] Type=simple ExecStart=%h/.local/bin/openrgb-follow-default.sh Restart=on-failure RestartSec=2 [Install] WantedBy=default.target     After that, we'll need to reload systemd to see the changes:    systemctl --user daemon-reload systemctl --user enable --now openrgb-follow-default.service     Restart OpenRGB. Now you can set the audio output to listen to in OpenRGB to something similar to 'Monitor of OpenRGB Audio Capture'. That should fix the issue permanently! If you have any questions, feel free to ask. Will probably enhance this anytime soon.       submitted by     /u/Minionguyjproo     to     r/OpenRGB       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OpenRGB/comments/1wh75mv/guide_how_to_make_openrgb_take_audio_of_all/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:38:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:39:06.685Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa982f46508d45f3d2cd520"
+    },
+    "message_id": "reddit_t3_1wh76ta",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "BuildAndScaleHQ",
+    "username": "Midnight_Lordd",
+    "title": "is there an email marketing platform that doesnt turn into a second software stack?",
+    "text": "is there an email marketing platform that doesnt turn into a second software stack?\n\nright now one campaign involves a builder, a separate landing page tool and a shared sheet nobody agrees is the actual source of truth, i lose about 6 hrs a week just moving stuff between them before a campaign is even out    i dont need a giant all in one promise, i need an email marketing platform where writing, sending and a basic pre send check can happen without another integration project, anyone actually simplified this or am i asking email software to be less annoying than software is allowed to be lol       submitted by     /u/Midnight_Lordd     to     r/BuildAndScaleHQ       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BuildAndScaleHQ/comments/1wh76ta/is_there_an_email_marketing_platform_that_doesnt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:39:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:40:04.859Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa982f56508d45f3d2cd521"
+    },
+    "message_id": "reddit_t3_1wh76t3",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AlignmentChartFills",
+    "username": "EasySenatTrain",
+    "title": "Name an Artist/Band with 1-3 Albums but deserved around 10-15.",
+    "text": "Name an Artist/Band with 1-3 Albums but deserved around 10-15.\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/EasySenatTrain     to     r/AlignmentChartFills       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlignmentChartFills/comments/1wh76t3/name_an_artistband_with_13_albums_but_deserved/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:39:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:40:05.057Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa982f56508d45f3d2cd522"
+    },
+    "message_id": "reddit_t3_1wh76s8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ConvExTests",
+    "username": "ios_feed_tests_user",
+    "title": "[TDM] SharingUITests_P0/testOverhauledShareSheetOpensFromSubreddit",
+    "text": "[TDM] SharingUITests_P0/testOverhauledShareSheetOpensFromSubreddit\n\nTest Data Manager (TDM) created this test post on Sep 15, 5:39 PM UTC.       submitted by     /u/ios_feed_tests_user     to     r/ConvExTests       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ConvExTests/comments/1wh76s8/tdm_sharinguitests/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:39:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:40:05.255Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa982f56508d45f3d2cd523"
+    },
+    "message_id": "reddit_t3_1wh76s6",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "Signal-Imagination16",
+    "title": "Grab 25⚡ from u/Signal-Imagination16!",
+    "text": "Grab 25⚡ from u/Signal-Imagination16!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Signal-Imagination16     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wh76s6/grab_25_from_usignalimagination16/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:39:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:40:05.451Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa982f56508d45f3d2cd524"
+    },
+    "message_id": "reddit_t3_1wh76s0",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Specialist_Cod_4963",
+    "title": "You have to be reborn as a wild hoofed animal, which one?",
+    "text": "You have to be reborn as a wild hoofed animal, which one?\n\nsubmitted by     /u/Specialist_Cod_4963     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wh76s0/you_have_to_be_reborn_as_a_wild_hoofed_animal/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:39:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:40:05.647Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa982f56508d45f3d2cd525"
+    },
+    "message_id": "reddit_t3_1wh76rl",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "howlonggone",
+    "username": "Typical_Local865",
+    "title": "Selling an extra ticket to Goneies in NY tonight",
+    "text": "Selling an extra ticket to Goneies in NY tonight\n\nPost        submitted by     /u/Typical_Local865     to     r/howlonggone       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/howlonggone/comments/1wh76rl/selling_an_extra_ticket_to_goneies_in_ny_tonight/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:39:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:40:05.845Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa982f66508d45f3d2cd526"
+    },
+    "message_id": "reddit_t3_1wh76rj",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "glasgowdnd",
+    "username": "Scottybhoy1977",
+    "title": "Support your local FLGSs",
+    "text": "Support your local FLGSs\n\nJust a gentle reminder to support your friendly local game store!    It's more than somewhere to buy games. It’s where folk discover new adventures, meet fellow players, find gaming groups, and keep the hobby alive in the real world.    So next time you’re looking for a new game, dice, miniatures, books or accessories, consider checking your local store first.    Buy local. Play local. Keep your FLGS thriving. ❤️🎲    A few Glasgow favourites in case you've not been recently:    🎲 West End Games  🎲 Static Games  🎲 Settlers  🎲 Geek-aboo  🎲 The Merchants' Guild  🎲 Forbidden Planet    But there's loads of others beyond that, including Element Games, The Last Outpost, Vlad's Emporium, Top Hat & Bishop, and The Gamer's Club. Supporting places like this keeps the spirit alive in your ttrpg community, so pop down and have a browse! 😃       submitted by     /u/Scottybhoy1977     to     r/glasgowdnd       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/glasgowdnd/comments/1wh76rj/support_your_local_flgss/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:39:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:40:06.041Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa982f66508d45f3d2cd527"
+    },
+    "message_id": "reddit_t3_1wh76qu",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "TwentiesIndia",
+    "username": "Witty_Butterfly_2774",
+    "title": "I got a compliment 🫠",
+    "text": "I got a compliment 🫠\n\nI always thought my face doesn't suit the undercut or fade. So I never tried that. I went on a trip this time and got myself that cut this time.   Today I went to the office and a girl who sits near me said \"You look nice\".   This is the first compliment I ever got \"straight to my face\" from a GIRL 🫠🫠🫠🫠🫠   Today is 15th September, 2026 🙃       submitted by     /u/Witty_Butterfly_2774     to     r/TwentiesIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TwentiesIndia/comments/1wh76qu/i_got_a_compliment/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:39:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:40:06.247Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa982f66508d45f3d2cd528"
+    },
+    "message_id": "reddit_t3_1wh76qp",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Namify",
+    "username": "FeedAlchemy",
+    "title": "Does it need to be .com for your customers to trust it?",
+    "text": "Does it need to be .com for your customers to trust it?\n\nThis question comes up enough in threads about non-.com storefronts that it's worth actually answering instead of assuming.   Short answer: no, it doesn't need to be .com. But across subreddits like  r/ecommerce ,  r/Entrepreneur , and  r/domain , business owners generally agree that while a non-.com isn't a dealbreaker, it does introduce friction that you have to work harder to overcome. The extension doesn't build trust on its own. It works alongside a few other signals, and if those signals are missing, no extension saves you.   Here's what actually earns trust at checkout:      Does the site look like it was built for the product, not templated overnight?  Real photos, consistent branding, an about/contact page that isn't just a Gmail address. This matters more than the extension by a wide margin.    Does the domain cleanly match the brand?  mrbeast.store and emirates.store work because the name IS the brand. There's no filler word bolted on. A domain that looks stitched together (randomwords123.store) reads worse regardless of the extension.    Does the extension at least make sense for what you're selling?  A .store domain selling actual products reads as intentional. It's built for exactly that use case, so it's not fighting against itself the way, say, a personal blog on .store might.    Does the site have HTTPS, working contact info, and normal-looking policies?  Baseline stuff, but it's where a lot of sketchy stores actually fail, not the extension.     If you assume .com carries a default level of trust that other extensions have to earn back, you might be looking at it from the wrong end of the telescope. .com carries recognition because it's old and everywhere, not because .com sites are inherently more legitimate.   One more thing: how much any of this matters probably depends on who's actually buying. Someone who's spent 20 years typing .com out of habit is a different case than someone who clicked through from a social ad and never looked at the URL bar.   So if the brand is real, the site is built with actual care, and the basics are covered, an extension like .store isn't holding anyone back. If those things are missing, .com wouldn't save it either (it just takes shoppers longer to notice).   What would you add to this list?       submitted by     /u/FeedAlchemy     to     r/Namify       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Namify/comments/1wh76qp/does_it_need_to_be_com_for_your_customers_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:39:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:40:06.445Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa982f76508d45f3d2cd52d"
+    },
+    "message_id": "reddit_t3_1wh76qi",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "GenZpk",
+    "username": "IntroductionDear7404",
+    "title": "Is being chronically mad the aesthetic here?",
+    "text": "Is being chronically mad the aesthetic here?\n\nLook, I get it..freedom of speech is a thing, and everyone is entitled to drop their hot takes. But once in a while, it’d be nice to see literally anything positive on here. Walking into this sub feels like stepping into a dedicated doom-scrolling vault. Every single day it’s people constantly complaining about religions, politics, or just random people.   ​I’m genuinely curious: what is everyone going through in their daily lives to be this bitter about literally everything? If you’re dealing with personal struggles, family issues, or past trauma, that’s valid and I get it. But using this platform as a 24/7 punching bag to degrade everyone and everything around you isn't it.   ​There’s a massive difference between actual constructive criticism/having an opinion and just holding a weird personal grudge against the entire world that you frame as \"just giving my opinion.\" You don’t have to drag everything down just because you’re having a bad time. Can we try being even slightly nice for once, or is being chronically mad the whole aesthetic here?       submitted by     /u/IntroductionDear7404     to     r/GenZpk       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GenZpk/comments/1wh76qi/is_being_chronically_mad_the_aesthetic_here/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:39:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:40:07.417Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa982f76508d45f3d2cd52e"
+    },
+    "message_id": "reddit_t3_1wh76qh",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "vacation",
+    "platform": "reddit",
+    "subreddit": "Disneycollegeprogram",
+    "username": "Fun_Sea_1109",
+    "title": "DCP role suggestions for someone with physical limitations?",
+    "text": "DCP role suggestions for someone with physical limitations?\n\nHi! I’ve done the DCP twice previously, although I did not complete a full program either time. I’m very interested in coming back for another program, especially now that I’m a Hospitality Management major and have a much clearer idea of what I want to do professionally. I would ultimately love for Disney to be the company where I build a long-term career, particularly working in the area of accessibility and serving guests and employees with disabilities.   Now that I have a lot more answers about my own limitations than I did during my previous programs, I wanted to ask if anyone with similar restrictions has found certain CP roles to be a particularly good fit. I’m not looking for anyone to tell me what Disney would or would not accommodate.. I know that’s an individualized process. I’m mainly interested in hearing people’s experiences with the actual physical demands of different roles.   My biggest limitations are that I would need assistance with lifting anything over ~25 pounds, cannot work in an outdoor role due to heat intolerance, am not able to work in most f&b roles do to heat intolerance in the kitchen environments and food allergies, and need the ability to alternate between standing/walking and sitting.  That doesn’t mean I need a completely sedentary position.  My abilities can vary considerably from day to day. There are days when I may be perfectly capable of being on my feet for an entire shift, while during a flare-up I may need to sit for a more extended period before returning to standing or walking. I also need reliable access to food and water throughout the day and the ability to use the restroom as needed. Again, I’m not asking whether these specific things would be approved as accommodations; I’m including them to give a better idea of what type of work environment I’m trying to identify.   Vacation Planning would honestly be an ideal type of role for me based on both my limitations and previous experience, but I’m not sure what the current status of that role is for CPs. During my program last summer, we were told CPs were no longer being placed there, so I’m not counting on that as an option.   For people who have actually worked different DCP roles,  what roles have you seen work well for CPs who need a balance of movement and opportunities to sit, aren’t able to tolerate heat, and have some lifting restrictions?  I’d especially love to hear from anyone who has done the program with similar limitations and what their experience was like.   I know the DCP can be physically demanding, and I’m not expecting a role where I never have to stand, walk, or do physical work. I’m just trying to be realistic about my limitations while also not automatically ruling out something that I know I’m capable of doing with the right environment. Thank you!       submitted by     /u/Fun_Sea_1109     to     r/Disneycollegeprogram       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Disneycollegeprogram/comments/1wh76qh/dcp_role_suggestions_for_someone_with_physical/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:39:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:40:07.616Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa982f76508d45f3d2cd52f"
+    },
+    "message_id": "reddit_t3_1wh76qb",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "RedditPregunta",
+    "username": "No_Bookkeeper_1178",
+    "title": "¿El mejor consejo que le darías a un adolescente de 16?",
+    "text": "¿El mejor consejo que le darías a un adolescente de 16?\n\nsubmitted by     /u/No_Bookkeeper_1178     to     r/RedditPregunta       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RedditPregunta/comments/1wh76qb/el_mejor_consejo_que_le_darías_a_un_adolescente/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:39:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:40:07.814Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa982f86508d45f3d2cd530"
+    },
+    "message_id": "reddit_t3_1wh76q9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "WeddingDressTips",
+    "username": "jxsmineeex",
+    "title": "I think I’ve found the one!",
+    "text": "I think I’ve found the one!\n\nI think I’ve found the dress but would like opinions that aren’t family ones!  I wanted a ball gown style that didn’t drown me, lace, sweetheart neckline & something unique but still timeless.  I think I’ve found the one? I’m so indecisive! I feel amazing when I put it on but would like opinions!        submitted by     /u/jxsmineeex     to     r/WeddingDressTips       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WeddingDressTips/comments/1wh76q9/i_think_ive_found_the_one/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:39:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:40:08.011Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa982f86508d45f3d2cd531"
+    },
+    "message_id": "reddit_t3_1wh76pc",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "India_Triathlon",
+    "username": "Familiar_Scheme_7190",
+    "title": "Beginner Road Bike Suggestions for Olympic Triathlon (Budget: ₹50k)",
+    "text": "Beginner Road Bike Suggestions for Olympic Triathlon (Budget: ₹50k)\n\nHey everyone,   I am a regular runner with solid endurance, recently joined swimming classes, and plan to participate in an Olympic Distance Triathlon maybe within the next 2 years.   ​I’ve been riding bicycle my entire life (currently own a Rockrider MTB from Decathlon), but I want to buy a proper road bike for training and also participating in Indian Olympian triathlons.    My budget is around 50k, and I’m eyeing these three road bikes:   ​Polygon Strattos S2   ​Van Rysel / Triban RC120   ​Battalion Frontline V3   Which of these three offers the best performance and value for a beginner aiming for an Olympic distance triathlon in 1–2 years?   ​   ​Are there any other road bikes in the ~₹50k budget in India I should look into?   ​Would appreciate any insights or long-term ownership feedback. Thanks!       submitted by     /u/Familiar_Scheme_7190     to     r/India_Triathlon       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/India_Triathlon/comments/1wh76pc/beginner_road_bike_suggestions_for_olympic/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:39:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:40:08.237Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa982f86508d45f3d2cd532"
+    },
+    "message_id": "reddit_t3_1wh76p1",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "FC_26",
+    "username": "C_W_StJohnNobbs",
+    "title": "Need some players",
+    "text": "Need some players\n\nI'd like to buy Totti, Nedved and Stoichkov, if anybody can sell me, it'd be really cool.       submitted by     /u/C_W_StJohnNobbs     to     r/FC_26       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FC_26/comments/1wh76p1/need_some_players/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:39:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:40:08.444Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa982f86508d45f3d2cd533"
+    },
+    "message_id": "reddit_t3_1wh76ny",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "SolanaMemeCoins",
+    "username": "Scared_Net_1408",
+    "title": "Day #1 FOMO buy of SPX6900",
+    "text": "Day #1 FOMO buy of SPX6900\n\nsubmitted by     /u/Scared_Net_1408     to     r/SolanaMemeCoins       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SolanaMemeCoins/comments/1wh76ny/day_1_fomo_buy_of_spx6900/",

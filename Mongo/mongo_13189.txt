@@ -1,0 +1,416 @@
+  {
+    "_id": {
+      "$oid": "6aafeff1aeeb96c1c63ba609"
+    },
+    "message_id": "reddit_t3_1wlis02",
+    "topic_key": "keyword research tool",
+    "search_keyword": "keyword research tool",
+    "platform": "reddit",
+    "subreddit": "SEO",
+    "username": "Winter_Reference_481",
+    "title": "SEO college course. Any actually free SEO keyword research tools that i can use for one single assignment?",
+    "text": "SEO college course. Any actually free SEO keyword research tools that i can use for one single assignment?\n\nSEO is VERY new to me, and I am in a digital marketing SEO class. One of our first major assignments requires us to use a keyword search tool to do analitics to find out Monthly search amounts, CPC, dificulty, relevance, and trend. The thing is the course materials are out dated as fuck, giving us recommendations to use keyword search tools which used might have been completely free before 2010, bit now require you to pay them after searching 3 keywords. I am looking for a completley free keyword research tool that i can use to finish this dumb assignment.       submitted by     /u/Winter_Reference_481     to     r/SEO       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SEO/comments/1wlis02/seo_college_course_any_actually_free_seo_keyword/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T14:38:29Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T14:38:41.784Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aafeff2aeeb96c1c63ba60a"
+    },
+    "message_id": "reddit_t3_1wlirzd",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "linux",
+    "username": "word-sys",
+    "title": "PULS v0.9.4 Optimization & Feature Update Released",
+    "text": "PULS v0.9.4 Optimization & Feature Update Released\n\nBig update for  PULS , after a decade now it has reached  v0.9.4 update . This update is a major feature, performance, and hardware telemetry release. I started sharing development stages and tests on my  YouTube channel  where you can check out more details for current and future releases.   This update introduces a  Granular Settings Modal & Configuration Persistence (F2 / Shift+S)  which lets you configure your environment directly inside the TUI. You can customize Interface Language, Color Theme, Default Startup Tab, Temperature Units (Celsius / Fahrenheit), Telemetry Refresh Rate (500ms - 5000ms), and Process Tree defaults, all automatically persisted to  ~/.config/puls/config.ini .   Another major addition is  Multi-Language Expansion (7 Languages) . PULS now includes full, native localization for English (default), Turkish, French, German, Spanish, Italian, and Russian with automatic  LANG / LC_ALL  environment detection on startup and instant runtime cycling ( L  /  l ).   I also added  Full Terminal Mouse Event Capture . You can now click any header tab directly to navigate, click the Settings badge, and smoothly scroll process tables, active socket lists, journal logs, and modal windows using the mouse wheel — protected by a panic hook that guarantees safe terminal state restoration upon exit.   Added a  Hierarchical Process Tree View & POSIX Signal Selector . Easily toggle between a flat sortable list and parent-child tree view ( t ) with standard branch glyphs ( ├─ ,  └─ ). You can send POSIX signals ( SIGTERM ,  SIGKILL ,  SIGHUP ,  SIGSTOP ,  SIGCONT ,  SIGINT ) via an interactive modal ( k  /  F9 ), and dynamically adjust scheduling niceness on the fly ( [  to raise priority,  ]  to lower priority).   Added an  Extended Process Inspector (Enter)  that opens a deep-dive multi-view modal displaying all open file descriptors ( /proc/[pid]/fd ), active socket counts, and per-thread CPU utilization and execution states ( /proc/[pid]/task ).   Added  Filesystem Inodes & Active Network Socket Mapping , reporting partition inode capacity and mount flags via zero-dependency  statvfs , per-process disk read/write throughput rates ( /proc/[pid]/io ), and active TCP/UDP socket endpoint tracking parsed natively from  /proc/net/ .   This update also includes deep optimizations and important improvements:      Massive CPU & Memory Optimizations:  Replaced  /proc/[pid]/stat  file reading with a direct native  getpriority  syscall to eliminate 500+ file I/O operations per second, cached translation dictionaries, and shifted string formatting on-demand strictly to visible viewport rows.    Stutter-Free Decoupled UI Loop:  Separated the 30 FPS rendering pipeline from background telemetry queries and eliminated busy-wait loops, reducing idle CPU usage to ~0.1%.    GPU Telemetry & Throttling Flags:  Added power limit vs current draw, PCIe link generation/width, fan RPM, and thermal throttling flags for NVIDIA, AMD, and Intel GPUs.    Hardware Power & NUMA Topology:  Battery health, charging wattage, AC status, CPU frequency scaling governors, and NUMA node core affinity support for systems with up to 128+ cores.    3 New Curated Color Themes:  Added Dracula, Solarized Dark, and High Contrast alongside Default, Dark Blue, and Light.    Multi-Architecture Release Pipeline:  Automated CI/CD builds for static standalone MUSL binaries and Debian packages ( .deb ) for both AMD64 ( x86_64 ) and ARM64 ( aarch64 ).    Zero New Dependencies:  All new features were implemented using the Rust standard library and native Linux kernel interfaces without bloating binary size with external crates.     You can download the .deb package, static portable MUSL binary, or build from source directly on the  GitHub Releases page .   Thanks to everyone who supports this project with their ideas, feedback, and bug reports. I hope this helps all Linux users monitor and manage their systems with ease, thank you :)       submitted by     /u/word-sys     to     r/linux       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/linux/comments/1wlirzd/puls_v094_optimization_feature_update_released/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T14:38:28Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T14:38:42.042Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aafeff2aeeb96c1c63ba60b"
+    },
+    "message_id": "reddit_t3_1wlirz3",
+    "topic_key": "dropshipping",
+    "search_keyword": "dropshipping",
+    "platform": "reddit",
+    "subreddit": "DropshippingTips",
+    "username": "Parking_Programmer91",
+    "title": "Complete beginner — read the Beginner's Guide but still lost on where to start. What were your actual first steps?",
+    "text": "Complete beginner — read the Beginner's Guide but still lost on where to start. What were your actual first steps?\n\nsubmitted by     /u/Parking_Programmer91     to     r/DropshippingTips       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DropshippingTips/comments/1wlirz3/complete_beginner_read_the_beginners_guide_but/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T14:38:27Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T14:38:42.289Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaff013660c608403987b32"
+    },
+    "message_id": "reddit_t3_1wlisgy",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SpainPolitics",
+    "username": "CarabajalTadeo",
+    "title": "¿Por qué apoyan las ideas que apoyan?",
+    "text": "¿Por qué apoyan las ideas que apoyan?\n\nEstuve un rato viendo los posts y, sobre todo, los comentarios de la gente en este subreddit. Llegué a la conclusión de que la mayoría de personas aquí son probablemente de izquierda o centro izquierda. No veo nada malo en eso, normalmente en los subreddits de política surge una ideología primaria y se empieza a generar una cámara de eco al rededor de esta ideología. Dependiendo de la moderación podría incluso volverse una norma tener esas ideas para no ser baneado xd.   La razón por la que hago este post es porque yo vengo de un país cuya ideología primaria durante muchas décadas fue la izquierda, y no terminó nada bien. Muchas de las medidas que los españoles de izquierda ya se hicieron aquí y terminaron en corrupción, malgasto de fondos públicos y manipulación de las masas. Esto me lleva a preguntarme, hacia las personas de izquierda en España: ¿Por qué crees que en tu país será diferente?   Desde ya gracias por responder con respeto a mi pregunta :)       submitted by     /u/CarabajalTadeo     to     r/SpainPolitics       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SpainPolitics/comments/1wlisgy/por_qué_apoyan_las_ideas_que_apoyan/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T14:39:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T14:39:15.862Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaff014660c608403987b33"
+    },
+    "message_id": "reddit_t3_1wlisgp",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "asktransgender",
+    "username": "GearFailure",
+    "title": "Recommendations for razors?",
+    "text": "Recommendations for razors?\n\nI'm looking for one with a replaceable head, because I'd much rather buy replacement heads, then waste whole razors.       submitted by     /u/GearFailure     to     r/asktransgender       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/asktransgender/comments/1wlisgp/recommendations_for_razors/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T14:39:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T14:39:16.074Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaff014660c608403987b34"
+    },
+    "message_id": "reddit_t3_1wlisga",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "GamingLaptops",
+    "username": "Commercial_Major_796",
+    "title": "Basic Gaming Laptop for Sims 4?",
+    "text": "Basic Gaming Laptop for Sims 4?\n\nHelp a girl out please! I just want to get new laptop where I can comfortable play sims 4 and Slay the Spire.   Budget: $800 - $1,200  Country: USA  Use Case: Sims 4 + mod + expansion packs, Slay the Spire, PPT, Word, normal computer uses  Preferred Specs / Form Factor: 15” screen size more or less, intel Core i5 or newer or AMD Ryzen 5 or Nvidia RTX (is what I’m told I need)  Portability Needs: laptop which will mostly stay at home.  Notes: I’d prefer to buy new or refurbished.    Currently looking at:  HP Victus 15?   Thank you!!!       submitted by     /u/Commercial_Major_796     to     r/GamingLaptops       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GamingLaptops/comments/1wlisga/basic_gaming_laptop_for_sims_4/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T14:39:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T14:39:16.288Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaff014660c608403987b35"
+    },
+    "message_id": "reddit_t3_1wlisg7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "RedditGames",
+    "username": "SexyStellar",
+    "title": "[Monkeys Paw] I wish I was a catboy! :3",
+    "text": "[Monkeys Paw] I wish I was a catboy! :3\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/SexyStellar     to     r/RedditGames       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RedditGames/comments/1wlisg7/monkeys_paw_i_wish_i_was_a_catboy_3/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T14:39:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T14:39:16.500Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaff014660c608403987b36"
+    },
+    "message_id": "reddit_t3_1wlisg4",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "sole_n1gg4",
+    "title": "Grab 100 hammers from u/sole_n1gg4!",
+    "text": "Grab 100 hammers from u/sole_n1gg4!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/sole_n1gg4     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wlisg4/grab_100_hammers_from_usole_n1gg4/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T14:39:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T14:39:16.711Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaff014660c608403987b37"
+    },
+    "message_id": "reddit_t3_1wlisfw",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "inearfidelity",
+    "username": "KAC-SK",
+    "title": "NiceHCK Tears Review - $35 Makes Me Question My Life Choices (+ budget shootout)!",
+    "text": "NiceHCK Tears Review - $35 Makes Me Question My Life Choices (+ budget shootout)!\n\nNICEHCK sent me the Tears as a free review sample. They had no input into the review and all thoughts are my own.    I have spent a fairly stupid amount of money on audio. Then something like the  NICEHCK Tears  shows up for around  $35  and makes me question a few decisions. I maintain a list of over 170+ audio products in the link in my profile with short reviews and ranking. Might want to check it out.   The headline is simple:    Dat bass.    Sound   The bass is easily the star. There is proper  rumble, weight and impact , but it does not turn into the bloated wall of bass. It also avoids the hollow feeling I initially had with  Tangzu Wan'er 2 Red Lion  before fixing that with Penon Liqueur Orange tips.   The mids are also very well judged for my ears. There is a rise around  2.5kHz , followed by a drop around 3kHz rather than continuing to push the pinna gain. That is exactly the kind of tuning that works for me because stronger 3kHz gain can become shouty very quickly. Vocals stay natural.   Treble is warm rather than bright. It is extended enough, but there is no splashiness, no S-bombs and no obvious sibilance.   The overall presentation actually reminds me quite a bit of my  Satyr 4 : warm, bassy, relaxed and easy to listen to. I can just put these on and forget about any form of technical analysis and just enjoy music in its purest form.   Tears vs Red Lion   These two are closer than I initially expected.  I have covered Red Lion extensively in my OoopusX Op 22 review.    With  Penon Liqueur Orange tips , Red Lion has excellent bass, natural vocals and a little more air up top. That extra air also gives Red Lion the  larger-feeling presentation .   Tears is the warmer set. It has slightly more of that bass-and-rumble-first character, while Red Lion feels a little more open.   I currently have:    Tears: 7.5/10    Red Lion: 7/10    Tears edges it overall for me, but they are very comparable.   Tears vs OOPUS X OP22   OP22 can be excellent, but it needs more work. Same review as above has more details. With the right tips, especially  SpinFit W1 , I can tame the areas that bother me in the upper mids and treble. Bass On gives OP22 huge low-end quantity. Tears offers slightly less. Overall Op 22 requires more work on the treble side of things when things get busy.    OP22: 7/10    The Simpler Budget Sets   I also spent time with  Tangzu Cai Wen Ji, Moondrop Chu 2  and  Truthear Gate .   They are all safe budget IEMs, but none of them does anything particularly special.   Tangzu Cai Wen Ji - 5/10   The standout here is  vocals . They sound natural and are easily the reason I rate Cai Wen Ji above Chu 2 and Gate.   The included  Tangzu HE Sonic tips  also work extremely well for me, and the nozzle size is much more reasonable.   For gaming, there is a slight benefit for footsteps, but I would not buy it specifically for gaming. There is an anime card that some people might like? I guess.   Moondrop Chu 2 - 4/10   This is my  sleepy IEM . Completely uninspiring. Also completely harmless.   It is the kind of IEM I can put on when I do not want anything demanding my attention.   The metal shell feels nice, although the nozzle is very wide and has a substantial lip. I also found  gold-colored traces in the box , which does not inspire huge confidence in the coating over the brass shell.   Truthear Gate - 4/10   Similar story. Safe, simple and easy to recommend if somebody just wants a cheap IEM that does not do anything crazy. The package is better than Chu 2 with  two sets of tips , and it is cheaper, although the shell is plastic.   The large nozzle is again the main fit issue for me.   Gaming is whatever.   Comfort and Build   This is another area where Tears punches well above its price. The shell is  tiny, lightweight and almost button-like in the ear . It is one of those IEMs that just disappears once I put it in.   Stock tips work for me, which is increasingly rare. The vented shell also helps it avoid that heavily plugged-up feeling I sometimes get from more sealed IEMs.   You also get a simple  pouch and cable tie , which is plenty at this price.   Comfort is genuinely top notch.   Gaming   Gaming was better than I expected.   For  small arena shooters , Tears is perfectly fine. Imaging is accurate enough to place sounds properly, and the tuning never becomes tiring.   The limitation shows up in  larger maps and more spacious shooters . The stage is not big enough to give me great distance information, so judging exactly how far away something is becomes harder.   That lines up with the music presentation too. Tears is warm and relatively intimate rather than airy and expansive.   So for sub-$100 gaming IEMs I have tried, my current gaming preference order is:    Defiant > Red Lion > Tears > OP22 Bass Off > Nimbus White Nozzle > Pure > OP22 Bass On    Tears works. I just would not choose it specifically for like BF6 type of gaming.   Final Thoughts   This is the kind of budget IEM that makes the hobby slightly ridiculous.    $35 gets you genuinely excellent bass, natural vocals, safe treble, great comfort and perfectly usable gaming performance. Also you can walk around looking decent without drawing attention to yourself  (unless that is what you want ;)).   There are better technical IEMs. There are airier IEMs.   But as a cheap, warm, basshead set that I can put in my ears without immediately looking for different tips or EQ?    Tears is excellent.  And yes, it makes some of my audio spending look increasingly questionable.   In the words of my good friend (almost 2 decades in this hobby) who got them on my recommendation recently:    \"these hit, holy S H I T, WTF lol\"        submitted by     /u/KAC-SK     to     r/inearfidelity       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/inearfidelity/comments/1wlisfw/nicehck_tears_review_35_makes_me_question_my_life/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T14:39:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T14:39:16.924Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaff015660c608403987b38"
+    },
+    "message_id": "reddit_t3_1wlisfr",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "Working-Layer7707",
+    "title": "Grab 25⚡ from u/Working-Layer7707!",
+    "text": "Grab 25⚡ from u/Working-Layer7707!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Working-Layer7707     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wlisfr/grab_25_from_uworkinglayer7707/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T14:39:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T14:39:17.138Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaff015660c608403987b39"
+    },
+    "message_id": "reddit_t3_1wlisfb",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PcBuild",
+    "username": "bamba05",
+    "title": "New pc build check",
+    "text": "New pc build check\n\nI've been quoted about £5.5k for this rig and I want to make sure this is a fair quote:   Case: Lian Li Lancool 217 Infinity Gaming Case - Black - (features x3 ARGB 170mm fans)   CPU (Processor): AMD Ryzen™ 7 9800X3D: 8 Cores, 120W TDP, 4.70GHz, 5.20GHz Turbo, 96MB L3 Cache, Pro OC Compatible, Radeon Graphics   CPU Overclocking: No Overclocking   CPU Cooling: MSI Coreliquid A13 360mm ARGB AIO Liquid Cooler, Ultimate OC Compatible - Black   Cooling Upgrades: Thermal Grizzly Premium Thermal Paste   Motherboard: MSI PRO X870E-P WIFI: ATX w/ PCle 5.0, Wi-Fi 7, USB 4, 3x M.2   Memory (RAM): 32GB (2x16GB) DDR5 6000MT/s Corsair Vengeance RGB Grey   Graphics Card (GPU): NVIDIA® GeForce RTX™ 5090 32GB Founders Edition (1 Card)   PSU (Power Supply): Corsair RM1000X 1000W Cybenetics Gold-Certified Low-Noise ATX 3.1 Fully Modular Gaming Power Supply   Primary Storage (NVMe Drives): 1TB ADATA Legend 860 M.2 PCIe 4.0 NVMe SSD - 6000MB/s Read & 5000MB/s Write (1 Drive)   I'm in the UK, idk if I can mention the website I'm purchasing from, but I've asked for some help from Gemini and these are the options it came up with.    I am buying this to play videogames of my LG Oled C1 in the living room, essentially using the TV as a gaming station. I need to replace my old rtx3070 gaming laptop and thought of investing some money before GPUs become even more expensive.    What do you guys think? Do you have better suggestions or is this fair and can proceed?        submitted by     /u/bamba05     to     r/PcBuild       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PcBuild/comments/1wlisfb/new_pc_build_check/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T14:39:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T14:39:17.352Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaff015660c608403987b3a"
+    },
+    "message_id": "reddit_t3_1wlisee",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "OutcomeMemories",
+    "username": "Zestyclose-Swing4642",
+    "title": "i legit think tripwire is overpowered rn purely because of how fucking hard she is to see due to darker environments cus of the new update",
+    "text": "i legit think tripwire is overpowered rn purely because of how fucking hard she is to see due to darker environments cus of the new update\n\nespecailly glorbwire and the amy tripwire skins, like their color pallet only uses dark colors so they perfectly blend into every map, and the fact that tripwire is so tiny basically makes looking for tripwire feel like finding a needle in a haystack especially mid chase, it feels like a tiny fucking dot following you around       submitted by     /u/Zestyclose-Swing4642     to     r/OutcomeMemories       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OutcomeMemories/comments/1wlisee/i_legit_think_tripwire_is_overpowered_rn_purely/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T14:38:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T14:39:17.568Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaff015660c608403987b3b"
+    },
+    "message_id": "reddit_t3_1wlise0",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Nadscha_90",
+    "title": "Which song absolutely has to be on the playlist for your 2000s party?",
+    "text": "Which song absolutely has to be on the playlist for your 2000s party?\n\nsubmitted by     /u/Nadscha_90     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wlise0/which_song_absolutely_has_to_be_on_the_playlist/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T14:38:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T14:39:17.781Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaff015660c608403987b3c"
+    },
+    "message_id": "reddit_t3_1wlisdp",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "FirstTimeHomeBuyer",
+    "username": "dhrubo0478",
+    "title": "home warranty",
+    "text": "home warranty\n\nIs it worth having a home warranty for major appliances? Pros and cons. How difficult is it to find claims? Who are the best providers? Approximate costing for a 2-bedroom townhouse.       submitted by     /u/dhrubo0478     to     r/FirstTimeHomeBuyer       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FirstTimeHomeBuyer/comments/1wlisdp/home_warranty/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T14:38:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T14:39:17.994Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaff016660c608403987b3d"
+    },
+    "message_id": "reddit_t3_1wlisdc",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "cheatonlinecollege",
+    "username": "Sea_Animator_9200",
+    "title": "Need Help to bypass PECB for cheating in ISO certification Exam Reddit!!",
+    "text": "Need Help to bypass PECB for cheating in ISO certification Exam Reddit!!\n\nif needed.. just DM       submitted by     /u/Sea_Animator_9200     to     r/cheatonlinecollege       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cheatonlinecollege/comments/1wlisdc/need_help_to_bypass_pecb_for_cheating_in_iso/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T14:38:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T14:39:18.205Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaff016660c608403987b3e"
+    },
+    "message_id": "reddit_t3_1wlisd8",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "Borderlands4",
+    "username": "riderkicker",
+    "title": "Trying to diagnose issue. The fast travel/revival teleport wormhole thing doesn't end.",
+    "text": "Trying to diagnose issue. The fast travel/revival teleport wormhole thing doesn't end.\n\nHi folks.    Steam player here playing Loveless, and I just beat Sol. I've never been to Carcadia Burn and I'm trying to get there... when I fast travel to a closer safe zone to speed up the travel to Carcadia Burn, my game gets stuck in the teleportation screen.   I was also trying to open up a safe zone in Carcadia Burn (Traveling manually_ when I died and the same thing happened... that blue wormhole interface thing just never ends.   I'm not sure how to diagnose, or if I should wait for a bugfix?       submitted by     /u/riderkicker     to     r/Borderlands4       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Borderlands4/comments/1wlisd8/trying_to_diagnose_issue_the_fast_travelrevival/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T14:38:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T14:39:18.417Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaff016660c608403987b3f"
+    },
+    "message_id": "reddit_t3_1wlisci",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "15_melon",
+    "title": "Grab 25⚡ from u/15_melon!",
+    "text": "Grab 25⚡ from u/15_melon!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/15_melon     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wlisci/grab_25_from_u15_melon/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T14:38:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T14:39:18.630Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaff016660c608403987b40"
+    },
+    "message_id": "reddit_t3_1wlisch",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "FuckNigelFarage",
+    "username": "Far_Emotion4592",
+    "title": "Restore Britain freaking out about Pakistani flags on Cardiff castle in 2024 to celebrate Pakistani Independence Day",
+    "text": "Restore Britain freaking out about Pakistani flags on Cardiff castle in 2024 to celebrate Pakistani Independence Day\n\nI’m literally British Pakistani and Welsh, born and raised in Cardiff. There’s a massive Pakistani community! Why they are so upset I do not understand. 2 years after it happened AND only for 1 day! Just put up to support Welsh Pakistanis, what is actually the problem? 😭       submitted by     /u/Far_Emotion4592     to     r/FuckNigelFarage       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FuckNigelFarage/comments/1wlisch/restore_britain_freaking_out_about_pakistani/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T14:38:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T14:39:18.840Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaff017660c608403987b41"
+    },
+    "message_id": "reddit_t3_1wliscf",

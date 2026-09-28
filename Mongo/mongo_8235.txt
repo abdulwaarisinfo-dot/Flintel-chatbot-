@@ -1,0 +1,416 @@
+      "$date": "2026-09-17T08:56:05.551Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabab256508d45f3d2d68b7"
+    },
+    "message_id": "reddit_t3_1wiolla",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "IntelArc",
+    "username": "YahabSh",
+    "title": "I finally got Forza Horizon 3 working on Intel Arc",
+    "text": "I finally got Forza Horizon 3 working on Intel Arc\n\nFH3 has been crashing on launch for me on an Arc Pro B50, and from what I found this seems to have been a problem on Arc for quite a while.   I ended up digging into it with WinDbg, the D3D12 debug layer and DRED.   The actual problem turned out to be a bad D3D12 call made by the game during startup. FH3 creates a null depth-stencil view with DXGI_FORMAT_UNKNOWN, the D3D12 device gets removed with DXGI_ERROR_INVALID_CALL, and then the game falls into its \"Video card\" fatal path and crashes.   I made a very small d3d12.dll compatibility shim that only fixes that specific call and forwards everything else to the normal Windows D3D12 runtime.   And... it actually works.   On my system:   - Intel Arc Pro B50   - FH3 / Microsoft.OpusPG  1.0.125.2    - Windows 11 24H2   The game now launches and I’ve been able to play normally.   There is still one annoying thing: FH3 shows the old FH204 \"Unsupported graphics card detected\" warning on startup. For now you can just click \"Ignore and continue\" and the game works. I haven’t touched that part yet.   I put the source, technical notes and a release here:    https://github.com/Yahavcd/FH3ArcFix    I built this with help from ChatGPT while debugging it.   Right now I’ve only tested it on the B50, so I’d really like to know if it also works on A770/A750/A580/B580/B570 or the newer Arc iGPUs.   If anyone tries it, please post your GPU, I'd love to know if it helped others or if is still has problems for different cards       submitted by     /u/YahabSh     to     r/IntelArc       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IntelArc/comments/1wiolla/i_finally_got_forza_horizon_3_working_on_intel_arc/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:55:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T08:56:05.754Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabab266508d45f3d2d68ba"
+    },
+    "message_id": "reddit_t3_1wioll2",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "unclebens",
+    "username": "redditisblack",
+    "title": "this whole bin survived a 100° heat wave, should I keep this mushroom?",
+    "text": "this whole bin survived a 100° heat wave, should I keep this mushroom?\n\nI thought this Bin was a lost cause for a bit because it was taking a while to fruit, and this big beautiful boy popped up. it's only been growin for about a week and it looks like it's going to be massive. it's already about as big as my thumb and it's still growing. PEU.       submitted by     /u/redditisblack     to     r/unclebens       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/unclebens/comments/1wioll2/this_whole_bin_survived_a_100_heat_wave_should_i/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:55:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T08:56:06.351Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabab266508d45f3d2d68bb"
+    },
+    "message_id": "reddit_t3_1wioll1",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Little-Carpenter4443",
+    "title": "What was Pavlov’s dog’s real name?",
+    "text": "What was Pavlov’s dog’s real name?\n\nsubmitted by     /u/Little-Carpenter4443     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wioll1/what_was_pavlovs_dogs_real_name/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:55:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T08:56:06.552Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabab266508d45f3d2d68bc"
+    },
+    "message_id": "reddit_t3_1wiolkq",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "PARTYGIMIKS",
+    "username": "cherierosyyy_",
+    "title": "GIMIK BUDS HALLOWEEN IS NEARRR",
+    "text": "GIMIK BUDS HALLOWEEN IS NEARRR\n\nhello guys!!! i miss posting here sa ginawa kong com hehe ☺️ kindly dm me to reserve your slot    ACCEPTING BOOKINGS FOR OCTOBER 29-31 pwede din 1 if trip nyo :))) just dm me here or sa ig ko tyyy🤍       submitted by     /u/cherierosyyy_     to     r/PARTYGIMIKS       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PARTYGIMIKS/comments/1wiolkq/gimik_buds_halloween_is_nearrr/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:55:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T08:56:06.753Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabab276508d45f3d2d68be"
+    },
+    "message_id": "reddit_t3_1wiolkb",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "YoTroublemakers",
+    "username": "NectarineDesperate82",
+    "title": "Just saw the LI video and \"apology\" (just my opinion don't engage if you dont want to)",
+    "text": "Just saw the LI video and \"apology\" (just my opinion don't engage if you dont want to)\n\nAs a long-time watcher of Dylan's, he toes the line a bit but I don't think he means to offend people. However, this joke, which I could definitely tell was a joke was in really bad taste. I would just attribute it to delivery, though. I wouldn't be joking about it at all but we aren't talking about me. The \"apology\" video though kind of made me feel worse about it. Sure, people misunderstood Dylan, but instead of saying \"Hey, vaild but that's not what I meant,\" It just felt like a public shaming of people that got the wrong impression. My community has often experienced finding out that people we admire/connect with/enjoy have some underlying prejudice, and it's painful. Sometimes people react prematurely because of that fear. I'll keep watching of course, I just wanted to share my thoughts.       submitted by     /u/NectarineDesperate82     to     r/YoTroublemakers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/YoTroublemakers/comments/1wiolkb/just_saw_the_li_video_and_apology_just_my_opinion/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:55:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T08:56:07.157Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabab276508d45f3d2d68bf"
+    },
+    "message_id": "reddit_t3_1wioljz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "DigitalMarketing",
+    "username": "incisiveranking2022",
+    "title": "Why a falling CPL usually isn't the flex you think it is (and what’s actually happening behind the scenes)",
+    "text": "Why a falling CPL usually isn't the flex you think it is (and what’s actually happening behind the scenes)\n\nA lower CPL always looks great in weekly client reporting, but if sales aren't moving with it, you're usually just feeding smart bidding low-quality conversion signals.   When Google Ads or Meta see a cheap event, the algorithm naturally shifts budget toward the easiest users to convert, not the ones most likely to buy.   the most common tracking & attribution gaps causing this disconnected reality:      Over-counting conversions:  Firing conversion tags on button clicks or thank-you page reloads instead of verified, unique form submissions.    Broken GCLID / attribution pipeline:  Losing ad parameters during redirects, cross-domain navigation, or form redirects before they ever reach the CRM.    Unfiltered lead signals:  Counting every raw spam/bot submission as a primary conversion signal without passing back lead validation status.    Missing pipeline integration:  Not connecting MQL, SQL, and Closed-Won deal stages back to ad accounts via offline conversion tracking (OCT).    Static conversion values:  Relying on arbitrary estimated values in ad platforms rather than actual closed revenue values from your CRM.      The Fix:    You have to map the complete data loop:    Ad Click → GCLID Capture → CRM Lead → MQL → SQL → Closed-Won → Revenue    If your bidding algorithms optimize toward raw lead count while sales cares about closed revenue, ad platforms and sales teams will pull in completely opposite directions.   Have you ran into this gap recently? Was it a tag setup issue, spam forms, or just bad pipeline synchronization?       submitted by     /u/incisiveranking2022     to     r/DigitalMarketing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DigitalMarketing/comments/1wioljz/why_a_falling_cpl_usually_isnt_the_flex_you_think/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:55:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T08:56:07.360Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabab276508d45f3d2d68c1"
+    },
+    "message_id": "reddit_t3_1wioljt",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "EGDating",
+    "username": "This-Amphibian-3690",
+    "title": "M26",
+    "text": "M26\n\nLooking for a female for a serious relationship that results in marriage.   I am 26 i work in the software industry. I like swimming , reading books and I enjoy discovering nature , travelling    I am 187 - 80 kg with a slim appearance. I am kind and like to listen to others and care about the details of my friends. I also have long term plans but I can’t share them in public    I am muslim and please i am only interested in serious dating which ends up in a relationship if we are compatible. I can give more info if someone is interested.       submitted by     /u/This-Amphibian-3690     to     r/EGDating       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/EGDating/comments/1wioljt/m26/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:55:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T08:56:07.761Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabab276508d45f3d2d68c2"
+    },
+    "message_id": "reddit_t3_1wiolja",
+    "topic_key": "nike",
+    "search_keyword": "Nike",
+    "platform": "reddit",
+    "subreddit": "Weidianshoe",
+    "username": "KinkiBiscuit",
+    "title": "Any seller sell Nikecraft Tom Sachs?",
+    "text": "Any seller sell Nikecraft Tom Sachs?\n\nSize 46/us12       submitted by     /u/KinkiBiscuit     to     r/Weidianshoe       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Weidianshoe/comments/1wiolja/any_seller_sell_nikecraft_tom_sachs/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:55:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T08:56:07.966Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabab2a6508d45f3d2d68cd"
+    },
+    "message_id": "reddit_t3_1wiolj7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Meowi",
+    "username": "Ok_Replacement_688",
+    "title": "[Choose] Can your Defenders protect you? How well/poor do your defenders do against the attackers and how does the scenario play out?",
+    "text": "[Choose] Can your Defenders protect you? How well/poor do your defenders do against the attackers and how does the scenario play out?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Ok_Replacement_688     to     r/Meowi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Meowi/comments/1wiolj7/choose_can_your_defenders_protect_you_how/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:55:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T08:56:10.146Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabab2a6508d45f3d2d68ce"
+    },
+    "message_id": "reddit_t3_1wiolij",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Ultr4ever",
+    "title": "Grab 100 hammers from u/Ultr4ever!",
+    "text": "Grab 100 hammers from u/Ultr4ever!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Ultr4ever     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wiolij/grab_100_hammers_from_uultr4ever/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:55:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T08:56:10.349Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabab2a6508d45f3d2d68cf"
+    },
+    "message_id": "reddit_t3_1wiolho",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "AmbroxAnon8",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Orange Tree Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Orange Tree Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/AmbroxAnon8     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wiolho/sticker_giveaway_enter_to_win_a_4_stars_orange/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:55:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T08:56:10.554Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabab2a6508d45f3d2d68d0"
+    },
+    "message_id": "reddit_t3_1wiolhk",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789635341105",
+    "text": "[PROBE] 1789635341105\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wiolhk/probe_1789635341105/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:55:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T08:56:10.755Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabab2a6508d45f3d2d68d1"
+    },
+    "message_id": "reddit_t3_1wiolf3",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devplatform_triggers",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789635334428",
+    "text": "[PROBE] 1789635334428\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devplatform_triggers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devplatform_triggers/comments/1wiolf3/probe_1789635334428/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:55:34Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T08:56:10.968Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabab2b6508d45f3d2d68d2"
+    },
+    "message_id": "reddit_t3_1wioldh",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Beading",
+    "username": "lindsaytheloser",
+    "title": "Where do I go to buy cute little beaded items?",
+    "text": "Where do I go to buy cute little beaded items?\n\nI'm not sure if this is the right place so I apologize, but I see SO many adorable things that I just want to scream.    I like to put cute small things on my desk to adore and hold when I am feeling low at work.   I've seen so many cute designs but Etsy has burned me with their drop shippers and AI scams.    I'd love to support artists and buy from them. Any suggestions on where to go?    I'm interested in just tiny cute things. 😍 I'm an art teacher, love rainbows, tiny animals, anime, and more. Favorite animal is a raccoon. I have two cats I'd love to get little beaded miniatures of and a bearded dragon.    I just want to fill my entire desk with beaded miniatures so I can find some happiness in a difficult day. 💜       submitted by     /u/lindsaytheloser     to     r/Beading       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Beading/comments/1wioldh/where_do_i_go_to_buy_cute_little_beaded_items/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:55:30Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T08:56:11.175Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabab616508d45f3d2d68d3"
+    },
+    "message_id": "reddit_t3_1wiom7v",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "XiaomiGlobal",
+    "username": "TioSVQ",
+    "title": "Xiaomi 18 Fold CN verdion",
+    "text": "Xiaomi 18 Fold CN verdion\n\nSo I'm looking to buy the Xiaomi 18 Fold, and it seems to come with different languages out of the box (not only CN and EN), and it has the Google services already installed.   No Android Auto, and no esim support.       submitted by     /u/TioSVQ     to     r/XiaomiGlobal       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/XiaomiGlobal/comments/1wiom7v/xiaomi_18_fold_cn_verdion/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:56:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T08:57:05.744Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabab616508d45f3d2d68d4"
+    },
+    "message_id": "reddit_t3_1wiom7a",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "crosstradingroblox",
+    "username": "avril_speedy",
+    "title": "SELLING NO POT MEGA MUNCKIN CAT FOR ROBUX",
+    "text": "SELLING NO POT MEGA MUNCKIN CAT FOR ROBUX\n\nsubmitted by     /u/avril_speedy     to     r/crosstradingroblox       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/crosstradingroblox/comments/1wiom7a/selling_no_pot_mega_munckin_cat_for_robux/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:56:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T08:57:05.961Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabab626508d45f3d2d68d5"
+    },
+    "message_id": "reddit_t3_1wiom5q",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MechanicAdvice",
+    "username": "Manhag",
+    "title": "HELP PLEASE 06 Infiniti g35x",
+    "text": "HELP PLEASE 06 Infiniti g35x\n\nI have been at this for 4 weekends in a row now and can’t figure this out   Originally I needed a bearing done, got that knocked out and put it all back together and then my front passenger side wouldn’t move. I had to really give a lot of gas to get the damn car to move. Then comes to a grinding halt. I replaced cv axle, caliper, caliper bracket and pads and still doing it. Only to find out last night that my rotor is GRINDING against my caliper bracket (see pic). It screwed my new rotor up.    I believe I got the wrong part from A premium as they sent me the wrong cv axle at first as well. I’m going to buy new caliper and caliper bracket and rotor after work today to try that. I torqued everything to spec, popped cv axle passed my c ring in the transmission, but it is making my center cap pop out on my front passenger side because my cv axle is sticking out a little farther than it should I think.    I just need some advice because I am so stumped if these new parts don’t work that I’m going to get from autozone today.        submitted by     /u/Manhag     to     r/MechanicAdvice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MechanicAdvice/comments/1wiom5q/help_please_06_infiniti_g35x/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:56:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T08:57:06.181Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabab626508d45f3d2d68d6"
+    },
+    "message_id": "reddit_t3_1wiom54",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Inevitable-Wealth727",
+    "title": "What’s a problem humans have collectively decided is “just part of life” even though it really doesn't have to be?",
+    "text": "What’s a problem humans have collectively decided is “just part of life” even though it really doesn't have to be?\n\nsubmitted by     /u/Inevitable-Wealth727     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wiom54/whats_a_problem_humans_have_collectively_decided/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:56:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T08:57:06.401Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabab626508d45f3d2d68d7"
+    },
+    "message_id": "reddit_t3_1wiom53",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "KitchenNightmares",
+    "username": "Status-Code-5177",
+    "title": "Watching the 24/7 livestream of kitchen nightmares on Youtube",
+    "text": "Watching the 24/7 livestream of kitchen nightmares on Youtube\n\nThe Sebastian guy is ridiculous!    The overly complicated menu is absurd, and the pizza looks ghastly.    I know the show can be over the top, but to think your system is working when there are no customers is delusional at best.        submitted by     /u/Status-Code-5177     to     r/KitchenNightmares       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/KitchenNightmares/comments/1wiom53/watching_the_247_livestream_of_kitchen_nightmares/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:56:45Z"

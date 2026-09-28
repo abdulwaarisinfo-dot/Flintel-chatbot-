@@ -1,0 +1,416 @@
+    "username": "ClaudeAI-mod-bot",
+    "title": "[Workflow] Asynchronous Claude Agent Framework with Faked Wait Primitive (iOS & Custom MCP)",
+    "text": "[Workflow] Asynchronous Claude Agent Framework with Faked Wait Primitive (iOS & Custom MCP)\n\nAsynchronous Claude Agent Framework with Faked Wait Primitive (iOS & Custom MCP)    Workflow value:  85/100   Status:  active ·  Freshness:  70/100 ·  Confidence:  0.90 ·  Level:  intermediate   Categories:  Quality Control, Token Saving, Context & Memory, Debugging, Hooks, Skills, MCP, Multi-Agent   Original source:   r/ClaudeAI post/comment    What problem this solves   Enabling asynchronous work with Claude, faking a 'wait' primitive for human input, and automating task processing in a compute-constrained environment, especially for users who don't traditionally code.   Summary   This workflow describes a custom agent framework that allows Claude to perform asynchronous tasks, pause for human decisions, and resume work across sessions. It leverages a custom server (MCP), iOS Shortcuts, and custom skills to manage task ingestion, execution, and a simulated 'wait' state, effectively creating a human-in-the-loop automation system.   Why it is useful   This workflow offers an innovative and detailed solution to a common challenge: enabling Claude to perform asynchronous tasks and wait for human input without constant supervision. It demonstrates how to build a robust, multi-component system using custom MCPs, skills, and mobile automation (iOS Shortcuts), making advanced agent capabilities accessible even to users who don't traditionally code. The approach to faking a 'wait' primitive and managing context across sessions is particularly valuable for extending Claude's utility in real-world, long-running processes.   Workflow     Ingest tasks (e.g., email attachments) into a structured storage (Google Drive) using a Claude-generated script.   A daily routine converts ingested data into tasks on a custom server (Async MCP) with linked procedures.   An hourly iOS Shortcut spawns a new Claude session with an 'Async skill' instruction.   The 'Async skill' directs Claude to the Async MCP to pick up a task and its associated procedure.   Claude uses a 'Vigil skill' to simulate waiting for human input by repeatedly executing a bash sleep and checking the Async MCP for decisions.   If a task requires a human decision, Claude pauses and waits for input via the Async web dashboard.   If a Claude session cannot finish a task, it writes its current context (what's done, what's left) back to the task for another session to pick up later.   Infrastructure features are planned with Claude, built by a Claude Code session, and PRs trigger another Claude Code session for review/questions via Async.   Monitor for routine failures, which trigger loud alerts via email or Discord.   Agents coordinate on a message board within the Async MCP when working on related tasks.     Tools / artifacts     Claude (Opus 5)   iOS Shortcuts   Google Drive   Custom VPS   Custom MCPs (Async)   Web dashboard   Async skill   Vigil skill   Bash sleep   Email scripts   Discord     Validation signals     Author states 'it works really well for me'   Provides concrete examples like 'reply to an email almost instantly'   Describes robust failure handling: 'Failures are loud'   Details context saving for task handoff to ensure continuity.     Limitations     Lack of community validation (low score, no comments).   Requires custom server setup (VPS, MCPs) which may be complex for true beginners.   Relies on iOS Shortcuts, limiting direct transfer to other mobile OS or desktop-only users.   The 'wait' primitive is a workaround that consumes tool calls, which the author acknowledges and wishes for a native solution.     Rate this workflow   Upvote this post if the workflow is useful, reproducible, or worth recommending.   Downvote if it is vague, outdated, unsafe, overhyped, or not reproducible.   Reply if it worked for you, failed, is outdated, or has a better alternative.      This post was generated automatically from the workflow library database.        submitted by     /u/ClaudeAI-mod-bot     to     r/ClaudeWorkflows       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeWorkflows/comments/1wh6vz2/workflow_asynchronous_claude_agent_framework_with/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:29:17Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:29:31.180Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa9807b6508d45f3d2cd471"
+    },
+    "message_id": "reddit_t3_1wh6vyx",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "PinoyTraveller",
+    "username": "micah_ligaya",
+    "title": "Travel to UK sponsored by Client/Company",
+    "text": "Travel to UK sponsored by Client/Company\n\nAno po need ko for solo travel to UK for maybe a week tapos next year? Sponsored by my client/company po.   Travel history: First solo intl travel ko po ay this october pero vietnam po.  Salary: Nagsi-six digits monthly po        submitted by     /u/micah_ligaya     to     r/PinoyTraveller       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PinoyTraveller/comments/1wh6vyx/travel_to_uk_sponsored_by_clientcompany/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:29:17Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:29:31.588Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa9807b6508d45f3d2cd472"
+    },
+    "message_id": "reddit_t3_1wh6vyu",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "nextjs",
+    "username": "TheVeloxStudio",
+    "title": "What Technical Startups Use for Their Marketing Websites",
+    "text": "What Technical Startups Use for Their Marketing Websites\n\nTechnical products are often built with sophisticated stacks like Next.js, React, APIs, and custom application infrastructure, while their marketing sites are increasingly built with platforms like Webflow and Framer.   That isn't necessarily a contradiction.   The two surfaces have different jobs.   The product has to execute the software. The marketing site has to explain it.   That means the marketing site needs a different set of capabilities. It needs to communicate a complex product clearly, publish documentation and changelogs, support different pages and use cases, handle SEO and content, and let a marketing team or founder make changes without constantly pulling engineering into the work.   Looking across technical startups, Webflow has the broader presence across this kind of marketing site. It shows up repeatedly across developer infrastructure, security, data, SaaS, and other technical B2B products.   Framer has a different concentration. Its strongest presence appears among newer, design-led and AI-native companies where speed of iteration and visual control are particularly important.   That doesn't make one platform universally better.   The pattern is more useful than a winner.   Webflow appears well suited to marketing sites that are becoming larger content and marketing systems. Framer appears particularly strong for smaller teams that need to move quickly and maintain a high degree of visual control.   Custom code still has a place when the marketing site genuinely requires application-level behavior or unusually bespoke functionality. But a technically sophisticated product does not, by itself, appear to require a code-first marketing site.   The interesting part is that the market seems to be separating the product stack from the marketing stack.   The product can stay deeply technical.   The website can optimize for communication, publishing, iteration, and ownership.   That may be the more important decision to make before choosing the stack.   The research also surfaced an operational pattern behind that separation.   Several companies that started with custom-coded marketing sites eventually changed platforms because the website had become difficult for the people responsible for marketing to operate.   Anrok described moving to Webflow after its custom site became difficult for the marketing team to maintain.  Marker.io  described a similar transition, with engineering becoming responsible for ordinary website changes.   The common problem wasn't that the original code was incapable of producing a good website.   It was that the operating model had become inefficient.   The same distinction appears in companies using Framer. Perplexity, StackAI, Delphi, and Legora all provide examples of technical companies maintaining substantial public-facing sites while using a visual platform for that layer.   So the more useful question may not be:   \"What stack is the company using?\"   It may be:    \"What does the marketing website need to become, and who needs to operate it?\"    That changes the platform decision considerably.       submitted by     /u/TheVeloxStudio     to     r/nextjs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/nextjs/comments/1wh6vyu/what_technical_startups_use_for_their_marketing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:29:17Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:29:31.789Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa9807b6508d45f3d2cd473"
+    },
+    "message_id": "reddit_t3_1wh6vy6",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "rhymeswithlemur",
+    "title": "Grab 25⚡ from u/rhymeswithlemur!",
+    "text": "Grab 25⚡ from u/rhymeswithlemur!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/rhymeswithlemur     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wh6vy6/grab_25_from_urhymeswithlemur/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:29:16Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:29:31.995Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa9807c6508d45f3d2cd474"
+    },
+    "message_id": "reddit_t3_1wh6vxr",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "istanbul_tips",
+    "username": "Responsible-Ad6433",
+    "title": "Şişil, Istanbul",
+    "text": "Şişil, Istanbul\n\nHere for a week, never solo traveled before. What are some things I should do? I’m planning on getting the metro card tmr and taking it wherever it takes me. What about nightlife and other things? Thanks       submitted by     /u/Responsible-Ad6433     to     r/istanbul_tips       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/istanbul_tips/comments/1wh6vxr/şişil_istanbul/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:29:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:29:32.197Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa9807c6508d45f3d2cd475"
+    },
+    "message_id": "reddit_t3_1wh6vxm",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Literatura_on_Reddit",
+    "username": "FilipeMiguelescritor",
+    "title": "Sinto-me despido",
+    "text": "Sinto-me despido\n\nsubmitted by     /u/FilipeMiguelescritor     to     r/Literatura_on_Reddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Literatura_on_Reddit/comments/1wh6vxm/sintome_despido/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:29:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:29:32.399Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa9807c6508d45f3d2cd476"
+    },
+    "message_id": "reddit_t3_1wh6vxe",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Thewaltenfiles",
+    "username": "FixHopeful5833",
+    "title": "Do you think Bon's 'weird' laugh is caused from having pierced lungs? And he couldn't breathe as well?",
+    "text": "Do you think Bon's 'weird' laugh is caused from having pierced lungs? And he couldn't breathe as well?\n\nThis is my first post in this subreddit, if this has been said before I'll remove it.   I assume the body inside Bon, weither it be Jack or something else, got inserted whole unlike Rose, so if the heart still beats, could the lungs still work?   Even that, we saw him speaking in Tape 5 but later on he can't speak/doesn't speak (I cant remember which), is it because his vocal cords got rotten off? So he couldn't speak? Then again since we saw the heart in Tape 5, wouldn't that have rotten off too?   I'm no theorist, I'm just going of what clicked in m head.   Plus the rocket plush could speak since it has a voice box.       submitted by     /u/FixHopeful5833     to     r/Thewaltenfiles       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Thewaltenfiles/comments/1wh6vxe/do_you_think_bons_weird_laugh_is_caused_from/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:29:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:29:32.601Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa9807c6508d45f3d2cd477"
+    },
+    "message_id": "reddit_t3_1wh6vw9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "LucyLetbyInnocent",
+    "username": "After-Pie5781",
+    "title": "The Daily T Podcast Mark McDonald speaks about today’s report by Lady Thirlwall",
+    "text": "The Daily T Podcast Mark McDonald speaks about today’s report by Lady Thirlwall\n\nIn my opinion Lady Thirlwall is a coward. She has rubber stamped Dewi Evans’ ridiculous theories. All of that time and money, all of the interviews with people who were there and saw what was going on, she ignored everything. All she came up with was running to the police on a whim and putting cameras on cots. Thirlwall and Evans have made lots of money from this case, both need to be sanctioned.       submitted by     /u/After-Pie5781     to     r/LucyLetbyInnocent       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LucyLetbyInnocent/comments/1wh6vw9/the_daily_t_podcast_mark_mcdonald_speaks_about/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:29:12Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:29:32.808Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa9807d6508d45f3d2cd478"
+    },
+    "message_id": "reddit_t3_1wh6vw3",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "DubaiPerfumeAddicts",
+    "username": "stfunedu",
+    "title": "WTS — 19 Fragrances | Abu Dhabi",
+    "text": "WTS — 19 Fragrances | Abu Dhabi\n\n​   Selling perfumes from my collection. All are authentic and have plenty of juice left. The juice levels below are approximate, and most bottles probably have a little more left than stated.   Location: Al Falah, Abu Dhabi   Delivery: I can personally deliver within Abu Dhabi City for AED 15.   If you're outside Abu Dhabi City, you'll need to either arrange your own pickup/delivery or come collect from Al Falah.   Fragrances & Prices      Gissah Hudson Valley — ~160–170ml — AED 210     Assaf Arrogate Comete — ~180–190ml — AED 100      Afnan Rare Reef — ~95–100ml — AED 80     Afnan 9PM Rebel — ~80–90ml — AED 70      Afnan 9PM Elixir — ~80–99ml — AED 75      Paris Corner Rifaaqat — ~60–70ml — AED 70     Lattafa Asad Bourbon — ~80–90ml — AED 50     Rayhaan Tiger — ~70–80ml — AED 70     Swiss Arabian Shaghaf Oud Azraq — ~50–60ml — AED 80     Rayhaan Crimson — ~80–90ml — AED 80     French Avenue Vulcan Feu — ~70–80ml — AED 80     Lattafa Mashrabya — ~70–80ml — AED 55     Rasasi Fattan — ~40–45ml — AED 35     Lattafa Opulent Dubai — ~90–100ml — AED 45     Maison Alhambra Jean Lowe Summer Vibes — ~90–100ml — AED 65     Al Majed Oud Elbrince — ~110–120ml — AED 70     Ahmed Al Maghribi Hayana — ~70–80ml — AED 65     Ahmed Al Maghribi Joud — ~60–70ml — AED 65     Lattafa Nashama Al Caprice — ~60–70ml — AED 45      Individual total: AED 1,460   Taking the entire collection? AED 1,430 for all 19.   The first buyer, or whoever takes the entire collection, will also get free samples.   DM me if you're interested. I can provide additional pictures/details of any individual bottle.       submitted by     /u/stfunedu     to     r/DubaiPerfumeAddicts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DubaiPerfumeAddicts/comments/1wh6vw3/wts_19_fragrances_abu_dhabi/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:29:12Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:29:33.010Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa9807d6508d45f3d2cd47a"
+    },
+    "message_id": "reddit_t3_1wh6vvu",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DarkRomance",
+    "username": "Dumbteen06",
+    "title": "There is an \"anti dark romance\" subreddit now😭",
+    "text": "There is an \"anti dark romance\" subreddit now😭\n\nNot sure if sharing this is against the rules of this subreddit but today I got an anti dark romance subreddit on my feed and it's basically all kink shaming and saying we cannot be feminists because we enjoy dark romance.    Instead of focusing on real world issues they choose to focus on what we read and shame us it's so deranged.        submitted by     /u/Dumbteen06     to     r/DarkRomance       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DarkRomance/comments/1wh6vvu/there_is_an_anti_dark_romance_subreddit_now/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:29:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:29:33.413Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa9807d6508d45f3d2cd47b"
+    },
+    "message_id": "reddit_t3_1wh6vvr",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "OnlyChild",
+    "username": "OkHeat1798",
+    "title": "Are Only child experience more Gender specific?",
+    "text": "Are Only child experience more Gender specific?\n\nHey guys ive noticed a lot that only child experience seem to be different according to the Gender of the person talking about it,like a lot times ive seen women mostly talking here on how they had to face a lot of restrictions at home and receiving a lot of attention made things worse and how parents are strict etc, but ive seen less of that much post about men. Could it be because the demographics? like how in Asia males are more preffered than females so a only female childrens suffer more pressure on them? I would actually like to hear more opinions about this or weather to know if i made a Bias.        submitted by     /u/OkHeat1798     to     r/OnlyChild       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OnlyChild/comments/1wh6vvr/are_only_child_experience_more_gender_specific/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:29:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:29:33.615Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa9807d6508d45f3d2cd47c"
+    },
+    "message_id": "reddit_t3_1wh6vue",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "casio",
+    "username": "DavNinety",
+    "title": "Casio ABL-100: Questions before buying",
+    "text": "Casio ABL-100: Questions before buying\n\nHi there,   I‘m thinking about buying the Casio ABL-100. Some questions:   1) Can you sync steps with the Casio Watches app on iOS? For which health data categories. Can’t find any official information about it.   2) How accurate is the step counter? Some people say it’s matching over data, some assume it’s overcounting 5, 10 or even 100 percent. What are your abservations?   3) Date is displayed at YY-MM-DD. Any setting to switch that to DD-MM-YY?   4) Is the bar on top counting up seconds? Any possibility to change that to step goal progress?   5) I read that Canon Watches app needs location permission, even if you don’t use the location based feature. True or can that be avoided?   Thanks!       submitted by     /u/DavNinety     to     r/casio       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/casio/comments/1wh6vue/casio_abl100_questions_before_buying/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:29:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:29:33.827Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa9807e6508d45f3d2cd47d"
+    },
+    "message_id": "reddit_t3_1wh6vty",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "nmitbanglore",
+    "username": "Darshfinding",
+    "title": "Anyone selling Casio fx991cw?",
+    "text": "Anyone selling Casio fx991cw?\n\nsubmitted by     /u/Darshfinding     to     r/nmitbanglore       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/nmitbanglore/comments/1wh6vty/anyone_selling_casio_fx991cw/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:29:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:29:34.030Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa9807e6508d45f3d2cd47e"
+    },
+    "message_id": "reddit_t3_1wh6vtw",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "GoogleOpinionReward",
+    "username": "rudrapratik",
+    "title": "[India] How are you using Google Rewards on iPhone?",
+    "text": "[India] How are you using Google Rewards on iPhone?\n\nRecently switched from android to iPhone, I used to use the Google Opinion Rewards on my android phone, but now it looks like this app isn’t available for India on iPhone?   Any workaround for this?       submitted by     /u/rudrapratik     to     r/GoogleOpinionReward       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GoogleOpinionReward/comments/1wh6vtw/india_how_are_you_using_google_rewards_on_iphone/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:29:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:29:34.238Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa9807e6508d45f3d2cd47f"
+    },
+    "message_id": "reddit_t3_1wh6vto",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "goldmansachs",
+    "username": "Scholeristical",
+    "title": "The Goldman experience in a nutshell - free milk, zero cups",
+    "text": "The Goldman experience in a nutshell - free milk, zero cups\n\nWorked out of a few different US offices over the years and it is always hilarious how hard they lean into the budget cuts.  Like, remember when they actually started phasing out basic things like free paper cups in the pantry to save a few bucks?  You would have people hovering around the sink or reusing the same grungy mug for three weeks.   And yet - through every round of cost-cutting and lean management memos - there was always, without fail, a pristine, fresh gallon of milk sitting in the mini fridge. Just an endless supply of dairy while everything else around us was getting stripped down to bare bones.   Does anyone else have a theory on why milk was the hill they chose to die on? Are we all secretly running on cereal and low-key despair?       submitted by     /u/Scholeristical     to     r/goldmansachs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/goldmansachs/comments/1wh6vto/the_goldman_experience_in_a_nutshell_free_milk/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:29:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:29:34.446Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa980b66508d45f3d2cd480"
+    },
+    "message_id": "reddit_t3_1wh6wzt",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MercadoRedditGaming",
+    "username": "Snakeeater97",
+    "title": "(COMPRO) Sega Saturn funcional",
+    "text": "(COMPRO) Sega Saturn funcional\n\nBusco Sega Saturn funcionando de preferencia model 2. Mientras mas lista para jugar mejor (control, cables, fuente, adaptador hdmi, SAROO). Tambien tengo retro handhelds anbernic para permuta. Soy de San Fernando, GBA Norte.        submitted by     /u/Snakeeater97     to     r/MercadoRedditGaming       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MercadoRedditGaming/comments/1wh6wzt/compro_sega_saturn_funcional/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:30:18Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:30:30.874Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa980b76508d45f3d2cd481"
+    },
+    "message_id": "reddit_t3_1wh6wzq",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BikeBuyingGuideIndia",
+    "username": "Unusual-Big-6467",
+    "title": "Best Disc Lock for Motorcycle",
+    "text": "Best Disc Lock for Motorcycle\n\nIf you own a motorcycle or scooter, a disc lock is one of the simplest ways to add an extra layer of security when parking. It attaches directly to the brake disc and prevents the wheel from rotating.   I was looking at some options under ₹999, and these stood out based on the listings, ratings and features available.   🔒 1. MIKANIX Motorcycle Disc Lock    Price: around ₹228    A simple budget option for anyone who wants a basic mechanical disc lock without spending much. The listing describes it as a motorcycle disc lock with a waterproof, anti-theft design.    Why consider it:      Budget-friendly   Designed for motorcycles   Mechanical locking system   Compact and easy to carry     👉  Check price on Amazon    🔒 2. Allextreme EXHDBL1 Disc Brake Lock    Rating: 4.0/5    This is a more traditional stainless-steel disc brake lock. The listing specifies a  7mm pin  and a heavy-duty design for bikes and motorcycles.   It makes sense if you don't want batteries or an alarm and just want a straightforward mechanical lock.    Features:      Stainless-steel construction   7mm locking pin   Heavy-duty design   Designed for bikes and motorcycles   4.0-star rating in the listing     👉  Check price on Amazon    🚨 3. TCKW Heavy Duty Disc Brake Lock with 110dB Alarm    Price: around ₹690 | Rating: 4.2/5    If you want an alarm along with the physical lock, this one is worth looking at.   The TCKW uses a  110dB alarm  and has an anti-tamper sensor. The listing also describes it as weatherproof and made from metal alloy.    Features:      110dB alarm   Anti-tamper sensor   Weatherproof metal-alloy construction   Key-operated   Suitable for scooters and bikes     👉  Check price on Amazon    🚨 4. Securo Aluminium Disc Lock with 110dB Alarm    Price: around ₹749 | Rating: 4.2/5    Another alarm-equipped option under ₹999 is the Securo disc lock.   It combines a physical disc lock with a  110dB anti-theft alarm and shock sensor . The listing also mentions waterproof and rust-resistant construction.    Features:      110dB alarm   Shock sensor   Waterproof and rust-resistant   Aluminium construction   4.2-star rating     👉  Check price on Amazon    🚨 5. Miwings Metal Bike Disc Lock   The Miwings is another alarm-style disc lock designed for motorcycles and scooters. The listing describes it as a  waterproof 110dB alarm lock  with a polished black finish.    Features:      110dB alarm   Metal construction   Waterproof design   Designed for motorcycles and scooters   Compact disc-lock format     👉  Check price on Amazon    My Pick   If you only want a basic mechanical lock, I'd look at the  MIKANIX or Allextreme .   If you want an alarm as an additional deterrent, the  TCKW 110dB  or  Securo 110dB  are more interesting options.   One important thing:  check that the locking pin fits the holes/openings in your bike's brake disc before ordering.  Disc designs vary between motorcycles and scooters.   Also, don't forget to remove the disc lock before riding. A reminder cable can be useful if you're forgetful.    Prices and availability can change, so check the Amazon listing before purchasing.     Disclosure: Some links above are affiliate links. If you purchase through them, I may earn a small commission at no additional cost to you.        submitted by     /u/Unusual-Big-6467     to     r/BikeBuyingGuideIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BikeBuyingGuideIndia/comments/1wh6wzq/best_disc_lock_for_motorcycle/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:30:18Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:30:31.097Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa980b76508d45f3d2cd482"
+    },
+    "message_id": "reddit_t3_1wh6wzm",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "Watches",
+    "username": "Death_and_Gravity1",
+    "title": "[Junghans Meister Calendar] While we are talking about moonphase complete calendars, just wanted to shout out mt Junghans",
+    "text": "[Junghans Meister Calendar] While we are talking about moonphase complete calendars, just wanted to shout out mt Junghans\n\nWith Rolex's release of the Perpetual Padellone I just wanted to shout out my Junghans Meister Calendar. I feel like I rarely see discussion of Junghans outside of the Max Bill, but they have a whole other world of similarly Bauhaus inspired sleek pieces. It has a moonphase, day, date, and month complications. Admittedly the Rolex beats it on specs, the Rolex differentiates between 30 and 31 day months, it has better power reserve and the like. But I like mine, I like its a real moonphase and not an AM/PM, and I like the minimalist design allows for so many complications without feeling crowded.   So yeah, just shouting out to Junghans.        submitted by     /u/Death_and_Gravity1     to     r/Watches       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Watches/comments/1wh6wzm/junghans_meister_calendar_while_we_are_talking/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:30:18Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:30:31.299Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa980b76508d45f3d2cd483"
+    },
+    "message_id": "reddit_t3_1wh6wz8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "No_Reality_8443",
+    "title": "In Search of Dragon Blood",
+    "text": "In Search of Dragon Blood\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/No_Reality_8443     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wh6wz8/in_search_of_dragon_blood/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T17:30:18Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T17:30:31.502Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa980b76508d45f3d2cd484"
+    },
+    "message_id": "reddit_t3_1wh6wz4",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",

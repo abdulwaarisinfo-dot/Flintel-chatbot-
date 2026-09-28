@@ -1,0 +1,416 @@
+    "_id": {
+      "$oid": "6aaa897c6508d45f3d2d2c43"
+    },
+    "message_id": "reddit_t3_1whvndx",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "exportersindia",
+    "username": "simraatsingh718",
+    "title": "Looking to connect with overseas buyers for precision-engineered components from India",
+    "text": "Looking to connect with overseas buyers for precision-engineered components from India\n\nHello everyone,   I’m an engineer with around 11 years of hands-on experience in precision manufacturing and component development in India.   I’m based in Faridabad, Haryana and have experience working with CNC & VMC machining, laser cutting, fabrication, sheet-metal components, forged/cast components and various secondary processes such as heat treatment, plating, etc.   I currently have a manufacturing setup that supplies precision components to companies in India, including companies that further export these components to their international customers.   I’m now looking to build direct relationships with overseas buyers, importers, distributors and companies looking to source engineered components from India.   We can manufacture components as per your drawings, samples or specifications and I can coordinate the complete manufacturing process where multiple processes are involved.   My focus is on:   * Consistent quality   * Competitive pricing   * Reliable delivery   * Technical understanding and DFM support   * End-to-end manufacturing coordination   * Long-term business relationships   I’m open to a wide range of engineered components rather than being limited to a particular product category.   If you are currently importing machined/fabricated components from India or are looking for a reliable manufacturing partner in India, feel free to comment or DM me.   You can also share a drawing, sample requirement or existing component requirement and I’ll be happy to evaluate it and provide a quotation.   Looking forward to connecting with genuine overseas buyers and building long-term partnerships.       submitted by     /u/simraatsingh718     to     r/exportersindia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/exportersindia/comments/1whvndx/looking_to_connect_with_overseas_buyers_for/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:20:12.554Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa897c6508d45f3d2d2c45"
+    },
+    "message_id": "reddit_t3_1whvndt",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Imjustharley",
+    "username": "Fragrant-Sundae414",
+    "title": "Whoever is reposting stuff from here, with my name on it, on the TikTok page, I’m just Reddit, stop. Crop out my name. I am not going to be associated with a fake TikTok page.",
+    "text": "Whoever is reposting stuff from here, with my name on it, on the TikTok page, I’m just Reddit, stop. Crop out my name. I am not going to be associated with a fake TikTok page.\n\nsubmitted by     /u/Fragrant-Sundae414     to     r/Imjustharley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Imjustharley/comments/1whvndt/whoever_is_reposting_stuff_from_here_with_my_name/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:20:12.992Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa897d6508d45f3d2d2c46"
+    },
+    "message_id": "reddit_t3_1whvndp",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Independent-Tune-144",
+    "title": "What's something you witnessed that you still can't explain, even years later?",
+    "text": "What's something you witnessed that you still can't explain, even years later?\n\nsubmitted by     /u/Independent-Tune-144     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1whvndp/whats_something_you_witnessed_that_you_still_cant/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:20:13.211Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa897d6508d45f3d2d2c47"
+    },
+    "message_id": "reddit_t3_1whvndi",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "linux_gaming",
+    "username": "ParabledReal",
+    "title": "Quest 3 Steam Link VR working on Nobara",
+    "text": "Quest 3 Steam Link VR working on Nobara\n\nJust wanted to share my setup since I was surprised by how well I got Steam Link VR working with my Quest 3 on Linux, especially since I had a hard time finding much about similar setups.   My setup:     Nobara 44 KDE/Wayland   RTX 4070 Super   Intel i5-12600K   ASUS Z790-AYW WIFI W II   MediaTek MT7902 Wi-Fi ( mt7921e  driver)   PC connected to my normal network over Ethernet   Quest 3   SteamVR Beta   Steam Link Beta on the Quest     Steam Link VR itself pretty much just worked, but I was getting occasional stutters/freezes with the Quest connected to my normal Wi-Fi. I wanted to try connecting the Quest directly to my PC instead.   I made a 5 GHz hotspot with NetworkManager, but Steam Link wouldn't let me use VR because the hotspot normally puts the Quest on a separate  10.42.0.x  subnet and it would say \"VR streaming is only supported on the local network.\"   What ended up working was giving the hotspot a  192.168.1.x/32  address and the Quest a static  192.168.1.x  address, then enabling IPv4 forwarding and proxy ARP between my Ethernet and Wi-Fi interfaces. I also added a  /32  route for the Quest through the Wi-Fi interface.   And somehow, holy shit, it just works. Steam Link is happy because both devices are on  192.168.1.x , but the Quest is connected directly to the PC over 5 GHz Wi-Fi. I'm getting around 2-4ms ping between them and so far the random freezing I was getting through my router seems to be completely gone.   Figured I'd post this in case anyone else is googling around (or asking chatgpt) trying to get a Quest 3 working with Steam Link VR on Nobara/Linux, or wants to try a direct PC-to-Quest connection without buying a dedicated router.       submitted by     /u/ParabledReal     to     r/linux_gaming       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/linux_gaming/comments/1whvndi/quest_3_steam_link_vr_working_on_nobara/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:20:13.431Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa897e6508d45f3d2d2c4b"
+    },
+    "message_id": "reddit_t3_1whvndc",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "gaming",
+    "username": "Sh0wDxwn",
+    "title": "100-200 GB games are made on purpose",
+    "text": "100-200 GB games are made on purpose\n\nOk guys, this is a conspiracy theory I came up with like 10 minutes ago, so don’t take me too seriously.   When I was younger, I used to play a lot of COD Zombies. Yesterday, I thought I’d buy BO7 just to see where the franchise was at these days. Imagine my surprise when I saw that the game was a 300 GB download.   I think it’s insane that games this big even exist nowadays. Metal Gear Solid V is like 20 GB, so why don’t developers optimize their games???   Then it hit me.   Having your game take up 300 GB is actually a way to make sure that once people download it — because nobody buys a AAA-priced game without playing it — they’ll think twice before uninstalling it.   It basically pushes you to keep the game on your drive all the time. And if it’s always installed, there’s a higher chance you’ll launch it again and give more of your time and attention to that game.   So yeah, that’s my little crazy theory.       submitted by     /u/Sh0wDxwn     to     r/gaming       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/gaming/comments/1whvndc/100200_gb_games_are_made_on_purpose/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:20:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:20:14.297Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa897e6508d45f3d2d2c4c"
+    },
+    "message_id": "reddit_t3_1whvncy",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "SideProject",
+    "username": "Objective-Cake7099",
+    "title": "Got permabanned from r/Guitar for sharing my app. The app: real amp settings for 1,380 songs",
+    "text": "Got permabanned from r/Guitar for sharing my app. The app: real amp settings for 1,380 songs\n\nI've spent a lot of time to create \"guitar tones\" for my gear in a spreadsheet for my gigs, and I thought it would be a good idea to turn it into an app that  adapts these tones to your own gear . So, I've posted a post to  r/Guitar  and mods decided it was AI slop,  permaban .   On the AI part, guilty for the code, I try to use any tool there is  (why wouldn't I?).    So why this app: One of my friends bought a HeadRush  (FX Processor)  and asking me which overdrive for a certain song and made me understand that I didn't even know. I'd already been keeping that spreadsheet for my own gigs, so I started writing down real amp settings from interviews and rig rundowns too.  About 1380 songs . So I turned it into an app where the song amp settings adapts to your gear pretty much using AI.   I've never done marketing for the app itself, it's my first app, launched in July. 3 to 4 downloads a day which nearly  all from replying to guitar tweets by hand.    Free to browse everything, the AI gear-adapt thing is paid.   it's iOS only, made by swift, cloudkit etc.   Claudflare Worker handles the AI key server-side, and  YES , a lot of the code came out of Claude.   If you have any ideas for the app itself I'll be more than happy to hear.  here is my website and the link to the app store:   https://toneamp.netnucleus.solutions/    https://apps.apple.com/us/app/toneamp-guitar-tone-finder/id6792555370        submitted by     /u/Objective-Cake7099     to     r/SideProject       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SideProject/comments/1whvncy/got_permabanned_from_rguitar_for_sharing_my_app/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:19:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:20:14.518Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa897e6508d45f3d2d2c4e"
+    },
+    "message_id": "reddit_t3_1whvncn",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "GiftHuddle",
+    "username": "Rich_Opinion2404",
+    "title": "🎮 DEAL ALERT — Save 18% on SteelSeries Rival 3 Wireless Gen 2 Gaming Mouse - 2.4GHz and Bluetooth - 18000 DPI TrueMove Air Optical Sensor - 60 Million Click Durability - Light-Weight - 100% PTFE Feet - Lavender!",
+    "text": "🎮 DEAL ALERT — Save 18% on SteelSeries Rival 3 Wireless Gen 2 Gaming Mouse - 2.4GHz and Bluetooth - 18000 DPI TrueMove Air Optical Sensor - 60 Million Click Durability - Light-Weight - 100% PTFE Feet - Lavender!\n\n💰 Was: £54.99 | Now: £44.99 💸 You save: £10.00 (18% off)   DUAL WIRELESS — Switch between gaming-grade 2.4GHz wireless connection and Bluetooth for other devices · FASTER THAN EVER — No wires, no limits; outpace the competition with super responsive 1.9ms click latency · TRUE…   ⏰ Expires 21 September — don't miss it!   👉 See the full deal:  https://www.gift-huddle.com/deals/7af7260b-73a1-4208-a44d-c92d1efdeda7?utm\\_source=reddit&utm\\_medium=social&utm\\_campaign=deal\\_post    GiftHuddle  r/SteelSeries  #GamingDeals #deals #giftideas #ukdeals       submitted by     /u/Rich_Opinion2404     to     r/GiftHuddle       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GiftHuddle/comments/1whvncn/deal_alert_save_18_on_steelseries_rival_3/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:19:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:20:14.955Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa897f6508d45f3d2d2c4f"
+    },
+    "message_id": "reddit_t3_1whvnbk",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "pcmasterrace",
+    "username": "Sgnorgopf",
+    "title": "Is this pc good to buy",
+    "text": "Is this pc good to buy\n\nI'm looking to buy a new pc and I found this, I think it's pretty good but honestly I don't understand most of the things written here. The pc will be used for both gaming (i will play all games from small indies to AAA) and studying   Here are the specs in italian   MSI Cyborg 15 B2RWFKG-076IT Intel Core 7 240H Computer portatile 39,6 cm (15.6\") Full HD 16 GB DDR5-SDRAM 1 TB SSD NVIDIA GeForce RTX 5060 Wi-Fi 6E (802.11ax) Windows 11 Home Nero   Here are the specs in english   MSI Cyborg 15 B2RWFKG-076IT Intel Core 7 240H laptop 39,6 cm (15.6\") Full HD 16 GB DDR5-SDRAM 1 TB SSD NVIDIA GeForce RTX 5060 Wi-Fi 6E (802.11ax) Windows 11 Home black   The price is €1199 ($1383,12)    If you have any other recommendations around this price or even lower that are the same or even better than this I will gladly listen to them   Have a wonderful day all of you!       submitted by     /u/Sgnorgopf     to     r/pcmasterrace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pcmasterrace/comments/1whvnbk/is_this_pc_good_to_buy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:19:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:20:15.185Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa897f6508d45f3d2d2c50"
+    },
+    "message_id": "reddit_t3_1whvnbf",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Magus125",
+    "title": "Grab 100 hammers from u/Magus125!",
+    "text": "Grab 100 hammers from u/Magus125!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Magus125     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1whvnbf/grab_100_hammers_from_umagus125/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:19:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:20:15.405Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa897f6508d45f3d2d2c51"
+    },
+    "message_id": "reddit_t3_1whvnbd",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "ChatGPT",
+    "username": "Appropriate_Risk_545",
+    "title": "I asked ChatGPT 6 and Claude Fable 5.1 to work together to draw a cheetah from scratch, and stop when satisfied. Also, I encouraged them to look up anatomy info and relevant images.",
+    "text": "I asked ChatGPT 6 and Claude Fable 5.1 to work together to draw a cheetah from scratch, and stop when satisfied. Also, I encouraged them to look up anatomy info and relevant images.\n\nsubmitted by     /u/Appropriate_Risk_545     to     r/ChatGPT       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ChatGPT/comments/1whvnbd/i_asked_chatgpt_6_and_claude_fable_51_to_work/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:19:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:20:15.623Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89806508d45f3d2d2c54"
+    },
+    "message_id": "reddit_t3_1whvnbb",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "loveholidays",
+    "username": "cryf_14",
+    "title": "Loveholidays",
+    "text": "Loveholidays\n\nWe booked Sunrise Remal Resort via LoveHolidays back in February based on the advertisement online.  We were looking forward to the holiday and done what anyone else would do and checked to see if there was a video online of a review from the hotel.  We then found out that we had booked a 4 star resort and the images we saw majority were from the 5 star ‘sister’ hotel and not the one we have booked.  I contacted loveholidays over this who were extremely dismissive regarding this and blamed it solely on the supplier. They contacted the supplier who then stated the advert was correct (I am here now and can further confirm it is not)  We bit the bullet after providing images to love holidays to show the supplier is being untruthful and that they are mis-selling to which they took no ownership and stated it is not their problem.  I had multiple calls with agents from love holidays who eventually informed us due to this being a sister hotel, we can use the facilities of both hotels.  Understand and accepting this we bit the bullet and came on holiday, to then be told when we arrived that we could only use a ‘segregated’ portion of the beach and only have access to one al a carte restaurant at lunch time which serves the same small menu at lunch time as our own hotel.  I have discussed with the in-resort support team who told me they need to contact the supplier to question this again (which took 3 weeks to get back to me last time) to see if there is an issue.  I informed them that I had been told verbally on a recorded call that I had access to the facilities at both to which they ignored and continued to mention the supplier, after asking them to check my previous calls when I was told this information it was still shunned to the side and blame pushed onto the supplier.   PLEASE DO NOT BOOK WITH LOVEHOLIDAYS THEY DO NOT CARE   LUCKILY I HAVE A TRAVEL PAGE WITH A GOOD FOLLOWING AND WILL BE POSTING THIS EXPERIENCE ON THERE ALSO IN HOPE OF BOYCOTTING THIS COMPANY FOR FALSE SELLING AND EXTREMELY POOR CUSTOMER SERVICE       submitted by     /u/cryf_14     to     r/loveholidays       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/loveholidays/comments/1whvnbb/loveholidays/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:19:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:20:16.275Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89806508d45f3d2d2c56"
+    },
+    "message_id": "reddit_t3_1whvna6",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "PrymexHorizonEurope",
+    "username": "CorrectEfficiency585",
+    "title": "Welcome to PrymexHorizonEurope",
+    "text": "Welcome to PrymexHorizonEurope\n\nWelcome to  r/PrymexHorizonEurope , a community created for people who want to learn more about PrymexHorizon in a clear and organized way.   Here you will find platform updates, feature explanations, simple guides, community discussions and answers to common questions.   We want this space to be useful for both new and existing users. You can ask about navigation, available tools, support, educational resources or any part of the platform that could use a clearer explanation.   If you are researching PrymexHorizon, this community can also provide additional context through discussions focused on specific features and practical platform information.   Feedback is welcome. If there is something you would like us to explain in more detail, feel free to start a discussion or suggest a topic.   Thanks for joining PrymexHorizonEurope.   We hope to build a helpful, well-organized and respectful community together.       submitted by     /u/CorrectEfficiency585     to     r/PrymexHorizonEurope       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PrymexHorizonEurope/comments/1whvna6/welcome_to_prymexhorizoneurope/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:19:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:20:16.717Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89806508d45f3d2d2c57"
+    },
+    "message_id": "reddit_t3_1whvna5",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ColorGuessr",
+    "username": "Ithon_",
+    "title": "Colorwire by u/Ithon_",
+    "text": "Colorwire by u/Ithon_\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Ithon_     to     r/ColorGuessr       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ColorGuessr/comments/1whvna5/colorwire_by_uithon/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:19:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:20:16.936Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89816508d45f3d2d2c58"
+    },
+    "message_id": "reddit_t3_1whvna3",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CoutureReps",
+    "username": "Sufficient_Fuel3285",
+    "title": "I didn't expect to buy so much.",
+    "text": "I didn't expect to buy so much.\n\nsubmitted by     /u/Sufficient_Fuel3285     to     r/CoutureReps       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CoutureReps/comments/1whvna3/i_didnt_expect_to_buy_so_much/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:19:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:20:17.153Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89816508d45f3d2d2c59"
+    },
+    "message_id": "reddit_t3_1whvn9v",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "hatethissmug",
+    "username": "Teasing-Axe-",
+    "title": "I hate when people don’t form their own opinions:",
+    "text": "I hate when people don’t form their own opinions:\n\nGaming because I’m specifically talking about the Wolverine game.   It’s actually so sad seeing how many Goobers online complaining about the Wolverine game because of some clips they saw on YouTube Shorts, I saw the gameplay reveal and it looked really fun, the clips people complain about also look fun.   I know this isn’t a new issue, I’m just seeing it a lot with the game, but people are genuinely so sucked into an internet hivemind that they can’t possibly form their own opinions, they just watch a few hundred short form videos that tell them they shouldn’t like the something.   And when it comes to the “handholding”, how people don’t like the guidance system in the game, it’s really not a big deal, they’d whine their eyes out playing Mirrors Edge, I swear. Some people also tried to complain about Logan using his claws to flip someone off, calling it “out of character” as if he hasn’t done that multiple times in other media; another OOC complaint is about him surrendering even though he only did that because he knew mystique was disguised as one of the guards.   I just wish people could think for themselves, I think you should play a game to see if you like it instead of relying off of other peoples opinions and partial gameplay without seeing the full thing.       submitted by     /u/Teasing-Axe-     to     r/hatethissmug       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hatethissmug/comments/1whvn9v/i_hate_when_people_dont_form_their_own_opinions/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:19:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:20:17.373Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89816508d45f3d2d2c5a"
+    },
+    "message_id": "reddit_t3_1whvn9s",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "Genshin_Impact",
+    "username": "Baka_Itto",
+    "title": "I didn't even realize people were struggling with it until I saw the barrage of posts from people struggling on floor 11.",
+    "text": "I didn't even realize people were struggling with it until I saw the barrage of posts from people struggling on floor 11.\n\nCleared the abyss in 6 consecutive runs and floor 11 chamber 21 first half with Traveler SSC on first try. Maybe because I'm bringing Alyosha?        submitted by     /u/Baka_Itto     to     r/Genshin_Impact       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Genshin_Impact/comments/1whvn9s/i_didnt_even_realize_people_were_struggling_with/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:19:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:20:17.593Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89816508d45f3d2d2c5b"
+    },
+    "message_id": "reddit_t3_1whvn9o",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Element-of-Supplies",
+    "title": "Grab 100 hammers from u/Element-of-Supplies!",
+    "text": "Grab 100 hammers from u/Element-of-Supplies!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Element-of-Supplies     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1whvn9o/grab_100_hammers_from_uelementofsupplies/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:19:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:20:17.811Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89826508d45f3d2d2c5c"
+    },
+    "message_id": "reddit_t3_1whvn8d",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "SanskariTypeA",
+    "title": "Grab 25⚡ from u/SanskariTypeA!",
+    "text": "Grab 25⚡ from u/SanskariTypeA!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/SanskariTypeA     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1whvn8d/grab_25_from_usanskaritypea/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:19:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:20:18.037Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa89826508d45f3d2d2c5d"
+    },
+    "message_id": "reddit_t3_1whvn8c",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "qatarairways",
+    "username": "InitialTangerine7832",
+    "title": "Qatar Airways – Can I use someone else’s Visa/Mastercard to pay for my ticket?",
+    "text": "Qatar Airways – Can I use someone else’s Visa/Mastercard to pay for my ticket?\n\n​   Hey everyone,   I’m planning to book a Qatar Airways flight, but I don’t have a Visa/Mastercard myself. I have someone who is willing to pay for my ticket using their card.   The ticket/booking would be completely in my name, but the payment card would belong to someone else.   I contacted Qatar Airways, and the agent told me:   «“Yes, you can proceed with the booking. However, if you receive an email regarding card verification, you will need to provide the requested documents/details. Otherwise, you may be required to make a guaranteed payment at the airport.”»   Has anyone here actually booked a Qatar Airways ticket using someone else’s card?   If you were asked for card verification, what did the verification involve? Did they ask for a copy of the card, ID of the cardholder, or something else?   Any firsthand experience would be appreciated.       submitted by     /u/InitialTangerine7832     to     r/qatarairways       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/qatarairways/comments/1whvn8c/qatar_airways_can_i_use_someone_elses/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:19:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:20:18.256Z"
+    }

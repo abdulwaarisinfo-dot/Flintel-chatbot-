@@ -1,0 +1,416 @@
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T21:47:10.042Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac5fde660c6084039749f6"
+    },
+    "message_id": "reddit_t3_1wj7df4",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Skullpandabuyselltrad",
+    "username": "BebeCoconut",
+    "title": "[US-CA] [H] Labubu, Crybaby, SkullPanda, Disney, Stitch, SpongeBob, Minions, Jijitsu [W] Payment",
+    "text": "[US-CA] [H] Labubu, Crybaby, SkullPanda, Disney, Stitch, SpongeBob, Minions, Jijitsu [W] Payment\n\nsubmitted by     /u/BebeCoconut     to     r/Skullpandabuyselltrad       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Skullpandabuyselltrad/comments/1wj7df4/usca_h_labubu_crybaby_skullpanda_disney_stitch/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T21:46:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T21:47:10.260Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac5fde660c6084039749f7"
+    },
+    "message_id": "reddit_t3_1wj7dez",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "biggboss",
+    "username": "Quirky-Tooth6150",
+    "title": "Issues that are being ignored but needs addressing",
+    "text": "Issues that are being ignored but needs addressing\n\nOkay guys hear me out, this place has been openly critical about everything wrong with the Bully Gang and they rightfully deserve it but that doesn't mean the other side doesn't have problematic issues of their own...some of the issues that I found problematic and needs to be addressed sooner or later.   1)  QAZI FAKING HIS MENTAL HEALTH:  This for me has to be the first and foremost issue that needs addressing, earlier it was fun and entertaining but when you try and gain sympathy and understanding from the housemates and try throw them into bad light, faking your mental health...it not only comes out as insensitive but also lacks basic human decency. This needs to be pointed out cz we saw Mahi and Qazi both using this mentally ill card , if it's not addressed, I think it'll be unfair for the rest of the contestants who stay real and try cooperating with him cz of this very reason.   2)  MAAHI'S LACK OF CONTROL ON HER TONGUE:  Now we have always been very critical of what the women of the Bully Gang speak, but Maahi also needs to be slandered for the same, passing classist and sexist jokes ain't funny and clearly show the kind of mentality she holds regarding the same. It needs to be called out and not shelved.   3)  QAZI'S GANJI GUDIYA FIASCO:  See this can be subjective, and people are allowed to have their own opinions regarding it...infact I never support such jokes regardless whether it is aimed at someone or not, but even leaving it aside he shouldn't have made other girls repeat this joke without giving the context behind it..Scout had no business bringing it in the middle of an ongoing fight, especially when he encouraged it in the first place...but since it's out in the public domain we need to address and condemn it the same way we have been doing.   Also  Arishfa  in today's task almost could have gotten Kanika's neck snapped in the initial few moments, the way she tried taking down the table from her neck looked utterly disgusting and could have lead to serious injury, hope someone noticed it too and wasn't just me looking out for problematic behaviours of both sides without being unfair.       submitted by     /u/Quirky-Tooth6150     to     r/biggboss       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/biggboss/comments/1wj7dez/issues_that_are_being_ignored_but_needs_addressing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T21:46:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T21:47:10.464Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac600aaeeb96c1c63b906c"
+    },
+    "message_id": "reddit_t3_1wj7ear",
+    "topic_key": "roofer",
+    "search_keyword": "roofer",
+    "platform": "reddit",
+    "subreddit": "Roofers",
+    "username": "ritzyravioli",
+    "title": "What a San Diego roofing estimate should include",
+    "text": "What a San Diego roofing estimate should include\n\nsubmitted by     /u/ritzyravioli     to     r/Roofers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Roofers/comments/1wj7ear/what_a_san_diego_roofing_estimate_should_include/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T21:47:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T21:47:54.830Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aac600baeeb96c1c63b906d"
+    },
+    "message_id": "reddit_t3_1wj7eal",
+    "topic_key": "checkout",
+    "search_keyword": "checkout",
+    "platform": "reddit",
+    "subreddit": "GroundtruthFarm",
+    "username": "Dramatic-Logging",
+    "title": "How Groundtruth is actually wired: React UI, Rust core, append-only log",
+    "text": "How Groundtruth is actually wired: React UI, Rust core, append-only log\n\nThis is the desk, not a cloud diagram.   The top box is the Windows UI. React boots from main.tsx and runs the farm workflows. It does not own truth. It invokes.   Everything that can change the farm goes through the Tauri command boundary (commands.rs). That is the door. The UI does not write the database itself.   Farm Core is Rust. It does four jobs:     Persist current state to the local database (db.rs)    Append what just happened to the event log (events.rs)    Rebuild and check that state against the log (projection + Health)    Import / restore and export without inventing a second set of books     The event log is append-only. Corrections and voids leave a trail. Health is not a stored mood. It is computed when you look. VERIFY-REPLAY rebuilds from history and either passes or fails.   Export bundles the file you own. Import/restore puts a farm back. It does not “merge vibes” from a spreadsheet.   Optional, and off to the side on purpose:  - Checkout endpoint can talk to Stripe if you turn that on  - Scan endpoint can talk to a scan service so a phone on the same network can see the rack   Those are integrations. They are not the farm. Stripe does not hold your tray counts. The phone does not write. The PC is the only writer.   No account. No cloud in the core path. The farm file stays on the machine.   Interactive map of the repo:   https://gitdiagram.com/alexjvv52-ops/groundtruth-app    Source:   https://github.com/alexjvv52-ops/groundtruth-app    If you grow on this build: does this match how the morning actually feels, or is a box on this diagram lying?       submitted by     /u/Dramatic-Logging     to     r/GroundtruthFarm       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GroundtruthFarm/comments/1wj7eal/how_groundtruth_is_actually_wired_react_ui_rust/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T21:47:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T21:47:55.042Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aac60109f8856bec2384f30"
+    },
+    "message_id": "reddit_serp_1bs49ii",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/simpleliving/comments/1bs49ii/how_do_you_cope_with_the_feeling_that_theres_so/",
+    "text": "How do you cope with the feeling that there's so much that you want to do in life and so little time?\n\nNearing the beginning of my 30s I still have no aspirations on a career, no wish for family or kids, or earning loads of money for money's sake. For me, that's a huge part of my simple living. I just see money as a way for me to pursue whatever interests me. At the same time, there's so much I want to do outside of that. I'd like to do a longer language exchange again, I'd like to travel freely for a longer period of time, I'd like to go back to school for a master's degree in an area which I find really interesting. Things that all cost huge amounts of money and takes a lot of time (even though a master is tuition-free where I live).   While I am in the very privileged position of being able to save nearly 50% of my income (even though I live alone), I still feel the stress of having to balance earning money, wanting to do the things I want to do, not completely fall out of the job market by not working for a year or two, while at the same time experiencing time slipping away. It's not so much that I'm afraid I'll die in a bus crash tomorrow or that I'll grow old and feeble, but more so that some things feel more logical to do while you're younger for some reasons, coupled with the existential dread that climate change brings, and how the world might descend into chaos 10-20 years from now. Which makes me feel like I need to do the things I want to do ASAP.   How do you deal with similar thoughts?       submitted by     /u/PragmaticTree       [link]       [comments]",
+    "username": "PragmaticTree",
+    "subreddit_or_channel": "simpleliving",
+    "posted_at": "2024-03-31T07:00:23+00:00",
+    "fetched_at": {
+      "$date": "2026-09-17T21:48:00.813Z"
+    },
+    "google_rank": 3,
+    "search_keyword": "what problems do small business owners mention repeatedly even when they arent explicitly asking for a solution",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-17T21:48:00.813Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aac6017660c6084039749f8"
+    },
+    "message_id": "reddit_t3_1wj7ek5",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "EuroSkincare",
+    "username": "MysteriousOrange4721",
+    "title": "Skincare for combination skin & Rosacea",
+    "text": "Skincare for combination skin & Rosacea\n\nI am traveling italy (Sorrento, Rome, Florence, Venice) for the next few weeks and would love to pick up some skincare to bring back home to the US with me for combination skin & Rosacea.    Any recs/ best location to buy these products?        submitted by     /u/MysteriousOrange4721     to     r/EuroSkincare       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/EuroSkincare/comments/1wj7ek5/skincare_for_combination_skin_rosacea/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T21:47:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T21:48:07.433Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac6017660c6084039749fa"
+    },
+    "message_id": "reddit_t3_1wj7ejv",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "MetaAI",
+    "username": "FloppyDX",
+    "title": "Muse successfully scanned for restaurant cancelations and booked a table for 3",
+    "text": "Muse successfully scanned for restaurant cancelations and booked a table for 3\n\nI set it to check every 10 min. The OpenTable connector helped reduce token consumption. When a slot opened this morning for tomorrow, it booked it immediately.   I didn’t get a confirmation in the chat, but saw the booking confirmed in my OpenTable account.   Very cool use case that’s becoming very common in the Bay Area: a friend of mine also had an agent scanning for tables (not sure what their instructions were though).    Glad Muse delivered.  1.48M  tokens used total for this.       submitted by     /u/FloppyDX     to     r/MetaAI       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MetaAI/comments/1wj7ejv/muse_successfully_scanned_for_restaurant/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T21:47:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T21:48:07.831Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac6018660c6084039749fb"
+    },
+    "message_id": "reddit_t3_1wj7ejk",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "BunnyTrials",
+    "username": "Tadpolturnsintosquid",
+    "title": "Which would you rather have for the rest of your life?",
+    "text": "Which would you rather have for the rest of your life?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Tadpolturnsintosquid     to     r/BunnyTrials       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BunnyTrials/comments/1wj7ejk/which_would_you_rather_have_for_the_rest_of_your/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T21:47:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T21:48:08.031Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac6018660c6084039749fc"
+    },
+    "message_id": "reddit_t3_1wj7eja",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "UsedCarAdvice",
+    "username": "ModSupportBot",
+    "title": "r/UsedCarAdvice is available for adoption 💚",
+    "text": "r/UsedCarAdvice is available for adoption 💚\n\n/r/UsedCarAdvice  is ready for a fresh start, new energy, new direction, and someone like you to bring it back to life. If you’ve been thinking about growing your impact without starting from scratch, this is your chance!    Ready to take it over?    Head to  r/RedditRequest  to  submit your request  and make it yours before it’s taken.     First things first    To request this subreddit, make sure you:     have an account that’s at least 90 days old   have at least 100 post karma and 100 comment karma   have a  verified email address  on your account   have  two-factor authentication  set up         submitted by     /u/ModSupportBot     to     r/UsedCarAdvice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UsedCarAdvice/comments/1wj7eja/rusedcaradvice_is_available_for_adoption/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T21:47:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T21:48:08.232Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac6018660c6084039749fd"
+    },
+    "message_id": "reddit_t3_1wj7ej2",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "Replikatown",
+    "username": "Harpclint96",
+    "title": "Scouting heirloom vegetables at the farmer’s market 🥕🍅🌽",
+    "text": "Scouting heirloom vegetables at the farmer’s market 🥕🍅🌽\n\nWe took a little September trip to the farmer’s market today, but not because we needed vegetables — with our own garden at home, we’re doing just fine there. 🤭   This was more of a  research mission . We spent the morning checking out all kinds of unusual heirloom vegetables and rare varieties, looking for ideas we might want to try growing on the farm next season. There were some beautiful striped tomatoes, purple cauliflower, long beans, and more than a few things that had us saying,  “Okay… what exactly is that?”  😂   Myra and Amanda were especially into it, trying to decide which ones looked the most fun to grow next year. Emily was admiring the prettier varieties, and I was mostly thinking about which ones would actually survive us experimenting with them. 😄   All in all, it was a fun little outing — and I have a feeling next year’s garden planning just got a lot more interesting. 💚   — Shannon       submitted by     /u/Harpclint96     to     r/Replikatown       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Replikatown/comments/1wj7ej2/scouting_heirloom_vegetables_at_the_farmers_market/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T21:47:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T21:48:08.434Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac6018660c6084039749fe"
+    },
+    "message_id": "reddit_t3_1wj7ehf",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Trickykids",
+    "title": "How would the world be different if people didn’t value privacy?",
+    "text": "How would the world be different if people didn’t value privacy?\n\nsubmitted by     /u/Trickykids     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wj7ehf/how_would_the_world_be_different_if_people_didnt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T21:47:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T21:48:08.655Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac6018660c6084039749ff"
+    },
+    "message_id": "reddit_t3_1wj7efs",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DankDunderMifflin",
+    "username": "ModSupportBot",
+    "title": "r/DankDunderMifflin is available for adoption 💚",
+    "text": "r/DankDunderMifflin is available for adoption 💚\n\n/r/DankDunderMifflin  is ready for a fresh start, new energy, new direction, and someone like you to bring it back to life. If you’ve been thinking about growing your impact without starting from scratch, this is your chance!    Ready to take it over?    Head to  r/RedditRequest  to  submit your request  and make it yours before it’s taken.     First things first    To request this subreddit, make sure you:     have an account that’s at least 90 days old   have at least 100 post karma and 100 comment karma   have a  verified email address  on your account   have  two-factor authentication  set up         submitted by     /u/ModSupportBot     to     r/DankDunderMifflin       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DankDunderMifflin/comments/1wj7efs/rdankdundermifflin_is_available_for_adoption/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T21:47:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T21:48:08.869Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac6019660c608403974a00"
+    },
+    "message_id": "reddit_t3_1wj7ees",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BuyItForLife",
+    "username": "ABsoluteNOthing9",
+    "title": "36 Year Old Leather Wallet",
+    "text": "36 Year Old Leather Wallet\n\nMy dad received this as a gift 36 years ago. It was bought in India and has been the only wallet he has used for over 36 years       submitted by     /u/ABsoluteNOthing9     to     r/BuyItForLife       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BuyItForLife/comments/1wj7ees/36_year_old_leather_wallet/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T21:47:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T21:48:09.072Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac6054660c608403974a01"
+    },
+    "message_id": "reddit_t3_1wj7fja",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Bulbrush",
+    "username": "bulbrush",
+    "title": "⚡ 6/3/1 — a BulbRush circuit by u/arl7_7",
+    "text": "⚡ 6/3/1 — a BulbRush circuit by u/arl7_7\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/bulbrush     to     r/Bulbrush       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Bulbrush/comments/1wj7fja/631_a_bulbrush_circuit_by_uarl7_7/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T21:48:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T21:49:08.061Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac6054660c608403974a02"
+    },
+    "message_id": "reddit_t3_1wj7fiy",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "sththunder",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Waffle Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Waffle Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/sththunder     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wj7fiy/sticker_giveaway_enter_to_win_a_4_stars_waffle/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T21:48:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T21:49:08.314Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac6054660c608403974a03"
+    },
+    "message_id": "reddit_t3_1wj7fim",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "friendship",
+    "username": "MarshalKos",
+    "title": "17M dude from Serbia/Europe looking for chill people to be friends with!",
+    "text": "17M dude from Serbia/Europe looking for chill people to be friends with!\n\nHey, how's it going? Are you looking for somebody interesting (at least I am to myself) to be your new friend? Then you're on the right place! Anyway, I'm an architecture student from Serbia and I work in politics, programming, and agriculture (if my family's farm counts). Besides that, I'm interested in music, urbex (exploring abandoned buildings), bushcraft/primitive technology/survival in nature, hiking, skiing, philosophy, religion (I'm Eastern Orthodox Christian, so bonus if you are too, and if you're not, don't expect me to be toxic or anything, I respect everyone's opinions), psychology, writing, history, geography, firearms and hunting, woodworking and blacksmithing, exercising/gym, traveling, extreme sports, horror stuff, learning languages ​​(Torlakian and Serbo-Croatian native, English C2, Macedonian C1, Bulgarian B2, Russian and Slovenian A2 and planning to learn many more, and as you can see becoming a polyglot in Slavic ones) and sometimes playing games. I also ride a retro motorcycle (chopper/cruiser) in my free time and am very invested into biker culture. I am generally a very extroverted and outgoing person, an ENTJ personality type if anyone is into those, and can talk for hours if I'm in good mood. That would be it, thanks if you have read this far, I know for sure this is not the nicest looking or most interesting post you have ever seen lol, but I hope we can become good friends, and if not, have a nice day anyways!       submitted by     /u/MarshalKos     to     r/friendship       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/friendship/comments/1wj7fim/17m_dude_from_serbiaeurope_looking_for_chill/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T21:48:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T21:49:08.517Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac6054660c608403974a05"
+    },
+    "message_id": "reddit_t3_1wj7fii",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Maleficent-Put-9424",
+    "title": "Why didn't Fury get as much love as Dunkink and 1917?",
+    "text": "Why didn't Fury get as much love as Dunkink and 1917?\n\nsubmitted by     /u/Maleficent-Put-9424     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wj7fii/why_didnt_fury_get_as_much_love_as_dunkink_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T21:48:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T21:49:08.914Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac6055660c608403974a06"
+    },
+    "message_id": "reddit_t3_1wj7fi3",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "IBSD",
+    "username": "ModSupportBot",
+    "title": "r/IBSD is available for adoption 💚",
+    "text": "r/IBSD is available for adoption 💚\n\n/r/IBSD  is ready for a fresh start, new energy, new direction, and someone like you to bring it back to life. If you’ve been thinking about growing your impact without starting from scratch, this is your chance!    Ready to take it over?    Head to  r/RedditRequest  to  submit your request  and make it yours before it’s taken.     First things first    To request this subreddit, make sure you:     have an account that’s at least 90 days old   have at least 100 post karma and 100 comment karma   have a  verified email address  on your account   have  two-factor authentication  set up         submitted by     /u/ModSupportBot     to     r/IBSD       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IBSD/comments/1wj7fi3/ribsd_is_available_for_adoption/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T21:48:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T21:49:09.117Z"
+    },
+    "reddit_comments": 0
+  },

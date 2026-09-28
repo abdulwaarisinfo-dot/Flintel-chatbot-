@@ -1,0 +1,416 @@
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T22:29:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T22:30:01.809Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa32f72a72f4cb7ae30b504"
+    },
+    "message_id": "reddit_serp_1vptc94",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/AIToolsTipsNews/comments/1vptc94/youtube_has_no_official_public_transcript_api/",
+    "text": "YouTube has no official public transcript API. Here are your 3 real options in 2026 (with code)\n\nTL;DR:  There's no official YouTube Transcript API for fetching transcripts of arbitrary public videos. Here's what actually works.      Why there's no \"official\" transcript API    The YouTube Data API v3 has a captions endpoint — but it only works for videos you own or manage. For any random public video, you're working around a deliberate gap in Google's product.   That means anything claiming to \"fetch YouTube transcripts\" is using one of three approaches:      Option 1: Official YouTube Captions API      Works only on videos you own or manage   Returns raw SRT/VTT files (not clean transcript text)   Costs quota (150 units per request by default)   Best for: processing your own channel's content        Option 2: youtube-transcript-api (Python, unofficial)     python from youtube_transcript_api import YouTubeTranscriptApi transcript = YouTubeTranscriptApi.get_transcript(\"VIDEO_ID\")     Open source, no API key required. Works by hitting YouTube's internal timedtext endpoints.    The catch:  it has broken before when YouTube changed internals, and it will again. Acceptable risk for a personal script; not ideal for a production pipeline.      Option 3: Commercial REST endpoints    Tools like OutlierKit's API wrap retrieval + caching behind a stable endpoint:     Works on any public video   Cached on first fetch (transcripts don't change)   No risk of YouTube internal changes breaking your app   Costs money, but you're paying for reliability and zero quota management        Decision guide:      One-off script or prototype → unofficial Python library   Processing your own channel → Official Captions API   AI pipeline needing transcripts at scale → commercial REST API     What are you using YouTube transcripts for? Building a summarizer, RAG pipeline, training data?       submitted by     /u/ayushchat       [link]       [comments]",
+    "username": "ayushchat",
+    "subreddit_or_channel": "AIToolsTipsNews",
+    "posted_at": "2026-08-16T10:15:53+00:00",
+    "fetched_at": {
+      "$date": "2026-09-10T22:30:10.072Z"
+    },
+    "google_rank": 1,
+    "search_keyword": "commercial REST API",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-10T22:30:10.072Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa32fa5035b0f36efcca75b"
+    },
+    "message_id": "reddit_t3_1wcy11c",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "NYCapartments",
+    "username": "BurnedByFreestone",
+    "title": "Warning! Avoid Freestone Property rentals in Brooklyn!",
+    "text": "Warning! Avoid Freestone Property rentals in Brooklyn!\n\nJust adding to the litany of posts warning you about the nightmare that is Freestone Property Group, aka NOVO Living LLC, aka Townhouse Rentals LLC.   Our old apartment at  806 President Street  is available for rent, and we STRONGLY advise you not to do it. We promise you it's not worth it.   When we moved in, the freezer was covered in black mold, and neither the stove nor the dryer worked. It took us four months (a third of our lease!) of constant emailing to get the stove replaced. Freestone's advice was to 'stop using the stove'. They finally replaced it the week Mamdani was elected. Coincidence? We'll never know.   Also, the shower had a jagged hole in the ground instead of a drain. After about 10 months, 311 forced them to fix the flooring. Instead of a contractor they sent the super to do it himself, so it looks awful and leaks all over. (He was the super that week, anyway. We had a new one almost every month.)   Usually when we submitted maintenance requests, they would tell us someone was coming and ask us to be home all day to meet them. Nine times out of ten, nobody ever showed.   The apartment itself could not be more different than the  listing photos,  which are egregiously altered with AI. The only windows are on the far side of the two small bedrooms, which backs into a tall church, so there is  no natural light  in the apartment at all. Even when you're sitting directly next to the windows, it's impossible to tell what time of day it is because the church blocks the entire view. The listing shows a window by the front door, which is pure AI hallucination.   The kitchen cabinet shelves would often collapse, the light switch panels are cracked, the bedroom walls are full of air pockets, the bathroom floors have permanent stains from God-knows-what, and the walls are so thin we can hear all of our neighbor's burps. (He has since moved out as well so no need to worry about that.)   Overall: this is a miserable pit of an apartment run by a criminally irresponsible property management company that has been buying up properties in Brooklyn and charging exorbitant prices in a crowded housing market. The location and neighborhood are lovely, but it's absolutely not worth renting from Freestone. We've never been so glad to leave an apartment.       submitted by     /u/BurnedByFreestone     to     r/NYCapartments       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NYCapartments/comments/1wcy11c/warning_avoid_freestone_property_rentals_in/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T22:30:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T22:31:01.894Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa32fa6a72f4cb7ae30b505"
+    },
+    "message_id": "reddit_serp_1knfj4r",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/googlecloud/comments/1knfj4r/how_to_do_cloud_run_load_tests/",
+    "text": "How to do Cloud run load tests?\n\nWe have a simple cloud run express js app, using firestore as a database. We want to do a load testing and want to configure the instances to be able to scale up when needed and handle 5000 concurrent users in best case scenarios, how to do that?   5k is a lot I know but we have millions of users and sometimes our users receive an important push notification like elections and whatnot, they all want to check it at once, and might hit the cloud run at some point.   Cloud run is just a small piece of our infrastructure but most users will visit it at one point, so it needs to handle a sudden load.   I thought about using  Locust  for load testing, I did using it before, but asking you first how you'd handle a load test and scaling up suddenly.    I don't think I care about cold start all that much, I mean the users won't die if they waited few milliseconds for nodejs cold start, but haven't made up my mind yet. Please feel free to share if you ever were in similar situations       submitted by     /u/lynob       [link]       [comments]",
+    "username": "lynob",
+    "subreddit_or_channel": "googlecloud",
+    "posted_at": "2025-05-15T18:27:28+00:00",
+    "fetched_at": {
+      "$date": "2026-09-10T22:31:02.082Z"
+    },
+    "google_rank": 5,
+    "search_keyword": "commercial load testing",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-10T22:31:02.082Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa32fa6035b0f36efcca75c"
+    },
+    "message_id": "reddit_t3_1wcy0zv",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BreakUps",
+    "username": "SkiingFishingGuy",
+    "title": "Found out my GF (23f) of 5 years was gonna break up with me (23m) by her scrubbing me from her instagram. OP",
+    "text": "Found out my GF (23f) of 5 years was gonna break up with me (23m) by her scrubbing me from her instagram. OP\n\nJust gotta vent and need support right now.    We just moved together and have been with each other in this new place for about 2 months or so and I thought it was going pretty well. We have a dog together who’s around 2.5 years old and I’ve pretty much raised as my own but technically we agreed when we first got it that it would be hers so I am losing my first ever dog too.    Just a week ago, she was excited to buy herself a necklace with my initials on it and just a few days ago she was texting me a bunch saying how much she missed me while she was on a work trip for two nights and saying that she loves me a lot.    after two days or so of her being avoidant I just randomly (and I absolutely never do this) Got a random urge to check Instagram and she not only deleted every post of me, but she even left posts up that had pictures of me and just deleted those specific pictures I was in while leaving the posts up. Additionally, she deleted all of my comments on her posts and even changed captions that mentioned me so that they no longer mention me.   I’m like now in a foreign place with a furnished new condo that’s half her stuff and half mine and I’m not only losing my best friend but also my canine best friend too. Really just need to vent. I’m in a new city and I don’t have anyone here. I’m a busy college student so I can’t take any time to grieve and have to keep going to labs and studying pretty much 24 seven but I just need to put this somewhere.   I hope you all are doing better than me and I just can’t believe that this is how I found out after being together for almost 5 years and living together for more than three. I’ll never know the real reason. I could speculate that she met someone while on the trip, I could speculate that she had this planned for a while but there is no way of knowing.    My guess is she either came to a realization while with some strangers and drinking and venting about our relationship that she was just done or she met someone and is just young and being lustful.    Sending love to each and everyone of you. I know this probably won’t get read by many people, but I just am really struggling right now. I also fractured my foot two days ago so it’s been one hell of a last 48 hours.    Doing everything I can to not have a complete breakdown.   Sorry if this reads funky, I’m doing voice to text.        submitted by     /u/SkiingFishingGuy     to     r/BreakUps       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BreakUps/comments/1wcy0zv/found_out_my_gf_23f_of_5_years_was_gonna_break_up/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T22:30:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T22:31:02.098Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa32fa6035b0f36efcca75d"
+    },
+    "message_id": "reddit_t3_1wcy0ym",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "acturnips",
+    "username": "ducki3333",
+    "title": "[sw]twins are buying for 522 bells - open for an hour",
+    "text": "[sw]twins are buying for 522 bells - open for an hour\n\ndon’t mind my island it’s still in the middle of construction. Comment or dm to get the dodo code. Please be patient with me and be respectful of others on the island with you.       submitted by     /u/ducki3333     to     r/acturnips       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/acturnips/comments/1wcy0ym/swtwins_are_buying_for_522_bells_open_for_an_hour/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T22:30:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T22:31:02.304Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa32fa6035b0f36efcca75e"
+    },
+    "message_id": "reddit_t3_1wcy0um",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "FirstTimeHomeBuyer",
+    "username": "Aggressive_Alps_7429",
+    "title": "Sharia compliance loan (interest free)",
+    "text": "Sharia compliance loan (interest free)\n\nHi looking to purchase a home. How does one go about getting a Sharia compliance loan? (Interest free loan used in Islamic law). Loan officer doesn’t seem to be knowledgeable in it but have friends who have done it.        submitted by     /u/Aggressive_Alps_7429     to     r/FirstTimeHomeBuyer       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FirstTimeHomeBuyer/comments/1wcy0um/sharia_compliance_loan_interest_free/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T22:30:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T22:31:02.515Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa32fe2035b0f36efcca75f"
+    },
+    "message_id": "reddit_t3_1wcy1wf",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "corporate",
+    "username": "tennisfan0504",
+    "title": "Am I actually the problem at work, or am I in a bad manager/role situation?",
+    "text": "Am I actually the problem at work, or am I in a bad manager/role situation?\n\nI work in marketing/communications at a large professional-services organization. I’ve been in my current role a little over a year, and I’m increasingly worried I’m heading toward a PIP.   My manager has become increasingly critical of my work. The feedback has included lack of initiative, ownership, storytelling and leadership, along with general concerns about my work product. She also heavily rewrites a lot of what I produce.   For about a year, I’ve also effectively been doing my job  plus a lot of the work from a coordinator position that was never replaced.  I know that probably isn't a great defense if my actual performance isn't meeting expectations, but it has contributed to my frustration.   A few weeks ago my manager told me,  \"Do you even want this job? You seem disengaged.\"   That really bothered me because I don't think I'm actually disengaged. I'm unhappy and frustrated, but I'm still working hard.   I recently had a meeting with my manager and her boss about my performance. They had apparently been discussing my performance for several weeks before I knew about it. The meeting made it clear that there are serious concerns, and I'm having another meeting in two weeks that may determine whether I'm put on a formal PIP.  Her boss described my situation as an  \"uphill battle\"  and said I have some skill gaps.    Why I'm especially scared   About two years ago, I was let go from a job at a startup after only a few months. I then spent roughly 6-8 months unemployed before eventually getting my current job.  So this isn't just \"I'm worried about getting fired.\" I've already experienced getting fired, a long period of unemployment and the process of rebuilding my career afterward. The idea of going through that again is honestly terrifying.  I'm married, recently bought a house, etc., so I really don't have much appetite for voluntarily walking away from a paycheck.   At the same time, I'm  applying and networking like an absolute maniac right now.  I'm reaching out to former colleagues, recruiters, people at other companies, and applying for roles internally and externally. I'm trying very hard to create an escape route before anything happens.    The part where I question myself   At my job before the startup, I spent several years in a similar professional-services environment and had good reviews, raises and bonuses. I never had anything remotely like this level of performance concern.  So I keep wondering:  Maybe I'm actually the problem.  Maybe I've become defensive about feedback. Maybe I've subconsciously checked out because I don't like the job anymore. Maybe I'm not as proactive or driven as I think I am. Maybe my manager is seeing something real that other managers didn't.  But it also feels possible that this is primarily a  bad manager/role fit  that has spiraled.  I'm more of a communications/writing person, while my current manager seems to expect a much higher level of proactive ownership and a somewhat different skill set.  I'm also trying to move internally because I don't necessarily think the entire organization is a bad fit.    What would you do?   For people who have been through PIPs or serious performance concerns:  Does this sound like a PIP is probably already decided?  Is \"you seem disengaged\" usually a major warning sign?  Can this still genuinely be turned around?  Should I be trying like hell to salvage this job while simultaneously assuming I need to leave?  How much weight should I give the fact that I've been doing additional work because of an unfilled position?  Does my previous successful job history make you think this is more likely a manager/fit issue?  And most importantly:  am I making excuses for legitimate performance problems, or does this sound like a situation where I'm genuinely in a bad fit with my manager?   I'm scared, honestly. I'm trying to keep my head down, improve, document everything and network/apply as aggressively as possible.  I'd appreciate  brutally honest advice , including if you think I'm fucking this up.       submitted by     /u/tennisfan0504     to     r/corporate       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/corporate/comments/1wcy1wf/am_i_actually_the_problem_at_work_or_am_i_in_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T22:31:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T22:32:02.315Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa32fe2035b0f36efcca760"
+    },
+    "message_id": "reddit_t3_1wcy1us",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "ExecutiveAssistants",
+    "username": "Time-Environment5661",
+    "title": "Dipshit Coworker Strikes again",
+    "text": "Dipshit Coworker Strikes again\n\nPreviously discussed here:  https://www.reddit.com/r/ExecutiveAssistants/s/DFnCu0HQG8    Now onto today’s nonsense (any typos are hers, not mine):   DC, to Admin 1 and me, marked high importance: “Admin 1 and OP: Do you have any one that will be leaving on 10/4 to (city where our regional training week is being held) and plan to stay at the (hotel)? Please send me their names as soon as you can. Additionally, I also need the names and $ amount of anymore that incurred a flight differential due to overstaying or early arrival. Thank you in advance for your help and quick turnaround.”   Me, to both: “Nope— I do not have anyone on my list of travelers who is expecting to stay at (the hotel) beyond (the core training dates). My last bookings done with Amex were all within the core travel window and would not incur additional fees.”   DC, to both: “Thanks, OP, would you mind sending me your completed list of all the (attendees based in Mexico) with the correct flight details, please. I am assuming all of the MEX travel is done? If they are not all done, you can still send me all the names so I can get the rooms assigned. We will can sort the flights later. Appreciate it.”   Me, just to DC: “Hi DC - You already have that list, just filter the responses to the Forms attendee survey. It's the same list of pople (minus One Person, who resigned on Date).”   DC, just to me: “Hi OP, I have quite a bit on my plate and you help with the work you have done would be greatly appreciated. Thank you so much for your help.”   Me, fed up with this dipshit: “Hi Dipshit - I’m also pretty busy this week and don't have time to duplicate information you already have access to. Since none of the 30 Mexico-based attendees are staying at the (hotel) beyond (our core dates), the attendee names needed for room assignments are already available in the Forms survey responses (minus That One Guy Who Resigned). I  send the final outstanding flight details separately once everything is finalized with Amex- that should be EOD tomorrow.”   This woman is stupid, and it’s making my job harder. Sigh.        submitted by     /u/Time-Environment5661     to     r/ExecutiveAssistants       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ExecutiveAssistants/comments/1wcy1us/dipshit_coworker_strikes_again/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T22:31:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T22:32:02.525Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa32fe2035b0f36efcca761"
+    },
+    "message_id": "reddit_t3_1wcy1s0",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Supplements",
+    "username": "Aromatic_King_4100",
+    "title": "Shipping Thorne Basic Nutrients to Canada",
+    "text": "Shipping Thorne Basic Nutrients to Canada\n\nAnyone else from Canada having issues buying Throne basic nutrients to Canada?   iHerb has them and even the Pure Encapsulation ONE as unavailable in Canada now.       submitted by     /u/Aromatic_King_4100     to     r/Supplements       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Supplements/comments/1wcy1s0/shipping_thorne_basic_nutrients_to_canada/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T22:31:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T22:32:02.733Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa32fe2035b0f36efcca762"
+    },
+    "message_id": "reddit_t3_1wcy1qs",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "LorcanaRestocks",
+    "username": "TrackaLackerBot",
+    "title": "Disney Lorcana Rapunzel Collector Starter Set is in stock at Best Buy for $29.99 (MSRP)",
+    "text": "Disney Lorcana Rapunzel Collector Starter Set is in stock at Best Buy for $29.99 (MSRP)\n\nView current status at  https://www.trackalacker.com/products/showcase/disney-lorcana-rapunzel-collector-starter-set...  #BestBuyAffiliate   As of 09/10/26 06:31 PM EDT   Due to platform limits, we recommend our  free app  for the fastest, most reliable alerts.       submitted by     /u/TrackaLackerBot     to     r/LorcanaRestocks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LorcanaRestocks/comments/1wcy1qs/disney_lorcana_rapunzel_collector_starter_set_is/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T22:31:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T22:32:02.938Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa32fe9a72f4cb7ae30b506"
+    },
+    "message_id": "reddit_serp_1h9el59",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/ProductManagement/comments/1h9el59/overworking_or_overthinking_curious_about_pm/",
+    "text": "Overworking or Overthinking? Curious about PM experiences with large workloads and small teams\n\nDear  r/productmanagement , I’d love to hear how others in similar situations manage their workload and expectations.   My team transitioned me to PM 1.5 years ago from a science consultant role, likely because of my background: science degrees, coding experience and love for design, multilingual, and a knack for public speaking. While the experience has been valuable, I’m starting to question how to maintain a sustainable workload in a small team.   Initially, I coordinated cross-team machine learning development efforts, which I enjoyed despite being new to the responsibility. Now, my responsibilities include platform UI maintenance, content and FAQs; data strategy and ingestion workflows; managing in-house apps; and various odd tasks. These tasks span vastly different contexts, teams, and outputs, making it challenging to manage everything effectively.   I’d love to hear how others have navigated similar situations.   My PM colleagues, all more senior, focus on strategic or customer-facing work within narrow scopes: areas I rarely get exposure to. And until we hire a new PM, everything they don’t handle filters down to me. My manager (who reports directly to the CEO) tends to downplay my workload with phrases like “oh, that’s not that big of a task” or “that’s just for now” and often micromanages my priorities, setting weekly tasks for me.   How do you manage communication with leadership about workload? How do I know when too much is too much?       submitted by     /u/customisable       [link]       [comments]",
+    "username": "customisable",
+    "subreddit_or_channel": "ProductManagement",
+    "posted_at": "2024-12-08T08:40:00+00:00",
+    "fetched_at": {
+      "$date": "2026-09-10T22:32:09.676Z"
+    },
+    "google_rank": 7,
+    "search_keyword": "commercial outsourced dev team",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-10T22:32:09.676Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3301ea72f4cb7ae30b507"
+    },
+    "message_id": "reddit_serp_1vu3iuu",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/CRMSoftware/comments/1vu3iuu/custom_crm_development_cost_for_a_small_business/",
+    "text": "Custom CRM Development Cost for a Small Business\n\nI’m helping a small service business move away from spreadsheets and build a custom CRM, and I’m trying to get a realistic idea of what development should cost.   The CRM would be web-based with multiple user roles and different permission levels. It would need customer profiles, order management, inventory tracking, and the ability for an admin to assign orders or tasks to specific team members. We’d also need a payments section for tracking basic financial stats, plus invoice generation and printing.   Nothing extremely complex, but it would need to be reliable and leave room for additional features as the business grows.   For developers or business owners who have built something similar, what would you consider a reasonable minimum or average custom CRM development cost in USD?       submitted by     /u/Living_Dependent242       [link]       [comments]",
+    "username": "Living_Dependent242",
+    "subreddit_or_channel": "CRMSoftware",
+    "posted_at": "2026-08-21T02:22:22+00:00",
+    "fetched_at": {
+      "$date": "2026-09-10T22:33:02.512Z"
+    },
+    "google_rank": 6,
+    "search_keyword": "custom CRM",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-10T22:33:02.512Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3301e035b0f36efcca763"
+    },
+    "message_id": "reddit_t3_1wcy2r3",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Antipsychiatry",
+    "username": "Zorione",
+    "title": "\"Consumers\" as a term for people in the psych system",
+    "text": "\"Consumers\" as a term for people in the psych system\n\nFrom what I can tell, \"consumers\" was first used in this way by patient empowerment advocates and activists.    It implies that they have—and maintain—a free and equal partnership with psychiatric workers. It suggests that they can enter or leave psych at any time at will, and that they supervise and authorize their own care without impediment. Just as other consumers can \"freely\" choose whether or not to patronize a business, or whether or not to buy an item or service.   But when \"consumption\" can be legally forced onto the \"consumer,\" it's difficult to see it as a term of empowerment.        submitted by     /u/Zorione     to     r/Antipsychiatry       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Antipsychiatry/comments/1wcy2r3/consumers_as_a_term_for_people_in_the_psych_system/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T22:32:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T22:33:02.810Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3301f035b0f36efcca764"
+    },
+    "message_id": "reddit_t3_1wcy2pr",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "macbookpro",
+    "username": "Worried-Property-565",
+    "title": "WTB] Looking for M1/M2 MacBook Air or M1 Pro – Delhi",
+    "text": "WTB] Looking for M1/M2 MacBook Air or M1 Pro – Delhi\n\n[WTB] Looking for a used MacBook – Delhi / South West Delhi   Hey guys,   I’m looking to buy a used MacBook directly from a Reddit user, preferably someone who is upgrading or just wants to sell their personal machine.   I’m mainly interested in:   MacBook Air M1 — preferably 16GB RAM   MacBook Air M2 — preferably 16GB RAM   MacBook Pro M1 Pro — 16GB or higher   Budget: Around ₹30k–₹55k depending on the model, RAM, SSD, battery health and condition.   Location: Delhi, preferably South West Delhi. I can travel within Delhi for the right deal.   I’m specifically looking for a personal/user-owned MacBook, rather than a shop or reseller. Ideally, we can meet in person, check the MacBook properly (battery cycles/health, serial number, Activation Lock, MDM, display, keyboard, ports, etc.) and then complete the deal.   If you're selling one, DM me with:   Model/year   RAM + storage   Battery health/cycles   Overall condition   Any repairs/replacements   Expected price   Your location in Delhi   Please don't DM unrealistic prices 😅 — I'm looking for a fair deal for both sides.   Thanks!       submitted by     /u/Worried-Property-565     to     r/macbookpro       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/macbookpro/comments/1wcy2pr/wtb_looking_for_m1m2_macbook_air_or_m1_pro_delhi/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T22:32:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T22:33:03.018Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3301f035b0f36efcca765"
+    },
+    "message_id": "reddit_t3_1wcy2on",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BassGuitar",
+    "username": "blownpickup90",
+    "title": "Talk me out of buying this beautiful 8 string that needs a new set of strings!",
+    "text": "Talk me out of buying this beautiful 8 string that needs a new set of strings!\n\nIt’s so dope and for 600 bucks it sure is tempting!       submitted by     /u/blownpickup90     to     r/BassGuitar       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BassGuitar/comments/1wcy2on/talk_me_out_of_buying_this_beautiful_8_string/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T22:32:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T22:33:03.220Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3301f035b0f36efcca766"
+    },
+    "message_id": "reddit_t3_1wcy2mt",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AppleWhatShouldIBuy",
+    "username": "Happy_Potential3037",
+    "title": "Upgrade",
+    "text": "Upgrade\n\nI’ve been thinking about upgrading from the iPhone 17 to the iPhone 18 Pro Max. The size of the regular 17 isn’t really practical for me, and I honestly miss having a Pro model. The battery life also isn’t quite enough for my usage, and I’d really like a better zoom camera as well. I’m just not sure if the upgrade is worth the price yet. What are your thoughts?       submitted by     /u/Happy_Potential3037     to     r/AppleWhatShouldIBuy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AppleWhatShouldIBuy/comments/1wcy2mt/upgrade/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T22:32:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T22:33:03.426Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3305b035b0f36efcca767"
+    },
+    "message_id": "reddit_t3_1wcy3lj",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "AI_Agents",
+    "username": "Ornery_Doctor_8344",
+    "title": "What if the CRM is wrong?",
+    "text": "What if the CRM is wrong?\n\nI think this is an underrated problem with AI agents.   The agent checks the CRM, sees that a case is closed and confidently tells the customer it was resolved. Meanwhile another system says it’s still open. At some point the agent has to decide which system to trust rather than just successfully calling an API. How do you handle conflicting data between systems?       submitted by     /u/Ornery_Doctor_8344     to     r/AI_Agents       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AI_Agents/comments/1wcy3lj/what_if_the_crm_is_wrong/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T22:33:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T22:34:03.395Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3305d035b0f36efcca770"
+    },
+    "message_id": "reddit_t3_1wcy3jq",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AnimalJam",
+    "username": "Practical_Secret_800",
+    "title": "Looking for specific colored mice",
+    "text": "Looking for specific colored mice\n\nOffering pet trades (i have a ton of pets, ask!), sapp pots (both 3 and 10 ones) or buying!! Lmk if you have any :D       submitted by     /u/Practical_Secret_800     to     r/AnimalJam       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AnimalJam/comments/1wcy3jq/looking_for_specific_colored_mice/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T22:33:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T22:34:05.187Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3305d035b0f36efcca771"
+    },
+    "message_id": "reddit_t3_1wcy3j3",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "amiwrong",
+    "username": "LimpAd2500",
+    "title": "AIW for wanting to get on my friend's case ?",
+    "text": "AIW for wanting to get on my friend's case ?\n\nSo I have this friend of mine who I have been extremely frustrated for the past couple of months. He's my bestfriend and I've been trying to plan things with him since May and I haven't been able to do anything with him. Back in June he told me that he probably can't do anything this fall cause he is probably busy with his wife and work and stuff like that. I got frustrated with him so much over the summer that I made some unfortunate postings online that got some people aware of this situation. My case manager and her intern have been watching me online and so they know about the situation too and they've been getting on my butt about me treating him horrible when I'm not. Back in late August, he came back to town to visit me and I told him that while we were hanging out that I want to come back over to Texas to hangout with him in October during my birthday. He was cool with it and says for me to call him in a few weeks so that we can plan it. Then yesterday I called him and I told him let's start planning it. He told me to first check to see if there is any games in the cities that we are planning on going to out of concerns of traffic being a problem and etc. I checked and unfortunately for all the weekends in October, there is either games or concerts at the stadiums in these cities. He then told me that he forgot that October might have been not a good time to come. He then told me that I might have to wait until December or January to come and that is winter and it would be too cold to do anything outdoors or any water sports. He then told me that I might just have to wait until next summer to do something as it seems like October is not a good time cause of the multitude of events that is in the cities. I'm getting ticked off and so I am wanting to just confront him head on about this situation as I am getting extremely mad. I talked to my therapist today and her intern got on me again and I hate her intern so much. Her intern told me that I am a piece of shh cause I am continously forcing my friend to do things when he doesn't want to. She told me \"Your a manipulative asshole. Why can't you just recognize that your friend is busy and doesn't want anything to do with you.\". I got so angry that I yelled at her and said that is not the case cause he is still talking to me and says that he and I are planning on doing this trip to Colorado next year so that's proof that he still wants to do stuff with me. He says he wants to do this big trip before he has kids cause afterwards, I probably would just be able to come visit him only since trips are out of the question until later on when the kids are older. I'm just flustered and so I'm thinking of finding new ways to force this October trip to happen and I'm planning on calling him again in the next week or two and just pressure him into doing this. Even if it means that I have to buy concert tickets to an concert just to have a reason to be in the city. The intern told me that I'm an extreme asshole and that I am so wrong. Am I really wrong here ??       submitted by     /u/LimpAd2500     to     r/amiwrong       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/amiwrong/comments/1wcy3j3/aiw_for_wanting_to_get_on_my_friends_case/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {

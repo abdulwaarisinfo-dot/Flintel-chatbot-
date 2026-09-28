@@ -1,0 +1,416 @@
+    "created_utc": {
+      "$date": "2026-09-07T19:50:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:51:15.568Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f15b91790aa25e94b8913"
+    },
+    "message_id": "reddit_t3_1wa2hdc",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "homeautomation",
+    "username": "kpagidas",
+    "title": "Drywall closes this week on a 4-storey Loxone house. What's the one cable you wish you'd run?",
+    "text": "Drywall closes this week on a 4-storey Loxone house. What's the one cable you wish you'd run?\n\nDrywall closes this week on a 4-storey Loxone house. What's the one cable you wish you'd run?   Renovating a ~500 m² house in Europe, four levels (garage / living + kitchen / master floor / attic). Electrical rough-in is done, plasterboard starts in days. After that, anything I forgot is a demolition job.   I've spent the last month auditing the spec line by line and found several real gaps. Before it's too late, I'd rather hear from people who've lived in a house like this for a few years than from anyone selling me something.   What's specced and paid for:    Control    Loxone Miniserver, Tree + Air   55 wall control points: 9 touch displays, 19 touch switches, 27 touch panels with sensors   27 flush presence sensors   20 blind/curtain motor controllers, motorised curtain tracks   Weather station, 1-Wire extension, KNX extension, 3× digital input, 3× relay extension, 2× Modbus    Lighting    41 linear metres of recessed 48V magnetic track   30× RGBW 24V dimmers, 6× 600 W LED drivers, 10× amplifiers   Fittings not yet ordered (deliberately)    HVAC    8 ducted indoor units, 8 Loxone A/C modules   Underfloor heating throughout + 4 wall-hung hydraulic designer radiators   Ventilation with supply/extract in the living space   Linear slot diffusers in the master bedroom    Energy    10 kWp PV + battery + backup box   9 energy meters (8× single-phase per circuit, 1× three-phase main)   EV charger    Other    17-zone multiroom audio (no cinema system yet)   6× 5 MP cameras + 8-channel NVR   21 window reed contacts   6 solar-powered external roof blinds (io-homecontrol)   Intercom with NFC, garage door integration   Gas supply in the house   What I already know is missing and am fixing: zero leak sensors, zero smoke/heat detectors, zero gas detection, no automatic water shut-off valve, no DALI extension, no access hatches marked on the drawings, no speaker back-boxes.   My actual questions:      48V magnetic track — DALI or channel dimming? The manufacturer says individual fixture control needs DALI; the cheaper 2-wire option dims a whole channel at once. My integrator specced no DALI. With ~35 fittings across 41 m, is channel-only dimming something you'd regret, or is it fine in practice?     Leak detection architecture. I'm adding sensors at ~18 points plus a motorised main valve. For those running this: how many false trips have you had, and did you regret a normally-open valve that closes on power loss? Any brand that's been solid for 5+ years?     Loxone + io-homecontrol. 6 solar VELUX blinds. Does the KLF 200 bridge actually work reliably in scenes, or is it a permanent annoyance?     27 presence sensors — overkill? And: standard PIR vs mmWave presence. Anyone swapped and found it worth it?     Single-vendor risk. Loxone is a closed ecosystem. Is it worth running spare shielded bus cable (KNX/DALI-compatible) to key points as 20-year insurance? Has anyone actually migrated a Loxone house to something else, and what did it cost?     The open question. You've lived in a house like this for a few years. What's the one cable, conduit or box you wish you'd put in before the drywall went on? That's the answer I'm really here for.       Not looking for \"just use Home Assistant\" — the system is bought and installed. Happy to be told I've made mistakes, but the pre-wire is what I can still change this week.        submitted by     /u/kpagidas     to     r/homeautomation       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/homeautomation/comments/1wa2hdc/drywall_closes_this_week_on_a_4storey_loxone/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:51:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:51:21.752Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f15ba1790aa25e94b8914"
+    },
+    "message_id": "reddit_t3_1wa2hbi",
+    "topic_key": "property manager",
+    "search_keyword": "property manager",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "📢 Cushman & Wakefield [HIRING] a Property Manager (cre)!",
+    "text": "📢 Cushman & Wakefield [HIRING] a Property Manager (cre)!\n\nCompany: Cushman & Wakefield   Location: Los Angeles, California 📍   Date Posted: September 04, 2026 📅   Categories: #humanresources #fulltime   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=propertymanagementjobs.com&rurl=aHR0cHM6Ly9wcm9wZXJ0eW1hbmFnZW1lbnRqb2JzLmNvbS9qb2JzL3Byb3BlcnR5LW1hbmFnZXItY3JlLTM4ODcwYjI2    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wa2hbi/cushman_wakefield_hiring_a_property_manager_cre/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:51:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:51:22.067Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f15ba1790aa25e94b8915"
+    },
+    "message_id": "reddit_t3_1wa2hag",
+    "topic_key": "hospice care",
+    "search_keyword": "hospice care",
+    "platform": "reddit",
+    "subreddit": "animal_rescue_help",
+    "username": "Resident_Power309",
+    "title": "This kitty were not in a good shape he needs an immediate vet treatment please any amount is already a great help 🙏",
+    "text": "This kitty were not in a good shape he needs an immediate vet treatment please any amount is already a great help 🙏\n\nI'm so sorry but I can't just pass by and do nothing    He is so helpless and in the store corner drench with rain,weak and meowing asking for help   Since I don't have a fund for his labtest and CBC blood chem    All I could do for now is help him to be in safe place as of the moment    Got him stinks and sick   Weak and keep on meowing    His mouth also got covered with sores   His infested of tick and fleas   His body were cold and ears were dirty   I didn't know how long he was drenched on the rain 🥹🙏   I already cleaned him but it's still stinks    His pees and poops were uncontrollable    I am giving him now recovery food and water every 2 to 3 hrs    Keep wiping and changing his pads too   He needs to be in fluids too   But I'm out fund   Blanca's still at the vet and bills were to big already    I already posted him but no one were stepping up   I don't have the means but only a hospice Care as he is not in a good shape 🥹   [paypal.me/ArianeZerrudo]( http://paypal.me/ArianeZerrudo )       submitted by     /u/Resident_Power309     to     r/animal_rescue_help       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/animal_rescue_help/comments/1wa2hag/this_kitty_were_not_in_a_good_shape_he_needs_an/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:51:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:51:22.333Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f15e8f0819e6636a93c84"
+    },
+    "message_id": "reddit_t3_1wa2iag",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "MechanicAdvice",
+    "username": "Adventurous_Fan_3562",
+    "title": "Honda CRV MK2 2.0 VTEC petrol overheating",
+    "text": "Honda CRV MK2 2.0 VTEC petrol overheating\n\nLooking for some advice (CRV MK2 overheating)   Car specs    Honda MK2 2007 (07) (apparently it was registered new after MK3 came out) 2.0 petrol VTEC. Owned for 5 years    Problem    Car broke down 3 days ago, wasn't sure what happened, waited a little while and it started up again, got 5 minutes down the road and it stalled again, noticed it was overheating (via temp gauge) checked radiator it was empty, filled it up and managed to get home (internal heaters were blowing hot)   Went out in it today and it over heated again so when it cooled down I checked the radiator and no water was visible, I topped it up and this time filled the additional reservoir, drove home on (4 miles) but on the way it broke down again (overheated)   Noticed the radiator fan is not working and the internal fans are no longer blowing hot air   Also since the first break down its been running a little rough, sounds like it's about to stall at idle and has vibration at idle    To complicate things...   A couple of weeks ago I installed a single element brake bulb but I don't know this was a problem, then I started noticing electrical issues, (headlight lighting up when I brake, cruise control not working, VSA dash light randomly appearing when driving untill I restart)   I have since removed the bulb, this made the headlights operate properly but the Fan, cruise control and VSA problems still exist   I have plugged in a ODB2 device and get the following codes   p0117, p0141, p2195, p2646, p0135, p0325   However another long term problem I have is the previous owner put a straight exhaust pipe on and I don't this they remapped the fuel/air ratio so it has always idled a little high with a petrol smell so some of the codes could relate to this   I obviously have a coolant leak (but no obvious signs of water on the road underneath) I just want to know if I should bother spending money trying to find the problem if it's likely damaged the head gasket    Many thanks to all who take the time to read all of this       submitted by     /u/Adventurous_Fan_3562     to     r/MechanicAdvice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MechanicAdvice/comments/1wa2iag/honda_crv_mk2_20_vtec_petrol_overheating/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:51:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:52:08.702Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f15e8f0819e6636a93c85"
+    },
+    "message_id": "reddit_t3_1wa2iac",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "digital_marketing",
+    "username": "Positive_County_3493",
+    "title": "Where can I find advertising or marketing agencies that I can collaborate with as a web design agency owner?",
+    "text": "Where can I find advertising or marketing agencies that I can collaborate with as a web design agency owner?\n\nLots of my clients are agencies or companies, and they worked on ad campaigns but needed to partner with web devs to build landing pages or websites for their campaigns sometimes.   I run a web design and development agency and tbh I make decent money because I put in the same quality and effort as a US based web agency would do, but the issue is I have enough free time I only get 2-3 clients a month which is perfectly fine for now but I have a lot of free time that I feel is wasted.   I want to find advertising/marketing agencies that don't have developers to partner with. I can do the websites and the technical stuff. They can white label my services or take a cut. I don't care, I only care about the quality of clients and work.   I have no idea how to find something like this or where to look, I can showcase my portfolio if you're interested.       submitted by     /u/Positive_County_3493     to     r/digital_marketing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/digital_marketing/comments/1wa2iac/where_can_i_find_advertising_or_marketing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:51:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:52:08.900Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f15e9f0819e6636a93c87"
+    },
+    "message_id": "reddit_t3_1wa2iab",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "Destiny",
+    "username": "AshtraysHaveRetired",
+    "title": "My 94yr old Bosnian grandma non-ironically mourns Ratko Mladic",
+    "text": "My 94yr old Bosnian grandma non-ironically mourns Ratko Mladic\n\nIdk if this is the right place to post this, but i'm just in fucking shock? Just now, she calls me, in tears, about watching the funeral procession how he was her hero, how she spent the whole day crying. And it was so impossible that she meant Ratko Mladic that I was legitimately like - nah. Its one of her old friends who died or a cousin or something.    NOPE. She was actually properly upset, weeping that the guy who died in teh Hague btw, convicted for the Srebrenica massacres, Butcher of Bosnia etcetera etcetera.    And my Muslim Bosnian Grandma -- otherwise like the sweetest lady, honestly, was a school teacher and my grandpa is a physician like, they're respected members of their community -- and my aunty (also a sweet lady and a linguist/translator who practically raised me??) watched the funeral and spent the whole day in tears, mourning the death of a great Serbian hero and patriot and martyr.    What. The Fuck.    Honest to god this isn't even MAGA this is like - I mean aside from the whole genocide conversation which I am not qualified to have and don't want to - this is like if your aunty who raised you was like - I don't know, this Epstein character is a real American hero and idk did a lot of things for the tourism of the Virgin Islands.    Fucking shocked.        submitted by     /u/AshtraysHaveRetired     to     r/Destiny       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Destiny/comments/1wa2iab/my_94yr_old_bosnian_grandma_nonironically_mourns/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:51:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:52:09.292Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f15e9f0819e6636a93c89"
+    },
+    "message_id": "reddit_t3_1wa2i9k",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "Romantasy",
+    "username": "Bloodreinna",
+    "title": "ACOTAR reading order help !",
+    "text": "ACOTAR reading order help !\n\nHi! I’m a bit confused about the reading order 😅   I’ve just finished ACOTAR 1 and 2, and I’m starting ACOTAR 3. I’ve also seen that books 6 and 7 have now been released.   So, can I just continue straight from ACOTAR 3 all the way through book 7, or am I supposed to read Throne of Glass somewhere in between?   Are ACOTAR and Throne of Glass set in the same universe and/or timeline? I’m a little confused about why people recommend reading them in a certain order.   I’d really appreciate an explanation  without spoilers , if possible! 🙏 I mostly just want to know what reading order makes the most sense before I continue.       submitted by     /u/Bloodreinna     to     r/Romantasy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Romantasy/comments/1wa2i9k/acotar_reading_order_help/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:51:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:52:09.690Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f15e9f0819e6636a93c8a"
+    },
+    "message_id": "reddit_t3_1wa2i9d",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "strandbergguitars",
+    "username": "Live-Specimens",
+    "title": "Why don't new Strandbergs have arm carves?",
+    "text": "Why don't new Strandbergs have arm carves?\n\nI just got my first Strandberg and it's the N2.6 transformative teal. I couldn't pass up the sale on Sweetwater right now. Overall I'm very impressed by the guitar, but it has to be the most uncomfortable arm rest area on any guitar I've owned. Sitting it's fine, but when standing the corner of the body just digs into my forearm. It looks like Boden Classic might have a carve, so I might try to exchange for one of those.        submitted by     /u/Live-Specimens     to     r/strandbergguitars       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/strandbergguitars/comments/1wa2i9d/why_dont_new_strandbergs_have_arm_carves/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:51:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:52:09.887Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f15eaf0819e6636a93c8b"
+    },
+    "message_id": "reddit_t3_1wa2i92",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PicoXR",
+    "username": "Front_Government785",
+    "title": "Pico 4 Vs pico 4 ultra",
+    "text": "Pico 4 Vs pico 4 ultra\n\nI’m looking to buy a VR headset and I’m currently deciding between two options.   I found a PICO 4 Ultra for €450 on Subito.it, which is an Italian marketplace similar to eBay. The listing also includes additional Motion Trackers.   On the other hand, I found a PICO 4 for €280 on eBay, including a carrying case and protective lens covers.   The PICO 4 Ultra is obviously the better and newer headset, but I’m wondering if it’s worth paying €170 more, especially since the Ultra comes with the additional Motion Trackers.   Which one would you choose? Would you spend the extra €170 for the PICO 4 Ultra + Motion Trackers, or go for the PICO 4 at €280?       submitted by     /u/Front_Government785     to     r/PicoXR       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PicoXR/comments/1wa2i92/pico_4_vs_pico_4_ultra/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:51:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:52:10.084Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f15eaf0819e6636a93c8c"
+    },
+    "message_id": "reddit_t3_1wa2i8o",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "etron",
+    "username": "ljaffe19",
+    "title": "Considering buying a used 2024 Q8 E-tron",
+    "text": "Considering buying a used 2024 Q8 E-tron\n\nI’m in the process of buying a 2024 Q8 E-tron Premium with 39k miles for 33k but a couple of questions   How much does range drop in winter?  How much are repairs when the bumper to bumper warranty ends?  Is this a good deal?   I’m new to an EV and to Audis in general (coming from a Mazda CX5) but I loved this car and have been eyeing an EV for years. I also drove an Id4 and didn’t like it as much and I’m afraid of the ICCU issues on Hyundai/Kia. I have two young kids so need a car with a decent amount of room but we will be using my spouses Sienna as our family hauler.    Any advice is appreciated.        submitted by     /u/ljaffe19     to     r/etron       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/etron/comments/1wa2i8o/considering_buying_a_used_2024_q8_etron/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:51:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:52:10.281Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f15eaf0819e6636a93c8e"
+    },
+    "message_id": "reddit_t3_1wa2i8n",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "mycology",
+    "username": "throwaway1992915",
+    "title": "Are these chanterelles I found growing out of grass/soil in Upstate New York?",
+    "text": "Are these chanterelles I found growing out of grass/soil in Upstate New York?\n\nThey have white flesh and pull apart like string cheese but I’m still unsure.        submitted by     /u/throwaway1992915     to     r/mycology       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mycology/comments/1wa2i8n/are_these_chanterelles_i_found_growing_out_of/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:51:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:52:10.673Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f15eaf0819e6636a93c8f"
+    },
+    "message_id": "reddit_t3_1wa2i8m",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "electribe",
+    "username": "NCuser123",
+    "title": "ESX-1: Can the Mute button be controlled with a MIDI footswitch?",
+    "text": "ESX-1: Can the Mute button be controlled with a MIDI footswitch?\n\nI’m using an ESX-1 live and one thing I’d really like is a way to control the Mute button with a footswitch.  I don’t mean using the pedal to mute a specific part.  I mean having the footswitch behave exactly like holding the physical Mute button on the ESX, so I could hold the pedal down and use one hand to press any part pads I want to mute/unmute.   Has anyone found a way to do this through MIDI/SysEx, or done a hardware mod with a momentary footswitch wired to the Mute button?  Ideally I’d prefer a MIDI solution so I don’t have to modify the ESX.  Thanks!       submitted by     /u/NCuser123     to     r/electribe       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/electribe/comments/1wa2i8m/esx1_can_the_mute_button_be_controlled_with_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:51:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:52:10.869Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f15ebf0819e6636a93c90"
+    },
+    "message_id": "reddit_t3_1wa2i85",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "benjaminone",
+    "username": "Horrorguy42",
+    "title": "The App is Down.",
+    "text": "The App is Down.\n\nI know the Benjamin app was updating their system but I was just playing a game on it and it all of a sudden the app kept saying error something went wrong try again later and now I can’t do anything on the app they signed me out and I when I sign back in gives me error try again later. Hope it’s a glitch because I have a big balance I need to still cash out.        submitted by     /u/Horrorguy42     to     r/benjaminone       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/benjaminone/comments/1wa2i85/the_app_is_down/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:51:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:52:11.066Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f15ebf0819e6636a93c91"
+    },
+    "message_id": "reddit_t3_1wa2i82",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "Ovariancancer",
+    "username": "elegyofus",
+    "title": "No free fluid on mass on ovary",
+    "text": "No free fluid on mass on ovary\n\nLong story short, they found a tumor on my left ovary. The report says “no free fluid” around the mass on my ovary. I’ve done some research, and I’m seeing that this can sometimes be a reassuring sign and that not all ovarian masses are cancerous, but I’m honestly not sure what to think.   I’m really just looking for some reassurance and information. I’m only 31, and I’ve never been through anything like this before, so naturally I’m pretty scared and overwhelmed. If anyone has any information, advice, or personal experience that could help me understand what this might mean, I’d really appreciate it. ❤️   And yes I have a MRI schedule but they dont want to do blood work because I'm so young. Should I push for blood work to be done?       submitted by     /u/elegyofus     to     r/Ovariancancer       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Ovariancancer/comments/1wa2i82/no_free_fluid_on_mass_on_ovary/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:51:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:52:11.263Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f15ebf0819e6636a93c92"
+    },
+    "message_id": "reddit_t3_1wa2i7z",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "pwnhub",
+    "username": "AstraSecurity",
+    "title": "How did our AI agents discovred an exposed actuator without distrubing it?",
+    "text": "How did our AI agents discovred an exposed actuator without distrubing it?\n\nRecently, we discovered an interesting finding from our autonomous pentesting platform, which identified an exposed actuator with proof without causing any damage.   Also, the attack chain it followed mimicked an experienced pentester.   For more information, check this out:  https://www.getastra.com/blog/autonomous-pentest-findings/actuator-shutdown-exposure/        submitted by     /u/AstraSecurity     to     r/pwnhub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pwnhub/comments/1wa2i7z/how_did_our_ai_agents_discovred_an_exposed/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:51:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:52:11.460Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f15ecf0819e6636a93c96"
+    },
+    "message_id": "reddit_t3_1wa2i7r",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "okaybuddydeadcell",
+    "username": "Yami_Sean",
+    "title": "Ok why does Vamp carry a knife over his cock?",
+    "text": "Ok why does Vamp carry a knife over his cock?\n\nsubmitted by     /u/Yami_Sean     to     r/okaybuddydeadcell       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/okaybuddydeadcell/comments/1wa2i7r/ok_why_does_vamp_carry_a_knife_over_his_cock/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:51:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:52:12.239Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f15ecf0819e6636a93c97"
+    },
+    "message_id": "reddit_t3_1wa2i7g",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "FGO",
+    "username": "nothingnew321",
+    "title": "Craft essence",
+    "text": "Craft essence\n\nAre these two from an event? If yes, does anyone know if they will come back soon?        submitted by     /u/nothingnew321     to     r/FGO       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FGO/comments/1wa2i7g/craft_essence/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:51:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:52:12.436Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f15ecf0819e6636a93c98"
+    },
+    "message_id": "reddit_t3_1wa2i75",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "MarvelTokon",
+    "username": "Sad-Barracuda-4407",
+    "title": "Can going free to play save this game?",
+    "text": "Can going free to play save this game?\n\nIv been desperately trying to get my friends to try this game but every single one says it’s not worth spending $70 for such low player count game. That got me thinking that if they go free to play it might bring a lot of new players that would normally not play it       submitted by     /u/Sad-Barracuda-4407     to     r/MarvelTokon       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MarvelTokon/comments/1wa2i75/can_going_free_to_play_save_this_game/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T19:51:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T19:52:12.633Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f15ecf0819e6636a93c99"
+    },
+    "message_id": "reddit_t3_1wa2i74",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "DigitalMarketing",
+    "username": "Positive_County_3493",
+    "title": "Where can I find advertising or marketing agencies that I can collaborate with as a web design agency owner?",
+    "text": "Where can I find advertising or marketing agencies that I can collaborate with as a web design agency owner?\n\nLots of my clients are agencies or companies, and they worked on ad campaigns but needed to partner with web devs to build landing pages or websites for their campaigns sometimes.   I run a web design and development agency and tbh I make decent money because I put in the same quality and effort as a US based web agency would do, but the issue is I have enough free time I only get 2-3 clients a month which is perfectly fine for now but I have a lot of free time that I feel is wasted.   I want to find advertising/marketing agencies that don't have developers to partner with. I can do the websites and the technical stuff. They can white label my services or take a cut. I don't care, I only care about the quality of clients and work.   I have no idea how to find something like this or where to look, I can showcase my portfolio if you're interested.       submitted by     /u/Positive_County_3493     to     r/DigitalMarketing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DigitalMarketing/comments/1wa2i74/where_can_i_find_advertising_or_marketing/",

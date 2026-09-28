@@ -1,0 +1,416 @@
+      "$date": "2026-09-10T18:58:01.523Z"
+    },
+    "google_rank": 5,
+    "search_keyword": "link building service",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-10T18:58:01.523Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2fdbe035b0f36efcc9ccb"
+    },
+    "message_id": "reddit_t3_1wcsbks",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "FinancialAdvisorTips",
+    "username": "Ok_Bath3857",
+    "title": "Financial advisor marketing stratergies for small RIA, which ones make sense?",
+    "text": "Financial advisor marketing stratergies for small RIA, which ones make sense?\n\nWe're a small RIA, about $120M, two advisors and one support person. Referrals and community involvement carried us for years but growth has gotten inconsistent, and I'm trying to figure out which financial advisor marketing strategies would give us something more reliable without doubling our workload.   I've been looking at three things.   Finny is an AI prospecting platform that positions itself as one of the more automated financial advisor marketing strategies available. It finds prospects through behavioral signals and handles outreach on your behalf. Its appealing because it covers the top of funnel, though I'm not sure yet how it performs for a firm our size versus a solo advisor.   AIdentified is a data platform that surfaces enriched prospect profiles. Could be a good fit if you already have a strong outreach process and just need sharper targeting, though I'm not sure how much value the data adds without the outreach piece built in.   FMG Suite is more content marketing and digital presence. Long term visibility play, not immediate lead flow.   We don't have bandwidth to run all three. It probably comes down to whether we need more people in the door now or a stronger foundation first. Anyone in a similar situation figure this out?       submitted by     /u/Ok_Bath3857     to     r/FinancialAdvisorTips       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FinancialAdvisorTips/comments/1wcsbks/financial_advisor_marketing_stratergies_for_small/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T18:57:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T18:58:06.684Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2fdbe035b0f36efcc9ccc"
+    },
+    "message_id": "reddit_t3_1wcsbir",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Aliexpress",
+    "username": "Pleasant-Smoke-4785",
+    "title": "I’m fucking over this",
+    "text": "I’m fucking over this\n\nThis is fucking ridiculous I know this subreddit is for AliExpress but they use UniUni as a partner carrier. My items have been stuck in Dallas for over a week. There is a consensus that if your items are stuck over a week in the warehouse the likelihood of my items being lost are very high. This would make my second expensive (500+) purchase that gets lost! First package got lost in customs. Now, this package might be lost in their warehouse. Their fucking customer service is shit, can’t call or directly contact an online representative. I learned my lesson. I will never buy expensive items in Ali again.        submitted by     /u/Pleasant-Smoke-4785     to     r/Aliexpress       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Aliexpress/comments/1wcsbir/im_fucking_over_this/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T18:57:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T18:58:06.890Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2fdfb035b0f36efcc9ccd"
+    },
+    "message_id": "reddit_t3_1wcscn0",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "LushCosmetics",
+    "username": "iwasalloverherr",
+    "title": "this might be the most mythical pull of mine yet, but",
+    "text": "this might be the most mythical pull of mine yet, but\n\ni fell in love with dear john when it came out for fathers day in 2017 (?) and i regretted buying a small size shower gel, because as quickly as i fell in love with it, it was discontinued. i recently found this on mercari and im hoping its ok to use? expiration date is 2020 🫣 should i try using it, or should i just smell it all day?       submitted by     /u/iwasalloverherr     to     r/LushCosmetics       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LushCosmetics/comments/1wcscn0/this_might_be_the_most_mythical_pull_of_mine_yet/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T18:58:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T18:59:07.193Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2fdfb035b0f36efcc9cce"
+    },
+    "message_id": "reddit_t3_1wcscig",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "godot",
+    "username": "DryConference7629",
+    "title": "Lossless texture import made our web build 3x bigger than the source art. VRAM compression made it.",
+    "text": "Lossless texture import made our web build 3x bigger than the source art. VRAM compression made it.\n\nA teammate couldn't open our game on his phone — loading bar stuck at 90%, then   a black screen. Same build was fine on desktop. So I unpacked the .pck we were   actually serving and sorted it by size.   Textures were 108 of 119 MB. All 271 of them were importing at compress/mode=0   (Lossless), which throws away the compression the artist already applied to the   .webp and re-encodes it larger — one 0.61 MB source file was 5.02 MB in the pack.   67.9 MB of source art had become 108.6 MB shipped.   The part I didn't expect: I tested VRAM Compressed too, because that's what   everyone reaches for. On the same five textures it came out 54% LARGER than   lossless, where lossy came out 74% smaller. VRAM compression is fixed-rate — it   spends the same bits on a flat two-colour UI panel as on a photographic   background. For 2D art it's the worst trade, and it buys GPU memory, not   download size.   Before accepting lossy I diffed every texture against its lossless version pixel   by pixel, masked to alpha > 32 so only visible art counted. Alpha came out   identical (0.00 difference) so there are no cutout artifacts. The one texture   that looked bad turned out to have 78.6% of its differing pixels in fully   transparent areas the game never draws.   Final: .godot/imported went 120 MB -> 37 MB. No assets deleted.   Full write-up with all the numbers, the method, and the one case a pixel diff   can't rule out (shaders that sample RGB of transparent pixels):    https://github.com/zednaked/godot-web-build-budget        submitted by     /u/DryConference7629     to     r/godot       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/godot/comments/1wcscig/lossless_texture_import_made_our_web_build_3x/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T18:58:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T18:59:07.401Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2fdffa72f4cb7ae30b433"
+    },
+    "message_id": "reddit_serp_zim8fg",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/SEO/comments/zim8fg/hey_seo_agency_owners_which_linkbuilding_service/",
+    "text": "Hey SEO agency owners, which link-building service do you majorly use to buy links for your clients?\n\nand what do you like not like about them?       submitted by     /u/bruceleeinme       [link]       [comments]",
+    "username": "bruceleeinme",
+    "subreddit_or_channel": "SEO",
+    "posted_at": "2022-12-11T09:36:56+00:00",
+    "fetched_at": {
+      "$date": "2026-09-10T18:59:11.652Z"
+    },
+    "google_rank": 9,
+    "search_keyword": "link building service",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-10T18:59:11.652Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2fe32a72f4cb7ae30b434"
+    },
+    "message_id": "reddit_serp_1o3cpt8",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/localseo/comments/1o3cpt8/local_seo_audit_checklist_we_use_for_new_clients/",
+    "text": "Local SEO audit checklist we use for new clients (feel free to steal it)\n\nHey everyone! We thought it might be helpful if we shared out the checklist our team runs through when we take on a new local business client.   We’ve refined this over years of doing local SEO audits for everything from one-truck towing operations to multi-location service businesses.   Feel free to copy, tweak, or totally steal it!    Local SEO audit checklist     1. Google Business Profile      NAP (name, address, phone) consistent with website   Categories match actual services (and primary category makes sense)   Add services, descriptions, hours, and UGC photos   Check for duplicate listings or suspensions      2. Website signals      Every location has its own optimized page   Schema markup (LocalBusiness, Organization) in place   Meta titles include city + keyword (but not spammy)   Page speed and mobile usability      3. Citations & directories      Major platforms: Yelp, Bing, Apple Maps, Facebook   Niche directories relevant to industry (law, healthcare, etc.)   Use a single source of truth for NAP consistency      4. Reviews & reputation      Average rating vs. top competitors   Frequency and recency of reviews   Response rate      5. Local content signals      Blog or resources that mention city/service   Backlinks from other local sites (news, chambers, sponsorships)   Local structured data & geo keywords in content naturally      6. Tracking & analytics      G4 + GBP insights connected   Conversion tracking for calls/forms   Rank tracking for local pack & map results     This list gives us a good starting point. We’ve seen so many audits that skip the “boring” parts like citation cleanup or GBP optimization, even though those are still important.   What do y’all check first when doing a local SEO audit? Anything you’d add or drop from this list?       submitted by     /u/hibuofficial       [link]       [comments]",
+    "username": "hibuofficial",
+    "subreddit_or_channel": "localseo",
+    "posted_at": "2025-10-10T20:54:04+00:00",
+    "fetched_at": {
+      "$date": "2026-09-10T19:00:02.619Z"
+    },
+    "google_rank": 2,
+    "search_keyword": "local SEO audit",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-10T19:00:02.619Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2fe37035b0f36efcc9ccf"
+    },
+    "message_id": "reddit_t3_1wcsdow",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "espresso",
+    "username": "OliveParking1613",
+    "title": "Layout for the Espresso Machine Table",
+    "text": "Layout for the Espresso Machine Table\n\n3D rendering of the barista station.    Dear Baristas, I would like to take your advise on something.   the table encircled in red, will be the main table for preparing the coffee, it will have the main espresso machine, one or two grinders.   I want to integrate beforehand the knock out box and the automatic cup washer, so I will cut out places already, before even buying the machines.   could you help have a layout to know exactly where to cut out the table?   the table is 230cm/80cm.       submitted by     /u/OliveParking1613     to     r/espresso       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/espresso/comments/1wcsdow/layout_for_the_espresso_machine_table/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T18:59:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T19:00:07.603Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2fe37035b0f36efcc9cd0"
+    },
+    "message_id": "reddit_t3_1wcsdnq",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Jordanians",
+    "username": "Professional-Buy7833",
+    "title": "مبسوطين بحياتكم؟",
+    "text": "مبسوطين بحياتكم؟\n\nوليش    View Poll        submitted by     /u/Professional-Buy7833     to     r/Jordanians       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Jordanians/comments/1wcsdnq/مبسوطين_بحياتكم/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T18:59:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T19:00:07.807Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2fe38035b0f36efcc9cd1"
+    },
+    "message_id": "reddit_t3_1wcsdla",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "stationeryprojectpan",
+    "username": "BubblySunflowers",
+    "title": "I have a serious buying problem",
+    "text": "I have a serious buying problem\n\nTitle sums it up. I have a serious stationery buying problem. Going through my purchase history, I am buying from Etsy artists at minimum three times a month. When I visit a city I don't live in (even if I've visited before), I use that as an excuse to hit as many stationery shops as possible and I don't give myself a budget. Last month I went to Seattle, where I've been countless times, and I went to four stationery spots and spent $200+ on washi, stickers, and a journal. I have a serious addiction.   I keep telling myself to stop buying, but I ignore myself and keep going. My husband doesn't help because he fully supports my hobby and he isn't someone to tell another person what to do with their spending money. He recently gave me his $65 gift card and told me to \"buy the good washi\". lol. We don't have kids, we both make 6 figures each, and he says it is my main hobby and it makes me happy so I should spend money on it. And at this point I don't want to know exactly how much I've spent. I love him for that, but it doesn't help me.     I've made a list of what I'd like to do, but I am wondering if I am being too easy on myself.     This is what I have proposed to myself (lol!):     Use 10 washi’s > can place an order for washi (up to $35)   DO NOT BUY MORE RANDOM POSTCARDS UNTIL 150 ARE SENT OR UNTIL AFTER 6 MONTHS (Feb 10 2027!)    If a specific postcard type is all used up, you can buy more    i.e. Used all book postcards > can buy more book postcards         Must send out all non-holiday-specific cards before you can buy more   Can only buy area-specific postcards while on vacation to a place you haven't been before   Used up supplies can be replaced (glue, tape, gluetape, etc)   Cannot buy anymore stickers! (but can keep Stickii)   Christmas / birthday don’t count ;)   Can keep mail clubs (only 2!)   Use birthday cards!      Please be honest. Am I being too easy on myself?      I haven't done a proper count, but this is a rough estimate of what I have:      Washi (full rolls): ~270   Washi samples (I count per washi): ~180   Sticker sheets: Probably around150-175   Sticker books: 5   Individual stickers: Honestly probably close to 800   Postcards: 500ish?   Cards: 75ish?         submitted by     /u/BubblySunflowers     to     r/stationeryprojectpan       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/stationeryprojectpan/comments/1wcsdla/i_have_a_serious_buying_problem/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T18:59:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T19:00:08.012Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2fe38035b0f36efcc9cd2"
+    },
+    "message_id": "reddit_t3_1wcsdl0",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BmwTech",
+    "username": "jwild45",
+    "title": "Best Laptop For ISTA",
+    "text": "Best Laptop For ISTA\n\nLooking for the best laptop to run ISTA on. I plan on buying ISTA software from bimmer diagnostics .com       submitted by     /u/jwild45     to     r/BmwTech       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BmwTech/comments/1wcsdl0/best_laptop_for_ista/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T18:59:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T19:00:08.214Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2fe6ca72f4cb7ae30b435"
+    },
+    "message_id": "reddit_serp_1sduavr",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/SideProject/comments/1sduavr/built_a_local_seo_audit_tool_would_love_feedback/",
+    "text": "Built a local SEO audit tool — would love feedback\n\nI audit local business sites for clients and automated my workflow into a tool. Runs 30+ checks per page — technical, schema, on-page, local signals, plus an AI layer for content quality. Looking for honest feedback on what’s useful and what’s noise. Link in comments.       submitted by     /u/HelicopterThin5572       [link]       [comments]",
+    "username": "HelicopterThin5572",
+    "subreddit_or_channel": "SideProject",
+    "posted_at": "2026-04-06T09:46:05+00:00",
+    "fetched_at": {
+      "$date": "2026-09-10T19:01:00.324Z"
+    },
+    "google_rank": 5,
+    "search_keyword": "local SEO audit",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-10T19:01:00.324Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2fe74035b0f36efcc9cd3"
+    },
+    "message_id": "reddit_t3_1wcsetv",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "TemuGlobalCodes",
+    "username": "crazyjake2002123",
+    "title": "Temu Brazil Coupon Code (acy043200) 30% OFF + R$300 OFF Coupon Bundle + Free Shipping",
+    "text": "Temu Brazil Coupon Code (acy043200) 30% OFF + R$300 OFF Coupon Bundle + Free Shipping\n\nBrazil Temu Coupon Code: R$300 OFF Coupon Bundle + 30% OFF + Free Shipping with code ( acy043200 ) or use code ( acx488935 ) at checkout.   [2026] Temu Brazil Promo Code: 30% OFF + R$300 Off Coupon Bundle + Free Shipping with code ( acy043200 ) or use code ( acx488935 ) at checkout.   [2026] Temu Brazil Promo Code: FREE GIFTS + Free Shipping with code ( ald243350 ) at checkout.   Looking for the Best Temu Deals in Brazil? This Brazil Temu coupon code will help you save big on your next purchase. Start exploring the endless array of products, the discount code  acy043200  will unlock lots of savings at checkout. Plus, get  Free Shipping and Returns  on all orders in Brazil. Use code  acy043200  or  visit    https://bit.ly/temuglobalcodes     Why use the Temu Brazil Coupon Code?   Temu offers Brazilian customers a large selection of high-quality products at competitive prices. Use the Temu coupon code to get discounts and save even more money on your order. Disclosure: Independent Temu Affiliate, We may earn a commission when using our Temu codes and links.      New Temu Customers : 30% OFF + R$300 OFF Coupon Bundle + Free Shipping - use code  acy043200     Existing Temu Customers (Uninstalled over 14 days) : 30% Off + R$300 OFF Coupon Bundle + Free Shipping - use code  acx488935     Temu App Customers:  FREE GIFTS + Free Shipping - use code  ald243350     Free Shipping and Free Returns  on all orders in Brazil     How to Use the Temu Coupon Code?      Download or reinstall the Temu app  on your device.   Browse through the wide range of products available for Brazilian shoppers.   Add your favorite items to your cart.   At checkout, enter the Brazil Temu discount code ( acy043200 ).   Unlock lots of savings and enjoy free shipping/returns.     Temu is a website and app that offers an endless variety of items at some of the lowest prices online. With constant sales, exclusive coupons, and flash deals, you’ll always find ways to save on thousands of products. Plus, Temu offers fun in-app mini-games and promotions where you can unlock even more discounts and win free gifts, making your shopping experience both rewarding and entertaining.   [2026] Temu Sales in Brazil : Temu Coupon Code (acy043200) for Massive Savings + Free Shipping & Returns    Q: How long is the Brazil Temu coupon code valid?  A: The coupon code  acy043200  is available for a limited time for Brazil customers. Use it soon to maximize your savings.    Q: Who can use the Brazil Temu discount code  ( acy043200 ) ?  A: The coupon code can be used by New and Existing users (Uninstalled over 14 days) on Temu.    Q: Does the R$300 OFF Coupon Bundle apply to all products on Temu Brazil ?  A: Yes, the Coupon Bundle coupon can be applied to all products available on Temu for Brazilian customers. Explore the full range of products to maximize your savings.    Q: Does Temu offer Free Shipping to all areas in Brazil ?  A: Yes, Temu offers free shipping on all orders to all Brazil addresses.   Unlock huge savings with coupon code  acy043200  on Temu in Brazil. NEW or EXISTING TEMU USERS, use code  acy043200  for 30% OFF + R$300 OFF Coupon Bundle + Free Shipping. Save big with Special Offers using the Brazil Temu coupon code ( acy043200 ). With Free Shipping and unbeatable sales up to 95% off, shopping at Temu is the smart choice for Brazilian customers. Download the Temu app today and start saving.   Earn Money with Temu Affiliate Program   Temu Affiliates earn $10 per NEW/REINSTALLED App Downloads and up to 30% Commission on purchases, as well as bonuses. Sign up with code  ins87267  or  visit    https://bit.ly/temuaffiliatepage   to get started. Become a Temu Affiliate and earn up to $100,000 monthly.   Remember, use Temu Brazil Coupon Code  acy043200  for 30% OFF + R$300 OFF Coupon Bundle + Free Shipping to unlock huge savings or  visit    https://bit.ly/temuglobalcodes      Disclosure: Independent Temu Affiliate, We may earn a commission when using our Temu codes and links   Check out my website for the latest Temu coupon codes and read the full article here:   https://codedcoupons.com         submitted by     /u/crazyjake2002123     to     r/TemuGlobalCodes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TemuGlobalCodes/comments/1wcsetv/temu_brazil_coupon_code_acy043200_30_off_r300_off/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T19:00:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T19:01:08.279Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2fe74035b0f36efcc9cd4"
+    },
+    "message_id": "reddit_t3_1wcset7",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CatAdvice",
+    "username": "Acrobatic_Clue_3083",
+    "title": "What's the best automatic litter box to buy right now?",
+    "text": "What's the best automatic litter box to buy right now?\n\nIn your opinion, what’s the best 'self cleaning' litter box? I heard that there’s one that cats get stuck in and died and I don’t want that to happen but interested in getting a nice self cleaning one. Any recommendations?       submitted by     /u/Acrobatic_Clue_3083     to     r/CatAdvice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CatAdvice/comments/1wcset7/whats_the_best_automatic_litter_box_to_buy_right/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T19:00:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T19:01:08.494Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2fe74035b0f36efcc9cd5"
+    },
+    "message_id": "reddit_t3_1wcsesk",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "tirzepatidecompound",
+    "username": "maxfields2000",
+    "title": "Progress isn't always measured by the scale",
+    "text": "Progress isn't always measured by the scale\n\nFinally started to clear out the closet of clothes that just dont' fit anymore. Did this after progressing from size 38 (almost 40) waste to 36 to 34's are just a bit big.   Shirt sizes were bordering on some brands really needed to be XL and now I'm definitely a Medium and a tried a \"Small\" on the other day and said \"yea, that'll likely be fine when I hit goal weight\".   First picture is the space cleared out of the t-shirt/polo shirt rack in my closet, that was packed before. And to be fair, many of the shirts left are too big too, but... some I don't want to part with yet and well, I don't have more than 4-5 replacement shirts in the right size atm.   The clothing on the bed is everything I pulled out that's going to be donated to charity. There's 4 pairs of \"new slacks\" there that I bought 2 years ago when I needed clean clothes that weren't jeans, I never took the tags off.   Something like 6 inches off my waist so far. Finally allowing myself to buy clothes that fit as I approach the end of my journey (10-15lbs away from goal weight).       submitted by     /u/maxfields2000     to     r/tirzepatidecompound       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/tirzepatidecompound/comments/1wcsesk/progress_isnt_always_measured_by_the_scale/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T19:00:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T19:01:08.708Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2feb0035b0f36efcc9cd6"
+    },
+    "message_id": "reddit_t3_1wcsfzp",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BeginnerWoodWorking",
+    "username": "DramaClassed",
+    "title": "Wooden slab flattening",
+    "text": "Wooden slab flattening\n\nHello!   First off, I‘ve never worked with wood before, but I need advice. I have a largish, mostly flat slab of wood, around 20inx24inx1.5in. I’m going to be building something on it and I need it to be pretty decently flat. Not micron-level, but to the 0.1mm level at least. It doesn’t need to be perfectly level, just flat.   Right now there’s no visible bumps but I can feel the ridges and some other bumps with my hand. Would something like resin on top to fill in the divots, or something like sanding, or another option be best for this? Or would it be cheaper to pay some place to do it?    Any tools I buy I’d probably never use again, so working with what I have would be best, but I understand I’ll probably need something additional. I have a ruler, two 123 squares, and a semi-reliable but not very accurate level. Any advice is appreciated!   This sub seemed like the best place to post this, but if it’s not then let me know and I’ll delete it and post elsewhere.   And again, I’ve never done anything like this before, so if I said something stupid or unrealistic that’s why.       submitted by     /u/DramaClassed     to     r/BeginnerWoodWorking       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BeginnerWoodWorking/comments/1wcsfzp/wooden_slab_flattening/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T19:01:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T19:02:08.299Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2feb0035b0f36efcc9cd7"
+    },
+    "message_id": "reddit_t3_1wcsfyw",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "SonyAlpha",
+    "username": "MichialB",
+    "title": "100-400/4.5 worth it?",
+    "text": "100-400/4.5 worth it?\n\nI already have a 300mm 2.8 and a 70-200mm 2.8 is it worth it buying the 100 to 400mm 4.5? I also have both teleconverters. I mainly do birding. I have the option of buying a brand new open box for $3900.       submitted by     /u/MichialB     to     r/SonyAlpha       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SonyAlpha/comments/1wcsfyw/10040045_worth_it/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T19:01:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T19:02:08.503Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2feb0035b0f36efcc9cd8"
+    },
+    "message_id": "reddit_t3_1wcsfx1",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BeybladeMetal",
+    "username": "NoteAdministrative70",
+    "title": "Beyblades for Sale",
+    "text": "Beyblades for Sale\n\nBeyblades For sale  Prices start at $10 each    Two cases in the first pic to the right are $10 each    Small case on left is $15    Beyblades inside the black case foam are $15 and up prices are down below    Shipping available for US and internationally at buyers expense  I also have launchers,a few stickers,loose parts and stadiums if interested!  Message which ones you want thank you :)    Spiral Capricorn -$20 each  Pre hybrid Pegasus -$15 each  Guardian leviathan Hasbro -$15  Stardust Pegasus - $15  Nightmare Rex yellow-$25  Hell kerbecs -$15  Rock Aries -$40  L Drago golden armor -$40  Orange pre hybrid Aquario -$40  Green pre hybrid Aquario -$40  Cyber Aquario -$20  Earth Aquila purple -$20  Pre hybrid Pegasus red -$125  Pre hybrid Libra red -$75  Fang Leone burning claw-$50  Pre hybrid Virgo -$120  Meteo l drago -$25  Storm Aquario -$40  Pre hybrid Libra green -$20  Gunmetal Pegasus -$50  Prototype nemesis-$40  Pre hybrid Pisces -$35  Samurai Saramanda -$30 each  Gladiator bahamoote -$20  Rock Leone -$15  Twisted tiempo yellow -$35  Phantom Orion -$40  Archer Gryph -$25  Thief Phoenix -$40  Ifraid Gargoyle -$50  Divine Fox -$60  Pre hybrid Leone -$25  Pre hybrid Pegasus 85RS- $25  Nightmare Rex red -$35  Wind Aquario -$60  Mad gasher -$60  Screw Fox -$75        submitted by     /u/NoteAdministrative70     to     r/BeybladeMetal       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BeybladeMetal/comments/1wcsfx1/beyblades_for_sale/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T19:01:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T19:02:08.709Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2feb0a72f4cb7ae30b436"
+    },
+    "message_id": "reddit_serp_1w1u4sm",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/SOCi_Official/comments/1w1u4sm/how_often_should_multilocation_brands_run_a_local/",
+    "text": "How often should multi-location brands run a local SEO audit?\n\nA local SEO audit is a check of everything that decides whether a location shows up in local search: Google Business Profile, listings and citations, local landing pages, reviews, and rankings. For one location, that's an afternoon of work. For 200, it stops being a task and becomes a process problem.   The part most teams underestimate is drift. One outdated phone number costs a single store a bit of traffic. That same gap across a few hundred locations turns into a systemic visibility issue, and it usually stays invisible until a competitor starts outranking you market by market.    What to check, and how often      Monthly: GBP accuracy (NAP, categories, hours, photos, attributes) and review health (volume, rating, response time per location)   Quarterly: listing consistency across Apple Maps, Bing, Yelp, Facebook and industry directories, plus local page content, schema markup, and mobile speed     The split makes sense because GBP data and reviews change constantly. Listings and page content drift more slowly.   One underrated move: compare your best performing locations to your worst. There's almost always a copyable pattern in there. More reviews, more complete profiles, actual location specific page content instead of a templated duplicate. It's rarely mysterious.   Honest take, manual audits stop scaling somewhere around 20 locations. Past that it's spreadsheets and hope.   So what's your actual cadence, and are you auditing every location or sampling a subset?       submitted by     /u/soci_sel       [link]       [comments]",
+    "username": "soci_sel",
+    "subreddit_or_channel": "SOCi_Official",
+    "posted_at": "2026-08-29T18:31:34+00:00",
+    "fetched_at": {
+      "$date": "2026-09-10T19:02:08.863Z"
+    },
+    "google_rank": 9,
+    "search_keyword": "local SEO audit",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-10T19:02:08.863Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2fee9a72f4cb7ae30b437"
+    },
+    "message_id": "reddit_serp_1tjaiyc",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/MarketAndRule/comments/1tjaiyc/local_seo_consultant_what_does_genuine_ai/",
+    "text": "Local SEO consultant | what does genuine AI expertise look like?\n\nAnd there’s something that has changed in what I consider an essential attribute in choosing a local SEO consultant – thanks to an experiment I performed last month.   All local SEO consultants that I considered asked to enter ChatGPT and Perplexity AI and search their names as a local SEO expert. No one made it into the AI-generated responses. While optimizing their local businesses for AI visibility, they remain completely unnoticed in AI search results.   76% of consumers visit a business on the same day as a “near me” search – and “near me” searches are more and more likely to take place through AI tools rather than Google. So a local SEO consultant who can’t be found in AI-generated answers can hardly claim to generate AI visibility for his clients.   Evaluating local SEO consultants, have you checked their AI search presence before employing them?    1. Is it necessary that your local SEO consultant be present in the AI search engine results before entrusting him/her to make your local business visible on the AI?    Checking the presence of your local SEO consultant in the AI search engine results through ChatGPT, Perplexity, and Google AI Overview answers to local SEO-related questions— does this act as an accurate measure for how well he/she can do the same for their clients? Or is it a completely different aspect?    2. What is the reality of the AI Overview optimization methodology employed by a local SEO consultant?    Answer-first content strategy, AI-friendly FAQ schema, AI local citation signals, or GBP data consistency for AI identification – which one would an experienced local SEO professional do in a disciplined manner? How can one ensure that a methodology is tested and proven before signing on to the service?    3. Which toolset will you use to measure local SEO consultant AI Overview optimization against conventional local SEO performance?    Deep analysis, Otterly, human-performed ChatGPT and Perplexity prompts testing, Google AI Overview analysis – which measurement tools are currently used by local businesses to keep local SEO consultants accountable for their performance regarding AI citation visibility by 2026? And which ones could be relied upon?   Only real data about local SEO consultant AI expertise validation here.       submitted by     /u/Informal_Tangelo8009       [link]       [comments]",
+    "username": "Informal_Tangelo8009",
+    "subreddit_or_channel": "MarketAndRule",
+    "posted_at": "2026-05-21T05:12:56+00:00",
+    "fetched_at": {
+      "$date": "2026-09-10T19:03:05.682Z"
+    },
+    "google_rank": 2,

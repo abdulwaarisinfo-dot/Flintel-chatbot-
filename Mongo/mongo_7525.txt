@@ -1,0 +1,416 @@
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:11:06.888Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa956b798842c4ceff9c62"
+    },
+    "message_id": "reddit_t3_1whwtr0",
+    "topic_key": "ai coding assistant",
+    "search_keyword": "AI coding assistant",
+    "platform": "reddit",
+    "subreddit": "mcp",
+    "username": "DayanaJabif",
+    "title": "Built 3 MCP servers for Capacitor/Ionic/Capawesome",
+    "text": "Built 3 MCP servers for Capacitor/Ionic/Capawesome\n\nDisclosure: I work at Capawesome, we built these.   We build Capacitor plugins and a Cloud platform (live updates, native builds, app store publishing) for mobile apps. Problem our users had: AI coding assistants would suggest Capacitor APIs that changed two versions ago, or plugin options that got deprecated. You know how tech is these days, docs just move faster than training data does.   So we put the docs behind MCP instead of relying on the model's memory of them.     Three separate servers, one per part of the stack:      Capacitor docs + plugin list:   https://capacitor-mcp.capawesome.io/mcp   , no auth needed   Ionic Framework docs + components reference:   https://ionic-framework-mcp.capawesome.io/mcp   , no auth needed   Capawesome docs + our own Cloud API (docs part is free, the \"actually do stuff to your account\" part needs a token):   https://mcp.capawesome.io/mcp       All three are hosted, nothing to run locally.   The Capawesome one is the only one that can write anything, it can trigger a build, ship a live update, roll back a channel, that kind of thing, if you give it an API token of course. Without a token it's just docs search, same as the other two. There's also a  readonly=true  flag if you want the Cloud tools available for lookups but don't want it changing anything.    Something we learned along the way:   The Cloud API itself is broken into toolsets (builds, deployments, devices, etc.) instead of registering all of them at once. Dumping everything into context made tool selection noticeably worse, the model would grab the wrong tool more often. Letting people pick  ?toolsets=cloud-app-builds,cloud-app-deployments  instead of  all  fixed that. Capacitor and Ionic MCPs don't need this since they're docs-only, nothing to scope.    Docs on the setup:   capawesome.io/docs/ai/mcp/     If you are building an MCP, how are you handling the scoping/context-size tradeoff for larger tool sets? Did you land on splitting by resource, by read/write, something else?       submitted by     /u/DayanaJabif     to     r/mcp       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mcp/comments/1whwtr0/built_3_mcp_servers_for_capacitorioniccapawesome/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:10:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:11:07.147Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa956b6508d45f3d2d3052"
+    },
+    "message_id": "reddit_t3_1whwtq3",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "247videogame",
+    "username": "GameProfessional",
+    "title": "🌐 24/7 Video Game | Hasbro Games™Junior Collection | Clue Jr | US | ESRB",
+    "text": "🌐 24/7 Video Game | Hasbro Games™Junior Collection | Clue Jr | US | ESRB\n\nHasbro Games™Junior Collection | Clue Jr | US | ESRB     ![Hasbro Games™Junior Collection | Clue Jr | US | ESRB>         Something suspicious is happening in Clue Junior…   Gather your family, search every room, uncover hidden clues, and keep your detective notes secret. Then make your accusation and see if you can crack the case! 🕵️   Play together with up to 4 players and track your progress in the Hasbro Games™Junior Collection.   🎮 Coming to XBOX 👉  https://www.xbox.com/games/store/hasbro-games-junior-collection/9P2HGWB65VCX    HasbroJrCollection #ClueJunior #Clue #FamilyGameNight #HasbroGames   SUBSCRIBE TO XBOX:  https://xbx.lv/2EEjmaR    FOLLOW XBOX  https://twitter.com/xbox   https://www.facebook.com/xbox   https://www.instagram.com/xbox/   https://www.tiktok.com/@xbox   https://www.threads.net/@xbox   https://bsky.app/profile/xbox.com      Hasbro Games™Junior Collection | Clue Jr | US | ESRB     ![YouTube player]( https://i0.wp.com/i.ytimg.com/vi/Lrc8M5H5rQE/hqdefault.jpg?w=1290&ssl=1 )           In the landscape of family-friendly board games, the Hasbro Games Junior Collection stands out for introducing younger players to classic experiences with age-appropriate mechanics. One standout title in this lineup is Clue Jr., a child-friendly adaptation of the beloved mystery game, tailored for a younger audience in the United States. This post examines its design, audience fit, and ESRB considerations to help parents, educators, and retailers understand its positioning and value.   Product positioning in the US market The Hasbro Junior Collection is designed to bridge the gap between simple, introductory games and more complex strategy titles. Clue Jr. takes the core premise of deduction and mystery-solving and simplifies it to a level accessible to early elementary-aged players. The objective remains familiar: determine who committed a fictional crime, with what method, and in which location. However, the clues, suspects, and actions are streamlined to fit younger players’ cognitive and social development.   Key design elements – Accessibility: Clue Jr. uses larger, easy-to-handle components and clearer visual cues. The game typically features simplified suspect cards, locations, and items, with text that supports early readers. – Co-operative tension: While Clue Jr. centers on individual deduction, the flow of play encourages sharing thoughts and collaborating with family members, making it an inclusive activity rather than a high-pressure competition. – Narrative framing: The theme is retained, but softened to align with a child-safe tone. The mystery remains engaging without being frightening or overly complex. – Playtime and pacing: Designed for shorter sessions, Clue Jr. accommodates the attention span of younger players, allowing for multiple rounds in a single sitting or a series of quick plays across several days.   ESRB considerations The ESRB (Entertainment Software Rating Board) provides guidance for age-appropriate content and gameplay experiences in video games and digital products, and its influence extends to physical family games through consumer expectations and retailer policies. For a product like Clue Jr. in the US market, several considerations are pertinent: – Content rating alignment: While ESRB primarily oversees digital and interactive media, Hasbro’s packaging and marketing often reflect a comparable standard of age-appropriateness. Clue Jr. typically targets younger players (commonly ages 5–8 or 6–9, depending on the edition). The content is designed to be non-violent and non-threatening, with a focus on deduction and social interaction. – Parental guidance: Packaging and product pages usually include clear guidance on age range, number of players, and approximate playtime. This helps caregivers choose age-appropriate experiences and align expectations with real-world gameplay. – Safety and materials: In accordance with US consumer safety standards, the Junior collection uses kid-friendly materials and components, with rounded edges and durable plastics or card stock suitable for younger hands.   Market considerations and sizing – Educational alignment: Clue Jr. supports critical thinking, memory, and communicative skills. Parents and educators often value these cognitive benefits alongside family bonding opportunities. – Replayability: The streamlined mechanics can accommodate repeated plays, which supports learning curves and word-of-mouth sharing within families. – Retail dynamics: In the US, retailers favor family games that demonstrate clear age appropriateness, simple rules, and an engaging theme. Clue Jr. typically performs well in the “family games” or “kid-friendly” segments and can benefit from in-store demonstrations or quick-play events.   Conclusion Clue Jr. within the Hasbro Games Junior Collection represents a thoughtful adaptation of a classic mystery experience for younger players in the US market. By balancing accessible mechanics, a softened yet engaging narrative, and considerations aligned with ESRB-informed expectations, the product supports family play that is enjoyable, educational, and appropriate for its target age group. For parents, caregivers, and retailers, Clue Jr. offers a reliable entry point into strategic, deductive play without sacrificing the warmth and social connection that characterize the family game experience.    24/7 Video Game    All the best video games, all the time. Watch no commentary gaming videos live and on demand. By Adrian M ThePRO the  Game Professional .     Join The Pro Gamers Community     • You are a pro gamer! • Share your content! • Get discovered!   Join The Pro Gamers Community on social media or  login  to 24/7 Video Game and submit your posts right to this website.     Up Game Shop     New & used video games, consoles, handhelds, retro, and gaming merchandise. Up Game Shop has the latest and greatest video game deals on the internet.    ![](https://i0.wp.com/247videogame.com/wp-content/uploads/2026/09/hqdefault.jpg-1685.jpeg?resize=1024%2C1024&ssl=1 \"hqdefault-jpg-1685-jpeg\")                                            September 16, 2026 at 09:05AM   More Information   Follow for more content like this.   24/7 Video Game   All of the best video games, all of the time.   YouTube    Twitch    Kick    Facebook    Instagram    Reddit    TikTok    X    Up Game Shop   Donate To   St. Jude's Children's Research Hospital        submitted by     /u/GameProfessional     to     r/247videogame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/247videogame/comments/1whwtq3/247_video_game_hasbro_gamesjunior_collection_clue/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:10:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:11:07.291Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa956b6508d45f3d2d3054"
+    },
+    "message_id": "reddit_t3_1whwtpx",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "HyperOS",
+    "username": "Longjumping_Fox_2705",
+    "title": "[Discussion] HyperOS 4",
+    "text": "[Discussion] HyperOS 4\n\nDef loving the liquid glass design haha. So far so good no overheat no overconsumption no lag. Even some new animations on notification.       submitted by     /u/Longjumping_Fox_2705     to     r/HyperOS       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HyperOS/comments/1whwtpx/discussion_hyperos_4/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:10:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:11:07.689Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa95a46508d45f3d2d3055"
+    },
+    "message_id": "reddit_t3_1whwupf",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "danishbhutto",
+    "title": "What role do backlinks still play now that AI search tools are growing?",
+    "text": "What role do backlinks still play now that AI search tools are growing?\n\nsubmitted by     /u/danishbhutto     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1whwupf/what_role_do_backlinks_still_play_now_that_ai/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:11:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:12:04.038Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa95a46508d45f3d2d3056"
+    },
+    "message_id": "reddit_t3_1whwuow",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "thighsandwhispers",
+    "title": "What video game has the best combat?",
+    "text": "What video game has the best combat?\n\nsubmitted by     /u/thighsandwhispers     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1whwuow/what_video_game_has_the_best_combat/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:11:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:12:04.259Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa95a46508d45f3d2d3057"
+    },
+    "message_id": "reddit_t3_1whwuoo",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "CCGeeksIN",
+    "username": "creditkeeda",
+    "title": "HSBC Zero Forex Markup offer has been extended till 30 September 2026.",
+    "text": "HSBC Zero Forex Markup offer has been extended till 30 September 2026.\n\nAll eligible HSBC personal credit cards get 0% forex markup on international transactions during the offer period.   Key points:  • Valid till 30 September 2026  • Works for international POS + online transactions  • Add-on card transactions are eligible too  • Existing card rewards continue as usual  • ATM withdrawals are excluded  • Transaction needs to be posted within the offer period  • GST, network cross-border fees or other applicable charges may still apply   Corporate cards are not eligible.   Pretty solid if you have an international trip or foreign currency spends coming up this month.       submitted by     /u/creditkeeda     to     r/CCGeeksIN       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CCGeeksIN/comments/1whwuoo/hsbc_zero_forex_markup_offer_has_been_extended/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:11:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:12:04.478Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa95a46508d45f3d2d3058"
+    },
+    "message_id": "reddit_t3_1whwuoh",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "buysellusedbooks",
+    "username": "Glittering-Sun6948",
+    "title": "Ayn Rand books for sale",
+    "text": "Ayn Rand books for sale\n\n4 books of Ayn Rand for 5000 rs including postage.   Books are old but in acceptable condition.   Shipping within India only.   PRICE IS FIXED. NOT SELLING SEPARATELY   For more images and information, please contact.       submitted by     /u/Glittering-Sun6948     to     r/buysellusedbooks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/buysellusedbooks/comments/1whwuoh/ayn_rand_books_for_sale/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:11:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:12:04.698Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa95a56508d45f3d2d305a"
+    },
+    "message_id": "reddit_t3_1whwuo2",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "ChatGPT",
+    "username": "theguywhobuilds",
+    "title": "Astra can help make the whole video; it still can’t give it a point of view.",
+    "text": "Astra can help make the whole video; it still can’t give it a point of view.\n\nA lot of the new Astra demos are technically impressive and somehow still feel like the same trailer.   It can jump between tools, build scenes, and turn a loose brief into something polished. But when the direction is just “make it cinematic,” you get the same slow camera move, dramatic lighting, and swelling music.   That's the bit I think people are confusing with creativity.   The hard part was never only making the shots. It's deciding what the video is trying to say, which odd shot should stay, where the pace should break, and what someone should feel at the end.   Astra can remove a lot of the production work. Without a human point of view, though, you can end up with a finished file that still feels unfinished.   Are AI videos still short on capability or what ?       submitted by     /u/theguywhobuilds     to     r/ChatGPT       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ChatGPT/comments/1whwuo2/astra_can_help_make_the_whole_video_it_still_cant/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:11:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:12:05.131Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa95a56508d45f3d2d305d"
+    },
+    "message_id": "reddit_t3_1whwuo1",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ColorGuessr",
+    "username": "bulkanoloji",
+    "title": "Colorwire by u/bulkanoloji",
+    "text": "Colorwire by u/bulkanoloji\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/bulkanoloji     to     r/ColorGuessr       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ColorGuessr/comments/1whwuo1/colorwire_by_ubulkanoloji/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:11:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:12:05.775Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa95a56508d45f3d2d305e"
+    },
+    "message_id": "reddit_t3_1whwunz",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "classicwow",
+    "username": "Drakares",
+    "title": "Has there been any statement re GDKP bots in Forever?",
+    "text": "Has there been any statement re GDKP bots in Forever?\n\nI haven't been able to find any info about their stance with regards to GDKP, if it will be allowed or not. Also, was there any discussion on the bot issue, especially on a serverless infrastructure, it badly needs to be addressed. Maybe there was an interview or something I missed.       submitted by     /u/Drakares     to     r/classicwow       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/classicwow/comments/1whwunz/has_there_been_any_statement_re_gdkp_bots_in/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:11:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:12:05.991Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa95a66508d45f3d2d305f"
+    },
+    "message_id": "reddit_t3_1whwunu",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "LahoreSocial",
+    "username": "meeeoooowwwwwww",
+    "title": "Where can I buy art, design & illustration books in Lahore?",
+    "text": "Where can I buy art, design & illustration books in Lahore?\n\nLooking for good books on drawing, illustration, character design, etc. Any reliable online stores or bookstores you recommend?       submitted by     /u/meeeoooowwwwwww     to     r/LahoreSocial       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LahoreSocial/comments/1whwunu/where_can_i_buy_art_design_illustration_books_in/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:11:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:12:06.208Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa95a66508d45f3d2d3060"
+    },
+    "message_id": "reddit_t3_1whwunp",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Free-Engineering-621",
+    "title": "Grab 100 hammers from u/Free-Engineering-621!",
+    "text": "Grab 100 hammers from u/Free-Engineering-621!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Free-Engineering-621     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1whwunp/grab_100_hammers_from_ufreeengineering621/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:11:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:12:06.425Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa95a66508d45f3d2d3061"
+    },
+    "message_id": "reddit_t3_1whwunc",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "UCantCMe10",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Cherry Tree Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Cherry Tree Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/UCantCMe10     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1whwunc/sticker_giveaway_enter_to_win_a_4_stars_cherry/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:11:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:12:06.642Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa95a66508d45f3d2d3062"
+    },
+    "message_id": "reddit_t3_1whwumw",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "redditrequest",
+    "username": "dks2000",
+    "title": "r/Long_nails_Fixation",
+    "text": "r/Long_nails_Fixation\n\nsubmitted by     /u/dks2000     to     r/redditrequest       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/redditrequest/comments/1whwumw/rlong_nails_fixation/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:11:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:12:06.861Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa95a76508d45f3d2d3063"
+    },
+    "message_id": "reddit_t3_1whwumh",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "WeddingPH",
+    "username": "Automatic_Car1261",
+    "title": "Two dream wedding options — Tagaytay vs. Batanes. Need honest opinions 🥹",
+    "text": "Two dream wedding options — Tagaytay vs. Batanes. Need honest opinions 🥹\n\nsubmitted by     /u/Automatic_Car1261     to     r/WeddingPH       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WeddingPH/comments/1whwumh/two_dream_wedding_options_tagaytay_vs_batanes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:11:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:12:07.078Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa95a76508d45f3d2d3064"
+    },
+    "message_id": "reddit_t3_1whwum2",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "wallstreetbetsGER",
+    "username": "Active_Air_9956",
+    "title": "BioNTech (ADRs) Buy (Jefferies & Company Inc.) 16.09.2026 | Analyse | finanzen.net",
+    "text": "BioNTech (ADRs) Buy (Jefferies & Company Inc.) 16.09.2026 | Analyse | finanzen.net\n\nsubmitted by     /u/Active_Air_9956     to     r/wallstreetbetsGER       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wallstreetbetsGER/comments/1whwum2/biontech_adrs_buy_jefferies_company_inc_16092026/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:11:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:12:07.295Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa95a76508d45f3d2d3065"
+    },
+    "message_id": "reddit_t3_1whwul8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MU_Stock",
+    "username": "7doi_gingerman",
+    "title": "Calls or MUU",
+    "text": "Calls or MUU\n\nHi good people of reddit, basically what title says. I have more or less 17k to play around with. With earnings etc. coming up, do you recommend I get one contract $173.84 strike at $810 expiring in December or put it all in MUU? Feeling like being an irresponsible degen for once.       submitted by     /u/7doi_gingerman     to     r/MU_Stock       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MU_Stock/comments/1whwul8/calls_or_muu/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:11:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:12:07.516Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa95a76508d45f3d2d3066"
+    },
+    "message_id": "reddit_t3_1whwul5",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "[HIRING] [REMOTE] a Revenue Operations Manager – Demand! in Jobgether",
+    "text": "[HIRING] [REMOTE] a Revenue Operations Manager – Demand! in Jobgether\n\nCompany: Jobgether   Location: Spain Remote 📍   Date Posted: September 10, 2026 📅   Categories: #remote #senior #businessdevelopment   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=brenxor.com&rurl=aHR0cHM6Ly9icmVueG9yLmNvbS9qb2ItZGV0YWlscy0xODY1MjEtcmV2ZW51ZS1vcGVyYXRpb25zLW1hbmFnZXItJWUyJTgwJTkzLWRlbWFuZA==    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1whwul5/hiring_remote_a_revenue_operations_manager_demand/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:11:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T13:12:07.733Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa95a76508d45f3d2d3067"
+    },
+    "message_id": "reddit_t3_1whwul4",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "AIDiscussion",
+    "username": "WhatsNextBuddy",
+    "title": "The real reasons of the “AI slowdown”",
+    "text": "The real reasons of the “AI slowdown”\n\nhttps://youtube.com/shorts/D4eb6HESI18?si=1fg7Ba4Hgy4glmHT    Is this accurate?       submitted by     /u/WhatsNextBuddy     to     r/AIDiscussion       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AIDiscussion/comments/1whwul4/the_real_reasons_of_the_ai_slowdown/",
+    "score": 0,
+    "num_comments": 0,

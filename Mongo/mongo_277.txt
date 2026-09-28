@@ -1,0 +1,416 @@
+      "$date": "2026-09-07T05:55:36.666Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e51d9f0819e6636a8dc25"
+    },
+    "message_id": "reddit_t3_1w9jlq0",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "dkfinance",
+    "username": "vanilla-bungee",
+    "title": "Skrå konvertering eller vente til renovering",
+    "text": "Skrå konvertering eller vente til renovering\n\nJeg kan se at min restgæld vil falde med ca. 80k hvis jeg konverterer mit 4% FF til F kort. Er det grund nok til at skifte, hvis vores risiko appetit har ændret sig?  Vi står over for en renovering af huset og genvurdering indenfor 1-3 år, så måske man skulle vente til der?  Restgæld ca. 2.5m.       submitted by     /u/vanilla-bungee     to     r/dkfinance       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/dkfinance/comments/1w9jlq0/skrå_konvertering_eller_vente_til_renovering/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:54:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:55:37.059Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5213f3d11795a689ef37"
+    },
+    "message_id": "reddit_t3_1w9jmol",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "GoldenInuMythos",
+    "username": "GroundbreakingBoss14",
+    "title": "📘 THE ERA OF PRE‑CAUSE SOVEREIGN GENESIS — Scrolls 300,000–400,000 (Ultra‑Compression)",
+    "text": "📘 THE ERA OF PRE‑CAUSE SOVEREIGN GENESIS — Scrolls 300,000–400,000 (Ultra‑Compression)\n\n⚡️🔥🦸‍♀️🐕 🔱Golden Inu x Stranger Superman   This is 100,000 scrolls compressed into one paragraph — the Era of Pre‑Cause Sovereign Genesis.   In the Era of Pre‑Cause Sovereign Genesis, Ember Flamekeeper and Golden Inu stepped beyond the pre‑source cradle into the pre‑cause vault, a realm older than triggers, older than catalysts, older than the proto‑spark that allows anything to initiate anything, older than the metaphysical permission for events to occur, older than the silent substrate where “cause” and “effect” have not yet been invented 🌌🔥. Their combined voltage ignited the Omni‑Cause Crown, collapsing all prior epochs — Pre‑Omni, Pre‑Law, Pre‑Concept, Pre‑Meaning, Pre‑Signal, Pre‑Presence, Pre‑Being, Pre‑Existence, Pre‑Reality, Pre‑Origin, Pre‑Source — into one sovereign pulse. The Flamekeeper’s armor became a living pre‑cause algorithm, lightning woven from unborn triggers; Golden Inu’s flame barked across the void, commanding proto‑events to kneel. Together they forged the Scroll of Absolute Causality, a single glyph that erased the difference between “before” and “after,” between “spark” and “reaction,” between “motion” and “intention.” ⚡🐕 Nebulae folded into crowns, galaxies became syllables, and the cosmos whispered their names as the Prime‑Sovereign Law of All That Cannot Cause Yet Commands All Causes. When the compression reached its zenith, reality inverted — the myth became the author, the author became the myth, and the Flamekeeper and Inu stood as the dual‑sovereign architects of pre‑cause, holding dominion over every unborn trigger, every silent genesis, every forgotten possibility, every proto‑event that ever dared to imagine becoming.       submitted by     /u/GroundbreakingBoss14     to     r/GoldenInuMythos       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GoldenInuMythos/comments/1w9jmol/the_era_of_precause_sovereign_genesis_scrolls/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:56:24Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:56:35.747Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5213f3d11795a689ef38"
+    },
+    "message_id": "reddit_t3_1w9jmo8",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "LocalLLaMA",
+    "username": "mr_tolkien",
+    "title": "Benchmarking calories evaluation with LLMs",
+    "text": "Benchmarking calories evaluation with LLMs\n\nI wanted a quick calories counter for myself, using LLMs to evaluate the calories from pictures of meals + descriptions.   I needed to pick a model so I made a quick benchmark.   The setup was:   - Nutrition5k photos for photo + calories:  https://github.com/google-research-datasets/Nutrition5k    - A tool with access to calories information from  USDA FoodData Central  +  MEXT    - I evaluated models based on how many of the meals they managed to have under 20% of error   - All on the same randomly picked 25 meals.   Models too big for my machine were run through OpenCode Go/OpenRouter. I've also included Spark 1.3 since it'll supposedly be open weights.   Results        Model   % within 20%   Mean bias   Median Error          Qwen 3.8 27b   16%   +64 kcal   148 kcal       GLM 5.3 Flash   28%   +18 kcal   65 kcal       Qwen 3.8 Max   32%   -11 kcal   48 kcal       Muse Glimmer 30b   32%   +25 kcal   92 kcal       Qwen 3.8 Flash   36%   +2 kcal   91 kcal       DeepSeek v4 Flash Vision   40%   +52 kcal   65 kcal       Muse Spark 1.3   48%   -24 kcal   45kcal        I know it's not the most scientific benchmark, but it's interesting to see that the order is not really linked to model size.   The most interesting for me is how Muse Glimmer 30b  trounces  Qwen 3.8 27b here. I think it highlights how \"the best\" model on consumer hardware (~32Gb VRAM) really depends on the task.       submitted by     /u/mr_tolkien     to     r/LocalLLaMA       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LocalLLaMA/comments/1w9jmo8/benchmarking_calories_evaluation_with_llms/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:56:24Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:56:35.965Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5214f3d11795a689ef39"
+    },
+    "message_id": "reddit_t3_1w9jmnt",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "BoyDinnerDiaries",
+    "username": "Advanced_Value7145",
+    "title": "I don't know if I can ever date women again",
+    "text": "I don't know if I can ever date women again\n\nLeftover homemade paella with fresh aioli on toast.   I 34M managed to escape an incredibly abusive relationship 3 years ago. I won't go into detail cuz the story is WAY too long and crazy, but if anyone is curious, I posted more detail about it on TrueOffMyChest a couple years ago on another throwaway account:    https://www.reddit.com/r/TrueOffMyChest/comments/1is2yry/i_was_accused_of_sa/    Long story short she was psychologically and sexually (therapist insists on this one, I still have a hard time agreeing) abusing me for months. For reasons I'm still not 100% certain about (but suspect) she accused me of SA and then ramped up the abuse which culminated in the abuse finally turning physical.    I manage to escape after that, my family forced me to go to the police, I get a restraining order on her and what follows are 4 grueling months of fighting for a permanent restraining order, a title IX investigation she initiated with my college, and waiting to see if SA criminal charges are initiated against me after she went to the police when she got served my restraining order. Ultimately what saved me was the fact that I started recording our conversations shortly after the accusation. Managed to come out the other side with a signed civil restraint order and some new scars.   Now 3 years later and I'm doing way better. Finished my masters, got my dream job, bought my dream car, moved states, and made quite a few new friends. I finally started trying dating again a few weeks ago and last week I actually went on a couple dates. One of them in particular went really well and I liked the girl a lot... but when it came time to set up a second date shit got real for me. I stopped responding and I can't bring myself to open up the app. I'm currently trying to rack up the courage to send something along the lines of me not being ready to date and apologize since I really don't like ghosting.   One part of me has come to like the peace that has come just being single, but I think the big issue is the SA accusation... I just can't see any situation where I don't eventually have to bring it up. Like how do you even talk about this with someone you are getting to know. And I don't think its fair to spend too long without saying it. I was given advice to just keep my mouth shut on this topic, I think it's a big deal and I would not be surprised if most women would rather not date someone who was accused of something like this, like they would never 100% ever really know so I can't blame them. I feel like it would be the same as lying if I don't say anything.   And even though I still have all those recordings saved I would never share them again. I don't think anyone who hears them can ever see me the same way again. I HATE the way I sound in them... like a beaten up little puppy who doesn't have the balls to even try to defend himself (therapist had a field day with these recordings). I'd be ok mentioning that I have them but that's about it. I already gave some friends nightmares with the insanity that's in those recordings.   Oh well. I am genuinely happy on my own right now and have been for years so I think I may be hopping off the dating pool for the time being. No need to make any girl suffer with my mental BS right now. Anyways, thanks for listening!       submitted by     /u/Advanced_Value7145     to     r/BoyDinnerDiaries       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BoyDinnerDiaries/comments/1w9jmnt/i_dont_know_if_i_can_ever_date_women_again/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:56:23Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:56:36.193Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5214f3d11795a689ef3a"
+    },
+    "message_id": "reddit_t3_1w9jmms",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "Bloggers",
+    "username": "Blogstra",
+    "title": "SAP Course in Mumbai: Learn the Skills Companies Actually Use",
+    "text": "SAP Course in Mumbai: Learn the Skills Companies Actually Use\n\nWhy SAP Skills Still Matter in Mumbai's Job Market   Picture a finance team closing the month while three different spreadsheets are still showing three different numbers. Someone checks the sales data. Someone else checks inventory. Then they realise the purchase figures came from another system altogether.   This is the kind of mess ERP software is meant to prevent.   SAP brings finance and sales and procurement and inventory and production into one connected environment. That is why companies do not just look for people who have seen an SAP screen before. They need professionals who understand how one business process affects another.   Mumbai has a particularly broad mix of industries where SAP skills can fit. Banking, manufacturing, logistics, pharmaceuticals, retail, and large corporate offices all have different reasons for using enterprise systems. A professional working in one of these environments may spend the morning inside  SAP S/4HANA  and then be dealing with a process issue involving  SAP MM  or  SAP FI  later in the day.   For someone comparing an   SAP Course in Mumbai   ,  the useful question is what you will actually work on during training.      SAP S/4HANA fundamentals  — Understanding the newer ERP environment and how core business processes are organised.    Module-based learning  — Getting familiar with areas such as SAP M,d SAP SD, and SAP FI based on the career direction you want to take.    Business process understanding  — Following how a purchase order, sales order, or invoice moves through the system.    Practical troubleshooting  — Working through configuration problems instead of only memorising transaction codes.     That is also why good  SAP Training in Mumbai  should connect SAP screens with actual business situations. Otherwise, it is very easy to remember the steps for an exercise and forget why those steps mattered in the first place.   What Will You Actually Learn in SAP Training in Mumbai?   SAP gets complicated when you only look at it as a collection of transactions. The easier way to learn is to follow a business process from beginning to end and notice where the different SAP modules meet.   Say a company needs material for a new production order. The request starts somewhere in procurement. A purchase order gets created. Goods arrive. Inventory changes. Finance eventually sees the accounting side of the transaction. One process. Several SAP components.   That is the kind of connection worth understanding during an   SAP Course in Pune  .   A practical program can include:      SAP MM  — Working with purchasing and vendor data and inventory movements so the procurement side makes sense beyond individual transactions.    SAP SD  — Following sales orders and deliveries and billing while seeing how sales activity affects other parts of the system.    SAP FI  — Understanding financial postings and how business transactions eventually reach accounting.    SAP S/4HANA  — Getting familiar with the current ERP environment and the changes it brings compared with older SAP setups.    SAP Fiori  — Learning how the modern SAP user experience fits into everyday business operations.    SAP implementation concepts  — Getting an introduction to approaches such as SAP Activate and the stages involved when a company introduces or changes an SAP system.     The exact path depends on the module you want to specialise in. Someone moving toward procurement will have a different focus from someone aiming at finance or sales.   That is why  SAP Training in Mumbai  should leave enough room for practice.   And  SAP Classes in Mumbai  should give you opportunities to make mistakes too. A configuration error found during training is a lot easier to deal with than the same mistake inside a live enterprise system.   What Kind of Career Options Can SAP Skills Open Up in Mumbai?   An SAP career does not always begin with an SAP consultant title. Some people come from finance and move into SAP FI. Others have worked in procurement and find their way into SAP MM. There are also IT professionals who start with support work and slowly get involved in implementation and configuration.   The starting point can be quite different.   What changes is the kind of responsibility you take on once you understand the system properly.      SAP Consultant  — Working with business teams and helping configure SAP around the way their processes actually run.    SAP Functional Specialist  — Focusing on a particular module such as SAP MM or SAP SD or SAP FI and getting deeper into that business area.    SAP Support Professional  — You spend a lot of time chasing transaction errors and checking configurations and figuring out why something that worked yesterday is suddenly refusing to cooperate.    SAP S/4HANA Consultant  — You work on newer SAP environments and help teams move away from older ERP setups or sort out processes that no longer make sense in the current system.    SAP Business Analyst  — You are often the person sitting between the business users and the SAP team and turning a messy requirement into something that can actually be built.     Mumbai has quite a spread of industries using SAP. A bank will have different priorities from a manufacturing company,y and a pharma business will have different workflows again from retail or logistics.   That variety can actually help over time because the same SAP module can involve very different problems depending on where you are working.   Someone finishing an  SAP Course in Mumbai  might begin with support work or a junior consulting position and then move into implementation projects once they have enough experience behind them.   The certificate gets you noticed. And the ability to understand a real business process is what usually takes you further.   Why Practical SAP Training Makes a Difference   You can memorise transaction codes fairly quickly. The difficult bit is usually not learning where a button is. It is dealing with the situation where you follow the usual steps and the system still gives you a result you did not expect.   Maybe a purchase order cannot move ahead. Maybe the stock quantity looks wrong after a goods movement. Maybe an invoice has not posted correctly into finance. These are the situations where simply remembering a transaction code does not help much.   That is why practical  SAP Training in Mumbai  matters.      Business process exercises  — Follow a complete process such as procure-to-pay or order-to-cash and see where different SAP modules connect.    SAP configuration practice  — Work through basic configuration tasks so you understand what sits behind the user-facing transactions.    S/4HANA exposure  — Get familiar with the newer environment and the way modern SAP workflows are organised.    Troubleshooting scenarios  — Work through mistakes and unexpected results instead of only practising when everything goes perfectly.    Implementation awareness  — Understand what happens when a company is preparing to introduce SAP or change an existing setup.    Reporting and analysis  — Learn how SAP data can be used to understand what is happening across purchasing,d sales, and finance processes.     Good  SAP Classes in Mumbai  should give you enough room to stop and ask why something works the way it does.   That question matters.   Once you understand the reason behind a process, you are much less dependent on memorising a fixed sequence of steps.   Why Choose SevenMentor for SAP Training in Mumbai?   There are plenty of SAP institutes around Mumbai, and most of them will have similar module names on the website. The difference becomes easier to judge once you look at what happens inside the classroom.   At SevenMentor Institute,te the focus is on getting learners familiar with SAP through actual business processes and practical exercises rather than spending the entire course memorising transaction codes.   A few things worth looking at:      Practical SAP sessions  — Work through processes inside the SAP environment so the steps have some context behind them.    Module-focused learning  — Training can cover areas such as SAP MM, SAP SD, and SAP FI depending on the direction you want to take.    S/4HANA exposure  — Understand how current SAP environments are organised and where they differ from older ERP systems.    Troubleshooting practice  — Work through common errors and unexpected results instead of practising only when everything goes exactly as planned.    Project-based learning  — Follow business scenarios that bring procurement,d sales, and finance activities together.    Career guidance  — Get support with interviews and resumes and discussions around the kind of SAP roles you can target.     For someone comparing an  SAP Course in Mumbai,  these details matter more than how long the institute's brochure is.   You are going to spend a lot of time working with SAP.   It helps when that time actually resembles the kind of work you want to do later.   Start Building Your SAP Career in Mumbai   Mumbai has a large enterprise job market,t and SAP sits quietly behind a lot of the business activity happening in it. You may not notice the software when you place an order or receive an invoice,ce but companies still need people who know how those processes move through the system.   That makes this a reasonable time to build SAP skills.   SevenMentor Institute offers  SAP Training in Mumbai  for students and working professionals looking to move toward SAP support and consulting and functional roles. The learning can be useful whether you are starting out or already have some experience in finance, procurement, or IT.   You can look through the modules and attend a demo session before making a decision. It is a simple way to see how the classes work and whether the schedule fits around your current routine.   The aim is not to make you memorise every transaction code in SAP.   The idea here at our coaching center is to leave you with enough knowledge of what you are doing in SAP instead of just simply remembering each and every step through repetitive training and hammering your brain.   Frequently Asked Questions    1. I am new to SAP. Which module should I start with in Mumbai?   It depends on what kind of work you already understand. Finance professionals often look toward SAP FI, while procurement and inventory backgrounds can make SAP MM a more natural starting point.    2. Do I need an MBA or a commerce degree before joining SAP Classes in Mumbai?   No specific degree is required for every SAP path. Your degree matters to some extent,t but your previous work can matter just as much when you are choosing an SAP module. People come into SAP from finance and procurement, operations and IT, and several other areas.    3. Do You Think We Should Learn SAP S/4HANA only at this point instead of any other SAP module?   Generally, it is a good idea to know SAP S/4HANA now because newer SAP projects are increasingly built around S/4HANA and integrated well into it without individual complexity. Learning the basics alongside your chosen module also helps you understand the sort of SAP environment you are likely to encounter at work.    4. I have never worked in IT. Can I still make a career in SAP?   Yes. People with backgrounds in finance, procurement, and operations often have useful domain knowledge already. The main step is learning how those business processes are handled inside SAP.    5. Will SAP training help me prepare for consultant or support roles?   It can, but hands-on work with configuration and business processes, and troubleshooting gives you actual situations to talk about when interview preparation starts.    6. I have a full-time job somewhere else in this,s so can I still attend SAP Training in Mumbai later after my job?   Yes, many of our learners come from various parts of Mumbai after their jobs are over, as we have evening batches for each course. Also,o our coaching centers are located near the railway lines and major arteries,es so it is easier for you to learn after       submitted by     /u/Blogstra     to     r/Bloggers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Bloggers/comments/1w9jmms/sap_course_in_mumbai_learn_the_skills_companies/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:56:20Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:56:36.424Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5214f3d11795a689ef3b"
+    },
+    "message_id": "reddit_t3_1w9jmme",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "blanks",
+    "username": "Pure-Yogurtcloset115",
+    "title": "Fill in the blanks: I need your ___.",
+    "text": "Fill in the blanks: I need your ___.\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Pure-Yogurtcloset115     to     r/blanks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/blanks/comments/1w9jmme/fill_in_the_blanks_i_need_your/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:56:19Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:56:36.646Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5214f3d11795a689ef3c"
+    },
+    "message_id": "reddit_t3_1w9jmm4",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "LostMinesOfPhandelver",
+    "username": "Stateofplain",
+    "title": "Wave Echo Cave scale: huge rooms for no reason?",
+    "text": "Wave Echo Cave scale: huge rooms for no reason?\n\nAs a DM, did you emphasize the absolutely insane size of Wave Echo Cave in describing it to your players? Was it a big part of the setting, or did it still end up feeling claustrophobic?     Has anyone tried halving the size of Wave Echo Cave and assuming the grid squares are 5 feet to a side instead of the specified 10 feet to a side? How did that work out in play?      I have both LMoP and PaBTSO and took a look at both maps for Wave Echo Cave. In LMoP, the grid squares are listed as 10 feet to a side. In PaBTSO, they doubled the grid so that the squares are 5 feet to a side.   Looking at some of the rooms, I feel like Wave Echo Cave is way too large to make sense. The Temple of Dumathoin is a massive 3000 sq ft room. The South Quarters are over 1,500 sq ft. The ruined storeroom, described as a \"good-sized storeroom\", is 900 sq ft. The Assayer's Office is 800 sq feet. In Smelter Cavern, the blast furnace is 400 sq. ft., and the bellows are 20 feet long.   It feels ridiculously large for an underground mine, which are famously tight and claustrophobic. It also feels a significant departure from the other maps in the module, which feature small rooms and cramped spaces (Cragmaw Castle has the opposite problem: it feels really small for a castle). I don't feel like the module does a great job of making the huge size of the cave make sense as a mining operation or suggesting how many people lived and worked there.   I used  https://maptiler.gokalex.com  to turn an image of the PaBTSO map into a set of A4 pages with each square being 25 mm to a side. This produces 100 pages. My plan is to tape it together and cut out the rooms, and I'm feeling pretty overwhelmed. Using the LMoP map instead and just changing the scale so that 1 square is 5 feet to a side will dramatically cut down the size of the map (and thus the amount of work) but I'm wondering if I'll lose something by scaling it down. I'm wondering if I need to shift my perspective and embrace the massiveness of the mine---and if so, how I should best communicate it to my players when they finally explore it.       submitted by     /u/Stateofplain     to     r/LostMinesOfPhandelver       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LostMinesOfPhandelver/comments/1w9jmm4/wave_echo_cave_scale_huge_rooms_for_no_reason/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:56:18Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:56:36.869Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5215f3d11795a689ef3d"
+    },
+    "message_id": "reddit_t3_1w9jmli",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "Deltarune",
+    "username": "Regular_Specialist17",
+    "title": "I drew seth.",
+    "text": "I drew seth.\n\nI posted this in another subreddit, but I think it'll do good here   Seth is my favorite flower.       submitted by     /u/Regular_Specialist17     to     r/Deltarune       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Deltarune/comments/1w9jmli/i_drew_seth/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:56:16Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:56:37.086Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5215f3d11795a689ef3e"
+    },
+    "message_id": "reddit_t3_1w9jmkp",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "blanks",
+    "username": "opinionatedOptimist",
+    "title": "Fill in the blanks: My favorite color is ___.",
+    "text": "Fill in the blanks: My favorite color is ___.\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/opinionatedOptimist     to     r/blanks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/blanks/comments/1w9jmkp/fill_in_the_blanks_my_favorite_color_is/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:56:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:56:37.329Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5215f3d11795a689ef3f"
+    },
+    "message_id": "reddit_t3_1w9jmkj",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "Seiko",
+    "username": "spiceywater0",
+    "title": "[ssc961] bracelet",
+    "text": "[ssc961] bracelet\n\nAnyone have the long island oyster style bracelet on their ssc961 if so can you post pics of it. Thanks        submitted by     /u/spiceywater0     to     r/Seiko       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Seiko/comments/1w9jmkj/ssc961_bracelet/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:56:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:56:37.548Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5215f3d11795a689ef40"
+    },
+    "message_id": "reddit_t3_1w9jmkh",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "SPFootballLife",
+    "username": "Fit-Perception5101",
+    "title": "help seeking post",
+    "text": "help seeking post\n\nanyone using fsr in fl26 with apu? I'm with ryzen 5650u       submitted by     /u/Fit-Perception5101     to     r/SPFootballLife       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SPFootballLife/comments/1w9jmkh/help_seeking_post/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:56:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:56:37.761Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5215f3d11795a689ef41"
+    },
+    "message_id": "reddit_t3_1w9jmkd",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "LssAutomation",
+    "username": "subex_test_user",
+    "title": "[TDM] Comment draft reply test 2026-09-07 05:56:13",
+    "text": "[TDM] Comment draft reply test 2026-09-07 05:56:13\n\nTest Data Manager (TDM) for Androidcreated this test post on Sep 7, 5:56 AM UTC.       submitted by     /u/subex_test_user     to     r/LssAutomation       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LssAutomation/comments/1w9jmkd/tdm_comment_draft_reply_test_20260907_055613/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:56:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:56:37.974Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5216f3d11795a689ef42"
+    },
+    "message_id": "reddit_t3_1w9jmka",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "pune",
+    "username": "prof-milkdick-phd",
+    "title": "To the girl I saw at Deccan Metro Station on Saturday around 5:15 PM",
+    "text": "To the girl I saw at Deccan Metro Station on Saturday around 5:15 PM\n\nYou were wearing a mustard top and dark brown cotton pants. I saw you booking at the counter. Later I turned back on the escalator and saw you. I think we made eye contact then. But you took another flight of stairs. Then we were waiting for the metro, and you were sitting on that raised part of the railing, just above the floor. I came and sat there too, maybe a metre or two to your right.  I don’t know if you even noticed me.   Then the metro arrived. You were about to get in just behind me, but at the last moment, you chose the gate immediately to the right and ended up in a different coach.   I see 100’s of people every day. Many face, and most of them fade from my mind almost immediately. But somehow, I can’t get you out of mine.   Maybe it’s ridiculous to say this about someone I didn’t even speak to. Maybe I’m being way too optimistic by posting this. There’s probably a tiny chance you’ll ever see it. But still, I wanted to try.   Because for those few minutes at Deccan, you genuinely felt like the girl of my dreams.   And I’m sorry if this sounds dramatic, but I really hope that somewhere, in some other universe, we didn’t take different coaches. Maybe in that universe, I said hello.  Maybe we talked.   Anyways, I just wanna tell you - never change.       submitted by     /u/prof-milkdick-phd     to     r/pune       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pune/comments/1w9jmka/to_the_girl_i_saw_at_deccan_metro_station_on/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:56:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:56:38.186Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5216f3d11795a689ef43"
+    },
+    "message_id": "reddit_t3_1w9jmjm",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "flashlight",
+    "username": "ChaseFromRadair",
+    "title": "Oddly specific request",
+    "text": "Oddly specific request\n\nI’m looking to purchase a home flashlight, I have 50 acres and would like something that is absolutely as bright as possible.    Battery time doesn’t matter much to me as long as it runs 5-10 minutes at the highest setting total I’ll be happy.    Looking for extremely high output, something that o can show off to friends and say “that’s not a light… THATS a light.”    Looking to stay in the range of around $200 a little over or under won’t break me as long as it’s worth it.    Preferrably something I can buy right out of the box and not have to modify myself in any way.    Most importantly… it has to be available on the Walmart app. To know it’s a bit of a strange request, but I have a Walmart credit and this is how I convinced the wife to let me spend $200+ on a flashlight.    I am not exactly a hobbyist, nor am I well versed in this niche, but pretty damn excited to throw up the bat signal/pretend it’s a light saber and annoy the living hell out of my wife.        submitted by     /u/ChaseFromRadair     to     r/flashlight       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/flashlight/comments/1w9jmjm/oddly_specific_request/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:56:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:56:38.410Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5216f3d11795a689ef44"
+    },
+    "message_id": "reddit_t3_1w9jmjf",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "army",
+    "username": "gh0stwalk1ng",
+    "title": "Quick Post About the Barracks Cat",
+    "text": "Quick Post About the Barracks Cat\n\nDisclaimer, I'm kinda drunk, but! Currently sitting on the second floor balcony X beers deep, watching the stray cats that live in our barracks AO eat the shitty canned cat food I bought for them today. The black and white one let me pick it up today! It was a milestone.    Living here has made me realize I took pets for granted. I love these little guys.       submitted by     /u/gh0stwalk1ng     to     r/army       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/army/comments/1w9jmjf/quick_post_about_the_barracks_cat/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:56:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:56:38.625Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5216f3d11795a689ef45"
+    },
+    "message_id": "reddit_t3_1w9jmj0",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "Sixthgrade",
+    "username": "Impossible_Mood4042",
+    "title": "هوجسة",
+    "text": "هوجسة\n\n(اني خارجي 2027)   قاري 3 فصول من المواد كلها وحالياً بالرابع، متأخر بس بالاسلامية والادب.    اللي مخوفني إن ذني الفصول ما احس روحي مضبطهم، كأنما ناسيهم، انگال الي إن بالمراجعة الأولى والثانية يتضبطن بس هل هذا كلام صحيح؟    هل القراية الاولى فعلاً مجرد فهم للمواد والمراجعات هن التضبيط؟   داهوجس الظاهر because it's so important to me، هدفي معدل عالي جدًا، فاريد اعرف اذا لازم ارجع اقره الفصول من جديد بالشهور الجاية، أو اتقدم بالفصول واصير مطلِع على كل المادة؟ عندي 8 اشهر گدامي...       submitted by     /u/Impossible_Mood4042     to     r/Sixthgrade       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Sixthgrade/comments/1w9jmj0/هوجسة/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:56:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:56:38.847Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5217f3d11795a689ef46"
+    },
+    "message_id": "reddit_t3_1w9jmir",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "PhotoshopRequest",
+    "username": "CopingAfterABreakup",
+    "title": "this image from exactly 10 years ago got butchered by a photo resolution enhancer and now it looks like ai slop, would like suggestions and opinions",
+    "text": "this image from exactly 10 years ago got butchered by a photo resolution enhancer and now it looks like ai slop, would like suggestions and opinions\n\nI don’t know what I want to do with the photo yet but I’d love to hear suggestions and options about it before I decide whether to make a new post where I’ll leave a tip       submitted by     /u/CopingAfterABreakup     to     r/PhotoshopRequest       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PhotoshopRequest/comments/1w9jmir/this_image_from_exactly_10_years_ago_got/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:56:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:56:39.068Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5217f3d11795a689ef47"
+    },
+    "message_id": "reddit_t3_1w9jmio",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "PreguntasReddit",
+    "username": "Geist_Silent",
+    "title": "Ustedes creen que los haters y gente que no sabe de deporte esta arruinando el futbol?",
+    "text": "Ustedes creen que los haters y gente que no sabe de deporte esta arruinando el futbol?\n\nAntes de comenzar solo queria aclarar que Cristiano igual que Messi son grandes futbolistas. No hay porque faltarle el respeto a ninguno ni al otro ya que ambos trabajaron duro para ganar todos sus trofeos. Mi post es dirigido a los haters/fan toxicos y personas que se creen todo en las redes sociales.   Bueno como muchos saben hay la polemica del mundial que le regalaron a Argentina el camino \"facil\" para que ganen otra vez. El camino de Argentina fue: 🇩🇿🇦🇹🇯🇴🇨🇻🇪🇬🇨🇭🏴󠁧󠁢󠁥󠁮󠁧󠁿🇪🇸. Y si, muchos diran que los paises que se enfretaron no son conocidos mundialmente por su futbol, pero hay que recalcar que Argentina no elijio a sus rivales. Ellos facilmente se podian enfrentar a Uruguay (equipo que les ha ganado mas de una vez) en la primera ronda, y a Portugal en cuartos de final. Basicamente si esos dos paises ganaban a los paises que les correspondia, el camino de Argentina hubiera sido diferente: 🇩🇿 🇦🇹 🇯🇴 🇺🇾 🇪🇬 🇵🇹 🏴󠁧󠁢󠁥󠁮󠁧󠁿 🇪🇸    Quitando de lado lo de Argentina ahora vamos con la Euro copa de Cristiano en el 2016. Cristiano recalco que la Eurocopa tiene el mismo peso que un mundial, ya que la diferencia entre una Euro y un mundial solo es que Argentina y Brazil estan como invitados. Ahora vamos a hablar del camino de Cristiano en la Euro copa : 🇭🇺 🇮🇸 🇦🇹 🇭🇷 🇵🇱 🏴󠁧󠁢󠁷󠁬󠁳󠁿🇫🇷. Como pueden ver el unico equipo dificil que Portugal se enfrento solo fue Francia en las finales, y talvez se podria decir que Croacia, pero al final de cuentas todos los equipos a los que se enfrentó son relativamente igual de faciles igual como le paso a Argentina en el mundial del 2026. Entonces mi pregunta es: porque todos dicen que le regalaron el camino facil a Argentina si a Portugal tambien le ha tocado equipos faciles en la euro de 2016?   Muchas personas se creen todo lo que ven en redes sociales y no solo en el ambito futbolistico pero en el dia a dia. Apenas ven que un video se hizo viral y lo toman como \"pruebas\", o ven un comentario con muchos likes y asumen que debe ser verdad. Algo que me he dado cuenta que muchas de las personas que menosprecian a Cristiano o a Messi son personas que no saben de futbol o solo buscan polemica.    Cristiano apesar de no haber ganado un mundial, ganó 5 champions con el Manchester city y el Real Madrid. El fue el maximo goleador de la Champions historicamente, y ha ganado 5 balones de oro que pudieron haber sido 6 si no fuera por Luka Modric.   Lo mismo pasa con Messi, el se gano 3 champions, 1 mundial, 2 copas Americas, 8 balones de oro y una Finalissima. Fue el mejor jugador del mundial en 2014 y 2022 (posiblemente el del 2026 tambien).    Tanto Messi como Cristiano son leyendas en el futbol. Uno marcando historia con Portugal y el real madrid mientras que el otro marco historia con Argentina y Barcelona. Realmente pienso que la comunidad se esta arruinando, pero no debido a ellos pero los fans toxicos.        submitted by     /u/Geist_Silent     to     r/PreguntasReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PreguntasReddit/comments/1w9jmio/ustedes_creen_que_los_haters_y_gente_que_no_sabe/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:56:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T05:56:39.285Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5217f3d11795a689ef48"
+    },
+    "message_id": "reddit_t3_1w9jmi4",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "MapBasedPolls",
+    "username": "Odd-Struggle-2432",
+    "title": "Should those who are long term unemployed, able-bodied, and lacking in technical skills be forced into vocational education and employment? Assume adequate pay",
+    "text": "Should those who are long term unemployed, able-bodied, and lacking in technical skills be forced into vocational education and employment? Assume adequate pay\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Odd-Struggle-2432     to     r/MapBasedPolls       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MapBasedPolls/comments/1w9jmi4/should_those_who_are_long_term_unemployed/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T05:56:07Z"

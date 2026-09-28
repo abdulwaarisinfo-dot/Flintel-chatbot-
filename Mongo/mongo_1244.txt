@@ -1,0 +1,416 @@
+  },
+  {
+    "_id": {
+      "$oid": "6a9ee2a21790aa25e94b87e3"
+    },
+    "message_id": "reddit_t3_1w9whgr",
+    "topic_key": "data engineer",
+    "search_keyword": "data engineer",
+    "platform": "reddit",
+    "subreddit": "ApacheIceberg",
+    "username": "rwxfortyseven",
+    "title": "Best way to go about benchmarking Indexing?",
+    "text": "Best way to go about benchmarking Indexing?\n\nHey folks,   I'm a security professional was looking to make Iceberg a bit more performant for my own needs - SOC operations (Faster needle searches [pruning]).   I've built an index and proxy that people can point their catalog configuration at, so there's minor changes to their stack.   I figured in for a penny in for a pound,  I've done some quick search and ran clickbench and \"httplogs\"   (Numbers so far: httplogs)        Stock   Using Kahshe Proxy                    opens 991 files   opens 2 files       execution time: 6.6–11.5s   execution time: 0.34–0.44 s       1.3gb read   2.6mb read         Its all looks good on paper, I think?   but I was wondering if there were more credible/industry standard methods that data engineers use/care about to benchmark these types of technologies?   Repo if interested:  https://github.com/Kahshe-io/kahshe        submitted by     /u/rwxfortyseven     to     r/ApacheIceberg       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ApacheIceberg/comments/1w9whgr/best_way_to_go_about_benchmarking_indexing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T16:13:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T16:13:22.610Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ee2a21790aa25e94b87e4"
+    },
+    "message_id": "reddit_t3_1w9whg9",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "TutorsHelpingTutors",
+    "username": "PineappleFalse9405",
+    "title": "r/tutors",
+    "text": "r/tutors\n\nI am a Physics Student from india, I want to make some money from teaching to pay my college fees . I can teach physics, science , I don't know how to start online or about any platforms , can someone guide me to set up and getting students        submitted by     /u/PineappleFalse9405     to     r/TutorsHelpingTutors       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TutorsHelpingTutors/comments/1w9whg9/rtutors/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T16:13:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T16:13:22.836Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ee2d2f0819e6636a9289c"
+    },
+    "message_id": "reddit_t3_1w9wib6",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "TVTooLow",
+    "username": "YehrButNoButUm",
+    "title": "Should I move the stand to the higher position?",
+    "text": "Should I move the stand to the higher position?\n\nCame from a 43 inch, upgrades to 55 inch. I might have overestimated the clearance under the tv in this position, but I don't really want to go through the hassle of moving the stand to the higher position on my own lol.   I do want to buy a soundbar in a couple of months. Probably a Marshall Heston 60.       submitted by     /u/YehrButNoButUm     to     r/TVTooLow       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TVTooLow/comments/1w9wib6/should_i_move_the_stand_to_the_higher_position/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T16:13:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T16:14:10.308Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ee2d2f0819e6636a9289d"
+    },
+    "message_id": "reddit_t3_1w9wiaz",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "gamedev",
+    "username": "Gentlebees",
+    "title": "Steam Can't Approve my Multiplayer Game- because they don't own the game on Steam?",
+    "text": "Steam Can't Approve my Multiplayer Game- because they don't own the game on Steam?\n\nAlright so basically:   - I've submitted my game's build to steam twice now.   - The multiplayer features (built with the P2P Facepunch C# Library made by Garry of Garry's mod fame) don't work unless you own the game on Steam, as proven by me having to invite team members to the Steamworks so they have actual authority. It works automatically from there.   - Steam has denied the game twice, reporting the known issue of multiplayer appearing to not work. I've submitted a ticket asking how to fix this and I got hit back with \"thank you for the additional info, we'll test your next build\" (this was between builds 1 and 2 submitted)   - I'm not sure what to do, I know hypothetically I could override the steamid within the facepunch library to be Spacewar (as everyone owns it)- but as far as I'm aware Valve does not allow that and you're not even really supposed to use it while testing.    Has anyone had experience with this / knows how to give the playtesters Auth or otherwise fix this issue?       submitted by     /u/Gentlebees     to     r/gamedev       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/gamedev/comments/1w9wiaz/steam_cant_approve_my_multiplayer_game_because/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T16:13:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T16:14:10.521Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ee2d2f0819e6636a9289f"
+    },
+    "message_id": "reddit_t3_1w9wiaq",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "Eraship_Craft",
+    "username": "Gotchalacking",
+    "title": "about discord link",
+    "text": "about discord link\n\nhello, I'm interested in the project and i have tried to join the discord via the link, it said the link is invalid or have expired, mind explaining why is it? the likely case i have in my mind as of now is that it is expired, I'm really interested in testing the app as android participants.       submitted by     /u/Gotchalacking     to     r/Eraship_Craft       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Eraship_Craft/comments/1w9wiaq/about_discord_link/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T16:13:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T16:14:10.944Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ee2d3f0819e6636a928a0"
+    },
+    "message_id": "reddit_t3_1w9wiaj",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "findaleague",
+    "username": "Dry-Tonight5989",
+    "title": "Need 1 for 12 team PPR",
+    "text": "Need 1 for 12 team PPR\n\nYahoo private paid league. $50 buy in.   1 QB, 3 WR, 2 RB, 1 TE, 2 flex K/DST   Draft at 8:15 pm EST.   Good group that had to fill a spot last minute and having some trouble. Message me for an invite!       submitted by     /u/Dry-Tonight5989     to     r/findaleague       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/findaleague/comments/1w9wiaj/need_1_for_12_team_ppr/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T16:13:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T16:14:11.157Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ee2d3f0819e6636a928a1"
+    },
+    "message_id": "reddit_t3_1w9wia4",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "pune",
+    "username": "Glittering_Stable436",
+    "title": "Di mora pune !!",
+    "text": "Di mora pune !!\n\nHeyy...   20F here will I get entry in DiMora 😭😭 ??   Please let me know...birthday incoming        submitted by     /u/Glittering_Stable436     to     r/pune       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pune/comments/1w9wia4/di_mora_pune/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T16:13:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T16:14:11.370Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ee2d3f0819e6636a928a2"
+    },
+    "message_id": "reddit_t3_1w9wia1",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "hyderabad",
+    "username": "Sani-kun",
+    "title": "Japan watch",
+    "text": "Japan watch\n\nAnyone in japan coming to Hyderabad?    Wanted seiko pressage.        submitted by     /u/Sani-kun     to     r/hyderabad       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hyderabad/comments/1w9wia1/japan_watch/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T16:13:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T16:14:11.583Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ee2d3f0819e6636a928a3"
+    },
+    "message_id": "reddit_t3_1w9wi9o",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "BipolarReddit",
+    "username": "Upper-Protection6390",
+    "title": "Bo cheats while pregnancy",
+    "text": "Bo cheats while pregnancy\n\nfound out my husband that I’ve been married to for 6 months been cheating on me online with two girls at a time while I was pregnant.   I found out about 2 weeks ago that he has been cheating for more than a month or maybe more using a hidden app on his phone I used to have his passcode this is how I was able to open it ,mind you my husband had severe bipolar disorder and suffering from different episodes from mania to hypo mania etc…  When I faced him with the truth he lied he claimed that his intentions with them was completely different from what I’m thinking but I read almost the whole conversation they were all nothing but romance he even was opening video call and doing some shit ,I was literally in shock i didn’t know what to do how could the person I loved most do this to me, he kept lying and lying and didn’t even take accountability for what he did or said that hes sorry.  He promised that he’s going to stop talking to them but he didn’t every time I’m not paying attention “he thinks that “ he was on his phone typing he even use the bathroom or going out to have a cigarette as an excuse and I sense what he’s doing, he’s saying that this is one of the episodes that he’s disorder is making him go through he said I will change just give me time but I see nothing I love him but I can’t trust him anymore I feel so broken and empty and cold when I’m around him I’m always anxious every time I see him on his phone my hearts drops and my mood changes immediately I couldn’t take this anymore but I’m staying in hope that he changes he was never like that he fears Allah and when he commit a sin he feels deep remorse and and promise himself to stop what he’s doing but this time he seems very distant from Allah and he’s religious I don’t what to do do I have to wait for him or walk away   Is there anyone who can confirm that bipolar disorder can make you commit such things as one of its episodes? I’m really understanding his struggle and I’ve been always there for him no matter what but when it comes to cheating it become something to really think about        submitted by     /u/Upper-Protection6390     to     r/BipolarReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BipolarReddit/comments/1w9wi9o/bo_cheats_while_pregnancy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T16:13:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T16:14:11.796Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ee2d4f0819e6636a928a5"
+    },
+    "message_id": "reddit_t3_1w9wi8y",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "ValkosLilies",
+    "username": "wannatakealongnap",
+    "title": "I don’t think the anecdotes are time locked entirely… (I have a worse theory)",
+    "text": "I don’t think the anecdotes are time locked entirely… (I have a worse theory)\n\nThey might add the items needed to unlock the 5 LIs’ anecdotes to Lemonette, so returning and new players will have to rely on another gacha and log in weekly to POTENTIALLY get their LI’s item.       submitted by     /u/wannatakealongnap     to     r/ValkosLilies       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ValkosLilies/comments/1w9wi8y/i_dont_think_the_anecdotes_are_time_locked/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T16:13:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T16:14:12.235Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ee2d4f0819e6636a928a6"
+    },
+    "message_id": "reddit_t3_1w9wi8v",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "phclassifieds",
+    "username": "Clear_Bar_7200",
+    "title": "selling this apple beanie for 450PHP!",
+    "text": "selling this apple beanie for 450PHP!\n\nhi! i’m selling this apple beanie for the price of 450PHP! I can ship through j&t, through lalamove, or meetup around my location which is ust/tayuman. for more inquiries or if you are interested in buying this shirt, you can pm me here in reddit. thank u!!       submitted by     /u/Clear_Bar_7200     to     r/phclassifieds       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/phclassifieds/comments/1w9wi8v/selling_this_apple_beanie_for_450php/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T16:13:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T16:14:12.448Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ee2d4f0819e6636a928a7"
+    },
+    "message_id": "reddit_t3_1w9wi8e",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "ZZZ_Unhinged",
+    "username": "Hunter2112004",
+    "title": "(Sketch) - “Please slow down miss Elowen!” - Lucia x Ye Shiyuan - Art By me",
+    "text": "(Sketch) - “Please slow down miss Elowen!” - Lucia x Ye Shiyuan - Art By me\n\nCommissioned by  u/Oxy _Doomer   Why didn’t I just draw them kissing… Why did I decided: “Ah yes let’s draw them riding Sobek, def a good idea!”…       submitted by     /u/Hunter2112004     to     r/ZZZ_Unhinged       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ZZZ_Unhinged/comments/1w9wi8e/sketch_please_slow_down_miss_elowen_lucia_x_ye/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T16:13:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T16:14:12.668Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ee2d4f0819e6636a928a8"
+    },
+    "message_id": "reddit_t3_1w9wi86",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "bihar_marketplace",
+    "username": "One-Parsley871",
+    "title": "Looking for kindle",
+    "text": "Looking for kindle\n\nI am from patna and want to buy kindle .. anybody selling kindle here?       submitted by     /u/One-Parsley871     to     r/bihar_marketplace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/bihar_marketplace/comments/1w9wi86/looking_for_kindle/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T16:13:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T16:14:12.881Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ee2d5f0819e6636a928a9"
+    },
+    "message_id": "reddit_t3_1w9wi7o",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "hiredev",
+    "username": "Over_Signal7674",
+    "title": "[For Hire] CAN MAKE BEST WEBSITE FOR BUSINESS IN URGENT OR IN A SPECIFIC DEADLINE AT BEST PRICE",
+    "text": "[For Hire] CAN MAKE BEST WEBSITE FOR BUSINESS IN URGENT OR IN A SPECIFIC DEADLINE AT BEST PRICE\n\nIf any business need their best websites , they can dm me , i am profession , experienced web developer . I will send demo of websites with best features for free for your businesses , you only pay if you like the website and its free to see the demo and you will have unlimited changes .BEST SERVICE WITH BEST PRICE       submitted by     /u/Over_Signal7674     to     r/hiredev       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hiredev/comments/1w9wi7o/for_hire_can_make_best_website_for_business_in/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T16:13:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T16:14:13.094Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ee2d5f0819e6636a928aa"
+    },
+    "message_id": "reddit_t3_1w9wi7e",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "TIFFTickets",
+    "username": "AlexC567",
+    "title": "[LTB] - [Babies] - [09/13] - [ANY] - [X2] - [any]",
+    "text": "[LTB] - [Babies] - [09/13] - [ANY] - [X2] - [any]\n\nReally hoping to catch this one if anyone has a couple tickets they want to sell! Thanks!!       submitted by     /u/AlexC567     to     r/TIFFTickets       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TIFFTickets/comments/1w9wi7e/ltb_babies_0913_any_x2_any/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T16:13:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T16:14:13.307Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ee2d5f0819e6636a928ab"
+    },
+    "message_id": "reddit_t3_1w9wi7a",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "TorontoCondominiums",
+    "username": "UnlikelyUnion1883",
+    "title": "Is Queen West / 36 Lisgar St safe for two young women renting?",
+    "text": "Is Queen West / 36 Lisgar St safe for two young women renting?\n\nBefore signing any papers I checked online and I’ve seen some crazy mixed reviews about the building having major sketchy issues in the past, but some people say it’s gotten way better recently.   Also, I've heard that general transportation and transit in the area has gotten worse lately due to all the construction. Is that still the case?   Any recent experiences with the building, management, or the general area especially at night would be super helpful, thanks!!       submitted by     /u/UnlikelyUnion1883     to     r/TorontoCondominiums       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TorontoCondominiums/comments/1w9wi7a/is_queen_west_36_lisgar_st_safe_for_two_young/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T16:13:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T16:14:13.520Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ee2d5f0819e6636a928ac"
+    },
+    "message_id": "reddit_t3_1w9wi73",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "weddingring",
+    "username": "arsenik-han",
+    "title": "custom made rings, super happy",
+    "text": "custom made rings, super happy\n\nThey have Tolkien quotes on them, and mine is also inspired by an 18th century posy ring I saw online (they even made it look aged for me!)   I can't wait to wear it!       submitted by     /u/arsenik-han     to     r/weddingring       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/weddingring/comments/1w9wi73/custom_made_rings_super_happy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T16:13:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T16:14:13.733Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ee2d5f0819e6636a928ad"
+    },
+    "message_id": "reddit_t3_1w9wi6m",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "blythe",
+    "username": "cuteclothesforever",
+    "title": "Buying my first doll",
+    "text": "Buying my first doll\n\nHello :) I’m new to Blythe and quite frankly have never collected dolls. I did read a lot about these and found myself absolutely in love with the takara tomy ones especially pre 2010s.    I found this „I love you it’s true“ doll from 2004. I’m mainly looking for a pale blonde doll. I am not sure 100 percent on the outfit but she looks so cute to me.    Now since it is my first doll, I wanted to know what is an appropriate price or even a good deal on her?        submitted by     /u/cuteclothesforever     to     r/blythe       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/blythe/comments/1w9wi6m/buying_my_first_doll/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T16:13:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T16:14:13.946Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ee2d6f0819e6636a928ae"
+    },
+    "message_id": "reddit_t3_1w9wi6f",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Icy-Doctor6865",
+    "title": "Which emoji do you think is useless why?",
+    "text": "Which emoji do you think is useless why?\n\nsubmitted by     /u/Icy-Doctor6865     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1w9wi6f/which_emoji_do_you_think_is_useless_why/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T16:13:50Z"
+    },
+    "fetched_at": {

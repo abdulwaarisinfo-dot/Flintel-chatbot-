@@ -1,0 +1,416 @@
+    "title": "[H] Lots of Space Marines and a Baneblade [W] Paypal or Cash [Loc] Pocatello, Idaho",
+    "text": "[H] Lots of Space Marines and a Baneblade [W] Paypal or Cash [Loc] Pocatello, Idaho\n\nSelling off my Pile of Shame:   Everything is New on Sprue except the Baneblade, it's partially assembled.   4 Heavy Intercessors, 2 Eradicators, 2 Aggressors, and 2 Inceptors: 40$ a box.   Any of the Dreadnoughts: $60   Crux Terminatus Box: $150   Baneblade (Partially Built): $75   Free shipping if you buy $100 worth of stuff. Alternatively if you're close to Pocatello I'm willing to drive.    https://imgur.com/gallery/selling-warhammer-minis-5E20OLu        submitted by     /u/Fenrir-Hati-Skoll     to     r/Miniswap       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Miniswap/comments/1wl681j/h_lots_of_space_marines_and_a_baneblade_w_paypal/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T03:44:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T03:45:27.675Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf56d8660c608403984527"
+    },
+    "message_id": "reddit_t3_1wl680z",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "MediumOk7833",
+    "title": "The Curious Appetite of Classic Birthday Cake",
+    "text": "The Curious Appetite of Classic Birthday Cake\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/MediumOk7833     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wl680z/the_curious_appetite_of_classic_birthday_cake/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T03:44:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T03:45:28.075Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf56d8660c608403984528"
+    },
+    "message_id": "reddit_t3_1wl680s",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "LocalLLaMA",
+    "username": "Odd_Caterpillar_2994",
+    "title": "Finally got Qwen 3.8 Next running on my v100 6gpu setup (TP2 PP3)",
+    "text": "Finally got Qwen 3.8 Next running on my v100 6gpu setup (TP2 PP3)\n\nHey everyone,   After wrestling with hardware and engine issues for days, I finally got  Qwen 3.8 Next  running properly on my multi-GPU rig. Thought I’d share the setup journey, benchmarks, and thermal results for anyone trying something similar.   he Troubleshooting Odyssey      PCIe Link Speed Issue:  Right after installation, one of the cards dropped to PCIe Gen 1 x16. Spent about 8 hours over two days diagnosing and fixing it.    Finding the Right Engine:     Started with  sglang-v100 , but kept hitting continuous OOM crashes.   Someone on Reddit previously suggested the  pxa  engine, but that threw errors as well.   Eventually tried  1cat-vllm , spent some time tweaking it, and finally hit a stable run!       Configuration:        Running with  TP2 PP3 .   Currently, speculative decoding is limited to  speculative=1 . Setting it to 2 throws an OOM due to memory constraints (might look into optimizing this later, but for now, it works).     Context & Memory Stats   Plaintext    INFO: Available KV cache memory: 8.78 GiB INFO: GPU KV cache size: 531,288 tokens INFO: Maximum concurrency for 262,144 tokens per request: 2.03x     Performance Benchmarks   1. Prompt Processing (Prefill)         Input Length (Tokens)     Speed (tok/s)            1,024 (1K)    1,389        2,048 (2K)    2,536        4,096 (4K)    3,210        8,192 (8K)    4,336        16,384 (16K)    4,679        32,768 (32K)    4,470        65,536 (64K)    3,820        131,072 (131K)    2,759        2. Text Generation (MTP Comparison)         Output Length (Tokens)     Base Speed (No MTP, tok/s)     Optimized Speed (MTP Enabled, tok/s)            128    22.23   41.34        256    22.32   42.48        512    22.70   43.04        1024    22.86   43.28        2048    22.83   43.38        Average     22.59     42.70          MTP nearly doubles generation throughput across the board.    Thermals & Acoustics   People often meme about multi-GPU rigs turning into space heaters or jet engines, so I ran a thorough thermal/stress test:      Stress Test:  Ran  gpu-burn  continuously for 20 minutes.    Thermal Equilibrium:  Temperatures peaked at 65°C and stabilized right around  64°C .    Fan Curve:  Based on my fan control script, the fans were only running at around  76%  at 64°C. The cards stay well under 65°C without even needing full blast.     Pretty happy with how stable, cool, and quiet this system turned out.       submitted by     /u/Odd_Caterpillar_2994     to     r/LocalLLaMA       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LocalLLaMA/comments/1wl680s/finally_got_qwen_38_next_running_on_my_v100_6gpu/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T03:44:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T03:45:28.276Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf56d8660c608403984529"
+    },
+    "message_id": "reddit_t3_1wl680n",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Pmsforsale",
+    "username": "Puzzled_Tax_7300",
+    "title": "[WTS] Saturday Night Shiny ✨time Fractional gold by the lots. Premium and Vintage silver. AGE, MAPLES, Perth, PAMP, Engelhard and other wildly rare Silver. 🪎💰",
+    "text": "[WTS] Saturday Night Shiny ✨time Fractional gold by the lots. Premium and Vintage silver. AGE, MAPLES, Perth, PAMP, Engelhard and other wildly rare Silver. 🪎💰\n\nHeeeeyo. Almost all prices dropped. Check it out, buy something shiny if you feel so inclined. Peace my People. Thanks for looking. Next post is a fat giveaway. Some guidelines but it’ll be a blast. CHAT ONE THIS SALE TO ENTER FOR NEXT GIVEAWAY. 💛   🧪 All coin and metals sigma verified. ✅  📦 Packed discreetly and securely. No rattles.  🔎 Middleman service available.  💬 Questions? More pics? Send me a DM. Will not chat first. Beware of scammers!  📸  PROOF  📸   🏆 GOLD 🏆   _________________________  1 oz Canadian Maple, $4,400🔥🍁  1/4 oz Canadian Aquitaine Bull, $1,130🔥  1/4ish 1925 British Sovereign, $1,075  5g Lady Fortuna, $745  1/10 ozt Maple Eagle, $475  4x 1/10 ozt AGE VARIOUS DATES, $472 each  10x 1g Perth Mint bar in individual assays, $155 each  10x 1g fractional Valcambi bar, $160 each  25 grams of raw Australian nuggets, $160 per gram (16g per bottle or inquire about nuggets sizes and weights 🇦🇺)   🩶 SILVER 🩶   ______________________________   🔥10 oz Pamp Lady of Freedom, $700  Sunshine Mint 10 oz Buffalo 250 Anniversary dual date round, $680 🦬  🔥12.75 oz .999 pure, Lone Star Original Mint 1970, kit-kat bar, $1,450 (1 of 1 test bar! Can provide additional pictures and proof of pedigree)  🇲🇽 Libertad, PR68 $165    VINTAGE ENGELHARD and other Rare Ag  ___________________________________   🔥10 oz Engelhard “Floating Decimal” 4th Series Pillow Loaf (Mintage   🔥10 oz Engelhard 12th series Variety C bar (Mintage   🔥10 oz Engelhard 2nd series C- series Globe bar, $735  2x 1 oz Engelhard SilverTowne rounds Winchester, IN, $83 each  2x 1 oz Stēvco Knit/Wovens (Mintage     🦅ASE | Eagle’s Crag   _____________________________________  2x 1988 Brown Label NGC MS69, $130 each  1991 Brown Label NGC MS69 , $95  2006 Red Label First Strike MS69, $90  2020 Silver Label MS69 Emergency Issue, $120   Always open to offers/trades and open to negotiate for the bunch. Shipping included in whale deals! 🐋  *Moai for decoration - not for sale🗿   💰Payment: Zelle or Cash App preferred; no note, please. Emojis okay.  🚀Shipping: $12 for priority. Anything else, clarify. Insurance available upon request at cost.  💸All packages go out within one business day.  USPS handles delivery unless otherwise specified. I’ll send a photo of your package before it ships, and you’ll receive a tracking number. Disclaimer: After I hand off, it’s up to USPS, so pick shipping methods and insurance accordingly. That being said, I still monitor everything very closely and will always assist in the event of a shipping issue.  @ u/rooneyskywalker  is my middleman should you require those services at buyer’s expense. Thanks, Skywalker!  📊 Prices subject to change prior to locking a deal due to changes in the market   Peace, my peoples.  Puzzled_Tax_7300  Soak it up🧽💛✨       submitted by     /u/Puzzled_Tax_7300     to     r/Pmsforsale       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Pmsforsale/comments/1wl680n/wts_saturday_night_shiny_time_fractional_gold_by/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T03:44:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T03:45:28.477Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf56d8660c60840398452a"
+    },
+    "message_id": "reddit_t3_1wl6800",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "youll_be_banned",
+    "username": "jan_Minki",
+    "title": "Fibonacci Apples | Day 171, Frame 49",
+    "text": "Fibonacci Apples | Day 171, Frame 49\n\nDay 170:  https://www.reddit.com/r/youll_be_banned/comments/1wkbilu/fibonacci_apples_day_170_frame_48/    Number: 150804340016807970735635273952047185       submitted by     /u/jan_Minki     to     r/youll_be_banned       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/youll_be_banned/comments/1wl6800/fibonacci_apples_day_171_frame_49/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T03:44:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T03:45:28.684Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf5706aeeb96c1c63ba245"
+    },
+    "message_id": "reddit_t3_1wl68ln",
+    "topic_key": "dermatologist",
+    "search_keyword": "dermatologist",
+    "platform": "reddit",
+    "subreddit": "ChronicPain",
+    "username": "JesusFreak5747",
+    "title": "My Story so far with Small Fiber Neuropathy",
+    "text": "My Story so far with Small Fiber Neuropathy\n\nHi everyone, I have read other people’s stories on here, but I think it’s long overdue that I make a post about my own story and current suffering. I need some wisdom and insight, also hope because this is something that I never thought would happen to me. This is going to be long, so please stick around to read because I need help.    I’ll start at the beginning before my symptoms started. My story is very unique I would say, and my symptoms are definitely an atypical presentation of Small Fiber Neuropathy.    In March of 2022, I was diagnosed was Graves’ disease. Autoimmune thyroid condition, my thyroid was overproducing hormones. So for the next 10 months, I was taking anti thyroid medication, like three times per day. My labs were still all over the place and it was doing nothing. I chose not to do Radioactive Iodine Therapy. The third and final option with Graves’ is surgery, getting your whole thyroid removed. So in January of 2023, at 23 years old, I went through with having a Total Thyroidectomy.    Initially after the surgery, I felt so much better. At least for the months of January and February. The beginning of hell started in March of 2023. I began to present with symptoms I have never had before, not even when the Graves’ was active. Back then when it first started, it looked very different from how it’s progressed to today. In March of 2023, I began to have deep neuropathic itching all over my body (not relieved by anything: creams, antihistamines, etc), feeling like bugs were crawling all over my body, and brief electric shock like sensations.    I thought it was bizarre, because before my thyroid surgery, I had never experienced any symptoms like this in my entire life. I was trying not to freak out. I figured it could’ve been a nerve they messed up or from something during my surgery. That is when my journey began of seeing doctors upon doctors, specialist upon specialists, to figure out what in the world was causing this. I’m sure most of you have experienced doctors not believing you, not taking you seriously, and dismissing you. Because of my age and how I looked “healthy” on the outside, door after door was slammed in my face. I’ve seen every specialist you can think of.    From March of 2023, until March of 2026, I was simply trying to find a name and get a diagnosis for what was going on. In March of this year I finally got a skin punch biopsy from my dermatologist that confirmed Small Fiber Neuropathy. I was waiting for months to get in with a neuromuscular neurologist to do it, but nobody would even call me back to schedule an appointment. So I took it upon myself to pay out of pocket for my dermatologist to do it, even though they do not treat it, I needed to know. But as you all know, that is such a small piece of the puzzle. Finding the cause and correct treatment is a whole other rabbit hole.  I will list all of the potential causes I know of Small Fiber Neuropathy and which ones correlate with my case:   Diabetes or prediabetes: Negative  Vitamin Deficiencies: Negative- bloodwork has been checked for vitamin B12 deficiency and vitamin B6 toxicity, both of which have come back normal  Thyroid issues: Negative- levels have been normal following total thyroidectomy in January of 2023 due to Graves disease diagnosis in March of 2022  Kidney issues: Negative  Autoimmune disease: Positive- history of Graves’ disease. Though my thyroid is gone, removing it does not take away the autoimmune process that was already going on in my body.  Inflammatory conditions: Negative- Celiac disease and sarcoidosis  Infections: Negative- Hepatitis C or HIV  Toxins: Positive- history of alcohol abuse. Got sober for good in March of 2024. I don’t believe I have alcoholic neuropathy, and I don’t think alcohol itself was the cause, but more so a trigger, if that makes sense. My symptoms have still progressed without alcohol.  Inherited/Genetic mutations: So far, negative. I say this because I am still in the process of doing genetic testing. But as of right now every genetic test has come back negative. I have one more “phase” left to do which is Whole Genome Sequencing. It’s basically the end of the road for genetic testing. If that comes back negative, I can pretty much assume that this isn’t any kind of mutation.    So I now have a name, but I am still actively suffering and have no relief. I do think it is highly likely mine is autoimmune due to my history of Graves’, though it has not been officially confirmed with testing (autoantibodies that are associated with SFN are TS-HDS and FGFR3). I am in the process right now of pushing to get these tests done, but it is very difficult as these are very specialized tests, and the only lab that does them is Washington University in St. Louis. You don’t have to physically go to St Louis, it can be sent off there, it is just a specialized and hard process. I also think my alcohol abuse contributed to autoimmunity as I drank for years before ever getting diagnosed with Graves. As I said before, my symptoms have progressed, slowly but surely. Here are the symptoms I have now in addition to the ones at the beginning:   Deep neuropathic itch with no skin issues or rashes  Parathesias (crawling sensations, electric shock sensations, burning sensations)  All of the itching and parathesias are generalized (all over body and random places: non length dependent)  Abnormal sweating and in weird areas (bottom of feet, butt crack, hands)  GI issues (excessive gas, abnormal bowels from time to time)  Overactive bladder (urinating frequently, nocturia, and straining to empty completely)   By far the most bothersome and debilitating symptoms for me are the neuropathic itching, crawling, electric shocks, and now burning sensations. That hasn’t changed since the start, the flares and intensity has only gotten worse. So with me, it’s not really pain, just the bizarre nerve sensations that I can’t describe to anybody. Over the last 3 and a half years it has gotten so bad to the point where I can’t even tell you how many sleepless nights I have had, just scratching and clawing all night. And I’m talking not even a few hours of sleep, no sleep whatsoever because nothing helps. It is miserable. It is agony. It is HELL. I would not wish this on my worst enemy.    During those three years before my official diagnosis, doctors did try me on a variety of medications, with little to no relief. I will list all of the medications I have tried. I am also open to suggestions of other medications, I just ask that you please do not suggest something I have already tried, because trust me, if it is on this list I have tried it for sure.   Any allergy medication (Claritin, Zyrtec, Benadryl)  Hydroxyzine (prescription anti anxiety/allergy medication)  Gabapentin (was on 2,400 mg at one point and made no difference)  Lyrica (was on 450 mg which is the highest dose and had very little effect if any)  Cymbalta (was on 60mg for a few months and made no difference in my symptoms)  Topicals are not an option in my case because my symptoms are literally on every inch of my body.  I am not for benzodiazepines whatsoever, but even those did not work for sleep because the itching and sensations outweighed any type of sedation from these medications, if that makes sense.    Current medications that I am in the process of trying are:   Trileptal 1,200mg (titrated up for a week and just got up to 1,200 mg on 9/15, which I was told is therapeutic dose for neuropathy symptoms) so currently still waiting to see benefits from that. I know it can take time for it to build up in your system. I take 600 in morning and 600 at night.  Nortriptyline 30mg (just started on 9/15, take at bedtime). This one can also take a week or two to build up and start seeing any benefits, I haven’t seen any yet.    Right now I think they are calling mine idiopathic, because there is no proof right now that it is autoimmune, but I’m pretty sure it could be if I can get these tests done. If it is autoimmune, the treatment comes down to not just masking the symptoms, but stopping the immune mediated attack on my nerves. I would say my case is very treatment resistant and refractory at this point. In that case the treatments would be:   IVIG (very hard to get approved by insurance unless they find out for certain it is autoimmune, but also takes many rounds and is not guaranteed that it will work, mixed results)  Corticosteroids or immunosuppressants (steroids are usually a short term solution from what I know, and many doctors are hesitant to prescribe immunosuppressants, but if I can get proof it is autoimmune, this could probably help)  Plasma exchange (used for severe, refractory cases)  Rituximab (this monoclonal antibody targets and depletes CD20-positive B-cells)   If you made it this far, thank you. I’m desperate for answers. Please help!!!       submitted by     /u/JesusFreak5747     to     r/ChronicPain       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ChronicPain/comments/1wl68ln/my_story_so_far_with_small_fiber_neuropathy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T03:45:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T03:46:14.526Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaf5710660c60840398452b"
+    },
+    "message_id": "reddit_t3_1wl68ur",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "TheNightFeeling",
+    "username": "So1ange",
+    "title": "Rail Line At Dusk",
+    "text": "Rail Line At Dusk\n\nJust came across this artwork on substack and though it might appeal to this reddit community, lots more on his website.   Images by Justin Parpan:     https://substack.com/@justinparpan   https://www.justinparpan.com/gallery        submitted by     /u/So1ange     to     r/TheNightFeeling       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TheNightFeeling/comments/1wl68ur/rail_line_at_dusk/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T03:46:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T03:46:24.765Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf5711660c60840398452c"
+    },
+    "message_id": "reddit_t3_1wl68u7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "wordgrind",
+    "username": "Ready-Mood-4839",
+    "title": "Translate — what's \"que\" in Spanish?",
+    "text": "Translate — what's \"que\" in Spanish?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Ready-Mood-4839     to     r/wordgrind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wordgrind/comments/1wl68u7/translate_whats_que_in_spanish/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T03:46:12Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T03:46:25.012Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf5711660c60840398452d"
+    },
+    "message_id": "reddit_t3_1wl68t8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "DoulaMrktplace",
+    "username": "Appropriate_Hunt2955",
+    "title": "Weekly Douala Port Terminal Discussion — Live Ground Updates & Open Networking",
+    "text": "Weekly Douala Port Terminal Discussion — Live Ground Updates & Open Networking\n\nWelcome to the weekly open operations forum for the Douala Port Trade Node.    This thread functions as a real-time ground intelligence channel for independent operators, cargo handlers and diaspora merchants to trade real-time port tracking variables.   Use this open space to:   • Report current container offloading and clearing timelines at the main maritime terminals.   • Ask questions regarding local customs tariff codes and handling agent verification.   • Network with verified transit operators, container consolidators and local truck dispatch desks.   Platform Security Rules:      No unverified personal phone numbers or direct payment links allowed in the comment feeds.     Keep all discussions focused strictly on practical port info and logistics realities.      Drop your current container tracking status or ask your clearance questions below to keep our trading network informed.       submitted by     /u/Appropriate_Hunt2955     to     r/DoulaMrktplace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DoulaMrktplace/comments/1wl68t8/weekly_douala_port_terminal_discussion_live/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T03:46:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T03:46:25.213Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf5711660c60840398452e"
+    },
+    "message_id": "reddit_t3_1wl68sf",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "hiringpakistan",
+    "username": "ridelonely",
+    "title": "Video Editor",
+    "text": "Video Editor\n\n🎬  Looking for a Remote Video Editing Job    I’m currently looking for a  remote video editing opportunity . I have intermediate-level experience in  Reels, short-form content, documentaries, and short films .   I can work with different editing styles, storytelling, pacing, transitions, sound, and basic color correction. I’m hardworking, willing to learn, and serious about growing as a professional video editor.   If you’re looking for a reliable video editor or know of any remote opportunities,  please feel free to reach out to me.    Open to freelance, part-time, and full-time remote work.       submitted by     /u/ridelonely     to     r/hiringpakistan       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hiringpakistan/comments/1wl68sf/video_editor/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T03:46:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T03:46:25.412Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf5711660c60840398452f"
+    },
+    "message_id": "reddit_t3_1wl68sa",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "wordgrind",
+    "username": "throwawaykJQP7kiw5Fk",
+    "title": "Translate — what's \"salut\" in English?",
+    "text": "Translate — what's \"salut\" in English?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/throwawaykJQP7kiw5Fk     to     r/wordgrind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wordgrind/comments/1wl68sa/translate_whats_salut_in_english/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T03:46:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T03:46:25.610Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf5711660c608403984530"
+    },
+    "message_id": "reddit_t3_1wl68r8",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "citibank",
+    "username": "CatCat2420",
+    "title": "Citi brokerage: are there any Treasury Money Market funds that offer tax efficiency (no state taxes)",
+    "text": "Citi brokerage: are there any Treasury Money Market funds that offer tax efficiency (no state taxes)\n\nDoes Citi brokerage offer something similar to VUSXX (Vanguard Treasury Money Market Fund) to minimize state taxes? I tried to purchase VUSXX via Citi's platform, but somehow unable to do so. I had been buying treasury bills at auction, but it can be cumbersome as I had to keep track of maturities (no auto-roll available) and had to call-in to make the purchases as there is no way to diy on their platform/interface.  What are others doing for tax efficiency? SGOV?       submitted by     /u/CatCat2420     to     r/citibank       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/citibank/comments/1wl68r8/citi_brokerage_are_there_any_treasury_money/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T03:46:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T03:46:25.810Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf5712660c608403984531"
+    },
+    "message_id": "reddit_t3_1wl68r6",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Pixelary",
+    "username": "Cold_Flatworm2317",
+    "title": "What did u/Cold_Flatworm2317 draw?",
+    "text": "What did u/Cold_Flatworm2317 draw?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Cold_Flatworm2317     to     r/Pixelary       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Pixelary/comments/1wl68r6/what_did_ucold_flatworm2317_draw/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T03:46:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T03:46:26.007Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf5712660c608403984532"
+    },
+    "message_id": "reddit_t3_1wl68q3",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DailySolitaire",
+    "username": "dizanimator",
+    "title": "Just crushed this deck in 84s! Can you do better? 🏆",
+    "text": "Just crushed this deck in 84s! Can you do better? 🏆\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/dizanimator     to     r/DailySolitaire       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DailySolitaire/comments/1wl68q3/just_crushed_this_deck_in_84s_can_you_do_better/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T03:46:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T03:46:26.207Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf5712660c608403984533"
+    },
+    "message_id": "reddit_t3_1wl68oy",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "leasehacker",
+    "username": "radphencer",
+    "title": "Lexus third party lease buyout",
+    "text": "Lexus third party lease buyout\n\nHas anybody done a third party lease buyout recently? From what I understand, Lexus/Toyota is no longer allowing this starting 10/01/26. I have about 90 days left on the lease and Carvana will give me about 5k more than the buyout price.    Since it’s a little late in the month, I would like to know how fast everything goes through. Don’t want to be stuck with Lexus not accepting Carvana’s payment or whatever. I could just buyout the lease myself and then sell, but then I’d have to pay the tax and I’d rather avoid that obviously.       submitted by     /u/radphencer     to     r/leasehacker       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/leasehacker/comments/1wl68oy/lexus_third_party_lease_buyout/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T03:45:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T03:46:26.423Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf5712660c608403984534"
+    },
+    "message_id": "reddit_t3_1wl68o6",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Riftbound",
+    "username": "Educational_Ice608",
+    "title": "Are there already people scalping riftbond?",
+    "text": "Are there already people scalping riftbond?\n\nThis is my first trading card collecting game since early Yu-Gi-Oh that intrigued me and have been trying a few games stores to buy packs but there all sold out are with just vi champion decks.    Just wondering if that’s because the game is still growing rapidly or scalping    ( sorry if it is a dumb question I really don’t know and new to this community)       submitted by     /u/Educational_Ice608     to     r/Riftbound       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Riftbound/comments/1wl68o6/are_there_already_people_scalping_riftbond/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T03:45:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T03:46:26.638Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf5712660c608403984535"
+    },
+    "message_id": "reddit_t3_1wl68o5",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "ReyisME",
+    "title": "Whats one thing everyone loves but you CANT STAND?",
+    "text": "Whats one thing everyone loves but you CANT STAND?\n\nsubmitted by     /u/ReyisME     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wl68o5/whats_one_thing_everyone_loves_but_you_cant_stand/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T03:45:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T03:46:26.835Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf5713660c608403984536"
+    },
+    "message_id": "reddit_t3_1wl68nz",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "revisionrhinoplasty",
+    "username": "Worried-Tourist-2766",
+    "title": "Do I need a revision?",
+    "text": "Do I need a revision?\n\nHi everyone , I’m one year post op from my second rhinoplasty. I had my primary with a well known doctor but still felt like my nose was too big and so I had a revision with the same doctor and these are my results a year later .   I have no breathing issues but I’m still not really happy with how my nose looks from the front and the 3/4 view. It still looks big and downturned to me even though I like the complete side profile.   I’m considering a third rhinoplasty with another surgeon I’ve researched about Dr süreyya şeneldir in Turkey however I’m conflicted and not sure if my nose would be perfected with this third rhinoplasty since the side profile i like only the front and 3/4th view I dislike, I would love to hear your opinions and thoughts do u think it’s worth it and has anyone had similar experience with good results?       submitted by     /u/Worried-Tourist-2766     to     r/revisionrhinoplasty       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/revisionrhinoplasty/comments/1wl68nz/do_i_need_a_revision/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T03:45:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T03:46:27.034Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf5713660c608403984537"
+    },
+    "message_id": "reddit_t3_1wl68ny",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ColorGuessr",
+    "username": "color-guesser",
+    "title": "Flag ColorGuessr #78 — September 20th, 2026",
+    "text": "Flag ColorGuessr #78 — September 20th, 2026\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/color-guesser     to     r/ColorGuessr       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ColorGuessr/comments/1wl68ny/flag_colorguessr_78_september_20th_2026/",

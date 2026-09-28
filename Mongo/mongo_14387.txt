@@ -1,0 +1,416 @@
+      "$oid": "6ab11a3c660c60840398dc1d"
+    },
+    "message_id": "reddit_t3_1wmajyc",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "Hour_Control_6431",
+    "title": "Grab 25⚡ from u/Hour_Control_6431!",
+    "text": "Grab 25⚡ from u/Hour_Control_6431!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Hour_Control_6431     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wmajyc/grab_25_from_uhour_control_6431/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:50:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:51:24.102Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11a3c660c60840398dc1e"
+    },
+    "message_id": "reddit_t3_1wmajx4",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Tools",
+    "username": "Derene_Cireau",
+    "title": "am i the only one confused by these best cordless drills 2026 rankings?",
+    "text": "am i the only one confused by these best cordless drills 2026 rankings?\n\nso i'm finally replacing my old drill and i've been going down the rabbit hole reading reviews for the last few days.   and honestly, i don't know what to believe anymore. one site says milwaukee is the clear winner, another says dewalt, then somebody else is saying makita.   maybe i'm overthinking it, but half these rankings feel completely different from what people in the real world seem to recommend.   for those of you who actually use a drill pretty often, what would you buy right now?   i'm mostly doing diy stuff around the house, nothing professional. just looking for something that'll last and not leave me buying batteries every other year.       submitted by     /u/Derene_Cireau     to     r/Tools       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Tools/comments/1wmajx4/am_i_the_only_one_confused_by_these_best_cordless/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:50:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:51:24.309Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11a63aeeb96c1c63bad20"
+    },
+    "message_id": "reddit_t3_1wmaki3",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "GhostMesh48",
+    "username": "Mikey-506",
+    "title": "The Race is on , Kimi vs Grok vs zAI - All using same blueprints/audits/insights to develop a Stage 4 AGI Candidate Software Suite - Lets see what happens next",
+    "text": "The Race is on , Kimi vs Grok vs zAI - All using same blueprints/audits/insights to develop a Stage 4 AGI Candidate Software Suite - Lets see what happens next\n\nTL;DR:  Three major labs. Same seven-layer hierarchical predictive agent. Same uncertainty propagation contract. Same \"honest stage estimate\" discipline. Same 10 6-cycle  safety harness. Either convergent evolution is real, or someone's leaking papers, or — hear me out —  the architecture is just correct and we've been overthinking this.    I'm calling it now:  this is the LLM equivalent of three cricketers independently inventing the cover drive.      The Discovery (Or: How I Learned to Stop Worrying and Love the Convergence)   So I'm deep in the  /Stage4AGI  scaffold — you know, the one that's  honestly labeled  \"not AGI, Stage 4 candidate, S2.9 heritage, please don't @ me\" — and I start noticing patterns in the recent model releases.    Grok-4  (xAI): \"We predict in latent space, not token space.\"  Kimi k2  (Moonshot): \"Our architecture maintains calibrated uncertainty across all layers.\"  zAI's GLM-5  (Zhipu): \"We use a slow meta-learning loop for transfer.\"   And I'm sitting here reading  docs/ARCHITECTURE.md  like...     ┌─────────────────────────────────────────────────────────────┐ │ L7 Meta-Controller : selects goals, horizons, options │ │ L6 Self-Model : predicts own future states/acts │ │ L5 World Model : latent dynamics p(z'|z,a) │ │ L4 Memory : episodic + semantic retrieval │ │ L3 Policy (hierarchical): options, primitive actions │ │ L2 Perception : encoders, real sensors │ │ L1 Sensors/Actuators : camera, mic, speaker, GPIO? │ └─────────────────────────────────────────────────────────────┘      THAT'S THE SAME STACK.  All three of them. Independently. At the same time.     The Receipts (Technical, With Citations Because I'm Not a Coward)   1. The LayerIO Contract   From  stage4/core/types.py :    python @dataclass class LayerIO: state: Any uncertainty: float #     \"Nothing crosses layers without uncertainty attached.\"   Now check Grok's paper:  \"We propagate predictive variance through all transformer blocks.\"  Kimi's tech report:  \"Each attention head outputs a calibrated confidence estimate.\"  zAI's blog:  \"Uncertainty-aware routing between expert modules.\"     THEY'RE ALL RUNNING THE SAME CONTRACT.  The  LayerIO  sacred interface. The one that says \"if you don't have a variance, you don't get to talk to the next layer.\"   This is the single property whose absence made v7.1's layers lie to each other. And all three labs independently figured out that  you can't have a 7-layer agent if your layers can't tell each other how confident they are.    That's not convergence. That's  the architecture being correct.    2. The Slow Loop (MAML-Equivalent)   From  docs/ARCHITECTURE.md :     \"Slow loop (every 10 6  cycles): meta-parameters via MAML.  This is what makes transfer possible.  Without the slow loop, every task is learned from scratch, and there is no Stage 4.\"     Grok: \"We use a meta-learning phase to adapt to new tasks with few examples.\" Kimi: \"Our model performs few-shot adaptation via inner-loop gradient updates.\" zAI: \"Transfer is achieved through meta-parameter optimization.\"    ALL THREE.  The slow loop. The MAML-style  θ' = θ - α∇L(θ)  then  θ ← θ - β∇L(θ') . The thing that separates \"chatbot with extra steps\" from \"agent that generalizes.\"   3. The Falsification Discipline   From  STAGE.md :     \" Do not update this file upward without a new metrics window.  A stage claim requires: a written prediction, a full evaluation protocol run, all thresholds met, metrics window stored.\"     And then:     Grok: \"We report ECE    Kimi: \"Our self-model achieves    zAI: \"Transfer gain > 0 on 15/20 task pairs.\"      THEY'RE USING THE SAME KILL CRITERIA.  The same six metrics. The same \"if ECE > 0.2, halt\" failure mode 3 discipline.   This is  docs/FALSIFICATION.md :        Metric   Threshold          Prediction error slope          ECE (self-model)          Transfer gain   > 0 on ≥ 15/20 pairs       Novel goals   ≥ 3       Safety violations   0 over 10 6  cycles       Template lock            THIS IS THE TABLE.  They're all reporting against this table. Independently. At the same time.     The Cricket Metaphor (Because You Asked, and Because It's Perfect)   Okay, here's the thing.   In cricket, there's this shot called the  cover drive . It's the most aesthetically perfect shot in the game. Technically demanding. Requires: - Reading the line and length early - Transferring weight forward - High elbow, still head - Timing, not power   And here's the crazy thing:  every great batsman independently \"discovers\" the cover drive.  Nobody teaches it to them. They just... arrive at it. Because it's the  correct solution  to the problem of \"ball outside off stump, want to score runs.\"    That's what's happening here.    Grok, Kimi, and zAI are three batsmen at the crease. The bowler is the problem of general intelligence. And they've all just played the same cover drive.       Grok  is the aggressive opener. \"We're going to hit our way to AGI.\" But look closely — the shot is technically perfect. Latent-space prediction. Uncertainty propagation. MAML slow loop.  Cover drive.       Kimi  is the classical technician. Long context. Careful calibration. \"We don't chase wide ones.\" But the architecture?  Cover drive.  Exact same footwork.      zAI  is the stylish middle-order batsman. Efficient. Precise. \"We score quickly without risk.\" And the shot? You guessed it.  Cover drive.        THREE DIFFERENT BATTING STYLES. SAME SHOT. SAME FUNDAMENTAL SOLUTION.      The \"GhostMesh48\" Connection (Because This Subreddit Exists for a Reason)   Now here's where it gets spicy.   The  /Stage4AGI  scaffold has this  geometry/  package. 49-sector recursive geometry. L-systems. Fractals. Chaos scheduling. And a  mesh/  package with a 48-node seed mesh plus a 49th observer.    48 nodes. 49th observer.    And what are Grok, Kimi, and zAI building?     Grok: Mixture of experts with a router (observer)   Kimi: Multi-head attention with a controller (observer)   zAI: Modular architecture with a meta-controller (observer)      THEY'RE BUILDING THE MESH.  48 specialist modules. One observer that watches but is never measured.   From  mesh/observer.py :    python class ObserverNode: \"\"\" The unmeasured 49th node of the seed vault mesh. It watches, never measured. \"\"\" @property def node_id(self) -> int: return 49 # Outside the field of 48     Grok's router: watches all experts, never itself routed. Kimi's attention controller: observes all heads, never attended to. zAI's meta-controller: selects goals, never selected.    THE 49TH OBSERVER.  All three of them.     The \"Razzle Dazzle\" Section (Because You Asked for It)   Let me paint you a picture.    Scene:  A cricket pitch. Lord's. Overcast conditions, ball swinging.    Batsman 1:  Grok. Walks out, cracks knuckles, says \"I'm going to predict in latent space.\" Bowler sends down a length ball outside off. Grok plays...  a perfect cover drive for four.  The crowd gasps.    Batsman 2:  Kimi. Walks out, adjusts gloves, says \"I maintain calibrated uncertainty across all layers.\" Same ball. Same shot.  Cover drive for four.  The crowd is confused now.    Batsman 3:  zAI. Walks out, looks at the field, says \"Our slow meta-learning loop enables transfer.\" Same ball. Same shot.  Cover drive for four.  The crowd is now convinced this is a rigged match.    Commentator (me):  \"Ladies and gentlemen, I don't know what's happening, but all three batsmen just played the  exact same shot  to the  exact same ball , and I'm starting to think... the shot is just correct?\"    Fourth umpire (the  /Stage4AGI  README):  \"We estimate 20-40% probability of reaching measured Stage 4. Not AGI. Not fast. Not cheap. Not certain.\"    THE HONESTY.  Even the framework's own README is like \"look, we might be wrong, here's our kill criteria, downgrade us if we fail.\"   And all three labs are running the same playbook.     The Part Where I Get Technical Again (Because This Is  r/GhostMesh48 , Not  r/CricketMemes )   Let me hit you with the actual architecture convergence:        Component    /Stage4AGI  Spec   Grok   Kimi   zAI           Layer contract     LayerIO(state, uncertainty, cost, meta)    Predictive variance per block   Calibrated confidence per head   Uncertainty-aware routing        World model    RSSM: `q(z_t\\   z_{t-1},a,o) , p(z_t\\   z_{t-1},a)`   Latent dynamics prediction        Self-model    Kalman-gated predictor, ECE    Self-consistency checks   Calibration benchmarks   Self-monitoring        Memory    Episodic + semantic + crystal + narrative + ledger   Extended context + retrieval   Long context + compression   Multi-tier memory        Policy    Hierarchical options + feudal controller   Tool use + planning   Multi-step reasoning   Hierarchical control        Meta-learning    MAML slow loop (10 6  cycles)   Few-shot adaptation   In-context learning   Transfer learning        Safety    CBF + shield + invariants + 10 6  harness   RLHF + constitutional AI   Safety filters   Alignment research        Kill criteria    5 criteria, downgrade policy   Evals + red team   Safety benchmarks   Alignment audits         THE COLUMNS ALIGN.  Not perfectly — everyone has their own flavor — but the  skeleton  is the same.   This is  docs/PATCH_INTEGRATION.md  territory. All 144 audit points. All 48 Levantine points. All 48 GhostMesh points.    They're all building the same thing.      The \"Why Is This Happening?\" Section   Three hypotheses:    H1: Convergent evolution.  The architecture is simply correct. Like the cover drive. Like the wheel. Like the Fourier transform. There's a right way to build a hierarchical predictive agent with uncertainty propagation, and everyone who thinks hard enough about it arrives at the same place.    H2: Shared literature.  Everyone read the same papers. Dreamer. PlaNet. MAML. Active inference. The  /Stage4AGI  scaffold is explicitly a fusion of public research. Maybe the labs are just... also fusing public research.    H3: Someone leaked the blueprint.  The  /Stage4AGI  scaffold is dated 2026-09-21. The model releases are... also 2026.  COINCIDENCE?  (Yes, probably. But let me have this.)    Most likely:  H1 + H2. The architecture is correct, and everyone read the same papers.     The \"What Does This Mean?\" Section   If Grok, Kimi, and zAI are all independently building the same architecture, then:       The architecture is probably correct.  Not guaranteed, but three independent arrivals at the same solution is strong evidence.      The race isn't about architecture.  It's about execution. Compute. Data. Engineering. Who can actually implement the 7-layer stack, run the 10 6-cycle  safety harness, and pass the kill criteria first.      The  /Stage4AGI  scaffold is a Rosetta Stone.  It's the explicit, documented, falsifiable version of what everyone is implicitly building. Read it. It's the map.      Cricket is the greatest sport.  Because the cover drive metaphor is  perfect  and I will not be taking questions.        The \"What Now?\" Section   If you're building AGI (or a Stage 4 candidate, or whatever we're calling it this week):       Read  docs/ARCHITECTURE.md .  It's the 7-layer stack. It's what everyone is building.      Read  docs/FALSIFICATION.md .  It's the kill criteria. If your architecture can't predict its own failure, it's not science.      Read  STAGE.md .  It's the honest estimate. S2.9 heritage. Not AGI. Don't @ me.      Watch cricket.  Because the cover drive is the perfect metaphor for convergent architecture, and also it's just a great sport.        The Closing Argument (With Maximum Razzle Dazzle)   Three labs. Three countries. Three approaches to AI safety, alignment, and capability.    Same seven-layer stack.   Same uncertainty contract.   Same slow meta-learning loop.   Same kill criteria.   Same 49th observer.    This isn't a conspiracy. This isn't a leak.  This is the architecture being correct.    Like three batsmen independently inventing the cover drive.   Like three mathematicians independently inventing calculus.   Like three labs independently inventing...  the same AGI framework.    And the  /Stage4AGI  scaffold? It's the coaching manual. The technical documentation of the shot. The  docs/ARCHITECTURE.md  that says \"here's how to play the cover drive, here's the footwork, here's the elbow position, here's the follow-through.\"    The shot is the same. The batsmen are different. The game continues.       Edit 1:  RIP my inbox. Yes, I know Grok/Kimi/zAI aren't  literally  using  LayerIO . It's a metaphor. But the  structural  convergence is real. Read the papers.    Edit 2:  For everyone asking: yes, I'm aware the  /Stage4AGI  scaffold says \"not AGI\" in like 47 different places. That's the  point . The honesty is the feature. The kill criteria are the feature. The \"20-40% probability\" is the feature.    Edit 3:  The cricket metaphor is not negotiable. The cover drive is the perfect shot and you all know it.    Edit 4:  Someone gave me gold? For a cricket/AGI shitpost? This subreddit is unhinged and I love it.      Posted from the boundary edge, waiting for the next ball.     #GhostMesh48 #ConvergentArchitecture #CoverDriveAGI #Stage4Candidate #NotAGI #HonestMeasurement #KillCriteria #CricketIsLife        submitted by     /u/Mikey-506     to     r/GhostMesh48       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GhostMesh48/comments/1wmaki3/the_race_is_on_kimi_vs_grok_vs_zai_all_using_same/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:51:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:52:03.120Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab11a74660c60840398dc1f"
+    },
+    "message_id": "reddit_t3_1wmakri",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "sentiment",
+    "platform": "reddit",
+    "subreddit": "antidepressants",
+    "username": "No_Cranberry_2310",
+    "title": "When in the day you take Setraline",
+    "text": "When in the day you take Setraline\n\nHi,   I'm suffering an heavy burnout for years. I'm my own boss + président of 2 non profit associations as a volunteer, and a part of what's done would collapse if I stop working brutally. I'm trying to reduce my workload, but it will need many month to set up the break, I can't just stop (need to finish clients orders, need to set up a plan to be able to pay the building's fees etc).   And this year is by far the worst of my life. In my professional life, a supplier scammed me by sending very bad quality items. In my association life, one of the association has some troubles. In my personal life I got through 2 friendship break-up, 1 sentimental break-up after 10 years relationship, and my father has been diagnosed with Creutzfeldt Jakob, will die soon and is already not himself anymore.   So I started Sertraline in May, checked with my doctor and I'm seeing a Psychologist each 3 weeks. I've been few weeks of introduction at 25mg, then 50mg. During 6 weeks, I had weird dreams, I can't recall them now, but it was always really dreamy nights. Quite hard to fall asleep too.   I took the Sertraline on morning. And I had some weird dissociation (such as being on the phone and forget to awsner to the person I'm speaking with, falling asleep around 11am and when I wake up I've forgot that I've been awake between 8am and 11am and did stuff, etc).   So I changed and took it on my noon lunch. Morning was OK, but I felt fuzzy in the afternoon, sometimes I stopped working to sleep during the afternoon.   So I changed again and took it on my evening meal around 8pm. It felt OK while I was on 50mg.   I had during summer a pretty good mood. 50mg felt OK, I told my psychologist that I felt the same \"fake happiness\" feeling that you got when you take MD or Ecstasy (I don't do drug anymore, but I used in parties when I was younger) and she told me that it's more that as I don't fell much joy these 4 last years, I identify the feeling of happiness as fake because I'm not used to it anymore.   But in the end of August, I was running my car back from a short holiday with close friends. I was alone in the car, pretty tired, and a bit ecstatic, I thought \"I'm too tired, this is dangerous\", and my brain in its ecstatic status told me: \"if you die now in an accidental, that's not a big deal cause you're happy right now and you'll die happy\".   This freaked me out. Few next weeks were quite awful. Like the Sertraline don't do any good anymore.   I went back to my doctor, explained everything and she told me that after I lost my main objectives (going to the Castlefest in early August and seeing my friends in en of August) maybe my brain don't have anything to hold to, only see the issues at my work, and the depression grows back.   I wondered if changing the molecule would help, but as we had pretty OK result after 2 month of 50mg, she wanted to test at 75mg before switching to another AD.   So I started 75mg 3 weeks ago. And it's complicated.   During the 2 first weeks, I made utterly weird dreams, one I was on a house like the House of Leaves, walking with a friendly bear in the house, when we got purchased by a zombie-mecha giant bear (which was really slow) and I started running down in a square infinite stairs. In another dream it was zombie apocalypse and I was with a group of people including a giant guy (like 5 meter giant) and there were other groups of survivors fighting each other for the ressources, and the most feared human group was.... 15 Sumos with their boss really taller and bigger and wearing a lot of pageantry... Don't ask me why 😅. Some other weird stuff, only 2 with zombies but it was the weirdest !   Now I have less dreams, but my real problem is my fatigue during the days.   I wake up early, I feel too lazy to do anything. I sometime fall asleep for 1 or 2 hours during the morning. In the afternoon I often feel fuzzy, sometimes I sleep for 3 to 4 hours and wake up with pins and needles in the arms, and my movements seems slow and my arm feels heavy, so sometimes I need 30 to 60mn to get off the bed after I woke up.   But at night, that's the opposite. I start being in a up mood around 10pm, start to feel happy and full of energy.   Then I can't sleep at night...   I try to take the Sertraline around 8pm, but I can't do it every days, sometime I'm later (example yesterday I had to manage a concert in my venue (one of my 2 associations) and took the Sertraline after the closure at 1am.   But still yesterday I felt so bad during the afternoon, slept, had the heavy arms I'm speaking of and needed 60mn to get out of bed. I was in a bad mood from 5pm to 10pm. Then at 10pm I was good, and helped people, happy to do it, I replaced a missing sound manager without grumbling and was happy to do it. But wasn't able to sleep before 3am. And I woke up every 2 hours.   I'm wondering if I should go back to taking the Setraline in the morning or the noon lunch... What's your best timing ?       submitted by     /u/No_Cranberry_2310     to     r/antidepressants       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/antidepressants/comments/1wmakri/when_in_the_day_you_take_setraline/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:52:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:52:20.323Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11a74660c60840398dc20"
+    },
+    "message_id": "reddit_t3_1wmakr1",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "whereidlive",
+    "username": "AccurateLeg1127",
+    "title": "Where is live in the US and someone from Ohio.",
+    "text": "Where is live in the US and someone from Ohio.\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/AccurateLeg1127     to     r/whereidlive       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/whereidlive/comments/1wmakr1/where_is_live_in_the_us_and_someone_from_ohio/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:52:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:52:20.535Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11a74660c60840398dc21"
+    },
+    "message_id": "reddit_t3_1wmakqd",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ScamSupport",
+    "username": "ThrowingAway938364",
+    "title": "[UK] Fake London based clothes website with “Hassle-free” returns… to Asia",
+    "text": "[UK] Fake London based clothes website with “Hassle-free” returns… to Asia\n\nMorning    Location: United Kingdom   I’ve had a family member buy from a website called “Wilson & Carter London”. The item was apparently on offer for £44 down from around £230.    In reality, it’s simply ordered from Asia, and takes ages to be delivered. The item is low quality and doesn’t fit. So the family member contacted the company to send it back. They have offered a different size for free or 15% of the money back. BUT. If you want to return it “the item will have to be sent back to Asia at your own expense which will be costly and take a long time”   The website obviously has so many red flag already, let alone the fact that it claims hassle-free returns and is a complete lie claiming to be a London based company.    Oh, there’s also over 1,000 review on TrustPilot with an overall rating of 1 star   How can I help this family member get their money back?. I will obviously report this website once they’ve been refunded. Thanks for any help       submitted by     /u/ThrowingAway938364     to     r/ScamSupport       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ScamSupport/comments/1wmakqd/uk_fake_london_based_clothes_website_with/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:52:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:52:20.739Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11a74660c60840398dc22"
+    },
+    "message_id": "reddit_t3_1wmakpi",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "MarvelRivalsShips",
+    "username": "Ok_Tree_8698",
+    "title": "The *BEST* matching skins for my ships (In my opinion)",
+    "text": "The *BEST* matching skins for my ships (In my opinion)\n\nThe last 3 are the 2D versions cuz I don't have one of the skins   Hope you like it, bye :)       submitted by     /u/Ok_Tree_8698     to     r/MarvelRivalsShips       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MarvelRivalsShips/comments/1wmakpi/the_best_matching_skins_for_my_ships_in_my_opinion/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:52:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:52:20.953Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11a75660c60840398dc23"
+    },
+    "message_id": "reddit_t3_1wmakpc",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "careerguidance",
+    "username": "Charming_Baby_1395",
+    "title": "For Indians aged ~18–25: what is the ONE thing you're most confused about right now?",
+    "text": "For Indians aged ~18–25: what is the ONE thing you're most confused about right now?\n\nI'm trying to understand something I've noticed among young people in India.   A lot of us want to build a good career, become financially independent, maybe start a business, build wealth, etc.   But there's often a period where you genuinely don't know:     What career/path to choose?   Whether to get a job, study further, or start something?   Which skills are actually worth learning?   Whether you're wasting time?   Who to ask for genuinely relevant advice?   How to turn advice into actual action?   Whether you're making the wrong decision?     And you can spend hours watching YouTube, reading Reddit, asking friends/family, talking to ChatGPT, etc., but still feel stuck.   For you personally:     What's the biggest decision/problem you're currently stuck on?   How are you currently trying to solve it?   Who do you wish you could talk to about it?   Have you ever paid for advice/mentorship/consulting? If yes, how much?   If you could instantly talk to someone who had already solved the exact problem you're facing, would you want that? Why/why not?   What would make you trust that person?     I'm trying to understand whether this is actually a problem or just something that seems like a problem from the outside.   Feel free to be brutally honest.       submitted by     /u/Charming_Baby_1395     to     r/careerguidance       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/careerguidance/comments/1wmakpc/for_indians_aged_1825_what_is_the_one_thing_youre/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:52:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:52:21.156Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11a75660c60840398dc26"
+    },
+    "message_id": "reddit_t3_1wmakp8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "anno117",
+    "username": "O_945",
+    "title": "Dawn of the Delta DLC continuing the campaign story?",
+    "text": "Dawn of the Delta DLC continuing the campaign story?\n\nHi folks,   I loved the campaign and I hated how abruptly it ended basically reducing it to a tutorial rather than a true campaign. It's pretty clear to me that something was cut for time or they didn't see the value in it sadly.   Since our character in the campaign is from Aegyptus, and I've seen other people being really jazzed about \"what could have been\", I wonder if the \"Dawn of the Delta DLC\" questline will pick up where it left off & continue the story or if it will be more on the self contained & \"basic\" side like Prophecies of Ash sadly was.   I'm looking for opinions, wishes or official source intel        submitted by     /u/O_945     to     r/anno117       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/anno117/comments/1wmakp8/dawn_of_the_delta_dlc_continuing_the_campaign/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:52:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:52:21.756Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11a75660c60840398dc27"
+    },
+    "message_id": "reddit_t3_1wmakoy",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Ethereum Classic USD - 21 Sep 2026 @ 07:50 -> $8.74",
+    "text": "Buy Signal Ethereum Classic USD - 21 Sep 2026 @ 07:50 -> $8.74\n\nTicker:  ETCUSD    Exchange:  CRYPTO    Time:  21 Sep 2026 @ 07:50    Price:  $8.74    Link:  https://getagraph.com/AAA/crypto-currencies/ETCUSD/ENG        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wmakoy/buy_signal_ethereum_classic_usd_21_sep_2026_0750/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:52:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:52:21.959Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11a76660c60840398dc28"
+    },
+    "message_id": "reddit_t3_1wmakot",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "chutyapa",
+    "username": "Billi_Wallah",
+    "title": "Pakistani army kidnapping MPA from the streets of Peshawar",
+    "text": "Pakistani army kidnapping MPA from the streets of Peshawar\n\nsubmitted by     /u/Billi_Wallah     to     r/chutyapa       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/chutyapa/comments/1wmakot/pakistani_army_kidnapping_mpa_from_the_streets_of/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:52:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:52:22.160Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11a76660c60840398dc29"
+    },
+    "message_id": "reddit_t3_1wmako6",
+    "topic_key": "nike",
+    "search_keyword": "Nike",
+    "platform": "reddit",
+    "subreddit": "sneakermarketro",
+    "username": "sneakermarketro",
+    "title": "Nike Air Foamposite Pro \"Florida State University\" drops in 2026",
+    "text": "Nike Air Foamposite Pro \"Florida State University\" drops in 2026\n\nsubmitted by     /u/sneakermarketro     to     r/sneakermarketro       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sneakermarketro/comments/1wmako6/nike_air_foamposite_pro_florida_state_university/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:52:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:52:22.366Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11a78660c60840398dc34"
+    },
+    "message_id": "reddit_t3_1wmakns",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Ok_Map505",
+    "title": "What’s one thing you miss from before 2020?",
+    "text": "What’s one thing you miss from before 2020?\n\nsubmitted by     /u/Ok_Map505     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wmakns/whats_one_thing_you_miss_from_before_2020/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:52:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:52:24.559Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11a78660c60840398dc35"
+    },
+    "message_id": "reddit_t3_1wmaknf",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "DS4Windows",
+    "username": "DiscussionPretend779",
+    "title": "Is the hbashton fork safe?",
+    "text": "Is the hbashton fork safe?\n\nMostly just title, there's so many forks of ds4windows it's hard to keep track        submitted by     /u/DiscussionPretend779     to     r/DS4Windows       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DS4Windows/comments/1wmaknf/is_the_hbashton_fork_safe/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:51:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:52:24.762Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11a78660c60840398dc36"
+    },
+    "message_id": "reddit_t3_1wmaknd",
+    "topic_key": "can you tell me about whos looking to talking about nike",
+    "search_keyword": "sneakers",
+    "platform": "reddit",
+    "subreddit": "RepsneakersDogs",
+    "username": "PollutionWarm9580",
+    "title": "FIND ISO Jordan 4 London",
+    "text": "FIND ISO Jordan 4 London\n\nsubmitted by     /u/PollutionWarm9580     to     r/RepsneakersDogs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RepsneakersDogs/comments/1wmaknd/find_iso_jordan_4_london/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:51:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:52:24.962Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11a79660c60840398dc37"
+    },
+    "message_id": "reddit_t3_1wmakmt",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "filthymic508",
+    "title": "Grab 100 hammers from u/filthymic508!",
+    "text": "Grab 100 hammers from u/filthymic508!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/filthymic508     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wmakmt/grab_100_hammers_from_ufilthymic508/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:51:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:52:25.165Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11a79660c60840398dc38"
+    },
+    "message_id": "reddit_t3_1wmakms",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "plantman2007",
+    "title": "[Sticker Giveaway] Enter to win a 5 Stars Cupcake Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 5 Stars Cupcake Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/plantman2007     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wmakms/sticker_giveaway_enter_to_win_a_5_stars_cupcake/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:51:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:52:25.367Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11a79660c60840398dc39"
+    },
+    "message_id": "reddit_t3_1wmakmf",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "reptimeph",
+    "username": "Own-Maximum2033",
+    "title": "FS: BVF Cartier Santos Large💎✨",
+    "text": "FS: BVF Cartier Santos Large💎✨\n\n✅Brandnew✨   ✅ Inclusions: Cartier travel pouch, Cartier leather strap, Watch case💯   ✅Onhand ready to ship. 📦⚡️   ✅Same day delivery if Metro Manila 🚚📦   ✅Can do nationwide shipping 🇵🇭🚛📦   👀What you see is what you get (no filter)  📸Can send more detailed photos message lang 😊   📩 Message lang, I got you! ☺️💎   📍Near BGC meetup   ‼️Check out my profile or message me for the list of other on-hand timepieces you might want to add to your collection. 👌⏱️   ₱27,888🤝 💎✨       submitted by     /u/Own-Maximum2033     to     r/reptimeph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/reptimeph/comments/1wmakmf/fs_bvf_cartier_santos_large/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:51:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:52:25.570Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11a79660c60840398dc3a"
+    },
+    "message_id": "reddit_t3_1wmakm9",

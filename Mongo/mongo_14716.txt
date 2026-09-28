@@ -1,0 +1,416 @@
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab16a56660c60840398f74c"
+    },
+    "message_id": "reddit_t3_1wmjins",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "submersionfestival",
+    "username": "Soplamocoloco",
+    "title": "ISO Early Arrival, car camping pass, and 2-day ticket!",
+    "text": "ISO Early Arrival, car camping pass, and 2-day ticket!\n\nSecured my flights and rental car yesterday! Just seeing if anyone needs to get rid of any of the above before I just buy through the site. Would love to help someone who can no longer make it if possible!       submitted by     /u/Soplamocoloco     to     r/submersionfestival       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/submersionfestival/comments/1wmjins/iso_early_arrival_car_camping_pass_and_2day_ticket/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T17:32:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T17:33:10.730Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab16a56660c60840398f74d"
+    },
+    "message_id": "reddit_t3_1wmjini",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "switch2",
+    "username": "Bronxman37",
+    "title": "Doubts on switching",
+    "text": "Doubts on switching\n\nHello all. I’ve had the first rog ally, then I sold it and bought a rog ally x close to a year ago. At first I was stoked but then I recently bought a PlayStation portal and it’s changed my opinion ! I can play on the portal all day and 90% of PSN games can be streamed and it works perfectly. But when there’s no internet that’s when the rog comes in.   Although I loved it before, I keep comparing it to the Portal. The rog is much MUCH heavier leading to hand cramp and it only last about An hour before I have to connect to a charger. And if I don’t buy games from gog (DRM Free games) I can’t use it offline anyways.    I’ve been thinking about selling my Rog (which i don’t use often anymore) to get a Nintendo switch 2.    Is it the right choice for me?       submitted by     /u/Bronxman37     to     r/switch2       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/switch2/comments/1wmjini/doubts_on_switching/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T17:32:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T17:33:10.931Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab16a5eaeeb96c1c63baf1a"
+    },
+    "message_id": "reddit_t3_1wmjixr",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "evermore",
+    "username": "Odd_Service_6568",
+    "title": "Why the oft-repeated myth that the \"Magic Gourd\" has no real utility is actually and demonstrably false.",
+    "text": "Why the oft-repeated myth that the \"Magic Gourd\" has no real utility is actually and demonstrably false.\n\nFor over two decades, the *Secret of Evermore* fan community widely classified the **Magic Gourd** as a \"dummied-out,\" completely non-functional item whose only indirect effect (the 5x Jewel modifier in Nobilia) was deemed an accidental memory glitch or overlapping bit-flag with the *Chocobo Egg*.    Recent static code analysis of the decompiled and translated SIGIL scripting scripts — specifically within the merchant logic — completely refutes the glitch theory. The code reveals a highly deliberate, nested conditional structure designed for progression gating and strict economic balancing, optimized for the SNES hardware constraints.    ### 1. The Nobilia Ceramic Pot Merchant Logic   The C# equivalent of the original SIGIL script layout for the Nobilia market demonstrates that the 5x Jewel multiplier (yielding 50 Jewels instead of 10) is a fully intended feature mapping to two entirely separate bit-flags on the player’s charm variable (_2262_Charms).     const UInt16 flagMagicGourd = 0x4; const UInt16 flagChocoboEgg = 0x40; if (( _2262_Charms & flagMagicGourd) == 0) // Case A: Player does NOT own the Magic Gourd { if (( _2262_Charms & flagChocoboEgg) == 0) // Sub-Case: Player also does NOT own the Chocobo Egg { var tmp = Random.Next(0, 16); // 1/16 RNG chance if (tmp == 7) { _243d_UnknownStatusMaybe = 2; Dialog(\"Found the Chocobo Egg.\"); } else { _Jewels += 10; Dialog(\"Found 10 Jewels.\"); } } else // Case B: Player owns the Chocobo Egg (but no Gourd) { _Jewels += 50; Dialog(\"Found 50 Jewels.\"); // Intended 5x Farming Bonus } } else // Case C: Player owns the Magic Gourd { _Jewels += 50; Dialog(\"Found 50 Jewels.\"); // Intended 5x Farming Bonus preserved }     ### Analytical Insights:   * **The Magic Gourd as an Inheritance Safeguard:** The Gourd purposefully inherits the 5x multiplier. Because trading the Chocobo Egg removes it from the inventory, this fallback guarantees players do not lose their pot-farming efficiency after completing the high-tier market barters.   * **Anti-Duplication Gate:** By checking for both flags explicitly, the script prevents a critical progression loophole. If the Gourd were not mapped to this branch, a player trading the Egg for the Gourd would immediately be eligible to fish another Chocobo Egg out of the pots, completely breaking the intentional item scarcity of the market phase.   ### 2. The Multi-Tier Progression Staircase (The Mad Monk in Antiqua)   The system logic becomes completely cohesive when tracking the continuity into the **Mad Monk** shop routine in Antiqua (Crustacia). When buying back the *Annihilation Amulet* (Amulett des Karon) for 10,000 Jewels, the script checks the presence of passive items sequentially to scale rewards dynamically:      **Tier 1 (Base):** Grants the **Chocobo Egg**.   **Tier 2 (Egg owned):** Grants the **Magic Gourd**.   **Tier 3 (Gourd owned):** Grants the **Wizard's Coin**.   **Tier 4 (Coin owned / Endgame):** Grants **3x Meteorites**.     ### Dynamic Inter-Era Continuity:   Since a player can also acquire the **Chocobo Egg** and the **Wizard's Coin** via alternative routes later in the game (specifically found as hidden rewards within the **Gothica** era), the Mad Monk's script serves as an elegant safety valve. The sequential logic dynamically skips any tier for items the player already obtained in Gothica.    This proves that the Magic Gourd was never dead code; it is a vital, permanent **state flag** acting as a security gate. To unlock the ultimate end-game resource farming loop for Meteorites, the architecture demands a cumulative, multi-step transaction history costing at least 30,000 Jewels (or equivalent barter progress), ensuring a tightly controlled endgame loop across eras.    ### 3. Explaining the 8-Bit Overflow Behavior (253 Meteorites Glitch)   A notable phenomenon occurs if a player hacks or reaches an astronomical inventory state: possessing 253 Meteorites and purchasing another pack rolls the count back down to 1 (254 yields 2, 255 yields 3).    ### Hardware-Driven Optimization, Not Oversight:   While Nobilia's pots contain strict boundary checks against exceeding 99 items, the Antiqua Monk routine completely omits this boundary check, causing a standard **8-bit unsigned byte overflow**.    Given the strict 24-Mbit ROM production limits imposed on Square USA, compressing a massive ~70-Mbit uncompressed master environment meant that every assembler instruction (LDA, CMP, BGE) and its associated dialog string had to earn its place. Because accumulating over 250 Meteorites is mathematically impossible via normal gameplay loops without external SRAM editors, the development team opted for pure engineering pragmatism: omitting an impossible boundary safety check saved critical bytes on the cartridge, utilizing the hardware constraints perfectly.    ### Code Reference   The translated scripting architecture can be reviewed directly in the repository file:    https://github.com/CleanCodeX/ROM.SoE/blob/main/Scripting/Merchants/NobiliaMarket.cs    If you found this information helpful, show the repository's author some appreciation — for example, by starring the repo or following him.       submitted by     /u/Odd_Service_6568     to     r/evermore       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/evermore/comments/1wmjixr/why_the_oftrepeated_myth_that_the_magic_gourd_has/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T17:33:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T17:33:18.707Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab16a5faeeb96c1c63baf1b"
+    },
+    "message_id": "reddit_t3_1wmjiwb",
+    "topic_key": "cardiologist",
+    "search_keyword": "cardiologist",
+    "platform": "reddit",
+    "subreddit": "TrueBackrooms",
+    "username": "Loose_Cardiologist64",
+    "title": "Lost in the Backrooms, but at least I found someone to get lost with. ❤️…she still refuses to share the snacks though. 😭",
+    "text": "Lost in the Backrooms, but at least I found someone to get lost with. ❤️…she still refuses to share the snacks though. 😭\n\nsubmitted by     /u/Loose_Cardiologist64     to     r/TrueBackrooms       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TrueBackrooms/comments/1wmjiwb/lost_in_the_backrooms_but_at_least_i_found/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T17:33:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T17:33:19.011Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab16a5faeeb96c1c63baf1c"
+    },
+    "message_id": "reddit_t3_1wmjiw3",
+    "topic_key": "dentist",
+    "search_keyword": "dentist",
+    "platform": "reddit",
+    "subreddit": "askdentists",
+    "username": "joy-713",
+    "title": "How do I know which dentist is correct?",
+    "text": "How do I know which dentist is correct?\n\nHow do I know which dentist to trust?   I’m hoping to get advice from someone who is a little less biased than me: what would you do in this situation? Which dentist would you trust?  TLDR: my regular dentist didn’t say anything about an infection, one I went to for a second opinion did (two days later). Is there any incentive for the second dentist to lie, or did the first one   just miss it?     Dental history context:  I did a bad job during high school of taking care of my teeth, and had several fillings, root canals, and crowns, but during college I turned things around and now take such thorough care of my teeth that several hygienists have joked that I’m doing their job for them   I started going to my “current” dentist (Dentist A) about four years ago. At the time of my first appointment, he replaced a filling that had fallen out of #19 (from my childhood dentist) with a root canal and crown. Shortly prior to that, I had an emergency root canal and same-day crown done on #30 due to a cracked and painful tooth (Dentist B). Within about a year of #30’s root canal, Dentist A told me that he was noticing “root re-absorption” and recommended extraction and an implant, but said that there wasn’t necessarily a hurry - I could either get it over with, or keep the tooth for longer but run the risk of it snapping off unexpectedly at some point. I elected to wait due to limited funds and perceived lack of risk. About year or so ago, #4 abruptly cracked off (childhood dentist had done a crown \\\\\\~8 years prior). No one had ever mentioned anything, but there was apparently significant decay inside. The crown came off with the tooth still inside, and the obvious only route forward was extraction. Dentist A took care of that over the course of the next several months, and everything related to that seemed to go well. Then in May, #19’s crown came off. Dentist A glued it back on and sent me on my way. A week later, it came off again, and he decided that there was little chance of this time being more successful, so he redid the crown (at no cost to me, as he had done the original), stating that it had a very low margin/was deep into the gum line, but he was hopeful it would last.    Now here comes the key part:  last week Tuesday, I had my routine cleaning/exam. No X-rays this time, but periodontal charting. He noted that #30’s pocket was slightly deeper, but otherwise gave me a clean bill of health. I scheduled my #30 extraction for after Thanksgiving, because it has been hurting more and I’m about to turn 26 and lose my parent’s insurance. On Thursday, I bit into a piece of pizza and #19 completely cracked off - crown, buildup, and even some of the root canal filling stringy material. At this point, I went to a new dentist (Dentist C) for evaluation, partially because she could get me in same-day and Dentist A couldn’t, and partially because I was starting to lose confidence in Dentist A. She informed me that the only path forward was extraction, but also noted that #30 was infected, gave me antibiotics, and told me she didn’t love the idea of waiting two full months for #30 to come out. She did not pressure me to do it at her office, just to get it done sooner.    Here are my questions:   - is there any reason a dentist would lie about an infection? Or did Dentist A really miss the infection 2 days prior? (Dentist C stated it couldn’t have formed in just 2 days)  - Do I switch dentists and go to Dentist C? I’ve never blamed Dentist A for all of my issues, because I do have historically awful enamel, but could 19’s failure actually be due to his work and not crappy luck?  - Should Dentist A have been able to notice the decay inside #4’s crown? I feel like they are pretty opaque on x-ray but I might just be too trusting. Can you tell on physical exam if something is going wrong inside?  - Would you trust a dentist that is new to you to do two extractions/implants? At this point, both molars just need to go. I feel like Dentist A did a good job on #4, but I’ve only actually had the crown for a month at this point, so I really don’t have long term evidence.    Image : theoretically infected tooth (30). Both dentists agree it needs to come out, but only Dentist C mentioned an infection, and she was much more concerned about the removal timeline.    I feel like signs are pointing towards switching to Dentist C, but I guess I’m just having a hard time coming to terms with the idea that I’ve been trusting Dentist A with my dental health for four years and he is apparently missing infections and god knows what else.  Sorry for the long post, and thank you for any thoughts!!       submitted by     /u/joy-713     to     r/askdentists       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/askdentists/comments/1wmjiw3/how_do_i_know_which_dentist_is_correct/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T17:33:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T17:33:19.226Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab16a8f660c60840398f750"
+    },
+    "message_id": "reddit_t3_1wmjjsm",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Meowi",
+    "username": "Hot-Switch-8374",
+    "title": "[Choose] Which type of chuunibyou are you ?",
+    "text": "[Choose] Which type of chuunibyou are you ?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Hot-Switch-8374     to     r/Meowi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Meowi/comments/1wmjjsm/choose_which_type_of_chuunibyou_are_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T17:33:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T17:34:07.913Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab16a90660c60840398f751"
+    },
+    "message_id": "reddit_t3_1wmjjrp",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "DigitalMarketing",
+    "username": "Shelby_Nate",
+    "title": "Where should I list?",
+    "text": "Where should I list?\n\nHey everyone, just wondering what you guys do to help local business get more clients without ads. One of my new clients does pool installation and was wondering if i should list their business anywhere else except Google?   So far i designed them a website and list their business on google (GMB page) so i was wondering if google reviews are the name of the game or should i list anywhere else?       submitted by     /u/Shelby_Nate     to     r/DigitalMarketing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DigitalMarketing/comments/1wmjjrp/where_should_i_list/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T17:33:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T17:34:08.118Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab16a90660c60840398f752"
+    },
+    "message_id": "reddit_t3_1wmjjrn",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "IntelligenceScaling",
+    "username": "lawligh0",
+    "title": "Light Yagami (LUTNW) Vs Canon L Full Scale",
+    "text": "Light Yagami (LUTNW) Vs Canon L Full Scale\n\nLUTNW Light vs Canon L    My opinion    Full-Scale IQ   WMI: L   PSI: L   FRI: L   VCI: Light=>   VSI: L   Emotional Intelligence (Overall EI)   Emotional Understanding (EU): Light   Emotional Perception (EP): L   Emotional Management (EM): Light   Emotional Engagement (EE): Light   Emotional Facilitation (EF): Light   Emotional Realization (ER): L=>   Social Intelligence (Overall SI)   Social Skills: Light   Social Awareness: Light   Self Awareness: Light    Self Management: Light   Relationship Management: Light   Adversity Capacity (Overall AC)    Mentak Fortitude: Light   Stress Tolerance: Light   Impuls management: L   Perseverance: Light   Composure: Light   General Intelligence   Fluid Intelligence: L=>   Crystallized Intelligence: L   Overall Thinking   Linear Thinking: L   Nonlinear Thinking: Light   Divergent Thinking: Light   Convergent Thinking: L   Critical Thinking: L=>   Creative Thinking: Light    Abstract Thinking: L=>   Logical Thinking: L   Overall Reasoning   Deductive Reasoning: L   Inductive Reasoning: L   Abductive Reasoning: L   Abstract Reasoning: L=>   Deception   Information Control: Light   Misdirection: Light   Acting Skills: Light   Fabrication: Light   Concealment: Light=>   Bluffing: Light   Verbal Deception: Light   Strategic Deception: Light   Mass Deception: Light   Manipulation   Direct Manipulation: Light   Indirect Manipulation: Light   Logical Manipulation: Light   Emotional Manipulation: Light   Mass Manipulation: Light   Foresight   Logical Prediction: Light   Intuitive Prediction: L   Anticipation: Light   Trap Evasion: Light   Adaptability   Strategic Adaptability: Light   Situational Adaptability: Light    Environmental Adaptability: Light   Seeing Through People   Cold Reading: L   Hot Reading: Light   Planning   Invincibility: Light    Intricacies: Light   Formulation Speed: Light=>   Preparation Process: Light   Coverage: Light   Versatility: Light   Contingencies: Light   Strategy   Complexity: Light   Foresight: Light   Success rate: Light   Execution: Light   Shielding: L   Effectiveness: Light   Tactics: L   Methods   Fluid Methods: Light   Crystallized Methods: L   Sensory   Perception: L   Observation: L   Miscellaneous   Knowledge: L   Data Analysis: L   Psycho Analysis: Light   Creativity: Light   Information Gathering: L   Setting Traps: Light   Intuition: L   General outsmarting: Light High diff(+)       submitted by     /u/lawligh0     to     r/IntelligenceScaling       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IntelligenceScaling/comments/1wmjjrn/light_yagami_lutnw_vs_canon_l_full_scale/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T17:33:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T17:34:08.320Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab16a90660c60840398f753"
+    },
+    "message_id": "reddit_t3_1wmjjpw",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Gamecrasher432",
+    "title": "What Lore have you guys had in real life that is crazy, but the actual process/ technicalities behind it were boring?",
+    "text": "What Lore have you guys had in real life that is crazy, but the actual process/ technicalities behind it were boring?\n\nsubmitted by     /u/Gamecrasher432     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wmjjpw/what_lore_have_you_guys_had_in_real_life_that_is/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T17:33:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T17:34:08.541Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab16a90660c60840398f754"
+    },
+    "message_id": "reddit_t3_1wmjjpr",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ColorGuessr",
+    "username": "Reshilotic",
+    "title": "Colorwire by u/Reshilotic",
+    "text": "Colorwire by u/Reshilotic\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Reshilotic     to     r/ColorGuessr       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ColorGuessr/comments/1wmjjpr/colorwire_by_ureshilotic/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T17:33:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T17:34:08.741Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab16a90660c60840398f755"
+    },
+    "message_id": "reddit_t3_1wmjjo8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "guessthesubreddit",
+    "username": "GTSBot",
+    "title": "[GTS] View from tagaytay",
+    "text": "[GTS] View from tagaytay\n\nsubmitted by     /u/GTSBot     to     r/guessthesubreddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/guessthesubreddit/comments/1wmjjo8/gts_view_from_tagaytay/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T17:33:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T17:34:08.947Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab16a91660c60840398f756"
+    },
+    "message_id": "reddit_t3_1wmjjnz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Watches_India",
+    "username": "Even-Eagle_",
+    "title": "Is this worth buying???",
+    "text": "Is this worth buying???\n\nGuys I don't have any watch and watch experience,i also don't have alot of money, i like its design(blue colour) because its dial is small as my wrist is thin (5.5 inches), i want a watch for daily wear, is this reliable considering its a chinese brand?       submitted by     /u/Even-Eagle_     to     r/Watches_India       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Watches_India/comments/1wmjjnz/is_this_worth_buying/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T17:33:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T17:34:09.147Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab16a91660c60840398f757"
+    },
+    "message_id": "reddit_t3_1wmjjnf",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MakeNewFriendsHere",
+    "username": "AnotherGuyNamedDan",
+    "title": "Midwest Guy Seeking Friends for Fun Chats",
+    "text": "Midwest Guy Seeking Friends for Fun Chats\n\nOlder guy here, empty nester, loves fitness, outdoors, motorcycles, car racing and snowboarding.   Indoors I’m a home chef, amateur video editor, gamer, movie and news junkie.   I have a wry wit, and love to make people laugh. I’m on and off Reddit all day, so I respond pretty quickly.   Looking for chat mates! Any age, gender or nationality.       submitted by     /u/AnotherGuyNamedDan     to     r/MakeNewFriendsHere       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MakeNewFriendsHere/comments/1wmjjnf/midwest_guy_seeking_friends_for_fun_chats/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T17:33:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T17:34:09.349Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab16a91660c60840398f758"
+    },
+    "message_id": "reddit_t3_1wmjjn2",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Feulas89",
+    "title": "Where is the one place you wish you were at right now instead of where you are?",
+    "text": "Where is the one place you wish you were at right now instead of where you are?\n\nsubmitted by     /u/Feulas89     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wmjjn2/where_is_the_one_place_you_wish_you_were_at_right/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T17:33:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T17:34:09.549Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab16a91660c60840398f759"
+    },
+    "message_id": "reddit_t3_1wmjjmk",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BayAreaRealEstate",
+    "username": "Candid_Drag_6805",
+    "title": "Neighborhood considerations for buying a house in San Francisco",
+    "text": "Neighborhood considerations for buying a house in San Francisco\n\nsubmitted by     /u/Candid_Drag_6805     to     r/BayAreaRealEstate       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BayAreaRealEstate/comments/1wmjjmk/neighborhood_considerations_for_buying_a_house_in/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T17:33:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T17:34:09.753Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab16ab9aeeb96c1c63baf1d"
+    },
+    "message_id": "reddit_t3_1wmjkil",
+    "topic_key": "dentist",
+    "search_keyword": "dentist",
+    "platform": "reddit",
+    "subreddit": "Dentists",
+    "username": "hoagiepop",
+    "title": "Cosmetic dentist in Florida / South Florida",
+    "text": "Cosmetic dentist in Florida / South Florida\n\nLooking for a good and honest cosmetic dentist in Florida, specifically South Florida.   I just went to someone local and he quoted me 25k for 10 veneers with a discount… work looks great but that’s ridiculous. I’m looking around 18k and under.   If there is a dentist-artist out there who is talented in composite bonding and can create them nice, I would definitely consider that.   Any recommendations or advice is greatly appreciated. Thanks!       submitted by     /u/hoagiepop     to     r/Dentists       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Dentists/comments/1wmjkil/cosmetic_dentist_in_florida_south_florida/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T17:34:36Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T17:34:49.087Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab16ab9aeeb96c1c63baf1e"
+    },
+    "message_id": "reddit_t3_1wmjkg4",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "DegenerateEDH",
+    "username": "Dapperpickle9",
+    "title": "Need Help Choosing a Commander/Direction",
+    "text": "Need Help Choosing a Commander/Direction\n\nHi All, i’m a big fan of Dimir and mill. I’m looking for some help/advice on building a B4 or high power B3 deck that plays cards like [[Doctor Doom, Unrivaled]], [[Laboratory Maniac]], [[Jace, Wielder of Mysteries]].    I would like to avoid the “tutor for a combo” loop if possible. Maybe that means this alternate wincon would be a secondary theme or option.    Do you have any advice or input on what commander/strategy would be good to support this? I’m torn between a typical mill deck, or turbo-self mill. Maybe something like [[Necropotence]] or [[Out of the Tombs]] would be good to stop me from decking myself without a wincon ready.   A few commanders I’m considering are [[Phenax, God of Deception]], [[Taskmaster, Mercenary Mimic]], or Lazav.   I’m struggling to find a solid gameplan, so any advice to point me in the right direction would be appreciated.       submitted by     /u/Dapperpickle9     to     r/DegenerateEDH       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DegenerateEDH/comments/1wmjkg4/need_help_choosing_a_commanderdirection/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T17:34:31Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T17:34:49.510Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab16ab9aeeb96c1c63baf1f"
+    },
+    "message_id": "reddit_t3_1wmjkf4",
+    "topic_key": "recruiter",
+    "search_keyword": "recruiter",
+    "platform": "reddit",
+    "subreddit": "Pixelary",
+    "username": "RetiredRecruiter1369",
+    "title": "What did u/RetiredRecruiter1369 draw?",
+    "text": "What did u/RetiredRecruiter1369 draw?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/RetiredRecruiter1369     to     r/Pixelary       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Pixelary/comments/1wmjkf4/what_did_uretiredrecruiter1369_draw/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T17:34:30Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T17:34:49.779Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab16acc660c60840398f75a"
+    },
+    "message_id": "reddit_t3_1wmjkx6",
+    "topic_key": "chatgpt sentiment on reddit today",

@@ -1,0 +1,416 @@
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "Upwork",
+    "username": "Sarezawise",
+    "title": "How do freelance architects find clients outside of Fiverr and Upwork?",
+    "text": "How do freelance architects find clients outside of Fiverr and Upwork?\n\nHi everyone,  I’ve been working as a freelance architect for around 4 years. I really enjoy freelancing because it gives me the opportunity to work on projects from different parts of the world.  However, finding a consistent flow of clients has been difficult. I occasionally get projects through Fiverr, but I’ve never managed to get a project through Upwork. Applying to jobs there can also be quite exhausting, especially when many of them have very low budgets.  I’ve also been regularly posting my work on Instagram, Behance, and LinkedIn, but these platforms haven’t brought me any clients so far.  How do you guys find your freelance clients?  Do you actually get clients through Instagram or LinkedIn, or do you use other methods such as cold emailing or direct outreach?       submitted by     /u/Sarezawise     to     r/Upwork       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Upwork/comments/1w9zs41/how_do_freelance_architects_find_clients_outside/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:13:18Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:13:38.668Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9eff2c1790aa25e94b8891"
+    },
+    "message_id": "reddit_t3_1w9ztoy",
+    "topic_key": "checkout",
+    "search_keyword": "checkout",
+    "platform": "reddit",
+    "subreddit": "promocodeland",
+    "username": "BluebirdKnown44",
+    "title": "iHerb Promo Code September 2026 - PJZ7818 Verified & Working, 10% Off No Minimum",
+    "text": "iHerb Promo Code September 2026 - PJZ7818 Verified & Working, 10% Off No Minimum\n\nHere's what's currently working for iHerb this September. Main code: PJZ7818    What you get:      10% off your order   No minimum spend required   Works across vitamins, supplements, skincare and groceries      Steps:      Add your products to cart   Enter PJZ7818 at checkout   Discount applies automatically before you pay      Cost/catch:  No minimum spend required    Who qualifies:  New and returning customers, works in most countries    Expires:  Still active this month, no expiry date attached to it   Let me know if it worked for you and which country you're in.       submitted by     /u/BluebirdKnown44     to     r/promocodeland       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/promocodeland/comments/1w9ztoy/iherb_promo_code_september_2026_pjz7818_verified/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:14:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:15:08.547Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9eff2c1790aa25e94b8892"
+    },
+    "message_id": "reddit_t3_1w9ztnj",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "promptingmagic",
+    "username": "Beginning-Willow-801",
+    "title": "How to build an exploding 3D website to learn how anything works with GPT-6 Astra + ChatGPT Work. Rotate 3D models. Pull it apart. Click every component. Here’s the ChatGPT workflow you need to try it + 8 fun examples",
+    "text": "How to build an exploding 3D website to learn how anything works with GPT-6 Astra + ChatGPT Work. Rotate 3D models. Pull it apart. Click every component. Here’s the ChatGPT workflow you need to try it + 8 fun examples\n\nTL;DR:  Use GPT-6 Astra in ChatGPT Work to build an interactive 3D website where visitors rotate an object, separate its components, and click parts to learn what they do. Start with one object, ask for independently modeled pieces, then add an explode slider, labels, and a reset button. Use ChatGPT Sites for automatic hosting. Below: a starter prompt, practical tips, and 8 ways to take the idea much further.   Imagine opening a car website and dragging one slider.   The roof lifts. The wheels move outward. The seats rise above the chassis. Click the motor and the camera moves closer while a short explanation appears.   Then press  Reassemble  and everything returns to its place.   That’s the experience to ask Astra to build. I created it using a Porsche Macan as an example and it made over 581 piece model for the car to show how it works. You can spin it, click on specific parts, get an X-ray view and see how it flows.     https://preview.redd.it/n695b8m215oh1.png?width=1514&format=png&auto=webp&s=3ecd7d7a2d188bad8971f50d02eb592ddbdc094f    OpenAI has published an Astra-built  interactive 3D museum  and a  Three.js game development walkthrough . Exploded views are a project you can ask it to implement using those broader capabilities.    https://preview.redd.it/wgoy25cx15oh1.png?width=1672&format=png&auto=webp&s=ab6311136c276fa2a6a8d2b722433b57e55ef85f    The interesting part is how much control you can describe in ordinary language.    Here’s how to start.      Open ChatGPT Work and select GPT-6 Astra if it’s available in your account.   Pick one object and one learning goal:    Attach useful references. Photos help with appearance; reliable diagrams or an existing model help with structure.   Say “build a website” or mention @  Sites .       Use this prompt:    Build a working interactive 3D website about [OBJECT] using Sites in ChatGPT Work.   Audience: curious beginners. Learning goal: [WHAT PEOPLE SHOULD UNDERSTAND].   Create a recognizable model with approximately 20–40 major components. Give each component a separate named 3D mesh so it can move and be selected independently. This is a starting scope, not a required part count.   Include drag-to-rotate, zoom, an Assembled-to-Exploded slider, Reassemble, Reset Camera, and a searchable parts list. Clicking a part should highlight it and show its name, function, and relationship to nearby components.   Give components deliberate separation paths. Keep the assembled positions so everything returns correctly, even when someone reverses the slider halfway through.   Use a clean charcoal, ivory, and emerald design with cinematic lighting, readable labels, large touch targets, keyboard controls, and reduced-motion support.   Use my references for factual explanations. Identify simplified or inferred geometry. If accurate internal geometry is unavailable, build a clearly labeled illustrative model.   First complete one working model and test its controls in the browser. Check mobile layout, part selection, repeated explode/reassemble actions, and reset behavior.   Deliver editable source and a reviewable preview. Save a version without deploying it so I can review before publishing.   Swap [OBJECT] for a camera, espresso machine, bicycle, game controller, or tiny house.    Choose the modeling approach that fits the job.         Approach   When to use it          Simplified, code-generated model   Start here for quick experiments and stylized explainers.       Existing model with separate components   Use when recognizable geometry and detailed parts matter. Confirm usage rights.       CAD-derived model plus verified documentation   Use for technical product education, with expert review.        A photo doesn’t reveal everything inside a device. Asking for “500 accurate pieces” doesn’t supply the missing engineering information.    https://preview.redd.it/yad6co9o15oh1.png?width=1672&format=png&auto=webp&s=3c33f579d1eea27ffbd572d34ec9143d046ebe13     The pro tips that make the biggest difference:       Ask for meaningful parts.  A beautifully textured object can still be one fused shape. Specify independent components and test clicking them.    Make the motion explain the object.  A phone should separate into readable layers. A building should open floor by floor. Random scattering loses the relationships you’re trying to show.    Use progressive detail.  Begin with major assemblies, then let visitors expand one assembly further. Hundreds of visible labels will bury the model.    Check appearance and accuracy separately.  Verify geometry and component descriptions. For branded products, cite reliable technical sources.    Test the boring actions.  Switch products while exploded. Reverse the slider halfway. Tap a tiny part on a phone. Reset after zooming. These reveal problems a hero screenshot won’t.    Give every gesture a button alternative.  Add a parts list, keyboard navigation, strong contrast, and adjustable text.    Keep the first build economical.  Use prewritten explanations and fixed interactions. A visitor shouldn’t need a fresh AI response to move a slider. Add live Q&A when it serves a clear purpose.    Test on an actual phone.  Ask Astra to measure and simplify heavy geometry, shadows, and effects. A responsive model is more useful than extra screws nobody can see.      Where this gets useful:       Product marketing:  let buyers explore the design decisions behind a camera, appliance, or machine.    Education:  turn a textbook diagram into something students can rotate, inspect, and reconstruct.    Architecture and real estate:  separate floors, highlight amenities, and reveal how spaces connect.    Training:  show assembly order and component relationships using verified references.    Portfolios and museums:  present a design process or artifact as an interactive exhibit.    Content creation:  build something people can try, then introduce it with a recording of the actual interaction.      Now go absolutely wild. These are features to ask Astra to implement:       Build a product switcher.  Let visitors choose an iPhone, MacBook, or iPad, then explore each with the same controls. Match the selected generation to your references.      https://preview.redd.it/feqau6n605oh1.png?width=3154&format=png&auto=webp&s=6af493b420097e50837478ab4e089e291bfb3a7a       Add X-ray mode.  Fade the outer shell and highlight one system at a time. Let visitors isolate, hide, and restore components.    Create a guided camera tour.  Move through five stops with one idea per stop. Add a “take control” button so people can leave the tour and explore.    Turn it into a rebuild challenge.  Give visitors separated components, matching locations, hints, and a progress indicator. Increase difficulty gradually.    Follow a flow.  Animate an illustrative path for power, air, water, or data. Explain whether it’s a conceptual animation or a validated simulation.    Explode an entire city.  Lift streets to reveal transit tunnels. Separate a tower’s floors. Add a day-to-night slider and windows that illuminate in sequence.    Compare two designs.  Synchronize cameras and explode sliders. Highlight meaningful differences using verified specs, with a stacked layout on small screens.    Make a scene shareable.  Add a screenshot button and a link that restores the chosen model, camera, selected component, and explosion amount.     You could also make a fictional spaceship that opens into rooms, a mechanical watch with nested assemblies, or a miniature museum where every exhibit becomes a puzzle.    A useful follow-up prompt:    Keep the current working model. Add a guided tour, X-ray mode, and a three-part rebuild challenge, one at a time. Test each addition before continuing. Preserve the existing controls and make every new interaction work with touch and keyboard.   ChatGPT 6 Astra is great at building 3D models of buildings. Upload some pictures of a building and it will build a 3D model and an interactive tour.     https://preview.redd.it/j4spliio25oh1.png?width=3424&format=png&auto=webp&s=c07bbb54d10113c3218be205a388734dbaec61bd    For sharing, choose the audience deliberately and test the published link as a visitor. Sites separates saving a version from deploying it.     Try this today:  choose one object on your desk and build its simplest useful exploded view. Add one ambitious feature after the basics work.   What will you build first: a car, a gadget, a building or something completely unhinged? Share what you create in the comments. Go absolutely wild! Do not hold back!        submitted by     /u/Beginning-Willow-801     to     r/promptingmagic       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/promptingmagic/comments/1w9ztnj/how_to_build_an_exploding_3d_website_to_learn_how/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:14:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:15:08.940Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9eff2d1790aa25e94b8893"
+    },
+    "message_id": "reddit_t3_1w9ztlj",
+    "topic_key": "painter",
+    "search_keyword": "painter",
+    "platform": "reddit",
+    "subreddit": "pcmasterrace",
+    "username": "Kru3ial262",
+    "title": "Custom Hatsune Miku GPU",
+    "text": "Custom Hatsune Miku GPU\n\nI made a custom Hatsune Miku GPU out of my Radeon RX 7600, and a keyboard and SSD heatsink. Spray painted with Rustoleum painters touch plus flat Grey primer, Schneider Turquoise spray paint and Acrylic paint markers for the accents and artwork, Rustoleum painters touch plus clear matte coat to cover everything.   I know it's buns, highkey coulda done better.   My favourite thing is the metallic silver holographic Hatsune Miku artwork I painted onto the backplate using a toothpick, looks better irl👉👈   Been here long enough to know Redditors and their \"not so kind words\", but at least I like it....   Also if anyone cares I spent Soooo long making custom adaptors for my argb fans to work in the corsair commander core hub I have, glad it actually works😭       submitted by     /u/Kru3ial262     to     r/pcmasterrace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pcmasterrace/comments/1w9ztlj/custom_hatsune_miku_gpu/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:14:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:15:09.240Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9eff2d1790aa25e94b8894"
+    },
+    "message_id": "reddit_t3_1w9ztkl",
+    "topic_key": "translator",
+    "search_keyword": "translator",
+    "platform": "reddit",
+    "subreddit": "TwentiesIndia",
+    "username": "Proper_Translator580",
+    "title": "jala hai jism jahan dil bhi jal gaya hoga",
+    "text": "jala hai jism jahan dil bhi jal gaya hoga\n\njala hai jism jahan dil bhi jal gaya hoga   kuredte ho jo ab raakh justuju (curiosity) kya hai       submitted by     /u/Proper_Translator580     to     r/TwentiesIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TwentiesIndia/comments/1w9ztkl/jala_hai_jism_jahan_dil_bhi_jal_gaya_hoga/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:14:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:15:09.545Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9eff41f0819e6636a93391"
+    },
+    "message_id": "reddit_t3_1w9zu30",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "fucksavana_",
+    "username": "btwiamsarbani",
+    "title": "In Savana i have Cancelled product still amount not refunded yet😭💔",
+    "text": "In Savana i have Cancelled product still amount not refunded yet😭💔\n\nThe moment i ordered this product after 5 mins i decided to cancel it and i cancelled. Its been 2 days now and i have not recieved any amount so i texted them via customer service and now they are saying they haven't recieved any moneeeyyyyyy😭😭😭       submitted by     /u/btwiamsarbani     to     r/fucksavana_       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/fucksavana_/comments/1w9zu30/in_savana_i_have_cancelled_product_still_amount/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:15:17Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:15:29.585Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9eff41f0819e6636a93392"
+    },
+    "message_id": "reddit_t3_1w9zu2x",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "PRLegacyWars",
+    "username": "Ok-Physics9813",
+    "title": "Legendarys",
+    "text": "Legendarys\n\ni am a f2p and came back from a couple of months of not playing is there a possibility to get a decent legendary and if can what is the fastest because i got to sapphire league with zeo yellow but she cant keep up with aurico and scott or even operation overdrive red        submitted by     /u/Ok-Physics9813     to     r/PRLegacyWars       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PRLegacyWars/comments/1w9zu2x/legendarys/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:15:17Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:15:29.799Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9eff42f0819e6636a93393"
+    },
+    "message_id": "reddit_t3_1w9zu2f",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "PercyJacksonfanfic",
+    "username": "Professional_Web446",
+    "title": "The goddess of childbirth is fed up",
+    "text": "The goddess of childbirth is fed up\n\nIlithya looks at the infant, dressed as a nurse to blend in at the hospital. The mother may be asleep now, but she could wake at any moment, and Ilithya doesn't want anyone to know she's interacting directly with the half-bloods.   Gaia knows Zeus would punish her with his lightning bolt if he discovered she's doing this.   The goddess looks back at the baby, radiant like a miniature sun, and sighs heavily.   Another child of Apollo for the collection.   How many are there in the world now? Fifteen? You'd think a god of medicine would know the term \"contraceptives,\" but no…   With that thought, she conjures a small veil of energy that conceals the child's supernatural nature. Not too powerful to be obvious to other gods that he's being protected, nor long-lasting enough to last until adulthood, but it will keep the monsters from killing him until he can at least run for his life.   Ilithya places the baby back in the crib and teleports herself back home. Her peaceful, quiet home.   Because, frankly, she's had enough.   She's fed up with having to protect demigods with her powers when they aren't even her children. All because their biological parents are too lazy to act like responsible individuals.   She's fed up with having to bring innocent lives into the world that will die horribly in the cruel power games of the gods.   Ilithya places the baby back in the crib and teleports herself back home. Her peaceful, quiet home.   Because, frankly, she's had enough.   She's fed up with having to protect demigods with her powers when they aren't even her children. All because their biological parents are too lazy to act like responsible individuals.   She's fed up with having to bring innocent lives into the world that will die horribly in the cruel power games of the gods.   She's fed up with... everything. With her family. With her fellow humans.   If only she could just turn off the reproductive capacity of Olympus so she wouldn't have to...Ilithya places the baby back in the crib and teleports herself back home. Her peaceful, quiet home.   Because, frankly, she's had enough.   She's fed up with having to protect demigods with her powers when they aren't even her children. All because their biological parents are too lazy to act like responsible individuals.   She's fed up with having to bring innocent lives into the world that will die horribly in the cruel power games of the gods.   She's fed up with... everything. With her family. With her fellow humans.   If only she could just turn off the reproductive capacity of Olympus so she wouldn't have to...Ilithya places the baby back in the crib and teleports herself back home. Her peaceful, quiet home.   Because, frankly, she's had enough.   She's fed up with having to protect demigods with her powers when they aren't even her children. All because their biological parents are too lazy to act like responsible individuals.   She's fed up with having to bring innocent lives into the world that will die horribly in the cruel power games of the gods.   She's fed up with... everything. With her family. With her fellow humans.   If only she could just turn off the reproductive capacity of Olympus so she wouldn't have to...Ilithya places the baby back in the crib and teleports herself back home. Her peaceful, quiet home.   Because, frankly, she's had enough.   She's fed up with having to protect demigods with her powers when they aren't even her children. All because their biological parents are too lazy to act like responsible individuals.   She's fed up with having to bring innocent lives into the world that will die horribly in the cruel power games of the gods.   She's fed up with... everything. With her family. With her fellow humans.   If only she could just turn off the reproductive capacity of Olympus so she wouldn't have to...Ilithya places the baby back in the crib and teleports herself back home. Her peaceful, quiet home.   Because, frankly, she's had enough.   She's fed up with having to protect demigods with her powers when they aren't even her children. All because their biological parents are too lazy to act like responsible individuals.   She's fed up with having to bring innocent lives into the world that will die horribly in the cruel power games of the gods.   She's fed up with... everything. With her family. With her fellow gods.   If only she could just turn off the reproductive capacity of Olympus so she wouldn't have to...   Ilithya stopped in her tracks as the thought crossed her mind.   What if she could? What if she were able to render those negligent bastards infertile?   With a smile, the goddess walked to her private library and began to read the information about it.   It is quite possible to curse a god so that he cannot produce offspring in any way. But it is usually done manually, and it is not advisable to be discovered cursing deities one by one.   To achieve her goal, she needs the help of other deities connected to conception, but... she can't really trust the gods she knows.   Priaphus is a lustful idiot incapable of focusing on anything other than sex.   Artemis blames her for keeping her trapped inside Leto's womb for years (even though it was all Herra's fault, and Ilithya helped break that curse).   And the rest of the gods and daemons are far too loyal to the Olympian gods.   Ilithya needs outsiders. Entities who might be willing to help her achieve her goal.   The first to be recruited? Echidna.   Not only is she the ancestor of many powerful monsters, but she also manages the fertility of much monstrous races.   It must be said that she wasn't easy to convince. Echidna harbors a lot of resentment toward the gods, but Ilithya managed to persuade her that her plan would end the cycle of suffering to which the monsters are bound.   The second recruit? Ketos.   Just as Echidna controls the fertility of monsters, Ketos controls the fertility of sea monsters.   She was even harder to convince than Echidna, given that she really has no reason to get involved in the affairs of demigods (sea monsters have rarely died at the hands of a half-blood).   Luckily, a couple of Poseidon's sons became whalers two hundred years ago. That fact was enough to convince the goddess of whales to join the team.   A couple of weeks later, the three women carried out the ritual. The gods of the sky, the earth, the sea, and the underworld were cursed without their knowledge.   Not everyone was affected, of course. Anemoi, Ourea, Potamoi, nymphs, satyrs, centaurs... They weren't the target.   The target was the truly powerful gods. Those who abused their power and saw themselves as superior to everyone else.   It would take them a while to realize what had happened to them. Perhaps a few months, a year at most. But by then, no evidence would remain to incriminate her.   Now all Ilithya has to do is sit back and enjoy the show.       submitted by     /u/Professional_Web446     to     r/PercyJacksonfanfic       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PercyJacksonfanfic/comments/1w9zu2f/the_goddess_of_childbirth_is_fed_up/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:15:16Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:15:30.015Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9eff42f0819e6636a93395"
+    },
+    "message_id": "reddit_t3_1w9zu29",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "ps2homebrew",
+    "username": "Eclipse8301",
+    "title": "Renaming FMCB apps?",
+    "text": "Renaming FMCB apps?\n\nHello, just a simple question that I can't seem to find the answer for when searching.   I bought a FMCB memory card online and it came with 3 versions of OPN and they are all named with the version.   How can i rename and delete the other 2 older versions?       submitted by     /u/Eclipse8301     to     r/ps2homebrew       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ps2homebrew/comments/1w9zu29/renaming_fmcb_apps/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:15:16Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:15:30.458Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9eff42f0819e6636a93396"
+    },
+    "message_id": "reddit_t3_1w9zu24",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "Mm2subreddit",
+    "username": "Imaginary-Corner3191",
+    "title": "Anyone have spare godlies/legends?",
+    "text": "Anyone have spare godlies/legends?\n\nI’ve been playing since around 2019 and I swear I have actually nothing but crap lol anyone have anything they dont want? like even rares and stuff too is fine i know its stupid to beg for stuff but like I’m bored at home soooo yeah xp       submitted by     /u/Imaginary-Corner3191     to     r/Mm2subreddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Mm2subreddit/comments/1w9zu24/anyone_have_spare_godlieslegends/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:15:16Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:15:30.672Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9eff42f0819e6636a93397"
+    },
+    "message_id": "reddit_t3_1w9zu1r",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "delhi",
+    "username": "silviaalyssa",
+    "title": "How shameless is Rekha Gupta??",
+    "text": "How shameless is Rekha Gupta??\n\nRescue operation is completed ??   Anf only 6 people died?   12 casualty?   When people around them are saying there are more people under the debris, they haven't reached the basement.   Human life has no value in this country.   The same casualty happened 3 months prior in pg. Students died there, and it was swept under rug,   Internet jammers were used to block people from calling them out.   Students died in fire in the coaching centre, they died while drowning , they died from building collapsing        submitted by     /u/silviaalyssa     to     r/delhi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/delhi/comments/1w9zu1r/how_shameless_is_rekha_gupta/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:15:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:15:30.887Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9eff43f0819e6636a93398"
+    },
+    "message_id": "reddit_t3_1w9zu1m",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "tretinoin",
+    "username": "Straight-Wrap-9522",
+    "title": "Your Sebaceous Hyperplasia Experience on Tretinoin?",
+    "text": "Your Sebaceous Hyperplasia Experience on Tretinoin?\n\nTret in combo with benzaclin has 100% cleared my acne. I have been on tret for 15 months now--6 months of .025, 6 months of .05, and 3 months of .1%.    My face is still covered all over with super tiny reddish little bumps that my dermatolagist said are sebaceous hyperplasia. I have had super oily skin and have been dealing with consistent acne now for 30 years-- I'm in my early 40s. They are really small, so I had always assumed they were like acne in waiting or something like that. Now I am a little bummed out because I thought I'd finally get that crystal clear, smooth skin now that I'm acne free. My dermatologist said that Tretinoin would clear them up, but I've been on tret for a year now . . . so what's up? Has anyone gotten rid of their S.H. with Tret alone?    I've done some reading saying that Accutane will clear these up, so I may go that route. I know that sounds extreme for such a small problem but I'm just so ready to have nice skin after so many years of dealing with subpar skin and I feel like I'm sooooo close.        submitted by     /u/Straight-Wrap-9522     to     r/tretinoin       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/tretinoin/comments/1w9zu1m/your_sebaceous_hyperplasia_experience_on_tretinoin/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:15:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:15:31.102Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9eff43f0819e6636a9339a"
+    },
+    "message_id": "reddit_t3_1w9zu1f",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "Chiraqology",
+    "username": "SouthWinner2434",
+    "title": "Niggas can say what they want bout Von but dude really spanked shit on the other hand Q50 was claiming all of Jeff work q50 really a cap artist",
+    "text": "Niggas can say what they want bout Von but dude really spanked shit on the other hand Q50 was claiming all of Jeff work q50 really a cap artist\n\nsubmitted by     /u/SouthWinner2434     to     r/Chiraqology       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Chiraqology/comments/1w9zu1f/niggas_can_say_what_they_want_bout_von_but_dude/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:15:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:15:31.529Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9eff43f0819e6636a9339b"
+    },
+    "message_id": "reddit_t3_1w9zu1c",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "overlanding",
+    "username": "BigSandwich6",
+    "title": "Faded Awning Restoration?",
+    "text": "Faded Awning Restoration?\n\nI added this awning to my car last year and it faded pretty badly. Is there anything I can do to restore it or is it too far gone? I tried a few products I had but they didn’t seem to do much. If not then maybe plasti dip?       submitted by     /u/BigSandwich6     to     r/overlanding       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/overlanding/comments/1w9zu1c/faded_awning_restoration/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:15:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:15:31.744Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9eff43f0819e6636a9339c"
+    },
+    "message_id": "reddit_t3_1w9zu17",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "Pflugerville",
+    "username": "Jvanglorious",
+    "title": "Dirt water",
+    "text": "Dirt water\n\nCan anyone explain why the water in this city tastes like dirt? I've lived here for nearly a decade and never had issues until the beginning of this year. I wrote it off as low lake levels and was excited when the rain brought relief in May. That only lasted a few weeks though. We're back to this dirt flavored water. What the fuck.   Honestly, I'm so sick of this city and state. I need solar panels and a battery to ensure my home has power, a new roof or car every 3 years because of hail, and now it seems I need to drill my own fucking well.       submitted by     /u/Jvanglorious     to     r/Pflugerville       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Pflugerville/comments/1w9zu17/dirt_water/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:15:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:15:31.959Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9eff44f0819e6636a9339d"
+    },
+    "message_id": "reddit_t3_1w9zu16",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "SaintMeghanMarkle",
+    "username": "Human-Economics6894",
+    "title": "That statement by the Lord Chamberlain is curious.",
+    "text": "That statement by the Lord Chamberlain is curious.\n\nhttps://preview.redd.it/u7urqm6iz4oh1.png?width=830&format=png&auto=webp&s=855ffcc4f61cf85f7251bcaa343393474c688a8d    Prime Minister Andy Burnham has joined the King and Queen at a church service in Scotland yesterday, sunday. Burnham was seen arriving at Crathie Kirk, a small, granite church on Royal Deeside, regularly visited by members of the royal family when they are staying at nearby Balmoral.   The next day—Monday—we get that statement from the Palace.   It’s interesting, because several reporters have noted that Harry has been relentlessly hounding not only Home Secretary Shabana Mahmood but also Andy Burnham himself to secure a new review from RAVEC; he’s even gone so far as to claim he wasn't informed of an alleged death threat from Al-Qaeda. Which is amusing, considering that statement from the group made headlines everywhere—yet Harry is only finding out about it now. 😏   Whatever transpired during that meeting between KC3 and the Prime Minister must have been very serious for the Palace to issue that statement.   This aligns with the events of October–November 2025, when Harry went to Canada claiming he had KC3’s permission—a move that was misinterpreted as him representing the King. It seems Harry was trying to play that same hand again. But this time, Burnham didn’t do what Starmer had done: stay silent.   I firmly believe something happened—something serious enough to prompt the Palace to issue a clarification that, at first glance, seems unnecessary. After all, reiterating that the Harkles stepped down might seem superfluous. But there is more to it than meets the eye: the statement from January 18, 2020, is being reiterated almost point for point.    https://www.royal.uk/statement-her-majesty-queen-0    Harry hates that statement issued by the Palace; he has always disavowed it, claiming it was made without his consent.   But the funniest part of the Palace statement is the final bit: \"All correspondence and administrative questions relating to the couple should be sent directly to their office, which will continue to operate separately from the Royal Household.\" If you have complaints, take them up with the Harkles 🤣🤣🤣 But it’s also a firm statement from the Palace to the government: if you decide to give the Harkles anything, that’s your decision and your problem. Don't drag us into the mess.   Harry must be furious because he's being told, \"Nothing has changed; don't lie.\"       submitted by     /u/Human-Economics6894     to     r/SaintMeghanMarkle       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SaintMeghanMarkle/comments/1w9zu16/that_statement_by_the_lord_chamberlain_is_curious/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:15:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:15:32.179Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9eff44f0819e6636a9339e"
+    },
+    "message_id": "reddit_t3_1w9zu0w",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "polyamoryR4R",
+    "username": "MilesTiger",
+    "title": "57 [M4F] #Maryland - Married ENM guy looking for music lover or creative soul",
+    "text": "57 [M4F] #Maryland - Married ENM guy looking for music lover or creative soul\n\nHi!   I am happily married and ENM. Located in the suburbs of Washington DC. I am laid back, tall (6'2\"), and fit (180 lbs). I've been told many times that I look young for my age (57).   I love cooking, ethnic cuisines, sweet cocktails, art house films, indie rock. I write songs, play guitar/piano and have a rock band. I manage my own IT business and have a very flexible schedule.   I am drawn to wit, adventure and moments that make you think, laugh and feel truly alive.   I'm looking to meet up in person eventually (though it could be fun to have an online friend too). Maybe we could meet for coffee or a drink? Also love dinner dates and seeing live music.   I would like an ongoing connection/FWB where there’s attraction, flirting and friendship and not just a random one-time hookup. I like a bit of kink but also love vanilla a lot too. Regular STI testing is a must.   Please don't be shy about reaching out to me!       submitted by     /u/MilesTiger     to     r/polyamoryR4R       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/polyamoryR4R/comments/1w9zu0w/57_m4f_maryland_married_enm_guy_looking_for_music/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:15:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:15:32.400Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9eff44f0819e6636a9339f"
+    },
+    "message_id": "reddit_t3_1w9zu0n",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "NonDessKnightSquad",
+    "username": "ItsMeNebulae",
+    "title": "I hate that there are no comics or songs or theories that have NonDessKnight in them without being about the Knight not being Dess.",
+    "text": "I hate that there are no comics or songs or theories that have NonDessKnight in them without being about the Knight not being Dess.\n\nTitle. Like whyyyyyyy I see a really cool comic and then it just casually assumes the Knight is Dess, and NEVER anyone else.       submitted by     /u/ItsMeNebulae     to     r/NonDessKnightSquad       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NonDessKnightSquad/comments/1w9zu0n/i_hate_that_there_are_no_comics_or_songs_or/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:15:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:15:32.616Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9eff44f0819e6636a933a0"
+    },
+    "message_id": "reddit_t3_1w9zu0j",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "FriendshipAdvice",
+    "username": "ash214375",
+    "title": "Would you stay with a friend if?",
+    "text": "Would you stay with a friend if?\n\nWould you stay with a friend who invalidated your feelings at times? and they also couldn’t handle hard conversations. When you would talk to them about any issues you would have with them even if you talked calmly about it they would get defensive or give you the silent treatment        submitted by     /u/ash214375     to     r/FriendshipAdvice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FriendshipAdvice/comments/1w9zu0j/would_you_stay_with_a_friend_if/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:15:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:15:32.830Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9eff45f0819e6636a933a1"

@@ -1,0 +1,416 @@
+  },
+  {
+    "_id": {
+      "$oid": "6a9f193f1790aa25e94b892c"
+    },
+    "message_id": "reddit_t3_1wa2wae",
+    "topic_key": "cpa",
+    "search_keyword": "CPA",
+    "platform": "reddit",
+    "subreddit": "BlocParty",
+    "username": "IllustriousEmploy420",
+    "title": "Lagoon Blue",
+    "text": "Lagoon Blue\n\nhttps://youtu.be/HQxomS-L2Ss?is=0R2FZTfb9-GR\\_xOK    Thoughts on the new mix?       submitted by     /u/IllustriousEmploy420     to     r/BlocParty       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BlocParty/comments/1wa2wae/lagoon_blue/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:06:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:06:23.538Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f193f1790aa25e94b892d"
+    },
+    "message_id": "reddit_t3_1wa2w9y",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "Akool_Official",
+    "username": "Ai_daily_news",
+    "title": "A world-model training corpus built in Unreal Engine: 2,691 hours at 1080p, five synchronised cameras, and nine keyboard actions",
+    "text": "A world-model training corpus built in Unreal Engine: 2,691 hours at 1080p, five synchronised cameras, and nine keyboard actions\n\nThis paper went up on arXiv on September 3, from a group at Joy Future Academy, Tsinghua University and HKUST. It is not a model. It is the pipeline and the corpus behind one — a synthetic data generator built on Unreal Engine that produces action-conditioned video for world-model pretraining, and the numbers are unusually specific for a data paper.   The corpus is 2,691 hours at 1080p plus a further 6,076 hours at 720p. A standard trajectory is 1,800 frames, sixty seconds, captured from five synchronised camera views. They acquired 2,384 asset packs and kept 429 levels for production, across four scene categories — historical and fantasy, science fiction, nature and landscape, urban and architectural — each holding roughly a fifth to a quarter of the total. Forty humanoid characters. Every frame carries metadata: character position, orientation, action state, and camera transforms, temporally aligned to the visual transitions. Rendering ran on 25 nodes of 8 RTX 5090s, 200 GPUs, in a two-stage pipeline that records physics and input in real time and then replays the whole thing offline at high render quality.   The design decision worth arguing about is the action vocabulary. Actions are nine discrete keyboard states — W, A, S, D, the four diagonals, and idle — and the authors deliberately weighted the distribution so that diagonal, backward and lateral movement makes up 46.6 percent of it. That is a direct response to a known failure: train on natural gameplay and forward motion dominates so heavily that the model learns \"time passing means moving forward\" and never properly separates the action from the scene dynamics. Correcting the imbalance in the data is much cheaper than correcting it in the loss.   What this represents is the part of world-model work nobody publishes. Every announcement in this area is a demo reel and a benchmark table, and the actual bottleneck — getting millions of frames where you know exactly what input produced each transition — is treated as an implementation detail. Real footage does not come with the action labels. Putting the whole thing inside a game engine solves the labelling problem completely and buys the synchronised multi-camera views for free, at the cost of a domain gap nobody has measured here.   The honest caveats are large and the paper states most of them itself. There is no model trained on this corpus reported anywhere in it, and no downstream metric — it describes itself as the synthetic component feeding a system called EchoWM, and stops there. The action vocabulary is locomotion only: no jumping, running, climbing or touching anything. The authors also flag that their perceptual quality filters may not correlate with learning utility at all, which is a considerable thing to admit about your own filtering. And I could not confirm from the text that the data or the pipeline is actually being released, or under what licence.   If you have trained anything action-conditioned — did synthetic data transfer, or did you find the model had learned the renderer rather than the world?       submitted by     /u/Ai_daily_news     to     r/Akool_Official       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Akool_Official/comments/1wa2w9y/a_worldmodel_training_corpus_built_in_unreal/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:06:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:06:23.770Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f19401790aa25e94b892e"
+    },
+    "message_id": "reddit_t3_1wa2w99",
+    "topic_key": "ai chatbot",
+    "search_keyword": "AI chatbot",
+    "platform": "reddit",
+    "subreddit": "americasfinestsub",
+    "username": "yt-app",
+    "title": "New CBS 8 San Diego Upload: AI chatbots giving questionable advice to sleep apnea patients",
+    "text": "New CBS 8 San Diego Upload: AI chatbots giving questionable advice to sleep apnea patients\n\nsubmitted by     /u/yt-app     to     r/americasfinestsub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/americasfinestsub/comments/1wa2w99/new_cbs_8_san_diego_upload_ai_chatbots_giving/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:06:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:06:24Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f19401790aa25e94b892f"
+    },
+    "message_id": "reddit_t3_1wa2w8x",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "teflteachers",
+    "username": "Antiwarrior7",
+    "title": "Finding the right TEFL provider/CELTA/Lack of a BA",
+    "text": "Finding the right TEFL provider/CELTA/Lack of a BA\n\nHi there,   I come seeking enlightenment, for I am very much stuck on the road to greener pastures. I am 33 years old, I hold a Diploma of Higher Education in Social Policy from the University of Lincoln (UK), and I have some years of teaching experience (mostly tutoring individuals or small groups). I am at that stage of one’s life where one can still count on a certain amount of youthful energy while at once realizing that the term “spry chicken” is starting to paint an increasingly inaccurate portrait of oneself.   Allow me to outline my current predicament: I would very much like to teach English abroad (preferably in Asia, although I am open to other destinations). I learned that in order to do so, one should at least obtain a TEFL qualification. Very well then. Unfortunately, the search for a reputable TEFL qualification provider has proven something of an ordeal. It can be a veritable jungle out there. Every TEFL provider I have checked out comes complete with mixed reviews and the occasional horror story. Some appear to be better than others, namely the International TEFL Academy (ITA) and the TEFL Academy. Still, I would like to be sure they are worthy of an investment of money and, perhaps even more importantly, time before moving any further. I also hear about CELTA and that such a qualification can make a world of difference. Is that true? Should I invest my time and money in that program, besides a TEFL course? Your guidance in these matters would be greatly appreciated.   Let us now move onto the next issue, admittedly an even more pressing one.   Foremost in my mind is the absence of a Bachelor’s among my academic qualifications. As stated at the outset, I only hold an associate degree (Diploma of Higher Education). One reads of countries with relatively lax approaches to academic qualifications where it is indeed possible to find good employment as an ESL teacher without a BA. I have read the Americas might offer such an opportunity with places like Mexico, Costa Rica or Colombia, although from what I gather the pay can be comparatively low. Turning to Asia, Cambodia has a reputation for being something of an ESL wild frontier, where men and women armed with little more than good will and a tourist visa can make something of a career out of their teaching skills; however, reports of dodgy infrastructures and an even dodgier legal framework paint not so rosy a picture. So even countries which are reportedly easier to access present their own set of challenges. Nevertheless, could those countries indeed be considered viable options, perhaps as launching pads to better destinations? I have read that Taiwan, by asking for a mere associate degree for a working visa, could prove something of a happy medium between loosely, informally regulated countries like Cambodia and countries with strict immigration requirements such as Japan and South Korea. Still, even after such considerations, concerns about the lack of a BA on my part continue to loom large on my mind. I have read that a BA really does mean the difference between a proper position in an actual professional setting with potential for saving and professional growth and an iffy job at some fishy institution with laughable remuneration and grueling hours.   I should perhaps add that while part of my formative years was spent in Britain and English is de facto my first language, I am technically not a citizen of an English-speaking country. I mention this because it is my understanding that some countries tend to privilege citizens of the Anglosphere when handing out visas for ESL work.   At this point you might be thinking that I am being a frightful worrywart and that I am overthinking it and that I should just go for it and set sail into the unknown. You might, to an extent, be right. But experience has taught me that, contrary to contemporary sensibility, there is such a thing as underthinking it. I have been young and relatively fancy free and, in the days of wine and roses, maybe even a bit of what the kids call a “madlad” (or at least I think they do). Were I in my early twenties I would definitely take the plunge and, to coin a phrase, improvise, adapt and overcome. But the harsh reality is that I will be pushing forty in a few years and I aim at attaining some version of stability in the not too far future. I can ill-afford to waste precious years mucking about. As such, I deem it wise to undergo a measure of preparation.   So to recap: which TEFL provider would you recommend? Is a CELTA qualification a must-have? And finally, is it a realistic proposition to embark on an ESL adventure abroad without a BA, and if so, which destinations should I set my sights on?   I would like to thank you in advance for your time and your kind attention, and I hope the admitted verbosity of this message does not result in a TL;DR scenario.   Thank you so very much       submitted by     /u/Antiwarrior7     to     r/teflteachers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/teflteachers/comments/1wa2w8x/finding_the_right_tefl_providerceltalack_of_a_ba/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:06:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:06:24.233Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f19401790aa25e94b8930"
+    },
+    "message_id": "reddit_t3_1wa2w6d",
+    "topic_key": "property manager",
+    "search_keyword": "property manager",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "📢 Mercy Housing [HIRING] a Property Manager - Ferndale Square!",
+    "text": "📢 Mercy Housing [HIRING] a Property Manager - Ferndale Square!\n\nCompany: Mercy Housing   Location: Ferndale, WA 📍   Date Posted: September 04, 2026 📅   Categories: #parttime #humanresources #support   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=propertymanagementjobs.com&rurl=aHR0cHM6Ly9wcm9wZXJ0eW1hbmFnZW1lbnRqb2JzLmNvbS9qb2JzL3Byb3BlcnR5LW1hbmFnZXItZmVybmRhbGUtc3F1YXJlLWQ5MTk4MDM4    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wa2w6d/mercy_housing_hiring_a_property_manager_ferndale/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:06:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:06:24.539Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1972f0819e6636a93e1d"
+    },
+    "message_id": "reddit_t3_1wa2x4h",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "SuperActionStatue",
+    "username": "Powerful_Beach4330",
+    "title": "Thoughts on BIG figures ? Are they the same as normal figures",
+    "text": "Thoughts on BIG figures ? Are they the same as normal figures\n\nsubmitted by     /u/Powerful_Beach4330     to     r/SuperActionStatue       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SuperActionStatue/comments/1wa2x4h/thoughts_on_big_figures_are_they_the_same_as/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:07:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:07:14.882Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1973f0819e6636a93e1e"
+    },
+    "message_id": "reddit_t3_1wa2x45",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "hyatt",
+    "username": "bargainmango",
+    "title": "Guilt-Free Getaway at Park Hyatt Chicago",
+    "text": "Guilt-Free Getaway at Park Hyatt Chicago\n\nHas anyone booked this experience? Can't decide if I want to splurge for the Park Hyatt, specifically the Guilt-Free Getaway that includes \"Bottle of bubbly upon arrival - Bento box of sushi and hot tea for two delivered in-room - Choice of massage or facial at NoMI Spa - Take home care package, including two Le Labo candles, two Eberjey robes, two silk sleeping masks, two pairs of Park Hyatt Chicago slippers.\"    We're currently between Athletic Association and Thompson, but I see so many reviews stating how nice Park Hyatt is that I'm considering upgrading and surprising my husband for our first trip in many years. I'll take any recommendations! We'll be staying in mid-November with plans of attending an NBA game, doing an architecture tour, high-rise excursion, and art museums.       submitted by     /u/bargainmango     to     r/hyatt       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hyatt/comments/1wa2x45/guiltfree_getaway_at_park_hyatt_chicago/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:07:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:07:15.084Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1973f0819e6636a93e1f"
+    },
+    "message_id": "reddit_t3_1wa2x40",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "PakFreelancers",
+    "username": "Reedrichards699",
+    "title": "Pakistani freelancers do your clients actually ask for AI chatbots?",
+    "text": "Pakistani freelancers do your clients actually ask for AI chatbots?\n\nHey everyone, I'm building a small SaaS and wanted to get some opinions from people here who actually work with clients.   For those of you building websites, SaaS products, ecommerce stores, etc.:   Do your clients ever ask for things like website AI chatbots, FAQ automation or customer-support bots?   And when they do, what do you normally do?     Build it yourself   Use an existing tool   Recommend another service   Tell the client it's outside the project     I'm asking because we're exploring a partner/reseller model specifically for Pakistani freelancers and small agencies.   The idea is pretty simple: if a client wants a chatbot, the freelancer could offer it as an add-on instead of spending time building and maintaining the whole thing themselves.   I'm mainly interested in hearing how you guys currently handle these requests. Not trying to turn this into an ad thread 😅   Would genuinely like to hear what your experience has been.       submitted by     /u/Reedrichards699     to     r/PakFreelancers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PakFreelancers/comments/1wa2x40/pakistani_freelancers_do_your_clients_actually/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:07:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:07:15.285Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1973f0819e6636a93e21"
+    },
+    "message_id": "reddit_t3_1wa2x3y",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "BFCIA",
+    "username": "hyacinth02jpg",
+    "title": "What did they do to four 😭✌️",
+    "text": "What did they do to four 😭✌️\n\nWhole video was just a bunch of BFDI episodes out of order       submitted by     /u/hyacinth02jpg     to     r/BFCIA       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BFCIA/comments/1wa2x3y/what_did_they_do_to_four/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:07:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:07:15.699Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1974f0819e6636a93e23"
+    },
+    "message_id": "reddit_t3_1wa2x36",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "PinkOmega",
+    "username": "No-Leg2555",
+    "title": "In Tongues Promo CD",
+    "text": "In Tongues Promo CD\n\nI have been looking for years for this CD and was hoping anyone here would be willing to sell theirs to me. I am willing to pay double whatever the last recorded one sold for or potentially even more. (Last one on Discogs was 150, so 300$ minimum.) It’s an item I have wanted for so long and I know they’re out there.        submitted by     /u/No-Leg2555     to     r/PinkOmega       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PinkOmega/comments/1wa2x36/in_tongues_promo_cd/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:07:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:07:16.098Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1974f0819e6636a93e24"
+    },
+    "message_id": "reddit_t3_1wa2x34",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AskMechanics",
+    "username": "Loose-Bookkeeper-250",
+    "title": "Was I crazy for buying this 2004 Silverado TD 2500HD Duramax for $1,000?",
+    "text": "Was I crazy for buying this 2004 Silverado TD 2500HD Duramax for $1,000?\n\nPicked up a 2004 Chevy Silverado 2500HD 6.6L Duramax Allison transmission for only $1,000.   260k miles  4WD  Crew cab  6.5 ft bed  Allison transmission  Body/paint are in mint condition for the year  Interior is also in really good shape   Main issue is that it needs head gaskets  Other than that, the truck is in surprisingly good condition and looks like it was taken care of. I have tech experience myself so I’ll be taking on the labor myself.   Obviously 260k miles is a lot, so I know there could be other things that pop up down the road, but for $1,000 I felt like it was hard to pass up.  What do you guys think?    Was this a good deal, or am i underestimating what I’m getting myself into with a 260K mile duramax?  Would you guys fix the head gaskets and run it, assuming the rest of the truck checks out?       submitted by     /u/Loose-Bookkeeper-250     to     r/AskMechanics       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskMechanics/comments/1wa2x34/was_i_crazy_for_buying_this_2004_silverado_td/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:07:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:07:16.299Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1974f0819e6636a93e25"
+    },
+    "message_id": "reddit_t3_1wa2x32",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "radeon",
+    "username": "JTMMidas",
+    "title": "RMA or Return? Gigabyte 9070 XT",
+    "text": "RMA or Return? Gigabyte 9070 XT\n\nI’ve got one of the Gigabyte’s with the bad hotspot temps. I could still return it to Best Buy and hopefully get a different brand? I really liked how much better it was than my 4060ti but the temps are bad like many others.       submitted by     /u/JTMMidas     to     r/radeon       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/radeon/comments/1wa2x32/rma_or_return_gigabyte_9070_xt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:07:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:07:16.501Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1974f0819e6636a93e26"
+    },
+    "message_id": "reddit_t3_1wa2x2b",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "lost",
+    "username": "Specialist-Ring-3974",
+    "title": "Why did John Lock turn evil?",
+    "text": "Why did John Lock turn evil?\n\ni know he was sort of evil at the beginning, trying to stay on the island and being at conflict with Jack the entire time. but he chilled out a lot. Now he’s full fledged evil all the sudden? Did this have to do with Ben resurrecting him?       submitted by     /u/Specialist-Ring-3974     to     r/lost       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/lost/comments/1wa2x2b/why_did_john_lock_turn_evil/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:07:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:07:16.704Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1974f0819e6636a93e27"
+    },
+    "message_id": "reddit_t3_1wa2x27",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "SamsungHelp",
+    "username": "Difficult-Badger-322",
+    "title": "How to Stop an app from closing",
+    "text": "How to Stop an app from closing\n\nI want an app to stay in background after i hit close all, i think they removed this feature i used to click the three dots that appear when you are in the background apps window but now there's an option for this feature there        submitted by     /u/Difficult-Badger-322     to     r/SamsungHelp       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SamsungHelp/comments/1wa2x27/how_to_stop_an_app_from_closing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:07:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:07:16.907Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1975f0819e6636a93e28"
+    },
+    "message_id": "reddit_t3_1wa2x23",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "ElderScrolls",
+    "username": "ResidentDrama9739",
+    "title": "Would anyone like to see smaller games in between mainline titles?",
+    "text": "Would anyone like to see smaller games in between mainline titles?\n\nThis is something that I would like to see and I think it could make the wait between mainline games a little better. TES has the potential for small budget spinoffs as filler content that are made by different studios. For example, I think something like The Elder Scrolls: Tactics (a turn based RPG, similar to XCOM) would work. I also think a dungeon crawler that's around 20-30 hours at most could work as well. With TES spinoff games, I feel like they have the potential to explore areas that don't appear in mainline games such as Black Marsh or Elsweyr. I could see another TES Adventures game working as well.        submitted by     /u/ResidentDrama9739     to     r/ElderScrolls       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ElderScrolls/comments/1wa2x23/would_anyone_like_to_see_smaller_games_in_between/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:06:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:07:17.107Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1975f0819e6636a93e29"
+    },
+    "message_id": "reddit_t3_1wa2x22",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "EnoughTrumpSpam",
+    "username": "DumbMoneyMedia",
+    "title": "Prophecy Meme: \"Since the dawn of time the Moon has looked at America and said, 'Yes that is my Home!!!'\": Trump announces \"Moon-A-Lago\" and tells followers to buy tickets today",
+    "text": "Prophecy Meme: \"Since the dawn of time the Moon has looked at America and said, 'Yes that is my Home!!!'\": Trump announces \"Moon-A-Lago\" and tells followers to buy tickets today\n\nsubmitted by     /u/DumbMoneyMedia     to     r/EnoughTrumpSpam       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/EnoughTrumpSpam/comments/1wa2x22/prophecy_meme_since_the_dawn_of_time_the_moon_has/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:06:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:07:17.308Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1975f0819e6636a93e2a"
+    },
+    "message_id": "reddit_t3_1wa2x1q",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "biggboss",
+    "username": "mai_kyu_btaun",
+    "title": "WATCHED EPISODE 2 AND ITS HONESTLY 9/10",
+    "text": "WATCHED EPISODE 2 AND ITS HONESTLY 9/10\n\nBhaiii jaisa everyone outside are saying ki kisko utha ke le aaye hoo , guyss they have their individuality or sb dikh rahe hai except rohed and wo rhitiya ( maybe i guessed the name wrong ) bhaii qaizii is straight up kalkaar i am loving whatever is wrong with him and he is masala , yung ka \"pyar vyar mat kar mereko , nafrat kar merese\" is cracking me up and bhai yung is giving content , gullu and kannika so fake like bhai kaafi fake and bullies same applies to mahi and the way she is bringing ex husband is weird i loved how rikki called her out , arishfa feels off to me matlab she is asking for bhasad or koi kar de raha to alag hi chillane lag rahi hai maybe she wants to act like farhanna , marry kom ke kharrate time bhaii mujhe dimaag dard de raha tha but she is sweet , i like love too matlab achha de rahe content amarpali bhi is like good scout v theek hi chal raha abhi tak dikha thora aisa uditi ke time she is also good , gandhi is sweet i like him a lot i mean maybe he is acting but he is really good i like him thats all . i dont know who i am supporting fully but i know whom i hate. overall everyones vibe is fresh koi chhupa hua uss level ka nahi dikh raha and i am loving it till now        submitted by     /u/mai_kyu_btaun     to     r/biggboss       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/biggboss/comments/1wa2x1q/watched_episode_2_and_its_honestly_910/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:06:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:07:17.509Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1975f0819e6636a93e2b"
+    },
+    "message_id": "reddit_t3_1wa2x1e",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "kandi",
+    "username": "RepresentativeEmu941",
+    "title": "made a one-inspired star cuff",
+    "text": "made a one-inspired star cuff\n\nevery time i see kandi star cuffs they remind me of one from bfdi so i made this lol   alao tried using perler beads for the first time :00       submitted by     /u/RepresentativeEmu941     to     r/kandi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/kandi/comments/1wa2x1e/made_a_oneinspired_star_cuff/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:06:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:07:17.711Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1975f0819e6636a93e2c"
+    },
+    "message_id": "reddit_t3_1wa2wzz",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "milgram",
+    "username": "Juwun1",
+    "title": "Why is it normalized to villainize \"unlikeable\" characters, and make \"likeable\" characters angels that did no wrong?",
+    "text": "Why is it normalized to villainize \"unlikeable\" characters, and make \"likeable\" characters angels that did no wrong?\n\nJun here! I was not going to make a serious post anymore for Milgram, at least not until Kotokos Trial. But after thinking, I needed to get this off my chest.   Oh, this post also won't speak about the main cast for the main part. I will speak about Rei, Mikotos Boss and Ryousuke . I was going to include Amanes Mother and Father but I don't feel like it. Let's start.      Ryousuke     I had brought up this topic months ago, but my opinion from back then slightly changed. I can see both the arguments for people stating that he is Homophobic, but also people that say he is not. But my opinion does not change regardless on what basis we use. My opinion, obviously, does not count for the whole LGBTQ Community but let's go with the former and say that he is Homophobic. So what? Fuuta doxxed someone. Muu stabbed someone. Kazui lied for years. Mikoto killed TWELVE people. What is worse? Getting uncomfortable, or getting killed? Hearing a dumb comment, or having your location revealed to pedophiles? Mhm?    Now, even if we assume he was NOT Homophobic. His reaction, while not nice is understandable. You have sympathy for Hinakos Situation, do you not? Because she was lied to, correct? Wasn't Ryousuke...Not lied to as well? Why is his reaction of getting angry not justified? You don't confess such a serious thing, that you have kept hidden for life while you are drunk.   Now, to my point. Ryousuke said \"That's disgusting\". That is everything he said. He did not threaten Kazui, kill Kazui, get people to kill him, not even reveal his secret to anyone. He said that's disgusting. Reminder, Haruka strangled two children, Fuuta doxxed a minor, Mikoto killed TWELVE people. Get your priorities straight.     Mikotos Boss      Now, I will keep myself as short as I can here.    Mikoto was not forced to work there. His Boss did not force him, did not threaten him, and it is not even like Mikoto could not have gotten any other job. If he was \"as gifted\" as everything said he was, surely he could have found a different job? Nobody forced him to ever work EXACTLY there. He has free will. He could have stopped. And to the \"Call/Message\" at 1 AM. I will simply type out what I would have done, if this ever happend to me.    Scenario 1: I don't see it because my notifications are off. Why are your notifications on at 1 AM?    Scenario 2: I somehow see the message. I will type \"No, I will not appear there now. If you don't want me working for your company because of that, you may gladly fire me. Good Night and see you tomorrow.\" (If I have work tomorrow)    Wow, Solution solved to that problem. That was so hard, a \"gifted\" person could not think of that.    So, Mikotos Boss was a work place with shitty conditions, that was completely optional to work as. Amane killed Shidou and by extension Mahiru, again, Fuuta doxxed someone, Kotoko mutilated two people, and beat up tons of other people.    And yet people have the audacity to say \"I wish John killed him instead.\" Wishing Death upon someone as \"Revenge\" is immature and will leave you empty as a person. If it is a purely fictional stance, it is fine but there are some people that would wish for something like this to happen, genuinely. And that is something I cannot support. (And before someone comes at me - I, for example, wished for Amane to get voted guilty and I would not care if she died. I still voted her innocent, though, and if she was a real person I would be the first person to forgive her, over nearly anyone else in Milgram. But I can separate my wishes for a fictional media compared to what I would think in RL. There are a lot of people that seem to have a hatred for Mikotos Boss which goes way beyond fiction.)      Rei     This was the original reason I wanted to write this post, and what I want to talk about is how Rei by a lot of people gets glazed like crazy. \"Ngl if I had to put up with Muus BS I would have done the same as Rei\".    Muu could have died in that interaction if Rei hit her a bit differently with the chair. If she got hit badly in the head, neck or on other places like the eye she could have died, or seriously gotten disabled permanently.    Yet nobody ever speaks about how deadly this could have ended. Because Muu \"deserved\" it. Which, by the way, Muu was never the main bully but a bystander that watched, but that is a completely different situation. In a different scenario, Rei is the one in Milgram, not Muu. Now, do you see the difference?    Ryousuke or Mikotos Boss were never even close to killing someone, while Rei was. Yet, only two of them are treated like the devils incarnation, and the other gets defended, even though her actions could have been fatal unlike the actions of the two others.    How does that make any sense? You do not even need to love those two and hate Rei. It is completely fine to hate the other two, and love Rei. But can we look at the actual actions of characters, and not villainize some characters and make others out to be completely morally correct?   Jun out.        submitted by     /u/Juwun1     to     r/milgram       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/milgram/comments/1wa2wzz/why_is_it_normalized_to_villainize_unlikeable/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:06:56Z"
+    },
+    "fetched_at": {

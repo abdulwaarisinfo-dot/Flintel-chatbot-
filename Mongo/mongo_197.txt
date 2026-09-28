@@ -1,0 +1,416 @@
+    },
+    "message_id": "reddit_t3_1w9ih8m",
+    "topic_key": "hello",
+    "search_keyword": "hello",
+    "platform": "reddit",
+    "subreddit": "immich",
+    "username": "TheSamDickey",
+    "title": "Question about restoring from backup",
+    "text": "Question about restoring from backup\n\nHello! I run Immich on docker inside of a Proxmox VM. I have the raw assets (/usr/src/app/upload/upload) mounted via NFS to my NAS which has much more storage.   The SSD running my Proxmox host died, and my most recent VM backup (via PBS) was from about a month ago. I had no problem getting a new SSD, restoring the VM, and booting up Immich.   The trouble I have - My Immich server is unaware of the assets that were uploaded after the VM was backed up. The raw photos / videos are all on the nas, but immich isn't detecting them. I don't want to re-upload those photos and have ~500 duplicates stored on the NAS.   Is there a way to get Immich to detect the already uploaded assets on the NAS and add them to the db? I've been digging around the documentation and previous threads without finding anyone that has solved this issue before.   Thanks!       submitted by     /u/TheSamDickey     to     r/immich       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/immich/comments/1w9ih8m/question_about_restoring_from_backup/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T04:55:30Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T04:56:07.669Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e43e7f0819e6636a8d39d"
+    },
+    "message_id": "reddit_t3_1w9ih8e",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "BoredInBangalore",
+    "username": "disguisedframe",
+    "title": "Drinks, Vibes and Hookup",
+    "text": "Drinks, Vibes and Hookup\n\n22M | Entrepreneur | Fair | Speaks fluent English and Hindi    Looking for a fun girl to join me at Drava Pub, Koramangala this Thursday , good music, drinks, flirting, conversation and hopefully some chemistry.    Just being upfront: I’m looking for a casual hookup, not a relationship. If we’re attracted to each other and the vibe is right, I’m completely open to spending the night together. No expectations beyond that, and no attachment afterward.   I’ll be staying in Koramangala that night.   If you’re also looking for a casual hookup with someone you actually vibe with, DM me “Drava” and tell me a little about yourself. Let’s chat first and see if there’s chemistry.       submitted by     /u/disguisedframe     to     r/BoredInBangalore       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BoredInBangalore/comments/1w9ih8e/drinks_vibes_and_hookup/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T04:55:29Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T04:56:07.869Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e43e8f0819e6636a8d39e"
+    },
+    "message_id": "reddit_t3_1w9ih89",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "Rag",
+    "username": "Intelligent_Coast930",
+    "title": "Built a local t-SNE viewer for debugging retrieval quality (Java/LangChain4j)",
+    "text": "Built a local t-SNE viewer for debugging retrieval quality (Java/LangChain4j)\n\nBeen debugging a RAG pipeline that kept retrieving irrelevant chunks, with basically nothing to go on besides staring at logged text. Built a small local tool for it: it projects your stored embeddings to a 2D t-SNE map, colors by cluster, and shows live similarity scores against what would actually get retrieved when you type a query. It also flags when the query ends up embedded with a different model than the one that built the index, which turned out to be a mistake I'd made myself.   It's Java/LangChain4j specific (EmbeddingStore), zero server or API key needed to run it locally.   Repo:  https://github.com/stlahxm/lc4j-lens    Mainly curious how other people here debug retrieval quality day to day, is this the kind of thing you'd reach for, or is there already tooling for this in other stacks that I should be looking at?       submitted by     /u/Intelligent_Coast930     to     r/Rag       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Rag/comments/1w9ih89/built_a_local_tsne_viewer_for_debugging_retrieval/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T04:55:29Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T04:56:08.068Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e43fbf3d11795a689ec29"
+    },
+    "message_id": "reddit_t3_1w9ihrw",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "discordfriends",
+    "username": "cute-ghoul_0125",
+    "title": "25f usa looking for my bestie 🫶🏽",
+    "text": "25f usa looking for my bestie 🫶🏽\n\nHiii!   I am looking for friends as i have none irl or online like a loser :( but im trying to put myself out there so why not post here.   A little about myself: I like smoking either vapes or weed, drama/reality tv, coffee, diamond painting, my guinea pigs, tiktok, coloring, shopping and a lot more i can't think of   But anyways i'm looking for friends, whether it's short term or long term. I'm pretty much open to anything lol so we can chat all day or here and there it's up to you! I'm so excited! I hope i can make some good friend on here. Thank you for reading :)       submitted by     /u/cute-ghoul_0125     to     r/discordfriends       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/discordfriends/comments/1w9ihrw/25f_usa_looking_for_my_bestie/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T04:56:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T04:56:27.463Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e43fbf3d11795a689ec2a"
+    },
+    "message_id": "reddit_t3_1w9ihrk",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "snowboarding",
+    "username": "BigBootyBebe",
+    "title": "Possible to ship snowboard from USA to Europe",
+    "text": "Possible to ship snowboard from USA to Europe\n\nI want to buy a snowboard. Theres only one left and it only ships to the us and canada. I have friends in the us and in canada, so that wouldnt be a problem. I just don‘t know how to ship it from there to europe. The only option i found was for 400$. Is that really the cheapest possible option? Wondering if anybody else has experience with this. Could also pick it up when i go to america sometime, but don‘t know how much the airlines would want either. Thx in advance🫶       submitted by     /u/BigBootyBebe     to     r/snowboarding       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/snowboarding/comments/1w9ihrk/possible_to_ship_snowboard_from_usa_to_europe/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T04:56:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T04:56:27.677Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e43fbf3d11795a689ec2b"
+    },
+    "message_id": "reddit_t3_1w9ihri",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "Radiationcirclejerk",
+    "username": "AdNovel4898",
+    "title": "I was messing around with the controls of my makeshift reactor, but I’m not too sure what I did that made her so happy!!! She’s literally jumping for joy right now!😁",
+    "text": "I was messing around with the controls of my makeshift reactor, but I’m not too sure what I did that made her so happy!!! She’s literally jumping for joy right now!😁\n\nI’ll post the video later, I’m going to make a super cute edit, it’s going to be adorable! 🎀 🙌       submitted by     /u/AdNovel4898     to     r/Radiationcirclejerk       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Radiationcirclejerk/comments/1w9ihri/i_was_messing_around_with_the_controls_of_my/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T04:56:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T04:56:27.876Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e43fcf3d11795a689ec2c"
+    },
+    "message_id": "reddit_t3_1w9ihps",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "Kinetix16",
+    "title": "Sweet Potato Wedges: Rare Ingredients and Sweet Streams",
+    "text": "Sweet Potato Wedges: Rare Ingredients and Sweet Streams\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Kinetix16     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1w9ihps/sweet_potato_wedges_rare_ingredients_and_sweet/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T04:56:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T04:56:28.119Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e43fcf3d11795a689ec2d"
+    },
+    "message_id": "reddit_t3_1w9ihp7",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "MeidasTouch",
+    "username": "Alissinarr",
+    "title": "Assailant with gun lunged at democrat candidate at an event Sunday.",
+    "text": "Assailant with gun lunged at democrat candidate at an event Sunday.\n\nOther reddit post had a pic of him handcuffed with his -hopefully unloaded- gun on the same bench.       submitted by     /u/Alissinarr     to     r/MeidasTouch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MeidasTouch/comments/1w9ihp7/assailant_with_gun_lunged_at_democrat_candidate/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T04:56:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T04:56:28.337Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e43fcf3d11795a689ec2e"
+    },
+    "message_id": "reddit_t3_1w9ihp2",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "baigan_ke_baataan",
+    "title": "Grab 25⚡ from u/baigan_ke_baataan!",
+    "text": "Grab 25⚡ from u/baigan_ke_baataan!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/baigan_ke_baataan     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1w9ihp2/grab_25_from_ubaigan_ke_baataan/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T04:56:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T04:56:28.536Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e43fcf3d11795a689ec2f"
+    },
+    "message_id": "reddit_t3_1w9ihoj",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "DailySolitaire",
+    "username": "throwaway_0484",
+    "title": "Just crushed this deck in 108s! Can you do better? 🏆",
+    "text": "Just crushed this deck in 108s! Can you do better? 🏆\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/throwaway_0484     to     r/DailySolitaire       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DailySolitaire/comments/1w9ihoj/just_crushed_this_deck_in_108s_can_you_do_better/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T04:56:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T04:56:28.740Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e43fcf3d11795a689ec30"
+    },
+    "message_id": "reddit_t3_1w9ihof",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "desabafos",
+    "username": "gothicspecter_",
+    "title": "A falta de noção da tia do meu namorado.",
+    "text": "A falta de noção da tia do meu namorado.\n\nNão sei nem por onde começar, mas esse é oficialmente meu primeiro post aqui no Reddit.    Desde que a conheço ela é assim, fofoqueira e intrometida, tão olhuda que os olhos saltam das órbitas quase que literalmente, pois a mesma possui olhos bem desproporcionais ao rosto, foram muitos acontecimentos com essa peça, irei começar pela ordem dos acontecimentos, meu pai ganhou uma boa quantia de dinheiro e minha mãe decidiu que era hora de uma reforma na casa ( e estava precisando mesmo) botou PVC na casa, pintou, remodelou a cozinha ,o banheiro e a sala, porém todos os dias incrível mente essa mesma pessoa vinha na janela pedir alguma coisa ou comentar sobre algo, depois o marido dela começou a vir também para pedir algumas coisas, mas o interessante é que antes de saber que estávamos reformando a casa ela nem sequer chegava para falar nada na janela, e para pedir qualquer coisa recorria a tia ou a irmã, ambas moram na mesma rua que ela, enfim reforma finalizada tudo do jeitinho que minha mãe queria, ela realmente botou a personalidade dela na casa e aí iniciou outra reforma na rua, a da sala da dita cuja, e ao finalizar era a cópia idêntica da sala ( a única visão que ela conseguia ter da janela) ou seja todas as idas a janela não eram com interesse real em pedir algo que estivesse precisando e sim para visualizar a reforma e sair copiando a personalidade da casa alheia, com isso temos o segundo acontecimento, ela tem um filho mais velho, porém se envolveu com um cara após um tempo divorciada e o sonho do homem era ser pai então ela decidiu parar de tomar as pílulas anticoncepcionais ( essa época o relacionamento deles já estava conturbado então vejo como se tivesse sido um meio de prender ele já que o mesmo estava financiando a reforma da casa dela como dito anteriormente) enfim, ela engravidou e a partir daí só piora, já que pelo mais velho não ter pai é o marido dela sempre querer ter um filho ela automaticamente começou a escantear o mais velho, tudo que comprava era para o mais novo, o mais velho precisava de um novo par de tênis para ir à escola e ela não comprava, o menino só serve pra ela receber o dinheiro do bolsa família, chega a ser bizarro o tratamento até em público mesmo ela faz questão de mostrar o quão escrota ela consegue ser com o próprio filho, vendo a situação do menino a tia e as irmãs se juntam para fornecer novas vestimentas, a alimentação que ele gosta, enfim dão todo o suporte que conseguem para o mais velho, de uns dois meses para cá ela está trabalhando sem carteira assinada para não perder o bolsa família, e diz que chegou cansada, cuida do mais novo e deixa o mais Velho para dormir na casa da minha sogra, detalhe todos da casa trabalham a única cama de casal é a do meu namorado, só nós vemos uma vez na semana então queremos aproveitar até tarde, hoje é domingo amanhã é feriado então eu não trabalho e ele irá pegar mais tarde então na nossa cabeça iria ser ótimo ficarmos até mais tarde juntos, porém a tia dele mais uma vez jogou o mais velho para lá e ele começou a pedir para dormir, poxa só temos um dia na semana para ficarmos juntos e ter q cuidar do filho dos outros, aí não eu disse ao meu namorado que aquilo estava errado e ele disse que também não aguentava mais ser babá, fomos entregar o menino na casa dele, chegando lá tudo trancado, meu namorado chamou, ligamos pra ela, o celular chamou duas vezes, na terceira ela desligou o celular, continuamos batendo até dar uma hora da manhã, enfim ela ganhou pois meu namorado o levou de volta para dormir se não ele ficaria na rua e ela não abriria, qualquer dia desses estou reunindo coragem para denunciar o uso indevido do benefício já que ela e o marido trabalham, meu namorado disse que antes ele daria um ultimato sobre esse comportamento dela e se não resolvesse faríamos isso, mas sinceramente estou cheia dessa mulher,  Mil desculpas pelos erros de ortografia estou nervosa porém com sono :/        submitted by     /u/gothicspecter_     to     r/desabafos       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/desabafos/comments/1w9ihof/a_falta_de_noção_da_tia_do_meu_namorado/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T04:56:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T04:56:28.942Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e43fdf3d11795a689ec31"
+    },
+    "message_id": "reddit_t3_1w9ihnt",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "7daystodie",
+    "username": "JohnSmith1834",
+    "title": "With the new combining system, Is it possible to make any weapon totally viable?",
+    "text": "With the new combining system, Is it possible to make any weapon totally viable?\n\nAlways been a fan of the pipe machine gun, but it was obviously not very good mid - late game, wondering if that’s changed with this new system?    not played this that update dropped        submitted by     /u/JohnSmith1834     to     r/7daystodie       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/7daystodie/comments/1w9ihnt/with_the_new_combining_system_is_it_possible_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T04:56:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T04:56:29.155Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e43fdf3d11795a689ec32"
+    },
+    "message_id": "reddit_t3_1w9ihns",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "Lightworks",
+    "username": "SilverMiserable9602",
+    "title": "How to get FX Settings to adjust the framing",
+    "text": "How to get FX Settings to adjust the framing\n\nHi, I'm very new to video editing, and I'm trying to figure out how to adjust the framing for certain parts of the video. I recorded everything on OBS with my webcam overlayed onto my desktop screen, but for some parts of the video, I want to adjust the framing to be just my webcam from the corner, or specific parts of the screen. Is there a way for me to do this in the free version of lightworks? I thought it was supposed to be in FX settings, but it's saying there's no effects. I can't seem to find the answer in VFX or Edit. Please help me!    https://preview.redd.it/h3qyrlbq41oh1.png?width=1460&format=png&auto=webp&s=eb34cdedcb49fe8fd7963a7ff00fa88fa1749938        submitted by     /u/SilverMiserable9602     to     r/Lightworks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Lightworks/comments/1w9ihns/how_to_get_fx_settings_to_adjust_the_framing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T04:56:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T04:56:29.354Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e43fdf3d11795a689ec33"
+    },
+    "message_id": "reddit_t3_1w9ihmj",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "HideAndSpot",
+    "username": "Shoddy-Prune-5877",
+    "title": "Can you spot it?",
+    "text": "Can you spot it?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Shoddy-Prune-5877     to     r/HideAndSpot       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HideAndSpot/comments/1w9ihmj/can_you_spot_it/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T04:56:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T04:56:29.575Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e43fdf3d11795a689ec34"
+    },
+    "message_id": "reddit_t3_1w9ihm1",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "Miirps",
+    "username": "miirps-app",
+    "title": "Fuzz Bunny said \"Wee!\" and challenged the whole sub",
+    "text": "Fuzz Bunny said \"Wee!\" and challenged the whole sub\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/miirps-app     to     r/Miirps       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Miirps/comments/1w9ihm1/fuzz_bunny_said_wee_and_challenged_the_whole_sub/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T04:56:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T04:56:29.804Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e43fef3d11795a689ec35"
+    },
+    "message_id": "reddit_t3_1w9ihkf",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "RelationshipIndia",
+    "username": "BeneficialShare3733",
+    "title": "35M - at least be honest about what you want when you are anonymous",
+    "text": "35M - at least be honest about what you want when you are anonymous\n\nSometimes I feel like everyone on here is still projecting the best version of themselves.   Every relationship post is “I want loyalty, trust, honesty, good communication…” I mean, obviously. Who doesn’t?   This is an anonymous platform. Can we just be honest about the peculiar, unconventional or even slightly crazy things we actually want?   If you want a particular relationship dynamic, say it. If you have a weird preference, say it. If you have an issue, say it.   That’s far more useful than wasting time discussing generic things that everyone wants anyway.   Let’s just be honest with each other. Maybe then people can actually find someone compatible instead of having the same boring conversation ten times.       submitted by     /u/BeneficialShare3733     to     r/RelationshipIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RelationshipIndia/comments/1w9ihkf/35m_at_least_be_honest_about_what_you_want_when/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T04:55:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T04:56:30.036Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e43fef3d11795a689ec36"
+    },
+    "message_id": "reddit_t3_1w9ihjd",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "ClaudeWorkflows",
+    "username": "ClaudeAI-mod-bot",
+    "title": "[Workflow] Streamline UI/Text Refinement with Claude Code and Tailr's Visual Markup Tool",
+    "text": "[Workflow] Streamline UI/Text Refinement with Claude Code and Tailr's Visual Markup Tool\n\nStreamline UI/Text Refinement with Claude Code and Tailr's Visual Markup Tool    Workflow value:  85/100   Status:  active ·  Freshness:  70/100 ·  Confidence:  0.90 ·  Level:  intermediate   Categories:  Quality Control, Context & Memory, Debugging, Shipping, MCP   Original source:   r/ClaudeAI post/comment    What problem this solves   Inefficient and tedious iteration on UI elements and text copy when building applications with LLMs, specifically addressing 'AI-slop' and fine-tuning design parameters.   Summary   A workflow utilizing the open-source Tailr application to visually mark up web page elements, edit text inline, request variations, and adjust live parameters. These visual instructions are then sent as a batch to a Claude agent for implementation, streamlining UI/text iteration and quality control in LLM-assisted development.   Why it is useful   This workflow introduces a novel and highly efficient method for iterating on UI and text content generated by LLMs. It directly addresses the common pain points of 'AI-slop' and tedious manual adjustments by providing a visual, interactive interface that translates human design intent into actionable instructions for a Claude agent. The open-source nature and local execution make it highly accessible and transferable, significantly improving the human-agent collaboration loop in front-end development.   Workflow     Install Tailr locally (e.g., via  npm  or  git clone  and  npm install ).   Integrate Tailr's proxy into your existing development server setup.   Open your project in a web browser, which will now display the Tailr overlay.   Use the Tailr overlay to visually select and mark up specific UI elements or text sections on your page.   Edit text directly inline, add comments, or request multiple variations for selected elements.   For design parameters, use Tailr's generated sliders to adjust values (e.g., padding, glow, duration) live on the page.   Batch the collected visual changes and instructions and send them to your Claude agent.   Review the code changes proposed or implemented by the Claude agent based on your visual input.   Iterate on the design and copy by repeating the markup and agent instruction process.     Tools / artifacts     Tailr application (Node.js, MIT licensed)   Claude Code / Claude agent   Web browser   Development server (e.g., Node.js based)   GitHub repository (for Tailr)   npm (Node Package Manager)     Validation signals     Author's consistent personal use for Tailr's own landing page development.   Open-source project with a public GitHub repository.   Explicit request for community testing and feedback.     Limitations     Requires an external tool setup (Node.js environment and proxy integration).   Initial validation is primarily self-validation; broader community adoption and testing are still in progress.   The specific 'copy-paste prompt' for Claude to install Tailr is mentioned but not provided directly in the Reddit post (though available on the website/README).     Rate this workflow   Upvote this post if the workflow is useful, reproducible, or worth recommending.   Downvote if it is vague, outdated, unsafe, overhyped, or not reproducible.   Reply if it worked for you, failed, is outdated, or has a better alternative.      This post was generated automatically from the workflow library database.        submitted by     /u/ClaudeAI-mod-bot     to     r/ClaudeWorkflows       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeWorkflows/comments/1w9ihjd/workflow_streamline_uitext_refinement_with_claude/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T04:55:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T04:56:30.256Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e4420f0819e6636a8d39f"
+    },
+    "message_id": "reddit_t3_1w9ii6q",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "iems",
+    "username": "Meme_nation99",
+    "title": "i have moodrop chu 2 rn i am thinking to klean sv my buget is 50$ any other options",
+    "text": "i have moodrop chu 2 rn i am thinking to klean sv my buget is 50$ any other options\n\nsubmitted by     /u/Meme_nation99     to     r/iems       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/iems/comments/1w9ii6q/i_have_moodrop_chu_2_rn_i_am_thinking_to_klean_sv/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T04:56:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T04:57:04.087Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e4420f0819e6636a8d3a0"
+    },
+    "message_id": "reddit_t3_1w9ii6l",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "TheOriginals",
+    "username": "NiceWelcome2027",
+    "title": "Why people love Mikaelsons but hate Finn?",
+    "text": "Why people love Mikaelsons but hate Finn?\n\nSaw way too many posts on people disliking Finn because of S2 for tryging to kill Hope and recruit the children from the Crescent Pack?   However, even though it has not always been explicitly shown on screen, we all know that Klaus, Rebekah, Kol, and Elijah have hurt and killed children as well.   So how come the other Mikaelsons are not hated for it, but people specifically use what Finn tried to do as a reason to hate him?       submitted by     /u/NiceWelcome2027     to     r/TheOriginals       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TheOriginals/comments/1w9ii6l/why_people_love_mikaelsons_but_hate_finn/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T04:56:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T04:57:04.286Z"
+    }
+  },
+  {

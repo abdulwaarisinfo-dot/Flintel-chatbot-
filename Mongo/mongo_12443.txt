@@ -1,0 +1,416 @@
+    "text": "Delta V - How my game needs to account for trajectory planning\n\nThis is an important concept. One that will become (is) the baseline for all space travel. No matter what you do, dV is key. DeltaV: Change in velocity.    This is important because this is what tells us how much fuel and power is needed to achieve a certain goal.    For example, the math behind a mission - if done right - can significantly reduce the dV required thus increasing a mission lifetime as the mission can be completed with more fuel remaining. In this example, we don’t care how we got into space (but this is equally important), we care about how we can achieve our goal when we are IN space. And this is where dV is important. Travelling towards a target, moon, planet, …, we need to know how big of a change we have to do in our speed. By knowing this, we know what we need to carry to make it happen. In a world with no limits, we could “carry” enough dV to simply fly in a straight line from A to B. But where's the fun in that…    Everything moves, nothing is stationary, timing is key.   A trip to Venus   It's tempting to draw a straight line going there - and also impossible considering the cost that would be involved.    So to get this right, we need to calculate a trajectory. And since Venus is orbiting the sun faster than Earth does (as it's closer), we need to find the right time to do so. And it's not when Venus is closest to the earth (remember, everything is moving - quite fast).   Reaching Venus is a problem of orbital geometry. We can solve a min dV transfer (Hohmann or Lambert), launch at the correct phase angle, and only then check if our dV budget can support this trajectory.    Cheapest launch window, to intercept Venus from Earth. Note that this means waiting around 3 months to catch the window (and an additional 7 months for flight)    Below is a trajectory example of our trip to Venus. This Hohmann solution uses the best launch window, thus getting us the lowest possible dV.   The launch window is in 3 months, and flight time to Venus is 7 months.    Cheapest dV flight from Earth to Venus    If we were to take a trip to Saturn instead, which is a lot further away, the story is different.   Below is an example of the lowest possible dV flight from Earth to Saturn. We will depart in 2.5 years, and our flight time will be 2 years and 7 months.   Since planet alignment is key to get the best trajectory, we need to wait until Saturn is positioned best (Potentially waiting many years, but in this particular case, max time till launch was set to 1000 days).   Also notice how the ship appears to lose speed as it advances further from the Earth. It's really not, but this is the consequence of the Logarithmic scaling I mentioned in my previous post.    https://i.redd.it/99ezysoc1lqh1.gif    So to get all that working so we can actually plan a spaceflight, we need a flight computer that can do the calculations for us and give us the best results.   Below is an example that gives us a few options. The lowest dV solution needs around 5,000 m/s.    Trajectory solutions for Earth-Mars. Green is lowest dV at around 5,000m/s    It's all about energy, cost and patience.       submitted by     /u/ManagerGames     to     r/StrategyGames       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/StrategyGames/comments/1wl4b37/delta_v_how_my_game_needs_to_account_for/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T02:07:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T02:08:19.673Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf401faeeb96c1c63ba1ce"
+    },
+    "message_id": "reddit_t3_1wl4bap",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "ps4homebrew",
+    "username": "zeft64",
+    "title": "NEW JB TUTORIAL FROM MODDED WARFARE",
+    "text": "NEW JB TUTORIAL FROM MODDED WARFARE\n\nhttps://youtu.be/3EVhd7mLpKM    And YES this IS the new jailbreak       submitted by     /u/zeft64     to     r/ps4homebrew       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ps4homebrew/comments/1wl4bap/new_jb_tutorial_from_modded_warfare/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T02:08:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T02:08:31.488Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaf404c660c608403983db3"
+    },
+    "message_id": "reddit_t3_1wl4bz2",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "WCW2001Reimagined",
+    "username": "BlkKing001",
+    "title": "WCW Live! Post-Mayhem Webcast — Sunday, November 25, 2001",
+    "text": "WCW Live! Post-Mayhem Webcast — Sunday, November 25, 2001\n\nhttps://preview.redd.it/nqstcxo12lqh1.png?width=1536&format=png&auto=webp&s=7a07b3e8bce5d6f67cc6a7cb56f503d02f22799e     (The fast-paced alternative rock theme of WCW Live! tracks into the streaming buffer over sweeping shots of the stunned Las Vegas crowd filing out of the COX Pavilion Center. The video feed cuts directly to Jeremy Borash and Bob Ryder at the anchor desk, both looking completely electrified.)     JEREMY BORASH:  \"Internet world, welcome in! It is eleven-fifteen on Sunday night, November twenty-fifth, two-thousand and one, and you are stream-loading a historic post-PPV edition of  WCW Live!  straight to your desktops right here on WCW.com! I am Jeremy Borash, alongside Bob Ryder. Bob... we have covered a lot of pay-per-views in our broadcasting careers, but the corporate and physical landscape of this promotion was just completely rewritten in a matter of fifteen minutes!\"    BOB RYDER:  \"JB, the servers are literally smoking tonight! The chatroom traffic is completely off the charts! Shawn Stasiak is the new United States Heavyweight Champion, the heel faction has completely imploded, and Scott Steiner is currently running loose in the backstage corridors in a homicidal rage! But the man who pulled the absolute tactical trigger on this entire evening is standing by live on our premium, high-priority webcam link... ladies and gentlemen, 'The Chosen One' Jeff Jarrett!\"    (The video screen splits to a private, highly secure dressing room backstage. Jeff Jarrett stands center frame, still in his ring gear, holding a microphone. He looks intensely smug, a wild, sharp grin on his face, entirely unbothered by the chaos running through the building.)     JEREMY BORASH:  \"Jeff, the entire internet wrestling community is completely paralyzed by what you just did. You walked out there as Scott Steiner’s partner, and out of absolutely nowhere, you shattered a heavy acoustic guitar across his skull, directly costing him the United States Championship. Explain your actions to the world!\"    JEFF JARRETT:   (Leans directly into his webcam lens, his voice sharp, calculated, and full of intense veteran conviction)  \"Borash... Bob Ryder... you tell all those pathetic marks typing in that chatroom to shut their mouths and listen to the ultimate reality of this business! You want an explanation? Let’s talk about memory tracking, slapnuts! Let’s remind every single person streaming this broadcast of exactly what Scott Steiner did to me earlier this year!   He thought because he was 'The Big Bad Booty Daddy' that he could systematically run my yard. He violently beat me down, he left me laying inside that canvas, and he used Midajah as an excuse to humiliate the centerpiece asset of this promotion! Steiner... you thought I forgot? You thought because I smiled, shook your hand, and aligned my interests with your faction this autumn that we were 'okay'?   I am 'The Chosen One' for a reason, pal! I played the game. I put on the mask. I pretended to be your buddy, I made you look like an absolute genius, and I waited patiently for the exact, perfect opportunity to strike back and screw you out of a championship!   And Steiner... look at the ledger now. I let that absolute slapnut Shawn Stasiak get the United States Title tonight on purpose! He’s nothing but a corporate pawn, Now Steiner you have the one title left that matters, and let me tell you right now,  The Chosen One Jeff Jarrett is officially coming straight for the prize that matters—the WCW World Heavyweight Championship!  I played you like a fiddle, Scott, and come Starrcade that championship is coming home, where it belongs! Ain't I great?!\"    (Jarrett lets out a loud, arrogant laugh and shoves his hand toward the webcam lens, violently cutting his feed to static as the chatroom window scrolls at a blinding speed.)     BOB RYDER:  \"An absolute psychological masterpiece from Jeff Jarrett! He has completely re-drawn the entire main event map heading into tomorrow night! But JB, the gold changed hands in the undercard blocks as well. Let’s transition down the supercard tracking sheet. Joining us live via satellite from the digital media backdrop... the brand-new WCW Cruiserweight Tag Team Champions...  Air Raid! AJ Styles and Air Paris! \"    (The screen splits to show AJ Styles and Air Paris standing side-by-side, proudly holding the silver Cruiserweight Tag Team Championship belts over their shoulders, the Vegas fans still roaring in the background.)     JEREMY BORASH:  \"Gentlemen, a monumental, historic triumph tonight! You stepped into the opening match of  Mayhem , put on an absolute high-flying clinic, and AJ, you pinned the legendary Rey Mysterio Jr. cleanly center canvas after a spectacular Styles Clash to capture the gold. How does it feel to be sitting on top of the world?\"    AJ STYLES:   (Grips his title belt tight, his eyes wide with immense, raw athletic passion)  \"Jeremy! Bob! Man, I can barely find the words to explain what is running through my veins right now! For months, the internet fans on  WCW.com  have been calling us the future of this division. Tonight, Air Paris and I went out there against the absolute absolute benchmarks of tag team workrate in Kidman and Mysterio, we pushed the velocity to absolute critical mass, and we proved it! Pinned Rey Mysterio cleanly?! This gold right here is the definitive proof of concept. Air Raid has officially arrived, and we are going to rule this division for a long, long time!\"    AIR PARIS:   (Slaps AJ on the shoulder, shouting into the mic)   \"The young lions are running the yard now, baby! The future is officially today!\"     (The new champions hoist their gold titles high into the satellite feed, cutting cleanly back to the studio anchors to a massive wave of thumbs-up emojis.)     BOB RYDER:  \"A spectacular breakout victory for the new era, JB! But the Cruiserweight dominance didn't stop there. Let's look at our final exclusive look-in for the night. Joining us live right now via our secondary webcam link... the man who just survived an absolute three-way masterpiece against Chavo Guerrero Jr. and Psicosis... the reigning WCW Cruiserweight Champion,  Shane Helms! \"    (The screen splits to show Shane Helms sitting on a training table, his ribs lightly iced but holding the gold Cruiserweight Title proudly over his shoulder, a look of ultimate babyface satisfaction on his face.)     SCOTT HUDSON:  \"Shane, congratulations on the retention tonight. Chavo and Psicosis threw every single high-impact and underhanded trick in the book at you under multi-man rules, but you successfully hit that devastating Vertebreaker to secure the pinfall. How did you survive the chaos?\"    SHANE HELMS:   (Breaths heavily but smiles into the lens)  \"Jeremy... Bob... you look at this title belt right here. This isn't just gold; it’s the heart and soul of the cruiserweight workrate baseline! Chavo tried to cheat, Psicosis tried to fly over the cables, but I told the world heading into Las Vegas that nobody was stripping this away from me. I weathered the storm, I locked the positioning down, and when the window opened up, I drove Psicosis straight into the canvas! The Helms era is locked down tight, and whoever wants to step to the front of the tracking line next week on FX... you better be ready to face the absolute best in the business!\"    (Helms points a definitive finger into the camera lens, cutting his webcam loop cleanly back to the main desk.)     JEREMY BORASH:  \"Total, absolute workrate excellence from our champions tonight, Bob! The road to December is officially a total powder keg.\"    BOB RYDER:  \"No question about it, JB. Make sure your television monitors are locked into FX tomorrow night at eight p.m. Eastern for  WCW Monday Nitro  as the radioactive fallout from the implosion hits peak velocity!\"    JEREMY BORASH:  \"Goodnight, internet world! Keep streaming the new era!\"    (The heavy alternative rock theme tracks to maximum volume as a promotional graphic for Monday Nitro on FX burns across the screen, highlighted by a golden image of the newly crowned United States Champion Shawn Stasiak and a blood-spattered graphic of Jeff Jarrett. The RealPlayer digital streaming feed fades cleanly to black.)        submitted by     /u/BlkKing001     to     r/WCW2001Reimagined       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WCW2001Reimagined/comments/1wl4bz2/wcw_live_postmayhem_webcast_sunday_november_25/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T02:09:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T02:09:16.242Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf404c660c608403983db4"
+    },
+    "message_id": "reddit_t3_1wl4byg",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "fansofcriticalrole",
+    "username": "IAmAUser4Real",
+    "title": "The Watcher's Ledgers, or How to Keep Track of the episodes You have already Watched",
+    "text": "The Watcher's Ledgers, or How to Keep Track of the episodes You have already Watched\n\nI came on knowing the Watcher's Ledgers webpage from the Critical Role subreddit, but it was somehow yanked from there, for nobody knows which reason, so, since I find it really useful to help me keep track of what I've watched, and how much I still miss, I want to share it with You all:    https://watchersledger.com/    It is completely free, easy to use, and does not require registration, nor save anything on their side (or your device).   Give it a go, and check on it.       submitted by     /u/IAmAUser4Real     to     r/fansofcriticalrole       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/fansofcriticalrole/comments/1wl4byg/the_watchers_ledgers_or_how_to_keep_track_of_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T02:09:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T02:09:16.450Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf404c660c608403983db5"
+    },
+    "message_id": "reddit_t3_1wl4bxe",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "FaithNoMore",
+    "username": "DefinitionJ8",
+    "title": "They were making new music for months in 2018",
+    "text": "They were making new music for months in 2018\n\n(Sorry for writing this long post. I just finished the book \"Small Victories\" and had to get it off my chest.)   The book \"Small Victories\" ends with a very hopeful little story of Billy, Puffy and Roddy working together again in late 2017. By the time of the book publication in mid 2018, it seems they had been making new music for several months and would continue to do so. Now we all know what happened after COVID.   Billy said in the ROCK TALK interview recently in response to whether there will be a new album that it's always so hard to make an album with FNM and he has to think whether he really wants to do it again. At first I thought it was a direct \"no\" but listening back, it sounds more like he actually hasn't ruled it out completely because he really doesn't know what will happen.   The book is a brilliant read for a new fan like me and my biggest takeaway is that Billy is not only the sole driving force behind the band but also the most important creative force. Most of my favorite FNM songs directly came from him. Patton, with his looks, charisma and voice, was what attracted me at first, but Billy is Mr. FNM. It may be one side of the story but the book made me very sad regarding the whole relationship and dynamic between Patton and the rest of the band especially Billy. It's almost like the band's life and death depend on Patton's willingness to collaborate, which is even more obvious after the COVID saga, subsequent hiatus/death and now this second reunion tour. According to the book, for Sol Invictus, Billy and co actually had made most of the music already before asking Patton to sing as they weren't sure if Patton would do it. They approached Patton who later went to listen to their finished demo in their studio and asked Billy if they wanted him to sing the songs. Billy says Patton asking this question sounds weird but I find the whole process humiliating. It's as if Patton is superior to the rest of the band - maybe he is.   Now back to the point of my post, I see there's already a discussion about the possibility of future new material since the news of the latest reunion and most people's predictions are \"not gonna happen\". Now having learned that the band actually had created music as early as in 2018, I think maybe it's not 100% impossible? Billy said on Rock Talk that he's the least excited one of the five members about this new reunion and I can fully understand his apprehensions. It's kind of a self protect mechanism. FNM is/was his everything while the others all have side projects to focus on. Patton's \"betrayal\" after COVID may have stung Billy and he has reasons to suspect and not pour all of his emotions into it this time around. I love Patton but it's so frustrating he doesn't care about FNM that much.       submitted by     /u/DefinitionJ8     to     r/FaithNoMore       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FaithNoMore/comments/1wl4bxe/they_were_making_new_music_for_months_in_2018/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T02:09:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T02:09:16.655Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf404c660c608403983db6"
+    },
+    "message_id": "reddit_t3_1wl4bx2",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PlantedTank",
+    "username": "No_Choice7982",
+    "title": "Don’t be this guy",
+    "text": "Don’t be this guy\n\nI’m taking time out of my day to make a post cause I truly believe cases like this need some light. You can check out the thread for yourself but to cut it short Op claims fishkeeping for 8+ years. Explains plants/fish continuously die “regularly” yet “out the blue” ???? Mentioned trying different substrates, my guess: the substrate wasn’t the cause of any death (at least for fish…) There’s mention of black/brown algae.  Op: “I would always go through the same phases.” All seemed to lead to…death.”   If we’re all on the same page then it’s clear this isn’t 8+years of fishkeeping this is a 8+year death collection with the low effort speaking for itself. I apologize if this comes off a little negative, going on the thread today and seeing people trying to give advice on how to restart a tank properly is lowkey infuriating. Like I commented on op it’s okay for a hobby to not be for you no matter how much you would love it to be. If you can never find joy in the hiccups or have a “buy a fix” mentality this is far from the hobby for you.  Fish/plants are living. Breathing. Life.  They aren’t display, they aren’t for fun. (Ofc theyre so fun but you know what I mean smh)    If you see this post and feel bad for op have a little compassion to think of the lives taken due to improper care.      Op had a decade. Don’t try to educate people who never tried themselves!!!         submitted by     /u/No_Choice7982     to     r/PlantedTank       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PlantedTank/comments/1wl4bx2/dont_be_this_guy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T02:09:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T02:09:16.872Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf404d660c608403983db7"
+    },
+    "message_id": "reddit_t3_1wl4bvh",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "GenXPolitics",
+    "username": "mettaCA",
+    "title": "Gen X won’t be able to rely on Social Security",
+    "text": "Gen X won’t be able to rely on Social Security\n\nOpinion piece:   Gen X won’t be able to rely on Social Security - Las Vegas Sun News     We should be pushing to strengthen Social Security. There are a few ways to do it and one of the easiest to to remove the limit on the amount of income that can be taxed for social security.        submitted by     /u/mettaCA     to     r/GenXPolitics       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GenXPolitics/comments/1wl4bvh/gen_x_wont_be_able_to_rely_on_social_security/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T02:08:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T02:09:17.082Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf404d660c608403983db8"
+    },
+    "message_id": "reddit_t3_1wl4buz",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "dorkington",
+    "username": "XTRIPLEX3X",
+    "title": "Practice makes Purrfect 😉🐱 (Art by me)",
+    "text": "Practice makes Purrfect 😉🐱 (Art by me)\n\nAlready made two drawings this month I wanna keep the spark the motivation going before I start to procrastinate and have art block again 😭       submitted by     /u/XTRIPLEX3X     to     r/dorkington       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/dorkington/comments/1wl4buz/practice_makes_purrfect_art_by_me/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T02:08:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T02:09:17.281Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf404d660c608403983db9"
+    },
+    "message_id": "reddit_t3_1wl4buo",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "strings_n_fins",
+    "title": "Grab 100 hammers from u/strings_n_fins!",
+    "text": "Grab 100 hammers from u/strings_n_fins!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/strings_n_fins     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wl4buo/grab_100_hammers_from_ustrings_n_fins/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T02:08:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T02:09:17.479Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf404d660c608403983dba"
+    },
+    "message_id": "reddit_t3_1wl4buk",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "---Hisoka---",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Maggie Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Maggie Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/---Hisoka---     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wl4buk/sticker_giveaway_enter_to_win_a_4_stars_maggie/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T02:08:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T02:09:17.679Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf404d660c608403983dbb"
+    },
+    "message_id": "reddit_t3_1wl4btq",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "OnlineFriend",
+    "username": "boyley94",
+    "title": "Bored at work looking for people to chat",
+    "text": "Bored at work looking for people to chat\n\nLooking for people to chat to while at work and make friends   32 m from Australia    Sitting at work with nothing to do so dm me and save me from my boredom.    Big fan of travel   Sports both playing and watching   Camping   The great outdoors    Board games   Any questions just ask im an open book        submitted by     /u/boyley94     to     r/OnlineFriend       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OnlineFriend/comments/1wl4btq/bored_at_work_looking_for_people_to_chat/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T02:08:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T02:09:17.881Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf404e660c608403983dbc"
+    },
+    "message_id": "reddit_t3_1wl4btd",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "eldenringdiscussion",
+    "username": "GwynLordofInsomnia",
+    "title": "Is Praetor Rykard",
+    "text": "Is Praetor Rykard\n\nsubmitted by     /u/GwynLordofInsomnia     to     r/eldenringdiscussion       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/eldenringdiscussion/comments/1wl4btd/is_praetor_rykard/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T02:08:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T02:09:18.079Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf404e660c608403983dbd"
+    },
+    "message_id": "reddit_t3_1wl4bsi",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "GPURestockAlerts",
+    "username": "TrackaLackerBot",
+    "title": "GIGABYTE RTX 5080 AERO SFF OC is in stock at Best Buy for $1,749.99 (MSRP)",
+    "text": "GIGABYTE RTX 5080 AERO SFF OC is in stock at Best Buy for $1,749.99 (MSRP)\n\nView current status at  https://www.trackalacker.com/products/showcase/nvidia-rtx-5080...  #BestBuyAffiliate   As of 09/19/26 10:08 PM EDT   Due to platform limits, we recommend our  free app  for the fastest, most reliable alerts.       submitted by     /u/TrackaLackerBot     to     r/GPURestockAlerts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GPURestockAlerts/comments/1wl4bsi/gigabyte_rtx_5080_aero_sff_oc_is_in_stock_at_best/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T02:08:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T02:09:18.279Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf4079aeeb96c1c63ba1cf"
+    },
+    "message_id": "reddit_t3_1wl4cgn",
+    "topic_key": "translator",
+    "search_keyword": "translator",
+    "platform": "reddit",
+    "subreddit": "ArenaBreakoutInfinite",
+    "username": "Rich_Translator_3834",
+    "title": "Head shot effectiveness increased?",
+    "text": "Head shot effectiveness increased?\n\nDid they really do that because I still don't ever get one tap headshots with most guns, unless it above 308. Did they actually change anything or was that just like i don't know a lie? Or is it just a skill issue and I just need to hit two head shots in a row like in real life? Also it was level 4 ammo on level 4 armor within effective range (5.45x39mm BP) of an AN-94. 33 damage, 16 damage blocked        submitted by     /u/Rich_Translator_3834     to     r/ArenaBreakoutInfinite       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ArenaBreakoutInfinite/comments/1wl4cgn/head_shot_effectiveness_increased/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T02:09:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T02:10:01.405Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaf4079aeeb96c1c63ba1d0"
+    },
+    "message_id": "reddit_t3_1wl4cd8",
+    "topic_key": "checkout",
+    "search_keyword": "checkout",
+    "platform": "reddit",
+    "subreddit": "SamsungSingapore",
+    "username": "BigSouthern433",
+    "title": "Keep your phone safe while charging",
+    "text": "Keep your phone safe while charging\n\nDid you ever had that fear of leaving your phone overcharging and get your battery ruined? We decided to help everyone with our new product, a smart unplug charger that unplugs (like the name sayis) once the battery reaches the maximum capacity. Click on the link to checkout my shop and charge it! Shipping worldwide       submitted by     /u/BigSouthern433     to     r/SamsungSingapore       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SamsungSingapore/comments/1wl4cd8/keep_your_phone_safe_while_charging/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T02:09:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T02:10:01.800Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaf407aaeeb96c1c63ba1d1"
+    },
+    "message_id": "reddit_t3_1wl4ccj",
+    "topic_key": "cardiologist",
+    "search_keyword": "cardiologist",
+    "platform": "reddit",
+    "subreddit": "AskDocs",
+    "username": "Tootsieluv",
+    "title": "Prescribed trial of IBSRELA but on high salt diet (GI related question)",
+    "text": "Prescribed trial of IBSRELA but on high salt diet (GI related question)\n\n39F    67 inches tall    approx 146lbs (we've been in decline since April, was upper 190s then) and on a high salt diet for orthostatic hypotension.   Caucasian    I was on lubipristone, but was swapped to a trial of IBSRELA to try to see if it eased stomach pain, cramping, incomplete evacuation, etc.   I took ONE PILL yesterday and i'm still dealing with the consequences 24 hours later. Everytime I drink water, i'm in the bathroom.   Don't drink, don't smoke cigarettes (do use medical marijuana)   I DISCONTINUED USE but my question is this: reading through the info, it says it's a salt inhibitor. Is that why things are SO BAD right now? Ever read that haribo sugar free gummy bear review? That's been me since right as I was going to bed about 10 last night when it finally hit and hasn't stopped. Was up four times, got up too early and stayed up and has been marathon bathroom trips since. It's a Saturday, I feel drained and afraid to do my usual salt additives to my water out of fear of perpetuating this problem. I left a message to my prescribing GI but if there are any GIs out there that can break this down better for me, that would be great. It was said things would be kind of rough the first few days, but there is no way this is what was meant. It's a straight up murder scene.  (Medication swap trial was to see if this could help provide relief of the pain associated with digesting food, GP flair finally subsided but colonic issue still persists, waiting on imaging from colorectal surgeon but that requires travel and I had an MR defography scheduled, had to reschedule and morning of they told me machine was broken and my husband had taken a code that day to be able to drive me 2 hours for the test. It now gets to wait til work calms down, it sucks but if he loses his job we lose insurance. Regardless of the outcome of that, i'm already scheduled for more PFPT but can't get seen til middle of October. My GI knowing all of this opted for medication trial in the meantime, if it worked, she'd try prescribing it but uhhh... yeah don't think this is what she intended to happen and she's not my cardiologist or primary, so don't think she knew I was on a high salt diet, but message I left for her on Mychart states that, but she won't see that til at least Monday which doesn't help me now)       submitted by     /u/Tootsieluv     to     r/AskDocs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskDocs/comments/1wl4ccj/prescribed_trial_of_ibsrela_but_on_high_salt_diet/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T02:09:35Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T02:10:02.019Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaf4088660c608403983dbe"
+    },
+    "message_id": "reddit_t3_1wl4cn9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AlignmentChartFills",
+    "username": "Ashamed_Leopard2658",
+    "title": "What is THE food item of New Jersey",
+    "text": "What is THE food item of New Jersey\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Ashamed_Leopard2658     to     r/AlignmentChartFills       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlignmentChartFills/comments/1wl4cn9/what_is_the_food_item_of_new_jersey/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T02:10:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T02:10:16.432Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf4088660c608403983dbf"
+    },
+    "message_id": "reddit_t3_1wl4cmp",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "gayfriendfinder",
+    "username": "OpportunityIcy4504",
+    "title": "32M - Work from home full time, traveler, concertgoer, looking to make new connections!",
+    "text": "32M - Work from home full time, traveler, concertgoer, looking to make new connections!\n\nI’m 32, live in Colorado, newly married (to a guy). I’m also a dog parent, and I work from home full time, and have unlimited PTO that I’d love to take advantage of more. I’d love to meet local friends, but I’m also open to making non-local friends as well - perhaps we could hangout in person someday or meet up for a concert or festival.   Anyway, I’m pretty basic. Love being outdoors, hiking, running, going to the gym (currently on a fitness journey), going to the sauna, traveling, and I’m recently getting into naturism.   If you feel like we would be a good fit, send me a message and introduce yourself a bit. I have other apps for chatting, but I’d prefer we get to know each other here first before we consider moving our conversation elsewhere.       submitted by     /u/OpportunityIcy4504     to     r/gayfriendfinder       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/gayfriendfinder/comments/1wl4cmp/32m_work_from_home_full_time_traveler_concertgoer/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T02:10:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T02:10:16.633Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf4088660c608403983dc0"
+    },
+    "message_id": "reddit_t3_1wl4clq",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Meowi",
+    "username": "YogurtclosetOwn9916",
+    "title": "[Hot take] one pice is ass",
+    "text": "[Hot take] one pice is ass\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/YogurtclosetOwn9916     to     r/Meowi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Meowi/comments/1wl4clq/hot_take_one_pice_is_ass/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T02:09:59Z"

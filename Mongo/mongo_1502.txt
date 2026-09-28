@@ -1,0 +1,416 @@
+    "text": "Seeking advice on air duct/ventilation cleaning: Best DIY methods for heavy pet odor (dog)?\n\nI’m looking for some advice from fellow landlords, property managers, or DIYers on cleaning out HVAC ventilation and air ducts.   My previous tenant wasn't the cleanest, and the property left behind a pretty strong dog smell. Before I rent the place out to a new tenant, I want to make sure the entire air ventilation system is thoroughly cleaned and odor-free.   For those who have tackled pet odor in air systems yourselves:   • DIY Cleaning Methods: Are there effective ways to clean and sanitize the accessible ducts yourself (e.g., using specialized vacuum attachments, foggers, or specific cleaning solutions)?   • Odor Elimination: What products actually break down embedded pet dander and oils inside the system rather than just masking the smell? (e.g., enzymatic sprays, chlorine dioxide, ozone machines)?   • Filter & Register Care: Besides changing the HVAC filter to a high-MERV or carbon filter and washing the vent covers, are there key areas inside the return/supply vents that people often overlook?   • DIY vs. Professional: At what point is a DIY job not enough, and when should I bite the bullet and hire a professional air duct cleaning service?   Any product recommendations, step-by-step tips, or cautionary advice would be greatly appreciated!       submitted by     /u/OhohohVickygo5     to     r/DIYHome       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DIYHome/comments/1wa30ge/seeking_advice_on_air_ductventilation_cleaning/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:10:35Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:10:54.242Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1a64f0819e6636a93e7b"
+    },
+    "message_id": "reddit_t3_1wa30xh",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "ExploitDev",
+    "username": "SolidAlternative1646",
+    "title": "Fix: OpenCode free-tier models working in Hermes Agent by adding X-Session-ID header",
+    "text": "Fix: OpenCode free-tier models working in Hermes Agent by adding X-Session-ID header\n\nOpenCode's free-tier models (muse-spark-1.2-contributor-free, mimo-v2.5-free, etc.) were broken in Hermes Agent v0.20.5 with `MissingSessionID / OpenCode's free tier can only be used in OpenCode`.   The fix was adding an `X-Session-ID` header to all anonymous OpenCode requests. Now working.   Background   Repo is at  https://github.com/ArcticWinterSturm/opencode-compat-shim  from testing 18B+ models can handle the install themselves   I've been using Hermes Agent on desktop (v0.20.5) with OpenCode's free-tier models. After a recent update, selecting any `*free` model (like `muse-spark-1.2-contributor-free`) started failing:   HTTP 400: Error from provider (Console): OpenCode's free tier can only be used in OpenCode   The error type was `MissingSessionID`.   Investigation   I dug into the OpenCode source code (they're open source — `anomali-co/opencode`) and found the issue:   The relay requires a session ID**: In `packages/console/app/src/routes/zen/util/handler.ts`, the `authenticate()` function checks for an `X-Session-ID` header. Without it, anonymous access is rejected.   Previously, User-Agent was the gate**: The upstream used to gate on `User-Agent: opencode/ `, but this was [deprecated/commented out](packages/console/app/src/routes/zen/util/ipRateLimiter.ts) (`// temporarily disable check headers`, `const headersExist = true`). The `X-Session-ID` header is now the mechanism.   API key doesn't have credit: paid key returns `401 CreditsError: No payment method`, so paid models (like `muse-spark-1.2` without `-contributor-free`) can't be used. The free-tier contributor models are the right target.   I also tried:   - `X-Session-ID` without `X-Session-ID` → 400 MissingSessionID   - `User-Agent: opencode/0.20.5` alone → 400 MissingSessionID (UA gate deprecated)   - Fresh session IDs each request → 200 ✓   The fix adds an `X-Session-ID` header (a UUID4 generated per plugin load) to all OpenCode free-tier header sets across 6 files:   plugins/model-providers/opencode-free/__init__.py → _KEYLESS_HEADERS   plugins/model-providers/opencode-zen/__init__.py → _ATTRIBUTION_HEADERS   hermes_cli/models.py → opencode_zen_free_headers()   agent/auxiliary_client.py → keyless override guard   agent/agent_runtime_helpers.py → conditional header injection   agent/agent_init.py (calls opencode_zen_free_headers())   The key change is in `hermes_cli/models.py` where `opencode_zen_free_headers()` now returns:   {   \"Authorization\": \"\", # empty — overrides SDK's Bearer placeholder   \"HTTP-Referer\": \" https://opencode.ai/ \",   \"X-Title\": \"opencode\",   \"User-Agent\": opencode_client_user_agent(),   \"X-Session-ID\": _opencode_session_id(), # ← this line   }   And in the Hermes desktop client: select `muse-spark-1.2-contributor-free` and send a message → works.   Frequently asked question, by nobody in particular just yet   Is it ethical to bypass controls of OpenCode which is now as Open™ as OpenAI?   yes very   The  r/exploitdev  community is one for law abiding security researchers. Agreed, Opencode please take note about vibe-coding your vibecoding app to begin with : )       submitted by     /u/SolidAlternative1646     to     r/ExploitDev       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ExploitDev/comments/1wa30xh/fix_opencode_freetier_models_working_in_hermes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:11:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:11:16.583Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1a64f0819e6636a93e7c"
+    },
+    "message_id": "reddit_t3_1wa30xc",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "Advice",
+    "username": "lotuseyedbabe",
+    "title": "I feel like I was useful to him while she was desired",
+    "text": "I feel like I was useful to him while she was desired\n\nI’m 25, and for many years I was with a man who is now 45. For a long time, I genuinely believed he was the person I was going to build my life with.   Over the years, our relationship deteriorated. I was under an enormous amount of stress, and my self-esteem became extremely low. Our sex life wasn’t very active either. But I hadn’t completely lost my sex drive. I still masturbated and could enjoy my sexuality on my own. A lot of the time, I simply didn’t have the desire to have sex with him.   Then I found out he was seeing a 27-year-old sex worker. He paid her to have sex with him, and they would spend hours together in motels. He also paid for content involving her through a man who, from my understanding, acted as her pimp. This wasn’t a one-time betrayal. It continued.   There was also a financial side to all of this that I’m still struggling to process.   I was paying bills, buying groceries, and taking care of many of our everyday expenses. Meanwhile, there were times when he would be out with her and call me screaming at me for $200 or $300. When he became angry like that, I was afraid, and I would send him the money.   Looking back, it hurts to realize what position I was in. I was financially contributing to our life together and trying to keep things afloat while he was spending money on another woman. At times, I was literally sending him money while he was out with her.   It made me feel like I was useful to him, but not desired by him.   Everything that happened started changing the way I viewed my body, my sexuality, and even money.  I constantly compared myself to her. I wondered what she had that I didn’t. I wondered what they could possibly be doing together for all those hours. I wondered why he was willing to spend so much money for sexual access to another woman while I was the one paying bills, buying groceries, helping him financially, and trying to maintain our relationship.   Eventually, I developed a desire that I hadn’t really had before: I wanted to know what it would feel like to go to a motel or hotel with a man, spend hours having sex, and then be paid afterward.  It isn’t simply about wanting money.   Somewhere along the way, my brain began associating being paid with being sexually desirable.  I was always the one giving. I paid bills. I bought groceries. I sent him money. I tried to help him. Meanwhile, from my perspective, she was receiving money simply because he wanted access to her sexually.   That difference did something terrible to my already low self-esteem.   Being paid started to symbolize being  wanted  instead of merely being  useful .   I even asked my partner whether he would pay me to have sex with him. He said no.   That answer hurt far more than he probably realized. I knew he was willing to pay another woman to sleep with him, yet he wouldn’t pay me.  Logically, I understand that sex within a relationship and paid sex are completely different situations. Emotionally, though, that wasn’t what I heard.  What I heard was:  “She has sexual value to you that I don’t.”    Since then, part of me has wanted to find a man who would take me to a motel or hotel, spend hours with me, and pay me afterward. I want to know what it feels like to be on the other side, to be the woman someone is willing to spend money on instead of the woman financing a relationship while wondering why her partner is paying somebody else.  That is incredibly difficult and embarrassing for me to admit.   I also spent a long time blaming myself for what happened because our sex life wasn’t very active. I wondered whether he would have done this if I had slept with him more often.   It especially confused me because I could masturbate and experience sexual desire by myself while frequently not wanting sex with him. For a long time, I interpreted that as evidence that something was wrong with me.   Now I’m trying to understand that my lack of desire for sex with my partner at that time doesn’t mean I didn’t have sexuality of my own. And problems with intimacy in a relationship do not make one person responsible for the other person’s decisions.  I’m also trying to untangle sex, money, desirability, and my self-worth.   I don’t know whether actually being paid for sex would give me the validation I imagine it would. I’m becoming aware that the fantasy itself may have developed partly because I’m trying to reverse the roles in what happened to me. Instead of being the woman giving money and wondering why she wasn’t enough, part of me desperately wants to experience being the woman who is desired enough to receive it.   I’m still trying to figure out how much of that desire genuinely belongs to me and how much of it came from being hurt.   I’m not sharing this because I want to be called stupid, promiscuous, damaged, or told that no man will ever respect me. I’ve already spent enough time tearing myself apart.    I’m sharing this because I could really use some kindness from strangers right now.    If anyone has experienced betrayal that completely changed the way they viewed their body, sexuality, or self-worth, I would genuinely appreciate hearing how you found yourself again.   I don’t expect strangers on the internet to fix this for me. I think I just need some encouragement that it’s possible to come out of an experience like this without spending the rest of my life believing that another woman’s desirability somehow proves the absence of my own.       submitted by     /u/lotuseyedbabe     to     r/Advice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Advice/comments/1wa30xc/i_feel_like_i_was_useful_to_him_while_she_was/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:11:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:11:16.800Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1a65f0819e6636a93e7f"
+    },
+    "message_id": "reddit_t3_1wa30xa",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "Drugs",
+    "username": "pozdroFryton777",
+    "title": "why weed feels bad for me now?",
+    "text": "why weed feels bad for me now?\n\nim trying to understand why i used to have fun after smoking and now i’m overthinking, feel my heart racing and overall can’t chill. maybe somebody also experienced this change. i’m thinking if its all in my head or what.    for context, i used to be a smoker, not everyday but quite often. almost every time i had fun, didn’t matter if i was at a party, with friends or alone. tried brownies, the strongest gummies, weird substances similar to thc etc. hell, when i was younger i had the balls to smoke and chill with my parents or get rlly high and wander in places i wasn’t familiar with. you get the point, weed was great for me. around a year ago i started to overthink while high with my best friend, then with other friends. i thought that maybe it would be still fun when i’m all by myself, but it’s only slightly better. when i’m with people all i do is analyse their actions, think about the little glances or what they „really mean” . it’s torture. so i stopped smoking with others, don’t even take a hit at parties (cuz it always affects me negatively). rarely smoke alone, its also not good.   i would love to go back to smoking, to chill and have fun, especially with people close to me, but i just freak out (not full panic attacks or smth thank god). anyone else has this problem?    also i don’t have any problems with other substances. i’ve tried a lot of things and it was always great for me. big fan of lsd, ket and mdma. +im taking adhd medication (methylphenidate) , thought that maybe that’s the cause but weed started being evil for me months after i started medicating.    long post but would appreciate your thoughts, maybe somebody has an idea why it happens? or was in the same situation. thanks        submitted by     /u/pozdroFryton777     to     r/Drugs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Drugs/comments/1wa30xa/why_weed_feels_bad_for_me_now/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:11:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:11:17.458Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1a65f0819e6636a93e81"
+    },
+    "message_id": "reddit_t3_1wa30x8",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "DermatologyQuestions",
+    "username": "ThrowAway051490",
+    "title": "How much filler do I need in my tear troughs? I have severe under eye circles.",
+    "text": "How much filler do I need in my tear troughs? I have severe under eye circles.\n\nHi everyone. I have these genetic dark circles and no amount of cream has ever been able to fix them. I was told by a dermatologist that I would need filler to fix this issue.  I have always covered them up with concealer, but they are getting worse as I am getting older and they have become a massive insecurity of mine.    What kind of filler do you think I would need and how much per eye? I am looking for an injector that can assist in Miami. Thank you.       submitted by     /u/ThrowAway051490     to     r/DermatologyQuestions       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DermatologyQuestions/comments/1wa30x8/how_much_filler_do_i_need_in_my_tear_troughs_i/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:11:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:11:17.900Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1a66f0819e6636a93e82"
+    },
+    "message_id": "reddit_t3_1wa30wt",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "RelationshipIndia",
+    "username": "Smart-Ad3388",
+    "title": "22M | Looking for someone I can genuinely vibe with 💌",
+    "text": "22M | Looking for someone I can genuinely vibe with 💌\n\nHey! I’m 22M, 5'8\", and currently single. I’d describe myself as an ambivert — a little shy at first, but once I’m comfortable, I can be pretty talkative and goofy. 😭   I’m a software engineer who’s into  horror, sci-fi, gaming, music, and travelling . I also love dogs. 🐶   What I’m looking for ❤️   I’m not really into rushing things. I’d rather start as strangers, become friends, get comfortable with each other, and see where things naturally go.   Ideally, I’m looking for:     A  slow-burn connection    Friends → something more   Meaningful conversations   Someone I can talk to freely without feeling judged   Someone kind, supportive, and respectful of other people’s feelings   A sweet and caring personality   Someone who can be both innocent and playful/goofy once comfortable 😭   Good communication and emotional maturity      Age preference:  19–22   I’m not expecting someone to be perfect. I’d just like to meet someone where the conversation feels natural and we genuinely enjoy talking to each other.   If you think we might get along,  my DMs are open . We can just talk and see if we vibe. :)   No pressure if we don’t — making a new friend is cool too. ✨       submitted by     /u/Smart-Ad3388     to     r/RelationshipIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RelationshipIndia/comments/1wa30wt/22m_looking_for_someone_i_can_genuinely_vibe_with/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:11:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:11:18.115Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1a66f0819e6636a93e84"
+    },
+    "message_id": "reddit_t3_1wa30wo",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "IndianBeautyBees",
+    "username": "manvigarg23",
+    "title": "Hey guys , bought this amazing tarte concealer from @theglambazaar1 from instagram please go check it out they have amazing beauty and skincare products . 100 per authentic i got this tarte concealer for only rs 1699/-.",
+    "text": "Hey guys , bought this amazing tarte concealer from @theglambazaar1 from instagram please go check it out they have amazing beauty and skincare products . 100 per authentic i got this tarte concealer for only rs 1699/-.\n\nsubmitted by     /u/manvigarg23     to     r/IndianBeautyBees       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IndianBeautyBees/comments/1wa30wo/hey_guys_bought_this_amazing_tarte_concealer_from/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:11:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:11:18.544Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1a66f0819e6636a93e85"
+    },
+    "message_id": "reddit_t3_1wa30wj",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "InstagramMarketing",
+    "username": "SadInitiative2105",
+    "title": "3 years in content. Millions of views. Helping you for 1 hour",
+    "text": "3 years in content. Millions of views. Helping you for 1 hour\n\n— Grew my IG to 30k+ followers  — Helped a consultation client go from 100 to 25k followers.  — Helped another consultation client go from 300 to 8.5k followers in 22 days. Last month.  — Worked with top YT channels in India.  — 3 years in content.  — Latest client in my agency got her first 100k+ reel in 1st week.  — 1 consultation call with me costs $80    Consider this your lucky day.    Cz for next 1 hour, I will help you with your content problems for free.    Doing a 60 minute google meet from 2am IST.    In the next 20 minutes, if i get enough DMs requesting the meet link, will do it.        submitted by     /u/SadInitiative2105     to     r/InstagramMarketing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/InstagramMarketing/comments/1wa30wj/3_years_in_content_millions_of_views_helping_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:11:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:11:18.759Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1a66f0819e6636a93e86"
+    },
+    "message_id": "reddit_t3_1wa30vr",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "footballmanagergames",
+    "username": "mxmcilx",
+    "title": "2026/27 on FM24",
+    "text": "2026/27 on FM24\n\nHey guys is it possible to play from the current season on FM24 somehow, before 27 comes out ?       submitted by     /u/mxmcilx     to     r/footballmanagergames       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/footballmanagergames/comments/1wa30vr/202627_on_fm24/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:11:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:11:18.974Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1a67f0819e6636a93e87"
+    },
+    "message_id": "reddit_t3_1wa30vp",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "sewing",
+    "username": "toecheeseuhohstinky",
+    "title": "Folkwear Dirndl: gaping in the chest and arms and pulling from waist to chest",
+    "text": "Folkwear Dirndl: gaping in the chest and arms and pulling from waist to chest\n\nIm gonna point my finger and say the pattern grading L doesn’t accommodate for my size or shape chest. I am nixxing the gussets in the chest because they look atrocious and i have no idea how to fix that problem   Then, (last picture with gussets pinned closed) i still have gaping at the arm and pulling from my waist to my bust point. I am wearing the bra i intend to wear with the finished outfit, and what i based my measurements on. My measurements fit the L size other than back waist length so i didnt anticipate making adjustments (glad i made a mockup)   What would you recommend? I assume i need a longer dart in the arm and maybe make it wider? Any tips are appreciated.   I put on the arpon in the last pic to see if the waistband would make the waist fit less noticeable and i dont think it did   This is a common enough pattern, so have you made it? Did you make adjustments? Thanks in advance   Note: og post taken down and reposted for editing       submitted by     /u/toecheeseuhohstinky     to     r/sewing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sewing/comments/1wa30vp/folkwear_dirndl_gaping_in_the_chest_and_arms_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:11:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:11:19.189Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1a67f0819e6636a93e88"
+    },
+    "message_id": "reddit_t3_1wa30vj",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal PancakeSwap USD - 7 Sep 2026 @ 16:08 -> $2.23",
+    "text": "Buy Signal PancakeSwap USD - 7 Sep 2026 @ 16:08 -> $2.23\n\nTicker:  CAKEUSD    Exchange:  CRYPTO    Time:  7 Sep 2026 @ 16:08    Price:  $2.23    Link:  https://getagraph.com/AAA/crypto-currencies/CAKEUSD/ENG        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wa30vj/buy_signal_pancakeswap_usd_7_sep_2026_1608_223/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:11:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:11:19.405Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1a67f0819e6636a93e89"
+    },
+    "message_id": "reddit_t3_1wa30vi",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "supervive",
+    "username": "sepltbadwy",
+    "title": "How can I miss a game I never played?",
+    "text": "How can I miss a game I never played?\n\nIt’s one of those pains in gaming. Discover a game so perfect only to see it’s over.   Honestly Supervive looks incredible, gameplay, innovation, polish. There are so many games that enter this space that don’t come close to this quality bar, Supervive was truly exceptional. I mean the gameplay and fluidity and art style and physics they all seem a step up from LoL even.. but it just didn’t catch its moment like that game did. So sad.   I so wish it was alive and thriving, or at least in fact that the publishers had allowed the game more live time to find its groove and audience.. I remember liking it from the reveal actually but then realising it was odd they were launching PC only.    Who will rise to make a solid and popular entry in the top-down PvP space? I mean Brawl Stars is huge right, but the breadth and dynamics of Supervive are another thing.. anyway, feel your pain everybody.       submitted by     /u/sepltbadwy     to     r/supervive       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/supervive/comments/1wa30vi/how_can_i_miss_a_game_i_never_played/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:11:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:11:19.620Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1a68f0819e6636a93e8b"
+    },
+    "message_id": "reddit_t3_1wa30v1",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "gameDevMarketing",
+    "username": "atreides___mete",
+    "title": "Hello everyone i need help. i release my game but price didn't show up on steam page",
+    "text": "Hello everyone i need help. i release my game but price didn't show up on steam page\n\nstate is hidden. how can i fix it       submitted by     /u/atreides___mete     to     r/gameDevMarketing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/gameDevMarketing/comments/1wa30v1/hello_everyone_i_need_help_i_release_my_game_but/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:11:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:11:20.049Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1a68f0819e6636a93e8c"
+    },
+    "message_id": "reddit_t3_1wa30uu",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "MobileLegendsGame",
+    "username": "Ok_Cow6845",
+    "title": "Exactly what I wanted to see after hopping into classic for a chill game",
+    "text": "Exactly what I wanted to see after hopping into classic for a chill game\n\nGuess I'll stick to brawl until this bs is over, god forbid someone wants to try an mm in classic. Played around 20 games since they got added and abour 70% of the games had double chou + zilong, what even is the point       submitted by     /u/Ok_Cow6845     to     r/MobileLegendsGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MobileLegendsGame/comments/1wa30uu/exactly_what_i_wanted_to_see_after_hopping_into/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:11:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:11:20.264Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1a68f0819e6636a93e8d"
+    },
+    "message_id": "reddit_t3_1wa30ul",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "chemistry",
+    "username": "Successful-Hippo3441",
+    "title": "Highschool student needing some help starting a Chemistry club, know any awesome experiments?",
+    "text": "Highschool student needing some help starting a Chemistry club, know any awesome experiments?\n\nHi, this is my first post on Reddit, so I apologize in advance if its not up to standard but I'd really appreciate some help finding some cool experiments to do! I know a bit about the basic myself, but I am a bit rusty. I am soon starting a chemistry club at my school, but as a Grade 12, I have no one to kind of guide me along, and I'm the first to start this club since I was a freshman.    I know the basic experiments like \"elephant toothpaste\" or like \"PH Cabbage indicators\" but I am looking for even more \"magical\" experiments. I remember when I was apart of the club in Grade 9, they had experiments like \"Lighting bubbles on your hand on fire\" which when you moved your hand it looked like you were bending fire, but it didn't burn. Even the club director made these I believe \"exploding precipitates\" which made small explosions. Anyways, in summary, I am hoping you guys can help me out with some \"almost dangerous\" experiments, that I can use to get this club up and going before the end of October. Thanks!   Also P.S My teacher is a bit crazy too so if I know the experiments, he'd probably go along as long as they are a sensible amount of dangerous (still very safe, just make should to be cautious)       submitted by     /u/Successful-Hippo3441     to     r/chemistry       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/chemistry/comments/1wa30ul/highschool_student_needing_some_help_starting_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:11:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:11:20.479Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1a68f0819e6636a93e8e"
+    },
+    "message_id": "reddit_t3_1wa30uk",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "MoviesTelugu",
+    "username": "Shot_Knowledge_8790",
+    "title": "I made an independent Telugu film #SANJEEV is now streaming on Aha for free need reviews and feedback.",
+    "text": "I made an independent Telugu film #SANJEEV is now streaming on Aha for free need reviews and feedback.\n\nHey everyone,   I am #Anil_Nakka actor, writer and director from Telangana.   I recently completed my first independent feature film,  SANJEEV . I started this journey as an actor, but instead of waiting for opportunities, I decided to create one myself. I learned writing and direction and made the film with a small team and personal loans.   It was a completely independent production, so getting the film made and finding an audience has been a huge journey for us.    SANJEEV is now streaming for free on Aha.    If you're interested in independent Telugu cinema, I'd genuinely love for you to watch it and tell me what you think especially about the filmmaking, writing and performances.    Watch:   https://www.aha.video/movie/sanjeev    Trailer:  https://www.youtube.com/watch?v=qOt8oAdEDJE    Thanks for giving an independent filmmaker a chance    https://preview.redd.it/30r1z3axm5oh1.png?width=282&format=png&auto=webp&s=b4508932467bbd6103084f2ad04502b498004500        submitted by     /u/Shot_Knowledge_8790     to     r/MoviesTelugu       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MoviesTelugu/comments/1wa30uk/i_made_an_independent_telugu_film_sanjeev_is_now/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:11:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:11:20.695Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1a68f0819e6636a93e8f"
+    },
+    "message_id": "reddit_t3_1wa30uc",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "chat",
+    "username": "bjorn-the-fellhanded",
+    "title": "40m from scotland - fancy a chat?",
+    "text": "40m from scotland - fancy a chat?\n\nHey there!   I’m looking for somebody to chat with in the evenings/ night mainly, but I always find the time to chat when the conversation is going well!   A wee bit about me, I’m married but spend most of my evenings by myself. I love chatting to and getting to know folk online. I can talk about almost anything, but my main goal for us to just kind of hang out, chat, and get to know each other. Maybe we hit it off and become friends, maybe we don’t, but there’s only one way to find out.   So if you fancy a chill conversation send me a dm with your asl and introduce yourself.       submitted by     /u/bjorn-the-fellhanded     to     r/chat       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/chat/comments/1wa30uc/40m_from_scotland_fancy_a_chat/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:11:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:11:20.910Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1a69f0819e6636a93e90"
+    },
+    "message_id": "reddit_t3_1wa30u4",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "LawFirm",
+    "username": "sman232323",
+    "title": "Is sponsering a local Facebook group a good idea??",
+    "text": "Is sponsering a local Facebook group a good idea??\n\nA local facebook group reached out, around 8k members seems pretty active, They will allow us to write and market our services, They mentioned only 3 business are allowed to market currently and no other personal injudry lawyer like us.    Is this a good idea, the cost is around $500/month, they dont promise any leads but more of top of funnel/ brand awareness play.    Any expericne or advice?        submitted by     /u/usman232323     to     r/LawFirm       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LawFirm/comments/1wa30u4/is_sponsering_a_local_facebook_group_a_good_idea/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:10:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:11:21.126Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1a69f0819e6636a93e91"
+    },
+    "message_id": "reddit_t3_1wa30tk",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "imaginaryelections",
+    "username": "Super-Concern2621",
+    "title": "One District, One President | What if Bush won the 19th district",
+    "text": "One District, One President | What if Bush won the 19th district\n\nhttps://preview.redd.it/1dxkfo2hn5oh1.png?width=6324&format=png&auto=webp&s=03c1fda1bb295a31bcfe71ca14251fb2f0428e9c     https://preview.redd.it/rohmramjn5oh1.png?width=415&format=png&auto=webp&s=9fff15886e0330864389437e4369f8e15d1815f2     https://preview.redd.it/40zdel0pn5oh1.png?width=416&format=png&auto=webp&s=e199264e6d4e8374c08cbe111b0cfc8831e89dce     https://preview.redd.it/1trugzmon5oh1.png?width=483&format=png&auto=webp&s=b4c151bbd0c68cd3b844a336a3cff00bf96487c2     https://preview.redd.it/neg7g30in5oh1.png?width=497&format=png&auto=webp&s=18dd1a4cb021f6d9462283731fad8f3a6a23f9f8     https://preview.redd.it/p0jf66fin5oh1.png?width=509&format=png&auto=webp&s=69b081c3350cda10c30d7a67e6d1c13c304ee469     https://preview.redd.it/dw305kvin5oh1.png?width=513&format=png&auto=webp&s=11623d231f38e8fe939c363ada01bd157570c4f3     https://preview.redd.it/toztx97jn5oh1.png?width=483&format=png&auto=webp&s=460629f1cb33bd8da41b04618e0fa2c2d1f31ad5     https://preview.redd.it/mhrufv6mn5oh1.png?width=483&format=png&auto=webp&s=875623d84ab9187d6ccd97345174d9a8156b71b4     https://preview.redd.it/w6zjn8gkn5oh1.png?width=528&format=png&auto=webp&s=fc50e4421f7ad80b84af3b7cff1839f60a963570     https://preview.redd.it/zlz2nktrn5oh1.png?width=528&format=png&auto=webp&s=9208ca9b08e65270ff65bcb2b2a20cb91fc3171a     https://preview.redd.it/481pi2esn5oh1.png?width=441&format=png&auto=webp&s=96cd7c5ffa6a5fb116218df67a51b7cfcbbbfd1e     https://preview.redd.it/wf0bu8atn5oh1.png?width=520&format=png&auto=webp&s=5c034f7a6a87c4e8ccc670567bab333935d92c7e     https://preview.redd.it/bkg4cnotn5oh1.png?width=659&format=png&auto=webp&s=a08a3381e77cc6e26a023bbbd4f8675cba0c71af     https://preview.redd.it/7puopw6un5oh1.png?width=656&format=png&auto=webp&s=85171ed8aef203de69b4c6031bbece596cefd85c     https://preview.redd.it/j2o2d1pun5oh1.png?width=520&format=png&auto=webp&s=e4f62ff18152c3d51a6ff37cfe21ba34974df8b6     https://preview.redd.it/622v79bvn5oh1.png?width=520&format=png&auto=webp&s=f767a5eb758fd96da37b263aed864a397cc0290b     https://preview.redd.it/hye4xttvn5oh1.png?width=520&format=png&auto=webp&s=ab1b3c4685bc1470048793c8a62f494162ab2240     https://preview.redd.it/wjczmbkwn5oh1.png?width=520&format=png&auto=webp&s=9b3df70a607cc374a04bf436e2917655efe4f17e     https://preview.redd.it/wsc0kcqxn5oh1.png?width=520&format=png&auto=webp&s=4d714435604520b1e95c2a08d3044ee9693d6860    Mobile:  https://imgur.com/a/GC64nxS         submitted by     /u/Super-Concern2621     to     r/imaginaryelections       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/imaginaryelections/comments/1wa30tk/one_district_one_president_what_if_bush_won_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T20:10:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T20:11:21.354Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f1a69f0819e6636a93e92"
+    },
+    "message_id": "reddit_t3_1wa30tg",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "evilautism",

@@ -1,0 +1,416 @@
+    "text": "The choice is yours\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Formal-Technology734     to     r/BunnyTrials       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BunnyTrials/comments/1wmsf3s/the_choice_is_yours/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T23:02:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T23:03:21.553Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1b7b9660c60840399105c"
+    },
+    "message_id": "reddit_t3_1wmsf2o",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "mcp",
+    "username": "Far-Round2092",
+    "title": "Showcase: ClawBrowse – an MCP server that lets Claude Code drive your real, logged-in Chrome (no second model, no keys)",
+    "text": "Showcase: ClawBrowse – an MCP server that lets Claude Code drive your real, logged-in Chrome (no second model, no keys)\n\nI built ClawBrowse, an open-source MCP server + Chrome extension that lets an MCP client (I use Claude Code) drive my actual logged-in Chrome tabs.   Disclosure: I'm the author.   How it works: the MCP server exposes browser tools (observe / act / read / assert / navigate). A Chrome MV3 extension connects to it over a localhost WebSocket and uses chrome.debugger (CDP) to read and act on your real tabs, so there's no remote-debug port and no relaunch. Pages come back as a compact numbered \"element table\" instead of screenshots, so it's cheap in tokens and the agent can click a control by ref in one round trip.   The calling agent is the policy: there's no second model and no API key. Page content only goes to the MCP client you're already running, never to a third party.   Zero dependencies (the server is one .mjs file), MIT.   GitHub:  https://github.com/ItaiZeilig/clawbrowse    Feedback welcome, especially from others building browser MCP servers.       submitted by     /u/Far-Round2092     to     r/mcp       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mcp/comments/1wmsf2o/showcase_clawbrowse_an_mcp_server_that_lets/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T23:02:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T23:03:21.761Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1b7e3aeeb96c1c63bb104"
+    },
+    "message_id": "reddit_t3_1wmsfpa",
+    "topic_key": "locksmith",
+    "search_keyword": "locksmith",
+    "platform": "reddit",
+    "subreddit": "sixwordstories",
+    "username": "Nervous-Locksmith484",
+    "title": "My feelings don't matter to you.",
+    "text": "My feelings don't matter to you.\n\nsubmitted by     /u/Nervous-Locksmith484     to     r/sixwordstories       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sixwordstories/comments/1wmsfpa/my_feelings_dont_matter_to_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T23:03:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T23:04:03.588Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab1b7f3660c60840399105e"
+    },
+    "message_id": "reddit_t3_1wmsg2z",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "HillWorthDyingOn",
+    "username": "kerds78",
+    "title": "\"Footballers that voluntarily withdraw from international duty should never receive a call-up again\" (Agree or disagree?)",
+    "text": "\"Footballers that voluntarily withdraw from international duty should never receive a call-up again\" (Agree or disagree?)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/kerds78     to     r/HillWorthDyingOn       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HillWorthDyingOn/comments/1wmsg2z/footballers_that_voluntarily_withdraw_from/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T23:04:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T23:04:19.026Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1b7f3660c60840399105f"
+    },
+    "message_id": "reddit_t3_1wmsg2x",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "therunningrack",
+    "username": "BQbyNov22",
+    "title": "2026 Indy Monumental Marathon bib for sale (full marathon)",
+    "text": "2026 Indy Monumental Marathon bib for sale (full marathon)\n\nHello,    I am selling my full marathon bib for the price I paid plus transfer fee ($120 total). Let me know if you'd like to take it off my hands.        submitted by     /u/BQbyNov22     to     r/therunningrack       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/therunningrack/comments/1wmsg2x/2026_indy_monumental_marathon_bib_for_sale_full/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T23:04:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T23:04:19.225Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1b7f3660c608403991060"
+    },
+    "message_id": "reddit_t3_1wmsg2q",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "DonutSMP",
+    "username": "Top-Temporary-6173",
+    "title": "selling a base",
+    "text": "selling a base\n\nauction- bids start at 2m highest bid by friday wins   buy it now - 15m   comment a bid and dm my if your interested in buying   you pay first, then i tp.       submitted by     /u/Top-Temporary-6173     to     r/DonutSMP       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DonutSMP/comments/1wmsg2q/selling_a_base/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T23:04:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T23:04:19.424Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1b7f3660c608403991062"
+    },
+    "message_id": "reddit_t3_1wmsg2h",
+    "topic_key": "how is sentiment around notion changing over the last 30 days",
+    "search_keyword": "Notion",
+    "platform": "reddit",
+    "subreddit": "opencode",
+    "username": "Apprehensive-Job9336",
+    "title": "How do we make OpenCode fully autonomous? My experience so far",
+    "text": "How do we make OpenCode fully autonomous? My experience so far\n\nI've been using OpenCode with Telegram integration to automate business tasks (Reddit outreach, email follow-ups, Instagram management, Notion kanban updates).   Here's what I've learned so far:      The bot runs 24/7  but it needs a reliable model — free tier limits are brutal    Session management matters  — losing context means starting from scratch    Browser automation (Playwright)  is the key to real-world tasks — Reddit DMs, Instagram, web scraping     My challenge: I want it to run completely autonomously without babysitting. What strategies have worked for you?     How do you handle model failover?   What's your approach to task scheduling?   How do you prevent the bot from getting stuck?     Would love to hear what others have built with OpenCode for autonomous workflows.       submitted by     /u/Apprehensive-Job9336     to     r/opencode       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/opencode/comments/1wmsg2h/how_do_we_make_opencode_fully_autonomous_my/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T23:04:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T23:04:19.824Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1b7f4660c608403991065"
+    },
+    "message_id": "reddit_t3_1wmsg1z",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "rebkos",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Daisy Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Daisy Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/rebkos     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wmsg1z/sticker_giveaway_enter_to_win_a_4_stars_daisy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T23:04:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T23:04:20.420Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1b7f4660c608403991066"
+    },
+    "message_id": "reddit_t3_1wmsfzz",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "LiamXnn",
+    "title": "What dish do you love cooking the most?",
+    "text": "What dish do you love cooking the most?\n\nsubmitted by     /u/LiamXnn     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wmsfzz/what_dish_do_you_love_cooking_the_most/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T23:04:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T23:04:20.629Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1b7f4660c608403991067"
+    },
+    "message_id": "reddit_t3_1wmsfzf",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MotorBuzz",
+    "username": "gaukmotors",
+    "title": "The man who designed the McLaren P1 has just built three cars without a hybrid in sight",
+    "text": "The man who designed the McLaren P1 has just built three cars without a hybrid in sight\n\nFrank Stephenson, the designer behind one of the defining hybrid hypercars, is now penning deliberately analogue REO models while everyone else sprints toward electrification.    Frank Stephenson has designed three new models for REO Motor Company, and none of them has a hybrid powertrain. This is the same Frank Stephenson who drew the McLaren P1, the 903 horsepower electrified hypercar that arrived in 2013 with a twin-turbo V8 and an electric motor working in concert. The P1 was part of the holy trinity alongside the LaFerrari and the Porsche 918 Spyder. All three were hybrids. All three were supposed to represent the future.   Now Stephenson is designing cars that deliberately ignore that future.   REO is not a new name. Ransom Eli Olds founded the company in 1905 after a disagreement at Oldsmobile, the brand that still carries his surname. REO built cars until 1936, then pivoted to trucks and eventually faded into obscurity. The revival appears to be positioning itself as a counterpoint to the industry's electrification sprint, focusing instead on mechanical simplicity and driver engagement.   Sound familiar?   Stephenson left McLaren in 2017. His portfolio includes the Ferrari F430, the Maserati MC12, and the modern MINI range. He knows how to design cars that move metal. What makes this interesting is the timing. Most manufacturers are targeting 2030 to 2035 for majority-electric lineups. Stephenson is moving in the opposite direction, and doing so publicly.   There is a market for this. Singer Vehicle Design has built an entire business restoring air-cooled Porsche 911s with naturally aspirated engines and no electronic interference. Gordon Murray's T.50 supercar, revealed in 2020, uses a naturally aspirated V12 with no hybrid assistance and a manual gearbox. Touring Superleggera's Aero 3 coupe, shown in 2022, took the same route. David Brown Automotive continues to sell retro-styled sports cars and restomods that prioritise analog driving experiences over connectivity and electrification.   Like this? Get the Buzz:  GAUK Motorbuzz  All your favourite motoring channels, publishers, motorsports, news & reviews. Curated Automotive Awesomeness   A correction is underway. Not a wholesale rejection of electrification, but a recognition that a segment of buyers and designers believe the rush toward batteries and motors has sacrificed something worth keeping. Weight, complexity, and the severing of the mechanical connection between driver input and vehicle response are the usual complaints. The debate hinges on values, not facts.   Stephenson's involvement lends credibility to REO's positioning. He is not a retrograde purist or a YouTuber with a Patreon. He designed the P1. He understands hybrid powertrains and advanced materials and active aerodynamics. His decision to design non-hybrid vehicles now is not ignorance. It is a choice.   Details on the three REO models are limited. No images, no specifications, no production timelines. That could mean the project is early-stage, or it could mean REO is controlling the narrative carefully. Either way, the announcement itself is the story. A designer who helped define the hybrid hypercar era is now working on cars that reject hybrids entirely.   The restomod industry has been growing quietly for years, turning classic vehicles into reliable daily drivers with modern brakes, suspension, and interiors while keeping the original engine and gearbox. It is a profitable niche sustained by people willing to pay significant money for mechanical engagement that new cars no longer offer. REO appears to be targeting the same audience, but with new designs rather than restored classics.   Whether REO can execute at scale is another question. Building limited-run analogue sports cars is expensive, and the regulatory environment is increasingly hostile to internal combustion engines. Emissions standards, noise regulations, and fuel economy requirements make non-electrified powertrains harder to certify every year. That is why manufacturers are electrifying. Not because they want to, but because staying in business requires it.   Stephenson's REO project is either perfectly timed or a decade too late. If there is a genuine market for new cars built around simplicity and mechanical purity, REO could carve out a sustainable position alongside Singer and Gordon Murray Automotive. If that market is smaller than it appears, or if regulatory pressure makes non-hybrid powertrains economically unviable, the project will struggle.   The original REO company folded in 1936 because it could not compete with larger manufacturers who had economies of scale and deeper pockets. The new REO will face the same pressures, but with the added burden of building internal combustion vehicles in an era designed to phase them out. Ransom Eli Olds managed thirty-one years before the money ran out.   Sources: McLaren Automotive, REO Motor Company, Singer Vehicle Design, Gordon Murray Automotive, Touring Superleggera       submitted by     /u/gaukmotors     to     r/MotorBuzz       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MotorBuzz/comments/1wmsfzf/the_man_who_designed_the_mclaren_p1_has_just/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T23:03:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T23:04:20.830Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1b7f5660c608403991068"
+    },
+    "message_id": "reddit_t3_1wmsfyx",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "fragranceswap",
+    "username": "packfan1234",
+    "title": "[WTS] Collection clearout — Loewe, House of Cosmo New Eden, Essential Parfums, Hermès, Scentality, Montagne & clones — bundles preferred (Bottle)",
+    "text": "[WTS] Collection clearout — Loewe, House of Cosmo New Eden, Essential Parfums, Hermès, Scentality, Montagne & clones — bundles preferred (Bottle)\n\nClearing out fragrances I’m not reaching for. Strong preference for selling everything together or in bundles. Willing to listen to reasonable offers -     Take all 15 bottles + Soul Purpose sample for $525 shipped CONUS.     All prices are USD and include CONUS shipping. Payment via PayPal Goods & Services; buyer covers the actual G&S fee. I’ll confirm the total before payment.    Photos / timestamp:  https://imgur.com/a/voFv4wI    Fill levels are approximate; please refer to photos. Happy to provide additional photos.    Designer / Independent         Fragrance   Bottle size   Estimated remaining   Shipped price          Loewe 7 Cobalt   100 mL   ~90%   $80       House of Cosmo New Eden — full presentation   100 mL   ~95%   $135       Essential Parfums The Musc by Calice Becker   100 mL   ~95%   $65       Scentality Notable — includes Soul Purpose sample   50 mL   Only test sprays missing   $65       Hermès Eau de Citron Noir   100 mL   ~95%   $35       Hermès Eau d’Orange Verte   100 mL   ~95%   $35       L’Eau d’Issey Pour Homme   125 mL   ~90%   $25         Montagne Parfums         Fragrance   Bottle size   Estimated remaining   Shipped price          Eau Noir   50 mL   ~98%; test sprays only   $30       Herb Garden   50 mL   ~90%   $30       Gypsy Mist   50 mL   ~95%   $30       Luvrs   50 mL   ~95%   $32         Middle Eastern    Priced to move—take all four for  $45 shipped !        Fragrance   Bottle size   Estimated remaining   Shipped price          French Avenue Moonstone Bleu   100 mL   ~90%   $28       Maison Alhambra Your Touch Santal   100 mL   ~90%   $20       Maison Alhambra Opulence Leather   100 mL   ~90%; conservative estimate   $18       Maison Alhambra Sceptre Oceana   100 mL   ~95%   $22         Bundle deals — CONUS shipping included       Entire lot, all 15 bottles + sample:  $525    All seven designer/independent bottles:  $425    All four Montagnes:  $110    Both Hermès:  $65    All four Middle Eastern bottles:  $45    Add all four Middle Eastern bottles to a $150+ purchase from the other sections:  $25 extra     Buyer covers the actual PayPal G&S fee on all purchases. Bundle discounts do not stack.   Priority goes to the full lot and larger bundles. Feel free to message with the combination you’re interested in.   Please comment before sending a chat or PM. Thanks!       submitted by     /u/packfan1234     to     r/fragranceswap       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/fragranceswap/comments/1wmsfyx/wts_collection_clearout_loewe_house_of_cosmo_new/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T23:03:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T23:04:21.035Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1b7f5660c60840399106a"
+    },
+    "message_id": "reddit_t3_1wmsfyo",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "promocodes",
+    "username": "ComfortableBobcat791",
+    "title": "Robinhood Referral Link: EASY $5 to $200 reward!",
+    "text": "Robinhood Referral Link: EASY $5 to $200 reward!\n\nhttps://refdecks.com/card/robinhood3  - Robinhood Referral Link     Make an account on Robinhood using my referral link above (Reddit's auto spam detection filter removes Robinhood links, so that's why I've linked it through the referral sharing platform RefDecks)   Once you've successfully signed up and been approved, link your bank account/debit card.   Fund your account with a deposit. No minimum requirement - even $1 will work!   After that you'll immediately receive a stock worth anywhere from $5 to $200! It's that easy!     In addition to your sign up reward, you can get up to $15,000 in referral rewards! You'll earn a reward stock each time you reach a qualifying referral milestone:   1 referral - $50  3 referrals - $150  10 referrals - $800  50 referrals - $4,000  200 referrals - $10,000   Full terms for referral bonuses:   https://robinhood.com/us/en/support/articles/invite-friends-pick-stock/    Full terms for sign up bonus:   https://robinhood.com/us/en/support/articles/open-account-pick-your-stock/    NOTE: While Robinhood is available in many different countries, this sign-up/referral reward program is limited to residents of the United States only.       submitted by     /u/ComfortableBobcat791     to     r/promocodes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/promocodes/comments/1wmsfyo/robinhood_referral_link_easy_5_to_200_reward/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T23:03:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T23:04:21.435Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1b7f5660c60840399106b"
+    },
+    "message_id": "reddit_t3_1wmsfy2",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "businessbroker",
+    "username": "realcmac",
+    "title": "A new scam targeting business brokers.",
+    "text": "A new scam targeting business brokers.\n\nSeveral people in our company have received identical messages like this one:    \"We’re very interested in the business and would appreciate the opportunity to discuss it further. Rather than continuing over email, I believe a brief Google Meet call would be the best way to review the details, ask a few questions, and determine if it’s the right fit.      My wife and brother will also join the call so we can review everything together. We’ll be joining from a computer for a smoother discussion.      Please let me know a convenient time, and I’ll be happy to send a Google Meet invitation.\"    This is an attempt to send an infected link. If you explain that you don't use Google Meet and offer a Zoom link that YOU send out, they vanish.   I'm sure they're targeting others too, but they're all over us for the last month or two.       submitted by     /u/realcmac     to     r/businessbroker       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/businessbroker/comments/1wmsfy2/a_new_scam_targeting_business_brokers/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T23:03:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T23:04:21.638Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1b7f5660c60840399106c"
+    },
+    "message_id": "reddit_t3_1wmsfxn",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ChicDaily",
+    "username": "waterbottle1112",
+    "title": "Where can I buy affordable clothes that I feel okay about morally?",
+    "text": "Where can I buy affordable clothes that I feel okay about morally?\n\nI can’t afford designer or even just semi nicer brands (like aritzia or free people), and I thrift everything I own. I hate my closet and want a revamp, which is hard when thrifting because it honestly takes forever to curate a closet that way. I like Brandy Melville because at least their clothes are predominantly pure cotton and their price point is great. That said, I still feel bad about it knowing that it is fast fashion. What do I even do? Are there any brands like that where at least the clothes aren’t just straight polyester?       submitted by     /u/waterbottle1112     to     r/ChicDaily       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ChicDaily/comments/1wmsfxn/where_can_i_buy_affordable_clothes_that_i_feel/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T23:03:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T23:04:21.838Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1b7f6660c60840399106d"
+    },
+    "message_id": "reddit_t3_1wmsfwa",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "triplej",
+    "username": "australianmusicscene",
+    "title": "Nemzzz – Australian Tour 2027",
+    "text": "Nemzzz – Australian Tour 2027\n\nsubmitted by     /u/australianmusicscene     to     r/triplej       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/triplej/comments/1wmsfwa/nemzzz_australian_tour_2027/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T23:03:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T23:04:22.044Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1b7f6660c60840399106e"
+    },
+    "message_id": "reddit_t3_1wmsfw8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "Wild-Mess6228",
+    "title": "Quest and Dark Arts on the Ruined Path",
+    "text": "Quest and Dark Arts on the Ruined Path\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Wild-Mess6228     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wmsfw8/quest_and_dark_arts_on_the_ruined_path/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T23:03:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T23:04:22.244Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1b82f660c60840399106f"
+    },
+    "message_id": "reddit_t3_1wmsgvq",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "CriticalStateGlobal",
+    "username": "MedievalSabre",
+    "title": "[Debate] Criminals are irredeemable and don’t deserve freedom.",
+    "text": "[Debate] Criminals are irredeemable and don’t deserve freedom.\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/MedievalSabre     to     r/CriticalStateGlobal       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CriticalStateGlobal/comments/1wmsgvq/debate_criminals_are_irredeemable_and_dont/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T23:05:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T23:05:19.525Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1b82f660c608403991070"
+    },
+    "message_id": "reddit_t3_1wmsgvo",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "FirstTimeHomeBuying",
+    "username": "IndependentRun2532",
+    "title": "35701 National Pike Rd, Little Orleans, MD 21766 | MLS #MDAL2015582 | Zillow",
+    "text": "35701 National Pike Rd, Little Orleans, MD 21766 | MLS #MDAL2015582 | Zillow\n\nsubmitted by     /u/IndependentRun2532     to     r/FirstTimeHomeBuying       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FirstTimeHomeBuying/comments/1wmsgvo/35701_national_pike_rd_little_orleans_md_21766/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T23:05:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T23:05:19.724Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1b82f660c608403991071"
+    },
+    "message_id": "reddit_t3_1wmsgvc",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "Substack",
+    "username": "Smoko_Kakaro5",
+    "title": "I’m new to substack and I’m looking for any suggestion on substack content and people to follow in branding and marketing",
+    "text": "I’m new to substack and I’m looking for any suggestion on substack content and people to follow in branding and marketing\n\nSo I’ve just started my Substack and still haven’t figured most of it.    But I’m curious if anyone has recommendations on people to follow around branding and marketing.   I work with cpg, alcoholic beverage and fashion retail brands so I’m opening to looking for any help.        submitted by     /u/Smoko_Kakaro5     to     r/Substack       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Substack/comments/1wmsgvc/im_new_to_substack_and_im_looking_for_any/",
+    "score": 0,

@@ -1,0 +1,416 @@
+    },
+    "message_id": "reddit_t3_1wkzjfz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "SelfHosting",
+    "username": "that_dba_guy",
+    "title": "Self-hosted guardrail so AI agents can't ruin your database",
+    "text": "Self-hosted guardrail so AI agents can't ruin your database\n\nDisclosure: I built this. Sharing because it's self-hosted and I think this sub will actually stress-test it.   The problem: we let Cursor/Claude write migrations against a real DB, and an agent tried to  DROP COLUMN  on a 41M-row table with live dashboards on it. No malice — the model just has no idea what's safe.   So I built  DeepSQL  — a self-hosted agent for Postgres/MySQL that sits between your coding agent and the database over MCP and reviews SQL before it runs (blocks destructive migrations, catches joins on stale tables, masks PII in generated queries). It also does the DBA grind — slow query detection, index recs — and can ship BI dashboards, but the guardrail is the reason I'm posting here.   The self-host details this sub cares about:      Everything runs in your own infra  — your VPC, your credentials, connects  read-only to a replica . Nothing phones home.    BYO model  — point it at OpenAI, Azure, or any OpenAI-compatible endpoint (including a local one). No forced vendor.    Apache-2.0 , full source. Docker Compose, up in ~15 min.   Runs on any Linux box / EC2 / container. RBAC, query policies, and audit logs built in.     Install (clone + compose, so you can read it first):    git clone https://github.com/DeepSQLAI/deepsql cd deepsql && cp .env.example .env docker compose up -d     Repo:  github.com/DeepSQLAI/deepsql    Point it at a staging DB and tell me where it breaks. What would you want locked down before you'd let something like this near a real database?       submitted by     /u/that_dba_guy     to     r/SelfHosting       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SelfHosting/comments/1wkzjfz/selfhosted_guardrail_so_ai_agents_cant_ruin_your/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T22:27:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T22:27:19.149Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf0c4a660c608403982d76"
+    },
+    "message_id": "reddit_t3_1wkzjfh",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MachinistToolsForSale",
+    "username": "LingLingGotBlingBlin",
+    "title": "Shop surplus — Haas HTS4, Mitutoyo 10X lens, TESA caliper & grinder flange",
+    "text": "Shop surplus — Haas HTS4, Mitutoyo 10X lens, TESA caliper & grinder flange\n\nClearing out a few pieces of machining/inspection equipment and figured I’d post them here before they sit around forever.  Haas HTS4 manual tailstock —  $1,100 OBO   Mitutoyo 172-482 10X projection lens set —  $649.99 OBO   Brown & Sharpe / TESA 00589020 6\" dial caliper —  $80 OBO   Lei Ying 614/618 grinder wheel flange adapter —  $55 OBO   All are currently listed on eBay. Buyer pays shipping. Happy to provide more photos, measurements, part numbers, or the listing links if anyone is interested. Reasonable offers welcome       submitted by     /u/LingLingGotBlingBlin     to     r/MachinistToolsForSale       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MachinistToolsForSale/comments/1wkzjfh/shop_surplus_haas_hts4_mitutoyo_10x_lens_tesa/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T22:27:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T22:27:22.105Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf0c4a660c608403982d77"
+    },
+    "message_id": "reddit_t3_1wkzjd6",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Mountaineering",
+    "username": "Legal_Pound2045",
+    "title": "Equipment help",
+    "text": "Equipment help\n\nHi everyone!  I’m a fresh entrant into the world of mountaineering. I have been on many low level hikes in India under 1500m but nothing very demanding.  Now that I am based in the UK I want to start hiking seriously with an aspiration of hiking all over Nepal someday and go upto 6000m peaks within the next couple of years.    I’m in the search of clothing and equipment to invest in. I’m currently a student so don’t have deep pockets. I have been looking at certain brands for polarised sunglasses, fleece, base layers and waterproof jackets. However these are very expensive, any recommendation on more affordable brands? I would like to purchase something good quality that wouldn’t hurt my bank because I’d rather buy it once than buy it repeatedly just because it’s cheaper.    Some of the brands I looked into were:  Arc’teryx  Mountain warehouse  Norrøna  Vallon   Would love for some uk based recommendations. I also plan on hiking Ben Nevis around March-May so please give appropriate reccs.   Thanks        submitted by     /u/Legal_Pound2045     to     r/Mountaineering       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Mountaineering/comments/1wkzjd6/equipment_help/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T22:26:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T22:27:22.323Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf0c4a660c608403982d78"
+    },
+    "message_id": "reddit_t3_1wkzjci",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "DigitalMarketing",
+    "username": "Ok_Communication732",
+    "title": "I need a job but i lowkey have ptsd from previous jobs?",
+    "text": "I need a job but i lowkey have ptsd from previous jobs?\n\nPSA: A small rant    I don’t know if this is just my luck but I have been working in content creation and social media for 6 years and I always end up becoming a one person marketing team where I have to do everything and the boss who knows nothing abt comms is NEVER SATISFIED, is disrespectful, belittles me and makes me feel small.    And the cycle continues, each time I start a new job, the expectations are HUGE.    I don’t know if im just very bad at my job or is this a marketing thing?   Now I have been out of a job for a year and I desperatly need a new job but when i am applying i feel like throwing up 🥲🥲   I just hate it now? I hate AI, I hate chatgpt I hate content creation meta business suite gives me the ick seo gives me the ick copywriting and thinking of new ideas gives me the ick?!??    l know you will say you have to change your job but I cant now in any capacity because I’m an immigrant and I'm in a really precarious situation but I’m planning to do so in 3 /5 years hopefully!    I don’t know what I am asking really xd I am just venting   Note: the only job I ever enjoyed was as an account manager in an agency for four months where my boss was amazing and the projects were good and it was the only time i felt respected but I had to leave because my immigration papers were ready.        submitted by     /u/Ok_Communication732     to     r/DigitalMarketing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DigitalMarketing/comments/1wkzjci/i_need_a_job_but_i_lowkey_have_ptsd_from_previous/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T22:26:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T22:27:22.528Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf0c4b660c608403982d7c"
+    },
+    "message_id": "reddit_t3_1wkzjc5",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "bosandman",
+    "title": "Visit bosandman's farm!",
+    "text": "Visit bosandman's farm!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/bosandman     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wkzjc5/visit_bosandmans_farm/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T22:26:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T22:27:23.321Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf0c4b660c608403982d7d"
+    },
+    "message_id": "reddit_t3_1wkzjbo",
+    "topic_key": "can you tell me about whos looking to talking about nike",
+    "search_keyword": "sneakers",
+    "platform": "reddit",
+    "subreddit": "SneakersCanada",
+    "username": "Vloydm",
+    "title": "Kobe Mambacurial in hand",
+    "text": "Kobe Mambacurial in hand\n\nsubmitted by     /u/Vloydm     to     r/SneakersCanada       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SneakersCanada/comments/1wkzjbo/kobe_mambacurial_in_hand/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T22:26:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T22:27:23.523Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf0c54aeeb96c1c63ba0a7"
+    },
+    "message_id": "reddit_t3_1wkzjnj",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "Alternate40kRules",
+    "username": "Alternate40kRules",
+    "title": "Painting Tutorial – OSL Ground",
+    "text": "Painting Tutorial – OSL Ground\n\nsubmitted by     /u/Alternate40kRules     to     r/Alternate40kRules       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Alternate40kRules/comments/1wkzjnj/painting_tutorial_osl_ground/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T22:27:18Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T22:27:32.305Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaf0c82660c608403982d7e"
+    },
+    "message_id": "reddit_t3_1wkzkbr",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "wow",
+    "username": "Fragrant_Airport7842",
+    "title": "Beta code warcraft via McDonalds app",
+    "text": "Beta code warcraft via McDonalds app\n\nLooking for world of Warcraft forever beta code via one of my australian homies. You get a world of Warcraft forever beta code via buying a big mac on the app in Australia would someone be so kind to gift me a beta code via DM. Help out a poor european that cannot afford a 60 euros package for a beta acces.        submitted by     /u/Fragrant_Airport7842     to     r/wow       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wow/comments/1wkzkbr/beta_code_warcraft_via_mcdonalds_app/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T22:28:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T22:28:18.622Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf0c82660c608403982d7f"
+    },
+    "message_id": "reddit_t3_1wkzkb5",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "shopify_growth",
+    "username": "Conscious_Call_5777",
+    "title": "Luxury Luggage Brand",
+    "text": "Luxury Luggage Brand\n\nI have a luxury luggage brand, which launched early this year. To build exclusivity, I made every item unavailable and distributed via hand selected personal shoppers..while this was a big risk it paid off when I had a large number of massive atheletes and wealthy individuals buying my pieces. However to keep things consistent I would like to turn the site back on for online sales but I don’t one how to build traction in time for christmas. I was thinking of paid ads?    For context my price ranges from £700-£1400       submitted by     /u/Conscious_Call_5777     to     r/shopify_growth       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/shopify_growth/comments/1wkzkb5/luxury_luggage_brand/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T22:28:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T22:28:18.827Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf0c83660c608403982d80"
+    },
+    "message_id": "reddit_t3_1wkzkah",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Connect-Picture-7070",
+    "title": "Cheaters of Reddit, why do you cheat on your significant other?",
+    "text": "Cheaters of Reddit, why do you cheat on your significant other?\n\nsubmitted by     /u/Connect-Picture-7070     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wkzkah/cheaters_of_reddit_why_do_you_cheat_on_your/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T22:28:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T22:28:19.029Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf0c83660c608403982d81"
+    },
+    "message_id": "reddit_t3_1wkzk96",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "twisty_lynx",
+    "title": "A Lost God and Vines at the Outer Temple",
+    "text": "A Lost God and Vines at the Outer Temple\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/twisty_lynx     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wkzk96/a_lost_god_and_vines_at_the_outer_temple/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T22:28:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T22:28:19.233Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf0c83660c608403982d82"
+    },
+    "message_id": "reddit_t3_1wkzk8x",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "Handhelds",
+    "username": "ZenPaperclips",
+    "title": "Anybody travel internationally with a handheld collection?",
+    "text": "Anybody travel internationally with a handheld collection?\n\nsubmitted by     /u/ZenPaperclips     to     r/Handhelds       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Handhelds/comments/1wkzk8x/anybody_travel_internationally_with_a_handheld/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T22:28:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T22:28:19.435Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf0c83660c608403982d83"
+    },
+    "message_id": "reddit_t3_1wkzk6p",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "bald",
+    "username": "Brilliant-Yam-3756",
+    "title": "Newly bald but grew some stubble as suggested!",
+    "text": "Newly bald but grew some stubble as suggested!\n\nHonest opinions? I’m still feeling quite unattractive to the ladies.       submitted by     /u/Brilliant-Yam-3756     to     r/bald       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/bald/comments/1wkzk6p/newly_bald_but_grew_some_stubble_as_suggested/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T22:27:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T22:28:19.649Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf0c83660c608403982d84"
+    },
+    "message_id": "reddit_t3_1wkzk51",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "AlertVegas",
+    "username": "MugShots",
+    "title": "NV Energy Alert",
+    "text": "NV Energy Alert\n\nNVEnergy Alert Under Investigation in 89414 Verified customers affected ORT: Verified ETR: Verified       submitted by     /u/MugShots     to     r/AlertVegas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlertVegas/comments/1wkzk51/nv_energy_alert/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T22:27:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T22:28:19.856Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf0c84660c608403982d85"
+    },
+    "message_id": "reddit_t3_1wkzk4s",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "warno",
+    "username": "WelcomeExtra762",
+    "title": "Recoilless Rifle Teams?",
+    "text": "Recoilless Rifle Teams?\n\nSo now that I understand CEVs are for exploding infantry and MGs are for filling the line or gunning down infantry, what are dedicated tank gun/recoilless rifle teams (SPGs, M40A1) for? Every division in my knowledge is equipped with ATGMs and have some sort of armor in their tank tab, whether it is static AT like the Rapira or top-tier tanks like the T-80, and not to mention machine guns. A lot of divs also have CEVs.   With an AT and anti-infantry role fulfilled by your ATGMs, static AT or tanks,  and  CEVs and machine guns, what do you need a recoilless rifle for? It has only 14-17 penetration, the accuracy isn't very good, and it can be one-shot by a CEV or other infantry squads. Plus if you're playing 35th or other divisions you already get the recoilless rifle in your MP and NG squads.   This especially applies to a Tman game I was watching where he fought 6th Panzergrenadier and his opponent had the recoilless rifle teams, which are slow to reload and outclassed by ATGMs, MGs, and autocannons or proper tank guns. Not to mention most MGs are cheaper.   I am pretty sure 6th gets a significant amount of IFVs and tanks. Some divisions even get vehicles equipped with recoilless rifles making them even more unnecessary. In my opinion it seems like a waste of AP points as compared to an armored tank, an IFV, or CEV but if you take the recoilless rifle team please explain why you take it and try to convince me to take it in one of my own decks.       submitted by     /u/WelcomeExtra762     to     r/warno       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/warno/comments/1wkzk4s/recoilless_rifle_teams/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T22:27:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T22:28:20.057Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf0caeaeeb96c1c63ba0a8"
+    },
+    "message_id": "reddit_t3_1wkzkwb",
+    "topic_key": "plumber",
+    "search_keyword": "plumber",
+    "platform": "reddit",
+    "subreddit": "auspayslips",
+    "username": "rizza12169",
+    "title": "24 yo qualified maintenance plumber",
+    "text": "24 yo qualified maintenance plumber\n\nsubmitted by     /u/rizza12169     to     r/auspayslips       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/auspayslips/comments/1wkzkwb/24_yo_qualified_maintenance_plumber/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T22:28:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T22:29:02.107Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaf0caeaeeb96c1c63ba0a9"
+    },
+    "message_id": "reddit_t3_1wkzkut",
+    "topic_key": "machine learning engineer",
+    "search_keyword": "machine learning engineer",
+    "platform": "reddit",
+    "subreddit": "OfferEngineering",
+    "username": "Aoki_zhang",
+    "title": "Indeed Machine Learning Engineer (MLE) System Design Interview",
+    "text": "Indeed Machine Learning Engineer (MLE) System Design Interview\n\nInterview Summary   The Indeed MLE phone screen was essentially an end-to-end machine learning system design discussion centered on spam and job-quality classification.   The interview started from a production model whose offline accuracy looked strong but whose real-world performance was poor, then expanded into error analysis, feature design, LLM/SLM trade-offs, training, latency, experimentation, rollout, and post-deployment drift monitoring.   -------------------------------------------------------------------------------------------------   Interview Details    Technical Phone Screen — Spam / Job-Quality Classification System    The interview began with an existing spam classifier that showed high offline accuracy but performed poorly after deployment. The first set of questions focused on diagnosing the gap between offline and production performance:     How would you investigate why offline metrics look strong while online performance is weak?   If recall is low, how would you perform EDA and analyze the false-negative population?     The discussion then moved into building a new classifier. I was asked what features I would consider for a spam or job-quality model and how the approach should change as LLM-generated content becomes increasingly common.    LLM / SLM Model Design    The interviewer then explored whether an LLM should be part of the system. Questions included how to protect an LLM-based classifier from  prompt injection and adversarial users , what inference and ongoing maintenance costs an LLM introduces, and how I would compare a self-hosted model of roughly  1B parameters  with a hosted LLM service.   The discussion also covered model development:     How would you train or fine-tune the replacement model?   How would you reduce the risk of overfitting?   What would you do if inference latency became too high?   How would you compare the computational cost or FLOPs of approaches such as XGBoost, neural networks, and a small language model?     -------------------------------------------------------------------------------------------------   Want to learn more details/follow-ups of this system design interview? I've put up the full version at  here .   Preparing for your next interview?   Chill Interview tracks recent interview experiences and recurring question patterns across top companies at  here .       submitted by     /u/Aoki_zhang     to     r/OfferEngineering       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OfferEngineering/comments/1wkzkut/indeed_machine_learning_engineer_mle_system/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T22:28:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T22:29:02.509Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaf0cbf660c608403982d86"
+    },
+    "message_id": "reddit_t3_1wkzl4v",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "programmation",
+    "username": "Swimming_Buy2584",
+    "title": "J'ai viré SQL de ma base de données et je l'ai remplacé par un langage en pipeline",
+    "text": "J'ai viré SQL de ma base de données et je l'ai remplacé par un langage en pipeline\n\nJe bricole une petite base de données en Rust — relationnel, document et graphe dans un seul moteur. Elle parlait du SQL standard jusqu'à la semaine dernière. Je viens de l'arracher pour un langage que j'ai inventé, et je préfère qu'on démonte le design maintenant plutôt qu'après avoir construit dessus.   Ce qui m'a décidé, c'est l'ordre des clauses. Tu écris  SELECT  en premier et il s'exécute presque en dernier, donc tu ne peux pas construire ta requête petit à petit, et un alias défini dans le  SELECT  est inutilisable dans le  WHERE  juste à côté. Ici chaque étape prend simplement les enregistrements que l'étape du dessus a produits :    person where age > 30 keep following knows sort age down show name, age     De haut en bas, c'est l'ordre dans lequel ça se passe. L'indentation  est  le pipeline ; le  |  fait la même chose sur une ligne. ( keep following knows  suit un lien aussi loin qu'il va, en largeur d'abord.)   Ce que je n'avais pas vu venir, c'est l'effet sur les suppressions :    person | where age     En SQL tu réécris un  SELECT  en  DELETE  et tu pries pour que le  WHERE  ait survécu. Ici tu ajoutes une ligne à la requête que tu viens de lancer.   Plusieurs trucs sont tombés tout seuls.  HAVING  n'est qu'un  where  après un  show .  COALESCE  devient  a or b , parce que  or  renvoie la première valeur présente comme en Python. Et il n'y a pas de logique ternaire sur  NULL  :  None == None  est vrai, et ça ne m'a pas encore manqué.   Les règles que j'essaie de tenir :     De l'anglais courant, pas d'abréviations. C'est  lowest  et  highest , pas  min  et  max . Ça coûte des frappes et ça gagne des lecteurs.   Rien n'est deviné. Cypher déduit ta clé de regroupement des termes du  RETURN  qui ne sont pas des agrégats, donc ajouter un champ change silencieusement le sens de la requête. Ici la clé est ce que tu as écrit après  group by , et nulle part ailleurs.   Si une étape lit un champ qu'un  show  précédent a supprimé, ça lève une erreur au lieu de renvoyer une liste vide sans rien dire. Celle-là je l'avais ratée au début et j'ai dû revenir la corriger.     Ce qui n'est pas fait, pour que vous ne perdiez pas de temps à me le dire : nommer un pipeline pour le réutiliser se parse mais ne s'exécute pas, les jointures sont une boucle imbriquée, rien n'est indexé, et une forme déclarée n'est pas vérifiée.   Le repo :  https://github.com/FISEM/novadb    Le truc sur lequel j'hésite encore : il n'y a pas de paramètres. Tu réutilises une requête en ajoutant une étape —  adults | where age > 30  — au lieu de substituer une valeur. Tous les langages que j'ai regardés ont fini par se faire pousser des fonctions. Est-ce qu'il y a un cas évident où ajouter une étape ne suffit pas ?       submitted by     /u/Swimming_Buy2584     to     r/programmation       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/programmation/comments/1wkzl4v/jai_viré_sql_de_ma_base_de_données_et_je_lai/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T22:29:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T22:29:19.214Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf0cbf660c608403982d87"
+    },
+    "message_id": "reddit_t3_1wkzl45",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",

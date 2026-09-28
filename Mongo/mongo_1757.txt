@@ -1,0 +1,416 @@
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T10:41:35Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T10:42:06.002Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fe6baf0819e6636a94be3"
+    },
+    "message_id": "reddit_t3_1wakv11",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AirFryTalk",
+    "username": "AndrewBennett6",
+    "title": "Is a glass air fryer actually healthier than metal or ceramic?",
+    "text": "Is a glass air fryer actually healthier than metal or ceramic?\n\nI've been looking more closely at air fryer cooking surfaces lately, and I keep seeing people say that glass air fryers are \"healthier\" than regular metal baskets.   I'm not sure that's really the right way to look at it.   Glass itself is pretty inert and doesn't need a nonstick coating, which I can definitely see as an advantage. Stainless steel is also a solid option since you're not relying on a nonstick coating either.   Ceramic is a little more confusing. Some air fryers advertised as \"ceramic\" are actually metal baskets with a ceramic-based coating, so you're still dealing with a coating of some kind.   So for me, the bigger question isn't really  glass vs metal vs ceramic . It's  coated vs uncoated cooking surfaces .   And I definitely wouldn't say that glass makes the food itself healthier. What you're cooking, how much oil you use, and the cooking temperature probably matter way more.   Personally, if two air fryers performed equally well, I'd probably lean toward glass or stainless steel simply because I like the idea of having no traditional nonstick coating.   Curious what everyone else thinks. Is the cooking surface something you actually consider when buying an air fryer?       submitted by     /u/AndrewBennett6     to     r/AirFryTalk       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AirFryTalk/comments/1wakv11/is_a_glass_air_fryer_actually_healthier_than/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T10:42:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T10:43:06.019Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fe6f591bc12a96dd64165"
+    },
+    "message_id": "reddit_serp_1u9pdrm",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/AI_Agents/comments/1u9pdrm/we_built_7_automations_for_a_d2c_brand_doing/",
+    "text": "We built 7 automations for a D2C brand doing $40K/mo. They crossed $85K in 90 days. Here's what actually moved the needle (and what didn't).\n\nGonna be upfront about something. Not all 7 automations mattered equally. Two of them barely moved the needle. One of them I'd honestly skip if I did it again. But the remaining four basically rewired how this store operated.   Some context first.   D2C skincare brand. Shopify store, decent product line, about 8 SKUs. They were doing roughly $40K/mo when they reached out. Owner was running the business with one full-time person handling customer service and a freelance media buyer for ads. No tech team. No dev. She was doing a lot of things manually that she didn't even realize could be automated because she'd been doing them since launch.   Here's what we built, ranked by actual impact.    #1: Abandoned cart recovery (but not the default Shopify one)    Yeah I know, everyone talks about this. But the default Shopify abandoned cart email is one generic message that goes out after 10 hours. That's it.   We set up a 3-step sequence. First message goes out within 20 minutes. No discount. Just a \"hey, you left something\" with the exact product image and a one-tap checkout link. Second message goes out 6 hours later with a quick customer review pulled dynamically for that specific product. Third message at 48 hours, and only this one includes a small discount.   That sequence alone recovered $6,200 in the first month. The previous Shopify default was bringing back maybe $800-900. The timing and the review in message two were doing most of the heavy lifting.    #2: Post-purchase flow that actually generated repeat orders    Before this, a customer would buy once and never hear from the brand again unless they happened to see an Instagram ad. No follow-up. Nothing.   We built a post-purchase sequence triggered by product type. Someone buys a cleanser? They get a \"how to use it\" message on day 2. On day 7, a check-in asking how their skin feels. On day 14, a recommendation for the matching moisturizer with a returning customer discount.   This one took about 3 weeks to show real numbers because the cycle is longer, but by month two it was driving about $4,800/mo in repeat orders from people who had already bought once. Customer acquisition cost on those sales was basically zero.    #3: Inventory-based ad pausing    This is the one nobody thinks about and it saved them the most money.   Their media buyer was running ads on 8 SKUs. When a product went low on stock, nobody told him. Ads kept running, orders kept coming in, and they'd end up overselling and then scrambling to cancel or delay orders. I've seen bad reviews pile up from exactly this kind of thing.   We connected Shopify inventory levels to their ad platform. When any SKU drops below a threshold, the ads for that product pause automatically. When stock is replenished, ads resume. No Slack message, no \"hey can you pause this,\" no human in the loop at all.   They estimated this was costing them around $2,000-3,000/mo in wasted ad spend and refund processing before we set it up. Hard to get an exact number but the refund complaints basically stopped.    #4: Review request timing    Simple but effective. Instead of a generic \"leave us a review\" email blast, we triggered review requests based on estimated delivery date plus 5 days. Enough time for the customer to actually try the product, not enough time for them to forget about it.   Response rate went from around 2% to 11%. Not earth-shattering on its own, but over three months the product pages filled up with recent reviews and that helped conversion across the board.    The three that mattered less:     #5: Customer service auto-tagging.  We auto-categorized incoming support tickets (refund, shipping, product question, etc.) and routed them. Saved maybe 30 minutes a day. Nice to have. Not a revenue mover.    #6: Social media scheduling automation.  Pulled product images from the catalog and auto-generated posting schedules. Honestly the output was mid. The owner ended up going back to creating posts manually because they felt too template-y. Fair enough.    #7: Weekly analytics digest.  Auto-generated email every Monday with key metrics. Useful for the owner's peace of mind but didn't change any decisions. She still logged into Shopify every morning anyway.    The takeaway nobody wants to hear:    The automations that made money were all about timing. Cart recovery within 20 minutes instead of 10 hours. Post-purchase follow-up at the exact right interval. Review requests after the product arrived, not after checkout. Ad pausing the moment inventory dipped.   The ones that saved time but didn't move revenue were fine but they never would have justified the project on their own.   If you're running a D2C store and thinking about where to start with automation, start with the customer journey. Not the back-office stuff. The back-office stuff feels productive but the money is in hitting customers at the right moment with the right message.   This was one of around 40 automation projects I've done across different industries. E-commerce is probably the one where you can see the revenue impact fastest because everything is so measurable. If anyone has questions about their specific setup, I'm around.       submitted by     /u/Warm-Reaction-456       [link]       [comments]",
+    "username": "Warm-Reaction-456",
+    "subreddit_or_channel": "AI_Agents",
+    "posted_at": "2026-06-19T02:14:06+00:00",
+    "fetched_at": {
+      "$date": "2026-09-08T10:44:05.434Z"
+    },
+    "google_rank": 9,
+    "search_keyword": "freelance cart recovery",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-08T10:44:05.434Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fe6f6f0819e6636a94be4"
+    },
+    "message_id": "reddit_t3_1wakvkc",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "DefendingAIArt",
+    "username": "Postal_Shame_Revival",
+    "title": "You can never make a problem go away by shaming the last person in the chain.",
+    "text": "You can never make a problem go away by shaming the last person in the chain.\n\nIt's a common pattern that I see. Someone identifies what they see as a systematic problem and then push all of the responsibility on the smallest person at the end of the chain who knows the least, has the least recourses and expertise, and had nothing to do with the root cause of the problem. But they are the easiest target.   You see this a lot with the anti-ai crowd. Not all of them. I have been engaged with this topic quite a bit lately and found that many anti-ai people are nice and will listen and understand that there's a human at the other end of the screen. But there's also quite a bit of harassment and shaming going on just about people using AI. It's not like you can shame every end-user and make it go away. And they call us lazy. It's lazy to attack your fellow citizens for using recourses that they find value and benefit in.   But this doesn't happen only in the AI debate. It goes beyond just that. Think about this. The post office  decided  to make postage stamps and print them by the billions and send them out into the world without a barcode or a serial number or a ledger. Just ink printed on paper with glue on the back. They decided to promise that they would be good forever. The intended design was that you cannot tell the history of the postage stamp by looking at the postage stamp. It functions like a bearer token. That's the design. The design they chose.   And then the copies came around and, I don't know if anyone else noticed it, but the expectations changed around it while the policies stayed the same. Did anyone else notice it? And it became this strange moral theater where if you buy discounted postage online, you're treated as immoral. But isn't that what they made it to do?   You're morally and legally obligated to not commit fraud. You should not knowingly use counterfeit postage. Similarly, you should not create something with AI and then act like no AI was involved. But seeking discounts is  not immoral  and using new cutting-edge technology to express yourself is  not immoral . These are just examples of normal consumer behavior. They want you to feel ashamed for behaving like a normal person and using normal common things as they were designed and intended to be used.   There's no law or policy that says you can't buy stamps at a discount. When and why did it silently become our moral obligation to pay the absolute highest price? That's the trick. It's not your duty to solve the problem but they lay it on your lap because that's the cheapest, easiest, laziest way for them to handle it. I don't think that's a fair thing to do to the public. Think about it. This is a consequence of their own failed design. And now it quietly became your fault because you believed in the old promise? Think about that. Let that sink in.    This is happening right now. You're supposed to be able to use postage stamps to send a package but try going to the post office with a package decked out in flag stamps. The first thing they will say is \"where did you get these?\" and/or \"how much did you pay?\" and if you tell them ebay/cheap, they will tell you they're fake. But the authentication was never actually done. So what now? You have these stamps that you can't authenticate and the post office can't authenticate, the seller says they're real, and there is no way to test it to know. And the post office admits they don't know how to tell anymore.   Because obviously the fakes got so good that they became essentially indistinguishable from real postage. Do you understand how this is a very weird position for an ordinary consumer to be in? If you can point to something on this stamp and show me what makes it fake, great. Thank you! I'll bring it back to the seller and say it did not pass authentication and I can get my money back. But the institution is falling back on price/source risk heuristics. And that's supposed to be infrastructure? Ask them where they got it and hope they don't lie? It's their job to be able to check it. If they can't do that and the fix is expensive, don't shame the end-user just because it's cheaper.       submitted by     /u/Postal_Shame_Revival     to     r/DefendingAIArt       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DefendingAIArt/comments/1wakvkc/you_can_never_make_a_problem_go_away_by_shaming/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T10:43:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T10:44:06.321Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fe72e91bc12a96dd64166"
+    },
+    "message_id": "reddit_serp_1qog4nk",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/Upwork/comments/1qog4nk/32k_upwork_chargeback_on_completed_project/",
+    "text": "$32k Upwork chargeback on completed project (approved deliverables, app in production). Need advice\n\nHi  r/Upwork  community!   I would ask for your assistance and feedback; maybe someone has been in a similar situation. I'll appreciate any input, thank you!   We just got hit with a five-figure chargeback request on a project we successfully completed, with the client approving deliverables throughout the process. The request came without any warning or communication from the client.   It happened without the client's notification.   Shortly, a client asked us to build a consumer mobile application. The communication was good, like 8/10; they always shared positive feedback, and nothing bad happened during the engagement.   Several months after final delivery, I received an email from Upwork stating that they requested a chargeback. Without any prior communication or any responses on that case. Just give your money back.   I tried to resolve it peacefully, from basic communication to the final, explaining what happened. No response at all.   I have shared all the evidence with the Upwork team: communications, project management records, repository access, the app live in production, and the client's own marketing of the product.   I need to cover the entire chargeback amount until the situation is resolved.   I would really appreciate any feedback on my case.       submitted by     /u/Informal-Ad580       [link]       [comments]",
+    "username": "Informal-Ad580",
+    "subreddit_or_channel": "Upwork",
+    "posted_at": "2026-01-27T14:59:07+00:00",
+    "fetched_at": {
+      "$date": "2026-09-08T10:45:02.305Z"
+    },
+    "google_rank": 3,
+    "search_keyword": "freelance chargeback management",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-08T10:45:02.305Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fe76ff0819e6636a94be5"
+    },
+    "message_id": "reddit_t3_1wakx47",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "WhatCarShouldIBuyGULF",
+    "username": "zerault13",
+    "title": "Jetour Dashing",
+    "text": "Jetour Dashing\n\nis this a good car for the price i’ll be paying ?   or are there any better options.. i checked out RAV4 and i was disappointed honestly r       submitted by     /u/zerault13     to     r/WhatCarShouldIBuyGULF       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WhatCarShouldIBuyGULF/comments/1wakx47/jetour_dashing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T10:45:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T10:46:07.187Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fe76ff0819e6636a94be6"
+    },
+    "message_id": "reddit_t3_1wakx3r",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PlayStation_X",
+    "username": "No_Preference1825",
+    "title": "Is a USB hub safe to use with PS5 accessories?",
+    "text": "Is a USB hub safe to use with PS5 accessories?\n\nGot a bunch of stuff I wanna keep connected like headset dongle, charging cable, external controller stuff and maybe a keyboard, but the PS5 only has so many USB ports and I dont wanna mess anything up. Do USB hubs cause any issues with power delivery or disconnects? Also does it matter if the hub is powered or should a normal USB hub be fine for basic accessories? Seen some cheap ones online and then some way more expensive hubs, so kinda confused if there’s any real difference for PS5 or if they all basically do the same thing. Would a powered hub be safer if multiple things are plugged in at once, or is that overkill? And can using a hub somehow affect controller charging or headset performance? Not really looking to do anything crazy, just wanna avoid damaging the console or having accessories randomly stop working during a game. If you use a USB hub with your PS5, what accessories do you have connected and has it been reliable long term? Any specific things I should look for before buying one?       submitted by     /u/No_Preference1825     to     r/PlayStation_X       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PlayStation_X/comments/1wakx3r/is_a_usb_hub_safe_to_use_with_ps5_accessories/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T10:45:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T10:46:07.389Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fe76ff0819e6636a94be7"
+    },
+    "message_id": "reddit_t3_1wakx1k",
+    "topic_key": "nike",
+    "search_keyword": "Nike",
+    "platform": "reddit",
+    "subreddit": "zdravlje",
+    "username": "Healthy-Gain-3881",
+    "title": "2025",
+    "text": "2025\n\nU 2025 počeo sam živjeti kao i svi samo ja od rente do rente. Tako sam barem sebi objasnio. Imao sam dva stana, rentu i jednostavnu financijsku politiku: koliko dobiješ, toliko potrošiš. Jedina sitnica bila je što ja nisam radio, pa je riječ zaradiš više služila kao ukras u rečenici. Renta, naravno, nije pala s neba, ona je produkt p meni ponajviše dr Pandaka, ali radije bi bio zdrav i bez rente.. Plaćena je tijelom, godinama i svime što ti nitko više ne može vratiti. Ali kad već sjedne na račun, ponašaš se normalno. Platiš račune, kupiš neku glupost s Temua, počastiš nekoga i pred kraj mjeseca gledaš stanje na računu kao svaki pošteni građanin.Rentu mi plačaju svi građani Lijepe naše. Jesu li oni krivi? APSOLUTNO NISU. Na papiru sam postao čovjek s nekretninama, u stvarnosti čovjek kojem ponekad treba deset minuta da obuče hlače. Svaki ima svoj biznis. I to sam rješio   Počeli su me hvatati i problemi običnih ljudi. Povlačilo mi se zubno meso, a zubar mi je objasnio da starim. To mi nitko prije nije javio. Ipak, ostalo mi je još 49,99 posto zuba, što je sasvim dovoljno ako hranu pravilno rasporediš. Pojavilo se i crvenilo na strateškom području tijela. Savjet sam, kao moderan pacijent, dobio preko društvene mreže i krema je pomogla. Jedne noći probudio sam se tresući se i odmah zaključio da imam gripu, temperaturu ili nešto zbog čega će me ponovno priključiti na aparate. Ispalo je da je vani bilo minus pet, grijanje se ugasilo, a ja se nisam pokrio. Bio sam zdrav. Još uvijek. Za sada.   U ožujku sam nakon četrnaest godina ponovno obukao traperice. Nisu bile Levi’s, nego Sinsay, ali nemojmo sada cjepidlačiti. Klasične traperice nisam mogao zakopčati jednom rukom, pa sam našao model s gumom u struku. Čovjek se prilagodi. Netko osvoji maraton, a ja zatvorim hlače. Izašao sam van, pokisao i neko vrijeme se čudio zašto mi je kosa mokra. Četrnaest godina treniraš hodanje, ravnotežu i oblačenje, a onda te iznenadi kiša. Mozak ima svoje prioritete. Kakve to ima veze s hlačama? Nikakve, bemti moždani.   Negdje u to vrijeme konačno sam pukao. Počeo sam pisati pjesme. Čovjek koji je godinama pokušavao sastaviti običnu rečenicu počeo ih je namjerno lomiti u stihove. Nisam preko noći postao pjesnik. Samo više nisam imao kamo sa svime što mi se skupljalo u glavi. Jedna se pjesma zvala Žmirim. U njoj sam ponovno igrao košarku, vozio bicikl, imao trbušnjake i prolazio kroz zatvorena vrata. Sve ono što sam nekad radio ne razmišljajući sada sam mogao raditi zatvorenih očiju. Onda sam ih otvorio i vidio. Možda pjesme nisu bile znak da sam pukao. Možda su samo riječi pronašle drugi izlaz kad im je prvi ostao oštećen.   SBPozitivno je u međuvremenu išao dalje i dosegao neslućenu popularnost jednog od najneshvaćenijih/najnečitanijih portala u mom gradu. Ljudi su nas čitali. Neki su razumjeli, neki nisu, neki su se slagali, a neki bi se najradije pravili da osobe s invaliditetom postoje samo kad se reže vrpca na kakvoj prigodnoj manifestaciji. Ali čitali su i bio sam ponosan. Nismo imali milijune, veliku redakciju ni ljude koji se javljaju iz Bruxellesa dok iza njih prolazi tramvaj. Imali smo teme od kojih su drugi okretali glavu. Jedan tekst zvao se I moj nkluzivno na papiru, isključeni u stvarnosti. To je, u biti, moglo biti i službeno geslo države.   Posebno me živcirala priča o rehabilitaciji. Prema pravilima koja su meni tada tumačili, osoba s dijagnozom G81 nakon moždanog udara ima pravo na stacionarnu rehabilitaciju dok je stanje akutno. Prve godine nisam mogao progutati ni vodu, vozili su me u kolicima, a Tea je još nosila pelene. Tada nisam mogao sudjelovati u ozbiljnoj rehabilitaciji. Kasnije, kad sam se dovoljno oporavio da bi ona stvarno imala smisla, više nisam bio akutan. Znači, kad ne možeš – možeš. Kad možeš – ne možeš. Ponovno bih stekao pravo kad bih slomio nogu ili, valjda, dobio novi moždani udar. Prvu opciju nisam želio isprobavati, a drugu sam već dvaput testirao i ne preporučujem. Pravilo radi, pacijent smeta.   Ipak, nisam sve ljude u bijelim kutama stavljao u isti džep. Postojali su Marko Kutleša i Tamara Živković, ljudi koji su znanjem, snagom i običnom ljudskošću pokazivali da medicina ne mora biti hladni hodnik u kojem si samo broj kreveta. Kad te sustav pretvori u šifru, dobar liječnik ponovno ti vrati ime.   U travnju sam prešao most iznad provalije. Dubina je, ovisno o trenutku panike, iznosila između 2,3 i deset metara. Napokon sam se vratio u Jajce, prekrasan grad, ali ima most. Prešao sam ga pješkePostoji i fotografski dokaz, da poslije ne ispadne kako izmišljam. Pokušao sam i jogu. Laki mi je pokazivao kako se to radi. On je izgledao kao lav spreman na napad, a ja kao ormar koji je prilikom pada pokušao zadržati dostojanstvo.    Onda smo se sjetili mora. Dražen i Mato zaključili su da je čuvanje Lakija skup sport. Trebalo je organizirati put, psa, mene, automobil i povratak ljudi koji su sve to organizirali. Na kraju je odlučeno da me Dražen odveze na Čiovo i ostavi tamo s automobilom, a Mato kasnije dođe po mene. Dražen je ostao jedan dan i vratio se ekspresnim autobusom. Nakon toga sve do danas je oduševljen brzinom naših autobusa Nakon toga je zaključio da je autobus bolji od naše brze željeznice. To baš i nije teško. U hrvatskom brzom vlaku čovjek stigne odrasti, promijeniti političko uvjerenje i početi razmišljati o mirovini prije dolaska na odredište.   Dok je Dražen bio s nama, ja sam se u jednom danu četiri puta popeo i spustio. Četiri puta gore i četiri puta dolje. Nekome je to običan dan, meni planinarska ekspedicija bez zastavice na vrhu. Kad je Dražen otišao, ostali smo obitelj i novi dio nje Laki, automobil i ja. Prvi put nakon toliko godina počeo sam ponovno ići po otoku. Nisam više sjedio na jednom mjestu i čekao da me netko prebaci. Sjeo bih u automobil i otišao. Možda ne daleko, ali sam. To sam ponekad je važnije od udaljenosti. Hana, Tea, mama i Laki i ja išli smo brdu gore dolje.   Na moru sam proveo skoro mjesec dana, a okupao se svega nekoliko puta. Volim more, miris soli i hladnoću vode. Manje volim uzbrdice, nizbrdice, uske ceste i činjenicu da je na Čiovu gotovo sve ili gore ili dolje. Laki je uživao, a mi smo živjeli u paranoji da će ga išamarati sve mačke iz susjedstva. Jedna ga je, naravno, išamarala. Lokalno stanovništvo odmah je uspostavilo red. Pola dana pitali smo gdje je Laki, a onda bismo ga pronašli kako hrče u ormaru. Pas je došao na ljetovanje i ponašao se pametnije od svih nas.   Hani i Tei smo s godinama pomalo dosadili. Odrasle su, imale svoj ritam i laganini otišle s mora prije nas. Tako to valjda treba biti. Djeca odrastu, a roditelji ostanu pričati iste priče i čuditi se zašto ih nitko ne želi slušati četvrti put. Mato je po mene došao avionom i tvrdio da je avion brži od autobusa. I je. Krenuo sam s Čiova po njega u zračnu luku i stigao gotovo točno u minutu. Tko poznaje ljetnu cestu između Čiova, Trogira i aerodroma zna da to nije vožnja nego lutrija s kružnim tokovima. Pokupio sam ga. Opet ono važno: ja.   U povratku smo odlučili ići kući putevima čudnim. Prvo smo otišli u Šibenik, do mjesta povezanih s Draženom Petrovićem. Pronašli smo spomen-sobu, park i košarkaški trag koji je ostavio u gradu. Prohodao sam nekoliko stotina metara i u glavi ponovno igrao košarku. Kao u pjesmi. Žmirio sam, samo ovaj put otvorenih očiju.   Nakon toga otišli smo u kanjon Zrmanje, gdje su se snimali filmovi o Winnetouu. Tamo sam dodatno provjerio svoj odnos s visinom. Odnos nije bio dobar. Nije to bio običan strah, nego demokratsko glasanje cijelog tijela protiv približavanja rubu. Nakon nekoliko metara noga mi je otišla u punu fleksiju. Mato mi je istezao stopalo i objašnjavao da je sve u glavi. Rekao sam mu da je kod mene u glavi vakuum. Vakuum ili ne, nastavio sam. Plan je bio pojesti janjetinu na Rastokama. Sjeli smo u restoran u kojem nije bilo janjetine pa smo pojeli ćevape. Tako je naše povijesno-filmsko-gastronomsko putovanje završilo onako kako završava većina ozbiljnih hrvatskih planova – ćevapima.   Vratio sam se kući i nastavio trenirati. Moja kućna teretana nije izgledala kao u reklamama. Ulazio sam u potkošulji izvrnutoj kao Rocky IV poslije borbe. Na traci sam hodao pet minuta dnevno brzinom između 1,5 i 3 kilometra na sat, a meni je to djelovalo kao autocesta. Od trake do sobnog bicikla bilo je 59 centimetara prepunih filozofije. Remenje za stopala raspalo se, lijevo stopalo bježalo je u fleksiju, a bicikl je izgledao depresivnije od mene. Do druge sobe imao sam još šest metara. Koljena su radila po svom, tepih se klizao kao političar pred odgovornim pitanjem, a Laki mi je ukrao plavu krpu. Drugi broje kilometre, ja brojim metre između sprava. Ali ih prijeđem.   Pred kraj godine otkrili su i da mi srce preskače. Kao da mi već nije bilo dovoljno što lijeva strana tijela povremeno radi po svom, sada se u oporbu uključilo i srce. Nosio sam Holter 24 sata, malu kutiju koja cijeli dan sluša kako ti srce vodi vlastitu politiku. Nalaz je pokazao preskoke, ali liječnici su rekli da su benigni. Dakle, srce nije odustalo, samo je povremeno preskakalo red. I ono je, izgleda, shvatilo kako se u Hrvatskoj najbrže dođe na red.   Četrnaestog prosinca navršilo se petnaest godina od drugog moždanog udara. Petnaest godina otkako sam dotaknuo smrt i otkrio da je to jedna fina dama koja dolazi bez poziva i nema namjeru objasniti zašto je stigla. Tada nisam mogao progutati ni kap vode. Moždani udar poslije se uselio u mene kao neželjeni podstanar koji ne plaća ni stanarinu ni režije, a stalno nešto pokvari.   Petnaest godina kasnije nisam postao stari Vanja. On je umro tog 14. prosinca. Novi Vanja hodao je sporije, govorio tako da ga nisu svi razumjeli i svakog dana pregovarao s lijevom stranom tijela. Bio je možda pola nekadašnje verzije, ali borac s punim radnim vremenom. Kiborg bez garancije i ovlaštenog servisa. Gledao sam Hanu i Teu kako odrastaju, roditelje, prijatelje i ljude koji nisu otišli kad je postalo teško. Gledao sam Lakija kako spava kao da je on sve to preživio.   Nisam ozdravio. To više nije ni bio cilj. Cilj je bio živjeti svoj život, a ne stalno čekati da mi ga netko odobri. Imati dva stana, trošiti rentu, pisati pjesme, voditi neshvaćeni portal, voziti po Čiovu, penjati se četiri puta dnevno, tražiti Winnetoua po Zrmanji i jesti ćevape kad nema janjetine. I smijati se. Govor mi još nisu svi razumjeli, ali sve više ljudi jest. Kad sve izgubiš, ne ostane ti mnogo. Ostane ti da ostaneš svoj i da se javiš kad te prozovu. Na redu si, kažu. Jesam. Samo mi treba malo više vremena da dođem do šaltera. Ali dođem. Jbga, još sam tu       submitted by     /u/Healthy-Gain-3881     to     r/zdravlje       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/zdravlje/comments/1wakx1k/2025/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T10:45:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T10:46:07.593Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fe770f0819e6636a94bed"
+    },
+    "message_id": "reddit_t3_1wakx0i",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "AdcampAcademyLamka",
+    "username": "digitalmang44",
+    "title": "Google Digital Marketing & E-commerce Course, what does it teach and what are rhe job prospects ?",
+    "text": "Google Digital Marketing & E-commerce Course, what does it teach and what are rhe job prospects ?\n\nIf you're thinking about starting a career in digital marketing, the Google Digital Marketing & E-commerce Certificate can be a useful beginner-friendly starting point.   The course introduces important areas such as digital marketing fundamentals, SEO, social media marketing, email marketing, Google Ads, analytics, e-commerce, customer engagement and online marketing strategies.   One of the biggest advantages is that you don't necessarily need a marketing degree to start learning. Students, graduates, career changers, freelancers and small-business owners can all benefit from these skills.   💼 What jobs can you pursue?   Depending on your skills and experience, possible career paths include:   - Digital Marketing Executive   - SEO Specialist   - Social Media Specialist   - E-commerce Specialist   - Paid Ads/PPC Executive   - Content Marketing Executive   - Email Marketing Specialist   - Digital Marketing Analyst   The certificate itself won't guarantee a job. Practical experience, projects, a portfolio, communication skills and continuous learning are equally important.   If you're a beginner, start with the fundamentals, build real projects and gradually specialize in areas such as SEO, Google Ads, Meta Ads or e-commerce marketing.   Would you recommend a Google digital marketing certification to someone starting their career in 2026?       submitted by     /u/digitalmang44     to     r/AdcampAcademyLamka       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AdcampAcademyLamka/comments/1wakx0i/google_digital_marketing_ecommerce_course_what/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T10:45:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T10:46:08.796Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fe771f0819e6636a94bee"
+    },
+    "message_id": "reddit_t3_1wakwzz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "orks",
+    "username": "Mindless_Usual_3780",
+    "title": "First Lost help",
+    "text": "First Lost help\n\nAfter months of collecting and painting, I feel ready tocenter in LGS and ask for some \"lessons\" and some First games (I alteady ready the tulebook, bit without plaing there are a lot of stuff I don't understand at 100%).   I have a mix of proxies and original GW, bit It looks like my club doesn't matter luckly. I would like to bring something \"competitive\", as for competitive I mean don't be tabled at turno 2. Or 3.   Here's my list of what I have:   10 tankbuster   10 breackas+2 Nobz   20 Flash gitz   60 Boyz with Nobz on 40mm and 3 special weapons (another 20 only with Rokkit)   60 gretchins+6 runtherds   4 trukks   1 battlewagon   10 Beast snaggas   10 Nobz (w Power klaw but not kombiwapoz, planning tockirbash in some way)   5 srormboyz   A bunch of characters (mela, warbosses, Ghaz ecc)   There's something I can buld.around those models? Something Is \"mandatory\" to buy like a Sag Mek?       submitted by     /u/Mindless_Usual_3780     to     r/orks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/orks/comments/1wakwzz/first_lost_help/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T10:45:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T10:46:09Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fe77591bc12a96dd64167"
+    },
+    "message_id": "reddit_serp_1qu684n",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/stripe/comments/1qu684n/best_way_to_avoid_chargeback/",
+    "text": "Best way to avoid chargeback ?\n\nHi,    Context:  Im working on a platform like fiverr/upwork where businesses can connect with freelancers.  Businesses put a contract and pay a 10% on top of their budget as a platform fee (I want it to be non refundable, since they used my product to show their \"searching for freelancer post\"). I am using stripe as an \"escrow system\".    What I currently have :  Businesses show a post where they are searching for a freelancer. They also link to it a contract with details of what they want with the budget. Freelancers apply and businesses can chat with the freelancers to validate if this is who they want and the terms of the contract. They can edit the contract and sign it when they both approve it. Freelancer does the work and send it to the business. If they both agree, the session is done and I deliver the money after a certain time to the freelancer.    Can I add a system where the dispute happens between the freelancer and the business? I would be only there if the problem is escalated ?   Also, what is the best way to avoid chargeback from businesses that would lie ? What information should I collect to protect myself ? What proof can I show to the banks to be sure they have no choice but to refuse the chargeback ? I know it's part of the game but I want to limit it as much as possible.   Thanks  (Please stay on the topic, don't judge if the idea would work or not that isn't the subject).       submitted by     /u/ADM0o       [link]       [comments]",
+    "username": "ADM0o",
+    "subreddit_or_channel": "stripe",
+    "posted_at": "2026-02-02T20:13:53+00:00",
+    "fetched_at": {
+      "$date": "2026-09-08T10:46:13.460Z"
+    },
+    "google_rank": 7,
+    "search_keyword": "freelance chargeback management",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-08T10:46:13.460Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fe7a591bc12a96dd64168"
+    },
+    "message_id": "reddit_serp_vufvad",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/venmo/comments/vufvad/how_do_i_prevent_chargeback_scams_as_a_freelance/",
+    "text": "How do I prevent chargeback scams as a freelance artist?\n\nAsk for my gf not me. My gf is a freelance artists who does custom portraits by commission. Recently she's been getting a ton of scammy DM's that are total red flags, so she's been trying to get on top of her game in all aspects. One thing I know is a problem is chargebacks.    Is there any way to prevent chargebacks? She conducts a lot of her business through Instagram so there is a record of an agreement between her and the buyer as well as a deliverance of the final product (the commission). Is Venmo good for these types of things or is something like PayPal better?   Appreciate it.       submitted by     /u/IsabelaCraneAuthor       [link]       [comments]",
+    "username": "IsabelaCraneAuthor",
+    "subreddit_or_channel": "venmo",
+    "posted_at": "2022-07-08T17:20:18+00:00",
+    "fetched_at": {
+      "$date": "2026-09-08T10:47:01.412Z"
+    },
+    "google_rank": 10,
+    "search_keyword": "freelance chargeback management",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-08T10:47:01.412Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fe7abf0819e6636a94bef"
+    },
+    "message_id": "reddit_t3_1wakxt9",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "conseilboulot",
+    "username": "Sidah-Colley87",
+    "title": "AEO HubSpot : comment corriger la manière dont ChatGPT et Perplexity décrivent notre marque ?",
+    "text": "AEO HubSpot : comment corriger la manière dont ChatGPT et Perplexity décrivent notre marque ?\n\nNous avons récemment commencé à tester HubSpot AEO après avoir réalisé qu'une bonne partie de nos leads entrants obtenaient des réponses étranges et obsolètes sur nos fonctionnalités via ChatGPT et Perplexity avant même d'avoir un premier échange avec nous.   Il s'avère que les moteurs de réponse ( answer engines ) scrapaient d'anciens articles de blog et des  listicles  tiers, ce qui signifie que des prospects arrivaient en démo en nous interrogeant sur des fonctionnalités abandonnées il y a deux ans. Nous voulions voir si le fait de suivre la couverture des prompts et de corriger nos données sources directement au cœur de notre workflow CRM allait vraiment faire bouger les lignes.   Au lieu de simplement publier de nouveaux articles chaque semaine, nous avons utilisé les données de prompts pour identifier nos principales lacunes de couverture et avons mis à jour nos pages clés avec des formats FAQ structurés et du balisage Schema. Le fait d'avoir ces recommandations directement intégrées à nos outils de contenu habituels a grandement facilité l'alignement entre l'équipe marketing et les commerciaux.   Nos citations dans les prompts et nos scores de visibilité ont grimpé assez rapidement une fois le contenu source nettoyé, et nos commerciaux passent désormais nettement moins de temps à rectifier de fausses idées lors des premiers appels.       submitted by     /u/Sidah-Colley87     to     r/conseilboulot       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/conseilboulot/comments/1wakxt9/aeo_hubspot_comment_corriger_la_manière_dont/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T10:46:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T10:47:07.694Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fe7abf0819e6636a94bf0"
+    },
+    "message_id": "reddit_t3_1wakxsl",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Mulund",
+    "username": "tbsm7191",
+    "title": "Where to buy games for ps4?",
+    "text": "Where to buy games for ps4?\n\nsubmitted by     /u/tbsm7191     to     r/Mulund       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Mulund/comments/1wakxsl/where_to_buy_games_for_ps4/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T10:46:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T10:47:07.894Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fe7acf0819e6636a94bf1"
+    },
+    "message_id": "reddit_t3_1wakxr9",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "radiohead",
+    "username": "proghead00",
+    "title": "Can we buy Radiohead Japan ticket later?",
+    "text": "Can we buy Radiohead Japan ticket later?\n\nHi guys, I’m planning for the Radiohead Japan trip (would tour in Japan as well), but it’s a bit too soon for my friends to confirm whether they’ll be able to go. Do you know if we can buy the Radiohead tickets later on?       submitted by     /u/proghead00     to     r/radiohead       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/radiohead/comments/1wakxr9/can_we_buy_radiohead_japan_ticket_later/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T10:46:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T10:47:08.096Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fe7acf0819e6636a94bf2"
+    },
+    "message_id": "reddit_t3_1wakxpu",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Warframe",
+    "username": "OHD5",
+    "title": "Simple tool to track standing & Forma during Plague Star",
+    "text": "Simple tool to track standing & Forma during Plague Star\n\nHello, hope your day is going well!   I made this simple tool to track your standing earnings and Forma buying for the Plague Star event tomorrow.   TL;DR: tracks standing + tells you how much Forma you can buy + how many you've bought so far.    https://mh4s.github.io/Plague-Star-Forma-Tracker/    It's pretty straightforward, I'll go over it real quick:    First box : pick your mission type (Normal / Advanced / Steel Path). After the mission, click the number showing how much standing you got from the event, and the drone bonus standing under it (if you got it). You can also manually set the standing at any point.    Second box : shows how many Forma you can buy with the standing you have. When you buy Forma, just put in the box how many you bought and it'll deduct from the standing automatically, so you don't have to do the math yourself.    Third box : shows how many Forma you've bought so far, and it auto-saves. You can check it anytime to keep track of how much you've farmed.   This is kinda for people who have a daily farming goal for this event, like me! Hope it's useful to someone.   Note: the numbers and shop prices are based on last year's event if anything changes tomorrow, I'll try to update it quickly.   This is my first ever GitHub post and Reddit post, so if there's any issues please let me know!       submitted by     /u/OHD5     to     r/Warframe       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Warframe/comments/1wakxpu/simple_tool_to_track_standing_forma_during_plague/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T10:46:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T10:47:08.298Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fe7e7f0819e6636a94bf3"
+    },
+    "message_id": "reddit_t3_1wakygq",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BLOOKET",
+    "username": "yuythefishball",
+    "title": "GUYS I FOUND A NEW METHOD TO OPEN PACKS EXTREAMLY FAST IN ONE GO",
+    "text": "GUYS I FOUND A NEW METHOD TO OPEN PACKS EXTREAMLY FAST IN ONE GO\n\nso first buy the amount of packs you want (100 is max), then when you are in the opening screen click reload. after that, yuo should be in the market with lesser tokens.then,open blooks and go to your pack you bought.There it is your blooks completly skipping all the animation       submitted by     /u/yuythefishball     to     r/BLOOKET       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BLOOKET/comments/1wakygq/guys_i_found_a_new_method_to_open_packs_extreamly/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T10:47:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T10:48:07.984Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fe7e8f0819e6636a94bf4"
+    },
+    "message_id": "reddit_t3_1wakyfv",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ReplicLeague",
+    "username": "JuggernautWeekly1995",
+    "title": "Review from prokitfc7 PSG Paris Saint Germain 2021/22 away",
+    "text": "Review from prokitfc7 PSG Paris Saint Germain 2021/22 away\n\nPretty good Fan Jersey, Order was ready properly fast    The Jersey has very much Detail at all (Last three Pictures are from Genuine)    Couldnt believe what they want for Jersey Like These in Genuine ... Crazy dont buy Jerseys over 500$€£   Bought from  r/SKKLLcom     Dont forget to Join  r/ReplicLeague  to never Miss Out any fire Drops or Anime or women Jersey some of them looking better than any Dessou 😏 Link as Always in the comments 🔥        submitted by     /u/JuggernautWeekly1995     to     r/ReplicLeague       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ReplicLeague/comments/1wakyfv/review_from_prokitfc7_psg_paris_saint_germain/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T10:47:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T10:48:08.184Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fe7e8f0819e6636a94bf5"
+    },
+    "message_id": "reddit_t3_1wakyfh",
+    "topic_key": "give me today top three conversation about e commerce",
+    "search_keyword": "ecommerce",
+    "platform": "reddit",
+    "subreddit": "thisecommercelife",
+    "username": "thisecommercelife",
+    "title": "\"Billionaire Heaven\" (Elon Musk, part 1 of 3)",
+    "text": "\"Billionaire Heaven\" (Elon Musk, part 1 of 3)\n\nShareable PDF of this comic and lots of citations on  Patreon.com/#noneofthisisok .   Follow #noneofthisisok wherever you fritter:  linktr.ee        submitted by     /u/thisecommercelife     to     r/thisecommercelife       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/thisecommercelife/comments/1wakyfh/billionaire_heaven_elon_musk_part_1_of_3/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T10:47:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T10:48:08.383Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fe7e8f0819e6636a94bf6"
+    },
+    "message_id": "reddit_t3_1wakyf8",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PerfumeIndia",
+    "username": "Decent_Rip_5112",
+    "title": "4 months fragrance collection",
+    "text": "4 months fragrance collection\n\nBeen into perfumes for the past 1 year and finally got the chance to buy these in the last three months.       submitted by     /u/Decent_Rip_5112     to     r/PerfumeIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PerfumeIndia/comments/1wakyf8/4_months_fragrance_collection/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {

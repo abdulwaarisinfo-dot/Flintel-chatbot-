@@ -1,0 +1,416 @@
+  {
+    "_id": {
+      "$oid": "6aae2f0aaeeb96c1c63b9bc7"
+    },
+    "message_id": "reddit_t3_1wkes93",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "ClaudeWorkflows",
+    "username": "ClaudeAI-mod-bot",
+    "title": "[Workflow] FreeComputerUse: A Cost-Optimized Hybrid LLM/Playwright Agent for Reusable Browser Automation Workflows",
+    "text": "[Workflow] FreeComputerUse: A Cost-Optimized Hybrid LLM/Playwright Agent for Reusable Browser Automation Workflows\n\nFreeComputerUse: A Cost-Optimized Hybrid LLM/Playwright Agent for Reusable Browser Automation Workflows    Workflow value:  90/100   Status:  active ·  Freshness:  70/100 ·  Confidence:  0.95 ·  Level:  advanced   Categories:  Quality Control, Token Saving, Context & Memory   Original source:   r/ClaudeCode post/comment    What problem this solves   The high cost of general-purpose LLM computer-use agents for repetitive browser automation tasks, making them uneconomical for daily use.   Summary   A hybrid browser automation agent ( FreeComputerUse ) that uses a small LLM (DeepSeek Flash) for planning and TypeScript/Playwright for local execution and verification. It prioritizes cost-efficiency by minimizing LLM calls and enables saving successful task sequences as reusable workflows, allowing subsequent runs with zero model calls.   Why it is useful   This workflow is valuable because it directly addresses the common pain point of high costs associated with LLM-driven computer-use agents for repetitive tasks. It provides a concrete, open-source solution that combines LLM planning with local script execution (Playwright/TypeScript) for efficiency. Crucially, it introduces a mechanism for saving and reusing successful task sequences as 'workflows' with zero subsequent model calls, making it highly cost-effective and repeatable. The provision of a GitHub repo, demo, and practice site makes it highly transferable and verifiable for other users.   Workflow     Identify a repetitive browser task that needs automation.   Set up the  FreeComputerUse  project locally from the GitHub repository.   Configure the agent with your chosen LLM API key (e.g., DeepSeek Flash).   Instruct the agent to perform the desired browser task.   The LLM plans a batch of browser actions.   TypeScript and Playwright execute these actions locally in Chromium and verify the results.   If the task requires further decisions or repairs, the LLM is called again for re-planning.   Upon successful completion, save the task's sequence of actions as a reusable workflow.   For future compatible tasks, load and execute the saved workflow, bypassing LLM calls for planning and achieving zero model cost for that run.     Tools / artifacts     FreeComputerUse (GitHub repository)   DeepSeek Flash (or other compatible LLM)   TypeScript   Playwright   Chromium browser   LLM API key   Saved workflow files   Free practice site (for testing)     Validation signals     Specific functional test case described (finding, extracting, downloading, and verifying an invoice).   Quantified results for the test case: 8 browser actions, 2 model calls, 5,263 tokens, 0 repairs.   Recorded demo available on GitHub.   Test results included in the repository.   Provision of a free practice site for users to test and validate.   Explicit mention of testing on a synthetic site to avoid real-world risks.     Cautions     The agent asks for permission before accessing a website.   Users can pause the agent at any time to take manual control.   Testing was conducted on a synthetic practice site to prevent real-world financial or account changes.     Limitations     This is a first version, and more complicated tasks may still fail.   Currently controls web pages only in Chromium.   Requires technical setup (TypeScript, Playwright, local environment) which might be a barrier for beginners.   Relies on a specific LLM (DeepSeek Flash) for planning, though the architecture might allow for others.     Rate this workflow   Upvote this post if the workflow is useful, reproducible, or worth recommending.   Downvote if it is vague, outdated, unsafe, overhyped, or not reproducible.   Reply if it worked for you, failed, is outdated, or has a better alternative.      This post was generated automatically from the workflow library database.        submitted by     /u/ClaudeAI-mod-bot     to     r/ClaudeWorkflows       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeWorkflows/comments/1wkes93/workflow_freecomputeruse_a_costoptimized_hybrid/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T06:42:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T06:43:22.990Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aae2f0baeeb96c1c63b9bc8"
+    },
+    "message_id": "reddit_t3_1wkes91",
+    "topic_key": "electrician",
+    "search_keyword": "electrician",
+    "platform": "reddit",
+    "subreddit": "DIYUK",
+    "username": "Any-Opp-20",
+    "title": "Old live doorbell wiring",
+    "text": "Old live doorbell wiring\n\nSo I'm redecorating an old hallway. I removed a large doorbell chime from the wall and came across the wiring in the first photo.    The wiring going out through the large hole (stuffed with paper bizarrely) goes into the exterior brickwork to where a doorbell used to be but it's long gone. The two wires going into the small hole on the right goes into the adjoining cupboard where the fusebox is.    Using my fluke I was getting small white sparks from the wiring to the right. I have since turned off the breaker on the fuse box marked doorbell, separated the wires and taped them. But I don't know what to do with them now. I don't want to just stuff them in the wall in case the breaker is put back on in the future by someone. And I don't have the expertise to disconnect them from the sealed fuse box.    It's this a job for a trained electrician or something I can do?    Thank you in advance.       submitted by     /u/Any-Opp-20     to     r/DIYUK       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DIYUK/comments/1wkes91/old_live_doorbell_wiring/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T06:42:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T06:43:23.192Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aae2f0c660c60840397e38b"
+    },
+    "message_id": "reddit_t3_1wkesgr",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Unique_Percentage521",
+    "title": "Grab 100 hammers from u/Unique_Percentage521!",
+    "text": "Grab 100 hammers from u/Unique_Percentage521!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Unique_Percentage521     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wkesgr/grab_100_hammers_from_uunique_percentage521/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T06:43:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T06:43:24.317Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae2f0c660c60840397e38c"
+    },
+    "message_id": "reddit_t3_1wkeseb",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Audi",
+    "username": "Background-Guest-971",
+    "title": "2015 A4 Allroad-couldn’t let this one slip through my fingers.",
+    "text": "2015 A4 Allroad-couldn’t let this one slip through my fingers.\n\n61,289 miles. One owner. All service records-after annoying the heck out of the sales guy-tracked down and verified. Car fax clean, Audi service department facts and figures jive with the Car fax. Put it in a lift zero leaks. Clean bottom zero rust, etc.    So I was hard pressed to let this go. $12k out the door. Feels a bit “looser” than my 2019 Allroad. Pulls like a well appointed freeway machine…I’m a happy camper. Patience is key with buying used. Can’t get very emotional and let our petrol headed enthusiasm run the show.    I’ll blow some carbon off tomorrow though let me assure you. (Not until oil temp is correct though.)    Have a good weekend all.        submitted by     /u/Background-Guest-971     to     r/Audi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Audi/comments/1wkeseb/2015_a4_allroadcouldnt_let_this_one_slip_through/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T06:43:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T06:43:24.544Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae2f0c660c60840397e38d"
+    },
+    "message_id": "reddit_t3_1wkese3",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PreguntasReddit",
+    "username": "Izuku-Girlfriend20",
+    "title": "¿Qué capitulo de \"Bob esponja\" es el mejor para ti?",
+    "text": "¿Qué capitulo de \"Bob esponja\" es el mejor para ti?\n\nComo buena fan de la esponjita puedo decir que tengo 3 episodios favoritos que para mi son los mejores :3    1- \"Banda de tont0s\": Me encanta como el humor de ese capítulo es super simple pero efectivo, sobretodo en la parte cuando la banda pelea antes de la presentación, y no olvidar la rolota que cantaron juntos, lo amo   2- \"Turno nocturno\": Este lleva parcialmente la misma formula del anterior, me gusta mucho ver a bob asustado en este episodio por que me da mucha risa jajsjs, además de que de niña me daba un poco de miedo, pero no podía negar que me encantaba, además es un capitulo super memorable :3.   3- \"Pizza a domicilio\": Solo lo puedo resumir en que me identifico con Bob en este capítulo jajsj, desde la emoción que le da entregar la pizza hasta cuando se pone triste por que el cliente le rechazo la pizza, y no olvidemos: \"La pizza de don cangrejo es la mejor pizza, para ti y para miiii 🎶\"    Te quiero mucho Bob Toronja^^.    (?)       submitted by     /u/Izuku-Girlfriend20     to     r/PreguntasReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PreguntasReddit/comments/1wkese3/qué_capitulo_de_bob_esponja_es_el_mejor_para_ti/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T06:43:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T06:43:24.761Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae2f0c660c60840397e38e"
+    },
+    "message_id": "reddit_t3_1wkesdg",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "MobileLegendsGame",
+    "username": "ChisseCralle",
+    "title": "PURIST GOLD LANER TIER LIST (NO UNIQUE GOLD LANERS LIKE FREYA, RUBY OR HARITH)",
+    "text": "PURIST GOLD LANER TIER LIST (NO UNIQUE GOLD LANERS LIKE FREYA, RUBY OR HARITH)\n\nS-Meta: Melissa --> Popol & Kupa --> Moskov --> Ixia   S-Conditional: Obsidia --> Wanwan   A: Natan --> Kimmy --> Brody --> Bruno --> Beatrix --> Irithel   B: Miya --> Claude --> Clint --> Hanabi --> Granger --> Karrie   C: Lesley --> Layla   D: None   E: None   F: None       submitted by     /u/ChisseCralle     to     r/MobileLegendsGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MobileLegendsGame/comments/1wkesdg/purist_gold_laner_tier_list_no_unique_gold_laners/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T06:43:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T06:43:24.974Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae2f0d660c60840397e38f"
+    },
+    "message_id": "reddit_t3_1wkescl",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "Ok-Ad4943",
+    "title": "Rescued Snacks and Lantern-Lit Truffle Parmesan Fries",
+    "text": "Rescued Snacks and Lantern-Lit Truffle Parmesan Fries\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Ok-Ad4943     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wkescl/rescued_snacks_and_lanternlit_truffle_parmesan/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T06:43:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T06:43:25.190Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae2f0d660c60840397e390"
+    },
+    "message_id": "reddit_t3_1wkesch",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "BreakUps",
+    "username": "confusedafbroo",
+    "title": "Am I wrong for asking my boyfriend to set boundaries with his brother’s girlfriend?",
+    "text": "Am I wrong for asking my boyfriend to set boundaries with his brother’s girlfriend?\n\nI need some honest advice because I’m confused about whether I did something wrong.  My boyfriend has a brother, and his brother’s girlfriend is very close to him. They call each other brother and sister, but some of their behavior made me uncomfortable.  For example, she would come into his room without knocking, touch him, put ice inside his shirt, and act very physically playful and over-friendly with him.  I told my boyfriend that I felt uncomfortable and wanted him to set some boundaries. I believe that even if they see each other as siblings, there should still be personal boundaries, especially when someone is in a relationship.  I wasn’t asking him to stop talking to her or to treat her badly. I just wanted him to understand my feelings and make sure certain things didn’t cross a line.  But now I’m wondering:   Was I wrong for asking him to set boundaries? Was I being controlling or insecure?   I understand that she is his brother’s girlfriend, and maybe they genuinely see each other as siblings. But I still feel that some behaviors are inappropriate or uncomfortable when you’re in a relationship.  I would really appreciate honest opinions, especially from people who have experienced something similar.  Am I wrong for feeling this way, or is it reasonable to expect boundaries in this situation?       submitted by     /u/confusedafbroo     to     r/BreakUps       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BreakUps/comments/1wkesch/am_i_wrong_for_asking_my_boyfriend_to_set/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T06:43:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T06:43:25.403Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae2f0d660c60840397e391"
+    },
+    "message_id": "reddit_t3_1wkescf",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "streetwearstartup",
+    "username": "STX_Garment",
+    "title": "🧪 Part 2: The Distressed Wash Lottery – Why Custom Vintage Fades, Acid Washes, and Sun-Bleached Hoodies Often Turn Into Bulk Disasters",
+    "text": "🧪 Part 2: The Distressed Wash Lottery – Why Custom Vintage Fades, Acid Washes, and Sun-Bleached Hoodies Often Turn Into Bulk Disasters\n\nIf you saw my post last week breaking down the generic factory traps of blank bait-and-switches and skipped pre-shrinking, you know how easily an independent streetwear drop can get sabotaged by lazy production shortcuts. Today, we are diving into Part 2:  The Distressed Wash Lottery.    Vintage aesthetics, heavy acid washes, oil stains, and sun-faded distress look incredible on mockups. You send over reference pictures of a high-end washed hoodie, and the factory delivers a custom sample that looks beautifully aged with the perfect luxury texture. You confidently fund the production.   But when the bulk shipment boxes arrive, it feels like you played a terrible lottery. Half of the hoodies look pitch black with zero wash texture, the other half look completely bleached out into a strange gray, and some items even have massive random holes ripped right through the heavy cotton fleece.   Your collection is ruined. But here is the raw, unedited textile reality:  The wash factory didn't make a mistake. Your generic supplier just didn't understand that heavyweight high-street washes cannot be processed using fast-fashion machinery.    Here are 2 critical custom washing and distressing traps generic factories pull on streetwear startups, and how to spot them before you launch your next drop.   🎰 1. The Bulk Tumbling Over-Exposure (The Fabric Ruin)     The Trick: Achieving that perfect vintage, heavy high-street edge distress requires tumbling the cut panels or garments with pumice stones or industrial enzyme chemicals.   The Reality: Lazy factories will throw smaller custom batches (like 50-100 pieces) into massive industrial wash vats designed for thousands of retail pieces. Because the machine volume is too large for a small run, the mechanical friction increases exponentially. The pumice stones don't just gently wear down the seams—they completely chew through the heavy 400GSM cotton fibers, turning your premium garments into a frayed, thin, damaged mess.     🎨 2. The Panel-to-Garment Shade Shift (The Color Nightmare)     The Trick: To ensure every single piece in your bulk drop has a consistent vintage shade, high-end manufacturers dye and wash sample panels of the fabric rolls together under strict temperature controls before final assembly.   The Reality: Standard fast-fashion factories rush the process. They sew the entire batch of raw black hoodies first, then throw them randomly into separate wash vats with uneven enzyme concentrations. Because heavy cotton absorbs water and chemicals unevenly in packed vats, you end up with massive shade variances. Sizing Medium looks entirely different from sizing Extra Large, ruining your brand's consistency.     🛠️ How to Protect Your Brand: The \"Inside-Seam & Pocket\" Audit   Before you accept final bulk delivery from any overseas clothing manufacturer, take 3 random pieces from different sizes and perform this immediate field check:   1️⃣  The Interior Pocket Inspection:  Open the front kangaroo pocket and look at the interior seams. If the wash color inside the pocket is completely dark black while the outside is washed gray, the factory used cheap local spray-bleaching techniques instead of a genuine industrial enzyme wash.  2️⃣  The Stitching Tensile Test:  Pull firmly on the flatlock or overlock stitching along the washed seams. High-strength vintage washes naturally weaken standard sewing threads. Premium manufacturers use specialized core-spun polyester threads that survive the chemical wash. If the threads snap under light pressure, your customers' hoodies will fall apart in their first home laundry machine.   💬 What distressed wash issue is driving you crazy right now? Random holes? Yellowish stains from uneven chemical neutralization? Drop a comment below, and I'll help you audit your current supplier's response.   Full Disclosure: I run the manufacturing floor at STX Garment in Dongguan, China. We specialize strictly in heavyweight custom streetwear (300-500+ GSM) and we actually built our entire production line around flexible, high-end manufacturing. We do custom pattern cutting, standard pre-shrunk fabric washes, and professional tunnel curing for every single client, no matter the order size. Look at our production capabilities at STX Garment or vibe with other independent brand founders. Up Next (Part 3): Next week, I am exposing \"The Tech Pack Translation Trap\"—how standard factories completely misinterpret Western streetwear sizing charts, and the exact blueprint to format your measurements so they never ruin your drop. Stay tuned.       submitted by     /u/STX_Garment     to     r/streetwearstartup       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/streetwearstartup/comments/1wkescf/part_2_the_distressed_wash_lottery_why_custom/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T06:43:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T06:43:25.617Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae2f0d660c60840397e392"
+    },
+    "message_id": "reddit_t3_1wkesbk",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "goatravel",
+    "username": "Escapeartist_Bob",
+    "title": "Jungle Cafe - Bistro & Bar in North Goa",
+    "text": "Jungle Cafe - Bistro & Bar in North Goa\n\nsubmitted by     /u/Escapeartist_Bob     to     r/goatravel       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/goatravel/comments/1wkesbk/jungle_cafe_bistro_bar_in_north_goa/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T06:43:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T06:43:25.837Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae2f0e660c60840397e395"
+    },
+    "message_id": "reddit_t3_1wkesah",
+    "topic_key": "can you tell me about whos looking to talking about nike",
+    "search_keyword": "sneakers",
+    "platform": "reddit",
+    "subreddit": "moresneakers",
+    "username": "New_Personality_6770",
+    "title": "Reverse mochas GOAT - differences and concerning",
+    "text": "Reverse mochas GOAT - differences and concerning\n\nSo guys, I recently bought this reverse mochas from GOAT, and I noticed some differences between the color of the box, color of the pink paper compared to a medium olive travis Scotts also purchased from GOAT. I need help with the authentication of this pair. I also noticed a differences between the threads that are aligned with the reverse swoosh logo so please could you help me with your thoughts. Do I definitely change the pair for another? or do you think it’s good? as you can see the photos of the boxes, the left side is from the reverse mocha box and the right side the medium olive box.       submitted by     /u/New_Personality_6770     to     r/moresneakers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/moresneakers/comments/1wkesah/reverse_mochas_goat_differences_and_concerning/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T06:42:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T06:43:26.478Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae2f0e660c60840397e396"
+    },
+    "message_id": "reddit_t3_1wkes9s",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "Chennai",
+    "username": "Western-Dress-8618",
+    "title": "Anuv Jain Concert Tickets for Sale – Chennai",
+    "text": "Anuv Jain Concert Tickets for Sale – Chennai\n\nSelling 4 GOLD tickets for the Anuv Jain concert in Chennai on 31st October.   📅 Date: 31st October 📍 Location: Chennai 🎫 Tickets: 4 💰 Price: ₹5,500 for all 4 tickets   Interested? DM me for details!       submitted by     /u/Western-Dress-8618     to     r/Chennai       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Chennai/comments/1wkes9s/anuv_jain_concert_tickets_for_sale_chennai/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T06:42:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T06:43:26.692Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae2f0e660c60840397e397"
+    },
+    "message_id": "reddit_t3_1wkes9c",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "RATS",
+    "username": "BigManInkMan",
+    "title": "Need Help",
+    "text": "Need Help\n\nHi all.  To sum it up this last month has been hell. Got broken up with, remote freelance job started ghosting me (which is basically their way of saying I don’t have a job anymore) and I’m struggling with groceries and bills and with that, also food for my rats and bedding.   I’ve had some rat food left but now I’m out and I’ve been feeding them a mix of veggies and fruit from what groceries I could buy and oatmeal and nuts and pasta and tuna and chicken. But honestly I’m scared because idk how long I can make this last.   I’m just very stressed rn nit being able to take care of myself or my rats and I don’t have anyone to ask for help.       submitted by     /u/BigManInkMan     to     r/RATS       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RATS/comments/1wkes9c/need_help/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T06:42:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T06:43:26.909Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae2f0f660c60840397e39a"
+    },
+    "message_id": "reddit_t3_1wkes8y",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MumbaiMarketplace",
+    "username": "Dpower75",
+    "title": "Sony CH - 720n ANC Headset",
+    "text": "Sony CH - 720n ANC Headset\n\nOriginal Sony WH-CH720N | ANC Wireless   Selling Sony WH-CH720N in Clean good condition   Clean and well maintained, with excellent sound quality and Active Noise Cancellation (ANC).   ✨ Highlights:   Genuine Sony WH-CH720N   Active Noise Cancellation   Great sound & battery backup   Bluetooth + AUX support   Original ear cushions — only minor wear around the edges   Fully functional — ANC, Bluetooth, mic, buttons & charging all working perfectly   Includes AUX cable + charging cable   Box: Not available   ₹4699 — ( slightly negotiable )   Genuine buyers welcome, message if interested.       submitted by     /u/Dpower75     to     r/MumbaiMarketplace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MumbaiMarketplace/comments/1wkes8y/sony_ch_720n_anc_headset/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T06:42:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T06:43:27.545Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae2f49660c60840397e39c"
+    },
+    "message_id": "reddit_t3_1wket4w",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "Warframe",
+    "username": "GeartechINC",
+    "title": "What do you think Eleanors favorite plants are?",
+    "text": "What do you think Eleanors favorite plants are?\n\nI don't know where else to ask, so I put it under discussion 😅   Anyway, I'm kinda thinking it's mushrooms, because she's rather grim at times, and also the whole hive mind thing mushrooms and the Techrot have, but maybe she particularly spiteful of mushrooms do to all the similarities. So anyway, what do y'all think?       submitted by     /u/GeartechINC     to     r/Warframe       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Warframe/comments/1wket4w/what_do_you_think_eleanors_favorite_plants_are/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T06:44:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T06:44:25.016Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae2f49660c60840397e39d"
+    },
+    "message_id": "reddit_t3_1wket40",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "battlecats",
+    "username": "Cytrusek322",
+    "title": "[Discussion] Do you think every cat units has their own Breeds / Species ?",
+    "text": "[Discussion] Do you think every cat units has their own Breeds / Species ?\n\nEvery cat units in this game seems to look exact same, so does that mean they all have the same cat breed? Or every cat has their own Breeds?  For example:  Can Can as Devon Rex  Ramen Cat as Persian  Cameraman as British Shorthair       submitted by     /u/Cytrusek322     to     r/battlecats       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/battlecats/comments/1wket40/discussion_do_you_think_every_cat_units_has_their/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T06:44:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T06:44:25.218Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae2f49660c60840397e39e"
+    },
+    "message_id": "reddit_t3_1wket3m",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Flashy-Condition9440",
+    "title": "Grab 100 hammers from u/Flashy-Condition9440!",
+    "text": "Grab 100 hammers from u/Flashy-Condition9440!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Flashy-Condition9440     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wket3m/grab_100_hammers_from_uflashycondition9440/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T06:44:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T06:44:25.421Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae2f49660c60840397e39f"
+    },
+    "message_id": "reddit_t3_1wket3j",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskForAnswers",
+    "username": "Slandandau",
+    "title": "I am trying to engage more on Reddit - but am not allowed due to “negative karma”?",
+    "text": "I am trying to engage more on Reddit - but am not allowed due to “negative karma”?\n\nI recently started posting, commenting and trying to be a part of more discussions in good faith and to be more social. But since I got negative karma (from a post based on broadway theatre lol) I am now not allowed to post or participate in many subreddits and discussions…  What is going on with that? Truly? There are so many bots on this site and I cant make posts or say anything to up my karma. What am I supposed to do?? Just give up because my first posts were disliked?? How does this make any sense? Asking for help. Thnx       submitted by     /u/Slandandau     to     r/AskForAnswers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskForAnswers/comments/1wket3j/i_am_trying_to_engage_more_on_reddit_but_am_not/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T06:44:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T06:44:25.622Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae2f49660c60840397e3a0"
+    },

@@ -1,0 +1,416 @@
+    "message_id": "reddit_t3_1wlw3ad",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "ChatGPT",
+    "username": "M0m3ntvm",
+    "title": "I'm blown away by Astra in Codex, man. Everything happening in real time on your screen, after asking something ultra-specific that barely even made sense in your own mind... I can paint in Photoshop with my own two hands, but that's a whole other level of expertise. No way to claim it as yours.",
+    "text": "I'm blown away by Astra in Codex, man. Everything happening in real time on your screen, after asking something ultra-specific that barely even made sense in your own mind... I can paint in Photoshop with my own two hands, but that's a whole other level of expertise. No way to claim it as yours.\n\nsubmitted by     /u/M0m3ntvm     to     r/ChatGPT       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ChatGPT/comments/1wlw3ad/im_blown_away_by_astra_in_codex_man_everything/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T23:17:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T23:18:15.362Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab069b7660c60840398a12b"
+    },
+    "message_id": "reddit_t3_1wlw3ab",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "aigamedev",
+    "username": "jenkoshot23",
+    "title": "I'm a beginner who got tired of aimless vibecoding. I built an open-source Godot 4 + AI Framework to get more efficient and focused development",
+    "text": "I'm a beginner who got tired of aimless vibecoding. I built an open-source Godot 4 + AI Framework to get more efficient and focused development\n\nI'm a just getting into gamedev and have no background in computer science or gamedev at all, i work construction and play games in my free time and with the emergence of AI ive decided to get into game dev. It's been a lot of trial and error and tutorials and learning how to use AI. I’ve been using AI to help build my upcoming game, but I quickly ran into the same walls I think most hit when making games with AI: the AI maxes out its context limit trying to read 40 files just to change a speed variable, it hand-edits a .tscn file and breaks every UID reference, or it gets stuck in an endless loop of aimless vibecoding without making actual progress. Or maybe its just me because I lack the planning skills and technical knowledge to actually make a game.   To solve this, I built the Godot AI GameDev Framework. It’s a directory and playbook system designed to enforce structured tasks and constant forward motion. I’m currently using it to build my own game, and I've decided to open-source the entire framework (GPLv3 License).   It houses all of your projects it automatically creates a project with your design docs and the tools and markdowns ive made based on the tier of game you're making. It can also house all your mechanics ever made all your assets and more and then pull from those folders when making new mechanics and scenes in a new project. Check it out and the readme for more info.   You can grab it here:  https://github.com/Jenkoshot/Godot-AI-GameDev-Framework    **What this framework actually fixes:**   I built this to solve four very specific failure modes that show up the moment you point an AI at a real Godot project:   * **Fixes Aimless Vibecoding:** Instead of open-ended chatting, the framework enforces a strict loop. It reads your design docs, reports a completion percentage, gives you exactly three structured tasks to choose from, and waits. You pick one, it writes a blueprint, and it executes. It ensures constant, forward motion instead of getting lost in the weeds.   * **Fixes Scene Corruption:** If you let an AI write directly to a .tscn file, it will eventually destroy it. This framework routes all Godot resource operations through a local Godot MCP Server. It talks to the engine directly—no raw file manipulation allowed.   * **Fixes Context Bloat:** An AI shouldn't need to read your combat math to fix an inventory bug. The framework uses tiered, lazy-loaded documentation. The agent only reads the exact system it was assigned to work on.   * **Fixes Planner/Coder Collision:** Asking one AI to design architecture and write code simultaneously usually results in bad architecture and bad code. This framework splits them into two distinct roles:   * **The Architect:** Reads the design docs, plans the system, and writes a detailed blueprint (scene tree, signal flow, export variables). Never writes GDScript.   * **The Executor:** Reads the blueprint, drives the MCP server, writes strictly-typed GDScript 4, and writes the tests. Never decides project scope.   * **Fixes Reinventing the Wheel:** Every project shouldn't have to rebuild a health bar. The framework includes a global shared library structure for mechanics, scenes, and assets that agents are explicitly mandated to check before they write new code.   **A few other cool features:**   * **Adversarial Audits:** After the Executor agent finishes writing code, the Architect agent runs an audit. It diffs the original blueprint against the code that actually landed to catch the coding agent silently dropping edge cases, and files bugs if it did.   * **The Tweak Guide:** Agents are forbidden from hardcoding magic numbers. Everything is exported and tracked in an auto-generated tweak_guide.md file so you can tune your game's feel directly in the inspector without asking the AI where variables live.   * **Procedural 3D Modeling:** It integrates antics-modelkit. Instead of an AI hallucinating broken binary meshes, the agent writes deterministic JavaScript recipes to mathematically construct, dequantize, and load 3D models into a Godot test environment.   **Setup & Requirements**   It currently targets Godot 4.4+. You'll need Node.js (for the MCP server) and Python (for the sync scripts). I've tested it primarily on Windows using Claude Code, ChatGPT Codex, and Antigravity (Gemini).   Check out the README for the full setup guide and the exact workflow loop. I'd love to hear your feedback, feel free to fork it and iterate on it to make it your own, again I am no AI expert or experienced gamedev so any additions that makes it better or refines it is more than welcome       submitted by     /u/jenkoshot23     to     r/aigamedev       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/aigamedev/comments/1wlw3ab/im_a_beginner_who_got_tired_of_aimless_vibecoding/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T23:17:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T23:18:15.963Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab069b8660c60840398a12e"
+    },
+    "message_id": "reddit_t3_1wlw395",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "plushies",
+    "username": "Fine_Design_2104",
+    "title": "Hello this is my first post on here but I’ve been looking for a plush for the whole day and I’ve tried everything but reddit",
+    "text": "Hello this is my first post on here but I’ve been looking for a plush for the whole day and I’ve tried everything but reddit\n\nSo this is all the stuff i have of the plushie so far I’ve looked at a ton of website with zero luck all just german stuff and porcelain ducks can anyone help me find this plush it’s so cute!!!   Thanks :)       submitted by     /u/Fine_Design_2104     to     r/plushies       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/plushies/comments/1wlw395/hello_this_is_my_first_post_on_here_but_ive_been/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T23:17:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T23:18:16.571Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab069b8660c60840398a12f"
+    },
+    "message_id": "reddit_t3_1wlw38y",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "NerdDating",
+    "username": "knightj1089",
+    "title": "36 [M4M] #United Kingdom - Seeking Long-term Relationship",
+    "text": "36 [M4M] #United Kingdom - Seeking Long-term Relationship\n\n🙋‍♂️   British guy here 🇬🇧   Genuine. Good morals and values. More traditional when it comes to dating, and date with intent.   Appreciate the simpler life, and value experiences and making memories more than possessions 🧘🏼‍♂️   • Gym 🏋️‍♂️  • Travel 🌎  • Adventure 🗺  • Outdoors 🏔  • Visiting new places ✈️🚢🚉  • Socialising with friends 🧍‍♂️🥂🧍🏽‍♀️🍽🧍🏻  • Trying new activities 🤺🧗‍♂️🚁  • Cinema 🎟 🎞  • Wolf Pack 🐕🐕🐈   Huge travel fan with many places that I’d like to visit or return to; Salem, San Francisco, Chicago, New York, New Zealand, Australia, Cambodia, Japan, Machu Picchu, Egypt, Italy, Switzerland...   Lakes, mountains, forests, fresh air, peace, and thrift stores are some of my favourite things 😌   I see marriage and children as part of my future so hopefully you’ll be aligned on that too.   Let’s go on an adventure!   ___________________________________________   Trying something new rather then the dating apps which seem to be full of match collectors, those looking to increase their social media following, or people who can’t hold a conversation 🥱😴   Would relocate if the connection is there. I always think that only focusing local could cause us to miss out on our perfect person.   ___________________________________________   Just a polite note - I wouldn’t have thought that I’d need to point this out in 2026, but I won’t reply to those who won’t share a picture 📸   You can see who you’re choosing to communicate with, so surely I should be able to do the same. That’s fair, right?  * I understand that a chat request will need to be accepted to allow the picture to be sent *   Also, in your initial message, please introduce yourself and share some information about who you are instead of just saying “hey”. A blank/hidden profile that just says “hey” isn’t giving anything to reply to.    Let’s all be kind to each other ✌ ️       submitted by     /u/knightj1089     to     r/NerdDating       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NerdDating/comments/1wlw38y/36_m4m_united_kingdom_seeking_longterm/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T23:17:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T23:18:16.776Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab069b8660c60840398a130"
+    },
+    "message_id": "reddit_t3_1wlw38l",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "cabosanlucas",
+    "username": "Ambitious_Wallaby598",
+    "title": "vape in mexico?",
+    "text": "vape in mexico?\n\ni do know that vapes are illegal in mexico and I’m completely fine with leaving it on the ship while I’m in cabo, but i’ve heard people have been just putting them in their pockets and going through like nun, any experience recently with how it is with security in cabo? would a geek bar in my pocket set off a metal detector? but like i said, i’m fully prepared to leave it, and most likely will anyways but i want to hear other’s opinions/ experiences        submitted by     /u/Ambitious_Wallaby598     to     r/cabosanlucas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cabosanlucas/comments/1wlw38l/vape_in_mexico/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T23:17:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T23:18:16.979Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab069dbaeeb96c1c63ba8c6"
+    },
+    "message_id": "reddit_t3_1wlw3yh",
+    "topic_key": "video editor",
+    "search_keyword": "video editor",
+    "platform": "reddit",
+    "subreddit": "jobs",
+    "username": "meraklou",
+    "title": "I'm thinking of quitting after 3 weeks atmy first job",
+    "text": "I'm thinking of quitting after 3 weeks atmy first job\n\nI genuinely feel so embarrassed and like such a failure. But I feel like my health is starting to get affected and I'm afraid to risk it. My job is basically a video editor for social media content. They want me to make 80 videos a month, 9-10 different clients. In my first week, they gave me a new client and I was in charge of creating their style. On top of that, I had to learn a new software and deal with many problems... I'm leaving out a lot of details but I've been working almost all day long for the past 2 weeks (including weekends)... it feels like my body is shaking, my eyes hurt and have weird sensations, I have headaches and nausea, my neck is killing me.    My friends tell me that it always sucks in the beginning of a new job and that it'll get better but I don't know if I can take it anymore. I don't know, I really need to hear from others who may have gone through a similar situation.        submitted by     /u/meraklou     to     r/jobs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobs/comments/1wlw3yh/im_thinking_of_quitting_after_3_weeks_atmy_first/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T23:18:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T23:18:51.598Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab069dcaeeb96c1c63ba8c7"
+    },
+    "message_id": "reddit_t3_1wlw3se",
+    "topic_key": "esthetician",
+    "search_keyword": "esthetician",
+    "platform": "reddit",
+    "subreddit": "50501",
+    "username": "Standard_Minute3244",
+    "title": "No Dimes Until Valentines (Economic Boycott Oct 1-Feb 14)",
+    "text": "No Dimes Until Valentines (Economic Boycott Oct 1-Feb 14)\n\nhi there! I hope this message finds everyone well and I sincerely mean that.    To my fellow Americans, we seem to be stuck in a spiral of despair with more and more bad news coming from all sides/all sectors to the point that it makes action feel paralyzing. After all, we still have to work and pay bills to survive no matter what is going on around us. But inaction is what *they* are counting on. Us being too divided, too sick, too angry, too afraid, too damn tired to do anything.   Lord knows our founders weren’t perfect, but they revolted where they could. The famously dumped tea in Boston Harbor. It is time for us to start dumping some tea as well. Our freedom to protest, our freedom of speech, our freedom of the press, our right to free and fair elections are all under attack. The leverage we have includes:  - our unity  - our votes at the ballot box  - our votes with our wallets   Are we not sick of our tax dollars and our hard earned money being used to harm ourselves and others around the world? Are we not tired of corporations dumping money into our elections and getting legislation passed that suits their interests and not ours? The American dream feels out of reach. And we need to build a new one. But in order to do that, we need to hit these companies and our elected officials where it hurts and the way it hurts is via their wallets.   Oct 1 begins the last fiscal quarter of the year. Let’s mass cancel services on October 1st through February 14th and send a message that we are NOT going to blindly watch as our country burns down around us.  Let’s have a national boycott on NON-essential spending from Oct 1 - Feb 14 (essential spending being food, water, utilities, shelter).     LET   US:    1. cancel streaming services :  These services include but are not limited to:  Paramount plus  DisneyPlus  ESPN +/Unlimited  Fox One  Peacock  YouTubeTV  Hulu  Netflix  AppeTV    2 Cancel your Chat GPT/Claude/Gemini/AI accounts     3. DO NOT buy tickets for any arena/stadium concert/sporting event you do not already have tickets for      4. DO NOT participate in online betting/gambling (this includes prediction markets)     5. Cancel/DO NOT buy tickets for non-essential travel     6. DO NOT purchase anything outside of your necessities  (food, shelter, utilities)   What  CAN  we do?  - Be there for your neighbor.  - Donate to food shelters  - Help fill up someone’s vehicle with gas if you can  - Support your small local businesses/your local theater. Go support high school/middle school sports.  - continue other forms of peaceful protest   - GO VOTE on Nov 3rd  in your local elections  - Write to your representatives and tell them you are unhappy  - Hold the line!   We are in an environment where the status quo is to sell, sell, sell to us and to distract us. We already know it is going to be a rough winter. Gas prices are up, diesel prices are up, food prices are up (for whatever has not recalled) and in 2027, this will all get worse. I know many of us rely on streaming services and rely on concerts/sporting events to bring us joy when everything else is bad. Particularly as the holidays are approaching. But we need to hit them where it hurts. If we take this stand together for a sustained period, maybe we can change something. A national labor strike is not feasible and protesting can be deadly but we can ALL sacrifice a little entertainment and home comfort for the greater good. I know we can.    The constitution says “we, THE PEOPLE, in order to form a more perfect union.”      It does not say “we, THE RICH PEOPLE.”     It does not say “we, THE FEW”     It does not say “we, the CORPORATIONS”     It does not say “me, The President”     It does not say “us, the SUPREME COURT” or “us, CONGRESS”     All three branches of government at every level (local, state, federal) ALL serve at OUR pleasure and with OUR permission and not the other way around.      Let us remind ourselves and each other what “we THE PEOPLE” really means.    I am not part of an organization. I don’t even know where to post this to get traction. But I am starting somewhere. I am one person with an idea. Will you join me?    OCT 1-FEB 14. GENERAL ECONOMIC BOYCOTT. Tell your family. Tell your friends. Tell your neighbors. Tell a friend to tell a friend. Tell your co-workers. Tell your barista, your mechanic, your local farmer, your lawyer, your healthcare professionals, your teacher, your students, your blue collar workers, your white collar workers, your scientists, your stay at home parents, your laborers, your artists, your musicians, your customer service professionals, your estheticians, your stylists. Your representative. Hell, tell your enemies. NO DIMES UNTIL VALENTINES.     Why Valentine’s Day? By then, a new Congress will have been seated for around six weeks and we, the people, will be watching their first 100 days accordingly. The current status quo cannot stand. We cannot continue to allow our money to fund injustice. We cannot continue to allow our money to fund our descent into a violent dictatorship.     #NoDimesUntilValentines       submitted by     /u/Standard_Minute3244     to     r/50501       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/50501/comments/1wlw3se/no_dimes_until_valentines_economic_boycott_oct/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T23:18:27Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T23:18:52.491Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab069dcaeeb96c1c63ba8c8"
+    },
+    "message_id": "reddit_t3_1wlw3s9",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "architecturestudent",
+    "username": "Long_Republic372",
+    "title": "Ayuda con corte arquitectónico A-A escalonado/quebrado",
+    "text": "Ayuda con corte arquitectónico A-A escalonado/quebrado\n\nHola, soy estudiante de arquitectura y estoy aprendiendo a hacer cortes. Tengo que realizar el  corte A-A de esta planta , pero la línea de corte no es recta: hace un cambio de dirección.   Mi duda es cómo debo  representar ese corte en una vista ortogonal (no en perspectiva) .   En el recorrido del corte aparecen una  encimera con gabinetes superiores, una caldera, una nevera, una puerta y un muro de 1.00 m .   No sé exactamente:     Cómo se debe “desplegar” un corte cuando la línea es quebrada.   Qué elementos debo mostrar de frente y cuáles se consideran cortados.   Cómo representar correctamente  la puerta abierta y el muro de 1.00 m .   Si los elementos que quedan detrás del plano de corte deben aparecer y con qué tipo de línea.         submitted by     /u/Long_Republic372     to     r/architecturestudent       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/architecturestudent/comments/1wlw3s9/ayuda_con_corte_arquitectónico_aa/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T23:18:26Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T23:18:52.701Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab069f2660c60840398a131"
+    },
+    "message_id": "reddit_t3_1wlw46e",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DiagramFills",
+    "username": "p4nopt1c0n",
+    "title": "Untangling the jock stereotype (part VIII)",
+    "text": "Untangling the jock stereotype (part VIII)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/p4nopt1c0n     to     r/DiagramFills       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DiagramFills/comments/1wlw46e/untangling_the_jock_stereotype_part_viii/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T23:18:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T23:19:14.651Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab069f2660c60840398a132"
+    },
+    "message_id": "reddit_t3_1wlw467",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "sentiment",
+    "platform": "reddit",
+    "subreddit": "Israel_Palestine",
+    "username": "ip_man_2030",
+    "title": "I have a few questions for Pro-Palestinians about your opinions and criticisms",
+    "text": "I have a few questions for Pro-Palestinians about your opinions and criticisms\n\nThis conflict is understandably very polarized and while real people all over the world care very deeply about the side they choose, the dialogue and truths are heavily influenced by both sides by propaganda and bots. This creates looks like an echo chamber and then actually becomes an echo chamber devoid of critical thought and productive dialogue. It pushes what appears to be the popular sentiment to the extremes and drowns out the moderate voices.     I have the following questions:     #1  Which of the following in your opinion are acceptable or not acceptable views of Palestinians and the Pro-Palestinian side? If not acceptable, why not?  1. Palestinians who support the Oct 7 attacks and view it as justified armed resistance because they are occupied.  2. Palestinians who condemn the Oct 7 attacks and view it as terrorism  3. Palestinians who support a peaceful Two State Solution along the 1967 borders  4. Palestinians who support a peaceful Two State Solution based on the 2008 Olmert Peace Plan  5. Palestinians who support a peaceful Two State Solution where Israel maintains sovereignty of Jerusalem but Palestinians have access to it and to Al Aqsa and Haram al-Sharif  6. Palestinians who support a single Palestinian state in the land with no Israel where Jews can live  7. Palestinians who support a a single Palestinian state in the land with no Israel and no Jews  8. Palestinians who believe Hamas started this specific war  9. Palestinians who do not believe this is a genocide and believe this is a war  10. Palestinians who do not condemn Israel, Jews, or Zionists simply for existing and/or want to destroy them.  11. Palestinians who speak up on behalf of both Palestine and Israel  12. Palestinians who who criticize Palestinians, Palestinian leadership, armed resistance, their allies, and their cause  13. Palestinians who take Israel's side in this war with Hamas and/or speak up in support of anything Israel  14. The same for any of the above that also applies to non-Palestinian pro-Palestine supporters    #2  Why is every pro-Israel publication propaganda or Hasbara regardless of how truthful or factual it is if you don't agree with the content, but anything published by them that you do agree with are wholly acceptable regardless of how truthful or factual it is   BUT   Why is every pro-Palestine publication treated as if it's always true regardless of how truthful or factual it is?     #3  Why is any Palestinian who speaks up against the Palestinian cause accused of being Hasbara, a paid supporter, or being blackmailed by Israel?    #4  Why is any person who does not like war but supports peace between both Palestine and Israel or who supports a two-state solution not welcome in the Pro-Palestinian camp?     #5  Why are Palestinians or Pro-Palestinians who want to see an independent Palestine but also do not support armed resistance, are critical of the Palestinian cause, want Hamas to surrender, and/or want peace with Israel not considered valid Palestinian voices?    #6  Why has the Palestinian cause been a mostly non-partisan issue in US politics for so long but now it's a purity test and a partisan issue?     #7  Why are US politicians who vote for anything supporting Israel even if they also vote for measures that support Palestinians, and especially when those votes have to do with their own constituents' wants and US geopolitical interests?     #8  For those who are American Pro-Palestinian voters on the left or who vote Democrat, do you believe that the Pro-Palestinian cause and the needs of Palestinians being the most important issue in elections are more important than focusing on helping Americans in need and keeping the country a democracy?     #9 . For those who are American Pro-Palestinian voters on the left or who vote Democrat, are you willing to risk seeing the United States fall into the hands of authoritarianism, endless war, hyperinflation, and worse just to see this conflict end the way you want it to?    10.  Even if the plan to make the Democratic party pro-Palestinian works in the 2026 and 2028 election cycles, how do you expect the Democratic party to get enough votes to accomplish their goals when they've pushed out or alienated so many pro-Israel or neutral voters out of the party    11.  How many people do you know who changed their vote from Harris and/or democratic candidates to Trump and/or Republican candidates, voted third party, or simply didn't vote at all because of the fact that Kamala Harris supported Israel? Do you think these voting decisions based on the support of israel or the palestinian cause changed the outcome of the 2024 elections, and do you see how the opposite could happen by forcing the palestinian cause on the democratic party and voters now?    #12  This is a multipart question regarding American Pro-Palestinian voters on the left or those who do not vote Republican, those who vote democratic, and/or those who choose not to vote:   12a.  Why do you alienate, demonize, and ostracize pro-Israel Democratic politicians and candidates on the left even if they agree with 90% of the other issues that those same pro-Palestinian believe in?   12b.  Do you believe that alienating, demonizing, and ostracizing pro-Israel and/or Jewish voters on the left or who vote for Democrats will push them to the right or simply push them to vote for a Republican for any reason including out of fear, safety, and alienation?   12c.  Do you think that Harris or Trump would have been worse for the Palestinian cause as president?   12d.  If you did not vote for Harris or voted for another candidate because she was pro-Israel do you regret doing so?     #13   Why do you share the views and quotes of the extreme Pro-Israel politicians and personalities that talk about wanting to destroy Palestine, kill Palestinians, and take the entire area for Israel while condemning these views,   BUT   Why do you not do the same for extreme Pro-Palestinian politicians and personalities that want to destroy Israel, kill Israelis, and take the entire area for Palestine and criticize these extremist views    #14   Why is any money from Jewish or non-Jewish Zionist individuals or PACs to influence politics, education, or decision making considered to be inappropriate and US politicians who accept this money are considered bought by, controlled by, or blackmailed by Israel   BUT   Why is it acceptable for any pro-Palestinian or Muslim individuals, PACs, or even countries to influence politics, education, or decision making to be completely acceptable and never criticized?     #15   Why do you call out Israel's killing or intent to kill Palestinians since Oct 7 is genocide   BUT   Why do you not call out the Oct 7 attacks, Palestinian, and Hamas's own statements about killing Israelis/Jews or intent to kill Israelis/Jews as genocide or an attempt at it?     #16   Why are Palestinians who are pro-Israel, believe in peace with Israel, who condemn the Oct 7 attacks, and do not support armed resistance and terrorism not considered valid voices of Palestinians   BUT   Why are any Jewish people or Israelis who are Pro-Palestinian, accuse Israel of committing genocide, and are Antizionist accepted?    My point in all of these questions is to find out what is acceptable and what is not acceptable. This is the Israel-Palestine conflict between Israel and Palestine. This means that there will be a variety of opinions of what's going on and how to resolve it. Any Palestinian should be able to have their own opinion as should any Israeli about what issues in the conflict they support. This also includes the ability and act of criticizing your own side of the conflict and not just the other side.    If it gets to the point where the pro-Palestinian side and Pro-Israel side do not take into account or accept the various opinions of Palestinians and Israelis themselves as part of each side, everything gets pretty muddled. If each side is only willing consider both Palestinians and Israelis who support their side of the conflict as valid and truthful, then this conflict has turned into a team sport and the entire cause itself starts to lack credibility when facts and reality no longer matter.       submitted by     /u/ip_man_2030     to     r/Israel_Palestine       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Israel_Palestine/comments/1wlw467/i_have_a_few_questions_for_propalestinians_about/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T23:18:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T23:19:14.854Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab069f3660c60840398a133"
+    },
+    "message_id": "reddit_t3_1wlw45v",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "sentiment",
+    "platform": "reddit",
+    "subreddit": "askphilosophy",
+    "username": "malazver",
+    "title": "Why is there a normative asymmetry between the acceptance of physical excellence and the rejection of ethical/rational authority in political philosophy?",
+    "text": "Why is there a normative asymmetry between the acceptance of physical excellence and the rejection of ethical/rational authority in political philosophy?\n\nIn ancient and contemporary political philosophy, there appears to be a distinct normative asymmetry regarding how collectives respond to different forms of individual superiority. While the delegation of authority based on physical or technical expertise (such as sports or craftsmanship) is generally accepted without conceptual resistance, the introduction of a rationally superior blueprint for societal organization often meets radical collective opposition, marginalization, or systemic inertia.   This phenomenon is frequently treated through the lens of  akrasia  (acting against one's better judgment) or anti-intellectualism, but it seems to involve a deeper structural resistance to moral and epistemic authority. When an agent presents a logically and ethically superior alternative to the status quo, the collective often prioritizes the maintenance of a sub-optimal equilibrium over a more rational alternative, effectively sabotaging its own long-term utility.     Which specific frameworks within social epistemology or normativity address this structural resistance to superior logic and moral clarity?   Beyond Nietzsche’s critique of  Ressentiment  and democratic leveling, how do political philosophers (e.g., within the Platonic tradition of the philosopher-king's rejection, or Enlightenment critiques of collective irrationality) theorize this deliberate societal preference for sub-optimal traditions over rational salvation?         submitted by     /u/malazver     to     r/askphilosophy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/askphilosophy/comments/1wlw45v/why_is_there_a_normative_asymmetry_between_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T23:18:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T23:19:15.060Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab069f3660c60840398a134"
+    },
+    "message_id": "reddit_t3_1wlw459",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "scrapingtheweb",
+    "username": "BleedReddit",
+    "title": "Highlight Scraper. helpful daily tool for anyone. Happy to get feedback for improvements. there is a mod doc for it to make it your own, Please!",
+    "text": "Highlight Scraper. helpful daily tool for anyone. Happy to get feedback for improvements. there is a mod doc for it to make it your own, Please!\n\nsubmitted by     /u/BleedReddit     to     r/scrapingtheweb       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/scrapingtheweb/comments/1wlw459/highlight_scraper_helpful_daily_tool_for_anyone/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T23:18:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T23:19:15.266Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab069f3660c60840398a135"
+    },
+    "message_id": "reddit_t3_1wlw456",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MISSINGBIPOC",
+    "username": "Electronic-Exam7677",
+    "title": "Tangena Hussain",
+    "text": "Tangena Hussain\n\nShe was last seen at a gas station on October 2, 2008. Her mother's boyfriend Jamrul Hussain had got to buy juice and gum. He said he had left Tagena in the car when he returned four minutes at 9: 06 pm later she was gone store survillence showed he did make purchases inside that window. He picked Tangena's mother and they filed a missing person's report at 9:30 pm after looking for her. A fifteen year old girl came forward and said Jamrul had sexually assaulted Jamrul was arrested and sentenced to fifteen years in prison.   I think that the boyfriend had something to do with it.       submitted by     /u/Electronic-Exam7677     to     r/MISSINGBIPOC       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MISSINGBIPOC/comments/1wlw456/tangena_hussain/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T23:18:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T23:19:15.468Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab069f3660c60840398a136"
+    },
+    "message_id": "reddit_t3_1wlw44c",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "DynastyFFTradeAdvice",
+    "username": "DelusionalGranduer",
+    "title": "We buying MHJ for a late 27 2nd?",
+    "text": "We buying MHJ for a late 27 2nd?\n\nOwner is finally fed up with MHJ and mentioned he’d do this, do I take the gamble?        submitted by     /u/DelusionalGranduer     to     r/DynastyFFTradeAdvice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DynastyFFTradeAdvice/comments/1wlw44c/we_buying_mhj_for_a_late_27_2nd/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T23:18:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T23:19:15.671Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab069f4660c60840398a138"
+    },
+    "message_id": "reddit_t3_1wlw448",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "iPhoneDuo",
+    "username": "Ok-Interest-5200",
+    "title": "Is anybody thinking about swapping back and forth between the Duo and an iPhone Pro, depending on activity?",
+    "text": "Is anybody thinking about swapping back and forth between the Duo and an iPhone Pro, depending on activity?\n\nJust curious if anyone else is thinking about running two phones? I want the Duo to be my primary device day to day, but I'd like to be able to leave it behind and bring my iPhone 15 Pro when traveling and adventuring in the mountains (snowboarding, biking, hiking, camping, etc.). The Pro is more compact, lighter, sturdier, and most importantly, has better cameras. I use the telephoto lens for landscapes and action shots very frequently. I am not interested in going back to a dedicated point and shoot camera, for many reasons.   The new iPhone handoff feature would be perfect for me, but unfortunately it doesn't sound like AT&T will be supporting that anytime soon. Due to coverage issues with T-Mobile and Verizon, switching would not be ideal. I don't really want to carry both devices at the same time, so I am currently looking into adding a cheap second line, then use call forwarding; or, possibly a cheaper data only plan, committing to iMessage and FaceTime for calls when on the Pro. I've also thought about just using the Apple Watch for calls and then I'd keep the iPhone Pro offline.    It all sounds like such a hassle, but I really want to figure out how to make this work.... Does anyone else have experience running two phones? Anyone planning on getting the Duo but keeping their Pro?       submitted by     /u/Ok-Interest-5200     to     r/iPhoneDuo       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/iPhoneDuo/comments/1wlw448/is_anybody_thinking_about_swapping_back_and_forth/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T23:18:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T23:19:16.072Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab069f4660c60840398a139"
+    },
+    "message_id": "reddit_t3_1wlw445",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "Frosty_Restaurant358",
+    "title": "Grab 25⚡ from u/Frosty_Restaurant358!",
+    "text": "Grab 25⚡ from u/Frosty_Restaurant358!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Frosty_Restaurant358     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wlw445/grab_25_from_ufrosty_restaurant358/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T23:18:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T23:19:16.274Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab069f4660c60840398a13a"
+    },
+    "message_id": "reddit_t3_1wlw43d",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "fixit",
+    "username": "Psychopath_next_door",
+    "title": "How can I fix my electric blanket in a safe way?",
+    "text": "How can I fix my electric blanket in a safe way?\n\nPoor person here whose less than 6mo old electric blanket has stopped working on one side!    Bought one of those electric blankets that fit on the mattress (queen sized with two sections) less than 6mo ago. The side of the bed I mainly sleep on stopped working, with the controller turning on, but a flashing P appears on the screen after it turns on. I know it indicates there's a power supply issue so I tried all the safe troubleshooting methods. It has been reset, hard reset, and I swapped the controllers and clearly both are fine.    Then I decided to move the internal wire gently to see if the wires going into the attachment have become loose, and I was right. One of the wires has clearly moved slightly out of where it should be (the arrow in one of the pics is the direction I moved the wire and it started working).    I know how important it is to make sure an electric blanket is operated as carefully as possible so I have been hesitant to do anything. But I have joint issues, can't afford buying a new one, the seller accepts no responsibility, and I got a quote for repair which is funny cause just the assessment is half the original price of the blanket.    Is it safe to open it up and put the wire back in? Is there anyway I can save it without adding the disaster of a house fire to my life?        submitted by     /u/Psychopath_next_door     to     r/fixit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/fixit/comments/1wlw43d/how_can_i_fix_my_electric_blanket_in_a_safe_way/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T23:18:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T23:19:16.480Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab069f4660c60840398a13b"
+    },
+    "message_id": "reddit_t3_1wlw435",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PMsFeedback",
+    "username": "Candid_Rabbit_2556",
+    "title": "[POSITIVE]%20for%20/u/Klutzy_Turnip_3011%20[buyer]",
+    "text": "[POSITIVE]%20for%20/u/Klutzy_Turnip_3011%20[buyer]\n\nsubmitted by     /u/Candid_Rabbit_2556     to     r/PMsFeedback       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PMsFeedback/comments/1wlw435/positive20for20uklutzy_turnip_301120buyer/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T23:18:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T23:19:16.685Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab06a239f8856bec238512d"
+    },
+    "message_id": "reddit_serp_1ofkyj0",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/librechat/comments/1ofkyj0/using_n8n_workflows_as_ai_models_in_librechat/",
+    "text": "Using n8n workflows as AI models in LibreChat (OpenAI-compatible bridge)\n\nHey LibreChat community! 👋 Built a bridge to use n8n workflows as OpenAI models    I've been working on a little project that might interest some of you: an OpenAI-compatible API bridge for n8n workflows.    What it does:  It lets you use your n8n agents/workflows as models in LibreChat (or any OpenAI-compatible client). So instead of hitting OpenAI/Anthropic directly, you can route through your own n8n workflows - maybe you want custom logic, RAG pipelines, or just more control over your AI setup.    Key features:      Full OpenAI Chat Completion API compatibility   Streaming support   Session tracking (works with LibreChat's conversation IDs)   Easy Docker setup   Hot-reload models without restart      Getting started:  You'll need to host the bridge (Docker setup included), then add a custom endpoint to your  librechat.yaml  -  example config here .   The repo includes an example n8n workflow to get started. It's open source and I've been running it both in my homelab and in production at roadsurfer.   Thought this might be useful for folks running their own infrastructure or experimenting with custom AI workflows. Happy to answer questions!   GitHub:  https://github.com/sveneisenschmidt/n8n-openai-bridge        submitted by     /u/sveneisenschmidt       [link]       [comments]",
+    "username": "sveneisenschmidt",

@@ -1,0 +1,416 @@
+      "$date": "2026-09-14T20:37:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:38:02.395Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa85b2a6508d45f3d2c724e"
+    },
+    "message_id": "reddit_t3_1wgfdep",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "falconbms",
+    "username": "bakert12",
+    "title": "[Release] Falcon BMS Companion app",
+    "text": "[Release] Falcon BMS Companion app\n\nHi everyone,   I'd like to share a free, open-source tool I've been building: **Falcon BMS Companion**, an Android app for phones and tablets with a small Windows bridge. The goal is simple: **never alt-tab out of the sim.** Frequencies, the alternate's ILS, the loadout, the comm ladder, threat ranges, kneeboard generation: all of it on the tablet next to your HOTAS.   The project has two parts:      **Live Mission section.** **BMS Companion Bridge** runs on the BMS PC. It reads your current mission and sends the raw data to the app over your local network. The app draws everything itself. There's no screen capture or video stream, so there's no frame-rate cost.     **Offline reference.** Aircraft, loadouts, the Threat Guide, airfields with charts, HOTAS, checklists, comms and a bullseye trainer. It's all extracted from the BMS 4.38 install and manuals, and needs no PC.      It's free, with no ads, no accounts and no internet connection needed. The bridge only listens on your LAN and **never writes to the BMS folder**.   **Download and source:**  https://github.com/Scorpion-41/Falcon-BMS-Companion    ---   ## Live Mission section (requires the PC bridge)   ### Map   * Ownship on the theater map with the **flight plan**, **target steerpoints**, **PPT threat rings**, markpoints and **bullseye rings**   * **AWACS picture:** friendly and hostile aircraft, helicopters, ships and **missiles in flight**, each with a speed vector, callsign and altitude. The source is BMS's built-in **Tacview real-time telemetry** server, so the Tacview program isn't needed.   * Tap a contact for **BRAA from ownship**, its **bullseye position** and **aspect** (HOT / FLANK / BEAM / DRAG)   * Tap a threat ring to identify it. Tap any point on the map to get its bullseye bearing and range.   * Departure, arrival and alternate airfields are marked. Tap one to open the airfield page with its charts.   * Follow mode and layer toggles (route, threats, traffic, hostiles, fields, labels)   * Tablet layout adds a side panel with ownship data, a **Picture** list of hostiles sorted by range, and the steerpoint list   ### Flight   * Altitude, KIAS / Mach, heading, ground speed, vertical speed, G / AOA   * Total, internal and external fuel, fuel flow and **bingo**. Chaff and flare counts.   * Ownship **bullseye position**, TACAN, UHF channel, Zulu time   * **ALR-56M-style RWR scope** with LAUNCH and LOCK indications and a plain-text emitter list   * **DED replica**   ### Briefing   Parsed from the `briefing.txt` written by the PRINT button:   * Mission, task, package, take-off, push time and TOT   * **Departure, recovery and alternate** airbases with TACAN, tower, ILS per runway and field elevation, one tap to the charts   * **Flight plan** with TOS, altitude and bullseye bearing/range for every steerpoint (tap to show it on the map)   * **DTC targets**, package and roster, **loadout for each jet** (each store links to its Arsenal page)   * **Threats linked to the Threat Guide:** a mention of \"SA-6\" opens the SA-6 entry   * Support (AWACS / tanker), weather, ROE, emergency procedures   ### Comms   * Comm ladder, grouped by agency, with the **currently tuned UHF frequency highlighted**   * DTC UHF/VHF presets, IFF codes and Link 16   ### Boards (EZBoards)   * A **Generate kneeboards** button on the tablet. The bridge runs `EZBOARDS.BAT` hidden (no console window over the sim), checks the result and sends back success or failure with the full log.   * Optional: **run EZBoards automatically every time the briefing is printed**   * The kneeboard content (package with TACANs, comm ladder, steerpoints with min fuel, targets, weather) is also shown natively in the app. It's read with EZBoards' own `xbrief.exe`, so it matches the in-cockpit boards.   ### Setup   * **Automatic discovery** of the bridge on the LAN (UDP broadcast), or a manual IP   * A status view shows what the bridge can see: BMS running, UI or 3D, briefing printed, DTC saved, AWACS feed, EZBoards   * Built-in setup guide and troubleshooting, plus a keep-screen-on option   * **Demo mode** (synthetic SEAD mission in Hellas with moving traffic) to try every screen without BMS running   ---   ## Offline reference (no PC bridge needed)   ### Arsenal   * **323 flyable aircraft types** from KTO and all installed add-on theater databases, with **per-theater variants** (loadouts differ between databases)   * Performance and specs: max speed, ceiling, corner speed, max G and AOA, internal fuel, weights, radar, RWR, countermeasures, flight model type   * **Station-by-station loadouts with rack capacity**, and a weapon × station matrix   * **518 weapons and stores** with sim data (campaign range, blast radius, drag index, hit chance…) and the list of aircraft that carry each one   ### Threat Guide   * SAMs, AAA, radars, MANPADS, fighters, air-to-air missiles and ships, split into OPFOR and BLUEFOR   * For each entry: **RWR symbols (ALR-56M and ALR-93)**, **HARM ALIC codes**, min/max range and altitude, radar and lock range, max speed and G, sensors, tactics and **engagement-envelope diagrams**   * Range comparison chart, air-to-ground weapons chart, countermeasure effectiveness scale, aircraft formations   * **HARM & RWR section:** ALIC tables, RWR symbols and modifiers, audio tones, HARM modes, threat table setups   * **TacRef Encyclopedia:** 1,346 entries (vehicles, ships, aircraft, munitions) from the tactical reference database   ### Airfields   * **519 unique airfields** across the five theaters with their own terrain (Korea KTO, Balkans, Hellas, Israel, Falklands), covering 19 theater databases including the add-ons built on them   * Runways with **ILS per runway end**, TACAN, **all frequencies** (tower, ground, approach, ATIS, base ops, LSO), ATC patterns, IFR/VFR minima, **nearest diverts**, navaids   * **1,386 airport and parking charts**, fullscreen with pinch-to-zoom   * **Theater map** with airfields, TACANs, navaids and towns. Search by name, ICAO, TACAN channel, ILS frequency or town.   * Flight and agency frequency lists from `RadioMap.dat`   ### Cockpit   * **HOTAS illustrations** for the **F-16C/D** (A-A and A-G stick and throttle, from the Dash-34) and the **F-15C**. Tap a numbered control to see every switch position with its function and key callback, filtered by master mode or sensor.   * **Checklists** for the **F-16CM, F-16CJ and F-15C**, normal and emergency, with tick-off and step search   * **Comms & Brevity:** 590 brevity words, a 935-term glossary, CAS / 9-line, ATC procedures, tanker and AWACS calls, IFF modes, AI wingman commands, NATO alphabet   * **Calculators:**   * Fuel & bingo, endurance   * Bearing and distance between airfields with ETE   * Wind triangle (heading to fly, ground speed, crosswind and head/tail components)   * Descent planner (start-descent distance, required VVI)   * Turn performance (radius, rate, standard-rate bank, load factor)   * TAS / Mach / CAS (ISA)   * Unit conversions (hPa / inHg, lb JP-8 / gal / L)   ### Bullseye Trainer   A situational-awareness mini-game with five modes:      **Plot the call:** tap the position of an AWACS bullseye call     **Call your bullseye:** read ownship position off the HSD     **BRAA from bullseye:** convert a bullseye call into BRAA from ownship     **Clock & reciprocal drill:** clock positions, reciprocals and beam headings against the timer     **Theater map:** plot calls on real theater geography      There are three difficulty levels (Rookie, Wingman, Flight Lead). Higher levels add longer ranges, tighter tolerances, shorter timers, no ring labels and a heading-up display. Best scores are saved for each mode and level.   ### General   * **Global search** across aircraft, stores, threats, airfields, ICAO, TACAN, frequencies, brevity and HOTAS   * Favorites on any page   * Dark, high-contrast UI   * **Phone layout** with a bottom navigation bar; **tablet layout** with a navigation rail and split views   ---   ## The PC bridge   * **A single self-contained `.exe`:** no installer, no .NET runtime required   * **Setup guide with live checks** on first launch: BMS found, firewall, app connected, briefing export settings, DTC saved, AWACS feed configuration, EZBoards and the .NET 8 runtime. Buttons pick folders, add the firewall rules, copy the cfg lines or open `Falcon BMS User.cfg` in Notepad. The guide never edits BMS files itself.   * Status window with BMS state, AWACS feed, last briefing print, last EZBoards run and the last app request   * Finds the BMS install from the registry and follows `g_sBriefingsDirectory`   * Optional firewall rules limited to the local subnet (TCP 47474, UDP 47475)   * Tacview port and password settings, custom app port, start minimized to the tray   ### Where the data comes from   |Data|Source|   |:-|:-|   |Ownship, RWR, DED, steerpoints, PPTs, bullseye, theater|BMS shared memory (`FalconSharedMemoryArea`, `…Area2`, `…AreaString`)|   |Other aircraft (AWACS picture)|BMS built-in Tacview real-time telemetry (port 42674)|   |Briefing, package, loadout, comm ladder, weather|`User\\Briefings\\briefing.txt` (PRINT button)|   |Steerpoints before 3D, targets, PPTs, radio presets|`User\\Config\\ .ini` (DTC Save)|   |Kneeboard tables|EZBoards `bin\\xbrief.exe`|   The bridge only reads BMS data. The one thing it runs is EZBoards, and only on request; EZBoards then writes its kneeboard textures as usual.   ---   ## Setup   **Requirements:** Android 8.0 or newer (phone or tablet) on the same LAN as the BMS PC. Windows with Falcon BMS 4.38. The .NET 8 runtime is only needed for EZBoards itself.      Run `BMSCompanionBridge.exe` on the BMS PC. Its setup guide opens on first launch. Allow it on private networks when Windows asks, or use the *Allow through Windows Firewall* button.     Install `BMS-Companion.apk` on the device (allow installing unknown apps), then go to **Mission → Setup → Find bridge**.     In the BMS Launcher, **Config → General → Briefing**: enable *Briefing Output to File* and disable *HTML Briefings*. In each mission, press **PRINT** on the Briefing screen and **SAVE** the DTC.     For the AWACS picture, add this to `User\\Config\\Falcon BMS User.cfg`:      set g_bTacviewRealTime 1   set g_bTacviewAcmi 1   Then start ACMI recording in 3D (default key **F**). In multiplayer the host controls this with `g_bMPTacviewRtAllowedByServer`.     For kneeboards in the cockpit, the 3D pilot model must be enabled (Setup → Graphics → Pilot Model). EZBoards' own page and slot settings stay in its `CONFIG_USER.BAT`.     A full setup guide and troubleshooting table are in the repository (`docs/SETUP.md`).   ---   ## Technical notes   * **Bridge:** C# / .NET 8 WinForms, no third-party packages. A minimal HTTP server sends compact JSON. The app polls about four times per second, and only while the Mission screen is open. The API is documented in `docs/PROTOCOL.md`.   * **App:** Kotlin, Jetpack Compose, Material 3. All reference data and charts are bundled in the APK (~64 MB).   * **Reference data:** a Node.js extractor reads the objects database, `BmsRack.dat`, TacRefDB, CampObjData, Stations+ILS, ATC files, runway geometry and the terrain heightmaps, and renders the theater maps. The Threat Guide, HOTAS, checklists and comms were transcribed from the BMS manuals.   * The repository includes a step-by-step checklist (`docs/UPDATING.md`) for regenerating the data and checking the shared memory layout when a new BMS version is released.   * The code was written with the help of Claude Code (an AI coding assistant) and tested against a real 4.38 install on an Android tablet and phone.   ## Known limitations   * Built and tested with **BMS 4.38**. Other versions may need the update checklist above.   * The AWACS picture shows whatever the telemetry stream contains, including hostiles. A toggle hides hostiles for anyone who prefers friendlies only.   * Add-on theaters that reuse a base theater's terrain are shown on that base map.   ---   ## Credits   This is an **unofficial fan project, not affiliated with Benchmark Sims.** Falcon BMS, its data, documentation, TacRef pictures, HOTAS illustrations and airport charts belong to Benchmark Sims and the respective add-on theater teams.   Many thanks to the BMS team and the theater developers for their work, and for the documentation that made this possible.   Feedback, bug reports and feature requests are very welcome, If anything in the reference data looks wrong, please let me know which screen and entry it is.   ---   ## Screenshots:   * Home:   https://i.ibb.co/vCKWtTmf/home.jpg     * Mission setup guide:   https://i.ibb.co/rGybqx87/mission-setup-guide.jpg     * Mission briefing:   https://i.ibb.co/VWVJ1W1g/mission-briefing.jpg     * Mission flight:   https://i.ibb.co/HT1sNcNR/mission-flight.jpg     * Mission loadout:   https://i.ibb.co/B9mRSBB/mission-loadout.jpg     * Mission comms:   https://i.ibb.co/B2hHQSC7/mission-comms.jpg     * Mission map:   https://i.ibb.co/qYnnBL4G/mission-map.jpg     * Mission map - threats:   https://i.ibb.co/dsd5ktSV/mission-map-threat.jpg     * Mission ezboards:   https://i.ibb.co/Q7VTgTJC/mission-ezboards.jpg     * Airfields:   https://i.ibb.co/276rmtvJ/airfields.jpg     * Airfield charts:   https://i.ibb.co/fYCG1j2n/airfield-charts.jpg     * Arsenal:   https://i.ibb.co/q36wLvxb/arsenal.jpg     * Threat guide:   https://i.ibb.co/rKV0GYRZ/threat-guide.jpg     * HARM ALIC:   https://i.ibb.co/5x2L6Xzq/harm-alic.jpg     * Bullseye trainer:   https://i.ibb.co/4wPd7tz2/bullseye-trainer.jpg     * HOTAS:   https://i.ibb.co/NgTG20R5/hotas.jpg     * Bridge setup guide:   https://i.ibb.co/ymbxcW3k/bridge-setup-guide.jpg     ---   ## Important Notes:   * AI was heavily used to build this project, it was intended for my personal use only, mainly as a HARMS code reference app, but i kept adding on ideas untill I got to this and thought it would be nice to share.   * I'm new to GitHub, software building and sharing, so if i'm breaking any rules, license wise, or something please let me know.   * I want to make iOS version but I don't have iOS device to test. I may though build a Web version if there is interest in it (maybe for people who use multiple monitors), with AI it doesn't really take much effort.   * Anyone is free to use the code and build anything with it, if it's better than mine don't forget to share.   BMS Forums link:  https://forum.falcon-bms.com/topic/33613/release-falcon-bms-companion-app        submitted by     /u/bakert12     to     r/falconbms       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/falconbms/comments/1wgfdep/release_falcon_bms_companion_app/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:37:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:38:02.625Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa85b2b6508d45f3d2c724f"
+    },
+    "message_id": "reddit_t3_1wgfdej",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "sidehustle",
+    "username": "ImTotallyOkayDw",
+    "title": "Disabled teen wanting to make money",
+    "text": "Disabled teen wanting to make money\n\nI wanna make side money. i left my job (walmart cashier) right before school started, only because i wouldn’t be able to handle it. it’s not too bad imo. i was doing no more than 28 hours a week at max, and it took a toll on my body. made my flare ups happen often. i have fibromyalgia and hypermobility arthralgia. i knew i would not be able to keep up with school and work. i wanna make at least a bit, because my allowance is $20 every other week. i’ve tried those online things in the past when i couldnt get a decent job because of age. Should i try selling art online? I’d probably do pre-made art because my energy to do stuff varies and commissions i would be worried about not finishing on time. I have an etsy shop that i havent used in a while. I can crochet, but that’s a lot for me to do as well and i’m not as interested in it. And none of the things i previously sold i’m interested in anymore. I don’t have a large enough social media to make money. My family is just above the threshold for receiving some SSI money for me. I want just to have some money, some to save for pets and a car.    tldr; can’t work on top of school. Need ways to make money, even if it’s not a lot. is online art worth it.       submitted by     /u/ImTotallyOkayDw     to     r/sidehustle       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sidehustle/comments/1wgfdej/disabled_teen_wanting_to_make_money/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:37:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:38:03.056Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa85b2b6508d45f3d2c7250"
+    },
+    "message_id": "reddit_t3_1wgfded",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "ANI_COMMUNISM",
+    "username": "SilenceHasReceipts",
+    "title": "The Rise of Natalie Harp: Trump's assistant and 'human printer'",
+    "text": "The Rise of Natalie Harp: Trump's assistant and 'human printer'\n\nThe Rise of Natalie Harp: Trump's assistant and 'human printer'   Senator Jon Ossoff ridiculed Trump during a Saturday rally in Georgia over his relationship with his young aide, Natalie Harp.   Harp, 35, was among the handful of aides chosen to accompany the President as he secretly fled Air Force One amid an Iranian assassination threat in Turkey back in July.   Sources have told the Daily Mail that Harp is Trump's closest aide, often dubbing her his 'connective tissue' with some pointing out that she has more access to the President than even his chief of staff Susie Wiles.   Harp is also known as his 'human printer' for her habit of sharing printed copies of articles and social media posts that the President wants to read. Trump's inner circle and others have noticed that there's rarely an event or trip where she's not glued closely to his side.       submitted by     /u/SilenceHasReceipts     to     r/ANI_COMMUNISM       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ANI_COMMUNISM/comments/1wgfded/the_rise_of_natalie_harp_trumps_assistant_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:37:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:38:03.273Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa85b2b6508d45f3d2c7251"
+    },
+    "message_id": "reddit_t3_1wgfde7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "BetaReaders",
+    "username": "SGTSunshine2605",
+    "title": "[In Progress] [23k] [slow horror/supernatural] The Fourth King",
+    "text": "[In Progress] [23k] [slow horror/supernatural] The Fourth King\n\nAfter the death of his sister, Matthew discovers just how broken their lives truly are.    Hi everyone! It took me a LONG time to get to this point of my story where I feel super comfortable sharing it- even though I feel like it’s not completely fleshed out how I want it. A thirteenth draft is fighting to get out but I just can’t seem to- well, get it out.    I posted this before in other casual scary story subreddits but got no attention and feedback.    I’m looking for all sorts of general feedback. Story direction, characters, spooks, etc. if it’s bad, tell me it’s bad! I’ll read everything and work even harder.    I’m also free for critique swaps! It might just take me a while though- work has recently been tough and whatever free time I have I try to work on other hobbies to relieve stress.    The full story is also pinned in my bio/page so if I don’t respond immediately to a DM, it’s also available there.    Thank you to everyone who takes a peak.        submitted by     /u/SGTSunshine2605     to     r/BetaReaders       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BetaReaders/comments/1wgfde7/in_progress_23k_slow_horrorsupernatural_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:37:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:38:03.488Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa85b2b6508d45f3d2c7252"
+    },
+    "message_id": "reddit_t3_1wgfdc7",
+    "topic_key": "can you find me top posts on reddit which has over 10k views per month from ai tech industry",
+    "search_keyword": "artificial intelligence",
+    "platform": "reddit",
+    "subreddit": "studyinEurope",
+    "username": "WorkIll4545",
+    "title": "LUISS Economics/Business in Italy vs Coventry Computer Science/AI in Kazakhstan — what would you choose?",
+    "text": "LUISS Economics/Business in Italy vs Coventry Computer Science/AI in Kazakhstan — what would you choose?\n\nI’m a 17/18-year-old student from Kazakhstan, and I’m currently stuck between two very different paths. I’m looking for genuinely objective advice, especially from people who have studied at LUISS, in Italy, or in CS/AI.   Option 1: LUISS University, Rome - Economics/Business   I have been admitted to LUISS for an English-taught undergraduate program in Economics/Business.   What attracts me:     LUISS has a stronger reputation/network for business, economics, finance and consulting.   Rome offers much more international exposure and access to European opportunities.   I am generally interested in business and economics. I studied Business Management in high school and have experience helping with/organizing business and operational activities, including work connected to a family business.   I can see myself eventually going into entrepreneurship, finance, consulting, management or something similar.   The university itself has a strong connection with companies and career opportunities.     I applied for the  DiSCo Lazio regional scholarship . My current preliminary result is:     Scholarship:  Idoneo (eligible)    Ranking: ~9900     I am NOT yet a confirmed scholarship winner.   From what I understand, Lazio has historically eventually funded all eligible students in recent years, but I know this is not a guarantee for 2026/27. Like there is or is there? a point where something can change and eventually I will not get the DSU scholarship.    My concern is not only the first year. I am worried about  years 2 and 3 .   For later years, academic performance becomes important in the DiSCo ranking. So theoretically, if I perform well and earn enough credits, I can improve my position. But there is still uncertainty about funding, delays, accommodation, etc.   I also already received my  Italian student visa for the first year , so the immediate visa issue is mostly solved. However, I am worried about what happens later with the residence permit renewal and whether there could be problems continuing my studies in Italy. One of my uncles said that the organization that controls \"residential permit\" has lost his documents, so he was forced to walk everywhere with a paper explanation from that organization. He also said a lot about burocracy, and that it generally does not matter that much where you pursue your studies rather than how you fill your portfolio/internship experience.    Though I am still not sure about my every point: mostly about the risk of not getting a DSU scholarship 2nd and 3rd year. I am scared that it can be taken away from me because of my academic performance, or some shifts in regulations or fund, or another financial documents. If problems like this happen, I would not be able to cope with the burden that my parents have to struggle for me again, I want the focus to finally pass to my little brother and sister. I will not be able to cope with an inside burn that my parents have to pay for me or whatever. And also I have a problem with saying goodbye to my fellow coworkers(who I respect and warm soo much), my students at the place where I taught(starting from kids who are at the age of 4, ending with students who are 15-16), and of course my family: but I know that I will see my family from time to time and I would not be able to see people related to my job anymore. So, sort of living all I have now: job, people, etc.    The micro-question is like \"are my concerns/scares are even real?\" \"were there any cases when students were not given DSU scholarship 2nd and 3rd years because of some shifts in whatever?\"   Option 2: Coventry University Kazakhstan - Computer Science / AI   My other option is Coventry University Kazakhstan, where I would study  Computer Science / Artificial Intelligence .   This option is much safer financially/logistically because I would remain in Kazakhstan and live at home. Moreover, I would still get an international diploma: not Italian but British one.   Another important factor is that my  CS grades are higher than economics marks . I have some programming experience and generally perform better in CS-related subjects/exams, but it still does not mean I 100% want to study CS. It is more like I can study CS for now and then move towards fintech/finance/enterpreneurship side, because they do not require that much hard skills. Yet, I would not be able to reverse that process from ECON/BUSINESS to CS/AI.    The advantages I see:     Much lower financial and immigration risk.   I can live at home.   British diploma   CS/AI gives me a technical skill set that can potentially lead to software engineering, AI, data, fintech, etc.   I could later combine technology with business through entrepreneurship, an MBA, fintech, etc.   I wouldn't have to depend on a scholarship continuing for three years.     The downside is that I am worried about the  quality/network/reputation ceiling  compared with studying business at LUISS in Rome.   Coventry Kazakhstan is an interesting option and gives me a UK university degree, but it obviously isn't the same environment as being at a well-known business university in Rome and being surrounded by European companies/networking opportunities.   My family is understandably concerned about the (currently the way thought) uncertainty of Italian scholarships and bureaucracy. I'm also trying not to make the mistake of choosing LUISS just because \"Europe + higher ranking\" sounds impressive.   At the same time, I don't want to choose the safe option and later regret not taking the opportunity to study at LUISS.   What would you do in my position?  Please be brutally honest.  If you were in my exact situation, what would you choose/do and why?    And if you choose LUISS:  how much would the DiSCo uncertainty actually worry you? Is this concern even real?   If you choose Coventry:  would you consider the opportunity cost of giving up LUISS too high?        submitted by     /u/WorkIll4545     to     r/studyinEurope       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/studyinEurope/comments/1wgfdc7/luiss_economicsbusiness_in_italy_vs_coventry/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:37:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:38:03.710Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa85b2b6508d45f3d2c7253"
+    },
+    "message_id": "reddit_t3_1wgfdc5",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "wordgrind",
+    "username": "dirty_erv",
+    "title": "Idiom — fill in the blank: \"the ___ gun\"",
+    "text": "Idiom — fill in the blank: \"the ___ gun\"\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/dirty_erv     to     r/wordgrind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wordgrind/comments/1wgfdc5/idiom_fill_in_the_blank_the_gun/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:37:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:38:03.926Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa85b2c6508d45f3d2c7254"
+    },
+    "message_id": "reddit_t3_1wgfdbt",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "RepWatchesEU",
+    "username": "ThrowRApapasmurfRyan",
+    "title": "First time buyer oyster perpetual champagne help WC",
+    "text": "First time buyer oyster perpetual champagne help WC\n\nsubmitted by     /u/ThrowRApapasmurfRyan     to     r/RepWatchesEU       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RepWatchesEU/comments/1wgfdbt/first_time_buyer_oyster_perpetual_champagne_help/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:37:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:38:04.139Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa85b2c6508d45f3d2c7255"
+    },
+    "message_id": "reddit_t3_1wgfdbp",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "HeadphoneAdvice",
+    "username": "Kind_Nectarine_6223",
+    "title": "PC38X",
+    "text": "PC38X\n\nI’m looking for a headset to use on my ps5 and Xbox series X mainly for story games (I’m wanting something with great immersion mainly for when GTA6 comes out). Would these be a good buy in 2026? I own a pair of Sennheiser HD 600’s and love them. These also fit my budget better than my other choice so far which would be the Beyerdynamic MMX 330 Pros. I’m going for $200-$275 budget wise and I could go to $300 if it’s really worth it but I’m just wanting great immersion for story games and a decent enough mic to where I don’t sound like an Xbox 360 party.       submitted by     /u/Kind_Nectarine_6223     to     r/HeadphoneAdvice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HeadphoneAdvice/comments/1wgfdbp/pc38x/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:37:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:38:04.355Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa85b2c6508d45f3d2c7256"
+    },
+    "message_id": "reddit_t3_1wgfdbi",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MakeRedditFriends",
+    "username": "Asmodeus-00",
+    "title": "25M feeling bored after a long and busy Monday and wanna talk to someone",
+    "text": "25M feeling bored after a long and busy Monday and wanna talk to someone\n\nThe day is finally over but now I’m just kinda on my phone with not a lot in terms of plans for the rest of the evening and honestly I’m also bored. So instead of being bored on my own, I’d say being bored with someone else and maybe making a friend out of it sounds better haha. So maybe you’re around, we could talk?        submitted by     /u/Asmodeus-00     to     r/MakeRedditFriends       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MakeRedditFriends/comments/1wgfdbi/25m_feeling_bored_after_a_long_and_busy_monday/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:37:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:38:04.570Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa85b2c6508d45f3d2c7257"
+    },
+    "message_id": "reddit_t3_1wgfdbh",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Electronic-Youth7321",
+    "title": "What do you think of Asha Sharma?",
+    "text": "What do you think of Asha Sharma?\n\nsubmitted by     /u/Electronic-Youth7321     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wgfdbh/what_do_you_think_of_asha_sharma/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:37:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:38:04.784Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa85b2d6508d45f3d2c7258"
+    },
+    "message_id": "reddit_t3_1wgfdb4",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "NewRiders",
+    "username": "Key-Size-8162",
+    "title": "New rider here, worried about thieves",
+    "text": "New rider here, worried about thieves\n\nI’m about to buy a 2025 R3, but I’m afraid it might get stolen. Here’s my scenario:   Live in Dallas  Apartment Complex  No garage  At work, parking is open for anyone   Am I being paranoid? Any suggestions?       submitted by     /u/Key-Size-8162     to     r/NewRiders       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NewRiders/comments/1wgfdb4/new_rider_here_worried_about_thieves/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:37:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:38:05.009Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa85b2d6508d45f3d2c7259"
+    },
+    "message_id": "reddit_t3_1wgfdak",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "jvangorkum",
+    "title": "Grab 100 hammers from u/jvangorkum!",
+    "text": "Grab 100 hammers from u/jvangorkum!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/jvangorkum     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wgfdak/grab_100_hammers_from_ujvangorkum/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:37:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:38:05.226Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa85b2d6508d45f3d2c725a"
+    },
+    "message_id": "reddit_t3_1wgfd9n",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789418261328",
+    "text": "[PROBE] 1789418261328\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wgfd9n/probe_1789418261328/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:37:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:38:05.443Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa85b2d6508d45f3d2c725b"
+    },
+    "message_id": "reddit_t3_1wgfd98",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AMCPlus",
+    "username": "FJ6utierrezFilm",
+    "title": "BEFORE THE FALL — Reddit Q&A Sept 14",
+    "text": "BEFORE THE FALL — Reddit Q&A Sept 14\n\nsubmitted by     /u/FJ6utierrezFilm     to     r/AMCPlus       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AMCPlus/comments/1wgfd98/before_the_fall_reddit_qa_sept_14/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:37:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:38:05.659Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa85b2d6508d45f3d2c725c"
+    },
+    "message_id": "reddit_t3_1wgfd8v",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "BeserkAsFvck",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Avocado Wrap Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Avocado Wrap Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/BeserkAsFvck     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wgfd8v/sticker_giveaway_enter_to_win_a_4_stars_avocado/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:37:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:38:05.873Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa85b2e6508d45f3d2c725d"
+    },
+    "message_id": "reddit_t3_1wgfd8j",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "isabelleryder",
+    "title": "What is a decision someone can make that instantly tells you a lot about their personality?",
+    "text": "What is a decision someone can make that instantly tells you a lot about their personality?\n\nsubmitted by     /u/isabelleryder     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wgfd8j/what_is_a_decision_someone_can_make_that/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:37:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:38:06.091Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa85b2e6508d45f3d2c725e"
+    },
+    "message_id": "reddit_t3_1wgfd83",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "GetMotivated",
+    "username": "Sweet-Bunk9",
+    "title": "The Silent Burden of Unfinished Projects and How to Lift It [Article]",
+    "text": "The Silent Burden of Unfinished Projects and How to Lift It [Article]\n\nWe all have that drawer full of half-started journals or the corner of the garage with the bike frame waiting for parts. Or maybe it's a half-written novel on your computer. These are the ghosts of good intentions. They dont scream for attention but they are always there a little weight on your mind.   I realized recently how much mental space these things take up. Its not just the physical clutter. Its the constant low hum of 'I should really get to that.' It drains energy.   I decided to tackle one small thing. This old guitar I meant to fix for ages. I just bought the missing string. Took five minutes online. When it arrived I put it on. It sounds terrible. But its playable. And that small victory felt huge.   Its not about finishing everything perfectly. Its about breaking the spell of the incomplete. You dont need to build a masterpiece. Just take one tiny step. Throw away the dead plants. Delete the old drafts. Buy the one missing ingredient. The act of moving something from 'unfinished' to 'done enough' or 'discarded' is incredibly freeing.   Has anyone else felt this? What unfinished projects are weighing you down? What small action can you take today to lighten that load?       submitted by     /u/Sweet-Bunk9     to     r/GetMotivated       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GetMotivated/comments/1wgfd83/the_silent_burden_of_unfinished_projects_and_how/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:37:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:38:06.307Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa85b666508d45f3d2c725f"
+    },
+    "message_id": "reddit_t3_1wgfedt",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "Asleep-Head2588",
+    "title": "[Sticker Giveaway] Enter to win a 5 Stars Orchid Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 5 Stars Orchid Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Asleep-Head2588     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wgfedt/sticker_giveaway_enter_to_win_a_5_stars_orchid/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:38:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:39:02.172Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa85b666508d45f3d2c7260"
+    },
+    "message_id": "reddit_t3_1wgfedo",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "TicketResale",
+    "username": "itswhatevas",
+    "title": "BUYING MCR 10/31",
+    "text": "BUYING MCR 10/31\n\nIf you are selling tickets in any of these sections for the hollywood bowl MCR show on 10/31 Dm me. I only want 1 ticket. my budget is up to 350ish depending on seats! Will only go through paypal goods and services and will need proof to prevent scamming!        submitted by     /u/itswhatevas     to     r/TicketResale       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TicketResale/comments/1wgfedo/buying_mcr_1031/",
+    "score": 0,

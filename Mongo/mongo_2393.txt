@@ -1,0 +1,416 @@
+    "username": "Hot_Improvement_2396",
+    "title": "Blood Glucose on HGH",
+    "text": "Blood Glucose on HGH\n\nI am on over 6mg Reta per week and planning on starting HGH. Is it necessary to monitor blood glucose if I am on taking 2-3IU HGH per day? I am 230lbs 5’10 23%ish body fat. Used to be insulin resistant and may have a family history of diabetes. Will the 6mg Reta counter the HGH if it’s only at 2-3IU or do I have to buy a glucometer? What do you guys think?       submitted by     /u/Hot_Improvement_2396     to     r/SteroidHGH       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SteroidHGH/comments/1wc5scw/blood_glucose_on_hgh/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T02:10:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T02:11:06.506Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa211ba035b0f36efcc859b"
+    },
+    "message_id": "reddit_t3_1wc5sbo",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "UTMississauga",
+    "username": "Sh_j1",
+    "title": "Why are books so expensive??",
+    "text": "Why are books so expensive??\n\nit’s so expensive each is 150, and I have to buy it because otherwise they won’t give me access to quizzes what should I do? Any tricks?       submitted by     /u/Sh_j1     to     r/UTMississauga       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UTMississauga/comments/1wc5sbo/why_are_books_so_expensive/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T02:10:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T02:11:06.710Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa211ba035b0f36efcc859c"
+    },
+    "message_id": "reddit_t3_1wc5sb9",
+    "topic_key": "hello",
+    "search_keyword": "Hello!",
+    "platform": "reddit",
+    "subreddit": "pasadena",
+    "username": "lakngsfn",
+    "title": "Favorite place for affordable haircut?",
+    "text": "Favorite place for affordable haircut?\n\nHello! My hair is long enough to donate. Is there a place where I can get a haircut and also help with preparing it to donate? My mom used to be the one to cut my hair. But since my mom passed, I need a place to get it cut and ready to donate. I don't even know how much an average haircut costs 😆 thanks in advance. (I'm an Asian F (51)       submitted by     /u/lakngsfn     to     r/pasadena       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pasadena/comments/1wc5sb9/favorite_place_for_affordable_haircut/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T02:10:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T02:11:06.911Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa211bf47709d84b65c005b"
+    },
+    "message_id": "reddit_serp_xrzxxw",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/devops/comments/xrzxxw/creating_a_basic_cicd_pipeline/",
+    "text": "Creating a Basic CI/CD Pipeline\n\nI have a couple of projects each of which has the following components:   - Python code (Django)   - Postgres DB    - Elasticsearch   At the moment, I am running them on the bare metal, without containerization. I would like to start using containers and set up a CI/CD, so that when I make a commit, all the tests and deployment happen automatically. I am also going to set up a staging server, which may or may not influence the configuration of the pipeline.   My questions are as follows.     What tools can I use for this? That is, Jenkins, Gitlab, etc?   How should I set up the database for this to work? That is, from where should a copy of DB come to create a deployable container?   What should the interaction of the staging and production servers be in the context of this pipeline? That is, is there a way to set it up, so that the production tracks a certain branch, whereas the staging tracks some other branch of source control? Is this how it is done?     Any tips are appreciated.       submitted by     /u/sober_programmer       [link]       [comments]",
+    "username": "sober_programmer",
+    "subreddit_or_channel": "devops",
+    "posted_at": "2022-09-30T12:21:55+00:00",
+    "fetched_at": {
+      "$date": "2026-09-10T02:11:11.017Z"
+    },
+    "google_rank": 10,
+    "search_keyword": "local CI/CD pipeline",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-10T02:11:11.017Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa211f047709d84b65c005c"
+    },
+    "message_id": "reddit_serp_1nm3evh",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/n8n/comments/1nm3evh/help_to_connect_n8ndocker_to_obsidian_mcp_local/",
+    "text": "Help to connect n8n(Docker) to Obsidian MCP + Local Rest API\n\nHi,   I'm new to all this (yet another victim of the AI hype I guess) but I try to find some use cases that actually help me and I started to play around with my PKM System Obsidian.   There is a MCP Server for Obsidian ( GitHub - docker/mcp-obsidian at docker-support )  By default Obsidian is a local application so there is no online version available like it is with Notion for example.  But it has a plugin that creates a local REST API ( GitHub - coddingtonbear/obsidian-web: Connect your web browser with your notes in Obsidian. )   My n8n Instance is running on my MainPC in a docker container and Obsidian on the same PC(Docker host)   now I struggle to get n8n connected to the MCP Server so that this server can then interact with my Obsidian Vault.   I got it running with Claude Desktop but as this is both on the same Host its less complex especially with the docker MCP Toolkit.   My final goal would be to run n8n on my Homeserver accessing a Vault on my PC. So n8n would need to see the REST API exposed on this Host. (All on the same network)   All the tutorials I can find are for n8n with public MCP servers, I got these running without any problem.  Can someone help me?   Edit: I might need to explain where I'm actually stuck... Sorry.  I got my Workflow running and the community Tools enabled. AI Agent note is working with other tools (MCP's) but setting up a MCP Obsidian Tool is were I can't proceed. I just try to connect to the server so I tried it with a MCP Client Note and then have Credentials setup for what I believe is correct for Obsidian MCP Server running as explained above.  But here I must be completely wrong. It does not conect. I am unsure about the syntax as I can't copy paste that from all these tutorials. I troubleshooted a bit and came to the conclusion that as its not running on the web, I need to tell it were the endpoint it. on \"host.docker.internal\" I guess. But do I need to give it also the port? Is it then a HTTPS credentials? I have found some info about a HTTPS Brige. But I don't understand the concept of this.  And by now I'm just completely lost in all this mess.       submitted by     /u/Dentvar       [link]       [comments]",
+    "username": "Dentvar",
+    "subreddit_or_channel": "n8n",
+    "posted_at": "2025-09-20T16:57:41+00:00",
+    "fetched_at": {
+      "$date": "2026-09-10T02:12:00.552Z"
+    },
+    "google_rank": 5,
+    "search_keyword": "local REST API",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-10T02:12:00.552Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa211f6035b0f36efcc859d"
+    },
+    "message_id": "reddit_t3_1wc5tbq",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "audioware",
+    "username": "glevil",
+    "title": "[Audio Plugin Deals] Strike Series Bundle by Filipe Leitao $39.00 (50% OFF)",
+    "text": "[Audio Plugin Deals] Strike Series Bundle by Filipe Leitao $39.00 (50% OFF)\n\nTransparency:  Use the  Affiliate  link to support our sub at no extra cost or if you prefer, use the  Non-Affiliate  link.      Affiliate Link:   https://audioplugin.deals/product/strike-series-bundle-by-filipe-leitao/ref/322/     Non-Affiliate Link:   https://audioplugin.deals/product/strike-series-bundle-by-filipe-leitao      Details    BUY STRIKE STRINGS, GET STRIKE DRUMS FREE    Filipe Leitao’s Strike series gives you finished cinematic performances, not raw articulations. Load a preset, hold a chord, the arrangement plays itself.   Strike Strings brings seventeen phrase styles, fifteen chord presets in all twelve keys and 744 bonus MIDI files. Strike Drums adds twenty-one presets with twelve performances, in half-time, normal and double-time.   Together just 2.7 GB, light for cinematic libraries. Grab both for $39, less than Strike Strings alone.    Requires the full version of Kontakt 7.10.7 or later.        submitted by     /u/glevil     to     r/audioware       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/audioware/comments/1wc5tbq/audio_plugin_deals_strike_series_bundle_by_filipe/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T02:11:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T02:12:06.706Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa211f6035b0f36efcc859e"
+    },
+    "message_id": "reddit_t3_1wc5t9t",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "UAEjobseekers",
+    "username": "Dry-Piccolo4213",
+    "title": "Fresh graduate ( need advice)",
+    "text": "Fresh graduate ( need advice)\n\nCan’t believe I’m writing this I just downloaded Reddit to get it off my chest🙂 female there.   I’m a recent Digital & Social Media graduate in the UAE (Uowd) and honestly I’m starting to feel really lost with the job search.   I’ve done one internship and I’ve been applying to both jobs and internships on LinkedIn and Indeed etc + I know it’s early to judge. I’ve been going 2 month applying, but I mostly keep getting internship offers. I’m okay with starting from a low salary , because I just want to get some proper experience and start my career. But the job market try to convince you 2-3kis good a starter   The internships I’m seeing are honestly frustrating, even from a not so well known company’s . They want a strong portfolio, then give you practical assessments that can take hours and basically feel like doing actual work for them… all for an “intern” position.   The process:   Apply for an internship → No response.  Apply again → No response.  Finally get selected → Work for 2-3 months → Gain experience.  Apply for a job → \"We need 1-2 years of experience.\"  Wait...  Wasn't the internship supposed to give me the experience?  The problem isn't that internships exist.  The problem is when an \"internship\" becomes a way to get full-time work without full-time pay, mentorship, or a clear learning path.   Same goes to applying internship > needs 1 year experience crazy. Recruiters neeed to know interns are here to learn not to became a cheapest employee.   I know I’m not an expert yet. I have experience with social media and content from my internship and media projects, but obviously I still have a lot to learn.   I portfolio is good ( wouldn’t say it’s packed by bunch of experiences ) I’m trying to do much internships to fulfill it.   I know some people graduated and work even with them just doing ( one internships) or started low entry.   Anyone who’s been in this position or works in UAE marketing / Social agency’s etc. what would you honestly recommend?   Sorry for my yapping session I’m jsut letting my frustration out haha helping would be lovely~~       submitted by     /u/Dry-Piccolo4213     to     r/UAEjobseekers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UAEjobseekers/comments/1wc5t9t/fresh_graduate_need_advice/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T02:11:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T02:12:06.927Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa211f7035b0f36efcc859f"
+    },
+    "message_id": "reddit_t3_1wc5t8x",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ChennaiBuyAndSell",
+    "username": "dic2big",
+    "title": "iPhone 17 pro max cosmic orange 512 gb - ₹1.3 lac",
+    "text": "iPhone 17 pro max cosmic orange 512 gb - ₹1.3 lac\n\nLimited warranty till JAN 09  bought it in Canada  esim variant ( more battery )  no box or bill ( left in canada ) can provide a different box as another family member has the same phone  battery health - 97% 292 cycles  excellent condition  can throw in a spigen tough armour  f2f preferred Chennai  Price - 1.30 L  reason to sell - want to by the new iPhone duo       submitted by     /u/dic2big     to     r/ChennaiBuyAndSell       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ChennaiBuyAndSell/comments/1wc5t8x/iphone_17_pro_max_cosmic_orange_512_gb_13_lac/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T02:11:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T02:12:07.144Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa211f7035b0f36efcc85a0"
+    },
+    "message_id": "reddit_t3_1wc5t62",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MiserableiraqiforTeen",
+    "username": "Zealousideal-Buy8402",
+    "title": "🤓🎀",
+    "text": "🤓🎀\n\nsubmitted by     /u/Zealousideal-Buy8402     to     r/MiserableiraqiforTeen       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MiserableiraqiforTeen/comments/1wc5t62/_/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T02:11:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T02:12:07.368Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa211f7035b0f36efcc85a1"
+    },
+    "message_id": "reddit_t3_1wc5t5i",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BayAreaRealEstate",
+    "username": "Some_RealEstateGuy",
+    "title": "Any buyers regretting their choice of getting an adjustable rate mortgage?",
+    "text": "Any buyers regretting their choice of getting an adjustable rate mortgage?\n\nWould love to hear your stories       submitted by     /u/Some_RealEstateGuy     to     r/BayAreaRealEstate       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BayAreaRealEstate/comments/1wc5t5i/any_buyers_regretting_their_choice_of_getting_an/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T02:11:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T02:12:07.585Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa21233035b0f36efcc85a2"
+    },
+    "message_id": "reddit_t3_1wc5u7s",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "sims2help",
+    "username": "earthbndmisfit",
+    "title": "How do I stop my game from doing this? I've only noticed in build/buy mode",
+    "text": "How do I stop my game from doing this? I've only noticed in build/buy mode\n\nIt does this weird glitch thing that's more annoying than anything, how do i fix it??       submitted by     /u/earthbndmisfit     to     r/sims2help       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sims2help/comments/1wc5u7s/how_do_i_stop_my_game_from_doing_this_ive_only/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T02:12:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T02:13:07.209Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa21233035b0f36efcc85a3"
+    },
+    "message_id": "reddit_t3_1wc5u6x",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "adidas",
+    "username": "Salt-Ice-4130",
+    "title": "Where to buy?",
+    "text": "Where to buy?\n\nIs there anywhere I can buy these other than stock x? Shipping to Canada or Australia. Product code KH6230       submitted by     /u/Salt-Ice-4130     to     r/adidas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/adidas/comments/1wc5u6x/where_to_buy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T02:12:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T02:13:07.438Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa21233035b0f36efcc85a5"
+    },
+    "message_id": "reddit_t3_1wc5u66",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "travel",
+    "username": "athu_law",
+    "title": "I Booked a Cab for My Senior Parents. The Driver Told Them to Cancel It and Pay Him Directly",
+    "text": "I Booked a Cab for My Senior Parents. The Driver Told Them to Cancel It and Pay Him Directly\n\nMy senior parents were waiting for a cab I had already booked and paid for. Then the driver told them to cancel it.   I honestly want to know what people would do in this situation.   I booked an outstation cab for my senior parents through a well-known online cab platform. The booking was confirmed, payment had already been made, and my parents were simply waiting to travel.   They weren't looking for anything complicated.   They just wanted to get into the booked vehicle and reach their destination safely.   Then the driver allegedly told them something along the lines of:   \"Cancel the booking and deal with me directly.\"   That's when I completely lost confidence in the whole system.   Why would I book through a platform, make a payment, receive a confirmation and rely on its supposedly organised transportation service, only for the driver to ask my elderly parents to cancel everything and make a private arrangement?   And here's the part that bothers me most.   My parents are senior citizens.   They shouldn't be standing at a railway station wondering whether they should cancel a confirmed booking, whether the driver can be trusted, whether another vehicle will come, or whether they're going to be left stranded.   I booked through a platform precisely so they wouldn't have to deal with that uncertainty.   The issue isn't simply that a driver behaved badly.   The bigger question is:   How many other passengers are being asked to do this?   Is this an isolated incident?   Are drivers trying to avoid paying platform commissions?   Are customers routinely being encouraged to move bookings off-platform?   And if a customer agrees and something goes wrong afterwards, who is accountable?   Because once the official booking is cancelled, the customer may suddenly lose much of the protection, tracking and accountability they thought they had when they made the booking.   Imagine this happening to someone travelling alone.   Or an elderly couple.   Or someone's parents who aren't comfortable using apps.   Or a family arriving late at night at a railway station.   That's what makes this particularly disturbing to me.   The company has been contacted and I've asked them to investigate what happened, preserve the relevant booking and communication records, refund the payment and take appropriate action if the driver's conduct is confirmed.   But I'm less interested in getting an apology than I am in understanding whether this is actually a wider problem.   So Reddit, I'm genuinely asking:   Has a cab driver ever told you to cancel your online booking and pay them directly?   What happened when you refused?   And if you agreed, did you have any problems later?   I'd especially like to hear from people who have experienced this with senior parents, elderly relatives, airport pickups or railway-station pickups.   Because if this is happening regularly, I don't think we should just shrug and say, \"That's how cab drivers are.\"   A confirmed booking should mean something.   And senior citizens should be able to depend on it.       submitted by     /u/athu_law     to     r/travel       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/travel/comments/1wc5u66/i_booked_a_cab_for_my_senior_parents_the_driver/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T02:12:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T02:13:07.892Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa21234035b0f36efcc85a6"
+    },
+    "message_id": "reddit_t3_1wc5u5r",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "UFV",
+    "username": "hello_kitty_97",
+    "title": "Psychology 102 textbook",
+    "text": "Psychology 102 textbook\n\nHi guys i'm looking for someone who has the  Psychology: Frontiers and applications  (2026 release). McGraw-Hill Canada textbook that i could potentially buy off of them? Or if anyone knows how to get the online/pdf version of the book? Thanks       submitted by     /u/hello_kitty_97     to     r/UFV       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UFV/comments/1wc5u5r/psychology_102_textbook/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T02:12:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T02:13:08.121Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa21234035b0f36efcc85a7"
+    },
+    "message_id": "reddit_t3_1wc5u29",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CryptoCurrency",
+    "username": "crypto_doctors",
+    "title": "A word of caution with Zcash",
+    "text": "A word of caution with Zcash\n\nIf you are buying into the hype of Zcash just due to massive pump, please know what you are getting into  1) The core engineering team (not for profit) behind zcash had a feud with parent company bootstrap following a bitter dispute recently. As such developers don’t agree with corporate handling of the project.    2) The team during their initial launch intentionally designated 20% of all mining rewards to early investors and founders out of pure greed.    3) The above point holds true even now that it’s heavy backed by few corporates like Electric Coin company and Grayscale. The very reason Grayscale supports its ETF’s.    4) The infinite minting AI bug issue was due to flaw in the design privacy pool which wasn’t discovered for 3-4 years allowing infinite minting of counterfeit tokens   5) The belief that zcash is private in itself is an irony! Zcash privacy is optional unlike Monero which includes privacy by default -a much better project. Zcash had the optional feature just to appease to regulators and exchanges for marketing purposes    6) Above all you should get skeptical if the price keeps going up everytime especially with recent surge driven by a few corporate people.    At the end of the day, it’s your hard earned money 💰 and put it in something which is community driven, useful where project team genuinely cares for it.        submitted by     /u/crypto_doctors     to     r/CryptoCurrency       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CryptoCurrency/comments/1wc5u29/a_word_of_caution_with_zcash/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T02:12:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T02:13:08.355Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2123747709d84b65c005d"
+    },
+    "message_id": "reddit_serp_eqh7vf",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/homeautomation/comments/eqh7vf/wifi_light_sensor_with_local_rest_api/",
+    "text": "WiFi light sensor with local REST api?\n\nAnyone know of any light sensors that are pre built and have a local rest API?    I know ubibot exists below, and this checks most of my boxes. However, I think the API is only available over the internet from their servers. I would prefer something local, so that if they go under or the internet does the sensor is still functional.   Im also aware I could build something with a dev board on Arduino \\ Rpi but was hoping to not have to go through all that just for a simple wifi light sensor.    ​   TY    https://www.amazon.com/UbiBot-Wireless-Thermometer-Temperature-Environment/dp/B071HVDDFB        submitted by     /u/strunker       [link]       [comments]",
+    "username": "strunker",
+    "subreddit_or_channel": "homeautomation",
+    "posted_at": "2020-01-18T14:48:37+00:00",
+    "fetched_at": {
+      "$date": "2026-09-10T02:13:11.033Z"
+    },
+    "google_rank": 10,
+    "search_keyword": "local REST API",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-10T02:13:11.033Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2126a47709d84b65c005e"
+    },
+    "message_id": "reddit_serp_19dwscp",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/Citrix/comments/19dwscp/onpremhybrid_azure_hosting_connection_update/",
+    "text": "On-Prem/Hybrid Azure Hosting Connection Update\n\nLooking down the barrel of the Azure app ID secret expiring, and my kneejerk thought here is simply create a new secret on the same app ID in Azure and edit the Application secret field in the current Hosting connection in Studio (i've equated it to changing a vCenter Hosting password in my mind). Has anyone successfully done that? Gonna test it in DR, but would be a nice confidence bump that it'll work if one of y'all have done it. All the docs popping on editing that Hosting connection are all DaaS --> Azure, which doesn't help here.    ​       submitted by     /u/lukelimbaugh       [link]       [comments]",
+    "username": "lukelimbaugh",
+    "subreddit_or_channel": "Citrix",
+    "posted_at": "2024-01-23T19:34:24+00:00",
+    "fetched_at": {
+      "$date": "2026-09-10T02:14:02.938Z"
+    },
+    "google_rank": 4,
+    "search_keyword": "local cloud hosting",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-10T02:14:02.938Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2126f035b0f36efcc85a9"
+    },
+    "message_id": "reddit_t3_1wc5v0z",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "Solotravelindia",
+    "username": "Select_Estimate_1601",
+    "title": "[Survey] How do you actually plan trips with friends/family? 2-minute travel planning survey. Help us understand what makes trips painful",
+    "text": "[Survey] How do you actually plan trips with friends/family? 2-minute travel planning survey. Help us understand what makes trips painful\n\nHey everyone!   We are working on a research project on  how people actually plan and execute trips with friends/family  not just where they want to go, but everything that happens before and during the trip.   We are particularly interested in the frustrating stuff:  • coordinating with multiple people  • comparing flights/hotels/activities  • chasing people for decisions  • making bookings  • verifying whether hotels/activities are actually as advertised  • dealing with last-minute changes and cancellations    The survey takes around 5 minutes , and your real experiences would be incredibly useful.    Survey:   https://forms.gle/Gs9ck5yUYUJWDNBS8    If you travel with friends, family, partners, colleagues, etc.,  please fill it out and share it with someone who is usually the “trip organiser” in their group.    🎁  As a small thank-you, respondents will also have a chance to enter an exciting gift giveaway.    No sales pitch we're genuinely trying to understand where trip planning breaks down before building anything.   Thanks a lot! 🙌  And if you've had a particularly disastrous travel-planning experience,  feel free to tell me about it in the comments,  those stories are exactly what we're looking for.       submitted by     /u/Select_Estimate_1601     to     r/Solotravelindia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Solotravelindia/comments/1wc5v0z/survey_how_do_you_actually_plan_trips_with/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T02:13:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T02:14:07.492Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa2126f035b0f36efcc85aa"
+    },
+    "message_id": "reddit_t3_1wc5uvo",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CNYHousing",
+    "username": "MartyKCNY",
+    "title": "Moving to CNY? I created new Facebook & Nextdoor relocation groups to connect newcomers with locals",
+    "text": "Moving to CNY? I created new Facebook & Nextdoor relocation groups to connect newcomers with locals\n\nAs we continue growing  r/CNYHousing , I wanted to share another resource I recently created for people moving to Syracuse and Central New York.   With Micron coming to Clay and the amount of development expected around it, we're likely to see more employees, contractors, construction workers, professionals, supporting businesses, and families relocating to CNY over the coming years.   I created  Moving to Syracuse & Central New York | Micron Relocation  on both Facebook and Nextdoor.   The idea is to give people moving here a place to connect with actual CNY residents and ask questions about:   🏡 Buying and renting  📍 Syracuse-area towns and neighborhoods  🚗 Commutes, including getting to the Micron/Clay area  🏫 Schools and communities  💰 Cost of living  🛠️ Local services  🍕 Restaurants and local recommendations  🌲 Things to do around CNY  📦 Moving and relocation in general   I'm a local Howard Hanna Realtor, but I don't want these groups to become Realtor advertising pages. The goal is to get plenty of regular CNY residents involved too, so newcomers can hear from people who actually live here.   If you're relocating to CNY — or you're already local and wouldn't mind helping our future neighbors — feel free to join:    Facebook:    https://www.facebook.com/groups/2105899460363677     Nextdoor:    https://nextdoor.com/g/1whw56bnr/    And definitely stick around here at  r/CNYHousing  as well. I want this subreddit to continue being a place where people can discuss buying, selling, renting, investing, housing questions, and what's happening in the Central New York housing market.   If there are other resources you think would be helpful for people moving to CNY, drop them in the comments. I'm looking for ideas as I build this out.       submitted by     /u/MartyKCNY     to     r/CNYHousing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CNYHousing/comments/1wc5uvo/moving_to_cny_i_created_new_facebook_nextdoor/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T02:13:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-10T02:14:07.717Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa212a447709d84b65c005f"
+    },
+    "message_id": "reddit_serp_1r0lldb",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/sideprojects/comments/1r0lldb/i_built_a_local_code_review_tool_for_giving/",
+    "text": "I built a local code review tool for giving structured, PR review style feedback to AI coding agents — without opening a PR.\n\nI tried out Codex over the past few days. It's good, and the one feature that I really liked was the ability to review the diff inside the app and leave inline comments. No more referring to code by file name and line number, or saying \"change this variable inside this function.\"   But I like using Amp Code more. So I built review-for-agent: a local web UI that shows your uncommitted changes as a diff, lets you leave inline comments, and exports a structured Markdown file you can paste straight back into your agent's chat.   It's a single Go binary that runs locally and works with any agent.   Vibe coded entirely with Amp Code CLI with a bit of Claude for the initial planning. Cost me about $16 but was within the free limit of Amp.   This is my first entirely vibe coded project, I mostly didn't review the code. Amp built something, I tested it out locally, and then eventually gave it feedback using the tool itself :)       submitted by     /u/confused_banda       [link]       [comments]",
+    "username": "confused_banda",
+    "subreddit_or_channel": "sideprojects",
+    "posted_at": "2026-02-10T00:21:38+00:00",

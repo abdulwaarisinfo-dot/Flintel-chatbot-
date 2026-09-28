@@ -1,0 +1,416 @@
+    "_id": {
+      "$oid": "6a9e26e3f0819e6636a8c37c"
+    },
+    "message_id": "reddit_t3_1w9fzz8",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "DeathBattleMatchups",
+    "username": "justanotherdreamer12",
+    "title": "Iori vs Kafka (Library of Ruina vs Honkai Star Rail) |The Spider’s Tear| {Connections in the Comments}",
+    "text": "Iori vs Kafka (Library of Ruina vs Honkai Star Rail) |The Spider’s Tear| {Connections in the Comments}\n\nsubmitted by     /u/justanotherdreamer12     to     r/DeathBattleMatchups       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DeathBattleMatchups/comments/1w9fzz8/iori_vs_kafka_library_of_ruina_vs_honkai_star/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T02:51:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T02:52:19.602Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e26e4f0819e6636a8c37f"
+    },
+    "message_id": "reddit_t3_1w9fzyv",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "PCHelpHub",
+    "username": "No-Goat3401",
+    "title": "Help me for computer😭",
+    "text": "Help me for computer😭\n\ni used airgun to clean all the dusts, didn't hold fans cuz i didn't know i have to hold fans when i blow with air.   and after few hours, i tried to turn it on and it starts booting but turn off by itself in few seconds.   what shoud i do😢   All fans are spinning, and i don't know what part is wrong.   pls help me brothers       submitted by     /u/No-Goat3401     to     r/PCHelpHub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PCHelpHub/comments/1w9fzyv/help_me_for_computer/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T02:51:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T02:52:20.198Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e271af0819e6636a8c382"
+    },
+    "message_id": "reddit_t3_1w9g0w5",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "FantasyFootballers",
+    "username": "Human_Ad392",
+    "title": "Team names",
+    "text": "Team names\n\nNobody appreciates how absolutely elite I am at naming my teams. Honestly might be better at naming them than I am drafting them       submitted by     /u/Human_Ad392     to     r/FantasyFootballers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FantasyFootballers/comments/1w9g0w5/team_names/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T02:53:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T02:53:14.500Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e271af3d11795a689e68c"
+    },
+    "message_id": "reddit_t3_1w9g0o7",
+    "topic_key": "prompt engineer",
+    "search_keyword": "prompt engineer",
+    "platform": "reddit",
+    "subreddit": "WorkSmarterWithAIs",
+    "username": "Recent-Ingenuity2556",
+    "title": "Are we moving from “prompt engineering” to actual systems engineering for AI?",
+    "text": "Are we moving from “prompt engineering” to actual systems engineering for AI?\n\nA few years ago, building with LLMs often meant one main thing: write a better prompt.   That is increasingly insufficient.   Modern AI applications are starting to look more like complete software systems around the model.   A useful way to think about the evolution is through five layers.    1. Prompt Engineering    This is the most familiar layer.   You define:     What the model should do   The role it should assume   Constraints   Output structure   Examples   Success criteria     Prompts remain important, but they only control a small part of a production AI system.    2. Context Engineering    The next question is not simply  what should I ask?    It becomes:    What information should the model see right now?    That can include:     User state   Conversation history   Retrieved documents   Database records   Tool results   Memories   Policies   Previous agent actions     Good context engineering is partly about inclusion and partly about exclusion. More context is not automatically better.   The system needs the  right context at the right time .    3. Harness Engineering    Once the model can take actions, you need infrastructure around it.   The harness manages things such as:     Tool access   Permissions   State   Memory   Sandboxing   Logging   Model routing   Budgets   Timeouts   Verification     At this point, reliability depends increasingly on the surrounding runtime rather than only on model intelligence.    4. Loop Engineering    A single model call is often insufficient for complex work.   Agents need loops such as:    Observe → Reason → Act → Verify → Retry    This allows a system to continue working instead of stopping after the first response.   But loops introduce new engineering questions:     When should the agent retry?   When should it stop?   How should errors be detected?   How much should it spend?   When should a human intervene?   How should progress be preserved?     This is where AI starts moving from assistant toward autonomous worker.    5. Graph Engineering    Eventually, one loop becomes insufficient too.   Complex systems may need multiple specialized agents and workflows coordinated through an explicit graph.   For example:    User goal   ↓   Planner   ↓  ↙ Research Agent  ↘ Coding Agent  ↘ Data Agent  ↓   Verifier   ↓   Human approval   ↓   Execution    Graphs make states, dependencies, branches, retries, and approval points explicit.   That can make complex agent systems easier to reason about than one enormous autonomous loop.   The progression therefore looks something like:    Prompt Engineering   → defines the request    Context Engineering   → supplies the information    Harness Engineering   → controls execution    Loop Engineering   → enables autonomous work    Graph Engineering   → coordinates larger systems   The interesting implication is that AI application development is becoming less about discovering the perfect prompt and more about engineering the complete environment in which models operate.   The model remains essential.   But increasingly, the competitive advantage may come from  what you build around it .   The full NexusAI playbook explores all five layers:    https://www.nexusai-tech.com/ai-insights/from-prompts-to-graphs-five-layer-playbook-modern-ai-apps    Where is most of your engineering effort going now: prompts, context, harnesses, loops, or multi-agent graphs?       submitted by     /u/Recent-Ingenuity2556     to     r/WorkSmarterWithAIs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WorkSmarterWithAIs/comments/1w9g0o7/are_we_moving_from_prompt_engineering_to_actual/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T02:52:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T02:53:14.532Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e271af0819e6636a8c383"
+    },
+    "message_id": "reddit_t3_1w9g0vr",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "Business_in_China",
+    "username": "Great-Beautiful-6383",
+    "title": "Chinese game console has American kids hooked, selling 1 million units.",
+    "text": "Chinese game console has American kids hooked, selling 1 million units.\n\nI. Nex Playground's Big Sales Success   When it comes to game consoles, most people's first reaction is probably Sony's PS5 or Nintendo's Switch.   But a Chinese made game console called the Nex Playground is quietly gaining popularity in North American households, winning over a large number of overseas users.   Specifically, in 2024, the Nex Playground sold about 150,000 units for the full year; in 2025, sales surged directly to 800,000 units. During last year's Black Friday promotional period, its sales even surpassed Microsoft's Xbox at one point. According to a report by The Wall Street Journal, Nex's revenue in 2025 exceeded $150 million (approximately 1.017 billion yuan).   The entrepreneurial team behind the product also has a very interesting background. Founder Li Jinghui previously worked at Apple for eight years as a senior engineering manager; the two co-founders, Tony Sung and Reggie Chan, also come from Apple's engineering management system, making the team a startup that truly emerged from Apple.   Bringing years of experience from working at Apple, this entrepreneurial team chose not to replicate the mature console gaming routes already available on the market, but instead took a different path.   The mainstream game consoles on the market primarily serve individual players, focusing on graphics quality, operation, and competitive experience. The Nex Playground, however, redefines the gaming scenario, turning the living room into a family entertainment space with a focus on motion-sensing interactive play that involves the whole family.   Based on this positioning, the product design also makes deliberate simplifications around the family context. The entire unit is only 3 inches in size, connects directly to the TV, and has an extremely low barrier to entry. Using AI visual recognition technology, it does not require a controller or any wearable devices—players' body movements alone can directly control the games. Without the need for complex button operations, the whole family can play together simply by moving their bodies.   This differentiated positioning and product design have helped Nex quickly break into the market. Currently, there are already about 1 million Nex Playground devices in American homes.   II. Brand Collaborations and IP Partnerships Boost Visibility   However, even with a sufficiently novel product experience, breaking into the global console market is no easy feat.   At present, Sony PlayStation, Nintendo Switch, and Microsoft Xbox together hold approximately 93% of the global market share, leaving very limited room for new players. Relying solely on hardware makes it difficult to quickly win over consumers, so IP partnerships have become a key strategy for Nex to open up the market.   Currently, there are already over 50 games available on the Nex platform, including many household-name IPs overseas, such as Barbie, Teenage Mutant Ninja Turtles, Kung Fu Panda, and Bluey.   It should be noted that these IPs are not simply \"reskinning\" games; here, IPs truly solve real-world challenges for brands going global.   First, they address the issue of brand awareness. For average overseas consumers, Nex is still an unfamiliar new piece of hardware, but characters like Barbie and the Teenage Mutant Ninja Turtles are already deeply rooted in their minds. Leveraging these well-known IPs greatly reduces the cost for users to understand the new product.   Second, they help build trust among parent groups. Since the device is equipped with a camera and targets families with children, it raises parental concerns about privacy and safety. The addition of child-friendly IPs helps establish a safe, low-risk product image for the brand.   More critically, user purchase of the hardware is only the first step. Continuously launching new IP-based games can consistently encourage users to renew their Play Pass memberships, generating longer-term revenue.   Nex is not the only cross-border brand with this approach. Previously, Govee also benefited from IP collaborations.   In 2024, Govee partnered with Warner Bros. and Legendary Entertainment around  Dune: Part Two , adding movie-themed packaging and lighting effects to its TV backlight strips. What users purchased was not just an ordinary light strip, but an experience that recreates the film's atmosphere at home.   This light strip has been well-received by movie fans, with product sales exceeding 33,000 units and revenue reaching $3.58 million, directly propelling it into the top ten of Amazon's LED light strip category—proving the commercial potential of the IP collaboration model.   Looking at Nex and Govee together, the true value of IP collaborations goes beyond just riding a wave of popularity to generate sales; it also helps new brands overcome the cognitive barriers of entering overseas markets.   This offers a useful approach for cross-border brands: first, identify IPs that align well with the target audience and usage scenarios; then, integrate the characters, stories, and product features; and finally, further boost market visibility through content updates and channel operations.       submitted by     /u/Great-Beautiful-6383     to     r/Business_in_China       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Business_in_China/comments/1w9g0vr/chinese_game_console_has_american_kids_hooked/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T02:53:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T02:53:14.702Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e271bf0819e6636a8c387"
+    },
+    "message_id": "reddit_t3_1w9g0vd",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "Laserengraving",
+    "username": "Strict_Cause_6686",
+    "title": "Engravings look warped",
+    "text": "Engravings look warped\n\nI’m currently running a Creality Falcon 10W open frame style laser. I wanted to make some of these business cards for an upcoming fair I’m going to but for some the image is looking a little warped? There is some contact info under my thumb that is doing the same thing as the “ER E.”    Any advice would be super helpful.        submitted by     /u/Strict_Cause_6686     to     r/Laserengraving       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Laserengraving/comments/1w9g0vd/engravings_look_warped/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T02:53:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T02:53:15.519Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e271cf0819e6636a8c38c"
+    },
+    "message_id": "reddit_t3_1w9g0tw",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "HunterXHunter",
+    "username": "peeing-red",
+    "title": "Tserriednich's level of combat capabilities",
+    "text": "Tserriednich's level of combat capabilities\n\nGon and the others were very capable fighters even before learning nen especially Hanzo. Do you think Tserriednich is the same? Do you think his level is closer to Hanzo's or to Gon's?       submitted by     /u/peeing-red     to     r/HunterXHunter       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HunterXHunter/comments/1w9g0tw/tserriednichs_level_of_combat_capabilities/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T02:52:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T02:53:16.528Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e271ef0819e6636a8c394"
+    },
+    "message_id": "reddit_t3_1w9g0ry",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "tacotradeoffers",
+    "username": "HuntTraditional2322",
+    "title": "Fair trade?",
+    "text": "Fair trade?\n\nI would get Gibbs.        submitted by     /u/HuntTraditional2322     to     r/tacotradeoffers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/tacotradeoffers/comments/1w9g0ry/fair_trade/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T02:52:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T02:53:18.140Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e271ef0819e6636a8c395"
+    },
+    "message_id": "reddit_t3_1w9g0rr",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "fashionreps2",
+    "username": "Upset-Roof1645",
+    "title": "[REVIEW] 310¥ GX Batch AirMax 95 Neon from Yolo",
+    "text": "[REVIEW] 310¥ GX Batch AirMax 95 Neon from Yolo\n\nYo, just wanted to drop a quick review on these AirMax    Material: This is my second pair of GX and they’re honestly insane compared to retail. Can’t spot a single difference in shades or textures on the kicks. Doesn't feel cheap at all.   Comfort: Nailed my size this time and they fit like a glove. The shoe literally hugs your foot and keeps you cozy/warm. Out of all my kicks, this is hands down the most comfortable one.   Sizing: Went TTS and they fit spot on. Not too tight, not too much room either the shape just cups your foot right.   Overall: 10/10, always been obsessed with this pair because of Yu-Gi-Oh, totally worth the money.   W2C:  https://shop1816463806.v.weidian.com/item.html?itemID=7799538575        submitted by     /u/Upset-Roof1645     to     r/fashionreps2       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/fashionreps2/comments/1w9g0rr/review_310_gx_batch_airmax_95_neon_from_yolo/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T02:52:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T02:53:18.342Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e2720f0819e6636a8c39f"
+    },
+    "message_id": "reddit_t3_1w9g0qy",
+    "topic_key": "hello",
+    "search_keyword": "hello",
+    "platform": "reddit",
+    "subreddit": "HelloKitty",
+    "username": "PurpleButterly19",
+    "title": "Badtz Maru is done! (9 out of 11)!!",
+    "text": "Badtz Maru is done! (9 out of 11)!!\n\nHere our boy is!!! So now I’m working on the final two characters Pochoco and Pomporim. I’m doing them together so it’ll go faster and since they’re right next to each other.    So I’ll see you guys later with what will hopefully be our final update        submitted by     /u/PurpleButterly19     to     r/HelloKitty       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HelloKitty/comments/1w9g0qy/badtz_maru_is_done_9_out_of_11/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T02:52:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T02:53:20.344Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e2720f0819e6636a8c3a1"
+    },
+    "message_id": "reddit_t3_1w9g0qo",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "Vent",
+    "username": "peepthegoods",
+    "title": "Is it me?",
+    "text": "Is it me?\n\nAt what point do I just pull the plug and give up on it? Maybe it’s me even though I’ve been told it’s not. After so many times it just hurts at that point. It makes me feel like maybe I’m a shitty person while at the same time makes me feel like shit. Maybe I’m just a fool for letting it happen over and over. It makes me question myself. It makes me not want to wake up. It makes me want to give up.        submitted by     /u/peepthegoods     to     r/Vent       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Vent/comments/1w9g0qo/is_it_me/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T02:52:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T02:53:20.745Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e2720f0819e6636a8c3a2"
+    },
+    "message_id": "reddit_t3_1w9g0qj",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "NHLcirclejerk",
+    "username": "psychichu",
+    "title": "Malkin thinking about all the a$$ on r/NHLcirclejerk",
+    "text": "Malkin thinking about all the a$$ on r/NHLcirclejerk\n\nsubmitted by     /u/psychichu     to     r/NHLcirclejerk       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NHLcirclejerk/comments/1w9g0qj/malkin_thinking_about_all_the_a_on_rnhlcirclejerk/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T02:52:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T02:53:20.947Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e2721f0819e6636a8c3a7"
+    },
+    "message_id": "reddit_t3_1w9g0pa",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "spiders",
+    "username": "Dopevoponop",
+    "title": "What type of spider is this?",
+    "text": "What type of spider is this?\n\nLocation: Hunterdon County, NJ, USA   Found it in my bathroom in the corner of the ceiling making a web. Any idea what kind it is?       submitted by     /u/Dopevoponop     to     r/spiders       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/spiders/comments/1w9g0pa/what_type_of_spider_is_this/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T02:52:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T02:53:21.952Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e2722f0819e6636a8c3a8"
+    },
+    "message_id": "reddit_t3_1w9g0oz",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "Copicola",
+    "username": "Many_Boysenberry4913",
+    "title": "Nhaque nhaque no meio da cana",
+    "text": "Nhaque nhaque no meio da cana\n\nAmanha talvez vai uma mina nova traba com nois e parece q ela é meio safadinha. Hummmm, ja pensou um nhaque nhaque bem gostoso com ela no meio da cana e a cana é meio alta ngm ver. Kkkkkk, mas no 1 dia n dar certo tenho q cv bem com ela 1 e tal. Kkkk, isso se caso ela for msm       submitted by     /u/Many_Boysenberry4913     to     r/Copicola       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Copicola/comments/1w9g0oz/nhaque_nhaque_no_meio_da_cana/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T02:52:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T02:53:22.167Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e2757f0819e6636a8c3a9"
+    },
+    "message_id": "reddit_t3_1w9g1lw",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "PassNclex",
+    "username": "NervousRhubarb5772",
+    "title": "Should I move my exam date",
+    "text": "Should I move my exam date\n\nI just took my first CAT exam and this was my score. I took a predictor assessment in June and got a “very high” chance of passing.    I’m getting tired of studying but the thought of the exam scares me. While I’m answering the question on the predictor exams, I feel like I’m failing and don’t know what I’m doing. I clearly do because I’m getting decent scores, they just feel different than when I do regular practice questions.    I’m scheduled to take my exam in October, but part of me thinks I’m ready to just get it over with.    Ughhh !! All this is making me crazy 😂😭 any advice on whether I should keep my date or push it up? My only concern with pushing it up is that I’m not 100% ready.. but do any of us feel 100% ready when we test ?        submitted by     /u/NervousRhubarb5772     to     r/PassNclex       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PassNclex/comments/1w9g1lw/should_i_move_my_exam_date/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T02:54:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T02:54:15.018Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e2757f0819e6636a8c3ad"
+    },
+    "message_id": "reddit_t3_1w9g1lf",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "ArtificialSentience",
+    "username": "Helpful-Series132",
+    "title": "Who told you we don't understand consciousness, AI or Youtube? Most people in the world accept the known definition and even understand subconscious & unconsciousness. Less than 1% of people think that we don't know what it is.",
+    "text": "Who told you we don't understand consciousness, AI or Youtube? Most people in the world accept the known definition and even understand subconscious & unconsciousness. Less than 1% of people think that we don't know what it is.\n\nAsk yourself \"when was the first time i ever even heard this idea?\" as of 2026, the answer 9/10 is from a language model & if not, It didn't come from psychology class in college, i came from a video on youtube of some philosopher, not a scientist but someone that was just thinking.   There is no way to prove it other than watching the life vanish after death. I cant put a device to your forhead and read that your alive but i can observe life within you. We don't need to prove every single little detail to understand thing.   Consciousness is not a undefined meaningless word it has a specific meaning and we understand how it works. Maybe 1-5% of people debate about it but most of the world is completely oblivious to the idea that we are confused about it.   the definition is   \"The ability to understand what is happening to you and whats going on in your surroundings through mental awareness\"   The only people debating that we dont know what consciousness are philosophers & AI enthusiast.   To say \"i cant prove that your conscious\" is like saying \"i cant prove the sky is blue to you\"   I cant look through your eyes and see that your blue is the same blue as mine but we can all agree the sky is blue the same way we can agree were all conscious. Psychology teaches you that consciousness has to with things like attention, perception, sleep and dreaming, altered states, automatic vs. controlled processing, and the difference between conscious and unconscious mental processes .. these are metaphors for whats going on in AI, none of these things actually happen within a language model, they use operations of code   We know 100% of whats going on with AI. The mind being a mysterious is irrelevant.   Where AI companies try to confuse you:   We also know whats going on with human consciousness but there are mysteries still hidden that we haven't fully discovered .. just because these mysteries exist do not mean the things we already understand no longer matter .. theres a few videos on youtube with a few million views   ask the average person \"did you know that people dont fully understand consciousness\" they will say no    This is similar to saying \"we dont fully understand physics\" then acting like everything that we have observed over years no longer matters.       submitted by     /u/Helpful-Series132     to     r/ArtificialSentience       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ArtificialSentience/comments/1w9g1lf/who_told_you_we_dont_understand_consciousness_ai/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T02:54:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T02:54:15.813Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e2758f0819e6636a8c3b0"
+    },
+    "message_id": "reddit_t3_1w9g1l4",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "TrueChristian",
+    "username": "Square_Cat6586",
+    "title": "Contemplating veiling fulltime and having an argument with my dad about it.",
+    "text": "Contemplating veiling fulltime and having an argument with my dad about it.\n\nI (18f) am soon to be 19 (this month) and I have been feeling called/urged to veil full time. I am slowly easing into it, trying it out ect. The one issue I have is my dad. He left the cathlioc faith years ago and destroyed our family. He has joined some very intresting church that i think is non denominational. I sent him a video on veiling in hopes to start a meaningful conversation on this new path I am exploring with Jesus. (now on further analysis the womans video i sent may have not been the best but regardless) I have the Corintheians 11 2:14 verse but would like some other verses and some outside opinion. Thank you and have a blessed day       submitted by     /u/Square_Cat6586     to     r/TrueChristian       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TrueChristian/comments/1w9g1l4/contemplating_veiling_fulltime_and_having_an/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T02:54:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T02:54:16.406Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e2758f0819e6636a8c3b2"
+    },
+    "message_id": "reddit_t3_1w9g1kn",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "dating_advice",
+    "username": "Sad_Show_4729",
+    "title": "Did I fuck up by ending things with someone I love?",
+    "text": "Did I fuck up by ending things with someone I love?\n\nThrowaway because this is embarrassing lol.   I met this guy online. We talked for around few months and got really close. It was one of those connections where you can talk for hours and somehow end up telling each other everything.   He was going through a really serious terminal health crisis this year to the point where he was basically fighting for his life. There were long periods where he barely replied. At the time I didn't really understand what was happening and honestly thought he was abandoning me, because i had no idea . Later I understood how serious things actually were.   I was there for him through some really dark moments. I cared about him a lot.   He told me at one point that he thought we had something but always told i should find a partner and that I should go date others. He also said long distance doesn't work for him and that if circumstances were different, he could see himself marrying me. But we never actually became a proper relationship.   Things completely stopped for 4 months, so i worked on myself a lot and after 3 months i healed and I went on a date with someone else ,nothing happened there. Recently in August he messaged hes doing better and started measaging back.   I thought he was over me as never went back tp the romantic conversations we had and he changed it was the same with me.   I told because weren't together, so I don't think I did anything wrong, but after that he seemed to withdraw even more. I don't know if he was hurt, jealous, or just decided he needed to detach.   Eventually I ended things after an emotional call because I wanted an actual relationship and a future, not something undefined and mostly online.   The goodbye was honestly heartbreaking. He was incredibly sweet and told me he loved me, that he'd never forget me, that I'd always be special to him, and that he'd miss my voice and our conversations. But he didn't ask me to stay or say that he wanted to try to make a relationship work.   And now I'm wondering if I fucked up.   Do you actually want to try with me? Instead, I made the decision based on what i believed.   Recently I got really worried about him and broke the no-contact/space we'd agreed on after 4 days.   I sent a short message basically saying I knew we were supposed to give each other space, but I was anxious and just wanted to know he was okay. He read it and didn't reply.   He doesn't know that I had actually gotten scared because of something going on with my own health that day. I didn't want to scare my family or friends, and because I'd been there for him during some really scary situations, my brain immediately went to him.   Now I'm sitting here wondering what he thinks of me. Maybe he thinks I'm inconsistent because I ended things and then messaged him. Maybe he thinks I'm needy. Maybe he's just respecting the space. I genuinely don't know.   The annoying part is I still love him and I think I want him back if he wants it too😭   So did I fuck up by ending it without directly asking him what he actually wanted?   Or was I right to walk away because he wasn't actually offering me a relationship?   And what do you think his withdrawal after I told him about the date meant?   Be brutally honest. I want to know if I made a mistake.       submitted by     /u/Sad_Show_4729     to     r/dating_advice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/dating_advice/comments/1w9g1kn/did_i_fuck_up_by_ending_things_with_someone_i_love/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T02:54:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T02:54:16.805Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e2759f0819e6636a8c3b4"
+    },
+    "message_id": "reddit_t3_1w9g1k9",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "Hermes",
+    "username": "Open_Button_8155",
+    "title": "Hi , I’m new and have a concern",
+    "text": "Hi , I’m new and have a concern\n\nI’m a closeted Christopagna ( pls don’t judge ) so I can’t have an altar for Hermes however I pray to Him in my mind . I wasn’t sure He was around and then I started seeing hares and hawks everywhere so I was like “ok maybe He is here “ . Again I’m new to this so pls don’t judge . My concern is there has been two times where I was a little arrogant in my thoughts to Him about something I shouldn’t be doing and the first time I realized and apologized before I left the house and had an accident with the car (I was not hurt) , even tho I apologized and prayed to Him to protect me . It happened again tonight and wasn’t an accident but as soon I thought it I drove onto a curb . I’m not sure whether it was Him slapping me upside the head or it was dark and I was distracted. I apologized again tried not to freak . My concern is , is He known to do things like that and if He does does that mean He hates me ?        submitted by     /u/Open_Button_8155     to     r/Hermes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Hermes/comments/1w9g1k9/hi_im_new_and_have_a_concern/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T02:54:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T02:54:17.205Z"
+    }

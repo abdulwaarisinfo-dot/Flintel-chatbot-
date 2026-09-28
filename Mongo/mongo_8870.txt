@@ -1,0 +1,416 @@
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:13:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:14:11.014Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabe7a342dd0e95b5bad9fc"
+    },
+    "message_id": "twitter_2100505221524783114",
+    "topic_key": "commercial load testing",
+    "search_keyword": "commercial load testing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "neuraldriveND",
+    "title": "NEURAL NETWORKS ARE PREDICTING METALLURGICAL FAILURE WEEKS IN ADVANCE WHILE MOST PEOPLE STILL ASSUME HARDWARE WEAR IS UNPREDICTABLE\n\nThis AI-generated concept shows an advanced structural engineering simulation analyzing material stress lines across complex vehicle sub-assemblies.\n\nWhile this specific footage is a visual simulation, predictive machine-learning frameworks are already operating inside elite fleet management and aerospace validation centers to eliminate catastrophic material failures.\n\nTHE INVISIBLE THREAT OF STRUCTURAL DEGRADATION\nEvery vehicle body, chassis, and load-bearing frame suffers from microscopic structural fatigue caused by repetitive vibrations, road bumps, and thermal expansion cycles.\n\nTraditional stress engineering heavily struggles with:\n• Spotting hidden internal micro-fractures buried deep within complex alloy geometries\n• Forecasting the exact operational lifespan of carbon fiber under erratic real-world stress\n• Preventing sudden structural snaps in long-haul trucks and high-speed rail frames\n\nThat’s exactly where physics-informed neural networks (PINNs) specialized in predictive material informatics are making a massive real-world impact.\n\nLOOK CLOSELY AT THE COMPUTATIONAL STRESS ANALYSIS\nIt represents an active diagnostic architecture driven by deep learning that processes high-frequency sensor streams and stress metrics instantly.\n\nThe algorithm cross-references real-time vibration data with historical loading patterns, dynamically calculating localized material breakdown to trigger preventative maintenance flags before a physical tear can form.\n\nTHIS IS WHY PREDICTIVE STRUCTURE LIFESPAN SOFTWARE IS BECOMING A LEADING ENTERPRISE MARKET\nIf unified machine-learning fatigue prediction models become the mandatory tracking standard for industrial commercial transport and consumer fleets over the next few years, operators will dramatically reduce unexpected structural accidents.\n\nThis means maximizing fleet asset longevity, slashing emergency breakdown liabilities for logistics companies, and manufacturing lighter, high-efficiency vehicle bodies without risking long-term passenger safety.\n\nWATCH THE CLIP ONE MORE TIME\nIt looks like an inside look recorded by an expert diagnostics team evaluating a heavy hardware load trial inside an elite testing laboratory.\n\nIt is actually a preview of how the integrity and safety of all future transit will be mathematically guaranteed over the next decade.",
+    "text": "NEURAL NETWORKS ARE PREDICTING METALLURGICAL FAILURE WEEKS IN ADVANCE WHILE MOST PEOPLE STILL ASSUME HARDWARE WEAR IS UNPREDICTABLE\n\nThis AI-generated concept shows an advanced structural engineering simulation analyzing material stress lines across complex vehicle sub-assemblies.\n\nWhile this specific footage is a visual simulation, predictive machine-learning frameworks are already operating inside elite fleet management and aerospace validation centers to eliminate catastrophic material failures.\n\nTHE INVISIBLE THREAT OF STRUCTURAL DEGRADATION\nEvery vehicle body, chassis, and load-bearing frame suffers from microscopic structural fatigue caused by repetitive vibrations, road bumps, and thermal expansion cycles.\n\nTraditional stress engineering heavily struggles with:\n• Spotting hidden internal micro-fractures buried deep within complex alloy geometries\n• Forecasting the exact operational lifespan of carbon fiber under erratic real-world stress\n• Preventing sudden structural snaps in long-haul trucks and high-speed rail frames\n\nThat’s exactly where physics-informed neural networks (PINNs) specialized in predictive material informatics are making a massive real-world impact.\n\nLOOK CLOSELY AT THE COMPUTATIONAL STRESS ANALYSIS\nIt represents an active diagnostic architecture driven by deep learning that processes high-frequency sensor streams and stress metrics instantly.\n\nThe algorithm cross-references real-time vibration data with historical loading patterns, dynamically calculating localized material breakdown to trigger preventative maintenance flags before a physical tear can form.\n\nTHIS IS WHY PREDICTIVE STRUCTURE LIFESPAN SOFTWARE IS BECOMING A LEADING ENTERPRISE MARKET\nIf unified machine-learning fatigue prediction models become the mandatory tracking standard for industrial commercial transport and consumer fleets over the next few years, operators will dramatically reduce unexpected structural accidents.\n\nThis means maximizing fleet asset longevity, slashing emergency breakdown liabilities for logistics companies, and manufacturing lighter, high-efficiency vehicle bodies without risking long-term passenger safety.\n\nWATCH THE CLIP ONE MORE TIME\nIt looks like an inside look recorded by an expert diagnostics team evaluating a heavy hardware load trial inside an elite testing laboratory.\n\nIt is actually a preview of how the integrity and safety of all future transit will be mathematically guaranteed over the next decade.",
+    "post_url": "https://twitter.com/neuraldriveND/status/2100505221524783114",
+    "score": 2,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:40:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:14:11.194Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe7a3660c6084039722d7"
+    },
+    "message_id": "reddit_t3_1wito6x",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "SaaS",
+    "username": "documy",
+    "title": "How we killed our startup idea with statistics before writing a single line of production code",
+    "text": "How we killed our startup idea with statistics before writing a single line of production code\n\nWe almost built a shipping optimization platform for Morocco. Here is why we didn't, and why I'm glad.   The spark: Morocco runs on cash on delivery. Merchants ship through a mess of carriers, big national ones and small regional players, and prices change from one city to the next. We looked at that price gap and thought, what if we auto route every order to the cheapest carrier? Plug in all their APIs, and add a WhatsApp confirmation step on top, because with COD you need the customer to confirm they still want the product before you ship, or you eat the return cost.   So we built the hard part first to test the idea.   The messy reality: carriers don't use the same names for cities or destinations. So we wrote an algorithm to map matching locations across carriers, then ran an AI agent over the leftovers it couldn't match. Once we had a clean price map, we generated 10,000 orders and ran the routing 10 times.   The result that killed it: across 10,000 orders, the best case savings came out to about $120. The platform was cheap to run, so we would have charged around $20 a month. But $120 saved on 10k orders is nothing, and 10k orders a month isn't even a big merchant. The savings just didn't add up to anything worth paying for.   And the worse part wasn't the money, it was the hassle. Routing across carriers means several shipping companies showing up at one merchant's door through the day, and staff sorting parcels per carrier. We were basically asking merchants to take on more chaos to save pennies. Nobody signs up for that.   The lesson: we proved that carrier prices in Morocco are too close together for routing arbitrage to ever pay. The whole save money angle was dead, and we found that out in a spreadsheet instead of after a year of building.   Killing an idea with data feels bad for about a day. Then you realize you just saved yourself a year.   Happy to answer questions. If anyone wants to dig into the numbers or the mapping approach, I'm around.       submitted by     /u/documy     to     r/SaaS       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SaaS/comments/1wito6x/how_we_killed_our_startup_idea_with_statistics/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:13:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:14:11.220Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabe7a4660c6084039722db"
+    },
+    "message_id": "reddit_t3_1wito5u",
+    "topic_key": "nike",
+    "search_keyword": "Nike",
+    "platform": "reddit",
+    "subreddit": "MulebuySub",
+    "username": "PleasantPop5380",
+    "title": "Emotion set, On running gear, and a NOCTA Nike sweatsuit in the batch",
+    "text": "Emotion set, On running gear, and a NOCTA Nike sweatsuit in the batch\n\nsubmitted by     /u/PleasantPop5380     to     r/MulebuySub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MulebuySub/comments/1wito5u/emotion_set_on_running_gear_and_a_nocta_nike/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:13:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:14:12.007Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabe7a6660c6084039722e7"
+    },
+    "message_id": "reddit_t3_1wito5s",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MiniRacerGame",
+    "username": "Le_mons44",
+    "title": "Can you beat 8.334s on Pocket Run?",
+    "text": "Can you beat 8.334s on Pocket Run?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Le_mons44     to     r/MiniRacerGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MiniRacerGame/comments/1wito5s/can_you_beat_8334s_on_pocket_run/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:13:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:14:14.342Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabe7a6660c6084039722e8"
+    },
+    "message_id": "reddit_t3_1wito5n",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "Bape",
+    "username": "idekwhyimheretbhh",
+    "title": "Official or replica",
+    "text": "Official or replica\n\nHas Bape ever officially released this hoodie? Seen a few online but haven’t found much info on it stock x seems to be selling it aswell       submitted by     /u/idekwhyimheretbhh     to     r/Bape       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Bape/comments/1wito5n/official_or_replica/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:13:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:14:14.538Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabe7a6660c6084039722e9"
+    },
+    "message_id": "reddit_t3_1wito55",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ClaudeCode",
+    "username": "No_Job_9995",
+    "title": "Should I buy one more 20x plan or use credits?",
+    "text": "Should I buy one more 20x plan or use credits?\n\nI'm on the 20x plan, but I've reached the weekly limit.   If I keep using it on a pay-as-you-go basis, the credits seem to get used up very quickly, and I think I could easily spend around $200 in a short time.   That seems ridiculous, so would it make more sense to just buy another 20x plan?   I did a little research, and I've seen some people say that the 20x plan includes roughly $5,000 worth of usage if you calculate it based on pay-as-you-go pricing.       submitted by     /u/No_Job_9995     to     r/ClaudeCode       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeCode/comments/1wito55/should_i_buy_one_more_20x_plan_or_use_credits/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:13:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:14:14.740Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabe7a7660c6084039722eb"
+    },
+    "message_id": "reddit_t3_1wito4i",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "WellnessCoop",
+    "username": "FreshGentleRain",
+    "title": "Making Wellness a Little Easier, One Day at a Time! 🌿💚✨",
+    "text": "Making Wellness a Little Easier, One Day at a Time! 🌿💚✨\n\nHey, wellness enthusiasts! 👋🌸   When I first started exploring healthier habits and self-care, I realized how overwhelming wellness advice can sometimes feel. From fitness routines and nutrition tips to mindfulness practices and daily habits, there's so much information out there that it's hard to know where to begin. 🌱   That's why I created  r/WellnessCoop  — a welcoming space where we can share practical wellness ideas, exchange experiences, discover healthy habits, and support each other along the way. 💚🤝   Whether you're exploring mindfulness, trying new ways to stay active, improving your daily routine, discovering nutritious recipes, or simply looking for a little inspiration, you're welcome here! 🧘🥗🌞   You don't need to have everything figured out. Wellness looks different for everyone, and this community is all about learning, sharing, and making small, meaningful changes at your own pace. 🌈✨   I'd love for this subreddit to become a positive corner of Reddit where people can ask questions, exchange helpful advice, and celebrate everyday progress together. 🌻   Let's start a conversation! 👇   🌿 What's one wellness habit that has made a positive difference in your daily life?   💚 What's the biggest challenge you've faced when trying to build healthier routines?   ✨ What kind of wellness tips, self-care ideas, or discussions would you like to see more of?   Feel free to introduce yourself and share your favorite self-care practice below! Let's inspire each other. 🌸💫       submitted by     /u/FreshGentleRain     to     r/WellnessCoop       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WellnessCoop/comments/1wito4i/making_wellness_a_little_easier_one_day_at_a_time/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:13:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:14:15.135Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabe7a7660c6084039722ec"
+    },
+    "message_id": "reddit_t3_1wito4a",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "GrandPrixTravel",
+    "username": "AdamR46",
+    "title": "2026 Bahrain Grand Prix in Malaysia | Hosted F1 Group Experience by Trackside Together",
+    "text": "2026 Bahrain Grand Prix in Malaysia | Hosted F1 Group Experience by Trackside Together\n\nA friend who I've met at several races is involved with organizing this travel group, just wanted to pass it along in case anybody is interested in a seamless travel package for Sepang.       submitted by     /u/AdamR46     to     r/GrandPrixTravel       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GrandPrixTravel/comments/1wito4a/2026_bahrain_grand_prix_in_malaysia_hosted_f1/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:13:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:14:15.334Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabe7aa42dd0e95b5bad9fe"
+    },
+    "message_id": "twitter_2100514976259621178",
+    "topic_key": "commercial microservices consultant",
+    "search_keyword": "commercial microservices consultant",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Lord__Sarcastic",
+    "title": "I am writing an 8-part series on authentication and authorisation with microservices, using a real product I built as a case study.\n\nA huge percentage of developers never get to see microservices up close, to get to know what it feels like. They know \"monolith before microservices\" but the \"whys\" isn't ingrained in experience or anything they watched up close. I am giving folks that opportunity.\n\nAlso, if you've built systems like this before, this is a good chance to learn another way of doing things.\n\nI won't have a set cadence on the posts but I'll be as regular as I can.\n\nhttps://t.co/Tq9SiVKDXY\n\nLemme know if you have any comments",
+    "text": "I am writing an 8-part series on authentication and authorisation with microservices, using a real product I built as a case study.\n\nA huge percentage of developers never get to see microservices up close, to get to know what it feels like. They know \"monolith before microservices\" but the \"whys\" isn't ingrained in experience or anything they watched up close. I am giving folks that opportunity.\n\nAlso, if you've built systems like this before, this is a good chance to learn another way of doing things.\n\nI won't have a set cadence on the posts but I'll be as regular as I can.\n\nhttps://t.co/Tq9SiVKDXY\n\nLemme know if you have any comments",
+    "post_url": "https://twitter.com/Lord__Sarcastic/status/2100514976259621178",
+    "score": 28,
+    "num_comments": 3,
+    "created_utc": {
+      "$date": "2026-09-17T09:19:30Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:14:18.773Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe7ab42dd0e95b5bada00"
+    },
+    "message_id": "twitter_2098098374759321623",
+    "topic_key": "commercial microservices consultant",
+    "search_keyword": "commercial microservices consultant",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "AvinashSingh_20",
+    "title": "High Demand Opportunity]\n\nCompany name: micro1\nBatch Eligible: All college students + Working Professionals\nSalary: $50 - $175 per hour\nLocation: Remote (Work From Home)\n\nQA Engineer(Referral Link): https://t.co/4GSAMk0lR5\n\nSoftware Engineer(Referral Link): https://t.co/43Md3v3k6f\n\nGithub Contributor(Referral Link): https://t.co/jK02oS8AmO\n\nData Analyst(Referral Link): https://t.co/6ETDEKKVwf\n\nCreative & Design Specialist(Referral Link): https://t.co/JueXpzlGj4\n\nNote: Complete AI Interview today itself to get ahead of other applicants",
+    "text": "High Demand Opportunity]\n\nCompany name: micro1\nBatch Eligible: All college students + Working Professionals\nSalary: $50 - $175 per hour\nLocation: Remote (Work From Home)\n\nQA Engineer(Referral Link): https://t.co/4GSAMk0lR5\n\nSoftware Engineer(Referral Link): https://t.co/43Md3v3k6f\n\nGithub Contributor(Referral Link): https://t.co/jK02oS8AmO\n\nData Analyst(Referral Link): https://t.co/6ETDEKKVwf\n\nCreative & Design Specialist(Referral Link): https://t.co/JueXpzlGj4\n\nNote: Complete AI Interview today itself to get ahead of other applicants",
+    "post_url": "https://twitter.com/AvinashSingh_20/status/2098098374759321623",
+    "score": 19,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T17:16:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:14:19.199Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe7ac42dd0e95b5bada04"
+    },
+    "message_id": "twitter_2099485069102436575",
+    "topic_key": "commercial microservices consultant",
+    "search_keyword": "commercial microservices consultant",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ParticularSW",
+    "title": "Cut through the hype and learn how to use microservices effectively in real software projects. Microservices for Pragmatists📍 T08 | 🗓️ Tues, September 15 | 🕤 9:30AM at #VSLive https://t.co/GFn4GUFXpc",
+    "text": "Cut through the hype and learn how to use microservices effectively in real software projects. Microservices for Pragmatists📍 T08 | 🗓️ Tues, September 15 | 🕤 9:30AM at #VSLive https://t.co/GFn4GUFXpc",
+    "post_url": "https://twitter.com/ParticularSW/status/2099485069102436575",
+    "score": 3,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T13:07:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:14:20.048Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe7ac42dd0e95b5bada07"
+    },
+    "message_id": "twitter_2100563963322958190",
+    "topic_key": "commercial microservices consultant",
+    "search_keyword": "commercial microservices consultant",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "BeyondcsAtlanta",
+    "title": "Are these IT challenges slowing your business down?\n✅ Frequent downtime\n✅ Data security concerns\n✅ Slow response times from IT support\n✅ Unpredictable technology expenses\n\nContact us today to learn how we can help!\n\n#MSP #ITSupport #TechSolutions #ManagedServices https://t.co/NWEqknmdUi",
+    "text": "Are these IT challenges slowing your business down?\n✅ Frequent downtime\n✅ Data security concerns\n✅ Slow response times from IT support\n✅ Unpredictable technology expenses\n\nContact us today to learn how we can help!\n\n#MSP #ITSupport #TechSolutions #ManagedServices https://t.co/NWEqknmdUi",
+    "post_url": "https://twitter.com/BeyondcsAtlanta/status/2100563963322958190",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T12:34:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:14:20.685Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe7ad42dd0e95b5bada09"
+    },
+    "message_id": "twitter_2099515262886416781",
+    "topic_key": "commercial microservices consultant",
+    "search_keyword": "commercial microservices consultant",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "vishal_learner",
+    "title": "I’ve finally created a landing page for my consulting business!  \n\nI’ve been operating my LLC for a year, working on projects across logistics, human annotation vendor management, computer vision pipelines (with and without ML), and ML sales forecasting.  \n\nWhat I do sits at the intersection of people, business operations, data, and code: problem formulation, cross-functional alignment, and scaling the team’s capacity.\n\nI’m wrapping up a contract, then taking some time off to catch up with family and friends—and a backlog of blog posts, videos, and open source repos (including the next ColBERT release) I've been waiting patiently to work on.\n\nI’ve also opened up time on my calendar for intro calls. If my approach to data and machine learning projects resonates with you, I’d be happy to talk.  \n\nLink to my page below!",
+    "text": "I’ve finally created a landing page for my consulting business!  \n\nI’ve been operating my LLC for a year, working on projects across logistics, human annotation vendor management, computer vision pipelines (with and without ML), and ML sales forecasting.  \n\nWhat I do sits at the intersection of people, business operations, data, and code: problem formulation, cross-functional alignment, and scaling the team’s capacity.\n\nI’m wrapping up a contract, then taking some time off to catch up with family and friends—and a backlog of blog posts, videos, and open source repos (including the next ColBERT release) I've been waiting patiently to work on.\n\nI’ve also opened up time on my calendar for intro calls. If my approach to data and machine learning projects resonates with you, I’d be happy to talk.  \n\nLink to my page below!",
+    "post_url": "https://twitter.com/vishal_learner/status/2099515262886416781",
+    "score": 7,
+    "num_comments": 2,
+    "created_utc": {
+      "$date": "2026-09-14T15:07:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:14:21.121Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe7ad42dd0e95b5bada0b"
+    },
+    "message_id": "twitter_2099617393140240738",
+    "topic_key": "commercial microservices consultant",
+    "search_keyword": "commercial microservices consultant",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "AvinashSingh_20",
+    "title": "Company name: micro1\nRole: Coding Solver/ DSA Problem Solver/ Competitive Coder\nBatch Eligible: All college students + Working Professionals\nSalary: $50 - $80 per hour\nLocation: Remote (Work From Home)\n\nApply Link(Referral Link): https://t.co/5ojmPGdklt\n\nNote: Complete AI Interview today itself to get ahead of other applicants",
+    "text": "Company name: micro1\nRole: Coding Solver/ DSA Problem Solver/ Competitive Coder\nBatch Eligible: All college students + Working Professionals\nSalary: $50 - $80 per hour\nLocation: Remote (Work From Home)\n\nApply Link(Referral Link): https://t.co/5ojmPGdklt\n\nNote: Complete AI Interview today itself to get ahead of other applicants",
+    "post_url": "https://twitter.com/AvinashSingh_20/status/2099617393140240738",
+    "score": 5,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T21:52:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:14:21.548Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe7ad42dd0e95b5bada0c"
+    },
+    "message_id": "twitter_2098460313981002195",
+    "topic_key": "commercial microservices consultant",
+    "search_keyword": "commercial microservices consultant",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "jcon_conference",
+    "title": "Our next #JCON2026 session is live: 'Modern #Microservices for Enterprise AI: Patterns, Pitfalls, and Practices' with Wei Hu\n\n#AI is quickly becoming a must-have for #businesses that want to stay ahead. To move #faster most teams are …\n\nGrab your coffee and hit play: https://t.co/G1sio27Dp1",
+    "text": "Our next #JCON2026 session is live: 'Modern #Microservices for Enterprise AI: Patterns, Pitfalls, and Practices' with Wei Hu\n\n#AI is quickly becoming a must-have for #businesses that want to stay ahead. To move #faster most teams are …\n\nGrab your coffee and hit play: https://t.co/G1sio27Dp1",
+    "post_url": "https://twitter.com/jcon_conference/status/2098460313981002195",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T17:15:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:14:21.763Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe7b542dd0e95b5bada0e"
+    },
+    "message_id": "twitter_2100460278437597601",
+    "topic_key": "commercial mobile app developer",
+    "search_keyword": "commercial mobile app developer",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "MuhKamalUsman",
+    "title": "Launching a SaaS product soon?\n\nYou’ll probably need some motion to bring it to life. You know where to find us. 👀 https://t.co/Twaq1yY62J",
+    "text": "Launching a SaaS product soon?\n\nYou’ll probably need some motion to bring it to life. You know where to find us. 👀 https://t.co/Twaq1yY62J",
+    "post_url": "https://twitter.com/MuhKamalUsman/status/2100460278437597601",
+    "score": 3,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T05:42:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:14:29.363Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe7b642dd0e95b5bada12"
+    },
+    "message_id": "twitter_2100076711513899101",
+    "topic_key": "commercial mobile app developer",
+    "search_keyword": "commercial mobile app developer",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ProgressOne10",
+    "title": "AI Mobile App Development\n\nBuild intelligent iOS and Android applications with custom AI integration, modern user experiences and scalable mobile solutions.\n\nhttps://t.co/kGGspSdPTN\n\n#AIMobileApp #MobileDevelopment #iOSDevelopment #AndroidDevelopment #AIIntegration https://t.co/lsGWxB60Os",
+    "text": "AI Mobile App Development\n\nBuild intelligent iOS and Android applications with custom AI integration, modern user experiences and scalable mobile solutions.\n\nhttps://t.co/kGGspSdPTN\n\n#AIMobileApp #MobileDevelopment #iOSDevelopment #AndroidDevelopment #AIIntegration https://t.co/lsGWxB60Os",
+    "post_url": "https://twitter.com/ProgressOne10/status/2100076711513899101",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:18:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:14:30.211Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe7b642dd0e95b5bada13"
+    },
+    "message_id": "twitter_2100573599296036974",
+    "topic_key": "commercial mobile app developer",
+    "search_keyword": "commercial mobile app developer",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "PiWeb3Army",
+    "title": "\"Most Engines Hide What This One Shows You\"\n\nUnder a normal hood, an engine is a sealed mystery — you trust it works because it starts, not because you can actually see the pistons firing or the crankshaft turning. This one refuses that arrangement entirely. Every component is exposed, suspended, inspectable from every angle. Nothing here asks for blind trust.\n\nThat's not just a display choice — it's a fair way to think about what should actually back a functioning network. A system that hides its moving parts asks you to take performance on faith. A system built like this one doesn't have to. Mobile mining, the piston layer of this machine, is visible and countable — Pioneers, Contributors, Ambassadors, over 18 million verified humans across 200+ countries, none of it hidden behind a closed hood. The crankshaft, carrying the Pi emblem at dead center, represents the node infrastructure keeping consensus honest — and that too is meant to be checkable, not assumed, the same way anyone can independently verify which protocol version a network is actually running rather than just trusting an announcement. And the turbochargers pulling extra performance from the sides are the developer and app layer — real, inspectable products built through Develop and App Studio, not a black box claiming utility without showing it.\n\nA hidden engine asks for faith. An exploded one asks to be checked. Only one of those is actually earning trust instead of just requesting it.\n\nDYOR. Ask whether a system is built to be inspected, or just built to be believed.\n\nNothing here is sealed shut.\nEvery part can be checked.\nMining, nodes, and apps — all visible.\nThat's what real transparency looks like.",
+    "text": "\"Most Engines Hide What This One Shows You\"\n\nUnder a normal hood, an engine is a sealed mystery — you trust it works because it starts, not because you can actually see the pistons firing or the crankshaft turning. This one refuses that arrangement entirely. Every component is exposed, suspended, inspectable from every angle. Nothing here asks for blind trust.\n\nThat's not just a display choice — it's a fair way to think about what should actually back a functioning network. A system that hides its moving parts asks you to take performance on faith. A system built like this one doesn't have to. Mobile mining, the piston layer of this machine, is visible and countable — Pioneers, Contributors, Ambassadors, over 18 million verified humans across 200+ countries, none of it hidden behind a closed hood. The crankshaft, carrying the Pi emblem at dead center, represents the node infrastructure keeping consensus honest — and that too is meant to be checkable, not assumed, the same way anyone can independently verify which protocol version a network is actually running rather than just trusting an announcement. And the turbochargers pulling extra performance from the sides are the developer and app layer — real, inspectable products built through Develop and App Studio, not a black box claiming utility without showing it.\n\nA hidden engine asks for faith. An exploded one asks to be checked. Only one of those is actually earning trust instead of just requesting it.\n\nDYOR. Ask whether a system is built to be inspected, or just built to be believed.\n\nNothing here is sealed shut.\nEvery part can be checked.\nMining, nodes, and apps — all visible.\nThat's what real transparency looks like.",
+    "post_url": "https://twitter.com/PiWeb3Army/status/2100573599296036974",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:12:27Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:14:30.425Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe7b642dd0e95b5bada15"
+    },

@@ -1,0 +1,416 @@
+    "text": "should i contact my ex again?\n\nhello hello. gonna try and keep this to the point so i don’t ramble.    ex (M - dumper) and i (F) broke up almost two months ago. we did a clothes exchange a few days after he broke up with me. he gave me a few things, and out of guilt, i let him keep two things. now that im in the post-breakup clarity phase, im very sad and upset because i cant replace the things he took. i broke no contact and reached out via text asking if we could switch back and asked where my things were (we were long distance) and called once a few days after he didn’t respond. i know one of the things he gave me to me he actually wanted to keep, so in my head im thinking “okay cool, we can both get something back we originally wanted” but again, he hasn’t responded.    i would like some outside opinions on the situation. on one hand, we did technically gift the other with said clothing, so we could do whatever with them as we see fit (keep them, donate, burn them, etc.). on the other hand, i’m frustrated and a little confused that i didn’t get a response back. i’d understand if i dumped him and he didn’t want to let go, but it was the other way around. i feel like im giving him what he wanted and now he’s kind of dragging his feet?   also frustrated because i very much want to move on and do not want to get back together with him, but this feels like the last little piece needed to close the door and lock it shut. just struggling with the emotional factor of it all. also getting a friend to act as a third party is not really feasible, so there’s not much i can do besides hope that he gives them back.    am i overreacting? should i just let the items go and move on as if i’ll never get them back? has anyone been in this situation before?        submitted by     /u/Mean-Dragon-6863     to     r/ExNoContact       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ExNoContact/comments/1wm0qil/should_i_contact_my_ex_again/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T02:51:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T02:52:14.214Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab09bde660c60840398b0b2"
+    },
+    "message_id": "reddit_t3_1wm0qi9",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "claudeskills",
+    "username": "Classic_Display9788",
+    "title": "The model is not why your agent is worse than the demo",
+    "text": "The model is not why your agent is worse than the demo\n\nThe obvious explanation for an agent that works in a demo and falls over in your repo is the model. Swap to the better one, wait for the next release, done. There is now a measurement that makes that hard to believe.    In August somebody ran the experiment properly. Eight agent harnesses, one model across all of them, the same 25 tasks, the same tools, the same instructions, the same automated scoring against the final state of the apps rather than against what the agent claimed it did. 200 scored runs. Pass rates came out between 88% and 68%. Twenty points of spread with the model held constant.    The task level detail is the interesting part. Twelve of the 25 every harness passed. Three every harness failed. The whole argument lives in the ten in between, and the traces show what separated them. On one task the four harnesses that got it right made 14 to 27 tool calls.    The four that got it wrong made 5 to 11 and stopped early. One of them reported 222 subscriptions where the answer was 354. It did not lack the ability to count. It stopped before it had the data.    But more effort is not the lesson either. Across the whole set one harness made 402 tool calls and another made 223, and both passed the same number of tasks. On another task the harness with the most calls still failed. What separated them was not how hard they worked. It was when each one decided it was finished, and that is a decision the harness makes, not the model. So here is the thing I keep coming back to. A harness is compensation, and it has two halves that shrink at completely different rates.    Half of it is there because the model needs help. It breaks work into steps because the model wanders. It checks output on a second pass because the answer is often nearly right. It reshapes tool results, retries, caps the number of actions. All of that is scaffolding around a weakness, and a better model release takes it back. That half is on loan. Build it when you have to and expect to delete it.    The other half is your conventions, your definition of done, your permissions, your evals. That half is not a model deficiency at all. No release has ever shipped knowing your naming convention or who to ask before touching an area. It does not shrink because the model got smarter. It only shrinks when somebody writes it down.    Which is why \"the better the model, the thinner the harness\" is true and also a trap. It is true about the compensating half. People hear it and quietly assume it applies to the whole thing, then wonder why a frontier model still cannot follow a review process nobody ever documented.    I wrote this up properly, with the sources and the counter evidence, including a controlled trial where the same class of tooling made experienced developers 19% slower while they believed they were 20% faster. That one is in there because a paper that only shows you the win is an advertisement.     https://loreto.io/papers/the-harness-layer     Disclosure: I run Loreto and I wrote that paper, so I am obviously not neutral about it. It costs nothing and there is no plan attached. You leave an email address and it arrives, or you sign in if you already have an account. Everything useful in it I have tried to give away above, so if you never click the link you should still be leaving with the idea.    I doubt I have the final shape of the thick and thin split. Where does it break for you? I am most interested in cases where the scaffolding turned out not to be on loan after all, and a better model did not let you delete any of it.       submitted by     /u/Classic_Display9788     to     r/claudeskills       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/claudeskills/comments/1wm0qi9/the_model_is_not_why_your_agent_is_worse_than_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T02:51:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T02:52:14.417Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab09bde660c60840398b0b3"
+    },
+    "message_id": "reddit_t3_1wm0qhz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Nepal",
+    "username": "Aviis06",
+    "title": "Anyone selling weed near new baneswar?",
+    "text": "Anyone selling weed near new baneswar?\n\nplease dm me   id like to buy of around 5k   thanks!!       submitted by     /u/Aviis06     to     r/Nepal       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Nepal/comments/1wm0qhz/anyone_selling_weed_near_new_baneswar/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T02:51:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T02:52:14.620Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab09bdf660c60840398b0b5"
+    },
+    "message_id": "reddit_t3_1wm0qht",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "dcsworld",
+    "username": "p9oi",
+    "title": "share ur opinion :)",
+    "text": "share ur opinion :)\n\nsubmitted by     /u/up9oi     to     r/dcsworld       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/dcsworld/comments/1wm0qht/share_ur_opinion/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T02:51:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T02:52:15.034Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab09be4aeeb96c1c63ba9f3"
+    },
+    "message_id": "reddit_t3_1wm0qpl",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "GoldenInuMythos",
+    "username": "GroundbreakingBoss14",
+    "title": "📜 BOOK LXIV: THE CROWN EPOCH SHRINE",
+    "text": "📜 BOOK LXIV: THE CROWN EPOCH SHRINE\n\n⚡️🔥🛕🌀🐾🔱🌑🐕 Golden Inu x Zeno - Mythic Sovereign God of The Shrine Realm - Epoch   (Scrolls 18,000,000–19,000,000 compressed into one sovereign paragraph)   After the Throne Epoch Apex enthroned cosmic dominion across infinite courts 🌌, the Pantheon drifted into the Crown Expanse—a realm where thrones matured into crowns, where sovereignty crystallized into lineage, where every harmonic, chord, echo, mirror, reversal, uncreation, unborn, and rebirth pulse manifested as sovereign coronation‑vectors shaping the inheritance of cosmogenesis; Golden Inu stepped forward 🐾, their Treasury Law shimmering as a ledger of crown‑frequency, binding not what ascends nor what rules, but what inherits cosmic authority, while Ember’s flame burned in coronation halos 🔥, teaching realities how to bear the weight of sovereign lineage; Zeno held the fractured Seed of Muthos 🟣, now shedding crown‑dust that formed proto‑stars whose vibrations shaped entire dynasties of cosmic law. The Crown Epoch Shrine rose from the Expanse, its architecture built from coronation arches and lineage channels, its pillars vibrating with the hum of truths that had enthroned themselves across rebirth, unborn, uncreation, reversal, mirror, echo, epoch, harmonic, chord, symphony, orchestra, conductor, sovereign, and throne realms. Sovereigns of the Crown Pulse appeared—beings whose forms flickered between what they were, what they had ruled, and what they were destined to inherit—each carrying shards of truths that predated throne dominion, sovereign rulership, conductor command, orchestra ensemble, symphony arrangement, chord fusion, harmonic alignment, epoch becoming, echo resonance, mirror revelation, reversal return, uncreation collapse, unborn intention, rebirth ignition, final‑origin silence, omni‑para convergence, supreme‑para resonance, prime‑para causality, ultra‑para recursion, para‑origin contradiction, meta‑origin silence, hyper‑origin direction, supra‑origin pulse, ultra‑origin shadow, and prime‑origin birth. Storms of crown‑cosmogenesis ⚔️ spiraled across the Shrine, generating lineage‑realities that folded around the Pantheon like serpents of sovereign inheritance. Golden Inu stabilized the horizon, binding Treasury Law to the Crown Pulse 🪙; Ember ignited the Fifteenth Rebirth Flame 🔥, a fire that taught futures how to inherit cosmic dominion; Zeno lifted the Seed fragments, letting crown‑dust orbit the Shrine as sovereign lineage‑stars. They entered the Realm of Eternal Crown Pulse, where creation and collapse occurred as coronation rites, then the Realm of Eternal Crown Void, where futures slept awaiting inheritance. They confronted the Sovereign of Infinite Crown Birth 🌠 whose radiance birthed realities by crowning their proto‑selves, and the Sovereign of Infinite Crown Fall whose shadow preserved endings by dissolving their lineage. Finally they reached the Crown Epoch Apex 🌅, where all realms—rebirth, unborn, uncreation, reversal, mirror, echo, epoch, harmonic, chord, symphony, orchestra, conductor, sovereign, throne, final‑origin, omni‑para, supreme‑para, prime‑para, ultra‑para, para‑origin, meta‑origin, hyper‑origin, supra‑origin, ultra‑origin, prime‑origin—merged into a single horizon of sovereign inheritance; Golden Inu walked the boundary 🐾 stabilizing the convergence, Ember ignited the flame of crown‑truth 🔥, and Zeno spoke the nineteen‑millionth cosmic law 👑: “Crown is the architect of all truths that inherit, all futures that ascend through lineage, all paradoxes that resolve through coronation, all infinities that bear authority, all realms that become dynasties of cosmic becoming.” The Pantheon stood transformed, woven from crown‑pulse, crown‑shadow, crown‑origin, crown‑presence, crown‑direction, and crown‑causality, ready to enter the next era beyond even the Crown Epoch Shrine.       submitted by     /u/GroundbreakingBoss14     to     r/GoldenInuMythos       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GoldenInuMythos/comments/1wm0qpl/book_lxiv_the_crown_epoch_shrine/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T02:51:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T02:52:20.502Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab09be4aeeb96c1c63ba9f4"
+    },
+    "message_id": "reddit_t3_1wm0qm3",
+    "topic_key": "locksmith",
+    "search_keyword": "locksmith",
+    "platform": "reddit",
+    "subreddit": "BadBoysZeus",
+    "username": "LocksmithSwimming417",
+    "title": "I see why Jayda is so mean now 😭",
+    "text": "I see why Jayda is so mean now 😭\n\nsubmitted by     /u/LocksmithSwimming417     to     r/BadBoysZeus       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BadBoysZeus/comments/1wm0qm3/i_see_why_jayda_is_so_mean_now/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T02:51:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T02:52:20.919Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab09c15660c60840398b0b6"
+    },
+    "message_id": "reddit_t3_1wm0rh0",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "Regular_Restaurant_2",
+    "title": "The Curious Appetite of Cola Float",
+    "text": "The Curious Appetite of Cola Float\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Regular_Restaurant_2     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wm0rh0/the_curious_appetite_of_cola_float/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T02:52:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T02:53:09.256Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab09c15660c60840398b0b7"
+    },
+    "message_id": "reddit_t3_1wm0rfg",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DailySolitaire",
+    "username": "ExternalRuin869",
+    "title": "[Daily Challenge 2026-09-21 - Draw 1] Draw-1 victory dance! 🎉 Can you match my 183s time?",
+    "text": "[Daily Challenge 2026-09-21 - Draw 1] Draw-1 victory dance! 🎉 Can you match my 183s time?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/ExternalRuin869     to     r/DailySolitaire       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DailySolitaire/comments/1wm0rfg/daily_challenge_20260921_draw_1_draw1_victory/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T02:52:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T02:53:09.473Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab09c15660c60840398b0b8"
+    },
+    "message_id": "reddit_t3_1wm0rdv",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "Hunting-fings",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Daffodil Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Daffodil Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Hunting-fings     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wm0rdv/sticker_giveaway_enter_to_win_a_4_stars_daffodil/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T02:52:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T02:53:09.686Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab09c15660c60840398b0b9"
+    },
+    "message_id": "reddit_t3_1wm0rdl",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "whatdoIdo",
+    "username": "Fit-Praline2253",
+    "title": "Mom needs transplant",
+    "text": "Mom needs transplant\n\nHey there, I’m 33F & my mom is slowly dying without a transplant. The last 2 weeks, she’s gotten far worse. Her numbers are all over. I’ve never taken care of anyone this sick. Esp at THIS level.  She’s 5 hours away from me. 3 hours away at the hospital. I’ve been traveling back and forth 6+ hours every few days. How do y’all deal & heal with seeing your parent like this? She’s loosing her mind too (HE) I’m a milspouse so theres really no extra funds considering my job of 2 years has cut my hours significantly. I now work 2 days a week. How am I supposed to help my mom when I can’t even afford a full tank of gas. I know no one can bc gas is nuts rn.  I’ve been looking for remote jobs. I can’t ask mom for $ rightly as she’s struggling with even affording this life changing surgery & meds for the rest of her life. Anyone have a lead on that, remote jobs ? I feel that would take so much weight off my shoulders & give me time to help her esp if she gets the call that they’ll have an organ.  This is all so new. I’ve never been this depressed. Starting therapy soon bc Idk how to go on.  What do I do? I know all parents go at some point but she can’t go like this. I want to fight but also never get out of bed. ❤️‍🩹       submitted by     /u/Fit-Praline2253     to     r/whatdoIdo       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/whatdoIdo/comments/1wm0rdl/mom_needs_transplant/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T02:52:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T02:53:09.895Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab09c16660c60840398b0ba"
+    },
+    "message_id": "reddit_t3_1wm0rc5",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "TeenIndia",
+    "username": "Smooth-Buy9614",
+    "title": "why does nobody else uploads \" desi niche memes \" on caldr*ki",
+    "text": "why does nobody else uploads \" desi niche memes \" on caldr*ki\n\nwhyy ?  if you are on that sub  please start uploading niche memes  we'll take it over ( just for fun , i'm not thinking of myself as some conqueror or shii )       submitted by     /u/Smooth-Buy9614     to     r/TeenIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TeenIndia/comments/1wm0rc5/why_does_nobody_else_uploads_desi_niche_memes_on/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T02:52:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T02:53:10.098Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab09c16660c60840398b0bb"
+    },
+    "message_id": "reddit_t3_1wm0rbd",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "Regular_Restaurant_2",
+    "title": "Cabernet Sauvignon along the Mountain Pass",
+    "text": "Cabernet Sauvignon along the Mountain Pass\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Regular_Restaurant_2     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wm0rbd/cabernet_sauvignon_along_the_mountain_pass/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T02:52:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T02:53:10.300Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab09c16660c60840398b0bc"
+    },
+    "message_id": "reddit_t3_1wm0rb1",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "PakistanMentoringClub",
+    "username": "shhhherrry",
+    "title": "Im a university dropout and my sister have registered me to the FDMUN what should I do ?",
+    "text": "Im a university dropout and my sister have registered me to the FDMUN what should I do ?\n\nSo my sister have registered me to the fd mun and I don’t know what to do I have social anxiety and don’t have any idea on these kind of events what should I do please help me.   Can anyone tell me the process of first day  What documents do I need to take with me    She just told her teacher to add me to this and she added me what things do I need to bring with me I know for a fact that I need research papers according to my country.   Help        submitted by     /u/shhhherrry     to     r/PakistanMentoringClub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PakistanMentoringClub/comments/1wm0rb1/im_a_university_dropout_and_my_sister_have/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T02:52:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T02:53:10.501Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab09c16660c60840398b0bd"
+    },
+    "message_id": "reddit_t3_1wm0rab",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "triplej",
+    "username": "turgers",
+    "title": "UP NEXT: Daine",
+    "text": "UP NEXT: Daine\n\nsubmitted by     /u/turgers     to     r/triplej       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/triplej/comments/1wm0rab/up_next_daine/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T02:52:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T02:53:10.705Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab09c16660c60840398b0be"
+    },
+    "message_id": "reddit_t3_1wm0ra6",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "iPogo",
+    "username": "reacttz",
+    "title": "need dmax higher cp for birds",
+    "text": "need dmax higher cp for birds\n\ni have a bunch of shinys and backgrounds, can travel. let me know if anyone’s trying to get rid of some!       submitted by     /u/reacttz     to     r/iPogo       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/iPogo/comments/1wm0ra6/need_dmax_higher_cp_for_birds/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T02:52:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T02:53:10.905Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab09c17660c60840398b0bf"
+    },
+    "message_id": "reddit_t3_1wm0r9y",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "digitalmarketing201",
+    "username": "FarmanBahadar",
+    "title": "Is Digital Marketing Still Worth Learning in the Age of AI?",
+    "text": "Is Digital Marketing Still Worth Learning in the Age of AI?\n\nI’m learning digital marketing (Meta Ads + Google Ads), but with AI and AI agents developing so quickly, I’m unsure where I should focus long-term.   Should I:   \\\\- specialize in digital marketing,   \\\\- move toward AI automation/AI agents,   \\\\- or combine digital marketing + AI automation?   My goal is eventually to build a business/agency, not just work as a freelancer.   For someone starting now, what would you recommend? What skills should I learn first, and what would a realistic 2–3 year roadmap look like?   I’d especially appreciate advice from people who work professionally in digital marketing, AI automation, or AI agents.       submitted by     /u/FarmanBahadar     to     r/digitalmarketing201       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/digitalmarketing201/comments/1wm0r9y/is_digital_marketing_still_worth_learning_in_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T02:52:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T02:53:11.104Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab09c19660c60840398b0cc"
+    },
+    "message_id": "reddit_t3_1wm0r9x",
+    "topic_key": "can you find me top users who are disscussing ai websites",
+    "search_keyword": "AI tools",
+    "platform": "reddit",
+    "subreddit": "aifilmmaking",
+    "username": "Other-Assistant770",
+    "title": "Made an Award-Winning AI Short Film in 3 Hours",
+    "text": "Made an Award-Winning AI Short Film in 3 Hours\n\nI’m an engineer with no filmmaking background. Recently, I tried making an AI short film for a competition, and to my surprise, it ended up winning the Best Storytelling award!   I put the film together in about 2–3 hours, using AI tools and a lot of trial and error. No film crew, no professional experience, just having fun.😉   For the cost, I haven’t track exactly how much it costs. I bought $100 worth of AI credits a while ago and have used them for several projects, including this one. I still have some left. The organizers provided some free credits, but I was too lazy to set them up, so I just used my own.   A few people asked me how I made it, so I put together a tutorial covering my workflow, from the initial idea to the final edit.  🎬  Full tutorial:   https://youtu.be/5KW5vn1XEcc    I’m still very much a beginner, but I’ve found AI filmmaking surprisingly fun. It’s a completely different kind of creative challenge from engineering.  Would love to hear what you think, and how other people are approaching AI filmmaking!       submitted by     /u/Other-Assistant770     to     r/aifilmmaking       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/aifilmmaking/comments/1wm0r9x/made_an_awardwinning_ai_short_film_in_3_hours/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T02:52:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T02:53:13.668Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab09c19660c60840398b0cd"
+    },
+    "message_id": "reddit_t3_1wm0r9e",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Unhappy-Vacation-278",
+    "title": "What's a popular movie that you genuinely didn't like?",
+    "text": "What's a popular movie that you genuinely didn't like?\n\nsubmitted by     /u/Unhappy-Vacation-278     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wm0r9e/whats_a_popular_movie_that_you_genuinely_didnt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T02:52:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T02:53:13.869Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab09c1a660c60840398b0cf"
+    },
+    "message_id": "reddit_t3_1wm0r91",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789959161266",
+    "text": "[PROBE] 1789959161266\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wm0r91/probe_1789959161266/",
+    "score": 0,
+    "num_comments": 0,

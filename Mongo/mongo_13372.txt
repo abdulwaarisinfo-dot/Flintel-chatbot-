@@ -1,0 +1,416 @@
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T17:59:08.846Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab01eed660c608403988a35"
+    },
+    "message_id": "reddit_t3_1wlny8o",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "VisaStats",
+    "username": "equalizer-rage",
+    "title": "APPROVALS on EB2 NIW, week 38 of 2026",
+    "text": "APPROVALS on EB2 NIW, week 38 of 2026\n\nI share weekly summaries of  approvals  and  denials  from the EB2 NIW subreddit.   I detected  11 approvals  in the last 7 days, please see below. Please exercise caution when going through individual stories, as authors' intentions may vary. I am ready to answer questions too, please ask away.        (Number of Posts by Profile), Field   Poster's Profile          (5) Electrical Engineering   A petitioner with a PhD in Electrical Engineering faced an RFE on all three prongs of their EB2 NIW petition, but after re-filing with a better-prepared petition and additional evidence, the case was ultimately approved.  LINK TO POST        (2) Healthcare   A petitioner with a PhD in cancer research from Canada, currently working in a pharma company in the US, filed an EB2 NIW petition in August 2024, upgraded to premium processing in March 2026, received an RFE in May 2026, resubmitted in July 2026, and received approval in September 2026.  LINK TO POST        (1) Biology   A petitioner with a PhD in Molecular Biology shares their successful NIW approval experience, highlighting their research in periodontitis and the support from Chen's Approval or Refund service.  LINK TO POST        (5) AI & Data Science    [post pending approval]  A petitioner with a background in AI and cybersecurity successfully obtained EB2-NIW approval after addressing USCIS concerns with stronger evidence of national importance and benefits to the U.S. - the petitioner already  reported his approval earlier , for some reason decided to re-publish  LINK TO POST        (1) Healthcare    [fresh account, post's authenticity challenged in the comments]  A doctoral student shares their successful EB-2 NIW I-140 approval experience, emphasizing the importance of clearly defining the proposed endeavor and its national significance.  LINK TO POST        (1) Healthcare   A licensed mental health clinician shared their successful EB-2 NIW petition experience, emphasizing the importance of building a coherent professional narrative and demonstrating the national importance of their work in community-based behavioral health.  LINK TO POST        (1) Academia    [post was deleted, but I can recover it if anyone is interested]  A petitioner shares their experience of getting an I-140 approved in June, advising others to wait until December to file due to potential issues with recent petition reviews.  LINK TO POST        (1) Seismology   A seismologist with a PhD successfully obtained NIW approval through Chen Immigration with premium processing, sharing their positive experience and insights on the PES and evidence preparation.  LINK TO POST        (5) Materials Science   A PhD student in Materials Chemistry/Photocatalysis filed an EB-2 NIW petition with Chen, received an RFE on Prongs 2 and 3, and eventually had their I-140 approved after a strong response and improved evidence.  LINK TO POST        (1) Engineering   A Mechanical Engineer shares their journey through multiple EB-2 NIW denials and RFEs, ultimately leading to approval after a more focused and comprehensive petition.  LINK TO POST        (1) Civil Engineering   A petitioner with a PhD in systems engineering and a focus on civil engineering successfully obtained NIW approval with the help of attorney Chen, after refining their evidence and demonstrating the national importance of their work in flood forecasting and climate adaptation.  LINK TO POST             submitted by     /u/equalizer-rage     to     r/VisaStats       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/VisaStats/comments/1wlny8o/approvals_on_eb2_niw_week_38_of_2026/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T17:58:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T17:59:09.245Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab01eed660c608403988a36"
+    },
+    "message_id": "reddit_t3_1wlny7x",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "jazwaresfnaf",
+    "username": "Crazydils313",
+    "title": "Would anyone wanna buy a spare endo series custom foxy suit pieces",
+    "text": "Would anyone wanna buy a spare endo series custom foxy suit pieces\n\nsubmitted by     /u/Crazydils313     to     r/jazwaresfnaf       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jazwaresfnaf/comments/1wlny7x/would_anyone_wanna_buy_a_spare_endo_series_custom/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T17:58:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T17:59:09.450Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab01eed9f8856bec238505d"
+    },
+    "message_id": "reddit_serp_1trxs00",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/n8n/comments/1trxs00/built_a_fully_selfhosted_ai_portfolio_chatbot/",
+    "text": "Built a fully self-hosted AI portfolio chatbot - here's the stack\n\nAfter weeks of building and iterating, I've deployed a production-ready AI chatbot for my portfolio. No third-party SaaS costs, no vendor lock-in - everything runs on infrastructure I control.   Bot Features   • RAG-powered responses using Qdrant vector database   • Multilingual support - responds in 50+ languages   • Voice input (Whisper STT) + voice output (OpenAI TTS)   • File uploads - PDF, Excel, TXT processing   • Smart response caching - repeat questions skip the AI entirely   • Lead capture - collects contact info automatically   • Chat memory - context-aware multi-turn conversations   • Scanned PDF detection with user-friendly error messages   Backend & Infrastructure   • n8n - self-hosted workflow automation engine (all AI orchestration)   • Qdrant - self-hosted vector database for semantic search   • Supabase (self-hosted PostgreSQL) - chat memory, lead storage, response cache   • Oracle Cloud server - free tier(24GB-4CPU-150GB), zero compute costs   • OpenAI - GPT-4o for responses, Whisper for STT, TTS for voice   Frontend   • Next.js + React + TypeScript   • Deployed on Vercel   [Attaching n8n workflow screenshot - 50+ nodes handling routing, caching, file processing, lead capture, TTS, and multilingual responses]   DM for the link to test the bot   Github:  https://github.com/tanweer306     https://preview.redd.it/ffkgxu6xh94h1.png?width=1674&format=png&auto=webp&s=7764436e1f26914c371ed9ed1435d3ebf48ecf97     Happy to answer questions about the architecture or any specific node in the workflow. code is too long to add in post     #n8n #selfhosted #RAG #AIchatbot #NextJS #Qdrant #Supabase #OracleCloud #WorkflowAutomation #LLM #OpenAI       submitted by     /u/zeego786       [link]       [comments]",
+    "username": "zeego786",
+    "subreddit_or_channel": "n8n",
+    "posted_at": "2026-05-30T11:47:55+00:00",
+    "fetched_at": {
+      "$date": "2026-09-20T17:59:09.656Z"
+    },
+    "google_rank": 7,
+    "search_keyword": "can you find me sales",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-20T17:59:09.656Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab01f209f8856bec238505e"
+    },
+    "message_id": "reddit_serp_1rkhpqu",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/AI_Agents/comments/1rkhpqu/email_context_for_ai_agents_is_way_harder_than_it/",
+    "text": "Email context for AI agents is way harder than it looks\n\nTeams building AI agents that need to add email context so the agent that can understand customer conversations, decisions, commitments etc., where you need to fetch emails from Gmail or Outlook, embed the messages, retrieve relevant threads, pass them to the model as context often find this breaks on real inboxes, especially at scale   One of the first issues is duplicated content.    For example, a 12-reply thread can repeat the same quoted text a dozen times plus signatures on every message.    We've seen threads where roughly 80% of the tokens going into the model were just duplicated quotes and footers. At that point the model is spending most of its context window processing noise.   Thread structure is another big one.    Email behaves more like a conversation database compared to docs so to answer questions accurately you need to know who replied to whom, which messages supersede earlier ones, and when a thread branches.    Without that structure you run into cases like a thread containing four separate \"sounds good\" replies each referring to a different proposal. If you treat the thread as flat text the model confidently extracts the wrong decision.   Identity resolution also becomes a problem surprisingly quickly. The same person might appear as \"John D,\" \"John Doe,\" and \"[ john.doe@company.com ](mailto: john.doe@company.com )\" across headers, signatures, and forwarded messages. If you're extracting commitments or tasks from conversations those references have to resolve to a single entity.   Attachments also because in a lot of business conversations the actual substance isn't in the email body at all. It's in a PDF, spreadsheet, or document attached to the thread. \"See attached for the updated proposal\" means the email itself is just a pointer.   Once you start solving these issues the scope expands into things like MIME parsing, quote stripping across different email clients, thread reconstruction using  In-Reply-To  and  References  headers, attachment extraction, indexing, permission boundaries, and multi-tenant isolation.    What starts as \"add email context to the agent\" turns into a fairly deep infrastructure project.   The underlying problem is that email looks like text but operationally it behaves like a structured conversation system. Most RAG pipelines treat emails as documents and that assumption breaks down pretty quickly once thread structure and participants actually matter.   Some teams build this entire layer internally. Others end up using APIs that sit between the mailbox and the model to convert raw email into structured thread data.    That's basically the problem space tools like iGPT are trying to solve, turning email threads into machine-readable context instead of raw messages.       submitted by     /u/EnoughNinja       [link]       [comments]",
+    "username": "EnoughNinja",
+    "subreddit_or_channel": "AI_Agents",
+    "posted_at": "2026-03-04T10:11:38+00:00",
+    "fetched_at": {
+      "$date": "2026-09-20T18:00:00.534Z"
+    },
+    "google_rank": 10,
+    "search_keyword": "can you find me sales",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-20T18:00:00.534Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab01f27660c608403988a37"
+    },
+    "message_id": "reddit_t3_1wlnz9o",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "dubaiclassifieds",
+    "username": "Striking_Guess8813",
+    "title": "[WTS] High-quality storage rack for sale",
+    "text": "[WTS] High-quality storage rack for sale\n\nHi everyone!   I am selling high-quality storage rack.   Dimensions: 60*200*200   4 shelves   Material: Steel (Powder-coated)   Normal usage   Has scratches as seen in the last attached image   Dismantling and pick-up have to be arranged by the buyer.   Pickup: Dubai   Sale price: AED 250       submitted by     /u/Striking_Guess8813     to     r/dubaiclassifieds       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/dubaiclassifieds/comments/1wlnz9o/wts_highquality_storage_rack_for_sale/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T17:59:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T18:00:07.745Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab01f28660c608403988a39"
+    },
+    "message_id": "reddit_t3_1wlnz8y",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "Cruise",
+    "username": "Wise_CatTravels",
+    "title": "What to do in Belize City for free during the day off a cruise ship?",
+    "text": "What to do in Belize City for free during the day off a cruise ship?\n\nWhat can you actually do in Belize City for free on a cruise day?   I’ve spent quite a bit of time working on cruise ships, and Belize City is one of those ports where you really don’t have to spend a fortune on an excursion to have a decent day.   If you’re looking for  free or very cheap things to do , there are actually a few options depending on how much time you have before you need to get back to the ship.   One option is simply exploring Belize City and taking in some of the historic areas. You can see quite a bit of the city without booking an expensive excursion. There are also ways to explore by  open-air tram/trolley or horse-drawn carriage  if you want someone else to do the navigating. The Belize Tourism Board specifically lists walking, open-air trolley trains and horse-drawn carriages as ways visitors can explore the city's history.   If sightseeing isn't really your thing, you can always spend some time  shopping around the Tourism Village , grab something to eat, and just enjoy being off the ship for a few hours.   Another option, if you have enough time, is taking the  water taxi over to Caye Caulker . It's not free, obviously, but it's a pretty easy way to get a completely different feel from Belize City. The trip is around 45 minutes each way, so I'd only consider this if your ship has a generous port schedule and you are very careful about the return time.   One thing I wish more cruise passengers knew about is a  self-guided Belize City tour . There’s an app/site called Fala Foot that maps out things you can see around the city yourself, so you don't necessarily have to pay for a private guide.       submitted by     /u/Wise_CatTravels     to     r/Cruise       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Cruise/comments/1wlnz8y/what_to_do_in_belize_city_for_free_during_the_day/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T17:59:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T18:00:08.146Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab01f28660c608403988a3b"
+    },
+    "message_id": "reddit_t3_1wlnz8a",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "AgentsOfAI",
+    "username": "Emotional-One-5005",
+    "title": "Can AI agents autonomously pay for APIs when they need the data?",
+    "text": "Can AI agents autonomously pay for APIs when they need the data?\n\nCan AI agents autonomously pay for APIs when they need data?   I’m looking for one developer building AI agents to test something I’ve been working on.   I built an MCP real-estate intelligence server using x402 where an agent can request data, receive a 402 payment requirement, automatically create a USDC payment, retry the request, and get the data back.   The interesting part is that the payment happens machine-to-machine.   For example:   Agent → MCP tool → 402 → USDC payment → verified → real-estate analysis returned   The current test call is $0.08 on Base Sepolia.   I’m specifically looking for someone other than me to run the test with their own wallet and tell me whether the developer experience makes sense.   If you're building with MCP, x402, or autonomous AI agents and want to test it, comment and I'll send you the GitHub/client instructions.       submitted by     /u/Emotional-One-5005     to     r/AgentsOfAI       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AgentsOfAI/comments/1wlnz8a/can_ai_agents_autonomously_pay_for_apis_when_they/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T17:59:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T18:00:08.548Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab01f2b660c608403988a48"
+    },
+    "message_id": "reddit_t3_1wlnz86",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "Adultofuncional",
+    "username": "Appropriate_Basil353",
+    "title": "👋 Te damos la bienvenida a r/Adultofuncional. ¡Preséntate y lee esto primero!",
+    "text": "👋 Te damos la bienvenida a r/Adultofuncional. ¡Preséntate y lee esto primero!\n\n¡Hola a todos! Soy Carolina, parte del equipo de moderación fundador de  r/Adultofuncional .    Este es nuestro nuevo espacio para todo lo relacionado con tips de hogar que hacen que tu día a día sea más eficiente, limpio y organizado. ¡Nadie es perfecto, estamos todos aprendiendo!    Qué publicar   Publica cualquier cosa que creas que podría resultar interesante, útil o inspirador para la comunidad. No dudes en compartir tus opiniones, fotos o preguntas sobre tips del hogar.     Ambiente de la comunidad   Nuestro objetivo es ser agradables, constructivos e inclusivos. Construyamos un espacio donde todos nos sintamos cómodos compartiendo y conectando.    Cómo empezar      Preséntate en los comentarios a continuación.   ¡Publica algo hoy! Hasta una pregunta sencilla puede ser el inicio de una gran conversación.   Si conoces a alguien a quien le encantaría esta comunidad, envíale una invitación para unirse.   ¿Te interesa ayudar? Siempre estamos buscando nuevos moderadores, así que no dudes en contactarme para enviar tu solicitud.     Gracias por formar parte de la primera ola. Juntos, hagamos que  r/Adultofuncional  sea increíble.       submitted by     /u/Appropriate_Basil353     to     r/Adultofuncional       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Adultofuncional/comments/1wlnz86/te_damos_la_bienvenida_a_radultofuncional/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T17:59:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T18:00:11.111Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab01f2b660c608403988a49"
+    },
+    "message_id": "reddit_t3_1wlnz83",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PetRelocationServices",
+    "username": "Steve_max68",
+    "title": "Airline Pet Policy Guide: Cabin, Cargo, Carrier, Breed and Document Rules",
+    "text": "Airline Pet Policy Guide: Cabin, Cargo, Carrier, Breed and Document Rules\n\n✈️🐾 Every airline has its own pet policy. A dog or cat accepted by one carrier may be refused by another because of its size, breed, destination, travel date or aircraft.   Airline rules can also change between domestic and international flights—and sometimes between aircraft operated by the same airline.   Before purchasing a ticket, confirm the policy for the  operating airline and exact flight , not merely the general policy displayed by the company that sold the ticket.   🐶 How Can Pets Travel on an Airline?   Airlines may transport pets using three main methods:   In the cabin   The pet travels inside an approved carrier placed beneath the seat in front of the passenger.   Cabin travel is normally limited to small dogs and cats. Some airlines also accept certain household birds or other animals, but rules vary.   As checked baggage   The pet travels in a temperature-controlled aircraft compartment associated with the passenger’s flight.   Many airlines have eliminated this option or offer it only to specific passengers, routes or military personnel.   Through air cargo   The pet is booked separately through the airline’s live-animal cargo program.   Cargo is commonly used for:     Large dogs   Unaccompanied pets   International relocation   Routes that prohibit checked pets   Animals transported by professional pet shippers     Cargo does not necessarily mean the pet is placed with ordinary luggage. Live animals are handled through separate booking, acceptance and loading procedures.   🎟️ A Passenger Ticket Does Not Reserve Pet Space   Pet space must normally be reserved separately.   Airlines restrict the number of animals allowed in each cabin and may also limit cargo capacity based on aircraft type, weather and route.   Before paying for your ticket, ask:     Is my pet eligible for this exact flight?   Is cabin or cargo space available?   Does the pet need a separate reservation?   What is the pet fee?   Which company operates each flight segment?   Are connections permitted?   Does the destination allow this travel method?   Where does pet check-in occur?   How early must we arrive?     Get the pet reservation confirmation in writing whenever possible.   🧳 Airline Pet Carrier Requirements   Cabin carriers generally must fit completely beneath the seat while allowing the pet to remain safely enclosed.   Airlines may regulate:     Maximum length, width and height   Combined pet-and-carrier weight   Hard-sided versus soft-sided construction   Ventilation   Waterproof or leak-resistant flooring   Number of animals per carrier   Ability of the animal to stand and turn   Zipper and closure security   Storage of the carrier during the flight     Do not trust a product listing simply because it says “airline approved.” There is no single carrier size accepted by every airline or aircraft.   Confirm the airline’s current dimensions for the specific aircraft whenever possible.   📦 Airline Cargo Crate Requirements   Pets traveling through cargo generally need a rigid travel crate that meets the airline’s live-animal requirements.   The crate may need:     Hard plastic, fiberglass, wood or metal construction   Secure metal fasteners   Ventilation on multiple sides   A solid, leak-resistant floor   An approved water container   Absorbent material   External handles or spacing bars   “Live Animal” labels   Upright-direction arrows   Owner and destination contact information   Food and watering instructions   A recent photograph of the pet     The pet usually must be able to:     Stand without touching the roof   Turn around normally   Sit erect   Lie down comfortably     Choose a crate using the animal’s standing measurements—not body weight alone.   🐕 Airline Breed Restrictions   Some airlines restrict certain breeds because of respiratory concerns, temperature sensitivity, size, strength or crate requirements.   Restrictions may apply to:     Short-nosed dogs   Short-nosed cats   Large guardian breeds   Powerful or restricted dog breeds   Mixed breeds displaying restricted characteristics   Very young animals   Senior animals   Pregnant animals     Examples of short-nosed breeds may include bulldogs, pugs, Boston terriers, Persian cats and Himalayan cats.   A veterinarian can evaluate an animal’s individual fitness to travel, but the airline makes the final transportation decision.   🌡️ Temperature and Weather Restrictions   Airlines may refuse pet travel when conditions are too hot or too cold at the departure airport, connection point or destination.   Restrictions can depend on:     Forecast temperature   Actual temperature   Time spent outside   Aircraft type   Airport facilities   Breed   Acclimation documentation   Seasonal embargoes     A flight can be accepted when booked and later refused because the forecast changes.   Have a backup travel date and avoid tight moving deadlines whenever possible.   🌍 International Airline Pet Policies   An airline’s acceptance of a pet does not guarantee legal entry into the destination country.   International travel may require:     ISO-compatible microchip   Rabies vaccination   Veterinary health certificate   Government endorsement   Import permit   Rabies antibody test   Parasite treatment   Customs clearance   Arrival inspection   Quarantine reservation   Approved arrival airport     Some countries require pets to arrive as manifest cargo even when the airline normally accepts pets in the cabin.   Check the official import rules before selecting an airline or route.   🔄 Codeshare and Connecting Flights   A codeshare occurs when one airline sells a flight operated by another airline.   This matters because the operating carrier’s pet policy usually controls the flight.   For an itinerary with connections, verify:     Each operating airline accepts pets   The carriers agree to transfer live animals   The connection airport permits the transfer   The layover is neither too short nor too long   Transit-country documents are complete   The pet does not need to clear customs mid-route   Cargo facilities operate during the connection     Separate tickets can create additional risk because airlines may not transfer the pet between bookings.   Direct flights are generally simpler when available.   💵 Airline Pet Fees   Pet fees vary according to:     Cabin or cargo travel   Domestic or international route   Pet and crate size   Chargeable crate weight   Number of flight segments   Airport handling   Customs and inspection   Destination agent   Seasonal surcharges     Cabin pets commonly pay a fixed fee per direction or flight segment.   Cargo pricing may be based on the combined weight and dimensions of the pet and crate. Large crates can cost substantially more even when the dog itself is not especially heavy.   Additional expenses can include veterinary care, certificates, permits, crates, government endorsements and professional relocation services.   📄 Documents Airlines May Request   Depending on the trip, the airline may request:     Health certificate   Rabies vaccination certificate   Microchip record   Import permit   Government endorsement   Laboratory results   Acclimation statement, where accepted   Feeding and watering declaration   Cargo airway bill   Shipper and receiver identification   Destination contact information     The name, microchip number and identifying information should match across every document.   🩺 Health and Age Requirements   Airlines may establish minimum ages and health conditions for transported animals.   A veterinarian may need to certify that the pet is healthy enough for travel and free from contagious disease.   Discuss additional risk factors with your veterinarian, including:     Breathing problems   Heart disease   Severe anxiety   Pregnancy   Recent surgery   Advanced age   Very young age   Temperature sensitivity   Medication needs     Do not sedate a pet unless the veterinarian and airline specifically approve the plan.   🛫 Airport Check-In for Pets   Cabin pets usually check in at the passenger terminal, but online check-in may be unavailable.   Cargo pets may need to be delivered to a separate cargo facility located away from the passenger terminal.   Before travel day, confirm:     Exact check-in address   Required arrival time   Parking and unloading process   Required documents   Crate inspection procedure   Feeding and watering instructions   Payment method   Emergency contact process   Destination pickup location     Arriving at the wrong terminal can cause a pet to miss the flight.   🚫 Common Airline Pet Policy Mistakes   Avoid these problems:     Buying a ticket before confirming pet availability   Checking only the marketing airline on a codeshare   Assuming domestic rules apply internationally   Purchasing a carrier without checking dimensions   Selecting a cargo crate by weight alone   Ignoring breed restrictions   Missing a seasonal or temperature embargo   Forgetting transit-country requirements   Assuming the pet fee includes veterinary paperwork   Arriving at the passenger terminal for cargo check-in   Using outdated screenshots of airline policies   Sedating the pet without professional guidance     ✅ Airline Pet Travel Checklist   Before the flight, verify:     The pet reservation is confirmed   Every operating airline accepts the pet   Cabin or cargo method is approved   The carrier or crate meets current dimensions   Breed and age restrictions are satisfied   Required documents remain valid   Destination and transit rules are complete   Temperature restrictions have been rechecked   Check-in address and time are confirmed   Arrival inspection and pickup are arranged   Backup plans exist for cancellation or refusal     💬 Which Airline Have You Used?   If you have flown with a pet, share:     The airline   Domestic or international route   Cabin, checked or cargo travel   Pet and carrier size   Approximate fee   Anything unexpected at check-in     Airline rules change frequently, but recent firsthand experiences can help other pet owners know what to confirm before booking.       submitted by     /u/Steve_max68     to     r/PetRelocationServices       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PetRelocationServices/comments/1wlnz83/airline_pet_policy_guide_cabin_cargo_carrier/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T17:59:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T18:00:11.313Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab01f2c660c608403988a4d"
+    },
+    "message_id": "reddit_t3_1wlnz7z",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Forsaken-Clothes5004",
+    "title": "Grab 100 hammers from u/Forsaken-Clothes5004!",
+    "text": "Grab 100 hammers from u/Forsaken-Clothes5004!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Forsaken-Clothes5004     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wlnz7z/grab_100_hammers_from_uforsakenclothes5004/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T17:59:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T18:00:12.116Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab01f2c660c608403988a4e"
+    },
+    "message_id": "reddit_t3_1wlnz7q",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Bushwick",
+    "username": "williamsburgpetcare",
+    "title": "Restaurants in Bushwick hiring?",
+    "text": "Restaurants in Bushwick hiring?\n\nI’ve been out of town for a minute but am looking for a gig as a server. Anyone know of anyplace locally hiring? Bushwick, Ridgewood or even Williamsburg area? Online leads are pretty dead unless there’s somewhere I’m not looking but was wondering if anyone’s seen help wanted posters around I’ve missed. Thanks in advance ❤️ already posted in Ridgewood subreddit and a bit desperate to find work right now.        submitted by     /u/williamsburgpetcare     to     r/Bushwick       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Bushwick/comments/1wlnz7q/restaurants_in_bushwick_hiring/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T17:59:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T18:00:12.317Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab01f2c660c608403988a4f"
+    },
+    "message_id": "reddit_t3_1wlnz7b",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MapBasedPolls",
+    "username": "Aegeansunset12",
+    "title": "Did you know that Constantinople has snow during winter ? ❄️",
+    "text": "Did you know that Constantinople has snow during winter ? ❄️\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Aegeansunset12     to     r/MapBasedPolls       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MapBasedPolls/comments/1wlnz7b/did_you_know_that_constantinople_has_snow_during/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T17:59:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T18:00:12.521Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab01f2c660c608403988a50"
+    },
+    "message_id": "reddit_t3_1wlnz6p",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Cordoba",
+    "username": "androsurfer",
+    "title": "Las 30 toneladas de carne que Karina Milei compró para la quinta presidencial, iban a parar a la empresa de catering de una amiga suya, mano derecha y empleada de Casa Rosada.",
+    "text": "Las 30 toneladas de carne que Karina Milei compró para la quinta presidencial, iban a parar a la empresa de catering de una amiga suya, mano derecha y empleada de Casa Rosada.\n\n‼️EL ESCÁNDALO DETRÁS DE LOS DESPIDOS EN OLIVOS   ⭕ La diputada Marcela Pagano denunció en sus redes sociales que el despido de los trabajadores en la Quinta de Olivos buscó encubrir el desplazamiento de su intendente, Osvaldo Sosa, cuñado de la funcionaria Belén Agudiez   👉 Pagano difundió pólizas de seguro para respaldar la existencia de un entramado de negocios cruzados entre contratistas de cátering, la firma de eventos Foggia y la asesora presidencial Mara Gorini, desmintiendo la versión oficial que atribuyó los cambios a razones de seguridad institucional.    🔴En concreto, denunció que las 30 toneladas de carne que Karina Milei compró para la quinta presidencial, iban a parar a la empresa de catering de su amiga, mano derecha y empleada de Casa Rosada.       submitted by     /u/androsurfer     to     r/Cordoba       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Cordoba/comments/1wlnz6p/las_30_toneladas_de_carne_que_karina_milei_compró/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T17:59:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T18:00:12.729Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab01f2c660c608403988a51"
+    },
+    "message_id": "reddit_t3_1wlnz61",
+    "topic_key": "can you find me top posts on reddit which has over 10k views per month from ai tech industry",
+    "search_keyword": "machine learning",
+    "platform": "reddit",
+    "subreddit": "deeplearning",
+    "username": "imYukiya",
+    "title": "Decision Trees from scratch but messed up by a lil mistake",
+    "text": "Decision Trees from scratch but messed up by a lil mistake\n\nSo it's Day 11 of Building Machine learning algorithms from scratch    I watch some videos on Decision Trees and then I start building Entropy and Information gain function and as you can see my code completely messed up but I'm happy cuz it's fun to build things I believe writing bad code is better then generating by AI    Tommorow I'll fix the entropy function it's taking column but it's need values like Sunny,Overcast etc etc I need to changes    I'm a newbie u can laugh at my code no prob cuz the yt guy didn't show code he just explain math and solve some sample dataset so I need to figure out things that way u can see random attempt made and then comment out    Stay Tune I'll build this Algorithm from scratch        submitted by     /u/imYukiya     to     r/deeplearning       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/deeplearning/comments/1wlnz61/decision_trees_from_scratch_but_messed_up_by_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T17:59:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T18:00:12.935Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab01f2d660c608403988a52"
+    },
+    "message_id": "reddit_t3_1wlnz5l",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "UlcerativeColitis",
+    "username": "CruellaLucy",
+    "title": "Life with UC",
+    "text": "Life with UC\n\nHi All, I just wanted to share that there is life with UC. A year ago, I was in a major flare and was hospitalized with c-diff. I have been on three different biologics with no improvement. I started using Skyrizi 10 weeks ago. It seems to be working but I don't want to get my hopes too high because I thought the other meds were working. This September I was able to go on a cruise to Alaska for 7 days. My UC was horrible, but I didn't let it ruin the trip. I fasted the day before I traveled. I was able to drive 4 hours to the airport for a 5-hour flight. I got a seat near the bathroom. The ship had plenty of bathrooms. The excursions I choose, a boat ride to see the glaciers and a train ride to see the Yukon both had bathrooms. The towns had visitor centers with bathrooms. Once I knew where the bathrooms were located, I was able to enjoy the sights and scenery. We had the best weather and saw tons of wildlife. I wasn't able to take advantage of the food on the cruise, but that's not why I went on the cruise. We went with 3 other couples. They were very understanding in me leaving the conversation to use the bathroom and never let me feel left out in any conversations or activities. You just have to manage the best you can. Do your homework. Don't let this disease limit you from doing what you want to do        submitted by     /u/CruellaLucy     to     r/UlcerativeColitis       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UlcerativeColitis/comments/1wlnz5l/life_with_uc/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T17:59:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T18:00:13.136Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab01f2d660c608403988a53"
+    },
+    "message_id": "reddit_t3_1wlnz5j",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "OpalGSmither",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Lavender Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Lavender Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/OpalGSmither     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wlnz5j/sticker_giveaway_enter_to_win_a_4_stars_lavender/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T17:59:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T18:00:13.348Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab01f2d660c608403988a54"
+    },
+    "message_id": "reddit_t3_1wlnz53",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MakeNewFriendsHere",
+    "username": "idkany_name",
+    "title": "Looking for people to chat with",
+    "text": "Looking for people to chat with\n\nI'm 23. A student.    I like to read. Although I haven't read in a while since I have been getting into anime. I watch One Piece.    I'm socially isolated so I'm looking to interact with people online :D    I haven't verified my age here on Reddit so you cannot send me a message but maybe leave a comment.        submitted by     /u/idkany_name     to     r/MakeNewFriendsHere       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MakeNewFriendsHere/comments/1wlnz53/looking_for_people_to_chat_with/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T17:59:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T18:00:13.550Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab01f2d660c608403988a55"
+    },
+    "message_id": "reddit_t3_1wlnz4r",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "manifestingSP",
+    "username": "abi2779",
+    "title": "Its getting better!!",
+    "text": "Its getting better!!\n\nSo i have been manifesting my sp for almost 2 months but ive really started seeing movement in the last 2 weeks. Ive managed to detach and honestly i has helped me so much.    Im a big believer in dreams having significance. The best way to describe my dreams is its like watching a tv show, what i mean by that is each dream i have is different but in each dream me and my sp grow and get closer each time. For example, a dream i had a few weeks ago. We were both on a plane travelling but we werent travelling together, i sensed her sitting behind me before i saw her, there was no interaction, we bumped into each other and it was just a simple smile. My most recent dream was extremely vivid. It was a long dream but here are the important parts, me and my sp met up, she hugged me so tight and said \"its you, its always been you\", i could smell her perfume and feel her hair, we went on a cinema date which was common for us to do before our breakup, in the end we made plans to go to a concert together which was a concert she bought us tickets to irl. It was light we just picked up where we left off.    Now the 3D movement. We texted last night, i initiated the conversation but what was different about it this time was how she interacted. Usually her answers are short and the converstionis very brief but this time it was fun, i asked how she was doing she spoke about work i told her about college and she sympathised with my work load which was different as she used to just give 1 word answers. The convo moved onto her pets we joked about her cat she told me how spoiled he was and she threw out a small story about him being mischievous with me having to ask.   To some this might not look like much movement but for me this feels huge. ive been feeling so different lately shes not on my mind 24/7 anymore, i feel so calm and i have a strong feeling its all coming back, itll be different but SHE is coming back to me. She is choosing me!       submitted by     /u/abi2779     to     r/manifestingSP       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/manifestingSP/comments/1wlnz4r/its_getting_better/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T17:59:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T18:00:13.754Z"
+    },
+    "reddit_comments": 0
+  },

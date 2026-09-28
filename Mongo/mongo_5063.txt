@@ -1,0 +1,416 @@
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T13:50:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T13:51:20.591Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7fbd86508d45f3d2c5599"
+    },
+    "message_id": "reddit_t3_1wg40ma",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "RepHeads",
+    "username": "JimArcimboldo",
+    "title": "[QC] ¥160 [MZ Batch] Satoshi Nakamoto OTW Old Skool LX \"White\" From Wonderful Buy",
+    "text": "[QC] ¥160 [MZ Batch] Satoshi Nakamoto OTW Old Skool LX \"White\" From Wonderful Buy\n\n¥160    ■ 86 1476 0127 522    ■  https://shop1857909246.v.weidian.com/item.html?itemID=7821796029&spider\\_token=6e82        submitted by     /u/JimArcimboldo     to     r/RepHeads       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RepHeads/comments/1wg40ma/qc_160_mz_batch_satoshi_nakamoto_otw_old_skool_lx/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T13:50:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T13:51:20.994Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7fbd96508d45f3d2c559a"
+    },
+    "message_id": "reddit_t3_1wg40m8",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ClaudeCode",
+    "username": "Zitroni",
+    "title": "Built a phone-to-PC photo backup app with Claude Code (Rust, Tauri, Kotlin). Now in closed beta on Google Play, here is what the beta taught me",
+    "text": "Built a phone-to-PC photo backup app with Claude Code (Rust, Tauri, Kotlin). Now in closed beta on Google Play, here is what the beta taught me\n\nI wanted my photos to end up on my own PC instead of someone's cloud, so over the summer I built PicHaven with Claude Code. One person, three codebases: a Rust core for the PC side, a Tauri 2 tray app on Windows, and a Kotlin/Compose app on Android. Phone and PC pair with a QR code and talk mTLS with pinned fingerprints. Whenever the phone is in the home Wi-Fi and the PC is on, new photos land on the PC as the original files, sorted by year and month. Nothing is ever deleted.   How Claude Code was used: pretty much everything, but the part that changed how I work was testing discipline. Early on a field test bit me: a sync run without photo permission stored a baseline of zero, so a real user hit the \"buy\" screen after 500 photos. Claude's suggestion was structural, not a patch. Every decision about limits, purchases and versions now lives in a pure Kotlin object with unit tests, and the end to end suite boots three Android emulators in parallel against the real desktop binary instead of a stub. That harness immediately caught a scheduling bug where a full backup would restart every time the phone touched a charger.   What the closed beta taught me this week: a tester reported that the Windows settings window opened with its buttons hidden under the task bar on a WQHD monitor. Turns out the window was created centered at a fixed size and then grew to fit its content, and growing keeps the top edge where it is. Claude measured the three windows in headless Chrome, ran the numbers against 1366x768 up to 4K at 125 and 150 percent scaling, tightened the layout and added a post-resize step that pushes the window back into the monitor's work area. One bug report, a fix for monitors I do not own.   Also learned: Google counts a beta tester only after they tap \"Become a tester\" on the opt-in page, being in the group is not enough. Seventeen people in my group, twelve counted. No code fixes that, but Claude wrote the reminder mail in two languages in the tone I asked for, no numbers, no drama, just how it works.   What I would do differently: write the  CLAUDE.md  rules about threading and locks before the first deadlock, not after. Ours now has a line \"never call tray or window methods while holding a lock the main thread might take\", because a sync froze the UI in the field.   It's in closed testing on Google Play right now and I'd like a small buffer above Google's twelve testers, so if you have an Android phone and a Windows PC:  https://pichaven.app/tester/  (testers get the unlimited version free). Happy to answer anything about the Rust/Tauri/Kotlin setup or the Claude workflow.       submitted by     /u/Zitroni     to     r/ClaudeCode       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeCode/comments/1wg40m8/built_a_phonetopc_photo_backup_app_with_claude/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T13:50:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T13:51:21.193Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7fc0d7ad037cc2be30362"
+    },
+    "message_id": "reddit_serp_1shfowm",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/smallbusinessesowners/comments/1shfowm/ai_replacing_jobs_is_the_biggest_myth_i_have_seen/",
+    "text": "AI replacing jobs is the biggest myth I have seen in business\n\nI keep seeing people say AI will replace everyone’s jobs, but honestly that has not been my experience.   I recently left my job to start building a small travel advisory business, and if anything, AI has made it easier to do things that used to require a team, research destinations, draft itineraries, handle marketing, etc.      If you are an employee, AI might automate some tasks, but companies still need people who can think and solve problems.     If you are a fresher, it may feel like opportunities are disappearing. but every big tech shift creates new kinds of work.     And if you are a small business owner, AI is actually a huge advantage. It gives small teams tools that were once only available to big companies.      So AI is not really replacing jobs.   It is replacing some tasks, and pushing everyone to adapt.   The real question is not “Will AI take my job?”   It is “How can I use AI to become better at what I do?”       submitted by     /u/Flaky-Taste2253       [link]       [comments]",
+    "username": "Flaky-Taste2253",
+    "subreddit_or_channel": "smallbusinessesowners",
+    "posted_at": "2026-04-10T07:32:17+00:00",
+    "fetched_at": {
+      "$date": "2026-09-14T13:52:13.306Z"
+    },
+    "google_rank": 9,
+    "search_keyword": "find the problems from ai in travel industry",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-14T13:52:13.306Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7fc126508d45f3d2c559c"
+    },
+    "message_id": "reddit_t3_1wg41nd",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "📢 [HIRING] a Dump Truck Operator - Fenix - Perth, Western Australia, Australia!",
+    "text": "📢 [HIRING] a Dump Truck Operator - Fenix - Perth, Western Australia, Australia!\n\nCompany:    Date Posted: September 05, 2026 📅   Categories: #fulltime   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=www.constructionjobsaustralia.com&rurl=aHR0cHM6Ly93d3cuY29uc3RydWN0aW9uam9ic2F1c3RyYWxpYS5jb20vam9icy9kdW1wLXRydWNrLW9wZXJhdG9yLTM2OTVlODAx    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wg41nd/hiring_a_dump_truck_operator_fenix_perth_western/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T13:52:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T13:52:18.338Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7fc126508d45f3d2c559d"
+    },
+    "message_id": "reddit_t3_1wg41nc",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "DividendsAndBuybacks",
+    "title": "Grab 100 hammers from u/DividendsAndBuybacks!",
+    "text": "Grab 100 hammers from u/DividendsAndBuybacks!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/DividendsAndBuybacks     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wg41nc/grab_100_hammers_from_udividendsandbuybacks/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T13:52:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T13:52:18.537Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7fc126508d45f3d2c559f"
+    },
+    "message_id": "reddit_t3_1wg41m0",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "particledamage",
+    "title": "Grab 25⚡ from u/particledamage!",
+    "text": "Grab 25⚡ from u/particledamage!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/particledamage     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wg41m0/grab_25_from_uparticledamage/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T13:52:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T13:52:18.950Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7fc136508d45f3d2c55a0"
+    },
+    "message_id": "reddit_t3_1wg41lv",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Meowi",
+    "username": "Interesting_Sand9769",
+    "title": "[Spin] What did you get? (First post)",
+    "text": "[Spin] What did you get? (First post)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Interesting_Sand9769     to     r/Meowi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Meowi/comments/1wg41lv/spin_what_did_you_get_first_post/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T13:52:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T13:52:19.151Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7fc136508d45f3d2c55a1"
+    },
+    "message_id": "reddit_t3_1wg41l0",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Meowi",
+    "username": "Isadore2001",
+    "title": "[Fill the blank] Robert. I accidentally ___ an Applebee's",
+    "text": "[Fill the blank] Robert. I accidentally ___ an Applebee's\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Isadore2001     to     r/Meowi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Meowi/comments/1wg41l0/fill_the_blank_robert_i_accidentally_an_applebees/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T13:52:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T13:52:19.353Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7fc136508d45f3d2c55a2"
+    },
+    "message_id": "reddit_t3_1wg41kl",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "criticgap324",
+    "title": "Those who broke up with their ex because you couldn’t fall in love, what made you feel that way?",
+    "text": "Those who broke up with their ex because you couldn’t fall in love, what made you feel that way?\n\nsubmitted by     /u/criticgap324     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wg41kl/those_who_broke_up_with_their_ex_because_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T13:52:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T13:52:19.555Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7fc136508d45f3d2c55a3"
+    },
+    "message_id": "reddit_t3_1wg41kd",
+    "topic_key": "can you find me top users who are disscussing ai websites",
+    "search_keyword": "generative AI",
+    "platform": "reddit",
+    "subreddit": "JPMorganChase",
+    "username": "FranklinSaint23",
+    "title": "Town Hall",
+    "text": "Town Hall\n\nDoes anyone take these town halls seriously? More generative AI nonsense, scripted questions, etc. Give me a break       submitted by     /u/FranklinSaint23     to     r/JPMorganChase       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/JPMorganChase/comments/1wg41kd/town_hall/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T13:52:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T13:52:19.756Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7fc136508d45f3d2c55a4"
+    },
+    "message_id": "reddit_t3_1wg41k5",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "HonestHotTakes",
+    "username": "Classic_Key_5897",
+    "title": "Eating, cattle or poultry isn't the same as eating dogs and cats.",
+    "text": "Eating, cattle or poultry isn't the same as eating dogs and cats.\n\nThis might be a popular opinion, but there are a huge number of people who don't believe in this. First of all you need to feed a dog or a cat meat for it to grow properly. A cow or a chicken can survive off just grains or grass while a pig just needs slop. This alone makes dogs and cats much more inefficient.    We could just eat the meat that was given to the dog and save time. And these creatures have very little meat on them. A healthy dog is very lean and it's the same for cats. So the only reason why anyone would wanna do it is because it's a delicacy and people in their community thinks that it's special. This is like shark fin soup or making medicine from a rhino horn.        submitted by     /u/Classic_Key_5897     to     r/HonestHotTakes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HonestHotTakes/comments/1wg41k5/eating_cattle_or_poultry_isnt_the_same_as_eating/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T13:52:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T13:52:19.956Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7fc146508d45f3d2c55a5"
+    },
+    "message_id": "reddit_t3_1wg41k1",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "Flimsy-Owl-5563",
+    "title": "Grab 25⚡ from u/Flimsy-Owl-5563!",
+    "text": "Grab 25⚡ from u/Flimsy-Owl-5563!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Flimsy-Owl-5563     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wg41k1/grab_25_from_uflimsyowl5563/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T13:52:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T13:52:20.155Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7fc146508d45f3d2c55a6"
+    },
+    "message_id": "reddit_t3_1wg41jd",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Aion2",
+    "username": "Laggoz",
+    "title": "Blizzard just dropped WoW Forever's beta start on the same date as Aion 2 global launch scale test.",
+    "text": "Blizzard just dropped WoW Forever's beta start on the same date as Aion 2 global launch scale test.\n\nBoy it's getting rough for NC to attract western players. MTX's aside Wow Forever will cost the same as Aion 2's subscription and you get the entire retail version of WoW with the same price (granted you buy the latest expansion). Nobody will be talking about Aion 2 this week or the next.   All we can do is hope Wow Forever is a total flop and people will lose interest right after the beta drops. Fuck man, everything is working against Aion 2 right now.       submitted by     /u/Laggoz     to     r/Aion2       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Aion2/comments/1wg41jd/blizzard_just_dropped_wow_forevers_beta_start_on/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T13:52:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T13:52:20.356Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7fc146508d45f3d2c55a7"
+    },
+    "message_id": "reddit_t3_1wg41jc",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "RedditLaqueristas",
+    "username": "111princesschi",
+    "title": "i’m thinking of removing all of these, what could i have done differently next time?",
+    "text": "i’m thinking of removing all of these, what could i have done differently next time?\n\nsubmitted by     /u/111princesschi     to     r/RedditLaqueristas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RedditLaqueristas/comments/1wg41jc/im_thinking_of_removing_all_of_these_what_could_i/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T13:51:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T13:52:20.555Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7fc146508d45f3d2c55a8"
+    },
+    "message_id": "reddit_t3_1wg41iu",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ElectricBikes",
+    "username": "Odd-Aardvark-7761",
+    "title": "I'm thinking of ditching my car for an e-bike since parking is killing my hourly rate",
+    "text": "I'm thinking of ditching my car for an e-bike since parking is killing my hourly rate\n\nI spend half my time on downtown orders just circling the block for parking or praying I don't get ticketed outside high-rises. Between the wasted time and burning gas on 1-mile trips, it’s completely tanking my earnings. I saw a video recently of someone doing deliveries on what looked like a heavy-duty utility bike with a large rear rack. The comments said it was a Helokeep , but I honestly couldn't tell if it's an actual bike you can buy yet or just an upcoming model. The only thing that really caught my eye was that it had two batteries.    My biggest hesitation with switching to a bike has always been having to cut a good shift short because the battery died halfway through. For those of you delivering on two wheels: how do you handle running orders up to an apartment without stressing about someone messing with your bike? And how many hours can you actually stay out before you're out of juice?       submitted by     /u/Odd-Aardvark-7761     to     r/ElectricBikes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ElectricBikes/comments/1wg41iu/im_thinking_of_ditching_my_car_for_an_ebike_since/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T13:51:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T13:52:20.755Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7fc156508d45f3d2c55aa"
+    },
+    "message_id": "reddit_t3_1wg41hv",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "askmanagers",
+    "username": "kovanroad",
+    "title": "how to deal with incomplete responses / feedback",
+    "text": "how to deal with incomplete responses / feedback\n\nMy manager has a habit / personality trait of giving basically incomplete, basically meaningless responses / feedback to work.   Frequently recurring examples are:     I sent an email regarding our on call roster, which has everyone on call for different timeslots every day, requesting that it be rebalanced so that people have some days off. He responded with \"lets discuss this\".   Requests for approving specific releases, pull requests, are often met with the same \"lets discuss this\", or \"this is fine now, but not for release\", or \"we need to talk about this\".   Sometimes, requests for approval are met with totally ignoring the thing I asked for approval on, asking a question about an unrelated thing, which I address... and then not returning to / addressing the original request, which I then have to repeat, possibly a few times.     I have to say, I find it pretty infuriating, especially given that it happens so often. In my mind, if I have a specific request / question / thing that needs approving, responding with \"lets discuss this\" is basically a semi-polite way to shut the conversation down, since there is no time, venue, etc. specified for the discussion. The guy has my phone number, he can discuss anything with me any time, so saying \"lets discuss this\" and then not initiating a discussion is basically just politely ignoring it, or putting the ball back in my court to basically try the whole thing again, or tease his concerns/questions out of him.   Likewise, \"this is fine for now, but not for release\"... ok, fine... so what are the extra things needed for release? How do I find those out? Again, ball is back in my court, I have to tease it out of him.   We have discussed this a few times, I think he's not going to change it... it's just his \"personality\" / slightly ADHD / he's busy managing up, whatever.   That being the case, what are some polite phrases / techniques to shut this loop down? The trap is, if he says \"lets discuss this\"... then the onus goes back on me, and if I don't chase him, it doesn't happen, and then it looks like I've dropped the ball.   I guess I'd like to end up with a list of responses I can copy & paste the basically say.. \"thanks for responding. you haven't addressed the issue i raised. you have mentioned the need for a discussion, without organizing a time and place for the discussion to occur. would you like to revisit the question here, or should I find time in your calendar?\".   Maybe I should start sending him a 1 hour meeting invitation each time he does this that says \"Discussion about  \" or something until he cuts it out...       submitted by     /u/kovanroad     to     r/askmanagers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/askmanagers/comments/1wg41hv/how_to_deal_with_incomplete_responses_feedback/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T13:51:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T13:52:21.162Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7fc156508d45f3d2c55ab"
+    },
+    "message_id": "reddit_t3_1wg41h7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "[HIRING] a Senior Analyst, Sales Analytics! in DoorDash",
+    "text": "[HIRING] a Senior Analyst, Sales Analytics! in DoorDash\n\nCompany: DoorDash   Location: San Francisco, CA; New York, NY; Atlanta, GA; Chicago, IL; Denver, CO; Washington D.C.; Austin, TX; Phoenix, AZ; Los Angeles, CA; Seattle, WA; Boston, MA; United States - Remote 📍   Date Posted: September 03, 2026 📅   Level: Senior 👵   Categories: #data #senior #fulltime   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=www.remoteweek.io&rurl=aHR0cHM6Ly93d3cucmVtb3Rld2Vlay5pby9qb2JzLzEwZTEzNWRiLTYxNDYtNDk4YS05MDMwLWIxNDAzODBiOTNkYw==    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wg41h7/hiring_a_senior_analyst_sales_analytics_in/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T13:51:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T13:52:21.368Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7fc3d7ad037cc2be30363"
+    },
+    "message_id": "reddit_serp_1vt52uw",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/ThrowingFits/comments/1vt52uw/when_where_why_did_nike_fall_off/",
+    "text": "When, where, why did Nike fall off?\n\nMaybe as many of you, I grew up heavily wearing Nike products, mainly their sneakers. Nike products were pretty ubiquitous in North American culture in the 00s and even more so in the 10s with the rise of collabs.    However, personally, I fell off the Nike bandwagon around 2015-2019 and I've only bought like 5 Nike pieces since then. On the other hand, brands like Adidas, New Balance and even Reebok have been growing since roughly that time span and have gotten a bit of a resurgence in the broader mainstream culture.    What prompted me to write this post and start this discussion is this article about Nike's stock price going down and just not being surprised at all, whatsoever. Article in question:  https://finance.yahoo.com/markets/stocks/article/nikes-stock-plunge-is-relentless-182413545.html    Maybe where you are, Nike is still pretty relevant culturally or within subcultures you are active in. So, most likely, you have a very different view on this.    I'd love to read everyone's thoughts on the brand and whether you disagree, agree or just don't care.        submitted by     /u/badcryptobitch       [link]       [comments]",
+    "username": "badcryptobitch",
+    "subreddit_or_channel": "ThrowingFits",
+    "posted_at": "2026-08-20T01:08:22+00:00",
+    "fetched_at": {
+      "$date": "2026-09-14T13:53:01.618Z"
+    },
+    "google_rank": 6,
+    "search_keyword": "how is sentiment around nike changing over the last 30 days gives you the trendreport format we built the schema for the shift table weekly breakdown drivers",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-14T13:53:01.618Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa7fc4e6508d45f3d2c55ac"
+    },
+    "message_id": "reddit_t3_1wg42jp",
+    "topic_key": "can you find me top posts on reddit which has over 10k views per month from ai tech industry",
+    "search_keyword": "artificial intelligence",
+    "platform": "reddit",
+    "subreddit": "Workersonboard",
+    "username": "aw1219",
+    "title": "🤖 1,000 Remote Non-Phone AI Jobs Available – Earn $50/Hour!",
+    "text": "🤖 1,000 Remote Non-Phone AI Jobs Available – Earn $50/Hour!\n\nIf you're looking for a  non-phone work-from-home job , here's a remote opportunity that could be a great fit.   A company is hiring  1.000 AI Evaluators  to help improve the performance of advanced AI systems. No phone calls—just focused computer-based work completed from home.    💰 Pay:   $50 per hour     What you'll do:    ✅ Write detailed, multi-turn conversations based on project guidelines  ✅ Create evaluation rubrics to measure AI responses  ✅ Test conversations with advanced AI models  ✅ Review and refine responses to meet quality and accuracy standards   This role is ideal for people with strong writing skills, attention to detail, and an interest in artificial intelligence.   ⚡  With 1.000 openings, this is one of the larger remote hiring projects currently available. If you're interested, don't wait too long to apply.     Apply here        submitted by     /u/aw1219     to     r/Workersonboard       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Workersonboard/comments/1wg42jp/1000_remote_nonphone_ai_jobs_available_earn_50hour/",
+    "score": 0,

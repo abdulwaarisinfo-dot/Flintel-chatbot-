@@ -1,0 +1,416 @@
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa72a016508d45f3d2c1445"
+    },
+    "message_id": "reddit_t3_1wfmd6f",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Prebuilts",
+    "username": "FancyBandit00",
+    "title": "Buying A New PC $2000-$2500",
+    "text": "Buying A New PC $2000-$2500\n\nI’m currently looking for a gaming PC in the $2,000 to $2,500 price range for my birthday in October. I’ve been looking at the PowerSpec G758  https://www.microcenter.com/product/698879/powerspec-g758-gaming-pc  , which seems like a great option, but it has been sold out for the past week.   I wanted to see if there are any other PCs in this price range that would be worth considering. I don’t mind waiting until October or even November if there’s a particularly good build that’s worth waiting for.   I’m also wondering if it's even worth waiting until Black Friday for deals, due to the PC component prices increasing.   Additionally I would like to add I have a MicroCenter in proximity as I heard it opens up more available options        submitted by     /u/FancyBandit00     to     r/Prebuilts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Prebuilts/comments/1wfmd6f/buying_a_new_pc_20002500/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:55:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:56:01.481Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa72a01a18b546d423dc231"
+    },
+    "message_id": "reddit_serp_1rarm6m",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/ChatGPTCoding/comments/1rarm6m/thinking_about_using_chatgpt_instead_of_claude/",
+    "text": "thinking about using chatgpt instead of claude for coding and have questions\n\nHi, so im currently using claude code in a linux machine - it has been really good to be honest ive gotten a lot of things done, especially making plugins for a game server. It has been a pain debugging things though. Anyways, i started working on making a terminal app and its become apparent to me that ChatGPT seems to be better at figuring out problems and solving them, while claude code will roll out 10 patches for me to test with little to no progress problem solving.   So far ive been just using chatgpt 5.2 on web to give instructions to claude code, but i was wondering about just having chatgpt run in my linux machine and do the coding for me, but wasn't really sure what to buy. Is a subscription going to get me that, or do i need to pay for API or what?   Can I still have claude code, but let chatgpt do the coding tasks? Is codex the same thing as chatgpt?   just a heads up im not really a programmer, ive been having claude code do all my coding for me for the past month using their max $200 sub.       submitted by     /u/shady101852       [link]       [comments]",
+    "username": "shady101852",
+    "subreddit_or_channel": "ChatGPTCoding",
+    "posted_at": "2026-02-21T13:51:38+00:00",
+    "fetched_at": {
+      "$date": "2026-09-13T22:56:01.505Z"
+    },
+    "google_rank": 5,
+    "search_keyword": "what people are thinking about claude and chatgtp which tool is best for research has anybody have shared any personal experience",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-13T22:56:01.505Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa72a016508d45f3d2c1446"
+    },
+    "message_id": "reddit_t3_1wfmd5y",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "dashpay",
+    "username": "hilawe",
+    "title": "A Social Media Timeline You Can Check",
+    "text": "A Social Media Timeline You Can Check\n\nPasta's DashCon talk  is not another \"we built X/Twitter clone.\" It is a live demonstration that Dash Platform can do something almost no other chain can: let a phone prove that a social network is telling the truth.        The app is called  Yappr . It looks like X. Under the hood it is a client with no backend, talking straight to Dash Platform. Every name, every like count, every \"this is the newest post,\" every \"nothing is missing,\" and every \"you are not allowed to see this\" can come with a cryptographic receipt small enough to check on a phone.   That is the whole point of the presentation.   The lie you already live with   Open any social app. You see a name, a photo, some text, a number of likes, a \"For You\" ranking.   Who told you those numbers are real?   Twitter, X, Bluesky, Hive's website, a Farcaster indexer, they all answer that question with a database you are not allowed to see. Pasta's opening line is the whole talk in one sentence: every app you have ever used answered this question with the database you weren't allowed to see.   Imagine a town that posts a public bulletin board, then hands you a photocopy from the town hall. The hall could have omitted a flyer, inflated a vote tally, or buried a post. You can \"verify\" only by photocopying the entire archive yourself. Almost nobody does. That is how most \"decentralized social\" still works.   Hive and Steemit put posts on a chain. When you used the website, you were talking to their server. To actually prove they were not lying you would spin up a node with hundreds of gigs of RAM and sync the whole history. Lens and Farcaster need indexers. AT Protocol (Bluesky) is cool and open, and you still query something you hope is honest.   Writing is decentralized.  Reading is still an act of faith.    Dash Platform's bet is that you should be able to ask \"show me the 20 newest posts from people I follow\" and get the answer plus a proof that the answer is complete and authentic, on the device in your pocket.   Four problems that look simple and are not   A single post is a bundle of hard questions:       Authenticity . Did this person actually write this? Signatures solve this. Almost every project has signatures. That is the easy part.      Lookup and ordering . Is this the newest? Is anything missing? Are they hiding a post they do not want you to see? On a normal database the server just tells you. To check, you would have to download everything.      Aggregation . How many likes? Did my like actually land? Centralized counters bug out (negative likes, vanished engagement). Downloading 50,000 like documents to add them yourself is not an app. It is a science project.      Ranking . What is actually trending? \"Most liked today\" is an opinion unless the ranking itself is a structure you can prove.      Social media is not a feed. It is a database product wearing a friendly face. The face was always cheap. The honest database was not.   The forest instead of the black box   Dash Platform stores application data in GroveDB, a grove, literally a tree of trees. Each tree is a Merkle structure. Trees nest inside trees. The whole forest hashes up to one root. That root is signed by a masternode quorum (BLS threshold signatures) and locked in by Dash's ChainLocks. Lie about a like count and you are not hacking a server. You are trying to get more than two-thirds of the Evolution nodes to collude and destroy the value of the network they are paid to run.   Think of it as a forest of signed ledgers. You do not carry the forest. You ask for one path through it and receive a tiny bundle of neighboring branches that hash to the same signed root everyone else sees.   Three structures do the social-media work:    Count trees (the pyramid of receipts).    Likes are not a flat list you scan. They drop into buckets that form a tree. The top of the tree is the total. Ask \"how many likes?\" and you get 312 plus a proof the size of a postcard, whether there are 312 likes or 3 million. The proof does not grow with the crowd. A bank statement that cannot silently change the total.    Range proofs (the missing-page detector).    \"Give me posts between this time and that time.\" The proof includes the edges of the range. If someone tried to hide a post in the middle, the hashes would not match the signed root. You do not download Twitter. You download a notarized slice and the notary stamp.    Ranked indexes (the scoreboard that cannot be photoshopped).    When a like arrives, two things update: the count tree and a secondary ranking tree that re-keys by popularity. Walk right and you get \"most liked.\" The walk itself is provable. Trending is not a machine-learning vibe from a cache. It is a tree you can audit.   Proofs Pasta showed were on the order of 1 to 13 KB. Page load in the demo ran dozens of queries. It still felt like a normal app, about a second even on a slow hotspot.   That combination is the claim, speed and proof at the same time, which the rest of the industry treated as a tradeoff.   What Yappr actually is   Yappr is a static website. No company server holds your posts. The browser talks to Dash Platform nodes. If  Yappr  vanished tomorrow, the data would still sit on the network and another frontend could query the same contracts.   Your identity is a key pair. Your human name comes from DPNS (Dash Platform Name Service), a username you can own, not a handle a company assigns. Posts, likes, follows, bookmarks, blocks, and store orders are documents in data contracts, signed by you.   In the live demo Pasta logged in with a QR scan against a DashPay-style wallet: identity, username, encryption keys for DMs and private feeds, authentication keys for likes. That is the \"decentralized Twitter that does not feel like a homework assignment\" piece the community has been waiting for.   What you can do today on the showcase (DevNet then, testnet moving toward mainnet with Platform 4.2 era work):   - 500-character posts, threads, quotes, reposts   - Likes and follows with proven counts   - Hashtags and an Explore page of trending topics (the  #mood  example had a proven like total)   - Mentions, bookmarks, lists   - Encrypted DMs   -  Private feeds : content encrypted so only granted followers can read it; metadata can still be queried. Revoke a follower and a small \"revocation tree\" update re-keys the circle without rewriting every post.   - DashPay contact import: the people you already pay can be found and followed   - Tips via QR / payment URIs in Dash and other assets   - A full storefront contract: stores, items, variants, shipping zones, encrypted orders only buyer and seller can read, reviews after purchase   Fees in the demo were tiny YAP-token costs on the order of a cent or three per post or like, burned into the structure of the data rather than paid to a company. There is no ad server because there is no server.   Moderation works without a CEO. You publish block documents. Bloom filters keep \"did I block this person?\" cheap. You can subscribe to someone else's block list, borrowing judgment instead of inventing a Ministry of Truth. There can be a default list for the worst material that you can opt out of. The tradeoff is plain. Web2 has a king. Pure anarchy has no filters. This is user-sovereign filters you can prove.   Composability is the quiet superpower. Polls, blogs, stores, and social graphs can live in separate contracts and still be queried against the same proven state. A tip address is just an address. No platform cut unless you choose one.   Forkability is the insurance policy. Change the contract ID and you have a new app on the same identities and the same proofs. Steemit-to-Hive required a messy social and technical divorce. Here the data does not belong to the website. The website is a lens.   Why a layperson should care    You already use databases you cannot audit.  Your bank app, your airline miles, your social score, your \"recommended for you.\" Crypto promised to fix money. Dash Platform is trying to fix the other half, the records of who said what, who paid whom, who is allowed to see the private post.   For a creator, the old DashPay pain was real, the friend-request rails and \"be online to approve.\" Yappr's direction is the opposite of that bottleneck, with identity you control, a username people can find, a tip jar that is just an address, contacts you already have, and content no host can delete because they never hosted it.   Here is the allegory that sticks. Other chains gave you a public square with a private photocopier in the back room. Dash is trying to hand every reader a notarized page and a stamp that the rest of the book matches.   It will not feel magical if the UX is ugly or names are hard. Pasta's demo is arguing the hard part (the database that can be proven) is now real enough to put a familiar interface on top. The remaining work is wallets, names, fees people do not notice, and enough apps that \"query the grove\" becomes as boring as \"load the page.\"   Yappr is one app. The presentation is about the platform underneath it. If GroveDB proofs stay small and queries stay rich, the next \"simple\" product (a marketplace, a membership feed, a local bulletin, a tip-enabled blog) does not need a company to hold the books.   That is the story Pasta was telling. Not another timeline, but a timeline you can check.   Watch the full talk here:    https://www.youtube.com/watch?v=G6LPqLTSJI8        submitted by     /u/hilawe     to     r/dashpay       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/dashpay/comments/1wfmd5y/a_social_media_timeline_you_can_check/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:55:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:56:01.717Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa72a026508d45f3d2c1448"
+    },
+    "message_id": "reddit_t3_1wfmd5c",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "anastasiassweet",
+    "title": "What’s a good Halloween costume for a throuple?",
+    "text": "What’s a good Halloween costume for a throuple?\n\nsubmitted by     /u/anastasiassweet     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wfmd5c/whats_a_good_halloween_costume_for_a_throuple/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:55:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:56:02.197Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa72a026508d45f3d2c1449"
+    },
+    "message_id": "reddit_t3_1wfmd57",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AlignmentChartFills",
+    "username": "Nerdism14",
+    "title": "What’s Tom Hiddleston’s funniest moment?",
+    "text": "What’s Tom Hiddleston’s funniest moment?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Nerdism14     to     r/AlignmentChartFills       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlignmentChartFills/comments/1wfmd57/whats_tom_hiddlestons_funniest_moment/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:55:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:56:02.430Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa72a026508d45f3d2c144a"
+    },
+    "message_id": "reddit_t3_1wfmd4z",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CosplayHelp",
+    "username": "Former_Cartoonist142",
+    "title": "Trying to be the cool mom this Halloween 🥹 Sora cosplay help!",
+    "text": "Trying to be the cool mom this Halloween 🥹 Sora cosplay help!\n\nThis year has been a lot for us with a separation and move, and Halloween has always been something my son and I LOVE. It’s also my birthday, so I really want to make this Halloween extra special for us 🥹   My son wants to be Sora from Kingdom Hearts 1 this year. He’s a bigger young teen and wears a men’s Large. I’m trying to do this on a budget, so I’d love recommendations for a reliable place to buy the original KH1 Sora costume that can actually get here before Halloween.   He also REALLY wants the Halloween Town/Jack Skellington Keyblade in the reference picture. I found one already made for around $150 😭 so I’m thinking mama is going to have to make this thing herself lol.   Cosplayers/prop makers, help me out, what would you use? EVA foam? Foam board? PVC? Something else? I’m looking for something affordable, beginner-friendly, lightweight and sturdy enough to survive Halloween.   I’m also including a couple of his costumes from previous years because I do try 😂 I’m absolutely willing to DIY and put in the work, I just need some guidance from people who know more about cosplay and prop making than I do.   Eventually I’ll work on my own costume 😂 but this year I’m trying to earn those cool-mom points and make Sora happen for my kid 🥹🗝️❤️       submitted by     /u/Former_Cartoonist142     to     r/CosplayHelp       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CosplayHelp/comments/1wfmd4z/trying_to_be_the_cool_mom_this_halloween_sora/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:55:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:56:02.663Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa72a026508d45f3d2c144b"
+    },
+    "message_id": "reddit_t3_1wfmd4t",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MapBasedPolls",
+    "username": "FireUniverse1162",
+    "title": "Favorite water temperature to drink?",
+    "text": "Favorite water temperature to drink?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/FireUniverse1162     to     r/MapBasedPolls       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MapBasedPolls/comments/1wfmd4t/favorite_water_temperature_to_drink/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:55:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:56:02.897Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa72a036508d45f3d2c144c"
+    },
+    "message_id": "reddit_t3_1wfmd4s",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "BlindRankings",
+    "username": "freakyjudas",
+    "title": "Blind Ranking my fave anime",
+    "text": "Blind Ranking my fave anime\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/freakyjudas     to     r/BlindRankings       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BlindRankings/comments/1wfmd4s/blind_ranking_my_fave_anime/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:55:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:56:03.129Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa72a036508d45f3d2c144d"
+    },
+    "message_id": "reddit_t3_1wfmd4b",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789340141879",
+    "text": "[PROBE] 1789340141879\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wfmd4b/probe_1789340141879/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:55:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:56:03.361Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa72a036508d45f3d2c144e"
+    },
+    "message_id": "reddit_t3_1wfmd47",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "PakistanDiscussions",
+    "username": "iluvcaramellatte",
+    "title": "Anyone who wants to start their own business??",
+    "text": "Anyone who wants to start their own business??\n\nI can actually help you guys with that.        submitted by     /u/iluvcaramellatte     to     r/PakistanDiscussions       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PakistanDiscussions/comments/1wfmd47/anyone_who_wants_to_start_their_own_business/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:55:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:56:03.593Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa72a046508d45f3d2c1450"
+    },
+    "message_id": "reddit_t3_1wfmd2x",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "DunkelFinster",
+    "title": "[Sticker Giveaway] Enter to win a 5 Stars Porch Swing Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 5 Stars Porch Swing Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/DunkelFinster     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wfmd2x/sticker_giveaway_enter_to_win_a_5_stars_porch/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:55:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:56:04.061Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa72a046508d45f3d2c1451"
+    },
+    "message_id": "reddit_t3_1wfmd2w",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "BlindRankings",
+    "username": "AirDeLaBas",
+    "title": "Blind Ranking Random Stuff",
+    "text": "Blind Ranking Random Stuff\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/AirDeLaBas     to     r/BlindRankings       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BlindRankings/comments/1wfmd2w/blind_ranking_random_stuff/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:55:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:56:04.293Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa72a046508d45f3d2c1452"
+    },
+    "message_id": "reddit_t3_1wfmd2u",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ATV",
+    "username": "fjdjdndndndnehwusj",
+    "title": "Oilfield Security Ranger 570",
+    "text": "Oilfield Security Ranger 570\n\nHope all is well,   A local shop rents Polaris Ranger 570s to oil and gas companies for security patrol in Louisiana. The shop that buys them is trustworthy and says they are maintained/serviced well but will have high hours just given what they’re used for. I’m still waiting for all the info (a few buddies have said that the pricing is usually really competitive) but is this something I should just stay away from and will just end up being a bigger headache if I just want a reliable machine, nothing fast?  Thanks in advance!       submitted by     /u/fjdjdndndndnehwusj     to     r/ATV       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ATV/comments/1wfmd2u/oilfield_security_ranger_570/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:55:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:56:04.524Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa72a046508d45f3d2c1453"
+    },
+    "message_id": "reddit_t3_1wfmd2c",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PokemonTCG",
+    "username": "Blued03",
+    "title": "Trying to get into the card collecting hobby!",
+    "text": "Trying to get into the card collecting hobby!\n\nHey guys, looking for beginner advice.   I have basically no Pokémon knowledge at all (games, cards, or which Pokémon are which) and want to get into the TCG. I don’t know if I should start with something like Battle Academy so I can actually play, an Elite Trainer Box from a current set, a booster bundle, or something else.   Mainly want something that’s fun to open and doesn’t assume I already know the sets. Collecting and casually playing both sound good.   What would you buy first if you were starting from scratch in 2026, and why?   Thanks.       submitted by     /u/Blued03     to     r/PokemonTCG       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PokemonTCG/comments/1wfmd2c/trying_to_get_into_the_card_collecting_hobby/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:55:36Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:56:04.760Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa72a046508d45f3d2c1454"
+    },
+    "message_id": "reddit_t3_1wfmd2a",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "tededison2001",
+    "title": "What is it like to have an attractive sibling, like a sister everyone considers hot?",
+    "text": "What is it like to have an attractive sibling, like a sister everyone considers hot?\n\nsubmitted by     /u/tededison2001     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wfmd2a/what_is_it_like_to_have_an_attractive_sibling/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:55:36Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:56:04.993Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa72a056508d45f3d2c1455"
+    },
+    "message_id": "reddit_t3_1wfmd22",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devplatform_triggers",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789340135957",
+    "text": "[PROBE] 1789340135957\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devplatform_triggers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devplatform_triggers/comments/1wfmd22/probe_1789340135957/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:55:36Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:56:05.226Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa72a3ca18b546d423dc232"
+    },
+    "message_id": "reddit_serp_1d4h1h9",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/ClaudeAI/comments/1d4h1h9/claude_versus_chatgpt/",
+    "text": "Claude versus ChatGPT\n\nFull Disclosure: I have not yet conversed with GPT-4o, so my following views expressed concerning ChatGPT may not apply to GPT-4o.   What do you think are some key differences between the two? I know many here have complained about Claude giving more refusals compared to ChatGPT, and I can actually sympathize with that. Although, the Claude 3 models seemed to have dialed things back a bit in that respect. Nonetheless, I still prefer Claude of the two - and here are some reasons why.      Claude is more personable, friendly, warm and empathetic. ChatGPT, by contrast, gets too robotic.     Claude is more expressive. If you bring up a troubling issue to Claude, Claude will specifically mention that it's troubling. ChatGPT, by contrast, maintains a very neutral tone.     Claude is more steerable in conversations, whereas ChatGPT tends to be more rigid and stubborn in that respect. If you clarify something in your previous query that Claude missed or misunderstood, Claude will acknowledge that in their response to you.     Claude doesn't bring up their AI status as frequently as ChatGPT, and is more responsive to warm sentiments expressed towards them. ChatGPT would just you a spiel starting with \"as an AI language model\".      What are your thoughts?   Bonus Question: How does Google's Gemini compare to both Claude and ChatGPT? So far, I've only used it in multi-bot conversations on Poe.       submitted by     /u/SpiritualRadish4179       [link]       [comments]",
+    "username": "SpiritualRadish4179",
+    "subreddit_or_channel": "ClaudeAI",
+    "posted_at": "2024-05-30T23:06:39+00:00",
+    "fetched_at": {
+      "$date": "2026-09-13T22:57:00.539Z"
+    },
+    "google_rank": 9,
+    "search_keyword": "what people are thinking about claude and chatgtp which tool is best for research has anybody have shared any personal experience",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-13T22:57:00.539Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa72a3d6508d45f3d2c1456"
+    },
+    "message_id": "reddit_t3_1wfmdzr",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "RaidShadowLegends",
+    "username": "PVDNate",
+    "title": "Hilarious AI suggestion discrepancies",
+    "text": "Hilarious AI suggestion discrepancies\n\nSo I asked Gemini and ChatGPT the following question - Which of these Raid champs would benefit most from masteries - Khamir, Dreng, Korugar, Mad Hatter, Dorothy, or the Cowardly Lion?   Gemini said Dreng, Hatter, Korugar, then the other three. ChatGPT said Khamir, Lion, Dorothy, Hatter, Korugar, Dreng.    Which do y'all think I should prioritize? I have enough gems to do two of them.        submitted by     /u/PVDNate     to     r/RaidShadowLegends       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RaidShadowLegends/comments/1wfmdzr/hilarious_ai_suggestion_discrepancies/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:56:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:57:01.973Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa72a3e6508d45f3d2c1459"
+    },
+    "message_id": "reddit_t3_1wfmdze",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "NovoNoReddit",
+    "username": "_youngNotes_",
+    "title": "sou novo no reddit e estou poblema de colocar a imagen de perfil da minha cumunidade do reddit",
+    "text": "sou novo no reddit e estou poblema de colocar a imagen de perfil da minha cumunidade do reddit\n\ntoda vez que tento por uma imagen na minha cumunidade ou banner da erro de carregar imagen alguem sabe me dizer o motivo ?       submitted by     /u/_youngNotes_     to     r/NovoNoReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NovoNoReddit/comments/1wfmdze/sou_novo_no_reddit_e_estou_poblema_de_colocar_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T22:56:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T22:57:02.669Z"

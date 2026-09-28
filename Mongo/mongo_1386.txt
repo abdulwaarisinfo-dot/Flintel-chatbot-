@@ -1,0 +1,416 @@
+    "_id": {
+      "$oid": "6a9f01f8f0819e6636a934af"
+    },
+    "message_id": "reddit_t3_1wa05qv",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "churchtech",
+    "username": "linearfft",
+    "title": "Hacked together a serverless, store-and-forward OBS plugin using S3 for resilient multisite campus video. Need some nerds to test/break it.",
+    "text": "Hacked together a serverless, store-and-forward OBS plugin using S3 for resilient multisite campus video. Need some nerds to test/break it.\n\nHey  r/churchtech ,   Multi-site video transport over unpredictable WAN links is a classic engineering problem in church tech. While real-time streaming protocols like RTMP or SRT work fine on a clean pipe, the second you hit packet loss or a momentary ISP dip mid-service, satellite campus playback falls apart. On top of that, closed-ecosystem platforms and dedicated commercial hardware aren't always a feasible option—whether due to budget, regional availability, or simply wanting to keep infrastructure open and self-hosted.   We wanted a purely open-source, decentralized way to handle resilient store-and-forward video transport between campuses without needing to host, manage, or pay for central API servers, custom databases, or middleware.   So we’ve been building obs-multisite, an open-source OBS Studio project: https://github.com/stageaudioworks/obs-multisite    The TL;DR on the architecture & feature set:     No central backend: It relies entirely on basic S3-compatible object storage primitives (AWS, Backblaze B2, Wasabi, MinIO, Cloudflare R2, etc.). The bucket is the transport layer and state engine.   Encoder side: The broadcast campus OBS instance encodes the stream, slices it into ~6-second media segments, calculates local checksums, and writes them along with a rolling manifest directly to S3.   Decoder side: Remote campus OBS instances poll the bucket, verify payload checksums, and execute store-and-forward playback with configurable buffer depth (30s, 2 minutes, 5 minutes, etc.). If the site's internet drops for a full minute, playback doesn't stutter because it's reading ahead from the buffer.   Raspberry Pi Player: For sites that don't want to dedicate a full PC/Mac as a decoder, we built a lightweight Raspberry Pi player client that hooks into the system as a dedicated playback appliance.   Native OBS Hardware/Software Ecosystem: Because the core decoder lives natively inside OBS, you get all the modular I/O flexibility out of the box—easily routing video out via DeckLink SDI cards, casting over local NDI networks, or patching multi-channel audio directly into Dante/AES67 virtual soundcards and plugins.   Simulcast Tooling: Includes companion tooling to handle concurrent simulcasting to platforms like YouTube/Facebook alongside the store-and-forward pipeline.   Zero server maintenance: Storage retention and cleanup rely entirely on native S3 lifecycle rules (auto-deleting segment objects after 24–48 hours), so there’s no database garbage collection or server state to manage.     The AI dev angle: We authored the protocol specs, system architecture, and store-and-forward logic, then leaned heavily on AI coding tools to help write and iterate the plugin codebase fast. It’s been a crazy efficient way to turn a technical specification into functional open-source software for the community in a fraction of the time.   Why open-source it? We built this out of a missional desire to give churches complete stewardship and ownership over their tech stack. Leveraging open tools like OBS means churches get high-resiliency multi-venue distribution without being trapped in expensive recurring SaaS loops, single-vendor hardware lock-in, or regional licensing limits.   It’s an active project, and we’d love for some fellow church tech nerds to break it, critique the manifest/polling logic, or run it through its paces in a lab environment.   If you have a couple of test machines running OBS (or a spare RPi) and an S3 bucket, give it a spin! Feel free to drop feedback here or kick open an issue/PR on GitHub.   Hope this helps out some of your tech teams!       submitted by     /u/linearfft     to     r/churchtech       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/churchtech/comments/1wa05qv/hacked_together_a_serverless_storeandforward_obs/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:26:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:27:04.321Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f01f8f0819e6636a934b1"
+    },
+    "message_id": "reddit_t3_1wa05qn",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "Stoic",
+    "username": "Due_Intern5369",
+    "title": "The obstacle is the way\" closes a passage about difficult colleagues, not adversity",
+    "text": "The obstacle is the way\" closes a passage about difficult colleagues, not adversity\n\nBook 5.20 opens with Marcus reminding himself that other people are his closest kin, that his job is to do good by them and put up with them. The obstacles he then describes are specific people getting in the way of what he's trying to do — they obstruct his actions but cannot touch his intention.   So when he says what obstructs the road becomes the road, the road is the practice of virtue. The difficult colleague didn't help him complete the task. The difficult colleague gave him an occasion to be patient, which was the only thing at stake in the first place.   The popular reading reattaches this to outcomes: your setback contains your success. But that's the opposite of what the reserve clause is for. Stoicism is built to survive failure, not to guarantee anything.   What I keep coming back to is that Marcus specifically became the marketable Stoic because he can be read as a successful man. Try the same repackaging with Epictetus and the pitch collapses.   Curious whether people here read 5.20 the same way, or whether I'm drawing the line too hard between the interpersonal and general readings.       submitted by     /u/Due_Intern5369     to     r/Stoic       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Stoic/comments/1wa05qn/the_obstacle_is_the_way_closes_a_passage_about/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:26:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:27:04.722Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f01f8f0819e6636a934b2"
+    },
+    "message_id": "reddit_t3_1wa05qm",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "fujifilm",
+    "username": "Franks_Random_Snaps",
+    "title": "An honest review of the 7Artisans 25mm f1.8 Lite AF lens (see post description)",
+    "text": "An honest review of the 7Artisans 25mm f1.8 Lite AF lens (see post description)\n\nDISCLAIMER: @7artisansofficial have sent me this lens for the purpose of this review, however they did not see this post before publishing & had no input into writing this review. All opinions are my own.    Back in March, I tested the 35mm version from this series and I had almost nothing negative to say about it. So when I got the opportunity to test the 25mm f1.8 Lite AF lens in their new silver color, I was eager to see how it performed.    The build quality is simple, yet solid: you get a sturdy, all metal lens with no buttons, just a focus ring and an USB port for updates. It comes with a lens hood of the same color, but it feels incredibly cheap and flimsy. Still good to have.    The image quality... Is a hit and miss. Starting with the positives: it's definitely sharp - in fact very much so. Corners aren't as sharp at f1.8 , but start improving from f2.8 onwards. The color rendering is natural with a slight contrast boost, which I really like. The autofocus is generally good, but it tended to sometimes misfire - this could just be a Fujifilm problem. It's still broadly reliable. I also was impressed with flare suppression, and color fringing isn't noticeable unless you pixel peep.   Whatever good things I can say about this lens gets overshadowed by its one major flaw: VIGNETTING.    My goodness, is the vignetting on this lens strong... Stopping down and turning off IBIS does almost nothing, and the corners are still dark at f8. While you can remove this in RAW post-production, in JPEGs you get overbearing vignette at all apertures. I don't mind some vignetting, but here it was egregious, and I'd like to see 7Artisans fix this issue.    Overall, it was a valiant effort to create a good everyday lens, and despite strong performance in many areas, that one optical flaw truly takes away from what could've been a very commendable piece of glass.        submitted by     /u/Franks_Random_Snaps     to     r/fujifilm       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/fujifilm/comments/1wa05qm/an_honest_review_of_the_7artisans_25mm_f18_lite/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:26:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:27:04.923Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f01f9f0819e6636a934b3"
+    },
+    "message_id": "reddit_t3_1wa05po",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "biostatistics",
+    "username": "Epidemiologist254",
+    "title": "Epidemiology is NOT just for Doctors. It's why your matatu crashes, your maize fails, and you lose in SportPesa. Many Kenyans think Epidemiology and Biostatistics is only for people in white coats at KEMRI.",
+    "text": "Epidemiology is NOT just for Doctors. It's why your matatu crashes, your maize fails, and you lose in SportPesa. Many Kenyans think Epidemiology and Biostatistics is only for people in white coats at KEMRI.\n\n&#x200B;       I am a BSc Epidemiology and Biostatistics graduate based in Embu, and let me explain it simply:       Epidemiology = The science of asking WHY things happen in groups.       Biostatistics = The tools to prove it with DATA, not guesswork.       We don't just study diseases. We study PATTERNS.       Examples in your daily life:         Boda / Matatu accidents in Embu-Nairobi road: Epidemiology asks - Do most accidents happen on Friday at 6pm? After rain? With unlicensed riders? Biostatistics proves it with data. Then NTSA knows where to put checks. Without data, we just say \"ni bahati mbaya\".           Farming: Why did maize fail this season in Embu but not in Kirinyaga? Is it seed, rainfall timing, fertilizer? Epidemiology compares groups. Biostatistics tells you if it's real or just bad luck.           Mama Mboga business: Why do tomatoes sell at 8am but rot at 2pm? She is doing epidemiology daily without knowing - observing patterns, making decisions.           SportPesa: You lose because you use heart, not data. Companies use biostatistics to set odds. You bet with emotion, they bet with data from 10,000 games.           Healthcare Demand and Congestion - This is where we fail most:         Look at Embu Level 5 Hospital. Every morning, long queues, no beds, doctors overwhelmed. Why? Because we wait until people are very sick.       Epidemiology helps us predict demand before it happens. For example, data shows that every rainy season, malaria and diarrhea cases in Embu increase by 40%. If we know this, we can prevent it - distribute nets early, chlorinate water early, do community health talks early.       Prevention reduces congestion. If we prevent 100 cases of diarrhea in the village through clean water data, that is 100 less people in the hospital queue, 100 less beds used, and doctors can attend to critical cases.       Biostatistics tells counties: \"Don't build a bigger hospital only. Use data to stop people from needing the hospital in the first place.\" That saves money and saves lives.       My point is, Kenya makes many decisions based on \"watu wanasema\" and \"mimi nafeel\". Epidemiology teaches us to say \"Data inasema nini?\"       It is not for health alone. It is for everywhere decisions need to be made.       I am passionate about this field and I am currently freelancing in academic writing as I look for an opportunity to grow in it. I have skills in R, SPSS, SAS, SQL and Excel. If you work in any institution that values data - health, agriculture, business, research - and you have an opening for an intern, research assistant, volunteer, or you just need help with data entry, cleaning and analysis, I would be happy to contribute and learn.       Also, any form of assistance, guidance, referral or even a handout as I continue searching will be highly welcomed and appreciated.       What is one decision in your life you wish you had made with data instead of guesswork? Let's discuss.       submitted by     /u/Epidemiologist254     to     r/biostatistics       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/biostatistics/comments/1wa05po/epidemiology_is_not_just_for_doctors_its_why_your/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:26:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:27:05.126Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f01f9f0819e6636a934b5"
+    },
+    "message_id": "reddit_t3_1wa05pg",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "AmItheAsshole",
+    "username": "Braver6",
+    "title": "AITA for leaving my friends in a small town on their trip to visit me",
+    "text": "AITA for leaving my friends in a small town on their trip to visit me\n\nMe(33F) and my husband(30M) live in AZ. My best friend of 11 years (30F) and her boyfriend(37M) live in Mass. Anna and I have a trauma bond from our past. She has been with her bf John for about 5 years. My husband, David gets along well with John.  Anna and John attended our wedding 2 years ago where the night before the ceremony, they got into a huge fight and the cops were involved. My husband and I were able to convince the cops to let us take them to separate places and they ended up sleeping in different locations to cool off for the night. Anna and I do not text frequently, we have always been long distance so our relationship picks up where we left off but doesn’t require constant communication.  3 days ago, Anna and John flew to AZ to come visit us for the long weekend. We live in a rural town about 3 hours from Phx. We have 3 kids and decided to bring Anna and John to our hometown rather than stay in Phx.  We had a fun weekend planned where we would spend Friday at our house, then leave the kids with my parents and go to Tombstone for Saturday and return Sunday. So far everything had gone really well. We met up with another friend (27F) and explored Tombstone all Saturday and had a great time. We all drink so we had some drinks, went to the bars, and then came back to our hotel for a swim. John had drank A LOT and was pretty drunk as we were getting in the hot tub. I’m not sure what exactly happened but some snarky comments were made by John to Anna and Anna got out of the hot tub and left for the room. John had taken off his shorts and was sitting naked in the hot tub.  I followed Anna into the room leaving John and David in the hot tub. David was trying to convince John to get his shorts on and to fix the argument with Anna. John was so drunk that he was talking to himself and saying weird things.  We had to calm Anna down and David was calming John down but John would not get his shorts on and would not get out of the hot tub. David had to pull John out and help him get shorts on but John sat in a chair with his penis out. He was threatening David. By this time it was 1am so I told David he needed to get him in a room and leave him there. I was scared of John and didn’t like the person he was at that moment and I told David I didn’t want him to come home w/ us. John finally got into a room and we all went to sleep, in the morning he wouldn’t come talk to anyone. Anna went over and they continued to argue. I told her that she could come with us home but he would not be returning with us. She got into our car and we started pulling away and she started hyperventilating and crying that she couldn’t leave him. So we drove back to the hotel and she chose to get out and stay with him so we drove home.  Neither of them has called or texted, no apologies. I have her location and I’m assuming his mom came and got them as she lives in the Phx area. Am I the asshole for leaving them?       submitted by     /u/Braver6     to     r/AmItheAsshole       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AmItheAsshole/comments/1wa05pg/aita_for_leaving_my_friends_in_a_small_town_on/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:26:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:27:05.526Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f01f9f0819e6636a934b7"
+    },
+    "message_id": "reddit_t3_1wa05pf",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "OnePiecePowerScaling",
+    "username": "DiamondShiryu1",
+    "title": "Even if Oda himself confirmed every single frame of this movie was personally supervised and approved by him people here would still say the movie is not canon.",
+    "text": "Even if Oda himself confirmed every single frame of this movie was personally supervised and approved by him people here would still say the movie is not canon.\n\nPeople here are setting themselves up for failure if they think people will not cynically scream from the rooftops that the movie isn't Canon despite us knowing Oda is adding things to the movie he couldn't in the manga.    Everyone knows we will never get a concrete itemized list of what came from Oda and what came from Toei. Due to this fact come post release from this movie whatever agenda is \"ruined\" by the added material will have a flock of fans running to dismiss the movie as non Canon.    This movie is going to be ruthlessly picked apart for any minor inconsistencies and then amplified as if it is a major contradiction that is completely incongruous with the manga.    Nobody here should delude themselves for a second that anything new in this movie will be accepted regardless if whether Oda says he approves the movie as being within the manga's continuity. This will he made even worse by that fact that western fans and eastern fans have different approaches and mindsets to what is Canon and what is not.   Regardless of your agenda this subreddit will never embrace this movie and any feats/statements in it that are not a 1 to 1 recreation of the manga.        submitted by     /u/DiamondShiryu1     to     r/OnePiecePowerScaling       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OnePiecePowerScaling/comments/1wa05pf/even_if_oda_himself_confirmed_every_single_frame/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:26:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:27:05.927Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f01faf0819e6636a934b8"
+    },
+    "message_id": "reddit_t3_1wa05oz",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "CATHELP",
+    "username": "throooowwwawaaayyy",
+    "title": "Why does he want my mango chunks so bad?",
+    "text": "Why does he want my mango chunks so bad?\n\nIts not just the mango chunks. Its also prune juice, any fruit really, and my sparking water. Hes the worst about the mango tho. Hes fighting with me over the mango and trying to pull it out of my hand actively as I type this. I already gave him a piece of banana as a distraction, but he wants MY banana. Why???    18 month old fixed male cat. In the USA. Vet care is available/affordable. I'm not a minor.       submitted by     /u/throooowwwawaaayyy     to     r/CATHELP       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CATHELP/comments/1wa05oz/why_does_he_want_my_mango_chunks_so_bad/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:26:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:27:06.129Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f01faf0819e6636a934b9"
+    },
+    "message_id": "reddit_t3_1wa05og",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "EastBoston",
+    "username": "NoPsychology6839",
+    "title": "Google Maps Bug Inflating East Boston Commute Times",
+    "text": "Google Maps Bug Inflating East Boston Commute Times\n\nFor a while, Google Maps was showing inflated walking times from parts of Eastie to Airport Station, making commutes look much worse to current residents and people considering moving here.   When I was looking to move to Boston, I initially wrote off my current place in Eastie because Google Maps said my commute to State Street would take around 25 minutes.   After actually trying the commute in person, I realized it was closer to 15 minutes.   I check out the route on Google Maps and it says the walk is 15 minutes instead of 5. I noticed that every walk to Airport station had an additional 10 minutes added because of a bug that rerouted you around the station instead of directly into it.   I reported it to Google and they fixed it! The same walk now shows a much more accurate route.       submitted by     /u/NoPsychology6839     to     r/EastBoston       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/EastBoston/comments/1wa05og/google_maps_bug_inflating_east_boston_commute/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:26:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:27:06.331Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f01faf0819e6636a934ba"
+    },
+    "message_id": "reddit_t3_1wa05o9",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "cowboyboots",
+    "username": "10mtnclimber",
+    "title": "Reposting b/c I Broke Rule #2 😬 Advice on What to do with Vintage Boots?",
+    "text": "Reposting b/c I Broke Rule #2 😬 Advice on What to do with Vintage Boots?\n\nThese Luchesse Eagle Heart Boots with Lemonwood accents belonged to my grandfather. He gave them to me, but they’re too small. I got them on a couple of times yet the leather keeps shrinking after wear and stretching oil. I love them as a family heirloom, but I’d hate to watch them rot away from non use for another twenty years. Any advice?   Thanks!       submitted by     /u/10mtnclimber     to     r/cowboyboots       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cowboyboots/comments/1wa05o9/reposting_bc_i_broke_rule_2_advice_on_what_to_do/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:26:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:27:06.538Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f01faf0819e6636a934bb"
+    },
+    "message_id": "reddit_t3_1wa05ng",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "runninglifestyle",
+    "username": "GradeLive3468",
+    "title": "Is the general running population aware of the dangers of underfueling?",
+    "text": "Is the general running population aware of the dangers of underfueling?\n\nA bit of a rant here: I see a lot of terrible advice on this sub and similar ones encouraging fasted running and other often-disordered habits that can lead to underfueling. At the same time, there is an abundance of information about proper fueling within runs and outside of runs (because within day deficits also matter) and the negative impacts of underfueling on performance and metabolic health (REDs/LEA, bone stress injuries, etc.) There are so many great science-based articles and podcasts, including SWAP, Your Diet Sucks, Doc Lyss Fitness, Fuel for the Sole, etc. Many pro athletes (male and female) have shared their own struggles with disordered eating and REDs, and how this negatively impacted their performance and led to injury cycles.   I’m genuinely curious, are most casual runners aware of this information? Why is there still so much bro science and bad advice?   I started running about 15 years ago and developed some terrible habits in my 20s. I knew nothing about fueling, didn‘t have any guidance, and thought being smaller was better. I thought bc i was a healthy weight and even carried extra body fat that there was no way i was underfueled. WRONG! I guess this is just a PSA that nobody gets away with these behaviors forever. You don’t have to “look underfueled” to be underfueled, and you don’t have to learn the hard way like I did when there are now countless resources available. Please take the time to learn about adequate fueling. If you’re hungry (and often even if you’re not), increasing volume, have an active life outside of running, find yourself injured often, etc, make sure you’re eating enough and ENOUGH CARBS, and be careful about the advice you take from the internet. Also, much of what society and general health guidance tells us about a “healthy diet” does not apply to endurance athletes who need more carbs (including simple sugars) and more sodium than the general population. Not a medical professional, just a person who has a history of underfueling.       submitted by     /u/GradeLive3468     to     r/runninglifestyle       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/runninglifestyle/comments/1wa05ng/is_the_general_running_population_aware_of_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:26:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:27:06.740Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f01faf0819e6636a934bc"
+    },
+    "message_id": "reddit_t3_1wa05n4",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "fragranceswap",
+    "username": "arandomnewyorker",
+    "title": "[WTS] Tom Ford, Savoir Faire, Jorum Studio, Heretic, 19-69 (Bottle)",
+    "text": "[WTS] Tom Ford, Savoir Faire, Jorum Studio, Heretic, 19-69 (Bottle)\n\nOffloading some more fragrances. Bundle packages preferred. Not interested in trades currently.   Free shipping over $100 USD. Please include Paypal G&S 3% to price. Type \"chat\" before messaging. Add $7 for shipping otherwise. Free samples included with every purchase. Orders will go out this Thursday.    Picture:  https://imgur.com/a/S94wSBH     Savoir Faire - Indicativa, 50ml, $120 (FP)      Cannabis, vetiver, vanilla, elemi, black agar, patchouli, bergamot, musk, green woods, cedar, sandalwood. Very wearable. Reminds me of Fresh Cannabis Santal but more refined and with more depth.      Tom Ford - Vert D'Encens, 50ml, $100 (A56 batch , see photo for fill )      Pine resin, fir balsam, heliotrope, woods. Sharply resinous, almost medicinal, pine sap and incense smoke cutting through cool air. Rare and discontinued.      Olympic Orchirds - Tropic of Capricorn, 30ml, $75    Named after Henry Miller's novel. 100% natural. Mango fruit, jasmine, frangipani, tuberose, magnolia, osmanthus, maile vine, Bourbon vanilla, Africa stone, ambergris, benzoin, New Caledonian sandalwood. Narcotic and animalic.    Rocksand - Earthcrawler, 30ml, $75      An Indonesian indie house from perfumer and brand owner Yudi Leo. Animalic, salty and smoky spices up top, balsamic and earthy florals in the heart, creamy woody base.      Jorum Studio - Spiritcask, 30ml, $55      Sweet and gently smoky with vanilla and cedarwood doing most of the work. This is not a boozy fragrance so much as the smell of the barrel itself. Cozy, soft and nostalgic.      Heretic Perfumes - Dirty Grass, 50ml, $55 (FP)      Hemp, lemon, black pepper, grass, petitgrain, galbanum, vetiver, sandalwood. Real hemp extract rather than synthetic accord. Sharp, green, slightly raw. Opens bright and citrus-forward before settling into an earthy vetiver-sandalwood base.      19-69 - Pink Jesus, 100ml, $50 (see photo for fill)      Ginger, pink bubblegum, cannabis, clary sage, cypriol, cedar, ambroxan, grey amber. Bright and slightly tart opening, earthy cannabis mid-wear, smooth woody drydown. Inspired by a Sonoma Farm sativa strain. Wearable all day, excellent longevity.         submitted by     /u/arandomnewyorker     to     r/fragranceswap       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/fragranceswap/comments/1wa05n4/wts_tom_ford_savoir_faire_jorum_studio_heretic/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:26:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:27:06.943Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f01fbf0819e6636a934bd"
+    },
+    "message_id": "reddit_t3_1wa05my",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Gamebundles",
+    "username": "Yashwa_Fablous",
+    "title": "Help needed",
+    "text": "Help needed\n\nHi. I'm new here, and I've just recently discovered about these gaming bundle websites, so it's all still very new to me.   This request is gonna sound weird, but I'm a little desperate right now and don't really have any other option.   I really really want to buy this bundle, and I have been trying everything in my power to get it for the last several days. I live in Pakistan, so making this transaction has not been easy, but I have tried multiple times using different methods, but none of them worked. I've been in contact with GMG customer support through email for the last couple of days. Long story short. If someone could buy this bundle for me, I'd really really appreciate it.  NOT FOR FREE . I'll obviously pay them. I can even send the money first to whoever can help me if it'd make them comfortable.   The bundle is about to expire in 22 hours. I'm exhausted trying to chase it. If someone could help me buy my first ever bundle, I'd be very grateful. This is an incredible bundle. I don't own any of the games on it, so I really don't wanna miss out on it.   Anyone who can help, please reach out to me.   Thank you for reading.        submitted by     /u/Yashwa_Fablous     to     r/Gamebundles       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Gamebundles/comments/1wa05my/help_needed/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:26:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:27:07.144Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f01fbf0819e6636a934be"
+    },
+    "message_id": "reddit_t3_1wa05ms",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "naturephotography",
+    "username": "TurbulentSurprise498",
+    "title": "Flower [OC]",
+    "text": "Flower [OC]\n\nsubmitted by     /u/TurbulentSurprise498     to     r/naturephotography       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/naturephotography/comments/1wa05ms/flower_oc/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:26:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:27:07.345Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f01fbf0819e6636a934bf"
+    },
+    "message_id": "reddit_t3_1wa05mo",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "Frauditors",
+    "username": "hydrafoil7",
+    "title": "Two Fools Get Trespassed",
+    "text": "Two Fools Get Trespassed\n\nsubmitted by     /u/hydrafoil7     to     r/Frauditors       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Frauditors/comments/1wa05mo/two_fools_get_trespassed/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:26:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:27:07.546Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f01fbf0819e6636a934c0"
+    },
+    "message_id": "reddit_t3_1wa05m5",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "askdentists",
+    "username": "mythrowawayaccim21",
+    "title": "Need dental advice because I can't access a dentist right now",
+    "text": "Need dental advice because I can't access a dentist right now\n\nHi! so    I'm pretty sure I have a wisdom tooth coming   because for days straight I felt tender swollen sore hard toothy feeling by my molars on one side but that was it. it's next to my last bottom tooth on one side in the back of my mouth.    then it suddenly started causing jaw pain and pressure and toothaches on the surrounding teeth and my jaw on that side feels tight   I can't eat or sleep or talk much or laugh much or anything because jaw pain   and I also have really bad tinnitus    and I have metallic and soapy taste in my mouth    and I am very sensitive to cold and my gums bleed when I brush my teeth. and it's hard to brush my teeth because it hurts and the toothpaste gives me a cold shock   the pain is a dull ache most of the time but occasionally has a sharp or tingly spike   the swollen/pressure feeling is constant but all the other symptoms come and go though. the pain windows are much longer than the pain free windows. but I might have a good few minutes or so, up to an hour, here and there, with no pain, before the pain returns.   I am very worried about complications if it is a wisdom tooth because my existing teeth is severely crooked, crowded, and has irreversible decay. It has virtually no room and my mouth is already swirling in bacteria.   But unfortunately, I cannot access a dentist right now. The closest dentist to me that accepts my medicaid dropped me as a patient because I have a very sensitive gag reflex and couldn't even finish getting x rays because I couldn't stop gagging and they couldn't work with that. The second closest dentist that accepts medicaid is far away. I went there twice before a year ago and they were able to work with the severe gagging and complete x rays and cleanings and fillings. But that was a year in a half ago. As of right now, I don't have means of transportation to go that far and won't at any point in the forseebale future and cannot get medical transportation because of how far it is from my home. it's outside of a radius or something. But theyre truly the closest that will see me as it seems almost no one accepts medicaid. So I won't be able to see a dentist at any point in the forseeable future.    The at home remedies I read so far I cannot do. I dont have salt or containers to do a saltwater rinse and can't afford to buy them because I'm very poor. I can't do cold packs because I have cold sensitivity so the cold makes it feel worse. I cannot tolerate taking pills like ibprofuen because it makes me gag so badly I cannot swallow it. (I don't have trouble swallowing in general. I just have a hard time with any pill that isn't extremely tiny because of my severe arfid) and also because of my severe treatment resistant arfid, I can't eat just anything. so I can't eat all of the recommended soft foods for this situation. The only thing I can eat that hasn't caused further pain is cake. But I dont want to live off of cake. I am not a sweets person :/       submitted by     /u/mythrowawayaccim21     to     r/askdentists       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/askdentists/comments/1wa05m5/need_dental_advice_because_i_cant_access_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:26:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:27:07.749Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f01fcf0819e6636a934c3"
+    },
+    "message_id": "reddit_t3_1wa05m1",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PCHardware",
+    "username": "M5030",
+    "title": "Help to see if I should buy used ram or not",
+    "text": "Help to see if I should buy used ram or not\n\nsubmitted by     /u/M5030     to     r/PCHardware       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PCHardware/comments/1wa05m1/help_to_see_if_i_should_buy_used_ram_or_not/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:26:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:27:08.347Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f01fcf0819e6636a934c4"
+    },
+    "message_id": "reddit_t3_1wa05lp",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "classicliterature",
+    "username": "500DaysOfSummer_",
+    "title": "The Buddenbrooks is so good.",
+    "text": "The Buddenbrooks is so good.\n\nI'm reading The Buddenbrooks for the first time, and so far I've enjoyed it a lot. This is also my first Thomas Mann.   This new translation is also pretty good (barring an error/spoiler that they revealed in the notes).   Sharing here to spread the good word about this book.    Cheers.       submitted by     /u/500DaysOfSummer_     to     r/classicliterature       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/classicliterature/comments/1wa05lp/the_buddenbrooks_is_so_good/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:26:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:27:08.548Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f01fcf0819e6636a934c5"
+    },
+    "message_id": "reddit_t3_1wa05ld",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "r4r",
+    "username": "BaubeHaus",
+    "title": "35 [F4M] Québec (Canada) - Looking for realness",
+    "text": "35 [F4M] Québec (Canada) - Looking for realness\n\nHello there, the title sounds more pretentious than it is haha...   Anyway, I'm a woman living in Québec in the grand area of Montreal, I'm more into IRL type of relationships, I am looking for more than friends but I'm open to friendships as well!    I'm a woman of hobbies, passions, talkative and I'm intestested in meeting someone likeminded.   Interests in :   - Psychology/prehistory and history/sociology and philosophy   - Nature/hiking/camping/animals and insects/mycology etc.   - Arts !! ALL ARTS. Visual, music, etc.   - Communication skills are crucial... haha if you can't hold an interesting conversation... :|   Not average :   - ENM, BBW, huge nerd in random topics like TES and some psychology stuff   Average :    - Friendly, funny, chronically online, likes her iced cap   Politics :    - I'm more of a leftist, socialist. I'm a big mad angry feminist ;)       submitted by     /u/BaubeHaus     to     r/r4r       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/r4r/comments/1wa05ld/35_f4m_québec_canada_looking_for_realness/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:26:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:27:08.749Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9f01fcf0819e6636a934c6"
+    },
+    "message_id": "reddit_t3_1wa05kr",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "CreditCardsIndia",
+    "username": "CivilCommunication53",
+    "title": "Regalia Gold Holders.. Please answer this",
+    "text": "Regalia Gold Holders.. Please answer this\n\nHello Redditors,   I currently hold Millennia LTF and aspire to upgrade to Regalia gold.   But, still not fully convinced about few aspects:     1500 Rs voucher on 1.5 lakh spends per quarter is 1% which is low compared to few UPI cards    The threshold limit on Smartbuy reward points per day / month via accelerated categories restricts returns from booking of multi nights hotels which is again low and discouraging    The lounge access is already devalued    The value back on non Smartbuy spends especially offline stores are again 1.25%    If in future, HDFC removes Insurance, Jewellery and Education spends from earning reward rate the major selling point of this card is dead    The cashback to statement option drops the value of the reward points to extremely low leaving the user to only travel redemptions alone     I intend to know from current Millenia card holders what kind of annual spends they route via this card and what they opine about above points    Thanks fellas       submitted by     /u/CivilCommunication53     to     r/CreditCardsIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CreditCardsIndia/comments/1wa05kr/regalia_gold_holders_please_answer_this/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T18:26:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T18:27:08.952Z"
+    }

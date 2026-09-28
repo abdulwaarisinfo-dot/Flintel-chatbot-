@@ -1,0 +1,416 @@
+    "message_id": "reddit_t3_1wk20ex",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SatanicTemple_Reddit",
+    "username": "Erramonael",
+    "title": "Christian Fascism 101: I wonder if we as a Satanists did the exact same thing with the Torah, the Tanakh, the Talmud and the Zohar, the christian Bible and the Qur'an and all the other so-called sacred books of all the other \"faiths\" what kind of response would we get?",
+    "text": "Christian Fascism 101: I wonder if we as a Satanists did the exact same thing with the Torah, the Tanakh, the Talmud and the Zohar, the christian Bible and the Qur'an and all the other so-called sacred books of all the other \"faiths\" what kind of response would we get?\n\nsubmitted by     /u/Erramonael     to     r/SatanicTemple_Reddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SatanicTemple_Reddit/comments/1wk20ex/christian_fascism_101_i_wonder_if_we_as_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T20:49:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T20:49:31.279Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aada3db660c60840397b659"
+    },
+    "message_id": "reddit_t3_1wk20eq",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "healthIT",
+    "username": "ch0use",
+    "title": "ChatGPT for Healthcare unveils new integrations with Epic, public health data sources",
+    "text": "ChatGPT for Healthcare unveils new integrations with Epic, public health data sources\n\n“On Tuesday, OpenAI  announced  that ChatGPT for Healthcare now integrates with Epic's electronic health record (EHR) to enable authorized clinicians to access and summarize patient information from medical records within ChatGPT or directly in supported Epic workflows. That integration can now pull together clinical notes, lab results, medications and specialist documentation, the company said in a blog post.”   Not much mention of privacy other than “ChatGPT for Healthcare combines healthcare-specific capabilities with enterprise controls such as role-based access, single sign-on and audit logs. With an applicable business associate agreement, OpenAI said customers can use ChatGPT Work, Codex, apps and plugins in the same workspace to support HIPAA-compliant workflows.”       submitted by     /u/ch0use     to     r/healthIT       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/healthIT/comments/1wk20eq/chatgpt_for_healthcare_unveils_new_integrations/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T20:49:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T20:49:31.494Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aada3dcaeeb96c1c63b9873"
+    },
+    "message_id": "reddit_t3_1wk20kc",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "UAVmapping",
+    "username": "aarushi-ai",
+    "title": "Quick Architecture Check: Task Subdivision & GPS-Denied Pipeline for Autonomous Drone Project",
+    "text": "Quick Architecture Check: Task Subdivision & GPS-Denied Pipeline for Autonomous Drone Project\n\nHi everyone,   Our team is structuring our workflow for a ROS 2 autonomous quadcopter (LiDAR + Depth Camera + Companion Computer) focusing on GPS-denied navigation. To avoid bottlenecks, we are decoupling hardware and software using Gazebo/SITL.   Proposed Subdivisions   Hardware: Frame CAD, payload CoG, ANSYS FEA (structural/vibration), power distribution, and thermal management.   Software (SITL First): ROS 2 Gazebo simulation, 3D LiDAR SLAM + VIO fusion, and offboard navigation/costmaps.   Key Technical Questions   PX4 / ArduPilot EKF Fusion: When streaming external odometry (FAST-LIO2 / LIO-SAM) over MAVROS or uXRCE-DDS to FCU EKF3/EKF2, how do you handle latency jitter and prevent position jumps? Is offboard position/velocity control safer than direct FCU fusion?   LiDAR SLAM + VIO Degeneracy: How do you handle fallback when LiDAR point clouds degenerate in uniform spaces (e.g., long corridors)? Do you use dynamic covariance switching between VIO and LiDAR SLAM, or rely on EKF fallback?   FEA vs. Real Resonance: How closely did your ANSYS frame modal analysis match real gyro FFT noise? What mechanical isolation works best for companion computer IMUs affected by motor resonance?   SITL-to-Real Gap: What were your biggest pain points moving 3D local costmaps and Nav2 from Gazebo synthetic point clouds to real LiDAR noise (e.g., ground-plane misclassification, reflectivity)?       submitted by     /u/aarushi-ai     to     r/UAVmapping       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UAVmapping/comments/1wk20kc/quick_architecture_check_task_subdivision/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T20:49:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T20:49:32.523Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aada3dcaeeb96c1c63b9874"
+    },
+    "message_id": "reddit_t3_1wk20k5",
+    "topic_key": "background check",
+    "search_keyword": "background check",
+    "platform": "reddit",
+    "subreddit": "conspiracytheories",
+    "username": "Traditional_End5406",
+    "title": "DISA Global Solutions Background Check Errors | FCRA Help",
+    "text": "DISA Global Solutions Background Check Errors | FCRA Help\n\nsubmitted by     /u/Traditional_End5406     to     r/conspiracytheories       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/conspiracytheories/comments/1wk20k5/disa_global_solutions_background_check_errors/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T20:49:12Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T20:49:32.724Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aada413660c60840397b65d"
+    },
+    "message_id": "reddit_t3_1wk21gj",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "gamedev",
+    "username": "MakeTradeScale",
+    "title": "Not a success story. Just real numbers from my hobby Reddit game",
+    "text": "Not a success story. Just real numbers from my hobby Reddit game\n\nHi all. I'm the developer of  r/MakeTradeScale , an economy/tycoon game that runs entirely inside Reddit.   This is not a big success story. The numbers below are modest. A few hundred players and pocket money. That's fine by me, because I do this as a hobby and I'm not trying to make a living from it.   But I've always wished more developers shared their real numbers, including the small ones, so here are mine.   About the game   You start with a farm and grow it into an industrial empire. Buildings produce goods every minute. Simple goods feed into longer production chains to create more complex products, research unlocks new products, and there is a season-long goal.   You can think of the season goal as a mega-project. This season, you build a rocket piece by piece and eventually launch it to the Moon. Every season resets the economy with new content and a new end goal.   The heart of the game is a player-driven marketplace. Players set the prices. Nobody can produce everything efficiently, so you sell what you're good at and buy your inputs from other players.   Daily players    Dailly players chart    Blue bars are the players who logged in that day. The orange line is brand-new players.     The season started on July 30. For the first three weeks, the game sat at 25-45 daily players, with 35-70 new players per week.   Now a normal day has about 200 players. The best day had about 300.   1,742 new players have signed up this season so far, and more than 1,300 of them came in the last three weeks.     Every spike on that chart is a post on  r/GamesOnReddit . The subreddit lets you share your game twice per week, which is what I do. It is by far my most stable source of new players.   The part I find more interesting is what happens between the spikes. Each wave fades within two or three days, but never all the way back to where it started. The quiet-day floor went from about 30 players, to 40, to 90, to 150 and beyond.   Weekly retention    Retention chart    Each row is the group of players who signed up in that week. Each cell is the percentage of that group that logged in again N weeks later.    1. The drop after the first visit is sharp.    Only 8–15% of a cohort comes back the following week. I'm not too worried about it.   A Devvit game sits in people's feeds, so opening it costs one curious tap. A lot of these \"players\" probably opened the game once, did little or nothing, and kept scrolling. I don't really count them as people who actually played.    2. After that drop, retention is almost flat.    The August 17 cohort reads 8%, 8%, 7%, 7%. The first cohort has been sitting at 7% from week 5 through week 7.   Players who stick around for a couple of days just keep coming back. This is the number that makes me happy.   With flat retention, every new cohort stacks on top of the previous ones. That's exactly what we're seeing in the rising floor in chart 1.   One thing that surprised me: the big cohorts retain about as well as the small ones.   Week 1 retention is 13-14% for the recent cohorts of 400-550 players, compared with 8-15% for the early cohorts of just 34-68 players. I expected player quality to drop as volume went up, but it didn't.   The early cohorts are tiny, of course. 3% of 34 players is literally one person, so those numbers could be misleading. The recent cohorts are large enough to be more meaningful, but they're still young, so it'll take another month or so to see whether they flatten out at the same level.   That said, I might still work on making the first drop less drastic. Maybe I can add more onboarding content. Everything after the first few days seems to hold reasonably well, so every extra first-time visitor who gets as far as a first real action has a decent chance of becoming a long-term player.   What about money?   With about 200 daily players, the game makes roughly $100 a month. Most of that goes straight back into server and database costs.   The game runs on its own PostgreSQL backend, and keeping that online isn't free, so think \"pays for itself\" rather than \"income.\"   Monetization is also through Reddit. Players buy the in-game currency, gems, with Reddit Gold. Gems mostly speed things up. You can finish a build instantly, or get a premium pass that comes with a build queue and better trade rates.   I kept payments disabled for a long time on purpose because I didn't want to sell people something that wasn't polished enough.   When I finally turned them on, the first purchase came within a few days. Please don't read that as \"players convert within days\" though. The people who paid had already been playing for a long time.   Use of AI   The idea had been in my mind for a long time, but I never had enough time to build it. Recent breakthroughs in AI finally made it possible for me to actually build the game.   I still spend a lot of time on it (around 5-10 hours per week, for the last nine months) but I'm mostly focusing on game mechanics, balancing, and the overall story rather than coding or creating assets.   Even though I'm a software developer by trade, I personally find the game design side much more fun. So that's where I spend my time and I offload more of the \"boring\" work to AI.   That said, I've realized that a large number of players have a prejudice against games built with AI. I understand them, because there is a lot of low-effort AI slop out there.   So, partly just to get past that initial negative impression, I'm considering \"de-AIfying\" some parts of the game and adding more human touch.       submitted by     /u/MakeTradeScale     to     r/gamedev       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/gamedev/comments/1wk21gj/not_a_success_story_just_real_numbers_from_my/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T20:50:16Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T20:50:27.546Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aada413660c60840397b65f"
+    },
+    "message_id": "reddit_t3_1wk21ft",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "MexicoTravel",
+    "username": "Wonderful_Dealer3568",
+    "title": "Recomendaciones para estadías en Ciudad de México",
+    "text": "Recomendaciones para estadías en Ciudad de México\n\nEstaré viajando a la capital de México por un par de semanas en familia en Octubre, que zonas de la ciudad recomiendan para estadía y que partes NO recomiendan? Si pueden recomendar un hotel 3 estrellas bueno, bonito y económico estaría perfecto, también un presupuesto de cuanto se necesita por semana en general en Mexico.        submitted by     /u/Wonderful_Dealer3568     to     r/MexicoTravel       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MexicoTravel/comments/1wk21ft/recomendaciones_para_estadías_en_ciudad_de_méxico/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T20:50:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T20:50:27.955Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aada414660c60840397b660"
+    },
+    "message_id": "reddit_t3_1wk21fc",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "starcitizen",
+    "username": "Tmbbaxx",
+    "title": "Star Citizen was good to me today",
+    "text": "Star Citizen was good to me today\n\nIt was only a matter of time before the game crashed, but today it decided to crash AFTER I made 4 million doing the orison relief missions, and selling 3 million in refined ores, that’s the best I can hope for right now, love this game, now I need to buy another ship I’m game.        submitted by     /u/Tmbbaxx     to     r/starcitizen       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/starcitizen/comments/1wk21fc/star_citizen_was_good_to_me_today/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T20:50:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T20:50:28.157Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aada414660c60840397b662"
+    },
+    "message_id": "reddit_t3_1wk21et",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "casualconlang",
+    "username": "Organic_Year_8933",
+    "title": "Reddit decides on a Conlang —Part 4: consonant-related",
+    "text": "Reddit decides on a Conlang —Part 4: consonant-related\n\nFirst and second most upvoted comments decide!      Vowels     “i iː u uː ɛ eː ɑ aː ɔ ɔː œ œː y yː”was incorporated with second comment’s “i a o aː oː” so high vowels do not have a lengthen equivalent. Also, there is “æɪ̯”, from first comment in Part 2.   /i u ɛ eː ɑ aː ɔ oː œ œː y æɪ̯/    Pitch accent    From the most upvoted comment. Pitch accent, affecting the tonic syllable, can be  rising ,  falling  or  neutral .    Vowel harmony    From one of the two comments in second position.   Back: /ɔ u oː ɑ/   Front: /œ y œː æɪ̯/   Neutral: /i ɛ eː aː /     Consonants     Basically the first comment+second comment’s ejectives and “v”+p’ (so it is more symmetric lol).   Nasals: /m n/   Stops and ejectives: /p pʰ p’ t’ tʰ t k’ kʰ k qʰ q' q/   Fricatives: /v s ts ɬ tɬ x h/   Other: /w ɾ l j/     Da rules:     —Work with the previously chosen aspects.   —Write with IPA and use the  already-chosen consonants .   — Naturalistic  (at least enough so it isn’t a weird circus conlang) —prioritize the lesser sounds, the most linguistically common consonants.   —You can add  consonant harmony  (in any of its forms, as long as it is sense-making),  liaison  (like French),  Celtic-style lenition  (like in Welsh or Irish, usually in declensions and conjugations),  Mediterranean-style lenition  (like Spanish or Greek, usually in between vowels), and  similar features  found on real languages.       submitted by     /u/Organic_Year_8933     to     r/casualconlang       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/casualconlang/comments/1wk21et/reddit_decides_on_a_conlang_part_4/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T20:50:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T20:50:28.558Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aada414660c60840397b663"
+    },
+    "message_id": "reddit_t3_1wk21dr",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "Intelligence",
+    "username": "Active-Analysis17",
+    "title": "Is AI the new Ultimate Spy?",
+    "text": "Is AI the new Ultimate Spy?\n\nThis week's episode of the Global Intelligence Weekly Wrap-Up looks at a question I've been following for the past couple of years: how will artificial intelligence change espionage?   Anthropic recently released threat-intelligence reporting describing a suspected Russian state-linked cyber-espionage operation in which Claude AI was reportedly integrated into multiple stages of the operation, including reconnaissance, phishing, malware development, maintaining access and data exfiltration.   What caught my attention wasn't simply that an intelligence actor was using AI. It was how deeply AI appears to have been incorporated into the operational process.   Anthropic reported that AI agents could monitor whether malicious software was being detected, modify it and test it again. The operation also reportedly used \"agent swarms,\" with different AI agents working simultaneously on separate tasks.   For me, that raises a more important question than whether AI will somehow invent an entirely new form of espionage.   What happens when familiar intelligence activities that traditionally operated at human speed begin operating at machine speed?   The episode also looks at three other intelligence developments this week.   In Germany, a well-connected Berlin businesswoman has been charged with allegedly assisting Russian intelligence, providing an interesting case study in why access to people can sometimes be as valuable as access to classified information.   In China, new exit restrictions connected to national security and technology raise questions about whether strategic competition is increasingly about controlling not only technology, but also the scientists, engineers and researchers who possess the knowledge behind it.   And in Canada, the first registrations under the new Foreign Influence Transparency Registry give us an opportunity to examine the important distinction between legitimate foreign influence and covert foreign interference.   Different countries and different methods, but many of the fundamentals remain the same: identify the target, gain access, collect information and avoid detection.   What may be changing dramatically is the speed and scale at which those activities can now occur.   The episode is approximately 36 minutes long and is available now on YouTube and the usual podcast platforms.    https://www.buzzsprout.com/2336717/episodes/19828836    I'd be interested in hearing what others think: Are intelligence and security organizations prepared for espionage conducted at machine speed?       submitted by     /u/Active-Analysis17     to     r/Intelligence       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Intelligence/comments/1wk21dr/is_ai_the_new_ultimate_spy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T20:50:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T20:50:28.762Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aada417660c60840397b671"
+    },
+    "message_id": "reddit_t3_1wk21dc",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "litrpg",
+    "username": "MindYerBeak",
+    "title": "How can I read books I can't buy?",
+    "text": "How can I read books I can't buy?\n\nMany/most books in this genre are not available on KU nor Audible. How can I read them? Is sailing the high seas the only alternative?        submitted by     /u/MindYerBeak     to     r/litrpg       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/litrpg/comments/1wk21dc/how_can_i_read_books_i_cant_buy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T20:50:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T20:50:31.517Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aada417660c60840397b672"
+    },
+    "message_id": "reddit_t3_1wk21d7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "New_Audience_9741",
+    "title": "Grab 100 hammers from u/New_Audience_9741!",
+    "text": "Grab 100 hammers from u/New_Audience_9741!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/New_Audience_9741     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wk21d7/grab_100_hammers_from_unew_audience_9741/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T20:50:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T20:50:31.716Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aada417660c60840397b673"
+    },
+    "message_id": "reddit_t3_1wk21cy",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "RenPy",
+    "username": "TaurusE11E",
+    "title": "Question about \"Indie Genre Advantage\"",
+    "text": "Question about \"Indie Genre Advantage\"\n\nSo this might be a dumb question but I gotta ask since I haven't really seen it discussed and I'm not hating on anyone so please hear me out:   I've been looking around at all the varied creations among indie Ren'Py users, and they are all unique in their own way, but I'm beginning to spot common tropes and genres among the ones that seem to be the most popular such as \"horror\", \"psychological thriller\", \"mystery\", \"dark and troubled past\", \"tsundere\", \"harem\", and \"dark fantasy\". All of these are able to weave very beautiful stories when handled well, but their prevalence just makes me wonder:    Are there genres or tropes that present an automatic advantage/disadvantage when trying to build an audience or make profit from a VN game (for example, genres that attract/repel the \"public\" of indie VN readers at large)?     Don't get me wrong, I understand that the genre itself is so niche that we should be grateful for every reader we get as indie devs and  we should all try to make the best stories possible no matter what genre we use.  I choose more family-friendly tropes to use simply because I have a weak stomach, but that may be part of the reason I cannot realistically expect my work to sell. Perhaps the genre of horror is a sure-fire way to get a player's attention/interest, or the \"classic adventure\" genre (save the princess/kill the monster) may be considered stale without focus on character trauma, or the trope of having a heteronormative romance front-and-center may turn players off - I have no idea.   It would good to get an opinion on what is most \"marketable\" in terms of genre and trope usage as of these days and times - not for me so much as any new devs still wondering/posting about what a good idea for the first project should be.       submitted by     /u/TaurusE11E     to     r/RenPy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RenPy/comments/1wk21cy/question_about_indie_genre_advantage/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T20:50:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T20:50:31.915Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aada418660c60840397b674"
+    },
+    "message_id": "reddit_t3_1wk21cv",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "nfsnolimits",
+    "username": "Wonderful_Second_841",
+    "title": "Crew stash bug",
+    "text": "Crew stash bug\n\nis there a bug to buy inifinty from crew stash without consume Coins ?       submitted by     /u/Wonderful_Second_841     to     r/nfsnolimits       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/nfsnolimits/comments/1wk21cv/crew_stash_bug/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T20:50:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T20:50:32.116Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aada418660c60840397b675"
+    },
+    "message_id": "reddit_t3_1wk21bz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "FirstTimeHomeBuyer",
+    "username": "joose_world",
+    "title": "Closing on Monday, Civil Judgements?",
+    "text": "Closing on Monday, Civil Judgements?\n\nSo we’re closing on Monday. Full approval, cleared to close, funds have already been wired to closing attorney(attorney state).  I have civil judgements that somehow have not come up in this entire process? What are the odds they come up on Monday?       submitted by     /u/joose_world     to     r/FirstTimeHomeBuyer       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FirstTimeHomeBuyer/comments/1wk21bz/closing_on_monday_civil_judgements/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T20:50:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T20:50:32.319Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aada418660c60840397b676"
+    },
+    "message_id": "reddit_t3_1wk21bu",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "RateMyPlate",
+    "username": "duckspiracy",
+    "title": "Made my girlfriend dinner 😋 thoughts and opinions?",
+    "text": "Made my girlfriend dinner 😋 thoughts and opinions?\n\nI made her dinner because people said on here that I should so I did        submitted by     /u/duckspiracy     to     r/RateMyPlate       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RateMyPlate/comments/1wk21bu/made_my_girlfriend_dinner_thoughts_and_opinions/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T20:50:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T20:50:32.518Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aada418660c60840397b677"
+    },
+    "message_id": "reddit_t3_1wk21b2",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ninevicious",
+    "username": "itsCADETonREDDIT",
+    "title": "This run right here is the best part of the project",
+    "text": "This run right here is the best part of the project\n\nsubmitted by     /u/itsCADETonREDDIT     to     r/ninevicious       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ninevicious/comments/1wk21b2/this_run_right_here_is_the_best_part_of_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T20:50:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T20:50:32.723Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aada436aeeb96c1c63b9876"
+    },
+    "message_id": "reddit_t3_1wk21ye",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "crochetpatterns",
+    "username": "ThrowRAtheavyihg",
+    "title": "is it normal to get physically angry at magic rings or am i just stupid ?",
+    "text": "is it normal to get physically angry at magic rings or am i just stupid ?\n\nhttps://preview.redd.it/92s2r78lccqh1.png?width=1621&format=png&auto=webp&s=ccdaff7d5948b79725949b0a142a17498a87ac9e    I've watched like 10 different youtube tutorials and every time i pull the tail the whole thing just turns into a knotted messy clump. literally about to throw my hook out the window rn. any actual idiot-proof tricks or should i just give up and stick to making straight scarves forever.       submitted by     /u/ThrowRAtheavyihg     to     r/crochetpatterns       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/crochetpatterns/comments/1wk21ye/is_it_normal_to_get_physically_angry_at_magic/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T20:50:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T20:51:02.999Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aada437aeeb96c1c63b9877"
+    },
+    "message_id": "reddit_t3_1wk21xu",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "Affinity",
+    "username": "Ok_Throat4720",
+    "title": "How to create a clean line drawing and fill it in with photo or color",
+    "text": "How to create a clean line drawing and fill it in with photo or color\n\nI do not know how to word this to get my question answered. I am using Affinity Designer 2.6.5   I am posting a jpg for the starting point. (Example 1)   1st of all, I have used MSPaint for years to do what I want. Yes, it sucks. But the learning curve for other programs was to overwhelming, so I gave up. Then I bought the Affinity package and have been trying to use Affinity Designer to do what I want. I can get so far, then I need a bitmap image to open in MSPaint, or at least to learn how to do what I have done for years in the MS version. And my image is horrible. I end up cleaning it up in MSPaint defeating the whole purpose.   OK, here is the upshot. I will be using MSPaint terms to describe what I have done in the past.   I design my own clothes. There is usually a jpg line drawing of the garment. (Example 1) I need it to be a clean bit map outline so I can fill it in with color or a fabric pattern photo. (Example 2)   With a jpg, there is usually little boxes/pixels of some off color in the drawing. In MSPaint, I would painstakingly erase them until I just had a black outline of the garment. A   fter that, I would save it as a bit map. Then I would fill in the garment with a color (Example 3), or fill in the outside of the drawing with a color leaving the garment blank, and lay it over the fabric picture. (Example 4) Then fill in the outside with white giving me the finished picture. (Example 5)   I have searched for videos, used Affinity Designer 2: Tutorial for Beginners [2024]; Using Color Fills, Strokes and Outlines in Affinity Designer; Notes from a video on Removing background from an image in Designer, and multiple other videos.    I need images. When I am given the text, I have no idea where to find the tool, especially when it is not showing up in the place referenced. And I need steps. Usually there is an assumption I know more than I do. I know MSPaint. Only because I have been doing work around for years and taught myself.   If you can help, I would really appreciate it. I have tried to use Affinity help, but I don't know what the terminology is, so I just get lost.       submitted by     /u/Ok_Throat4720     to     r/Affinity       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Affinity/comments/1wk21xu/how_to_create_a_clean_line_drawing_and_fill_it_in/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T20:50:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T20:51:03.228Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aada437aeeb96c1c63b9878"
+    },
+    "message_id": "reddit_t3_1wk21th",
+    "topic_key": "background check",
+    "search_keyword": "background check",
+    "platform": "reddit",
+    "subreddit": "Fidelity",
+    "username": "West-Pound-22",

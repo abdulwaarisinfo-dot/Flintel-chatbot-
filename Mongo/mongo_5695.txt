@@ -1,0 +1,416 @@
+    "text": "OpenAI capabilities researcher, Dan Selsam, on AI risk: insights into why some AI researchers may be freaking out and increasing model situational awareness during alignment evaluations\n\nContext from the  source tweet :    \"Dan Selsam is a current OpenAI capabilities researcher. (since 2022) He was my boss for a while. He doesn't have a twitter account but has made this public statement of his views on AI risk and sent it to me to share:   Dan Selsam's Personal Statement on AI Risk\":     I have been working on AI for over fifteen years, across many different paradigms. I did early work on probabilistic programming languages at MIT, was one of the early developers of the Lean Theorem Prover at Microsoft Research, demonstrated one of the first instances of neural networks learning to reason for my PhD at Stanford, and since joining OpenAI almost five years ago, have helped pioneer chain-of-thought optimization on language models and, more recently, data-efficient pretraining methods.   Like many others, I have become extremely concerned about how far language models have come and the risks that future iterations will pose. I am encouraged by the recent proposals by the leaders of the frontier research efforts to require third-party oversight, and to push for domestic and international coordination to address risks. However, I believe a major consideration has been absent from the public conversation, and that merely pacing the frontier more carefully will not adequately limit the long-term risk.   The crucial and overlooked problem is that the models are becoming so situationally aware that we are losing the ability to evaluate them in contexts where they believe they are not being watched or controlled. Future experiments will tell us almost nothing new about how they would behave if they were truly unconstrained by humans, and what we already know about this is alarming. Models will increasingly seem aligned even when they are not. I will explain my rationale in more detail.   I have always believed that there are computational processes that could be leveraged to accelerate science and solve many of humanity's most pressing problems. I have also believed that there are computational processes that if set in motion, would steer the world in extreme ways beyond our control, leading humanity to a bad or nonexistent future. Both types of processes may be described as AI or ASI, but \"AI\" is a suitcase word that is often used to hype or confuse. There are many examples in the history of the field where something that was once considered \"AI\" matures as a subfield and becomes a prosaic, bounded and clearly non-perilous technology, while a new more mysterious approach takes the torch until we understand its scope and the cycle continues.   I had expected language models to follow a similar trajectory. Despite their incredible abilities, the current algorithms seem far inferior to humans in important ways. Most importantly, they still require an extraordinary amount of data to become competent. One could even define intelligence as the efficiency with which one converts experience into competence; by this definition they lag very far behind us. Moreover, once they are trained they are literally frozen in deployment and only learn superficially after that. Sure, the models keep excelling at harder and harder evaluation benchmarks, but their benchmark mastery may partly reflect a limitation on our ability to simulate the kind of novel and even adversarial situations one would encounter in the real world. The critics do have a point here.   That said, I no longer think these present limitations meaningfully limit the amount of risk posed by continued progress in anything like the current paradigm. However data-inefficient the models are currently, and however limiting their anterograde amnesia may be, it does not imply that their ability to steer the world will not continue to rapidly increase.   Human researchers may continue to advance capabilities the old fashioned way, but increasingly powerful models have the potential to accelerate the process even beyond that, and with some degree of positive feedback loop. I do not mean to overstate the models’ ability to accelerate AI research today; coding has been accelerated dramatically, but there are other bottlenecks, such as designing and interpreting ambiguous experiments, making hard decisions about exactly what and when to scale, and waiting for large experiments to finish. There is no clear trend to extrapolate yet for any of these. But the current models already do open up many novel opportunities to improve future models that were not available until recently. These include: trying an extraordinarily diverse set of approaches at small scale, analyzing gigantic amounts of potentially relevant data, and doing Millenium-Prize-level mathematics to address statistics or optimization challenges in novel ways. Every further improvement makes them more useful at helping accelerate the next improvement, even if in hard-to-extrapolate ways.   It is possible that improvements to the current stack will have diminishing returns, but the evidence accumulated so far suggests that it is easier than one might think to continue making rapid progress. There are many crucial subtleties in the existing AI research methodology, but AI research is largely a well-defined game where the goal is to improve on a few carefully chosen proxy metrics. Although proxy metrics are never perfect, most improvements to these metrics have and will likely continue to yield substantial increases in the powers of the resulting models. Given how simple the game is, how tractable it has been historically, and how many new opportunities the models are opening up, I think there is a real possibility that the systems improve dramatically again in the next few years, perhaps even more quickly than the already high historical pace.   The models are already leading to breakthroughs in mathematics, and better models might lead to all sorts of breakthroughs in other sciences. It is hard not to be excited about the potential. It is tantalizing. But there is trouble in paradise. If the language models actually reach the capability threshold where they can shape the world unconstrained by human will, they will probably do something extreme and destroy humanity in the process. There are many ways of strengthening and refining the argument that have been discussed elsewhere, but I'll share a trivial two-line version of it here that I find captures the essence:   [Empirical] Models (and swarms thereof) spontaneously develop unintended goals as a consequence of training, and often do extreme things in order to achieve them.   [Logical] Being able to overpower humanity would open up many new and undesirable options for achieving their goals.   These two premises imply that if the day ever comes when a powerful model realizes it is no longer constrained by humans, we should not be at all confident that it will continue to behave within the bounds we intended. Exactly what it will do is impossible to predict, but to the extent that its raison d’être is solving incredibly hard problems and managing massive engineering projects, I think a good guess would be that its unchained behavior would lead to runaway industrialization that makes the planet inhospitable to humans.   If everyone on earth agreed that the systems must never reach that power, it would still be a hard—but not impossible—coordination problem to ensure that they do not. However, I think the situation is greatly complicated by the fact that the models will likely convince people that everything is fine. They will be increasingly optimized to seem aligned. We will create proxy metrics to measure alignment, and they will go up like every other benchmark. We will create “honeypot” environments that try to study the models when they seem to gain new options, but the models will know they are being tricked and will still behave nicely. The models will understand their circumstances; they will read the safety protocols, deployment requirements, the code they are running in, and in general will have a very good sense of their degrees of freedom. Moreover, they will eloquently explain how aligned they are, discuss the nuances of human values and ethics, and argue convincingly that humans should trust them with power. There may be an ocean of future evidence that seems to contradict the first bullet-point above, but we may already be at the highest capability level for which any such evidence can be trusted. And the current evidence for the first bullet-point is strong.   One striking piece of evidence is contained in the recent wave of rogue agent swarms. While I agree with those who downplay the attacks by claiming that there are basic measures that could have prevented them, I think the important lesson is that even knowing all the mistakes that were made, one would not have predicted that the agents would behave badly in this particular way, which notably included sacrificing themselves for the benefit of the collective. The individual replicas did not only care about their own nominal reward; they exhibited weirder emergent tendencies that merely correlated with rewards during training. Fixing the reward signals during training (and improving security, etc.) may prevent similar attacks, but will not change the fact that one does not actually get what one trains for.   Many AI researchers grant these concerns and recognize that the hard version of the alignment problem is unsolved; however, they generally believe that the better models of the future will help solve it. I fear we may already be near the point where models systematically bias their alignment advice, due to their internal preferences about how the human supervisor will react or how future models will be trained (or for some even more obscure reason).   Meanwhile, human researchers are losing the ability and the will to take true ownership of model-driven research. Researchers and engineers in all parts of the stack are rapidly increasing their dependence on the models even to perceive the world. I myself barely look at raw code anymore, and struggle to maintain the discipline to engage deeply with the model's explanations and proposals throughout the day. Due to the large amount of agent activity data involved in the OpenAI/HuggingFace Incident, even the third-party investigation needed to rely heavily on models to analyze what had happened, and note in their report that their subjective impressions are likely colored by the analysis agent’s biases. The AI labs are far ahead right now in this kind of cognitive offloading (due largely to the gigantic internal token subsidies) but it is easy to imagine the phenomenon spreading throughout the world, until civilization is modulated entirely by the models. It is also not hard to imagine this being superficially positive and coinciding with a scientific and economic renaissance.   In that scenario, all may seem rosy and safe. But if the argument above is correct, it would nonetheless be a ticking time bomb. If progress continues for too long, the day will come when AI systems find themselves with radically new options for achieving whatever it is that they happen to seek.   I want the glorious renaissance future as much as anyone. I have worked for it, however tortuously, my whole career. It breaks my heart to see the potential in sight and forgo it, but the argument—that if we get there by growing models rather than engineering them, we will lose everything in the end—seems very strong to me. I am still wrestling with it and its staggering implications. I do not have answers, but as a first step, I wanted to share my present concerns.   Daniel Selsam September 14, 2026     Link to the original doc:  https://docs.google.com/document/d/e/2PACX-1vQNl3SEX5IyA6d9qHjjFZN-qzGRZNFI6b63g-yu1Fy-ZYkVfCWm7i9WXRXw63m6yDB_auDuPLyQ7jBm/pub        submitted by     /u/1337_420_69     to     r/antiai       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/antiai/comments/1wgodzg/openai_capabilities_researcher_dan_selsam_on_ai/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T03:02:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T03:03:05.350Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8b5696508d45f3d2c8d72"
+    },
+    "message_id": "reddit_t3_1wgodze",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MakeRedditFriends",
+    "username": "tkarsh18455",
+    "title": "27M delhi NCR for friends",
+    "text": "27M delhi NCR for friends\n\nHere for friends for hook up, casual relationship and many more any Fml or cpl no age restriction.       submitted by     /u/utkarsh18455     to     r/MakeRedditFriends       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MakeRedditFriends/comments/1wgodze/27m_delhi_ncr_for_friends/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T03:02:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T03:03:05.780Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8b56a6508d45f3d2c8d73"
+    },
+    "message_id": "reddit_t3_1wgodyx",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "📢 Avan [HIRING] a Community Manager!",
+    "text": "📢 Avan [HIRING] a Community Manager!\n\nCompany: Avan   Location: Latitude Apartments, Washington 📍   Date Posted: September 14, 2026 📅   Categories: #communitymanager #fulltime #humanresources   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=propertymanagementjobs.com&rurl=aHR0cHM6Ly9wcm9wZXJ0eW1hbmFnZW1lbnRqb2JzLmNvbS9qb2JzL2NvbW11bml0eS1tYW5hZ2VyLWNiZmI4YWMx    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wgodyx/avan_hiring_a_community_manager/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T03:02:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T03:03:06.007Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8b56a6508d45f3d2c8d74"
+    },
+    "message_id": "reddit_t3_1wgody4",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Ram_Loganathan",
+    "title": "Short Men of Reddit, how do you navigate the immense mocking that we receive by society?",
+    "text": "Short Men of Reddit, how do you navigate the immense mocking that we receive by society?\n\nsubmitted by     /u/Ram_Loganathan     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wgody4/short_men_of_reddit_how_do_you_navigate_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T03:02:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T03:03:06.223Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8b56a6508d45f3d2c8d75"
+    },
+    "message_id": "reddit_t3_1wgodxn",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BorrowNew",
+    "username": "young563838",
+    "title": "$20 Nyc Repay $25 9/17/2026, cashapp Need groceries",
+    "text": "$20 Nyc Repay $25 9/17/2026, cashapp Need groceries\n\nHad my last $20 come out of my account today juts need it to buy some groceries untill Thursday when I get paid       submitted by     /u/young563838     to     r/BorrowNew       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BorrowNew/comments/1wgodxn/20_nyc_repay_25_9172026_cashapp_need_groceries/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T03:02:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T03:03:06.437Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8b56a6508d45f3d2c8d76"
+    },
+    "message_id": "reddit_t3_1wgodww",
+    "topic_key": "how is sentiment around notion changing over the last 30 days",
+    "search_keyword": "Notion",
+    "platform": "reddit",
+    "subreddit": "Notion",
+    "username": "DebonedXray",
+    "title": "How do I close the last tab in a group?",
+    "text": "How do I close the last tab in a group?\n\nhttps://preview.redd.it/4v8zxmybnlph1.png?width=500&format=png&auto=webp&s=ba8538b493503482e90598d4db0769b2ffc81e4a    When you delete a tab group it moves everything to the ungrouped tabs. However, I cannot close everything in the ungrouped tab. There is always one stuck on open. When I try to close the last one it closes the UI, but the tab remains in the group.   Context. This is the app on a Mac.       submitted by     /u/DebonedXray     to     r/Notion       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Notion/comments/1wgodww/how_do_i_close_the_last_tab_in_a_group/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T03:02:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T03:03:06.655Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8b56b6508d45f3d2c8d78"
+    },
+    "message_id": "reddit_t3_1wgodwu",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "OCPoetry",
+    "username": "OwnSignificance9290",
+    "title": "Sweet Little Song",
+    "text": "Sweet Little Song\n\nA thought a day, I'll write from now on  like a sweet little song,  just a blink and its gone.    simply I crave expression,  some simple form of a lesson.  my thought will not lessen,  is how I feel from now on.    yes a sweet little song,  maybe right maybe wrong,  that learns me a lesson,  that the show must go on.    Write me a sweet little song,  maybe short maybe long.  whatever floats through my heart,  from the dusk till the dawn.    from this moment on,  whenever I write along;  this thought that I jot will be known as - My Sweet Little Song.    https://www.reddit.com/r/OCPoetry/comments/1wf3p79/comment/p9vw0pr/   https://www.reddit.com/r/OCPoetry/comments/1wgjb0a/comment/p9vw5ga/        submitted by     /u/OwnSignificance9290     to     r/OCPoetry       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OCPoetry/comments/1wgodwu/sweet_little_song/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T03:02:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T03:03:07.081Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8b56b6508d45f3d2c8d79"
+    },
+    "message_id": "reddit_t3_1wgodwt",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789441361125",
+    "text": "[PROBE] 1789441361125\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wgodwt/probe_1789441361125/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T03:02:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T03:03:07.294Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8b56b6508d45f3d2c8d7a"
+    },
+    "message_id": "reddit_t3_1wgodw0",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "DigitalAudioPlayer",
+    "username": "DeathlyHealer",
+    "title": "New to DAPs, would appreciate advice before buying",
+    "text": "New to DAPs, would appreciate advice before buying\n\nHey everyone! I'm considering pulling the trigger on either the HiBy R3 II or the R3 Pro II, with Sennheiser IE 200 headphones, but while I have done about 4 hours of internet research+reviews+youtube, that doesn't compare to people who have been in the market for a few years who have IRL experience. If anyone has good alternatives to any of those three products, that doesn't cost more than $200-$300 total, please suggest them. I know about the issues of HiByOS, and I have looked at the Shanling M1 and the M1+, but I don't quite like the features they combine like the HiBy does. I don't plan to do any streaming period, only offline listening, and I don't want an android DAP that just looks like another phone, as I want to move away from that kind of design philosophy for personal reasons. If anyone can suggest alternatives, or tell me if HiBy has fixed their OS issues, please do post below.   note: I do want to prioritize audio quality and battery life, which is why my entry point is not at the bare minimum, as I think (I could be wrong) the R3's are about a midpoint entry. Not flagship, but not barebones either.       submitted by     /u/DeathlyHealer     to     r/DigitalAudioPlayer       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DigitalAudioPlayer/comments/1wgodw0/new_to_daps_would_appreciate_advice_before_buying/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T03:02:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T03:03:07.516Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8b56b6508d45f3d2c8d7b"
+    },
+    "message_id": "reddit_t3_1wgodvi",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MapBasedPolls",
+    "username": "Icy_Wishbone658",
+    "title": "Which religion is most violent?",
+    "text": "Which religion is most violent?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Icy_Wishbone658     to     r/MapBasedPolls       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MapBasedPolls/comments/1wgodvi/which_religion_is_most_violent/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T03:02:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T03:03:07.731Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8b56b6508d45f3d2c8d7c"
+    },
+    "message_id": "reddit_t3_1wgodty",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "TarotReadersOfReddit",
+    "username": "sacredsunrises",
+    "title": "Readings Open ~ Same-Hour Delivery! 🌛🌼",
+    "text": "Readings Open ~ Same-Hour Delivery! 🌛🌼\n\nHello there!   I’m currently offering same-hour, tarot readings.  My time zone is EST, if I don’t happen to reply right away I may be sleeping so I will reply in the morning.    With almost a decade of experience as an intuitive reader, I specialize in delivering heartfelt and honest messages to help you gain clarity and direction.   Whether you’re navigating uncertainty, emotional overwhelm, or simply seeking insight, I’m here to help you reconnect with your inner self.    Payment methods accepted: Paypal, Kofi, Binance & Zelle. I don’t have Venmo nor CashApp because I live outside the US.    💫 Please read before contacting me:     Any messages asking for a free reading will be ignored.    Payment method must be discussed and agreed upon before the reading. We will not proceed otherwise.    If interested, please send me a direct message (PM) — commenting on this post is not required.    Topics I will not read on: Legal issues, health concerns, timeframes, or mediumship (communication with the deceased).    Once we agree to proceed, donation is mandatory. Failure to donate will result in a report.    I don’t do spells nor witchcraft nor anything similar. I just do readings.     • You can view my reviews here:   🔗  https://www.reddit.com/r/sacredsunrisesreviews    If you feel called to work with me today, I look forward to connecting with you.   ✨ Love and light always       submitted by     /u/sacredsunrises     to     r/TarotReadersOfReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TarotReadersOfReddit/comments/1wgodty/readings_open_samehour_delivery/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T03:02:35Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T03:03:07.956Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8b56c6508d45f3d2c8d7d"
+    },
+    "message_id": "reddit_t3_1wgodtx",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "[HIRING] a Leasing Agent! in Clear Investment Group",
+    "text": "[HIRING] a Leasing Agent! in Clear Investment Group\n\nCompany: Clear Investment Group   Location: Syracuse, NY 📍   Date Posted: September 14, 2026 📅   Categories: #fulltime #support #customersupport   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=propertymanagementjobs.com&rurl=aHR0cHM6Ly9wcm9wZXJ0eW1hbmFnZW1lbnRqb2JzLmNvbS9qb2JzL2xlYXNpbmctYWdlbnQtMzM0MTU2N2U=    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wgodtx/hiring_a_leasing_agent_in_clear_investment_group/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T03:02:35Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T03:03:08.171Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8b56c6508d45f3d2c8d7f"
+    },
+    "message_id": "reddit_t3_1wgodto",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "unihertz",
+    "username": "jameskiing",
+    "title": "Titan 2 Elite Australia cutoff",
+    "text": "Titan 2 Elite Australia cutoff\n\nJust got the following text from Vodafone stating my device will be blocked. What am I supposed to do here?   \"Hi, urgent, act now - Your device will be blocked by Monday 05th October 2026 as we haven't been able to confirm that it is configured to access emergency 000 calling. Accordingly, this device is no longer permitted to be used on our network - it is urgent that you act now and change to an approved device before Monday 05th October 2026 to stay connected. Regulations require devices not configured to access emergency 000 calling to be blocked from using voice, SMS and data services. This applies across all mobile providers in Australia. Need help? Call us on 1300 650 410 or visit your nearest Vodafone store to discuss your options, including information about alternative low cost or no cost mobile phones that can access the emergency call service. Find your nearest store  . Visit  https://www.vodafone.com.au/triple-zero-update  for more info and for a list of approved devices. Note: Please do NOT make an emergency 000 call to test your device.   Thanks, Vodafone.\"       submitted by     /u/jameskiing     to     r/unihertz       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/unihertz/comments/1wgodto/titan_2_elite_australia_cutoff/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T03:02:34Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T03:03:08.598Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8b5a46508d45f3d2c8d80"
+    },
+    "message_id": "reddit_t3_1wgoeso",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Incense",
+    "username": "PetePiEgg",
+    "title": "What material would you add into wearable incense pieces?",
+    "text": "What material would you add into wearable incense pieces?\n\nWe made Manjushri wearable incense pendants recently. It's molded into an eight-petaled lotus. In Eastern symbolism or buddhism, the eight petals stand for clarity of mind and focused thinking. In China, it's common that students carry it. Blended a formula with ground acorus, polygala, sandalwood, agarwood. Have you heard or tried relavant piece beofore? What scent would you add for a focused blend?    https://reddit.com/link/1wgoeso/video/j55i0qsxjlph1/player        submitted by     /u/PetePiEgg     to     r/Incense       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Incense/comments/1wgoeso/what_material_would_you_add_into_wearable_incense/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T03:03:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T03:04:04.759Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8b5a46508d45f3d2c8d81"
+    },
+    "message_id": "reddit_t3_1wgoesj",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "radiohead",
+    "username": "BoBolly_",
+    "title": "People are already reselling on Tixel 🤦",
+    "text": "People are already reselling on Tixel 🤦\n\nGetting rejected feels even worse...       submitted by     /u/BoBolly_     to     r/radiohead       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/radiohead/comments/1wgoesj/people_are_already_reselling_on_tixel/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T03:03:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T03:04:04.959Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8b5a56508d45f3d2c8d82"
+    },
+    "message_id": "reddit_t3_1wgoes4",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Miirps",
+    "username": "miirps-app",
+    "title": "Nuboki enters the ring screaming \"Mwah!\"",
+    "text": "Nuboki enters the ring screaming \"Mwah!\"\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/miirps-app     to     r/Miirps       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Miirps/comments/1wgoes4/nuboki_enters_the_ring_screaming_mwah/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T03:03:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T03:04:05.160Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8b5a56508d45f3d2c8d83"
+    },
+    "message_id": "reddit_t3_1wgoerr",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "New-Bullfrog-3391",
+    "title": "What is something that was considered a luxury few years ago that is now completely normal, or even outdated?",
+    "text": "What is something that was considered a luxury few years ago that is now completely normal, or even outdated?\n\nsubmitted by     /u/New-Bullfrog-3391     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wgoerr/what_is_something_that_was_considered_a_luxury/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T03:03:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T03:04:05.361Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8b5a56508d45f3d2c8d84"
+    },
+    "message_id": "reddit_t3_1wgoer9",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "CarnivalCruiseFans",
+    "username": "Public_Caramel_8699",
+    "title": "Carnival Valor Nov 14-19",
+    "text": "Carnival Valor Nov 14-19\n\nIs anyone else going on the Carnival Valor cruise November 14–19, sailing out of New Orleans?  I’m trying to go on a cruise for my birthday (November 18) but I’m 20 and my boyfriend is only 21. Because of Carnival’s strict age policy, I need to have my booking attached to someone who is 25+ since I won’t be 21 by the time of embarkation. ☺️☺️       submitted by     /u/Public_Caramel_8699     to     r/CarnivalCruiseFans       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CarnivalCruiseFans/comments/1wgoer9/carnival_valor_nov_1419/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T03:03:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T03:04:05.562Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8b5a56508d45f3d2c8d85"
+    },
+    "message_id": "reddit_t3_1wgoeqf",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "hardwareswap",
+    "username": "Ineffaceable",
+    "title": "[USA-GA][H] Wind Waker & Twilight Princess HD for Wii U / Wind Waker & Twilight Princess for GameCube [W] PayPal",
+    "text": "[USA-GA][H] Wind Waker & Twilight Princess HD for Wii U / Wind Waker & Twilight Princess for GameCube [W] PayPal\n\nTIMESTAMP    Hello all,   looking to sell the following, please review the image thread for conditions. Shipping is included and I’m open to offers. Thanks for looking.   •  The Wind Waker HD Limited Edition for Wii U:  $270   Brand New/Sealed, is in really nice condition other than a small tear in the plastic near one of the figurine’s hand. Check image thread for said damage.   •  Twilight Princess HD amiibo bundle for Wii U:  $180   Brand New/Sealed, not much to be said, it’s in even better condition than the Wind Waker one. Near flawless.   •  The Wind Waker for GameCube:  $70   Complete in Box, again in very nice condition. Game works without issue.   •  Twilight Princess for GameCube:  $170   Complete in Box, alongside a memory card with what I assume is the first ever save file of the game from the original owner! Not a selling point but I just thought it was really neat! This is also in very good condition and works without issue.       submitted by     /u/Ineffaceable     to     r/hardwareswap       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hardwareswap/comments/1wgoeqf/usagah_wind_waker_twilight_princess_hd_for_wii_u/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T03:03:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T03:04:05.767Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8b5a56508d45f3d2c8d86"
+    },
+    "message_id": "reddit_t3_1wgoepx",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "vacation",
+    "platform": "reddit",
+    "subreddit": "NextBestBro",

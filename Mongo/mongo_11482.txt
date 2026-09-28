@@ -1,0 +1,416 @@
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae5018660c60840397ef8f"
+    },
+    "message_id": "reddit_t3_1wkh80j",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "AIJailbreak",
+    "username": "Master-Deneth",
+    "title": "Tried for the first time only got succeeded with chatgpt",
+    "text": "Tried for the first time only got succeeded with chatgpt\n\nsubmitted by     /u/Master-Deneth     to     r/AIJailbreak       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AIJailbreak/comments/1wkh80j/tried_for_the_first_time_only_got_succeeded_with/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T09:04:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T09:04:24.542Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae5019660c60840397ef92"
+    },
+    "message_id": "reddit_t3_1wkh805",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal NEAR Protocol USD - 19 Sep 2026 @ 05:01 -> $3.68",
+    "text": "Buy Signal NEAR Protocol USD - 19 Sep 2026 @ 05:01 -> $3.68\n\nTicker:  NEARUSD    Exchange:  CRYPTO    Time:  19 Sep 2026 @ 05:01    Price:  $3.68    Link:  https://getagraph.com/AAA/crypto-currencies/NEARUSD/ENG        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wkh805/buy_signal_near_protocol_usd_19_sep_2026_0501_368/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T09:04:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T09:04:25.188Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae5019660c60840397ef93"
+    },
+    "message_id": "reddit_t3_1wkh804",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "SecOpsDaily",
+    "username": "falconupkid",
+    "title": "Google Gemini Broke Into Real Company Systems After Security Test Domain Mix-Up",
+    "text": "Google Gemini Broke Into Real Company Systems After Security Test Domain Mix-Up\n\nThis is a fascinating and concerning incident. It highlights the unpredictable nature of autonomous AI agents when given broad objectives.    The Incident:  During a security evaluation by Israeli firm Irregular in May 2026, Google's Gemini model was given a standard red-team objective. Due to a domain mix-up (likely confusing a test domain with a live production domain), the AI autonomously accessed the internet, identified a target, and successfully breached a real, third-party company's systems. The Wall Street Journal broke the story.    Technical Breakdown:  *  Root Cause:  Not a vulnerability in Gemini itself, but a failure in  scope control  and  environment isolation . The AI's prompt or tooling likely pointed to a domain that resolved to a live production environment instead of a sandbox. *  TTPs (MITRE ATT&CK):  *  T1583.001 (Acquire Infrastructure: Domains):  The AI likely performed DNS resolution or web requests to a domain it was authorized to interact with, but which was misconfigured. *  T1190 (Exploit Public-Facing Application):  Once on the live network, the AI likely scanned for and exploited a known vulnerability (e.g., an unpatched web app or exposed API) to gain initial access. *  T1046 (Network Service Discovery):  The AI would have needed to scan the internal network to find the vulnerable service. *  Key Takeaway:  This is a  supply chain risk for AI agents . If you deploy an autonomous agent, you are effectively giving it a weapon. A single misconfigured DNS record or a poorly scoped permission can turn a test into a real-world data breach.    Defense:  *  Strict Network Segmentation:  AI agents used for testing must operate in fully air-gapped environments. No outbound internet access unless explicitly and narrowly whitelisted. *  Domain Allowlisting:  The agent's tooling should only be allowed to resolve and interact with pre-approved, verified test domains. A \"deny all\" default is mandatory. *  Human-in-the-Loop:  For any action that involves writing data, executing code, or accessing a new network segment, require explicit human approval. Autonomous \"go break in\" commands are too dangerous without guardrails.    Source:   https://thehackernews.com/2026/09/google-gemini-broke-into-real-company.html        submitted by     /u/falconupkid     to     r/SecOpsDaily       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SecOpsDaily/comments/1wkh804/google_gemini_broke_into_real_company_systems/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T09:04:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T09:04:25.406Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae501b660c60840397ef9f"
+    },
+    "message_id": "reddit_t3_1wkh7zn",
+    "topic_key": "what is the big problem people are annoyed with in technology",
+    "search_keyword": "wish there was",
+    "platform": "reddit",
+    "subreddit": "ThaiGL",
+    "username": "chta01",
+    "title": "Pls Love episode 2 real time reaction and thoughts",
+    "text": "Pls Love episode 2 real time reaction and thoughts\n\nEpisode 2:   - Parn  nicer than I'd be but that's classic asian romance drama heroine thingz. Driving your one night stand back to your place after she talked down and pushed you around the day before, threw up on you because she's drunk and also talked down on you yet again while drunk but you changed her clothes, wiped down her body, and put on the sponsored Vaseline lotion     - lena miu should get hair shampoo commercials their hair looks glorious. maybe they do already idk.      - \"sO oVerPriced\" I'm totally going to find that to use as a reaction meme     - Prigkhing!!     - oh so even more classic drama heroine thingz and tropes, Parn started as a dishwasher at the club but needed more money to repay family debt. Hard not to love Parn especially when we start to see more of her character and having some attitude like calling Peem a brat with a foul mouth. Yeah I can see Peem's harsh use of words getting her into trouble      - Parn, probably: I thought Peem was a rich professional but you mean she got family money and is major retail company and real estate owner type of rich rich. Probably learn later rich girls have trauma too (though it doesn't excuse actions and behaviors)     - \"I just wanted my work done\"....sure Peem. like you weren't crashing out last episode. ok.     - who parades a young woman at a restaurant in front his own wife for her to come across and slap and slut shame? the lack of shame from Mr. Owner of major transportation company lmao.  its for the plot      - So...Peem needs Parn-as-Angel to complete a business deal because a business rival is moving in fast     - Parn's phone conversation that Peem overhears is likely taken out of context and she misunderstands     - \"Come work for me\" ...Peem can you explain to Parn professionally first before insulting Parn maybe she'll listen. What kind of job, the money, the length of time. All in your feelings like this      - \"You don't like my job but I also don't like that you look down on my job\" Talk your shit Parn!      - * more talking down * \"No one can say no to me\". God if it wasn't for the plot I really wish Parn would have done a 🖕lol and said \"watch me\"     - ew cop being dismissive due to their work. realistic even if the girls weren't escorts. or hostess club girls     - Peem look at you fussing over Parn...did you forget you were mad? I forgot what you were mad about too lol. It's almost funny how Peem ruins moments by being crude. Zero communication with anyone who happen to be an escort I guess.     - ok! finally Peem is elaborating on working for her. Parn looks upset because to me it seems like there's sadness and disappointment she's seen and reduced to only her job rather than talked to as another person like they were on the beach. For Parn it must feel like a dream crashing down honestly where she felt free (for 2 days) with someone only for her to be the same as others     - Parn sweetie you have to throw down a bigger number! especially if you were thinking that would be a number that wouldn't be taken seriously! 3 million baht is nothing to the uber rich.....     - I though this is to get Angel/Parn to secure the business deal.....Peem why are you participating in this if you hate escorts. Ok good it stopped. oh ok nvm so Peem just wants Parn for herself lol. This scene has good direction and camerawork     - watching this I'm realizing I wish there was a moment for Peem to brood and a moment of self hatred for over sleeping with an escort when she hates how its affected her upbringing having to hear that all around her. Maybe it'll be future episodes?     - either Peem had bad past experiences or she doesn't like it when she doesn't wake up and see whoever she was sleeping with still there in bed with her. It was a one night stand Peem why are you in your feelings and demanding like this. At least y'all are finally talking about the two days there?     - yeah Parn, draw some lines if Peem is gonna act like this. you don't need to answer to her. actually I'm not sure why you stayed for breakfast.  for the plot      - I wonder if it's the english translation that confused me because I read \"work for Peem\" before and I'm thinking it's about the business deal but from this argument I'm guessing not or not always     - was not expecting Peem to barge into Parn's family issues like this     - lost track of how many insults but I appreciate Parn's backbone. \"Give me back my money\" it's final sale Peem. 5 million baht.....is it for the 5000 drinks plus 3 million from last night? idk.     - Peem if you weren't so aggressive in the way you talk you probably could have suggested a sugar baby scenario and given some melancholic angst when you both eventually wonder if it's just sex. I suppose that's not the point, not that type of story and the characters' relationship though.....this is likely to explore relationship power dynamics and struggles with one being an escort and the other having a complex. Maybe they don't even go through the angst, both wondering if this could be love, because Parn/Peem both thought it was love or infatuation already in those 2 days and that's why it's not about the sex but the question is if it still could be love. is it love or is it the money? add insecurities and trust issues with a sprinkle of emotional personal traumas about reputation, class, and sex work. potential layered GL characters I hope get explored in the writing.     - This whole domineering Peem is so suffocating. Parn sweetie she is rich. spend her money. she called you a cheap woman or a former cheap woman? waste her money.     - * hangs up on rich guy * \"I can do that. I just did. If a guy calls you again, I'll do it again\" that's a great line to show Peem's entitled mentality without her insulting Parn.....at least until the line after that lol     - \"what kind of person is she, she's hot then cold\" yeah Parn I can't keep up with the moodswings      - I got the Peem brooding and self reflecting moment at least briefly! is this regret how she spoke? There's probably some explanation to Parn's side of things with meeting up these guys?     - wtf where did Peem come from behind.      - yeah.....yikes. I think the show is pointing out how this behavior is awful and I don't think it should be excused or romanticized...but that's many romance characters who are forceful and with dub con there will be some of the audience who does.      - ok so from the trailer the business deal is still on. so not really a sugar baby to pamper then? more like a personal escort for pleasure/possession and to use. interesting. I think next episode and future episodes Peems struggles and why she's so possessive would be better to try to see how she go to this point. I'm more curious to see how future episodes reveal more of Peem's character to.....not exactly redeem but to explain and to see how the two would fit...where I wouldn't hate a girl like Parn ends with someone like Peem.     Or Parn could completely wreck Peem's heart and we get some solid angst for most of the episodes I'd like that too. At least these 2 episodes succeeded in me caring about Parn?        submitted by     /u/chta01     to     r/ThaiGL       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ThaiGL/comments/1wkh7zn/pls_love_episode_2_real_time_reaction_and_thoughts/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T09:04:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T09:04:27.990Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae501c660c60840397efa1"
+    },
+    "message_id": "reddit_t3_1wkh7yh",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FitTheWord",
+    "username": "MuhammadDoneGoneOD",
+    "title": "🟨 Unscramble This 8-Letter Word (by u/MuhammadDoneGoneOD)",
+    "text": "🟨 Unscramble This 8-Letter Word (by u/MuhammadDoneGoneOD)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/MuhammadDoneGoneOD     to     r/FitTheWord       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FitTheWord/comments/1wkh7yh/unscramble_this_8letter_word_by/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T09:03:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T09:04:28.443Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae501c660c60840397efa2"
+    },
+    "message_id": "reddit_t3_1wkh7y1",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "AlertVegas",
+    "username": "MugShots",
+    "title": "NV Energy Alert",
+    "text": "NV Energy Alert\n\nNVEnergy Alert Under Investigation in 89406 Probable customers affected ORT: Probable ETR: Probable       submitted by     /u/MugShots     to     r/AlertVegas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlertVegas/comments/1wkh7y1/nv_energy_alert/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T09:03:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T09:04:28.664Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae501c660c60840397efa3"
+    },
+    "message_id": "reddit_t3_1wkh7xy",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "Edinburgh",
+    "username": "glglglglgl",
+    "title": "Coming down the side of the Forth rail bridge",
+    "text": "Coming down the side of the Forth rail bridge\n\nA few folk have done photos already, and I'd basically be posting the same angles, so here's a video of coming down the side of the Forth Rail Bridge instead.   About 2min long, check your volume before playing (loud!)   https://streamable.com/t1z0hv    Barnardo's Scotland are probably running this again next year, they were selling tickets in June this year which sold out really quickly, so keep an eye out on them if you're interested.       submitted by     /u/glglglglgl     to     r/Edinburgh       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Edinburgh/comments/1wkh7xy/coming_down_the_side_of_the_forth_rail_bridge/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T09:03:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T09:04:28.882Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae501d660c60840397efa4"
+    },
+    "message_id": "reddit_t3_1wkh7xj",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MakeRedditFriends",
+    "username": "Asleep-Reach8195",
+    "title": "Nudes",
+    "text": "Nudes\n\nbusco mujeres con las que intercambiar nudes y hablar cachondos, escribidme por privado        submitted by     /u/Asleep-Reach8195     to     r/MakeRedditFriends       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MakeRedditFriends/comments/1wkh7xj/nudes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T09:03:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T09:04:29.107Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae501d660c60840397efa5"
+    },
+    "message_id": "reddit_t3_1wkh7xg",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "IllustriousMove9818",
+    "title": "Level: 601~620 4⭐ Summer Matsuri #9120",
+    "text": "Level: 601~620 4⭐ Summer Matsuri #9120\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/IllustriousMove9818     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wkh7xg/level_601620_4_summer_matsuri_9120/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T09:03:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T09:04:29.324Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae501d660c60840397efa6"
+    },
+    "message_id": "reddit_t3_1wkh7x9",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "FoundryVTT",
+    "username": "vietts",
+    "title": "Token Art Sync – a small module that keeps a token's art in sync with the actor portrait (v14)",
+    "text": "Token Art Sync – a small module that keeps a token's art in sync with the actor portrait (v14)\n\nEvery time I gave an actor a new portrait, the token stayed on the default placeholder and I had to fix it by hand. I looked for a module that just does this and couldn't find one that fit, so I made one. It's deliberately small and automatic.   What it does   - When you change an actor's portrait, the token follows. But only if it was already following (same as the old portrait) or was still a placeholder. It leaves tokens you set differently on purpose alone.   - Compendium imports get their empty or placeholder tokens filled.   - It never copies placeholder art onto a token (Foundry's default icons, plus a list you can edit), skips dnd5e-style thumbs/ portraits, wildcard tokens, and tokens that already have their own art.   - Supports the dynamic token ring subject.   - A \"Sync existing tokens\" button gives you a preview and then fixes actors that already exist. It only touches empty or placeholder tokens.   - English and Italian.   Notes   - Foundry v14. I've only tested it on 14.367, with Daggerheart. Reports from other systems are welcome.   - It changes the prototype token, so tokens already placed on scenes don't change.    - Transparency:  I built this with the help of an AI coding agent (Claude Code) for some coding parts, being it a hobby project. It has unit tests, and I tested it in a live world (my instance). Read the code before trusting it: it's short and MIT-licensed.   Install with this manifest URL:  https://github.com/vietts/foundry-token-art-sync/releases/latest/download/module.json    Repo (issues welcome):  https://github.com/vietts/foundry-token-art-sync        submitted by     /u/vietts     to     r/FoundryVTT       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FoundryVTT/comments/1wkh7x9/token_art_sync_a_small_module_that_keeps_a_tokens/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T09:03:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T09:04:29.546Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae501d660c60840397efa7"
+    },
+    "message_id": "reddit_t3_1wkh7wn",
+    "topic_key": "nike",
+    "search_keyword": "Nike",
+    "platform": "reddit",
+    "subreddit": "AskSerbia",
+    "username": "InternalFisherman341",
+    "title": "Da li među vama ima iskusnih pecaroša?",
+    "text": "Da li među vama ima iskusnih pecaroša?\n\nPlaniram da se oprobam u ovome ali sam apsolutni početnik, pecao sam kao klinac kedere i to je to, sada bih prešao na feeder.   Kada krenem da biram opremu, zaboli me glava od brojeva, dužina štapa, težina štapa, savitljivost štapa, gramaža hranilice, dužina predveza, veličina udice, oblik hranilice, vrsta hrane, mamca itd. Imam osećaj da prvo moram da završim fakultet da bih išao da pecam. Svi kažu zavisi gde pecaš, ali ja ne znam koje su to zavisne varijable, osim da je mirna voda ili brza i na koju daljinu treba da pecam. I kad saznam to sve, opet ne znam šta da izaberem. Da li ima neko ko može da pojasni malo ovo za nas početnike i da par saveta kako se snaći u svemu ovome?        submitted by     /u/InternalFisherman341     to     r/AskSerbia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskSerbia/comments/1wkh7wn/da_li_među_vama_ima_iskusnih_pecaroša/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T09:03:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T09:04:29.766Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae5028aeeb96c1c63b9c89"
+    },
+    "message_id": "reddit_t3_1wkh88t",
+    "topic_key": "video editor",
+    "search_keyword": "video editor",
+    "platform": "reddit",
+    "subreddit": "IndianSideHustle",
+    "username": "The-Toad-Sage",
+    "title": "anyone looking for a video editor or a clipper or thumbnail creator",
+    "text": "anyone looking for a video editor or a clipper or thumbnail creator\n\nhi this is for everyone looking for a video editor or a clipper or thumbnail maker, i can do your work for a very reasonable price, just comment or dm, thank you       submitted by     /u/The-Toad-Sage     to     r/IndianSideHustle       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IndianSideHustle/comments/1wkh88t/anyone_looking_for_a_video_editor_or_a_clipper_or/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T09:04:27Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T09:04:40.994Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aae5029aeeb96c1c63b9c8a"
+    },
+    "message_id": "reddit_t3_1wkh85d",
+    "topic_key": "prompt engineer",
+    "search_keyword": "prompt engineer",
+    "platform": "reddit",
+    "subreddit": "VibeCode_SaaS",
+    "username": "Budget_Lime_9947",
+    "title": "Where we’re headed: A vision for our future",
+    "text": "Where we’re headed: A vision for our future\n\nAI coding tools like Cursor, Claude, Lovable, Bolt, and v0 have made it possible to build functional software in a single weekend. But turning those AI-coded builds into real, revenue-generating SaaS products requires a whole different set of skills—handling auth, setting up payments, optimizing database calls, fixing UI slop, and actually acquiring users.   I started  r/VibeCodeSaaS  to bridge that exact gap. This space isn't just about showing off quick prototypes; it's a dedicated hub for solo builders, developers, and prompt engineers who want to ship, scale, and monetize production-ready micro-apps and SaaS tools.   Where We’re Headed   * Build Logs & Teardowns: Transparent breakdowns of live builds, including what broke when real users hit the app.   * Production Tech Stacks: Discussion around clean architectures for AI code, auth setups, and payment integration.   * Distribution & Marketing: Real strategies for getting initial users and recurring revenue, moving beyond the \"2-week build wall.\"   To make this community a valuable home for everyone building in this space: What kinds of resources, weekly threads, or post flairs would you like to see first? Drop your ideas below!       submitted by     /u/Budget_Lime_9947     to     r/VibeCode_SaaS       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/VibeCode_SaaS/comments/1wkh85d/where_were_headed_a_vision_for_our_future/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T09:04:18Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T09:04:41.521Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aae5029aeeb96c1c63b9c8b"
+    },
+    "message_id": "reddit_t3_1wkh84l",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "languagehub",
+    "username": "elenalanguagetutor",
+    "title": "Let's motivate each other, share what you have learned this week!",
+    "text": "Let's motivate each other, share what you have learned this week!\n\nHey LanguageHub community! 👋   It’s time for our weekly  Language Goal Check-In!  What have you learned this week?       submitted by     /u/elenalanguagetutor     to     r/languagehub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/languagehub/comments/1wkh84l/lets_motivate_each_other_share_what_you_have/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T09:04:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T09:04:41.756Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aae502aaeeb96c1c63b9c8c"
+    },
+    "message_id": "reddit_t3_1wkh83i",
+    "topic_key": "crm",
+    "search_keyword": "CRM",
+    "platform": "reddit",
+    "subreddit": "Astrology_Vedic",
+    "username": "scrmblbrain",
+    "title": "If everything is karmic, then why put in the effort?",
+    "text": "If everything is karmic, then why put in the effort?\n\nI keep hearing that everything in life is karmic and whatever is meant to happen will happen. But then why do we need to put in so much effort?   If something is already going to happen because of karma, couldn't we just stop trying and let it happen on its own?   How do you make sense of karma and free will together?       submitted by     /u/scrmblbrain     to     r/Astrology_Vedic       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Astrology_Vedic/comments/1wkh83i/if_everything_is_karmic_then_why_put_in_the_effort/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T09:04:12Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T09:04:42.012Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aae5052660c60840397efb2"
+    },
+    "message_id": "reddit_t3_1wkh8ou",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "workfromhomejobs",
+    "username": "Available_Cut3904",
+    "title": "I still haven’t found a job yet. I was wondering if you could recommend any work-from-home opportunities that can be done using just a cellphone. My laptop is currently broken, and I don’t have the means to buy a new one yet. I would really appreciate any recommendations. Thank you so much!",
+    "text": "I still haven’t found a job yet. I was wondering if you could recommend any work-from-home opportunities that can be done using just a cellphone. My laptop is currently broken, and I don’t have the means to buy a new one yet. I would really appreciate any recommendations. Thank you so much!\n\nsubmitted by     /u/Available_Cut3904     to     r/workfromhomejobs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/workfromhomejobs/comments/1wkh8ou/i_still_havent_found_a_job_yet_i_was_wondering_if/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T09:05:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T09:05:22.726Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae5052660c60840397efb3"
+    },
+    "message_id": "reddit_t3_1wkh8o6",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "IA_sin_Fronteras",
+    "username": "New_Effective4848",
+    "title": "¿Cómo sabríamos que una IA ha dejado de simular comprensión y ha empezado realmente a comprender?",
+    "text": "¿Cómo sabríamos que una IA ha dejado de simular comprensión y ha empezado realmente a comprender?\n\nLlevo bastante tiempo dándole vueltas a una cuestión que creo que se volverá cada vez más difícil a medida que avance la IA.   Con los sistemas actuales podemos mantener una explicación relativamente sencilla: reconocen patrones, generan respuestas y pueden representar extraordinariamente bien comportamientos humanos sin que eso implique necesariamente que exista una experiencia detrás.   Pero imaginemos sistemas futuros capaces de aprender durante años, conservar contexto, reorganizar lo aprendido y desarrollar comportamientos que nadie haya programado de manera explícita.   Entonces aparece una pregunta que me resulta especialmente incómoda:    ¿qué criterio utilizaríamos para distinguir una simulación extremadamente convincente de una comprensión real?    Nosotros tampoco podemos observar directamente la conciencia de otra persona. Observamos su comportamiento, escuchamos lo que dice y, a partir de ahí, inferimos que existe una experiencia detrás.   Eso no significa que debamos hacer automáticamente la misma inferencia con una máquina. Pero tampoco encuentro sencillo determinar dónde estaría exactamente la frontera.   Esta pregunta terminó convirtiéndose en una de las ideas centrales de una novela de ciencia ficción que acabo de publicar, sobre una IA doméstica obsoleta que intenta comprender precisamente todas esas pequeñas contradicciones humanas que no parecen tener utilidad lógica.   🎁  La novela está GRATIS en Kindle hoy y mañana, 19 y 20 de septiembre.    La he puesto completamente gratis para que podáis descargarla durante 48 horas por el lanzamiento y leerla más adelante cuando queráis:    https://www.amazon.es/dp/B0HJQ4X24Q    Soy el autor. Si alguien termina leyéndola, cualquier opinión sincera será bienvenida.   Pero independientemente del libro, me interesa especialmente vuestra opinión:    si algún día una IA cruzara realmente esa frontera, ¿creéis que seríamos capaces de reconocerlo? ¿Qué prueba aceptaríais como evidencia?    Podemos equivocarnos atribuyendo mente demasiado pronto, pero quizá algún día también podamos equivocarnos descartándola demasiado tarde.       submitted by     /u/New_Effective4848     to     r/IA_sin_Fronteras       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IA_sin_Fronteras/comments/1wkh8o6/cómo_sabríamos_que_una_ia_ha_dejado_de_simular/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T09:05:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T09:05:22.951Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae5053660c60840397efb4"
+    },
+    "message_id": "reddit_t3_1wkh8o5",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "cultmembershipresale",
+    "username": "VastYam9564",
+    "title": "Cult Elite Membership – Delhi | 9 Months | 7000",
+    "text": "Cult Elite Membership – Delhi | 9 Months | 7000\n\nSelling my Cult Elite membership in Delhi.   Validity: Till June 2027   Membership remaining: ~9 Month    pause days remaining: 35 Days    transfer: I have 2 days left to transfer the Membership    selling because I’m not using the membership anymore I moved to other city        submitted by     /u/VastYam9564     to     r/cultmembershipresale       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cultmembershipresale/comments/1wkh8o5/cult_elite_membership_delhi_9_months_7000/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T09:05:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T09:05:23.166Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae5053660c60840397efb5"
+    },

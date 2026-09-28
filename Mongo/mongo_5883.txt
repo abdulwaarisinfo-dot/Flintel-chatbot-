@@ -1,0 +1,416 @@
+    "username": "Zoinks_Scoob_19",
+    "title": "I hate it when I accidentally start a little trend thats gonna piss people off for valid reasons",
+    "text": "I hate it when I accidentally start a little trend thats gonna piss people off for valid reasons\n\nWhat's up guys, im a certified petty looser on reddit and I am very angry people stole my VERY ORIGINAL joke and used it but slightly different the same day I made the joke, this is a very serious and important matter that should be taken to the highest of government officials to be sorted out   But seriously, I dont care, I just have a feeling this is gonna annoy people if it keeps going and so let's stop before this becomes a hole thing, i still think its kinda funny but I dont want to piss of the people who use the place to actually bring up good points and topics, so let's unite and not mess with our local reddit users who probably already hate me at this point       submitted by     /u/Zoinks_Scoob_19     to     r/hatethissmug       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hatethissmug/comments/1wgsha1/i_hate_it_when_i_accidentally_start_a_little/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:30:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:30:30.167Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e6066508d45f3d2c9e0e"
+    },
+    "message_id": "reddit_t3_1wgsh9h",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DailyGuess",
+    "username": "TumbleweedSudden3643",
+    "title": "Can You Guess This 5-Letter Word? Puzzle by u/TumbleweedSudden3643",
+    "text": "Can You Guess This 5-Letter Word? Puzzle by u/TumbleweedSudden3643\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/TumbleweedSudden3643     to     r/DailyGuess       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DailyGuess/comments/1wgsh9h/can_you_guess_this_5letter_word_puzzle_by/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:30:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:30:30.372Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e6066508d45f3d2c9e0f"
+    },
+    "message_id": "reddit_t3_1wgsh8l",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "kraw",
+    "username": "Atiny_2001",
+    "title": "Can you beat \"The Tale of Two Choices\" in under 00:14:89?",
+    "text": "Can you beat \"The Tale of Two Choices\" in under 00:14:89?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Atiny_2001     to     r/kraw       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/kraw/comments/1wgsh8l/can_you_beat_the_tale_of_two_choices_in_under/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:29:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:30:30.576Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e6416508d45f3d2c9e10"
+    },
+    "message_id": "reddit_t3_1wgsi3l",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "soloGokarna",
+    "username": "redemption2416",
+    "title": "Zostel female dorms sold out",
+    "text": "Zostel female dorms sold out\n\nHey guys!   Planning a trip around the 3rd week of October. However, female dorms at gokarna are sold out. Please suggest good hostels/stays around under budget. Travelling for the first time solo.        submitted by     /u/redemption2416     to     r/soloGokarna       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/soloGokarna/comments/1wgsi3l/zostel_female_dorms_sold_out/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:31:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:31:29.164Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e6416508d45f3d2c9e11"
+    },
+    "message_id": "reddit_t3_1wgsi3k",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "PCB",
+    "username": "AddAnotherCircle",
+    "title": "Review Request - Phased Array Antenna Control Board",
+    "text": "Review Request - Phased Array Antenna Control Board\n\nHi there!   I'm a senior Electrical Engineering major working on my capstone project which involves creating a small phased array antenna as a rocket payload. The plan is to have a controller board connected to the antenna array that will send the RF and phase shifter control signals. As of now, the first iteration of the control board is almost ready for ordering, but I wanted to get some more opinions before I send it off, as my RF design skills are somewhat limited (this is the first board I've done with it).   Here's a brief overview of the board     RP2040 Microcontroller as main control   3.3v linear regulator will accept 9-12 volts   I2C and UART breakout for possible additions later   3.3v to -3.3v charge pump for negative rail required by phase shifters on antenna board   connectors will distribute the controlling signals to the antenna board (SPI and Power)   4-layer stackup, (PCBWay standard, Impedance Controlled, See stackup image)   RF trace width: .325mm (Coplanar waveguide with ground plane, 50ohm target at 2.4GHz, .2mm clearance to GND Pour)      Some Comments    I'm aware that there are modules for the SX1280 chip that would make my life easier. I deliberately chose to attempt a bare chip design as I will be needing to do RF design more later in the project, and figured this would be a lower-stakes initial attempt. The results of the design will guide the rest of the project. I stuck as close as possible to the datasheet's recommended designs with only slight modifications for connection and impedance matching with my stackup.    Concerns      I have a total of 28 DRC errors, all of which are a result of the USB footprint, which I got from DigiKey, and it has cleared PCBWay's audit in the past. I am somewhat concerned about the USB routing though, due to the awkward routing needed to connect to the RP2040.   Obviously I have concerns about the SX1280 circuitry, as that is one of the main functions of the board, and likely the most difficult to get right.   The charge pump generating -3.3v is closely following the reference design, but I do not have much experience with charge pumps and therefore don't know how much I can trust it in this case.      Questions      Are there any glaring issues that I've missed?   Are there any best practices that I'm not using that I should begin doing?      Testing    We have a LibreVNA and a spatial characterization apparatus on hand, so I'll be able to verify impedance matching and radiation characteristics empirically once boards are in hand, but I'd rather catch design issues now than after manufacturing.   Thank you so much for any feedback you have!       submitted by     /u/AddAnotherCircle     to     r/PCB       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PCB/comments/1wgsi3k/review_request_phased_array_antenna_control_board/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:31:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:31:29.374Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e6416508d45f3d2c9e12"
+    },
+    "message_id": "reddit_t3_1wgsi20",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "Pretoria",
+    "username": "Budget_Lime_9947",
+    "title": "Solo digital products side hustle looking for a partner — I can't do this alone anymore",
+    "text": "Solo digital products side hustle looking for a partner — I can't do this alone anymore\n\nSo I've been running a small digital products business on the side for a while now. I do everything — the product, the design, the branding, the marketing, all of it. And honestly it's gotten to the point where I realize I just can't keep doing this by myself. There's more potential here than I can execute on solo, especially while balancing everything else in life.   I'm not looking to hire someone or pay for a gig. I want an actual partner — someone who comes in with real skin in the game, splits ownership, makes decisions with me, the whole thing.   What I really need is someone who's good at stuff I'm not:   Marketing and growth (getting eyes on the thing, SEO, content, ads, whatever works)   Design/UX — someone who can make things look and feel more polished than I can on my own   Or just general business sense — pricing, scaling, systems, the operational side   I've got the vision and the groundwork already done, I just need someone who wants to build something with me instead of me trying to carry it all solo.   Not trying to be cagey but I'd rather not lay out all the specifics in a public post. If this sounds like something you'd be into, shoot me a DM and I'm happy to talk details there.       submitted by     /u/Budget_Lime_9947     to     r/Pretoria       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Pretoria/comments/1wgsi20/solo_digital_products_side_hustle_looking_for_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:31:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:31:29.591Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e6416508d45f3d2c9e13"
+    },
+    "message_id": "reddit_t3_1wgsi1u",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "SriLankaTravel",
+    "username": "Dry-Trip-9369",
+    "title": "Sri Lanka in November",
+    "text": "Sri Lanka in November\n\nMy husband and I have the full month of November to travel Sri Lanka, but I need some advice on the weather /areas matched with our style of traveling. We are really not into touristy traps/hip beach bars/granola yoga vibes/organised tours. We'd love to get an authentic experience. Given that november is inter-monsoon.. where to go/what to avoid considering our preferred experience?  Thanks!        submitted by     /u/Dry-Trip-9369     to     r/SriLankaTravel       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SriLankaTravel/comments/1wgsi1u/sri_lanka_in_november/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:31:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:31:29.802Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e6426508d45f3d2c9e14"
+    },
+    "message_id": "reddit_t3_1wgsi1r",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "DigitalMarketing",
+    "username": "Naghma-ZN",
+    "title": "How do you know when a marketing channel is worth continuing?",
+    "text": "How do you know when a marketing channel is worth continuing?\n\nHow long do you usually test a marketing channel before deciding whether to continue or stop?   Do you mainly look at leads, conversions, CAC, revenue, or something else? I'm curious how others decide when a channel just needs more time versus when it clearly isn't working.        submitted by     /u/Naghma-ZN     to     r/DigitalMarketing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DigitalMarketing/comments/1wgsi1r/how_do_you_know_when_a_marketing_channel_is_worth/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:31:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:31:30.012Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e6426508d45f3d2c9e15"
+    },
+    "message_id": "reddit_t3_1wgsi1k",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "ShopeePH",
+    "username": "Sea-Historian9019",
+    "title": "OMAIGADDD DI PA RIN AKO MAKAPANIWALAAAA",
+    "text": "OMAIGADDD DI PA RIN AKO MAKAPANIWALAAAA\n\nGRABEEEEEEE TIL NOW DI AKO MAKAPANIWALA NA MANANALO AKO LIKEEE GHURLLL LAGI AIRPODS TINA TRY KO KUNIN KO MA CHECKOUT TAPOS MAG TRY AKO SA NEO OMAIGADDD NAKUHA KO SHAAAAAAA    KALA KO TALAGA SA MGA NAGPO POST NG GANITO EITHER FOR ENGAGEMENT LANG SA SHOPEE OR MARKETING STRATEGY SHAAAA    OMAIGADDDD I KENNATTTTTTT   EXCITED NA KO BUKASSS WHAAHAHAHA NGAYON NA LANG AKO NA EXCITE NA MAG BUKASSS    TSAKA NASA WAREHOUSE NA SHA SMTH TAPOS NA I PACK WHAHAHAHAHAH OMAIGADDD KALA KO KASI I KA CANCEL PA NILA WHAHAHAH       submitted by     /u/Sea-Historian9019     to     r/ShopeePH       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ShopeePH/comments/1wgsi1k/omaigaddd_di_pa_rin_ako_makapaniwalaaaa/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:31:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:31:30.221Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e6426508d45f3d2c9e16"
+    },
+    "message_id": "reddit_t3_1wgsi14",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "rusAskReddit",
+    "username": "Level_Animal2536",
+    "title": "Самый залайканый комментарий определяет следующий ход",
+    "text": "Самый залайканый комментарий определяет следующий ход\n\nsubmitted by     /u/Level_Animal2536     to     r/rusAskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/rusAskReddit/comments/1wgsi14/самый_залайканый_комментарий_определяет_следующий/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:31:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:31:30.437Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e6426508d45f3d2c9e17"
+    },
+    "message_id": "reddit_t3_1wgsi0t",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Meowi",
+    "username": "_wafj",
+    "title": "[Spin] Your execution is tomorrow… choose your last meal",
+    "text": "[Spin] Your execution is tomorrow… choose your last meal\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/_wafj     to     r/Meowi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Meowi/comments/1wgsi0t/spin_your_execution_is_tomorrow_choose_your_last/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:31:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:31:30.649Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e6426508d45f3d2c9e18"
+    },
+    "message_id": "reddit_t3_1wgsi0p",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "boardgames",
+    "username": "benjaneson",
+    "title": "Is there a “reviewer class” of board gaming that experiences games completely differently from normal players?",
+    "text": "Is there a “reviewer class” of board gaming that experiences games completely differently from normal players?\n\nThis is something I've noticed more and more with board game criticism, especially from reviewers like SUSD, NPI, Space-Biff, etc, compared with playing games myself and watching other people actually play them.   There seems to be a particular group of reviewers (and some designers) who really want games to be something more than games, in a way which doesn't correspond to how most people actually experience them.   According to the perspective of those reviewers,  John Company  isn't just an extremely interactive negotiation/economic game, but supposedly makes you confront your complicity in colonialism and understand the incentives which made the East India Company what it was.  Pax Pamir  isn't just a card/area-control game with temporary alliances, but gives you some unusually profound perspective on Afghan politics and imperialism.  Spirit Island  isn't just a very complicated cooperative optimisation game, but makes you experience colonialism from the opposite perspective. And with licensed games you get the same thing in a slightly different form -  this  game finally captures what Lord of the Rings or Star Wars actually feels like.   I don't really recognise any of this from watching people play them.  I've never watched a game of John Company and thought that the people playing it were relating to the theme in some fundamentally different way from people playing  Agricola ,  Le Havre ,  Brass ,  Gaia Project ,  Concordia , etc. They're trying to win. They want a particular office because it helps them, they make a deal because it's advantageous, they want someone else to vote a particular way because it improves their position, they might deliberately allow the Company to fail because it's better for them personally, etc.   Obviously you can describe that afterwards as modelling something real about the East India Company, and that's interesting. The people running it didn't all have the same interests, private incentives mattered, somebody could benefit while the institution as a whole was doing badly, etc - but the person actually playing is still thinking \"this is better for me\".  I don't see why that is somehow a different category of experience from somebody in Agricola thinking \"I need four wood before she takes it\", or somebody in Gaia Project working out whether this conversion is worth doing, or somebody in Le Havre taking a loan because it's obviously better than not taking one.   Pax Pamir is similar. You can explain that the players aren't \"playing Britain\" or \"playing Russia\", that they're Afghan political actors using those powers, changing allegiance when it suits them, etc - but once people know the game, Britain is also just the coalition that currently has these pieces, Russia is the coalition where somebody has three influence, and the actually relevant question is whether the dominance check is coming out now.  I don't even mean that negatively. I really like Cole Wehrle's games. It just seems to be what happens to basically every game once you play it enough.   The same thing happens with Spirit Island. At first it's explorers arriving, then towns being built, then the land being ravaged, the Dahan fighting back, etc - but after two or three games it's \"Ravage 6, Defend 4, two Dahan kill the town\".    All of this is normal, and that's how people learn and play games.  What I find strange is that this kind of interpretation seems to depend a lot on which game you're talking about.   You could do exactly the same thing with Agricola if you wanted - you could say it's about subsistence anxiety, enclosure, family labour, children being both more mouths to feed and more labour, constantly having to increase production just to avoid disaster, and so on.  But no reviewer says that when someone plays Agricola, they're \"confronting the precarity of peasant life\".   You could do the same with Le Havre: debt, industrialisation, privately owned infrastructure, turning raw materials into more valuable goods, food constantly hanging over everything, etc.  But if somebody takes a loan because it's the best move, nobody says they're now having a profound experience of industrial capitalism.   So why does somebody making the selfish move in John Company suddenly become a profound experience of colonialism?   A designer can have thought very seriously about the subject. The mechanisms can represent the subject really well. Playing to win can even make people reproduce some of the same incentives.  But then somehow it becomes \"the player is experiencing colonialism\" or \"the game forces you to confront your complicity\", and I don't see that happening in actual gameplay.   This is where I think the difference between the reviewer class and actual players is most obvious. Read a long Space-Biff piece about a Cole Wehrle game and then listen to four experienced people playing it.  The reviewer is talking about empire, institutions, historical contingency, complicity, power, the meaning of victory conditions, etc. The players are mostly saying: \"Can you stop her?\", \"How much will you give me?\", \"If you buy that I win\", \"No, because I'll betray this\", \"Who's actually ahead?\", \"I'll give you £2.\"   Obviously, a reviewer can talk about things the players aren't literally saying at the table. That's not the issue. The issue is when \"I can interpret this mechanism as meaning X\" turns into \"the player is having an experience of X\" - those clearly aren't the same thing.   The same thing happens with IP games, with some reviewers saying \"this really makes you feel like you're in Star Wars\" or \"this finally captures Lord of the Rings\".  But does it? Or is it a good game where the pieces happen to be called Luke Skywalker and Darth Vader, and where obviously you're more interested in them because you already care about Star Wars?  Even  War of the Ring , which is probably one of the strongest examples possible, becomes Hunt dice, corruption, DEW, military VPs, activations, etc once people know it. You could replace the whole setting with a generic fantasy world where a huge evil empire is fighting several initially inactive free nations while a hidden group carries the one magical object capable of destroying the enemy into its territory. Obviously it would be much less appealing and would probably sell vastly fewer copies, but it would still be the same game.   Honestly, I struggle to think of many strategy games in the BGG Top 500 which couldn't be given some generic equivalent theme and still basically work.  You might need to preserve the underlying situation which the mechanisms came from, but not the actual IP, historical event, names, artwork, etc.  I'm not saying theme is pointless - obviously it isn't. It can make a game much easier to understand, much more attractive, more memorable, funnier, more emotionally engaging, and can make people want to play it in the first place. And having mechanisms which fit the theme extremely well is clearly  good  design. I just don't see why that automatically means the act of playing the game becomes some  deep experience  of the subject.   Maybe this is why I've always found the Dice Tower style of reviewing games, even though it's much less \"serious\", closer to how people I know actually talk about games: is it fun? Are the decisions interesting? Does it drag? Is there too much downtime? Does the interaction work? Would you play it again?   Whereas there seems to be another group where it isn't enough for John Company to be a brilliant game which models some interesting things about a certain historical era. Playing it also has to somehow become an important experience about colonialism, and I just don't see that happening at the table.   Do people here actually experience John Company, Pax Pamir, Spirit Island, etc in a fundamentally different way while playing them from Agricola, Gaia Project, Le Havre, Concordia, etc? Or is most of that something that happens when people write about the game afterwards?       submitted by     /u/benjaneson     to     r/boardgames       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/boardgames/comments/1wgsi0p/is_there_a_reviewer_class_of_board_gaming_that/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:31:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:31:30.860Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e6436508d45f3d2c9e19"
+    },
+    "message_id": "reddit_t3_1wgsi04",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "CATHELP",
+    "username": "VariousRevolution195",
+    "title": "Nicked my cat while grooming (pic)",
+    "text": "Nicked my cat while grooming (pic)\n\nI know now not to cut out fur matting, will be using a razor moving forward. But yesterday I caught a tiny bit of skin as I was cutting out some matte fur. My husband and I cleaned the wound, shaved the area around the wound, sprayed with saline, applied wound care and animal friendly Neosporin. My husband tried to use suter strips but they weren’t staying. Please look at the photo and tell us if you think it will heal or we need to get stitches at the vet        submitted by     /u/VariousRevolution195     to     r/CATHELP       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CATHELP/comments/1wgsi04/nicked_my_cat_while_grooming_pic/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:31:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:31:31.082Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e6436508d45f3d2c9e1a"
+    },
+    "message_id": "reddit_t3_1wgshzf",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "gmeshire",
+    "username": "gmepriceticker",
+    "title": "GME Price Tracker - 2026-09-15",
+    "text": "GME Price Tracker - 2026-09-15\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/gmepriceticker     to     r/gmeshire       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/gmeshire/comments/1wgshzf/gme_price_tracker_20260915/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:31:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:31:31.298Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e6436508d45f3d2c9e1b"
+    },
+    "message_id": "reddit_t3_1wgshz4",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "SpunkyaWWWee61",
+    "title": "what's one small thing you always pack that seems pointless to everyone else?",
+    "text": "what's one small thing you always pack that seems pointless to everyone else?\n\nsubmitted by     /u/SpunkyaWWWee61     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wgshz4/whats_one_small_thing_you_always_pack_that_seems/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:31:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:31:31.509Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e6436508d45f3d2c9e1c"
+    },
+    "message_id": "reddit_t3_1wgshyr",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Sui USD - 15 Sep 2026 @ 02:28 -> $0.708",
+    "text": "Buy Signal Sui USD - 15 Sep 2026 @ 02:28 -> $0.708\n\nTicker:  SUIUSD    Exchange:  CRYPTO    Time:  15 Sep 2026 @ 02:28    Price:  $0.708    Link:  https://getagraph.com/AAA/crypto-currencies/SUIUSD/ENG        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wgshyr/buy_signal_sui_usd_15_sep_2026_0228_0708/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:31:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:31:31.719Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e6436508d45f3d2c9e1d"
+    },
+    "message_id": "reddit_t3_1wgshyp",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Karachi",
+    "platform": "reddit",
+    "subreddit": "PakistanMarketplace",
+    "username": "ActualBlueberry3751",
+    "title": "preloved shirts and pents",
+    "text": "preloved shirts and pents\n\n50 ki shirt   100 ki pent   6 shirts (casual / office wear)   6 pants (jeans / cotton / dress)   Size M   Waist 31-33   Length 31-33   1000 for all    karachi only       submitted by     /u/ActualBlueberry3751     to     r/PakistanMarketplace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PakistanMarketplace/comments/1wgshyp/preloved_shirts_and_pents/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:31:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:31:31.928Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e6446508d45f3d2c9e1e"
+    },
+    "message_id": "reddit_t3_1wgshy4",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "IMadeThis",
+    "username": "gather_social",
+    "title": "I missed bowling because of a WhatsApp poll. So I built “gather.” try and do somthing about it",
+    "text": "I missed bowling because of a WhatsApp poll. So I built “gather.” try and do somthing about it\n\nA few months ago, me and the lads were planning pints, bowling, then more pints after work. We'd all agreed on it over WhatsApp, someone dropped a poll in the chat to lock in numbers for booking the bowling, I missed it in the yapping in the group chat, and ended up joining them at the pub having skipped the bowling entirely.   Not the end of the world. But I wanted to do something about it - this can happen too easily. Plans that almost work. People who almost make it. A group chat that gets lost in translation into plans.   “gather.” is a social scheduling app built to cut the fat out of planning. You create an event, put your time and location options out in front of everyone, and friends vote on them in real time. No buried polls, no chasing people for replies - just a clear picture of what works for the group.   It's live on the App Store now. Building it was the enjoyable part; the fine-tuning toward the end took considerably longer than expected. Good to have it out there.   Would love to hear if this is something you've run into, or what you'd want from an app like this. And please call me out if I’ve missed anything or anything’s not working.  https://apps.apple.com/app/gather/id6761619905        submitted by     /u/gather_social     to     r/IMadeThis       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IMadeThis/comments/1wgshy4/i_missed_bowling_because_of_a_whatsapp_poll_so_i/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:31:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:31:32.143Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e6446508d45f3d2c9e1f"
+    },
+    "message_id": "reddit_t3_1wgshy0",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Chessit",
+    "username": "chesspuzzle-game",
+    "title": "15 SEP • 12 PM",
+    "text": "15 SEP • 12 PM\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/chesspuzzle-game     to     r/Chessit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Chessit/comments/1wgshy0/15_sep_12_pm/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:31:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:31:32.354Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e6446508d45f3d2c9e20"
+    },
+    "message_id": "reddit_t3_1wgshx9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",

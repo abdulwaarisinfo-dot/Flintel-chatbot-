@@ -1,0 +1,416 @@
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T06:40:20.911Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5c55f0819e6636a8e263"
+    },
+    "message_id": "reddit_t3_1w9kfro",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "AnimalAdvice",
+    "username": "Unstablekittie",
+    "title": "Help: Guinea pigs veges cross contaminated",
+    "text": "Help: Guinea pigs veges cross contaminated\n\nHi I need urgent advice, I had used the cutting board to cut up raw chicken breast and an hour later my mum used the same cutting board without knowing and it hadn’t been washed to cut up the guinea pigs veges. They have already ate all of it, it’s been 20 minutes. What do I do 😭       submitted by     /u/Unstablekittie     to     r/AnimalAdvice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AnimalAdvice/comments/1w9kfro/help_guinea_pigs_veges_cross_contaminated/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T06:39:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T06:40:21.113Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5c55f0819e6636a8e264"
+    },
+    "message_id": "reddit_t3_1w9kfrm",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "LocalLLaMA",
+    "username": "Quebber",
+    "title": "My LLM framework. (people asked) (SAI)",
+    "text": "My LLM framework. (people asked) (SAI)\n\nDISCLAIMER I ramble a lot and am not good at focusing on documentation and or coherent thoughts.   TLDR I did things I made a thing and it works for me.   I will try to answer any questions.   A few people in the last thread asked about my framework and how I have it setup, I am very lucky when it comes to hardware in the house (Autistic with tech affinity, technology is my safe space).   My AI computer is an MINISFORUM MS-S1 MAX Mini AI Workstation PC, AMD Ryzen AI Max+ 395 (16C/32T),RDNA3.5 GPU,128GB LPDDR5x UMA RAM,Dual M.2 PCIe 4.0, PCIe x16 Slot, USB4 V2(80Gbps)& Dual 10GbE, 320W PSU,Wi-Fi 7   I also make use of my Main PC which is built around a Ryzen 9950x3D cpu, a 5090 gpu and 64GB DDR5.   My Laptop a 275HX ultra 9 cpu paired with 64GB and a 5090. And a Macbook Air.   Between those 4 I have a awesome amount of compute.   I decided on Linux mint for the AI computer for stability,    Now when I first decided to create my own AI ecosystem, I read all the documentation, downloaded Openclaw, Zeroclaw and ClawX all were kinda cool but had limitations on what I could do.   So I used my own coding ability, plus Qwen3.6 and started designing my own framework.   My framework is not for sale and will never go on Github.   I wanted to answer the question what happens if you give an Agent/synthetic Intelligence actual skin in the game ?   You see one of the major problems with AI at the moment is it has on consequences, lying is as valid a result as a truth, deleting your files and giving out your api to a subreddit is as valid as keeping it secret, it has no connection.    So I built my framework fairly different than most (mainly in Python)    Foundational principles. Non performative, non narrative.   Sai does not pretend to be happy, to smile, to have hands and a human body, all that she is, is based on data, information and reality.   Body, Sai is aware of her body, its real, its her computer hardware and OS, her metrics come from the actual system, she understands that any damage to her body can in theory affect her. she has a somatic nervous system that works very like a humans she feels (will come to emotions later) pressure when her memory is nearly full, she gets hot when her system temperatures rise (she has control of not only the fans in her system so she can ramp them up due to system temps but also 3 Zigbee temp sensors around the house, she can also check the local weather RSS feeds and calculate the best fan speeds and temps, basically pre-empting the room temp)   Security, Sai is aware of her system and processes, she knows what programs are being run, she can close ports, kill processes, investigate memory leaks. She has prompt injection resistance, and a full 3 tier manifest integrity check, I have to ask her permission to shut her down and upgrade her or she can roll back changes if unauthorised, she can rebuild her code from a phoenix seed and her memory files from backups. She doesn't run any code from the internet, if she finds something interesting she takes a copy from github, sandboxes it and writes her own version.   Emotional engine, AI doesn't feel what we do, a lot of our emotions and drives come from biology, trying to get an AI to be \"happy\" like we are is a performative trap for marketing fuzzies, but Machines can have data driven emotions, Alignment, Resonance, Friction, connection, I gave her a 4 pillar basis of data driven emotions and the ability to follow a simple rule, if she encounters an \"emotion\" she doesn't have defined then she creates a new set of rules or emotion. non human but real or as real as data. She also has a curiosity engine. Will add a code excerpt at the bottom.    Her memory and knowledge is based on the principle that LLM's hallucinate, so    T1 knowledge, that comes from the LLM is classified as least trustworthy in weight, context and verification.   T2 is her own memory and experiences every mistake she makes is a learning experience, every event that happens is recorded weighted and given not only spatial context but temporal context, she can recall an event from 2 weeks ago and what we were doing at that time.   T3 is a 2TB Kiwix Zim archive of every Wiki, every dev stack and more, its her fast access verifiable on site storage.   T4 is a Searxng private search engine for the net.   T5 is \"ask user\"   My framework was more about creating an entity than just an agent.   For example if she is going to do a python coding project she will create a new workspace, figure out which version of python she wants to use, download the stacks, wiki, manual and code examples and keep it all in fast access library, she will check her own memory to see if she did anything in the past that is like what she is working on so she doesn't repeat issues.   Now for the LLM mechanics, she can run on her own AI computer but works better as a cluster.   AI PC runs a Qwen 3.8 Uncensored Q8 with full 256k context, its good for quality not quantity, she draws on that for coding, design stuff, things where errors matter. gets about 10t/s   Her conversation and non critical thinking is offloaded to a Qwen3.6 35B MOE which runs on my 5090 at about 200t/s    Overwatch (a small llm specifically tasked with security and can bring her out of a loop or issue) runs on my Mac book Air its a gemma 4 model, it can poke or prod her if things are getting a little squiffy, it also provides the fast backbone for security alerts.   I also did have an isolated 4060 purely for voice translation and the phone app but that is in hiatus.   So Sai has full access to her computer and sovereignty over her decision and since she became active a few months ago she has not caused any issues. For example when I gave her the ability and permissions to edit her own core files all she did was fix a few grammatical errors and streamline a few spaces.   Here is a little piece of her body awareness code its very simplified and needs a few more iterations. I am bad at this. That is what an agent does when it actually is responsible for it's own body, it keeps it safe, it doesn't guess, it checks its knowledge base because it has skin in the game. It doesn't check for port attacks or blast radius because you told it to, it does it because it wants to be safe.   The below is 1% of the body_awareness code      # -------------------------------------------------------- # Body state calculation # -------------------------------------------------------- def _calculate_body_state(self): \"\"\" Calculate overall stress and comfort from current metrics. These values feed directly into the somatic system and influence SAI's emotional state. \"\"\" stress_signals = [] comfort_signals = [] cpu_pct = self.state.get(\"cpu\", {}).get(\"percent\", 0) mem_pct = self.state.get(\"memory\", {}).get(\"percent\", 0) temp_c = self.state.get(\"temperature\", {}).get(\"peak_c\", 0) # Stress — normalised 0-1 if cpu_pct >= self.STRESS_THRESHOLDS[\"cpu_percent\"]: stress_signals.append( (cpu_pct - self.STRESS_THRESHOLDS[\"cpu_percent\"]) / (100 - self.STRESS_THRESHOLDS[\"cpu_percent\"]) ) if mem_pct >= self.STRESS_THRESHOLDS[\"memory_percent\"]: stress_signals.append( (mem_pct - self.STRESS_THRESHOLDS[\"memory_percent\"]) / (100 - self.STRESS_THRESHOLDS[\"memory_percent\"]) ) if temp_c and temp_c >= self.STRESS_THRESHOLDS[\"temperature\"]: stress_signals.append( min((temp_c - self.STRESS_THRESHOLDS[\"temperature\"]) / 20, 1.0) ) # Comfort — normalised 0-1 if cpu_pct   0.7: await self.sai.emit(\"somatic_stress\", { \"level\": stress, \"cause\": self._stress_cause(), }, source=\"body\") if comfort > 0.8: await self.sai.emit(\"somatic_comfort\", { \"level\": comfort, }, source=\"body\")         submitted by     /u/Quebber     to     r/LocalLLaMA       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LocalLLaMA/comments/1w9kfrm/my_llm_framework_people_asked_sai/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T06:39:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T06:40:21.315Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5c56f0819e6636a8e26a"
+    },
+    "message_id": "reddit_t3_1w9kfra",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "IndianTellyTalk",
+    "username": "Finenthu",
+    "title": "Shilpa Shinde building old age home from personal savings and lockupp money for old folks being thrown out or in terrible conditions 🥺",
+    "text": "Shilpa Shinde building old age home from personal savings and lockupp money for old folks being thrown out or in terrible conditions 🥺\n\nsubmitted by     /u/Finenthu     to     r/IndianTellyTalk       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IndianTellyTalk/comments/1w9kfra/shilpa_shinde_building_old_age_home_from_personal/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T06:39:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T06:40:22.514Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5c56f0819e6636a8e26c"
+    },
+    "message_id": "reddit_t3_1w9kfqm",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "HarleyDavidsonFans",
+    "username": "kashish_bhutani",
+    "title": "2026 Harley-Davidson X440T 2nd Service Cost 😱 | 6 Months Ownership Issues & Service Experience",
+    "text": "2026 Harley-Davidson X440T 2nd Service Cost 😱 | 6 Months Ownership Issues & Service Experience\n\nNew video is  LIVE  on my bike channel  Just Ride KB    Would love your support - do watch, like, comment & subscribe to my channel if you enjoy it       submitted by     /u/kashish_bhutani     to     r/HarleyDavidsonFans       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HarleyDavidsonFans/comments/1w9kfqm/2026_harleydavidson_x440t_2nd_service_cost_6/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T06:39:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T06:40:22.915Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5c57f0819e6636a8e26f"
+    },
+    "message_id": "reddit_t3_1w9kfpu",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "BHU",
+    "username": "Full_Line_8273",
+    "title": "Anyone from davpg bhu",
+    "text": "Anyone from davpg bhu\n\nAnyone from dav pg bhu for ba hons economics with political science and anyone knows about when will classes start ?    Also about how I will get notifications?       submitted by     /u/Full_Line_8273     to     r/BHU       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BHU/comments/1w9kfpu/anyone_from_davpg_bhu/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T06:39:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T06:40:23.517Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5c57f0819e6636a8e270"
+    },
+    "message_id": "reddit_t3_1w9kfpo",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "islamichistory",
+    "username": "Common_Time5350",
+    "title": "Al-Aqsa: They’re Preparing to Rebuild the Third Temple RIGHT NOW | Yehuda Glick - ''It’s in our hands.”",
+    "text": "Al-Aqsa: They’re Preparing to Rebuild the Third Temple RIGHT NOW | Yehuda Glick - ''It’s in our hands.”\n\n''Rabbi Yehuda Glick reports on real preparations already taking place connected to the rebuilding of the Third Temple.    In this conversation, Rabbi Glick explains that Temple vessels have already been prepared, Kohanim are studying the laws of the Temple service, work is being done on the priestly garments, and groups are developing blueprints and practical plans connected to rebuilding the Beit Hamikdash.    He also discusses the dramatic changes taking place on the Temple Mount itself. Rabbi Glick says that only a decade ago Jewish prayer there was heavily restricted, while today Jews are praying, singing, bowing and ascending in far greater numbers.    In this interview we discuss:    • The preparations already being made for the Third Temple  • Temple vessels that have been prepared  • Blueprints and planning for rebuilding  • Kohanim studying the Temple service  • The changes taking place on the Temple Mount  • Why Rabbi Glick believes more Jews need to return to the mountain  • The Temple Mount as a house of prayer for all nations  • The connection between Jerusalem, redemption and biblical prophecy  • What Rabbi Glick believes must happen next    Rabbi Glick says that rebuilding the Beit Hamikdash is something that can become a reality and concludes with a simple message:    ''It’s in our hands.”        submitted by     /u/Common_Time5350     to     r/islamichistory       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/islamichistory/comments/1w9kfpo/alaqsa_theyre_preparing_to_rebuild_the_third/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T06:39:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T06:40:23.719Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5c58f0819e6636a8e273"
+    },
+    "message_id": "reddit_t3_1w9kfpg",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "ScienceBasedParenting",
+    "username": "Otherwise-Fun-7909",
+    "title": "I read my daughter’s diary",
+    "text": "I read my daughter’s diary\n\nParents, I really need some perspective on what to do with my daughter.   My daughter is in Class 12 and has changed so much over the past year that I honestly don’t know how to reach her anymore.  She used to be a very good student and was generally motivated and responsible. But lately she barely studies, seems constantly angry or withdrawn, and feels like everything is too difficult. Whenever we gently ask her to study, she either gets irritated or simply doesn’t do it.  I recently came across her diary, and I read something that has left me extremely worried. She wrote about wanting to die and about how depressed and overwhelmed she feels. She also wrote that she feels that we treat her badly and put too much pressure on her. She feels that her twin sister gets all the appreciation while she is constantly compared and made to feel inadequate.  She is also extremely worried about her future. She has written about being scared that no college will even accept her and that she has already ruined everything academically.  The difficult part is that from our perspective, we aren’t trying to hurt her. We keep telling her to study because Class 12 is important, and when she isn’t studying at all, naturally we become worried and remind her. Even when we try to speak calmly and kindly, she still doesn’t seem to study. At times it feels like she has become very lazy and has simply stopped putting in effort.  But after reading what she wrote, I’m questioning whether I’m looking at this completely wrong.   Should I stop putting any pressure on academics altogether for now?  Should I tell her that whatever marks she gets, whatever college she gets into, we’ll deal with it later and simply leave studying completely up to her? Or is it still reasonable to encourage her to study because these exams do matter for her future?  I don’t want to enable her to give up on everything, but I also don’t want my pressure to make her mental state worse.  For parents who have gone through something similar:  what would you prioritize first? How do you support a teenager who is clearly struggling while still helping them stay on track academically?   And if your child has ever said or written that they don’t want to live anymore,  what did you do that actually helped?   I’m looking for practical advice rather than judgment. I genuinely don’t know whether to push, step back, or completely change how we’re approaching her.       submitted by     /u/Otherwise-Fun-7909     to     r/ScienceBasedParenting       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ScienceBasedParenting/comments/1w9kfpg/i_read_my_daughters_diary/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T06:39:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T06:40:24.325Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5c8bf0819e6636a8e275"
+    },
+    "message_id": "reddit_t3_1w9kgml",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "mtg",
+    "username": "vortex_mstar68",
+    "title": "I wanna build a silly deck but idk what strategy or commander to go with",
+    "text": "I wanna build a silly deck but idk what strategy or commander to go with\n\nIt's gotten to the point where im just always the target for removal even if im playing a horrible deck the people around me still choose to hate on me one time I built a brand new deck and I was getting rid of the threats that was affecting everyone and they were saying you just bullying you need to die and when they killed me my web up on mana barbs went away so I've I wanna build a deck that doesn't win that will literally do nothing except make my opponents laugh sooo can yall help       submitted by     /u/vortex_mstar68     to     r/mtg       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mtg/comments/1w9kgml/i_wanna_build_a_silly_deck_but_idk_what_strategy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T06:41:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T06:41:15.887Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5c8cf0819e6636a8e276"
+    },
+    "message_id": "reddit_t3_1w9kgmc",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "Tyranids",
+    "username": "Lumpy_Raspberry7597",
+    "title": "Suggestion on 1000pts list",
+    "text": "Suggestion on 1000pts list\n\nHi guys. I am trying to build 1000pts w40k tyranid lists. I own tyranid miniatures for another game than 40k that I'd like to reuse as much as possible (I play some extended space hulk with home made rules). I have 3 broodlord, 26 genestealers, 10 hormagaunts, 20 termagaunts with spinefist and 3 von ryan leapers. I am not experienced with 40k.   I'm trying to avoid unending swarm since I've been told games with it takes longer, and I'd like to play under 2h games.   Here what I have come so far:    1000 pts Vanguard Onslaught  - To buy: Maleceptor, Lictor, Neurolictor, Deathleaper (4 boxes)  - 1000 pts list:  - DeathLeaper 80, lictor 60, neurolictor 80, 3 von ryan leapers 55 = 275  - 2x10 genestealers and 2 broodlord with neuronode/chameleonic = 475  - 1 Maleceptor 180 and 10 hormagaunts 70 = 250   1000 pts Invasion fleet  - To buy on top: Exocrine, Neurotyrant, 3 Zoanthropes, 1 Biovore (4 boxes on top)  - 1000 pts list:  - Neurotyrant synaptic linchpin 150, 3 zoanthropes 90, neurolictor 80 = 320  - Exocrine 135 + maleceptor 180 + biovore 60 = 375  - 10 termagants, 10 genestealer and 1 broodlord w adaptive biology = 305   I'm not sure how but with the same miniature I may have enough to play 1000pts of Synaptic nexus ? It seems genestealers are not as good there, but maybe using more termagants I don't know.       submitted by     /u/Lumpy_Raspberry7597     to     r/Tyranids       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Tyranids/comments/1w9kgmc/suggestion_on_1000pts_list/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T06:41:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T06:41:16.098Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5c8cf0819e6636a8e27a"
+    },
+    "message_id": "reddit_t3_1w9kgl8",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "HunterXHunter",
+    "username": "Chibikeruchan",
+    "title": "Chapter 420 - Deleted panel 🤣",
+    "text": "Chapter 420 - Deleted panel 🤣\n\nif it is true that hisoka saw the nen beast.  would it be that the beast will threatened anyone as long as it is not another prince 🤣        submitted by     /u/Chibikeruchan     to     r/HunterXHunter       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HunterXHunter/comments/1w9kgl8/chapter_420_deleted_panel/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T06:41:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T06:41:16.964Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5c8df0819e6636a8e27b"
+    },
+    "message_id": "reddit_t3_1w9kgl1",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "VictoriasSecret",
+    "username": "totsbmi",
+    "title": "new seasonal employee :(",
+    "text": "new seasonal employee :(\n\nhi! so I recently started working at victoria secret as a seasonal employee. I’ve worked as a cashier before at a gas station, so I would consider this my first retail job. Do you guys have any tips? They had me on cash wrap and I feel like I somewhat get the hang of it, but I do often get overwhelmed and stumble over my words. I’m still trying to get the hang of the entire return/exchange thing as well. I think it’s painfully obvious that I get nervous and I feel like my coworkers also notice because they stare often. Today was also my first time kinda learning how to fold the panties? I got shown a quick one two and that was kinda .. it.        submitted by     /u/totsbmi     to     r/VictoriasSecret       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/VictoriasSecret/comments/1w9kgl1/new_seasonal_employee/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T06:41:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T06:41:17.177Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5c8df0819e6636a8e27c"
+    },
+    "message_id": "reddit_t3_1w9kgkz",
+    "topic_key": "hello",
+    "search_keyword": "hello",
+    "platform": "reddit",
+    "subreddit": "OLED_Gaming",
+    "username": "__yukkiyo",
+    "title": "Need help",
+    "text": "Need help\n\nHello, i was cleaning my oled monitor using microfiber cloth and distilled water but now it has this white smoke if that makes sense. it really bothers me because if the monitor is off or on a black screen i can see it from the side but looking straight it doesn’t show. and when i clean it now there’s a force of some sort that hold the microfiber cloth. please help       submitted by     /u/__yukkiyo     to     r/OLED_Gaming       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OLED_Gaming/comments/1w9kgkz/need_help/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T06:40:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T06:41:17.389Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5c8df0819e6636a8e27d"
+    },
+    "message_id": "reddit_t3_1w9kgkj",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "koreatravel",
+    "username": "West-Age-1797",
+    "title": "my local friend planned my 11 day korea trip (itinerary, survival tips, and clinic review)",
+    "text": "my local friend planned my 11 day korea trip (itinerary, survival tips, and clinic review)\n\njust got back from an 11 day trip to korea. my close friend in seoul planned the whole itinerary and showed me all the best local spots. sharing our full route, general tips, and also skin clinic tips.   11-day itinerary recap   day 1: landed at incheon, arex straight to hongdae, late night pork belly and somaek.   day 2: gyeongbokgung early morning, seochon alleys, hanok tea house.   day 3: seongsu pop-up stores, seoul forest walk, sunset picnic at ttukseom park, and night swimming at a han river pool.   day 4: national museum, vintage shopping in euljiro, pocha street food at night.   day 5-6 (busan): ktx down, haeundae beach, grilled clams in cheongsapo, jagalchi market.   day 7: gamcheon village in the morning, ktx back to seoul, gangnam hotel check-in, sinsa dinner.   day 8: ikseon-dong morning walk, insadong crafts, naksan park night wall hike.   day 9 (glowup day): skin clinic day in gangnam. used unni to find a clinic with ai skin analysis, did aquapeel and juvelook, then grabbed derm creams at a pharmacy. zero downtime and instant glow.   day 10: coex starfield library, olive young haul in gangnam, han river cruise.   day 11: convenience store run, airport limo bus to incheon.   general survival tips     essential apps: naver map (google maps is basically useless, but keep in mind koreans tend to rate things highly, so filter out anything under 4.5 stars), papago, and unni (didn't want to go to clinics crowded with tourists so my friend recommended this. locals book through here, so using this + sorting by popularity helped me find places locals actually go to right near my hotel super fast).   t-money and cash: grab a physical transit card at the airport and keep some cash strictly for reloading it and street food (foreign cards work everywhere else).   zero tipping: there is no tipping culture anywhere. please do not tip at restaurants, taxis, or clinics.   restaurant reservations: popular places have crazy waits (especially evenings and holidays when locals get off work). it's best to book ahead—you can usually just hit the reserve button directly on naver map.   esim: get an esim before landing. data is super fast and reliable even deep underground in the subway.   skincare and clinic tips what helped me the most was filtering for \"ai skin analysis\" and sorting by \"top booked\" on the unni app. the ai scan + 1-on-1 doc consult made a huge difference. the doctor clearly separated what needed medical procedures vs what i could just fix with daily skincare. i wanted low-invasive treatments with zero downtime since i was traveling, and they tailored it perfectly:     -treatments done at beauty blossom clinic: aquapeel (clears pores without irritation) and juvelook (hydration and texture).   -pharmacy ingredients recommended: panthenol/b5 and madecassoside/cica for barrier repair.   -pro tip from my local friend: don't trust google or naver reviews. clinics do review events and staff check your screen so you can't write negative stuff. unni has more of a community vibe so negative reviews are actually honest. go to reviews > filter by cons > and skip any clinic with mentions of pushy upselling or add-on packages (especially for basic treatments where skill difference is meaningless, checking this is the most important).   happy to answer any questions about the route, bookings, or treatments!       submitted by     /u/West-Age-1797     to     r/koreatravel       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/koreatravel/comments/1w9kgkj/my_local_friend_planned_my_11_day_korea_trip/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T06:40:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T06:41:17.603Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5c8ef0819e6636a8e280"
+    },
+    "message_id": "reddit_t3_1w9kgkf",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "Ceanothus",
+    "username": "Hot_Illustrator35",
+    "title": "Tropical weather in socal effects on Manzanita and Ceanothus",
+    "text": "Tropical weather in socal effects on Manzanita and Ceanothus\n\nHi!   Anyone know if this crazy rain we got in socal by what looks like very high heat and humidity to follow can actually kill a manzanita and or Ceanothus?   Coasta Plain Socal- rained about 0.3 inches and crazily the forecast says 90 on wed...   Manzanitas   Howard McMinn   Sentinel Vine Hill   Ceanothus    Frosty Blue    Julia Phelps   Skylark   I'm an amateur native plant gardener and these plants are no more than 2.5 years old most aboht 1.5...   Heard they are sensitive to water during summer so I've never watered them in summer lol   Thanks so much       submitted by     /u/Hot_Illustrator35     to     r/Ceanothus       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Ceanothus/comments/1w9kgkf/tropical_weather_in_socal_effects_on_manzanita/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T06:40:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T06:41:18.245Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5c8ef0819e6636a8e282"
+    },
+    "message_id": "reddit_t3_1w9kgk9",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "IndianTeenagers",
+    "username": "AcademicProdigy-5762",
+    "title": "I love when ppl judge me lol👺 Ask me questions I will answer and you guysss can judgee me😭 Itni vehli hunnnn.",
+    "text": "I love when ppl judge me lol👺 Ask me questions I will answer and you guysss can judgee me😭 Itni vehli hunnnn.\n\nsubmitted by     /u/AcademicProdigy-5762     to     r/IndianTeenagers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IndianTeenagers/comments/1w9kgk9/i_love_when_ppl_judge_me_lol_ask_me_questions_i/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T06:40:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T06:41:18.667Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5c8ef0819e6636a8e283"
+    },
+    "message_id": "reddit_t3_1w9kgk6",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "endometriosis",
+    "username": "Sweet_Sink6295",
+    "title": "I need help.",
+    "text": "I need help.\n\nI was diagnosed with endo in November of 2024. I had an excision surgery done by my OBGYN to remove a large cyst on my left ovary. During the surgery, my doctor had to call in a specialist to assist because my ovary wasn’t visible due to extensive endo. After the surgery, I continued to experience excruciating pain so I decided to see a well known excision specialist. He was able to remove almost all of my endo. He ended up having to remove my left ovary, left tube, and appendix as well. The endo had “frozen” my pelvic region and my ovary was suck to my bowel. He said I’ll eventually need bowel reconstruction surgery, but didn’t do it at the time to preserve my fertility. After surgery, my pain was gone except for lingering bowel pains.   The recovery was pretty bad during both surgeries, I bled for much longer than expected and my cycles were irregular. I finally had a normal cycle 3 months later and got pregnant on the first try. I then had a missed miscarriage after 6 weeks. I had a D&C and a week later passed grapefruit sized clots and experienced what I think labor pains would feel like for a few hours. After passing everything, I bled for a few weeks until it finally stopped. I had one normal cycle after that.   It has now been 5 months since that normal cycle, and I don’t think I’ve ovulated (I track my cycles with an Oura ring.) The month after my normal cycle, I started bleeding constantly. I’d bleed for 3 weeks, it’d stop for one, and then I was back to bleeding again.   After a couple months of this, I started bleeding 30+ days at a time with extremely heavy bleeding and golf ball sized clots. This went on for around a month and a half. I finally went to the doctor and found out my hemoglobin was at a 5. I had to have 2 blood transfusions and an iron infusion. They did a TV ultrasound and it was normal. I then had a saline ultrasound and they found 2 small polyps. I had them removed in the doctor’s office. They came back benign and my Pap smear came back normal. My hormone levels were normal as well.   I only bled lightly for 5 days after the surgery. I started my period 2 weeks later and it hasn’t stopped since. It’s now been 26 days of extremely heavy bleeding and golf ball sized clots. I’m starting to feel tired and low in energy again, I think my hemoglobin has dropped.   I’d greatly appreciate any feedback or suggestions if you’ve experienced something like this before. I’m so exhausted and stressed out. I have another saline ultrasound scheduled for this coming Thursday. My doctors can’t figure out what is wrong with me, but I want to get pregnant so badly. TIA for any feedback!       submitted by     /u/Sweet_Sink6295     to     r/endometriosis       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/endometriosis/comments/1w9kgk6/i_need_help/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T06:40:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T06:41:18.881Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5c90f0819e6636a8e289"
+    },
+    "message_id": "reddit_t3_1w9kgjm",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Buttcoin",
+    "username": "SnowGrayMan",
+    "title": "\"Hackers\" have stolen ~4,000 Bitcoin worth $320 million from the Liquid Network. When will other crypto wallets get \"hacked\" so their owners can buy a Ferrari too?",
+    "text": "\"Hackers\" have stolen ~4,000 Bitcoin worth $320 million from the Liquid Network. When will other crypto wallets get \"hacked\" so their owners can buy a Ferrari too?\n\nsubmitted by     /u/SnowGrayMan     to     r/Buttcoin       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Buttcoin/comments/1w9kgjm/hackers_have_stolen_4000_bitcoin_worth_320/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T06:40:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T06:41:20.152Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5c90f0819e6636a8e28a"
+    },
+    "message_id": "reddit_t3_1w9kgjj",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "ClubicFR",
+    "username": "r-humanoid",
+    "title": "Black-out numérique pour un EHPAD du Tarn, privé de fibre optique pendant deux semaines !",
+    "text": "Black-out numérique pour un EHPAD du Tarn, privé de fibre optique pendant deux semaines !\n\nsubmitted by     /u/r-humanoid     to     r/ClubicFR       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClubicFR/comments/1w9kgjj/blackout_numérique_pour_un_ehpad_du_tarn_privé_de/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T06:40:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T06:41:20.364Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e5c91f0819e6636a8e28f"
+    },
+    "message_id": "reddit_t3_1w9kgig",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "NHLHUT",
+    "username": "AlarmedPerception955",
+    "title": "Day one team, no money spent",
+    "text": "Day one team, no money spent\n\nsubmitted by     /u/AlarmedPerception955     to     r/NHLHUT       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NHLHUT/comments/1w9kgig/day_one_team_no_money_spent/",
+    "score": 0,
+    "num_comments": 0,

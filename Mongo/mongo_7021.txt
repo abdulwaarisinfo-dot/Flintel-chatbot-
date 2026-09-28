@@ -1,0 +1,416 @@
+    "post_url": "https://www.reddit.com/r/MtSAC/comments/1whn1s1/async_intro_to_public_speaking_c1000/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:31:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T04:31:30.563Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa1ba26508d45f3d2d039d"
+    },
+    "message_id": "reddit_t3_1whn1qz",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Virtual_West1",
+    "title": "What’s your fantasy fetish?",
+    "text": "What’s your fantasy fetish?\n\nsubmitted by     /u/Virtual_West1     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1whn1qz/whats_your_fantasy_fetish/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:31:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T04:31:30.781Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa1ba26508d45f3d2d039e"
+    },
+    "message_id": "reddit_t3_1whn1qw",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Interrail",
+    "username": "Key_Contribution_634",
+    "title": "Italian trains New Years Day",
+    "text": "Italian trains New Years Day\n\nWe are going to be travelling Rome-Bolzano by on January 1st 2027. I know theres a timetable schedule update mid October for trains Dec 13- but I'm from a country with no long distance trains so I'm confusing myself.   At the moment I can see trains on our route/day but only at 8.50am and 2.55pm departures after 13th December - all the dates before then have a 10.50am departure. If I wait until next month for the October schedule update, will the 10.50am departing train come up as an option? Or should I just book tickets on the earlier/later train now because thats all there will be? Especially because it will be a public holiday.   (We want a table/4 seating so ideally would book early to make sure we get one - also I assume tickets are cheaper the further in advance we buy them).   Thanks so much for any help :)       submitted by     /u/Key_Contribution_634     to     r/Interrail       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Interrail/comments/1whn1qw/italian_trains_new_years_day/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:31:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T04:31:30.996Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa1ba36508d45f3d2d03a0"
+    },
+    "message_id": "reddit_t3_1whn1qn",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "ComfyPancake",
+    "title": "Grab 25⚡ from u/ComfyPancake!",
+    "text": "Grab 25⚡ from u/ComfyPancake!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/ComfyPancake     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1whn1qn/grab_25_from_ucomfypancake/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:31:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T04:31:31.421Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa1ba36508d45f3d2d03a1"
+    },
+    "message_id": "reddit_t3_1whn1pz",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "OpenAI",
+    "platform": "reddit",
+    "subreddit": "opensourcevietnam",
+    "username": "tymon3568",
+    "title": "MỘT FORMAT GỌI 100+ MÔ HÌNH AI KHÁC NHAU: LITELLM LÀ UNIVERSAL PROXY TỐI ƯU CHI PHÍ VÀ CHỐNG DOWN-TIME CHO MỌI HỆ THỐNG AGENT",
+    "text": "MỘT FORMAT GỌI 100+ MÔ HÌNH AI KHÁC NHAU: LITELLM LÀ UNIVERSAL PROXY TỐI ƯU CHI PHÍ VÀ CHỐNG DOWN-TIME CHO MỌI HỆ THỐNG AGENT\n\nKhi hệ thống AI mở rộng, bạn phải quản lý hàng chục SDK và endpoint khác nhau: OpenAI thì format một kiểu, Anthropic Claude format kiểu khác, Google Gemini lại một kiểu riêng, chưa kể các model local chạy qua Ollama hay vLLM. Mỗi lần đổi model là lại phải sửa code client.   LiteLLM là thư viện và proxy server mã nguồn mở đóng vai trò như một bộ chuyển đổi vạn năng (Universal Adapter): chuẩn hóa hơn 100 mô hình AI lớn nhỏ về đúng một định dạng API chuẩn duy nhất tương thích 100% với OpenAI format.   Tech Stack: Được xây dựng bằng Python, tối ưu hóa I/O bất đồng bộ bằng aiohttp/asyncio. Cung cấp cả thư viện Python SDK siêu nhẹ lẫn một Reverse Proxy Server chạy độc lập bằng Docker.   Tại sao nên dùng? - Viết code một lần, gọi mọi mô hình: Chỉ cần gọi hàm  completion(model=\"claude-3-5-sonnet\", messages=...)  hoặc  completion(model=\"ollama/llama3\", ...) , LiteLLM sẽ tự động dịch payload và tham số sang định dạng của từng nhà cung cấp. - Cơ chế Fallback và Load Balancing tự động: Khi OpenAI bị lỗi 503 hoặc hết hạn ngạch Rate Limit, LiteLLM tự động chuyển hướng request sang Azure OpenAI, Anthropic hoặc Bedrock mà không làm gián đoạn người dùng. - Quản lý ngân sách và Virtual API Keys: Cho phép bạn tạo các API key ảo cho từng team/dự án, giới hạn ngân sách hàng tháng (Spend Tracking) và giới hạn số lượng request (Rate Limiting).   Dự án có hơn 19.000 stars trên GitHub và là hạ tầng gateway thiết yếu đứng sau hàng nghìn ứng dụng AI production.   Link tham khảo:  https://github.com/BerriAI/litellm    OpenSourceVN #VNOSS #opensourcevn #vnoss #DevCommunity #LiteLLM #LLMOps #AIGateway #OpenAI #Proxy #Python       submitted by     /u/tymon3568     to     r/opensourcevietnam       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/opensourcevietnam/comments/1whn1pz/một_format_gọi_100_mô_hình_ai_khác_nhau_litellm/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:30:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T04:31:31.638Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa1bd9798842c4ceff9aaf"
+    },
+    "message_id": "reddit_t3_1whn2jp",
+    "topic_key": "electrician",
+    "search_keyword": "electrician",
+    "platform": "reddit",
+    "subreddit": "AskElectricians",
+    "username": "Illustrious-Eye-8270",
+    "title": "Planning a new 400 amp service for old motel.",
+    "text": "Planning a new 400 amp service for old motel.\n\nsubmitted by     /u/Illustrious-Eye-8270     to     r/AskElectricians       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskElectricians/comments/1whn2jp/planning_a_new_400_amp_service_for_old_motel/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:32:12Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T04:32:25.372Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa1bd9798842c4ceff9ab0"
+    },
+    "message_id": "reddit_t3_1whn2ib",
+    "topic_key": "cpa",
+    "search_keyword": "CPA",
+    "platform": "reddit",
+    "subreddit": "SleepApnea",
+    "username": "DriftwoodAndSand",
+    "title": "Attention Canadian CPAP users!",
+    "text": "Attention Canadian CPAP users!\n\nI've been using CPAP 5 years now. My favourite mask has been the AirTouch F20. It's been great, zero complaints for the first 3 years. 2 years ago I was diagnosed with psoriatic arthritis. All the psoriasis I developed with it is on my face (very bad on my nose/around my nostrils), scalp, and ears. I try to keep up with wearing my mask but sometimes my plaque psoriasis is so bad, the foam and head gear will be bloody from rubbing it raw while I sleep. It's excruciating. I use Protopic ointment and it works well when I don't use my mask, but the foam mask soaks it up and the silicone mask slides around. So, I can't get ahead of it.    Now I'm sleeping most nights without it and back to the profound exhaustion I felt pre-treatment. I'm on 2 medications for my psoriatic arthritis. But autoimmune disorders are unpredictable and can be very difficult to treat. I'm hoping to get onto a biologic by November. But even that's not a guarantee of remission.   My question is, does anyone have any experience with CPAP alternatives for OSA? I know they exist and are effective. However, I don't know if my health insurance/benefits will cover it. I feel like I'm an exception as I cannot function without treatment but I also can't keep waking up to a bleeding face and scalp. I don't even recognize myself anymore 😭.       submitted by     /u/DriftwoodAndSand     to     r/SleepApnea       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SleepApnea/comments/1whn2ib/attention_canadian_cpap_users/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:32:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T04:32:25.627Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa1bda798842c4ceff9ab1"
+    },
+    "message_id": "reddit_t3_1whn2cw",
+    "topic_key": "painter",
+    "search_keyword": "painter",
+    "platform": "reddit",
+    "subreddit": "DragonAdventures",
+    "username": "OldPainter4958",
+    "title": "inventory clearout!! read description",
+    "text": "inventory clearout!! read description\n\ni am aware that these are not the best dragons. I am currently saving for a veidreki, so mainly looking for coin offers, but if you cannot do that, I absolutely adore djaes & halloween dragons (with traits!)    i'll list here what dragons have certain cosmetic traits or rare elements that arent listed in their name, because usually i name a dragon after what trait or element it has but occasionally i do not.   - Drogan    - Paz has the thorned apple element.   - Galeruth (Roborus X) has the lazer element.   - Ikarus (Lunaesol) has the messier element.   - Wisdom (Fuegin) has the aspect trait.       submitted by     /u/OldPainter4958     to     r/DragonAdventures       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DragonAdventures/comments/1whn2cw/inventory_clearout_read_description/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:31:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T04:32:26.154Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa1bdc6508d45f3d2d03a3"
+    },
+    "message_id": "reddit_t3_1whn2kn",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PinoyGunpla",
+    "username": "hasturcomesforth",
+    "title": "Selling my HG Backlog",
+    "text": "Selling my HG Backlog\n\nSelling 5 HGs from my backlog for 4k, all unbuilt. I dont want to build them anymore and Im selling it to buy a Zeus Silhouette .   -HG WFM Aerial Rebuild  -HG WFM Lfrith  -HG PB WFM Beguir-Beu Torche  -HG PB Gelgoog (GQ)  -HG PB Leo-R   Around Metro Manila lang sana para madali sa courier. Thanks!    https://preview.redd.it/92xdgz9q7tph1.png?width=526&format=png&auto=webp&s=e55ed7a4a4a3875206a10c64a3d8c29d8e53c75d        submitted by     /u/hasturcomesforth     to     r/PinoyGunpla       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PinoyGunpla/comments/1whn2kn/selling_my_hg_backlog/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:32:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T04:32:28.065Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa1bdc6508d45f3d2d03a5"
+    },
+    "message_id": "reddit_t3_1whn2kk",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FitTheWord",
+    "username": "Western_Point2490",
+    "title": "Alfred Hitchcock Movies (created by u/Western_Point2490)",
+    "text": "Alfred Hitchcock Movies (created by u/Western_Point2490)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Western_Point2490     to     r/FitTheWord       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FitTheWord/comments/1whn2kk/alfred_hitchcock_movies_created_by_uwestern/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:32:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T04:32:28.461Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa1bdc6508d45f3d2d03a6"
+    },
+    "message_id": "reddit_t3_1whn2k1",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "ctebcm",
+    "username": "ctebcm",
+    "title": "Album Anniversary List 2026-09-16",
+    "text": "Album Anniversary List 2026-09-16\n\nToday's anniversaries are:    1997       Happy Family -  Tosc̈co  (zeuhl)       2008       Andromeda -  The Immunity Zone  (progressive metal)       2010       Cloudkicker -  Beacons  (post-rock)       2012        Cold Night for Alligators -  Singular Patterns  (progressive metal)       The Mercury Tree -  Freeze in Phantom Form  (progressive rock)        2013        Mals Totem -  Mals Totem  (progressive rock)       Oh Bree -  Covers  (folk)      Unjustly Labeled -  Lost Within  (djent)       2014        Amogh Symphony -  Vectorscan  (progressive metal, jazz fusion)    Read our review.        The Body Politic -  Egressor  (metalcore)       The Contortionist -  Language  (progressive metal)       Xerath -  Ⅲ  (death metal)        2015       Endon -  Bodies  (noise metal)      Hadean -  On Fading  (experimental doom metal)    Read our review.         2016        An Endless Sporadic -  Magic Machine  (progressive rock)    Read our review.        Barishi -  Blood from the Lion's Mouth  (progressive metal)    Read our review.        Ehnahre -  Nothing and Nothingness  (experimental doom metal)       Ghost -  Popestar  (alternative rock)       Gravitysays I -  Quantum Unknown  (progressive rock)    Read our review.        Mare Cognitum -  Luminiferous Æther  (atmospheric black metal)    Read our review.       Melopœia -  芭蕉の古池 (Bashō no furuike)  (ambient)      Osaka Punch -  Death Monster Super Squad  (progressive rock)       Pénitence onirique -  Vitriol  (atmospheric black metal)    Read our review.        Seven Impale -  Contrapasso  (progressive rock)    Read our review.        Shabaka and the Ancestors -  Wisdom of Elders  (spiritual jazz, jazz fusion)    Read our review.        Street Sects -  End Position  (experimental hardcore)    Read our review.        Syndrome -  Forever and a Day  (post-rock)    Read our review.        Tesseract -  Errai  (atmo-djent)       Thy Catafalque -  Meta  (progressive rock)       Virvum -  Illuminance  (technical death metal)    Read our review.         2017        Catalytic -  The Fall, Part 1  (death metal)       Massola -  Torture Jazz  (experimental jazz, jazzcore)       The Lone Tree in the Woods that Killed Us All -  The Offering  (progressive metal)        2018        Dubmood -  Overshoot Days  (chiptune, electro)       House of Stairs -  House of Stairs  (soul)       Leap of Faith -  Irreducibility  (free jazz)       Mor Ensemble -  Mor  (world fusion)        2019       McMeta -  McMeta  (progressive rock, jazz fusion)       2020        Bave -  Secret Peaks of Grief Mountain  (math rock)    Read our review.        Marie Mifsud -  Récif  (jazz fusion)       Ordinul negru -  Nebuisa  (black metal)       Pandu & 小埜涼子 (Ono Ryōko) -  New Duo, Series 020  (free improvisation, noise)       Seum -  Summer of Seum  (stoner metal)        2021        La Tragédie -  Forcer la façade  (folk rock)       MRW -  Hio ohn vovataia hto hiotti portellete  (ambient, musique concrète, progressive rock)        2022        3 on Vega -  Kolorbloks  (math rock)       A World Wondered Full -  Government Buildings  (experimental post-rock)       ACOD -  Fourth Reign over Opacities and Beyond  (blackened death metal)       Ahasver -  Causa suī  (progressive metal)       Alessandro Sgobbio -  Piano Music  (modern jazz)       Bruno Sanfilippo -  Redes  (ambient classical)       Choke -  Desiphon  (deathgrind)       Collapse Culture -  Drag Your Coffin My Lord  (dub techno)       Crust -  Wanderers  (post-black metal)    Read our review.        Destrage -  So Much, Too Much  (progressive metalcore)       Dora the Destroyer -  Trinity  (nu prog)       E converso -  Pásla milá Satana  (jazz fusion)       Elizabete Balčus -  Hotel Universe  (avant-pop)       Escaping Aghartha -  Escaping Aghartha  (atmospheric black metal)       God Is War -  Predation Perfected  (darkwave)       Inhaling -  Darkest Black  (atmospheric black metal)       Innumerable Forms -  Philosophical Collapse  (death metal)       Irist -  Gloria  (post-metal)       Jasper Høiby's Planet B -  What It Means to Be Human  (modern jazz)       Jessica Pavone, Lukas Koenig, and Matt Mottel -  Spam Likely  (avant-garde jazz)       Johannes Dickbauer's Hive -  Isn't Dinner Lovely Tonight  (jazz fusion)       John Zorn, played by Brian Marsella, Jorge Roeder, Ches Smith, and Julian Lage -  Incerto  (modern jazz)       Jon Irabagon -  Rising Sun  (modern jazz)       Julian Lage -  View with a Room  (modern jazz)       Katharina Weber -  In Márta's Garden  (contemporary classical)       Kill Division -  Peace through Tyranny  (grindcore)       Marxist Love Disco Ensemble -  Marxist Love Disco Ensemble  (nu disco, funk)       Massface -  Inequable  (progressive metal)       Michael Hersch -  The Script of Storms  (contemporary classical)       Mikel Kuehn -  Entanglements  (electroacoustic)       Miscreance -  Convergence  (progressive thrash metal)    Read our review.        Monastr -  On Your Knees  (post-metal)       Mute Ocean -  Caravan  (atmospheric black metal)       Mycelia -  In a Late Country  (djent)       Nicolás Politzer -  Será niebla  (avant-garde jazz)       Pape Samory Seck -  Baobab  (world fusion)       Phobophilic -  Enveloping Absurdity  (death metal)       RA Washington & Jah Nada -  In Search of Our Father's Gardens  (free jazz)       Reliqa -  I Don't Know What I Am  (metalcore)       Somehow Jo -  Scales and Details  (progressive metal)       Sundrowned -  Glacious  (blackgaze)       The Mantra Discord -  Relapse into Silence  (progressive rock)       The Mars Volta -  The Mars Volta  (progressive rock)    Read our review.       Titan to Tachyons -  Vonals  (avant-garde metal)      Tribal Gaze -  The Nine Choirs  (death metal)       Virtual Symmetry -  Virtual Symmetry  (progressive metal)       Will Vinson -  Tripwire  (modern jazz)       Цигун (Cigun / Tsygun) -  Хворь (Xvor')  (blackened hardcore)       ओं (Om) -  50  (electroacousticore)       星屑に眠る (Hoshikuzu ni nemuru / Sleeping on Stardust) -  Celestial Monarchy  (nintendocore)       澤山リナ (Sawayama Rina) -  Hold the Girl  (pop)        2023        Astronomie -  Interstellar Nomad  (stoner rock)       Ekbom -  Ekbom  (mathgrind)       The Bug -  Machine Ⅳ  (experimental electro)        2024        Decimals -  Convergence  (progressive metal)       Madara -  Gorephiliac  (deathgrind)       The Abstract Space -  Toxinocin  (metalcore)        2025       Catsclaw -  Perfect Death  (metalcore)          submitted by     /u/ctebcm     to     r/ctebcm       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ctebcm/comments/1whn2k1/album_anniversary_list_20260916/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:32:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T04:32:28.666Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa1bdc6508d45f3d2d03a7"
+    },
+    "message_id": "reddit_t3_1whn2it",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "OceanDriveRacing",
+    "username": "SoNotAnAltAccount",
+    "title": "🏁 u/SoNotAnAltAccount ran 8.28342s on The Sunday Lot — can you beat it?",
+    "text": "🏁 u/SoNotAnAltAccount ran 8.28342s on The Sunday Lot — can you beat it?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/SoNotAnAltAccount     to     r/OceanDriveRacing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OceanDriveRacing/comments/1whn2it/usonotanaltaccount_ran_828342s_on_the_sunday_lot/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:32:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T04:32:28.873Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa1bdd6508d45f3d2d03a8"
+    },
+    "message_id": "reddit_t3_1whn2is",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "IndianEnts",
+    "username": "DoomsdayDexx",
+    "title": "How often do you trip on acid ? What’s the ample time in between two dosages?",
+    "text": "How often do you trip on acid ? What’s the ample time in between two dosages?\n\nBasically the title , I’ve started using acid recently , have tried 2-3 times .   I wanna know if it’s fine to trip on acid twice within a span of a month ?   Also , wanted to know how many Gs of shrooms can one take as a first timer(no prior experience with shrooms . Only lsd )   Shroom strain I might get is penis envy revert !   Thanks yall        submitted by     /u/DoomsdayDexx     to     r/IndianEnts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IndianEnts/comments/1whn2is/how_often_do_you_trip_on_acid_whats_the_ample/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:32:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T04:32:29.073Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa1bdd6508d45f3d2d03a9"
+    },
+    "message_id": "reddit_t3_1whn2in",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "vacation",
+    "platform": "reddit",
+    "subreddit": "horrorstories",
+    "username": "Roco_universe",
+    "title": "Waking up in his gaze",
+    "text": "Waking up in his gaze\n\nDear readers, before continuing, I must warn you: this story is not an isolated case. It is one of the many experiences that have haunted me throughout my life, like shadows that refuse to dissipate. I will call it \"Awakening in Her Gaze,\" but I assure you that the title does not do justice to the horror it contains.   To this day, I don't know if my memory is betraying me, if my mind is fabricating its own monsters, or if it was all real. But what I do know is that every detail lives within me, like a scar that never stops burning. It all began on a trip home. The family vacation had ended, and we were exhausted. Our only remaining desire was to get home, but there were still hours of driving ahead. Traffic piled up in front of us, an endless serpent of red and white lights that seemed to slither toward the horizon. I leaned my head against the window, looking for a moment of rest. The air inside the car was thick, saturated with weariness and silence, as if time itself had decided to stop. And then, it happened.   First, there was a whisper. A metallic, unsettling murmur that seemed to slither through the shadows of the vehicle. It was a strange sound, as if something invisible were preparing to attack. Then came the crash. A sharp, brutal impact that tore through the silence with the force of thunder. It was so violent that the world seemed to shatter into a million fragments. Time froze as everything around me spun uncontrollably. My body became a piece of fabric tossed about by a storm, battering every corner of the car. The crunch of metal on metal filled my ears, mingling with a deeper, more visceral sound: the breaking of something I couldn't identify. Bones? Wood? I don't know. The air was thick with a nauseating mixture of gasoline, oil, burnt plastic, and something else. A singular, strange smell, etched in my memory like an indelible mark.   And then, silence.   But it wasn't a peaceful silence. It was an opaque emptiness, heavy with questions no one could answer. The world seemed to have vanished, and at that moment, before me, she appeared. A face. An empty gaze, dark as a bottomless pit. Her eyes were two abysses that seemed to devour everything around them, and although her mouth opened, she made no sound. There was no scream, no words. Only a silence so profound it seemed to have a life of its own, as if the emptiness had become tangible, a presence that enveloped me and stole my breath.   And then, I awoke.   I opened my eyes and my chest heaved, desperately searching for air. My whole body trembled as I tried to convince myself that it had all been just a dream. A fateful dream, but only that: an illusion created by my mind. However, as my brain struggled to readjust to reality, something didn't add up. The traffic continued to back up, the line of vehicles moving at a snail's pace, as if time were still trapped in that nightmare.   \"There must have been an accident,\" I thought, trying to rationalize the weight I felt in the air. The air was heavy, laden with a tragedy that seemed to permeate everything. I decided to ignore it, still shaken by what I had just experienced, but grateful that it had all been a nightmare, nothing more. That thought comforted me for a moment. I turned my face toward the window, trying to distract myself with the scenery. But just then, I heard my mother shout:   \"Don't look outside!\"   It was too late. My eyes had already fixed on the scene. We were passing by a horrific accident. The wrecked vehicles were like metallic corpses, twisted and bleeding. Among them, I saw paramedics covering the body of a woman. But before her face disappeared beneath the white sheet, her eyes met mine.   It was her.   The empty gaze. The muffled scream I never heard. It was the same woman I had seen in my dream. Her face was marked by a despair that seemed to transcend time and space. And although her body was motionless, her eyes spoke to me. They screamed something I couldn't understand, something that pierced my soul.   My body froze. The air left me, and the moment was etched in my memory like an indelible mark. That desperate gaze, that scream that never came, stayed with me forever.   Twenty years have passed since that day. Twenty years since that dream, nightmare, or fateful reality. And I still wake up at night with her gaze fixed on my mind. Sometimes, I feel she's there, watching me from some dark corner of my room, waiting. I don't know if it was a warning, an inexplicable connection between two souls, or simply a cruel coincidence. But what I do know is that, since then, I've lived with the certainty that there are things we cannot understand. Things that watch us from the other side, waiting for the moment to awaken in our gaze.   I hope you enjoyed this story. If so, I'd be delighted to share more of my experiences with you, because, as I mentioned, this isn't the only unsettling experience I've had. There are more dark secrets waiting to be told...  Author: The Dreamer       submitted by     /u/Roco_universe     to     r/horrorstories       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/horrorstories/comments/1whn2in/waking_up_in_his_gaze/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:32:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T04:32:29.283Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa1bdd6508d45f3d2d03aa"
+    },
+    "message_id": "reddit_t3_1whn2ik",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Composition",
+    "username": "Big_League7004",
+    "title": "Classical Composing Machine",
+    "text": "Classical Composing Machine\n\nI have been studying classical composition for sometime now and am honestly wondering if the classical composers possessed information regarding composing that is now lost to history. I took a small set of pieces specific to a small set of dances and created an arithmetic composition machine. It can compose in a limited style to some of the greats - but is not perfect yet. With that said I would like to share it and recieve honest constructive feedback. The machine is located at  Music Builder  .     https://reddit.com/link/1whn2ik/video/kfvy1pxf8tph1/player        submitted by     /u/Big_League7004     to     r/Composition       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Composition/comments/1whn2ik/classical_composing_machine/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:32:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T04:32:29.484Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa1bdd6508d45f3d2d03ab"
+    },
+    "message_id": "reddit_t3_1whn2ii",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "IndianStockMarket",
+    "username": "Realistic_Most1060",
+    "title": "Indian markets have fallen for two straight sessions — which stocks are on your watchlist for value buying?",
+    "text": "Indian markets have fallen for two straight sessions — which stocks are on your watchlist for value buying?\n\nWith the Sensex and Nifty both down over the last two trading days, I'm curious what stocks/sectors people here are eyeing as potential value buys on this dip. What's on your watchlist right now, and what's your reasoning?       submitted by     /u/Realistic_Most1060     to     r/IndianStockMarket       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IndianStockMarket/comments/1whn2ii/indian_markets_have_fallen_for_two_straight/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:32:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T04:32:29.682Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa1bdd6508d45f3d2d03ac"
+    },
+    "message_id": "reddit_t3_1whn2hg",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "commutersph",
+    "username": "kalawak4n",
+    "title": "Cubao to Real Quezon",
+    "text": "Cubao to Real Quezon\n\nHi po! Magtravel po kami to Jomalig Island this Thursday night. Boat schedule po from Real to Jomalig is Friday 7:00 AM.   Ask ko lang po kung saan kami sasakay, or saan ang Bus Terminal para makarating kami ng Real, Quezon and kung may schedule po ba byahe, sa Cubao po kami manggaling.   Thank you!       submitted by     /u/kalawak4n     to     r/commutersph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/commutersph/comments/1whn2hg/cubao_to_real_quezon/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:32:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T04:32:29.890Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa1bde6508d45f3d2d03ad"
+    },
+    "message_id": "reddit_t3_1whn2h3",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "MakeNewFriendsHere",
+    "username": "winnesthepoo",
+    "title": "41 M looking for chat if you are in MD or close that be even cooler 18+",
+    "text": "41 M looking for chat if you are in MD or close that be even cooler 18+\n\nHey if anyone wants to talk, message me just be 18+ and be able to hold a conversation. If you no longer wish to talk just let me know and don’t disappear, I’m a big boy and can handle it. A few things about myself I love the outdoors and all things in nature, I spend 80% of my time outside, I love riding motorcycles and taking random road trips. If you are interested in talking feel free to DM me.       submitted by     /u/winnesthepoo     to     r/MakeNewFriendsHere       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MakeNewFriendsHere/comments/1whn2h3/41_m_looking_for_chat_if_you_are_in_md_or_close/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:32:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T04:32:30.091Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa1bde6508d45f3d2d03ae"
+    },
+    "message_id": "reddit_t3_1whn2gs",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "r4r",
+    "username": "Apprehensive-Top-361",
+    "title": "33 [F4M] #online - looking for gaming duo",
+    "text": "33 [F4M] #online - looking for gaming duo\n\nI’m looking for a fit, attractive, fun East Asian guy who actually enjoys gaming and wants someone to consistently play, chat, flirt, and vibe with.  I play a lot of League and TFT, but I’m also down for Overwatch, PUBG, WoW, co-op games, random Steam games, or honestly whatever we end up getting addicted to together. Competitive enough to care but not so competitive that you’re raging at me over a bad game.   A little about me: I’m an American white woman, blonde, 5’2”, curvy, and very feminine/girly. I love gaming, cute things, shopping, traveling, going to the beach, and having someone I can joke around with throughout the day. I can be a bit of a brat and I definitely like attention, but I also genuinely enjoy getting to know someone and having that comfortable “let’s get on Discord and play something” kind of connection.   I’m in Japan, so time zones can be a little weird, but my schedule is definitely not a normal Japan schedule and I’m usually around at odd hours.  Ideally you’re:   -Asian  -Fit / takes care of yourself  -Funny and easy to talk to  -Actually into video games and will play with me  -Comfortable with voice chat/Discord  -Flirty and affectionate  -Looking for something consistent rather than disappearing after two conversations   I’m not looking for someone who just wants to exchange two spicy messages and vanish. I want the gaming + friendship + flirting + chemistry part too.   Send me a message with your age, where you’re from, what you play, and a little about yourself. A picture eventually is definitely appreciated. Attraction matters to me and I’m happy to reciprocate. 💕       submitted by     /u/Apprehensive-Top-361     to     r/r4r       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/r4r/comments/1whn2gs/33_f4m_online_looking_for_gaming_duo/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T04:32:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T04:32:30.292Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa1bde6508d45f3d2d03af"
+    },
+    "message_id": "reddit_t3_1whn2fo",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "CricketCoded",
+    "username": "AlFactorial",

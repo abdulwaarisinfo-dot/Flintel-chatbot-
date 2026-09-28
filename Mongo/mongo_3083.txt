@@ -1,0 +1,416 @@
+    "username": "procurify",
+    "title": "AI contract management in procurement: why extracted terms have to reach the purchase",
+    "text": "AI contract management in procurement: why extracted terms have to reach the purchase\n\nMost contract management conversations stop at the repository. Agreements in one place, searchable, renewal dates tagged. Useful, but it treats signing as the finish line when it's really the handoff. The negotiated value only shows up later, in what the organization actually buys, approves, and pays for.   The reading part has genuinely changed. Older tools could pull text off a page but couldn't tell a start date from a renewal date, or work out what \"30 days from the effective date\" refers to, or recognize two vendors describing the same obligation in different words. Language models handle that now, and they can tie the supplier named in the PDF back to the right vendor record instead of leaving the agreement as a standalone file. Review replaces transcription.   Faster reading isn't spend control, though. A contract summarized in seconds and then parked in a folder still leaks money. World Commerce & Contracting's research this year puts average post-signature value loss near 11 percent for procurement organizations—missed savings, untracked obligations, unauthorized changes. None of that is a storage problem. It's negotiated terms never reaching the moment someone spends.   The version that works turns commercial terms into structured data the purchasing process uses. Negotiated pricing checked against what a supplier invoices. A new request checked against existing agreements before another vendor gets added. Minimum commitments in the budget forecast rather than surfacing when the invoice lands. Notice periods triggering something before an agreement quietly extends.   That structure matters more as procurement gets more agentic. An agent weighing a purchase needs to know whether an agreement is active, what price was negotiated, and whether the request falls inside the agreed scope.   Curious where this breaks down for others: once a contract is signed, what actually keeps its terms visible to the people spending against it?       submitted by     /u/procurify     to     r/govcon       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/govcon/comments/1wdgdyw/ai_contract_management_in_procurement_why/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T13:30:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T13:31:14.943Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa402a36508d45f3d2ba629"
+    },
+    "message_id": "reddit_t3_1wdgdxy",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "php",
+    "platform": "reddit",
+    "subreddit": "nginx",
+    "username": "WillingnessQuick5074",
+    "title": "Open source tool that reads your access logs and tells you which sessions are actually people. Runs on your server.",
+    "text": "Open source tool that reads your access logs and tells you which sessions are actually people. Runs on your server.\n\nI run Opensolr. This is a thing we built for ourselves and then open sourced, so the disclosure is up front.   We had a problem we could not answer with any analytics product we were paying for. The dashboards said traffic was healthy. The logs said something else. So I wrote the thing that settles it.    What we found on our own site    Roughly half of the sessions our analytics reported carried a hard bot signature.   Dozens of addresses on unrelated consumer ISPs, all sharing one byte identical header fingerprint. One page each, never two. Every single one reporting exactly ten seconds on site.   From inside any one plane of observation that is indistinguishable from a crowd of real visitors. That is the whole problem. A User-Agent blocklist catches what announces itself. It does not catch headless Chrome on rotating residential proxies, which is what scraping actually looks like now.    How it works    Three independent planes, cross checked against each other.     Transport, what the access log records   Behaviour, how the session moves across requests   Execution, what the browser can actually run     Each one alone is defeatable and essentially every existing tool uses exactly one of them. Every verdict comes with the evidence that produced it, never a bare score you have to trust.    Time on site, measured honestly    Conventional analytics pings while the page is merely loaded, so a tab left open in a background window reports as an hour of engagement. Loghound keeps three separate clocks and never mixes them. Wall time, visible time, engaged time. Kept apart those numbers say something. Averaged into one they say whatever you want to hear.    Where the data goes    It installs on your own server and reads your access log read only. What it learns lives in two Solr indexes on your own Opensolr account. Everything except the address is hashed. No telemetry, no vendor copy of your traffic.   An Opensolr account is required because it needs to create and shape its own indexes, which it cannot do against a Solr server it does not manage. The free plan is enough to start. That is the honest catch and I would rather say it here than have somebody find it in the installer.    Stack    PHP 8.1, no Composer, no npm, no build step. Apache, nginx and Caddy log formats. systemd units for the tailer and the scoring job.   Source:  https://github.com/phpcip/loghound  Docs:  https://opensolr.com/loghound-docs  What it does:  https://opensolr.com/loghound    Happy to answer anything, including the awkward questions about false positives. There is a whole documentation page on what it does not catch and why, because a bot detector that oversells itself is worse than none.       submitted by     /u/WillingnessQuick5074     to     r/nginx       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/nginx/comments/1wdgdxy/open_source_tool_that_reads_your_access_logs_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T13:30:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T13:31:15.158Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa402d935b55a1469d49707"
+    },
+    "message_id": "reddit_serp_1cdwweo",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/startups/comments/1cdwweo/what_are_the_next_steps_and_how_can_i_do_marketing/",
+    "text": "What are the next steps? And how can I do marketing?\n\nHi, I build Cookie Ai a website that allows people to easily create cookie cutters with only a text or image input. The website creates cookie cutter files that are 3d printable. On average around 100 people per week create cookie cutters on our website.    I don't know how to do marketing I tried some social media posts but the engagement is quite low on Instagram. I also made some posts on dedicated cookie cutter subreddits and in total 3000 cookie cutters were created by them. My question is should I run Google ads or Tiktok ads? How do I create effective marketing for such a website?    And I would love to hear some Feedback about the site and the functions. One big limitation at the moment is that it's not possible to buy any cookie cutters. I will integrate a 3d printing service in the future so that the created cookie cutters can be delivered to the potential customer.        submitted by     /u/addpencil       [link]       [comments]",
+    "username": "addpencil",
+    "subreddit_or_channel": "startups",
+    "posted_at": "2024-04-26T21:18:12+00:00",
+    "fetched_at": {
+      "$date": "2026-09-11T13:32:09.667Z"
+    },
+    "google_rank": 9,
+    "search_keyword": "small business marketing automation",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-11T13:32:09.667Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa402de6508d45f3d2ba62a"
+    },
+    "message_id": "reddit_t3_1wdgf0w",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Wixcom Ltd - 11 Sep 2026 @ 09:30 -> $75.44",
+    "text": "Buy Signal Wixcom Ltd - 11 Sep 2026 @ 09:30 -> $75.44\n\nTicker:  WIX    Exchange:  NASDAQ    Time:  11 Sep 2026 @ 09:30    Price:  $75.44    Link:  https://getagraph.com/AAA/trading/NASDAQ/WIX/analysis/signals        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wdgf0w/buy_signal_wixcom_ltd_11_sep_2026_0930_7544/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T13:32:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T13:32:14.588Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa402de6508d45f3d2ba62b"
+    },
+    "message_id": "reddit_t3_1wdgf0c",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "AlertVegas",
+    "username": "MugShots",
+    "title": "NV Energy Alert",
+    "text": "NV Energy Alert\n\nNVEnergy Alert Planned Shutdown for Service Improvement in 89022 Verified customers affected ORT: Verified ETR: Verified       submitted by     /u/MugShots     to     r/AlertVegas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlertVegas/comments/1wdgf0c/nv_energy_alert/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T13:32:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T13:32:14.837Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa402df6508d45f3d2ba62c"
+    },
+    "message_id": "reddit_t3_1wdgf03",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "cassetteculture",
+    "username": "Guhranchy",
+    "title": "did I mess up?",
+    "text": "did I mess up?\n\nJust purchased this machine and am now noticing it’s the second part of a set. Can I still duplicate tapes on this machine alone? Or do I need the first part too? Really hoping there’s a way to duplicate on this machine alone without having to buy an expensive add on.       submitted by     /u/Guhranchy     to     r/cassetteculture       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cassetteculture/comments/1wdgf03/did_i_mess_up/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T13:32:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T13:32:15.037Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa402df6508d45f3d2ba62d"
+    },
+    "message_id": "reddit_t3_1wdgezz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AITAH",
+    "username": "tarheelblonde20",
+    "title": "AITAH for selling a bike on FB Marketplace to someone who offered to prepay?",
+    "text": "AITAH for selling a bike on FB Marketplace to someone who offered to prepay?\n\nI listed a bike for sale on FB Marketplace for $100. I didn’t get any bites so a few days later I dropped the price to $50. I got many inquiries, mostly from people who clearly were in the bike reseller business.    I responded to everyone who reached out, but ultimately narrowed it down to two potential buyers (will call them A and B) who confirmed that my location was doable for them.    At 10:25am, I messaged both A and B asking if they “could you come at 5 or 5:30pm?”.   My work day was crazier than expected, so by the time I went back to check their responses it was 4pm.    Buyer A had messaged me at 10:26am that they “had class till 5:45 but could Venmo now and do porch pick up after class”.    Buyer B had messaged me at 2:51pm saying “Sure does 5 work?”.   I decided to sell the bike to Buyer A because they had responded back first. I quickly sent him my Venmo, marked the bike as sold and joined my 4pm work meeting (I’m remote) a few minutes late.    At 4:50pm, I got a knock on my door and it was Buyer B there to pick up the bike. I told him I’m sorry but someone else had bought the bike already. He looked at me dumbfounded and I said sorry again and that I had marked the listing as sold about an hour ago.    I quickly hustled back to my meeting and while in my chair messaged Buyer B at 4:52pm “I’m so sorry!”.   When I checked the messages again (a few minutes after 5pm when my meeting ended), Buyer B had sent me:   4:53pm: “That was very dirty”  4:57pm: “Can you tell me who bought the bike?”  5:02pm: “This was the most fucked up situation I’ve ever been in on marketplace. I want you to know that.”   Followed by a notification that I had a review waiting and could rate him back.    I responded back at 6:06pm after Buyer A had picked up the bike with “I’m sorry it happened that way. I offered you both the pick up time option this morning and his response was sooner when I compared. I genuinely thought that I had sent you a message to let you know and I apologize that it never was sent. I marked the bike as sold at 4pm so you should have seen that notification come through at minimum. Again, I’m sorry for the inconvenience of driving out here. Best of luck to you.”   I thought about rating him back (assuming he left me a 1) but my husband said to leave it alone, that it wasn’t worth engaging with a crazy man who knows our address.    I agreed and wished I could go back in time and not used my home address for this sale. Lesson learned!   It takes 2 weeks for FB to release ratings and this morning I was able to see it:   1 star  “She gave me the time and the location to pick up the item. I drove 45 minutes there she told me someone else paid her via Venmo to hold it for them and that she was sorry. She never contacted me. Horrible experience.”   So AITAH?    For not sending Buyer B a personalized message after I sold it to Buyer A? That wasn’t nice but I marked it as sold and he should have gotten that notification.   For selling it to Buyer A because they messaged me first? No, that’s fair in my eyes.    My follow up question is, do I rate him back? I think he deserves a 1 star for being a whiny baby. Haha maybe that makes me the asshole!       submitted by     /u/tarheelblonde20     to     r/AITAH       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AITAH/comments/1wdgezz/aitah_for_selling_a_bike_on_fb_marketplace_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T13:32:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T13:32:15.237Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa402df6508d45f3d2ba62e"
+    },
+    "message_id": "reddit_t3_1wdgeyq",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "forhire",
+    "username": "Otherwise-Joa777",
+    "title": "[For Hire] Quick offer for business owners with raw footage looking for contents",
+    "text": "[For Hire] Quick offer for business owners with raw footage looking for contents\n\nGot raw property photos and walk-through videos just sitting on your phone?   We are expanding our real estate portfolio and offering a complete, custom content package to two businesses completely free of charge. No pitch, no hidden fees. We simply want solid case studies to showcase our work.   We do not just slap music on a video and call it a day. We will build this around your actual business goal, whether that is attracting serious buyers, landing new listings, or building local authority.    What we will deliver:       Strategy first:  A quick review of your target audience and objectives so every piece of content has a clear purpose.    6 to 8 feed posts:  High-value carousels, listing showcases, and market authority posts with persuasive copy and strong calls to action.    2 to 4 reels:  Hook-driven property tours, neighborhood highlights, or value clips edited for retention.     All you need to do is share your raw footage and tell us your primary focus right now. We will map out the plan and deliver ready-to-post assets.   Drop a comment below or send a quick DM if you want to grab one of the two spots.       submitted by     /u/Otherwise-Joa777     to     r/forhire       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/forhire/comments/1wdgeyq/for_hire_quick_offer_for_business_owners_with_raw/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T13:31:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T13:32:15.440Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa402df6508d45f3d2ba62f"
+    },
+    "message_id": "reddit_t3_1wdgewb",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "php",
+    "platform": "reddit",
+    "subreddit": "bigseo",
+    "username": "WillingnessQuick5074",
+    "title": "Your analytics is counting headless Chrome on residential proxies as human traffic. Open source tool to find out how much.",
+    "text": "Your analytics is counting headless Chrome on residential proxies as human traffic. Open source tool to find out how much.\n\nI run Opensolr. This is a thing we built for ourselves and then open sourced, so the disclosure is up front.   We had a problem we could not answer with any analytics product we were paying for. The dashboards said traffic was healthy. The logs said something else. So I wrote the thing that settles it.    What we found on our own site    Roughly half of the sessions our analytics reported carried a hard bot signature.   Dozens of addresses on unrelated consumer ISPs, all sharing one byte identical header fingerprint. One page each, never two. Every single one reporting exactly ten seconds on site.   From inside any one plane of observation that is indistinguishable from a crowd of real visitors. That is the whole problem. A User-Agent blocklist catches what announces itself. It does not catch headless Chrome on rotating residential proxies, which is what scraping actually looks like now.    How it works    Three independent planes, cross checked against each other.     Transport, what the access log records   Behaviour, how the session moves across requests   Execution, what the browser can actually run     Each one alone is defeatable and essentially every existing tool uses exactly one of them. Every verdict comes with the evidence that produced it, never a bare score you have to trust.    Time on site, measured honestly    Conventional analytics pings while the page is merely loaded, so a tab left open in a background window reports as an hour of engagement. Loghound keeps three separate clocks and never mixes them. Wall time, visible time, engaged time. Kept apart those numbers say something. Averaged into one they say whatever you want to hear.    Where the data goes    It installs on your own server and reads your access log read only. What it learns lives in two Solr indexes on your own Opensolr account. Everything except the address is hashed. No telemetry, no vendor copy of your traffic.   An Opensolr account is required because it needs to create and shape its own indexes, which it cannot do against a Solr server it does not manage. The free plan is enough to start. That is the honest catch and I would rather say it here than have somebody find it in the installer.    Stack    PHP 8.1, no Composer, no npm, no build step. Apache, nginx and Caddy log formats. systemd units for the tailer and the scoring job.   Source:  https://github.com/phpcip/loghound  Docs:  https://opensolr.com/loghound-docs  What it does:  https://opensolr.com/loghound    Happy to answer anything, including the awkward questions about false positives. There is a whole documentation page on what it does not catch and why, because a bot detector that oversells itself is worse than none.       submitted by     /u/WillingnessQuick5074     to     r/bigseo       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/bigseo/comments/1wdgewb/your_analytics_is_counting_headless_chrome_on/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T13:31:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T13:32:15.647Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa4030c35b55a1469d49708"
+    },
+    "message_id": "reddit_serp_1mi8kza",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/SocialMediaMarketing/comments/1mi8kza/for_hire_social_media_manager/",
+    "text": "[For hire] Social media manager\n\nHi everyone, I'm a freelance social media manager helping individuals and brands grow their online presence with genuine strategies and creative content. I work across platforms like Instagram, Facebook, Threads, Pinterest, and YouTube Shorts.   Here’s what I can help you with: ✅ Content creation and scheduling ✅ Organic growth (no bots or fake methods) ✅ Viral and engaging captions ✅ Reels ideas and trend strategy ✅ Hashtag research ✅ Analytics tracking and insights   Whether you’re just starting out or looking to boost your current presence, I’ll bring consistency, creativity, and care to your brand.   If you're looking for someone reliable who actually listens and delivers, feel free to send me a message. I’d love to hear more about your goals and how I can help.         [link]       [comments]",
+    "username": "nknown",
+    "subreddit_or_channel": "SocialMediaMarketing",
+    "posted_at": "2025-08-05T13:01:47+00:00",
+    "fetched_at": {
+      "$date": "2026-09-11T13:33:00.634Z"
+    },
+    "google_rank": 9,
+    "search_keyword": "social media manager",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-11T13:33:00.634Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa4031b6508d45f3d2ba630"
+    },
+    "message_id": "reddit_t3_1wdgfxo",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Omada Health - 11 Sep 2026 @ 09:30 -> $21.43",
+    "text": "Buy Signal Omada Health - 11 Sep 2026 @ 09:30 -> $21.43\n\nTicker:  OMDA    Exchange:  NASDAQ    Time:  11 Sep 2026 @ 09:30    Price:  $21.43    Link:  https://getagraph.com/AAA/trading/NASDAQ/OMDA/analysis/signals        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wdgfxo/buy_signal_omada_health_11_sep_2026_0930_2143/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T13:33:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T13:33:15.256Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa4031b6508d45f3d2ba631"
+    },
+    "message_id": "reddit_t3_1wdgfxg",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Hafnia Limited - 11 sep 2026 @ 15:30 -> Kr.86.80",
+    "text": "Buy Signal Hafnia Limited - 11 sep 2026 @ 15:30 -> Kr.86.80\n\nTicker:  HAFNIO.OL    ![Logo]( https://www.getagraph.com/logos/HAFNIO.OL.png )   Exchange:  OSL    Time:  11 sep 2026 @ 15:30    Price:  Kr.86.80    Link:  https://getagraph.com/AAA/trading/OSL/HAFNIO.OL/analysis/signals        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wdgfxg/buy_signal_hafnia_limited_11_sep_2026_1530_kr8680/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T13:33:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T13:33:15.456Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa4031b6508d45f3d2ba632"
+    },
+    "message_id": "reddit_t3_1wdgfw2",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "WirelessEarbuds",
+    "username": "Ok_Character5326",
+    "title": "Wireless headphones",
+    "text": "Wireless headphones\n\nI’m looking for recommendations for headphones that offer good value for money, as well as where to buy them in Venezuela or through an online store.       submitted by     /u/Ok_Character5326     to     r/WirelessEarbuds       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WirelessEarbuds/comments/1wdgfw2/wireless_headphones/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T13:33:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T13:33:15.666Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa4031b6508d45f3d2ba633"
+    },
+    "message_id": "reddit_t3_1wdgfvk",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ohnePixel",
+    "username": "FiheQ",
+    "title": "Will Nocts Hold Price?",
+    "text": "Will Nocts Hold Price?\n\nI want to buy Battle Scarred Notcs and just wondering if there are any reasons why they might lose value in the future months. Just curious.       submitted by     /u/FiheQ     to     r/ohnePixel       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ohnePixel/comments/1wdgfvk/will_nocts_hold_price/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T13:32:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T13:33:15.866Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa4031c6508d45f3d2ba634"
+    },
+    "message_id": "reddit_t3_1wdgfus",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "GreenWicks",
+    "username": "Carlene_Trammel",
+    "title": "Treasury Sec. Bessent just flashed a warning on US crypto regulation. The pre-market tape on $AXG explains exactly how Wall Street is front-running the gridlock",
+    "text": "Treasury Sec. Bessent just flashed a warning on US crypto regulation. The pre-market tape on $AXG explains exactly how Wall Street is front-running the gridlock\n\nBODY:  If you want to see exactly how Wall Street is reacting to Treasury Secretary Scott Bessent's latest warning, ignore the political headlines and look straight at the pre-market tape on SOLOWIN HOLDINGS (AXG).   This morning, AXG is seeing an absolute explosion in early volume, crossing 104,000 shares traded before the opening bell. For context, this is a stock that normally averages 150,000 shares for the  entire day . This is not retail guessing; this is a coordinated institutional front-run ahead of the looming September 15 CLARITY Act vote.   Here is the exact setup: Secretary Bessent is openly warning the Senate that failing to advance the CLARITY Act next week will send a \"troubling signal\" to the world about American digital asset leadership. While Washington remains paralyzed by gridlock and infighting, institutional capital is aggressively pivoting to fully licensed, offshore infrastructure.   AXG represents the ultimate regulatory arbitrage, and smart money is heavily buying the underlying fundamentals. They are accumulating shares because AXG is completely insulated from the US regulatory circus on two massive fronts:    1. The Impenetrable Offshore Moat:  They do not need US legislative approval because they already hold SFC Type 1, 4, 6, and 9 licenses to dominate the Asian ETF market in Hong Kong . Combine that with a sovereign stablecoin issuance license secured directly from the Central Bank of Bahrain, and you have a dual-jurisdiction powerhouse routing billions outside of SEC oversight.    2. The Hidden AI Revenue Engine:  Most importantly, they are no longer just a crypto company. Their latest SEC filings confirm that out of their $28.05M in total revenue (a staggering 895% YoY growth), a massive 79% ($22.20M) comes directly from their AI Tokens segment. They are monetizing enterprise high-performance computing (HPC) and AI cloud routing, rendering domestic crypto legislation entirely irrelevant to their primary growth engine.   Institutions are using this pre-market window to aggressively park capital into a compliant, dual-jurisdiction ecosystem that is already operating at scale. The smart money isn't waiting around to see what politicians decide on September 15; they are locking up the float right now.   I do not hold a position in AXG. This is an analysis of public SEC filings, macroeconomic trends, and tape mechanics, not financial advice.   $BNC $DELL $AGCO $DIA $BKKT $MS $CRCL $IPEX $PDEX $NX $EXOD $NXTC $AVAV $HOOD $ATER $ATTO $MTCH $GPRO $BTX $SBET $CHD $LEXX $GEO $RTB $KRAQ $SLE $CLSK $GME $COR $SOFI $FLNG $ORA $GS $FGL $HCWC $PSQL $AMD $TSLA $GAIA $LULU $ABM $SPCX $KRP $CIFR $GNL $GLXY $IMRN $AVO $XXI $VTMX $GCDT $SNWV $INTC $DVLT $TRBG $UNFI $GYGY $IOT $GIGM $MSFT $ANPA $NGG $AUGO       submitted by     /u/Carlene_Trammel     to     r/GreenWicks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GreenWicks/comments/1wdgfus/treasury_sec_bessent_just_flashed_a_warning_on_us/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T13:32:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T13:33:16.067Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa4031c6508d45f3d2ba635"
+    },
+    "message_id": "reddit_t3_1wdgftt",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "Comma_ai",
+    "username": "Gaius__Of__The_Julii",
+    "title": "Will the Honda Safety sense dealer update screw up my Comma 4? Taking it in Tuesday to be done.",
+    "text": "Will the Honda Safety sense dealer update screw up my Comma 4? Taking it in Tuesday to be done.\n\n2018-20 Accord, Accord Hybrid / 2017-19 CR-V Honda Sensing Software Update noticeNews 📰 (self.crv)   Just received this letter in the mail:   What is the reason for this Product Update?   Honda has developed software updates to the Honda Sensing system to enhance driver experience by modifying the circumstances when the advanced driver assist system (ADAS) decelerates the vehicle or the extent of deceleration. The software covers Adaptive Cruise Control (ACC), Collision Mitigation Braking System (CMBS), and Road Departure Mitigation (RDM).   What will Honda do?   Please call any authorized Honda dealer and make an appointment to have your vehicle's software update for FREE. Once you make an appointment for your vehicle, be advised that the total software update process may take approximately 20 minutes. However, your dealer can provide you with a better estimate of the overall time for this service visit, as it may be necessary to make your vehicle available for a longer period of time. If you are not the only driver of this vehicle, please advise all other drivers and passengers of this important information.   If you have questions   If you have any questions about this notice, or need assistance with locating a Honda dealer, please call American Honda's Customer Support & Campaign Center at 1-888-234-2138. You can also visit AskDave.honda.com to use our 24/7 virtual agent or locate a dealer online at mygarage.honda.com. Customers in U.S. territories, please contact your local distributor/dealer.   We apologize for any inconvenience this campaign may cause you.   Sincerely,   American Honda Motor Co., Inc.       submitted by     /u/Gaius__Of__The_Julii     to     r/Comma_ai       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Comma_ai/comments/1wdgftt/will_the_honda_safety_sense_dealer_update_screw/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T13:32:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T13:33:16.272Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa4035135b55a1469d49709"
+    },
+    "message_id": "reddit_serp_1mo6yrk",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/productivity/comments/1mo6yrk/whats_the_best_webinar_platform_for_actually/",
+    "text": "What's the best webinar platform for actually generating leads (not just hosting events)?\n\nI'm not looking for a basic video call tool. I want a platform that's actually built for marketing. I need to do lead capture, engagement, CRM sync, and follow-up. Bonus points if it helps handle no-shows and replay distribution. Any legit options out there?       submitted by     /u/deku_small_pp       [link]       [comments]",
+    "username": "deku_small_pp",
+    "subreddit_or_channel": "productivity",
+    "posted_at": "2025-08-12T12:10:11+00:00",
+    "fetched_at": {
+      "$date": "2026-09-11T13:34:09.358Z"
+    },
+    "google_rank": 10,
+    "search_keyword": "webinar platform",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-11T13:34:09.358Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa403576508d45f3d2ba636"
+    },
+    "message_id": "reddit_t3_1wdggu7",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal MongoDB Inc - 11 Sep 2026 @ 09:31 -> $371.68",
+    "text": "Buy Signal MongoDB Inc - 11 Sep 2026 @ 09:31 -> $371.68\n\nTicker:  MDB    Exchange:  NASDAQ    Time:  11 Sep 2026 @ 09:31    Price:  $371.68    Link:  https://getagraph.com/AAA/trading/NASDAQ/MDB/analysis/signals        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wdggu7/buy_signal_mongodb_inc_11_sep_2026_0931_37168/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T13:34:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T13:34:15.438Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa403576508d45f3d2ba638"
+    },
+    "message_id": "reddit_t3_1wdggtu",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "AlertVegas",
+    "username": "MugShots",
+    "title": "NV Energy Alert",
+    "text": "NV Energy Alert\n\nNVEnergy Alert Planned Shutdown for Service Improvement in 89022 Verified customers affected ORT: Verified ETR: Verified       submitted by     /u/MugShots     to     r/AlertVegas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlertVegas/comments/1wdggtu/nv_energy_alert/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T13:34:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T13:34:15.832Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa403586508d45f3d2ba639"
+    },
+    "message_id": "reddit_t3_1wdggsx",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "3d6",
+    "username": "ZebGrim",

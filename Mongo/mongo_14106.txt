@@ -1,0 +1,416 @@
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wm5ij0/why_do_you_mourn_your_birthday/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T07:05:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T07:06:25.842Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0d772660c60840398c49c"
+    },
+    "message_id": "reddit_t3_1wm5iiy",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "ClaudeCode",
+    "username": "aq2bq",
+    "title": "I haven't re-onboarded Claude Code after /clear in 10 days. Markdown/Issues memory rots because nothing enforces its lifecycle, so I built a CLI that refuses bad writes.",
+    "text": "I haven't re-onboarded Claude Code after /clear in 10 days. Markdown/Issues memory rots because nothing enforces its lifecycle, so I built a CLI that refuses bad writes.\n\n20 years of web dev, first time posting something I built. For the last 10 days I've run my day job, and the development of this tool, through the tool itself.   The first thing that disappeared was the re-onboarding ritual after every /clear: \"here's the issue we're on, the process is in this Markdown file, last time we finished this PR, next is X.\" I haven't typed that once in 10 days.   How Claude Code is used: as the project lead, not the typist. My Claude Code session usually acts as product owner. It triages requests, writes each requirement and its acceptance criteria into gy, hands implementation to a second agent (often opencode, with Codex as a second reviewer), then measures the result before recording it. I never run gy myself. gy ships as a CLI plus agent skills; the entry skill tells Claude Code to start from `gy handover` / `gy next`, and that is the whole onboarding. I /clear any of the agents whenever I feel like it.   The bigger relief: early decisions used to come back as late-project pain, and I'm usually the cause. I make a wrong call, or state a need that contradicts an earlier one.   Real example. Early on I wrote down, as a principle, that letting this tool affect how I run git had been a mistake. Four days later colleagues wanted team sharing, and the only zero-cost option was a git remote. Claude Code listed \"this narrows your own principle\" as a cost, quoted the sentence, and recorded the new decision as narrowing just that sentence: the record stays out of the project repo, a separate machine-only repo is allowed. The rest of the old decision stayed in force, and any fresh session that opens it sees that one sentence marked as retracted, with a pointer to what replaced it.   I don't watch how it finds these. What I see is the old sentence, the proposed change, and a decision to make.   What I learned, as two opinions:      Markdown wikis and GitHub Issues are too free. Labels, parent/child links, an LLM-maintained wiki: all structure, none of it enforces what is still a proposal, what was agreed, what was replaced, and what must exist before something counts as done. Without that it becomes debt, and correctness depends on the agent remembering the convention.     GitHub Issues is too slow a loop for agents. The overhead per decision is sized for humans.      So gy is a small CLI where agents record needs, questions, decisions, requirements and acceptance criteria, and invalid writes are refused when they are made:   ``` $ gy criterion satisfy ac-a80e --evidence \"tests pass\"  ac-a80e is not covered by an approved requirement (targets); req add \" \" --need   --targets ac-a80e   ```   Replacing a decision means quoting the passage that loses effect, and the quote is checked against the old text.   What it doesn't do: it checks the record, not your code, and it doesn't detect contradictions by itself. It forces the fix to be one sentence wide. I still have to decide goals and needs. That part didn't go away, it's just the only part left.   Local, Rust, open source,  cargo install gy . Team sharing (a dedicated git repo) is experimental.    https://github.com/aq2bq/gy    If you've kept a Markdown- or Issues-based memory alive across /clear for more than a few weeks: what broke first?       submitted by     /u/aq2bq     to     r/ClaudeCode       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeCode/comments/1wm5iiy/i_havent_reonboarded_claude_code_after_clear_in/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T07:05:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T07:06:26.061Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0d772660c60840398c49e"
+    },
+    "message_id": "reddit_t3_1wm5iix",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "peopleplayground",
+    "username": "calihooya",
+    "title": "Destructo Disc!",
+    "text": "Destructo Disc!\n\nhttps://reddit.com/link/1wm5iix/video/3p5cyc8ootqh1/player    working on some per pixel destruction code for my upcoming dbz mod       submitted by     /u/calihooya     to     r/peopleplayground       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/peopleplayground/comments/1wm5iix/destructo_disc/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T07:05:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T07:06:26.493Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0d7a9660c60840398c49f"
+    },
+    "message_id": "reddit_t3_1wm5jfm",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Donnie607",
+    "title": "What's it like dating someone with low emotional intelligence? What are the signs?",
+    "text": "What's it like dating someone with low emotional intelligence? What are the signs?\n\nsubmitted by     /u/Donnie607     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wm5jfm/whats_it_like_dating_someone_with_low_emotional/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T07:07:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T07:07:21.819Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0d7aa660c60840398c4a0"
+    },
+    "message_id": "reddit_t3_1wm5jfl",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "cprogramming",
+    "username": "Motor_Alternative944",
+    "title": "Is It Possible to Find a Job in Systems Programming Without a Degree?",
+    "text": "Is It Possible to Find a Job in Systems Programming Without a Degree?\n\nI love these fields. I have been working as a web developer at a digital marketing agency since I was 15, but I am tired of it now. Although my salary is good, I am more interested in fields like system programming or compilers. I have at least 2-3 years that I can dedicate to these areas. I am also considering going to university during this period, but if my dream of university doesn't come true, is it possible to find a job in this field without a degree? Of course, assuming that we make open-source contributions.       submitted by     /u/Motor_Alternative944     to     r/cprogramming       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cprogramming/comments/1wm5jfl/is_it_possible_to_find_a_job_in_systems/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T07:07:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T07:07:22.033Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0d7aa660c60840398c4a1"
+    },
+    "message_id": "reddit_t3_1wm5jf6",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Apprehensive-Fan2492",
+    "title": "Has any crime already happened in your family? If yes, can you tell how?",
+    "text": "Has any crime already happened in your family? If yes, can you tell how?\n\nsubmitted by     /u/Apprehensive-Fan2492     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wm5jf6/has_any_crime_already_happened_in_your_family_if/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T07:07:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T07:07:22.249Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0d7aa660c60840398c4a2"
+    },
+    "message_id": "reddit_t3_1wm5jc6",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AssassinsCreedShadows",
+    "username": "Exportxxx",
+    "title": "Can i use PS5 controller if bought on Ubisoft connect?",
+    "text": "Can i use PS5 controller if bought on Ubisoft connect?\n\nLooking to buy Shadows as its around 70% of but only on Ubisoft connect, i can only play on a PS5 controller will the controller auto work if i buy the game? like it does for stream? i don't see any controller settings in Ubisoft connect, does any else play like this?        submitted by     /u/Exportxxx     to     r/AssassinsCreedShadows       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AssassinsCreedShadows/comments/1wm5jc6/can_i_use_ps5_controller_if_bought_on_ubisoft/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T07:07:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T07:07:22.488Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0d7aa660c60840398c4a3"
+    },
+    "message_id": "reddit_t3_1wm5jbr",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "homeassistant",
+    "username": "lappes",
+    "title": "Austria Email Explorer EVO 2 + Somfy TaHoma Switch actually works with Home Assistant",
+    "text": "Austria Email Explorer EVO 2 + Somfy TaHoma Switch actually works with Home Assistant\n\nI had quite a hard time figuring out whether the  Austria Email Explorer EVO 2  water heater is actually compatible with the  Somfy TaHoma Switch .   The EVO 2 uses  io-homecontrol , just like the TaHoma Switch, but Austria Email only explicitly mentions compatibility with the  ComfyTouch Bridge , which connects the boiler to Overkiz/the cloud.   Since I already had some electric Velux blinds that are compatible with the TaHoma Switch, I figured I'd give it a try before buying another bridge.   Unfortunately, the TaHoma app itself wasn't very promising.   The EVO 2 isn't available as a selectable device. I put the boiler into connection/search mode and tried pretty much everything I could think of. I went through all the Atlantic water heater models in the TaHoma app, trying different ones while the boiler was in pairing mode.   Nothing happened.   After about 20 minutes of clicking through basically every Atlantic boiler I could find, the app was just showing connection errors.    But then I noticed something weird: the display on the boiler itself said it was connected.    At that point I assumed maybe my neighbor had somehow connected to it or something. 😅   I still couldn't see the boiler anywhere in the TaHoma app, so I didn't expect much.   However, I already had Home Assistant set up and thought I'd give the  local debugger mode of the TaHoma Switch  a try.   And to my surprise,  Home Assistant actually detected the EVO 2!    Through the Home Assistant TaHoma integration I can now:     Change the operating mode:    Electric   Heat Pump   Eco   Performance      Set the duration   Read the current temperatures   Monitor the boiler     So despite the fact that the  TaHoma app doesn't appear to recognize/select the EVO 2 , the boiler is apparently communicating through the TaHoma Switch well enough for Home Assistant to control it.   I obviously can't guarantee that every EVO 2 firmware/version will behave exactly the same, but in my case the underlying io-homecontrol communication works.    If you're trying to connect an Austria Email Explorer EVO 2 to your smart home, I'd definitely try a Somfy TaHoma Switch first if you already have one.    And if you don't already have one, I'd recommend checking whether the Home Assistant TaHoma integration can see the boiler before spending money on the ComfyTouch Bridge.    TL;DR:  EVO 2 doesn't show up in the TaHoma app, but it can still connect to a TaHoma Switch and is fully controllable through Home Assistant. So try TaHoma + Home Assistant before buying the ComfyTouch Bridge.    DHWP Actuator visible as Overkiz element added via Somfy     Water Boiler Data within Home Assistant    I hope this helps someone and saves you money       submitted by     /u/lappes     to     r/homeassistant       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/homeassistant/comments/1wm5jbr/austria_email_explorer_evo_2_somfy_tahoma_switch/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T07:07:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T07:07:22.707Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0d7aa660c60840398c4a4"
+    },
+    "message_id": "reddit_t3_1wm5jbh",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "JournalingPH",
+    "username": "Pup0119",
+    "title": "Flying Tiger Planners",
+    "text": "Flying Tiger Planners\n\nThinking of buying a planner from them kasi ang cute ng cover lol. Not sure about the paper quality though, ok ba? 🥹 I use uniball signo and zento gel pens lang naman, mag bleed through kaya?        submitted by     /u/Pup0119     to     r/JournalingPH       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/JournalingPH/comments/1wm5jbh/flying_tiger_planners/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T07:07:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T07:07:22.925Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0d7ab660c60840398c4a5"
+    },
+    "message_id": "reddit_t3_1wm5jay",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "techIndia",
+    "username": "nknown560002",
+    "title": "S26 for ₹70k",
+    "text": "S26 for ₹70k\n\nWas confused whether to buy it now or wait for the upcoming sales, but finally got the S26 for ₹70k    Did I make a good decision or nah?   And I wanted compact, that's why I bought this.       submitted by     /u/unknown560002     to     r/techIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/techIndia/comments/1wm5jay/s26_for_70k/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T07:06:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T07:07:23.142Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0d7ab660c60840398c4a6"
+    },
+    "message_id": "reddit_t3_1wm5jao",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MumbaiJobsOpenings",
+    "username": "wisedaikonagain",
+    "title": "I can do scripts for your commercials and give a trial script for free!",
+    "text": "I can do scripts for your commercials and give a trial script for free!\n\nEveryone loves to hear a story    In fact people buy cause they feel they belong to the brand    It's the closeness    And we can together build a story that echoes in every client's home   Let's do it!   Price negotiable        submitted by     /u/wisedaikonagain     to     r/MumbaiJobsOpenings       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MumbaiJobsOpenings/comments/1wm5jao/i_can_do_scripts_for_your_commercials_and_give_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T07:06:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T07:07:23.356Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0d7ab660c60840398c4a7"
+    },
+    "message_id": "reddit_t3_1wm5jaf",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "asktravel",
+    "username": "nicolasanderson24",
+    "title": "Is 7 Days Enough for a First Trip to Singapore, or Would You Spend More Time There?",
+    "text": "Is 7 Days Enough for a First Trip to Singapore, or Would You Spend More Time There?\n\nI’m interested in finding out how long should the first-time visitors to Singapore should plan for their visit. There’s a lot to see, including Marina Bay, Gardens by the Bay, Sentosa, Chinatown, Little India, and a lot of places to eat.    What would be the ideal Itinerary for people who have been to Singapore before? Should they plan to explore more areas and try more local food, or should they include all the major attractions such as Universal Studios, Singapore Zoo, Sentosa, etc.    I'd also like to know which places you consider essential to visit in Singapore, and which places you'd exclude if you are there for a week. It would also be great to know any travelling tips, choosing the best accommodation, etc.       submitted by     /u/nicolasanderson24     to     r/asktravel       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/asktravel/comments/1wm5jaf/is_7_days_enough_for_a_first_trip_to_singapore_or/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T07:06:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T07:07:23.571Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0d7ab660c60840398c4a8"
+    },
+    "message_id": "reddit_t3_1wm5jac",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "WordGameArcade",
+    "username": "963aytg",
+    "title": "🟨 Unscramble This 6-Letter Word (by u/963aytg)",
+    "text": "🟨 Unscramble This 6-Letter Word (by u/963aytg)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/963aytg     to     r/WordGameArcade       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WordGameArcade/comments/1wm5jac/unscramble_this_6letter_word_by_u963aytg/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T07:06:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T07:07:23.785Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0d7ac660c60840398c4a9"
+    },
+    "message_id": "reddit_t3_1wm5ja7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "doors_roblox",
+    "username": "Alarmed-Glove3717",
+    "title": "Who is stronger, Guiding light or the red light? (Image barely related)",
+    "text": "Who is stronger, Guiding light or the red light? (Image barely related)\n\nÀ mon avis, I think it is Guiding light because she literally created and manages entire floors. Not only that, but she can also crucify almost all entities excluding the bosses and non lethal entities. Red light, on the other hand, only deals with modifiers and helps to maintain the game's balance by preventing modifiers from entering subfloors. Now You might say 'But the Red light can disable Guiding light's hints'. However, that may be just a little antic that the Red light is allowed to perform to give the players a challenge and doesnt necessarily prove his power.   TLDR: Guiding light is stronger than the red light.  Anyway, that's just my opinion. What do y'all think?       submitted by     /u/Alarmed-Glove3717     to     r/doors_roblox       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/doors_roblox/comments/1wm5ja7/who_is_stronger_guiding_light_or_the_red_light/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T07:06:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T07:07:24Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0d7ac660c60840398c4aa"
+    },
+    "message_id": "reddit_t3_1wm5j9u",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MakeRedditFriends",
+    "username": "Flaky-Wrap6527",
+    "title": "HaPpYd mY dAyl....cOmEs aLiVec",
+    "text": "HaPpYd mY dAyl....cOmEs aLiVec\n\nsubmitted by     /u/Flaky-Wrap6527     to     r/MakeRedditFriends       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MakeRedditFriends/comments/1wm5j9u/happyd_my_daylcomes_alivec/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T07:06:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T07:07:24.215Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0d7ac660c60840398c4ab"
+    },
+    "message_id": "reddit_t3_1wm5j9m",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "OlympusCamera",
+    "username": "itchykrab",
+    "title": "Issue with HR tripod shot with flash - OM5ii",
+    "text": "Issue with HR tripod shot with flash - OM5ii\n\nDidn’t get any feedback on the OM sub, reposting if anyone knows about this issue and has a possible solution        submitted by     /u/itchykrab     to     r/OlympusCamera       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OlympusCamera/comments/1wm5j9m/issue_with_hr_tripod_shot_with_flash_om5ii/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T07:06:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T07:07:24.429Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0d7ac660c60840398c4ac"
+    },
+    "message_id": "reddit_t3_1wm5j96",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "DarylAnnDenner_Snark",
+    "username": "spongebobs_pineapple",
+    "title": "Daily Thread / September 21",
+    "text": "Daily Thread / September 21\n\n🥤🤎 Welcome!    Before you dive into the comments, please read the sub rules. They keep things running smoothly and the discussion focused on the adults who somehow convinced the internet they’re influencers.     While you’re at it, check out the daily pinned post. It covers FAQs and helps keep the same questions from popping up every five minutes.     Influencers don’t just make money from sponsorships. They also profit from your views, story taps, likes, comments, and other interactions.     Unfollowing is a great first step, but if you’re still watching their content through the app, you’re still boosting their engagement, feeding the algorithm, and ultimately helping line their pockets.     BELOW YOU WILL FIND LINKS TO USE INSTEAD OF THE APP: 👇    Anonymous story viewer:  https://insnoop.com    Link to a newer anonymous page to also view reels:  https://www.viewsocials.com    Direct link to view DAD's stories:  https://storynavigation.com/user/darylanndenner    Direct link to Danielle's Stories:  https://storynavigation.com/user/daniellefletcher     Direct links for every person will not be posted since people use different websites. Go to the community info tab under the sub name and you can find all handles listed.         submitted by     /u/spongebobs_pineapple     to     r/DarylAnnDenner_Snark       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DarylAnnDenner_Snark/comments/1wm5j96/daily_thread_september_21/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T07:06:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T07:07:24.647Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0d7ac660c60840398c4ad"
+    },
+    "message_id": "reddit_t3_1wm5j92",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Femalefounders",
+    "username": "Agulka_Jewellery",
+    "title": "How do you style Kundan or Jadau jewellery for Diwali without looking overdone?",
+    "text": "How do you style Kundan or Jadau jewellery for Diwali without looking overdone?\n\nI work with festive jewellery and keep getting asked this. My rule of thumb is one statement piece and everything else quiet. What's yours? Curious how people here balance heavy jewellery with sarees vs lehengas vs kurta sets.   Check the subreddit's self-promotion rules before posting, and keep the brand link out of the post.       submitted by     /u/Agulka_Jewellery     to     r/Femalefounders       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Femalefounders/comments/1wm5j92/how_do_you_style_kundan_or_jadau_jewellery_for/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T07:06:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T07:07:24.862Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0d7ad660c60840398c4ae"
+    },
+    "message_id": "reddit_t3_1wm5j8w",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "wordgrind",
+    "username": "WideConversation2811",
+    "title": "Translate — what's \"cook\" in Spanish?",
+    "text": "Translate — what's \"cook\" in Spanish?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/WideConversation2811     to     r/wordgrind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wordgrind/comments/1wm5j8w/translate_whats_cook_in_spanish/",
+    "score": 0,

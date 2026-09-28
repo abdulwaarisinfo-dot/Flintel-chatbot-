@@ -1,0 +1,416 @@
+    "post_url": "https://www.reddit.com/r/stripe/comments/1ew1fst/chargeback_risk_and_stripe_connect/",
+    "text": "Chargeback risk and Stripe Connect\n\nI've just started building a new marketplace app and had planned to use Connect. After reading posts on this forum about chargebacks and Stripe support, I'm wondering whether my app would be workable with Stripe.   My app would be something similar to TaskRabbit which I understand uses Connect.    Basically, the seller in the marketplace fixes their fee for a remote service. The buyer has a charge placed on their card until the service is completed. The seller uploads proof when service is complete. The app checks the proof and then charges the buyer's card before paying the amount to the seller.   I'm worried about the following scenario - after the app has paid the seller, the buyer makes a chargeback against the app. This would be a big problem if the fee charged to the buyer's card was large and the app no longer has the money because it has been paid to the seller who has withdrawn the money.    Since the service is mainly online, I'm thinking that there is a lot of potential for fraud or a buyer wanting their money back if they're unhappy with the service. For example, a seller and buyer could collaborate to defraud the app out of money through a sham service. Or the buyer could get the service for free by doing a \"friendly fraud\" chargeback. Also, the buyer could just be unhappy with the service (despite the app checking it) and want their money back.   I know there are some things that can be done to mitigate this problem:  1) Delay payment to the seller. However, the buyer in theory can make a chargeback up to 120 days after the charge. 120 days is a very long time to wait to pay the seller.  2) Use a stripe connect standard account for the seller so the app is not at risk for the charge back. It seems that there is huge friction for the seller in opening a standard account as opposed to custom/express accounts. Also, I imagine Stripe would just close the app's account without notice if there were a few chargebacks and Stripe was liable for them. So this doesn't seem like a good option either if it could potentially kill the app.   How do apps like TaskRabbit deal with these issues in Stripe Connect? Has anyone had experience on how to deal with payments in user marketplaces? Are there better options than Stripe Connect?    Thanks for any advice!        submitted by     /u/Comfortable-Way-4212       [link]       [comments]",
+    "username": "Comfortable-Way-4212",
+    "subreddit_or_channel": "stripe",
+    "posted_at": "2024-08-19T13:12:12+00:00",
+    "fetched_at": {
+      "$date": "2026-09-09T09:32:10.658Z"
+    },
+    "google_rank": 4,
+    "search_keyword": "remote chargeback management",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-09T09:32:10.658Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1279a035b0f36efcc6cee"
+    },
+    "message_id": "reddit_t3_1wbgrb5",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Aurangabad",
+    "username": "wannabeichigo_0301",
+    "title": "Good polo tshirts in our city",
+    "text": "Good polo tshirts in our city\n\nWhere can I buy the best polo tshirts in our city.. i wanna explore various varieties and options        submitted by     /u/wannabeichigo_0301     to     r/Aurangabad       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Aurangabad/comments/1wbgrb5/good_polo_tshirts_in_our_city/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T09:31:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T09:32:10.659Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1279a035b0f36efcc6cef"
+    },
+    "message_id": "reddit_t3_1wbgra4",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "AiChatGPT",
+    "username": "Ok_pettech",
+    "title": "Self-hosting MetaGPT: complete local installation guide",
+    "text": "Self-hosting MetaGPT: complete local installation guide\n\nI wanted to run MetaGPT entirely on my own infrastructure without sending anything to cloud APIs. It took some trial and error, but I documented the full process.   The guide covers:   · Setting up a Python venv   · Installing MetaGPT   · Configuring local LLMs like Ollama or vLLM   · Fixing common startup errors   If you’re into self-hosted AI agents, this could help:    https://interconnectd.com/forum/thread/262/how-to-install-metagpt-locally-complete-technical-setup-guide/    What local model are you using for agent work?       submitted by     /u/Ok_pettech     to     r/AiChatGPT       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AiChatGPT/comments/1wbgra4/selfhosting_metagpt_complete_local_installation/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T09:31:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T09:32:10.875Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa127cc23d250a5b10baa1b"
+    },
+    "message_id": "reddit_serp_1qxgeri",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/advancedentrepreneur/comments/1qxgeri/failed_payments_and_chargebacks_solve_different/",
+    "text": "failed payments and chargebacks solve different problems. treating them the same is a mistake\n\n[removed]   submitted by     /u/Icy_Second_8578       [link]       [comments]",
+    "username": "Icy_Second_8578",
+    "subreddit_or_channel": "advancedentrepreneur",
+    "posted_at": "2026-02-06T12:34:13+00:00",
+    "fetched_at": {
+      "$date": "2026-09-09T09:33:00.422Z"
+    },
+    "google_rank": 9,
+    "search_keyword": "remote chargeback management",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-09T09:33:00.422Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa127d6035b0f36efcc6cf8"
+    },
+    "message_id": "reddit_t3_1wbgs2w",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Repcnbuy",
+    "username": "Live_Passage4344",
+    "title": "New haul: Some On, Chrome, Stone Island, and a few others. Thoughts on the quality?",
+    "text": "New haul: Some On, Chrome, Stone Island, and a few others. Thoughts on the quality?\n\nsubmitted by     /u/Live_Passage4344     to     r/Repcnbuy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Repcnbuy/comments/1wbgs2w/new_haul_some_on_chrome_stone_island_and_a_few/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T09:32:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T09:33:10.523Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa127d6035b0f36efcc6cf9"
+    },
+    "message_id": "reddit_t3_1wbgs1q",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "learnmachinelearning",
+    "username": "Ok_pettech",
+    "title": "Self-hosting MetaGPT: complete local installation guide",
+    "text": "Self-hosting MetaGPT: complete local installation guide\n\nI wanted to run MetaGPT entirely on my own infrastructure without sending anything to cloud APIs. It took some trial and error, but I documented the full process.   The guide covers:   · Setting up a Python venv   · Installing MetaGPT   · Configuring local LLMs like Ollama or vLLM   · Fixing common startup errors   If you’re into self-hosted AI agents, this could help:    https://interconnectd.com/forum/thread/262/how-to-install-metagpt-locally-complete-technical-setup-guide/    What local model are you using for agent work?       submitted by     /u/Ok_pettech     to     r/learnmachinelearning       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/learnmachinelearning/comments/1wbgs1q/selfhosting_metagpt_complete_local_installation/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T09:32:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T09:33:10.722Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa127d8035b0f36efcc6d02"
+    },
+    "message_id": "reddit_t3_1wbgryl",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "digitalcards",
+    "username": "Potential-Storage-16",
+    "title": "I built a browser-based fantasy TCG with PvP, a 121-stage story, 397 cards, guilds, trading, tournaments and minigames — Duel & Fights [Public Beta]",
+    "text": "I built a browser-based fantasy TCG with PvP, a 121-stage story, 397 cards, guilds, trading, tournaments and minigames — Duel & Fights [Public Beta]\n\nHey everyone!    I’m the solo developer behind  Duel & Fights , a free browser-based fantasy Trading Card Game that I’ve been building as an independent project.   The game is currently in  Public Beta , and I’ve reached the point where I’d really like to get more players in and, most importantly, collect feedback about the gameplay, progression, balance and overall experience.   The idea was to build something that goes beyond simply opening packs and playing isolated card battles. I wanted a TCG with its own world, progression systems, social features and several different ways to play.   ⚔️ What’s currently in the game      Online PvP Quick Match  with rankings    Private PvP matches  to challenge friends    Live Match Spectating     Tournament system     PvE Story Mode  with  121 stages     11 story chapters , taking you through different settings including dark kingdoms, forests, undead lands, a Jurassic world, Ancient Egypt, Greek mythology, Atlantis, pirates and vampires    397 collectible cards     Deck building / Deck Editor     Card packs  and individual cards   Multiple card rarities and different mechanics/abilities    Player Avatar progression     Collection management     Card trading between players     Friends system     Guilds , including members, donations, guild currency and a Guild Shop    Missions and achievements    Progress, Story, Achievement, Daily and Weekly objectives    Referral system  with unlockable rewards    Gold economy    Duplicate-card management through the  Dust system , allowing excess cards to be converted into gold, random cards, or a combination of both    Daily rewards and activities      There’s also a separate  Challenges & Events  area that I’m expanding beyond the normal campaign.   Current modes include an  Onslaught challenge  and an experimental  Infinite Horde Mode , where you try to survive as many rounds as possible.   I’ve also added several small activities/minigames as alternative ways to earn rewards:    Mana Pulse, Runic Chest, Defense of Raven Hollow, Memory of the Phoenixes, Goblin Hunt, Runic Blocks, Mana Basket, Dragon Serpent , plus a  Daily Wheel .   More challenge modes such as  Tower of Trials  and  Boss Hunt  are planned.   🃏 About progression   The game has a persistent collection and deck-building system. You earn gold and cards by playing, completing missions, progressing through the story, participating in challenges and using the other game systems.   One thing I’m trying to avoid is having the game feel like nothing more than  grind → buy pack → repeat , so I’ve been experimenting with multiple reward sources and side activities.   Since this is still a beta,  balancing the economy, rewards, card values and progression speed is one of the areas where feedback would be particularly useful.    🧪 Public Beta   The project is still actively being developed, so there will definitely be bugs, balance issues and things that need polishing.   Some systems are already fairly extensive, while others are experimental or still being expanded.   I’d especially appreciate feedback on:    Is the game understandable for a new player? Is progression satisfying? Are the cards/battles interesting? Does the UI feel intuitive? Which systems feel unnecessary or underdeveloped? And, most importantly, would you actually come back and play it again?    You can play directly in your browser —  no download required :    Play Duel & Fights    If anyone gives it a try, feel free to be critical. At this stage, useful criticism is much more valuable to me than simply hearing that it looks good.   Thanks for checking it out! ⚔️    https://preview.redd.it/ec27m51trgoh1.png?width=1920&format=png&auto=webp&s=5a9fadbb06a17afcf996ab83ceb0a7e62cd8bc5d     https://preview.redd.it/pc2lmpsqrgoh1.png?width=1316&format=png&auto=webp&s=80cffc68dfec7b82f4c1e01d2da03773fc32b246     https://preview.redd.it/aiisng8xrgoh1.png?width=958&format=png&auto=webp&s=edd213b66f7018718a32caeb0415f26c230244a2        submitted by     /u/Potential-Storage-16     to     r/digitalcards       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/digitalcards/comments/1wbgryl/i_built_a_browserbased_fantasy_tcg_with_pvp_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T09:32:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T09:33:12.495Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa127d8035b0f36efcc6d03"
+    },
+    "message_id": "reddit_t3_1wbgrxs",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "kolkata",
+    "username": "Simple-Obligation-10",
+    "title": "Anyone looking to buy fitpass ? Selling 9 months membership dm",
+    "text": "Anyone looking to buy fitpass ? Selling 9 months membership dm\n\nFitpass 9 months membership for sale       submitted by     /u/Simple-Obligation-10     to     r/kolkata       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/kolkata/comments/1wbgrxs/anyone_looking_to_buy_fitpass_selling_9_months/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T09:32:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T09:33:12.695Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa127d8035b0f36efcc6d04"
+    },
+    "message_id": "reddit_t3_1wbgrx8",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "IndianBeautyBees",
+    "username": "fluffycoffeecake",
+    "title": "Amazing seller and Amazing prices 💕",
+    "text": "Amazing seller and Amazing prices 💕\n\nAbsolutely loved my experience with this seller  u/frosty-function9737  🫶🏻 Amazing products at such amazing prices and everything was packed so securely and carefully. Everything arrived perfectly. Would definitely buy from her again 💕       submitted by     /u/fluffycoffeecake     to     r/IndianBeautyBees       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IndianBeautyBees/comments/1wbgrx8/amazing_seller_and_amazing_prices/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T09:32:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T09:33:12.897Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa127d9035b0f36efcc6d05"
+    },
+    "message_id": "reddit_t3_1wbgrx2",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "smallbusinessindia",
+    "username": "Ahmedos90",
+    "title": "Amazon prep centers",
+    "text": "Amazon prep centers\n\nIf anyone is interested in buying stock from Europe, having it fully prepped according to Amazon policies, and shipped directly to Amazon warehouses in the UK, USA, Australia, or Canada, I can put you in contact with a prep center in the Czech Republic that is very experienced with this.     Same if you need a UK‑based prep center with experience shipping to the EU, USA, Canada, and Australia.        submitted by     /u/Ahmedos90     to     r/smallbusinessindia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/smallbusinessindia/comments/1wbgrx2/amazon_prep_centers/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T09:32:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T09:33:13.095Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1281223d250a5b10baa1c"
+    },
+    "message_id": "reddit_serp_v28vwa",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/FulfillmentByAmazon/comments/v28vwa/remote_fulfillment_with_fba_in_canada_mexico/",
+    "text": "Remote Fulfillment with FBA in Canada, Mexico - should I do it?\n\nHi experts,   I got a note that Amazon will automatically enroll me in Remote Fulfillment with FBA in Canada, Mexico, unless I opt out. Is this worth it? What's the catch, if any? Any inputs appreciated. Thanks!       submitted by     /u/shortblokade       [link]       [comments]",
+    "username": "shortblokade",
+    "subreddit_or_channel": "FulfillmentByAmazon",
+    "posted_at": "2022-06-01T04:46:06+00:00",
+    "fetched_at": {
+      "$date": "2026-09-09T09:34:10.766Z"
+    },
+    "google_rank": 3,
+    "search_keyword": "remote fulfillment",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-09T09:34:10.766Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa12813035b0f36efcc6d06"
+    },
+    "message_id": "reddit_t3_1wbgsn1",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "Advice",
+    "username": "phyrah89",
+    "title": "I think the new manager has it out for me",
+    "text": "I think the new manager has it out for me\n\nSo I work at a small restaurant inside a fairly large hotel. I serve and bartend, and although I’m relatively new to bartending, I catch on quickly and genuinely love it. We aren’t a typical restaurant because our traffic and volume depend heavily on the hotel, but we have a lot of regulars—especially truck drivers and people traveling for work.  One of my favorite parts of the job is building relationships with customers. I know many of my regulars by name, remember their usual orders, and genuinely enjoy talking to people and making them feel welcome. I’m friendly, I like upselling, and I’m comfortable finding alternatives when we’re out of something.  That brings me to the current drama. About two months ago, we got a new Food & Beverage Manager. She has no previous experience in this type of position and recently admitted that she lied on her resume because she was trying to move up. Since she started, we’ve had a lot of problems with the restaurant, especially with inventory. Orders aren’t consistently being placed, so we frequently run out of food and drinks on the menu. My coworkers and I have all struggled with some of the changes, although I personally tried not to let the kitchen/inventory issues bother me too much. I just adapted, communicated with customers, and offered alternatives.  The bigger issue for me is my schedule.  Before she started making the schedule, I was working around 60–80 hours every two weeks. Since she took over scheduling, I’ve been getting maybe 2–3 days a week, sometimes less—around 40 hours every two weeks. Financially, that is a HUGE difference. I went from making roughly $4,000–$6,000 a month to around $990 every two weeks. 😳  I texted her over a week ago and told her that the reduction in hours was unacceptable and that I couldn’t continue working that little. She responded that we needed to have a meeting with another manager first. The other manager is also very new—she had only been there for about two weeks.  During the meeting, I was told I wasn’t “in trouble,” but that I could no longer bartend or serve as many days because apparently customers have been writing reviews about me, and according to my manager, my name is the one that comes up “a lot.”  This is where things got really confusing.  She started asking me questions in a way that felt extremely insulting—where I had worked before, whether I actually had serving experience, and whether I knew to do basic things like smile, greet customers, talk to them, check on their tables, etc. Basically, she was questioning whether I knew how to do the fundamentals of serving, despite the fact that I’ve been doing exactly that this entire time.  I told them I found it strange because I have a lot of regular customers and very rarely receive complaints. I also asked them to show me the reviews they were referring to. They refused.  So afterward, I searched for the reviews myself. I found several reviews mentioning me, but they were positive. The negative reviews I could find about our restaurant either didn’t mention a server at all or were too vague to identify who was working. And honestly, negative reviews about our restaurant are pretty rare in the first place.  Then I was told that if I wanted more hours, I could get them by working in the back washing dishes.  I agreed to work in the back this week because I really need the hours, but I made it clear that I’m uncomfortable with being pushed into a position I wasn’t hired for. I’m a server and bartender, and I actually want to continue developing my bartending skills. I’m proud of what I’ve learned so far—I can make margaritas, classic martinis, Old Fashioneds, piña coladas, passion fruit martinis, etc. 😏 I want to keep learning new drinks and getting better behind the bar, not move away from it.  What bothers me most is that I feel like I’m being disciplined without ever being given an opportunity to correct anything.  If customers really have been complaining about me, why wasn’t I told when the complaints happened? Why take away my hours and responsibilities without ever giving me specific feedback or telling me what I supposedly did wrong?  One of my coworkers made a mistake involving customer interaction, and management immediately spoke to him about it and told him what he needed to change. He was given an opportunity to correct the behavior. Why am I not being given that same opportunity?  Another coworker told me that our manager has actually been going around asking other employees about me and my performance. My coworkers were confused by the questions but vouched for me and gave honest answers.  There’s another situation that makes the whole thing feel even more unfair. We recently implemented a strict “no phones/no sitting down” rule. One of my coworkers regularly sits down and watches TikTok loudly on his phone while working. One day, my manager had to tell him THREE times to get off his phone and stand up, and he still continued doing it.  I’m not trying to throw my coworkers under the bus—I actually like all of them. I just don’t understand why behavior like that seems to be tolerated while my hours are being cut and I’m being pushed out of serving and bartending.  I’ve asked to speak with our Regional Manager and General Manager about everything, and that meeting is happening in a few days. I’m trying to be patient and wait until then, but I’m honestly anxious and stressed. From my perspective, it feels like my manager may be building a case against me to eventually fire me, permanently move me to the back, or otherwise push me out.  I really don’t want to quit. I actually like my job, my coworkers, my regular customers, and especially bartending. I feel like I’m good at what I do and that I’ve built real relationships with our guests.  Tonight, a bunch of corporate people came into the restaurant. Everything went well, and we had a great night, but afterward one of my coworkers suggested that they might have been there specifically to observe my performance. That made me even more nervous because now I feel like I’m constantly being watched or evaluated for something I don’t even know I’m doing wrong. 🫠  So what do you think about this entire situation?  I’m trying to be patient and professional, but I also don’t want to sit back and let my hours, income, and opportunity to bartend disappear without understanding why.  Hope this wasnt too long        submitted by     /u/phyrah89     to     r/Advice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Advice/comments/1wbgsn1/i_think_the_new_manager_has_it_out_for_me/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T09:33:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T09:34:11.297Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa12813035b0f36efcc6d07"
+    },
+    "message_id": "reddit_t3_1wbgsmm",
+    "topic_key": "nike",
+    "search_keyword": "Nike",
+    "platform": "reddit",
+    "subreddit": "bootroom",
+    "username": "Rodidit_099",
+    "title": "I'm looking to buy football boots",
+    "text": "I'm looking to buy football boots\n\nI'm looking to buy my first pair of football boots, because I started playing again recently. I play as a fullback, most often as a RB, and usually play on an astroturf. I'm doing a little research on various boots and so far I'm really liking the Nike Mercurial Vapor.    What I'm looking for is something that will be comfy, good when I'm sprinting, and during sharp turns.    My foot is quite flat       submitted by     /u/Rodidit_099     to     r/bootroom       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/bootroom/comments/1wbgsmm/im_looking_to_buy_football_boots/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T09:33:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T09:34:11.515Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa12815035b0f36efcc6d0e"
+    },
+    "message_id": "reddit_t3_1wbgsmg",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "SharedOwnershipUK",
+    "username": "anacondaronda",
+    "title": "Buying a resale",
+    "text": "Buying a resale\n\nI'm so confused about the whole process. I'm going to viewings and just feel overwhelmed. It's hard doing this alone and I'm not sure what's the best source of info to learn what I'm doing?! Any clear advice would be much appreciated. I didn't realise buying a resale was different to buying a new build....I don't know anyone who has done this and don't really have any support! Thanks in advance!       submitted by     /u/anacondaronda     to     r/SharedOwnershipUK       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SharedOwnershipUK/comments/1wbgsmg/buying_a_resale/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T09:33:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T09:34:13.008Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa12815035b0f36efcc6d0f"
+    },
+    "message_id": "reddit_t3_1wbgsmf",
+    "topic_key": "im selling ai shopping assistants built for ecommerce websites show me people who are struggling to convert customers on their online store or whose customers abandon their cart or who are looking for ways to increase sales on their website",
+    "search_keyword": "low conversion rate",
+    "platform": "reddit",
+    "subreddit": "peerplay",
+    "username": "Gonsrb",
+    "title": "How to Build a Google Play Closed Testing Opt In Page That Converts",
+    "text": "How to Build a Google Play Closed Testing Opt In Page That Converts\n\nay   Download App   Home / Blog / How to Build a Google Play Closed Testing Opt In Page That Converts   How to Build a Google Play Closed Testing Opt In Page That Converts   September 9, 2026   5 min read   Getting real people to test your Android app is hard enough, but getting them to successfully complete Google Play's opt-in process is where many developers lose prospective testers. If you operate a personal Google Play Console account created on or after November 13, 2023, Google requires you to run a closed test with at least 12 testers who remain opted in for 14 consecutive days. While this requirement was reduced from 20 testers in December 2024, the onboarding process for testers remains surprisingly full of friction. Developer accounts belonging to organizations or personal accounts registered before November 13, 2023 are currently exempt, but for modern indie developers, getting 12 people to properly click through Google Play's multi-step opt-in workflow is a mandatory rite of passage.   When you share a raw Google Play opt-in link, non-developer friends or recruits are often met with error screens like App Not Available or Join Testing Program prompts that confuse them. If a tester drops off before accepting the web invitation or downloading the build, your 14-day clock does not start, or worse, an existing streak breaks when a confused tester uninstalls. Creating a dedicated landing page or detailed instruction sheet for your google play closed testing opt in page is the best way to convert prospective recruits into reliable testers who stay active for the full two weeks.   Why Standard Google Play Opt-In Links Fail   Google Play closed testing uses an invitation system that requires testers to be added to an authorized list, typically through a Google Group or a manual email list, before they can access the opt-in page. If someone opens your Google Play web opt-in link before their email address is registered in your Google Console tester list or Google Group, Google displays a generic page saying the app is not available or has not been published yet. To a casual user, this looks like a broken link or a dead app, causing them to close the tab immediately.   Even when the user is added correctly, the default process requires multiple distinct actions. The tester must join your Google Group or confirm their email, open the web opt-in link to click Become a Tester, and then open the Google Play Store link on their mobile device to download the build. If any step in this sequence is skipped or performed out of order, the user will fail to opt in properly. Expecting casual recruits to figure this out without explicit guidance leads to low conversion rates and wasted outreach efforts.   Key Elements of a High-Converting Opt-In Page   To maximize conversions on your google play closed testing opt in page, you should never send testers directly to Google Play's raw URLs without context. Instead, direct recruits to a dedicated web page or structured document that breaks the process down into clear, sequential steps. Start by setting immediate expectations: explain what the app does, why their participation matters, and explicitly mention that they need to keep the app installed for 14 consecutive days.   Your opt-in page should feature numbered call-to-action buttons corresponding to each phase of the workflow. Step one must be joining your Google Group or submitting their email address for access. Step two should link directly to the web opt-in URL where they accept the invitation. Step three should provide the direct Google Play Store link to download the app onto their device. By visually separating these steps with clear visual cues, you remove the guesswork and drastically reduce drop-off rates at each stage.   Writing Instructions for Non-Technical Testers   Developers are accustomed to technical workflows, but your testers might not be. Avoid technical jargon like closed track, production track, or email list propagation delays. Use plain language that explains exactly what the tester will see on their screen at each moment. For example, explicitly inform them that after joining the Google Group, they may need to wait a few minutes before the Google Play opt-in link becomes active for their account.   It is equally important to emphasize the commitment required for closed testing. Remind testers that uninstalling the app early or opting out through the store page will reset your progress toward the 14-day requirement. Include a simple notice asking them to keep the app installed, open it at least once, and leave it on their device until you notify them that testing is complete. A clear, friendly explanation prevents accidental uninstalls that can ruin your continuous testing streak.   Troubleshooting Guidance to Include on Your Page   Even with clear instructions, some testers will run into issues due to cached browser sessions or multiple signed-in Google accounts on their Android devices. Your opt-in page should include a short troubleshooting section addressing the most common pitfalls. The most frequent issue occurs when a user joins the Google Group using one Google account, but their Android device's Google Play Store app is signed in under a different primary account.   Include a brief tip advising users to ensure they are logged into the same Google account on both their web browser and mobile device. Tell them that if they encounter an App Not Available message after joining the group, they should wait five minutes and refresh the page, or open the link inside an incognito tab signed into the correct account. Providing these solutions upfront saves you from answering endless repetitive support messages and recovers testers who would otherwise abandon the opt-in process.   Bypassing Onboarding Friction with PeerPlay   Designing custom landing pages, writing instructions, and manually onboarding friends or forum volunteers takes substantial time and effort. Even with a perfect opt-in page, casual recruits often forget to stay opted in or uninstall the app halfway through the 14-day testing period, resetting your counter back to zero.   PeerPlay eliminates this friction entirely by connecting indie Android developers in a structured, peer-to-peer testing network. Rather than begging unmotivated recruits to follow multi-step opt-in links, PeerPlay matches your app with verified developers and testers who understand the Google Play requirement. You can start with our free reciprocal testing tier, where you test other apps in exchange for opt-ins on your own. If you want a hands-off experience without mandatory testing duties, our paid Starter Pro and Production Pass plans provide verified Pro Testers who guarantee opt-in completion, keep your app installed for the full 14 consecutive days, and help you pass Google Play review smoothly.       submitted by     /u/Gonsrb     to     r/peerplay       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/peerplay/comments/1wbgsmf/how_to_build_a_google_play_closed_testing_opt_in/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T09:33:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T09:34:13.228Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa12815035b0f36efcc6d10"
+    },
+    "message_id": "reddit_t3_1wbgslj",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "gravelcycling",
+    "username": "essqq197",
+    "title": "bib shorts recommendation",
+    "text": "bib shorts recommendation\n\nAs I get more into cycling and longer rides, I want to buy my first pair of higher-quality bib shorts. I’m considering the Pactimo Flyte, Bioracer Icon, Ekoi Perf Cargo, or Straede Aero.  any experience with these, or any other recommendations?       submitted by     /u/essqq197     to     r/gravelcycling       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/gravelcycling/comments/1wbgslj/bib_shorts_recommendation/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T09:33:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T09:34:13.448Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa12815035b0f36efcc6d11"
+    },
+    "message_id": "reddit_t3_1wbgsj7",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "Aitoolsubs",
+    "username": "b2kyt",
+    "title": "12-Month Premium Subscriptions at the Lowest Prices! (Cursor Pro, LinkedIn, Google AI & more)",
+    "text": "12-Month Premium Subscriptions at the Lowest Prices! (Cursor Pro, LinkedIn, Google AI & more)\n\nGetting straight to the point. I’m offering massive discounts on full 1-year (12-month) premium subscriptions for top productivity, AI, and dev tools. These are the absolute lowest prices you will find.    The List (All are 12 Months)    * LinkedIn Career – $45     * LinkedIn Business – $60     * Notion Business – $20     * Granola Business (10 Seats) – $8     * Intercom Fin AI Agent + Advanced (5 Seats + $100 AI Credits/Mo) – $10     * Duolingo Super – $15     * Cursor Pro – $70     * Google AI Pro + 5TB Storage – $20     * ElevenLabs Creator Plan – $30     * Runway Pro – $40     * Replit Core – $25     * Gamma Pro – $25     * Higgsfield Pro – $80     * Lovable Pro – $30     * n8n Cloud Starter – $20     * Supabase Pro Credits – $25     * Factory Pro – $15     * Framer Pro – $10     * Gumloop Pro (20k Credits/Mo) – $8     * Manus (4,000 Credits/Mo) – $30     * Warp Build – $15     * Wispr Flow Pro – $20     Payment accepted: binance, crypto, remitly, revoult wise, taptap    DM -  u/b2kyt    Join discord for PROOF and VOUCHES:  DISCORD         submitted by     /u/b2kyt     to     r/Aitoolsubs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Aitoolsubs/comments/1wbgsj7/12month_premium_subscriptions_at_the_lowest/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T09:33:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T09:34:13.674Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa12816035b0f36efcc6d14"
+    },
+    "message_id": "reddit_t3_1wbgsix",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "RiseOfBerk",
+    "username": "Arientum",
+    "title": "When is the autumn statue coming?",
+    "text": "When is the autumn statue coming?\n\nHi everyone    I have three seasonal statues and just lack the autumn one.   I thought it will emerge in the store when the new seasonal event starts.   It didn't.    Any idea when it is coming?   I have enough polished amber to buy two statues:)       submitted by     /u/Arientum     to     r/RiseOfBerk       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RiseOfBerk/comments/1wbgsix/when_is_the_autumn_statue_coming/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T09:33:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T09:34:14.315Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1284623d250a5b10baa1d"
+    },
+    "message_id": "reddit_serp_1odebjf",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/TracFone/comments/1odebjf/pending_remote_fulfillment/",
+    "text": "Pending Remote Fulfillment?\n\nUPDATE: Received the phone a week after this post.    So i ordered the TCL 3 10/17. Money went through and I got the order number.   Checked to see if there was any updates and it still \"Pending Remote Fulfillment\" Online chat was useless and Calling the customer service said that it's possible that there's no stock for the product I ordered nearby.   Chat and Phone service basically said that they have no idea when it will be in stock and so I just have to wait, nothing else. I knew I should have just ordered a phone off of Mercari , at least they are more diligent when it comes to tracking.   That's crazy , how was I even able to place an order if the product wasn't in stock. They were quick to take the money but suddenly the product isn't' there.   Anyone have this experience before?       submitted by     /u/22poppills       [link]       [comments]",
+    "username": "22poppills",
+    "subreddit_or_channel": "TracFone",
+    "posted_at": "2025-10-22T17:14:04+00:00",
+    "fetched_at": {
+      "$date": "2026-09-09T09:35:02.247Z"
+    },
+    "google_rank": 6,
+    "search_keyword": "remote fulfillment",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-09T09:35:02.247Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1284f035b0f36efcc6d15"
+    },
+    "message_id": "reddit_t3_1wbgta3",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",

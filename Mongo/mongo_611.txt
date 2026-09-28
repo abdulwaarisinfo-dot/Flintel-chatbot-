@@ -1,0 +1,416 @@
+    "text": "Umm... I thought a bigger package, worth more than 150 EUR, would do much better import tax wise...\n\nI'm not sure what is the issue here tbh. I made sure to only have \"Choice\" products in my cart. Maybe it's because AE hasn't yet categorised items for Estonia (where I wanna ship my stuff to). Still though, this is a ridiculous amount of tax.  If you divide 97,63 by 3 EUR, you would roughly get 32-33 completely different items. My cart has 28 items. This doesn't make much sense to me...  Does someone know if there is a way to decrease the tax somehow?  I would also appreciate if you could get this post some traction, because I have seen similar issues on here, where AE later categorised items for a specific country and the tax decreased significantly.        submitted by     /u/Efficient_Call_2342     to     r/Aliexpress       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Aliexpress/comments/1w9my1r/umm_i_thought_a_bigger_package_worth_more_than/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T09:02:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T09:03:03.930Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e7dc8f3d11795a689f855"
+    },
+    "message_id": "reddit_t3_1w9my1g",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "huggingface",
+    "username": "_innovius",
+    "title": "PII Detection, Replacement & Restore: ShinrAI v1.3 is out",
+    "text": "PII Detection, Replacement & Restore: ShinrAI v1.3 is out\n\nHey everyone, just wanted to say thanks again to those who filled out our beta form, those who replied to our last post and those who sent DMs. Our team has been hard at work to bring improvements to the ShinrAI model and we're always excited to share the latest version as early as possible.   Now for an update- ShinrAI v1.3 is out.   A quick overview on the changes:      Language coverage : we're now doing \"semantic encryption\" in 15 locales (German, English, French, Spanish, Italian, Polish, Portuguese (BR + PT), Russian, Ukrainian, Turkish, Arabic, Japanese and Korean) with Hebrew in beta.    Improvements : 19 detection heads, 27 entity classes and a 1024-token window    License : Unlike versions 1.1 and 1.2 that are licensed with Apache 2.0, v1.3 is released with an Innovius Open License inspired by Apache 2.0. Long story short, we want it free for most, fair when necessary. We explain it a bit more here:  https://huggingface.co/spaces/innovius/innovius-open-license     Benchmark :          Suite (Register Name)    ShinrAI 1.3     Field            Business & Clinic Letters  (15 locales, strict spans, includes Hebrew beta)    95.0    Azure AI PII: 53–76        Japanese Correspondence  (300 texts; Japanese-localized test)    98.1    Liquid AI LFM2 (JP): 56.6        Adversarial Chat Prompts  (27 prompts, overlap F1 - Privacy Study '26)   84.9   Azure Prev:  88.8,  Azure GA: 81.1, Presidio: 75.6, GLiNER2: 74.3        Everyday Messages (ai4privacy)  (de/en/fr/it, overlap F1)    80.8–85.4    Liquid AI LFM2.5 PII: 69.4–76.7, GLiNER2: 35.6–45.2        Long-record Redaction  (REDACT, 1k records, 25 languages)   36.5 (Partial F1)   Azure:  51.2         Synthetic US Paperwork  (Gretel / Nemotron, partial F1)   52.2 / 64.4   Liquid AI:  84.5  /  87.3         A deep dive on the benchmark, including a breakdown on how the models performs on different hardware:  https://huggingface.co/spaces/innovius/shinrai-pii-benchmarks    Try it out with a live demo for text, PDF, image and short audio on Hugging Face:  https://huggingface.co/spaces/innovius/shinrai-pii-playground   (short clarification: Detect -> Replace -> Restore is for text, while redaction is the default for other media)   Training for v1.4 is ongoing with a focus on long-records, the voted domains and beta-access feedback. Once again, thank you for the feedback and we're happy to answer questions.   TL;DR   ShinrAI v1.3 is released. Now with 15 locales (+1 in beta), 19 detection heads, 27 entity classes. v1.4 is in training focusing categories the community has voted for.       submitted by     /u/_innovius     to     r/huggingface       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/huggingface/comments/1w9my1g/pii_detection_replacement_restore_shinrai_v13_is/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T09:02:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T09:03:04.148Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e7dc8f3d11795a689f856"
+    },
+    "message_id": "reddit_t3_1w9my1c",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "ActuallyUsingAI",
+    "username": "Consistent_Camp_4804",
+    "title": "A feature can exist, be documented, and still not actually be wired into anything",
+    "text": "A feature can exist, be documented, and still not actually be wired into anything\n\nTL;DR:  “The feature exists” is not one state. I now separate  DESCRIBED → BUILT → WIRED → FIRED → BEHAVIORALLY VERIFIED .   I found this while auditing a safety check in an AI system.   The checker existed.   It was executable.   The documentation described it as mandatory.   At first glance, that sounds like an implemented control.   Then I searched for the executable call sites.   There were none.   The system had instructions saying the check must happen, and code capable of performing it, but no runtime path actually invoking it.   The accurate status was:       not:       That distinction led me to a five-stage test:   1. DESCRIBED   The requirement appears in a document, prompt, diagram, policy, or comment.   This proves intent, not implementation.   2. BUILT   The code, tool, or component exists and can run in isolation.   This proves capability, not integration.   3. WIRED   An actual execution path can reach and invoke it.   This proves integration, not that the path has run.   4. FIRED   Runtime evidence shows that it was invoked during a real or representative execution.   This proves activity, not necessarily correct behavior.   5. BEHAVIORALLY VERIFIED   A controlled test shows that the feature changed, allowed, blocked, or recorded behavior exactly as intended, including the failure path.   This is the first stage that establishes the behavior you actually care about.   The same ladder applies far beyond AI safety controls:     permission checks;   fallback models;   retry logic;   audit logging;   backups;   data-retention rules;   human-approval gates;   monitoring and alerts.     A feature is not operational merely because the AI says it used it, the docs require it, or the code exists somewhere in the repository.   What is one feature in your own stack that you know is  built , but have not yet proven is  wired, fired, and behaviorally verified ?       submitted by     /u/Consistent_Camp_4804     to     r/ActuallyUsingAI       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ActuallyUsingAI/comments/1w9my1c/a_feature_can_exist_be_documented_and_still_not/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T09:02:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T09:03:04.351Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e7dc8f3d11795a689f857"
+    },
+    "message_id": "reddit_t3_1w9my18",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "MangoLoco",
+    "username": "thewtfcat",
+    "title": "You guys I have fatty liver bc of drinking energy drinks",
+    "text": "You guys I have fatty liver bc of drinking energy drinks\n\nYou guys I have fatty liver bc of drinking energy drinks these are not all the energy drinks I drank these are only the cans that I saved   And some of the cans are missing bc they got robbed bc my house was robbed in august    I just wanted to say I went for a health check and diagnosed with fatty liver and then I googled what could have possibly given me fatty liver of all the things and google said drinking energy drinks can cause fatty liver jaundice and hepatitis    I have heard a lot of reports of people even dying from drinking energy drinks but they mostly said that the people who drink them die from enlarged hearts so I wasn’t expecting fatty liver instead    And I was wondering if any of u guys who drink energy drinks got any health issues also like me        submitted by     /u/thewtfcat     to     r/MangoLoco       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MangoLoco/comments/1w9my18/you_guys_i_have_fatty_liver_bc_of_drinking_energy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T09:02:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T09:03:04.556Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e7dc8f3d11795a689f858"
+    },
+    "message_id": "reddit_t3_1w9my0m",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "metro",
+    "username": "gladchadstone",
+    "title": "Who would you vast in a Metro movie",
+    "text": "Who would you vast in a Metro movie\n\nIdeally I would prefer this movie to be made in Russia with Russian actors, but with the Russian made adaptation that was announced years back indefinitely on hold, who do you all think would be good actors to play these characters in a Hollywood/western adaption?   These would be my tentative suggestions as someone who doesn't know a heap of actors that aren't very mainstream.   (Just assume they would actually do the source material justice and not move it to LA or something like was proposed)        submitted by     /u/gladchadstone     to     r/metro       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/metro/comments/1w9my0m/who_would_you_vast_in_a_metro_movie/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T09:02:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T09:03:04.782Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e7dc8f3d11795a689f859"
+    },
+    "message_id": "reddit_t3_1w9my0j",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "UrduCafe",
+    "username": "DianKhan2005",
+    "title": "🌧️ Word of the Day: Baarish (بارش)",
+    "text": "🌧️ Word of the Day: Baarish (بارش)\n\n💡 Pronunciation: Baa-rish   🌙 Grammatical Category: Feminine   📜 Etymology: Urdu noun derived from Persian بارش (baarish, rain/rainfall)   💡 Breakdown: Baarish : Rain / Rainfall   📖 Context: The lover watches the downpour wash away the paper-thin architecture of past hopes.   ✍️ Example: \"Bheegte barish mein beh gaya\"   🎵 Song: Chod Diya — Arijit Singh — 2018       submitted by     /u/DianKhan2005     to     r/UrduCafe       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UrduCafe/comments/1w9my0j/word_of_the_day_baarish_بارش/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T09:02:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T09:03:04.994Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e7dc9f3d11795a689f85a"
+    },
+    "message_id": "reddit_t3_1w9my0e",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "Pelicangers_Cave",
+    "username": "posxatu",
+    "title": "Jajaj",
+    "text": "Jajaj\n\nsubmitted by     /u/posxatu     to     r/Pelicangers_Cave       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Pelicangers_Cave/comments/1w9my0e/jajaj/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T09:02:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T09:03:05.197Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e7dc9f3d11795a689f85b"
+    },
+    "message_id": "reddit_t3_1w9my0d",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "TwoXIndia",
+    "username": "rajaikambal",
+    "title": "Have a job offer but it makes me want to cry",
+    "text": "Have a job offer but it makes me want to cry\n\nI have been looking for full-time jobs since the start of this year and finally got an offer to be a graphic designer but the thing is that its not the position that i want or the kind of company that i want to be at and its giving me really bad anxiety. I really need a job but doing something I won't like is scaring my insides and I want to cry.   I have worked hard and upskilled myself, I am a decent designer at least and I deserve better. Even my parents are kinda disappointed that this is the best I could do after yapping about following my passion and couldn't even get a decent job. I just dont know anymore       submitted by     /u/rajaikambal     to     r/TwoXIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TwoXIndia/comments/1w9my0d/have_a_job_offer_but_it_makes_me_want_to_cry/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T09:02:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T09:03:05.398Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e7dc9f3d11795a689f85c"
+    },
+    "message_id": "reddit_t3_1w9mxzx",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "devplatform_triggers",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1788771757282",
+    "text": "[PROBE] 1788771757282\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devplatform_triggers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devplatform_triggers/comments/1w9mxzx/probe_1788771757282/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T09:02:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T09:03:05.623Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e7dc9f3d11795a689f85d"
+    },
+    "message_id": "reddit_t3_1w9mxzp",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "SabrinaCarpenter",
+    "username": "Ceyyhun",
+    "title": "Aeropostale Exclusive Collection Launch Event, Los Angeles - April 2018",
+    "text": "Aeropostale Exclusive Collection Launch Event, Los Angeles - April 2018\n\nsubmitted by     /u/Ceyyhun     to     r/SabrinaCarpenter       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SabrinaCarpenter/comments/1w9mxzp/aeropostale_exclusive_collection_launch_event_los/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T09:02:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T09:03:05.830Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e7dcaf3d11795a689f85e"
+    },
+    "message_id": "reddit_t3_1w9mxzh",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "alien",
+    "username": "mastrblaster08",
+    "title": "Possibly Hot Take: Alien Earth wasn’t very good",
+    "text": "Possibly Hot Take: Alien Earth wasn’t very good\n\nI’ve been an alien fan for a long time, and I was excited to watch Alien Earth after Romulus. I really liked Romulus and wanted to see the xenomorph finally on earth. But I feel like that was mistake #1, I want to preface this by saying I did not think it was horrible, I liked the first and second episode as well as the flashback episode. But I feel like the show wasn’t really an Alien show, it did not have any of the iconic cassette futurism the first movie and Romulus had, the alien design wasn’t horrible, but the cgi and oftentimes the action felt very “man in rubber suit” for a 2025 show.    Back to the first mistake, the title “Alien Earth” is misleading. It isn’t really the xenomorph on earth, it’s more the xenomorph trapped on a remote island. Part of what I think excited a lot of people was seeing the xenomorph terrorize someone besides marines or space truckers. I wanted to see xenomorphs in cities and urban areas, but instead we were stuck on an island.   I didn’t hate the android and robot storylines, but I feel like some of them were just not interesting. The show felt like it wanted to say profound things, and I think the grooming allegory with Kumi getting Slightly to do things for him in a very pedophilic way really traced back to the original message of the first Alien (being rape). But besides that, a lot of the stories about the hybrids wondering if they are human or machine was kind of boring. The ending especially.   I liked the other aliens introduced, but I felt like it wasn’t very Alien feeling. I’m all for trying new things and I can respect them trying that, but it felt like a random assortment of aliens and a xenomorph. The eye I liked, I felt it was one of the more interesting premises of the show, but I can barely remember any of the other ones.    Back to the environment and xenomorph in rubber suit thing, I believe partly it’s because they tried to put a black phallic alien in a jungle environment. I get that xenomorphs are very intelligent hunters, but what one singular xenomorph was doing was unrealistic I feel like against hundreds of trained soldiers. Even in aliens, one soldier was able to at least take down one.    I also hate how they did the xenomorph at times, Wendy being able to speak to the xenomorph is dumb. One of my favorite parts about the Alien franchise is that the xenomorph is an uncontrollable force. It has been tried numerous times to contain this uncontainable creature and never works, yet Wendy is just able to speak to one? It really took the immersion out for me at times and made it hard to look over.    In summation, the plot was weak 80% of the time, the villain was boring, generic evil capitalist, the world building was ok, but the set design I think was just too modern for my taste, the xenomorph was cool at times but often just stupid, the plot of the hybrids questioning their humanity was a cool idea but poorly executed.    I will give credit where credit is due, the music at the end of the episodes, perfect, the first episode felt great and honestly was very fun, the flashback episode was the best in my opinion, yes it was basically a retelling of the first Alien, but the set pieces, the other aliens breaking containment, it felt very new and very exciting. I can also appreciate them tackling new ideas and new commentary, for example the current debate on AI being talked about in the show. It felt like they were trying to keep Alien woke (as it has always been) and they did succeed in that, it just wasn’t a very good commentary. Again, maybe I’m just spiteful and this is a rant with very little coordination, but I’d like to hear people’s opinions if you don’t mind. I will still watch season 2, and I am curious how the series progresses, but right now I give Alien Earth a 5/10.        submitted by     /u/mastrblaster08     to     r/alien       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/alien/comments/1w9mxzh/possibly_hot_take_alien_earth_wasnt_very_good/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T09:02:36Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T09:03:06.042Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e7dd2f0819e6636a8f5de"
+    },
+    "message_id": "reddit_t3_1w9my9c",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "codex",
+    "username": "Presstabstart",
+    "title": "Finally figured out why /goal used 100% of my usage in 10 hours...",
+    "text": "Finally figured out why /goal used 100% of my usage in 10 hours...\n\nTurns out, if you set a goal Astra doesn't really know when to complete or gets confused when it wants user input. It then does this bizarre thing where it pretends to be you and imagines what you say in a passive aggressive way and tacks on irrelevant features.   So in short please don't use /goal mode...       submitted by     /u/Presstabstart     to     r/codex       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/codex/comments/1w9my9c/finally_figured_out_why_goal_used_100_of_my_usage/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T09:03:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T09:03:14.114Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e7dd2f0819e6636a8f5df"
+    },
+    "message_id": "reddit_t3_1w9my99",
+    "topic_key": "hello",
+    "search_keyword": "hello",
+    "platform": "reddit",
+    "subreddit": "DBGekishinSquadra",
+    "username": "LonerVibezz",
+    "title": "Prioritize settings",
+    "text": "Prioritize settings\n\nHello people, I was wondering for my PS peeps what do you guys prioritize settings look like? i’m wondering because there’s times in games when i’m fighting a enemy and then it’ll lock onto a NPC. I could really use some advice on how to fix this please and thank you        submitted by     /u/LonerVibezz     to     r/DBGekishinSquadra       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DBGekishinSquadra/comments/1w9my99/prioritize_settings/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T09:03:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T09:03:14.325Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e7dd2f0819e6636a8f5e0"
+    },
+    "message_id": "reddit_t3_1w9my8y",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "ZyzzLegacy",
+    "username": "NobodyLittle5936",
+    "title": "How's the physique looking?!",
+    "text": "How's the physique looking?!\n\nsubmitted by     /u/NobodyLittle5936     to     r/ZyzzLegacy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ZyzzLegacy/comments/1w9my8y/hows_the_physique_looking/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T09:03:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T09:03:14.538Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e7dd2f0819e6636a8f5e1"
+    },
+    "message_id": "reddit_t3_1w9my8x",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "CatAdvice",
+    "username": "DonkeyOld9140",
+    "title": "Took my stray home, but he wont eat",
+    "text": "Took my stray home, but he wont eat\n\nHi! My mom befriends all the neighborhood strays and we adopt them out at around 2-4 months if we can (we TNR the totally feral ones as we can but its a never ending thing) I took one of them home (small boy, like 3 months old-ish) about 34 hours ago and I swear to god he has not eaten a thing or pooped or peed the entire time he just hides everywhere.    I set out a heating pad, wet food, dry food, churu, human tuna and water in like three containers and i left the tap running a little bit but none of it has been touched. my entire room smells like cat food please help i cannot handle being the reason this poor thing dies       submitted by     /u/DonkeyOld9140     to     r/CatAdvice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CatAdvice/comments/1w9my8x/took_my_stray_home_but_he_wont_eat/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T09:03:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T09:03:14.750Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e7dd2f0819e6636a8f5e2"
+    },
+    "message_id": "reddit_t3_1w9my8q",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "keyboards",
+    "username": "Sufficient_Pause_289",
+    "title": "Is ROG Azoth X worthy?",
+    "text": "Is ROG Azoth X worthy?\n\nsubmitted by     /u/Sufficient_Pause_289     to     r/keyboards       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/keyboards/comments/1w9my8q/is_rog_azoth_x_worthy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T09:03:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T09:03:14.962Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e7dd3f0819e6636a8f5e3"
+    },
+    "message_id": "reddit_t3_1w9my8o",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "gameofthrones",
+    "username": "Unusual-Charge6943",
+    "title": "Which GoT book is supposed to be the real season 8 portrayal?",
+    "text": "Which GoT book is supposed to be the real season 8 portrayal?\n\nRewatching GoT recently and i can’t help but think how perfectly written the first season was. I remember when season 8 came out and how the events unfolded, it was a complete disaster and fans were furious because this wasn’t how it “supposed to be”. My question is which book can i buy from GoT series that has the “real” ending?        submitted by     /u/Unusual-Charge6943     to     r/gameofthrones       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/gameofthrones/comments/1w9my8o/which_got_book_is_supposed_to_be_the_real_season/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T09:03:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T09:03:15.174Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e7dd3f0819e6636a8f5e4"
+    },
+    "message_id": "reddit_t3_1w9my8h",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "TrueOffMyChest",
+    "username": "Flame0fthewest",
+    "title": "I miss a life I never lived so much that it hurts",
+    "text": "I miss a life I never lived so much that it hurts\n\nI'll start with a story time, so if you want to see \"the point\", feel free to scrooll down.    I'm 29/M   I didn't have a normal childhood nor teenage years by any means. I didn't have a normal family, I never felt close to my parents, I barely ever had meaningful friendhips and I never had a girlfriend either.   I come from a religious family, the church we used to go was basically a cult. I had no right to say no when I didn't want to go, I had to go to there twice a week. I couldn't watch most scifi and action movies or tv shows, not even anime.   I couldn't own a mobile phone until I was 18 and I couldn't use a computer more than twice a week for a little time. I had to change schools because of religious reasons (my parents thought that the new leaders or my school were \"bad christians\").   Despite of all these, I had a relatively \"happy\" childhood. I had some friends, I had some adventures and I enjoyed living.   Until everything fell apart.   - Changing school meant I lost all my friends (LITERALLY: I had no mobile phone and I didn't own a computer, I had no way to keep in contact with them)   - I became sick and never really got cured (no one knows what's wrong with me, most doctors said my health issues must be related to mental health). I felt nausea, headaches and stomach problems for no reasons. It was so bad I went to a hospital for weeks once. I slowly got better, but no one could ever give me a answer what was my problem exactly   - I came from a art school, so I loved music, drawing, reading a lot. In my new school (which had a bad reputation) I was just the \"weird one\". I didn't want to smoke, I didn't want to drink, I didn't like partying the way my schoolmates did. I was bullied despite of the fact that I never provoked anyone.   - Since I was on the bottom of the hierarchy of the school, not many people bothered to make friends with me. Most of them were mean or didn't care about me at all. I had surface level friendships only   - For the next years I had the same experience everywhere. I finished school. I went to high school, again, into a very bad one. People literally stole my money and food, one guy knocked me out on the street for talking back to his friend who stole my necklace. After just a few months I went into a different highschool   - The new one was a bit better but not so much. I hated it till I finished there, and then I stayed for another year to get a degree in marketing (I had no idea what to do with my life, I just wanted to buy some time)   - By this time I part ways with the church. My relationship with my parents wasn't really bad, I just didn't understand or loved any of them really, and they never understood me either.   - I realized that my father is a alcoholic and drug addict and his condition became worse and worse. (and apparently he's been like this for many years, I was just blind to it for somehow)   - I couldn't really find work. I was sick, or felt sick often. Even if I had a job, I hated it, despite of trying my best. I live in a small town, we don't really have a lot of chances. When covid hit, I became very sick again, and had to drop the only workplace I liked because I couldn't do hard work anymore   - For the next years I had no job at all and while my mother and father were working, I've been home, nursing my grandmother who moved into our house. I kept doing this until she had to move into a home for elderly people because she lost her mind   - Shortly after this one night, while we were watching a tv show, my father walked into the bathroom and took his own life. Didn't even leave a note. I found him, and I took care of everything, I dealt with the paramedics and the police so no one had to see what I have seen. My family felt bad for me and they were proud that I was the one who \"took the hit\" but idk. I don't know to feel about it.   - After this, everything had to change. We sold the house, and everyone moved into different places. I live with my sister in a flat we rent. I have money for some years.    How I feel now    All the things I went through changed me. I was a very cheerful kid, I was always happy and I liked to laugh a lot. I had a lot of energy and I'm slightly autistic... but at times I feel I just lost the person who I really was.     I'm not angry at the world. I feel sad most of the time. Sometimes just \"neutral\". I barely ever feel happiness, and when I do, it's always related to video games, books, anime, manga, tv shows or movie.     Every time I walk on the streets I get sad. I see a lot of teens, because I live right next to a school.   And they are happy (at least they look happy). They are having fun, laughing, teasing each other, I can hear meaningful conversations and I can hear them having a party near the park.   I can see young couples kissing, walking while holding hands, or just chilling at random places.    I literally never had a chance to experience these moments as a teen. I know it's SO STUPID to even think about it, but this is what I want more than anything.  (Which is funny, because most people would hate to go back to their teenage years. Or so I heard)     Or, rather, it's not even about \"getting younger again\". I just want to experience these things. For real. The proper way.     I want to have deep conversations with friends who understand me.   I want to be useful for people. I want to go on adventures. I want to party.   I want to go to their houses to play, to talk, to philosophy.   I want to invite them into my flat to do the same.   To watch movies together. To talk about books. About relationships. To cook, to drink something, to experience REAL LIFE.     Seeing people having \"normal lives\" makes me a bit happy, often melancholic, and more often very sad. Because I envy them a lot. I don't know how to shake off this feeling.       The scariest thing is that I'm not even sure if I could be a useful friend for anyone. If I could feel this good, even if I had the chance. So many years passed and I just feel empty.      Well I guess that's all.    Thank you if you read it. There's a chance I'll delete this post later, or I don't know. I just felt like I have to write this out of me.       submitted by     /u/Flame0fthewest     to     r/TrueOffMyChest       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TrueOffMyChest/comments/1w9my8h/i_miss_a_life_i_never_lived_so_much_that_it_hurts/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T09:02:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T09:03:15.386Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e7dd4f0819e6636a8f5e8"
+    },
+    "message_id": "reddit_t3_1w9my8b",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "czech",
+    "username": "jancaaacz",
+    "title": "Dítě způsobilo vážný úraz - odškodné?",
+    "text": "Dítě způsobilo vážný úraz - odškodné?\n\nJe mi jasné, že se tu svede bitva rodičů proti cyklistům, ale pojďme do toho.   Minulý víkend sundal z kola přítele tříleťák na First bike (odrážedlo s plášťovými koly), který jel v opačném směru, po kraji stezky, ale z ničeho nic ho napadlo, že to vezme kolmo na druhou stranu, do druhého směru, které má stezka vyznačené, přímo po dráhy jedoucímu cyklistovi. Jeho doprovody (2x žena s kočárkem, jedna z nich jeho matka, k tomu měly celkem 3 děcka předškolního věku - dvě na odrážedlech a jedno na koloběžce) nijak nestihly zareagovat, takže došlo ke střetu. Můj přítel skončil podřený se zlomenou klíční kostí, kterou bylo nutné operovat a sežroubovat. Dítěti se nic vážného nestalo.   No a teď přichází na řadu začít vytvářet účet viníkům:   - výdaje související s úrazem (od léků po rehabilitace, cestovné)   - náhrada ztráty příjmu - 6 týdnů na PN je cca 45 tisíc   - bolestné   - přítel vyžaduje pomoc, taktéž musí někdo zastat jeho role (něco zastanu já, za něco budeme muset zaplatit)   - zničení oblečení, rozbitá helma, poškození kola, nutný odvoz kola z místa - cca 10 tisíc   - nemožnost účasti na zaplaceném kurzu surfingu v Portugalsku v druhé půlce září - 25 tisíc (možná část půjde z pojištění nebo se nějak domluvit)   Část kryje naše (jeho) životní pojištění.   Netuším, zda paní má nějaké pojitění či zda to vůbec kryje, ale jde o deseti tisíce. Bije se v nás, že budeme po někom chtít 80+ tisíc, což může být zásah pro jejich rozpočet, na druhou stranu způsobili tím dost nepříjemností a zásahů do našeho rozpočtu i denního života,   Jaký by byl váš přístup - co vše chtít po viníkovi?    A jste i vy připraveni na to, že vaše dítě může něco takového udělat?       submitted by     /u/jancaaacz     to     r/czech       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/czech/comments/1w9my8b/dítě_způsobilo_vážný_úraz_odškodné/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T09:02:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T09:03:16.228Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e7dd4f0819e6636a8f5e9"
+    },
+    "message_id": "reddit_t3_1w9my81",
+    "topic_key": "hello",
+    "search_keyword": "hello",
+    "platform": "reddit",
+    "subreddit": "emotionalneglect",

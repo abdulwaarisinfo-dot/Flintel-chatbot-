@@ -1,0 +1,416 @@
+    "username": "siddhardhhhh",
+    "title": "IBM job application",
+    "text": "IBM job application\n\nHii , HR's from IBM    I completed my ibm coding assessment on aug 24 and my Job application status was showing all assessments completed, for the entry level machine learning data engineer role ,    Till now , there's no update    So can you tell me, when I will get updates .        submitted by     /u/siddhardhhhh     to     r/IBM       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IBM/comments/1wgs1b0/ibm_job_application/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:04:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:05:21.826Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e0226508d45f3d2c9c11"
+    },
+    "message_id": "reddit_t3_1wgs1aq",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Beginning_Emu_3296",
+    "title": "Grab 100 hammers from u/Beginning_Emu_3296!",
+    "text": "Grab 100 hammers from u/Beginning_Emu_3296!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Beginning_Emu_3296     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wgs1aq/grab_100_hammers_from_ubeginning_emu_3296/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:04:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:05:22.040Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e0226508d45f3d2c9c12"
+    },
+    "message_id": "reddit_t3_1wgs1a2",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "OkDevice4793",
+    "title": "Grab 100 hammers from u/OkDevice4793!",
+    "text": "Grab 100 hammers from u/OkDevice4793!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/OkDevice4793     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wgs1a2/grab_100_hammers_from_uokdevice4793/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:04:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:05:22.269Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e0226508d45f3d2c9c13"
+    },
+    "message_id": "reddit_t3_1wgs19z",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "artificial",
+    "username": "anime_king_1",
+    "title": "i vibe coded an entire accounting app and its better then any professional accounting application like TALLY PRIME",
+    "text": "i vibe coded an entire accounting app and its better then any professional accounting application like TALLY PRIME\n\nHere's a version with the business-specific details generalized — the operational quirks (exact set structure, tax code, filing specifics) are now described at a higher level so it doesn't map so precisely back to your actual operation:    Title suggestion:  I built my own accounting app for my distribution business because nothing else fit. 40+ versions in, sharing what I learned.   I run a small distribution business — buy from suppliers, sell through a few different channels including retail and walk-in customers. One warehouse, a large and varied product catalog I'm juggling.   A few years back I got fed up with existing software and built my own. It's just one HTML file that runs on the shop PC — no login, no internet needed, no subscription. I'm dozens of versions in now, dozens of screens, close to a hundred test suites, thousands of assertions, tens of thousands of lines of TypeScript. Agents wrote most of it, but more on that later.   Why not just use Tally or some inventory app? Two reasons, both specific to how my business actually works:   My real unit isn't a single item, it's a bundle — a group of different products sold together under one order, each with its own pricing and discount, that needs to break out into separate line items on the invoice but still roll up as one entry on the stock side. Every off-the-shelf app assumes single items and leaves you to do that translation by hand.   Also, a chunk of what I sell falls under a tax category where a zero-tax line is actually correct, not an error. But every \"smart\" app I tried kept trying to flag it or auto-correct it. I had to build mine so it just doesn't do that. Sounds small but it's honestly the whole reason this works for me.   Worst bug I ever shipped, and it was entirely on me: if you open the app by double clicking the html file, it loads as a file:// page, and Chrome/Edge won't let that store anything. Instead of failing loudly, the app just quietly kept everything in memory and looked totally fine. Close the tab and boom, the whole day's entries are gone. There was one small grey line telling you to use \"the installed app\" instead, except that's a big download and a lot of my users are on offline shop PCs that can't really do that.   Fixed it two ways. First, a launcher that serves the app off your own machine over loopback so saving actually works and it's not accessible to anyone else on the network. Second — and this is the one I actually care about — a check that runs before you can type a single voucher, plus a red banner you literally cannot dismiss. You can shrink it to one line, that's it. A lost day of bookkeeping isn't something you get to swipe away. There's even a test now that fails on purpose if anyone ever makes that banner closable again.   On the \"built with AI\" thing — yeah, agents wrote most of the actual code. What I did was own the process. Rules like: never say something works unless you've tested it, ask before guessing, never quietly remove a feature. Every bug an audit finds goes into a defect log before it gets fixed, described the way I actually experienced it as a user, not some abstracted ticket. About ten of those so far. Every new test also gets mutation tested — meaning we put the bug back on purpose and check the test actually catches it. I lost an entire afternoon once to a handful of tests that looked fine but did nothing, and that's exactly the rule that stopped it happening again. Manual has to get updated in the same commit as the behavior or the build fails.   CI runs on Windows too since that's what my users actually have. There's a whole test suite that walks through a typical working day end to end — from receiving stock to making a sale to closing the books for the month — and it literally tracks clicks and keystrokes per task, because that's the real measure of whether this is actually easier to use.   And offline isn't just a tagline — there's a test that strips out comments and fails the build if any networking code shows up anywhere in the app.   To be clear about what this ISN'T: it's not better than Tally. Tally supports way more transaction types than mine does. I checked — of the ones I'm missing, none of them matter for my kind of business, so I didn't lose sleep over it. It's single-user on purpose, doesn't handle some of the regulatory filing types larger businesses need (it exports the data, but a human still has to file it separately). No multi-branch, no manufacturing. Doing less but doing it right for my exact use case was always the point.   It's not for sale, I'm not trying to build a business out of this. I built it so my own books are correct. If you're in distribution and want to poke at it, source's in the comments.   Genuinely curious what people think about a couple things:   Is treating everything as \"derived vouchers, reports are just pure functions of them\" the right call for something single-user, or am I setting myself up for pain down the line vs just using an append-only ledger?   If a second person ends up using the same PC, does that basically force multi-user support whether I want it or not?   And honestly — anything above that reads like a red flag to you, I'd rather hear it now.   Stack's Vite, React 19, TypeScript, zustand, with an optional Electron shell if you want it. Data's stored locally in the browser plus an encrypted export file you pick the location for. There's no backend at all — nothing to inspect because nothing exists.    Screenshots below:      https://preview.redd.it/t565s2n6kmph1.png?width=1757&format=png&auto=webp&s=056f753a469f814c64ac8600d15b8fb9fcba3134        submitted by     /u/anime_king_1     to     r/artificial       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/artificial/comments/1wgs19z/i_vibe_coded_an_entire_accounting_app_and_its/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:04:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:05:22.484Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e05a6508d45f3d2c9c17"
+    },
+    "message_id": "reddit_t3_1wgs25l",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "egyptstory",
+    "username": "AutoModerator",
+    "title": "📱 Responsive Web Design in Egypt: Engage Customers Anywhere",
+    "text": "📱 Responsive Web Design in Egypt: Engage Customers Anywhere\n\nResponsive Web Design in Egypt: Engage Customers Anywhere    In today’s fast-moving digital world, your audience in  Egypt  is browsing from everywhere—phones, tablets, laptops, and desktops. If your website doesn’t adapt to all devices seamlessly, you’re losing business.   That’s where  responsive   web design  comes in—smart, flexible, and built to convert.   🌍 Why Responsive Design Matters in Egypt   With over  90% of Egyptians accessing the internet via mobile , a website that doesn't adjust to different screens will frustrate users and drive them away.       ✅ Key Benefits of Responsive Web Design   📱 1. Mobile-Friendly Experience   Your site automatically adjusts layout, images, and fonts to fit any screen—no pinching or zooming required.       🚀 2. Faster Load Times   Optimized code and design elements ensure your site loads quickly on all devices, especially slower mobile networks.       🔍 3. Better  Google     Ranking (SEO)    Google prioritizes mobile-friendly websites in search results—especially important if you're targeting Egyptian users locally or globally.       💸 4. Lower Maintenance Costs   One site to manage and update—no need for separate mobile and desktop versions.       🧑‍💼 5. Enhanced User Engagement   Consistent experience builds trust and keeps visitors engaged longer, increasing your chances of conversion.       🏢 Responsive Design by  Malafaat    At  Malafaat , we specialize in crafting responsive websites for businesses across Egypt.    Whether you’re a startup or an established brand, we help you:     Reach customers  anywhere, on any device    Build a strong  online presence    Increase  sales, leads, and credibility          submitted by     /u/AutoModerator     to     r/egyptstory       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/egyptstory/comments/1wgs25l/responsive_web_design_in_egypt_engage_customers/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:06:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:06:18.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e05a6508d45f3d2c9c18"
+    },
+    "message_id": "reddit_t3_1wgs25g",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "JapanTravelTips",
+    "username": "baby_hooper",
+    "title": "PokePark lottery selection",
+    "text": "PokePark lottery selection\n\nHello,   My family and I ordered tickets to the PokePark for November back in August. When I checked my application status on the website, it said \"selection in progress\".   When should I expect to hear back? Or does the lack of a response mean we weren't picked?       submitted by     /u/baby_hooper     to     r/JapanTravelTips       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/JapanTravelTips/comments/1wgs25g/pokepark_lottery_selection/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:06:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:06:18.719Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e05a6508d45f3d2c9c19"
+    },
+    "message_id": "reddit_t3_1wgs24y",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Bangalorestartups",
+    "username": "Antique_Pangolin_867",
+    "title": "I built a app to answer a question I couldn't find a good answer to: “What's happening in Bangalore today?”",
+    "text": "I built a app to answer a question I couldn't find a good answer to: “What's happening in Bangalore today?”\n\nI've been building Elara, a small consumer app around a simple idea: We have plenty of ways to find news.   But if I want to know:   What's happening near Koramangala today?   Is there an event worth checking out?   What's new around Indiranagar?   Any interesting business openings?   What's happening with local civic issues?   …I end up jumping between Instagram, Reddit, Google, news apps and random websites. So I tried putting all of that onto a map.   Elara pulls together local news, events, business updates and civic happenings from the last 24 hours and turns them into map pins.   The interaction is deliberately simple: Open → explore your city → pop interesting pins → collect points → unlock more cities.   No login. Free to use.  I'm not sure yet whether this is a genuinely useful product or just something I personally wanted.   So I'm looking for Bangalore founders/builders/users to try it and tell me: Would you use this regularly?   And more importantly: What would make you open it tomorrow instead of forgetting about it?   That's the problem I'm trying to solve right now.   Download link at:  https://uncoverroads.com/elara        submitted by     /u/Antique_Pangolin_867     to     r/Bangalorestartups       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Bangalorestartups/comments/1wgs24y/i_built_a_app_to_answer_a_question_i_couldnt_find/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:06:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:06:18.924Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e05b6508d45f3d2c9c1a"
+    },
+    "message_id": "reddit_t3_1wgs23h",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "ausjobs",
+    "username": "Relevant_Ad3187",
+    "title": "Am i just being ungrateful?",
+    "text": "Am i just being ungrateful?\n\n29 years old in Victoria   In what was once a dream job, in the digital marketing space and overall the job is fine. But I'm having a crisis over whether I want to be working in this field for the rest of my life or not. (both for enjoyment but also for forced use of AI)   My partner is supportive of me exploring career options, but at the same time I want to be able to provide for them and our future family as we look towards the future. Taking a career break or a career change just doesn't seem practical considering the things I want to be able to afford in the next few years.    I'd be more willing to take the leap if I actually knew what I wanted to do.    Do I start my own agency?   Do I keep my head down and stay put in a fine job while there's economic uncertainty.    I've considered re-skilling into teaching or into counselling.   Or do I just need a holiday? (Haven't properly taken one since pre-Covid)   Has anyone made a leap away from marketing? where did you land?       submitted by     /u/Relevant_Ad3187     to     r/ausjobs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ausjobs/comments/1wgs23h/am_i_just_being_ungrateful/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:06:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:06:19.131Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e05b6508d45f3d2c9c1c"
+    },
+    "message_id": "reddit_t3_1wgs23d",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "rfirezilla",
+    "title": "Unattended Delicacies and Hibiscus Rum Punch at the Summer Matsuri",
+    "text": "Unattended Delicacies and Hibiscus Rum Punch at the Summer Matsuri\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/rfirezilla     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wgs23d/unattended_delicacies_and_hibiscus_rum_punch_at/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:06:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:06:19.533Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e05b6508d45f3d2c9c1d"
+    },
+    "message_id": "reddit_t3_1wgs230",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "whatcarshouldIbuy",
+    "username": "t3ss4_m",
+    "title": "This is more of a what car should I KEEP post",
+    "text": "This is more of a what car should I KEEP post\n\nHi guys I have 2 cars and I am stuck on what one to keep, I really cant decide I need help, I dont have room for both, one of them is currently parked on the street.    First car:   1997 EL Fairmont    Kms: 150,000   Pros:   - Interior is absolutely mint   - No major dents or scratches on outside body   - No major problems   - Easy and light to drive   Cons:   - Very squeaky steering and brakes   - Rust appearing underneath car   For a new wof it needs:   - New front brake pads   - New front bump stops   - New rear sway bar link bushes   - Front top strut mounts   (I can do all that, parts shouldnt be too expensive, but it sounds like a bloody hassle)   Second car:   2002 VX SS commodre   Kms: 200,000   Pros:   - V8 🤠   - Has had water pump replaced   - Transmission has been replaced and slightly modified    - Decent wheels (with no curbing yet)   - Has been tuned and sounds pretty neat   - Engine bay is immaculate    - More fun to drive   Cons:   - Needs trans cooler (cheap and easy to install)   - Has a few big scratches on exterior   - Clear coat on boot is peeling   - Interior is pretty cracked and seats and stained/ripped (but I have a coworker who has leather seats I can have for free 😃 and I should be able to replace the plastics for under $200NZD)   - Has a secondary horn, it sounds so stupid, like a clown horn, so I cant road rage appropriately, but it has passed the last wof with said horn so its not a money issue just sounds stupid)   - Steering and acceleration is pretty heavy   I was really leaning towards keeping the Commodore, but I like the shape and colour of the fairmont more, but then I also dont really want to be the one who has to deal with the rust.       submitted by     /u/t3ss4_m     to     r/whatcarshouldIbuy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/whatcarshouldIbuy/comments/1wgs230/this_is_more_of_a_what_car_should_i_keep_post/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:06:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:06:19.787Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e05b6508d45f3d2c9c1e"
+    },
+    "message_id": "reddit_t3_1wgs22p",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "TeslaFSD",
+    "username": "Rbb-tesla",
+    "title": "FSD 14.3.9 critical failure. FSD maintained an unsafe/ambiguous trajectory approaching the gore at highway speed, requiring driver intervention to establish a safe path around the physical island.",
+    "text": "FSD 14.3.9 critical failure. FSD maintained an unsafe/ambiguous trajectory approaching the gore at highway speed, requiring driver intervention to establish a safe path around the physical island.\n\nAt about  14 seconds , FSD is clearly engaged and the vehicle is traveling approximately  62 mph . The overhead signs identify the upcoming split:  Tunnel Rd/Caldecott Ln to the left and Fish Ranch Rd to the right . The right-hand exit lane is already developing, and the pavement markings make the separation increasingly clear.   From roughly  14–17 seconds , the car continues toward the split at  about 61 → 59 mph . The critical feature is that the exit separation becomes progressively more explicit: first the lane line, then two diverging solid white lines/gore markings, followed by the physical island/curb area.   At approximately  17–17.5 seconds , the vehicle is approaching the  nose of the gore/island  at about  58–59 mph . At this point, the system should already have committed to a clean trajectory on one side of the gore. Instead, the trajectory remains uncomfortably aligned toward the convergence area.   Then something important happens at approximately  17.5–18 seconds : FSD disengages. The display changes from blue  “Self-Driving”  to the normal driving display, and the red steering-wheel/intervention indicator appears. Speed drops rapidly:    ~58 mph → 53 → 46 → 38 → 34 → 31 mph.    That sequence is consistent with you taking control and making a substantial corrective maneuver/deceleration.    My assessment of the failure    I would classify this as primarily a  late path-commitment / gore-boundary handling failure .   It doesn’t look to me like the cameras simply couldn’t see the island. There are multiple visual cues well before reaching it: the exit-only pavement marking, diverging white lines, overhead signage, exit signage, pavement geometry and ultimately the physical curb/island itself.   That makes a pure  “object wasn’t detected”  explanation less convincing.   Instead, the video suggests FSD failed to establish the correct drivable corridor early enough as the roadway divided. In autonomous-driving terminology, this looks more like a  trajectory/path-planning failure around a roadway bifurcation  than ordinary lane-centering error.    The part I find most concerning    The speed.   FSD is still doing approximately  59 mph around one second before disengagement . Even though the exit has a posted advisory speed visible in the sequence, the vehicle remains at highway speed while approaching an increasingly constrained split.   At 59 mph, the car is moving approximately  86.5 feet per second . So even a one-second delay in recognizing that the planned trajectory is wrong consumes almost 90 feet of roadway.   That’s why this particular error can become serious very quickly.   There is also no obvious obstruction forcing the car into that position. Traffic ahead appears relatively light, visibility is good, pavement markings are visible, and the road is dry. That makes this a more useful FSD failure case than one involving snow, construction, faded markings or another vehicle cutting you off.       submitted by     /u/Rbb-tesla     to     r/TeslaFSD       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TeslaFSD/comments/1wgs22p/fsd_1439_critical_failure_fsd_maintained_an/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:06:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:06:19.992Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e05c6508d45f3d2c9c1f"
+    },
+    "message_id": "reddit_t3_1wgs22n",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Aggressive-Sign-8167",
+    "title": "What’s something that always makes people tell a story about their childhood?",
+    "text": "What’s something that always makes people tell a story about their childhood?\n\nsubmitted by     /u/Aggressive-Sign-8167     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wgs22n/whats_something_that_always_makes_people_tell_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:06:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:06:20.195Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e05c6508d45f3d2c9c20"
+    },
+    "message_id": "reddit_t3_1wgs22k",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "HistoricalPeace6032",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Chocolate Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Chocolate Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/HistoricalPeace6032     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wgs22k/sticker_giveaway_enter_to_win_a_4_stars_chocolate/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:06:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:06:20.396Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e05c6508d45f3d2c9c21"
+    },
+    "message_id": "reddit_t3_1wgs21h",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Apart_Specialist7429",
+    "title": "Grab 100 hammers from u/Apart_Specialist7429!",
+    "text": "Grab 100 hammers from u/Apart_Specialist7429!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Apart_Specialist7429     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wgs21h/grab_100_hammers_from_uapart_specialist7429/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:05:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:06:20.604Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e05c6508d45f3d2c9c22"
+    },
+    "message_id": "reddit_t3_1wgs20n",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "rfirezilla",
+    "title": "Doubt, The Past, and Asparagus and Pea Velouté",
+    "text": "Doubt, The Past, and Asparagus and Pea Velouté\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/rfirezilla     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wgs20n/doubt_the_past_and_asparagus_and_pea_velouté/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:05:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:06:20.807Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e05d6508d45f3d2c9c23"
+    },
+    "message_id": "reddit_t3_1wgs1xz",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "RATS",
+    "username": "marlidazzle",
+    "title": "Time to leave the rats reddit :(",
+    "text": "Time to leave the rats reddit :(\n\nsubmitted by     /u/marlidazzle     to     r/RATS       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RATS/comments/1wgs1xz/time_to_leave_the_rats_reddit/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:05:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:06:21.014Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e05d6508d45f3d2c9c24"
+    },
+    "message_id": "reddit_t3_1wgs1xv",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "bicycletouring",
+    "username": "Diligent-Wrongdoer68",
+    "title": "Anyone has done a family bike tour with an e-bike? Trying to avoid making our first trip a disaster",
+    "text": "Anyone has done a family bike tour with an e-bike? Trying to avoid making our first trip a disaster\n\nMy family is planning to do our first multi day bike trip, and I am trying to figure out if we are being realistic or just getting excited about the idea.   The plan is pretty simple, we are not trying to do some huge cross country ride. More like a few days on quieter roads, stopping often, seeing places along the way, and making it something everyone actually enjoys.   The part I am unsure about is the logistics, like how far can we realistically ride each day? what happens if someone gets tired halfway through? how do you handle charging if you are staying somewhere different every night? what happens if something breaks and you are not close to a bike shop?   I have been looking at e-bikes because I like the idea of making the trip more accessible for everyone instead of turning it into a test of who has the most endurance.   One bike I have been considering is the 26F. The reason it caught my attention is not really about the speed infact I like the idea of having something comfortable for mixed roads, some rough pavement, and carrying a few things without making every mile feel like work.   But I also know there are tradeoffs. A heavier e-bike might be great while riding, but not as fun when loading it onto a rack, moving it around a hotel, or dealing with stairs. Battery planning is also something I have never had to think about with normal bikes.   The goal is not to replace a proper touring bike. I am mostly trying to find a setup that lets my family actually enjoy the trip instead of someone struggling the whole time.   If anyone on this sub has done family bike tours with e-bikes, what was the thing you underestimated before your first trip? was it range, weight, packing, charging, repairs, or something else?       submitted by     /u/Diligent-Wrongdoer68     to     r/bicycletouring       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/bicycletouring/comments/1wgs1xv/anyone_has_done_a_family_bike_tour_with_an_ebike/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:05:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:06:21.215Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e05d6508d45f3d2c9c25"
+    },
+    "message_id": "reddit_t3_1wgs1xs",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "StockMarketIndia",
+    "username": "strangeAV",
+    "title": "Do we have Buying opportunity here...?",
+    "text": "Do we have Buying opportunity here...?\n\nWhat you all think..?       submitted by     /u/strangeAV     to     r/StockMarketIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/StockMarketIndia/comments/1wgs1xs/do_we_have_buying_opportunity_here/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:05:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:06:21.417Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e0966508d45f3d2c9c26"
+    },
+    "message_id": "reddit_t3_1wgs2ry",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "SlowAd4151",
+    "title": "[Sticker Giveaway] Enter to win a 5 Stars Yoghurt Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 5 Stars Yoghurt Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/SlowAd4151     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wgs2ry/sticker_giveaway_enter_to_win_a_5_stars_yoghurt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T06:07:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T06:07:18.975Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8e0976508d45f3d2c9c27"
+    },
+    "message_id": "reddit_t3_1wgs2rj",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",

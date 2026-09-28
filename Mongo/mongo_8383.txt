@@ -1,0 +1,416 @@
+    "username": "yume_arasaki",
+    "title": "If you have a 16GB RTX card, you are sitting on a frontier-tier AI brain, a video studio, an image generator, a voice cloner, and a music producer. All free. All local. \n\nMy 24GB post went around. The most asked question: what about 16GB? \n\nINTELLIGENCE: FRONTIER-TIER 27B AT UP TO 100 TOK/S\n\nQwen 3.8 27B. The model that beats previous-generation frontier (Opus 4.6) on coding and agent benchmarks, running on your card. The fit is tight, so pick the right quant:\n\nQuality play: IQ4_XS at 14.5GiB (bartowski). A 21-quant evaluation picked it as the standout, retaining more than 95.8% of reference performance. Full resident up to 65K context, goes over 16GB past that.\n\nHeadroom play: UD-Q3_K_XL at 13.4GB. Several GB free for long context and buffers.\n\nMax-fit play: Q4-XYZ-v2 at 15.06GB. Built specifically to be the largest Q4-tier file that fits one 16GB card. 32K context.\n\nQ4_K_M at 17.1GB and UD-Q4_K_XL at 17.9GB do not fit. That is why 16GB owners kept reading \"just run Q4\" and failing.\n\nThe receipts, MTP on, from the community table (53 configs, 40 contributors):\n\nRTX 5080 16GB: 53.4 to 101.3 tok/s. 100 tok/s on a 16GB card. Q3_K_M, 64K context, q4_0 KV, thinking off.\n\nRTX 5060 Ti 16GB: 26.3 to 59.5. Q4-XYZ-v2, 32K context. Deep drafts keep paying, n-max 4 beat n-max 2.\n\nRTX 4060 Ti 16GB: 17.6 to 40.0. Same quant. The budget lane is real.\n\nRTX 3080 Ti Laptop 16GB: 14.8 to 28.6, +93% from MTP on a 115W laptop chip.\n\nRadeon 9060 XT 16GB: 15.2 to 28.7. Yes, AMD. Vulkan and ROCm rows both exist.\n\nOn a 24GB card MTP adds 60 to 90 percent. On 16GB cards it doubles you.\n\nOne note: Q3 thinking runs roughly 2x more verbose than Q4, so faster decode can still finish tasks slower. Time-per-task is the metric that pays, not tok/s.\n\nVIDEO: SYNCHRONIZED VIDEO WITH AUDIO IN MINUTES\n\nMiniMax H3. 33B omni-modal. Video with native stereo audio in one pass, speech, sound effects, and ambience synchronized, no separate audio pipeline.\n\nX-MinimaxH3 ships a dedicated 16GB INT8 launcher: 360p to 1080p native, second-pass sampling to 1440p, one GPU, web console and REST API. 709 passing tests in the release validation.\n\nComfyUI H3 workflow v2 targets exactly this tier, 16GB VRAM plus 32GB RAM, using Sage Attention 2.2+.\nMeasured on a 4060 Ti 16GB: 640x832 portrait, 8-second clip, about 7 minutes, w4a8 quant.\n\nMeasured on a 5080 16GB: 10 seconds of 480p in about 3 minutes.\n\nSlight penalty for the 16gb tier: Drift, can be more blurry, less production quality capable than the 24gb vram tier, needs config adjustments.\n\nFortunately, I have a launch script that auto configs for your card (In reply), for both Windows and Linux\n\nIMAGE: PRODUCTION IMAGE GENERATION ON YOUR CARD\n\nKrea 2 Turbo peaks at 8 to 14GB. Fits 16GB with room to spare, runs the same as on 24GB cards. Full Raw peaks at 14 to 22GB, which means lower-end configs fit and heavier ones do not. This is the one tier where you may need to pick Turbo over Raw depending on the workflow.\n\nFlux.1 dev at full FP16 needs ~24GB and does not fit. Quantized Flux builds run on 16GB but lose the zero-quantization flex the 24GB tier gets.\n\nVOICE: UNLIMITED HIGH-QUALITY VOICE PRODUCTION ON YOUR CARD\n\nKokoro-82M is 82 million parameters. It runs beside your 27B brain on the same 16GB card with room left over, dozens of times faster than realtime. \n\nVoice cloning, streaming speech, real-time agent pipelines. This is the easiest win on the whole map.\n\nQwen3-TTS-12Hz-1.7B fits 16GB easily on its own. Running it alongside a 27B needs sequential loading, the brain and the voice take turns. \n\nHigher quality than Kokoro, works for voice agent pipelines where you need natural conversation. The work people pay ElevenLabs for.\n\nMUSIC: FULL SONGS WITH LYRICS AND STRUCTURE, ONE CARD\n\nThis is not even a 16GB question. It is a 12GB question.\n\nMinimax Music 3 at fp16 is under 5GB VRAM. INT8 ConvRot is 2.5GB. A single RTX 3060 at ~9GB runs the full 11B stack, 20-second song in 43 seconds. \"They said you need 2 GPUs.\" You do not.\n\nThe AMD lane has a receipt: RX 9060 XT 16GB, same card from the intelligence table, INT8 ConvRot plus fp16 for TE and DiT. If VAE OOMs on first try, add --disable-smart-memory.\n\nACE-Step 1.5 also fits this tier in ComfyUI with style LoRAs, feed it your own tracks and it generates in your style. The real workflow is the 27B brain in one window and Music3 beside it. Music and video on one card, no cloud.\n\nBEFORE YOU BENCH\n\nUpdate llama.cpp to b10450 or newer. Anything older does not have the MTP path and you are leaving up to 145% on the table across 68 rigs. Bench headless, a shared desktop silently spills 3.5GB to host RAM over PCIe with no error shown. Two 16GB cards: add --split-mode tensor, it was +68% on its own on a dual 5060 Ti, MTP stacked on top for 3.14x total.\n\nTHE CLOSER\n\nIn January the honest 16GB answer was a 14B at reading speed and an image model that struggled with hands. \n\nNow a 5080 cracks 100 tok/s on a frontier-tier 27B, H3 renders video in minutes, Music3 produces full songs in under a minute, and the quant makers are shipping files sized for your card.\n\nThe card did not change. The software did.\n\nSources, MyMinmax H3 EzLaunch and recipes in the reply 👇",
+    "text": "If you have a 16GB RTX card, you are sitting on a frontier-tier AI brain, a video studio, an image generator, a voice cloner, and a music producer. All free. All local. \n\nMy 24GB post went around. The most asked question: what about 16GB? \n\nINTELLIGENCE: FRONTIER-TIER 27B AT UP TO 100 TOK/S\n\nQwen 3.8 27B. The model that beats previous-generation frontier (Opus 4.6) on coding and agent benchmarks, running on your card. The fit is tight, so pick the right quant:\n\nQuality play: IQ4_XS at 14.5GiB (bartowski). A 21-quant evaluation picked it as the standout, retaining more than 95.8% of reference performance. Full resident up to 65K context, goes over 16GB past that.\n\nHeadroom play: UD-Q3_K_XL at 13.4GB. Several GB free for long context and buffers.\n\nMax-fit play: Q4-XYZ-v2 at 15.06GB. Built specifically to be the largest Q4-tier file that fits one 16GB card. 32K context.\n\nQ4_K_M at 17.1GB and UD-Q4_K_XL at 17.9GB do not fit. That is why 16GB owners kept reading \"just run Q4\" and failing.\n\nThe receipts, MTP on, from the community table (53 configs, 40 contributors):\n\nRTX 5080 16GB: 53.4 to 101.3 tok/s. 100 tok/s on a 16GB card. Q3_K_M, 64K context, q4_0 KV, thinking off.\n\nRTX 5060 Ti 16GB: 26.3 to 59.5. Q4-XYZ-v2, 32K context. Deep drafts keep paying, n-max 4 beat n-max 2.\n\nRTX 4060 Ti 16GB: 17.6 to 40.0. Same quant. The budget lane is real.\n\nRTX 3080 Ti Laptop 16GB: 14.8 to 28.6, +93% from MTP on a 115W laptop chip.\n\nRadeon 9060 XT 16GB: 15.2 to 28.7. Yes, AMD. Vulkan and ROCm rows both exist.\n\nOn a 24GB card MTP adds 60 to 90 percent. On 16GB cards it doubles you.\n\nOne note: Q3 thinking runs roughly 2x more verbose than Q4, so faster decode can still finish tasks slower. Time-per-task is the metric that pays, not tok/s.\n\nVIDEO: SYNCHRONIZED VIDEO WITH AUDIO IN MINUTES\n\nMiniMax H3. 33B omni-modal. Video with native stereo audio in one pass, speech, sound effects, and ambience synchronized, no separate audio pipeline.\n\nX-MinimaxH3 ships a dedicated 16GB INT8 launcher: 360p to 1080p native, second-pass sampling to 1440p, one GPU, web console and REST API. 709 passing tests in the release validation.\n\nComfyUI H3 workflow v2 targets exactly this tier, 16GB VRAM plus 32GB RAM, using Sage Attention 2.2+.\nMeasured on a 4060 Ti 16GB: 640x832 portrait, 8-second clip, about 7 minutes, w4a8 quant.\n\nMeasured on a 5080 16GB: 10 seconds of 480p in about 3 minutes.\n\nSlight penalty for the 16gb tier: Drift, can be more blurry, less production quality capable than the 24gb vram tier, needs config adjustments.\n\nFortunately, I have a launch script that auto configs for your card (In reply), for both Windows and Linux\n\nIMAGE: PRODUCTION IMAGE GENERATION ON YOUR CARD\n\nKrea 2 Turbo peaks at 8 to 14GB. Fits 16GB with room to spare, runs the same as on 24GB cards. Full Raw peaks at 14 to 22GB, which means lower-end configs fit and heavier ones do not. This is the one tier where you may need to pick Turbo over Raw depending on the workflow.\n\nFlux.1 dev at full FP16 needs ~24GB and does not fit. Quantized Flux builds run on 16GB but lose the zero-quantization flex the 24GB tier gets.\n\nVOICE: UNLIMITED HIGH-QUALITY VOICE PRODUCTION ON YOUR CARD\n\nKokoro-82M is 82 million parameters. It runs beside your 27B brain on the same 16GB card with room left over, dozens of times faster than realtime. \n\nVoice cloning, streaming speech, real-time agent pipelines. This is the easiest win on the whole map.\n\nQwen3-TTS-12Hz-1.7B fits 16GB easily on its own. Running it alongside a 27B needs sequential loading, the brain and the voice take turns. \n\nHigher quality than Kokoro, works for voice agent pipelines where you need natural conversation. The work people pay ElevenLabs for.\n\nMUSIC: FULL SONGS WITH LYRICS AND STRUCTURE, ONE CARD\n\nThis is not even a 16GB question. It is a 12GB question.\n\nMinimax Music 3 at fp16 is under 5GB VRAM. INT8 ConvRot is 2.5GB. A single RTX 3060 at ~9GB runs the full 11B stack, 20-second song in 43 seconds. \"They said you need 2 GPUs.\" You do not.\n\nThe AMD lane has a receipt: RX 9060 XT 16GB, same card from the intelligence table, INT8 ConvRot plus fp16 for TE and DiT. If VAE OOMs on first try, add --disable-smart-memory.\n\nACE-Step 1.5 also fits this tier in ComfyUI with style LoRAs, feed it your own tracks and it generates in your style. The real workflow is the 27B brain in one window and Music3 beside it. Music and video on one card, no cloud.\n\nBEFORE YOU BENCH\n\nUpdate llama.cpp to b10450 or newer. Anything older does not have the MTP path and you are leaving up to 145% on the table across 68 rigs. Bench headless, a shared desktop silently spills 3.5GB to host RAM over PCIe with no error shown. Two 16GB cards: add --split-mode tensor, it was +68% on its own on a dual 5060 Ti, MTP stacked on top for 3.14x total.\n\nTHE CLOSER\n\nIn January the honest 16GB answer was a 14B at reading speed and an image model that struggled with hands. \n\nNow a 5080 cracks 100 tok/s on a frontier-tier 27B, H3 renders video in minutes, Music3 produces full songs in under a minute, and the quant makers are shipping files sized for your card.\n\nThe card did not change. The software did.\n\nSources, MyMinmax H3 EzLaunch and recipes in the reply 👇",
+    "post_url": "https://twitter.com/yume_arasaki/status/2098519680076145116",
+    "score": 123,
+    "num_comments": 10,
+    "created_utc": {
+      "$date": "2026-09-11T21:10:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:05:45.240Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc98942dd0e95b5baace8"
+    },
+    "message_id": "twitter_2100534597905788970",
+    "topic_key": "budget shipping software",
+    "search_keyword": "budget shipping software",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Voss__kai",
+    "title": "After sharing my first thoughts on @MovitOn_P2P , I wanted to see how the idea translates into an actual product, so I downloaded the beta, signed up and spent some time exploring the app.\n\nThe concept becomes much clearer once you go through the flow: \nMovitOn connects people who need to send a parcel with travelers already heading in the same direction.\n\nWhat stood out to me was how features such as live tracking, AI compliance checks and smart-contract escrow are built around the practical concerns of peer-to-peer delivery visibility, item safety and secure payment.\n\nIt’s still in beta, but now that I’ve seen the product itself, I have a much better sense of how the model could work in practice.\nBeta: https://t.co/qKXT5lvONh",
+    "text": "After sharing my first thoughts on @MovitOn_P2P , I wanted to see how the idea translates into an actual product, so I downloaded the beta, signed up and spent some time exploring the app.\n\nThe concept becomes much clearer once you go through the flow: \nMovitOn connects people who need to send a parcel with travelers already heading in the same direction.\n\nWhat stood out to me was how features such as live tracking, AI compliance checks and smart-contract escrow are built around the practical concerns of peer-to-peer delivery visibility, item safety and secure payment.\n\nIt’s still in beta, but now that I’ve seen the product itself, I have a much better sense of how the model could work in practice.\nBeta: https://t.co/qKXT5lvONh",
+    "post_url": "https://twitter.com/Voss__kai/status/2100534597905788970",
+    "score": 3,
+    "num_comments": 2,
+    "created_utc": {
+      "$date": "2026-09-17T10:37:28Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:05:45.450Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc98942dd0e95b5baace9"
+    },
+    "message_id": "twitter_2044059366400176156",
+    "topic_key": "budget shipping software",
+    "search_keyword": "budget shipping software",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "gregisenberg",
+    "title": "SOMEONE built an AI agent that sells pool installations on autopilot \n\n10 \"boring\" cash-flowing startup ideas YOU can build on autopilot using the OpenClaw/Hermes etc:\n\n1. find commercial buildings with flat roofs in sunny states and calculate their solar savings, render the install, mail the building owner a custom ROI report. become the broker between building owners and solar installers, take a cut of every deal or charge $$\n\n2. find shopify stores doing $1M+/yr with no international shipping and build them a localized storefront for their top non-US traffic countries, pitch a rev share to unlock revenue they're leaving on the table\n\n3. find businesses paying for 10+ SaaS tools via public job postings and tech stack data and build a custom \"consolidation audit\" showing how to cut 40% of their software spend, sell the migration as a service\n\n4. find commercial properties with high water bills using public utility data and render a xeriscaping or rainwater capture plan with projected savings, sell to property management companies at scale\n\n5. find ecom brands running meta ads to products with 1-2 star reviews and build a better version of their top SKU with a manufacturer, launch against them with their own keyword data\n\n6. find small banks and credit unions with websites from 2012 and render a modern site + mobile app with their branding, pitch it as a turnkey digital transformation. they have budget but no one's calling on them\n\n7. find warehouses and industrial spaces near EV corridors with no charging infrastructure and model the revenue from installing chargers, pitch landlords a lease + install package\n\n8. find franchisees posting complaints in public forums about their franchisor's tech and build a shadow operating system (POS, scheduling, inventory) that plugs into their existing franchise, sell directly to franchisees\n\n9. find medical practices billing under specific CPT codes with low reimbursement rates and build an AI billing optimization engine that reclassifies and appeals claims, take a % of recovered revenue\n\n10. find DTC brands with 100k+ instagram followers but no subscription offering and model their repeat purchase data from reviews, build a subscription flow with retention math, pitch it as a done-for-you program with rev share\n\nthe framework is basically this\n\nuse AI agents to surface a gap in public data, build the solution before anyone asks for it, and show up with the math already done. \n\nyou use info arbitrage + OpenClaw is the ultimate wedge\n\ni dont know how long this lasts\n\nbut i do know there's a ton of ways to make $$ using this\n\nand i won't hold back\n\ni'll be sharing more ideas here, @startupideaspod and @ideabrowser \n\ntoday is a beautiful day to be building",
+    "text": "SOMEONE built an AI agent that sells pool installations on autopilot \n\n10 \"boring\" cash-flowing startup ideas YOU can build on autopilot using the OpenClaw/Hermes etc:\n\n1. find commercial buildings with flat roofs in sunny states and calculate their solar savings, render the install, mail the building owner a custom ROI report. become the broker between building owners and solar installers, take a cut of every deal or charge $$\n\n2. find shopify stores doing $1M+/yr with no international shipping and build them a localized storefront for their top non-US traffic countries, pitch a rev share to unlock revenue they're leaving on the table\n\n3. find businesses paying for 10+ SaaS tools via public job postings and tech stack data and build a custom \"consolidation audit\" showing how to cut 40% of their software spend, sell the migration as a service\n\n4. find commercial properties with high water bills using public utility data and render a xeriscaping or rainwater capture plan with projected savings, sell to property management companies at scale\n\n5. find ecom brands running meta ads to products with 1-2 star reviews and build a better version of their top SKU with a manufacturer, launch against them with their own keyword data\n\n6. find small banks and credit unions with websites from 2012 and render a modern site + mobile app with their branding, pitch it as a turnkey digital transformation. they have budget but no one's calling on them\n\n7. find warehouses and industrial spaces near EV corridors with no charging infrastructure and model the revenue from installing chargers, pitch landlords a lease + install package\n\n8. find franchisees posting complaints in public forums about their franchisor's tech and build a shadow operating system (POS, scheduling, inventory) that plugs into their existing franchise, sell directly to franchisees\n\n9. find medical practices billing under specific CPT codes with low reimbursement rates and build an AI billing optimization engine that reclassifies and appeals claims, take a % of recovered revenue\n\n10. find DTC brands with 100k+ instagram followers but no subscription offering and model their repeat purchase data from reviews, build a subscription flow with retention math, pitch it as a done-for-you program with rev share\n\nthe framework is basically this\n\nuse AI agents to surface a gap in public data, build the solution before anyone asks for it, and show up with the math already done. \n\nyou use info arbitrage + OpenClaw is the ultimate wedge\n\ni dont know how long this lasts\n\nbut i do know there's a ton of ways to make $$ using this\n\nand i won't hold back\n\ni'll be sharing more ideas here, @startupideaspod and @ideabrowser \n\ntoday is a beautiful day to be building",
+    "post_url": "https://twitter.com/gregisenberg/status/2044059366400176156",
+    "score": 521,
+    "num_comments": 71,
+    "created_utc": {
+      "$date": "2026-04-14T14:25:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:05:45.659Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc98a42dd0e95b5baacee"
+    },
+    "message_id": "twitter_2099888114579669303",
+    "topic_key": "budget shipping software",
+    "search_keyword": "budget shipping software",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "usepikkah",
+    "title": "Save up 40% OFF your shipping with Pikkah.  Send items to the Uk at affordable price.\n\nVisit: https://t.co/lSxizl2EkS to sign up and get started.\n\n#Pikkah #InternationalShipping #shipping https://t.co/hiSmZqEZE8",
+    "text": "Save up 40% OFF your shipping with Pikkah.  Send items to the Uk at affordable price.\n\nVisit: https://t.co/lSxizl2EkS to sign up and get started.\n\n#Pikkah #InternationalShipping #shipping https://t.co/hiSmZqEZE8",
+    "post_url": "https://twitter.com/usepikkah/status/2099888114579669303",
+    "score": 2,
+    "num_comments": 2,
+    "created_utc": {
+      "$date": "2026-09-15T15:48:35Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:05:46.695Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc98a42dd0e95b5baacef"
+    },
+    "message_id": "twitter_2099548476384346562",
+    "topic_key": "budget shipping software",
+    "search_keyword": "budget shipping software",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ParthPa29421067",
+    "title": "Finally I have launched it. Please check it out: https://t.co/9rDtw5Pm36",
+    "text": "Finally I have launched it. Please check it out: https://t.co/9rDtw5Pm36",
+    "post_url": "https://twitter.com/ParthPa29421067/status/2099548476384346562",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T17:18:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:05:46.911Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc99242dd0e95b5baacf2"
+    },
+    "message_id": "twitter_2085375557886267531",
+    "topic_key": "budget storefront builder",
+    "search_keyword": "budget storefront builder",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Mikadzyki_NFT",
+    "title": "THIS GIRL AT 23 MADE $47,000 IN A MONTH ON A PRODUCT SHE HAS NEVER HELD IN HER HANDS. BEFORE THAT SHE TRIED THREE TIMES AND ENDED UP IN THE RED THREE TIMES\n\nA year ago she was standing behind a coffee shop counter for $14 an hour and launching stores in the evenings that never paid for themselves\n\nDropshipping is simple. The product goes from the supplier straight to the buyer, the store earns on the margin, and there is no stock to buy upfront\n\nEveryone breaks at the same step. A person picks a product they like rather than one the market likes, and spends the next three weeks paying for that mistake with ad budget\n\nHer fourth attempt started from the other end\n\nClaude Code pulls TikTok Shop data and returns the items whose sales are climbing right now. The demand on them has already been paid for with someone else's money, so there is nothing to guess\n\nWhat came out of the list was a neck massager. At the supplier it costs $6\n\nAn AI builder put the store together in a couple of minutes: description, photos, reviews, checkout button. An agency would have invoiced $3,000 for that page\n\nThe price on the storefront is $39\n\nThe product link goes back into Claude Code, and five ad angles come back for different audiences. All five launch on Facebook, the weak ones get switched off by evening, the strong one takes the whole budget\n\nThe first order came on day eleven. By the end of the month there were fifteen hundred of them, with $21 left clean on each\n\nShe now runs three stores and one rule: whatever has not paid for itself in two weeks gets shut down without regret\n\nThe massager that brought her the first thirty thousand she never ordered for herself. She says her neck is fine",
+    "text": "THIS GIRL AT 23 MADE $47,000 IN A MONTH ON A PRODUCT SHE HAS NEVER HELD IN HER HANDS. BEFORE THAT SHE TRIED THREE TIMES AND ENDED UP IN THE RED THREE TIMES\n\nA year ago she was standing behind a coffee shop counter for $14 an hour and launching stores in the evenings that never paid for themselves\n\nDropshipping is simple. The product goes from the supplier straight to the buyer, the store earns on the margin, and there is no stock to buy upfront\n\nEveryone breaks at the same step. A person picks a product they like rather than one the market likes, and spends the next three weeks paying for that mistake with ad budget\n\nHer fourth attempt started from the other end\n\nClaude Code pulls TikTok Shop data and returns the items whose sales are climbing right now. The demand on them has already been paid for with someone else's money, so there is nothing to guess\n\nWhat came out of the list was a neck massager. At the supplier it costs $6\n\nAn AI builder put the store together in a couple of minutes: description, photos, reviews, checkout button. An agency would have invoiced $3,000 for that page\n\nThe price on the storefront is $39\n\nThe product link goes back into Claude Code, and five ad angles come back for different audiences. All five launch on Facebook, the weak ones get switched off by evening, the strong one takes the whole budget\n\nThe first order came on day eleven. By the end of the month there were fifteen hundred of them, with $21 left clean on each\n\nShe now runs three stores and one rule: whatever has not paid for itself in two weeks gets shut down without regret\n\nThe massager that brought her the first thirty thousand she never ordered for herself. She says her neck is fine",
+    "post_url": "https://twitter.com/Mikadzyki_NFT/status/2085375557886267531",
+    "score": 66,
+    "num_comments": 19,
+    "created_utc": {
+      "$date": "2026-08-06T14:40:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:05:54.821Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc99342dd0e95b5baacf3"
+    },
+    "message_id": "twitter_2100377923459162598",
+    "topic_key": "budget storefront builder",
+    "search_keyword": "budget storefront builder",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "bitbranding",
+    "title": "Cover your logo. Read your homepage. Could it belong to any store? 👀\n\nThat’s the real problem: generic design, not bad design.\n\nBitbranding breaks down what makes a clothing store look cheap. Does yours pass the test? https://t.co/UyW19a091m",
+    "text": "Cover your logo. Read your homepage. Could it belong to any store? 👀\n\nThat’s the real problem: generic design, not bad design.\n\nBitbranding breaks down what makes a clothing store look cheap. Does yours pass the test? https://t.co/UyW19a091m",
+    "post_url": "https://twitter.com/bitbranding/status/2100377923459162598",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T00:14:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:05:55.029Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc99342dd0e95b5baacf6"
+    },
+    "message_id": "twitter_2098483694633930886",
+    "topic_key": "budget storefront builder",
+    "search_keyword": "budget storefront builder",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ihuzaifadev",
+    "title": "Day 30 of building Storofy, an alternate of Shopify.\n\nAdded Custom HTML & CSS today, for the sellers who\nwant more control than the section editor gives.\n\n→ Drop in custom HTML markup or embeds\n→ Add custom CSS for full styling control\n→ Works alongside the drag-and-drop sections\n\nMost sellers won't need this. But the ones who do\n(developers, agencies) shouldn't be blocked by a no-code builder.\n\nCurrently building in public, follow the journey.\n\nEarly 100 users get 1 year free\nJoin the waitlist → Link in Bio\n\n#buildinpublic #SaaS #ecommerce",
+    "text": "Day 30 of building Storofy, an alternate of Shopify.\n\nAdded Custom HTML & CSS today, for the sellers who\nwant more control than the section editor gives.\n\n→ Drop in custom HTML markup or embeds\n→ Add custom CSS for full styling control\n→ Works alongside the drag-and-drop sections\n\nMost sellers won't need this. But the ones who do\n(developers, agencies) shouldn't be blocked by a no-code builder.\n\nCurrently building in public, follow the journey.\n\nEarly 100 users get 1 year free\nJoin the waitlist → Link in Bio\n\n#buildinpublic #SaaS #ecommerce",
+    "post_url": "https://twitter.com/ihuzaifadev/status/2098483694633930886",
+    "score": 3,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-11T18:47:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:05:55.652Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc99342dd0e95b5baacf7"
+    },
+    "message_id": "twitter_2098022330169463259",
+    "topic_key": "budget storefront builder",
+    "search_keyword": "budget storefront builder",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "falaThayron",
+    "title": "O que eu faria se tivesse 30 mil e quisesse construir uma renda secundária do zero.\n\nPrimeiro, ia consumir todo o conteúdo do meu perfil. De graça. Antes de gastar um real, ia dominar o básico: o que é um mercado autônomo, como funciona, onde ganha e onde perde dinheiro.\n\nCom isso na cabeça, ia montar um filtro de pontos. Condomínio de 100 a 200 apartamentos. Empresa de 100 a 500 funcionários. Academia de rede movimentada. Centro comercial. Hospital. Lugar com gente e com giro.\n\nIa atrás desses pontos, explicando o modelo e propondo uma parceria. Com quem topasse, faria um estudo de viabilidade de verdade, projetando a loja e o layout sempre pensando na experiência de quem vai comprar.\n\nSendo viável, contrato assinado, é aí que o dinheiro entra em campo.\n\nUma cervejeira e uma geladeira expositora, uns 5 mil cada.\nUm totem de autoatendimento, uns 1.300.\nPrateleiras, uns 2.500.\nUm ar condicionado, uns 2.400.\nKit de câmeras e controle de acesso, uns 2.900.\nComunicação visual, uns 500.\nMercadoria pra abastecer, 5 mil.\n\nIsso dá uns 24, 25 mil. O resto eu guardaria pra giro e pra qualquer adequação que a loja precisar depois.\n\nRepara numa coisa: não tem taxa de franquia. Não tem royalty comendo teu lucro todo mês. Não tem pagar 40 mil pra ter o direito de usar um nome. É teu, do começo ao fim.\n\nIsso não é teoria. É o passo a passo que eu uso nas minhas lojas e ensino pra quem eu acompanho.\n\nE antes que apareça nos comentários, deixa eu já responder:\n\n\"Ah, mas esse mercado tá saturado.\" Tem mais de 400 mil condomínios no Brasil. Isso sem contar empresa, academia, hospital, centro comercial. Se isso é saturado, eu quero viver saturado.\n\n\"Ah, mas no Brasil não funciona, vão te roubar tudo.\" Quebra de quem opera com o mínimo de destreza fica entre 3 e 5%. Dói? Dói. Inviabiliza o negócio? Longe disso. Tá na conta faz tempo.\n\n\"Ah, mas a franquia tal falou que eu preciso de 100 mil pra começar.\" Precisa mesmo. Porque metade disso fica no bolso deles, na taxa de franquia. Eu te mostrei como fazer com 30, sem pagar pedágio pra ninguém.\n\nO que falta pra começar quase nunca é oportunidade ou dinheiro. É parar de arrumar desculpa.\n\nOBS: Na foto da loja gastei menos que isso.",
+    "text": "O que eu faria se tivesse 30 mil e quisesse construir uma renda secundária do zero.\n\nPrimeiro, ia consumir todo o conteúdo do meu perfil. De graça. Antes de gastar um real, ia dominar o básico: o que é um mercado autônomo, como funciona, onde ganha e onde perde dinheiro.\n\nCom isso na cabeça, ia montar um filtro de pontos. Condomínio de 100 a 200 apartamentos. Empresa de 100 a 500 funcionários. Academia de rede movimentada. Centro comercial. Hospital. Lugar com gente e com giro.\n\nIa atrás desses pontos, explicando o modelo e propondo uma parceria. Com quem topasse, faria um estudo de viabilidade de verdade, projetando a loja e o layout sempre pensando na experiência de quem vai comprar.\n\nSendo viável, contrato assinado, é aí que o dinheiro entra em campo.\n\nUma cervejeira e uma geladeira expositora, uns 5 mil cada.\nUm totem de autoatendimento, uns 1.300.\nPrateleiras, uns 2.500.\nUm ar condicionado, uns 2.400.\nKit de câmeras e controle de acesso, uns 2.900.\nComunicação visual, uns 500.\nMercadoria pra abastecer, 5 mil.\n\nIsso dá uns 24, 25 mil. O resto eu guardaria pra giro e pra qualquer adequação que a loja precisar depois.\n\nRepara numa coisa: não tem taxa de franquia. Não tem royalty comendo teu lucro todo mês. Não tem pagar 40 mil pra ter o direito de usar um nome. É teu, do começo ao fim.\n\nIsso não é teoria. É o passo a passo que eu uso nas minhas lojas e ensino pra quem eu acompanho.\n\nE antes que apareça nos comentários, deixa eu já responder:\n\n\"Ah, mas esse mercado tá saturado.\" Tem mais de 400 mil condomínios no Brasil. Isso sem contar empresa, academia, hospital, centro comercial. Se isso é saturado, eu quero viver saturado.\n\n\"Ah, mas no Brasil não funciona, vão te roubar tudo.\" Quebra de quem opera com o mínimo de destreza fica entre 3 e 5%. Dói? Dói. Inviabiliza o negócio? Longe disso. Tá na conta faz tempo.\n\n\"Ah, mas a franquia tal falou que eu preciso de 100 mil pra começar.\" Precisa mesmo. Porque metade disso fica no bolso deles, na taxa de franquia. Eu te mostrei como fazer com 30, sem pagar pedágio pra ninguém.\n\nO que falta pra começar quase nunca é oportunidade ou dinheiro. É parar de arrumar desculpa.\n\nOBS: Na foto da loja gastei menos que isso.",
+    "post_url": "https://twitter.com/falaThayron/status/2098022330169463259",
+    "score": 108,
+    "num_comments": 5,
+    "created_utc": {
+      "$date": "2026-09-10T12:14:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:05:55.862Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc99442dd0e95b5baacf8"
+    },
+    "message_id": "twitter_2099347413429362939",
+    "topic_key": "budget storefront builder",
+    "search_keyword": "budget storefront builder",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "LCsign_tony",
+    "title": "☕ Shop &amp; Cafe SignageOpen signs 🔓 menu words 🍔 window statements 🪟—custom illuminated signage that pulls people in from the street and gets photographed 📷🚶 🏪 Upgrade your storefront: Tony.team@lcsign.com | 💬 https://t.co/bMHcoP3lN2 | 🔗 https://t.co/LGS4Cs3fQk https://t.co/liYFHnK2dq",
+    "text": "☕ Shop &amp; Cafe SignageOpen signs 🔓 menu words 🍔 window statements 🪟—custom illuminated signage that pulls people in from the street and gets photographed 📷🚶 🏪 Upgrade your storefront: Tony.team@lcsign.com | 💬 https://t.co/bMHcoP3lN2 | 🔗 https://t.co/LGS4Cs3fQk https://t.co/liYFHnK2dq",
+    "post_url": "https://twitter.com/LCsign_tony/status/2099347413429362939",
+    "score": 574,
+    "num_comments": 10,
+    "created_utc": {
+      "$date": "2026-09-14T04:00:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:05:56.071Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc99442dd0e95b5baacf9"
+    },
+    "message_id": "twitter_2100530603250893001",
+    "topic_key": "budget storefront builder",
+    "search_keyword": "budget storefront builder",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Sion_Smith",
+    "title": "YOUR FIRST SAAS DOESN'T NEED A DEVELOPER, A DESIGNER, OR A PENNY OF ADS.\n\nMine did $4,980.03 in July without any of them.\n\nHere are the 10 prompts I'd use to build it again from zero: https://t.co/vzCkjgHfCi",
+    "text": "YOUR FIRST SAAS DOESN'T NEED A DEVELOPER, A DESIGNER, OR A PENNY OF ADS.\n\nMine did $4,980.03 in July without any of them.\n\nHere are the 10 prompts I'd use to build it again from zero: https://t.co/vzCkjgHfCi",
+    "post_url": "https://twitter.com/Sion_Smith/status/2100530603250893001",
+    "score": 11,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-17T10:21:36Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:05:56.280Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc99442dd0e95b5baacfb"
+    },
+    "message_id": "twitter_2098097920738574747",
+    "topic_key": "budget storefront builder",
+    "search_keyword": "budget storefront builder",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "tonbistudio",
+    "title": "Today's YouTube video is Part 3 in my Agent-Run Business From Zero series!\n\nIn this part, I design some of the visual assets, including the logo, use Minimax H3 to generate some video, and then use Claude Design to create the site for my store!\n\nhttps://t.co/809lGwA3UM",
+    "text": "Today's YouTube video is Part 3 in my Agent-Run Business From Zero series!\n\nIn this part, I design some of the visual assets, including the logo, use Minimax H3 to generate some video, and then use Claude Design to create the site for my store!\n\nhttps://t.co/809lGwA3UM",
+    "post_url": "https://twitter.com/tonbistudio/status/2098097920738574747",
+    "score": 71,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T17:14:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:05:56.695Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc99542dd0e95b5baad00"
+    },
+    "message_id": "twitter_2100511006975811930",
+    "topic_key": "budget storefront builder",
+    "search_keyword": "budget storefront builder",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "SamuelAAnjorin",
+    "title": "If you can dream it, we can build it \n\nSHOPPING MALL 🛍️ 🛒 \n\nDesign &amp; Image credits by Legend _architecture👑\n\n@chaosgroup \n@chaosvray\n@autodeskrevit\n@photoshop\n\n#Shoppingmall   #Exteriordesign #goviral  #architecture https://t.co/gOHnFLcCkI",
+    "text": "If you can dream it, we can build it \n\nSHOPPING MALL 🛍️ 🛒 \n\nDesign &amp; Image credits by Legend _architecture👑\n\n@chaosgroup \n@chaosvray\n@autodeskrevit\n@photoshop\n\n#Shoppingmall   #Exteriordesign #goviral  #architecture https://t.co/gOHnFLcCkI",
+    "post_url": "https://twitter.com/SamuelAAnjorin/status/2100511006975811930",
+    "score": 1,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T09:03:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:05:57.729Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc99d42dd0e95b5baad01"
+    },
+    "message_id": "reddit_t3_1wiqxp1",
+    "topic_key": "fulfillment",
+    "search_keyword": "fulfillment",
+    "platform": "reddit",
+    "subreddit": "AskMen",
+    "username": "EnginearingMyLimit92",
+    "title": "How did you decide who you want to be?",
+    "text": "How did you decide who you want to be?\n\nIts a pretty broad question I know, but for some background:    I'm graduating in a few months, and will  probably  have a pretty well paid job straight out of university (6 figs+ in engineering but in a HCOL); I'm not too concerned about being an adult in that regard.   I went to a party school but I never really partied that hard; I used to go out fairly regularly til my 3rd year but some bad experiences put an end to that.    I lost my v card pretty late at 20, and then proceeded to fuck way too many people. I regret some of it and tbqh I wasn't really attracted to some of them.    I've never been in a long-term relationship. Even worse, outside of 3 partners, the rest were all one night stands.    I'm still pretty awkward when it comes to chatting up women. I fear I come across as too 'soft'. I live in America but I'm not an American (non-white). I do have an accent but most people seem to understand me fine, and I have been complimented for it a few times.    I don't think I'm terrible looking, I do struggle on dating apps but I've had a few dates and hookups through them; apparently my pictures are terrible. I've been told I've got decent features and I'm about average height for a guy (5' 10)   I feel like I've ticked most of the boxes for what makes a satisfied man, but I just don't feel 'enough'.    I feel like there's this idea of your 20s that most people experience that I'm going to miss out on. I feel like I'm too weird/neurodivergent/just broken in some way to enjoy life the way others do. My base state of contentment is me being in my room working on my little engineering projects.   On the one hand, I don't want to betray who I am. On a fundamental level, I am a weird nerd who has 700 hours in Factorio and wears a watch he cobbled together himself.    On the other hand, I  fucking hate  that that's who I am. Its an uncool, terminally shut-in way to live a life, and doesn't seem like it will lead to any sort of real fulfillment. And I kinda like what not being that feels like. If the nerd was in the drivers seat I'd still be a viirgin.   But it doesn't fulfill me, and I don't know what will. Hedonism doesn't seem to do it, but maybe that's because I'm not good enough at it. Maybe I need to be fitter, more handsome and then it'll click. Being weird does make this really hard.   Or maybe its the unticked boxes. Or maybe there's something else missing. Or maybe nothing's missing and I'm just paranoid. I just don't know.       submitted by     /u/EnginearingMyLimit92     to     r/AskMen       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskMen/comments/1wiqxp1/how_did_you_decide_who_you_want_to_be/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T11:05:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:05.369Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc99d42dd0e95b5baad02"
+    },
+    "message_id": "reddit_t3_1wiqxo7",
+    "topic_key": "crm",
+    "search_keyword": "CRM",
+    "platform": "reddit",
+    "subreddit": "agency",
+    "username": "instinct_ow",
+    "title": "What is an appropriate name for an agency?",
+    "text": "What is an appropriate name for an agency?\n\nI'll need to start offering the services I've been learning for the last half year and it never crossed my mind that it's a good idea to get my own domain with a specific name. But I have no idea what name is appropriate for this type of business. Does this even matter? I plan on offering WP websites and SEO and later on I'll expand to many other services like CRMs, Ads and funnels. I know this is a dumb question but I'm curious what you think about it. Thank you to anyone who takes the time to answer!       submitted by     /u/instinct_ow     to     r/agency       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/agency/comments/1wiqxo7/what_is_an_appropriate_name_for_an_agency/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T11:05:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:05.599Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc99d42dd0e95b5baad03"
+    },
+    "message_id": "twitter_2099574866408034421",
+    "topic_key": "budget subscription billing",
+    "search_keyword": "budget subscription billing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "estheranalyst",
+    "title": "I just realized how quietly subscription bills can eat into your money.\nCloud storage. YouTube. Gmail. Snapchat. Apple Music. One after another.\nEach payment looks small enough to ignore.Until you add them all up.\n\nApple Music just went from ₦1,300 to ₦1,700/month.\nAnd suddenly, I’m looking at all my subscriptions differently. \nHow many “small” monthly payments are you carrying?",
+    "text": "I just realized how quietly subscription bills can eat into your money.\nCloud storage. YouTube. Gmail. Snapchat. Apple Music. One after another.\nEach payment looks small enough to ignore.Until you add them all up.\n\nApple Music just went from ₦1,300 to ₦1,700/month.\nAnd suddenly, I’m looking at all my subscriptions differently. \nHow many “small” monthly payments are you carrying?",
+    "post_url": "https://twitter.com/estheranalyst/status/2099574866408034421",
+    "score": 36,
+    "num_comments": 10,
+    "created_utc": {
+      "$date": "2026-09-14T19:03:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:05.799Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc99e42dd0e95b5baad04"
+    },
+    "message_id": "twitter_2068459235759755334",
+    "topic_key": "budget subscription billing",
+    "search_keyword": "budget subscription billing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "StartupHakk",
+    "title": "The AI token bill is finally showing up.\n\nToday we go over why companies are starting to panic over the real cost of cloud AI coding tools. What looked like cheap intelligence is turning into expensive metered usage, and teams that built workflows around cloud agents are now facing caps, credits, billing changes, and budget problems.\n\nThe problem is not just the price. It is the lack of control. If your AI workflow depends on a provider that can change pricing, limit usage, move you to token-based billing, or end a subsidized plan, then your company is building on someone else’s meter.\n\nWe look at why AI coding tools can become surprisingly expensive, why companies are trying to restrict usage, and why the economics of cloud AI may not work the way people assumed. Productivity only matters if the cost of getting that productivity does not eat the value.\n\nThis is why https://t.co/QApTa7g6ZJ was built as a local-first, open-source coding agent. Run it on your own hardware, keep your workflow under your control, and stop paying per token just to get work done.\n\nAI should be infrastructure you own, not a subscription meter you fear.",
+    "text": "The AI token bill is finally showing up.\n\nToday we go over why companies are starting to panic over the real cost of cloud AI coding tools. What looked like cheap intelligence is turning into expensive metered usage, and teams that built workflows around cloud agents are now facing caps, credits, billing changes, and budget problems.\n\nThe problem is not just the price. It is the lack of control. If your AI workflow depends on a provider that can change pricing, limit usage, move you to token-based billing, or end a subsidized plan, then your company is building on someone else’s meter.\n\nWe look at why AI coding tools can become surprisingly expensive, why companies are trying to restrict usage, and why the economics of cloud AI may not work the way people assumed. Productivity only matters if the cost of getting that productivity does not eat the value.\n\nThis is why https://t.co/QApTa7g6ZJ was built as a local-first, open-source coding agent. Run it on your own hardware, keep your workflow under your control, and stop paying per token just to get work done.\n\nAI should be infrastructure you own, not a subscription meter you fear.",
+    "post_url": "https://twitter.com/StartupHakk/status/2068459235759755334",
+    "score": 373,
+    "num_comments": 21,
+    "created_utc": {
+      "$date": "2026-06-20T22:21:26Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:06.012Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc99e42dd0e95b5baad05"
+    },
+    "message_id": "twitter_2052783737952260434",
+    "topic_key": "budget subscription billing",
+    "search_keyword": "budget subscription billing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "hanakoxbt",
+    "title": "A 22 year old Chinese developer plugged a $599 Mac Mini into a budget monitor and shipped code for a SaaS billing system in 33 seconds.\n\nTangled cables everywhere. A $70 COOC monitor. A Mac Mini barely visible under the wire mess. No second screen. No mechanical keyboard. No RGB.\n\nHe opened a terminal window. Typed one line. Claude Code picked up the rest.\n\nThe clip hit Bilibili and pulled 1.1M views in 2 days. Comments were mostly laughing emojis and \"太丝滑了\" - \"too smooth.\" A few senior devs called it staged. Most just reshared it.\n\nBut one commenter paused the video at 0:19.\n\nThe terminal showed Claude Code v1.71 connected to Sonnet 4. The command wasn't a demo. It was a real prompt: \"write a test for ServiceSubscriptionAndBilling.jsx.\" A live NextJS project directory. A real billing service with subscription logic.\n\nA second commenter cross-referenced the project name with an active Polymarket wallet. Same username. Same time window.\n\nhttps://t.co/ow3uyI9lQP\n\nThe account had 47 trades in the last 3 weeks. All AI-related markets. Net positive.\n\nSomeone traced the project structure. The repo had 14 service files. Payment processing. Usage tracking. Tier management. All tested in a single afternoon session using Claude Code on a machine most American developers wouldn't use for Slack.\n\nThe kid never touched the code manually. He typed prompts. Claude wrote the tests. He approved. Next file.\n\nThree months ago he was posting homework solutions on CSDN. Now he's building production SaaS infrastructure on a setup that costs less than one month of a junior dev's salary in San Francisco.\n\nThe cheapest office in Shenzhen is still more expensive than the machine that replaced the engineer inside it.",
+    "text": "A 22 year old Chinese developer plugged a $599 Mac Mini into a budget monitor and shipped code for a SaaS billing system in 33 seconds.\n\nTangled cables everywhere. A $70 COOC monitor. A Mac Mini barely visible under the wire mess. No second screen. No mechanical keyboard. No RGB.\n\nHe opened a terminal window. Typed one line. Claude Code picked up the rest.\n\nThe clip hit Bilibili and pulled 1.1M views in 2 days. Comments were mostly laughing emojis and \"太丝滑了\" - \"too smooth.\" A few senior devs called it staged. Most just reshared it.\n\nBut one commenter paused the video at 0:19.\n\nThe terminal showed Claude Code v1.71 connected to Sonnet 4. The command wasn't a demo. It was a real prompt: \"write a test for ServiceSubscriptionAndBilling.jsx.\" A live NextJS project directory. A real billing service with subscription logic.\n\nA second commenter cross-referenced the project name with an active Polymarket wallet. Same username. Same time window.\n\nhttps://t.co/ow3uyI9lQP\n\nThe account had 47 trades in the last 3 weeks. All AI-related markets. Net positive.\n\nSomeone traced the project structure. The repo had 14 service files. Payment processing. Usage tracking. Tier management. All tested in a single afternoon session using Claude Code on a machine most American developers wouldn't use for Slack.\n\nThe kid never touched the code manually. He typed prompts. Claude wrote the tests. He approved. Next file.\n\nThree months ago he was posting homework solutions on CSDN. Now he's building production SaaS infrastructure on a setup that costs less than one month of a junior dev's salary in San Francisco.\n\nThe cheapest office in Shenzhen is still more expensive than the machine that replaced the engineer inside it.",
+    "post_url": "https://twitter.com/hanakoxbt/status/2052783737952260434",
+    "score": 59,
+    "num_comments": 15,
+    "created_utc": {
+      "$date": "2026-05-08T16:12:36Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:06.268Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc99e42dd0e95b5baad06"
+    },
+    "message_id": "reddit_t3_1wiqxl5",
+    "topic_key": "cpa",
+    "search_keyword": "CPA",
+    "platform": "reddit",
+    "subreddit": "TheUltimateObjectCamp",
+    "username": "Intelligent-Glass-98",
+    "title": "NeedleToast challenge 32: The bake-off",
+    "text": "NeedleToast challenge 32: The bake-off\n\nhttps://preview.redd.it/lo54zhqxa2qh1.png?width=2160&format=png&auto=webp&s=25468554b8715c3b3bc5a16f9974a6200278afb9     https://preview.redd.it/xrw2ckqxa2qh1.png?width=2160&format=png&auto=webp&s=c356552bd233d847bc9af852430c08d94f3437f6     https://preview.redd.it/psf1cjqxa2qh1.png?width=2160&format=png&auto=webp&s=a924e290bddf39109db07920ea1b7b4b5b8ed600     https://preview.redd.it/cpa80iqxa2qh1.png?width=2880&format=png&auto=webp&s=ef966ed4782fa046cc9b89c10175e9a39107a040     https://preview.redd.it/gfejp85qb2qh1.png?width=2160&format=png&auto=webp&s=c4e0bd1b8186100d487aa92f0c8468ddb8b3f5df     https://reddit.com/link/1wiqxl5/video/1mvs5rvrb2qh1/player     https://preview.redd.it/z4czu3btb2qh1.png?width=2160&format=png&auto=webp&s=539865342c21ee465a7db9ab7996bace2fd37a09     https://preview.redd.it/wke2n3btb2qh1.png?width=2160&format=png&auto=webp&s=43c4533f0a887a3be3a952eaef71a4125887015e     https://preview.redd.it/i5go64btb2qh1.png?width=2880&format=png&auto=webp&s=c505d8099c45cabe5fcf79c2af3ee201cae84bdc     https://preview.redd.it/uykz94btb2qh1.png?width=2160&format=png&auto=webp&s=cc7d80c0b20e6f153ade238434a81c7c7f93c827     https://preview.redd.it/ycrss5btb2qh1.png?width=2160&format=png&auto=webp&s=6f0014b3c05eca79bbad31931fbf9a67f14e4569     https://preview.redd.it/e2xsy4btb2qh1.png?width=2160&format=png&auto=webp&s=c74da5633952f5e6983bf28352d7f2d8ff334cbc     https://preview.redd.it/j5cdmz2wb2qh1.png?width=2160&format=png&auto=webp&s=525ba08782183f077f62e3775e9cbedee58e12d8        submitted by     /u/Intelligent-Glass-98     to     r/TheUltimateObjectCamp       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TheUltimateObjectCamp/comments/1wiqxl5/needletoast_challenge_32_the_bakeoff/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T11:05:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:06.273Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc99e42dd0e95b5baad07"
+    },
+    "message_id": "twitter_2071638409022763292",
+    "topic_key": "budget subscription billing",
+    "search_keyword": "budget subscription billing",

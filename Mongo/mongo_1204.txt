@@ -1,0 +1,416 @@
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T15:34:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T15:34:26.530Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ed982f0819e6636a92540"
+    },
+    "message_id": "reddit_t3_1w9vffm",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "ForeverAloneDating",
+    "username": "TerraPhy",
+    "title": "32[M4F] #Europe #Denmark - Looking for a genuine connection and partner.",
+    "text": "32[M4F] #Europe #Denmark - Looking for a genuine connection and partner.\n\nWhat am I looking for? - Someone to care for and enjoy life together with. A person who I can connect with in multiple ways. Both emotionally and physically. A woman that is not in it to play games but rather knows what she wants and it not afraid to say it.   I want a partner that makes the good days in life feel fantastic, someone who will cheer for my wins just like I will be there to cheer for yours. While also making the inevitable bad days feel less sad just by your presence.   Dealbreakers - I don’t have many but if you are a smoker or weed-enjoyer then I am not interested.   Bonus points if you are a discord user and PC Gamer, as that makes communicating a whole lot easier and we might be able to find something to enjoy together.   I am not opposed to sharing pictures early on because physical attraction is naturally important.   Who am I ? - I am a 32 year old cat lover that is not afraid to speak his mind. I am introverted and my ideal Friday evening involves cuddling together while watching our favorite show or movie.   I am 100% judgement free regarding anything and everything you like or enjoy - My motto in life is that you should squeeze it for every drop of enjoyment possible and therefore I make no judgements on whatever you personally enjoy doing. I am patient and an active listener, as well as believing myself to be funny and have a strong sense of humor - but I suppose you will have to be the judge of that.   In my spare time I am an avid book reader of fantasy novels and a PC gamer. While also dabbling in my own writing, due to having been inspired by the novels that I have read.   I am an oldschool hopeless romantic, so if you are the type of person that would enjoy waking up to a lovely and cute little morning message to kickstart your day, then I hope to hear from you.       submitted by     /u/TerraPhy     to     r/ForeverAloneDating       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ForeverAloneDating/comments/1w9vffm/32m4f_europe_denmark_looking_for_a_genuine/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T15:34:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T15:34:26.732Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ed982f0819e6636a92541"
+    },
+    "message_id": "reddit_t3_1w9vffj",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "arduino",
+    "username": "Late_Lengthiness1021",
+    "title": "numbers clipping on digital clock",
+    "text": "numbers clipping on digital clock\n\ncan anyone tell my why my numbers clipp over the other numbers but not the background...    #include   #include   #include   #include   #include   #include   struct Decoration; #define TFT_CS 8 #define TFT_DC 5 #define TFT_RST 2 Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST); RTC_DS3231 rtc; // ================= Layout ================= const int DIGIT_WIDTH = 52; const int INNER_SPACING = 4; const int SEGMENT_SPACING = 58; const int TEXT_SIZE = 2; int16_t posX[4], posY[4]; char lastHour[3] = \"--\"; char lastMinute[3] = \"--\"; // ================= Farben ================= uint16_t COLOR_DIGITS, COLOR_GLOW, COLOR_HEART, COLOR_HEART_SHINE; uint16_t COLOR_DECO, COLOR_DECO_DARK, COLOR_STAR, COLOR_SKULL; uint16_t COLOR_CHAR_BODY, COLOR_CHAR_DARK, COLOR_CHAR_ACCENT, COLOR_CHAR_EYES, COLOR_CHAR_WHITE; void setupColors() { COLOR_DIGITS = tft.color565(255, 105, 220); COLOR_GLOW = tft.color565(140, 40, 130); COLOR_HEART = tft.color565(255, 90, 180); COLOR_HEART_SHINE = tft.color565(255, 180, 230); COLOR_DECO = tft.color565(210, 180, 240); COLOR_DECO_DARK = tft.color565(30, 15, 45); COLOR_STAR = tft.color565(230, 200, 255); COLOR_SKULL = tft.color565(245, 240, 255); COLOR_CHAR_BODY = tft.color565(35, 25, 50); COLOR_CHAR_DARK = tft.color565(15, 8, 25); COLOR_CHAR_ACCENT = tft.color565(255, 140, 200); COLOR_CHAR_EYES = ST77XX_BLACK; COLOR_CHAR_WHITE = tft.color565(250, 245, 255); } // ================= Deko-Elemente ================= struct Decoration { uint8_t type; // 0=Stern, 1=Totenkopf, 2=Herz gefüllt, 3=Herz Outline int16_t cx, cy, r; }; const int NUM_DECOS = 14; Decoration decos[NUM_DECOS] = { {0, 28, 28, 8}, {0, 22, 205, 9}, {0, 295, 200, 8}, {0, 30, 75, 6}, {0, 290, 55, 7}, {1, 28, 145, 11}, {1, 290, 140, 11}, {2, 55, 55, 12}, {2, 265, 70, 11}, {2, 50, 175, 10}, {2, 270, 175, 12}, {3, 45, 110, 14}, {3, 275, 110, 13}, {3, 160, 35, 10} }; // ================= Charakter ================= int16_t charCx, charCy; int16_t heartCx, heartCy; int16_t charLeft, charTop, charRight, charBottom; unsigned long lastTimeCheck = 0; // ===================================================== DateTime getLastSunday(int year, int month) { static const int daysInMonth[] = {31,28,31,30,31,30,31,31,30,31,30,31}; int day = daysInMonth[month - 1]; bool leap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0); if (month == 2 && leap) day = 29; DateTime d(year, month, day, 0, 0, 0); int dow = d.dayOfTheWeek(); day -= dow; return DateTime(year, month, day, 0, 0, 0); } bool isSummerTimeUTC(const DateTime &utc) { DateTime dstStart = getLastSunday(utc.year(), 3); dstStart = DateTime(dstStart.year(), dstStart.month(), dstStart.day(), 1, 0, 0); DateTime dstEnd = getLastSunday(utc.year(), 10); dstEnd = DateTime(dstEnd.year(), dstEnd.month(), dstEnd.day(), 1, 0, 0); return (utc.unixtime() >= dstStart.unixtime() && utc.unixtime()   1000) { lastTimeCheck = now; updateClockDigits(); } } void updateClockDigits() { DateTime local = getLocalTime(); char currentHour[3], currentMinute[3]; sprintf(currentHour, \"%02d\", local.hour()); sprintf(currentMinute, \"%02d\", local.minute()); char allChars[4] = { currentHour[0], currentHour[1], currentMinute[0], currentMinute[1] }; bool needRedrawCharacter = false; for (int i = 0; i   7) { tft.fillCircle(cx - , cy - , max(2, ), shine); } } void drawHeartOutline(int16_t cx, int16_t cy, int16_t r, uint16_t color) { tft.drawCircle(cx - , cy, , color); tft.drawCircle(cx + , cy, , color); tft.drawLine(cx - r, cy, cx, cy + r, color); tft.drawLine(cx + r, cy, cx, cy + r, color); tft.drawLine(cx - r + 1, cy, cx, cy + r - 1, color); tft.drawLine(cx + r - 1, cy, cx, cy + r - 1, color); } // ===================================================== // Kuromi // ===================================================== void drawMiniCharacter(int16_t cx, int16_t cy) { int r = 52; tft.fillTriangle(cx - 22, cy - 32, cx - 78, cy - 52, cx - 48, cy - 2, COLOR_CHAR_BODY); tft.fillTriangle(cx - 20, cy - 28, cx - 72, cy - 46, cx - 42, cy + 2, COLOR_CHAR_BODY); tft.fillTriangle(cx + 22, cy - 32, cx + 78, cy - 52, cx + 48, cy - 2, COLOR_CHAR_BODY); tft.fillTriangle(cx + 20, cy - 28, cx + 72, cy - 46, cx + 42, cy + 2, COLOR_CHAR_BODY); tft.fillCircle(cx, cy, r, COLOR_CHAR_BODY); tft.fillCircle(cx, cy + 10, 36, COLOR_CHAR_WHITE); tft.fillTriangle(cx - 32, cy - 28, cx + 32, cy - 28, cx, cy + 2, COLOR_CHAR_BODY); tft.fillCircle(cx - 20, cy + 20, 9, COLOR_CHAR_ACCENT); tft.fillCircle(cx + 20, cy + 20, 9, COLOR_CHAR_ACCENT); tft.fillCircle(cx - 14, cy + 6, 10, COLOR_CHAR_EYES); tft.fillCircle(cx + 14, cy + 6, 10, COLOR_CHAR_EYES); tft.fillCircle(cx - 11, cy + 2, 3, ST77XX_WHITE); tft.fillCircle(cx + 17, cy + 2, 3, ST77XX_WHITE); tft.drawLine(cx - 22, cy - 2, cx - 16, cy - 7, COLOR_CHAR_DARK); tft.drawLine(cx - 18, cy + 0, cx - 12, cy - 6, COLOR_CHAR_DARK); tft.drawLine(cx - 14, cy + 1, cx - 8, cy - 5, COLOR_CHAR_DARK); tft.drawLine(cx + 8, cy - 5, cx + 14, cy + 1, COLOR_CHAR_DARK); tft.drawLine(cx + 12, cy - 6, cx + 18, cy + 0, COLOR_CHAR_DARK); tft.drawLine(cx + 16, cy - 7, cx + 22, cy - 2, COLOR_CHAR_DARK); tft.fillCircle(cx, cy + 18, 3, COLOR_CHAR_DARK); tft.drawLine(cx - 10, cy + 26, cx, cy + 31, COLOR_CHAR_DARK); tft.drawLine(cx + 10, cy + 26, cx, cy + 31, COLOR_CHAR_DARK); tft.drawLine(cx - 9, cy + 27, cx, cy + 32, COLOR_CHAR_DARK); tft.drawLine(cx + 9, cy + 27, cx, cy + 32, COLOR_CHAR_DARK); tft.fillCircle(cx + 48, cy - 48, 9, COLOR_CHAR_ACCENT); tft.fillCircle(cx + 62, cy - 48, 9, COLOR_CHAR_ACCENT); tft.fillRect(cx + 51, cy - 51, 10, 7, COLOR_CHAR_ACCENT); tft.fillCircle(cx + 55, cy - 62, 8, COLOR_SKULL); tft.fillCircle(cx + 52, cy - 64, 2.5, COLOR_DECO_DARK); tft.fillCircle(cx + 58, cy - 64, 2.5, COLOR_DECO_DARK); tft.fillTriangle(cx + 55, cy - 60, cx + 52, cy - 55, cx + 58, cy - 55, COLOR_DECO_DARK); tft.drawLine(cx + 44, cy + 42, cx + 72, cy + 26, COLOR_CHAR_BODY); tft.drawLine(cx + 44, cy + 43, cx + 72, cy + 27, COLOR_CHAR_BODY); tft.drawLine(cx + 45, cy + 44, cx + 72, cy + 28, COLOR_CHAR_BODY); tft.fillTriangle(cx + 72, cy + 26, cx + 82, cy + 16, cx + 78, cy + 34, COLOR_CHAR_BODY); } // ===================================================== void drawColon() { int16_t colonX = posX[1] + DIGIT_WIDTH + (SEGMENT_SPACING / 2) - 5; int16_t colonY = posY[0]; tft.fillCircle(colonX, colonY - 32, 6, COLOR_DIGITS); tft.fillCircle(colonX, colonY - 10, 6, COLOR_DIGITS); } void drawFullTime(int h, int m) { char chars[5]; sprintf(chars, \"%02d%02d\", h, m); for (int i = 0; i  = 0 && yy         submitted by     /u/Late_Lengthiness1021     to     r/arduino       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/arduino/comments/1w9vffj/numbers_clipping_on_digital_clock/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T15:34:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T15:34:26.932Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ed983f0819e6636a92542"
+    },
+    "message_id": "reddit_t3_1w9vfff",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "samharrisorg",
+    "username": "palsh7",
+    "title": "Coleman Hughes: \"I don’t think we’re stuck choosing between wokeness and the bell curve, and I think both of those worldviews collapse into the same kind of tribal conflict the moment they actually go mainstream.\"",
+    "text": "Coleman Hughes: \"I don’t think we’re stuck choosing between wokeness and the bell curve, and I think both of those worldviews collapse into the same kind of tribal conflict the moment they actually go mainstream.\"\n\n0:00  Intro   9:50  Who Is Nathan Cofnas and How Did He Expose Jason Arday?   28:21  The Implications of the Jason Arday Scandal   30:18  What Is Race Realism?   32:35  Where Do You Draw the Line Between Groups?   40:17  The Forced Choice Between Wokeness and Hereditarianism   45:45  Is the Cultural Explanation Persuasive Enough?   54:06  The Danger of Mainstreaming Race and IQ   1:00:50  Was Colorblindness a Stable Equilibrium?   1:07:18  Did Colorblindness Fail or Did Social Media Break It?   1:29:27  Should Conservatives and Liberals Be Talking About IQ Gaps Between Political Tribes?   1:34:19  Nathan's Criticism of the University of Austin       submitted by     /u/palsh7     to     r/samharrisorg       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/samharrisorg/comments/1w9vfff/coleman_hughes_i_dont_think_were_stuck_choosing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T15:34:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T15:34:27.134Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ed983f0819e6636a92543"
+    },
+    "message_id": "reddit_t3_1w9vff6",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "cs2",
+    "username": "Alotofbytes",
+    "title": "3000 edpi??",
+    "text": "3000 edpi??\n\nanyone else use insanely high edpi? my friends always laugh when they spectate me because i flick around so much but i thought they were exaggerating how much more i do it than a normal player.   i thought my sens was normal until i checked my settings and realised it was 3000 edpi. i tried a lower sens in a practice match but it already feels like im giving my wrist a workout.   on leetify i have 52 aim rating, 10k on premier. anyone else play like this? i use a g502.       submitted by     /u/Alotofbytes     to     r/cs2       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cs2/comments/1w9vff6/3000_edpi/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T15:34:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T15:34:27.333Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ed983f0819e6636a92544"
+    },
+    "message_id": "reddit_t3_1w9vfey",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "madisonwi",
+    "username": "heyalexxxxx",
+    "title": "Screen-free elementary schools - any options?",
+    "text": "Screen-free elementary schools - any options?\n\nHello! There is increasing research about the ills of 1:1 technology in schools, especially for the youngest students. (Recommend the podcast Scrolling 2 Death for accessible entry to this topic if you haven't dived in already!) We are in the Middleton/Cross Plains school district, and from what I can tell there is no option to opt out and 1:1 devices starting in Kindergarten. It doesn't seem like there are any screen-free options (or screen-safe, no 1:1 devices and a computer lab, let's say) for elementary schools in the greater Madison area, that still do value some level of education standards (so we don't want something totally alternative where kids don't start learning to read) and also would prefer a high proportion of students who are vaccinated (I know some of the alternative school rates are abysmal - not trying to be political, more for family health and safety purposes). Any ideas? Anyone already organizing in Middleton area to reduce screens for our babies? We have a few years until enrollment but I'm anxious the more I learn, and know change takes time! Thanks for any insight.       submitted by     /u/heyalexxxxx     to     r/madisonwi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/madisonwi/comments/1w9vfey/screenfree_elementary_schools_any_options/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T15:34:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T15:34:27.532Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ed983f0819e6636a92545"
+    },
+    "message_id": "reddit_t3_1w9vfew",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "WritingPrompts",
+    "username": "Independent_Pen_9865",
+    "title": "[WP] Every 10,000,000 years life carves out the same person put of a blank slate. Ofcourse, they always bear a new name and a new face, but the personality is always the same. This time, it happened twice at the same time, in the same galaxy, planet, pub.",
+    "text": "[WP] Every 10,000,000 years life carves out the same person put of a blank slate. Ofcourse, they always bear a new name and a new face, but the personality is always the same. This time, it happened twice at the same time, in the same galaxy, planet, pub.\n\nsubmitted by     /u/Independent_Pen_9865     to     r/WritingPrompts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WritingPrompts/comments/1w9vfew/wp_every_10000000_years_life_carves_out_the_same/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T15:34:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T15:34:27.730Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ed983f0819e6636a92546"
+    },
+    "message_id": "reddit_t3_1w9vfes",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "Planetside",
+    "username": "Prochilles",
+    "title": "Hurry before I get banned..",
+    "text": "Hurry before I get banned..\n\nPlease tell me why the game keeps crashing every 2s ?       submitted by     /u/Prochilles     to     r/Planetside       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Planetside/comments/1w9vfes/hurry_before_i_get_banned/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T15:34:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T15:34:27.929Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ed984f0819e6636a92547"
+    },
+    "message_id": "reddit_t3_1w9vfdx",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "nsutfreshers_2030",
+    "username": "Lonely_Goose_3616",
+    "title": "Why no sufficient hostels /no hostels for west east campus .",
+    "text": "Why no sufficient hostels /no hostels for west east campus .\n\nsubmitted by     /u/Lonely_Goose_3616     to     r/nsutfreshers_2030       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/nsutfreshers_2030/comments/1w9vfdx/why_no_sufficient_hostels_no_hostels_for_west/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T15:34:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T15:34:28.129Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ed984f0819e6636a92548"
+    },
+    "message_id": "reddit_t3_1w9vfdt",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "TeenIndia",
+    "username": "EmbarrassedSalad1736",
+    "title": "Would you rather date...",
+    "text": "Would you rather date...\n\nAn average to thik thak looking person with 4 exes with whom they didn't get physical with or a very attractive looking person with only one ex partner however they have gotten physical with them.    Shape my dating choices now fellas I'm REALLY stuck.        submitted by     /u/EmbarrassedSalad1736     to     r/TeenIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TeenIndia/comments/1w9vfdt/would_you_rather_date/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T15:34:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T15:34:28.328Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ed984f0819e6636a9254a"
+    },
+    "message_id": "reddit_t3_1w9vfdp",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "genzmedschool",
+    "username": "Journey_ad_Infinity",
+    "title": "Physiology paper 2 preparation (WBUHS)",
+    "text": "Physiology paper 2 preparation (WBUHS)\n\nBehind the chapter questions, last 5 years PYQ's for common topics, and that's it. I can't do more bruh 😔    Please advise seniors 🙏       submitted by     /u/Journey_ad_Infinity     to     r/genzmedschool       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/genzmedschool/comments/1w9vfdp/physiology_paper_2_preparation_wbuhs/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T15:34:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T15:34:28.733Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ed984f0819e6636a9254b"
+    },
+    "message_id": "reddit_t3_1w9vfdg",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Internet Computer USD - 7 Sep 2026 @ 11:31 -> $2.93",
+    "text": "Buy Signal Internet Computer USD - 7 Sep 2026 @ 11:31 -> $2.93\n\nTicker:  ICPUSD    Exchange:  CRYPTO    Time:  7 Sep 2026 @ 11:31    Price:  $2.93    Link:  https://getagraph.com/AAA/crypto-currencies/ICPUSD/ENG        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1w9vfdg/buy_signal_internet_computer_usd_7_sep_2026_1131/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T15:34:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T15:34:28.932Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ed985f0819e6636a9254c"
+    },
+    "message_id": "reddit_t3_1w9vfdc",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "CrossDressRealism",
+    "username": "satsugaiparkar",
+    "title": "Is it a bit too flashy?",
+    "text": "Is it a bit too flashy?\n\nsubmitted by     /u/satsugaiparkar     to     r/CrossDressRealism       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CrossDressRealism/comments/1w9vfdc/is_it_a_bit_too_flashy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T15:34:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T15:34:29.132Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ed985f0819e6636a9254d"
+    },
+    "message_id": "reddit_t3_1w9vfd6",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "FamilyIssues",
+    "username": "NegativeMachine8101",
+    "title": "My dad is the biggest asshole I’ve ever met and no one calls him out.",
+    "text": "My dad is the biggest asshole I’ve ever met and no one calls him out.\n\n(I’m 15, autistic and a girl.)  . I can’t call him out because he scares me. He wouldn’t hit me, but he gets so angry and never apologises for anything. He treats my mom (an absolute angel) like shit, luckily she’s patient and doesn’t hold grudges so she takes it.   He’s a saint to my brother, but an asshole to me and my sister. (They’re both 25-26)  He gets mad when I get mad, then proceeds to act even worse and expects everyone to never call him out because he’s so fucking self absorbed.   When he gets angry it’s EVERYONES problem. He knows he’s made me cry multiple times yet he has never even attempted to apologise, he even stops talking to me multiple days after.   Since I’m autistic and very late diagnosed, I have issues that I’m actively working on fixing (such as acting like him but I APOLOGISE LIKE ANY ADULT SHOULD) I get overstimulated and cannot handle it when he gets mad, and since I’m too scared to show emotions around the asshole, I resort to stupid shit like hitting myself instead of expressing myself like I should.   How do I stop giving a shit ?? I’m so stressed and unhopeful about my life right now because I just can’t fucking live with him anymore.        submitted by     /u/NegativeMachine8101     to     r/FamilyIssues       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FamilyIssues/comments/1w9vfd6/my_dad_is_the_biggest_asshole_ive_ever_met_and_no/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T15:34:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T15:34:29.331Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ed9d31790aa25e94b87a7"
+    },
+    "message_id": "reddit_t3_1w9vgnm",
+    "topic_key": "general contractor",
+    "search_keyword": "general contractor",
+    "platform": "reddit",
+    "subreddit": "GeneralContractor",
+    "username": "Energetic_Gem726",
+    "title": "DIY vs. Hiring a General Contractor (GC)",
+    "text": "DIY vs. Hiring a General Contractor (GC)\n\nsubmitted by     /u/Energetic_Gem726     to     r/GeneralContractor       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GeneralContractor/comments/1w9vgnm/diy_vs_hiring_a_general_contractor_gc/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T15:35:25Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T15:35:47.063Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ed9f8f0819e6636a9254e"
+    },
+    "message_id": "reddit_t3_1w9vhe7",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "homelab",
+    "username": "Adventurous-Lime191",
+    "title": "Advice on Hetzner Storage Box as a cold storage solution",
+    "text": "Advice on Hetzner Storage Box as a cold storage solution\n\nI have accumulated around 1TB of files that it would be impossible or extremely hard for me to replace. Right now they sit on my NAS and are encrypted and backed up to B2 using TrueNAS Cloud Sync.   I hated the NAS being a single point of failure so I added B2 but now I fell like all my cloud storage eggs are in one basket.   Hetzner Storage Boxes are cheap enough that I want to add one to my arsenal but I am not sure the best way to secure it.   What I would like to do is once a month open the SMB share from my NAS in Windows or Linux and run some kind of program to backup all the new and changed files to the Storage Box.    The main thing I am worried about is encryption and security. The SMB share has a lot of financial documents and other things that would easily enable identity theft if an attacker got in.        submitted by     /u/Adventurous-Lime191     to     r/homelab       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/homelab/comments/1w9vhe7/advice_on_hetzner_storage_box_as_a_cold_storage/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T15:36:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T15:36:24.726Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ed9f8f0819e6636a9254f"
+    },
+    "message_id": "reddit_t3_1w9vhdr",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "birthcontrol",
+    "username": "jpalacio07",
+    "title": "Break through bleeding?",
+    "text": "Break through bleeding?\n\nHi i have been under birth control for now two years and only had breakthrough bleeding once but recently i got another spotting incident yesterday but it only lasted a day which is strange because my last period was two weeks ago. The birth control i am under is sprintec also i am sexually active but i take the pills on time everyday so would anyone give advice? Or help i am going to call my clinic just they are close today and its haunting me. No i am not pregnant i just took the test this morning.        submitted by     /u/jpalacio07     to     r/birthcontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/birthcontrol/comments/1w9vhdr/break_through_bleeding/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T15:36:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T15:36:24.940Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ed9f9f0819e6636a92550"
+    },
+    "message_id": "reddit_t3_1w9vhdq",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "Accounting",
+    "username": "Normanbates264",
+    "title": "In your opinion, which of these is doing the most damage to the accounting profession?",
+    "text": "In your opinion, which of these is doing the most damage to the accounting profession?\n\nI see a lot of frustration on this sub regarding the state of the career right now, usually centered around a few core issues:   ​Low Starting Pay: Entry-level salaries feel completely disconnected from the current cost of living, especially when compared to finance, tech, or corporate roles with similar barriers to entry.   ​The 150-Hour / Debt Burden: Requiring 150 credit hours for the CPA often forces an extra year of college tuition and debt just to qualify for entry-level compensation.   ​Burnout & Unpaid Overtime: Brutal busy season hours with little to no work-life balance, where high hourly stress dilutes an already modest salary.   ​Tough Entry-Level Job Market: Despite headlines about a \"CPA shortage,\" breaking in or finding an entry-level position without years of experience feels harder than ever.   ​Return-to-Office Mandates: Rigid in-office demands while other white-collar industries maintain hybrid or remote options.   ​The \"Boring\" Stigma: The persistent reputation that the work is tedious, outdated, and unfulfilling.   While it's easy to say \"all of the above,\" if you had to pick the single biggest factor driving people out or steering students away from accounting entirely, which one is the worst?       submitted by     /u/Normanbates264     to     r/Accounting       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Accounting/comments/1w9vhdq/in_your_opinion_which_of_these_is_doing_the_most/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T15:36:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T15:36:25.153Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ed9f9f0819e6636a92551"
+    },
+    "message_id": "reddit_t3_1w9vhcu",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "PathToNowhere",
+    "username": "im_here_yet_not",
+    "title": "Will langley and Zoya get an interrogation soon?",
+    "text": "Will langley and Zoya get an interrogation soon?\n\nJust recently got langley after at least 3 years of playing PTN and I just found out she doesn't have an interrogation? I looked through the first released S class sinners and also found out Zoya doesn't have one. Will they eventually get one or for some lore reasons there won't be one?        submitted by     /u/im_here_yet_not     to     r/PathToNowhere       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PathToNowhere/comments/1w9vhcu/will_langley_and_zoya_get_an_interrogation_soon/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T15:36:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T15:36:25.367Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ed9f9f0819e6636a92552"
+    },
+    "message_id": "reddit_t3_1w9vhc5",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "Coros",
+    "username": "hoemarb",
+    "title": "Pod2 is far from great.",

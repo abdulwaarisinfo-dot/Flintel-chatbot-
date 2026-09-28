@@ -1,0 +1,416 @@
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:43:14.041Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad31e2660c6084039790c1"
+    },
+    "message_id": "reddit_t3_1wjp5fm",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "elektrischrijden",
+    "username": "EVMaximizer",
+    "title": "Even een korte noot over content en stemgedrag hier",
+    "text": "Even een korte noot over content en stemgedrag hier\n\nIk wil toch even iets kwijt over de manier waarop hier soms op posts en reacties wordt gereageerd.   Ik heb onlangs op  r/autoadvies  een  post  gelezen over stemgedrag die me aan het denken zette. Daar werd mooi uitgelegd dat een upvote niet automatisch betekent dat je het met iemand eens bent, en dat een inhoudelijk tegengeluid juist waardevol kan zijn voor een discussie.   Dat principe zou ik hier eigenlijk ook graag terugzien.   Ik schrijf hier regelmatig langere en inhoudelijke posts over elektrische auto's en de automarkt. Daar steek ik behoorlijk wat tijd in. Soms gebruik ik AI als hulpmiddel bij de structuur, redactie of formulering. Daar ben ik ook gewoon transparant over. De onderwerpen, invalshoeken en uiteindelijke inhoud bepaal ik zelf en ik controleer wat er wordt geplaatst.   Toch merk ik dat het vermelden van AI bij sommige mensen blijkbaar genoeg is om direct een downvote te geven. En eerlijk gezegd vind ik dat jammer.   Niet omdat ik vind dat iedereen mijn posts positief moet beoordelen, maar omdat een downvote mij niet vertelt wat er volgens jou inhoudelijk beter kan.   Ben je het niet eens met mijn conclusie? Prima. Ben je het niet eens met mijn kijk op een bepaald merk? Ook prima. Vind je dat ik een belangrijk argument over het hoofd zie? Nog beter: vertel het vooral.   Daar kan ik iets mee.   Want als mensen die tegen het gebruik van AI zijn vervolgens nauwelijks inhoudelijk reageren op de bijdragen die hier worden geplaatst, maar wel massaal op de omlaagstemknop drukken zodra AI wordt genoemd, dan houden we die ontwikkeling natuurlijk ook zelf een beetje in stand. Als je wilt dat mensen meer volledig zelfgeschreven en inhoudelijk uitgewerkte bijdragen plaatsen, helpt het om juist op die inhoud te reageren en aan te geven wat je mist.   Een goed voorbeeld daarvan was mijn post van vanmorgen over de  gebruikte Nissan Leaf . Daar heb ik behoorlijk wat tijd in gestoken. Vrij snel zag ik dat de post door een aantal mensen werd gedownvote. De inhoudelijke discussie bleef echter beperkt. De meest concrete kritiek die ik kreeg was bijvoorbeeld:  \"  Pittig lang verhaal maat  .\"    Dat mag natuurlijk. Niet iedereen heeft behoefte aan lange posts. Ik heb die persoon daarom ook niet verbannen. Ik heb hem of haar alleen van mijn profiel geblokkeerd, zodat mijn posts voortaan niet meer in diens feed verschijnen. Dat vind ik een veel redelijkere oplossing dan iemand daadwerkelijk uit de subreddit weren.   Hetzelfde geldt voor reacties waarin wordt  gesuggereerd  dat ik voor de  Chinese geheime dienst  zou werken omdat ik kritisch schrijf over  bepaalde Europese merken  of positief ben over bepaalde Chinese auto's.   Daar kan ik weinig mee.   Over ieder land, iedere fabrikant en ieder merk valt wel iets te zeggen. Een discussie over auto's hoeft wat mij betreft geen wedstrijd tussen landen of merken te worden. Je kunt kritisch zijn op Chinese auto's, Europese auto's, Japanse auto's, Amerikaanse auto's of allemaal tegelijk. Hetzelfde geldt voor positieve ervaringen.   Ik schrijf hier op persoonlijke titel. Dat betekent ook dat ik zelf bepaal welke onderwerpen en invalshoeken ik interessant vind.   Wil je graag een post zien over bijvoorbeeld de Volkswagen ID. Polo waarin de nadruk ergens anders ligt? Schrijf hem vooral. Mis je een bepaald argument in mijn post? Voeg het toe. Denk je dat mijn conclusie niet klopt? Leg uit waarom.   Daar wordt deze subreddit uiteindelijk beter van.   Wat ik niet ga doen, is mijn onderwerpen aanpassen omdat een bepaald merk, onderwerp of invalshoek gegarandeerd wat downvotes oplevert. Downvotes zijn onderdeel van Reddit en iedereen staat natuurlijk vrij om daarop te stemmen. Maar ze bepalen niet waar ik over schrijf.   Inhoudelijke discussies, scherpe tegenargumenten en feitelijke correcties zie ik juist graag. Dat is precies waarom ik dit soort posts schrijf.   Persoonlijke aanvallen, merkdogmatisme en ongefundeerde verwijten voegen voor mij weinig toe. In dat soort gevallen gebruik ik liever de blokkeerfunctie van mijn profiel. Niet om iemand het zwijgen op te leggen, maar simpelweg omdat ik mijn eigen Reddit-feed prettig wil houden.   De kracht van een community zit wat mij betreft niet in het feit dat iedereen hetzelfde denkt. Juist verschillende ervaringen, argumenten en conclusies maken een discussie interessant.   Dus ben je het met me oneens? Laat het vooral weten.   Maar vertel er dan ook bij  waarom .   Daar heeft iedereen uiteindelijk veel meer aan dan aan alleen een omlaagstem.       submitted by     /u/EVMaximizer     to     r/elektrischrijden       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/elektrischrijden/comments/1wjp5fm/even_een_korte_noot_over_content_en_stemgedrag/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:42:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:43:14.240Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad31e2660c6084039790c2"
+    },
+    "message_id": "reddit_t3_1wjp5fk",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "coolgithubprojects",
+    "username": "isntw",
+    "title": "I built a worktree manager for Claude Code",
+    "text": "I built a worktree manager for Claude Code\n\nHey all,   I developed a tool called ccwt(Claude Code Worktrees). I found it difficult to work with plain git worktrees, because every new one needs setting up by hand: install the dependencies, copy over .env, find a port nothing else is using, then start the dev server yourself.   ccwt does that part for you. You describe once what a worktree of your project needs, and it handles the rest from there.   What it does:     provisions every new worktree from a recipe: files copied, node_modules hardlinked, postCreate commands run   gives each worktree its own port, its own dev server and its own logs   handles several projects at once, with all their worktrees on one dashboard   works with the worktrees Claude Code creates, not just the ones it made itself   comes with a Claude Code plugin: 11 MCP tools, 4 hooks and 3 skills, so a session can set a project up and run it     It's beta and macOS only for now. README has the rest:   https://github.com/isntw/claude-code-worktrees     https://preview.redd.it/88x0acjwx9qh1.png?width=1600&format=png&auto=webp&s=ba9cf9d73c7bd25abecb33bb6d6bfc92906276ac        submitted by     /u/isntw     to     r/coolgithubprojects       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/coolgithubprojects/comments/1wjp5fk/i_built_a_worktree_manager_for_claude_code/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:42:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:43:14.440Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad320caeeb96c1c63b95ae"
+    },
+    "message_id": "reddit_t3_1wjp67l",
+    "topic_key": "recruiter",
+    "search_keyword": "recruiter",
+    "platform": "reddit",
+    "subreddit": "UKJobs",
+    "username": "Reasonable-Cow1992",
+    "title": "Waiting for Next Steps",
+    "text": "Waiting for Next Steps\n\nJust writing to vent because I feel like I’m losing my mind waiting!   I had a final round interview for a job I really, really want. It would be a big step up in responsibility, 40% increase in pay, working in a small team full of intelligent, hard working people. On paper everything is perfect and exactly the kind of thing I have been looking for. I’ve been stuck in the same underpaid, monotone, micromanaging job for the past 3 years so I’m really excited for this opportunity.    My references have been contacted and they have provided positive feedback to HR about me. The external recruiter seems to think an offer is coming and they are supposedly just finalising budget and paperwork at this point (although he could just be trying to keep me warm as he knows I have more interviews at other firms lined up). I’m waiting impatiently for a verbal offer or next steps but haven’t heard anything back as of yet.    Hoping for some good news before the weekend…        submitted by     /u/Reasonable-Cow1992     to     r/UKJobs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UKJobs/comments/1wjp67l/waiting_for_next_steps/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:43:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:43:56.705Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad320caeeb96c1c63b95af"
+    },
+    "message_id": "reddit_t3_1wjp67a",
+    "topic_key": "makeup artist",
+    "search_keyword": "makeup artist",
+    "platform": "reddit",
+    "subreddit": "WeddingsCanada",
+    "username": "weddingplanningyay",
+    "title": "Looking for makeup artists who can/will do colourful or whimsical bridal looks, in southern Ontario",
+    "text": "Looking for makeup artists who can/will do colourful or whimsical bridal looks, in southern Ontario\n\nHello all!! Please let me know if I flaired this incorrectly, first time I’m posting here!    I’m a bride getting married soon next year, and we’re now on the search for vendors, including a make up artist (who preferably may do hair as well ahah).    I’m having trouble with finding make up artists that are not too far away, and I am also worried as my own makeup style doesn’t match too much with the traditional bridal makeup looks (which btw, is so so so gorgeous! nudes just aren’t for me)    I am wondering if anyone may know of makeup and/or hair artists who would be willing or able to do more colourful or whimsical bridal looks?    I’m getting married in Burlington Ontario, so would love someone in the area or someone able to travel to Burlington!    Thank you so incredibly kindly and please feel free to let me know if I posted or tagged anything wrong ahah. Thanks !!! 😊        submitted by     /u/weddingplanningyay     to     r/WeddingsCanada       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WeddingsCanada/comments/1wjp67a/looking_for_makeup_artists_who_canwill_do/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:43:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:43:56.941Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad320daeeb96c1c63b95b0"
+    },
+    "message_id": "reddit_t3_1wjp66t",
+    "topic_key": "pediatrician",
+    "search_keyword": "pediatrician",
+    "platform": "reddit",
+    "subreddit": "ApparentJokes",
+    "username": "DokCyber",
+    "title": "Why are",
+    "text": "Why are\n\npediatricians always so angry? They have very little patients.       submitted by     /u/DokCyber     to     r/ApparentJokes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ApparentJokes/comments/1wjp66t/why_are/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:43:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:43:57.180Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad320daeeb96c1c63b95b1"
+    },
+    "message_id": "reddit_t3_1wjp653",
+    "topic_key": "barber",
+    "search_keyword": "barber",
+    "platform": "reddit",
+    "subreddit": "TeluguJournals",
+    "username": "Ornery-Barber-3201",
+    "title": "We don’t embrace our language enough",
+    "text": "We don’t embrace our language enough\n\nIt is baffling how Telugu people constantly replace our own rich vocabulary with terms from other regions when we have precise words of our own.   Take Ganesh Chaturthi: people use  visarjan  which carries a completely different, inappropriate meaning in Telugu, instead of our proper word,  Nimarjanam . Similarly,  mandal  get imported for Mandapam where they don't belong.   Does not dropping our native words really make people look cool? Our language has incredible depth, but if we don't take pride in it, who will?       submitted by     /u/Ornery-Barber-3201     to     r/TeluguJournals       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TeluguJournals/comments/1wjp653/we_dont_embrace_our_language_enough/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:43:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:43:57.557Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad320daeeb96c1c63b95b2"
+    },
+    "message_id": "reddit_t3_1wjp645",
+    "topic_key": "general contractor",
+    "search_keyword": "general contractor",
+    "platform": "reddit",
+    "subreddit": "Columbus",
+    "username": "HanzoExecution",
+    "title": "Need to widen chain link fence gate",
+    "text": "Need to widen chain link fence gate\n\nive tried calling several fencing companies to do this job but they all say they only do fence installs. told me to reach out to a general contractor and im surprised how hard its been for me to find someone who is capable or willing to do this job.    i just want to be lazy while I mow my grass! please halp       submitted by     /u/HanzoExecution     to     r/Columbus       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Columbus/comments/1wjp645/need_to_widen_chain_link_fence_gate/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:43:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:43:57.920Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad320eaeeb96c1c63b95b3"
+    },
+    "message_id": "reddit_t3_1wjp62n",
+    "topic_key": "insurance broker",
+    "search_keyword": "insurance broker",
+    "platform": "reddit",
+    "subreddit": "iX3",
+    "username": "DraggedThruTheGarden",
+    "title": "iX3 Insurance shock - and options",
+    "text": "iX3 Insurance shock - and options\n\nMy insurance broker had a hard time quoting my incoming iX3 because the VIN wouldn’t load. Finally they figured it out and said the new car raised my two-car premium from $1,800 to $4,300/year. WTF! That’s even with discounts from having homeowners, etc. So jumped on GEICO’S website. Couldn’t match the coverage exactly but with their max coverage and $1,000 deductible going with a quote of $1,438/yr. For two cars, garaged, lowish miles, in Chicago. What have you found?       submitted by     /u/DraggedThruTheGarden     to     r/iX3       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/iX3/comments/1wjp62n/ix3_insurance_shock_and_options/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:43:34Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:43:58.601Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad320eaeeb96c1c63b95b4"
+    },
+    "message_id": "reddit_t3_1wjp61k",
+    "topic_key": "therapist",
+    "search_keyword": "therapist",
+    "platform": "reddit",
+    "subreddit": "deppresionhelp",
+    "username": "Few-Guarantee9688",
+    "title": "👋Welcome to r/deppresionhelp - Introduce Yourself and Read First!",
+    "text": "👋Welcome to r/deppresionhelp - Introduce Yourself and Read First!\n\nFirst and foremost, we are not trained psychologists or therapists. I will seek out some to add to our mods for help, but understand that we are not professionals in the field and this is meant to be temporary help. I'm  u/Few-Guarantee9688 , a founding moderator of  r/deppresionhelp .   This is our new home to be able to seek help and express how they are feeling without the worry of someone makingthings worse. We're happy you chose to come here. Whether its to help or be helped or simply a wall to scream at about what you are going through.    My hope is this will be a place thats a safe haven. Because of that any reports of someone who tries to manipulate, put down, troll, or is offering damaging misinformation, will be given a 2 strike chance. If reported we will look at the reason for the report and what is said. You will receive a suspension first followed by a ban if the issue is ongoing.    What to Post   Post how you feel or whats going on. We want to know when you are actively thinking about suicide or depression. Even something as simple as a daily post counting each day can be a success and feel great. We are here to help and listen.   Community Vibe   We're all about being friendly, constructive, and inclusive. Let's build a space where everyone feels comfortable sharing and connecting.   How to Get Started   1) This is a place for anonymity and safety.   2) Post something today. Even a simple question can spark a great conversation and can help relieve some of your burden.   3) If you know someone who would benefit from this community, invite them to join.   4) Interested in helping out? We're always looking for new moderators, so feel free to reach out to me to apply.   5) If someone is actively talking about completing suicide, comments and messages that are seen as putting the OP down or feel bad about wanting will be removed upon discovery/report.   6) If you would like or be ok with others dming you please include DMs OK in your title. This lets others know that you are up to privately discussing this with someone.   7) Please refrain from calling for crisis intervention via 911 or other emergency lines unless OP has stated that it is ok. (This may seem counterintuitive, but the risk of this can dissuade a person from seeking help in a moment they need it most)   8) If any one has come here and made you feel unsafe after posting, let our team know and they will be dealt with immediately.    Thanks for being part of the very first wave. Together, let's make  r/deppresionhelp  amazing.       submitted by     /u/Few-Guarantee9688     to     r/deppresionhelp       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/deppresionhelp/comments/1wjp61k/welcome_to_rdeppresionhelp_introduce_yourself_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:43:32Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:43:58.915Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad321a660c6084039790c3"
+    },
+    "message_id": "reddit_t3_1wjp6dv",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "asoiaf",
+    "username": "LChris24",
+    "title": "Euron's \"Mate\": The Long, Tall, Terrible Shadow (Spoilers Extended)",
+    "text": "Euron's \"Mate\": The Long, Tall, Terrible Shadow (Spoilers Extended)\n\nBackground    While Aegon is tripping hard on Shade of the Evening in the Forsaken, he gets numerous visions of what is seemingly Euron's upcoming plotline. In one of the dreams he sees what GRRM describes as Euron's mate and \"a shadow in woman’s form, long and tall and terrible, her hands alive with pale white fire\". In this post, I thought it would be fun to look into the identity of this \"mate\" using clues and information from other parts of the series.   If interested:  Comparing Visions: The HoTU/The Silence     The Forsaken    This is what Aeron sees, which is seemingly a vision of a Lovecraftian Euron sitting on the Iron Throne. In this vision we see his \"mate\":     He saw his brother on the Iron Throne again, but Euron was no longer human. He seemed more squid than man, a monster fathered by a kraken of the deep, his face a mass of writhing tentacles.  Beside him stood a shadow in woman’s form, long and tall and terrible, her hands alive with pale white fire . Dwarves capered for their amusement, male and female, naked and misshapen, locked in carnal embrace, biting and tearing at each other as  Euron and his mate laughed and laughed and laughed  … -TWoW, The Forsaken     I've argued for what the meaning of the capering dwarves well ( Dance of the Dragons II , remember in Dany's vision the dwarves signified the War of the Five Kings).   Potential \"Mates\"    Daenerys Targaryen    The most obvious answer. Euron has sent Victarion to Slaver's Bay to bring back his bride for him, it is even mentioned in the Forsaken:     “East,” she said, “with all his ships. He’s to bring the dragon queen to Westeros. I’m to be Euron’s salt wife, but  he must have a rock wife too, a queen to rule all Westeros at his side . They say she’s the most beautiful woman in the world, and she has dragons.      and we even have a Greyjoy mention in the House of the Undying in Dany's bride of fire section:     Her silver was trotting through the grass, to a darkling stream beneath a sea of stars.  A corpse stood at the prow of a ship, eyes bright in his dead face, grey lips smiling sadly . A blue flower grew from a chink in a wall of ice, and filled the air with sweetness. . . . mother of dragons, bride of fire . . .-ACOK, Daenerys IV     but I would argue that this is remnants of one of GRRM's changed plotlines from when he had all 3 Greyjoy brothers visiting Slaver's Bay and Daenerys likely marrying Euron in order to get access to the fleet. Only as GRRM grew Euron as a character, he realized that a) Dany would never marry him and b) he fit better as an Act III villain.   If interested:  The Split Greyjoy Plotline  &  \"A Corpse at the Prow of a Ship\": A Look at a Changed Plotline and the Effect on a Vision     Cersei Lannister    While the show is not the best example of what is to come in the books (ex: Euron is just a horny Jack Sparrow type), we can at least note that this plotline exists, as well as the fact that Tywin was already considering marrying Cersei to a Greyjoy:     \"I have considered the Redwyne twins,  Theon Greyjoy , Quentyn Martell, and a number of others.   ...  \"You will marry and you will breed. Every child you birth makes Stannis more a liar.\" Their father's eyes seemed to pin her to her chair. \"Mace Tyrell, Paxter Redwyne, and Doran Martell are wed to younger women likely to outlive them.  Balon Greyjoy's wife is elderly and failing , but such a match would commit us to an alliance with the Iron Islands, and I am still uncertain whether that would be our wisest course.\" -ASOS, Tyrion III     as well as the fact that Cersei seems intent on making an enemy of Highgarden (the enemy of my enemy is my friend):     \"Carrion crows make their feasts upon the carcasses of the dead and dying,\" said Grand Maester Pycelle. \"They do not descend upon hale and healthy animals. Lord Euron will gorge himself on gold and plunder, aye, but as soon as we move against him he will back to Pyke, as Lord Dagon was wont to do in his day.\"  \"You are wrong,\" said Margaery Tyrell. \"Reavers do not come in such strength. A thousand ships! Lord Hewett and Lord Chester are slain, as well as Lord Serry's son and heir. Serry has fled to Highgarden with what few ships remain him, and Lord Grimm is a prisoner in his own castle. Willas says that the iron king has raised up four lords of his own in their places.\" -AFFC, Cersei VII     If interested:  Cersei's Wedding     Viserion    With Euron in \"possession\" ( Who has claimed the horn? ?) of the dragonhorn, Aeron's other visions also show it as well:     “The bleeding star bespoke the end,” he said to Aeron. “These are the last days, when the world shall be broken and remade. A new god shall be born from the graves and charnel pits.”  Then Euron lifted a great horn to his lips and blew, and dragons and krakens and sphinxes came at his command and bowed before him .     It is possible that  the Battle of Blood  Euron's giant  ritual sacrifice  is just that, a  blood claim on the horn . With that in mind, I have seen it argued that Euron's mate is the dragon Viserion (pale white fire).    Melisandre    Mel (a red priestess/shadowbinder) has gone to Stannis believing him to be Azor Ahai. Which he is obviously not as another shade of the evening shows us this is a lie:      Glowing like sunset, a red sword was raised in the hand of a blue-eyed king who cast no shadow . A cloth dragon swayed on poles amidst a cheering crowd. From a smoking tower, a great stone beast took wing, breathing shadow fire. . . . mother of dragons, slayer of lies . . . -ACOK, Daenerys IV     and while its possible that Mel stays with Stannis until the end, we also know that (although I think this is about the  Ultimate Sacrifice :      we all deceive ourselves, when we want to believe. Melisandre most of all, I think.  The sword is wrong, she has to know that . . . light without heat . . . an empty glamor . . . the sword is wrong, and the  false light can only lead us deeper into darkness,  Sam. -AFFC, Samwell IV     and while not super strong, we get Mel described:     Many called her beautiful. She was not beautiful. She was red, and  terrible , and red. -ACoK, Prologue     If interested:  Melisandre's Misinterpretation: \"False Light Leading to Deeper Darkness\"     The Mad Maid    Another potential character is Malora Hightower aka the Mad Maid. She has only been mentioned once so far in the series (as we get  mention of some of the Hightower Defenses ):     \"To be sure.  Lord Leyton's locked atop his tower with the Mad Maid, consulting books of spells.  Might be he'll raise an army from the deeps. Or not. Baelor's building galleys, Gunthor has charge of the harbor, Garth is training new recruits, and Humfrey's gone to Lys to hire sellsails. If he can winkle a proper fleet out of his whore of a sister, we can start paying back the ironmen with some of their own coin. Till then, the best we can do is guard the sound and wait for the bitch queen in King's Landing to let Lord Paxter off his leash.\" -AFFC, Samwell V     but with  Leyton Hightower spending a decade atop the Hightower  seemingly in a collision course with Euron, it is very possible she becomes a bigger character in TWoW.    Winter    With Euron being a potential former pupil of Bloodraven (and at a minimum has extremely  similar dreams to Bran ), this vision of a mate may be more thematic/figurative and not meant to be taken literal. Euron has chosen to use perversions of this magic in an attempt to become a god:     North and north and north he looked, to the curtain of light at the end of the world, and then beyond that curtain. He looked deep into the heart of winter, and then he cried out, afraid, and the heat of his tears burned on his cheeks.  you know, the crow whispered as it sat on his shoulder. Now you know why you must live. -AGoT, Bran III      Shiera Seastar    The great bastards all have deep impacts on the story. We have King Daemon I's  female line , Bittersteel's  professional army , Bloodraven still  interfering in plotlines from a tree , and a potential  proxy war  about to break out between their descendants. What about Shiera? Sure, she's mentioned from time to time as being loved by Bloodraven/Bittersteel, but this is definitely not at the level of her half brothers.   If interested:  The Fate of Shiera Seastar     Sarella Sand    While the imagery doesn't make a ton of sense, it is worth noting that similar to the Mad Maid, Sarella sits right on Euron's path into Westeros. We also know the following:     GRRM mentioned that he wanted to \"Introduce the dramatis personae of the Citadel, i.e. archmaesters, novices, etc.  Two of the Citadel characters the reader meets will be important to Sam's story when he arrives... Lazy Leo Tyrell and Alleras the Sphinx\".      If interested:  The Lazy Rose and the Sphinx in TWoW    and while I don't think that is super strong on its own, if we go back to the vision:     Then Euron lifted a great horn to his lips and blew, and dragons and krakens and  sphinxes came at his command and bowed before him . -TWoW, The Forsaken      Ice Queen/Other    There are  numerous characters  (ranging from Bloodraven to Daemon Targaryen to Craster, etc.) that parallel the Night's King and this \"mate\" of Euron's does slightly:     A woman was his downfall; a woman glimpsed from atop the Wall, with skin as white as the moon and eyes like blue stars. Fearing nothing, he chased her and caught her and loved her, though her skin was cold as ice, and when he gave his seed to her he gave his soul as well.  He brought her back to the Nightfort and proclaimed her a queen and himself her king, and with strange sorceries he bound his Sworn Brothers to his will. For thirteen years they had ruled, Night's King and his corpse queen, till finally the Stark of Winterfell and Joramun of the wildlings had joined to free the Watch from bondage. After his fall, when it was found he had been sacrificing to the Others, all records of Night's King had been destroyed, his very name forbidden.      Magic/Blood Magic/Supernatural Entity    This is the strongest/most costly form of sorcery (only death can pay for life). We see descriptions match up a bit like (this is also from a shade of the evening vision):     Faster and faster the visions came, one after the other, until it seemed as if the very air had come alive.  Shadows whirled and danced inside a tent, boneless and terrible .     and:      Beside him stood a shadow in woman’s form, long and tall and terrible       Shadowbabies    We also see shadowbabies described as terrible shadows as well. Just worth noting:     \"Oh, very good.\" Jaime laughed. \"Your wits are quicker than mine, I confess it. When they found me standing over my dead king, I never thought to say, 'No, no, it wasn't me, it was a  shadow, a terrible cold shadow. '\"-ASOS, Jaime II     and:      Such shadows as I bring forth here will be terrible , and no creature of the dark will stand before them. With such sorceries at her command, she should soon have no more need of the feeble tricks of alchemists and pyromancers. -ADWD, Melisandre I      Quaithe    The cryptic character who appears to Daenerys to seemingly guide her toward Asshai.   If interested:  Then & Now: Qarth & the Early Importance of the Visitors in Dany's Chapters     Falia Flowers    Not something I necessarily believe, but she could be resurrected, etc. in some form:     “Falia Flowers, Lord Hewett’s natural daughter. I am to be King Euron’s salt wife.     and:     “Falia Flowers,” he called. “Have courage, girl! All this will be over soon, and we will feast together in the Drowned God’s watery halls.”  The girl raised up her head, but made no answer.  She has no tongue to answer with,  the Damphair knew. He licked his lips, and tasted salt.      An Heir Worth of \"Him\"    The last thing I wanted to mention is that Euron is also seemingly focused on creating an heir as well:     No,  to make an heir that's worthy of him , I need a different woman. When the kraken weds the dragon, brother, let all the world beware. -AFFC, The Reaver     If interested:  Euron Greyjoy: An Heir Worthy of \"Him\"     TLDR: While Aeron is tripping on shade of the evening aboard Euron's Silence, he sees a vision of Euron on the Iron Throne with his \"mate\". The identity of this character is oft debated amongst the fandom. Just a list of some of the more discussed ones.        submitted by     /u/LChris24     to     r/asoiaf       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/asoiaf/comments/1wjp6dv/eurons_mate_the_long_tall_terrible_shadow/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:43:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:44:10.543Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad321a660c6084039790c4"
+    },
+    "message_id": "reddit_t3_1wjp6du",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "vacation",
+    "platform": "reddit",
+    "subreddit": "disneyvacation",
+    "username": "Spadesghost",
+    "title": "How to Ruin A Subculture Before Monster® Pulls Their Funding",
+    "text": "How to Ruin A Subculture Before Monster® Pulls Their Funding\n\nsubmitted by     /u/Spadesghost     to     r/disneyvacation       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/disneyvacation/comments/1wjp6du/how_to_ruin_a_subculture_before_monster_pulls/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:43:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:44:10.761Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad321b660c6084039790c5"
+    },
+    "message_id": "reddit_t3_1wjp6d5",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "GojiCenter",
+    "username": "titanus_dalamadur017",
+    "title": "Lagiacrus abyssovator behemothenus",
+    "text": "Lagiacrus abyssovator behemothenus\n\n⬛ Classified — Goji Center Genome Registry — File: LGB-001 ⬛   Lagiacrus abyssovator   behemothenus   The Tide   Behemoth   Abyssal Sovereign · Living Leviathan · The Deep's Answer   Apex Classification OMEGA-CLASS PREDATOR   ~18m Est. Length   3hr+ Max Dive   233dB Sonic Output   25× Venom Potency   17 Genome Sources   78/100Threat Level   Overview Genome Capabilities Threat Matrix Ecology Etymology   [ 00 ]   Overview   \"Look at Behemoth, which I made along with you and which feeds on grass like an ox. What strength it has in its loins, what power in the muscles of its belly! Its tail sways like a cedar; the sinews of its thighs are close-knit. Its bones are tubes of bronze, its limbs like rods of iron.\"   — Job 40:15–18 (NIV)   Lagiacrus abyssovator behemothenus is a seventeen-genome chimeric apex predator engineered from the deepest reserves of evolutionary history — drawing from living leviathans, Paleozoic phantoms, and creatures that time has barely touched. Named in the tradition of Monster Hunter's fearsome Lagiacrus lineage and anchored to the biblical Behemoth of the deep, this creature represents the confluence of every survival strategy the natural world has ever devised.   Seventeen distinct genomes — spanning 306 million years of evolution from the Late Carboniferous to the present — have been woven into a single, semi-aquatic organism of unprecedented capability. It is ambush predator and social sovereign; electroreceptive hunter and sonic titan; venomous juggernaut and armored endurance machine.   [ 01 ]   Genome Breakdown   ▸ TIER I — STRUCTURAL FOUNDATION   Prognathodon   Prognathodon sp. / Pan-Mosasauridae   LATE CRETACEOUS — 72–66 MYA EXTINCT   Genomic Contributions   Extreme body length (frame basis — up to 12–14m+ in largest species)   Hydrodynamic elongated mosasaur body plan — reduced drag, serpentine undulation   Double-rooted bicuspid dentition on both maxilla and pterygoid (two functional tooth rows simultaneously)   Robust mosasaur skull architecture — wide temporal arches, crushing bite forces   Jacobson's organ — deeply forked, bifurcated tongue for aquatic scent-tracking (chemoreception)   Hindlimb-to-flipper conversion genetics — rear propulsion flippers   Flattened, paddle-like tail for directional thrust   🦕 PALEO ACCURACY NOTE: Prognathodon is confirmed among the largest and most heavily built mosasaurids, with some species reaching 12–14m. The bicuspid teeth and pterygoid tooth row are real and well-documented — giving mosasaurs a literal second set of functional teeth on the roof of the mouth, enabling grip-and-crush prey processing. Jacobson's organ is confirmed by skull anatomy. These were fully aquatic, air-breathing marine reptiles, not fish.   ▸ TIER II — DEEP DIVE ARCHITECTURE   Sperm Whale   Physeter macrocephalus   EXTANT — PRESENT LIVING   Genomic Contributions   Spermaceti organ — biological acoustic lens; directionally focuses biosonar clicks; potential repurposed as cranial focusing chamber   Deepest-diving physiology: collapsible alveolar lungs, extreme myoglobin density (blood nearly black), diving bradycardia reflex   Magnetite-based magnetic navigation — geomagnetic orientation across open ocean   Loudest biological sound on Earth: clicks reaching 230–233 dB (brief pulses)   Slow, dramatically reduced metabolism at depth — long-range endurance hunting   Wax ester (spermaceti) biochemistry — unique to this species; no other animal produces it   Largest brain of any animal on Earth (by mass) — complex intelligence substrate   Clan-based vocal dialects — culturally transmitted, generationally stable   Longest tooth of any toothed whale — conical ivory dentition in lower jaw   Robust immune system pressure-adapted to extreme depth   ▸ TIER II — DIVE ENDURANCE   Cuvier's Beaked Whale   Ziphius cavirostris   EXTANT — PRESENT LIVING   Genomic Contributions   World dive record holder: 3 hours 42 minutes (documented 2020) — longest mammalian dive on record   Air chamber reinforcement genetics — reinforced sinuses and air pockets resist pressure collapse   Rete mirabile oxygen recycling — counter-current heat/oxygen exchange system   Waxy myelin sheath genes — nerve insulation against nitrogen narcosis at depth   Selective circulation shutdown during dives — redirects blood to brain and heart only   Provides the structural basis for the creature's 3-hour sustained submersion   ▸ TIER III — COGNITION & SOCIAL   Killer Whale (Orca)   Orcinus orca   EXTANT — PRESENT LIVING   Genomic Contributions   Cultural learning architecture — most complex non-primate social cognition on Earth; knowledge transmitted across generations within pods   Ecotype plasticity — biome-adaptive genetics; orca ecotypes vary radically across globe, yielding massive behavioral and physiological flexibility   Precision echolocation — more frequency-diverse and target-specific than sperm whale sonar   Pod-based cooperative hunting neural traits — coordinated pack strategy, role assignment   Human-rival IQ neural substrate (basis for the creature's cognitive ceiling)   High-contrast counter-shading pigmentation — disruptive pattern for visual camouflage at depth   Extraordinary speed and maneuverability — hydrodynamic body genetics, burst sprint capability   High-endurance aerobic metabolism — sustained fast-cruise speed   Complex matriarchal social hierarchy — grandmothers transmit ecological knowledge   ▸ TIER III — SOCIAL REINFORCEMENT   False Killer Whale   Pseudorca crassidens   EXTANT — PRESENT LIVING   Genomic Contributions   Social hierarchy rivaling orca pods in complexity — reinforces and stabilizes the creature's social structure   Superior conical tooth grip — teeth rounded and projecting for secure prey-hold without shredding   Highest trainability of any cetacean — reward-based learning adaptability surpassing most species   Documented food-sharing with humans — cross-species social behavior neural wiring   Strong inter-group bonding; documented adoption of injured individuals from other species   Amplifies vocalization complexity when combined with sperm whale + orca genomes   ▸ TIER IV — REPTILIAN SYSTEMS   Green Iguana   Iguana iguana   EXTANT — PRESENT LIVING   Genomic Contributions   Ectothermic metabolic regulation — energy conservation mode; can survive extended periods on minimal caloric intake   Dewlap / cranial ornamentation genetics — visual display structures for threat display and social signaling   Salt-excreting nasal glands — excess sodium expelled without fresh water; critical for marine-adjacent survival   Tree-climbing ability — powerful grasping forelimbs, claws, and balance; exceptional arboreal agility   Camouflage coloration genetics — green-to-grey chromatic range; pattern-matching to vegetation   Laterally flattened \"whip tail\" genetics — powerful tail weapon and swimming aid   Regenerative tail autotomy genes — partial regeneration capacity inherited and expanded by salamander genome   UV-B vitamin D synthesis — highly efficient solar energy processing; reduces dietary dependency   Sharp needle-like juvenile dentition — serrated, fine-pointed teeth for precision piercing   Robust gut microbiome for fermenting plant matter — dietary versatility   ▸ TIER IV — REPTILIAN INTELLIGENCE   Nile Monitor Lizard   Varanus niloticus   EXTANT — PRESENT LIVING   Genomic Contributions   Functionally divided cardiac ventricle — superior oxygen separation during activity vs. rest; unique among reptiles   High resting metabolic rate for a reptile — supports sustained active predation   Documented cooperative hunting intelligence — individuals coordinate to distract rivals while partners steal resources (crocodile egg heists observed in wild)   Venom gland genetics — most Varanus species carry the genetic capacity for venom component production; reinforces the frog venom system   Facultative parthenogenesis potential — females can produce offspring without fertilization under isolation; colony-founding adaptation   15+ minute underwater submersion (high nostrils, efficient lung capacity)   Triple threat locomotion: expert swimmer AND tree climber AND fast sprinter on land   Africa's longest lizard — contributes additional length/frame genetics   Highly acute forked tongue chemoreception — stacks with Prognathodon Jacobson's organ   ▸ TIER IV — ARMOR & STEALTH   African Dwarf Crocodile   Osteolaemus tetraspis   EXTANT — \"LIVING FOSSIL\" LIVING   Genomic Contributions   Heaviest osteoderm armor relative to body size of any living crocodilian — bony scutes fused across neck, back, belly, and tail; natural plate mail   Jet-black nocturnal coloration — near-total visual camouflage in low-light and murky water   Most terrestrial of all crocodilians — evolved for extensive land forays; stacks with iguana and monitor climbing genes   Tree-climbing capability (documented: climbs low branches to bask) — unique among crocodilians   Salt-tolerance tongue glands — excess marine salt actively excreted   Burrow-digging and concealment behavior — ambush staging, den-rearing of young   Continuous polyphyodont tooth replacement — teeth lost and regrown throughout life   Unique chemical secretion: dianeackerone-related steroidal esters — pheromonal signaling system   \"Living fossil\" genome — changed minimally in millions of years; deeply conserved survival genes   64 sharp, conical, rootless teeth in deep sockets — interlocking bite   ▸ TIER V — APEX SEMI-AQUATIC   Leopard Seal   Hydrurga leptonyx   EXTANT — PRESENT LIVING   Genomic Contributions   Apex predator heterodont dentition — incisors, true canines, AND tricuspid molars for filter-to-rip prey processing; most diverse tooth set of any pinniped   Extreme cold tolerance — Antarctic-grade blubber architecture and thermoregulation under polar conditions   Aggressive hunt-pursuit neural wiring — leopard seals actively chase, play with, and teach prey capture; strong predatory drive encoding   Flipper-based semi-amphibious locomotion — efficient both in water AND hauling out on land   Immune resilience to polar pathogens — among the strongest innate immune profiles of any pinniped   Counter-shading pigmentation — dark dorsal, pale ventral; optimized visual ambush camouflage from above and below   Exceptionally fast underwater pursuit speed — among the fastest of the Phocidae   ▸ TIER V — KILLING MECHANICS   Marsupial Lion   Thylacoleo carnifex   PLEISTOCENE — 2.5 MYA–40,000 YBP EXTINCT   Genomic Contributions   Strongest bite force-to-body-weight ratio of any known mammal — skull architecture supporting extreme jaw musculature   Retractable cat-like forelimb claws — first retractable claws in marsupial evolutionary history; convergent with felids   Massive opposable-thumb \"dew claw\" — primary killing weapon; used to slash and disembowel prey while jaws hold fast; unique killing system found in no living predator   Unique elbow joint: combined arboreal rotational capacity + ground-stabilizing features — one hunting style seen nowhere in living animals   Tree-climbing and elevated ambush behavior — cave scratch marks confirm regular arboreal movement   Long shearing carnassial blades + crushing incisors — dual-mode dentition for both flesh-slicing and bone-crushing   Cave-rearing of young — protected nursery behavior, long parental investment period   Documented in Aboriginal rock art — apex predator of Pleistocene Australia for over 2 million years   🦁 PALEO NOTE: Thylacoleo carnifex (Greek/Latin: \"pouched lion executioner\") is confirmed as the largest carnivorous marsupial to ever live. The elbow joint study (Figueirido et al., 2016, Paleobiology) showed a unique combination of traits found in no living animal — rotational arboreal capacity combined with ground-stabilizing structure. The retractable claws are confirmed, and its bite force relative to body mass exceeded modern felids.   ▸ TIER IV — REGENERATION & LONGEVITY   Giant Chinese Salamander   Andrias davidianus   EXTANT — OLDEST LIVING AMPHIBIAN LINEAGE LIVING   Genomic Contributions   Extreme longevity genetics — one of the longest-lived amphibians alive; 60–80+ years documented; contributes dramatically extended lifespan potential   Cutaneous respiration — oxygen absorption directly through skin surface; backup breathing system when submerged   Lateral line sensory system — detects pressure waves, vibrations, and water displacement in real-time; \"sixth sense\" for aquatic awareness   Remarkable tissue regeneration — one of the strongest regenerative genomes among living tetrapods; significant wound recovery   Low metabolic rate with dormancy capacity — long-term energy conservation and aestivation potential   Neotenic potential — retention of larval-like features into adulthood; developmental plasticity   ▸ TIER VI — PRIMARY VENOM   Bruno's Casque-Headed Frog   Aparasphenodon brunoi   EXTANT — ATLANTIC FOREST, BRAZIL LIVING   Genomic Contributions   The only confirmed venomous frog on Earth — not merely poisonous (passive toxin) but actively venomous: injects toxin via bony skull spines directly into threat/prey   Lipocalin-based venom system — skull spines covered with venom gland tissue; physical head-press delivers toxin through bony protrusions   Venom estimated at 25× the lethality of a pit viper's venom by mass — extraordinary potency per dose   Dermal armor fusion — bony casque-head structure fused to skull (exostoses); the delivery mechanism is part of the bone itself   In this hybrid: the venom delivery system is enhanced and relocated — distributed across cranial crests, shoulder ridges, and dorsal osteoderms   ▸ TIER VI — ELECTRORECEPTION & VENOM   Platypus   Ornithorhynchus anatinus   EXTANT — MONOTREME (ANCIENT LINEAGE) LIVING   Genomic Contributions   Electroreception array — 40,000 electroreceptors in the bill detect micro-electrical fields emitted by all living organisms; hunting remains effective in complete darkness and zero-visibility water   Venomous spur system — 80 distinct toxins per delivery; uniquely contains D-amino acids, found in no other known mammalian venom; causes pain lasting months from a single strike   UV fluorescence genetics — platypus fur glows green/cyan under UV light; potential bioluminescent camouflage layer in this hybrid   Monotreme magnetoreception — contributes to navigation alongside sperm whale magnetite system   Robust shoulder girdle and wide humerus — dense muscle attachment for front-limb power (exceptionally strong fore-stroke in water)   Dual sensory bill genetics — electroreceptors + mechanoreceptors allow prey triangulation with eyes fully closed   Unique immune system (DLP defensin proteins) — contributes additional immune architecture   ▸ TIER VI — TOXIN IMMUNITY   Virginia Opossum   Didelphis virginiana   EXTANT — OLDEST MARSUPIAL LINEAGE LIVING   Genomic Contributions   Snake venom immunity — blood serum contains 13-amino acid neutralizing peptide that counteracts a broad spectrum of pit viper, rattlesnake, and hemotoxic venoms   Von Willebrand Factor (vWF) mutations — evolved to resist venom C-type lectins (SNACLECs) that target blood clotting; prevents coagulopathy from venom strikes   Rabies immunity — low core body temperature prevents rabies virus replication; nearly unique among mammals   Thanatosis (death-feigning) reflex — involuntary, convincing immobility response to extreme threat; instinctual deceptive behavior   Broad disease resistance — scavenger-grade immune system adapted to pathogen-dense environments   Functionally ensures the creature is nearly immune to its own venom and resistant to retaliatory venomous strikes   ▸ TIER VII — PALEOZOIC INHERITANCE   Diplocaulus   Diplocaulus magnicornis   LATE CARBONIFEROUS → LATE PERMIAN — 306–252 MYA EXTINCT   Genomic Contributions   Boomerang-skull hydrofoil genetics — the tabular horns of Diplocaulus functioned as a biological hydrofoil (confirmed in wind tunnel modeling by Cruikshank & Skews, 1980); in this hybrid, skull extensions generate lift and directional control during burst attacks from the bottom   Bottom-ambush aquatic predation programming — patient, immobile stalking strategy from the substrate   Lateral line sensory amplification — reinforces the Giant Chinese Salamander's lateral line system   Aestivation genetics — ability to burrow into mud and enter deep dormancy during drought or stress   Fully aquatic gill-capable genetics (juvenile stages) — early developmental plasticity for water breathing   Ancient lepospondyl lineage — contributes Paleozoic-era genomic stability and resilience   🦎 PALEO ACCURACY NOTE: Diplocaulus (306–252 MYA) was a lepospondyl amphibian — NOT a dinosaur. The hydrofoil function of its skull is scientifically documented: a 1980 study placed a Diplocaulus model in a wind tunnel and confirmed aerodynamic lift properties. It grew up to 1 meter long, was likely fully aquatic, and could snap upward from the bottom to ambush prey. Fossils are found in Texas and Morocco. It coexisted with Dimetrodon, which preyed upon it.   ▸ TIER VII — PALEOZOIC INHERITANCE   Dimetrodon   Dimetrodon limbatus / grandis   EARLY PERMIAN — 295–272 MYA EXTINCT   Genomic Contributions   Thermoregulatory sail genetics — elongated neural spines forming a dorsal crest; in this hybrid, modified into a hydrodynamic crest that assists steering and intimidation display; a 200kg individual heats 2.5× faster with the sail than without   Heterodont dentition origin — Dimetrodon was among the first vertebrates on Earth to possess differentiated teeth (canines + shearing teeth); ancestor of the mammalian tooth plan; amplifies the creature's already complex multi-genome dentition   Synapsid temporal fenestra — the enlarged skull opening that anchors massive jaw musculature; substantially amplifies bite force beyond what the skull size suggests   Synapsid biochemistry bridging mammalian lineage — Dimetrodon is more closely related to humans than to any reptile; its genome bridges mammalian metabolic traits with ancient Permian physiology   Apex-predator behavioral programming — top predator for over 25 million years before the first dinosaur existed   Intimidation display instinct — use of dorsal structures for perceived size increase and threat signaling   🦕 PALEO ACCURACY NOTE: Dimetrodon is NOT a dinosaur — it predates them by 40+ million years and is actually more closely related to modern mammals (including humans) than to any reptile. It is a synapsid (Sphenacodontidae). The sail's function remains debated: thermoregulation (heating 2.5× faster, per Bramwell & Fellgett 1973), display, and intimidation are all proposed. Its heterodont dentition — the first of its kind in vertebrate history — is a direct predecessor of all mammalian tooth differentiation. It was the dominant apex predator of the Early Permian.   [ 02 ]   Integrated Capabilities   Sonic Weaponry   The sperm whale's spermaceti organ, refocused by the biosonar-shaping genetics of both sperm whale and orca echolocation, produces directional sonic blasts. Sustained clicks reach biological maxima.   ~233 dB Peak Output   Electroreception Grid   Platypus electroreceptor genetics distributed across the broadened, mosasaur-flattened snout provide a passive electrosensory array. Detects the heartbeat of prey through water, rock, and sediment. Operates in absolute darkness.   40,000+ Receptor Cells   Deep Dive Endurance   Cuvier's beaked whale air chamber genetics combined with sperm whale myoglobin density and collapsible lungs support marathon submersion without resurfacing. The largest recorded mammalian dive is the baseline.   3 Hours+ Submersion   Venom Complex   Bruno's casque-headed frog lipocalin venom — 25× pit viper potency — delivered through dorsal osteoderm crests and cranial spine protrusions. Platypus spur toxins (80 compounds, unique D-amino acids) delivered through modified ankle and wrist structures. Opossum immunity ensures the creature is functionally immune to its own compounds.   25× Pit Viper Lethality   Intelligence & Social Order   Orca cultural learning + false killer whale trainability + sperm whale clan-dialect cognition + monitor cooperative intelligence form a layered neural architecture. Rivals human IQ benchmarks in spatial reasoning, social complexity, and multi-generational knowledge transmission.   Human-Rival Cognitive Tier   Osteoderm Plate Armor   African dwarf crocodile's proportionally thickest osteoderm suite of any living crocodilian — bony scutes across neck, dorsal spine, belly, and tail. Combined with Thylacoleo's dense musculature and the mosasaur's robust skull, the body is a naturally armored siege vehicle.   Full Dorsal & Ventral Coverage   Adaptive Camouflage   Iguana chromatic genetics, orca counter-shading, leopard seal dorsal-ventral gradient, and dwarf crocodile jet-black nocturnal coloration layer into a multi-context adaptive palette. UV bioluminescence from platypus genetics adds an active layer under low-light conditions.   Multi-Spectrum Concealment   Multi-Row Dentition System   Prognathodon's pterygoid and maxillary dual tooth rows, combined with Dimetrodon's differentiated canine/shearing heterodonty, Thylacoleo's crushing incisors and shearing carnassials, leopard seal's tricuspid molars, false killer whale's grip-cones, and dwarf crocodile's continuous polyphyodont replacement create a dental system of unparalleled complexity.   6-Genome Dental Architecture   Hydrofoil Ambush Strike   Diplocaulus's tabular horn hydrofoil skull (wind-tunnel confirmed) integrated into the mosasaur skull's lateral expansion creates lateral \"wing\" projections that generate instantaneous vertical lift from a floor-resting position — a bottom-launch ambush burst capability.   Tested Hydrodynamic Lift Geometry   Tissue Regeneration   Giant Chinese salamander regenerative genome — one of the strongest among tetrapods — combined with iguana tail autotomy and partial regrowth genetics. Severe wounds recover. Lost appendages exhibit partial regrowth capability over extended periods.   Salamander-Grade Regeneration   Magnetic Navigation   Sperm whale magnetite-based orientation system stacks with platypus monotreme magnetoreception. The creature navigates across open ocean using Earth's magnetic field, requiring no visual, solar, or chemical cues for long-range positioning.   Geomagnetic Tri-Field Sensing   Killing Limb System   Thylacoleo carnifex's unique elbow joint — rotational arboreal capacity + ground stabilization, found in no living animal — combined with the enormous retractable dew-claw thumb. While the jaws hold, the forelimbs disembowel. Mosasaur flipper genetics provide additional propulsive and grappling limb strength.   Unique System — No Living Analog   [ 03 ]   Name & Etymology   Lagiacrus   Origin: Monster Hunter franchise (Capcom, 2010 — Monster Hunter Tri / 3)   Lagiacrus is a Leviathan-class monster of the Monster Hunter universe — an electric, serpentine apex predator of the ocean and coast. The name evokes ancient, serpentine dominance of the sea. Its usage here anchors the creature to the Monster Hunter creature-design tradition of blending real-world biology with mythological scale. Lagiacrus serves as the genus name — the broadest taxonomic identifier, signaling leviathan lineage.   abyssovator   Constructed Latin: abyssus + ovator   From Latin abyssus (\"the abyss, the bottomless deep\") and ovator (\"one who triumphs, conqueror\"). Together: \"Conqueror of the Abyss.\" This epithet captures the creature's identity as the dominant organism across every depth of the world's waters — from sunlit shallows to lightless trenches.   behemothenus   Origin: Hebrew Scripture — Book of Job, Chapter 40   From the Hebrew בְּהֵמוֹת (Behemoth) — the primordial creature described in Job 40:15–24 as an entity of terrifying power, immovable strength, and divine creation; a being that no sword can touch, whose bones are bronze and limbs iron. The -enus Latin suffix transforms the proper name into a Latinized species epithet, meaning \"of the Behemoth nature\" or \"he who is Behemoth.\" This anchors the creature to the Christian/Hebraic tradition of primordial, God-crafted monsters — beings that exist not as errors of nature but as deliberate expressions of creation's deepest power.       submitted by     /u/titanus_dalamadur017     to     r/GojiCenter       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GojiCenter/comments/1wjp6d5/lagiacrus_abyssovator_behemothenus/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:43:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:44:10.999Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad321b660c6084039790c6"
+    },
+    "message_id": "reddit_t3_1wjp6cu",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "alphaandbetausers",
+    "username": "Good-World3585",
+    "title": "What makes you willing to try an early-stage tool?",
+    "text": "What makes you willing to try an early-stage tool?\n\nI've been thinking about how people decide whether an early-stage product is actually worth spending time with. When something is still being developed, I think the biggest challenge is knowing what it should prioritize rather than trying to build every possible feature.   I'm working around a concept that helps people explore business ideas, understand the opportunities around them, and turn a rough idea into a clearer direction. We're trying to keep the process useful without making it feel like the tool is simply telling someone whether their idea is good or bad.   At this stage, I'm more interested in what would make the experience genuinely useful to someone who is testing an idea for the first time. Things like market information, competitor research, potential customers, possible challenges, or practical next steps could all be useful, but I don't want to assume what matters most.   When you try an early-stage product, what makes you want to keep using it after the first few minutes?       submitted by     /u/Good-World3585     to     r/alphaandbetausers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/alphaandbetausers/comments/1wjp6cu/what_makes_you_willing_to_try_an_earlystage_tool/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:43:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:44:11.221Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad321b660c6084039790c7"
+    },
+    "message_id": "reddit_t3_1wjp6cg",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "mentalhealth",
+    "username": "HeyNowBooey",
+    "title": "Anyone have any experience in mental health resources at Boston Scientific. I'd love to hear your opinion",
+    "text": "Anyone have any experience in mental health resources at Boston Scientific. I'd love to hear your opinion\n\nI have heard many stories       submitted by     /u/HeyNowBooey     to     r/mentalhealth       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mentalhealth/comments/1wjp6cg/anyone_have_any_experience_in_mental_health/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:43:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:44:11.435Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad321b9f8856bec2384fce"
+    },
+    "message_id": "reddit_serp_um0e32",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/Frugal/comments/um0e32/simple_question_is_hello_fresh_worth_it_for_the/",
+    "text": "Simple Question - Is Hello Fresh worth it for the wallet?\n\nI feel like I know the answer. can people tell me why it is not?       submitted by     /u/ILearnAboutComputers       [link]       [comments]",
+    "username": "ILearnAboutComputers",
+    "subreddit_or_channel": "Frugal",
+    "posted_at": "2022-05-09T20:24:25+00:00",
+    "fetched_at": {
+      "$date": "2026-09-18T12:44:11.537Z"
+    },
+    "google_rank": 9,
+    "search_keyword": "hello",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-18T12:44:11.537Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad321b660c6084039790c8"
+    },
+    "message_id": "reddit_t3_1wjp6c8",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "ThailandTourism",
+    "username": "Majestic_Anybody_77",
+    "title": "Thailand in mid-October: Phuket/Phi Phi/Krabi itinerary and weather advice",
+    "text": "Thailand in mid-October: Phuket/Phi Phi/Krabi itinerary and weather advice\n\nPlanning a 5-night/6-day Thailand trip for 2 friends from Hyderabad, India, in mid-October 2026, with a total budget of around ₹1.6 lakh (~THB 60k–65k) for both, excluding shopping.   Our tentative itinerary is:   Day 1: Hyderabad → Bangkok; explore Bangkok in the evening   Day 2: Bangkok city, Chao Phraya/canal boat, food, massage, nightlife   Day 3: Bangkok → Phuket; beach, Promthep Cape sunset, Patong/Bangla Road   Day 4: Phi Phi + Maya Bay + Pileh Lagoon + snorkeling; return to Phuket   Day 5: Phuket → Krabi by ferry; Ao Nang + Railay + Phra Nang   Day 6: Hong Islands day trip; return to Krabi and fly back via a connection to Hyderabad   We are mainly interested in beaches, islands, limestone cliffs, boat trips, nightlife and food, rather than temples.   Questions for people living in Thailand / who have visited in October:   1.How is the weather/sea condition normally around Phuket, Phi Phi and Krabi in mid-October?   2.Is it realistic to plan Phi Phi/Maya Bay, Hong Islands and the Phuket–Krabi ferry during this period, or are cancellations due to rough seas common?   3.If one of the island/boat trips is cancelled because of weather, are there enough good land-based alternatives in Phuket/Krabi for a full day?   4.Would you recommend keeping this itinerary for mid-October, or changing the route to avoid depending so heavily on boat trips?   5.With a total budget of ₹1.6 lakh for 2 people (~THB 60k–65k), what other destinations/routes within Thailand would make sense for 5 nights/6 days?   6.If you had these dates and budget, would you spend the trip around Bangkok + Phuket/Krabi, or consider another part of Thailand with more reliable October conditions?   Would particularly appreciate responses from people who have actually travelled the Andaman coast in October, especially regarding sea conditions and cancelled tours.       submitted by     /u/Majestic_Anybody_77     to     r/ThailandTourism       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ThailandTourism/comments/1wjp6c8/thailand_in_midoctober_phuketphi_phikrabi/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:43:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:44:11.651Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad321b660c6084039790c9"
+    },
+    "message_id": "reddit_t3_1wjp6c3",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "SwissPersonalFinance",
+    "username": "Educational_Bug_946",
+    "title": "Buying property in France border?",
+    "text": "Buying property in France border?\n\nHi everyone,   I’m single, living and working in Geneva, with no children and no plans to have any. I currently have around CHF 80k in savings and earn roughly CHF 7k net per month.   I’ll admit that my knowledge of investing and personal finance is fairly limited, so I’m trying to understand my options before making any major decisions.   Recently, I was contacted by an agency that specializes in helping people based in Switzerland buy property just across the border in France, particularly in Annemasse, Ferney Voltaire and Saint Julien en Genevois.   The financing conditions and required down payment seem quite attractive and would allow me to buy something relatively comfortably. Buying an investment property in Geneva itself, on the other hand, feels basically out of reach at the moment.   To clarify, I wouldn’t be buying the property to live in. The idea would be purely as an investment, most likely renting it out long term and potentially benefiting from appreciation over time.   I’m therefore wondering whether buying an investment property in the French border area actually makes financial sense for someone in my situation.   Has anyone here done something similar while living and working in Geneva?   I’d be particularly interested in hearing about actual rental yields, taxes, financing, cross border complications, vacancy, property management and resale. I’m also curious whether Annemasse, Ferney Voltaire or Saint Julien stand out for any particular reason from an investment perspective.   And more broadly, if you had around CHF 80k available and a CHF 7k net monthly income, would you even consider real estate in this area, or are there other investment options that I should seriously look into before committing that much capital to a property?   I’d really appreciate experiences from people who have actually bought or invested on the French side of the Geneva border.       submitted by     /u/Educational_Bug_946     to     r/SwissPersonalFinance       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwissPersonalFinance/comments/1wjp6c3/buying_property_in_france_border/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:43:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:44:11.865Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad321c660c6084039790ca"
+    },
+    "message_id": "reddit_t3_1wjp6by",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "wordgrind",
+    "username": "_PixXzSs_",
+    "title": "Translate — what's \"dinero\" in English?",
+    "text": "Translate — what's \"dinero\" in English?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/_PixXzSs_     to     r/wordgrind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wordgrind/comments/1wjp6by/translate_whats_dinero_in_english/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:43:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:44:12.085Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad321c660c6084039790cb"
+    },
+    "message_id": "reddit_t3_1wjp6bq",

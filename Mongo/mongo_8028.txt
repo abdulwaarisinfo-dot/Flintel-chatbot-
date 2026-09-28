@@ -1,0 +1,416 @@
+    "created_utc": {
+      "$date": "2026-09-17T04:08:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T04:09:12.587Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab67e86508d45f3d2d5753"
+    },
+    "message_id": "reddit_t3_1wijh4d",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "databricks",
+    "username": "SmallAd3697",
+    "title": "Lakehouse RT Questions (basics)",
+    "text": "Lakehouse RT Questions (basics)\n\nI see surpisingly little discussion about Lakehouse RT in this forum. Maybe databricks customers are happy using Fabric models or Duckdb as their serving layers. I'm not sure.   I watched the promotional material from the 2026 summit, and learned almost nothing about the technology itself. Im assuming that it is comparable to Fabric DirectLake on OneLake, or maybe Duckdb to a lesser degree.   I haven't tested yet. Pardon the basic questions...   Questions   - Uses SQL as query language right (no support for MDX or DAX?)   -Speed is gained using tons of RAM and machine-local in-process query engines (rather than distributed MPP)?   -Speed and Ram are optimized by loading from columnstore Ram on selective colums? IE. similar to Fabric transcoding.   -Query times are obviously measured from a client in the same region? RTT latency over network to an on premise user is obviously going to double the query times that matter to users.   -After fresh writes to Lakehouse, the immediately following queries will be sluggish while data is reloaded to RAM?    - The use of this engine with Postgres will have dramatically different performance characteristics?   - Cost of using this will be higher, to reflect the large multi-core VMs needed for numerous clients, and the RAM needed to load all the related data prior to query execution. IE. this is very different than the concept of spark that runs in a distributed way on commodity hardware.   - Engine is 1000% proprietary; and the dbx marketing teams wont sell in with \"open source\" label like they sell everything else?   - May some day have Excel plugin, like we have for Lakebase (but faster!)   - May directly compete with Fabric semantic models at some point in the future    Any info would be appreciated        submitted by     /u/SmallAd3697     to     r/databricks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/databricks/comments/1wijh4d/lakehouse_rt_questions_basics/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T04:08:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T04:09:12.782Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab681f6508d45f3d2d5756"
+    },
+    "message_id": "reddit_t3_1wiji02",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "infosys",
+    "username": "Shank_123",
+    "title": "Infosys interview results query",
+    "text": "Infosys interview results query\n\nHi everyone   I had a query. I completed my interview on 27th august . I had solved only 1out of 4 questions in OA. Then in interview I was able to solve both live coding questions in 20 minutes. After that I was asked questions on my projects etc. That too went well. Around 80% questions I was able to answer but failed to answer a few on ai agents and devops as I didn't have any exposure to these.    It was an on campus pool consisting of 2 colleges. Iafter 10 days all students of the college have received the result ( shared to the placement cell of the college) apart me.    Only my results are pending and when asked my placement cell told that background verification is still going on. It has been 3 weeks now from my interview also. Before 1 week all other students from my college have received their results as I told.    Can this happen or just that infosys has missed to record my results.    Please answer my query.        submitted by     /u/Shank_123     to     r/infosys       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/infosys/comments/1wiji02/infosys_interview_results_query/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T04:09:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T04:10:07.074Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab68216508d45f3d2d5762"
+    },
+    "message_id": "reddit_t3_1wijhzn",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "GotLatina",
+    "username": "_Cherry_2201",
+    "title": "[ Removed by Reddit ]",
+    "text": "[ Removed by Reddit ]\n\n[ Removed by Reddit on account of violating the  content policy . ]       submitted by     /u/_Cherry_2201     to     r/GotLatina       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GotLatina/comments/1wijhzn/removed_by_reddit/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T04:09:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T04:10:09.594Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab68216508d45f3d2d5763"
+    },
+    "message_id": "reddit_t3_1wijhzl",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "Multifandom",
+    "username": "Mw_rio",
+    "title": "Would like to know your thoughts",
+    "text": "Would like to know your thoughts\n\n​   I've been brainstorming & writing a prologue for a story inspired by the Hellvese,TADC, Murder Drones,many others. And I've been thinking, \"what are some things fans of Hazbin hotel, (or Hellvese universe in general)and TADC, Like or want to see more of in Hazbin hotel/TADC/Helluva Boss.\" Please do share some of your thoughts/opinions.       submitted by     /u/Mw_rio     to     r/Multifandom       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Multifandom/comments/1wijhzl/would_like_to_know_your_thoughts/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T04:09:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T04:10:09.807Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab68226508d45f3d2d5764"
+    },
+    "message_id": "reddit_t3_1wijhzk",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "Fuzzy_Speaker_9969",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Tulip Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Tulip Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Fuzzy_Speaker_9969     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wijhzk/sticker_giveaway_enter_to_win_a_4_stars_tulip/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T04:09:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T04:10:10.020Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab68226508d45f3d2d5765"
+    },
+    "message_id": "reddit_t3_1wijhz7",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "shouldibuythiscar",
+    "username": "Jvxk_",
+    "title": "Is this worth it?",
+    "text": "Is this worth it?\n\nsubmitted by     /u/Jvxk_     to     r/shouldibuythiscar       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/shouldibuythiscar/comments/1wijhz7/is_this_worth_it/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T04:09:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T04:10:10.232Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab68226508d45f3d2d5766"
+    },
+    "message_id": "reddit_t3_1wijhz5",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "sentiment",
+    "platform": "reddit",
+    "subreddit": "aiMusic",
+    "username": "tn_notahick",
+    "title": "Here's your ANTI-AI Megathread",
+    "text": "Here's your ANTI-AI Megathread\n\nFor all you people who feel the need to be ANTI-AI, here's where you are welcome to post. Be aware, people will argue with you.   Our Be Civil rules STILL APPLY. Personal (or general) attacks against other community members are not allowed. Calling names is not allowed. And this goes for BOTH SIDES.   Formulate an actual coherent, truthful argument without ad hominem attacks and your comment stays.   ANTI-AI SENTIMENTS ARE NOT ALLOWED ANYWHERE ELSE IN THIS SUBREDDIT AND YOU'LL BE IMMEDIATELY BANNED WITH NO WARNING. ALL IT TAKES IS ONE POST OR COMMENT, AND YOU'LL BE GONE.        submitted by     /u/tn_notahick     to     r/aiMusic       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/aiMusic/comments/1wijhz5/heres_your_antiai_megathread/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T04:09:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T04:10:10.445Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab68226508d45f3d2d5767"
+    },
+    "message_id": "reddit_t3_1wijhyy",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "FUTMobile",
+    "username": "Heavy_Stand5575",
+    "title": "Someome pls buy this 😭",
+    "text": "Someome pls buy this 😭\n\nThats the exact price i put it for. Pls buy it 😭😭😭😭       submitted by     /u/Heavy_Stand5575     to     r/FUTMobile       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FUTMobile/comments/1wijhyy/someome_pls_buy_this/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T04:09:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T04:10:10.657Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab68226508d45f3d2d5768"
+    },
+    "message_id": "reddit_t3_1wijhyx",
+    "topic_key": "try searching for ai agent autonomous agents llm agents or agent framework to capture different ways people discuss them",
+    "search_keyword": "autonomous agents",
+    "platform": "reddit",
+    "subreddit": "Entrepreneurs",
+    "username": "jamesa99j",
+    "title": "I was ready to quit building because of the AI doom-scroll. Then I actually talked to 5 local business owners.",
+    "text": "I was ready to quit building because of the AI doom-scroll. Then I actually talked to 5 local business owners.\n\nIf you spend more than 30 minutes on tech Reddit or Twitter, you’d think the entire software and freelance economy is dead.   The narrative is everywhere:     Every SaaS idea is already built.   AI does everything for free.   Clients won't pay for tasks Claude or ChatGPT can do in 2 seconds.   AGI is going to eat everyone’s lunch by next year.     A couple of weeks ago, I felt completely paralyzed by this. Why bother building anything when 500 AI wrappers launch every single morning?   So I decided to close my laptop and actually talk to five local, non-tech business owners (a contractor, an auto repair shop owner, an accountant, a dental office manager, and a logistics broker).   The disconnect from our online bubble was almost comical:      Zero AI adoption:  Not a single one of them uses an LLM for daily operations. Two had tried ChatGPT once to write a funny email, and the others thought it was just a search engine.    Operational chaos:  A company doing $1.5M in annual revenue is running their entire scheduling and dispatching off broken Google Sheets, paper invoices, and WhatsApp voice notes.    They don't want AGI; they want simple relief:  None of them care about cutting-edge tech or autonomous agents. They just want someone to fix the 2 hours of repetitive manual data entry they hate doing every night.     It made me realize something crucial:   We are trapped in an echo chamber of  nerds building for other nerds .   The internet makes the market feel 100% saturated because 10,000 developers are all fighting over the same 0.1% of tech-savvy customers. Meanwhile, 99% of the real, brick-and-mortar economy has barely entered the modern digital era—and they actually have cash to spend.   Stop worrying about what AI can do in theory. The real opportunity is just bridging the gap for people who don't spend their entire lives on a screen.   Has anyone else experienced this massive reality gap once you stepped outside the tech bubble? Or are non-tech clients just notoriously too stubborn to sell to?       submitted by     /u/jamesa99j     to     r/Entrepreneurs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Entrepreneurs/comments/1wijhyx/i_was_ready_to_quit_building_because_of_the_ai/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T04:09:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T04:10:10.870Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab6823798842c4ceffa1ab"
+    },
+    "message_id": "reddit_t3_1wijhyg",
+    "topic_key": "leasing agent",
+    "search_keyword": "leasing agent",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "[HIRING] a Leasing Agent! in Cascade Management",
+    "text": "[HIRING] a Leasing Agent! in Cascade Management\n\nCompany: Cascade Management   Location: Portland, OR 📍   Date Posted: September 16, 2026 📅   Categories: #fulltime #support #entrylevel #humanresources   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=propertymanagementjobs.com&rurl=aHR0cHM6Ly9wcm9wZXJ0eW1hbmFnZW1lbnRqb2JzLmNvbS9qb2JzL2xlYXNpbmctYWdlbnQtMmY5NWI0YjE=    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wijhyg/hiring_a_leasing_agent_in_cascade_management/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T04:09:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T04:10:11.469Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab6823798842c4ceffa1ac"
+    },
+    "message_id": "reddit_t3_1wijhwy",
+    "topic_key": "product manager",
+    "search_keyword": "product manager",
+    "platform": "reddit",
+    "subreddit": "consultingcareers",
+    "username": "ResearchStraight5207",
+    "title": "Mentorship who’s knowledgeable in the senior care and living industry",
+    "text": "Mentorship who’s knowledgeable in the senior care and living industry\n\nI’m very clear this is the next industry and business I want to go into. I have a decently successful career as a product manager in tech, but I treat my career income as a means to an end—to maintain my lifestyle and other investments.   I plan to focus on building this business while studying for certifications that will continue to secure my career trajectory. I’m motivated and willing to do the work to make this happen and run a solid business.       submitted by     /u/ResearchStraight5207     to     r/consultingcareers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/consultingcareers/comments/1wijhwy/mentorship_whos_knowledgeable_in_the_senior_care/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T04:09:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T04:10:11.694Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab68246508d45f3d2d576e"
+    },
+    "message_id": "reddit_t3_1wijhyu",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "mollywoodcirclejerk",
+    "username": "broken4lyf",
+    "title": "Reddit moment",
+    "text": "Reddit moment\n\nsubmitted by     /u/broken4lyf     to     r/mollywoodcirclejerk       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mollywoodcirclejerk/comments/1wijhyu/reddit_moment/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T04:09:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T04:10:12.134Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab68246508d45f3d2d576f"
+    },
+    "message_id": "reddit_t3_1wijhyq",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "ComicBookCollabs",
+    "username": "biancayamakoshi",
+    "title": "[For Hire] The Stars Are Blind, And Sci-Fi Is A Beautiful Lie - Slots Available For September Onwards!",
+    "text": "[For Hire] The Stars Are Blind, And Sci-Fi Is A Beautiful Lie - Slots Available For September Onwards!\n\nHello folks! Hope your week is going well this far.    Sharing some fan art that has been sitting in some dust for a while now, being sci-fi a genre I actually won’t be leaving behind anytime soon.   You can see my portfolio for previous works here:    https://behance.net/biancayamakoshi     And can contact me for queries and further discussion:   [ biancayamakoshi@gmail.com ](mailto: biancayamakoshi@gmail.com )    Thank you!    Thanks!        submitted by     /u/biancayamakoshi     to     r/ComicBookCollabs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ComicBookCollabs/comments/1wijhyq/for_hire_the_stars_are_blind_and_scifi_is_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T04:09:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T04:10:12.347Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab68246508d45f3d2d5771"
+    },
+    "message_id": "reddit_t3_1wijhyb",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "choke2130",
+    "title": "If you could have any superpower, what would you pick?",
+    "text": "If you could have any superpower, what would you pick?\n\nsubmitted by     /u/choke2130     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wijhyb/if_you_could_have_any_superpower_what_would_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T04:09:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T04:10:12.772Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab68246508d45f3d2d5772"
+    },
+    "message_id": "reddit_t3_1wijhxs",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AlignmentChartFills",
+    "username": "shield_x",
+    "title": "Reddit builds a pc! What Graphics card should go in the $500 pc?",
+    "text": "Reddit builds a pc! What Graphics card should go in the $500 pc?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/shield_x     to     r/AlignmentChartFills       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlignmentChartFills/comments/1wijhxs/reddit_builds_a_pc_what_graphics_card_should_go/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T04:09:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T04:10:12.985Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab68256508d45f3d2d5773"
+    },
+    "message_id": "reddit_t3_1wijhx6",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "RedditForCats",
+    "username": "angelxfacexx",
+    "title": "b said stuffy is his…",
+    "text": "b said stuffy is his…\n\nsubmitted by     /u/angelxfacexx     to     r/RedditForCats       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RedditForCats/comments/1wijhx6/b_said_stuffy_is_his/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T04:09:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T04:10:13.198Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab68256508d45f3d2d5774"
+    },
+    "message_id": "reddit_t3_1wijhwm",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "wordgrind",
+    "username": "Glass-Bit-7334",
+    "title": "Translate — what's \"Krankenhaus\" in English?",
+    "text": "Translate — what's \"Krankenhaus\" in English?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Glass-Bit-7334     to     r/wordgrind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wordgrind/comments/1wijhwm/translate_whats_krankenhaus_in_english/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T04:09:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T04:10:13.414Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab68256508d45f3d2d5775"
+    },
+    "message_id": "reddit_t3_1wijhvx",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "MarketingJobs",
+    "username": "Amazing_Name680",
+    "title": "Slm I ‘m looking for a job",
+    "text": "Slm I ‘m looking for a job\n\nActually I lost some clients due to some reasons anyway now I’m looking for remote job in a company of marketing for long term . So if you’ve any info abt it tell me       submitted by     /u/Amazing_Name680     to     r/MarketingJobs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MarketingJobs/comments/1wijhvx/slm_i_m_looking_for_a_job/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T04:09:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T04:10:13.632Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aab68256508d45f3d2d5776"
+    },
+    "message_id": "reddit_t3_1wijhv6",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "dubairealestate",
+    "username": "GrouchyEgg2216",
+    "title": "Am I asking too much information before talking to a broker?",
+    "text": "Am I asking too much information before talking to a broker?\n\nI’ve been looking at offplans since last year and I keep running into the same thing.   I’ll find a project that looks interesting, then I want to check the basics myself first.   Price   Payment plan   Floor plans   Location   Fees   Handover   Amenities, etc.   Nothing crazy I think.   But usually I end up filling a form, sending my number, talking to someone, asking for a brochure, then asking another question about something that wasn’t in the brochure.   Maybe this is just how real estate works.   But as a buyer, that's too much friction. I've yet to come across a project where all info I need to decide is publicly available.   Imagine if all property info is accessible...   For brokers, wouldn't it be nicer if all the leads that you get are already pre-qualified and ready to buy? If I'm ready to buy, I would still need someone to assist me, right? So that's where brokers come in.   Or will you be threatened by it? Thinking about it, maybe it may not good for business long term, no?   For people who have actually bought off-plan, what did you personally need to see before you were comfortable talking to a broker or developer?       submitted by     /u/GrouchyEgg2216     to     r/dubairealestate       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/dubairealestate/comments/1wijhv6/am_i_asking_too_much_information_before_talking/",

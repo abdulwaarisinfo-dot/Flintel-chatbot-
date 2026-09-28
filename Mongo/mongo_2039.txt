@@ -1,0 +1,416 @@
+    "subreddit_or_channel": "b2bmarketing",
+    "posted_at": "2025-10-19T07:47:52+00:00",
+    "fetched_at": {
+      "$date": "2026-09-09T07:49:01.193Z"
+    },
+    "google_rank": 5,
+    "search_keyword": "premium SMS marketing",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-09T07:49:01.193Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa10f87035b0f36efcc6a84"
+    },
+    "message_id": "reddit_t3_1wbf0qc",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "IndiaAlgoTrading",
+    "username": "Puzzleheaded_Mix4357",
+    "title": "Built a drag-and-drop backtester so I'd stop debugging scripts. Calibrated it against published results: 87.6% vs 87.34%. Then found out my \"safety feature\" would have sold at the May 2021 bottom",
+    "text": "Built a drag-and-drop backtester so I'd stop debugging scripts. Calibrated it against published results: 87.6% vs 87.34%. Then found out my \"safety feature\" would have sold at the May 2021 bottom\n\nI wanted to test one idea (RSI dip in an uptrend, scale out at 3% and 6%). Three evenings later I was debugging a timezone bug instead of the idea. So I built a thing where you drag boxes instead.   It's a node graph: indicators → conditions → logic gates → buy/sell, stops hanging off the entry. Backtests on real candles, runs the same graph live via CCXT. Docker, local, keys stay on your machine.    Did I trust my own numbers? No.  So I rebuilt four strategies with published BTC daily results and compared. Golden Cross: published +87.34%, 4 trades. Mine: +87.6%, same 4 trades, same dates. MACD: 62 vs 63 trades. RSI: 12 vs 12. That's the moment it stopped being a toy.    Then it embarrassed me.  I had a \"max drawdown auto-stop\" — breach it, close everything, stop the bot. Sounded responsible. In backtest it fired in May 2021 with open positions up +300% that gave back 35% from the peak. It would have liquidated at the exact bottom. Drawdown from an unrealized peak ≠ losing money, and my safety feature couldn't tell the difference. Fixed: it now blocks new entries instead of selling.   Two more things that bit me: fees are the whole story below 1h (a 15m bot: 143 trades, 67% of the loss was fees), and picking coins you already know went up is survivorship bias — same strategy, 2019 top-6 coins: +208%; coins I \"cleverly\" picked in 2026: +462%. The first number is the real one.   It's crypto-only for now (no Zerodha/Kite — the exchange layer is one file if anyone's built against Kite and wants to talk). Source is public:  https://github.com/Stenvro/ApexAlgo  — first bot in five minutes, no exchange account needed to backtest. Hobby dev, Claude Code as assistant, mistakes mine.   Real question: does anyone here calibrate their backtester against published results? Never saw it recommended, and it's the only reason I trust mine.       submitted by     /u/Puzzleheaded_Mix4357     to     r/IndiaAlgoTrading       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IndiaAlgoTrading/comments/1wbf0qc/built_a_draganddrop_backtester_so_id_stop/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T07:49:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T07:49:27.798Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa10f88035b0f36efcc6a85"
+    },
+    "message_id": "reddit_t3_1wbf0q0",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Golfsimulator",
+    "username": "GolfingCharlieB",
+    "title": "Square Golf Omni Carry Case?",
+    "text": "Square Golf Omni Carry Case?\n\nAnyone thinking of pre-ordering the  Square Golf Omni Carry Case ? https://simspacegolf.com/products/square-golf-omni-carry-case    I think it looks pretty decent, but I’m still a bit on the fence about whether I’d actually use it enough to justify buying one.   I know quite a few people have gone down the custom case route already, so I’d be interested to hear how those are working out. Are you happy with what you’ve got, or does the new Omni case tempt you? Would be good to hear what everyone thinks before I decide either way.       submitted by     /u/GolfingCharlieB     to     r/Golfsimulator       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Golfsimulator/comments/1wbf0q0/square_golf_omni_carry_case/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T07:49:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T07:49:28.012Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa10f88035b0f36efcc6a86"
+    },
+    "message_id": "reddit_t3_1wbf0nv",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "founder",
+    "username": "Civil_Ad3916",
+    "title": "built this after realizing happy customers don't automatically become testimonials",
+    "text": "built this after realizing happy customers don't automatically become testimonials\n\none thing that surprised me while building Laud:   having happy customers isn't really the problem.   actually turning those happy customers into usable proof is.   someone has to remember to ask.   then follow up.   then clean up what they wrote.   then get approval.   then figure out whether you're actually allowed to use their name/photo/quote.   so I'm trying to put all of that into one simple flow.   send link → feedback → testimonial → approval → consent → signature → publish.    https://withlaud.com/?utm_source=reddit&utm_medium=organic_social&utm_campaign=reddit_launch&utm_content=founder_feedback    still early.   would genuinely love founder feedback on whether this feels painful enough to solve.       submitted by     /u/Civil_Ad3916     to     r/founder       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/founder/comments/1wbf0nv/built_this_after_realizing_happy_customers_dont/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T07:49:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T07:49:28.230Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa10f88035b0f36efcc6a87"
+    },
+    "message_id": "reddit_t3_1wbf0n7",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CarParts",
+    "username": "Ckibet-002",
+    "title": "Datsun 510 Tension arm braces",
+    "text": "Datsun 510 Tension arm braces\n\nI am scrolling to buy tension arm braces. How fast shipping does Apex engineered do for anyone who's ordered?   I need them asap since it is my main car for work.       submitted by     /u/Ckibet-002     to     r/CarParts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CarParts/comments/1wbf0n7/datsun_510_tension_arm_braces/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T07:48:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T07:49:28.444Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa10fb323d250a5b10ba9b4"
+    },
+    "message_id": "reddit_serp_cfgjm",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/PHP/comments/cfgjm/is_there_a_way_to_send_free_sms_text_messages/",
+    "text": "Is there a way to send free SMS text messages from your server to other people's cell phones? if so, how please? (I am not looking to spam ppl)\n\nsubmitted by     /u/trixjo       [link]       [comments]",
+    "username": "trixjo",
+    "subreddit_or_channel": "PHP",
+    "posted_at": "2010-06-16T02:55:51+00:00",
+    "fetched_at": {
+      "$date": "2026-09-09T07:50:11.710Z"
+    },
+    "google_rank": 9,
+    "search_keyword": "premium SMS marketing",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-09T07:50:11.710Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa10fc4035b0f36efcc6a88"
+    },
+    "message_id": "reddit_t3_1wbf1d7",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "findaleague",
+    "username": "VivaLaTERevolution",
+    "title": "3/12 Spots Open - Dynasty Auction Startup $25 w/rookie auction drafts",
+    "text": "3/12 Spots Open - Dynasty Auction Startup $25 w/rookie auction drafts\n\nI'm starting a dynasty league where the rookie drafts each year will also be auctions, with budgets determined by the draft picks you own + their draft slots. I think it will be really fun.   We're doing a live auction startup draft after the league fills - aiming to draft as early as possible this week, potentially on Saturday. Need people to join asap so we can get started!   Standard rules otherwise - superflex, .5TEP, PPR, max PF to determine draft order (which determines auction budgets), etc. $25 buy-in through Leaguesafe, stay paid in 1 year ahead to prevent orphans.   We're playing on  Pursuit Fantasy  (Pursuit can support all the rookie auction customization stuff)    Link to join the league  (and download the app - I recommend so you can get notifications)   Message me if you have any questions!       submitted by     /u/VivaLaTERevolution     to     r/findaleague       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/findaleague/comments/1wbf1d7/312_spots_open_dynasty_auction_startup_25_wrookie/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T07:50:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T07:50:28.384Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa10fc4035b0f36efcc6a89"
+    },
+    "message_id": "reddit_t3_1wbf1cf",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "AlertVegas",
+    "username": "MugShots",
+    "title": "NV Energy Alert",
+    "text": "NV Energy Alert\n\nNVEnergy Alert Planned Shutdown for Service Improvement in 89705 Verified customers affected ORT: Verified ETR: Verified       submitted by     /u/MugShots     to     r/AlertVegas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlertVegas/comments/1wbf1cf/nv_energy_alert/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T07:50:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T07:50:28.600Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa10fc4035b0f36efcc6a8a"
+    },
+    "message_id": "reddit_t3_1wbf1b2",
+    "topic_key": "nike",
+    "search_keyword": "Nike",
+    "platform": "reddit",
+    "subreddit": "Malawi",
+    "username": "Value265",
+    "title": "TT ? card payment? USDT",
+    "text": "TT ? card payment? USDT\n\nIve used USDT before, ive made payments with cards before.. can someone explain what TT is? How it works when making a payment?    For example munthu akapanga advertise kuti. Ali nd TT amakhala akuti chani kwenikeni? Is it the same with card payment?        submitted by     /u/Value265     to     r/Malawi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Malawi/comments/1wbf1b2/tt_card_payment_usdt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T07:50:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T07:50:28.817Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa10fc6035b0f36efcc6a90"
+    },
+    "message_id": "reddit_t3_1wbf1ax",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "WsCubeTech_Official",
+    "username": "SheepherderWarm8194",
+    "title": "Coming from a non-technical background, I wasn't sure if digital marketing was actually for me",
+    "text": "Coming from a non-technical background, I wasn't sure if digital marketing was actually for me\n\nI’ve recently been learning digital marketing, and I wanted to share my experience because I spent quite a bit of time wondering whether someone without a technical background could actually get into this field.   I didn’t come from a technical/marketing background, and when I first started looking into digital marketing, I honestly found it a little overwhelming.   I knew what SEO, Google Ads, social media marketing, keywords, etc. were, at least in theory. But knowing the definitions and actually doing the work are two very different things.   My biggest question was basically:    Where do I even start?    There are so many free resources, courses, YouTube videos and opinions online that it was difficult to figure out what I should learn first.   Eventually, I decided to take an online digital marketing course from WsCube Tech because I wanted some structure rather than trying to learn everything randomly.    What helped me the most    For me, it wasn't really the certificates or simply completing lessons.   The biggest difference was getting to actually work on things.   I got practical exposure to areas such as:     SEO and website audits   Keyword research   On-page optimization   Website-related tasks   Performance marketing concepts   Campaign-related tasks   Digital marketing projects   Regular assignments and exercises     Working on these things made me realize how different practical learning is from just watching tutorials.   For example, before doing SEO-related tasks, I understood the basic idea of SEO. But once I started looking at an actual website and asking why a page was targeting a particular keyword, whether the content was useful, what could be improved, etc., the concepts started making much more sense.    Mentors helped too    Another thing I found useful was having mentors I could ask questions to.   Coming from a non-technical background, there were definitely moments when I didn't understand something immediately.   Being able to ask,  \"Why does this work this way?\"  or  \"How do I approach this task?\"  helped me get past those blocks instead of just moving on without understanding.   Over time, I became more comfortable with not knowing something.   That sounds simple, but I think it's actually an important part of learning.    I also got some placement guidance    The course also had placement support, which I found useful for things like resume preparation, interview preparation and understanding how to approach job opportunities.   That said, I don't want to give the impression that taking a course automatically means you'll get a job.   It doesn't.   You still need to practice, build your skills, work on projects, understand the tools and prepare for interviews. A course can give you structure and guidance, but you still have to do the work yourself.    Am I an expert now?    Definitely not.   I still have a lot to learn.   Digital marketing changes constantly, and I think practical experience is something you continue building even after completing a course.   But compared with when I started, I feel much more confident about the field and, more importantly, I have a better idea of what I need to learn next.   That's probably the biggest change for me.   When I started, I was asking:    \"Can someone from a non-technical background build a career in digital marketing?\"    Now I'm asking:    \"What should I learn and work on next?\"    For anyone else who has come from a non-technical background and is considering digital marketing, I'd say don't let the lack of a technical degree stop you.   You don't need to know everything before starting.   Learn the basics, practice them, work on real projects, ask questions, and gradually build from there.   That's been my experience so far.       submitted by     /u/SheepherderWarm8194     to     r/WsCubeTech_Official       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WsCubeTech_Official/comments/1wbf1ax/coming_from_a_nontechnical_background_i_wasnt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T07:50:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T07:50:30.105Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa10fc6035b0f36efcc6a91"
+    },
+    "message_id": "reddit_t3_1wbf19b",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "indianbikes",
+    "username": "Radiant_Client_7941",
+    "title": "Buying a bike in Puducherry and using it across TN, Karnataka & Telangana — any issues?",
+    "text": "Buying a bike in Puducherry and using it across TN, Karnataka & Telangana — any issues?\n\nI'm planning to buy a new bike in Puducherry (PY) because the on-road price is around ₹20–30k cheaper than Bangalore/Hyderabad.   I’ll be using the bike across Tamil Nadu, Karnataka (Bangalore), and Telangana (Hyderabad) depending on where I’m working/living at the time.   Since a PY-registered vehicle is an outside-state vehicle in both Karnataka and Telangana, would I eventually have to re-register the bike and pay the respective state's road tax if I keep using it there for an extended period?   And if I move from Karnataka to Telangana later, would I have to go through the same process again?   Is buying and registering in PY actually worth the ₹20–30k saving, or will the interstate registration/tax issues make it more trouble than it's worth?   Looking for advice from anyone who has actually used a PY-registered vehicle across TN, KA and Telangana.       submitted by     /u/Radiant_Client_7941     to     r/indianbikes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/indianbikes/comments/1wbf19b/buying_a_bike_in_puducherry_and_using_it_across/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T07:50:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T07:50:30.330Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa10fc6035b0f36efcc6a92"
+    },
+    "message_id": "reddit_t3_1wbf173",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AusFemaleFashion",
+    "username": "Civilian-Stripes",
+    "title": "Dress shops Perth",
+    "text": "Dress shops Perth\n\nI’m heading to Perth later this year and since there are a lot more shopping options than here in NZ I’m hoping to look for a dress to get married in.   I am not wanting a proper wedding dress but just a nice formal dress for a very low key ceremony, max budget would be able to stretch to $1000.    I have been looking at David Jones but when I find something nice the website always says they have no stock in any stores.  I really would like to be able to try something on before buying and I was hoping I might be able to get some recommendations for stores to check out.       submitted by     /u/Civilian-Stripes     to     r/AusFemaleFashion       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AusFemaleFashion/comments/1wbf173/dress_shops_perth/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T07:49:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T07:50:30.546Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa10fe723d250a5b10ba9b5"
+    },
+    "message_id": "reddit_serp_1tv75m4",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/ShopifyeCommerce/comments/1tv75m4/solo_founder_0_coding_skills_is_a_premium_shopify/",
+    "text": "Solo founder, 0 coding skills: Is a premium Shopify theme actually worth it?\n\nHey everyone,   I’m a solo founder building a D2C pet product brand on my own. I don't have any coding experience, and I am officially tearing my hair out trying to customize the free Dawn theme.   For anyone who made the jump from free to premium:     Was the ROI actually there? Did your conversion rates or AOV actually improve because of the built-in features?   Do premium themes actually give you deep creative control in the visual editor?   Over 80% of my traffic will be on phones. How do these premium themes actually hold up on mobile speed?    Any theme recommendations would be greatly appreciated.      I really want to avoid hiring an expensive developer right out of the gate but I also don't want my store to look like a generic template.   Would love some honest, brutal feedback from anyone who has been in my shoes. Thank you!       submitted by     /u/Radiant_Phone_1422       [link]       [comments]",
+    "username": "Radiant_Phone_1422",
+    "subreddit_or_channel": "ShopifyeCommerce",
+    "posted_at": "2026-06-02T22:58:58+00:00",
+    "fetched_at": {
+      "$date": "2026-09-09T07:51:03.366Z"
+    },
+    "google_rank": 2,
+    "search_keyword": "premium Shopify",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-09T07:51:03.366Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa11000035b0f36efcc6a93"
+    },
+    "message_id": "reddit_t3_1wbf1vw",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "vintedUK",
+    "username": "bigmattb28",
+    "title": "Buy wanted to cancel now moaning someone else has bought my item",
+    "text": "Buy wanted to cancel now moaning someone else has bought my item\n\nListed an item yesterday, got the usual handful of favourites and a couple of stupid offers before someone bought it at the list price, great stuff, so I got it packed and label generated on Vinted then the buyer messaged me saying she wants to change the delivery address so wants to cancel the order. Okay no bother, I've had enough interest that I can't imagine it won't get sold if she changed her mind so I cancelled the order.   I messaged her saying it's been done and the item is uploaded, she said thanks. I forgot about it then got a notification later on saying it's been sold, great. Then got a message asking when it will be uploaded again, I said it has been and been sold, I thought it was her that had bought it but it's someone else and for the asking price too.    She's now messaged me saying for me to cancel the new order with the new buyer and sell it to her as she had bought it already. I was like erm, no, I aren't doing that you didn't buy it again in the time it was relisted and someone else has bought it.    Some people eh.       submitted by     /u/bigmattb28     to     r/vintedUK       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/vintedUK/comments/1wbf1vw/buy_wanted_to_cancel_now_moaning_someone_else_has/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T07:51:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T07:51:28.485Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa11000035b0f36efcc6a94"
+    },
+    "message_id": "reddit_t3_1wbf1ua",
+    "topic_key": "give me today top three conversation about e commerce",
+    "search_keyword": "ecommerce",
+    "platform": "reddit",
+    "subreddit": "ecommerce",
+    "username": "flavia-f",
+    "title": "Those of you who run sales or support on WhatsApp: how much of your day is the same 20 questions, and would you let an AI take that part?",
+    "text": "Those of you who run sales or support on WhatsApp: how much of your day is the same 20 questions, and would you let an AI take that part?\n\nI work with small businesses whose customers write to them on WhatsApp: quotes, orders, “is it in stock”, “what time do you close”, “where’s my delivery”. Most owners tell me the same thing: a big part of the day is answering the same questions and trying to remember what they told each person.   I want to understand how real this is for you, and what you’d actually want, before anyone builds anything. Imagine an assistant that:     learns your business by itself from your past conversations and your website, and shows you what it understood (no setup, nothing to configure)   remembers every customer: what they asked, what you promised, how they like to be spoken to   prepares the replies for you; you approve with one tap, and only once it’s always right on a type of question can you let it send those on its own   keeps the inbox in order: tags, flags what’s urgent, passes each chat to the right person on your team   asks you when it isn’t sure, and learns from your corrections (you can answer with a voice note)   and you set the limits: hours, things it must never say, how much it can spend     Honest questions:     Which three of those would actually change your day? Which ones do you not care about?   What would make you NOT trust it with your customers?   How do you handle this today: yourself, an employee, a tool?   Roughly how many chats a day are we talking about?   If it worked as described, what would it be worth to you per month, compared with what you pay today?     Not selling anything. I just want to know whether this is a real problem or only a loud one.       submitted by     /u/flavia-f     to     r/ecommerce       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ecommerce/comments/1wbf1ua/those_of_you_who_run_sales_or_support_on_whatsapp/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T07:51:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T07:51:28.705Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa11001035b0f36efcc6a96"
+    },
+    "message_id": "reddit_t3_1wbf1tu",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "UsedCarsBharat",
+    "username": "Salty-Detail-474",
+    "title": "Tata Tiago Ev Long range 2023",
+    "text": "Tata Tiago Ev Long range 2023\n\nNew condition 35,000 km Driven!  Only Rs6.49 Lac/-  Dm to buy       submitted by     /u/Salty-Detail-474     to     r/UsedCarsBharat       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UsedCarsBharat/comments/1wbf1tu/tata_tiago_ev_long_range_2023/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T07:51:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T07:51:29.137Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa11001035b0f36efcc6a97"
+    },
+    "message_id": "reddit_t3_1wbf1rv",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "tamilyapping",
+    "username": "Radiant_Client_7941",
+    "title": "Buying a bike in Puducherry and using it across TN, Karnataka & Telangana — any issues?",
+    "text": "Buying a bike in Puducherry and using it across TN, Karnataka & Telangana — any issues?\n\nsubmitted by     /u/Radiant_Client_7941     to     r/tamilyapping       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/tamilyapping/comments/1wbf1rv/buying_a_bike_in_puducherry_and_using_it_across/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T07:50:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T07:51:29.367Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1102b23d250a5b10ba9b6"
+    },
+    "message_id": "reddit_serp_ke35ny",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/shopify/comments/ke35ny/best_premium_shopify_theme_for_2021/",
+    "text": "Best Premium Shopify Theme for 2021?\n\nHi there.   I am starting a new shopify store and I am overwhelmed with the amount of theme options.   I am willing to pay extra for a premium theme.   Features that mean the most to me:   - fast and responsive   - high design versatility without coding, so my website doesn't look like everyone else's   - plenty of built in useful features so I do not have to rely on paying extra for apps   - mega menu, currency conversion, shipping calculation tools, product filter tools, product search tools, sales, product reviews, etc.   -blogging is going to be a big part of the website and I need something which can organize my blogs on the website using categories, allow comments, and be user friendly to read and search for content   The themes I have on my mind right now are Turbo, Flex, Superstore   ​   Thank you!       submitted by     /u/A-Sidhu       [link]       [comments]",
+    "username": "A-Sidhu",
+    "subreddit_or_channel": "shopify",
+    "posted_at": "2020-12-16T05:28:27+00:00",
+    "fetched_at": {
+      "$date": "2026-09-09T07:52:11.070Z"
+    },
+    "google_rank": 6,
+    "search_keyword": "premium Shopify",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-09T07:52:11.070Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1103d035b0f36efcc6a98"
+    },
+    "message_id": "reddit_t3_1wbf2k3",
+    "topic_key": "nike",
+    "search_keyword": "Nike",
+    "platform": "reddit",
+    "subreddit": "bootroom",
+    "username": "cracksparrow1135",
+    "title": "Nike Phantom 6 Low Academy TF sizing",
+    "text": "Nike Phantom 6 Low Academy TF sizing\n\nShould I go true to size or half a size up for the turf version of the Phantom 6 Academy? I have wide feet (2E, nothing crazy) and wear a men's 8 US in Air Force 1s. I've heard the FG models are fine for wider feet but that the TF versions run tighter and should be sized up.        submitted by     /u/cracksparrow1135     to     r/bootroom       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/bootroom/comments/1wbf2k3/nike_phantom_6_low_academy_tf_sizing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T07:52:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T07:52:29.181Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1103e035b0f36efcc6a9e"
+    },
+    "message_id": "reddit_t3_1wbf2ij",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "AlertVegas",
+    "username": "MugShots",
+    "title": "NV Energy Alert",

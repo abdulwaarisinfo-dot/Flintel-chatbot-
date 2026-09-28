@@ -1,0 +1,416 @@
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "akshay_pachaar",
+    "title": "The harness is what matters now. The model is just a commodity.\n\nA model on its own returns text. Nothing it produces becomes working code until something around it reads the repo, applies the edits, runs the tests, and reacts to what breaks.\n\nThat something is the harness, and it decides how much of a model's ability actually ships.\n\nCline ran a clean test of this. Same model, GLM 5.2, on the same set of coding tasks, driven two ways by their harness.\n\n- 57.3% with reasoning turned off.\n- 68.5% with reasoning turned on.\n\nThe weights never changed. The only difference was how the harness drove the model.\n\nReasoning budget is one knob. The harness also decides what context the model carries across steps, which tools it can reach, how edits get applied, and whether the work gets checked before it moves on.\n\nThis is why the model is becoming the swappable part. The open ones are strong enough now, so what separates a good run from a wasted one is the environment they run inside.\n\nCline is an open-source harness built for exactly this. The model is a slot you fill, and the loop around it stays the same whether you run GLM 5.2, Kimi K2.7, or DeepSeek V4.\n\nClinePass is the clean version of that idea. One subscription to bring those open models into the harness, without assembling the stack yourself.\n\nA few things follow from the design.\n\n→ It curates the field. The set is narrowed to open models tested for coding-agent use, so you skip finding out the hard way which ones hold up across long tasks.\n\n→ It drops the provider sprawl. One subscription covers them, with no separate accounts, keys, or billing to track across labs.\n\n→ It runs longer. The quota gives 2 to 5x the standard API rate limits, so long agent runs don't stall mid-task.\n\n→ It stays open. Custom keys and local models keep working alongside it, so it adds an option instead of replacing what you have.\n\nThe point is not which open model wins. It is that the harness that decides the outcome now, and the model is just the part you swap in.\n\nThe video below shows the setup in action. I worked with the team to put it together.",
+    "text": "The harness is what matters now. The model is just a commodity.\n\nA model on its own returns text. Nothing it produces becomes working code until something around it reads the repo, applies the edits, runs the tests, and reacts to what breaks.\n\nThat something is the harness, and it decides how much of a model's ability actually ships.\n\nCline ran a clean test of this. Same model, GLM 5.2, on the same set of coding tasks, driven two ways by their harness.\n\n- 57.3% with reasoning turned off.\n- 68.5% with reasoning turned on.\n\nThe weights never changed. The only difference was how the harness drove the model.\n\nReasoning budget is one knob. The harness also decides what context the model carries across steps, which tools it can reach, how edits get applied, and whether the work gets checked before it moves on.\n\nThis is why the model is becoming the swappable part. The open ones are strong enough now, so what separates a good run from a wasted one is the environment they run inside.\n\nCline is an open-source harness built for exactly this. The model is a slot you fill, and the loop around it stays the same whether you run GLM 5.2, Kimi K2.7, or DeepSeek V4.\n\nClinePass is the clean version of that idea. One subscription to bring those open models into the harness, without assembling the stack yourself.\n\nA few things follow from the design.\n\n→ It curates the field. The set is narrowed to open models tested for coding-agent use, so you skip finding out the hard way which ones hold up across long tasks.\n\n→ It drops the provider sprawl. One subscription covers them, with no separate accounts, keys, or billing to track across labs.\n\n→ It runs longer. The quota gives 2 to 5x the standard API rate limits, so long agent runs don't stall mid-task.\n\n→ It stays open. Custom keys and local models keep working alongside it, so it adds an option instead of replacing what you have.\n\nThe point is not which open model wins. It is that the harness that decides the outcome now, and the model is just the part you swap in.\n\nThe video below shows the setup in action. I worked with the team to put it together.",
+    "post_url": "https://twitter.com/akshay_pachaar/status/2071638409022763292",
+    "score": 185,
+    "num_comments": 19,
+    "created_utc": {
+      "$date": "2026-06-29T16:54:20Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:06.469Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc99e42dd0e95b5baad09"
+    },
+    "message_id": "twitter_2076217208645259583",
+    "topic_key": "budget subscription billing",
+    "search_keyword": "budget subscription billing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "otomat_rail",
+    "title": "https://t.co/JGxkNvIC7g",
+    "text": "https://t.co/JGxkNvIC7g",
+    "post_url": "https://twitter.com/otomat_rail/status/2076217208645259583",
+    "score": 44,
+    "num_comments": 11,
+    "created_utc": {
+      "$date": "2026-07-12T08:08:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:06.872Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc99f42dd0e95b5baad0a"
+    },
+    "message_id": "twitter_2088974503514710500",
+    "topic_key": "budget subscription billing",
+    "search_keyword": "budget subscription billing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "KimiDYOR",
+    "title": "https://t.co/6RcXjsSbF3",
+    "text": "https://t.co/6RcXjsSbF3",
+    "post_url": "https://twitter.com/KimiDYOR/status/2088974503514710500",
+    "score": 33,
+    "num_comments": 12,
+    "created_utc": {
+      "$date": "2026-08-16T13:01:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:07.073Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc99f42dd0e95b5baad0b"
+    },
+    "message_id": "twitter_2100497865105633425",
+    "topic_key": "budget subscription billing",
+    "search_keyword": "budget subscription billing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "MyBudgetcomau",
+    "title": "Thinking about joining MyBudget? Here's how it works! \n\nWe design a customised 12-month plan, automate your bill payments, and help you save faster.\n\nOur Money Coaches are with you every step of the way 💙\n\nExplore our How It Works page for more info: https://t.co/HfX5A1Utjv https://t.co/rAR0XdEd6h",
+    "text": "Thinking about joining MyBudget? Here's how it works! \n\nWe design a customised 12-month plan, automate your bill payments, and help you save faster.\n\nOur Money Coaches are with you every step of the way 💙\n\nExplore our How It Works page for more info: https://t.co/HfX5A1Utjv https://t.co/rAR0XdEd6h",
+    "post_url": "https://twitter.com/MyBudgetcomau/status/2100497865105633425",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T08:11:31Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:07.274Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc99f42dd0e95b5baad0d"
+    },
+    "message_id": "twitter_2040136645614161997",
+    "topic_key": "budget subscription billing",
+    "search_keyword": "budget subscription billing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "neil_xbt",
+    "title": "https://t.co/1yUqqYD2CG",
+    "text": "https://t.co/1yUqqYD2CG",
+    "post_url": "https://twitter.com/neil_xbt/status/2040136645614161997",
+    "score": 51,
+    "num_comments": 9,
+    "created_utc": {
+      "$date": "2026-04-03T18:37:34Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:07.673Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc99f42dd0e95b5baad0e"
+    },
+    "message_id": "twitter_2089593118093890018",
+    "topic_key": "budget subscription billing",
+    "search_keyword": "budget subscription billing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "mikenevermiss",
+    "title": "https://t.co/arqsPWG6lD",
+    "text": "https://t.co/arqsPWG6lD",
+    "post_url": "https://twitter.com/mikenevermiss/status/2089593118093890018",
+    "score": 50,
+    "num_comments": 9,
+    "created_utc": {
+      "$date": "2026-08-18T05:59:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:07.874Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc9a042dd0e95b5baad0f"
+    },
+    "message_id": "twitter_2092228964253069759",
+    "topic_key": "budget subscription billing",
+    "search_keyword": "budget subscription billing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ArchiveExplorer",
+    "title": "https://t.co/iBjROAJQ4c",
+    "text": "https://t.co/iBjROAJQ4c",
+    "post_url": "https://twitter.com/ArchiveExplorer/status/2092228964253069759",
+    "score": 144,
+    "num_comments": 9,
+    "created_utc": {
+      "$date": "2026-08-25T12:33:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:08.075Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc9a042dd0e95b5baad10"
+    },
+    "message_id": "twitter_2098834387848626655",
+    "topic_key": "budget subscription billing",
+    "search_keyword": "budget subscription billing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "sambaker1598",
+    "title": "Stop the production loop! Growing businesses compromise on quality, speed, or budget. Penji's flat-rate monthly subscription model bypasses this, offering continuous creative production without hourly billing or complex contracts. #GraphicDesign #BusinessTips https://t.co/OdqUGnbj6a",
+    "text": "Stop the production loop! Growing businesses compromise on quality, speed, or budget. Penji's flat-rate monthly subscription model bypasses this, offering continuous creative production without hourly billing or complex contracts. #GraphicDesign #BusinessTips https://t.co/OdqUGnbj6a",
+    "post_url": "https://twitter.com/sambaker1598/status/2098834387848626655",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T18:01:27Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:08.275Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc9a042dd0e95b5baad11"
+    },
+    "message_id": "twitter_2082010486477033769",
+    "topic_key": "budget subscription billing",
+    "search_keyword": "budget subscription billing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Adilson_Ai",
+    "title": "Let's talk openly about Seedance 2.0.\n\nhttps://t.co/iVgjfFrAoR\n\nThe output quality is mind-blowing, but running a single generation can easily drain your wallet like buying a fast-food meal. 🍔💸\n\nSure, Higgsfield Free might catch your eye, but it's basically just a 24-hour trial that automatically flips into a paid subscription if you forget to cancel. 📉\n\nThis is exactly why the deal from Dreamina feels so incredibly refreshing.\n\nAfter grabbing your first monthly sub, new users can tap into Seedance 2.0 at merely $0.083/sec—easily among the most affordable official access routes out there right now. 💰\n\nNo convoluted \"freebie\" schemes.\n\nNo hidden billing traps waiting to catch you. 🚫\n\nJust transparent, upfront pricing from Dreamina, the official platform by ByteDance.\n\nEven better, instead of those promos that punish early adopters, Dreamina's biggest cost-saver works for absolutely everyone—both new and veteran users: 🤝\n\nRun Seedance 2.0 Mini for cheap, rapid iterations. 🚀\n\nPlay around with your prompts, angles, and overall creative vision.\n\nNail down your final concept. 🎯\n\nThen switch to the full Seedance 2.0 exclusively for your absolute final render.\n\nMini for your experimentation phase.\n\nSeedance 2.0 for your final delivery. ✨\n\nYou burn way less cash this way—a pricing model that actually respects your budget instead of just serving as clickbait on a landing page. 💯",
+    "text": "Let's talk openly about Seedance 2.0.\n\nhttps://t.co/iVgjfFrAoR\n\nThe output quality is mind-blowing, but running a single generation can easily drain your wallet like buying a fast-food meal. 🍔💸\n\nSure, Higgsfield Free might catch your eye, but it's basically just a 24-hour trial that automatically flips into a paid subscription if you forget to cancel. 📉\n\nThis is exactly why the deal from Dreamina feels so incredibly refreshing.\n\nAfter grabbing your first monthly sub, new users can tap into Seedance 2.0 at merely $0.083/sec—easily among the most affordable official access routes out there right now. 💰\n\nNo convoluted \"freebie\" schemes.\n\nNo hidden billing traps waiting to catch you. 🚫\n\nJust transparent, upfront pricing from Dreamina, the official platform by ByteDance.\n\nEven better, instead of those promos that punish early adopters, Dreamina's biggest cost-saver works for absolutely everyone—both new and veteran users: 🤝\n\nRun Seedance 2.0 Mini for cheap, rapid iterations. 🚀\n\nPlay around with your prompts, angles, and overall creative vision.\n\nNail down your final concept. 🎯\n\nThen switch to the full Seedance 2.0 exclusively for your absolute final render.\n\nMini for your experimentation phase.\n\nSeedance 2.0 for your final delivery. ✨\n\nYou burn way less cash this way—a pricing model that actually respects your budget instead of just serving as clickbait on a landing page. 💯",
+    "post_url": "https://twitter.com/Adilson_Ai/status/2082010486477033769",
+    "score": 24,
+    "num_comments": 13,
+    "created_utc": {
+      "$date": "2026-07-28T07:49:16Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:08.476Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc9a042dd0e95b5baad12"
+    },
+    "message_id": "twitter_2059944798963007567",
+    "topic_key": "budget subscription billing",
+    "search_keyword": "budget subscription billing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "BAI_AGI",
+    "title": "https://t.co/3ewbiJW9m4",
+    "text": "https://t.co/3ewbiJW9m4",
+    "post_url": "https://twitter.com/BAI_AGI/status/2059944798963007567",
+    "score": 53,
+    "num_comments": 16,
+    "created_utc": {
+      "$date": "2026-05-28T10:28:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:08.677Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc9a042dd0e95b5baad13"
+    },
+    "message_id": "twitter_2082872556411867568",
+    "topic_key": "budget subscription billing",
+    "search_keyword": "budget subscription billing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "near_ai",
+    "title": "https://t.co/KQwVn5YJBi",
+    "text": "https://t.co/KQwVn5YJBi",
+    "post_url": "https://twitter.com/near_ai/status/2082872556411867568",
+    "score": 79,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-07-30T16:54:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:08.878Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc9a142dd0e95b5baad14"
+    },
+    "message_id": "twitter_2100538882525729112",
+    "topic_key": "budget subscription billing",
+    "search_keyword": "budget subscription billing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "heyjxck_",
+    "title": "this, plus the hidden extra costs, basically leaves you with almost nothing after a plus subscription if you want to make a genuinely good SHORT video (on a good day, 90s = $100+)\n\nwtf are they building in those data centers man? https://t.co/YFAQlGIOkH",
+    "text": "this, plus the hidden extra costs, basically leaves you with almost nothing after a plus subscription if you want to make a genuinely good SHORT video (on a good day, 90s = $100+)\n\nwtf are they building in those data centers man? https://t.co/YFAQlGIOkH",
+    "post_url": "https://twitter.com/heyjxck_/status/2100538882525729112",
+    "score": 1,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T10:54:30Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:09.078Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc9a742dd0e95b5baad15"
+    },
+    "message_id": "twitter_2066197570750218416",
+    "topic_key": "budget supplier sourcing",
+    "search_keyword": "budget supplier sourcing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "rgk_degen",
+    "title": "$20,000/month Shopify store running on Claude full setup, no team, no warehouse.\n\nMost people building Shopify stores in 2026 still do it the old way.\nThey write product descriptions by hand. They test ads one at a time. They manage inventory like it’s 2019.\n\nThat’s why 90% of stores stall under $2,000/month and never move.\n\nHere’s the system that actually scales to $20k \n\nPhase 1 Store setup (Day 1-3)\n\nClaude builds the entire store skeleton.\nNiche research prompt → top 10 trending categories, competition score, margin estimates.\nProduct listing prompt → 50 listings in 40 minutes, each with title, description, and SEO tags.\nNo copywriter. No agency. 1 Shopify plan at $39/month.\n\nPhase 2 Product sourcing (Day 3-5)\n\nAutoDS connects to AliExpress and DSers.\nClaude writes the winning criteria: margin above 40%, shipping under 12 days, 4.5+ star supplier rating.\nFilter 1,000 products down to 12 in 1 session.\nThose 12 go live.\n\nPhase 3 Ad creative (Day 5-10)\n\nClaude generates 30 ad hooks from 1 product brief.\nRun $10/day test on each winner.\nKill under 1.5% CTR after 3 days.\nScale above 2% CTR to $50/day.\n\nMonth 1 result: $3,200 revenue. $1,100 profit. Learning what works.\n\nPhase 4 Email + retention (Week 3)\n\nKlaviyo sequences written by Claude.\nWelcome flow. Abandoned cart. Post-purchase upsell.\n5 emails per sequence. Written in 25 minutes.\nAverage store recovers 15-22% of abandoned carts with this alone.\n\nPhase 5 Scale (Month 2-3)\n\nWinners get PagePilot landing pages.\nClaude rewrites ads for the top 3 products every 2 weeks.\nBudget moves to $200/day on proven SKUs.\n\nMonth 2: $9,400. Month 3: $20,000+.\n\nThe math:\n3 winning products × 140 orders/month × $47 AOV = $19,740.\nCOGS at 38%. Ad spend at 22%. Net: 40%.\n\nBefore Claude: 6 hours/day writing copy, testing blind, burning budget.\nAfter Claude: 45 minutes/day reviewing what the system flags.\n\nThe store runs. The couch doesn’t move.\n\nFollow for the full prompt stack.",
+    "text": "$20,000/month Shopify store running on Claude full setup, no team, no warehouse.\n\nMost people building Shopify stores in 2026 still do it the old way.\nThey write product descriptions by hand. They test ads one at a time. They manage inventory like it’s 2019.\n\nThat’s why 90% of stores stall under $2,000/month and never move.\n\nHere’s the system that actually scales to $20k \n\nPhase 1 Store setup (Day 1-3)\n\nClaude builds the entire store skeleton.\nNiche research prompt → top 10 trending categories, competition score, margin estimates.\nProduct listing prompt → 50 listings in 40 minutes, each with title, description, and SEO tags.\nNo copywriter. No agency. 1 Shopify plan at $39/month.\n\nPhase 2 Product sourcing (Day 3-5)\n\nAutoDS connects to AliExpress and DSers.\nClaude writes the winning criteria: margin above 40%, shipping under 12 days, 4.5+ star supplier rating.\nFilter 1,000 products down to 12 in 1 session.\nThose 12 go live.\n\nPhase 3 Ad creative (Day 5-10)\n\nClaude generates 30 ad hooks from 1 product brief.\nRun $10/day test on each winner.\nKill under 1.5% CTR after 3 days.\nScale above 2% CTR to $50/day.\n\nMonth 1 result: $3,200 revenue. $1,100 profit. Learning what works.\n\nPhase 4 Email + retention (Week 3)\n\nKlaviyo sequences written by Claude.\nWelcome flow. Abandoned cart. Post-purchase upsell.\n5 emails per sequence. Written in 25 minutes.\nAverage store recovers 15-22% of abandoned carts with this alone.\n\nPhase 5 Scale (Month 2-3)\n\nWinners get PagePilot landing pages.\nClaude rewrites ads for the top 3 products every 2 weeks.\nBudget moves to $200/day on proven SKUs.\n\nMonth 2: $9,400. Month 3: $20,000+.\n\nThe math:\n3 winning products × 140 orders/month × $47 AOV = $19,740.\nCOGS at 38%. Ad spend at 22%. Net: 40%.\n\nBefore Claude: 6 hours/day writing copy, testing blind, burning budget.\nAfter Claude: 45 minutes/day reviewing what the system flags.\n\nThe store runs. The couch doesn’t move.\n\nFollow for the full prompt stack.",
+    "post_url": "https://twitter.com/rgk_degen/status/2066197570750218416",
+    "score": 45,
+    "num_comments": 10,
+    "created_utc": {
+      "$date": "2026-06-14T16:34:23Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:15.178Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc9a742dd0e95b5baad16"
+    },
+    "message_id": "twitter_2097838746444132466",
+    "topic_key": "budget supplier sourcing",
+    "search_keyword": "budget supplier sourcing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "pressmonitorcan",
+    "title": "11 Essential Supply Chain Stories for Canadian Business Leaders\nhttps://t.co/aITwaCNNMc\n\nAccording to Press Monitor's tracking of Canadian publications, this press review covers 11 essential supply chain and procurement stories shaping Canadian business today. From trade policy escalations to procurement bans and digital transformation initiatives, these developments demand immediate attention.\n\n1. Trump Removes Canada from U.S. Procurement Program\nEdmonton Journal reports that U.S. President Donald Trump announced on Tuesday that Canadian-origin products will be removed from the U.S. General Services Administration's Multiple Award Schedules unless Canada restores full and fair reciprocity for American farmers and companies. The announcement came the same day Canadian retaliatory tariffs took effect on twenty-eight billion dollars worth of U.S. imports, following a breakdown in trade negotiations on August 21. Canadian Prime Minister Mark Carney stated that the tariffs are necessary to protect Canadian workers, companies, and communities.\nPresident Donald Trump has directed the removal of Canadian-origin products from the U.S. General Services Administration's procurement schedules, threatening access to a market worth over $50 billion annually. This move follows Canada's retaliatory tariffs on $28 billion in U.S. imports and marks a dramatic escalation in North American trade tensions. For Canadian exporters and government contractors, reciprocity is now the price of market access. How will your organization adapt to this new procurement reality?\n\n2. $28 Billion Canadian Retaliatory Tariffs Begin\nEdmonton Journal reports that Canada has imposed retaliatory tariffs on twenty-eight billion Canadian dollars worth of United States goods, effective Tuesday. This measure responds directly to Washington’s recent imposition of a fifty per cent levy on approximately twenty-eight billion Canadian dollars of Canadian exports. Prime Minister Mark Carney stated the duties are necessary to shield domestic workers and companies, while President Donald Trump immediately threatened to bar Canadian goods from federal purchasing programs.\nCanada's retaliatory tariffs on $28 billion worth of U.S. goods took effect Tuesday, responding directly to Washington's 50 percent levy on Canadian exports. Prime Minister Mark Carney defended the measures as essential for protecting domestic workers and companies. The tariffs signal Canada's willingness to absorb short-term economic pain to defend long-term trade principles. What does this mean for your cross-border supply chain?\n\n3. Trump Tariffs Threaten Bombardier US Jobs\nThe Hamilton Spectator reports that Republican politicians in Kansas are defending Bombardier against Donald Trump's threat to ban aircraft sales unless production moves to the United States, arguing the move puts American jobs at risk. As Canadian counter-tariffs take effect, Trump's Truth Social post sparked concern among more than 1,200 workers at the company's US headquarters in Wichita, while the International Association of Machinists and Aerospace Workers voiced firm opposition to the proposed ban. Bombardier responded that many components are produced in the US and its supply chain relies on 2,800 American suppliers across 47 states.\nDonald Trump's threat to ban Bombardier aircraft sales from the United States puts over 1,200 American jobs at risk in Wichita, Kansas. The Canadian aerospace giant relies on 2,800 American suppliers across 47 states, making a unilateral ban economically self-defeating. Republican politicians in Kansas and the International Association of Machinists and Aerospace Workers have both opposed the move. How will this aerospace trade dispute affect your supplier network?\n\n4. Trump Bans Canadian Alcohol, Motorcycles, and Dairy\nThe Hamilton Spectator reports that U.S. President Donald Trump signed five executive orders on Tuesday to escalate trade retaliation against Canada, imposing a complete import ban on goods such as motorcycles, certain dairy products, and alcoholic beverages. The orders take effect later this month and follow Ottawa's recent tariffs imposed in response to 50 per cent duties Washington had previously levied. Prime Minister Mark Carney warned that Canada's pivot away from the United States will carry a cost but stressed the alternative would be far worse.\nPresident Trump signed five executive orders imposing a complete import ban on Canadian motorcycles, certain dairy products, and alcoholic beverages. The sweeping restrictions escalate a trade war that began after Ottawa imposed counter-tariffs on U.S. goods. These product-specific bans go beyond tariff disputes, targeting consumer goods that affect everyday Canadians and American businesses alike. Are product-level bans the next frontier in trade escalation?\n\n5. $1.5 Billion Michigan Auto Exports Face Tariffs\nThe Chronicle Herald reports that Canada new retaliatory tariffs, ranging from 15 to 50 per cent, will hit United States exports hardest, impacting roughly one point five billion Canadian dollars in Michigan auto parts shipments annually. Analysts warn that duties on vehicles, steel, and aluminium will squeeze wholesale margins, freeze expansion and hiring plans, and push retailers to source cheaper goods from overseas markets.\nCanada's retaliatory tariffs, ranging from 15 to 50 percent, will hit approximately $1.5 billion in Michigan auto parts shipments annually. Analysts warn that duties on vehicles, steel, and aluminium will squeeze wholesale margins, freeze expansion plans, and push retailers to source cheaper goods from overseas. The auto supply chain disruption demonstrates how trade policy reverberates through regional economies. Is your supply chain diversified enough to withstand these shocks?\n\n6. Carney Launches Digital Transformation Canada\nOttawa Citizen reports that Prime Minister Mark Carney has established a new digital transformation agency led by former Google chief financial officer Patrick Pichette. The initiative aims to scale shared government solutions, modernize public servant tools, and leverage federal purchasing power to support Canadian technology firms. However, the push for greater artificial intelligence integration comes as most federal departments face operating budget cuts of up to fifteen per cent, raising questions about workforce impacts.\nPrime Minister Mark Carney has established a new digital transformation agency led by former Google CFO Patrick Pichette. The initiative aims to scale shared government solutions and leverage federal purchasing power to support Canadian technology firms. However, with most federal departments facing up to 15 percent budget cuts, the agency's ability to deliver on its promise remains uncertain. How will this new agency reshape government procurement of technology services?\n\n7. Tariffs Could Cost Calgary Hundreds of Millions\nCalgary Herald reports that the trade war between Canada and the United States could add hundreds of millions of Canadian dollars to the city’s costs, with estimates ranging from three point five million to four hundred sixty‑six million Canadian dollars. The city’s supply chain management team says the impact will hit infrastructure projects such as the Green Line transit, Scotia Place, water projects and new fire trucks. The city is exploring mitigation strategies and lobbying the federal government for a tariff relief program.\nThe Canada-U.S. trade war could add between $3.5 million and $466 million to Calgary's municipal costs, impacting infrastructure projects including the Green Line transit, Scotia Place, and water projects. The city's supply chain management team is exploring mitigation strategies and lobbying the federal government for a tariff relief program. How will municipal budgets absorb these trade war costs?\n\n8. Houthi Rebels Strike Saudi Oil Facilities\nThe Globe And Mail (ottawa/quebec Edition) reports that Iranian-backed Houthi rebels struck Saudi oil facilities and utilities on Tuesday, wounding more than 70 people and igniting fires. The assault marks a significant escalation in regional tensions, threatening global oil supplies amid ongoing maritime route disruptions. The attacks targeted key industrial hubs and military bases along the Red Sea coast.\nIranian-backed Houthi rebels struck Saudi oil facilities and utilities, wounding over 70 people and igniting fires. The assault marks a significant escalation in regional tensions, threatening global oil supplies amid ongoing maritime route disruptions. For Canadian supply chain planners, this underscores the geopolitical risks inherent in global energy procurement and the need for diversified sourcing strategies. How are you mitigating geopolitical risk in your energy supply chain?\n\n9. Sapporo Shifts Brewing Amid 50 Percent Tariffs\nNational Post - (latest Edition) reports that Japanese brewer Sapporo Breweries Limited is moving non alcoholic beer production from Canada to the United States due to newly imposed fifty per cent tariffs on Canadian beer exports. The company plans to shift manufacturing by the first half of twenty twenty seven and may build or acquire a brewery on the West Coast to reinvigorate its North American operations following years of underperforming acquisitions. This strategic pivot aims to protect market share in the lucrative United States market while navigating broader trade tensions between Washington and Ottawa.\nJapanese brewer Sapporo Breweries Limited is moving non-alcoholic beer production from Canada to the United States due to newly imposed 50 percent tariffs on Canadian beer exports. The company plans to shift manufacturing by the first half of 2027 and may build or acquire a brewery on the West Coast. This strategic pivot illustrates how tariffs force multinational supply chain restructuring. What other industries will follow suit?\n\n10. Nova Scotia Premier Expands Battery Storage Procurement\nThe Chronicle Herald reports that Premier Tim Houston of Nova Scotia is expanding the province’s energy procurement to include battery storage options alongside natural gas peaker plants, with NRStor proposing a large‑scale battery project in Pictou County and the IESO opening an open call for proposals. The story was published on September ninth, two thousand twenty‑six.\nPremier Tim Houston is expanding Nova Scotia's energy procurement to include battery storage options alongside natural gas peaker plants, with NRStor proposing a large-scale battery project in Pictou County. The IESO has opened an open call for proposals, signaling a shift toward cleaner energy infrastructure in Canada's maritime provinces. How will this procurement shift affect your energy supply chain?\n\n11. Carney Warns of Tough Times Ahead\nThe Standard (st. Catharines) reports that Prime Minister Mark Carney says Canada’s pivot away from the United States will cost money but is necessary. His government implemented retaliatory tariffs on U.S. goods after President Donald Trump imposed new duties. Carney says the goal is to make Canada stronger and more resilient.\nPrime Minister Mark Carney acknowledges that Canada's pivot away from the United States will cost money but insists it is necessary for long-term resilience. His government's retaliatory tariffs on U.S. goods reflect a strategic choice to prioritize domestic protection over short-term economic comfort. As supply chain leaders navigate this new landscape, the question remains: is the cost worth the independence?\n\nThis media intelligence briefing underscores why print media monitoring remains critical for business decision-making. Press Monitor's curated intelligence helps leaders navigate the news on supply chain with confidence. Which of these stories will have the biggest impact on your operations?\n\n#TradeWar #TrumpTariffs #CanadaUS",
+    "text": "11 Essential Supply Chain Stories for Canadian Business Leaders\nhttps://t.co/aITwaCNNMc\n\nAccording to Press Monitor's tracking of Canadian publications, this press review covers 11 essential supply chain and procurement stories shaping Canadian business today. From trade policy escalations to procurement bans and digital transformation initiatives, these developments demand immediate attention.\n\n1. Trump Removes Canada from U.S. Procurement Program\nEdmonton Journal reports that U.S. President Donald Trump announced on Tuesday that Canadian-origin products will be removed from the U.S. General Services Administration's Multiple Award Schedules unless Canada restores full and fair reciprocity for American farmers and companies. The announcement came the same day Canadian retaliatory tariffs took effect on twenty-eight billion dollars worth of U.S. imports, following a breakdown in trade negotiations on August 21. Canadian Prime Minister Mark Carney stated that the tariffs are necessary to protect Canadian workers, companies, and communities.\nPresident Donald Trump has directed the removal of Canadian-origin products from the U.S. General Services Administration's procurement schedules, threatening access to a market worth over $50 billion annually. This move follows Canada's retaliatory tariffs on $28 billion in U.S. imports and marks a dramatic escalation in North American trade tensions. For Canadian exporters and government contractors, reciprocity is now the price of market access. How will your organization adapt to this new procurement reality?\n\n2. $28 Billion Canadian Retaliatory Tariffs Begin\nEdmonton Journal reports that Canada has imposed retaliatory tariffs on twenty-eight billion Canadian dollars worth of United States goods, effective Tuesday. This measure responds directly to Washington’s recent imposition of a fifty per cent levy on approximately twenty-eight billion Canadian dollars of Canadian exports. Prime Minister Mark Carney stated the duties are necessary to shield domestic workers and companies, while President Donald Trump immediately threatened to bar Canadian goods from federal purchasing programs.\nCanada's retaliatory tariffs on $28 billion worth of U.S. goods took effect Tuesday, responding directly to Washington's 50 percent levy on Canadian exports. Prime Minister Mark Carney defended the measures as essential for protecting domestic workers and companies. The tariffs signal Canada's willingness to absorb short-term economic pain to defend long-term trade principles. What does this mean for your cross-border supply chain?\n\n3. Trump Tariffs Threaten Bombardier US Jobs\nThe Hamilton Spectator reports that Republican politicians in Kansas are defending Bombardier against Donald Trump's threat to ban aircraft sales unless production moves to the United States, arguing the move puts American jobs at risk. As Canadian counter-tariffs take effect, Trump's Truth Social post sparked concern among more than 1,200 workers at the company's US headquarters in Wichita, while the International Association of Machinists and Aerospace Workers voiced firm opposition to the proposed ban. Bombardier responded that many components are produced in the US and its supply chain relies on 2,800 American suppliers across 47 states.\nDonald Trump's threat to ban Bombardier aircraft sales from the United States puts over 1,200 American jobs at risk in Wichita, Kansas. The Canadian aerospace giant relies on 2,800 American suppliers across 47 states, making a unilateral ban economically self-defeating. Republican politicians in Kansas and the International Association of Machinists and Aerospace Workers have both opposed the move. How will this aerospace trade dispute affect your supplier network?\n\n4. Trump Bans Canadian Alcohol, Motorcycles, and Dairy\nThe Hamilton Spectator reports that U.S. President Donald Trump signed five executive orders on Tuesday to escalate trade retaliation against Canada, imposing a complete import ban on goods such as motorcycles, certain dairy products, and alcoholic beverages. The orders take effect later this month and follow Ottawa's recent tariffs imposed in response to 50 per cent duties Washington had previously levied. Prime Minister Mark Carney warned that Canada's pivot away from the United States will carry a cost but stressed the alternative would be far worse.\nPresident Trump signed five executive orders imposing a complete import ban on Canadian motorcycles, certain dairy products, and alcoholic beverages. The sweeping restrictions escalate a trade war that began after Ottawa imposed counter-tariffs on U.S. goods. These product-specific bans go beyond tariff disputes, targeting consumer goods that affect everyday Canadians and American businesses alike. Are product-level bans the next frontier in trade escalation?\n\n5. $1.5 Billion Michigan Auto Exports Face Tariffs\nThe Chronicle Herald reports that Canada new retaliatory tariffs, ranging from 15 to 50 per cent, will hit United States exports hardest, impacting roughly one point five billion Canadian dollars in Michigan auto parts shipments annually. Analysts warn that duties on vehicles, steel, and aluminium will squeeze wholesale margins, freeze expansion and hiring plans, and push retailers to source cheaper goods from overseas markets.\nCanada's retaliatory tariffs, ranging from 15 to 50 percent, will hit approximately $1.5 billion in Michigan auto parts shipments annually. Analysts warn that duties on vehicles, steel, and aluminium will squeeze wholesale margins, freeze expansion plans, and push retailers to source cheaper goods from overseas. The auto supply chain disruption demonstrates how trade policy reverberates through regional economies. Is your supply chain diversified enough to withstand these shocks?\n\n6. Carney Launches Digital Transformation Canada\nOttawa Citizen reports that Prime Minister Mark Carney has established a new digital transformation agency led by former Google chief financial officer Patrick Pichette. The initiative aims to scale shared government solutions, modernize public servant tools, and leverage federal purchasing power to support Canadian technology firms. However, the push for greater artificial intelligence integration comes as most federal departments face operating budget cuts of up to fifteen per cent, raising questions about workforce impacts.\nPrime Minister Mark Carney has established a new digital transformation agency led by former Google CFO Patrick Pichette. The initiative aims to scale shared government solutions and leverage federal purchasing power to support Canadian technology firms. However, with most federal departments facing up to 15 percent budget cuts, the agency's ability to deliver on its promise remains uncertain. How will this new agency reshape government procurement of technology services?\n\n7. Tariffs Could Cost Calgary Hundreds of Millions\nCalgary Herald reports that the trade war between Canada and the United States could add hundreds of millions of Canadian dollars to the city’s costs, with estimates ranging from three point five million to four hundred sixty‑six million Canadian dollars. The city’s supply chain management team says the impact will hit infrastructure projects such as the Green Line transit, Scotia Place, water projects and new fire trucks. The city is exploring mitigation strategies and lobbying the federal government for a tariff relief program.\nThe Canada-U.S. trade war could add between $3.5 million and $466 million to Calgary's municipal costs, impacting infrastructure projects including the Green Line transit, Scotia Place, and water projects. The city's supply chain management team is exploring mitigation strategies and lobbying the federal government for a tariff relief program. How will municipal budgets absorb these trade war costs?\n\n8. Houthi Rebels Strike Saudi Oil Facilities\nThe Globe And Mail (ottawa/quebec Edition) reports that Iranian-backed Houthi rebels struck Saudi oil facilities and utilities on Tuesday, wounding more than 70 people and igniting fires. The assault marks a significant escalation in regional tensions, threatening global oil supplies amid ongoing maritime route disruptions. The attacks targeted key industrial hubs and military bases along the Red Sea coast.\nIranian-backed Houthi rebels struck Saudi oil facilities and utilities, wounding over 70 people and igniting fires. The assault marks a significant escalation in regional tensions, threatening global oil supplies amid ongoing maritime route disruptions. For Canadian supply chain planners, this underscores the geopolitical risks inherent in global energy procurement and the need for diversified sourcing strategies. How are you mitigating geopolitical risk in your energy supply chain?\n\n9. Sapporo Shifts Brewing Amid 50 Percent Tariffs\nNational Post - (latest Edition) reports that Japanese brewer Sapporo Breweries Limited is moving non alcoholic beer production from Canada to the United States due to newly imposed fifty per cent tariffs on Canadian beer exports. The company plans to shift manufacturing by the first half of twenty twenty seven and may build or acquire a brewery on the West Coast to reinvigorate its North American operations following years of underperforming acquisitions. This strategic pivot aims to protect market share in the lucrative United States market while navigating broader trade tensions between Washington and Ottawa.\nJapanese brewer Sapporo Breweries Limited is moving non-alcoholic beer production from Canada to the United States due to newly imposed 50 percent tariffs on Canadian beer exports. The company plans to shift manufacturing by the first half of 2027 and may build or acquire a brewery on the West Coast. This strategic pivot illustrates how tariffs force multinational supply chain restructuring. What other industries will follow suit?\n\n10. Nova Scotia Premier Expands Battery Storage Procurement\nThe Chronicle Herald reports that Premier Tim Houston of Nova Scotia is expanding the province’s energy procurement to include battery storage options alongside natural gas peaker plants, with NRStor proposing a large‑scale battery project in Pictou County and the IESO opening an open call for proposals. The story was published on September ninth, two thousand twenty‑six.\nPremier Tim Houston is expanding Nova Scotia's energy procurement to include battery storage options alongside natural gas peaker plants, with NRStor proposing a large-scale battery project in Pictou County. The IESO has opened an open call for proposals, signaling a shift toward cleaner energy infrastructure in Canada's maritime provinces. How will this procurement shift affect your energy supply chain?\n\n11. Carney Warns of Tough Times Ahead\nThe Standard (st. Catharines) reports that Prime Minister Mark Carney says Canada’s pivot away from the United States will cost money but is necessary. His government implemented retaliatory tariffs on U.S. goods after President Donald Trump imposed new duties. Carney says the goal is to make Canada stronger and more resilient.\nPrime Minister Mark Carney acknowledges that Canada's pivot away from the United States will cost money but insists it is necessary for long-term resilience. His government's retaliatory tariffs on U.S. goods reflect a strategic choice to prioritize domestic protection over short-term economic comfort. As supply chain leaders navigate this new landscape, the question remains: is the cost worth the independence?\n\nThis media intelligence briefing underscores why print media monitoring remains critical for business decision-making. Press Monitor's curated intelligence helps leaders navigate the news on supply chain with confidence. Which of these stories will have the biggest impact on your operations?\n\n#TradeWar #TrumpTariffs #CanadaUS",
+    "post_url": "https://twitter.com/pressmonitorcan/status/2097838746444132466",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T00:05:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:15.379Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc9a742dd0e95b5baad17"
+    },
+    "message_id": "twitter_2100060234664575420",
+    "topic_key": "budget supplier sourcing",
+    "search_keyword": "budget supplier sourcing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "xmdropship",
+    "title": "A lot of people think sourcing from China is just about finding a supplier.\n\nIt’s not.\n\nThe right supplier isn’t simply the one with the lowest price. You need the right product, competitive pricing, reliable quality, clear communication, stable inventory, and a partner who can keep up as your business grows.\n\nThat’s where I come in.\n\nI work directly with suppliers and factories in China to help e-commerce businesses with sourcing, pricing, product checks, inventory, and fulfillment.\n\nAlready have a winning product? I can help you source it.\n\nStill looking for one? I can help with that too.\n\nIf you’re looking for a reliable sourcing partner in China, feel free to DM me. \n#Dropshipping #Shopidy #Ecommerce #OnlineBusiness #Sourcing #EcommerceTips",
+    "text": "A lot of people think sourcing from China is just about finding a supplier.\n\nIt’s not.\n\nThe right supplier isn’t simply the one with the lowest price. You need the right product, competitive pricing, reliable quality, clear communication, stable inventory, and a partner who can keep up as your business grows.\n\nThat’s where I come in.\n\nI work directly with suppliers and factories in China to help e-commerce businesses with sourcing, pricing, product checks, inventory, and fulfillment.\n\nAlready have a winning product? I can help you source it.\n\nStill looking for one? I can help with that too.\n\nIf you’re looking for a reliable sourcing partner in China, feel free to DM me. \n#Dropshipping #Shopidy #Ecommerce #OnlineBusiness #Sourcing #EcommerceTips",
+    "post_url": "https://twitter.com/xmdropship/status/2100060234664575420",
+    "score": 4,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-16T03:12:31Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:15.787Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc9a742dd0e95b5baad18"
+    },
+    "message_id": "twitter_2100480016286982322",
+    "topic_key": "budget supplier sourcing",
+    "search_keyword": "budget supplier sourcing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "GEP_Worldwide",
+    "title": "Supply chain disruptions demand fast decisions, not bigger teams. Discover how on-demand procurement services help organizations access specialized expertise, strengthen resilience, and respond to disruption without permanent hiring: https://t.co/PLgXfXrddT\n#GEP #Procurement #SupplyChain #AI",
+    "text": "Supply chain disruptions demand fast decisions, not bigger teams. Discover how on-demand procurement services help organizations access specialized expertise, strengthen resilience, and respond to disruption without permanent hiring: https://t.co/PLgXfXrddT\n#GEP #Procurement #SupplyChain #AI",
+    "post_url": "https://twitter.com/GEP_Worldwide/status/2100480016286982322",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T07:00:35Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:15.988Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc9a842dd0e95b5baad19"
+    },
+    "message_id": "twitter_2079572374043705477",
+    "topic_key": "budget supplier sourcing",
+    "search_keyword": "budget supplier sourcing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "dmitry_alexin",
+    "title": "Today, we are announcing H1. H1 is a model developed by @HandoffAI that performs autonomous construction takeoffs at the level of a human estimator.\n\nThis is an incredible accomplishment for our team that has been in the works since we started the company in 2019. I also believe that this is a monumental step forward for the construction industry as a whole.\n\nWhy does this matter? Until now, reading a set of construction drawings and extracting a detailed understanding of how to build a project required a human. That is what a takeoff is.\n\nH1 automates this process entirely, meaning that any construction drawing can now become machine-readable. With a single API call, you can accurately extract all of the characteristics of a building, including detailed material quantities down to every single stud and nail.\n\nCombined with Handoff’s existing AI estimating models and live construction cost data, this also means that every construction drawing can become an accurate construction budget, with materials that can be purchased directly through our supplier partners in just a few clicks.\n\nFrom the early days of Handoff, we said that we were codifying the language of buildings and developing an abstraction layer that would enable anyone to interact with construction blueprints as if they were structured data.\n\nThis is no longer a demo. H1 is available to thousands of construction companies on the Handoff platform, as well as at thousands of Pro Desk locations across every US state.\n\nIn addition to announcing our model, we’re publishing a research paper that describes how we built it. We’re also open-sourcing the benchmark we use to validate that Handoff outperforms every foundation model, as well as human estimators, on a set of permissioned construction blueprints.\n\nIf you are a construction supplier or an enterprise looking to integrate AI takeoffs into your systems, please don’t hesitate to reach out to me and we’ll set you up with access.\n\nLet’s build something great.",
+    "text": "Today, we are announcing H1. H1 is a model developed by @HandoffAI that performs autonomous construction takeoffs at the level of a human estimator.\n\nThis is an incredible accomplishment for our team that has been in the works since we started the company in 2019. I also believe that this is a monumental step forward for the construction industry as a whole.\n\nWhy does this matter? Until now, reading a set of construction drawings and extracting a detailed understanding of how to build a project required a human. That is what a takeoff is.\n\nH1 automates this process entirely, meaning that any construction drawing can now become machine-readable. With a single API call, you can accurately extract all of the characteristics of a building, including detailed material quantities down to every single stud and nail.\n\nCombined with Handoff’s existing AI estimating models and live construction cost data, this also means that every construction drawing can become an accurate construction budget, with materials that can be purchased directly through our supplier partners in just a few clicks.\n\nFrom the early days of Handoff, we said that we were codifying the language of buildings and developing an abstraction layer that would enable anyone to interact with construction blueprints as if they were structured data.\n\nThis is no longer a demo. H1 is available to thousands of construction companies on the Handoff platform, as well as at thousands of Pro Desk locations across every US state.\n\nIn addition to announcing our model, we’re publishing a research paper that describes how we built it. We’re also open-sourcing the benchmark we use to validate that Handoff outperforms every foundation model, as well as human estimators, on a set of permissioned construction blueprints.\n\nIf you are a construction supplier or an enterprise looking to integrate AI takeoffs into your systems, please don’t hesitate to reach out to me and we’ll set you up with access.\n\nLet’s build something great.",
+    "post_url": "https://twitter.com/dmitry_alexin/status/2079572374043705477",
+    "score": 110,
+    "num_comments": 27,
+    "created_utc": {
+      "$date": "2026-07-21T14:21:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:16.189Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc9a842dd0e95b5baad1b"
+    },
+    "message_id": "twitter_2044758207646531876",
+    "topic_key": "budget supplier sourcing",
+    "search_keyword": "budget supplier sourcing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "DeRonin_",
+    "title": "How to sell a $500-5k/mo AI services in 6 months with Marketing Studio:\n\nBy the end, you'll be able to:\n\n- find and validate winning products fast\n- generate video ads for every platform without a team\n- run paid traffic profitably\n- operate multiple products at once\n- scale without hiring\n\nSo, let's discuss your roadmap month by month\n\nMonth 1: Get solid enough in e-commerce fundamentals\n\nWhat to learn:\n\n- how product margins actually work\n- Shopify or TikTok Shop basics\n- how to read competitor ads\n- what makes a product \"video-friendly\"\n- supplier sourcing (CJdropshipping, Alibaba basics)\n- basic analytics: CTR, ROAS, CPC, CPM\n- what a winning product page looks like\n- payment processing and fulfillment basics\n\nMonth 2: Master AI video ad creation\n\nWhat to learn:\n\n- product URL to video ad workflow in @higgsfield\n- testing multiple creatives from one product\n- batch generation: 50 products, hundreds of ads\n- how to choose a winning one\n\nMonth 3: Learn product testing at scale\n\nWhat to learn:\n\n- how to validate demand before sourcing inventory\n- reading engagement signals before spending on ads\n- creative iteration: kill losers fast, scale winners\n- A/B testing ad styles against each other\n- competitor creative analysis\n- building a swipe file of your own winning formats\n- when to move on from a product\n\nMonth 4: Paid distribution and platform mechanics\n\nWhat to learn:\n\n- TikTok Ads Manager basics\n- Meta Ads structure: campaigns, ad sets, creatives\n- how the algorithm decides what to amplify\n- budget allocation across platforms\n- retargeting basics\n- organic seeding before paid amplification\n- creator content vs AI content: when to mix\n- reading your first profitable campaign\n\nMonth 5: Operations, reliability, and margin protection\n\nWhat to learn:\n\n- running 10+ products without losing track\n- supplier relationships and backup sourcing\n- customer support systems\n- return rate management\n- ad account health and policy compliance\n- creative refresh cadence (when ads die)\n- cost monitoring: ad spend vs inventory vs production\n- cash flow basics for product businesses\n\nMonth 6: Specialize and become hard to compete with\n\nthese skills you gained can be applied in three directions\n\nyou need to choose one of them and focus on practice\n\nalthough everything mentioned above is also best learned purely through practice\n\nDirection 1: Solo product operator\n\nBest if you want revenue fast\n\nFocus on:\n\n- one-product Shopify store blitz\n- TikTok Shop with AI video listings\n- dropshipping at AI speed\n- test 50, scale the winners\n\nDirection 2: AI marketing agency\n\nFocus on:\n\n- selling video ad packages to brands\n- white-label AI video production\n- pitch via the ads themselves\n- recurring client model at scale\n\nDirection 3: E-commerce portfolio builder\n\nFocus on:\n\n- Amazon FBA with AI video ads\n- Print-on-demand with AI marketing\n- Etsy SEO + video listings\n- multi-platform product empire\n\nThis roadmap will help you go through a practical path, and the key is to test every step on real products with real money\n\nBy month six, you will already have several products launched, ads running, and your first profitable store\n\nThe barrier between you and that was always distribution. That barrier is gone\n\nSave it so you don't lose it and can return to study later",
+    "text": "How to sell a $500-5k/mo AI services in 6 months with Marketing Studio:\n\nBy the end, you'll be able to:\n\n- find and validate winning products fast\n- generate video ads for every platform without a team\n- run paid traffic profitably\n- operate multiple products at once\n- scale without hiring\n\nSo, let's discuss your roadmap month by month\n\nMonth 1: Get solid enough in e-commerce fundamentals\n\nWhat to learn:\n\n- how product margins actually work\n- Shopify or TikTok Shop basics\n- how to read competitor ads\n- what makes a product \"video-friendly\"\n- supplier sourcing (CJdropshipping, Alibaba basics)\n- basic analytics: CTR, ROAS, CPC, CPM\n- what a winning product page looks like\n- payment processing and fulfillment basics\n\nMonth 2: Master AI video ad creation\n\nWhat to learn:\n\n- product URL to video ad workflow in @higgsfield\n- testing multiple creatives from one product\n- batch generation: 50 products, hundreds of ads\n- how to choose a winning one\n\nMonth 3: Learn product testing at scale\n\nWhat to learn:\n\n- how to validate demand before sourcing inventory\n- reading engagement signals before spending on ads\n- creative iteration: kill losers fast, scale winners\n- A/B testing ad styles against each other\n- competitor creative analysis\n- building a swipe file of your own winning formats\n- when to move on from a product\n\nMonth 4: Paid distribution and platform mechanics\n\nWhat to learn:\n\n- TikTok Ads Manager basics\n- Meta Ads structure: campaigns, ad sets, creatives\n- how the algorithm decides what to amplify\n- budget allocation across platforms\n- retargeting basics\n- organic seeding before paid amplification\n- creator content vs AI content: when to mix\n- reading your first profitable campaign\n\nMonth 5: Operations, reliability, and margin protection\n\nWhat to learn:\n\n- running 10+ products without losing track\n- supplier relationships and backup sourcing\n- customer support systems\n- return rate management\n- ad account health and policy compliance\n- creative refresh cadence (when ads die)\n- cost monitoring: ad spend vs inventory vs production\n- cash flow basics for product businesses\n\nMonth 6: Specialize and become hard to compete with\n\nthese skills you gained can be applied in three directions\n\nyou need to choose one of them and focus on practice\n\nalthough everything mentioned above is also best learned purely through practice\n\nDirection 1: Solo product operator\n\nBest if you want revenue fast\n\nFocus on:\n\n- one-product Shopify store blitz\n- TikTok Shop with AI video listings\n- dropshipping at AI speed\n- test 50, scale the winners\n\nDirection 2: AI marketing agency\n\nFocus on:\n\n- selling video ad packages to brands\n- white-label AI video production\n- pitch via the ads themselves\n- recurring client model at scale\n\nDirection 3: E-commerce portfolio builder\n\nFocus on:\n\n- Amazon FBA with AI video ads\n- Print-on-demand with AI marketing\n- Etsy SEO + video listings\n- multi-platform product empire\n\nThis roadmap will help you go through a practical path, and the key is to test every step on real products with real money\n\nBy month six, you will already have several products launched, ads running, and your first profitable store\n\nThe barrier between you and that was always distribution. That barrier is gone\n\nSave it so you don't lose it and can return to study later",
+    "post_url": "https://twitter.com/DeRonin_/status/2044758207646531876",
+    "score": 54,
+    "num_comments": 13,
+    "created_utc": {
+      "$date": "2026-04-16T12:42:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:16.587Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc9a842dd0e95b5baad1c"
+    },
+    "message_id": "twitter_2087722198937084412",
+    "topic_key": "budget supplier sourcing",
+    "search_keyword": "budget supplier sourcing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "sophiazl105",
+    "title": "💡Supply tips\nA Product Getting Orders Only Proves You Chose the Right Product. Staying Profitable After It Goes Viral Proves Your Supply Chain Is Ready.\n\nWhen testing a product, many cross-border sellers focus heavily on CTR, conversion rate, ROAS, and order volume. Once the numbers start going up, the natural reaction is to increase the ad budget and scale as quickly as possible.\n\nBut after working with sellers for years, we’ve found that what truly determines whether a product can scale sustainably isn’t just advertising performance. It’s whether your supply chain can keep up once the orders start pouring in.\n\nA product can go viral in just a few days. But expanding production capacity, sourcing raw materials, manufacturing, quality control, packaging, and fulfillment all take time. Without proper preparation, the faster your orders grow, the more pressure you put on your supply chain.\n\nFor example, a supplier may handle a few dozen orders a day without any issues. But when orders suddenly jump to hundreds or even thousands, do they have enough raw materials? Can the factory increase production quickly? Will lead times become longer? Can packaging keep up? Does your logistics provider have enough capacity to handle the increased volume?\n\nAll of these factors can directly impact customer experience and your final profit.\n\nMore importantly, many sellers only start addressing these problems after their product has already taken off. By then, it may already be too late.\n\nThat’s why our advice to cross-border sellers is simple: Don’t wait until your product goes viral to prepare your supply chain. Start preparing for the next stage of growth as soon as you see strong signals from your product.\n\nConfirm your supplier’s actual production capacity, understand raw material lead times, lock in production schedules, and have backup suppliers and logistics solutions ready. When orders really start accelerating, you’ll have enough capacity and flexibility to handle the growth.\n\nBecause the hardest part of cross-border e-commerce isn’t getting a product to sell. It’s keeping it in stock, shipping orders on time, maintaining quality, and protecting your margins after sales start taking off.\n\nA winning product determines how much you can sell. Your supply chain determines how much you can ultimately earn.\n\nThat’s why we believe product selection, advertising, and supply chain management should never be treated as separate parts of the business. They should be considered together from the very first day of product testing.",
+    "text": "💡Supply tips\nA Product Getting Orders Only Proves You Chose the Right Product. Staying Profitable After It Goes Viral Proves Your Supply Chain Is Ready.\n\nWhen testing a product, many cross-border sellers focus heavily on CTR, conversion rate, ROAS, and order volume. Once the numbers start going up, the natural reaction is to increase the ad budget and scale as quickly as possible.\n\nBut after working with sellers for years, we’ve found that what truly determines whether a product can scale sustainably isn’t just advertising performance. It’s whether your supply chain can keep up once the orders start pouring in.\n\nA product can go viral in just a few days. But expanding production capacity, sourcing raw materials, manufacturing, quality control, packaging, and fulfillment all take time. Without proper preparation, the faster your orders grow, the more pressure you put on your supply chain.\n\nFor example, a supplier may handle a few dozen orders a day without any issues. But when orders suddenly jump to hundreds or even thousands, do they have enough raw materials? Can the factory increase production quickly? Will lead times become longer? Can packaging keep up? Does your logistics provider have enough capacity to handle the increased volume?\n\nAll of these factors can directly impact customer experience and your final profit.\n\nMore importantly, many sellers only start addressing these problems after their product has already taken off. By then, it may already be too late.\n\nThat’s why our advice to cross-border sellers is simple: Don’t wait until your product goes viral to prepare your supply chain. Start preparing for the next stage of growth as soon as you see strong signals from your product.\n\nConfirm your supplier’s actual production capacity, understand raw material lead times, lock in production schedules, and have backup suppliers and logistics solutions ready. When orders really start accelerating, you’ll have enough capacity and flexibility to handle the growth.\n\nBecause the hardest part of cross-border e-commerce isn’t getting a product to sell. It’s keeping it in stock, shipping orders on time, maintaining quality, and protecting your margins after sales start taking off.\n\nA winning product determines how much you can sell. Your supply chain determines how much you can ultimately earn.\n\nThat’s why we believe product selection, advertising, and supply chain management should never be treated as separate parts of the business. They should be considered together from the very first day of product testing.",
+    "post_url": "https://twitter.com/sophiazl105/status/2087722198937084412",
+    "score": 3,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-08-13T02:05:34Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:06:16.787Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabc9a842dd0e95b5baad1d"
+    },
+    "message_id": "twitter_2074445207135805629",

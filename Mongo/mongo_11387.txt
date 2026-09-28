@@ -1,0 +1,416 @@
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T07:33:16.987Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae3abd660c60840397e7bf"
+    },
+    "message_id": "reddit_t3_1wkfo9t",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "IndicKnowledgeSystems",
+    "username": "RossbihariGhost1900",
+    "title": "Nedunchezhian Swaminathan and the Science of Turbulent Combustion: From Flame Physics to Hydrogen, MILD Combustion and Engineering-Scale Computational Models",
+    "text": "Nedunchezhian Swaminathan and the Science of Turbulent Combustion: From Flame Physics to Hydrogen, MILD Combustion and Engineering-Scale Computational Models\n\nProfessor  Nedunchezhian “Swami” Swaminathan  is an Indian-born mechanical engineer and combustion scientist whose research has concentrated on one of the most difficult problems in thermal engineering: predicting what happens when  turbulence, chemical reactions, molecular diffusion, heat release and acoustics interact simultaneously inside a practical combustion system . He is Professor of Mechanical Engineering at the University of Cambridge and a Fellow and Director of Studies in Engineering at Robinson College. He trained first in mechanical engineering at PSG College of Technology, continued with aerospace engineering at the Indian Institute of Science, and completed a PhD in mechanical engineering at the University of Colorado Boulder.   Swaminathan's importance is not based on inventing a single engine or discovering one new chemical reaction. His achievement is more fundamental and, in modern engineering, arguably more broadly useful: he has worked on constructing the  physics and computational modelling framework necessary to turn extremely complicated combustion phenomena into quantities engineers can predict .   That distinction matters. A gas-turbine combustor may contain billions of interacting vortical structures and chemical events occurring over radically different time and length scales. Engineers nevertheless need answers to apparently simple questions: Where will the flame sit? Will it blow out? How hot will particular regions become? How much pollutant will form? Will the combustor oscillate? How noisy will it be? Can hydrogen replace natural gas? Can the system operate lean enough to reduce emissions without becoming unstable?   The University of Cambridge described the importance of Swaminathan's work particularly clearly when announcing his election to the Royal Academy of Engineering in 2025. It credited his work on  turbulence–scalar–chemistry interaction  with enabling a modelling framework capable of quantitatively estimating temperature distributions, emissions, combustion noise and instabilities within a common simulation framework.   Understanding how he reached that point requires looking at several interconnected strands of his work.   1. The fundamental problem: a turbulent flame is not an ordinary flame   A laminar flame can, in principle, be understood as a comparatively ordered reaction zone. Fuel and oxidizer diffuse, molecules react, heat is liberated, and the reaction zone propagates into fresh mixture.   Put the same chemistry into a gas turbine, aircraft engine or high-speed industrial burner and the situation changes completely.   The flow becomes turbulent. Large vortices break into smaller vortices. The flame surface stretches, wrinkles and folds. Different regions experience different temperatures and mixture compositions. Chemical reaction changes the density of the gas, which in turn changes the turbulence that distorted the flame in the first place.   Thus the interactions run in both directions:    turbulence → flame → heat release → density and pressure changes → turbulence.    At the same time, molecular mixing determines whether fuel and oxidizer can reach one another rapidly enough for combustion, while chemical kinetics determines whether the mixed gases react before turbulence changes them again.   Swaminathan's career has largely been about understanding this coupled system sufficiently well that it can be represented mathematically without requiring an impossibly expensive simulation of every molecule and turbulent eddy.   This is particularly important for  lean combustion , in which more air is present than is theoretically required to burn the fuel. Lean burning can substantially reduce flame temperatures and therefore help suppress certain pollutants, especially nitrogen oxides, but lean flames can also become unstable, oscillatory or prone to extinction.   Swaminathan and Kenneth Bray's 2011 Cambridge University Press volume  Turbulent Premixed Flames  was organised around precisely this problem. They emphasized that lean premixed combustion has the potential for extremely low emissions while simultaneously being particularly susceptible to combustion oscillations.   That conflict— clean combustion versus stable combustion —has remained central to Swaminathan's research.   2. Turbulence–chemistry interaction: the intellectual core of his work   One of the recurring concepts in Swaminathan's publications is  turbulence–chemistry interaction .   This sounds abstract, but it is the central difficulty of computational combustion.   Suppose a computer simulation divides a gas-turbine combustor into millions of computational cells. Even these cells are enormous compared with the smallest chemical reaction zones. Within one computational cell there may therefore simultaneously be unburned gas, reacting gas and fully burned products.   The computer cannot simply say:     temperature = 1500 K, therefore reaction rate = X.     Reaction rates are highly nonlinear. Averaging the mixture before calculating chemistry generally does not give the same result as calculating chemistry locally and then averaging it.   Consequently, engineers need  closure models : mathematical relationships that represent the effects of unresolved turbulent fluctuations and reaction structures.   A major part of Swaminathan's research has been aimed at constructing such closures from physical principles and testing them against high-fidelity simulations and experiments.   This work includes models involving quantities such as:     reaction progress variables,   scalar dissipation rates,   flame surface behaviour,   turbulence-induced flame strain,   probability-density functions,   filtered reaction rates,   heat-release-rate fluctuations.     The importance of these quantities lies in translating microscopic combustion behaviour into variables that a practical CFD calculation can actually carry.   Swaminathan's election as a Fellow of the Combustion Institute in the 2018 class specifically recognized his research in  numerical simulation of combustion, particularly premixed gaseous fuel–air mixtures .   3. Scalar dissipation and the structure of premixed turbulent flames   An important theme in Swaminathan's earlier theoretical research concerned  scalar dissipation .   In combustion, a scalar might describe mixture composition or the extent to which a fuel–air mixture has reacted. Turbulence creates steep gradients in such quantities by stretching and folding the fluid. Molecular diffusion simultaneously tries to erase those gradients.   The scalar dissipation rate therefore provides information about how vigorously molecular mixing destroys concentration variations.   In premixed combustion this becomes especially interesting because chemical reaction creates strong density changes through thermal expansion. Swaminathan and collaborators investigated how this  dilatation caused by combustion  alters scalar-dissipation behaviour.   This type of research may appear remote from gas turbines, but it provides the theoretical foundation required for practical models. If a combustion model predicts how rapidly unresolved variations are destroyed incorrectly, the resulting heat-release rate, flame position and pollutant predictions can all become wrong.   His work with researchers including H. Kolla developed  strained-flamelet formulations for turbulent premixed flames . The flamelet idea is powerful because, instead of attempting to calculate every reaction directly inside the turbulent flow, one treats complicated turbulent flames as ensembles of relatively thin flame structures whose behaviour can be characterised beforehand. Strain—the deformation imposed on the flame by the flow—can then be incorporated into those structures.   The broader strategy appears repeatedly throughout Swaminathan's research:    study the detailed physics → identify the controlling quantities → build a reduced physical representation → insert it into engineering CFD.    4. Making Large Eddy Simulation useful for real combustion   Another major component of Swaminathan's work involves  Large Eddy Simulation , or LES.   There are roughly three levels at which turbulent flows might be calculated.   Direct Numerical Simulation resolves essentially the complete dynamically relevant turbulence field, but its computational requirements become enormous for practical engineering systems.   Traditional Reynolds-Averaged Navier–Stokes approaches average most turbulence behaviour and model it statistically, making calculations cheaper but potentially removing important transient structures.   LES occupies the middle ground. It calculates the larger turbulent eddies directly while modelling the smaller unresolved motions.   For gas-turbine combustion, this is attractive because many practically important phenomena—flame motion, vortex shedding, local extinction, ignition and thermoacoustic oscillations—are inherently unsteady.   But LES creates another problem: the chemical reaction zones are normally smaller than the LES grid.   Swaminathan's group has therefore devoted substantial attention to  sub-grid combustion modelling .   For example, work with Ivan Langella and Robert Pitz applied an unstrained-flamelet sub-grid closure to bluff-body-stabilised premixed flames. The simulations reproduced measured velocity, temperature and species behaviour across conditions with substantially different turbulence intensities, indicating that a physically constructed flamelet closure could function across multiple combustion regimes.   His group has similarly developed and tested models for turbulent lifted jet flames. A study with Shaohong Ruan and Oliver Darbyshire combined flamelet models representing premixed and non-premixed burning with probability-density descriptions and tested those models using DNS before applying them to flame lift-off and flame-brush prediction.   This methodology— DNS for understanding and model construction, LES for realistic applications —is characteristic of Swaminathan's research programme.   5. Direct Numerical Simulation as a scientific microscope   Swaminathan has not treated DNS simply as a method for producing impressive computational images. Instead, his group frequently uses it almost like a numerical laboratory.   In DNS, the governing equations of fluid mechanics and combustion are solved without conventional turbulence models down to the smallest relevant turbulent scales. This is expensive, which limits the physical size and operating conditions that can be examined.   Its value is therefore not usually that it directly designs an entire engine.   Its value is that DNS provides an exceptionally detailed dataset from which scientists can ask:   What does a flame actually look like internally?   Which terms dominate the species equations?   Where does ignition occur?   How does turbulence change molecular mixing?   Which quantities should an LES model contain?   How accurate are proposed closure assumptions?   One of the clearest examples of Swaminathan using DNS in this fashion concerns  MILD combustion .   6. MILD combustion: uncovering a radically distributed combustion regime   MILD stands for  Moderate or Intense Low-Oxygen Dilution  combustion.   The concept involves diluting reactants sufficiently and often preheating them so that combustion occurs without the extremely intense localized flame fronts characteristic of ordinary flames.   MILD combustion is attractive because it can provide relatively uniform temperature distributions, low pollutant production, reduced acoustic behaviour and high efficiency.   But precisely because its flame structure differs from conventional combustion, ordinary combustion models do not necessarily work.   Swaminathan's group used DNS to examine this strange combustion regime from inside.   A particularly important study with Nguyen Anh Khoa Doan and Yuki Minamoto simulated MILD combustion with spatial variations in mixture fraction. The analysis showed that MILD combustion cannot simply be classified as one familiar flame type. Instead, the computed field contained  ignition fronts, lean premixed flames, rich premixed flames and non-premixed burning structures  within the same system.   That is a crucial conceptual result.   An engineer accustomed to asking whether a combustor is \"premixed\" or \"non-premixed\" may be imposing an artificial classification on a regime in which several burning mechanisms coexist.   Further work by Doan and Swaminathan examined the competition between  autoignition and flame propagation . They found that chemical reactions were distributed through a much larger portion of the domain than in conventional combustion. Autoignition tended to occur in suitable lean regions and could subsequently spread into richer mixtures either through additional ignition events or flame-like propagation. The balance was strongly influenced by mixture-fraction length scales.   The significance is broader than the individual simulations.   Swaminathan's MILD-combustion research shows how apparently \"flameless\" combustion can actually consist of a complicated mixture of local physical mechanisms. Once those mechanisms are identified, practical reduced-order models can be constructed intelligently instead of being borrowed blindly from conventional flames.   Cambridge describes this goal as developing  “green” and “silent” combustors  by obtaining fundamental insight into turbulent fuel-lean and MILD combustion and translating that insight into models suitable for engineering calculations.   7. Hydrogen combustion and the transition away from conventional fuels   Swaminathan's work has become especially relevant as gas-turbine manufacturers investigate  hydrogen and hydrogen-rich fuels .   Hydrogen is not simply natural gas without carbon.   Its combustion characteristics differ strongly from methane. Hydrogen has very high diffusivity, substantially different flame speeds and different ignition and stability characteristics. These properties complicate practical combustor design.   A gas turbine originally engineered for natural gas cannot necessarily be converted to hydrogen merely by replacing the fuel supply.   Questions arise about:     flashback,   flame stabilization,   mixing,   thermoacoustic instability,   nitrogen-oxide formation,   preferential diffusion,   flame lift-off,   high-pressure behaviour.     Swaminathan and collaborators have investigated hydrogen flames across several of these regimes.   For example, his group has worked on  supersonic lifted hydrogen flames , hydrogen-enriched methane combustion and turbulent hydrogen jets. Cambridge CARES lists among his group's key publications a 2021 LES investigation of a supersonic lifted hydrogen flame, while its broader HYCOMBS activity connects his modelling work with future low- and zero-carbon combustion systems.   The work continues into high-pressure environments directly relevant to gas turbines. A 2025  Journal of Fluid Mechanics  study co-authored with Aanantha Murugavel and James Massey used LES to examine hydrogen/helium jets injected across an air stream at pressures ranging from atmospheric conditions to  15 bar , investigating how pressure alters mixing and the resulting combustion mode.   His group has also continued developing models of transient hydrogen flame stabilization. A 2025 study examined the propagation of the leading edge of a lifted turbulent hydrogen jet flame following ignition, using LES with flamelet-based reaction-rate closure.   These studies connect the fundamental physics of flame propagation and turbulent mixing directly to engineering challenges encountered when designing future hydrogen combustors.   8. Combustion noise: predicting sound from chemical heat release   Swaminathan's research is unusual in its breadth because it does not stop after predicting whether a fuel burns.   He has also investigated  how turbulent burning generates sound .   In a turbulent flame, heat release fluctuates in space and time. These fluctuations create pressure waves. In gas turbines and aircraft engines, this can produce both broadband combustion noise and potentially destructive organized oscillations.   One notable project with Yu Liu, Ann Dowling and Rolls-Royce researchers attempted to predict combustion noise for a realistic aeroengine combustor. The approach combined combustor-flow information obtained from computational modelling with models describing heat-release-rate fluctuations and how acoustic, entropic and vortical perturbations travel through the engine. The calculated broadband acoustic spectra reproduced important characteristics seen in engine measurements.   This work is important because aircraft-engine noise cannot be treated purely as an external aerodynamics problem.   The combustion chamber itself can become a sound source.   Swaminathan's research therefore connects:    turbulence → fluctuating combustion → heat-release spectra → pressure disturbances → engine noise.    A closely related subject is  thermoacoustic instability .   Here the interaction becomes a feedback loop. Pressure fluctuations alter the flame; the flame's altered heat release generates new pressure fluctuations; if the phases align appropriately, the oscillations reinforce themselves.   This phenomenon can produce violent pressure oscillations capable of limiting combustor operating ranges or damaging hardware.   Swaminathan's recent work includes numerical investigations of azimuthal thermoacoustic instability in gas-turbine model combustors, extending his turbulence–combustion modelling framework into the stability problem.   This helps explain why Cambridge's description of his research stresses both  green  and  silent  combustion.   9. Heat-release-rate diagnostics   Another interesting part of Swaminathan's research concerns something apparently much simpler:  how scientists identify where heat is actually being released inside a flame .   Experiments often cannot directly measure instantaneous chemical heat release everywhere. Researchers therefore use chemical species or reaction pathways as markers.   Swaminathan and Zacharias Nikolaou tested commonly used heat-release markers for methane and multicomponent fuel flames and found that correlations could change substantially with mixture stoichiometry. They identified alternative markers and evaluated them under turbulent conditions using DNS data.   This is a good illustration of his research style.   Rather than accepting an established diagnostic assumption, the work asks:    Does the proxy still represent the actual physical quantity under different chemistry and turbulence conditions?    That question is crucial because experimental images and model validation can become misleading if the diagnostic itself is unreliable.   10. From fundamental physics to industrial combustor design   Perhaps the strongest indication that Swaminathan's work is not purely academic comes from its industrial use.   Cambridge CARES states that computational codes developed within his group have been used by companies including  Siemens and Mitsubishi  for in-house evaluation of combustor designs, including predictions of emissions and thermoacoustic characteristics at elevated pressures and temperatures.   This is significant.   A fundamental combustion model becomes technologically important when it can survive the transition from a controlled academic flame to conditions involving realistic pressure, temperature, turbulence and geometry.   A practical industrial tool must predict several effects simultaneously:   temperature,   chemical reaction,   pollutant formation,   flow structure,   flame stabilization,   acoustics,   instability.   This explains why the Royal Academy of Engineering highlighted Swaminathan's ability to create modelling approaches giving quantitative predictions of several of these quantities  within a single computational framework .   The achievement is therefore not merely \"better CFD.\"   It is the integration of combustion physics into models that remain computationally manageable enough to influence actual engineering design.   11. Machine learning enters reacting-flow science   In more recent years Swaminathan has also explored  machine learning for combustion modelling .   This is a natural development.   Traditional combustion modelling is essentially an exercise in compressing enormously complicated multidimensional physics into tractable mathematical relationships.   Machine learning offers another method of performing such compression—but Swaminathan's work places it within the physical framework of turbulence and combustion rather than treating ML as a replacement for the governing physics.   He and Alessandro Parente edited the 2023 open-access book  Machine Learning and Its Application to Reacting Flows . The volume brings together ML methods with chemically reacting-flow modelling and discusses applications including subgrid turbulence modelling, combustion chemistry, filtered reaction-rate estimation, reduced-order modelling and thermoacoustics.   One direction pursued by Swaminathan and collaborators involves using neural networks to represent the  filtered density functions  required in LES.   Traditional approaches may rely on large precomputed tables. Machine-learning representations can potentially reproduce complex probability distributions with dramatically reduced storage requirements. One reported ANN-based approach required more computational time during simulation but reduced memory requirements by more than two orders of magnitude while improving several flow and flame predictions in test configurations.   The importance lies in the hybrid philosophy:    high-fidelity physical simulations generate reliable data → machine learning extracts complicated relationships → the resulting representation is embedded inside physics-based CFD.    It is therefore neuro-numerical modelling rather than blind prediction.   12. Work beyond conventional combustion   Although turbulent combustion remains his central field, Swaminathan's interests extend more widely across  multiphysics fluid dynamics .   Cambridge CARES lists work involving density-stratified flows, magnetohydrodynamics, heat transfer, atmospheric boundary layers, geophysical flows, cloud physics, tropical cyclones and environmental fluid mechanics.   There is a conceptual connection between these apparently disparate subjects.   A combustion chamber, an atmospheric plume and a geophysical flow may differ enormously in scale, but each involves interacting transport processes:   momentum transport,   heat transport,   mass transport,   turbulent mixing,   density differences,   sometimes chemical reaction.   The mathematical machinery developed for one multiphysics flow can therefore inform another.   This breadth explains why Swaminathan's interests have ranged, as descriptions of his work sometimes put it, from comparatively simple flames to aircraft gas turbines and environmental flows.   13. Building the intellectual infrastructure of combustion science   Swaminathan's contribution also includes synthesis and education.   His 2011 volume with K. N. C. Bray,  Turbulent Premixed Flames , did not simply collect unrelated articles. It organised the subject from fundamentals through modelling, combustion instabilities, practical lean flames and future research directions.   The later machine-learning volume performs a similar role for the emerging intersection of data-driven techniques and reacting flows.   This kind of work matters because mature engineering disciplines advance not only through individual research papers but through  frameworks that allow researchers to see how separate results fit together .   Swaminathan has therefore contributed at three levels:   fundamental physical understanding,   computational model construction,   and organization of that knowledge for subsequent researchers and engineers.   14. Recognition of the work   The trajectory of his professional recognition reflects these contributions.   He was elected a  Fellow of the Combustion Institute in 2018 , specifically for his numerical combustion research.   Cambridge records his election as a Fellow of the  Royal Academy of Engineering in 2025 , recognizing his continuing engineering contributions and particularly his work connecting fundamental turbulence–chemistry physics with predictive combustion models.   He has additionally been elected to fellowship in major engineering bodies including the American Society of Mechanical Engineers, the Institution of Mechanical Engineers and the Royal Aeronautical Society. His research has also received multiple recognitions from the British Section of the Combustion Institute; Cambridge notes, for example, the  2011 Sugden Award  for work connecting heat-release-rate correlations with combustion noise.   His publication record is correspondingly extensive: Scopus currently indexes more than  200 documents  associated with him, spanning combustion, turbulent flows, hydrogen, gas-turbine systems and related multiphysics research.   Conclusion: what Nedunchezhian Swaminathan actually contributed   The best way to understand Nedunchezhian Swaminathan's scientific work is not to describe him merely as someone who \"studies combustion.\"   His research addresses the difficult middle layer between  fundamental physics and working machinery .   At one end lie Navier–Stokes equations, chemical kinetics, diffusion equations and molecular transport. At the other lie aircraft engines, power-generation gas turbines and future hydrogen combustors that engineers must actually design.   The enormous gap between those two worlds must somehow be bridged.   Swaminathan's career has been devoted to constructing that bridge.   His research has clarified how turbulence interacts with chemical reaction and scalar mixing; investigated how thermal expansion and molecular dissipation behave in premixed flames; helped develop flamelet and reaction-rate closures for turbulent-combustion calculations; used DNS as a microscope for discovering the internal structure of complicated combustion regimes; demonstrated that MILD combustion can contain autoignition, lean and rich premixed burning and non-premixed reaction structures simultaneously; developed modelling approaches for lifted and partially premixed flames; extended combustion modelling to hydrogen and hydrogen-rich fuels; linked fluctuating heat release to combustion noise; investigated thermoacoustic instability; and increasingly incorporated machine learning into physics-based modelling.   The consistent theme is  reduction without abandoning physics .   A real turbulent combustor is far too complicated to reproduce molecule by molecule during routine engineering design. Swaminathan's approach has therefore been to understand the unresolved physics deeply enough that it can be represented by mathematically compact models while retaining the important underlying mechanisms.   That is why his work is especially relevant to the energy transition. Hydrogen, ammonia, lean premixed combustion and MILD combustion do not eliminate combustion physics; in many respects they make it harder. Future low-carbon combustors must simultaneously achieve very low emissions, stable operation, high efficiency, acceptable acoustic behaviour and safe operation over wide load ranges.   Designing such machines increasingly requires simulations that can predict several coupled phenomena rather than treating each one independently.   This is the larger significance of Swaminathan's research.  He has helped transform turbulent combustion from a phenomenon that engineers primarily observed experimentally into one that increasingly can be interrogated, decomposed and quantitatively predicted through computation.  The models are not merely mathematical conveniences: they represent decades of work identifying which pieces of flame physics must survive when an impossibly complex turbulent reacting flow is reduced to something an engineer can calculate.   His career—from mechanical engineering at  PSG College of Technology , through aerospace engineering at the  Indian Institute of Science , to advanced combustion research and ultimately a professorship at  Cambridge —has thus produced a body of work spanning fundamental mechanical engineering, thermodynamics, fluid mechanics, chemical kinetics, numerical mathematics, acoustics and, increasingly, artificial intelligence.   For that reason, Nedunchezhian Swaminathan's contribution is best characterized not as one isolated invention but as the development of a  predictive science of complicated reacting flows : understanding flames deeply enough that cleaner, quieter, hydrogen-compatible and increasingly sophisticated combustion technologies can be designed before they are built.       submitted by     /u/RossbihariGhost1900     to     r/IndicKnowledgeSystems       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IndicKnowledgeSystems/comments/1wkfo9t/nedunchezhian_swaminathan_and_the_science_of/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T07:32:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T07:33:17.219Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae3abe660c60840397e7c1"
+    },
+    "message_id": "reddit_t3_1wkfo9c",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Prestigious-Law8050",
+    "title": "Grab 100 hammers from u/Prestigious-Law8050!",
+    "text": "Grab 100 hammers from u/Prestigious-Law8050!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Prestigious-Law8050     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wkfo9c/grab_100_hammers_from_uprestigiouslaw8050/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T07:32:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T07:33:18.419Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae3abe660c60840397e7c2"
+    },
+    "message_id": "reddit_t3_1wkfo91",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "InternationalTravelIN",
+    "username": "Strange_Shame7886",
+    "title": "Looking for Europe countries suggestions for APR 2027",
+    "text": "Looking for Europe countries suggestions for APR 2027\n\nHello Travel folks,   We are a well-travelled family of couple in late 30s and 9 year old son.    We have been to Paris, Amsterdam, Switzerland, Budapest, Venice, Italy, London so far in the Europe.    We want to visit Europe next year before the June summer peak.    We have so far zeroed in on Spain and Portugal for a 2 weeks vacation in 4 cities.    However, the itinerary and activities are not looking very exciting so far.    For example, we did Japan this year and really enjoyed the bullet trains, cycling, mt. Fuji, 3 amusement parks etc. Which were high energy but also great return in terms of experience.    Does Spain-portugal offers similar high energy and high reward activities?    Any other countries you would want to suggest in the Europe apart from the ones we have visited so far?    Our other options were -       UK - scotland road trip, Edinburgh etc. But UK in general is more expensive and is not covered in Schengen to cover more than one country.      Iceland and Scandavian countries     Germany and eastern Europe - but East Europe does not feel the same as what we identify Europe with.      Please drop in your suggestions.       submitted by     /u/Strange_Shame7886     to     r/InternationalTravelIN       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/InternationalTravelIN/comments/1wkfo91/looking_for_europe_countries_suggestions_for_apr/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T07:32:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T07:33:18.623Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae3abe660c60840397e7c3"
+    },
+    "message_id": "reddit_t3_1wkfo8n",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "RealEstateCanada",
+    "username": "Upper-Log-131",
+    "title": "Does anyone feel like buying a place will either be a) the best decision of their lives or b) the worst decision of their lives at this point in time.",
+    "text": "Does anyone feel like buying a place will either be a) the best decision of their lives or b) the worst decision of their lives at this point in time.\n\nsubmitted by     /u/Upper-Log-131     to     r/RealEstateCanada       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RealEstateCanada/comments/1wkfo8n/does_anyone_feel_like_buying_a_place_will_either/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T07:32:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T07:33:18.827Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae3abf660c60840397e7c4"
+    },
+    "message_id": "reddit_t3_1wkfo8c",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "Ok-Ad4943",
+    "title": "Wrong Dark Experiments and Roasted Turkey Leg",
+    "text": "Wrong Dark Experiments and Roasted Turkey Leg\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Ok-Ad4943     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wkfo8c/wrong_dark_experiments_and_roasted_turkey_leg/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T07:32:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T07:33:19.028Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae3abf660c60840397e7c5"
+    },
+    "message_id": "reddit_t3_1wkfo8a",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "PakistaniTech",
+    "username": "colonalWozzeck",
+    "title": "Projector for movies",
+    "text": "Projector for movies\n\nHi,  From where can I get reliable projector for my room to watch movies  I don’t wanna for these cheap Chinese projectors  Please suggest me some good 1080p projectors       submitted by     /u/colonalWozzeck     to     r/PakistaniTech       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PakistaniTech/comments/1wkfo8a/projector_for_movies/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T07:32:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T07:33:19.229Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae3abf660c60840397e7c6"
+    },
+    "message_id": "reddit_t3_1wkfo89",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "BetaReaders",
+    "username": "Trick-Ad-3052",
+    "title": "[Complete] [95k] [Adult Science Fiction / Conspiracy Thriller] WENU — Looking for Beta Readers",
+    "text": "[Complete] [95k] [Adult Science Fiction / Conspiracy Thriller] WENU — Looking for Beta Readers\n\nHi everyone,   I'm looking for beta readers for my completed adult science-fiction novel,  WENU , currently at approximately  95,000 words .    Wenu is a highly advanced human civilization built on the ruins of a forgotten past.    Centuries ago, humanity escaped extinction aboard an ancient vessel known as the Ark and began again on a new world. Their civilization has since flourished—but the fear of the enemy that nearly destroyed their ancestors has never disappeared.    Nolan has spent his life studying that history, not making it.    A researcher and historian at the First Colony, he is unexpectedly nominated to join the Elite, Wenu's most powerful security force. What begins as an opportunity to follow in the footsteps of his late father soon draws him into an investigation involving a fourteen-cycle-old incident, missing records, a secret scientific program, and questions surrounding his father's death.   The deeper Nolan searches, the less certain the past becomes.   And as buried pieces of Wenu's history begin to surface, he discovers that the greatest threat to his civilization may not be what happened centuries ago—but what people are willing to do because of it.    Genre:  Adult Science Fiction / Conspiracy Thriller   Length:  ~95,000 words   Status:  Complete manuscript   Beta-reading timeframe:  Ideally 4–5 weeks   I'm primarily looking for readers who enjoy  science fiction with mystery, political intrigue, advanced technology, conspiracy, character relationships, and gradual revelations  rather than nonstop military action.   I'm particularly interested in your natural reader experience: where you became invested, where your attention dropped, which characters you trusted or distrusted, whether the mysteries and reveals worked for you, anything you found confusing, and—most importantly—whether you wanted to continue reading.    No editing or proofreading is required.  I'm looking for honest reader reactions rather than line-by-line corrections.   The manuscript is currently unpublished, so I ask that it remain private and not be redistributed or uploaded to third-party services.   I'm happy to provide a final ebook when the novel is published and include beta readers in the acknowledgments if they would like.   If you're interested, please send me a message or email me on   [thedaysoftheend@gmail](mailto: thedaysoftheend@gmail.com ).com   and tell me a little about the kind of science fiction you enjoy reading.   Below is the Prologue   The sun was setting.   It had been a long time since I had allowed myself to stop and witness such quiet beauty.   Once… I believed I would never live to see a moment like this again. And yet here I stand beneath a clear sky, with a clear mind for the first time in many cycles, unburdened—if only for a moment—by fear, duty, and the endless weight of memory.   I watched the last light bleed across the horizon as the sun sank behind the mountains. Bands of gold faded into cold grey, while the snow along the peaks gathered and held the final light as if reluctant to surrender it.   Below, the river wound through the valley like a dark silver ribbon, catching the sky in broken flashes where the current moved fastest.   Night did not arrive all at once. It came slowly, almost gently, until the colors of evening deepened into shadow. The moon cast its silver reflection over the water. Stars trembled above the valley in fragile clusters, while the surrounding forest filled with the low pulse of life—the distant cry of some unseen   creature, branches stirred by the mountain wind, the dry whisper of grass against stone.   I began making my way down toward the settlement where my people now live.   The slope was uneven beneath my boots, scattered with loose stones and thin roots twisting through the soil. Fires glowed faintly in the distance, small and scattered at first, then clearer as I descended—little signs of endurance against the vastness of the dark.   After all we had endured, we were grateful to have found this place.   Its silence was different from the silence of loss.   With time, perhaps, we would learn to call it home.   As I walked, memories of the past crowded my mind.   None of us had truly anticipated what would unfold. For decades, we failed to recognize the signs—and those who did see them often chose silence over confrontation. The rot had been there long before the fall quickened. What came in the end was not born from a single season of crisis, but from corruption, arrogance, and compromise accumulated over far longer than anyone wished to admit.   We had been a mighty civilization. We had made Wenu our home millennia ago and built our lives on the strength of those who came before us.   Now we were left to begin again, with humbler tools, humbler shelters, and a future stripped of certainty.   My name is Nolan.   I am one of the last surviving members of Wenu’s High Council.   Even now, the thought feels strange. I never sought that position, nor the burden that came with it. Truthfully, I never sought any part in the events that eventually brought me there. Yet the deeper I became involved, the clearer it grew that every attempt to prevent the collapse only seemed to hasten it.   By the time I reached the settlement, the night air had sharpened with cold.   The main tent stood among the others, plain and weather-worn, its outer fabric pulling lightly in the wind. I paused before entering and looked back across the camp.   The watchfires burned low but steady. Shadows moved where the night watch followed their assigned paths, alert despite   their exhaustion. None of us had been made for this life, and yet there was gratitude here too…   A fragile, stubborn gratitude for the second chance we had been given.   Around us lay uncertainty.   Within the camp, people still whispered about tomorrow as though peace might one day become ordinary.   When I entered the tent, Asia stirred awake at once, startled by the sound of the flap closing behind me.   “Nolan, is that you? What time is it?”   “The night has settled, my love,” I said softly.   “Go back to sleep. It has been a long day, and you need the rest.”   “Won’t you sleep?” she asked, her voice still heavy with fatigue.   I moved toward her.   In the dim glow of the dying fire, I studied her face. Time had marked her, as it had marked all of us, but it had not taken the grace that first drew my eyes to her.   If anything, sorrow had given her beauty a quieter depth. She offered me a faint smile, though behind it I could still see the weight she carried.   “Nolan,” she said carefully, “you’ve carried this long enough. Let the young ones shape what comes next. You deserve peace.”   “I only need to record the events of the day,” I replied, taking her hand and holding it close.   “Go back to sleep. I’ll join you soon.”   She searched my face for a moment, then exhaled softly and nodded.   “Just don’t stay up too long,” she whispered.   Then, with the smallest hint of warmth, she added, “You do know I never sleep well without you beside me.”   A tired smile touched my mouth.   “I won’t be long.”   She settled back beneath the blankets, and soon the tent sank into silence.   Only the wind could be heard outside, dragging itself across the settlement, while the fire behind me collapsed inward with an occasional soft crack.   I remained there for a while, watching her sleep.   “You are still everything I ever loved, my sweet wife,” I whispered, careful not to wake her.   “You hide your pain, so I won’t carry more than I already do, even when it is consuming you. But I know you too well. I hear it in your voice. I see it in the way your hands linger. I feel it in your touch.”   My gaze lowered, and with it came the old wound that had never truly closed.   I know how much Calip meant to you. I know the void he left in our lives.   It is a cruel thing for parents to outlive their own son.   You kept telling me there was nothing I could have done. I have repeated the same lie to myself more times than I can count.   But the truth remains.   I still blame myself.   I always will.   Again and again, I return to the past, replaying every choice, every hesitation, every action taken too soon—or too late.   I wonder what I might have changed, what I should have refused, what path I should never have stepped onto.   Perhaps, if someone else had led in my place, Calip would still be alive.   Perhaps many would be.   But regret cannot rewrite history.   Nor can grief restore what was taken.   Only memory remains.   I turned to the records I had been writing over the past few days and slowly read through them again, comparing the words before me with the memories I still carried.   I found myself wondering what kind of truth I was leaving behind.   Who we had been.   Who we had become.   These records were not written to excuse our failures, nor to soften them with time.   They were for those who would come after us, so they might understand how secrecy, fear, and the hunger for power could consume even a civilization that once believed itself too strong to fall.   So that our mistakes would not find a foothold in their future.   I lived through the final days of our civilization, and I witnessed its fall.   I saw ambition decay into corruption.   I saw survival twisted into justification for authoritarianism.   I saw good people choose silence until silence itself became another weapon.   Now, as one of the last leaders of our people, I leave these records behind, hoping those who come after us will heed them.   My name is Nolan.   And this is our history.       submitted by     /u/Trick-Ad-3052     to     r/BetaReaders       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BetaReaders/comments/1wkfo89/complete_95k_adult_science_fiction_conspiracy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T07:32:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T07:33:19.438Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae3abf660c60840397e7c7"
+    },
+    "message_id": "reddit_t3_1wkfo7c",
+    "topic_key": "what people are talking about on reddit about product design",
+    "search_keyword": "UI/UX",
+    "platform": "reddit",
+    "subreddit": "INAT",
+    "username": "CopacaBella",
+    "title": "[RevShare] 2000s Inspired Story Game - Multiple Roles",
+    "text": "[RevShare] 2000s Inspired Story Game - Multiple Roles\n\nLooking for a Character Artist, UI/UX Artist, 2D Animator, and Unity Programmer for a 2000s inspired story game.    Character Artist: Your job will be to make stylized avatars that belong in a virtual world that's reminiscent of games like Club Penguin, MovieStarPlanet, OurWorld, Webkinz,  GirlsGoGames.com    UI/UX Artist: Your job will be to make the UI elements that fit into the Windows XP / Windows Vista era of internet. Think MySpace, Skype, etc. The internet's awkward stage.   2D Animator: Your job will be to bring the various elements in the virtual world to life and add juice throughout the game.   Unity Programmer: Your job will be to help me extend the existing gameplay systems like creating realistic NPCs   The team currently consists of:   -2 Environment Artists   -2 Writers   -1 Programmer   We have a prototype that's in decent shape so it's time to nail down the style and polish it up. Project timeline is 6 months - 1 year.       submitted by     /u/CopacaBella     to     r/INAT       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/INAT/comments/1wkfo7c/revshare_2000s_inspired_story_game_multiple_roles/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T07:32:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T07:33:19.649Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae3abf660c60840397e7c8"
+    },
+    "message_id": "reddit_t3_1wkfo74",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "ComfortableEar9637",
+    "title": "What is the best way to solve 3x3 rubik’s cube?",
+    "text": "What is the best way to solve 3x3 rubik’s cube?\n\nsubmitted by     /u/ComfortableEar9637     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wkfo74/what_is_the_best_way_to_solve_3x3_rubiks_cube/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T07:32:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T07:33:19.850Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae3ac0660c60840397e7c9"
+    },
+    "message_id": "reddit_t3_1wkfo6z",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789803161293",
+    "text": "[PROBE] 1789803161293\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wkfo6z/probe_1789803161293/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T07:32:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T07:33:20.052Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae3af7660c60840397e7ca"
+    },
+    "message_id": "reddit_t3_1wkfp06",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "WorkingOnTheInternet",
+    "username": "binnywriter",
+    "title": "A look at our early days",
+    "text": "A look at our early days\n\nWe’re still at the very beginning of  r/WorkingOnTheInternet , and honestly, that’s the fun part. Nothing here is fully defined yet.   I imagine this becoming a place for conversations around marketing, GenAI, freelancing, remote work, content, client life, internet culture, and all the things we learn while building careers online.   But I don’t want to decide everything myself.    What would you genuinely like to read, share, or discuss here?   Stories? Experiments? Work lessons? Marketing observations? AI discoveries? Freelance realities?   Would love to shape this community with the people who join early.       submitted by     /u/binnywriter     to     r/WorkingOnTheInternet       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WorkingOnTheInternet/comments/1wkfp06/a_look_at_our_early_days/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T07:34:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T07:34:15.646Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae3af7660c60840397e7cb"
+    },
+    "message_id": "reddit_t3_1wkfp01",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ColorGuessr",
+    "username": "Turbulent-Law2331",
+    "title": "Colorwire by u/Turbulent-Law2331",
+    "text": "Colorwire by u/Turbulent-Law2331\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Turbulent-Law2331     to     r/ColorGuessr       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ColorGuessr/comments/1wkfp01/colorwire_by_uturbulentlaw2331/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T07:34:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T07:34:15.852Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae3af8660c60840397e7cc"
+    },
+    "message_id": "reddit_t3_1wkfozo",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "S25Ultra",
+    "username": "TrippyTeas",
+    "title": "Camera jittering/OIS issue, what to do?",
+    "text": "Camera jittering/OIS issue, what to do?\n\nsubmitted by     /u/TrippyTeas     to     r/S25Ultra       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/S25Ultra/comments/1wkfozo/camera_jitteringois_issue_what_to_do/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T07:33:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T07:34:16.054Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae3af8660c60840397e7cd"
+    },
+    "message_id": "reddit_t3_1wkfoz9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Pixelary",
+    "username": "PrestigiousHedgehog5",
+    "title": "What did u/PrestigiousHedgehog5 draw?",
+    "text": "What did u/PrestigiousHedgehog5 draw?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/PrestigiousHedgehog5     to     r/Pixelary       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Pixelary/comments/1wkfoz9/what_did_uprestigioushedgehog5_draw/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T07:33:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T07:34:16.268Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae3af8660c60840397e7ce"
+    },
+    "message_id": "reddit_t3_1wkfoz6",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "AlertVegas",
+    "username": "MugShots",
+    "title": "NV Energy Alert",
+    "text": "NV Energy Alert\n\nNVEnergy Alert Under Investigation in 89406 Probable customers affected ORT: Probable ETR: Probable       submitted by     /u/MugShots     to     r/AlertVegas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlertVegas/comments/1wkfoz6/nv_energy_alert/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T07:33:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T07:34:16.470Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae3af8660c60840397e7cf"
+    },
+    "message_id": "reddit_t3_1wkfoyo",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "stuffm0nger",
+    "title": "Grab 100 hammers from u/stuffm0nger!",
+    "text": "Grab 100 hammers from u/stuffm0nger!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/stuffm0nger     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wkfoyo/grab_100_hammers_from_ustuffm0nger/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T07:33:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T07:34:16.674Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae3af8660c60840397e7d0"
+    },
+    "message_id": "reddit_t3_1wkfoyf",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "mtg",
+    "username": "Deus_Excellus",
+    "title": "Is there going to be a supply shortage for Reality Fracture?",
+    "text": "Is there going to be a supply shortage for Reality Fracture?\n\nI was looking online tonight for preorders. Everything is out. Is this going to be another set where everything is going to be absurdly priced due to scalpers and nobody can buy anything near msrp?        submitted by     /u/Deus_Excellus     to     r/mtg       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mtg/comments/1wkfoyf/is_there_going_to_be_a_supply_shortage_for/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T07:33:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T07:34:16.880Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae3af9660c60840397e7d1"
+    },
+    "message_id": "reddit_t3_1wkfoxq",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "crochetpatterns",
+    "username": "midwench",
+    "title": "Capybara wearing a backpack - pattern wanted please!",
+    "text": "Capybara wearing a backpack - pattern wanted please!\n\nHi all    Looking for a pattern as the title suggests. I've been looking on Etsy and there are just so many AI posts, with many having reviews so it's getting harder to ensure I buy a real pattern.    Any recommendations please?       submitted by     /u/midwench     to     r/crochetpatterns       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/crochetpatterns/comments/1wkfoxq/capybara_wearing_a_backpack_pattern_wanted_please/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T07:33:53Z"
+    },
+    "fetched_at": {

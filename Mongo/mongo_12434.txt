@@ -1,0 +1,416 @@
+    "topic_key": "data engineer",
+    "search_keyword": "data engineer",
+    "platform": "reddit",
+    "subreddit": "AskStatistics",
+    "username": "qaeproject",
+    "title": "Data Discretization — Equal-Frequency Binning vs Equal-Width Binning — A Basic— Comparison",
+    "text": "Data Discretization — Equal-Frequency Binning vs Equal-Width Binning — A Basic— Comparison\n\nHi.. I wondered if anyone can comment on this below?   Is this correct? I'm new at data engineering and this topic doesn't get explored much and isn't easy to articulate?   ---   Data Discretization — Equal-Frequency Binning vs Equal-Width Binning — A Basic— Comparison   Same 15 Readings, Two Binning Methods — Where Balance and Readability Diverge   Preamble: Fifteen thunderclap peak readings in dB integers, with two clear outliers at the top end. Same data, same four quartile bins — but the two binning methods produce very different bin counts.   The Data (15 readings, sorted):   33, 37, 45, 47, 48, 50, 51, 52,   54, 56, 59, 60, 63, 90, 95   n = 15 | k = 4 bins | ideal = 15 ÷ 4 = 3.75 per bin   Equal-Frequency Binning (quantile — rank-driven)   Cut-off positions at evenly spaced percentiles: p × (n − 1)   Note. The input are integers. This can create decimal fractions as cut-off values.   0% → pos 0 → 33   25% → pos 3.5 → 47.5   50% → pos 7 → 52   75% → pos 10.5 → 59.5   100% → pos 14 → 95   Cut-offs: 33 │ 47.5 │ 52 │ 59.5 │ 95   Q1 33–47.5 → 4   Q2 47.5–52 → 3   Q3 52–59.5 → 4   Q4 59.5–95 → 4   Counts 4 / 3 / 4 / 4 — dev 0.75 → PASS   This method fails if the data contains excessive duplicate values as the values fail to distribute cleanly at the cut-offs. Jitter can be used to break ties.   When the number of observations isn’t evenly divisible by the number of bins, bin counts can deviate from the mean bin count by up to 1, so the largest and smallest bin counts differ by 1. This is how pd.qcut and PERCENTILE.INC operate.   A dataset that can reliably inhabit an equal-frequency quartile structure, without excessive duplicate values, can then be used in applications including data smoothing, machine learning and other analytical systems that require the structural reliability of equal-frequency binning.   Equal-Width Binning (cardinal — magnitude-driven)   Cut-off step: w = (max − min) / k = (95 − 33) / 4 = 15.5   33.0 + 15.5 → 48.5   48.5 + 15.5 → 64.0   64.0 + 15.5 → 79.5   79.5 + 15.5 → 95.0   Cut-offs: 33 │ 48.5 │ 64.0 │ 79.5 │ 95   Q1 33–48.5 → 5   Q2 48.5–64.0 → 8   Q3 64.0–79.5 → 0   Q4 79.5–95.0 → 2   Counts 5 / 8 / 0 / 2 — dev 4.25   Statistical variance in bin density and sparsity is part of what this type of analysis reveals   The Contrast   The two outliers produce very different statistical outcomes. These are now two different dimensional representations of the same reality. I think this topic may be called Data Discretization.   Equal-frequency spaces cut-offs by rank position — cut-off boundaries are a consequence of the range distribution. They are dynamically assigned based on data.   Equal-width spaces cut-offs by equal arithmetic steps — counts stretch to keep ranges readable.       submitted by     /u/qaeproject     to     r/AskStatistics       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskStatistics/comments/1wl43uk/data_discretization_equalfrequency_binning_vs/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:57:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:58:00.337Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaf3db4660c608403983d0a"
+    },
+    "message_id": "reddit_t3_1wl43zz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "guns",
+    "username": "Trollygag",
+    "title": "Trollygag's Barrel Test pt 15, Rosco Purebred/Bloodline, SOLGW RMA",
+    "text": "Trollygag's Barrel Test pt 15, Rosco Purebred/Bloodline, SOLGW RMA\n\nIntroduction/Updates    Last thread     Follow-up on SOLGW Barrel Problems    I put this review on pause because SOLGW wanted to RMA both barrels I sent back to them. They did not offer an explanation, but instead called me to let me know that the barrels were 'very clean. weirdly clean' and were very interested in my socials. I sent them pictures of the bore, pictures of the targets, pictures of the shooting setup, etc.    In any case, since they did, then didn't have any same-spec barrels on hand as the two identical specs that I sent them (one on loan from a gracious benefactor), I am in waiting mode on the replacements.   You will see, in this test, that it is absolutely not an issue with the setup as the Roscos did just fine in the same setup.    Rosco   This is a low-on-the-RADAR brand out of Rhode Island. A bit unusual for AR-15 parts, but that's how it is.    The barrels are mid-priced. Bloodline is their entry-level barrel ($166), and the Purebred is their 'better' barrel ($216). Neither are crazy expensive, and it seems their pricing roughly follows BA or Faxon, which they directly compete with.   First impressions - the barrels look nice. The finishes are nice, the laser engravings are nice.       Purebred laser engraving and finish , the  really clean gas port , but some  weird chatter  on the recessed muzzle.  Dimpled  before bead blasting.       Bloodline  finish and laser engraving.  Non-recessed crown .       Inside the bores:      Bloodline  classic unlapped marks from the rifling button , a  pretty nice crown with chamfer , but  a kindof yucky burr left on the gas port , which is  still there  after 50 rounds. [Foggy rifling marks to make them easier to see]( https://i.imgur.com/mlzxlS2.png      Purebred  same classic unlapped marks from the button , except maybe with some  heat originated oxidation .  Throat isn't reamed straight vs the  other side  and  middle .  Also a burr in this gas port too  - they must not have a process for deburring gas ports like most barrel makers do. The fibers in the gas port are from... well... probably the burr scraping them off patches.  Crown  is recessed AND chamfered twice. That's a lot of chamfering. Some barrels don't do it at all.       I rate the Purebred and Bloodline both 5/10 on the barrel metrics. Pretty mid.    The Results    and  4x10 chart of the same .    Raw Pureblood     Raw Bloodline     Good vs Bad Buys     Same for all ammo     Same but by weight     Same but by weight for all ammo    Conclusion   The Purebred is probably the new cheapest 'good' barrel that you can buy and expect to get good performance from without dice rolling on a BCA. It's just heavy - over half a pound heavier than a Criterion Hybrid.    If you want light, like most people do, Criterion Core and Daniel Defense are still kings of the castle.    If you don't care about weight, it's only a LITTLE more expensive to get a Criterion Hybrid or HBAR, both of which offer a LOT more performance. In these tests, each step shed .07 MOA MR, which is a big difference (like a quarter MOA ES each step).   So, a solid showing.    As for the Bloodline USASOC - kindof a mid option. It's not a bad barrel, but it's not doing anything that the KAC Mid LW didn't also do a little better and cheaper.        submitted by     /u/Trollygag     to     r/guns       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/guns/comments/1wl43zz/trollygags_barrel_test_pt_15_rosco/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:57:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:58:12.022Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf3db4660c608403983d0b"
+    },
+    "message_id": "reddit_t3_1wl43z7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Ubiquiti",
+    "username": "AK_reddit_new_",
+    "title": "UDR7 only negotiates at 100 Mbps with Xfinity XB10 – replacement UDR7 has the exact same issue",
+    "text": "UDR7 only negotiates at 100 Mbps with Xfinity XB10 – replacement UDR7 has the exact same issue\n\nHi everyone,   I’ve been troubleshooting a strange WAN negotiation issue with my UniFi Dream Router 7 and Xfinity XB10, and I’m hoping someone here may have seen something similar.   My Xfinity plan is  2 Gbps  and the XB10 has 10G Ethernet ports.   The problem is that when I connect the  XB10 directly to the UDR7 WAN port , the connection negotiates at only  100 Mbps . My actual speed tests are around  94 Mbps down / 96 Mbps up , which matches a 100 Mbps Ethernet link.   Here’s where it gets interesting.   If I disconnect the UDR7 and connect the  same XB10 connection directly to my Windows PC , the PC negotiates at  2.5 Gbps  and I can get speeds well above 1 Gbps.   So:    XB10 → PC = 2.5 Gbps link     XB10 → UDR7 = 100 Mbps link    I have already tried multiple Ethernet cables, including a factory-made Cat6 cable, different ports on the XB10, and different ports/settings on the UDR7.   I opened a ticket with Ubiquiti and went through extensive troubleshooting with their escalation team. At their request, I also did a  full factory reset of the UDR7 and configured it from scratch without restoring a backup .   Same result:  100 Mbps .   Ubiquiti then approved an RMA and replaced the UDR7.   I just received the replacement UDR7 and tested it.    Exact same problem. The replacement UDR7 also negotiates at only 100 Mbps when connected to the XB10.    At this point, it seems very unlikely that I received two UDR7s with the exact same hardware failure. It looks more like some kind of  auto-negotiation/compatibility issue between the Xfinity XB10 and UDR7 .   One other interesting detail from troubleshooting: manually changing the Ethernet speed/settings on the UDR7 has behaved differently than Auto Negotiation, so I’m especially suspicious of negotiation between these two devices.   Has anyone experienced an issue like this specifically with  Xfinity XB10 + UDR7 , or another UniFi gateway?   I’d really appreciate suggestions for what to test next. I’m especially interested in whether there are known issues with:     Auto Negotiation between XB10 and UDR7   2.5/5/10GbE negotiation   EEE (Energy Efficient Ethernet)   XB10 bridge mode   Manually forcing the UDR7 WAN port to 2.5 Gbps   Putting a 2.5G/10G switch between the XB10 and UDR7 as a test     I’m happy to run commands, provide screenshots, or test different configurations if anyone has ideas.   Thanks!       submitted by     /u/AK_reddit_new_     to     r/Ubiquiti       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Ubiquiti/comments/1wl43z7/udr7_only_negotiates_at_100_mbps_with_xfinity/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:57:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:58:12.231Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf3db4660c608403983d0c"
+    },
+    "message_id": "reddit_t3_1wl43yr",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "SSCCGL",
+    "username": "No-Layer463",
+    "title": "Help needed",
+    "text": "Help needed\n\nI was studying from the Parmar GK 4.0 batch on Telegram and following my daily routine. Today, I woke up, revised some previous topics, and went straight to Telegram to watch a few lectures. Unfortunately, I found out that the content had been removed due to copyright issues.   Right now, I really can't afford to buy the batch, so those lectures were a huge help for me. It would be really helpful if there was any way I could access them again.if someone reading this can help plz        submitted by     /u/No-Layer463     to     r/SSCCGL       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SSCCGL/comments/1wl43yr/help_needed/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:57:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:58:12.439Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf3db4660c608403983d0d"
+    },
+    "message_id": "reddit_t3_1wl43wx",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "eldenringdiscussion",
+    "username": "Coffee_and_PournXxx",
+    "title": "🗡\"LET ME TANK HIM\"",
+    "text": "🗡\"LET ME TANK HIM\"\n\nsubmitted by     /u/Coffee_and_PournXxx     to     r/eldenringdiscussion       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/eldenringdiscussion/comments/1wl43wx/let_me_tank_him/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:57:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:58:12.653Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf3db4660c608403983d0e"
+    },
+    "message_id": "reddit_t3_1wl43ws",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PokemonRaffles",
+    "username": "Chewy966996",
+    "title": "VINTAGE NEO SHINING GARY GONE FISHIN'",
+    "text": "VINTAGE NEO SHINING GARY GONE FISHIN'\n\n• Come check out this raffle over on  https://chansey.gg/r/ovhuer    • More images:  https://imgur.com/a/vNLO8ba    • Spots will exclusively be called and held on Chansey.gg. Any spots called via Reddit will not be honored.   • In partnership with  r/PokemonRaffles , Chansey.gg offers a place for Pokèmon card enthusiasts to participate in raffles for a chance to win cards they might not be able to afford otherwise. Whether you are a seasoned collector or just starting out, our community offers a fair and exciting way to get your hands on amazing cards. Join us, participate in raffles, and enjoy the thrill of potentially winning that coveted card for your collection! Disclaimer: Always participate at your own risk.   • Reach us on Discord for further questions  https://discord.gg/pokemonraffles        submitted by     /u/Chewy966996     to     r/PokemonRaffles       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PokemonRaffles/comments/1wl43ws/vintage_neo_shining_gary_gone_fishin/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:57:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:58:12.856Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf3db5660c608403983d0f"
+    },
+    "message_id": "reddit_t3_1wl43wj",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "AmazonFlexDrivers",
+    "username": "SuperPhilosophy7447",
+    "title": "Sent 50 miles away from fc today with 47 pkgs on first trip ever, and had to literally spend the entire earning on gas😩 is this even legal?",
+    "text": "Sent 50 miles away from fc today with 47 pkgs on first trip ever, and had to literally spend the entire earning on gas😩 is this even legal?\n\nHey y'all, just did my very first Flex block today out of the Waco station and I think the algorithm officially hates me😩☹️.   Took a  4.5-hour block for $97  (I know, I know, I'm a rookie and didn't know about waiting for surges yet).   They handed me a cart with  47 deliveries , which didn't look  too  terrible until I looked at the addresses. The entire route was down in  Temple, TX . That’s a 40-mile drive down I-35 just to get to the first stop! By the time I finished all the stops and drove all the way back home, I had logged well over 100 miles and  burned $40 in gas .   After calculating the gas and vehicle wear, I think I made about $12 an hour. Lesson heavily learned. I already emailed support to try and get an earnings adjustment because I went over my block time just trying to finish the route.   Is the Waco, TX station always this brutal with sending people down to Temple/Belton for base pay, or did I just get an exceptionally bad first draw?        submitted by     /u/SuperPhilosophy7447     to     r/AmazonFlexDrivers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AmazonFlexDrivers/comments/1wl43wj/sent_50_miles_away_from_fc_today_with_47_pkgs_on/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:57:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:58:13.061Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf3db5660c608403983d10"
+    },
+    "message_id": "reddit_t3_1wl43vw",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "ShyNbr8",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Daffodil Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Daffodil Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/ShyNbr8     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wl43vw/sticker_giveaway_enter_to_win_a_4_stars_daffodil/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:57:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:58:13.265Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf3db5660c608403983d11"
+    },
+    "message_id": "reddit_t3_1wl43vp",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "egg_irl",
+    "username": "pokebattel",
+    "title": "egg_irl",
+    "text": "egg_irl\n\nI have a funny idea of the easiest way to come out to my sister    I buy a pear of thigh highs and just in the most autiscilly neutral voice ever say something along the lines of \"Fellow offspring I bring news\" walk into the doorway and just say \"ive lost a bet and now my testicles give me depression please advise\"       submitted by     /u/pokebattel     to     r/egg_irl       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/egg_irl/comments/1wl43vp/egg_irl/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:57:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:58:13.468Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf3db5660c608403983d12"
+    },
+    "message_id": "reddit_t3_1wl43vg",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "pitbulls",
+    "username": "foamyduvet",
+    "title": "Beach trip at 3 months and 9 months 😭",
+    "text": "Beach trip at 3 months and 9 months 😭\n\nsubmitted by     /u/foamyduvet     to     r/pitbulls       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pitbulls/comments/1wl43vg/beach_trip_at_3_months_and_9_months/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:57:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:58:13.670Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf3db5660c608403983d13"
+    },
+    "message_id": "reddit_t3_1wl43uo",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "TheSympathizer",
+    "username": "Due-Department-3864",
+    "title": "hERE'S How I find UFC 331 ｌｉｖｅ 𝒮𝓉𝓇𝑒𝒶𝓂𝓈*FREE",
+    "text": "hERE'S How I find UFC 331 ｌｉｖｅ 𝒮𝓉𝓇𝑒𝒶𝓂𝓈*FREE\n\nHey fellow UFC 331: Van vs. Pantoja 2 Live Streams viewers. UFC Streams Reddit :UFC Live Streaming UFC 331: Van vs. Pantoja 2 2026/ season UFCStreams reddit All match, tv channel, Reddit scores info start time UFC Fight... a thorough briefing regarding all the official channels to catch the live coverage. Check out for Reddit to Watch Live. And when there is no UFC, internet TV customers enjoy dozens of other sports.We break down what to watch and how to watch on TV and live streaming...   🥊👉Website: Get Access Now!   I am not purchasing cable- streaming only.Check out for Reddit to Watch Live. And when there is no UFC, internet TV customers enjoy dozens of other sports.We break down what to watch and how to watch on TV and live streaming...   I want to do it legally so please don’t tell me to attach a Rube Goldberg series of coat hangers from the neighbors house to my houses cable. As much as I may love such an idea.   What’s the best way to stream UFC Fight? UFC-Plus seems to be a good offer, only being 5 dollars a month.   Doesn’t Paramount + and Amazon Prime also offer UFC Fight? With that, I heard that yahoo also lets you stream Fight on mobile, for At Home.   Streams UFC Fight live on ESPN, DAZN, FOX or UFC Network. I'm sure you can stream as well as way to watch it but I want to see what you guys recommend.   Hey, I’m starting college here soon and I’m on a budget. I’m open to any suggestions.       submitted by     /u/Due-Department-3864     to     r/TheSympathizer       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TheSympathizer/comments/1wl43uo/heres_how_i_find_ufc_331_ｌｉｖｅ_𝒮𝓉𝓇𝑒𝒶𝓂𝓈free/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:57:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:58:13.875Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf3df0660c608403983d16"
+    },
+    "message_id": "reddit_t3_1wl44qk",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Fearless_Lion_6397",
+    "title": "What movie made you cry?",
+    "text": "What movie made you cry?\n\nsubmitted by     /u/Fearless_Lion_6397     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wl44qk/what_movie_made_you_cry/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:59:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:59:12.158Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf3df0660c608403983d17"
+    },
+    "message_id": "reddit_t3_1wl44qf",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "jerky",
+    "username": "stonecats",
+    "title": "I'm catching a lot of commercial jerky <$1/oz this year, but i though beef prices have doubled ?!",
+    "text": "I'm catching a lot of commercial jerky <$1/oz this year, but i though beef prices have doubled ?!\n\nfor years whenever i notice commercial beef jerky under $1/oz i'd buy it, which in years past was about 1-2 times a year. now i'm seeing a wide variety of brands this $1/oz cheap monthly. what's changed?    i'm not talking about near date expired items        submitted by     /u/stonecats     to     r/jerky       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jerky/comments/1wl44qf/im_catching_a_lot_of_commercial_jerky_1oz_this/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:59:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:59:12.360Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf3df0660c608403983d18"
+    },
+    "message_id": "reddit_t3_1wl44p7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "d0hm4n",
+    "title": "The Shadowy Legacy of Butter Shortbread Round",
+    "text": "The Shadowy Legacy of Butter Shortbread Round\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/d0hm4n     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wl44p7/the_shadowy_legacy_of_butter_shortbread_round/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:58:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:59:12.567Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf3df0660c608403983d19"
+    },
+    "message_id": "reddit_t3_1wl44p0",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Past_Relief5219",
+    "title": "What dream did you have that you wish it was real?",
+    "text": "What dream did you have that you wish it was real?\n\nsubmitted by     /u/Past_Relief5219     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wl44p0/what_dream_did_you_have_that_you_wish_it_was_real/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:58:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:59:12.769Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf3df0660c608403983d1a"
+    },
+    "message_id": "reddit_t3_1wl44oq",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "ryan24parker",
+    "title": "Wistful Raspberry Cream Slice",
+    "text": "Wistful Raspberry Cream Slice\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/ryan24parker     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wl44oq/wistful_raspberry_cream_slice/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:58:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:59:12.972Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf3df1660c608403983d1b"
+    },
+    "message_id": "reddit_t3_1wl44oc",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Leathercraft",
+    "username": "Dear_Challenge1554",
+    "title": "My first sewing machine.",
+    "text": "My first sewing machine.\n\nI just bought a tippmann boss and I can’t tell if it’s me or the machine but it’s cutting the bobbin thread and doing what’s pictured.  I have zero experience with sewing machines. So it could very easily be me and not the machine.  I just hope I have bought a rather expensive automated hole punch and YouTube has been mostly tippmann adds.  For any mods I hope I did the flare right I don’t really use Reddit very often.        submitted by     /u/Dear_Challenge1554     to     r/Leathercraft       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Leathercraft/comments/1wl44oc/my_first_sewing_machine/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:58:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:59:13.175Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf3df1660c608403983d1c"
+    },
+    "message_id": "reddit_t3_1wl44o3",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CambridgeMA",
+    "username": "biodiversityrocks",
+    "title": "Looking for wingless fruit fly culture",
+    "text": "Looking for wingless fruit fly culture\n\nUnexpectedly got hold of some baby mantids. Apparently they need to eat a whole lot of fruit flies ASAP! Anyone know where to buy already producing cultures or could spare a few?       submitted by     /u/biodiversityrocks     to     r/CambridgeMA       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CambridgeMA/comments/1wl44o3/looking_for_wingless_fruit_fly_culture/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:58:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:59:13.389Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf3df1660c608403983d1d"
+    },
+    "message_id": "reddit_t3_1wl44n7",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",

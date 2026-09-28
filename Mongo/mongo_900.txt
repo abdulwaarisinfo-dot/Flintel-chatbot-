@@ -1,0 +1,416 @@
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "shanghai",
+    "username": "Shanamat",
+    "title": "Trying to choose an apartment. Degusteria vs Piccolo",
+    "text": "Trying to choose an apartment. Degusteria vs Piccolo\n\nI'm moving back to Shanghai and looking for an apartment. I've found 2 I really like, both are similar in price and size. Both happen to be very close to 2 branches of Alimentari, degusteria and piccolo. One apartment is on Jiazhou Rd and the other is on Fahuazhen Rd. Any pros or cons to either location?        submitted by     /u/Shanamat     to     r/shanghai       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/shanghai/comments/1w9pqes/trying_to_choose_an_apartment_degusteria_vs/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T11:37:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T11:37:18.648Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ea1eef0819e6636a90a08"
+    },
+    "message_id": "reddit_t3_1w9pqei",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "PCHelpHub",
+    "username": "thfc_theo",
+    "title": "Pc not displaying",
+    "text": "Pc not displaying\n\nCan people please help I just finished building my pc but I'm getting no display please help me fix it       submitted by     /u/thfc_theo     to     r/PCHelpHub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PCHelpHub/comments/1w9pqei/pc_not_displaying/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T11:37:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T11:37:18.862Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ea1eff0819e6636a90a09"
+    },
+    "message_id": "reddit_t3_1w9pqe5",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "3Dprinting",
+    "username": "oxmannnn",
+    "title": "Did a tool that turns Minecraft builds into multicolor prints with the actual textures carved in",
+    "text": "Did a tool that turns Minecraft builds into multicolor prints with the actual textures carved in\n\nEvery Minecraft to STL converter I tried does the same thing: one cube per block, flat faces, pick a color per block type. Fine for a chunk of terrain, boring for a house you spent hours on. So I wrote one that treats the game files as the source.    What it does:    It opens any schematic format (.schematic, .schem, .litematic, structure .nbt, Bedrock .mcstructure) and pulls the block models and textures out of your own Minecraft install, mods and resource packs included. A stair is a stair, a fence is a fence, a flower is the flat cutout plant it is in the game.   Textures become geometry. It reads the mortar lines out of the brick texture, the seams out of planks, the cracks in stone bricks, and carves them 0.5 mm into the surface. Plain stone and dirt stay flat because their textures are just noise. You get the block look under a raking light instead of a smooth box.   Colors are reduced to the filaments you actually have. It talks to a Bambu AMS, Klipper or OctoPrint to see what is loaded, or you paste a slicer preset, and it matches every block color to the closest spool. Glass panes go to a separate slot so you can use clear PETG. Export is a 3MF with one object per filament, ready to paint in the slicer, plus STL and OBJ if you want them. Big builds get split into tiles that fit your bed.   There is a kit mode. It cuts the build into bricks with studs and sockets, packs them onto plates per filament, and writes an assembly guide with a layer map. You print a bag of parts and build the house by hand.   And mobs. The game keeps entity models as Java code inside the jar, so the tool reads them straight out of there and prints 78 of them as figures, with a plate under each if you want a standalone one. Creeper, villager, warden, axolotl, the lot.   Print settings I use on a Bambu A2L: PETG, 0.4 nozzle, 10 mm per block for buildings, 20 mm per block for single figures. The tool keeps every wall at 0.8 mm minimum so thin fences and panes still print, and the meshes are watertight per color so the slicer does not complain.   It's open-source project:  https://github.com/winchxyz/mc-print-3d    AND IT'S WIP, so you may have some bugs...        submitted by     /u/oxmannnn     to     r/3Dprinting       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/3Dprinting/comments/1w9pqe5/did_a_tool_that_turns_minecraft_builds_into/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T11:37:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T11:37:19.075Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ea1eff0819e6636a90a0a"
+    },
+    "message_id": "reddit_t3_1w9pqdb",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "Hull",
+    "username": "pollingj",
+    "title": "Tech Event at Hull Uni - September",
+    "text": "Tech Event at Hull Uni - September\n\nWe have another Tech Sessions event at Hull Uni on the evening of 29th September:   * Gordon McKenzie will be talking in building an AI-native culture at a tech start-up  * Ed Moore will cover AgenticOps in practice    Hope this is of interest to some.    https://www.eventbrite.co.uk/e/the-tech-sessions-deep-dives-ai-native-culture-and-agenticops-tickets-1999984173501        submitted by     /u/pollingj     to     r/Hull       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Hull/comments/1w9pqdb/tech_event_at_hull_uni_september/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T11:37:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T11:37:19.291Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ea1eff0819e6636a90a0b"
+    },
+    "message_id": "reddit_t3_1w9pqda",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "sfx",
+    "username": "Bean_juice9772",
+    "title": "Adding ceramic to a prosthetic",
+    "text": "Adding ceramic to a prosthetic\n\nHi everyone!  I have been hired to do a small independent film and the director has asked me to create a prosthetic for a stunt where a mug is smashed into someone's face. They'd like small pieces of ceramic to be embedded into the skin, does anyone have any suggestions on how to do this? I thought real ceramic would be too heavy for the prosthetic to support, so I'm not sure if I should find a prop alternative that would look realistic?    Thanks!       submitted by     /u/Bean_juice9772     to     r/sfx       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sfx/comments/1w9pqda/adding_ceramic_to_a_prosthetic/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T11:37:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T11:37:19.504Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ea1eff0819e6636a90a0c"
+    },
+    "message_id": "reddit_t3_1w9pqd5",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "computervision",
+    "username": "Annual-Gift7613",
+    "title": "We built a GPU → CVAT human-in-the-loop video annotation pipeline, here’s what actually happened",
+    "text": "We built a GPU → CVAT human-in-the-loop video annotation pipeline, here’s what actually happened\n\nsubmitted by     /u/Annual-Gift7613     to     r/computervision       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/computervision/comments/1w9pqd5/we_built_a_gpu_cvat_humanintheloop_video/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T11:36:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T11:37:19.717Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ea1eff0819e6636a90a0d"
+    },
+    "message_id": "reddit_t3_1w9pqd3",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "darkestdungeon",
+    "username": "LoliFleish",
+    "title": "Did another thumbnail for Shelcreatures Titual crusade run! id post the link but it says that posting letsplays is againt the rules so here is just my art <3",
+    "text": "Did another thumbnail for Shelcreatures Titual crusade run! id post the link but it says that posting letsplays is againt the rules so here is just my art <3\n\nsubmitted by     /u/LoliFleish     to     r/darkestdungeon       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/darkestdungeon/comments/1w9pqd3/did_another_thumbnail_for_shelcreatures_titual/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T11:36:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T11:37:19.939Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ea1f0f0819e6636a90a0e"
+    },
+    "message_id": "reddit_t3_1w9pqd0",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "Whysoooserious",
+    "username": "athersport",
+    "title": "We got Kissing Baba before GTA 6",
+    "text": "We got Kissing Baba before GTA 6\n\nsubmitted by     /u/athersport     to     r/Whysoooserious       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Whysoooserious/comments/1w9pqd0/we_got_kissing_baba_before_gta_6/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T11:36:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T11:37:20.152Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ea1f0f0819e6636a90a0f"
+    },
+    "message_id": "reddit_t3_1w9pqcu",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "SecretFWB",
+    "username": "slickrickstik",
+    "title": "48 [M4F] #NYC. Tri-state area. Looking for someone trustworthy to keep things quiet and fun.",
+    "text": "48 [M4F] #NYC. Tri-state area. Looking for someone trustworthy to keep things quiet and fun.\n\nI'm a 48 year old white guy, pretty easygoing, stable, and definitely still young at heart. I'm married, but untortunately the intimacy and connection have been gone for a while, and I really miss having that physical fun.  I'm looking to meet a woman who's warm, fun, affectionate, and enjoys a good laugh. I'm a man with a high libido, so physical chemistry is important to me, I'd like to actually enjoy talking, hanging out, getting to know each other, and having something consistent that we both look forward to.  If you're in a similar situation and miss having that kind of connection, I'd love to hear from you.  What is your favorite 80's or 90's comedy.       submitted by     /u/slickrickstik     to     r/SecretFWB       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SecretFWB/comments/1w9pqcu/48_m4f_nyc_tristate_area_looking_for_someone/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T11:36:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T11:37:20.365Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ea1f0f0819e6636a90a10"
+    },
+    "message_id": "reddit_t3_1w9pqcg",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "MuslimMatrimonials",
+    "username": "manchester_brother",
+    "title": "42 male manchester",
+    "text": "42 male manchester\n\nMarriage Profile   Gender: Male   Religion: Sunni Muslim   Marital Status: Divorced   Location: Manchester   I would describe myself as a family-oriented, honest and genuine person who places a lot of importance on strong family values. I believe marriage is about companionship, friendship, understanding and being there for one another through all of life's ups and downs.   I have a good sense of humour and enjoy making the people around me smile. I’m looking for a partner who can also become my best friend — someone I can share the simple things in life with, from meaningful conversations and laughter to exploring new places and creating lasting memories together.   Outside of work, I enjoy going to the gym, hiking and spending time outdoors surrounded by nature. I also enjoy a good coffee, beautiful sunsets and sightseeing. I appreciate the simple pleasures in life and would love to share those experiences with my future partner.   What I'm Looking For   I’m seeking someone 30+ who is kind-hearted, caring, genuine and has a good sense of humour. Divorcees and reverts are very welcome.   Caste, education and employment are not major factors for me. What matters far more is the person themselves — genuine character, loyalty, honesty, kindness and strong family values.   I’m looking for someone who understands that no relationship is perfect and that marriage means standing by each other through both the good times and the difficult ones. I want us to be a team — supporting each other, communicating openly, growing together and creating a peaceful and loving home.   Ultimately, I’m looking for a meaningful marriage built on trust, respect, companionship, friendship and love, where we can share life's experiences and create many beautiful and everlasting memories together, Insha'Allah.       submitted by     /u/manchester_brother     to     r/MuslimMatrimonials       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MuslimMatrimonials/comments/1w9pqcg/42_male_manchester/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T11:36:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T11:37:20.579Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ea1f0f0819e6636a90a11"
+    },
+    "message_id": "reddit_t3_1w9pqcc",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "iPhone13Mini",
+    "username": "Charming-Plastic-679",
+    "title": "5 days after buying iPhone 15 pro, a car ran over it and I am back to 13 mini",
+    "text": "5 days after buying iPhone 15 pro, a car ran over it and I am back to 13 mini\n\nI just could not make it up. Bought an iPhone 15 pro, 512gb, pristine condition. Hated the size of course, but the battery was just wow. Was forcing myself to get used to the thumb gymnastics, and had sore pinky all of the time when using it, the phone just felt extremely heavy.    On day 5 it fall down when I was riding a motorbike, and a car drove over it. It’s now smashed on both front and the back, even though the frame is intact and everything inside is fine too. But, turns out replacing front and back screens with Apple will cost the same as another iPhone 15 pro, and if I use non-genuine parts, I lose faceID, True Tone and camera will be affected because it won’t be able to make use of the sensor on the back… even though the phone is intact inside this titanium frame! On a side note, is that really true that with smashed front and back the only financially viable way is to sell this phone for spares?..   I am back to my iPhone 13 mini and it just feels like home. So comfy, so small, so light. Pure enjoyment. It’s as if the destiny was against me retiring it. I was away from my beloved mini for merely five days before being forced to reunite        submitted by     /u/Charming-Plastic-679     to     r/iPhone13Mini       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/iPhone13Mini/comments/1w9pqcc/5_days_after_buying_iphone_15_pro_a_car_ran_over/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T11:36:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T11:37:20.793Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ea1f1f0819e6636a90a13"
+    },
+    "message_id": "reddit_t3_1w9pqc6",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "xmen",
+    "username": "Miningapple-100",
+    "title": "Ms. Marvel as a leader in the X-Men",
+    "text": "Ms. Marvel as a leader in the X-Men\n\nSince Kamala has leadership experience with her time in the Champions do you think we could see a team lead by her with her time as a mutant. I feel because of her inhuman and mutant background it would be interesting to see a team comprised of a split between the younger cast of the mutants and inhumans with Kamala at the helm. Who do you think would comprise the team she would have?       submitted by     /u/Miningapple-100     to     r/xmen       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/xmen/comments/1w9pqc6/ms_marvel_as_a_leader_in_the_xmen/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T11:36:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T11:37:21.217Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ea1f1f0819e6636a90a14"
+    },
+    "message_id": "reddit_t3_1w9pqbw",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "balatro",
+    "username": "The25thCourier",
+    "title": "I finally got my first unseeded naneinf run",
+    "text": "I finally got my first unseeded naneinf run\n\nI'm just really happy for finally getting an unseeded naneinf run after probably hundreds of runs, ever since I started playing this game 6 months ago. Thank you for this sub for helping me learn about the game.       submitted by     /u/The25thCourier     to     r/balatro       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/balatro/comments/1w9pqbw/i_finally_got_my_first_unseeded_naneinf_run/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T11:36:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T11:37:21.431Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ea1f1f0819e6636a90a15"
+    },
+    "message_id": "reddit_t3_1w9pqbt",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "StarWars",
+    "username": "Hyperion_Magnificent",
+    "title": "What happened to Luke’s hand?",
+    "text": "What happened to Luke’s hand?\n\nSo this is for a Sith larp Im running and I want to say that they have cloned Luke and Leia. Leia from here time in a new hope as a prisoner, Luke from the hand chop by Vader because he literally took the hand with him.    Is it ever shown for sure that the hand flies off the platform and ends up down the chute, or could it have landed where Vader could pick it up?        submitted by     /u/Hyperion_Magnificent     to     r/StarWars       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/StarWars/comments/1w9pqbt/what_happened_to_lukes_hand/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T11:36:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T11:37:21.643Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ea1f2f0819e6636a90a18"
+    },
+    "message_id": "reddit_t3_1w9pqbs",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "laundry",
+    "username": "Bellaamayyy",
+    "title": "I finally found that “clean laundry fresh cotton” smell I’ve been after and it’s 10x better than I’d hoped !",
+    "text": "I finally found that “clean laundry fresh cotton” smell I’ve been after and it’s 10x better than I’d hoped !\n\nThe kind of “cotton fresh” smell I know we all love!! Half price on Amazon! And lasts until your next wash, even the rooms in my house smell so good when my clothes are drying in it ! And my sheets and pillows smell so fresh it’s great to fall asleep to :) they also have a fabric softener if this is too strong!    PS: when you smell the beads they smell weird but once washed in it’s amazing        submitted by     /u/Bellaamayyy     to     r/laundry       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/laundry/comments/1w9pqbs/i_finally_found_that_clean_laundry_fresh_cotton/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T11:36:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T11:37:22.277Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ea1f2f0819e6636a90a19"
+    },
+    "message_id": "reddit_t3_1w9pqbp",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "chrome_extensions",
+    "username": "SyntaxTerror_69",
+    "title": "I made a tiny Chrome extension that changes the YouTube logo to “Premium”",
+    "text": "I made a tiny Chrome extension that changes the YouTube logo to “Premium”\n\nI use an ad blocker on YouTube, so the experience already feels almost identical to YouTube Premium.   No ads.   No interruptions.   Just YouTube.   Except the logo still says “YouTube.” 😅   That tiny detail bothered me more than it probably should have.   So I made a small Chromium extension that changes the YouTube wordmark to “Premium.”   It's completely local — no analytics, no tracking, no unnecessary permissions.   GitHub:    https://github.com/kalpit118/youtube-premium-logo-changer        submitted by     /u/SyntaxTerror_69     to     r/chrome_extensions       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/chrome_extensions/comments/1w9pqbp/i_made_a_tiny_chrome_extension_that_changes_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T11:36:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T11:37:22.491Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ea1f2f0819e6636a90a1a"
+    },
+    "message_id": "reddit_t3_1w9pqb5",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "Gintama",
+    "username": "_Johan_n",
+    "title": "Utsuro's build up is still the most brilliant idea I've seen in fiction",
+    "text": "Utsuro's build up is still the most brilliant idea I've seen in fiction\n\nEven if Sorachi didn't plan him from the very start, in some early arcs you feel like he really planned something like him, foreshadowing utsuro through people's void and emptiness instead of appearing sometimes like Takasugi or any fiction character do. This is why the silver soul is peak fiction, the silver soul not only refers to gintoki but more about all the people that Gintoki helped and incrusted his silver soul with them so it's more like \"the silver souls\". A conflict between the void of human beings and the shine of their soul, even if it's not the brightest shine even if it's not as valuable as gold. Their silver soul is still unique to them and more real than any light could be. So as Yoshida Shouyo said a sword is not meant to protect yourself but to protect your very soul.       submitted by     /u/_Johan_n     to     r/Gintama       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Gintama/comments/1w9pqb5/utsuros_build_up_is_still_the_most_brilliant_idea/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T11:36:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T11:37:22.707Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ea1f3f0819e6636a90a1c"
+    },
+    "message_id": "reddit_t3_1w9pqb2",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "WallStreetbetsELITE",
+    "username": "Rbd74",
+    "title": "Hey, come and join moomoo to get rewards!",
+    "text": "Hey, come and join moomoo to get rewards!\n\nsubmitted by     /u/Rbd74     to     r/WallStreetbetsELITE       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WallStreetbetsELITE/comments/1w9pqb2/hey_come_and_join_moomoo_to_get_rewards/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T11:36:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T11:37:23.130Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ea1f3f0819e6636a90a1d"
+    },
+    "message_id": "reddit_t3_1w9pqar",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "godot",
+    "username": "zdmit",
+    "title": "Migrated from Godot to custom C++ Vulkan engine",
+    "text": "Migrated from Godot to custom C++ Vulkan engine\n\nBecause of starting to fight with MultimeshInstance3D ie per grass blade culling. Tried so many things and eventually gave up.    Now (mesh shader pipeline):  - per blade culling without any hacks that happens fully on GPU and seems to be free.  - 1 draw call for whole grass field instead of ~200 (depending of amount of chunks).  - terrain now also has LODs instead of single subdivided mesh.  - can connect anything i want at a cost of upfront time investment which in theory should be worth long-term.  - no fighting with engine.  - bunch more.   Was afraid to do this step but glad I did. All the best to all of us.   Some references:  -  https://gpuopen.com/learn/mesh_shaders/mesh_shaders-from_vertex_shader_to_mesh_shader/   -  https://developer.nvidia.com/blog/introduction-turing-mesh-shaders/   -  https://www.khronos.org/blog/mesh-shading-for-vulkan   -  https://www.youtube.com/watch?v=rEoBjbtZBrk   -  https://www.youtube.com/watch?v=EtX7WnFhxtQ         submitted by     /u/zdmit     to     r/godot       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/godot/comments/1w9pqar/migrated_from_godot_to_custom_c_vulkan_engine/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T11:36:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T11:37:23.343Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9ea1f3f0819e6636a90a1e"

@@ -1,0 +1,416 @@
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T12:07:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:08:15.883Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabd830660c608403971d60"
+    },
+    "message_id": "reddit_t3_1wis6cj",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "Wetshavers_India",
+    "username": "KartoosPM",
+    "title": "SOTD — Yellow Thursday",
+    "text": "SOTD — Yellow Thursday\n\nRazor:  Romer-7 Shivira   Blade:  Willy’s Premium   Brush:  Pink Woolf Boar   Soap:  The Shepherd — Wool Fat Recipe   Lathering Bowl:  Coconut Bowl     Prep:  Pre-shave as usual.    The Shave   A special  Yellow Thursday shave 💛  before heading out on a  10-day-long journey . Wanted a proper, comfortable shave before hitting the road.    2 passes:   • WTG  • XTG  • ATG on the goatee  • Some touch-ups around the moustache, chin & neck   The  Romer-7 Shivira + Willy’s Premium  pairing performed really well. The Shepherd gave me a rich, creamy lather, and the old faithful Pink Woolf boar did its usual job.    Result    Almost BBS!   Smooth, comfortable and travel-ready.    Post-Shave   Remaining bowl lather →  face wash   Then a  bath    Bombay Shaving Company ASL    Minimalist HOCL   Now I’m ready for the 10-day travel adventure.     Yellow Thursday never disappoints!        submitted by     /u/KartoosPM     to     r/Wetshavers_India       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Wetshavers_India/comments/1wis6cj/sotd_yellow_thursday/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T12:07:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:08:16.108Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabd830660c608403971d62"
+    },
+    "message_id": "reddit_t3_1wis6cc",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "StremioAddons",
+    "username": "TripLopsided2413",
+    "title": "Stremio Addon - JPL Pro League",
+    "text": "Stremio Addon - JPL Pro League\n\nHello, is there a Stremio add-on for watching the JPL Pro League (Belgian football league)?   I’ve already installed several add-ons, but I haven’t yet been able to find one that lets me watch this league.   Thank you!       submitted by     /u/TripLopsided2413     to     r/StremioAddons       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/StremioAddons/comments/1wis6cc/stremio_addon_jpl_pro_league/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T12:07:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:08:16.536Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabd83e42dd0e95b5bac299"
+    },
+    "message_id": "twitter_2099401264014475682",
+    "topic_key": "marketplace integration",
+    "search_keyword": "marketplace integration",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Aulex_0",
+    "title": "A product can have every feature it needs and still feel broken.\n\nThat became very clear to me while integrating my car marketplace. \n\nI started this project from a Figma design, built the Flutter app, built the backend, documented the API with\n\nSwagger, integrated Paystack and webhooks  and I've now completed the full integration.\n\nAt this point, the major flows are connected:\n\n→ Authentication\n\n→ Vehicle discovery & details\n\n→ Search & filtering\n\n→ Cart & favourites\n\n→ Checkout & orders\n\n→ Wallet & payments\n\n→ Notifications\n\n→ Profile & settings\n\nBut here's what I found interesting:\nBuilding the features was only part of the problem.\n\nA user doesn't experience your backend, database, API or architecture.\n\nThey experience:\n\n“I clicked this. Did it work?”\n\nIf a user adds a car to their cart, the cart needs to reflect it.\n\nIf they make a payment, their wallet needs to update correctly.\n\nIf an order is created, the user needs to see the right state.\n\nIf something fails, the app needs to handle it without leaving the user wondering what happened.\n\nThat means every boundary between the frontend and backend has to be reliable.\n\nAnd this is where I think good engineering directly affects the product.\n\nFounders think in terms of features.\nUsers think in terms of experiences.\nEngineers have to make the two meet reliably.\n\nDuring integration, I had to deal with API contracts, authentication state, loading and error states, empty responses, stale data, \n\nand keeping the UI consistent with the actual state of the backend.\n\nOne lesson I'm taking from this:\n\nA feature isn't finished when the code works.\nIt's finished when the user can depend on it.\n\nThe marketplace is now fully integrated.\n\nNext phase: testing the product under real usage, finding the weak points, and tightening them up. \n\nIf you're building something interesting and need an engineer to help bring it to life, feel free to reach out.\n\n#SoftwareEngineering #Flutter #NodeJS",
+    "text": "A product can have every feature it needs and still feel broken.\n\nThat became very clear to me while integrating my car marketplace. \n\nI started this project from a Figma design, built the Flutter app, built the backend, documented the API with\n\nSwagger, integrated Paystack and webhooks  and I've now completed the full integration.\n\nAt this point, the major flows are connected:\n\n→ Authentication\n\n→ Vehicle discovery & details\n\n→ Search & filtering\n\n→ Cart & favourites\n\n→ Checkout & orders\n\n→ Wallet & payments\n\n→ Notifications\n\n→ Profile & settings\n\nBut here's what I found interesting:\nBuilding the features was only part of the problem.\n\nA user doesn't experience your backend, database, API or architecture.\n\nThey experience:\n\n“I clicked this. Did it work?”\n\nIf a user adds a car to their cart, the cart needs to reflect it.\n\nIf they make a payment, their wallet needs to update correctly.\n\nIf an order is created, the user needs to see the right state.\n\nIf something fails, the app needs to handle it without leaving the user wondering what happened.\n\nThat means every boundary between the frontend and backend has to be reliable.\n\nAnd this is where I think good engineering directly affects the product.\n\nFounders think in terms of features.\nUsers think in terms of experiences.\nEngineers have to make the two meet reliably.\n\nDuring integration, I had to deal with API contracts, authentication state, loading and error states, empty responses, stale data, \n\nand keeping the UI consistent with the actual state of the backend.\n\nOne lesson I'm taking from this:\n\nA feature isn't finished when the code works.\nIt's finished when the user can depend on it.\n\nThe marketplace is now fully integrated.\n\nNext phase: testing the product under real usage, finding the weak points, and tightening them up. \n\nIf you're building something interesting and need an engineer to help bring it to life, feel free to reach out.\n\n#SoftwareEngineering #Flutter #NodeJS",
+    "post_url": "https://twitter.com/Aulex_0/status/2099401264014475682",
+    "score": 3,
+    "num_comments": 5,
+    "created_utc": {
+      "$date": "2026-09-14T07:34:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:08:30.480Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd83e42dd0e95b5bac29a"
+    },
+    "message_id": "twitter_2098453164244484191",
+    "topic_key": "marketplace integration",
+    "search_keyword": "marketplace integration",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Aulex_0",
+    "title": "The API can work perfectly and the UI can still be wrong.\n\nI've been integrating the Flutter app with the backend, and a lot more has started coming together. \n\nI've now connected several of the core marketplace flows:\n\n→ Authentication\n\n→ Vehicle listings & product details\n\n→ Search & filtering\n\n→ Cart\n\n→ Favourites\n\n→ Orders\n\n→ And the data behind the different screens\n\nOne thing this phase has reminded me of:\nBuilding the backend is only half the problem.\n\nYou can test an endpoint in Swagger, get the expected response, and think everything is working.\n\nThen you connect it to the actual app and suddenly you have to deal with:\n\n→ Different response states\n\n→ Empty data\n\n→ Loading states\n\n→ Failed requests\n\n→ Keeping UI state in sync\n\n→ Making sure the data coming from the backend actually fits the screen\n\nThat's where I think integration gets interesting.\n\nThe backend knows the data.\n\nThe frontend knows how to present it.\n\nIntegration is where those two worlds have to agree.\n\nAnd connecting these flows has already exposed a few assumptions I made while building each side separately.\n\nThat's probably one of my biggest lessons from this phase:\n\nDon't just test whether your API works. Test whether the product works with it.\n\nStill integrating the rest of the marketplace. \n\n#Flutter #SoftwareEngineering #NodeJS",
+    "text": "The API can work perfectly and the UI can still be wrong.\n\nI've been integrating the Flutter app with the backend, and a lot more has started coming together. \n\nI've now connected several of the core marketplace flows:\n\n→ Authentication\n\n→ Vehicle listings & product details\n\n→ Search & filtering\n\n→ Cart\n\n→ Favourites\n\n→ Orders\n\n→ And the data behind the different screens\n\nOne thing this phase has reminded me of:\nBuilding the backend is only half the problem.\n\nYou can test an endpoint in Swagger, get the expected response, and think everything is working.\n\nThen you connect it to the actual app and suddenly you have to deal with:\n\n→ Different response states\n\n→ Empty data\n\n→ Loading states\n\n→ Failed requests\n\n→ Keeping UI state in sync\n\n→ Making sure the data coming from the backend actually fits the screen\n\nThat's where I think integration gets interesting.\n\nThe backend knows the data.\n\nThe frontend knows how to present it.\n\nIntegration is where those two worlds have to agree.\n\nAnd connecting these flows has already exposed a few assumptions I made while building each side separately.\n\nThat's probably one of my biggest lessons from this phase:\n\nDon't just test whether your API works. Test whether the product works with it.\n\nStill integrating the rest of the marketplace. \n\n#Flutter #SoftwareEngineering #NodeJS",
+    "post_url": "https://twitter.com/Aulex_0/status/2098453164244484191",
+    "score": 1,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-11T16:46:36Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:08:30.698Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd83f42dd0e95b5bac29c"
+    },
+    "message_id": "twitter_2099732857765929093",
+    "topic_key": "marketplace integration",
+    "search_keyword": "marketplace integration",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "priyant_J",
+    "title": "Programmatic SEO isn’t about creating thousands of pages. It’s about building a system that turns data + search intent into scalable search visibility. I wrote a complete guide covering pSEO, SEO, AEO, GEO, indexing, measurement. https://t.co/PhsnbLk1Vo",
+    "text": "Programmatic SEO isn’t about creating thousands of pages. It’s about building a system that turns data + search intent into scalable search visibility. I wrote a complete guide covering pSEO, SEO, AEO, GEO, indexing, measurement. https://t.co/PhsnbLk1Vo",
+    "post_url": "https://twitter.com/priyant_J/status/2099732857765929093",
+    "score": 9,
+    "num_comments": 13,
+    "created_utc": {
+      "$date": "2026-09-15T05:31:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:08:31.130Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd83f42dd0e95b5bac29e"
+    },
+    "message_id": "twitter_2099541003141279851",
+    "topic_key": "marketplace integration",
+    "search_keyword": "marketplace integration",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ASaltyVet",
+    "title": "After hearing about @AgentNative talk about some great things Codex and Astra are doing, this idea was floated, so I fed it to the agent team and here's what came out. Maybe someone will run with this. https://t.co/CFXRIKi8JQ",
+    "text": "After hearing about @AgentNative talk about some great things Codex and Astra are doing, this idea was floated, so I fed it to the agent team and here's what came out. Maybe someone will run with this. https://t.co/CFXRIKi8JQ",
+    "post_url": "https://twitter.com/ASaltyVet/status/2099541003141279851",
+    "score": 0,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-14T16:49:17Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:08:31.777Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd83f42dd0e95b5bac29f"
+    },
+    "message_id": "twitter_2097897146775458075",
+    "topic_key": "marketplace integration",
+    "search_keyword": "marketplace integration",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "vikrantshukla",
+    "title": "Conversation is becoming a front door. Brands that win will not be the ones with the cleverest chat. They will be the ones with clean catalogs, clear approval gates, and agents that sit where shoppers already ask questions.\n\n#Vikshu #ConversationalCommerce https://t.co/6afK7eBdaQ",
+    "text": "Conversation is becoming a front door. Brands that win will not be the ones with the cleverest chat. They will be the ones with clean catalogs, clear approval gates, and agents that sit where shoppers already ask questions.\n\n#Vikshu #ConversationalCommerce https://t.co/6afK7eBdaQ",
+    "post_url": "https://twitter.com/vikrantshukla/status/2097897146775458075",
+    "score": 8,
+    "num_comments": 8,
+    "created_utc": {
+      "$date": "2026-09-10T03:57:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:08:31.994Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd84042dd0e95b5bac2a0"
+    },
+    "message_id": "twitter_2098112435689234611",
+    "topic_key": "marketplace integration",
+    "search_keyword": "marketplace integration",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "_Everknown",
+    "title": "⚡ THE MERGE IS HERE.\n\nOne account. Dual purpose.\n\nTrade Futures + Forex from one seamless space. 🐐\n\nNo switching between platforms.\nNo unnecessary complexity.\n\nJust one account.\nTwo markets.\nOne unified trading experience. 🔥 https://t.co/QKVbmuPGqD",
+    "text": "⚡ THE MERGE IS HERE.\n\nOne account. Dual purpose.\n\nTrade Futures + Forex from one seamless space. 🐐\n\nNo switching between platforms.\nNo unnecessary complexity.\n\nJust one account.\nTwo markets.\nOne unified trading experience. 🔥 https://t.co/QKVbmuPGqD",
+    "post_url": "https://twitter.com/_Everknown/status/2098112435689234611",
+    "score": 12,
+    "num_comments": 2,
+    "created_utc": {
+      "$date": "2026-09-10T18:12:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:08:32.211Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd84042dd0e95b5bac2a1"
+    },
+    "message_id": "twitter_2036120265013477781",
+    "topic_key": "marketplace integration",
+    "search_keyword": "marketplace integration",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "AlexFinn",
+    "title": "People aren't talking about this enough\n\nDespite the fact that OpenAI bought OpenClaw, they keep shipping features and support for Anthropic, Gemini, and Cursor features\n\nNewest update is MASSIVE:\n• Support for Claude Code and Cursor MCP's\n• Claude Code config import\n• Exa search support\n• New Chrome integration\n• Claude marketplace registry (install plugins directly from Claude)\n\nThe future is open source, open garden tools that are model agnostic\n\nX loves to clown OpenAI as ClosedAI but I challenge you to find another tool owned by a major AI lab that is as open as this",
+    "text": "People aren't talking about this enough\n\nDespite the fact that OpenAI bought OpenClaw, they keep shipping features and support for Anthropic, Gemini, and Cursor features\n\nNewest update is MASSIVE:\n• Support for Claude Code and Cursor MCP's\n• Claude Code config import\n• Exa search support\n• New Chrome integration\n• Claude marketplace registry (install plugins directly from Claude)\n\nThe future is open source, open garden tools that are model agnostic\n\nX loves to clown OpenAI as ClosedAI but I challenge you to find another tool owned by a major AI lab that is as open as this",
+    "post_url": "https://twitter.com/AlexFinn/status/2036120265013477781",
+    "score": 815,
+    "num_comments": 103,
+    "created_utc": {
+      "$date": "2026-03-23T16:37:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:08:32.428Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd84042dd0e95b5bac2a3"
+    },
+    "message_id": "twitter_2099879657755869654",
+    "topic_key": "marketplace integration",
+    "search_keyword": "marketplace integration",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "lemonar777",
+    "title": "Beldex isn’t just talking about privacy. It has already built a working ecosystem around it.\n\n@BeldexCoin already has:\n\n• @BChatBeldex for private messaging\n• @BelNetBeldex for decentralized private networking\n• Beldex Browser for privacy-first browsing\n• BNS for human-readable identities\n• Beldex Wallet for BDX transactions\n• A masternode-powered PoS network\n• BNS Marketplace for peer-to-peer name trading\n• Beldex Bridge connecting the native chain with BNB Smart Chain\n• BDX support on SWFT Wallet and OmniBridge\n• BDX integration with Privacy Gateway\n\nAnd in August, Beldex closed an $8M funding round to accelerate privacy infrastructure for Web3 and AI. \n\nThis is what has already been built.\n\nThe next chapter is about taking that privacy infrastructure further.",
+    "text": "Beldex isn’t just talking about privacy. It has already built a working ecosystem around it.\n\n@BeldexCoin already has:\n\n• @BChatBeldex for private messaging\n• @BelNetBeldex for decentralized private networking\n• Beldex Browser for privacy-first browsing\n• BNS for human-readable identities\n• Beldex Wallet for BDX transactions\n• A masternode-powered PoS network\n• BNS Marketplace for peer-to-peer name trading\n• Beldex Bridge connecting the native chain with BNB Smart Chain\n• BDX support on SWFT Wallet and OmniBridge\n• BDX integration with Privacy Gateway\n\nAnd in August, Beldex closed an $8M funding round to accelerate privacy infrastructure for Web3 and AI. \n\nThis is what has already been built.\n\nThe next chapter is about taking that privacy infrastructure further.",
+    "post_url": "https://twitter.com/lemonar777/status/2099879657755869654",
+    "score": 17,
+    "num_comments": 16,
+    "created_utc": {
+      "$date": "2026-09-15T15:14:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:08:32.860Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd84142dd0e95b5bac2a4"
+    },
+    "message_id": "twitter_2100556222332055670",
+    "topic_key": "marketplace integration",
+    "search_keyword": "marketplace integration",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "SolanaMemeEx",
+    "title": "Currently working on a number of things, adding in the option to have a basket of commodities instead of just 1, adding new markets &amp; always looking into ways to make the system more liquid. Should have some new markets by EOD. \n\nLocked in \n\nSME",
+    "text": "Currently working on a number of things, adding in the option to have a basket of commodities instead of just 1, adding new markets &amp; always looking into ways to make the system more liquid. Should have some new markets by EOD. \n\nLocked in \n\nSME",
+    "post_url": "https://twitter.com/SolanaMemeEx/status/2100556222332055670",
+    "score": 4,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-17T12:03:24Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:08:33.076Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd84842dd0e95b5bac2a9"
+    },
+    "message_id": "twitter_2098891959066677369",
+    "topic_key": "online 3pl",
+    "search_keyword": "online 3PL",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "DavyWaters",
+    "title": "This Logistics Learning guide explores several essential areas of modern logistics, including inbound logistics, reverse logistics, third-party logistics (3PL), and last mile delivery  https://t.co/ew9kjsA0LZ\n\n#Logistics #Inboundlogistics #Lastmile #3pl #ASN #logisticslearning https://t.co/wYqQe2dpkB",
+    "text": "This Logistics Learning guide explores several essential areas of modern logistics, including inbound logistics, reverse logistics, third-party logistics (3PL), and last mile delivery  https://t.co/ew9kjsA0LZ\n\n#Logistics #Inboundlogistics #Lastmile #3pl #ASN #logisticslearning https://t.co/wYqQe2dpkB",
+    "post_url": "https://twitter.com/DavyWaters/status/2098891959066677369",
+    "score": 7,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T21:50:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:08:40.484Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd84842dd0e95b5bac2aa"
+    },
+    "message_id": "twitter_2098803827310842301",
+    "topic_key": "online 3pl",
+    "search_keyword": "online 3PL",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "3V3RYDAYP3OPL3",
+    "title": "WE’RE LIVE.⚡️\n\n3P MINT IS NOW OPEN.\n\nNo AI.\nNo shortcuts.\nJust hand-drawn art, cooked line by line✍️\n\nYou’ve been watching the lore.\nYou’ve been watching us cook.\nNow watch this.\n\nGTD = GTD \n3V3RYDAY P3OPL3 https://t.co/RmAh2dwAIp",
+    "text": "WE’RE LIVE.⚡️\n\n3P MINT IS NOW OPEN.\n\nNo AI.\nNo shortcuts.\nJust hand-drawn art, cooked line by line✍️\n\nYou’ve been watching the lore.\nYou’ve been watching us cook.\nNow watch this.\n\nGTD = GTD \n3V3RYDAY P3OPL3 https://t.co/RmAh2dwAIp",
+    "post_url": "https://twitter.com/3V3RYDAYP3OPL3/status/2098803827310842301",
+    "score": 49,
+    "num_comments": 15,
+    "created_utc": {
+      "$date": "2026-09-12T16:00:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:08:40.701Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd84842dd0e95b5bac2ab"
+    },
+    "message_id": "twitter_2098857104626892825",
+    "topic_key": "online 3pl",
+    "search_keyword": "online 3PL",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "3V3RYDAYP3OPL3",
+    "title": "PUBLIC IS LIVE ⚡️\n\nMint might be moving slow… but that’s just the life of 3V3RYDAY P3OPL3.\n\nNo hype. No shortcuts.\nJust everyday people showing up and building.\nWe’re still here.\n3P https://t.co/U2Gqfc0wuc",
+    "text": "PUBLIC IS LIVE ⚡️\n\nMint might be moving slow… but that’s just the life of 3V3RYDAY P3OPL3.\n\nNo hype. No shortcuts.\nJust everyday people showing up and building.\nWe’re still here.\n3P https://t.co/U2Gqfc0wuc",
+    "post_url": "https://twitter.com/3V3RYDAYP3OPL3/status/2098857104626892825",
+    "score": 18,
+    "num_comments": 11,
+    "created_utc": {
+      "$date": "2026-09-12T19:31:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:08:40.918Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd84942dd0e95b5bac2ad"
+    },
+    "message_id": "twitter_2058074042431844490",
+    "topic_key": "online 3pl",
+    "search_keyword": "online 3PL",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "xmdropship",
+    "title": "FAQ of XM Dropshipping\n#dropshipping #fulfillment  #business #online #ecom #sourcing #onlinemarketing #3pl #onlineshop #Shopify https://t.co/PEjMiBbj4u",
+    "text": "FAQ of XM Dropshipping\n#dropshipping #fulfillment  #business #online #ecom #sourcing #onlinemarketing #3pl #onlineshop #Shopify https://t.co/PEjMiBbj4u",
+    "post_url": "https://twitter.com/xmdropship/status/2058074042431844490",
+    "score": 4,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-05-23T06:34:23Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:08:41.563Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd84942dd0e95b5bac2ae"
+    },
+    "message_id": "twitter_2098987036778909887",
+    "topic_key": "online 3pl",
+    "search_keyword": "online 3PL",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Puvvnl_Mirzapur",
+    "title": "लोड बढ़वाना हो? किसी और को पैसे ना दें! सभी सेवाएं UPPCL की आधिकारिक वेबसाइट https://t.co/E9xIcQ9W7i पर ऑनलाइन उपलब्ध हैं। सुरक्षित, तेज और भरोसेमंद।  #UPPCL #DigitalPayment #SafePayment\n\n@CMOfficeUP\n\n@EMofficeUP\n\n@aksharmaBharat\n\n@ChairmanUppcl\n\n@mduppcl\n\n@PuVVNLHQ https://t.co/uWkvypRPS8",
+    "text": "लोड बढ़वाना हो? किसी और को पैसे ना दें! सभी सेवाएं UPPCL की आधिकारिक वेबसाइट https://t.co/E9xIcQ9W7i पर ऑनलाइन उपलब्ध हैं। सुरक्षित, तेज और भरोसेमंद।  #UPPCL #DigitalPayment #SafePayment\n\n@CMOfficeUP\n\n@EMofficeUP\n\n@aksharmaBharat\n\n@ChairmanUppcl\n\n@mduppcl\n\n@PuVVNLHQ https://t.co/uWkvypRPS8",
+    "post_url": "https://twitter.com/Puvvnl_Mirzapur/status/2098987036778909887",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T04:08:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:08:41.792Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd84a42dd0e95b5bac2b0"
+    },
+    "message_id": "twitter_2099760983078297655",
+    "topic_key": "online 3pl",
+    "search_keyword": "online 3PL",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "DigiFortune",
+    "title": "@OverlapAI 3L has not issues. \nunless you use the trademark  copy website 、slogon or logo in your landing page",
+    "text": "@OverlapAI 3L has not issues. \nunless you use the trademark  copy website 、slogon or logo in your landing page",
+    "post_url": "https://twitter.com/DigiFortune/status/2099760983078297655",
+    "score": 1,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-15T07:23:24Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:08:42.223Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd84a42dd0e95b5bac2b2"
+    },
+    "message_id": "twitter_2098066652034179218",
+    "topic_key": "online 3pl",
+    "search_keyword": "online 3PL",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Camexgt",
+    "title": "Involucrarte de más en procesos logísticos puede interferir en el avance de otras áreas de tu negocio. Con el 3PL de CEALSA nos encargamos de tu operación logística desde que parte en el país de origen, hasta que llega a nuestras bodegas. https://t.co/HVKuBnk7h9",
+    "text": "Involucrarte de más en procesos logísticos puede interferir en el avance de otras áreas de tu negocio. Con el 3PL de CEALSA nos encargamos de tu operación logística desde que parte en el país de origen, hasta que llega a nuestras bodegas. https://t.co/HVKuBnk7h9",
+    "post_url": "https://twitter.com/Camexgt/status/2098066652034179218",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T15:10:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:08:42.655Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd84b42dd0e95b5bac2b4"
+    },
+    "message_id": "twitter_2098334642822869242",
+    "topic_key": "online 3pl",
+    "search_keyword": "online 3PL",
+    "platform": "twitter",
+    "subreddit": "",

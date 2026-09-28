@@ -1,0 +1,416 @@
+  },
+  {
+    "_id": {
+      "$oid": "6ab030fd660c608403988fd0"
+    },
+    "message_id": "reddit_t3_1wlq0k6",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "GamingLaptops",
+    "username": "thecyberpunkmonk",
+    "title": "Recommendation: Razer Blade 16 2026 or Custom Laptop or Other?",
+    "text": "Recommendation: Razer Blade 16 2026 or Custom Laptop or Other?\n\nBudget: $4500 to $5000 USD  Country: Romania  Use Case: Mainly gaming, open world or city building. Looking for a future proof laptop that can easily handle GTA VI, VR gaming and more  Preferred Specs / Form Factor: NVidia GeForce RTX 5090 ideally, flexible with CPU, 32 GB Ram  Portability Needs: Mainly using at desk but want to be able to bring it on a plane when I travel  Notes: I’ve mainly narrowed it down between a Razer Blade 16 2026 here in Romania, or getting a custom laptop in Singapore when I visit, from a place where I got a custom desktop before:    Razer Blade 16 (22,099 lei, £3599, $4822 USD)   GeForce RTX 5090 24GB  AMD Ryzen AI 9 370, 5.1GHz  32GB Ram  SSD 2TB  16\" QHD+, 2560 x 1600, 240Hz   OR    X-16 PRO - RTX 5090 ($5895 SGD, £3447, $4620 USD)   NVIDIA GeForce RTX 5090 24GB  Intel Core Ultra 9 290HX Plus Processor (24 Cores)  32GB DDR5 5600MHz (Laptop) (16x2)  1TB Patriot P410 Lite Gen4 SSD (R: 5000 | W: 4500)  16\" 2560x1600 16:10 300Hz 1200nits MiniLED Panel   Which would you pick and why? Or do you have other suggestions?       submitted by     /u/thecyberpunkmonk     to     r/GamingLaptops       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GamingLaptops/comments/1wlq0k6/recommendation_razer_blade_16_2026_or_custom/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:15:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:16:13.051Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03121aeeb96c1c63ba795"
+    },
+    "message_id": "reddit_t3_1wlq1e2",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "NintendoDS",
+    "username": "Dry-Balance-5999",
+    "title": "Dust/Dots(?) On my Top DS LITE SCREEN",
+    "text": "Dust/Dots(?) On my Top DS LITE SCREEN\n\nI dont think these are dead pixels it looks like it's between the screen lens and the screen, how do I clean this up as simple as possible? Without disassembling my ds lite? I'm very new to this   Pls help, tutorials would be very handy thanks       submitted by     /u/Dry-Balance-5999     to     r/NintendoDS       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NintendoDS/comments/1wlq1e2/dustdots_on_my_top_ds_lite_screen/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:16:32Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:16:49.726Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab031319f8856bec2385096"
+    },
+    "message_id": "reddit_serp_1igylq6",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/minio/comments/1igylq6/how_do_i_make_a_webhookfastapi_with_mc_events_to/",
+    "text": "How do I make a webhook(fastapi) with mc events to notify of creation of new buckets?\n\nHow can I develop a webhook using FastAPI and integrate it with MC events to receive notifications when a new bucket is created?  how to write bash script, docker compose, script py.  I've tried writing every way I can, but it either doesn't work or doesn't send notifications.   now i was trying a docker minio-init that starts a bash script that runs mc events commands.   Objectives     receive webhook notifications from mc events for:    creation and removal buckets(so you don't know the name in advance)   creation and removal of files from buckets      in any case must be able to talk to fastapi ## Remarks   is it possible to use a dockerfile with minio base image to which I apply mc commands instead of minio-init? how?   Are there easier ways than what I did?   is it possible to enable mc events via minio python sdk?     Problem   in this case I am not getting notifications of the events written above.   Files used     configure-minio.sh     ```YAML version: '3.8'   services: minio: image: minio/minio container_name: minio ports: - \"9000:9000\" - \"9001:9001\" environment: MINIO_ROOT_USER: minioadmin MINIO_ROOT_PASSWORD: minioadmin MINIO_NOTIFY_WEBHOOK_ENABLE: \"on\" MINIO_NOTIFY_WEBHOOK_ENDPOINT: \"http://webhook:8000/minio-events\" MINIO_NOTIFY_WEBHOOK_AUTH_TOKEN: \"\" MINIO_NOTIFY_WEBHOOK_COMMENT: \"webhook notification setup\" MINIO_NOTIFY_WEBHOOK_ENABLE_PRIMARY: \"on\" MINIO_NOTIFY_WEBHOOK_ENDPOINT_PRIMARY: \"http://webhook:8000/minio-events\" MINIO_NOTIFY_WEBHOOK_QUEUE_DIR_PRIMARY: \"/data/.notify-events\" MINIO_NOTIFY_WEBHOOK_QUEUE_LIMIT_PRIMARY: \"10000\" MINIO_API_SELECT_ALL: \"on\" MINIO_BROWSER: \"on\" command: server /data --console-address \":9001\" volumes: - minio_data:/data healthcheck: test: [\"CMD\", \"curl\", \"-f\", \"http://localhost:9000/minio/health/live\"] interval: 30s timeout: 20s retries: 3 networks: - minio-net   webhook: build: . container_name: webhook ports: - \"8000:8000\" environment: - LOGURU_LEVEL=DEBUG - PYTHONUNBUFFERED=1 depends_on: - minio networks: - minio-net   minio-init: image: minio/mc container_name: minio-init tty: true depends_on: minio: condition: service_healthy webhook: condition: service_started volumes: - ./init-scripts:/init-scripts entrypoint: [\"/init-scripts/configure-minio.sh\"] environment: MINIO_ROOT_USER: minioadmin MINIO_ROOT_PASSWORD: minioadmin networks: - minio-net   networks: minio-net: driver: bridge   volumes: minio_data: ```     configure-minio.sh     ```bash   !/bin/sh   set -e   echo \"Configurazione MinIO in corso...\"   Configura l'alias per MinIO   mc alias set myminio http://minio:9000 \"${MINIO_ROOT_USER}\" \"${MINIO_ROOT_PASSWORD}\" --api S3v4   Configura il webhook per tutti i bucket   mc admin config set myminio notify_webhook enable=on endpoint=http://webhook:8000/minio-events queue_dir=/data/.notify-events queue_limit=10000   Riavvia MinIO per applicare le modifiche   mc admin service restart myminio || true   Attendi che il server si riavvii   sleep 2   Crea un bucket di test   mc mb myminio/test --ignore-existing || true   Configura gli eventi per tutti i bucket   mc admin config set myminio notify_webhook queue_limit=100000 mc admin config set myminio notify_webhook queue_dir=\"/data/events\" mc admin config set myminio notify_webhook enable=\"on\"   Riavvia di nuovo per applicare tutte le modifiche   mc admin service restart myminio || true   Attendi che il server si riavvii   sleep 2   Test: crea un file di prova   echo \"test\" > /tmp/test.txt mc cp /tmp/test.txt myminio/test/   Test: rimuovi il file di prova   mc rm myminio/test/test.txt   echo \"Configurazione MinIO completata!\"   ```   ** configure-minio.sh ** ```python import os from typing import Dict, Any   from fastapi import FastAPI from fastapi.responses import ORJSONResponse from loguru import logger from pydantic import BaseModel   app = FastAPI(default_response_class=ORJSONResponse)   class S3EventRecord(BaseModel): eventVersion: str eventSource: str awsRegion: str eventTime: str eventName: str userIdentity: Dict[str, Any] requestParameters: Dict[str, Any] responseElements: Dict[str, Any] s3: Dict[str, Any]    class Config: extra = \"allow\"     class MinioEvent(BaseModel): EventName: str | None = None Key: str | None = None Records: list[S3EventRecord] | None = None    class Config: extra = \"allow\"     from fastapi import Request   @app.post(\"/minio-events\") async def minio_webhook(request: Request): # Log dei dati raw body = await request.body() logger.info(f\"RAW REQUEST BODY: {body.decode()}\")    # Log degli headers logger.info(f\"REQUEST HEADERS: {request.headers}\") # Converti il body in JSON try: data = await request.json() logger.info(f\"PARSED JSON: {data}\") event = MinioEvent(**data) except Exception as e: logger.error(f\"Errore nel parsing della richiesta: {e}\") return {\"status\": \"error\", \"message\": f\"Errore nel parsing: {str(e)}\"} logger.debug(\"Headers della richiesta ricevuta\") logger.info(\"Ricevuto evento MinIO\") logger.info(f\"Evento completo: {event.dict()}\") if not event.Records: logger.warning(\"Nessun record nell'evento\") return {\"status\": \"success\", \"message\": \"Nessun record da processare\"} for record in event.Records: logger.info(f\"Processando record: {record.eventName}\") # Estrai informazioni dal record S3 bucket_name = record.s3.get('bucket', {}).get('name', '') object_key = record.s3.get('object', {}).get('key', '') # Gestione eventi bucket if \"s3:BucketCreated\" in record.eventName: logger.info(f\"Nuovo bucket creato: {bucket_name}\") return {\"status\": \"success\", \"message\": f\"Bucket {bucket_name} creato e configurato\"} # Gestione eventi file elif \"s3:ObjectCreated\" in record.eventName: logger.info(f\"Nuovo file creato: {object_key} nel bucket {bucket_name}\") return {\"status\": \"success\", \"message\": f\"File {object_key} caricato nel bucket {bucket_name}\"} logger.info(f\"Evento {record.eventName} processato per bucket: {bucket_name}, oggetto: {object_key}\") return {\"status\": \"success\", \"message\": \"Eventi processati\"}     if  name  == \" main \": import uvicorn uvicorn.run( \"main:app\", host=\"0.0.0.0\", port=8000, reload=True, loop=\"uvloop\", http=\"httptools\", ) ```       submitted by     /u/Aristocle-       [link]       [comments]",
+    "username": "Aristocle-",
+    "subreddit_or_channel": "minio",
+    "posted_at": "2025-02-03T20:09:32+00:00",
+    "fetched_at": {
+      "$date": "2026-09-20T19:17:05.097Z"
+    },
+    "google_rank": 7,
+    "search_keyword": "can you find me sales",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-20T19:17:05.097Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab03134660c608403988fd1"
+    },
+    "message_id": "reddit_t3_1wlq1sd",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "falloutnewvegas",
+    "username": "3030minecrafter",
+    "title": "Did I get the wrong version of the game?",
+    "text": "Did I get the wrong version of the game?\n\nI recently purchased New Vegas for the price of a small coffee off of a Steam key site. It seemed very much up my alley compared to 3 and 4 because it was outsourced instead of developed in house by Bethesda. The key I redeemed gave me the RUSSIAN version of the game. (I am NOT from Russia)   I read online that the Russian version of the game runs poorly, is a buggy mess and doesn't support mods...   I feel like I could have paid a bit more to get a key of the ultimate edition and maybe that would have given me the right version of the game. Or I could have just bought it off of steam directly for 10 euros and got it done with.   I am wondering if I should keep it or delete it from my account and try to buy another release or the game or get it directly off of steam since I doubt I'm getting my money back considering I bought it from a third party website.   I don't understand the needs for the devs to lock Russians to a different steam community and or worse version of the game. Why do they do that?       submitted by     /u/3030minecrafter     to     r/falloutnewvegas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/falloutnewvegas/comments/1wlq1sd/did_i_get_the_wrong_version_of_the_game/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:16:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:17:08.019Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03134660c608403988fd2"
+    },
+    "message_id": "reddit_t3_1wlq1rn",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "wordgrind",
+    "username": "wontonteneigho",
+    "title": "Spot the Real Word — one of these is real. Which?",
+    "text": "Spot the Real Word — one of these is real. Which?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/wontonteneigho     to     r/wordgrind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wordgrind/comments/1wlq1rn/spot_the_real_word_one_of_these_is_real_which/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:16:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:17:08.229Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03134660c608403988fd3"
+    },
+    "message_id": "reddit_t3_1wlq1re",
+    "topic_key": "give me today top three conversation about e commerce",
+    "search_keyword": "ecommerce",
+    "platform": "reddit",
+    "subreddit": "forhire",
+    "username": "marshruto",
+    "title": "[FOR HIRE] I'm a Web Developer - WordPress, WooCommerce, Shopify - $20/hr",
+    "text": "[FOR HIRE] I'm a Web Developer - WordPress, WooCommerce, Shopify - $20/hr\n\nHi, I’m a web developer with  7+ years of experience  helping businesses build, improve, and maintain  high-performing websites and eCommerce stores . I specialize in  WordPress, WooCommerce, Shopify, and X-Cart development , helping businesses launch new websites, improve existing stores, and optimize their online presence.    I can help with:      Website design and development   WooCommerce, WordPress and Shopify store development   Website and eCommerce migrations   Theme redesigns, revamps, and customizations   Conversion rate optimization and sales funnel improvements   Bug fixing and troubleshooting   Server maintenance, website and plugins updates   SEO, Website security and performance optimization   Product uploads, catalog management, and store support     For businesses that need ongoing assistance, I offer monthly support plans starting at  $1,500/month , covering store management, maintenance, bug fixes, security updates, and server tasks. For other projects, my hourly rate is  $20/hr . I’m available for both quick fixes and larger development projects.    Contact:  Send me a message/chat here on Reddit and I’ll get back to you within a few minutes.       submitted by     /u/marshruto     to     r/forhire       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/forhire/comments/1wlq1re/for_hire_im_a_web_developer_wordpress_woocommerce/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:16:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:17:08.432Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03135660c608403988fd6"
+    },
+    "message_id": "reddit_t3_1wlq1r8",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "jobs",
+    "username": "June132004",
+    "title": "Finding A Long Term Job Good For Me",
+    "text": "Finding A Long Term Job Good For Me\n\nI am having trouble to determine a good long term job for myself. I am willing to get up to a bachelors degree in education. I am good with people but do not want a job that is revolved around customer interaction. I need a high paying job to survive in the economic state completely on my own and have enough to work towards a decent house in the long-term. I currently work as a vet tech but unfortunately do not make enough to move up in my life (afford to buy a house in the future)       submitted by     /u/June132004     to     r/jobs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobs/comments/1wlq1r8/finding_a_long_term_job_good_for_me/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:16:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:17:09.032Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03135660c608403988fd7"
+    },
+    "message_id": "reddit_t3_1wlq1qj",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "secret_digits_dev",
+    "username": "secret-digits",
+    "title": "New questions are live in the quiz! Be quick and beat the topper.",
+    "text": "New questions are live in the quiz! Be quick and beat the topper.\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/secret-digits     to     r/secret_digits_dev       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/secret_digits_dev/comments/1wlq1qj/new_questions_are_live_in_the_quiz_be_quick_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:16:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:17:09.239Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03135660c608403988fd8"
+    },
+    "message_id": "reddit_t3_1wlq1q7",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "sportscards",
+    "username": "Cojay34",
+    "title": "What cards do you regret selling?",
+    "text": "What cards do you regret selling?\n\nSold this last year. Never thought it would sky rocket like it did.       submitted by     /u/Cojay34     to     r/sportscards       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sportscards/comments/1wlq1q7/what_cards_do_you_regret_selling/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:16:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:17:09.443Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03135660c608403988fd9"
+    },
+    "message_id": "reddit_t3_1wlq1pw",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Bossitsme",
+    "title": "Grab 100 hammers from u/Bossitsme!",
+    "text": "Grab 100 hammers from u/Bossitsme!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Bossitsme     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wlq1pw/grab_100_hammers_from_ubossitsme/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:16:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:17:09.646Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03135660c608403988fda"
+    },
+    "message_id": "reddit_t3_1wlq1p1",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Broadway",
+    "username": "bumpy12369",
+    "title": "Ariana Madix Just In Time ticket advice",
+    "text": "Ariana Madix Just In Time ticket advice\n\nI need some advice on going to a show with stunt casting. My friend and I wanted to fly in to see Ariana Madix on Broadway. We didn’t want to spend so much on tickets. My friend suggested a matinee on a Thursday. But I feel like with stunt casting I don’t know if they perform only on weekends or only at night. Any advice on what tickets to buy?        submitted by     /u/bumpy12369     to     r/Broadway       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Broadway/comments/1wlq1p1/ariana_madix_just_in_time_ticket_advice/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:16:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:17:09.857Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03136660c608403988fdb"
+    },
+    "message_id": "reddit_t3_1wlq1oo",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "TopCharacterTropes",
+    "username": "Slow_Bowler8285",
+    "title": "[Time travel paradox trope] A time traveling causes a dystopian future due the character not being in the present to prevent it.",
+    "text": "[Time travel paradox trope] A time traveling causes a dystopian future due the character not being in the present to prevent it.\n\nThe dystopian future was caused by a character time traveling to the future and therefore not being able to stop the dystopian future in the present.   Donatello is sent to a dystopian future by Ultimate Drako where Utrom Shredder has taken over the world and the Ninja Turtles have disbanded and are all missing body parts. Shredder was able to take over because Donatello wasn't there to stop him and keep the Ninja Turtles together. Teenage Mutant Ninja Turtles (2003) Episode \"Same As it Never Was\"   Along with Megavolt and Quackerjack, Goslyn travels to a fascist police state St. Canard run by her adoptive father who now goes by Darkwarrior Duck. Without Goslyn to act as a moral compass, Darkwing goes overboard, eliminating all crime with minor offenses such jaywalking punishable by jail. Darking Duck, episode \"Time and Punishment\"   Goliath is struck by lighting while trying to return to New York. When he awakens he discovers its 40 years in the future and Manhattan has been taken over by Xanatos. Brooklyn blames Goliath not being their for Xanatos' rise to power.  In the end, Goliath discovers this was all just an illusion created by Puck to take Goliath's Phoenix gate. - Gargoyles episode \"Future Tense\"       submitted by     /u/Slow_Bowler8285     to     r/TopCharacterTropes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TopCharacterTropes/comments/1wlq1oo/time_travel_paradox_trope_a_time_traveling_causes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:16:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:17:10.061Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03136660c608403988fdc"
+    },
+    "message_id": "reddit_t3_1wlq1oh",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "DollsForAll",
+    "username": "Toralei-Stripe",
+    "title": "Monster High unreleased Draculaura head",
+    "text": "Monster High unreleased Draculaura head\n\nsubmitted by     /u/Toralei-Stripe     to     r/DollsForAll       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DollsForAll/comments/1wlq1oh/monster_high_unreleased_draculaura_head/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:16:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:17:10.267Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03136660c608403988fdd"
+    },
+    "message_id": "reddit_t3_1wlq1oc",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "HitOrQuit",
+    "username": "hitorquit-app",
+    "title": "LOSE TO ME",
+    "text": "LOSE TO ME\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/hitorquit-app     to     r/HitOrQuit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HitOrQuit/comments/1wlq1oc/lose_to_me/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:16:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:17:10.469Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03136660c608403988fde"
+    },
+    "message_id": "reddit_t3_1wlq1nz",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "Watches",
+    "username": "not2many-watches",
+    "title": "[Trade] Tokyo Casio Duro (non-JDM)",
+    "text": "[Trade] Tokyo Casio Duro (non-JDM)\n\nI am going to be traveling from the US to Tokyo early next year and just thought I would see if there’s anyone that would be interested in a couple watch trades. I like both quartz and automatics. I could bring something like a Casio Duro Marlin from the US and trade for a JDM watch.       submitted by     /u/not2many-watches     to     r/Watches       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Watches/comments/1wlq1nz/trade_tokyo_casio_duro_nonjdm/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:16:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:17:10.676Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03136660c608403988fdf"
+    },
+    "message_id": "reddit_t3_1wlq1n4",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "Polymarket_Traders",
+    "username": "Aria-Harris",
+    "title": "Polymarket resolved multiple Sep 20 weather markets using incomplete NOAA data - Manila, Singapore & Qingdao affected",
+    "text": "Polymarket resolved multiple Sep 20 weather markets using incomplete NOAA data - Manila, Singapore & Qingdao affected\n\nI am documenting what appears to be a NOAA/NWS WRH ingestion/display failure that affected multiple Polymarket daily temperature markets on September 20, 2026.   This is not a claim that any trader was an insider. I am trying to establish the facts, especially exact on-chain trade timing.   The Manila market uses the NOAA WRH time-series page for RPLL and is currently still In Review with 32°C proposed.   However, the official NWS METAR cycle archive contains:   RPLL 200400Z ... 33/25   The WRH viewer missed several observations around 04Z-07Z. The missing 04Z observation is therefore the actual 33°C reading that would have exceeded the 32°C maximum visible in the incomplete WRH table.   This does not appear to be isolated to Manila.   Singapore was finalized by Polymarket at 31°C. The official NWS archive contains:   WSSS 200500Z ... 32/24   Qingdao was finalized by Polymarket at 29°C. The official NWS archive contains:   ZSQD 200500Z ... 30/15   and:   ZSQD 200600Z ... 30/16   In other words, for all three markets, official NWS METAR archives contain a temperature one degree higher than the value used/proposed by Polymarket, and those higher observations occur during the apparent WRH missing-data window.   For Manila, NOAA/NWS support has also confirmed to me directly that the missing METAR observations exist in other official NWS systems and that their support/development team is investigating the WRH viewer and possible backfilling.   The Polymarket rules are important here. They specifically refer to the highest reading under the NOAA WRH \"Temp\" column, and they say later revisions after the first datapoint of the following day are not considered. So there is a genuine rules interpretation issue: does an incomplete WRH table control even when NOAA/NWS possessed the missing observations contemporaneously?   There is another public-data issue I would like help investigating.   Wallet:   0x13f995ad154da3e078ac2a1dd923bf2b265dd352   Its public Polymarket/third-party history shows substantial September 20 profits in several weather markets, including approximately:   Qingdao: +$9.3k   Manila: +$4.7k   Singapore: +$2.2k   Ankara: +$2.4k   Beijing: +$1.7k   Third-party analytics show roughly +$20k for September 20 overall.   Again, I am NOT alleging insider trading.   The wallet was already active in weather markets before September 20 and also lost money on several markets that day. It may simply be a skilled trader who noticed the public NOAA/WRH problem faster than everyone else.   The critical question is timing.   I am looking for help reconstructing every trade from this wallet in the affected September 20 temperature markets and separating them into:     trades entered before the NOAA/WRH missing-data problem became observable   trades entered while the observations were missing   trades entered after the missing observations/problem were publicly visible to any trader     The Polymarket Data API exposes timestamps, transaction hashes, side, price, size and market identifiers, so this should be independently reproducible from public data.   If anyone can provide the raw trade JSON, transaction hashes, or a reliable on-chain reconstruction for this wallet, please post it.   Please keep the discussion factual. A profitable wallet trading an outage is not evidence of insider trading by itself. The goal is to establish the timeline and determine whether there is anything genuinely anomalous.   The larger issue is whether several September 20 weather markets were resolved from an incomplete NOAA WRH display even though the missing METAR observations existed in official NWS systems at the time.       submitted by     /u/Aria-Harris     to     r/Polymarket_Traders       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Polymarket_Traders/comments/1wlq1n4/polymarket_resolved_multiple_sep_20_weather/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:16:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:17:10.888Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab0316c9f8856bec2385097"
+    },
+    "message_id": "reddit_serp_https___www_reddit_com_r_SQLServer_",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/SQLServer/",
+    "text": "September 2026 | Job Opportunities\n\nWelcome to the monthly job thread!    Posting a job or opportunity? Include:      Role title and description   Location or remote/hybrid status   Company or client context   Direct application link      Looking for work?  Share your skills, experience level, and what you're looking for.    Rules:      One top-level comment per opportunity   No \"DM me\" or link-free posts — include a direct, verifiable link   Scam or misleading comments will be removed and may result in a ban         submitted by     /u/AutoModerator       [link]       [comments]",
+    "username": "AutoModerator",
+    "subreddit_or_channel": "SQLServer",
+    "posted_at": "2026-09-01T13:02:48+00:00",
+    "fetched_at": {
+      "$date": "2026-09-20T19:18:04.642Z"
+    },
+    "google_rank": 3,
+    "search_keyword": "can you find me sales",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-20T19:18:04.642Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab03170660c608403988fe0"
+    },
+    "message_id": "reddit_t3_1wlq2te",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MakeRedditFriends",
+    "username": "cloudsandcottoncandy",
+    "title": "26 F looking for friends all over the world",
+    "text": "26 F looking for friends all over the world\n\nsubmitted by     /u/cloudsandcottoncandy     to     r/MakeRedditFriends       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MakeRedditFriends/comments/1wlq2te/26_f_looking_for_friends_all_over_the_world/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:17:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:18:08.424Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03170660c608403988fe1"
+    },
+    "message_id": "reddit_t3_1wlq2td",
+    "topic_key": "i said i dont want any indian post",

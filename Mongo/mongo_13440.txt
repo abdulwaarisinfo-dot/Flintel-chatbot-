@@ -1,0 +1,416 @@
+    "title": "Polymarket resolved multiple Sep 20 weather markets using incomplete NOAA data - Manila, Singapore & Qingdao affected",
+    "text": "Polymarket resolved multiple Sep 20 weather markets using incomplete NOAA data - Manila, Singapore & Qingdao affected\n\nI am documenting what appears to be a NOAA/NWS WRH ingestion/display failure that affected multiple Polymarket daily temperature markets on September 20, 2026.   This is not a claim that any trader was an insider. I am trying to establish the facts, especially exact on-chain trade timing.   The Manila market uses the NOAA WRH time-series page for RPLL and is currently still In Review with 32°C proposed.   However, the official NWS METAR cycle archive contains:   RPLL 200400Z ... 33/25   The WRH viewer missed several observations around 04Z-07Z. The missing 04Z observation is therefore the actual 33°C reading that would have exceeded the 32°C maximum visible in the incomplete WRH table.   This does not appear to be isolated to Manila.   Singapore was finalized by Polymarket at 31°C. The official NWS archive contains:   WSSS 200500Z ... 32/24   Qingdao was finalized by Polymarket at 29°C. The official NWS archive contains:   ZSQD 200500Z ... 30/15   and:   ZSQD 200600Z ... 30/16   In other words, for all three markets, official NWS METAR archives contain a temperature one degree higher than the value used/proposed by Polymarket, and those higher observations occur during the apparent WRH missing-data window.   For Manila, NOAA/NWS support has also confirmed to me directly that the missing METAR observations exist in other official NWS systems and that their support/development team is investigating the WRH viewer and possible backfilling.   The Polymarket rules are important here. They specifically refer to the highest reading under the NOAA WRH \"Temp\" column, and they say later revisions after the first datapoint of the following day are not considered. So there is a genuine rules interpretation issue: does an incomplete WRH table control even when NOAA/NWS possessed the missing observations contemporaneously?   There is another public-data issue I would like help investigating.   Wallet:   0x13f995ad154da3e078ac2a1dd923bf2b265dd352   Its public Polymarket/third-party history shows substantial September 20 profits in several weather markets, including approximately:   Qingdao: +$9.3k   Manila: +$4.7k   Singapore: +$2.2k   Ankara: +$2.4k   Beijing: +$1.7k   Third-party analytics show roughly +$20k for September 20 overall.   Again, I am NOT alleging insider trading.   The wallet was already active in weather markets before September 20 and also lost money on several markets that day. It may simply be a skilled trader who noticed the public NOAA/WRH problem faster than everyone else.   The critical question is timing.   I am looking for help reconstructing every trade from this wallet in the affected September 20 temperature markets and separating them into:      trades entered before the NOAA/WRH missing-data problem became observable     trades entered while the observations were missing     trades entered after the missing observations/problem were publicly visible to any trader      The Polymarket Data API exposes timestamps, transaction hashes, side, price, size and market identifiers, so this should be independently reproducible from public data.   If anyone can provide the raw trade JSON, transaction hashes, or a reliable on-chain reconstruction for this wallet, please post it.   Please keep the discussion factual. A profitable wallet trading an outage is not evidence of insider trading by itself. The goal is to establish the timeline and determine whether there is anything genuinely anomalous.   The larger issue is whether several September 20 weather markets were resolved from an incomplete NOAA WRH display even though the missing METAR observations existed in official NWS systems at the time.       submitted by     /u/Aria-Harris     to     r/Polymarket       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Polymarket/comments/1wlpyj1/polymarket_resolved_multiple_sep_20_weather/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:13:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:14:09.058Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03081660c608403988fa6"
+    },
+    "message_id": "reddit_t3_1wlpyj0",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "vacation",
+    "platform": "reddit",
+    "subreddit": "MakeFriendsOver30",
+    "username": "kj242413",
+    "title": "32M - looking to meet new people!",
+    "text": "32M - looking to meet new people!\n\nHappy Sunday! Just a Canadian bored at work with a couple of hours left in the day, so figured instead of writing SOPs, I'd try to make a new friend or 2.   A little bit about me: I have a pretty busy job wearing multiple hats but when I'm not at work I enjoy hanging out with my 2 cats, playing video games on my pc/ps5, watching my favorite hockey, football, f1 and basketball teams lose, planning my next vacation whenever I can escape and a lot more! If you're looking to chat with someone, look no further! I am 420 friendly and am looking to hopefully meet some cool new people!       submitted by     /u/kj242413     to     r/MakeFriendsOver30       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MakeFriendsOver30/comments/1wlpyj0/32m_looking_to_meet_new_people/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:13:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:14:09.262Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab030819f8856bec2385093"
+    },
+    "message_id": "reddit_serp_1wkx2ps",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/sideprojects/comments/1wkx2ps/built_an_ai_that_answers_restaurant_customers/",
+    "text": "Built an AI that answers restaurant customers' questions — cold outreach taught me more than the code did\n\nSo I've spent the last few months building this thing called GetLoop. It's an AI chat widget restaurants can stick on their website that answers customer questions, menu stuff, hours, dietary restrictions all that. Restaurants just paste one line of code and it works, no dashboard or setup needed.   The idea came from noticing how many times restaurant staff get asked the exact same questions every night. \"What time do you close.\" \"Is this halal.\" \"Gluten-free options?\" Felt like something that should just be automated so people can focus on actually running the floor instead of answering the same 5 things on repeat.   I'm a college student, taught myself to build this, Node/Express backend, OpenAI for the chat part, Supabase for the data. Built demos for 4 real local restaurants first (real menus, real hours) before trying to get more people on it.   Then I DM'd like 20 more restaurants on Instagram trying to get them to try it. Almost nobody replied. Which, honestly, taught me more than writing the code did. turns out cold outreach to strangers is just really hard, even when the thing is free and actually works. Got maybe 2 polite \"thanks, we'll look into it\" type responses and that's it.   So now I made it self-serve instead: [link in comments]. You can sign up and try it on your own restaurant's info without needing to talk to me first.   Kind of curious how other people here have handled the early \"nobody's replying\" phase, did you just push through more volume, change your approach, find a totally different channel? Feels like the part nobody really talks about compared to the building part.       submitted by     /u/Square-Cycle-2052       [link]       [comments]",
+    "username": "Square-Cycle-2052",
+    "subreddit_or_channel": "sideprojects",
+    "posted_at": "2026-09-19T20:44:01+00:00",
+    "fetched_at": {
+      "$date": "2026-09-20T19:14:09.458Z"
+    },
+    "google_rank": 3,
+    "search_keyword": "can you find me sales",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-20T19:14:09.458Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab03081660c608403988fa7"
+    },
+    "message_id": "reddit_t3_1wlpyih",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "Bhopal",
+    "username": "Wolfhere-",
+    "title": "Anyone up for casting and Working on a Shortfilm together?",
+    "text": "Anyone up for casting and Working on a Shortfilm together?\n\nHeyy am up for discussion.   it will be volunteering and a collaborative idea..    No such pay and all.    It's on all and we all will be a team to work on together no one is higher or lower just ideas and Executions.    If you can shoot through     cameras or phone      Floor design     Ideas     Write      Cast     Act     Or more      Let's discuss         submitted by     /u/Wolfhere-     to     r/Bhopal       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Bhopal/comments/1wlpyih/anyone_up_for_casting_and_working_on_a_shortfilm/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:13:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:14:09.467Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab030b59f8856bec2385094"
+    },
+    "message_id": "reddit_serp_1kjle5d",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/ToastPOS/comments/1kjle5d/toast_pos_is_a_sham_i_wish_id_never_signed_up_to/",
+    "text": "Toast POS is a SHAM I wish I’d never signed up to use.\n\nI wish I could say Toast is everything it’s advertised to be. But these last few months there’s not been a day that’s gone by that I haven’t considered sending everything back, scrapping the whole dang system, and demanded a refund. I’ve also seriously considered legal action because our issues are so compounded, it’s comical. But on a serious note, I told someone the other day I was on the verge of “Going Toastal” 😩😩😩🤣🤣🤣.    Our business specializes in both cooked Cajun boiled seafood/crawfish and in live/fresh sales of the same. Our menu is very complex because it’s very customizable at multiple levels. We have an entire menu of dinners with preset weights and pricing (ie: 3 lb. crawfish dinner = $30). We allow add-ons and substitutions for the sides and seafood options. We also sell many items at a “per pound” price. Some items offer bulk pricing at a reduced cost the higher the weight quantity purchased. We were very up front on how we operate, the complexity of the menu, things that were a “must have” and both how and why we needed them to work to be worth the time and money investment. Not only were we up front with our expectations, we repeated them multiple times and asked dozens of questions and follow up questions before making the purchase.    We purchased this system at the beginning of April 2024 right in the peak of crawfish season. It took us 3 weeks just to receive the equipment, which we paid for out of pocket on the Pay As You Go Growth plan. If we knew then what we know now, we would’ve waited until the season was over to get started on it, or simply would not have purchased it at all and looked for something else. I’ll number the issues we’ve encountered so if you choose to respond to one, you can reference the item number in question. Prepare yourself because this is going to be the longest nightmare of pos bs you’ll read this year. So let’s get into it…    April 2024…   Lie #1) We were told verbatim “most customers are able to set up their menu themselves within a couple of days but even for complex menus it shouldn’t take longer than a couple of weeks.” It took us until the 2nd week of June to get the menu set up well enough to be published online. By that time, we were lucky if we had 2 weeks left of the season so we decided not to go live with it that time.    Lie #2) Every explanation and tutorial one could ever need can be found in the many articles published on Toast Central, the multitude of videos available through through Toast Classroom, or in the Toast Community feedback. While these things do provide a lot of info, much of the time, especially in the articles, steps are left out. And if you have no clue what’s left out you just know something is missing because you’ve followed the steps word for word and it isn’t working like it should. To make matters worse, every one of them is designed for a very simplistic menu and restaurant set up scenario. So if your business is more complex, often times, you will not find the answers you need here.    Lie #3) We are here to support you. This is probably the biggest one they tell you. Their sales people are all about servicing your business needs until you sign your name on the dotted line. Once that’s done, sales only has access to your account for 30 days. When you receive your equipment, Sales transfers your account to an Onboarding Coordinator and stops answering any inquiry or communication you make, regardless if it’s by phone, email or text. The OC is responsible for helping make sure you’ve got everything set up correctly. You get one hour of their time so it’s imperative you make it count or you are SOL. During that onboarding period, you also receive (1) 30 minute menu boot camp with a menu coordinator. Once your system goes live, the OC then only has access to your account for 30 days after and EVERYTHING goes through customer service. We’ve now had (2) of each of these persons (more on that later). So let’s pause and discuss the 1st set of persons. ———3a) Sales person literally went dark after we received our equipment. ———3b) The menu coordinator was 10 minutes late to the scheduled meeting, refused to go over the scheduled end time by 10 minutes and make up the loss. She then refused to give us a reschedule of that time. So we got 20 mins. She didn’t know how to do any of the things we asked her about. We would explain how we needed something to function (and we know it can because we’ve seen it in menus of other restaurants) and she would point us to an article or video. ——-3c) We went ahead and set up our one hour onboarding consulting time even though our menu wasn’t complete and we were not ready to go live because we were desperate for explanations on some of the set up. This gentleman was very helpful and it’s only because of him that we know how to do 90% of the more complex things. That said, during that meeting we discovered we’d been lied to about some of the functionality. When we brought this to the attention of the sales person, she informed us he was incorrect and that’s all the more we heard about it. (Revisited in 2025 coming up).    Refer back to Lie#1, after Lie #3c, we spent the bulk of the next several months perfecting the menu set up so we could go live with it at the start of the 2025 season and it would work correctly for customer facing online orders with all the customizations our customer base has become accustomed to. By the time 2024 ends, I’d venture to say we know the Toast back end better than most of their internal employees.    Fast forward to 2025. To the best of our knowledge we have everything set up how it should be. We call Toast at the beginning of the season to make sure we can go live without issue as we are ready to turn the system on. We also want to order two kitchen screens to make the fulfillment process easier for our kitchen team. We get referred to a new sales person. We tell her everything we have, everything we need, and that we’d like to go live.    Lie #4 - She tells us that our account has been closed/archived. It can’t be reactivated and that we have to open a whole new account with a new merchant ID. But that they (Toast) will copy everything from our old account to our new account for us so we don’t have to rebuild the menu. We don’t understand why the account can’t just be reopened, but what can we do? At this point, we’ve invested an exorbitant amount of time into this system to just dump it. So we go through the entire set up process all over again. Have to resubmit every business document. Then wait another 2 weeks for equipment to arrive. In theory, once hardware is received, we just need to get it installed and should be ready to go live immediately. When you set up an account with Toast, you have to upload documents (like your business and bank verification info) into the account you’ve created. These documents and the related verifications get assigned to your restaurant location. You’ll see, coming up, why this entire process was a sham.    Lie #5: Toast will copy the menu and the entire account configuration over for you. They copied some of it. Not all of it. The discounted bulk pricing at varying weight levels had to be rebuilt from scratch. Some of our dinners were removed and had to be rebuilt. But what’s more is that when they copied it, they copied it into a new location altogether. Meaning they required us to set up a new account, which in turn created a restaurant location; but when they copied menu, they added a 2nd location to our profile so it looks like we have two locations to our business. We do not. To make matters worse, our new account was not set up with all of the software services we previously had. Our old account had all of the marketing essentials, website, and digital storefront premium modules. The new one is missing all of this. Our website is dead. We can’t do even half of the stuff we had previously. Oh and they have our business name listed wrong and we have no way to change it like we did previously.    Lie #6) Repeat of Lie #3. We bring up #5 to the sales person. She’s no where to be found. She’s transferred us to the new OC and refuses to assist with anything. ———-6a) New OC claims to get the software modules fixed. We have to sign a new contract because the salesperson changed our entire configuration when we asked to add (2) kitchen screens. Once that is done, we realize we are constantly having to toggle into the correct location because they didn’t put the menu on the location that was set up with the account and the 2nd location has nothing on it. They relabeled that account a rebuilding account (it wasn’t). We ask them to remove it. They do. We go live on 3.22. It’s now almost April again and our season has been going strong for 2 months already. Once we go live, we are told we can reach her by email or schedule at 15 minute intervals and that she will have access to our account for 30 days. We encounter multiple issues after going live (more on that coming up). It takes her a minimum of 2 days to respond to anything. Then when she responds needing confirmation or questions answered, you wait another two days. Suffice it to say, a week is burned up very quickly on what could be a 5-10 minute question/answer considering we’ve already educated ourselves on Toast better than most of their employees. ——-6b) We are given a 2nd menu boot camp because we ordered new hardware and had to set up a new account. So we decided to use this time to figure out what will be explained below. The menu coordinator canceled 30 minutes before the call. She took forever to respond. By the time we visited with her our system was live for 30 days. She was 7 minutes late. Was not able to answer anything to my resolution. Then went on to tell me she was really impressed with all of our customizations nested into the menu because most of their people don’t even know how to do those things. 😳🙄🤯.    Lie #8) Recall 3C - One of the primary reasons we wanted this system was because we were told it could track inventory with our menu set up and we needed a way to better manage order taking and processing. So for example: If I put in my inventory I have 1000 lbs. of cooked crawfish for sale, and a customer orders (1) 3 lb. dinner, I need it to deduct 3 lbs. from the inventory and leave me at 997 lbs. remaining inventory. This is crucial because we have preset dinners from 1 lbs - 5 lbs in additional to selling large quantities by the pound and don’t want to have to tell the system we have a qty of (10) 5 lb. dinners, (5) 4 lb. dinners, and so on; as we don’t manage crawfish inventory by the dinner. We manage it by the pound. It’s difficult to manage the inventory with online sales by the dinner and we don’t want it to oversell our total inventory weight. This is similar to how a Deli would price items. You can buy chicken deli meat by the pound or you can buy prepackaged deli pack of 2.15 lbs for $X. Our crawfish inventory/sales work exactly the same way. The menu person doesn’t know how to do anything. The original sales person who told us this won’t respond. The new sales person won’t respond. The only thing I can find in Toast Central indicates we need a barcode scanner and a Toast Scale, along with a subscription to Toast Retail. More money more bs - no no no. The OC tells us this is what’s required also but she can’t even confirm 100% for sure if this additional hardware and software (at our expense) would actually have that functionality or not. So now we have to manage this all manually which now completely defeats the purpose of why we ever went with this stupid system to begin with. At this point, we have easily invested over 500 hours into optimizing and perfecting this menu setup. So we are now stuck and no doubt they know it.    Lie #9 (Reference #4 above) - I go to login to my loyalty programs to make modifications and can’t access it. After a week of waiting I get a response that she had it “tied to the wrong account” (the one they claimed to have archived). 🤨🤔. Riddle me this - how do you add a new software service to an account you claim was closed and was forced to be started over from scratch? As you will see as we move along, I firmly believe this is a tactic their sales people use to force a “new sale” so they can claim credit for commission. Screw what it does to the customer.    Lie #10 - Reference 4 & 6a - on March 25th I notified them that the location info was incorrect. Our name needed to be corrected. And that we could not access the location info. They changed the name. We still couldn’t access the location even though they said we could. This was becoming a huge issue because we are a mobile food truck business. If we can’t change our location (this is highly advertised by them) then how do customers know where to pick up their orders? They don’t. We started having to send messages to every customer to make sure they knew the pickup location because it’s was wrong on the Toast site. When you get 500 customers per weekend that’s a lot of manual address order management taking place to preserve brand reputation.    Lie #11 - Reference 4 & 6a - our Google business profile has been claimed since last year. Yet our Google integration still shows pending 4 months in with no resolution.    Lie #12 - Reference 4 & 6a - Toast Local does not have us listed at all, much less as preferred, and has been pending for 4 months with no resolution.    Lie #13 - On 4/12, we still do not have resolution to issue #s 8-12 that have been pending since 3/25, with 10-12 being crucial. Our system crashes in the middle of a busy order pick up day. Complete hardware failure - not a connection issue. We have to abandon online ordering options and go back to manual orders and are looking up order info for pickups in Toast Web via cell phones. We contact the OC, daily, from this point through 4/19 and advise the urgency of the issue needing resolution. No response. I finally looked up an email of someone in their leadership team and reach out requesting assistance. No response. Customer service has no idea how to fix it and has asked us on 5 separate occasions to clear our browser cache and history. Ummm what. We finally get one single response from OC in which she finally tells us her 30 days is up and she’s no longer going to be working with us and that all of our problems will have to go through customer service. 😳🤯.    Lie #14 - a week later, we finally get assigned to an escalation agent who sends us new hardware under warranty and routes our others issues to engineering. It’s now 5/10. We are 8 weeks into this issue without resolution, and with 6 weeks of our season left. Until 2 days ago, engineering could not figure out why we couldn’t access location info or make any changes to our account. Now that I’ve threatened formal legal action in writing, in conjunction with formal written complaints to BBB and several federal agencies, suddenly on Thursday night, I noticed there were now (3) locations showing up on my account. One is the old one they forced us to “archive”. The second is the one we created on our new account that they mistakenly didn’t copy the info to. And the third is the additional one they created on that new account that we are operating from now. The reason (as best as I can tell) is that they’ve got different parts of our set up tied to (3) different locations all with different modules and permissions. I go to log in to various marketing modules. One is tied to one location. Loyalty is tied to another. Website is tied to another. This makes it abundantly clear there was NEVER a need for a new account in the first place. They could’ve easily reactivated our first account. If they couldn’t have, then they wouldn’t have new program modules tied to it as a current location on the new account. So now as I type this, I’m still waiting on them to clean up this location mess without further burdening my business or removing my access to my own business’s location and financial information. They cost us thousands of dollars in time, actual order failure, and brand reputation 😡😡   If you have read this far and have any clue how to resolve item #8, I’d be most appreciative.    If you are considering Toast, unless you can afford to pay their outrageous hourly rates to have someone manage the backend system and build the menu for you - find a different POS provider. There are things I like, but I am confident I can find those with a company that services their customer base better and doesn’t make a point to lie to them about functionality, then push them off on to others to avoid responsibility every time there is an issue. If I knew then what I know now I’d have told these people at this company to pound sand until they reached the other side of the Earth.        submitted by     /u/Wild-Chart-3325       [link]       [comments]",
+    "username": "Wild-Chart-3325",
+    "subreddit_or_channel": "ToastPOS",
+    "posted_at": "2025-05-10T21:53:57+00:00",
+    "fetched_at": {
+      "$date": "2026-09-20T19:15:01.756Z"
+    },
+    "google_rank": 10,
+    "search_keyword": "can you find me sales",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-20T19:15:01.756Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab030bc660c608403988fa8"
+    },
+    "message_id": "reddit_t3_1wlpzo5",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "RedditGames",
+    "username": "Y3lpm",
+    "title": "[Spin] Spin your waifu . There is 300",
+    "text": "[Spin] Spin your waifu . There is 300\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Y3lpm     to     r/RedditGames       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RedditGames/comments/1wlpzo5/spin_spin_your_waifu_there_is_300/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:14:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:15:08.039Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab030bc660c608403988fa9"
+    },
+    "message_id": "reddit_t3_1wlpzny",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "stopdrinking",
+    "username": "61olem",
+    "title": "I hate seeing my trashcan full of empty alcohol containers",
+    "text": "I hate seeing my trashcan full of empty alcohol containers\n\nJust here to vent, really. Also to help me(34F) not go and buy some alcohol. About three years ago I took a break from alcohol because I realized that I was getting out of hand. I don’t feel like I need to get too into that as most of us here are here for a reason and know what too much drinking looks like. Binge drinking, not remembering, feeling like shit, feeling sad, etc. I decided to try to shoot for a year and then reassess to see if I can drink again and be able to moderate like normal people. I went without for a year and two months. Best I have ever felt. I was in the best shape of my life. I also felt emotionally and mentally strong. Gosh, it was amazing. When I finally made the decision that I could drink again, it was fine. I drank in moderation and I thought everything could be cool. I was in control.    Well, that slowly changed. I am back to the point where if I have a drink, that drink will likely turn into weeks of drinking with zero breaks. Day after day. Sometimes I wake up craving a drink and will give in before noon. I absolutely hate that I cannot be a normal drinker. One drink is impossible. My brain questions what is even the point of one, two, or three drinks? After a binge, I’ll go maybe 1-3 days with no drinks and do it all over again. I hate the cycle.    About two months ago I realized that I am having too many super drunk nights that I can’t remember. Waking up trying to find different belongings of mine or wondering where certain minor injuries came from. I look in the mirror and I still love myself, but I have gained weight and the clear headed, emotionally strong, and super fit version of me is gone. Instead, I feel dull again. I look bloated and feel stressed. I am spending unnecessary money and not working out like I want. I love working out. I love going on long runs outside. I love painting. I haven’t been doing any of that consistently in a while. Why am I doing this to myself?    Addiction.    I am an alcoholic.    That’s tough to say sometimes.    Scary.    The pull that alcohol has on me is insane and it fucking sucks. I will wake up like, “girl… you can’t drink again today. I don’t want to drink today. After work, I will not stop for alcohol.”    I go to work.  About noon the craving starts creeping in.  “Damn.”  The back and forth debating in my head begins.  “Don’t stop for alcohol after work.”  “Ehh, just today is fine. Tomorrow you won’t drink. Either stop at the gas station or stop at [different restaurant options where I like to drink] and have some dinner and some drinks”  “No, no, no. You don’t need to stop and do all that. You have food at home aaaaand you don’t need to drink AGAIN.”  Work finishes.  I begin to drive home. Biting my bottom lip, fidgeting, and debating which option wins.  What do ya know, my car turns into the gas station and I purchase alcohol.  That or I stop at the restaurant I was thinking of that day and have dinner and drink(SSSSSS). I say “sssss” because of course I stop at the gas station before I go home for more because of course the couple or few that I had at the restaurant weren’t enough and only a tease.    I have no control.   Yesterday was the first day that I didn’t drink in three weeks. The only reason that I didn’t drink is because I went to go visit my parents and sister and ended up spending the night. I thought about going to the store and sneaking in some drinks, but I didn’t. Proud of myself for that little win. Since I have one day sober, I am going to try this again. I have to. I want to. IWNDWYT.        submitted by     /u/61olem     to     r/stopdrinking       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/stopdrinking/comments/1wlpzny/i_hate_seeing_my_trashcan_full_of_empty_alcohol/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:14:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:15:08.240Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab030bc660c608403988faa"
+    },
+    "message_id": "reddit_t3_1wlpznk",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "cf4cf",
+    "username": "LiquidTreeSnake",
+    "title": "30s [M4F] Offering Commitment to Authenticity and Lasting Reciprocated Effort in Trying Times",
+    "text": "30s [M4F] Offering Commitment to Authenticity and Lasting Reciprocated Effort in Trying Times\n\nAs a man in his early 30s who has dedicated most of his life (16+ years) to training in the sciences, I live a rewarding life in the LA area that revolves around understanding how molecules interact with each other to create the world we see. In this realm, boring and mundane days do not exist, especially if you have an interest in understanding the secrets of the universe which lie in the carbons, hydrogens, oxygens, and other atoms that surround us every second of every day. If anything, the days can be too exciting sometimes, which leads to 16-hour days in lab tinkering, learning, analyzing data, collecting results, reading papers, writing reports, making presentations, and mentoring students. You see the sun rise when you come to lab and you see it set by the time you leave, but the experience entices you such that you can’t wait to do it again because each day presents another opportunity to learn more, to build something of your own, to solve problems that need answers, and to become more disciplined, more patient, more resilient, more observant of the realities and the notable challenges facing planet earth. As Randy says, “I didn’t hear no bell!”   Admittedly, this can feel isolating after 16+ years, so it would be nice to find a woman to grow alongside with. Here, I offer a commitment to authenticity and lasting reciprocated effort throughout trying times (as title states). Everybody has challenges in life, and I’m happy to work them out with you and provide the best support possible. Do you have an interest in being physically active? Good news is that I run 100 mile events, amongst other activities, so there is no activity too strenuous. If you are better than I am at something, which there are many (surfing, dancing, tennis, to name a few), I’d make time to try something new. I don’t take myself too seriously, so you can tease me for falling flat and I can handle that. Do you have a dog who likes to run? If so, I can run your dog, as I do as a volunteer at animal rescues and shelters. You may appreciate a self-deprecating, sarcastic sense of humor. While I don’t have the money to buy a private island like everyone else these days, I do have a private chauffeur who takes me from place to place every day. She’s called the Metro line. There’s always complimentary narcotics and alcohol for just $1.75 (free some days) if you look hard enough.   Historically, I connect well with mature people who think deeply about the life they live and have a skill or passion which excites them to the point where they can’t stop talking about it, whether that’s their mastery of Excel spreadsheet commands, their garden with a million plants, their expertise in Marmosets, or their love for something seemingly mundane. The most interesting conversations I have had tend to be with people who read, put effort into their lives, have high anxiety, have some form of autism, are not city people, or do not fit in with the expectations of modern Western society. I do not do well with people who strongly prioritize hedonistic and materialistic pursuits or who value screen time over making connections with people in-person. Given the long days, having biological children would not be a good idea.   It would be great to initially get to know someone (26+) in-person over coffee in a public setting. We can pick each other’s brain about whether that dress was blue and black or white and gold, why birds aren’t actually real, how Harambe’s death changed the universe’s timeline, the mystery of the Ariel school incident of 1994 in Zimbabwe, and witchcraft.   If you found this appealing, you can send a message with a detailed description with 4 things: who you are, what you value, what you are looking for, and a photo. I do not use Reddit much, so it may take a while to respond to you. Thanks.    Photo    Have been listening to this recently.    https://www.youtube.com/watch?v=zQfF84ackMM        submitted by     /u/LiquidTreeSnake     to     r/cf4cf       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cf4cf/comments/1wlpznk/30s_m4f_offering_commitment_to_authenticity_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:14:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:15:08.449Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab030bc660c608403988fac"
+    },
+    "message_id": "reddit_t3_1wlpzn7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Anonymous5282864838",
+    "title": "What’s the most reliable but still affordable car?",
+    "text": "What’s the most reliable but still affordable car?\n\nsubmitted by     /u/Anonymous5282864838     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wlpzn7/whats_the_most_reliable_but_still_affordable_car/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:14:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:15:08.861Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab030bd660c608403988fad"
+    },
+    "message_id": "reddit_t3_1wlpzmw",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "wordgrind",
+    "username": "gooner2109",
+    "title": "Translate — what's \"create\" in German?",
+    "text": "Translate — what's \"create\" in German?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/gooner2109     to     r/wordgrind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wordgrind/comments/1wlpzmw/translate_whats_create_in_german/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:14:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:15:09.074Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab030bd660c608403988fae"
+    },
+    "message_id": "reddit_t3_1wlpzml",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "LostMinesOfPhandelver",
+    "username": "plurrex",
+    "title": "Alternative opening for Phandelver and Below – Nezznar encounter",
+    "text": "Alternative opening for Phandelver and Below – Nezznar encounter\n\nHi everyone!   I’m about to DM Phandelver and Below for a group of moderately experienced players using the 2024/5.5e rules. The party starts at level 2.   I’m thinking about changing the opening:   The party travels together with Gundren and Sildar toward Phandalin. During the Goblin Ambush, the party starts gaining the upper hand. At that point, Nezznar personally shows up. (I’m considering making him a Gith to better foreshadow the later parts of the adventure)   Nezznar defeats the party and kidnaps Gundren, but leaves the PCs alive. He orders the goblins to take them to Cragmaw Hideout and keep them alive for future experiments.   The PCs later wake up with 1 HP around H6 and have to fight their way out of the hideout.   I like the idea of introducing Nezznar very early and giving the players a personal connection to him from the beginning.   Has anyone tried something similar?   How would you handle the Nezznar encounter without making it feel like a frustrating “the DM says you lose” cutscene? Or is this just stupid ?       submitted by     /u/plurrex     to     r/LostMinesOfPhandelver       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LostMinesOfPhandelver/comments/1wlpzml/alternative_opening_for_phandelver_and_below/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:14:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:15:09.278Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab030bd660c608403988faf"
+    },
+    "message_id": "reddit_t3_1wlpzmc",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Dotheysellpizza",
+    "title": "Grab 100 hammers from u/Dotheysellpizza!",
+    "text": "Grab 100 hammers from u/Dotheysellpizza!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Dotheysellpizza     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wlpzmc/grab_100_hammers_from_udotheysellpizza/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:14:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:15:09.483Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab030bd660c608403988fb0"
+    },
+    "message_id": "reddit_t3_1wlpzlw",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "PakGamers",
+    "username": "Confident-Star25",
+    "title": "Selling - High-End Gaming PC Components",
+    "text": "Selling - High-End Gaming PC Components\n\nLocation: Gulberg, Isb   1. Intel Core i7-12700K Desktop Processor (12th Gen)    Price:  Rs. 80,000     Condition:  New     Description:  Power up your productivity, gaming, and content creation with this unlocked Intel Core i7-12700K processor. Built on the revolutionary Alder Lake hybrid architecture, it perfectly balances Performance and Efficiency cores to handle the most demanding AAA games and heavy multitasking workloads without breaking a sweat.  Key Specifications:       Cores/Threads:  12 Cores (8 Performance + 4 Efficient) / 20 Threads    Clock Speed:  Up to 5.0 GHz Max Turbo Frequency    Socket:  LGA 1700    Graphics:  Intel UHD Graphics 770 integrated    Unlocked:  Yes, ready for overclocking     2. MSI MAG Z690 TOMAHAWK WIFI DDR4 Motherboard    Price:  85,000 PKR     Condition:  New    Description:  Conquer the battlefield with the MSI MAG Z690 TOMAHAWK WIFI. Designed for gamers and PC builders who want maximum stability and high-end thermal performance, this board supports 12th, 13th, and 14th Gen Intel processors. It comes packed with premium features including extended heatsinks, PCIe 5.0, and lightning-fast networking.     Key Specifications:       Form Factor:  ATX    Socket/Chipset:  LGA 1700 / Intel Z690    Memory:  Supports DDR4 up to 5200+ MHz (OC)    Networking:  Intel Wi-Fi 6 & 2.5G LAN    Storage:  Multiple M.2 slots with Shield Frozr cooling     3. Corsair Vengeance RGB PRO 32GB (2x16GB) DDR4 3200MHz RAM    Price:  Rs. 75,000 PKR     Condition:  New     Description:  Elevate your PC's aesthetics and performance with this 32GB Corsair Vengeance RGB PRO memory kit. Offering excellent multitasking capabilities and mesmerizing dynamic multi-zone RGB lighting, this RAM syncs flawlessly with the Corsair iCUE ecosystem to match your setup's vibe.     Key Specifications:       Capacity:  32GB Kit (2 x 16GB)    Speed:  3200MHz (PC4-25600)    Latency:  C16 (CMW32GX4M2E3200C16)    Features:  Custom PCB for high performance, aluminum heat spreader, Intel XMP 2.0 certified     4. Corsair H100x RGB ELITE Liquid CPU Cooler (240mm)    Price:  Rs. 32,000 PKR     Condition:  New     Description:  Keep your high-performance CPU ice-cold with the Corsair H100x RGB ELITE. This 240mm All-in-One liquid cooler features a contemporary pump head design and is paired with Corsair's SP120 RGB ELITE PWM fans equipped with AirGuide technology for powerful, concentrated airflow.     Key Specifications:       Radiator Size:  240mm    Fans:  2x 120mm SP120 RGB ELITE Series    Lighting:  16 Individually addressable RGB LEDs on the pump head    Compatibility:  Intel (LGA 1700, 1200, 115X) & AMD (AM5, AM4)    Control:  Simple 5V ARGB motherboard control or Corsair iCUE (controller sold separately)     5. Samsung 970 EVO Plus 1TB NVMe M.2 SSD    Price:  Rs. 40,000 PKR     Condition:  New     Description:  Level up your boot times and game load screens with the Samsung 970 EVO Plus. Powered by Samsung's V-NAND technology, this 1TB NVMe SSD delivers top-tier Gen 3 speeds, making it an incredibly reliable choice for OS installations, heavy gaming, and fast file transfers.     Key Specifications:       Capacity:  1TB    Form Factor:  M.2 2280 NVMe    Interface:  PCIe Gen 3.0 x4    Speeds:  Up to 3,500 MB/s Sequential Read | 3,300 MB/s Sequential Write     6. Samsung 870 EVO 250GB SATA 2.5\" SSD    Price:  Rs. 8,000 PKR     Condition:  Used / Excellent health (Unboxed)     Description:  A perfect, highly reliable SSD for a boot drive or secondary fast storage. The Samsung 870 EVO pushes the limits of the SATA interface, ensuring snappy day-to-day performance, quick app launches, and rock-solid durability.     Key Specifications:       Capacity:  250GB    Form Factor:  2.5-inch internal    Interface:  SATA III (6 Gb/s)    Speeds:  Up to 560 MB/s Read | 530 MB/s Write    Model Number:  MZ-77E250     7. Seagate BarraCuda 2TB Desktop HDD    Price:  Rs. 14,000 PKR     Condition:  Used / Excellent health (Unboxed)     Description:  Never run out of storage space for your massive game libraries, video projects, and media files. The Seagate BarraCuda 2TB is the industry standard for reliable, high-capacity mass storage, delivering snappy performance for traditional hard drives.     Key Specifications:       Capacity:  2TB    Form Factor:  3.5-inch Desktop HDD    Interface:  SATA 6Gb/s    Speed & Cache:  7200 RPM with a massive 256MB Cache (Model ST2000DM008)   Preloaded with lots of games.         submitted by     /u/Confident-Star25     to     r/PakGamers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PakGamers/comments/1wlpzlw/selling_highend_gaming_pc_components/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:14:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:15:09.688Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab030bd660c608403988fb1"
+    },
+    "message_id": "reddit_t3_1wlpzl0",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "howChatGPTseesme",
+    "username": "TastyTangerine9107",
+    "title": "✨my tenderness✨🦋",
+    "text": "✨my tenderness✨🦋\n\nsubmitted by     /u/TastyTangerine9107     to     r/howChatGPTseesme       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/howChatGPTseesme/comments/1wlpzl0/my_tenderness/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:14:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:15:09.898Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab030be660c608403988fb4"
+    },
+    "message_id": "reddit_t3_1wlpzi9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "BunnyTrials",
+    "username": "Full-Shake-173",
+    "title": "which would you prefer?",
+    "text": "which would you prefer?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Full-Shake-173     to     r/BunnyTrials       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BunnyTrials/comments/1wlpzi9/which_would_you_prefer/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:14:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:15:10.548Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab030be660c608403988fb5"
+    },
+    "message_id": "reddit_t3_1wlpzhy",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Dankol83reddit",
+    "username": "Intelligent_Matter49",
+    "title": "il boss finale di Ghostbusters",
+    "text": "il boss finale di Ghostbusters\n\nsubmitted by     /u/Intelligent_Matter49     to     r/Dankol83reddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Dankol83reddit/comments/1wlpzhy/il_boss_finale_di_ghostbusters/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:14:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:15:10.750Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab030be660c608403988fb6"
+    },
+    "message_id": "reddit_t3_1wlpzhr",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "fragranceswap",
+    "username": "Putrid-Interaction56",
+    "title": "[WTS] Aristo, Atlantis Extrait, Liquid Brun Limited Edition (Bottle)",
+    "text": "[WTS] Aristo, Atlantis Extrait, Liquid Brun Limited Edition (Bottle)\n\nISO selling these dupes.    ($35) Aristo - 3.4 oz bottle , test sprayed , full pres    ($35) Atlantis Extrait - 3.4 oz bottle , test sprayed, full pres   ($35) Liquid Brun LE - 3.4 oz bottle, test sprayed, full pres    All shipped CONUS, PayPal only. Thank you!     https://imgur.com/a/VyRv1Ga        submitted by     /u/Putrid-Interaction56     to     r/fragranceswap       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/fragranceswap/comments/1wlpzhr/wts_aristo_atlantis_extrait_liquid_brun_limited/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:14:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:15:10.955Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab030c7aeeb96c1c63ba793"
+    },
+    "message_id": "reddit_t3_1wlpzs4",
+    "topic_key": "locksmith",
+    "search_keyword": "locksmith",
+    "platform": "reddit",
+    "subreddit": "sixwordstories",
+    "username": "Nervous-Locksmith484",
+    "title": "And I know I'll feel peace.",
+    "text": "And I know I'll feel peace.\n\nsubmitted by     /u/Nervous-Locksmith484     to     r/sixwordstories       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sixwordstories/comments/1wlpzs4/and_i_know_ill_feel_peace/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:15:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:15:19.510Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab030c7aeeb96c1c63ba794"
+    },
+    "message_id": "reddit_t3_1wlpzq1",
+    "topic_key": "psychiatrist",
+    "search_keyword": "psychiatrist",
+    "platform": "reddit",
+    "subreddit": "TrueOffMyChest",
+    "username": "Secret_Subject2571",
+    "title": "Absurdism",
+    "text": "Absurdism\n\nI've been sober for four years. I used to drink heavily but somehow kept it in check, but smoking weed every day for two years led to psychosis. I recovered. My psychiatrist even wanted to stop taking antipsychotics recently, but I asked to stay sober for a while longer because I'm going through a stressful period with work and the job market. So I was given antidepressants, and the anxiety disappeared along with the stress. But I feel nothing, nothing makes sense. I see all the manipulation around me, how this world works, based solely on making money and status, and to those in power and corporations, we're just a replaceable resource. I don't even have anyone to talk to about it, and shallow conversations or gossiping about people bores me. Everything bores me, so after work, I mostly sit and do nothing. Occasionally I only have flashes of satisfaction or the desire to play on the console, watch a movie or engage in a hobby, but it's mostly stagnation.       submitted by     /u/Secret_Subject2571     to     r/TrueOffMyChest       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TrueOffMyChest/comments/1wlpzq1/absurdism/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:14:59Z"

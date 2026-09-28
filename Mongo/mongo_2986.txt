@@ -1,0 +1,416 @@
+    "platform": "reddit",
+    "subreddit": "JobsInDubaiUAE",
+    "username": "MarketingDangerous66",
+    "title": "Hiring for credit card sales",
+    "text": "Hiring for credit card sales\n\nsubmitted by     /u/MarketingDangerous66     to     r/JobsInDubaiUAE       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/JobsInDubaiUAE/comments/1wd9pgn/hiring_for_credit_card_sales/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T07:55:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T07:56:19.966Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3b424035b0f36efccb373"
+    },
+    "message_id": "reddit_t3_1wd9pg2",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "RomanceMangaAnime",
+    "username": "Severe_Fan6695",
+    "title": "how i met my soulmate vol 8",
+    "text": "how i met my soulmate vol 8\n\ni noticed that vol 8 for how i met my soulmate was released in japan march of this year. does anyone know why the  english release  won’t be until april 2027? just out of pure curiosity! i think im probably gonna end up buying the japanese release and try my hand at translating bc im impatient LOL but i just wanted to know 🕺       submitted by     /u/Severe_Fan6695     to     r/RomanceMangaAnime       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RomanceMangaAnime/comments/1wd9pg2/how_i_met_my_soulmate_vol_8/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T07:55:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T07:56:20.182Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3b424035b0f36efccb374"
+    },
+    "message_id": "reddit_t3_1wd9pfv",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Pixmax",
+    "username": "After_Lifeguard_1664",
+    "title": "GPT Image 2.5 Review: Flare is 47% Faster, But Watch the Quality Trap",
+    "text": "GPT Image 2.5 Review: Flare is 47% Faster, But Watch the Quality Trap\n\nhttps://preview.redd.it/wr99esqjkuoh1.png?width=1024&format=png&auto=webp&s=24a6ad447ba3f54ee5a86f5581778d628e4fc07b    Quick Answer: GPT Image 2.5 (released Sept 8, 2026) ships as two API models — Flare (speed-first) and Sunburst (precision-first) — on token rates identical to GPT Image 2. An independent benchmark of the official API largely confirms the headline claims: Flare cut latency ~47% at a matched cost, and multi-turn editing drifts ~15-20% less over three turns. But the number OpenAI didn't advertise matters more: 2.5's high quality setting spends exactly what GPT Image 2's medium spent. Swap the model ID without remapping quality and you silently lose 3.8× of your output budget — cheaper bill, simpler images.   Key Conclusions of GPT Image 2.5:      Speed claim: essentially true.  Flare: 19.7s vs GPT Image 2's 37.3s at the same 1,413-token output budget and $0.059 cost.    Quality ladder shifted.  Map `medium→high` and `high→max` to preserve fidelity; leave it and you downgrade silently.    Multi-turn editing: real but incremental.  Pixel drift after 3 edits: 11.4% (Image 2) → 9.9% (Sunburst) / 9.2% (Flare).    Endpoint loss.  2.5 API models support only image generation + edit routes; Responses/Realtime/Batch integrations need rework.    No price cut.  Same token rates; \"savings\" only exist if you deliberately drop a quality rung.     What Actually Improved — With Numbers Attached   OpenAI's launch announcement promises sharper detail, better reference handling, multi-turn consistency, and up to 50% lower latency. Two days after launch, an independent team (Tosea) ran  41 single-shot calls against the official API  — same prompt, same references, matched resolutions — and the hard numbers now exist to judge it.    Speed: verifiably real.  At a matched 1,413-output-token render of the same 2048×1152 slide, GPT Image 2 took 37.3s, Sunburst 27.7s, and Flare  19.7s — 47% faster at an identical $0.059 bill . Latency variance also tightened (Flare 17.7–22.3s vs Image 2's 35.2–39.2s), which matters more than the mean for concurrent pipelines. That is a rare case of launch-day marketing surviving measurement.    Multi-turn editing: improves, but it's a step, not a leap.  After three sequential single-instruction edits, whole-frame pixel drift measured 11.4% on GPT Image 2 vs 9.9% (Sunburst) and 9.2% (Flare). Real and directionally as claimed — but without a mask,  every turn regenerates the whole canvas , so background photography still wanders. \"Edit one headline, touch nothing else\" remains out of reach without the mask parameter.    Detail fidelity: real but modest.  On dense business-slide content, all three models rendered every figure correctly (98.4%, 96.1%, \"4.2 to 5.6\") — GPT Image 2 had already closed the text-rendering gap, so there is no typography leap to harvest here.    One quirk worth knowing:  developers on the  OpenAI Developer Community  found background=\"transparent\" is a generation condition, not a pure alpha-channel switch — turning it on can shift the rendering style itself. Treat transparency as a stylistic parameter, not a post-processing trick.   GPT Image 2 vs GPT Image 2.5: The From-Measured Comparison        Dimension     GPT Image 2     GPT Image 2.5           Release    April 21, 2026   Sept 8, 2026        Model lineup    Single (gpt-image-2)   Flare + Sunburst        Endpoints    Generation + edit + Responses/Realtime/Batch   Generation + edit  only         Same-fidelity mapping    medium = 1,413 tokens   high = 1,413 tokens        Latency at matched budget    37.3s   Flare 19.7s / Sunburst 27.7s        Tokens per image (known)    Documented   Documented by testers ($0.026–$0.19 per 2K image)        Independent benchmark     #1 on Artificial Analysis, Elo 1178    None yet — 2 days old        Multi-turn drift (3 edits)    11.4%   9.2–9.9%         The trap buried under the launch notes:  the quality ladder moved two rungs,  downward . 2.5's high spends what 2's medium spent; its max spends what 2's high spent. Keep quality:\"medium\" after switching and your render drops from 1,413 to 367 output tokens — a 3.8× cut in output budget. The bill falls; so does composition quality, silently. Testers also found auto landed on inconsistent token budgets across otherwise identical calls — set quality explicitly.   Flare vs Sunburst: You Pay for Time, Not Money   Both models bill identically and returned  identical output-token counts at every quality setting  in  the independent runs . The only difference you buy is seconds.  My call: default to Flare  (19.7s vs 27.7s at the same rung); reach for Sunburst only when a hero asset justifies ~8 extra seconds of tighter handling. And note the naming is reversed relative to intuition — Flare is the fast one.   The Migration Playbook      Re-map quality, don't just swap the model ID.  medium→high, high→max. This single step preserves your fidelity and is the difference between an upgrade and a silent downgrade.    Drop auto.  Unpredictable token budgets across identical calls; explicit quality is required for per-generation billing.    Re-tune timeouts.  If your client waited 180s for GPT Image 2 at 4K, Flare finishes in roughly a third of that.    Keep gpt-image-2 as fallback.  It's still served, still independently benchmarked, and single-provider pipelines are fragile regardless of model freshness.    Re-verify C2PA/metadata handling  — provenance behavior carries over from GPT Image 2; don't assume your container is untouched.     Upgrade Verdict: Switch — but Re-Baseline First   The evidence now supports a measured yes, with one condition.    Move if:  you iterate on edits (series, campaigns, product sets), need speed at matched cost, or want xhigh/max detail tiers. Flare is the right default.    Hold if:  you depend on Responses/Realtime/Batch routing, or your cost model relies on documented per-image pricing — 2.5's per-image cost is tester-derived, not a published calculator.   The lowest-cost way to run that shadow test? Pixmax lets you trial GPT Image 2 free — no OpenAI key, no API setup — on the same canvas where you already manage assets and workflows. GPT Image 2.5 is rolling out there soon, so you can validate now and flip the switch later without re-engineering anything.    The honest gaps:  as of launch week there is no Reddit-level consensus on 2.5 yet (searched; none found), no independent leaderboard entry, and no large-scale reliability data. The transparent-background, portraiture, and masked-inpainting paths OpenAI headlines remain untested per the benchmark's own \"What We Did Not Find\" section. That's why the playbook above ends with \"keep a fallback\" — this is a strong 1.0, not a proven flagship.    Bottom line:  GPT Image 2.5 is a speed-and-consistency refinement of a proven model, not a paradigm shift. The marketing oversells \"sharper,\" and the ladder change — the number that actually affects your output — is buried. Re-baseline your quality mapping before you trust any cost savings.   FAQs   GPT Image 2.5 vs GPT Image 2 — which is better?   Flare is 47% faster than GPT Image 2 at the same token budget, and multi-turn editing drifts 15-20% less . But 2.5's high quality setting equals 2's medium, so naive switching downgrades output. GPT Image 2 remains the only independently ranked model (#1 on Artificial Analysis, Elo 1178).   Flare or Sunburst?   Flare by default — same price, same output tokens, ~8s faster. Sunburst only when a hero asset needs tighter edit handling and the wait is acceptable.   How much does GPT Image 2.5 cost per image?   Unit rates are unchanged ($8/$30 per M tokens). Independent testing measured $0.026–$0.19 per 2048×1152 image depending on the quality rung— same as Image 2 at matched fidelity.       submitted by     /u/After_Lifeguard_1664     to     r/Pixmax       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Pixmax/comments/1wd9pfv/gpt_image_25_review_flare_is_47_faster_but_watch/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T07:55:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T07:56:20.398Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3b457a72f4cb7ae30b737"
+    },
+    "message_id": "reddit_serp_1kwuio8",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/QualityAssurance/comments/1kwuio8/api_testing/",
+    "text": "API Testing\n\nI have started API testing and since I am new to this, I just started with verifying the status codes and basic validations. I would like to explore more in API testing and need make it as one of my strengths. Can someone suggest any courses (udemy, Coursera, etc) that I can master API testing from the scratch to a master level?       submitted by     /u/QA_Asks       [link]       [comments]",
+    "username": "QA_Asks",
+    "subreddit_or_channel": "QualityAssurance",
+    "posted_at": "2025-05-27T18:16:40+00:00",
+    "fetched_at": {
+      "$date": "2026-09-11T07:57:11.738Z"
+    },
+    "google_rank": 1,
+    "search_keyword": "emergency QA testing",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-11T07:57:11.738Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3b45f035b0f36efccb376"
+    },
+    "message_id": "reddit_t3_1wd9q48",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Lido Staked ETH USD - 11 Sep 2026 @ 03:53 -> $2 465.88",
+    "text": "Buy Signal Lido Staked ETH USD - 11 Sep 2026 @ 03:53 -> $2 465.88\n\nTicker:  STETHUSD    Exchange:  CRYPTO    Time:  11 Sep 2026 @ 03:53    Price:  $2 465.88    Link:  https://getagraph.com/AAA/crypto-currencies/STETHUSD/ENG        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wd9q48/buy_signal_lido_staked_eth_usd_11_sep_2026_0353_2/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T07:57:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T07:57:19.915Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3b460035b0f36efccb377"
+    },
+    "message_id": "reddit_t3_1wd9q40",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "diablo4",
+    "username": "PuzzledHawk5290",
+    "title": "Buy the DLC on sale on steam or wait for a potential new expansion annoucement at BlizzCon ?",
+    "text": "Buy the DLC on sale on steam or wait for a potential new expansion annoucement at BlizzCon ?\n\nIf I understand correctly, whenever they release a new expansion, even for preorder, it includes all the old ones.   If they announced a new expansion at BlizzCon for preorder, it would include the 2 current ones rigght ?   So it might end up better value than buying the current 2 on steam.   Best to wait a day and see ?       submitted by     /u/PuzzledHawk5290     to     r/diablo4       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/diablo4/comments/1wd9q40/buy_the_dlc_on_sale_on_steam_or_wait_for_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T07:57:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T07:57:20.126Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3b460035b0f36efccb378"
+    },
+    "message_id": "reddit_t3_1wd9q23",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "JobsInDubaiUAE",
+    "username": "MarketingDangerous66",
+    "title": "Hiring for credit card sales",
+    "text": "Hiring for credit card sales\n\nsubmitted by     /u/MarketingDangerous66     to     r/JobsInDubaiUAE       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/JobsInDubaiUAE/comments/1wd9q23/hiring_for_credit_card_sales/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T07:56:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T07:57:20.355Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3b460035b0f36efccb379"
+    },
+    "message_id": "reddit_t3_1wd9pyj",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "badmintonbangalore",
+    "username": "Square-Conference-16",
+    "title": "[WTS] Li-Ning 3D Calibar 300C Badminton Racket + Bag (Bengaluru)",
+    "text": "[WTS] Li-Ning 3D Calibar 300C Badminton Racket + Bag (Bengaluru)\n\nHey everyone, looking to part ways with my Li-Ning 3D Calibar 300.   Model: Li-Ning 3D Calibar 300C Combat   Current Retail Price: ₹7,490   Product Link:  Li-Ning India Official Site    My Purchase Price: ~₹6,300   Asking Price: ₹3,000 + Shipping (Open to reasonable negotiation)   Extras: Comes with the attached Li-Ning kit bag. Currently gutted with Yonex BG 80 Power at 26 lbs, Yonex SuperGrap.   Location: Panathur Main Road, Bengaluru (Prefer local pickup, but can coordinate shipping at the buyer's expense).   Reason for selling: I had purchased this item when I was training and played singles, but now I exclusively play doubles, and it isn't suitable for my doubles game.   The frame has been well maintained with standard wear from indoor court play. Drop a comment or DM me if you want more pictures or have any questions!       submitted by     /u/Square-Conference-16     to     r/badmintonbangalore       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/badmintonbangalore/comments/1wd9pyj/wts_lining_3d_calibar_300c_badminton_racket_bag/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T07:56:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T07:57:20.576Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3b460035b0f36efccb37a"
+    },
+    "message_id": "reddit_t3_1wd9pyc",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "hmtforsale",
+    "username": "ludic_13",
+    "title": "Where to buy hmt kanchan not used old stock",
+    "text": "Where to buy hmt kanchan not used old stock\n\nsubmitted by     /u/ludic_13     to     r/hmtforsale       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hmtforsale/comments/1wd9pyc/where_to_buy_hmt_kanchan_not_used_old_stock/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T07:56:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T07:57:20.787Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3b489a72f4cb7ae30b738"
+    },
+    "message_id": "reddit_serp_1dz0jjw",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/ycombinator/comments/1dz0jjw/why_are_technical_founders_considered_to_be_so/",
+    "text": "Why are technical founders considered to be so prized and rare?\n\nDon’t get me wrong, I fully understand what they bring to the table. Actually knowing how to build the product is huge. Especially if you’re still early.    But a lot of people know how to code. I forget the ideal ratio of PMs to devs, but it’s something like 1:10. Which would suggest there are far more devs than PMs.    Guess it seems to me that there are a lot of devs out there, so why are they regarded as being so rare? I’d think the sheer quantity of them would make them fairly plentiful.        submitted by     /u/Texas_Rockets       [link]       [comments]",
+    "username": "Texas_Rockets",
+    "subreddit_or_channel": "ycombinator",
+    "posted_at": "2024-07-09T11:56:25+00:00",
+    "fetched_at": {
+      "$date": "2026-09-11T07:58:01.480Z"
+    },
+    "google_rank": 3,
+    "search_keyword": "emergency technical co-founder",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-11T07:58:01.480Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3b49c035b0f36efccb37b"
+    },
+    "message_id": "reddit_t3_1wd9qqz",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "agencynewbies",
+    "username": "astringchun11",
+    "title": "Struggling with landing a client",
+    "text": "Struggling with landing a client\n\nHi I'm a small agency owner based in Taipei but my company is registered in Hong Kong.   Recently I partnered up with a Chinese partner to help South East Asia brands enter the China market.   My HK company is the business hub, my Chinese partner is the executing end. Our target audience is SEA hotels, resorts and luxury villas, because we've been doing marketing for cultural & tourism brands on western platforms (Facebook, Instagram, etc).   I'm the one doing BD and finding clients.   My first sales idea was \"we help you validate the Chinese market\", because I believe most of them are interested in China but haven't made a move yet.   Here is what I've tried so far.    LinkedIn    I sent 150 connection requests to hospitality owners and GMs, then messaged something like \"I saw your brand on Ctrip, are you interested in the China market?\"   5% engaged, meaning they showed interest in China. But most of them had no follow-up questions.   Only 1 lead went to the proposal phase, and he turned us down. The initial investment was too high for him. It was $15,000 for the first 3 months, including:     Social media management (RedNote, WeChat, Ctrip): content publishing, reply management   Conversion path plan & tracking setup   Content production & management   Paid ad management      Instagram DM    LinkedIn was slow for finding owner leads, so I switched to Instagram DM. My assumption was that some small business owners would read the DM themselves.   This time I didn't just ask questions. I wrapped up a validation plan under $300, aiming for cost per booking between $50-$100, by working with in-market creators to bring in booking guests.   200 DMs sent so far. 3% engagement rate, people who showed interest in China.   So I can see that 3% are interested in the validation package. But none of them have nodded yet.   Just here to seek advices to guide me a little, if I should keep reaching out, or maybe I should offer a bet like, if we don't achieve the target, you don't need to pay, so that I can land my client to exchange my first case study?       submitted by     /u/astringchun11     to     r/agencynewbies       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/agencynewbies/comments/1wd9qqz/struggling_with_landing_a_client/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T07:58:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T07:58:20.582Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3b49c035b0f36efccb37d"
+    },
+    "message_id": "reddit_t3_1wd9qqo",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Solana USD - 11 Sep 2026 @ 03:56 -> $99.66",
+    "text": "Buy Signal Solana USD - 11 Sep 2026 @ 03:56 -> $99.66\n\nTicker:  SOLUSD    Exchange:  CRYPTO    Time:  11 Sep 2026 @ 03:56    Price:  $99.66    Link:  https://getagraph.com/AAA/crypto-currencies/SOLUSD/ENG        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wd9qqo/buy_signal_solana_usd_11_sep_2026_0356_9966/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T07:58:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T07:58:20.978Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3b49d035b0f36efccb37e"
+    },
+    "message_id": "reddit_t3_1wd9qqc",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "koreatravel",
+    "username": "Briggus",
+    "title": "All train/buses from Seoul to Busan are sold out - possibilities, what to do next?",
+    "text": "All train/buses from Seoul to Busan are sold out - possibilities, what to do next?\n\nHello there,    we have to go from Seoul to Busan on 23rd September.    We tried to catch KTX tickets but everything was sold out when it appeared. Slower and SRT trains are also sold out, buses aswell.    Flights and care rental are too expensive.    Is there any option to get to Busan on 23rd?    Wait for some released seats or buy some train/bus at the office right in Seoul?    Thank you.       submitted by     /u/Briggus     to     r/koreatravel       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/koreatravel/comments/1wd9qqc/all_trainbuses_from_seoul_to_busan_are_sold_out/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T07:58:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T07:58:21.177Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3b4c5a72f4cb7ae30b739"
+    },
+    "message_id": "reddit_serp_rlguia",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/Splunk/comments/rlguia/splunk_enterprise_errors_with_app_install_from/",
+    "text": "Splunk Enterprise: errors with App install from REST API\n\nHello all,   I've been working with the Splunk Enterprise REST API. I'm attempting to install apps from Splunkbase via the API. I have no problems getting the auth token from Splunkbase, and no problems authenticating with Splunk Enterprise.    The error is: \"Error during app install: failed to extract app from /opt/splunk/var/run/12345abcde.tar.gz to /opt/splunk/var/run/splunk/bundle_tmp/12345abcde: No such file or directory\"   I've checked the Splunk role permissions (running as admin account), and the Linux permissions (all the files are owned by the splunk user and group).    If anyone else has encountered this error, I'd love to hear your input and solutions!       submitted by     /u/SirSertile       [link]       [comments]",
+    "username": "SirSertile",
+    "subreddit_or_channel": "Splunk",
+    "posted_at": "2021-12-21T15:20:51+00:00",
+    "fetched_at": {
+      "$date": "2026-09-11T07:59:01.673Z"
+    },
+    "google_rank": 9,
+    "search_keyword": "enterprise REST API",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-11T07:59:01.673Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3b4d8035b0f36efccb37f"
+    },
+    "message_id": "reddit_t3_1wd9rbq",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "specialed",
+    "username": "coolcrystalgirl",
+    "title": "Need advice on student behavior",
+    "text": "Need advice on student behavior\n\nHello everyone I am a behavior support assistant in an inclusion classroom for grades 4-6. This school year we got a new student on our caseload and things went good for about one day. My groups are manageable however there is one student who has been giving me a bit of a harder time. The first day I worked with him I thought oh my goodness this is going to be a piece of cake. Then the next day comes and I was so surprised with his behavior. This student began to growl and groan and everything I would tell him to do! In my groups I reward students by giving them stars on their desks and each star equals 100 points and at the end of their group the max they usually get will be 5 stars so 500 points total and at the end of the week they can buy something with their points (candy, squishies, chips, etc.) When I notice that the student is groaning a lot I will remind him what we are working for, but if he continues to groan I will remove stars from him or not give him any stars. Sometimes this will work and make him stop groaning and start working however it seems like positive reinforcement , negative reinforcement, positive punishment, and negative punishment do not work anymore. I need some advice because I really do not know what to do as it is very hard to teach a student who does not want to work / is complaining the whole time. In addition, I am a lot younger than the teacher I teach under and I think that whenever she calls him out on his behavior he does tend to listen more to her. I wonder if it is because I am younger he thinks he can get away with it/ he doesn't respect me? If I tell him something about his behavior and tell him that he will not earn any points, he will usually still groan or start throwing a tantrum ( crying, hitting the desk, groaning louder, etc.) if you have any advice please let me know thank u       submitted by     /u/coolcrystalgirl     to     r/specialed       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/specialed/comments/1wd9rbq/need_advice_on_student_behavior/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T07:59:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T07:59:20.713Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3b4d8035b0f36efccb380"
+    },
+    "message_id": "reddit_t3_1wd9rb6",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Toncoin USD - 11 Sep 2026 @ 03:56 -> $1.351",
+    "text": "Buy Signal Toncoin USD - 11 Sep 2026 @ 03:56 -> $1.351\n\nTicker:  TONUSD    Exchange:  CRYPTO    Time:  11 Sep 2026 @ 03:56    Price:  $1.351    Link:  https://getagraph.com/AAA/crypto-currencies/TONUSD/ENG        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wd9rb6/buy_signal_toncoin_usd_11_sep_2026_0356_1351/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T07:59:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T07:59:20.935Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3b4d9035b0f36efccb381"
+    },
+    "message_id": "reddit_t3_1wd9r83",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "textbooks",
+    "username": "inos140",
+    "title": "Selling jee books , some are untouched, some brand new , some used , some barley touched",
+    "text": "Selling jee books , some are untouched, some brand new , some used , some barley touched\n\n​   Solomons, Fryhle & Snyder Organic Chemistry (M.S. Chouhan): ₹799   Physics Galaxy: Mechanics (Vol 1): ₹399   S.L. Arora Physics (Class 11, Parts 1 & 2): ₹999   O.P. Tandon Organic Chemistry (Vol 1) & Inorganic Chemistry (Vol 2): ₹999together   R.C. Mukherjee Chemical Calculations: ₹399   Disha 164 JEE Main Chemistry PYQs: ₹399   Disha 164 JEE Main Mathematics PYQs: ₹399   Lakshya JEE Module (Class 12): ₹1999   Pradeep’s Chemistry Class 11 (Vols I & II): ₹1299   Oswaal CBSE Class 10 Science & Math Question Banks (2024): ₹499for both   Pearson iit foundation book : physics at 299   Physical chemistry Eajee notes at 399   Selling individually also and Total at bulk also    If u wanna buy everything then the discounted price is ₹ 6969 ( no lie \"they won't know , they know XD )    If u want me individually then dm    Location: banglore        submitted by     /u/inos140     to     r/textbooks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/textbooks/comments/1wd9r83/selling_jee_books_some_are_untouched_some_brand/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T07:58:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T07:59:21.164Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3b4d9035b0f36efccb382"
+    },
+    "message_id": "reddit_t3_1wd9r7m",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "qullamaggie",
+    "username": "Emotional_Buy_6712",
+    "title": "Did Qullamaggie stopped trading breakouts at the end?",
+    "text": "Did Qullamaggie stopped trading breakouts at the end?\n\nHey   going through his last live sessions (2 years ago) he said that he stopped trading breakouts and instead trading EP's as breakouts are failing more often    is that correct? did the market change in the last years that made breakout trading more difficult?       submitted by     /u/Emotional_Buy_6712     to     r/qullamaggie       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/qullamaggie/comments/1wd9r7m/did_qullamaggie_stopped_trading_breakouts_at_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T07:58:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T07:59:21.386Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3b501a72f4cb7ae30b73a"
+    },
+    "message_id": "reddit_serp_pqq697",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/ExperiencedDevs/comments/pqq697/database_patterns_for_horizontal_scalimg/",
+    "text": "Database Patterns for Horizontal Scalimg?\n\nDoes anyone have good literature on what are the current popular ways to design applications for horizontally scaling (IE kubernetes, docker, etc) that both read and write to a DB?   I've read some stuff about splitting databases up into the read vs write DBs.   Mostly just looking for specific pattern names I can look up.   And, what are your opinions on these patterns.   The primary one I seem to be imaging works is having a local write only DB in every pod, which then pipe their data into an external distributed cluster of load balanced DBs you can read from.   Thus writes are instant locally, reads are a bit slower but load balanced.   Is there a term for this pattern?       submitted by     /u/lionhart280       [link]       [comments]",
+    "username": "lionhart280",
+    "subreddit_or_channel": "ExperiencedDevs",
+    "posted_at": "2021-09-18T17:01:15+00:00",
+    "fetched_at": {
+      "$date": "2026-09-11T08:00:01.245Z"
+    },
+    "google_rank": 7,
+    "search_keyword": "enterprise data pipeline",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-11T08:00:01.245Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3b514035b0f36efccb383"
+    },
+    "message_id": "reddit_t3_1wd9s1v",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "buildapc",

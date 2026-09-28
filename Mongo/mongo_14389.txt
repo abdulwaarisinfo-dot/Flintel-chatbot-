@@ -1,0 +1,416 @@
+    "platform": "reddit",
+    "subreddit": "funComunitty",
+    "username": "facelessreddit2",
+    "title": "I got a dentist appointment in a few hours ama (14male)",
+    "text": "I got a dentist appointment in a few hours ama (14male)\n\nhttps://preview.redd.it/8svd7x564vqh1.jpg?width=640&format=pjpg&auto=webp&s=fafa86f9a3e966a65a174a5f3887d7a991cb7920        submitted by     /u/facelessreddit2     to     r/funComunitty       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/funComunitty/comments/1wmam77/i_got_a_dentist_appointment_in_a_few_hours_ama/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:54:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:54:21.566Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11aed660c60840398dc50"
+    },
+    "message_id": "reddit_t3_1wmam5u",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "NPTEL",
+    "username": "Big_Dhiraj",
+    "title": "NPTEL Business Analytics & Text Mining Modeling Using Python — Full Exam Review (Paper Pattern, Prep Strategy & Center Experience)",
+    "text": "NPTEL Business Analytics & Text Mining Modeling Using Python — Full Exam Review (Paper Pattern, Prep Strategy & Center Experience)\n\n> **TL;DR:** 50 questions, and **30 of them are the assignments copied as-is**. Do the assignments properly, understand *why* the wrong options are wrong, read the **transcripts** instead of the 7-year-old lectures, and this paper is a 90-minute formality. Full breakdown below.   ---   ## 1. Course & context   - **Course:** Business Analytics & Text Mining Modeling Using Python (NPTEL / SWAYAM)   - **My exam date:** 20 September 2026 (I'm writing this the day after, so it's all fresh)   - **Shift:** Morning — but shifts are assigned **randomly**, I just got lucky (see section 6)   - **Time taken:** 90 out of 180 minutes   - **Difficulty:** Very easy — *if* you did the assignments and studied around them   I'd already written a few NPTEL exams before this one, so I roughly knew what to expect. Here's everything, honestly.   ---   ## 2. Exam pattern — what actually showed up   **50 questions total, split into 3 sections:**   | Section | Questions |   | --------- | --------- |   | Section 1 | 10 |   | Section 2 | 16 |   | Section 3 | 24 |   Breakdown of where the questions came from:   - **30 / 50 = assignments copied as-is.** Same question, same options, same order. No changes at all.   - **~10 / 50 = reworded assignment questions.** Same concept, but variables/definitions swapped and the options shuffled. If you understood the assignment instead of memorising it, these are free marks.   - **~10 / 50 = genuinely different.** These had unfamiliar definitions and **tabular-format questions** — they gave a matrix/document and asked things like which matrices differ in number of rows, etc. Two questions of that type showed up.   **Other things worth knowing:**   - **Two exact duplicate questions.** One question from Section 1 reappeared in Section 2, word for word — same options, same everything. Just those two, so don't go in expecting the whole paper to repeat itself. The one I remember:   ```   What is the output of the following code snippet?   a = numpy.array([1, 2, 3, 4, 5])   b = numpy.arange(0, 10, 2)   c = a + b   print(c[4])   ```   Answer: `13` — `b` is `[0, 2, 4, 6, 8]`, so `c` is `[1, 4, 7, 10, 13]`. Free marks if you notice the repeat.   - **Sections 1 and 2 contain most of the assignment questions.**   - **POS-tag counting questions:** they give you a sentence and ask how many nouns / verbs / adverbs are in it. Count-and-answer type stuff. I don't remember the exact wording, but expect that flavour.   ---   ## 3. The assignment strategy (most important section)   Here's the thing nobody tells you: **some of the \"correct\" answers in the assignments are actually wrong.**   I verified several of them against ChatGPT and Gemini — both disagreed with the official key, and both gave detailed reasoning with proof for why the given answer was incorrect. And yet, that's the answer the portal marks as correct.   So if your goal is **100/100 in the assignments**, do this:      **Don't go straight to ChatGPT or Gemini for the answers.** They'll give you the *technically* correct answer — which loses you marks.     **First check where the previous year's answers are already posted.** Scribd, Studocu, and similar sites often have the exact same assignment with the accepted answers.     **Search YouTube** for last year's question-and-answer videos for the same subject. These are usually the fastest and most reliable.      But — and this is the part that actually gets you through the exam — **also read why the other options are wrong.**   Example: if the key says *Winchester*, ask yourself *why not Porter?* Read about Porter too. Because in the exam, that same question comes back with the variables changed and **Porter** sitting in the options. If you only memorised \"Winchester\", you're stuck. If you understood both, you pick Porter without thinking.   **Do the assignments properly + study around them = the exam is over in 90 minutes.**   ---   ## 4. How to actually study (and what to skip)   **Skip the lectures.** NPTEL lectures are someone reading slides out loud. No engagement, no energy, and the explanation quality is poor. I didn't watch them, and I don't think I lost anything.   Also, **the lectures are old.** For this course they were **7 years old**. Across the NPTEL courses I've seen, this is normal — 3, 5, 7-year-old recordings.   **Use the transcripts instead.** Go to the course page, scroll to the bottom, and you'll find a **Download videos / Transcripts** option. You get a text transcript for **each individual lecture**. This is far better than the book, because:   - The \"books\" are basically just compiled transcripts — they added no value.   - A single giant book confuses any AI you feed it to for summarisation. Per-lecture transcripts summarise cleanly and map directly to the assignment weeks.   **Which AI to feed them to.** I used **WorkBuddy AI** and it was clearly better than ChatGPT or Gemini for this — cleaner summaries, and it can turn the transcripts into a proper **expected question-and-answer PDF** in one shot. It also gives you access to some paid models for free, which is what made me switch. I've been using it a while now and I rate it above the other chatbots for this kind of work.   To be clear on where it fits: use it for **summarising and building revision material**. For assignment answers, still go to the previous-year sources in section 3 — that's a different job.   If you want to try it, here's my referral link — **you get 350 credits, I get 100**: ** https://workbuddy.ai/invite?code=F5JERDFN\\*\\*    **Don't rely on the teacher's Jupyter notebooks either.** They often don't compile. The version the instructor is teaching on is far too old for the Jupyter you'll have installed, so the code errors out or behaves differently on your machine. Expect to fix things as you go.   **Which brings up the bigger point: this course is running on outdated material, and the exam has not been updated to match.**   A lot of the code is written for an old Jupyter/package version. Modern syntax won't always match. But for the exam, **prepare the old concepts and the old code as they were taught** — because the paper is built on that same old material and it isn't going to be refreshed for you. Don't \"modernise\" your answers in your head; answer what the course actually taught.   **Don't skip matrix multiplication.** This is the one question I actually got wrong.   They gave two NumPy arrays and asked for the result. I mixed up **element-wise multiplication** with **real matrix multiplication**, and only realised at home that I'd picked the wrong one. Learn the difference cold:   ```python   import numpy as np   a = np.array([[1, 2],   [3, 4]])   b = np.array([[11, 12],   [13, 14]])   ```   - `a * b` → **element-wise**: `[[11, 24], [39, 56]]`   - `a @ b` (or `np.dot(a, b)`) → **actual matrix multiplication**: `[[37, 40], [85, 92]]`   Same two arrays, two completely different answers. Know which one the question is asking for before you touch the options.   **The forum is useless.** The assigned instructor didn't help. It's just students helping students. I answered a few people's questions myself. Don't count on official support.   ---   ## 5. Registration & credit transfer — do this EARLY   This is where people actually lose out.   - **Register 1–3 months before the semester starts.** The registration window closes before your semester even begins. Example: if you're in your 3rd sem and want to write the exam in your 4th sem, you have to **register during your 3rd sem**. Register in the 4th sem and it's already too late.   - **Ask your teacher whether the credit will transfer.** Do not assume. For me, my teacher confirmed the credits would transfer. One of my friends wanted to write **both** the NPTEL exam and the university exam for the same subject — the teacher told him not to. Doing both can confuse the system and land you **zero marks** for that subject. Write only one of the two.   - **Ask your teacher which NPTEL course is assigned** for your subject — there are usually options.   - **Fees:** my college quoted ₹2K for 8 subjects, and the NPTEL paper for one subject cost me ₹1K — so **₹3K total for this 5th sem**.   **Is it worth it?** For me, yes. A university theory paper won't hand you that CGPA — you can't finish a full paper in 3 hours, and the person checking it won't be generous. NPTEL is a much easier route to SGPA/CGPA.   **Also:** write as many NPTEL exams as you can. You get an **NPTEL Star** award, which is a genuine plus point and can sometimes land you a job. Colleges mostly don't tell students this exists — ask your teacher.   ---   ## 6. Exam center & day-of experience   Honestly, my center was great. Every corner had staff directing you to your block and seat. Walkthrough:   **Documents:**   - **Hall ticket** — black-and-white print is fine, colour is preferred but not required.   - **Physical Aadhaar card — original, NOT a Xerox.** They do not accept photocopies. College ID card is also good to carry.   - **Missing signature, photo, or barcode on the hall ticket?** Don't worry about it. The staff stamping it will handle it. All of these are extremely common.   **What to wear:**   - **No belt. No watch.** The security scan will flag it and you'll be asked to remove it.   - **No college uniform** — go in a simple outfit you're comfortable in.   - **You'll have to remove shoes and socks** before entering the hall.   **What to carry:**   - **Hall ticket** and **an ID proof — Aadhaar preferred.**   - One pen and a transparent water bottle. That's it.   **The entry process:**      First guard takes one page of your 2-page hall ticket and gives you one back.     They stamp it for registration.     A third guard checks you for anything electronic. **Girls have a separate scanning room.**     Bag and bike-key drop was **free** at my center. Some centers charge ₹10–20 — small thing, but know it.     Labs are posted outside so you can check your seat before entering.      **Inside the hall:**   - Clean toilets, already available. Nice.   - Staff guide you to your seat (I was seat 009).   - **They provide pens** if you didn't bring one, plus **as many blank sheets as you want** for rough work.   - **Your exam password is your date of birth — DDMMYYYY.**   - Instructions on screen, then the 180-minute timer starts.   **Who's sitting around you:** don't assume the person next to you has your paper.   For the last NPTEL paper I wrote (E-Business), every student around me had the **same paper** on screen. This time, everyone next to me had a **completely different paper** — and they weren't even from the same degree. I'm from B.Tech; the people beside me were BCA and B.Com students.   So the seating isn't grouped by course. You can't glance at a neighbour's screen for anything useful, and honestly, don't try — the papers are different, so it tells you nothing anyway.   **Rules to respect:**   - **Cameras are everywhere. Don't try anything clever** — no writing on your hands or legs. They check hands. These invigilators have far more experience than you do.   - **You cannot take anything out of the hall.** Pens and rough sheets given by the center must be returned. Everything.   - **You can leave after 90 minutes.** Most people do.   **Timing:** 180 minutes given, 90 minutes minimum. I finished in exactly 90. If the subject is easy, **one day of study is genuinely enough**. If it's a hard subject (quantum computing, for example), budget a month.   **Morning vs evening shift:** you don't get to pick — the shift is assigned **randomly**. I got morning and it worked in my favour: no sun to deal with, and no lunch sitting heavy in your stomach making you sleepy halfway through the paper. In the evening shift, that food coma is a real risk. So if you get morning, be glad; if you get evening, plan your lunch accordingly.   ---   ## 7. Results timeline   - **Computer-based exam: ~2 weeks** (sometimes stretches to a month)   - **Paper-based exam: ~1 month**   I'll update this post once my result is out.   ---   ## 8. Feedback forms — fill them   NPTEL sent me feedback forms about **3 times** (twice by email, once in the app) — and I'm not even counting the weekly feedback forms in that. I filled every one — very negative, a straight reality check. They never responded. If you go through the same thing, **fill it in and be brutally honest.** They also ran a survey asking whether NPTEL should be discontinued since it isn't government-funded. I said yes — the lectures were boring, and nothing about them energised me.   ---   ## 9. Everything I used is in a GitHub repo   Here it is:   ** https://github.com/BigDhiraj/business-analytics-text-mining-modeling-using-python-resouces\\*\\*    What's in it:   - **All 2026 assignment answers** — week-wise, so you have the accepted answers in one place instead of hunting through Scribd and YouTube   - **The exact code the instructor used in the lectures**   - **Jupyter notebook resources** — Python, Pandas, Matplotlib, text mining / NLP examples   - **A complete study guide (HTML)** — condensed, so you don't have to sit through the lectures   It's a student-made repo, not officially affiliated with NPTEL — verify anything important against the official material.   If it helps you, star it and pass it on to whoever takes this course next.   ---   ## 10. Final thoughts   NPTEL exams are not compulsory — but if you can, take them. They're one of the cheapest, easiest ways to lift your CGPA/SGPA, and the theory paper route gives you far less for far more effort.   **One request for the mods:** please actually maintain this sub. Better flairs, an updated wiki, a pinned thread for per-subject reviews. Right now it's not doing the job.   ---   **Got any doubts — even silly ones? Drop them in the comments and I'll answer.**   Also, please **share your own NPTEL / SWAYAM experience** on this sub. The more real experiences we post, the more useful this place becomes for the next batch.   *I'll update this post when my result is out.*       submitted by     /u/Big_Dhiraj     to     r/NPTEL       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NPTEL/comments/1wmam5u/nptel_business_analytics_text_mining_modeling/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:54:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:54:21.785Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11aef660c60840398dc53"
+    },
+    "message_id": "reddit_t3_1wmam5q",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "wordgrind",
+    "username": "word-grind",
+    "title": "Translate — what's \"しちがつ\" in English?",
+    "text": "Translate — what's \"しちがつ\" in English?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/word-grind     to     r/wordgrind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wordgrind/comments/1wmam5q/translate_whats_しちがつ_in_english/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:54:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:54:23.178Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11aef660c60840398dc54"
+    },
+    "message_id": "reddit_t3_1wmam5k",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Wilh Wilhelmsen Holding - 21 sep 2026 @ 13:36 -> Kr.885.00",
+    "text": "Buy Signal Wilh Wilhelmsen Holding - 21 sep 2026 @ 13:36 -> Kr.885.00\n\nTicker:  WWI.OL    ![Logo]( https://www.getagraph.com/logos/WWI.OL.png )   Exchange:  OSL    Time:  21 sep 2026 @ 13:36    Price:  Kr.885.00    Link:  https://getagraph.com/AAA/trading/OSL/WWI.OL/analysis/signals        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wmam5k/buy_signal_wilh_wilhelmsen_holding_21_sep_2026/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:54:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:54:23.379Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11aef660c60840398dc55"
+    },
+    "message_id": "reddit_t3_1wmam4d",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Electronic-Youth7321",
+    "title": "Which game feels like a wet sock?",
+    "text": "Which game feels like a wet sock?\n\nsubmitted by     /u/Electronic-Youth7321     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wmam4d/which_game_feels_like_a_wet_sock/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:54:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:54:23.586Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11aef660c60840398dc56"
+    },
+    "message_id": "reddit_t3_1wmam3u",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "hiringpakistan",
+    "username": "Acceptable-Word4699",
+    "title": "Remote Freelance Opportunity – Earn 25,000 PKR Per Client",
+    "text": "Remote Freelance Opportunity – Earn 25,000 PKR Per Client\n\nHi everyone,  I’m looking to connect with freelancers who are good at  finding potential customers and starting sales conversations online .   I run a web agency that works with businesses that need websites and online presence and we also design MVPs for new projects as well as end-to-end SaaS. We’re looking for people who can help us identify these businesses and introduce them to our services.    What you’ll be doing    You’ll have the flexibility to handle outreach however you prefer. This could include:   Finding businesses that may need a new or improved website.    Contacting business owners through Instagram, Facebook, WhatsApp, email, etc.   Introducing our services and understanding what the business needs.    Passing interested prospects over to our team.    For  every client who signs up and makes a payment, you’ll receive 25,000 PKR.     The Setup    Work completely remotely  No fixed working hours  Commission-based   25,000 PKR per successful paying client   No investment or joining fee  Use your own preferred outreach strategy  Previous sales/lead-generation experience is helpful, but not mandatory.    You don’t need to be an experienced salesperson to apply. If you’re comfortable talking to people, researching businesses, and convincing potential clients to consider a service, you’re welcome to reach out.  If this sounds interesting,  send me a DM  with:   1.  Any previous sales, outreach, or lead-generation experience   2.  The platforms you’re comfortable using.   3.  Roughly how much time you can commit per week  Feel free to message even if you’re new to this — I’m more interested in your ability to generate genuine clients than formal experience.       submitted by     /u/Acceptable-Word4699     to     r/hiringpakistan       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hiringpakistan/comments/1wmam3u/remote_freelance_opportunity_earn_25000_pkr_per/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:53:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:54:23.791Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11af0660c60840398dc58"
+    },
+    "message_id": "reddit_t3_1wmam3c",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Birkenstocks",
+    "username": "wela_masroof",
+    "title": "Pre loved/Thrifted/Landa bazar birkenstocks",
+    "text": "Pre loved/Thrifted/Landa bazar birkenstocks\n\nWhat I have listened about berkinstocks is that they mold according to the foot shape of the person wearing it. What if I buy it from a thrift shop, pre loved as it would be molded according to the food shape of the person who was wearing it before me. Would it again mold according to my foot or it would be just a waste of money       submitted by     /u/wela_masroof     to     r/Birkenstocks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Birkenstocks/comments/1wmam3c/pre_lovedthriftedlanda_bazar_birkenstocks/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:53:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:54:24.195Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11af0660c60840398dc59"
+    },
+    "message_id": "reddit_t3_1wmam1l",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "MrInbetween",
+    "username": "ivan_in_oz",
+    "title": "Lustre Glo",
+    "text": "Lustre Glo\n\nSeason 3, episode 2, Dave goes for a drive with the guy from the pedestrian crossing incident. When they get out of Dave’s truck, you briefly see the logo Lustre Glo on the side of the truck.    Lustre Glo is an auto body shop across the road from the location they use for the outside of Freddy’s strip club (Marrickville Bowlo).       submitted by     /u/ivan_in_oz     to     r/MrInbetween       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MrInbetween/comments/1wmam1l/lustre_glo/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:53:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:54:24.403Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11b17aeeb96c1c63bad21"
+    },
+    "message_id": "reddit_t3_1wmams0",
+    "topic_key": "roofer",
+    "search_keyword": "roofer",
+    "platform": "reddit",
+    "subreddit": "DIYUK",
+    "username": "curium99",
+    "title": "Mounting solar panels to shed roof",
+    "text": "Mounting solar panels to shed roof\n\nHi,   I’m going to build a shed in my garden to achieve the dimensions needed to maximise the space.    I’m thinking of mounting solar panels as the location is full sun from around 11am in summer.    I’m not a roofer so I’m looking for information on how to secure solar panels to a flat roof (mild slope to remove water but need to stay under limits to avoid the need for planning permission) without compromising the roof and allowing water in.    Is this easier to achieve with some finishes than others? The roof finishes I was considering are felt, fibreglass and EPDM.   Useful advice gratefully received.        submitted by     /u/curium99     to     r/DIYUK       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DIYUK/comments/1wmams0/mounting_solar_panels_to_shed_roof/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:54:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:55:03.109Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab11b17aeeb96c1c63bad22"
+    },
+    "message_id": "reddit_t3_1wmamri",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "NIOS_Students",
+    "username": "Latter_Mission5001",
+    "title": "NIOS Stream 1 Block 1 — Has TMA been released yet?",
+    "text": "NIOS Stream 1 Block 1 — Has TMA been released yet?\n\nHas anyone received/seen the TMA (Tutor Marked Assignment) for this session yet?   I       submitted by     /u/Latter_Mission5001     to     r/NIOS_Students       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NIOS_Students/comments/1wmamri/nios_stream_1_block_1_has_tma_been_released_yet/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:54:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:55:03.313Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab11b17aeeb96c1c63bad23"
+    },
+    "message_id": "reddit_t3_1wmamrg",
+    "topic_key": "psychiatrist",
+    "search_keyword": "psychiatrist",
+    "platform": "reddit",
+    "subreddit": "Femalefounders",
+    "username": "Healthy_Lemon6736",
+    "title": "29F Psychiatrist wanting to build a mental health startup — how do I find mentors and the business consultans?",
+    "text": "29F Psychiatrist wanting to build a mental health startup — how do I find mentors and the business consultans?\n\nsubmitted by     /u/Healthy_Lemon6736     to     r/Femalefounders       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Femalefounders/comments/1wmamrg/29f_psychiatrist_wanting_to_build_a_mental_health/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:54:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:55:03.525Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab11b17aeeb96c1c63bad24"
+    },
+    "message_id": "reddit_t3_1wmamqu",
+    "topic_key": "cpa",
+    "search_keyword": "CPA",
+    "platform": "reddit",
+    "subreddit": "WhatIsMyCQS",
+    "username": "rcpa_soonest",
+    "title": "what is my cqs",
+    "text": "what is my cqs\n\nsubmitted by     /u/urcpa_soonest     to     r/WhatIsMyCQS       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WhatIsMyCQS/comments/1wmamqu/what_is_my_cqs/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:54:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:55:03.756Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab11b18aeeb96c1c63bad25"
+    },
+    "message_id": "reddit_t3_1wmamot",
+    "topic_key": "recruiter",
+    "search_keyword": "recruiter",
+    "platform": "reddit",
+    "subreddit": "QatarCareers",
+    "username": "Weak_Conference2907",
+    "title": "Qatar Airways Recruitment Process",
+    "text": "Qatar Airways Recruitment Process\n\nHi everyone,   I recently completed a final-stage interview for an analyst position at Qatar Airways and wanted to hear about other candidates’ experiences.   I was told after the interview that I would likely receive an update within around 1–2 weeks. It has now been more than 3 weeks and I still haven’t received a final decision.   My application portal still shows **“Interview/Assessment In Progress.”**   I have followed up with recruitment. I eventually received a response from an HR contact saying that my enquiry had been forwarded to the recruiter responsible for providing an update, but I haven’t heard anything further.   Has anyone experienced something similar with Qatar Airways?   How long did you wait after your final interview before receiving an offer or rejection? Did your application remain “Interview/Assessment In Progress” during the waiting period?   I’m particularly interested in recent experiences, as I’m trying to understand whether a 3–4 week wait after a final interview is common.   Thanks!       submitted by     /u/Weak_Conference2907     to     r/QatarCareers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/QatarCareers/comments/1wmamot/qatar_airways_recruitment_process/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:54:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:55:04.121Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab11b29660c60840398dc5a"
+    },
+    "message_id": "reddit_t3_1wmamzx",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "PakistaniTwenties",
+    "username": "Brilliant-News-1519",
+    "title": "i need to be distracted",
+    "text": "i need to be distracted\n\nim going through an exhausting visa process atm and literally consuming my mental space and i really need a distraction        submitted by     /u/Brilliant-News-1519     to     r/PakistaniTwenties       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PakistaniTwenties/comments/1wmamzx/i_need_to_be_distracted/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:55:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:55:21.525Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11b29660c60840398dc5b"
+    },
+    "message_id": "reddit_t3_1wmamz9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ChicagoSuburbs",
+    "username": "KiefKommando",
+    "title": "Warrenville City Council Meeting - Speak out against FLOCK!",
+    "text": "Warrenville City Council Meeting - Speak out against FLOCK!\n\nCome help us pack the room for this evening’s 9/21 Warrenville City Council Meeting to speak out against FLOCK/ALPRs!   6:30 PM   28W701 Stafford Place, Warrenville, IL 60555    https://actionnetwork.org/events/921-warrenville-city-council-meeting-w-dadc?source=reddit    Last week on 9/15 they held a Q&A with the Chief of Police and a representative from FLOCK Safety, this session raised more questions than it answered and included some hair raising statements by the chief, who is of the opinion that the government is allowed to violate your constitutional rights and vowed to keep using flock until the laws change or the city makes a decision against continuing! It’s more important than ever to pack the room and make our voice heard!        submitted by     /u/KiefKommando     to     r/ChicagoSuburbs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ChicagoSuburbs/comments/1wmamz9/warrenville_city_council_meeting_speak_out/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:55:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:55:21.729Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11b29660c60840398dc5c"
+    },
+    "message_id": "reddit_t3_1wmamz8",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "MEDICOreTARDS",
+    "username": "Feisty-Poem-7915",
+    "title": "Gap certificate for partial droppers",
+    "text": "Gap certificate for partial droppers\n\nHey everyone. I was enrolled in bsc and probably getting a gmc in second or 3rd round of counselling. The bsc college is refusing to give me tc , although they returned all my 12th documemts. Since i will be reuired to present a gap certificate if i am submitting my 12th documents as the last attended inatitute, what should i write in it. If anyone was enrolled in bsc and taking admission this here , please give some insights       submitted by     /u/Feisty-Poem-7915     to     r/MEDICOreTARDS       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MEDICOreTARDS/comments/1wmamz8/gap_certificate_for_partial_droppers/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:55:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:55:21.930Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11b2a660c60840398dc5d"
+    },
+    "message_id": "reddit_t3_1wmamy9",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "askHVAC",
+    "username": "DefinitionStill2003",
+    "title": "AC & Refrigeration Technician from Pakistan – Looking for International Job Opportunities",
+    "text": "AC & Refrigeration Technician from Pakistan – Looking for International Job Opportunities\n\nsubmitted by     /u/DefinitionStill2003     to     r/askHVAC       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/askHVAC/comments/1wmamy9/ac_refrigeration_technician_from_pakistan_looking/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:55:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:55:22.140Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11b2a660c60840398dc5e"
+    },
+    "message_id": "reddit_t3_1wmamy7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "Brazil",
+    "username": "No_Question9911",
+    "title": "What It Really Costs Me to Live in São Paulo as a Retired American",
+    "text": "What It Really Costs Me to Live in São Paulo as a Retired American\n\nI’m a retired American living full-time in São Paulo, and one thing that surprised me after moving here was how different the real monthly cost can be compared with what you see online.   A lot of cost-of-living discussions focus on rent, groceries, and restaurants, but there were expenses I completely underestimated.   For example, I currently rent a large house in São Paulo for R$8,200 per month. What I did not fully understand when I signed the lease was that I would also be responsible for the IPTU, which is about R$4,700 per month.   That one expense alone changed the entire picture.   For a household of nine people, groceries are around R$6,000 per month as well, so even though some things in Brazil are much cheaper than what I was used to in the U.S., living here definitely isn’t automatically “cheap.”   I recently went through my actual monthly expenses and added everything up — housing, IPTU, groceries, utilities, transportation and the other regular bills.   I made a video showing the full breakdown for anyone researching what it really costs to live in São Paulo:    https://youtu.be/TnhHTrf8WOg?is=J1zR4H0838UCPQ2P    I’m curious how my numbers compare with other people living in Brazil.   What expense surprised you the most after moving here?       submitted by     /u/No_Question9911     to     r/Brazil       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Brazil/comments/1wmamy7/what_it_really_costs_me_to_live_in_são_paulo_as_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T11:55:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T11:55:22.342Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab11b2a660c60840398dc5f"
+    },
+    "message_id": "reddit_t3_1wmamxs",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "LaptopDealsIndia",
+    "username": "Cold_Night1559",
+    "title": "SELLING Lenovo LOQ 15AHP10 — ₹1.15L | OPEN TO EXCHANGE FOR MACBOOK M4/M5 | Ryzen 7 250 + RTX 5050 8GB | 16GB RAM | Warranty till 2029",
+    "text": "SELLING Lenovo LOQ 15AHP10 — ₹1.15L | OPEN TO EXCHANGE FOR MACBOOK M4/M5 | Ryzen 7 250 + RTX 5050 8GB | 16GB RAM | Warranty till 2029\n\nI'm looking to sell or exchange my Lenovo LOQ 15AHP10.   I purchased it in February 2026, so it is around 6–7 months old, but the laptop has been barely used during this period and is in very good condition.   I originally bought it for day-to-day tasks and occasional gaming, but I haven't ended up gaming much. I've realized that a thin and light laptop would suit my current usage better, so I'm looking to switch.   💻 Specifications   Model: Lenovo LOQ 15AHP10   CPU: AMD Ryzen 7 250   GPU: NVIDIA GeForce RTX 5050 Laptop GPU — 8GB VRAM   RAM: 16GB DDR5 5600 MT/s   Storage: 512GB SSD   Battery: 100% capacity   Power adapter: Original 245W adapter   Warranty: Valid until 2029   Purchase date: February 2026   Condition: Very good, no major issues   💰 Selling Price - ₹1,15,000   🔄 Exchange — MacBook M4/M5   I'm also specifically looking for a MacBook M4 or M5 in exchange.   Preferably: Around 6–7 months old   Exchange value will depend on the specific MacBook and its condition   I'm looking to move from a gaming laptop to something thinner, lighter and more suitable for everyday use.   📍 Location: Guwahati, Assam   📦 Original invoice/warranty details available.   📸 Additional photos/videos can be provided to serious buyers.       submitted by     /u/Cold_Night1559     to     r/LaptopDealsIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LaptopDealsIndia/comments/1wmamxs/selling_lenovo_loq_15ahp10_115l_open_to_exchange/",
+    "score": 0,

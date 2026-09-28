@@ -1,0 +1,416 @@
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "Femalefounders",
+    "username": "ProgramExpress2918",
+    "title": "Small business owners: what could I actually do with this skill? Growing my following on different platforms",
+    "text": "Small business owners: what could I actually do with this skill? Growing my following on different platforms\n\nI accidentally discovered that I seem to have a knack for communicating and building engagement online. 😅   I originally wanted to become a graphic designer, so that’s where I put most of my energy. But over time, I noticed something interesting: I genuinely enjoy talking to people online, joining different communities, sharing my thoughts on specific topics, answering questions, and having conversations.   And somehow, without really intending to, doing this has helped my accounts grow particularly on LinkedIn and Reddit. I seem to naturally enjoy the community/communication side of social media just as much as the visual/design side.   Now I'm wondering if there's an actual service or role hidden in this that I haven't considered.   For those of you who own small businesses:   What would you actually find useful if you hired someone who was good at:   Starting and participating in online conversations   Writing thoughtful posts/comments   Building engagement and relationships within communities   Understanding how to communicate with different audiences   Growing a company's presence organically   Combining this with graphic design/social media skills   Would this be useful for things like community management, social media management, content marketing, founder-led content, customer engagement, Reddit/LinkedIn outreach, or something else entirely?   I'd love to hear from actual business owners: what problem would you hire someone like this to solve?   I'm curious because I may have accidentally developed a skill I never originally set out to have. 😂        submitted by     /u/ProgramExpress2918     to     r/Femalefounders       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Femalefounders/comments/1wlkao2/small_business_owners_what_could_i_actually_do/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:38:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:39:10.559Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffe1e660c608403987fb1"
+    },
+    "message_id": "reddit_t3_1wlkanm",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BangaloreBuyandSell",
+    "username": "Tanzkaa",
+    "title": "🛋️ Selling: New/Barely Used Wooden Pallet Sofa – Indiranagar",
+    "text": "🛋️ Selling: New/Barely Used Wooden Pallet Sofa – Indiranagar\n\nsubmitted by     /u/Tanzkaa     to     r/BangaloreBuyandSell       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BangaloreBuyandSell/comments/1wlkanm/selling_newbarely_used_wooden_pallet_sofa/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:38:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:39:10.963Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffe1f660c608403987fb3"
+    },
+    "message_id": "reddit_t3_1wlkanb",
+    "topic_key": "httpswarisdevisadev its my web so find me for customers",
+    "search_keyword": "conversational AI",
+    "platform": "reddit",
+    "subreddit": "SideProject",
+    "username": "dwarfLevi",
+    "title": "Typesafe's JEV model work as an LLM",
+    "text": "Typesafe's JEV model work as an LLM\n\nA conversational AI that doesn't generate a single token — it selects from 400 pre-written responses using TypeSafe's Jev, a non-generative model that returns probabilistic judgments instead of text.    The technical approach:    Traditional LLMs generate responses token by token. I flipped this — I wrote 400 responses by hand and let the AI pick the best match. Here's the architecture:    Step 1: Classification (400ms, 1 API call)    I ask Jev 18 questions in parallel about the user's message:    Questions asked simultaneously: - intent (Choice: greeting/complaint/question/etc — 14 options) - formality (Score: 0-4 scale, 5 levels) - emotional_intensity (Score: 0-4 scale) - needs_human (Noul: yes/no probability) - subcategory_greeting (Choice: if intent=greeting, which type?) - subcategory_complaint (Choice: if intent=complaint, which type?) ... [14 speculative subcategory questions, one per intent]     All 18 run in one API call using speculative fan-out — code only reads the subcategory answer for whichever intent wins. This eliminates a round trip without extra cost.    Step 2: Candidate Fetch (0ms, pure code)    The response bank is structured as:    { complaint: { empathetic: [ { id: \"cmp_emp_1\", text: \"Three times is way too many...\" }, { id: \"cmp_emp_2\", text: \"I hear you — that's frustrating...\" }, // ...10 responses total ], solution_oriented: [ ... ] }, greeting: { ... } }     Code looks up  bank[intent][subcategory]  and pulls ~10 candidates. If there are >10 in a category, I run a cheap Noul shortlist (one yes/no question per candidate) to narrow it down.    Step 3: Scoring (400ms, 1 API call)    Each candidate gets scored on 6 dimensions in parallel:    Per candidate (10 candidates × 6 dimensions = 60 questions): - relevance (Score: 0-4) - tone_match (Score: 0-4) - helpfulness (Score: 0-4) - answers_question (Noul: 0-1) - specificity (Score: 0-4) - natural_flow (Score: 0-4)     Then I apply context-aware weights:    // Default weights weights = { relevance: 0.25, tone: 0.15, helpfulness: 0.20, ... } // High emotion? Tone matters more if (emotional_intensity > 2.5) { weights.tone = 0.30; weights.relevance = 0.20; } // Small talk? Natural flow matters more if (intent === \"small_talk\") { weights.natural_flow = 0.35; weights.helpfulness = 0.05; }     Winner = highest weighted score.    Step 4: Output    If final score     Example flow:    User:  \"I'm frustrated, my order has been wrong three times\"     Classify (400ms): intent: complaint (91% confidence) subcategory: empathetic (speculative answer, used since complaint won) emotional_intensity: 3.8/4.0 formality: 1.2/4.0 needs_human: 0.34 (below 0.8 threshold, proceed) Fetch: 10 responses from complaint/empathetic Score (400ms): Each candidate × 6 dimensions Weights adjusted: tone=30% (emotion is high) Top 3: #1: \"Three times is way too many...\" → 0.82 #2: \"I hear you — that's frustrating...\" → 0.77 #3: \"That sounds really frustrating...\" → 0.70 Winner: Response #1 (highest weighted score)     Total: ~800ms, ~$0.0001 per message    Why this works:     Philosophical questions nail it.  Philosophy is about picking the right framing, not generating insights. \"What's the purpose of life?\" has many valid perspectives — selection feels natural.    No hallucinations.  Every word was pre-written. Perfect for customer support or anywhere brand safety matters.    Full transparency.  You see intent → scores → winner. No \"the model decided\" black box.    100x cheaper.  ~$0.0001 vs ~$0.01-0.10 per message.    Where it breaks:     Can't generate anything.  No coding, writing, creative tasks. If it's not in the bank, I got nothing.    Limited to 400 responses.  Works for bounded conversations (support, FAQs, onboarding). Scaling needs manual work or template responses with dynamic slots.    Factual Q&A is rough  unless you template responses with live data.   I added an LLM fallback for low confidence, but 90% is pure selection.    What Jev is NOT doing:    It doesn't read the response bank — I fetch candidates in code. Jev only classifies the message and scores the candidates. No reasoning, no generation, just fast probabilistic judgments.    Links:      Live demo:  https://jevllm.pages.dev  (terminal mode + pipeline explorer)   Source code:  https://github.com/akash-kamat/jev-llm      Would love feedback — especially if anyone's tried similar selection-based approaches or has ideas for scaling the response bank!       submitted by     /u/dwarfLevi     to     r/SideProject       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SideProject/comments/1wlkanb/typesafes_jev_model_work_as_an_llm/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:38:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:39:11.373Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffe1f660c608403987fb5"
+    },
+    "message_id": "reddit_t3_1wlkamu",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "Perfumes",
+    "username": "Top-Candidate-2779",
+    "title": "Marc Jacobs Decadence",
+    "text": "Marc Jacobs Decadence\n\nUK based!   Decadence by Marc Jacobs has been one of my absolute favourite fragrances for decades, so when I heard it was going to be discontinued I bought a little stockpile - I'm halfway through my last bottle and I am desperate for a perfume which is as close as I can get to this scent.   I've tried Wild Vanilla Orchid by Floral Street, and while I do see similarities, it just doesn't compare in my opinion.   Any recommendations?   TIA!       submitted by     /u/Top-Candidate-2779     to     r/Perfumes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Perfumes/comments/1wlkamu/marc_jacobs_decadence/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:38:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:39:11.789Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffe1f660c608403987fb6"
+    },
+    "message_id": "reddit_t3_1wlkamn",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "TeenPakistani",
+    "username": "One-Pepper34",
+    "title": "ROADS BLOCKED",
+    "text": "ROADS BLOCKED\n\nPLS KOI ROADS BLOCK KARWA DO MUJHE SUBAH NAHI JANA KUCH KAROOOO       submitted by     /u/One-Pepper34     to     r/TeenPakistani       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TeenPakistani/comments/1wlkamn/roads_blocked/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:38:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:39:11.992Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffe20660c608403987fb7"
+    },
+    "message_id": "reddit_t3_1wlkakt",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "JapanTravelTips",
+    "username": "Kusakaru",
+    "title": "Traveling from Asakusa to Hakone and staying one night. Will we have time to do the full loop? What time should we aim to arrive in Hakone by? Advice on where to stay, timing of things, and general stuff we should keep in mind?",
+    "text": "Traveling from Asakusa to Hakone and staying one night. Will we have time to do the full loop? What time should we aim to arrive in Hakone by? Advice on where to stay, timing of things, and general stuff we should keep in mind?\n\nWe will be in Japan in mid-November. We are staying in Asakusa in Tokyo, and plan to leave early in the morning to get there. We are shipping our luggage to Kyoto, and will just have backpacks with us.    We originally wanted to take the Romance car from Shinjuku, but I think it would be faster for us to take the Toei Asakusa Line to Shinagawa Station, transferring to the Tokaido Shinkansen to Odawara Station, and then taking the Hakone Tozan Railway to Hakone-Yumoto Station.  Is this the better option? Any advice on what time we should aim to leave Asakusa by or plan to arrive in Hakone-Yumoto by?    Once we arrive in Hakone, we would like to do the loop. I originally thought we would take the Hakone Tozan bus first and start at the lake and end in Gora, where we would stay overnight. But I did some more research and I think by the time we got to Gora, everything would be closed and we'd struggle to find somewhere to eat. Now I'm thinking we should start by taking the Hakone Tozan railway to Gora and doing the loop that way, ending up back in Hakone-Yumoto at the end and staying there. This would make it easier for us to leave for Kyoto the next morning as well.  Is this the right move? Any advice on hotels/ryokan to stay at?  We are looking for something with a private onsen and less than $650 a night, and we are overwhelmed with options. We are not attached to the idea of a kaiseki dinner either, as we have some dietary restrictions.   Regarding the loop itself,  do you think we would have time to do the Open air museum and Picasso museum in Gora? If so, how much time would you all recommend we budget to spend there?  It looks like we would need to get to the Lake Ashi Cruise before 5:00, preferably earlier, as that is when the last boat leaves.  Also, which port should we get off at from the cruise? Any advice on which bus stop to wait at to go back to Hakone-Yumoto station?  I am struggling to understand the bus schedule and where we should get on and off it at.    Thank you in advance for any insight you all can provide! We really appreciate it.       submitted by     /u/Kusakaru     to     r/JapanTravelTips       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/JapanTravelTips/comments/1wlkakt/traveling_from_asakusa_to_hakone_and_staying_one/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:38:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:39:12.207Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffe20660c608403987fb9"
+    },
+    "message_id": "reddit_t3_1wlkak9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "IllustriousMove9818",
+    "title": "Level: 601~620 3⭐ Weapons Market #10911",
+    "text": "Level: 601~620 3⭐ Weapons Market #10911\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/IllustriousMove9818     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wlkak9/level_601620_3_weapons_market_10911/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:38:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:39:12.608Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffe20660c608403987fba"
+    },
+    "message_id": "reddit_t3_1wlkak3",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "biggboss",
+    "username": "Emergency_Leave_1971",
+    "title": "Just caught up to the Sept 15th (Tuesday) episode.",
+    "text": "Just caught up to the Sept 15th (Tuesday) episode.\n\nps: my post was removed before so posting again after filtering it. :)   Hey everyone,   I started watching this season a little late, so I’m currently a few episodes behind.  Please strictly NO SPOILERS in the comments  for anything that happens after Tuesday's episode! I just really want to share my thoughts on what I felt after watching the September 15th episode.   As a long-time viewer of the show, I actually skipped the last few seasons entirely because I felt the quality of the content and the nature of the arguments had declined. I decided to give this season a chance to start fresh, but the extreme negativity and blatant production manipulation are already making it difficult to enjoy.   Before I start, let me make one thing clear:  all of these are simply my own personal opinions and observations. I am just looking to vent my thoughts, and I am not interested in getting into aggressive fan wars or personal arguments in the comments over our favorite contestants.    First of all, I am deeply uncomfortable with Kaiz's behavior. Watching a contestant like Aasif literally in tears and showing real emotional distress while Kaiz stands there acting completely cold, blank, and indifferent feels incredibly unfair and unsettling to watch. What bothers me the most is how highly sensitive issues like emotional distress or mental health boundaries seem to be trivialized or put on as a performance just to secure screen time. Mocking or manufacturing these kinds of situations for cheap entertainment on national television is wrong. It sets a bad precedent and makes it hard to watch.   Second, the groupism from Yung DSA, Scout, and Aasif is getting quite repetitive. Whenever someone tries to have a simple, direct conversation with Yung, he remains completely quiet while Aasif and Scout immediately step in to fight his battles for him, which creates unnecessary, loud arguments. Yung came in as such a composed, cool guy, but the constant, targeted attacks from the opposing group seem to have completely drained his enthusiasm to the point where he looks totally checked out. It was genuinely disheartening to see the house divided this way and watching a group get targeted so personally.   The structural twists this week feel highly manipulated as well. Giving the captaincy contenders the power to strip away the lifelines of nominated people feels very cheap. It looks like the makers are openly shifting the rules to protect the loud, highly vocal contestants who generate viral drama, while systematically dismantling the quieter group. It makes you feel like public voting doesn't fully matter if the producers can just twist the format to save their preferred choices for the sake of viewership.   As for my thoughts on the rest of the housemates:      Aamrapali is my absolute favorite since day one!  I really appreciate her grounded dignity and presence compared to the rest of the chaos in the house.    Aman  seems to have very little individual personality or independent strategy. He acts more like a follower who waits for the others to take a stand so he can jump in and pick petty fights.    Arishfa's  constant shouting matches are exhausting.    Uditi  appears to be playing a very double-sided game—acting completely sweet to someone's face but immediately gossiping the second their back is turned.     I really hope the weekend segments address some of this behavior and bring some balance back, because watching genuine people get targeted through these methods is becoming very difficult to watch.   Would love to know if anyone else felt a similar frustration during Tuesday's episode, but please keep the comment section spoiler-free for the later episodes!       submitted by     /u/Emergency_Leave_1971     to     r/biggboss       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/biggboss/comments/1wlkak3/just_caught_up_to_the_sept_15th_tuesday_episode/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:38:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:39:12.813Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffe21660c608403987fbc"
+    },
+    "message_id": "reddit_t3_1wlkaj9",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BangaloreRealEstates",
+    "username": "Even_Choice_6939",
+    "title": "Prestige Parklane- A Brilliant Masterclass in Real Estate (Mis)selling?",
+    "text": "Prestige Parklane- A Brilliant Masterclass in Real Estate (Mis)selling?\n\nDisclaimer   The purpose of writing this is to create some awareness and put out a \"brain dump\" regarding what I feel is seriously off about the project's pricing versus its location today. This is for the like-minded, anguished folks who find it difficult to tolerate the hubris. The rest (most people, I feel) will anyways go ahead and buy into this project. There is nothing wrong with that—it invariably contributes to the GDP and Prestige's bottom line, while buyers get to boast about their Prestige purchase in random conversations! :-)    Prestige Parklane: Current Facts & Lowlights      Density- 1800 Apartments in 12 acers     Distance from Airport:  20 km (not that we go to the airport daily, but still).     Distance from Devanahalli Town:  9 km.     Distance from nearest Software Park (Employment Hub):  17 km to Prestige Tech Cloud (which doesn't even have a large staff base currently).     Metro Connectivity:  Sorry, please do not ask.     Malls/Retail:  Sorry, please do not ask.      My Thoughts: The \"Doraemon\" Story   You should buy into this project because you have been told a beautiful story by Channel Partners (CPs) and influencers. You believe it to be true, and you think it is very soon going to become a reality—like something Doraemon pulls out of his 4D pocket!    Apologies for the sarcasm, but I honestly do not know how else to process the pain of seeing people rush to pay ₹12.5k per sq. ft. for this project.    Let’s break it down:    1. The Tech Park Myth   The major story being sold by CPs revolves around future tech parks (like Brigade WTC), schools, malls, and retail spaces. Most buyers start imagining they have hit a treasure trove.    Take a pause and think about  what  and  how . CPs obviously expect you to believe it will be a high-paying software park, just like the established ones. They like the confusion and lack of clarity because it makes mis-selling easier.    To understand what KIADB Phase 2 really is, look at the companies operating there today versus what is planned:       Currently Operating Companies:     Foxconn (Hon Hai Precision Industry)    Boeing India    Collins Aerospace    Safran HAL Aircraft Engines    Wipro Aerospace    Dynamatic Technologies    Shell Technology Centre    SASMOS HET Technologies    Thyssenkrupp Aerospace India    Rossell Techsys        Planned & Upcoming Companies:     Exide Energy Solutions    NTT Data Center    Airbus India    Hindustan Aeronautics Limited (HAL)        Software Parks & Tech Zones:     KIADB Hi-Tech Hardware & IT Park    Brigade World Trade Center (WTC Devanahalli)         I agree that some sort of planned office and retail spaces are expected to come up in the future. However, it is  NOT  going to be a massive software park ecosystem. Instead, these are integrated industrial and aerospace parks that create a mix of blue-collar and white-collar jobs. Furthermore, it is going to take a minimum of 10 to 15 years for this ecosystem to fully develop and flourish.    Consider this: KIADB Phase 1 does not have—and is not expected to have—large software Global Capability Centres (GCCs), as explained in this  Bangalore Real Estates Reddit Thread . Why do you think a large software ecosystem would move or set up in KIADB Phase 2, which is another 12 km further away? Which GCC would dare to set up an office there?    Ask yourself: Whom will you sell to? Whom will you rent to, and at what price? Who is your target buyer or tenant? Personally, I do not understand the math.    2. The \"Builder-Controlled\" Social Infrastructure   Next up are the malls, multiplexes, schools, and retail spaces near the project. Currently, there are none. The story being sold is that these  will  be built.    Obviously, once apartments are built in a no-man's-land where people have nothing to do on weekends, where will they go? The builder will have to build a mall or retail space—it is a no-brainer. The same goes for schools. In that location, the builder  ought  to provide basic infrastructure because there is nothing nearby.    What does this mean for you? You will be part of a closed ecosystem built entirely by the developer. Because of the extreme scarcity of basic social infrastructure around you, the builder will charge a massive premium (think of it like the Apple ecosystem). Consequently, your day-to-day cost of living will be incredibly expensive.    The STRR Moat   Another major selling point being pushed is the Satellite Town Ring Road (STRR), which is built for inter-city commuting and connects Dabaspet to Whitefield and the Chennai Bengaluru Industrial Corridor (CBIC).   Honestly, I fail to see how this is a valid selling point for this project. I really do not understand why anyone would buy a home here if their office is located in Whitefield. Daily commuting via a highway ring road is absurd, yet channel partners talk about it as if it is a completely viable, everyday option. Absolute vultures..!   The Much-Talked-About Price   Considering the points above, I see a massive disconnect between the quoted price and the actual social infrastructure, livability, and job potential available by the time these homes are ready.    Location plays the key role in real estate investment. In this case, that core element itself is a big question mark and a massive \"IF.\"    Let's look at a quick comparison to see if Parklane makes sense:       Prestige Finsbury Park (KIADB Phase 1):  Ready-to-move-in options are available at ₹11k per sq. ft. (before negotiation).     Rent for a 2 BHK (~900 sq. ft.):  Around ₹27k per month (before negotiation).      Now, look at what you are paying for a 2 BHK (~900 sq. ft.) at  Prestige Parklane (KIADB Phase 2) :       Base Price:  ₹10.5k     GST:  5%     Additional Charges:  PLC (Preferential Location Charges), FRC (Floor Rise Charges), interiors, and pre-EMI interest (~10%)     Registration:  7%     Overall Cost:  Landed cost comes to around  ₹12.5k per sq. ft.       Do you still think it makes sense?    The Cost Reality Check   Another point that cannot be ignored when evaluating why this project feels like a super rip-off:  As per the official RERA filing, the combined cost of land and construction comes to around  ₹4k per sq. ft.  This means Prestige is pricing it at more than double its actual cost. At launch price, their markup is a massive 150 to 200%. Does that reflect the true intrinsic value of this project?    Lastly, Try the \"Sleep Test\"   On a lighter note, I have a personal test called the \"Sleep Test\" for any high-ticket investment.    Once I pay the initial token money, I closely observe my sleep pattern for the next few days while the due diligence in progress and before the final confirmation. Sometime, our decisions are driven purely by FOMO (Fear Of Missing Out), and this test serves as an excellent barometer. Our subconscious mind usually understands exactly what we are getting ourselves into. If I notice that my sleep pattern is impacted or disturbed, I simply back out and won't proceed.    Try it yourself the next time you pay a token amount. See if it works for you!     note- formed with help of AI for better readability        submitted by     /u/Even_Choice_6939     to     r/BangaloreRealEstates       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BangaloreRealEstates/comments/1wlkaj9/prestige_parklane_a_brilliant_masterclass_in_real/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:38:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:39:13.223Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffe21660c608403987fbf"
+    },
+    "message_id": "reddit_t3_1wlkaih",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "airsoftcanada",
+    "username": "Unusual-Research970",
+    "title": "[WTS][ON] RAV-NEO-LMG46",
+    "text": "[WTS][ON] RAV-NEO-LMG46\n\nselling my rav neo lmg46.  asking $250 for it. comes with everything in the pics.  message me to arrange a deal! prefer to sell it asap.  i won it in a big game and i wont use it, i did make sure it works! No issues.        submitted by     /u/Unusual-Research970     to     r/airsoftcanada       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/airsoftcanada/comments/1wlkaih/wtson_ravneolmg46/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:38:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:39:13.836Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffe22660c608403987fc0"
+    },
+    "message_id": "reddit_t3_1wlkaid",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "indiaStockMarket",
+    "username": "CosmicTt09",
+    "title": "What are your opinion guys...I kinda see it as great deal...",
+    "text": "What are your opinion guys...I kinda see it as great deal...\n\nsubmitted by     /u/CosmicTt09     to     r/indiaStockMarket       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/indiaStockMarket/comments/1wlkaid/what_are_your_opinion_guysi_kinda_see_it_as_great/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:38:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:39:14.037Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffe5a660c608403987fc1"
+    },
+    "message_id": "reddit_t3_1wlkbm3",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Prebuilts",
+    "username": "ohheytheretrap",
+    "title": "Looking to buy a PC to run games likes Halo MCC AND Similar. Is the below decent and at a good price?",
+    "text": "Looking to buy a PC to run games likes Halo MCC AND Similar. Is the below decent and at a good price?\n\nhttps://www.ebuyer.com/medion-medion-erazer-recon-e45-rtx-5060-gaming-pc---amd-ryzen-5-5500-16gb-1tb-ssd---black-714219#colcode=71421903        submitted by     /u/ohheytheretrap     to     r/Prebuilts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Prebuilts/comments/1wlkbm3/looking_to_buy_a_pc_to_run_games_likes_halo_mcc/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:39:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:40:10.434Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffe5a660c608403987fc2"
+    },
+    "message_id": "reddit_t3_1wlkbko",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ThePokemonHub",
+    "username": "Spice_Extract_777",
+    "title": "Which Special Pokemon best fits the Avenger Class?",
+    "text": "Which Special Pokemon best fits the Avenger Class?\n\nFilling in Fate Servant Classes with Pokemon. (2 for regular and 1 for Legendaries/Mythical/Ultra Beasts/Paradox)    CLASS DESCRIPTIONS   Saber - Agile and powerful melee warriors adept at swordsmanship. They’re often portrayed as disciplined “knight” figures: proud, duty-bound, idealistic, and very focused on honor or a personal code.   Lancer - Very Agile, skilled with long-range melee weapons such as spears and lances (could be body parts too). Playful, carefree, and spirited personality, often with a strong warrior’s pride underneath.   Archer - Using powerful projectile weapons or special abilities related to projectile weapons.   Rider - In this context, they serve as excellent mounts. They often excel in speed, mobility, and battlefield positioning.   Caster - Powerful in magic, weaker in direct physical combat, and often best used through strategy, support, and battlefield control rather than brute force.   Assassin - High stealth and infiltration ability. Built around concealment, speed, and surprise attacks rather than direct head-on combat.   Berserker - Built for overwhelming force rather than finesse, strategy, or subtlety. Often associated with a dangerous, relentless fighting style that ignores pain and fear.   Ruler - Those who arbitrate. Beacons of order or balance.   Shielder - Not designed to overwhelm enemies with raw damage. Instead, they absorb attacks, protect teammates, and buy time for the rest of the party to act .   Avenger - Fueled by lasting hatred or a desire to avenge a wrong. Often tied to corruption, injustice, or being cast into a role of suffering.   Pretender - Built around deception, disguise, and identity substitution.   Foreigner - Those that exist outside the scope of moral understanding (usually outer space). They are often described as beings who “overturn the base laws” of the world.       submitted by     /u/Spice_Extract_777     to     r/ThePokemonHub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ThePokemonHub/comments/1wlkbko/which_special_pokemon_best_fits_the_avenger_class/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:39:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:40:10.647Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffe5a660c608403987fc3"
+    },
+    "message_id": "reddit_t3_1wlkbkc",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AynThor",
+    "username": "ah_shit_here_we_goo",
+    "title": "Anyone know of any places to buy second hand besides ebay?",
+    "text": "Anyone know of any places to buy second hand besides ebay?\n\nI know the extra is because you're not waiting. But the 200+ markup are insane. Anywhere where people are actually reasonable?       submitted by     /u/ah_shit_here_we_goo     to     r/AynThor       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AynThor/comments/1wlkbkc/anyone_know_of_any_places_to_buy_second_hand/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:39:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:40:10.867Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffe5b660c608403987fc4"
+    },
+    "message_id": "reddit_t3_1wlkbk6",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PCB",
+    "username": "Sea_Appearance_2319",
+    "title": "Have you ever considered buying a desktop PCB milling machine?",
+    "text": "Have you ever considered buying a desktop PCB milling machine?\n\nWhat made you consider one, and did you end up buying it? Why or why not?   I'm researching desktop PCB tools and would like to hear about actual purchase decisions.       submitted by     /u/Sea_Appearance_2319     to     r/PCB       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PCB/comments/1wlkbk6/have_you_ever_considered_buying_a_desktop_pcb/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:39:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:40:11.079Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffe5b660c608403987fc5"
+    },
+    "message_id": "reddit_t3_1wlkbjx",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "Construction",
+    "username": "Downhereinoc",
+    "title": "What would you do",
+    "text": "What would you do\n\nBack in July I got a call from someone I know higher up in the local. He saw my name on the out of work list and asked if I wanted to travel for work. It’s been slow back home and what not so I took the opportunity. Anyway I drove halfway across the country and got to it.   It’s been a shit show since I got here. Atleast for like the first 6/7 weeks I was able to get 60-70+ hours. There hasn’t been a single day or task where shits worked out well. We’re now down to 40 hour weeks and have to deal with the establishment being opened so it’s not as easy to work as a regular jobsite.   Anyway, on Friday the company laid off 20+ guys. My site lost our foreman and one of the more knowledgeable guys. Aside from everyone finding out by text last minute anyone traveling had to check out by Saturday morning.    Now I’m stuck here with this shitty ass shop on this fucked up job. The two guys who were here from the beginning are gone. Itl be me and another lead/foreman for the company on Monday and we’ll probably get another guy I’ve worked with here on Wednesday.   I’m just over it. Having to deal with missing things, fixing things, catching up loose ends…   wtf should I do or would you do? I’m so so so soooo spent .-. They are gonna expect so much of us yet we’re gonna be missing some shit, have the wrong shit, not have enough man power,    I hate to vent I just dont know what to do. Only reason I wasn’t laid off was because I show up on time every day…        submitted by     /u/Downhereinoc     to     r/Construction       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Construction/comments/1wlkbjx/what_would_you_do/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:39:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:40:11.297Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffe5b660c608403987fc6"
+    },
+    "message_id": "reddit_t3_1wlkbi4",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "buyamattress",
+    "username": "Stay_Curious7",
+    "title": "🛏️ Mattress Hunting — Help Me Avoid a $800 Mistake",
+    "text": "🛏️ Mattress Hunting — Help Me Avoid a $800 Mistake\n\nI am officially in the **“I need a new mattress but have no idea what I am doing”** phase. 😅   Looking for a Queen mattress around $600–$800 ( memory foam ) and would love some real-world Reddit wisdom.   **Where I’m shopping:**  🛒 Costco  🛒 Sam’s Club  🛒 Anywhere else worth checking   **What I’m looking for:**  🔥 Medium-firm to firm  😴 Actually comfortable for sleeping  🦴 Good support  🌡️ Doesn’t sleep ridiculously hot  🛏️ Good edge support  ⏳ Doesn’t turn into a taco after 2 years   I have been looking at Costco/Sam’s Club because of their return policies, but there are SO many mattresses that I am getting decision fatigue.    **So Reddit, what’s your mattress GOAT under $800?** 🐐   **Which mattresses should I stay far away from?** 🚩   Bonus points if you have owned it for **2+ years** and can share how it’s holding up!       submitted by     /u/Stay_Curious7     to     r/buyamattress       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/buyamattress/comments/1wlkbi4/mattress_hunting_help_me_avoid_a_800_mistake/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:39:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:40:11.524Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffe5b660c608403987fc8"
+    },
+    "message_id": "reddit_t3_1wlkbhu",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "BorrowNew",
+    "username": "blueindia26",
+    "title": "Request $1500 - Repayment w/interest 9/25/2026 - Venmo/Cashapp - Texas - Rent",
+    "text": "Request $1500 - Repayment w/interest 9/25/2026 - Venmo/Cashapp - Texas - Rent\n\nNeed a loan to pay my past due rent but I don't get paid until the 25th. Am employed full time but just ran short on cash this month. Honest borrower requesting honest lenders. Can provide proof of income and ability to payback funds.   ***UPDATE*** Found a truly honest and fair lender. Thank you reddit. Prayers for all in need.        submitted by     /u/blueindia26     to     r/BorrowNew       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BorrowNew/comments/1wlkbhu/request_1500_repayment_winterest_9252026/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T15:39:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T15:40:11.950Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaffe5c660c608403987fc9"
+    },
+    "message_id": "reddit_t3_1wlkbhn",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",

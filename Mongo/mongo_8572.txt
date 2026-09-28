@@ -1,0 +1,416 @@
+      "$date": "2026-09-17T11:54:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:55:09.833Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabd51e660c608403971c58"
+    },
+    "message_id": "reddit_t3_1wirw5k",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "OpenAI",
+    "platform": "reddit",
+    "subreddit": "Gaming_Intelligence",
+    "username": "EffectiveDiligent660",
+    "title": "A game solver ran up to 80 times faster on one A100",
+    "text": "A game solver ran up to 80 times faster on one A100\n\nA new game-solving system ran between 29.8 and 80.4 times faster than the previous GPU baseline across eight card, dice and board-game tests on the same Nvidia A100. The result is not simply a case of moving an artificial-intelligence workload to faster hardware. GPU-CFR first rewrites a fixed game tree as a static sequence of tensor operations, removing much of the work that made earlier implementations inefficient before CUDA Graph Replay reduces the remaining launch overhead.   The  GPU-CFR preprint , submitted by Tsinghua University researchers Boning Li and Longbo Huang on 10 September, addresses counterfactual regret minimisation, or CFR. The algorithm repeatedly estimates how much a player would have gained by choosing different actions at each information set. In a two-player zero-sum game, the average strategy can converge towards an equilibrium that neither player can profitably exploit.   CFR helped produce strong poker systems, but its tabular form has been awkward for graphics processors. One iteration walks a game tree and performs millions of small, dependent reads and writes. The arithmetic can finish quickly on a GPU while the host spends disproportionate time issuing operations and launching kernels. GPU-CFR changes the representation rather than the update rule.   A fixed tree becomes a fixed program   The system walks a game once and converts it into flat arrays for nodes, edges and information sets. It groups work by tree depth, calculates chance contributions in advance and keeps separate reach probabilities for both players in one buffer. The resulting forward and backward passes use a known sequence of gather, arithmetic and scatter operations.   The shape and address of each operation no longer change between iterations. A CUDA graph can record it and replay the complete iteration without asking the host to submit every kernel again. Nvidia's  CUDA documentation  describes graphs as a first-class platform feature; GPU-CFR is a concrete example of the data representation determining whether that feature can be used.   On the heads-up no-limit hold'em turn subgame, compilation reduced the reference path from 1,742 PyTorch operations per iteration to 96. The eager compiled path cut the time from 11.9 milliseconds to 0.617 milliseconds, and graph replay reduced it again to 0.397 milliseconds. A profiler found that the eager version issued 87 kernel launches per iteration and kept the GPU occupied for 32% of the measured window. Graph replay reduced host submissions to three and raised measured occupancy to 94%.   The paper therefore attributes most of the improvement to the flat execution schedule. Against the matched prior GPU implementation, the compiled path without graph replay was already 17.4 to 23.5 times faster. Graph replay supplied a further gain that ranged from 1.6 times on the larger hold'em subgame to 3.6 times on tiny Kuhn poker.   The same point appears in the CPU results. Running the compiled solver on eight CPU threads was 2.2 to 51.1 times faster than the prior A100 baseline across the eight games. The work was not inherently unsuitable for a CPU or magically repaired by a GPU; the older representation was issuing it inefficiently.   The 80-times figure has a scale boundary   The main suite ranges from Kuhn poker with 54 information sets to Battleship with 275,983. GPU-CFR was not fastest on the two smallest games. A single-threaded C++ library completed a Kuhn iteration in 0.008 milliseconds against 0.113 milliseconds for GPU-CFR, and was also ahead on a 437-information-set Dark Hex test. The GPU has a fixed launch and replay cost that small trees cannot fill.    Small fixed trees cannot fill the accelerator, while wider batches make parallel execution more useful. Illustration: Gaming Intelligence/OpenAI.    Its advantage grew once operations became wide enough to occupy the device. The graph path took 0.397 milliseconds per iteration on the 83,040-information-set hold'em turn subgame, compared with 11.893 milliseconds for the matched GPU baseline and 102.16 milliseconds for the single-threaded LiteEFG library. On Battleship it took 0.38 milliseconds, against 14.393 and 80.952 milliseconds respectively.   Iteration time alone would be a weak result if the faster system produced a poorer strategy. The authors also compared the time needed to reach fixed exploitability thresholds, a measure of how much a best-responding opponent could gain. GPU-CFR reached the three reported thresholds between 3.84 and 18.21 times faster than the matched GPU baseline on the hold'em turn subgame. Across the six games in that comparison, the ratios varied from 3.84 to 43.97.   Li told Gaming Intelligence that practical decision latency depends on the number of CFR iterations, which is generally between 200 and 1,000. Asked whether the reported 0.397 milliseconds per iteration should therefore be read as roughly 79 to 397 milliseconds for the hold'em turn test, he pointed to the paper's threshold results and said exploitability evaluation was not included in the running time. His answer does not establish the end-to-end latency for choosing an action at a specified level of exploitability, because the target, evaluation cost and any action-selection work still have to be fixed.   The one-off build cost is not hidden. Constructing and compiling the hold'em turn tree took about 4.23 seconds, followed by roughly 0.3 seconds for graph capture. A 1,000-iteration solve then took about 0.4 seconds. The complete first solve still finished in 4.94 seconds, compared with 11.89 seconds for the matched GPU baseline and 102.16 seconds for LiteEFG. Reusing the compiled tree makes the trade more favourable because payoffs and starting ranges can be changed without rebuilding it.   Memory remains linear in the stored tree. The ordinary eight-game suite peaked at 183 MiB allocated on the turn subgame, but a 36-million-state Libratus endgame required 8.9 GiB for the solver and more memory for evaluation. On that terminal-heavy tree, the previous GPU implementation was slightly faster per iteration. The paper's 30-to-80-times advantage did not carry to every topology.   The release supports inspection, not the complete comparison   The public  GPU-CFR repository  includes the compiler, four CFR update rules, game adapters, evaluation code, probes and an artefact binary. Its readme gives commands for reduced reproductions and reports that graph-path medians from a later A100 check were within about 1% of the paper's main timing table.   It also records material gaps. The NoRegret driver files needed to rerun the strongest matched GPU baseline are absent. A sparse-operation probe has a Python ABI conflict, the reference-stage timing driver for the complete optimisation ladder is not included, and the full convergence curves were not remeasured with the reduced package.   Gaming Intelligence has not run the software. Its packaged extension targets CPython 3.9 on Linux, and reproducing the headline protocol requires an otherwise idle A100, pinned CPU cores and independent process repetitions. The paper reports 2,293 measurement cells collected across 24.2 hours, which is more substantial than a single favourable run, but the evidence is still author-run on one accelerator and software stack.   The scope is also narrower than “game AI” can imply. GPU-CFR requires a finite, fixed tree for a two-player, zero-sum, perfect-recall game. It does not currently support more than two players or sampled Monte Carlo CFR, where the traversal changes from one iteration to the next. It was not tested inside a shipped video game, against live players or on consumer GPUs. A developer cannot infer that an arbitrary strategy, NPC or multiplayer system will become 80 times faster.   Asked which extension would be easiest, Li identified imperfect-recall games. He did not identify a priority for testing other GPU hardware or explain which part of the static schedule would be most likely to stop applying. That makes this an exciting direction for further work rather than evidence that the present implementation already carries beyond perfect-recall games.   The useful result is more specific. For an imperfect-information solver that repeatedly traverses the same known tree, compiling structure away can turn a launch-bound workload into a batched one without changing CFR itself. The next evidence should show whether that advantage survives different Nvidia generations and practical decision budgets, and whether the missing comparison components can be released for an independent run.       submitted by     /u/EffectiveDiligent660     to     r/Gaming_Intelligence       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Gaming_Intelligence/comments/1wirw5k/a_game_solver_ran_up_to_80_times_faster_on_one/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T11:54:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:55:10.040Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabd51e660c608403971c59"
+    },
+    "message_id": "reddit_t3_1wirw5c",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MiniRacerGame",
+    "username": "Avion321_",
+    "title": "Can you beat 8.396s on Pocket Run?",
+    "text": "Can you beat 8.396s on Pocket Run?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Avion321_     to     r/MiniRacerGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MiniRacerGame/comments/1wirw5c/can_you_beat_8396s_on_pocket_run/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T11:54:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:55:10.244Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabd51e660c608403971c5a"
+    },
+    "message_id": "reddit_t3_1wirw5a",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "avesNYC_tix",
+    "username": "Common-Performance-2",
+    "title": "selling 2 tix for fri 9/18 zack fox & syd at elsewhere tix",
+    "text": "selling 2 tix for fri 9/18 zack fox & syd at elsewhere tix\n\nfirst round GA release was $36 total but i'll let them both go for $60. paypal g&s or venmo! please DM me       submitted by     /u/Common-Performance-2     to     r/avesNYC_tix       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/avesNYC_tix/comments/1wirw5a/selling_2_tix_for_fri_918_zack_fox_syd_at/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T11:54:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:55:10.442Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabd51e42dd0e95b5babe82"
+    },
+    "message_id": "twitter_2100548997748261134",
+    "topic_key": "licensed customs broker",
+    "search_keyword": "licensed customs broker",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "_VeriPass",
+    "title": "Relocating is more than booking a flight and filling out forms.\n\nIt’s about understanding your options, knowing where your profile fits, and having the right strategy before you make one of the biggest decisions of your life.\n\nAt Veripass, we help you get clarity on your relocation pathway and the steps needed to move forward with confidence.\n\nYour dream life starts with the right move.\n\nBook your discovery call with Veripass today.\n\nGet started here - https://t.co/ITT1jEKQwD",
+    "text": "Relocating is more than booking a flight and filling out forms.\n\nIt’s about understanding your options, knowing where your profile fits, and having the right strategy before you make one of the biggest decisions of your life.\n\nAt Veripass, we help you get clarity on your relocation pathway and the steps needed to move forward with confidence.\n\nYour dream life starts with the right move.\n\nBook your discovery call with Veripass today.\n\nGet started here - https://t.co/ITT1jEKQwD",
+    "post_url": "https://twitter.com/_VeriPass/status/2100548997748261134",
+    "score": 1,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T11:34:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:55:10.521Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd51e660c608403971c5b"
+    },
+    "message_id": "reddit_t3_1wirw4x",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "DeepTechFounders",
+    "username": "Cliznitch",
+    "title": "How did you get your first customer?",
+    "text": "How did you get your first customer?\n\nNot a university connection, grant project or friendly pilot. Someone who actually had a problem and paid you to solve it.   Especially curious about deeptech companies selling to large industrial companies. How did you find them, who did you approach, and what eventually got them to buy?       submitted by     /u/Cliznitch     to     r/DeepTechFounders       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DeepTechFounders/comments/1wirw4x/how_did_you_get_your_first_customer/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T11:54:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:55:10.646Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabd51f660c608403971c5d"
+    },
+    "message_id": "reddit_t3_1wirw4m",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "FantasyFootballers",
+    "username": "yoBsup",
+    "title": "Acquiring Terry",
+    "text": "Acquiring Terry\n\nHow do we feel about this trade? I don’t mind it, however wanted to gauge people’s opinions about Terry this year!    12 team Redraft half PPR       submitted by     /u/yoBsup     to     r/FantasyFootballers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FantasyFootballers/comments/1wirw4m/acquiring_terry/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T11:54:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:55:11.056Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabd51e42dd0e95b5babe84"
+    },
+    "message_id": "twitter_2098190075607896108",
+    "topic_key": "licensed customs broker",
+    "search_keyword": "licensed customs broker",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ou_to21644",
+    "title": "Today’s take:US-China tech\nOn September 4, Reuters reported that the US and China will hold AI talks this month, and that the Treasury Department is leading them.\nOn September 8, the White House said there are no such talks.\nFive people with direct knowledge told Reuters the talks are real.\nI don't think the denial is a lie. I think the denial is the mechanism.\nThat distinction is the whole story — not just of these talks, but of where this competition actually sits right now. Let me lay it out.\nDenial is the mechanism\nBoth governments need the appearance of distance and the reality of contact, at the same time, permanently. Washington cannot be seen negotiating with Beijing on AI in the same week it puts Huawei on trial in Brooklyn and accuses six Chinese AI companies of industrial-scale theft. Beijing cannot be seen asking for talks while telling its own public that containment is failing.\nSo the talks happen, and the talks are denied. The denial is not a cover for weakness. It is the price of admission, paid by both sides.\nNote the tell: Treasury is leading, not State, not Commerce. Treasury runs sanctions. When the sanctions office runs the negotiation, you are not negotiating friendship. You are negotiating the management of a rivalry. That is more honest than the word \"talks\" suggests, and it is the correct frame for reading everything that follows.\nWhat is actually on the table\nThese are not arms control talks in the Cold War sense. Nobody is capping GPU fleets. Nobody can verify that, and neither side would accept inspectors.\nWhat is actually negotiable is much thinner and much more specific: a crisis hotline, a shared channel for reporting AI incidents, possibly a commitment to notify before certain classes of deployment. Thin rails.\nThis is where I part company with the pure cynics. A thin rail is worth having — not because it builds trust, it does not, but because the specific risk it addresses is one neither capital can survive. Two AI superpowers, each running partially automated decision systems, drifting into escalation on a misread signal: that is a tail risk with no upside for anyone. You do not build a rail to make the train friendly. You build it so the train does not leave the track.\nSo — genuine risk reduction? Partly. But notice carefully what it reduces. It reduces the risk of accident. It does not reduce the competition. The competition is permanent, and everyone in the room knows it.\nThe object of control has changed\nHere is the deeper shift, and it is the part most coverage misses.\nExport control was built for a world where the scarce input was an object. A chip. You could X-ray the crate at the port, read the manifest, arrest the broker. The entire architecture of containment assumes the thing you are containing has a shipping container.\nThat world is ending. The scarce input in frontier AI is not a chip you can hold. It is a login. It is compute-hours rented in a data center in Singapore or Bangkok or the Gulf. And so Commerce is now reportedly drafting rules on \"remote access\" — rules that would police not the crate but the credential.\nThink about what that means operationally. You cannot X-ray a token. A model weight is a number; it crosses borders as electricity and as text. The enforcement surface has moved from customs to compliance, and the practical consequence is that the state's coercive power over technology is being outsourced — to cloud providers, to identity systems, and in no small part to Nvidia's own compliance department.\nThat is a real degradation of sovereign capacity, and it runs in both directions. Washington is discovering it cannot choke what it cannot weigh. Beijing is discovering that what it cannot buy it must build — and that what it builds will be open.\nThe distillation charge has a hole in it\nOn September 8, three agencies — FBI, NSA, CISA — jointly accused six Chinese AI companies of industrial-scale distillation of American models.\nI want to take that seriously, then explain why I don't think it is a sufficient explanation.\nTake it seriously first: distillation is real, it is cheap, and it works well enough to be worth doing. Every frontier lab does some version of it, American ones included.\nBut the public line from Treasury — that China is distilling American models and therefore will never catch up — has a logical problem. If they can never catch up, why do three intelligence agencies need to say so out loud? You do not deploy the national security apparatus to dismiss a threat you consider trivial. The volume of a denial is a measurement of the concern behind it.\nMore structurally: distillation transfers outputs. It does not transfer architecture. You can imitate a model's answers; you cannot inherit the research program that produced them. Which gives us a test — and the test is legible in public benchmark data.\nLook at Kimi K3. By its own team's admission it trails Fable 5 and GPT-5.6 Sol on overall capability. Now look at where it does not trail: first on SWE-Marathon, second on Terminal-Bench, third on GDPval.\nThat profile is the important part. A copy degrades uniformly — a slightly blurrier photocopy, weaker everywhere in the same proportion. An uneven gap is something else. Uneven gaps are what original research looks like when you have somewhat less compute: you push hard where you have insight, and you fall behind where the gap is raw scale.\nSo the benchmark profile is not the fingerprint of theft. It is the fingerprint of engineering under a constraint. That does not make the theft charge baseless — it means the charge cannot be the whole story, and any strategy priced on the assumption that it is will misread the next two years.\nThey are optimizing in opposite directions\nThis is the part I keep returning to, because I think it is the actual fault line.\nThe United States is optimizing to be hard to copy. Closed weights, licensed access, export controls, compliance regimes. The logic is the moat: if the capability cannot leave, the advantage cannot leave.\nChina is optimizing to be easy to copy. Open weights, permissive licenses, aggressive pricing. Alibaba's agent at 2 and 6 per million tokens against Anthropic's 10 and 50 is not a discount, it is a land grab — roughly a fifth the input cost, roughly an eighth the output cost.\nNow the historical regularity: in every platform transition on record, the side that wins the standard is not the side with the best product. It is the side that is easiest to adopt.\nAnd the demand side here is enormous and almost entirely unpriced in American discourse. Sixty-seven countries are running some form of sovereign AI program — roughly 184 projects. Ask what any of them actually needs. They need a model that runs on their soil, under their law, in their language, and that does not stop working if a vendor in another country changes its mind.\nClosed source cannot sell that. It is not a pricing problem, it is a sovereignty problem, and no discount fixes it.\nTwo data points and then I will stop. One: on HuggingFace, Chinese models crossed 41% of downloads this year, ahead of the US for the first time. Two: Saudi Arabia — a US security partner, whose crown prince personally chairs the effort — built its national Arabic-language model on MiniMax M3. A Chinese open model is now the substrate of an American ally's sovereign AI.\nThe paradox\nPut 3 through 5 together and you reach the uncomfortable conclusion.\nExport controls were designed to compress China's options. They did. That part worked.\nBut one of the options that survived compression was open-sourcing at scale. And the thing that was forged under containment is now setting into the foundations of America's own allies.\nThat is not a failure of will. It is a structural consequence. When you make it impossible for someone to buy the product, you make it rational for them to give the product away.\nThe chip war is not being lost. It ended. What replaced it is a competition over terrain — over whose stack becomes the default ground other people build on. And terrain is not won with walls.\nSo what actually happens next\nBeing concrete, because this is where analysis usually dissolves into vibes.\nThe AI talks will produce a thin framework. Not a treaty. Probably a hotline and an incident-reporting channel, announced in language both sides can claim as a win.\nThe Huawei trial will run for months and then become a bargaining chip. Indicted in 2018, tried in 2026 — the gap between those two dates tells you this was never primarily a legal process.\nThe Xi-Trump meeting on September 24 will produce a joint statement nobody fully believes, and that is fine, because that is not what it is for. It is for resetting the channel so the next conversation can happen at all.\nAnd through all of it the real competition — over models, over compute, over which stack the next sixty-seven countries build on — continues without pause, because it is not being negotiated.\nNot decoupling. Not engagement. Something messier in between: permanent competition, permanent contact, and a very thin rail whose only job is to keep the competition from becoming an accident.\nThe fact that all of it is happening at once is the headline. Everything else is scheduling.",
+    "text": "Today’s take:US-China tech\nOn September 4, Reuters reported that the US and China will hold AI talks this month, and that the Treasury Department is leading them.\nOn September 8, the White House said there are no such talks.\nFive people with direct knowledge told Reuters the talks are real.\nI don't think the denial is a lie. I think the denial is the mechanism.\nThat distinction is the whole story — not just of these talks, but of where this competition actually sits right now. Let me lay it out.\nDenial is the mechanism\nBoth governments need the appearance of distance and the reality of contact, at the same time, permanently. Washington cannot be seen negotiating with Beijing on AI in the same week it puts Huawei on trial in Brooklyn and accuses six Chinese AI companies of industrial-scale theft. Beijing cannot be seen asking for talks while telling its own public that containment is failing.\nSo the talks happen, and the talks are denied. The denial is not a cover for weakness. It is the price of admission, paid by both sides.\nNote the tell: Treasury is leading, not State, not Commerce. Treasury runs sanctions. When the sanctions office runs the negotiation, you are not negotiating friendship. You are negotiating the management of a rivalry. That is more honest than the word \"talks\" suggests, and it is the correct frame for reading everything that follows.\nWhat is actually on the table\nThese are not arms control talks in the Cold War sense. Nobody is capping GPU fleets. Nobody can verify that, and neither side would accept inspectors.\nWhat is actually negotiable is much thinner and much more specific: a crisis hotline, a shared channel for reporting AI incidents, possibly a commitment to notify before certain classes of deployment. Thin rails.\nThis is where I part company with the pure cynics. A thin rail is worth having — not because it builds trust, it does not, but because the specific risk it addresses is one neither capital can survive. Two AI superpowers, each running partially automated decision systems, drifting into escalation on a misread signal: that is a tail risk with no upside for anyone. You do not build a rail to make the train friendly. You build it so the train does not leave the track.\nSo — genuine risk reduction? Partly. But notice carefully what it reduces. It reduces the risk of accident. It does not reduce the competition. The competition is permanent, and everyone in the room knows it.\nThe object of control has changed\nHere is the deeper shift, and it is the part most coverage misses.\nExport control was built for a world where the scarce input was an object. A chip. You could X-ray the crate at the port, read the manifest, arrest the broker. The entire architecture of containment assumes the thing you are containing has a shipping container.\nThat world is ending. The scarce input in frontier AI is not a chip you can hold. It is a login. It is compute-hours rented in a data center in Singapore or Bangkok or the Gulf. And so Commerce is now reportedly drafting rules on \"remote access\" — rules that would police not the crate but the credential.\nThink about what that means operationally. You cannot X-ray a token. A model weight is a number; it crosses borders as electricity and as text. The enforcement surface has moved from customs to compliance, and the practical consequence is that the state's coercive power over technology is being outsourced — to cloud providers, to identity systems, and in no small part to Nvidia's own compliance department.\nThat is a real degradation of sovereign capacity, and it runs in both directions. Washington is discovering it cannot choke what it cannot weigh. Beijing is discovering that what it cannot buy it must build — and that what it builds will be open.\nThe distillation charge has a hole in it\nOn September 8, three agencies — FBI, NSA, CISA — jointly accused six Chinese AI companies of industrial-scale distillation of American models.\nI want to take that seriously, then explain why I don't think it is a sufficient explanation.\nTake it seriously first: distillation is real, it is cheap, and it works well enough to be worth doing. Every frontier lab does some version of it, American ones included.\nBut the public line from Treasury — that China is distilling American models and therefore will never catch up — has a logical problem. If they can never catch up, why do three intelligence agencies need to say so out loud? You do not deploy the national security apparatus to dismiss a threat you consider trivial. The volume of a denial is a measurement of the concern behind it.\nMore structurally: distillation transfers outputs. It does not transfer architecture. You can imitate a model's answers; you cannot inherit the research program that produced them. Which gives us a test — and the test is legible in public benchmark data.\nLook at Kimi K3. By its own team's admission it trails Fable 5 and GPT-5.6 Sol on overall capability. Now look at where it does not trail: first on SWE-Marathon, second on Terminal-Bench, third on GDPval.\nThat profile is the important part. A copy degrades uniformly — a slightly blurrier photocopy, weaker everywhere in the same proportion. An uneven gap is something else. Uneven gaps are what original research looks like when you have somewhat less compute: you push hard where you have insight, and you fall behind where the gap is raw scale.\nSo the benchmark profile is not the fingerprint of theft. It is the fingerprint of engineering under a constraint. That does not make the theft charge baseless — it means the charge cannot be the whole story, and any strategy priced on the assumption that it is will misread the next two years.\nThey are optimizing in opposite directions\nThis is the part I keep returning to, because I think it is the actual fault line.\nThe United States is optimizing to be hard to copy. Closed weights, licensed access, export controls, compliance regimes. The logic is the moat: if the capability cannot leave, the advantage cannot leave.\nChina is optimizing to be easy to copy. Open weights, permissive licenses, aggressive pricing. Alibaba's agent at 2 and 6 per million tokens against Anthropic's 10 and 50 is not a discount, it is a land grab — roughly a fifth the input cost, roughly an eighth the output cost.\nNow the historical regularity: in every platform transition on record, the side that wins the standard is not the side with the best product. It is the side that is easiest to adopt.\nAnd the demand side here is enormous and almost entirely unpriced in American discourse. Sixty-seven countries are running some form of sovereign AI program — roughly 184 projects. Ask what any of them actually needs. They need a model that runs on their soil, under their law, in their language, and that does not stop working if a vendor in another country changes its mind.\nClosed source cannot sell that. It is not a pricing problem, it is a sovereignty problem, and no discount fixes it.\nTwo data points and then I will stop. One: on HuggingFace, Chinese models crossed 41% of downloads this year, ahead of the US for the first time. Two: Saudi Arabia — a US security partner, whose crown prince personally chairs the effort — built its national Arabic-language model on MiniMax M3. A Chinese open model is now the substrate of an American ally's sovereign AI.\nThe paradox\nPut 3 through 5 together and you reach the uncomfortable conclusion.\nExport controls were designed to compress China's options. They did. That part worked.\nBut one of the options that survived compression was open-sourcing at scale. And the thing that was forged under containment is now setting into the foundations of America's own allies.\nThat is not a failure of will. It is a structural consequence. When you make it impossible for someone to buy the product, you make it rational for them to give the product away.\nThe chip war is not being lost. It ended. What replaced it is a competition over terrain — over whose stack becomes the default ground other people build on. And terrain is not won with walls.\nSo what actually happens next\nBeing concrete, because this is where analysis usually dissolves into vibes.\nThe AI talks will produce a thin framework. Not a treaty. Probably a hotline and an incident-reporting channel, announced in language both sides can claim as a win.\nThe Huawei trial will run for months and then become a bargaining chip. Indicted in 2018, tried in 2026 — the gap between those two dates tells you this was never primarily a legal process.\nThe Xi-Trump meeting on September 24 will produce a joint statement nobody fully believes, and that is fine, because that is not what it is for. It is for resetting the channel so the next conversation can happen at all.\nAnd through all of it the real competition — over models, over compute, over which stack the next sixty-seven countries build on — continues without pause, because it is not being negotiated.\nNot decoupling. Not engagement. Something messier in between: permanent competition, permanent contact, and a very thin rail whose only job is to keep the competition from becoming an accident.\nThe fact that all of it is happening at once is the headline. Everything else is scheduling.",
+    "post_url": "https://twitter.com/ou_to21644/status/2098190075607896108",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T23:21:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:55:10.915Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd51f660c608403971c5e"
+    },
+    "message_id": "reddit_t3_1wirw4j",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Spiritual_Mail6399",
+    "title": "What is the smartest thing you've seen a pet do or be trained to do?",
+    "text": "What is the smartest thing you've seen a pet do or be trained to do?\n\nsubmitted by     /u/Spiritual_Mail6399     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wirw4j/what_is_the_smartest_thing_youve_seen_a_pet_do_or/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T11:54:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:55:11.256Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabd51f42dd0e95b5babe85"
+    },
+    "message_id": "twitter_2099883436466987366",
+    "topic_key": "licensed customs broker",
+    "search_keyword": "licensed customs broker",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "coleintl",
+    "title": "Compliance, but make it smooth. Our eBook breaks down the best practices you need to keep risk in check and your operations on track.\n\n📘 Achieving Customs Compliance Excellence 👉 Download now and get the tools you need to stay in control. https://t.co/uLLfU0reHC",
+    "text": "Compliance, but make it smooth. Our eBook breaks down the best practices you need to keep risk in check and your operations on track.\n\n📘 Achieving Customs Compliance Excellence 👉 Download now and get the tools you need to stay in control. https://t.co/uLLfU0reHC",
+    "post_url": "https://twitter.com/coleintl/status/2099883436466987366",
+    "score": 1,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T15:29:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:55:11.309Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd51f42dd0e95b5babe86"
+    },
+    "message_id": "twitter_2100274612059681146",
+    "topic_key": "licensed customs broker",
+    "search_keyword": "licensed customs broker",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "EikonPeters",
+    "title": "A successful immigration journey starts with the right guidance.\n\nVictor Aileku shares his experience securing a UK Sponsorship Licence with Eikon Peters Immigration Services Ltd.\n\n+44 7557 882523\nhttps://t.co/zLTXXKJZDl\n\n#ClientTestimony #UKImmigration #SponsorshipLicence https://t.co/3CcepLxoI4",
+    "text": "A successful immigration journey starts with the right guidance.\n\nVictor Aileku shares his experience securing a UK Sponsorship Licence with Eikon Peters Immigration Services Ltd.\n\n+44 7557 882523\nhttps://t.co/zLTXXKJZDl\n\n#ClientTestimony #UKImmigration #SponsorshipLicence https://t.co/3CcepLxoI4",
+    "post_url": "https://twitter.com/EikonPeters/status/2100274612059681146",
+    "score": 1,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T17:24:23Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:55:11.519Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd52642dd0e95b5babe88"
+    },
+    "message_id": "twitter_2100551778576089492",
+    "topic_key": "licensed dropshipping",
+    "search_keyword": "licensed dropshipping",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "enebinha",
+    "title": "dunk batch WM \n\nR$ 80\n\nhttps://t.co/36dJW1mmNQ\n\ntutorial e fornecedores no link da bio https://t.co/fRsdk0j7iX\ne fixado: \nhttps://t.co/fnQaNiljAX\n\nse cadastrando pelo link: https://t.co/gZwXa5Dvle\n\nvoce ganha 200$ dol em cupons pra deixar o frete mais barato\ndesbloqueia compras de marcas (sem o convite nao da) \ne ainda me ajuda, ja que nao cobro nadinha pra ajudar voces, tmj 🩷",
+    "text": "dunk batch WM \n\nR$ 80\n\nhttps://t.co/36dJW1mmNQ\n\ntutorial e fornecedores no link da bio https://t.co/fRsdk0j7iX\ne fixado: \nhttps://t.co/fnQaNiljAX\n\nse cadastrando pelo link: https://t.co/gZwXa5Dvle\n\nvoce ganha 200$ dol em cupons pra deixar o frete mais barato\ndesbloqueia compras de marcas (sem o convite nao da) \ne ainda me ajuda, ja que nao cobro nadinha pra ajudar voces, tmj 🩷",
+    "post_url": "https://twitter.com/enebinha/status/2100551778576089492",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T11:45:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:55:18.589Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd52642dd0e95b5babe89"
+    },
+    "message_id": "twitter_2100545625141998043",
+    "topic_key": "licensed dropshipping",
+    "search_keyword": "licensed dropshipping",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Kilimall",
+    "title": "Hujajoin Kilimall as a Seller? What are you waiting for😌. Join Kilimall as a seller and get to reach customers nation wide😇🤭.Sign up via this link😌>> https://t.co/H4RvDiCTsb fill in your details to register, list your products and earn up to 100k every week!💸💃\n#Kilimall #onlinesales #onlinebusiness #dropshipping #makemoneyonline",
+    "text": "Hujajoin Kilimall as a Seller? What are you waiting for😌. Join Kilimall as a seller and get to reach customers nation wide😇🤭.Sign up via this link😌>> https://t.co/H4RvDiCTsb fill in your details to register, list your products and earn up to 100k every week!💸💃\n#Kilimall #onlinesales #onlinebusiness #dropshipping #makemoneyonline",
+    "post_url": "https://twitter.com/Kilimall/status/2100545625141998043",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T11:21:17Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:55:18.788Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd52742dd0e95b5babe8c"
+    },
+    "message_id": "twitter_2085867767882985947",
+    "topic_key": "licensed dropshipping",
+    "search_keyword": "licensed dropshipping",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "indexsy",
+    "title": "AI companies are paying up to $2M for access to your company's slack messages, and the dubai affiliate guys have already moved on from dropshipping to harvesting corporate data. \n\nhere's everything from this week:\n\nthe data gold rush is real and it's messy. AI labs desperately want to learn how people actually work, employee-to-employee interactions, how projects get done. tom turned it into a live ad read on the pod ($100K to $2M, 20+ employees in slack, \"no catch\") while jacky called it NGMI behavior on air. tony already got offered $300K from one lab and is shopping for a better number. the kicker: there are only a couple of real buyers, everyone else in the market is a broker reselling to them.\n\nour first guest mark made the smartest counterargument: don't sell. models will eventually run out of data, so we might see negative token prices where labs pay YOU to use them. every year you hold your data it gets more valuable, and selling it now means training your own future competitors for a one-time check. tom's rebuttal: google, meta, apple, and slack already know everything about you anyway, so if someone's finally paying, take the money. tony got sold by the end of the episode.\n\nmark's business is an absurd machine. licensed collectibles, 200 product drops a month, 1,800 SKUs, most releases sell out in 21-28 days. he went through YC (same batch as gitlab), did the thiel fellowship, failed at a play-video-games-for-money startup, then accidentally built an empire making collectibles for youtubers. saw a raccoon going viral on twitter, had a finished plushie in two weeks. the moat is volume: when creator schedules slip or channels pivot, 200 monthly releases means no single delay matters.\n\nthe licensing model explained: someone owns the rights to a character, you pitch them, they take a royalty, you make and sell the product. deals close in days or take three years, so you keep hundreds of pitches out at all times. and once you acquire companies, the existing relationships compound, \"hey, we also do this product category now\" is the easiest upsell in the world.\n\nthe AI segment went places. mark's company won't touch AI for creative work (licensing partners would riot) but automated their entire ops layer: logistics, warehousing, five google sheets of manual reconciliation turned into one-click dashboards. his stack: codex and claude for the dev team, K3 as the first open source model to gain real traction internally, with fable reviewing K3's work and vice versa. jacky runs his whole team off one $19 K3 subscription through a vibe-coded internal dashboard because he's too cheap for multiple seats.\n\nthe wildest reveal: a competitor doing $30M/year partners with walking apps to game google maps rankings. they incentivize people to physically walk to businesses, leave five-star reviews for points, click the website. that's how they offer a 7-day ranking guarantee. also discussed: the bootleg chinese token routers selling fable at 95% off by aggregating burner accounts, and tony's theory that you're the one doing the distillation for them when you use it. jacky's response: \"if this is my contribution to open source, I'm down.\"\n\nbonus: tony's new AI executive assistant books things over iMessage with actual hands. planned an entire paris trip, found spider-man seats live on the pod, and when it tried to schedule the task for tomorrow he said \"hurry the fuck up, mikaela's getting angry\" and it went instant. also tom brought four new people into the company group chat and jacky went completely silent. \"I kind of shut down when there's too many people. four is probably the limit.\"\n\nNGMI with @itstonyyu and @tomwang24, first guest episode with @markprokoudine. \n\nwatch/listen ↓",
+    "text": "AI companies are paying up to $2M for access to your company's slack messages, and the dubai affiliate guys have already moved on from dropshipping to harvesting corporate data. \n\nhere's everything from this week:\n\nthe data gold rush is real and it's messy. AI labs desperately want to learn how people actually work, employee-to-employee interactions, how projects get done. tom turned it into a live ad read on the pod ($100K to $2M, 20+ employees in slack, \"no catch\") while jacky called it NGMI behavior on air. tony already got offered $300K from one lab and is shopping for a better number. the kicker: there are only a couple of real buyers, everyone else in the market is a broker reselling to them.\n\nour first guest mark made the smartest counterargument: don't sell. models will eventually run out of data, so we might see negative token prices where labs pay YOU to use them. every year you hold your data it gets more valuable, and selling it now means training your own future competitors for a one-time check. tom's rebuttal: google, meta, apple, and slack already know everything about you anyway, so if someone's finally paying, take the money. tony got sold by the end of the episode.\n\nmark's business is an absurd machine. licensed collectibles, 200 product drops a month, 1,800 SKUs, most releases sell out in 21-28 days. he went through YC (same batch as gitlab), did the thiel fellowship, failed at a play-video-games-for-money startup, then accidentally built an empire making collectibles for youtubers. saw a raccoon going viral on twitter, had a finished plushie in two weeks. the moat is volume: when creator schedules slip or channels pivot, 200 monthly releases means no single delay matters.\n\nthe licensing model explained: someone owns the rights to a character, you pitch them, they take a royalty, you make and sell the product. deals close in days or take three years, so you keep hundreds of pitches out at all times. and once you acquire companies, the existing relationships compound, \"hey, we also do this product category now\" is the easiest upsell in the world.\n\nthe AI segment went places. mark's company won't touch AI for creative work (licensing partners would riot) but automated their entire ops layer: logistics, warehousing, five google sheets of manual reconciliation turned into one-click dashboards. his stack: codex and claude for the dev team, K3 as the first open source model to gain real traction internally, with fable reviewing K3's work and vice versa. jacky runs his whole team off one $19 K3 subscription through a vibe-coded internal dashboard because he's too cheap for multiple seats.\n\nthe wildest reveal: a competitor doing $30M/year partners with walking apps to game google maps rankings. they incentivize people to physically walk to businesses, leave five-star reviews for points, click the website. that's how they offer a 7-day ranking guarantee. also discussed: the bootleg chinese token routers selling fable at 95% off by aggregating burner accounts, and tony's theory that you're the one doing the distillation for them when you use it. jacky's response: \"if this is my contribution to open source, I'm down.\"\n\nbonus: tony's new AI executive assistant books things over iMessage with actual hands. planned an entire paris trip, found spider-man seats live on the pod, and when it tried to schedule the task for tomorrow he said \"hurry the fuck up, mikaela's getting angry\" and it went instant. also tom brought four new people into the company group chat and jacky went completely silent. \"I kind of shut down when there's too many people. four is probably the limit.\"\n\nNGMI with @itstonyyu and @tomwang24, first guest episode with @markprokoudine. \n\nwatch/listen ↓",
+    "post_url": "https://twitter.com/indexsy/status/2085867767882985947",
+    "score": 72,
+    "num_comments": 6,
+    "created_utc": {
+      "$date": "2026-08-07T23:16:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:55:19.381Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd52742dd0e95b5babe8d"
+    },
+    "message_id": "twitter_2098426867124494440",
+    "topic_key": "licensed dropshipping",
+    "search_keyword": "licensed dropshipping",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "justinpollack_",
+    "title": "TikTok Shop Virtual Goods (US invite):\n\nSoftware licences, not boxes.\nCreators earn commission on purchase.\nZero shipping. High margin.\n\nWe run the Shop channel for software brands.\nDM if you’re on the invite list. https://t.co/DVHqgL2wKg",
+    "text": "TikTok Shop Virtual Goods (US invite):\n\nSoftware licences, not boxes.\nCreators earn commission on purchase.\nZero shipping. High margin.\n\nWe run the Shop channel for software brands.\nDM if you’re on the invite list. https://t.co/DVHqgL2wKg",
+    "post_url": "https://twitter.com/justinpollack_/status/2098426867124494440",
+    "score": 2,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-11T15:02:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:55:19.580Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd52742dd0e95b5babe8e"
+    },
+    "message_id": "twitter_2099126438163259864",
+    "topic_key": "licensed dropshipping",
+    "search_keyword": "licensed dropshipping",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "zachsapiro",
+    "title": "Sold a Shopify dropshipping store for $140,000.\n\nThe brand was 2 years old and sold pregnancy products.\n\nAdditional funds paid after sale 💪 https://t.co/itdyfSP7bw",
+    "text": "Sold a Shopify dropshipping store for $140,000.\n\nThe brand was 2 years old and sold pregnancy products.\n\nAdditional funds paid after sale 💪 https://t.co/itdyfSP7bw",
+    "post_url": "https://twitter.com/zachsapiro/status/2099126438163259864",
+    "score": 136,
+    "num_comments": 20,
+    "created_utc": {
+      "$date": "2026-09-13T13:21:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:55:19.780Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd52842dd0e95b5babe90"
+    },
+    "message_id": "twitter_2100328725095076209",
+    "topic_key": "licensed dropshipping",
+    "search_keyword": "licensed dropshipping",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "JohnWick9401",
+    "title": "En sah 99% des ecom droppshiper sont pas reglo surtt dans la cosmétique et compléments avec les promos tte l’année, le manque de certificats etc faut faire attention et être reglo et demander les certificats aux agents et en France",
+    "text": "En sah 99% des ecom droppshiper sont pas reglo surtt dans la cosmétique et compléments avec les promos tte l’année, le manque de certificats etc faut faire attention et être reglo et demander les certificats aux agents et en France",
+    "post_url": "https://twitter.com/JohnWick9401/status/2100328725095076209",
+    "score": 6,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-16T20:59:24Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:55:20.175Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd52842dd0e95b5babe92"
+    },
+    "message_id": "twitter_2099701501560250376",
+    "topic_key": "licensed dropshipping",
+    "search_keyword": "licensed dropshipping",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "AgilTriatm64429",
+    "title": "I'm in the $2,000 CHOP airdrop. 🐕🪙\n\nPosting so The Pack reaches everyone it can — the pool gets split between every handler who does.\nHandler License: CHOP-000544\n\nNO HOLDER WALKS ALONE.\nsolana:GH37DfLYgT9wPNzzE1TSvBKH4cCRndJwT1M2pRrPpump @ChopThePack #ChopAirdrop",
+    "text": "I'm in the $2,000 CHOP airdrop. 🐕🪙\n\nPosting so The Pack reaches everyone it can — the pool gets split between every handler who does.\nHandler License: CHOP-000544\n\nNO HOLDER WALKS ALONE.\nsolana:GH37DfLYgT9wPNzzE1TSvBKH4cCRndJwT1M2pRrPpump @ChopThePack #ChopAirdrop",
+    "post_url": "https://twitter.com/AgilTriatm64429/status/2099701501560250376",
+    "score": 5,
+    "num_comments": 2,
+    "created_utc": {
+      "$date": "2026-09-15T03:27:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:55:20.569Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd52842dd0e95b5babe94"
+    },
+    "message_id": "twitter_2086994704584024236",
+    "topic_key": "licensed dropshipping",
+    "search_keyword": "licensed dropshipping",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "AiwithAnnie",
+    "title": "https://t.co/cKpN5ubNqV",
+    "text": "https://t.co/cKpN5ubNqV",
+    "post_url": "https://twitter.com/AiwithAnnie/status/2086994704584024236",
+    "score": 8,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-08-11T01:54:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:55:20.963Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd53142dd0e95b5babea1"
+    },
+    "message_id": "twitter_2043583627276227061",
+    "topic_key": "licensed ecommerce accountant",
+    "search_keyword": "licensed ecommerce accountant",

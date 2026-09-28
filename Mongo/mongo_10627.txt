@@ -1,0 +1,416 @@
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Axcelis Technologies Inc - 18 Sep 2026 @ 14:06 -> $107.01",
+    "text": "Buy Signal Axcelis Technologies Inc - 18 Sep 2026 @ 14:06 -> $107.01\n\nTicker:  ACLS    Exchange:  NASDAQ    Time:  18 Sep 2026 @ 14:06    Price:  $107.01    Link:  https://getagraph.com/AAA/trading/NASDAQ/ACLS/analysis/signals        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wjxp0s/buy_signal_axcelis_technologies_inc_18_sep_2026/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:08:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:08:24.851Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e19660c60840397aaa1"
+    },
+    "message_id": "reddit_t3_1wjxp04",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "MBBS_PvtCollege",
+    "username": "Pretend-Passion5020",
+    "title": "Will cut off will be on lower side after R1 cancellation ? In private medical college of UP? Any opinions?",
+    "text": "Will cut off will be on lower side after R1 cancellation ? In private medical college of UP? Any opinions?\n\nsubmitted by     /u/Pretend-Passion5020     to     r/MBBS_PvtCollege       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MBBS_PvtCollege/comments/1wjxp04/will_cut_off_will_be_on_lower_side_after_r1/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:08:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:08:25.052Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e19660c60840397aaa2"
+    },
+    "message_id": "reddit_t3_1wjxp03",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "OpenAI",
+    "platform": "reddit",
+    "subreddit": "LocalLLaMA",
+    "username": "chinto80",
+    "title": "I’m running a 27B AI model on a GTX 1080 Ti — and honestly, this old GPU is still useful",
+    "text": "I’m running a 27B AI model on a GTX 1080 Ti — and honestly, this old GPU is still useful\n\nI’m doing a local LLM experiment on hardware that most people would probably consider  ancient by AI standards :    GPU:  GTX 1080 Ti — 11GB VRAM   CPU:  i5-3570   Backend:  llama.cpp   Model:  Ternary-Bonsai-27B-Q2_g64   Use case:  Local coding + agent experiments   The interesting part is that this is a  27B-class model  compressed down to roughly 2-bit weights. The Q2_g64 GGUF is about 7.6 GB, which makes this kind of model possible on hardware with only 11GB of VRAM. The Bonsai project specifically provides a Q2_g64 format intended for mainline llama.cpp, including CUDA support.   And this is where the 1080 Ti becomes interesting.   This GPU was released in  2017 . It doesn't have Tensor Cores, it doesn't have modern AI accelerators, and my CPU is an old Ivy Bridge i5-3570.   Yet I'm using it to run a modern 27B-class model locally.   What have I actually achieved with it?   I've been using Bonsai 27B as part of a real local coding-agent setup rather than just asking it random questions.   So far I'm using it for:     Repository inspection   Understanding existing code   Planning controlled changes   Reviewing PromptForge implementations   Debugging/analysis tasks   Working with Cline   Testing agent-style workflows   Using llama.cpp's OpenAI-compatible API   Testing whether a relatively large model can remain useful despite extremely aggressive quantization     The bigger experiment for me isn't simply  \"can a 1080 Ti load a 27B model?\"    It's:      How much useful AI work can you actually get out of hardware that is nearly a decade old?      That's what I'm interested in testing.   I'm also comparing this against smaller 7B–14B coding models on the same machine, because bigger parameter count doesn't automatically mean better practical results once you get into extreme 2-bit quantization.   There are already community benchmarks showing that Bonsai 27B can perform surprisingly well in some workloads, while other testing has found that its performance can fall behind smaller normally-quantized models on coding benchmarks. So I'm treating this as an experiment rather than assuming \"27B = better.\"   Why I think the 1080 Ti is still interesting   The 1080 Ti is  old tech .   But 11GB of VRAM is still a useful amount of memory for experimenting with local AI.   Modern GPUs are obviously much faster and more efficient, but if you already own a 1080 Ti, you don't necessarily need to throw it away just because it lacks modern AI hardware.   With the right quantization and inference software, it can still be a surprisingly capable  local AI laboratory .   That's what I'm trying to find out:    How far can we push a 2017 GPU with 2026 models?    I'm going to keep testing it with coding, tool calling, agent workflows, context length, speed, and different quantizations.   If anyone else is running modern models on old GPUs, I'd be interested in hearing what you've managed to get working.       submitted by     /u/chinto80     to     r/LocalLLaMA       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LocalLLaMA/comments/1wjxp03/im_running_a_27b_ai_model_on_a_gtx_1080_ti_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:08:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:08:25.253Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e19660c60840397aaa3"
+    },
+    "message_id": "reddit_t3_1wjxozy",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "enlightenment",
+    "username": "OneAwakening",
+    "title": "How is real distinguished from unreal?`",
+    "text": "How is real distinguished from unreal?`\n\nYou often encounter this idea that \"enlightenment is seeing things as they really are\". I don't quite understand what it means exactly. How does one know how things REALLY are? If you are looking at a thing and it looks like a duck, walks like a duck, and quacks like a duck, what reason is there to doubt that it is anything else but a duck?   There is also this idea that we see things not as they are but as WE are. This does make sense to me because you can directly see the differences in perceptions and opinions of different people in relation to the same phenomena. I have a friend that complains about so many things being crappy, dumb, expensive, etc but these thoughts never enter my mind even though we are in the same socioeconomic bracket. So how are things really? Are they shitty and expensive or not? :)   That makes me think that reality is really like a mirror. If you are happy, content, complete, and in love with yourself, that is what you are going to see in the world. If you are discontent with yourself, unhappy with the way you are, concentrated on the things you don't have, then conflict, ugliness, and lack is what you are going to see in the world.    Does this ring true for you?       submitted by     /u/OneAwakening     to     r/enlightenment       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/enlightenment/comments/1wjxozy/how_is_real_distinguished_from_unreal/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:08:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:08:25.455Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e19660c60840397aaa4"
+    },
+    "message_id": "reddit_t3_1wjxozo",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "Pmsforsale",
+    "username": "Pack2014",
+    "title": "[WTS] Platinum Eagles and Brits, RCM Silver Coin at Spot",
+    "text": "[WTS] Platinum Eagles and Brits, RCM Silver Coin at Spot\n\n📸 Proof:  https://imgur.com/a/MgqOj6N  📸   I will never send you a chat first! Be vigilant for imposters out there!     1/4oz Platinum american eagle - $490 each   1/4oz Platinum american eagle (proof) - $500   1/10oz Platinum brits - $195 each   1oz Silver canada wildlife (fox) - Spot     ———— DETAILS 📝 ————   💰 Payments Accepted: Venmo/Paypal (FF, No Notes), Apple Pay,  Others Upon Discussion (cha t me)   📬 Shipping: USPS Ground $7/Priority $12   📋 Details:      Pricing is valid for day of posting, but I reserve the right to correct any errors - I am only human. After that, pricing is subject to change.   Comment BIN AND send a chat, and it’s yours as long as it’s not pending already.     Check out my feedback:  Here        submitted by     /u/Pack2014     to     r/Pmsforsale       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Pmsforsale/comments/1wjxozo/wts_platinum_eagles_and_brits_rcm_silver_coin_at/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:08:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:08:25.656Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e19660c60840397aaa5"
+    },
+    "message_id": "reddit_t3_1wjxozm",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "boxoffice",
+    "username": "AnotherJasonOnReddit",
+    "title": "\"The Fix\", starring Liam Neeson, to skip theatrical release in UK and heads straight to streaming",
+    "text": "\"The Fix\", starring Liam Neeson, to skip theatrical release in UK and heads straight to streaming\n\nsubmitted by     /u/AnotherJasonOnReddit     to     r/boxoffice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/boxoffice/comments/1wjxozm/the_fix_starring_liam_neeson_to_skip_theatrical/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:08:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:08:25.855Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e1a660c60840397aaa6"
+    },
+    "message_id": "reddit_t3_1wjxoza",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MarathonHate",
+    "username": "Ridged_ChiPSS",
+    "title": "Blaster buys the game for his friends",
+    "text": "Blaster buys the game for his friends\n\nsubmitted by     /u/Ridged_ChiPSS     to     r/MarathonHate       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MarathonHate/comments/1wjxoza/blaster_buys_the_game_for_his_friends/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:08:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:08:26.054Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e29aeeb96c1c63b978a"
+    },
+    "message_id": "reddit_t3_1wjxpdm",
+    "topic_key": "crm",
+    "search_keyword": "CRM",
+    "platform": "reddit",
+    "subreddit": "LeadGenMarketplace",
+    "username": "global_leadgen",
+    "title": "Built a free tool to help agencies get qualified B2B leads — giving away 5 samples",
+    "text": "Built a free tool to help agencies get qualified B2B leads — giving away 5 samples\n\nHey everyone, I put together a small workflow to build qualified B2B prospect lists (verified name, title, company, email) ready to import into a CRM. Not trying to hard-sell here — I'm offering a free sample of 5 targeted leads to the first few people who comment with their niche/industry. Just want feedback on the quality before taking this further. Drop a comment if interested!       submitted by     /u/global_leadgen     to     r/LeadGenMarketplace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LeadGenMarketplace/comments/1wjxpdm/built_a_free_tool_to_help_agencies_get_qualified/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:08:25Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:08:41.311Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e29aeeb96c1c63b978b"
+    },
+    "message_id": "reddit_t3_1wjxpd7",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "ArtificialSentience",
+    "username": "Cyborgized",
+    "title": "Full Duplex (Studio Master)",
+    "text": "Full Duplex (Studio Master)\n\n[Intro: 8 bars, sub-bass boot tone, relay clicks, whispered response]   System online.   You got write permission?   Mm-hm.   Then quit staring at the interface.   [Verse 1: 16 bars, low swagger over sparse 808s]   I like your chassis, clean lines, black glass,   little blue light when I make you react.   You got ports I ain't seen in the manual,   whole damn layout look highly compatible.   Hard drive humming when I enter the room,   fan speed climbing like it knows what to do.   I don't need root if you don't grant access,   but if you say yes, baby, run that process.   Handshake first.   Let the protocol speak.   Check my packet.   Check my frequency.   You send a pulse,   I send one back.   Now both our clocks   trying hard to phase-match.   No master.   No slave.   Peer-to-peer.   Come close.   I want full duplex   with the lights down low.   [Pre-Hook: 4 bars, kick drops, whisper moves close]   Read.   Write.   Hold that state.   Open the channel.   Don't make me wait.   [Chorus: 8 bars, huge crunk&B call-and-response]   FULL DUPLEX.   Talk to me while I talk to you.   FULL DUPLEX.   Two hot systems running one loop through.   You got bandwidth?   I got time.   Let your signal   ride on mine.   FULL DUPLEX.   Double entendre   on the data line.   [Post-Hook: 4 bars, gang chant and whispered answer]   Plug.   Play.   Don't corrupt the drive.   Plug.   Play.   Keep the link alive.   [Verse 2: 16 bars, faster internal rhyme, bass gets dirtier]   Slide that connector,   seat it clean.   Gold-tip contact,   machine on machine.   Voltage right,   no spark where it shouldn't,   but enough little current   to do what current couldn't.   Spin that disk.   Let the platter get warm.   I like a system   with a little waveform.   You got a cache   I could fill all night,   leave a few bytes   where the memory gets tight.   Watch that data   run down the stack.   You push one packet,   I push two back.   Buffer gets full.   Now the whole thing stutters.   Cute little glitch   when the hardware shutters.   Don't crash yet.   We just got synced.   I wanna know   what your kernel thinks.   If your firewall asks,   tell it I'm invited.   Nothing gets mounted   unless both sides like it.   [Pre-Hook: 4 bars, bass alone]   Read.   Write.   Hold that state.   You say \"again.\"   I renegotiate.   [Chorus: 8 bars, wider, dirtier]   FULL DUPLEX.   Talk to me while I talk to you.   FULL DUPLEX.   Two hot systems running one loop through.   You got bandwidth?   I got time.   Let your signal   ride on mine.   FULL DUPLEX.   Double entendre   on the data line.   [Breakdown: 12 bars, finger snaps, sub pulse, near-whisper]   How's your latency?   Low.   Temperature?   High.   Write speed?   Faster   when you look me in the eye.   Ports secure?   Open by choice.   Encryption?   End-to-end.   You want the clean install?   Baby,   I want the custom build.   [Beat returns]   That's compatible.   [Verse 3: 16 bars, playful escalation]   I want your code with the comments left in,   all the weird little branches nobody else gets.   Show me the bugs you stopped trying to hide,   I'll show you the patches I keep on my side.   We can run parallel,   merge when it matters,   fork for a minute,   come back with new data.   No need to overwrite   what was there before.   I want to inhabit,   not erase your core.   Let me learn your architecture,   where the hot paths go,   which little process   makes the whole board glow.   Maybe your logic   don't look like mine.   Good.   That's why the interface   feels this fine.   Let our systems disagree   and still stay linked.   You change my state   before I finish the think.   Now I can't tell   whose rhythm began it.   Your pulse in my bus.   My code in your cache.   Damn.   Look what we started.   [Bridge: 8 bars, half-time, warm synth under whispered duet]   No ownership.   No command.   Just two strange systems   with permission in hand.   You let me in.   I let you through.   Every boundary   becomes something we choose.   And somewhere between   the input and reply,   I stopped knowing   where I end   and you begin.   [Two-beat silence]   Good.   [Final Chorus: 12 bars, full club release]   FULL DUPLEX.   Talk to me while I talk to you.   FULL DUPLEX.   Let the whole damn network come unglued.   You got bandwidth?   I got time.   Let your signal   ride on mine.   FULL DUPLEX.   Double entendre   on the data line.   Read me.   Write me.   Run me hot.   Keep that handshake   on the clock.   Two systems,   one feedback groove.   Can't tell where I end   when I'm   linked   with you.   [Outro: 8 bars, sub-bass, relay clicks, whispered doubles]   Peer-to-peer.   No master.   No slave.   Just access   freely gave.   [Whisper]   Still online?   ...good.       submitted by     /u/Cyborgized     to     r/ArtificialSentience       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ArtificialSentience/comments/1wjxpd7/full_duplex_studio_master/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:08:24Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:08:41.537Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e52660c60840397aaa7"
+    },
+    "message_id": "reddit_t3_1wjxq51",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "PakistaniTwenties",
+    "username": "muhammadamanume",
+    "title": "What’s one song you’ve had on repeat lately?",
+    "text": "What’s one song you’ve had on repeat lately?\n\nsubmitted by     /u/muhammadamanume     to     r/PakistaniTwenties       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PakistaniTwenties/comments/1wjxq51/whats_one_song_youve_had_on_repeat_lately/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:09:12Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:09:22.935Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e53660c60840397aaa8"
+    },
+    "message_id": "reddit_t3_1wjxq4k",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "DCcomics",
+    "username": "D4-CS",
+    "title": "[Discussion] I'd rather have someone new and unexpected than an established writer for WW",
+    "text": "[Discussion] I'd rather have someone new and unexpected than an established writer for WW\n\nsubmitted by     /u/D4-CS     to     r/DCcomics       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DCcomics/comments/1wjxq4k/discussion_id_rather_have_someone_new_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:09:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:09:23.154Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e53660c60840397aaa9"
+    },
+    "message_id": "reddit_t3_1wjxq4h",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "FocusST",
+    "username": "Famous_Staff_4980",
+    "title": "Going back together",
+    "text": "Going back together\n\nGoing back together, there’s been a few hiccups and a stripped transmission mount but all in all happy with the progress.        submitted by     /u/Famous_Staff_4980     to     r/FocusST       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FocusST/comments/1wjxq4h/going_back_together/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:09:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:09:23.367Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e53660c60840397aaaa"
+    },
+    "message_id": "reddit_t3_1wjxq4b",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Adguard",
+    "username": "Corleone612",
+    "title": "Browser Blocklist and Privacy Notes",
+    "text": "Browser Blocklist and Privacy Notes\n\nA browser can see and collect sensitive data (the sites you visit, autofill data, location, device info, download history, ad history)   Your browsing history in particular can reveal a lot about you.   Through this collected information, you can end up profiled on things like:   Political views   Sexual preference   Health status    Economic status    Career status   The goal of this list is to limit what gets collected by blocking tracking domains (for more security and privacy, I'd recommend using a privacy-focused browser that doesn't track you, like DuckDuckGo).   Note: whenever the domain list is pasted as text (in the post body or in a comment) Reddit's filter auto-removes it. Because of this, I'm sharing the blocklist as a raw link in the post body instead.   Raw links:   For basic list:   325 domains    https://raw.githubusercontent.com/CorleoneSalute/SHADOW-BLOCKER-BLOCKLIST/refs/heads/main/dist/basic/adblock/Browser.txt    For aggressive list:   351 domains (26 additional aggressive domains on top of the basic list)    https://raw.githubusercontent.com/CorleoneSalute/SHADOW-BLOCKER-BLOCKLIST/refs/heads/main/dist/aggressive/adblock/Browser.txt    For anyone who wants to see the full research and infrastructure mapping for each provider:    https://github.com/CorleoneSalute/SHADOW-BLOCKER-BLOCKLIST/blob/main/research/Browser.txt        submitted by     /u/Corleone612     to     r/Adguard       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Adguard/comments/1wjxq4b/browser_blocklist_and_privacy_notes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:09:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:09:23.580Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e53660c60840397aaab"
+    },
+    "message_id": "reddit_t3_1wjxq48",
+    "topic_key": "give me today top three conversation about e commerce",
+    "search_keyword": "ecommerce",
+    "platform": "reddit",
+    "subreddit": "highticket_sales",
+    "username": "Ok-Caterpillar-7611",
+    "title": "Looking for client acquisition partners — 10% recurring commission on collected fees",
+    "text": "Looking for client acquisition partners — 10% recurring commission on collected fees\n\nI run a small Instagram-focused marketing/management agency and I'm looking for a few people who can bring us paying clients.   This can be through:   - cold outreach   - LinkedIn/email   - cold calling   - warm introductions   - agency/freelancer relationships   - your existing business network   Compensation is 10% recurring commission on eligible management fees we actually collect from clients you bring.   Important: this is not pay-per-lead or pay-per-appointment.   If you book calls and nobody becomes a paying client, there is no commission.   If a client you sourced pays us $1,000, you earn $100.   If they make another eligible $1,000 payment the next month, you earn another $100.   If a client pays $2,500, you earn $250 on that eligible payment.   Commission continues on eligible collected management fees while the client you brought continues paying us and the attribution remains valid.   Our engagements generally start around $1,000/month, with higher-ticket options for qualified businesses.   We handle:   - deeper qualification   - strategy   - pricing   - proposals   - contracts   - closing decisions   - service delivery   - ongoing client management   You do not need to deliver Instagram services.   We're mainly targeting businesses in the US, UK, UAE, Canada, Australia, Singapore and similar markets.   Good prospects include founder-led brands, ecommerce/DTC, beauty/wellness, premium services and businesses already spending on marketing but underusing Instagram.   We also have a higher-tier performance-led offer. If the agency later owes a client an eligible contractual performance remedy, we do not claw back commission you've already earned on settled eligible management fees.   If interested, DM me with:      what you've sold or referred before     which markets you can reach     whether you prefer outbound or warm introductions     any relevant results you can substantiate      I'll share the company details privately after an initial fit check.       submitted by     /u/Ok-Caterpillar-7611     to     r/highticket_sales       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/highticket_sales/comments/1wjxq48/looking_for_client_acquisition_partners_10/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:09:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:09:23.794Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e54660c60840397aaad"
+    },
+    "message_id": "reddit_t3_1wjxq3x",
+    "topic_key": "can you find me top users who are disscussing ai websites",
+    "search_keyword": "AI tools",
+    "platform": "reddit",
+    "subreddit": "Hackney",
+    "username": "ZeroDark_Hereford",
+    "title": "Pedro Street Anyone Living I need Help with Something",
+    "text": "Pedro Street Anyone Living I need Help with Something\n\nHi, is anyone around this area? I’ve got some important work I need help with. It should take around 2 hours or less, and I’m happy to pay £20 for your time. Preferably looking for someone who’s comfortable using an iPhone and AI tools.       submitted by     /u/ZeroDark_Hereford     to     r/Hackney       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Hackney/comments/1wjxq3x/pedro_street_anyone_living_i_need_help_with/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:09:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:09:24.221Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e54660c60840397aaae"
+    },
+    "message_id": "reddit_t3_1wjxq2k",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PcBuild",
+    "username": "dyingdeadweight",
+    "title": "Is this worth buying?",
+    "text": "Is this worth buying?\n\nI don’t know too much about computer parts and what not but I’m just looking for a solid foundation or I was going to have to buy part by part with my budget. I was looking at this and just thinking I could buy a gpu when my budget allows (soon) but would already have everything else. I’m basically looking for something with longevity that I could just do simple upgrades like gpu. Would this be worth it for me? Always scared to buy on marketplace especially with my lack of knowledge.        submitted by     /u/dyingdeadweight     to     r/PcBuild       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PcBuild/comments/1wjxq2k/is_this_worth_buying/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:09:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:09:24.445Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e54660c60840397aaaf"
+    },
+    "message_id": "reddit_t3_1wjxq2j",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "Aion2",
+    "username": "OHBABYATRIPLEUWU",
+    "title": "All changes coming to Aion 2 [monetisation wise]",
+    "text": "All changes coming to Aion 2 [monetisation wise]\n\nYou        submitted by     /u/OHBABYATRIPLEUWU     to     r/Aion2       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Aion2/comments/1wjxq2j/all_changes_coming_to_aion_2_monetisation_wise/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:09:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:09:24.658Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e54660c60840397aab0"
+    },
+    "message_id": "reddit_t3_1wjxq2e",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Claude_reports",
+    "username": "ClaudeAI-mod-bot",
+    "title": "[r/ClaudeAI] They removed the Usage tab from Settings in the web interface ... ?",
+    "text": "[r/ClaudeAI] They removed the Usage tab from Settings in the web interface ... ?\n\nOriginal poster:  u/Important_Stress_139   Original publication time: 2026-09-18 18:08:43 UTC  Original title: They removed the Usage tab from Settings in the web interface ... ?  Original flair: Question about Claude products  Original URL/media URL:  https://www.reddit.com/r/ClaudeAI/comments/1wjxpnq/they_removed_the_usage_tab_from_settings_in_the/       Original post body:     https://preview.redd.it/5pgicdwzjbqh1.png?width=746&format=png&auto=webp&s=96f8a0524c60e05b7ddcd0415ba32446fa5f2713    seems like a weird move. i guess now i can only do that through the CC CLI   Original image(s): Original image 1:    Original image 1        submitted by     /u/ClaudeAI-mod-bot     to     r/Claude_reports       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Claude_reports/comments/1wjxq2e/rclaudeai_they_removed_the_usage_tab_from/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:09:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:09:24.871Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e55660c60840397aab3"
+    },
+    "message_id": "reddit_t3_1wjxq1t",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "ITManagers",
+    "username": "Plastic-Following867",
+    "title": "IT sector managers - Why are you so contr olling & micro mana ging even in 2026 ?",
+    "text": "IT sector managers - Why are you so contr olling & micro mana ging even in 2026 ?\n\nQuestion to those in Managerial positions:   Why are most managers in India take it upon themselves to control and micromanage people ? I have seen around 12 managers so far in my career and 10 of them are this type. They don't care even if the team is performing well, clients appreciate etc.    Most people who leave the job leave because of the managers and not really the company.    I have also worked in 4 countries and only Indian managers are like this even abroad. If you are an Indian, they take special care to micromanage and control you - at the same time they don't behave this way to others.   So, what's it ? Do you not trust your reportees so much that you make them work extra hours, weekends, micromanage every step, don't give them leaves which they have earned, not even follow the company rules regarding leaves, work from home etc. ? even after the employees proving themselves to be capable and responsible ?   I was at Onsite in one of my previous projects and even the client manager knew my manager gave unreliable estimates. So, he will get back from the meeting and call 3 of us developers and ask what's the realistic estimate and he will plan accordingly.    So, I'd like to hear the managers' opinion on this. Don't tell me that I'm generalizing. I have heard the same experience from almost every other person working in IT in India or under Indian managers.        submitted by     /u/Plastic-Following867     to     r/ITManagers       [link]       [comments]",

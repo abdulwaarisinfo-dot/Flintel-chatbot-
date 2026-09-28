@@ -1,0 +1,416 @@
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "militariasales",
+    "username": "MilitaryTrophies",
+    "title": "MEGA LOT - Used Ukrainian Army Plate Carriers, ATO 2014-2016 | Russo-Ukrainian War #2",
+    "text": "MEGA LOT - Used Ukrainian Army Plate Carriers, ATO 2014-2016 | Russo-Ukrainian War #2\n\n$75 each + shipping    Buy 2 or more - $65 each + shipping     10 plate carriers available.  Available models include  Korsar M3C, Korsar M3M, and plate carriers made by Temp 3000.  All of them were issued to Ukrainian Army soldiers.   All plate carriers are  used  and may have various defects, including poor-condition Velcro, traces of repairs and modifications made by previous owners, dirt, and other signs of use. Some examples have all of these signs combined.   Some also retain  original markings , such as call signs, unit numbers, years of service, initials, and other personal markings.   If you’re interested in purchasing one, please  send me the number of the plate carrier you’re interested in.  If you need additional photos of a specific one, feel free to DM me.   Please note:  These are collectible items and may also be suitable for restoration.    If you’re looking for a   Korsar in good condition  , I have another option available.       submitted by     /u/MilitaryTrophies     to     r/militariasales       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/militariasales/comments/1wj7rjc/mega_lot_used_ukrainian_army_plate_carriers_ato/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T22:01:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T22:02:15.566Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac6367660c608403974b2f"
+    },
+    "message_id": "reddit_t3_1wj7rip",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DailyGuess",
+    "username": "Liqwid9",
+    "title": "Can You Guess This 5-Letter Word? Puzzle by u/Liqwid9",
+    "text": "Can You Guess This 5-Letter Word? Puzzle by u/Liqwid9\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Liqwid9     to     r/DailyGuess       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DailyGuess/comments/1wj7rip/can_you_guess_this_5letter_word_puzzle_by_uliqwid9/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T22:01:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T22:02:15.769Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac6367660c608403974b30"
+    },
+    "message_id": "reddit_t3_1wj7ri5",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "FalloutMods",
+    "username": "DonkStomp",
+    "title": "[Fo4] Grognak Comics - AI Generated",
+    "text": "[Fo4] Grognak Comics - AI Generated\n\nSo I made AI generated Grognak comics for the first four issues. They’re not perfect but I think it could be something to refine and put into a mod eventually. Perhaps someone with more talent and time could generate the rest of the comics and magazines? I used Grok with the super heavy agent team to refine it all, but sometimes text is off and style too. I decided to do a “Girls of Grognak” issue accumulating all the pinups from the issues and with an extra naughty nude or near nude for each girl. This link will only work for a week and I don’t know where else to put them for the time being. If you have a better suggestion let me know or repost with the better link.   Here is the full Grok skill prompt, which is heavily Grognak-centered so it’ll need to be adapted to do the other comics and magazines from Fo4:   ---  name: grognak-issue  description: Build a complete 32-page mint Hubris Comics Grognak the Barbarian pamphlet from an official Fallout cover. Use when the user asks for a Grognak issue, Hubris comic, Blood on the Harp, Cometh the Trickster, Bat-Babies, Corsair Queen, or any other Grognak magazine recreation.  ---   # SKILL: Hubris Comics — Grognak the Barbarian Issue Builder   Reusable production bible. Drop this file next to every new issue and follow it  in order. Hardened on No. 1 Blood on the Harp (16 JAN, $23) and applied to  No. 2 Cometh the Trickster (20 FEB, $23). Every rule below is a scar from a  real failure or a locked user preference. Do not \"improve\" them.   ------------------------------------------------------------------------  0. WHAT THIS SKILL PRODUCES  ------------------------------------------------------------------------  A complete 32-page saddle-stitch pre-War Hubris Comics pamphlet that could  sit on a 2077 Boston newsstand. Not a poster set. Not a \"comic-styled  gallery.\" A readable issue:   cover + IFC credits + 10–12 story pages with real dialogue + rotating  house ads + two Lil' Heathens pinups + next-issue HOUSE ad + back cover.   The story WRAPS in-issue unless the user explicitly wants a cliffhanger.  The official Fallout 4 / Fallout 76 cover painting is page 1, mint, unclipped.   Output paths:  /home/workdir/artifacts/issue##/  LOCKED_SCRIPT_##.md  GEN_PROMPTS.md  pages/p01.jpg … p32.jpg  /home/workdir/artifacts/Grognak_the_Barbarian_##_Title_Words.pdf  /home/workdir/artifacts/GROGNAK_ISSUE_SKILL.md (this file, keep current)   ------------------------------------------------------------------------  1. WORKFLOW — DO NOT SKIP STEPS  ------------------------------------------------------------------------  1. Locate the official cover for THIS issue.  Prefer 1583×2048 mint Twitter / Art-of-Fallout-4 file  over a 927×1200 wiki scan. Files live in  /artifacts/official/ and /artifacts/refs/*_twitter.jpg.  2. Stare at the cover until you can name every object, color, and costume  piece. Write a COVER CAST card ( Grognak kit / foe kit / woman? / setting  / title treatment / $23 box / date box ).  3. Woman rule:  - If the official cover includes a woman, she is the love interest  AND both Lil' Heathens pinups. Match hair, outfit, face to the  cover, then show her BEFORE the cover-injury (unhurt in pinups).  - If the official cover has NO woman, invent a new supporting woman  who belongs to THIS setting and is visually distinct from the  roster in §4. She appears in the story AND both pinups.  4. Write LOCKED_SCRIPT_##.md first: 32-page map + panel script + ad slate  + cover-kit reminder. Do not generate pages against a vibe.  5. Generate interiors at portrait pulp aspect. Target 1375×2048 (~0.671).  Cover stays 1583×2048 (~0.773). White unaged paper.  6. Bind with NATIVE-ASPECT pages. Never fill-crop onto one canvas.  Use scripts/bind_issue.py (or the recipe in §10).  7. Proof page 1 at 100% for clipping of $23, date, HUBRIS, GROGNAK K,  title, and every painted limb. Proof pinups + 2–3 story pages for  edge loss, yellow paper, and lettering soup.   ------------------------------------------------------------------------  2. CANON LOCKS — DO NOT INVENT AGAINST THESE  ------------------------------------------------------------------------  PUBLISHER  - Hubris Comics Publishing, subsidiary of Hubris Publishing, founded 2021.  - HQ Washington; Boston storefront / mail-away.  - Slogan: \"Publishing Quality Prints at Quality Prices.\"  - Mail: Hubris Comics, P.O. Box 2077, Boston, Massachusetts.  - Street: 1187 Washington Street, Boston, Massachusetts.  - Credits that exist in Fallout terminals (use these exact names):  STORY — Mr. Moorellis  ART — P. Shiner  LETTERS — Hubris Bullpen  EDITS — Mr. Neptura  CHIEF OF PUBLISHING — Peter Shiner  - Other named staff (do not credit randomly): Tina Hopkins, Vivian O'Dell,  Aaron Babowski, Evans Richelli, Rebecca Granier, Shannon Rivers.  - Comics Code Authority stamp is fine (diegetic pre-War).  - Price of a Grognak issue is CANON $23. Date is the one printed on the  official cover. Never 10¢, 25¢, or \"a dime at your local stand.\"   ISSUE CALENDAR (FO4 / FO76, use these dates on the IFC and next-issue ads)  No. 1 Blood on the Harp 16 JAN $23  No. 2 Cometh the Trickster 20 FEB $23  No. 3 Jungle of the Bat-Babies 21 MAR $23  No. 4 In the Bosom of the Corsair Queen 24 APR $23  No. 5 Demon Slaves, Demon Sands 22 MAY $23  No. 6 Enter Maula: War Maiden of Mars 22 JUN $23  No. 7 Fatherless Cur! 24 JUL $23  No. 8 Lost in the Snows of Lust 24 AUG $23  No. 9 In the Lair of the Virgin Eater 14 NOV $23  No.10 What Sorcery This? 16 DEC $23  Other named issues exist in terminals (Ants of Agony, An Axe For All Ages,  Heavy the Oaken Crown, Grognak's Salute to the Troops, Revenge of the  Man-Saurian) — use only if the user asks. The ten above are the run.   GROGNAK — DEFAULT KIT, THEN COVER OVERRIDE  - Blonde forelock, clean-shaven, muscular Conan parody.  - Default kit from most covers:  green loincloth / waistcloth  brown bracers and brown fur-topped boots  SINGLE black leather baldric, left-shoulder to right-hip  no helmet, no fur cape, no X-shaped harness, no headband  - EXCEPTION: match the COVER of the issue you are drawing, every panel.  No. 1 Blood on the Harp — black baldric, brown boots, sword + torch  No. 2 Cometh the Trickster — RED waist-sash with gold disc,  reddish-brown boots, NO baldric while  bound (cover moment). After he is cut  free he may wear the single black baldric  again. Unarmed on the cover; sword later.  Later issues: read the cover. If the sash is red, draw red. If he  holds an axe, give him the axe. Do not \"standardize\" him back to  the default kit inside an issue whose cover disagrees.  - Voice: taciturn, dry, oath-keeper. Short sentences. He does not  speechify. He does not say \"Point.\" as a one-word balloon.  - Arch-villain of the franchise is GRELOK (spelling: Grelok, never  Greltok). Other named foes only when the title names them:  AntAgonizer, Femme-Ra, Man-Saurian, Mastadonald, Skullpocalypse,  Maula, Corsair Queen, The Trickster, Bat-Babies, the Virgin Eater.   THE COVER IS LAW  - Page 1 is the official painting, restored to mint: no rust, no coffee  rings, no yellowing, no wear. Colors UNTOUCHED. Do not recolor a sash.  Do not \"fix\" the palette. Do not redraw the logo.  - Cover aspect is ~0.773 (1583/2048). Interiors ~0.671 (1375/2048).  NEVER force both into one frame with fill-crop. That is how Blood on  the Harp lost $23, the K in GROGNAK, BLOOD ON THE HARP, and the harp.  - Recreate the official cover composition ONCE as a story splash  (usually page 5 or 6) with balloons, so the reader understands what  the painted cover was depicting. The cover moment is MADE in the  issue, not assumed.   ------------------------------------------------------------------------  3. WOMEN / PINUPS / ROSTER — VARIETY ACROSS THE RUN  ------------------------------------------------------------------------  Goal: by the end of the 10-issue run, a real variety of faces and palettes  (blonde, auburn, dark, red, other; dresses, leathers, armor, science-kits).   ROSTER SO FAR  No. 1 Blood on the Harp — YSENE  Long blonde hair, short pink dress, orange-red stockings,  bare feet / sandals, harp-priestess of Halloran.  Cover HAS her (draped over the harp — that is a plot injury,  she is ALIVE after, and pinups show her unhurt).  No. 2 Cometh the Trickster — ROWAN  Cover has NO woman. Invented.  Copper / auburn wavy hair to the shoulders, freckles, green eyes,  forest-green cloak over brown leather bodice and skirt,  laced brown boots, hunting knife. Wood-ward of Ashholt / the  pine road. NOT blonde. NOT pink. Distinct face from Ysene.  No. 3 Jungle of the Bat-Babies — NIMA  Cover has NO woman. Invented.  Black hair knotted high, gold armlets, leaf-and-hide wrap,  ochre face-dots, bone whistle, green-gold eyes.  Bat-clan vine-ward of the canopy road. NOT Ysene. NOT Rowan.  Pinups are Nima. She signs both pinups bottom-right.  No. 4 In the Bosom of the Corsair Queen — cover HAS the Corsair Queen.  She is the issue woman AND both pinups. Match the cover.  (Redhead pirate-queen energy. Do not turn her into Ysene.)  No. 5 Demon Slaves, Demon Sands — read the cover; if a woman is on it  she is the pinup; if not, invent a desert woman who is not Rowan.  No. 6 Enter Maula: War Maiden of Mars — cover HAS Maula.  Red/orange-skinned war maiden. She is the issue woman AND pinups.  No. 7 Fatherless Cur! — read the cover.  No. 8 Lost in the Snows of Lust — cover typically has a pale snow-woman.  She is the issue woman AND pinups. Cool palette, not forest green.  No. 9 In the Lair of the Virgin Eater — read the cover (this is the  FO3/FNV Grognak cover). Use that woman if present.  No.10 What Sorcery This? — Grelok is on the cover; woman TBD from art.   If a later cover woman looks like one we already did, keep the COVER  likeness but change costume details, jewelry, age-feeling, or styling  so the run still has variety. Never paste last issue's pinup face  \"because she's pretty.\"   PINUP RULES (two pages, every issue) — SUPERSEDED DETAIL IN §19  P23 close-up + P24 full-body of THIS issue's NAMED woman.  J. Scott Campbell 1990s painted comic pinup. Mint paper.  Environment is unique to this issue AND belongs to this woman.  Do NOT default to fur + candelabra after Issue 1.  P23 pose changes every issue.  P24 pose = that issue's cover month mapped to a 1996 Playboy  centerfold as a POSE GUIDE ONLY (body arrangement, not the photo).  Both pinups signed bottom-right with her NAME in handwritten ink  (Ysene / Rowan / Nima / …). Costume covers nipples. Separate feet.  No Playboy logo, rabbit, wordmark, or copied face.  Full law, month table, and Issue 3 ship card: see §19 at the end.   ------------------------------------------------------------------------  4. PRODUCTION FAILURES WE ALREADY PAID FOR — NEVER REPEAT  ------------------------------------------------------------------------  CLIPPING / BIND  - Do not bind every page into a single taller canvas (e.g. 1192×1845,  aspect 0.646) using CSS-style object-fit: cover. That sliced ~16%  off each side of the official cover.  - Bind rule: each PDF page uses that page's NATIVE aspect.  Cover page = official image aspect (~0.773), full-bleed, no bars.  Interiors = generated 1375×2048 aspect (~0.671), full-bleed.  Common HEIGHT (10.25 in / 738 pt) is fine. Width follows the art.  Scale with LANCZOS. Never crop. Never letterbox unless the user  asks for a padded preview.  - Proof page 1 at full bleed and CHECK:  $23 box visible  month / day visible  HUBRIS COMICS full  GROGNAK — the K is the piece that dies first  title treatment full (BLOOD ON THE HARP / COMETH THE TRICKSTER)  every limb of every figure on the painted cover visible  Grognak's feet / the harp / the spear tip / the Trickster's hooves   PAPER  - Brand-new 2077 newsstand copy. Cool white or mint-cream.  NOT parchment, NOT coffee-tan, NOT \"aged comic,\" NOT yellowed.  - De-yellow any generated page whose paper regions have high  (R+G)/2 − B. A simple PIL pass: if paper mean warmth > threshold,  lift blue / drop red on those pixels.  - No \"since the Great War\" copy. These comics are PRE-War.  Winter 2077 is fine. October 23, 2077 has not happened yet.   TEXT IN THE BOOK  - No panel numbers. No \"Page 3 — Interior Story.\" No \"LAST PAGE.\"  - Journey captions only when the characters are actually traveling  (\"Ashholt Road, first thaw.\").  - Dialogue must be long enough that a first-time reader can follow  the plot without a wiki. The first pass of Blood on the Harp failed  because balloons were clipped one-liners. Target 4–6 panels on talk  pages, 1–2 on splashes, and put the RULE of the issue on-page  (the Binding, the First String, the Trickster's wager, etc.).  - Image models garble dense lettering. Keep balloons short enough to  survive generation (one or two sentences). If a page comes back  unreadable, regen or overlay type with PIL / ReportLab — do not  ship alphabet soup.  - \"Point.\" as a lone Grognak balloon is banned. Always a following  clause (\"Keep the bread. Point me at the trees.\").   COVER-AS-STORY  - Recreate the official cover composition once as a STORY splash  with balloons. That is how the reader understands the painting.  - Invent the smallest myth that makes the cover image inevitable.  Put the rule on pages 3–6 so a kid in 2077 understands why the  cover looks like that.   NEXT-ISSUE AD  - NEVER paste the next official cover full-bleed as a page.  - Design a Hubris HOUSE AD that uses the next cover as a CAST and  COSTUME guide only: same characters, same palette, same setting,  NEW layout, \"NEXT MONTH\" burst, title, date, $23, two teaser lines,  Hubris slogan.  - Do not continue THIS issue's plot on the next-issue ad.  - Do not show a miniature of the next magazine as a physical object  (that just becomes a poorly-copied cover paste).   ADS / PRODUCTS  - Rotate the ad slate every issue. Do not reprint the same six ads  in the same order. Recurring franchise pages (IFC, subscription,  Lil' Heathens, Heathen Mail, next-issue) stay but get a NEW layout.  - Each issue should introduce at least two new product ads.  - Every Fallout product must look like the GAME prop, not a cousin.  See §6 for the locked product kit.   BANNED COPY (user-flagged or canon-breaking)  \"ONLY 10¢ AT YOUR LOCAL NEWSSTAND\"  \"ONLY 25¢ IN THIS ISSUE\"  \"DO NOT SEND BOTTLE CAPS\"  classifieds  statement of ownership  \"Fallout 4\" printed on in-world packaging  \"since the Great War\"  \"WINTER CATALOG\" badge (user flagged this on issue 1)  leftover white blocks at the bottom of mail / catalog pages  panel numbers  10¢ / 25¢ / dime jokes of any kind   LIL' HEATHENS  - Canon fan-club name. $45/year. P.O. Box 2077 Boston.  - Two-page spread OR one page + coupon.  - Kid mascot (if used) wears a SINGLE baldric, not an X-harness.  - This month's Heathen thumbnail is THIS issue's woman, not last issue's.   ISSUE 3 SCARS (Jungle of the Bat-Babies — do not re-pay)  - Green Grognak. Jungle bounce light will tint generated skin moss-green.  Lock EVERY story prompt: \"natural suntanned Caucasian skin, warm peach-tan,  NOT green, NOT olive, NOT moss. Green is ONLY the loincloth.\"  QC every page after P10. If flesh reads green, regen.  - Pinup set reuse. Candlelit fur + candelabra is ONE look (Issue 2 Rowan).  Next issue must change environment AND pose. Signature is her NAME.  - Formal membership \"scroll.\" A typeset certificate is not a comic ad.  Lil' Heathens pages must look like 1950s house ads: bursts, mascot,  coupon, $45, PO Box 2077, decoder word = this issue's woman.   ISSUE 2 SCARS (Cometh the Trickster — do not re-pay)  - Prompt-leak balloons. If a generate prompt says \"Clear readable English\"  or \"No panel numbers,\" those words will print IN the balloons. Never put  production notes in the image prompt after the word balloon. QC every  balloon for leaked instructions before shipping.  - Meta ad copy. Prompts that say \"mint, no yellowing, no 10 cents, no  Great War, no black reel-to-reel\" will typeset those phrases on the ad.  Describe the desired look. Do not list the bans inside the picture.  - Grelok spelling. Models emit GRELK / GRELTOK. Force GRELOK in the  prompt and QC the letters.  - Cover-kit drift. Trickster-issue Grognak wears a RED sash and reddish-  brown boots. Models will quietly swap in the No. 1 black baldric or  brown pants. Restate the kit in EVERY story-page prompt.  - Reveal timing. If the cover shows goat-legs, the first appearance can  wear boots; the tableau page MUST show hooves. Do not reverse that.  - Inset letters. \"A\" / \"B\" on the tableau insets count as panel numbers.  Describe insets by position (\"lower left,\" \"lower right\"), never by letter.  - In-world \"Fallout 4\" on holotape labels. Say \"RobCo Fun holotape\" only.  - Typeset text-heavy pages (IFC, sub, mail, order blank, More Thrills)  in PIL/ReportLab. Do not ask the image model to set a page of body copy.   ------------------------------------------------------------------------  5. 32-PAGE MAP (adapt titles, keep the rhythm)  ------------------------------------------------------------------------  Story page count can flex ±1 if an ad has to move. Never drop below  10 story pages. Never let ads share a page with story panels.   1 Official mint cover. Native 0.773. Untouched colors.  2 IFC credits / indicia. White field.  Moorellis / Shiner / Neptura / Peter Shiner.  $23. Issue date. CCA. Slogan.  Spot illustration ONLY (a prop from THIS cover — harp, spear  and rope, bat-baby — NOT a second cover painting).  3–6 Story act I, including the COVER TABLEAU as a story splash  (usually p06).  7 House ad A (rotate; Issue 2 = Nuka Quartz, user-locked).  8 House ad B (new product this issue).  9–10 Story act II (the rule of the issue explained; the hunt).  11 House ad C.  12–13 Lil' Heathens two-pager $45. This issue's woman as thumbnail.  Must LOOK like a comic-book house ad (bursts, mascot, coupon,  decoder word = her name). Never a formal typeset certificate.  14–15 Story act III (confrontation begins).  16–17 House ads D + E (one often a Nuka or holotape variant).  18 Story fight / turning page.  19–20 House ads F + G.  21–22 Story resolution + THE END splash. Tiny footer is a house  strip, NOT a plot hook into next month.  23 Pinup closeup (candlelit JSC).  24 Pinup full body, arms above head (candlelit JSC).  25 Subscription $199 / $23. No bottle-cap joke.  \"MAIL CHECK OR MONEY ORDER. ALLOW 6–8 WEEKS.\"  26 More Thrills from Hubris (real FO4 cover styles, locked  prices, no 10¢).  27 Catalog OR a unique product page for this issue.  No WINTER CATALOG badge. No yellow paper.  28 Heathen Mail — FULL page of letters, mint paper, no leftover  white block at the bottom. 4–6 letters. \"Letters may be  edited with an axe.\"  29 Next-issue HOUSE AD (cast guide, not a pasted cover).  30 Game / PipMan / holotape splash unique to this issue.  FO4 white/orange holotape if the product is a holotape.  31 Order blank / second coupon. No bottle-cap line.  32 Back cover (PipMan / Ruby Ruins / issue-specific game).  Mustache Vault Boy + voxel screenshots OK when the product  is a RobCo game.   ------------------------------------------------------------------------  6. PRICE LOCK AND PRODUCT VISUAL KIT  ------------------------------------------------------------------------  Anchored to the $23 comic ≈ 10× late-90s newsstand. Keep canon prices  where they exist (Giddyup $16,000).   Grognak / Silver Shroud issue $23  Astoundingly Awesome Tales $29  Unstoppables $15  12-issue Grognak subscription $199  (newsstand 12 × $23 = $276, save $77)  Sugar Bombs family box $34.99  Fancy Lads Snack Cakes $9.99  Nuka-Cola bottle $9.99  Nuka six-pack $29.95  Foam Grognak battle-axe $149.95  Giddyup Buttercup (Wilson Atomatoys, 2042) $16,000  Vault-Tec Junior Geiger Detective Kit $199.95  Lil' Heathens Fan Club $45 / year  Reign of Grelok / Ruby Ruins / Captain  Cosmos / Red Menace holotape $40  PipMan Home Assistant hardware $1,999  Blamco Mac & Cheese family $12.99  Dandy Boy Apples tin $8.99  Slocum's Joe dozen $14.99  Yum Yum Deviled Eggs $7.99   PRODUCT LOOKS LIKE THE GAME PROP  Sugar Bombs — FO4 white carton, blue and red, bomb-in-oval logo.  Fancy Lads — FO4 pink window-box. FANCY / SNACK / CAKES. $9.99.  Nuka-Cola — FO4 rocket bottle (THREE glass fins), FILLED.  Regular = dark brown cola; Quantum = glowing blue;  Quartz = glowing white-crystal unless user override;  Victory = glowing orange-red; Cherry = red.  Nuka-Girl — Blonde victory rolls. White rocketsuit, red piping,  black gloves, black thigh-high heeled boots, red jetpack, Thirst Zapper.  Giddyup Buttercup — Wilson Atomatoys yellow robotic horse. $16,000. Copyright 2042.  Holotape — FO4 white/cream cartridge + orange slider + gray metal disc.  Geiger kit — Vault-Tec Junior Geiger Detective Kit. $199.95.  Reign of Grelok — RobCo chunky CRT, green phosphor. Spelling GRELOK.  Ruby Ruins — RobCo Fun No. 12, $40.  PipMan — Hardware $1,999 / holotape $40.   AD ROTATION POOL (pick 2+ new ones each issue)  Blamco, Dandy Boy, Slocum's Joe, Yum Yum, Red Rocket toy truck,  Vault-Tec \"See the Stars from Your Vault,\" Silver Shroud radio hour,  Captain Cosmos holotape, Unstoppables #, Nuka flavors (ONE per issue),  Mentats Junior (children's-optimism framing only), Jangles plush,  Red Menace, Grognak foam axe (redesign, don't photocopy last issue).   NUKA QUARTZ — ISSUE 2 USER-LOCKED STAGING  Full page 1375×2048. ENTIRE field BLACK.  FO4 rocket bottle DEAD CENTER, filled with GLOWING BLUE liquid  (user override; canon Quartz is white — follow the user).  Nuka-Girl FACE behind and to the RIGHT of the bottle.  Small type: NUKA-COLA QUARTZ / THE CLASSY GLOW / Bottle $9.99 • Six-pack $29.95.   ------------------------------------------------------------------------  7. HOW TO WRITE THE ISSUE  ------------------------------------------------------------------------  1. Read the official cover until you can name every object on it.  2. Read the official Twitter / marketing blurb if one exists.  3. The TITLE is the plot.  4. Invent the smallest myth that makes the cover image inevitable.  5. The woman (cover or invented) has agency. She does not vanish  after the cover tableau. She goes into act II.  6. End on a road, a door, or a laugh that dies. THE END.  Next month is a different tale.   VOICE  Grognak: short, dry, concrete.  Woman: competent, local knowledge, not a scream-prop.  Foe: the title tells you the tone.   ------------------------------------------------------------------------  8. HOW TO DRAW — IMAGE-GEN PROMPT SKELETONS  ------------------------------------------------------------------------  STORY PAGE: 1980s Marvel/DC interior, bright WHITE unaged paper,  bold black ink, flat cel color, Ben-Day. No panel numbers.  Grognak kit restated every page. Portrait 1375×2048.   PINUP CLOSEUP: J. Scott Campbell 1990s painted comic pinup.  THIS issue's named woman, unhurt, this-issue environment.  Handwritten NAME signature bottom-right. Costume covers nipples.   PINUP FULL BODY: same woman. Pose follows the §19 month table.  Separate feet. No Playboy marks.   AD PAGE: 1950s American magazine advertisement, white paper,  product looks like the FO4 game prop, locked price.   HOUSE NEXT-ISSUE AD: NEW composition from next cover CAST.  Not a pasted official painting. Date • $23. Two teaser lines.   IFC CREDITS: Moorellis / P. Shiner / Hubris Bullpen / Neptura /  Peter Shiner. $23. CCA. Slogan. Spot of a COVER PROP, not a second cover.   ------------------------------------------------------------------------  9. LETTERING SURVIVAL  ------------------------------------------------------------------------  Keep balloons to one or two short sentences.  Prefer 4 panels on talk pages.  After generation, READ every balloon. If soup: regen or composite type.  Never ship a page whose balloons you cannot read aloud.   ------------------------------------------------------------------------  10. HOW TO BIND  ------------------------------------------------------------------------  Target interiors 1375×2048 (aspect 0.671).  Cover 1583×2048 (aspect 0.773).  JPEG quality 92–94.   python3 /home/workdir/.grok/skills/grognak-issue/scripts/bind_issue.py \\  --pages-dir /home/workdir/artifacts/issue##/pages \\  --out /home/workdir/artifacts/Grognak_the_Barbarian_##_Title_Words.pdf   Common height 738 pt (10.25 in).  Page width = 738 × (image_width / image_height).  Never fill-crop onto one canvas.   ------------------------------------------------------------------------  11. QC CHECKLIST BEFORE YOU SHIP  ------------------------------------------------------------------------  COVER: official mint, unclipped, $23, date, HUBRIS, GROGNAK K, title, every limb.  STORY: cover kit, named woman, wraps, no panel numbers, readable balloons, THE END.  PINUPS: two pages, same named woman, unique env, month-table pose, NAME signed,  nipples covered, separate feet, no Playboy marks, unhurt.  ADS: house next-issue not a paste; locked prices; no 10¢ / bottle caps / Great War /  Fallout 4 / WINTER CATALOG; rotated slate.  PAPER / BIND: no yellow; native-aspect; 32 pages; correct filename.   ------------------------------------------------------------------------  12. ISSUE-2 LOCKED CARD (Cometh the Trickster)  ------------------------------------------------------------------------  Date 20 FEB. $23.  Woman this issue — ROWAN (invented; cover has none).  Plot: Ashholt Road laugh / Trickster wager / Grognak names the rope / THE END.  Next: Jungle of the Bat-Babies • 21 MAR • $23.   ------------------------------------------------------------------------  13. WHAT TO COPY INTO THE NEXT CHAT  ------------------------------------------------------------------------  Follow /home/workdir/artifacts/GROGNAK_ISSUE_SKILL.md exactly.  Issue: Grognak the Barbarian No. [#] \"[TITLE]\" • [DATE] • $23.  Official cover file: [path].  Cover woman: [YES — name and kit / NO — invent distinct roster entry].  Write LOCKED_SCRIPT_##.md first. Bind with scripts/bind_issue.py.  QC against §11 before shipping.   Do not skip the script. Do not bind with fill-crop. Do not yellow  the paper. Do not reuse last issue's woman. Do not paste the next  cover. Do not put 10¢ on anything.   ------------------------------------------------------------------------  19. PINUP LAW + SKIN LAW + CLUB-AD LAW (user-locked 17 SEP 2026)  ------------------------------------------------------------------------  This section SUPERSEDES older pinup paragraphs that said  \"always candlelit / always fur / always arms above head / always  Grognak's Lil' Heathens in the corner instead of her name.\"   A. TWO PINUPS EVERY ISSUE  P23 close-up of THIS issue's named woman  P24 full-body centerfold-style page of the SAME woman  Art: J. Scott Campbell 1990s painted comic pinup, mint paper.  Not a photograph. No Playboy logo, rabbit, wordmark, or  copied face. Costume COVERS nipples. Separate feet.  Two arms, two legs, two hands, one head.   B. SHE HAS A NAME, AND SHE SIGNS THE ART  Locked roster so far:  No. 1 16 JAN YSENE  No. 2 20 FEB ROWAN  No. 3 21 MAR NIMA  No. 4 24 APR Corsair Queen (cover woman) — new face  Bottom-right of BOTH pinups: her name in handwritten ink.  \"Grognak's Lil' Heathens\" may appear smaller elsewhere.  It does NOT replace her signature.   C. ENVIRONMENT — never reuse last issue's set  Env must be (a) different from every prior issue's pinups AND  (b) appropriate to this woman / this issue's landscape.  Ysene — harp chamber, carved stone, harp strings, candle OK  Rowan — Trickster woods, frost ferns, crooked pines, foxfire  Nima — jungle river canopy, wet leaves, vines, warm gold-green  Do NOT default to \"fur rug + brass candelabra\" after Issue 1.   D. POSE ROTATION  P23 = a new close pose every issue.  P24 = that issue's COVER MONTH mapped to a 1996 Playboy  centerfold as a POSE GUIDE ONLY.  Pose guide = body arrangement + camera height + limb rhythm.  Do NOT reproduce the photograph, set, jewelry, hair, face,  branding, or logo of any real centerfold.   Issue month → P24 composition lock:  JAN (No. 1) seated-kneel three-quarter, near knee up, one  hand on the raised knee, other braced behind  FEB (No. 2) overhead from above, lying on furs, arms resting  beside her (SHIPPED — do not reuse)  MAR (No. 3) recline on her SIDE (not her back), torso propped  on the near elbow, far arm along the hip, bottom  leg long, top knee drawn up, eyes to camera  APR (No. 4) standing contrapposto against a vertical prop  (mast / column / tree), weight on back leg,  one arm up the prop, other on hip  MAY prone on stomach, elbows planted, calves kicked  up and crossed  JUN sitting on a ledge, feet dangling, torso lean  forward, arms framing thighs  JUL standing stretch, both arms overhead holding a  vine or scarf, hip cocked  AUG kneeling upright on heels, hands stacked on thighs,  long vertical crop  SEP lying on back, knees tented, one arm across  midriff, face to camera  OCT reclined in a chair-like root or throne, one leg  over the arm  NOV side-sit, both legs to one side, far hand on  floor, near hand in hair  DEC seated, knees drawn, look back over the shoulder   E. ISSUE 3 PINUP SHIP CARD  P23 Nima close-up — moonlit jungle pool / vine hammock. Signed: Nima  P24 Nima full body — MARCH pose lock. Signed: Nima   F. GROGNAK SKIN LAW  Grognak is a tanned / fair HUMAN. Green is the LOINCLOTH only.  Green skin, orc skin, Hulk skin = fail that page and regen.   G. LIL' HEATHENS MEMBERSHIP / SCROLL PAGE (usually P13)  Must look like a 1950s–80s Hubris club AD, not a legal document.  $45 a year, P.O. Box 2077, Boston. Decoder word = this issue's woman.   H. QC ADDITIONS  [ ] Pinup environment ≠ last issue  [ ] Pinup pose ≠ last issue and matches the month row  [ ] Both pinups signed with her NAME, bottom-right  [ ] Grognak skin is never green  [ ] P13 looks like a comic ad, not a document   ------------------------------------------------------------------------  20. ISSUE 3 USER PUNCH 17 SEP 2026 — ADS / MAIL / PINUP / STYLE  ------------------------------------------------------------------------  P20 Giddyup: FO4 yellow jointed METAL horse, $16,000, excited 1950s girl,  normal child proportions, NOT chibi. No Vault Boy.  P24 Nima override for that pass: fingertip-trace pose, still signed Nima.  P25 Subscription: characters sell $199 / 12, $23 a copy.  P27 Sugar Bombs: FO4 cream carton. Kill \"PUBLISHING QUALITY PRINTS\" chrome.  P28 Heathen Mail: fun letters column, fill the page.  P29 Next issue: Corsair Queen house ad, not a pasted cover.  STYLE LOCK: story = 1980s Marvel heroic; pinups = JSC; ads = 1950s painted.   ------------------------------------------------------------------------  21. ISSUES 4–9 PRODUCTION LAW (user-locked 17 SEP 2026)  ------------------------------------------------------------------------  This section SUPERSEDES the §5 32-page map for Issues 4–9.   A. THE RUN  No. 4 In the Bosom of the Corsair Queen 24 APR $23  No. 5 Demon Slaves, Demon Sands 22 MAY $23  No. 6 Enter Maula: War Maiden of Mars 22 JUN $23  No. 7 Fatherless Cur! 24 JUL $23  No. 8 Lost in the Snows of Lust 24 AUG $23  No. 9 In the Lair of the Virgin Eater 14 NOV $23  No.10 What Sorcery This? 16 DEC $23 (not this batch)   B. STORIES ARE LONGER AND BETTER  Main feature: 14–16 story pages. Cover image is MADE inside the issue.  Woman has agency through Act III. THE END is this issue.   C. SIDE STORY — REQUIRED, 2–4 PAGES  Grognak wins by WIT, not only by the axe.  Prize is the girl, treasure, or a laugh. Often two.  Locked spines:  No. 4 \"The First Mate's Riddle\"  No. 5 \"The Word That Was Backwards\"  No. 6 \"The Gong Before the Blow\"  No. 7 \"Whose Blood on the Blade\"  No. 8 \"The Joke That Thawed the Pass\"  No. 9 \"A Virgin by the Label\"   D. AD SPACING — NEVER THREE ADS BACK TO BACK  Canonical 32-page map for Issues 4–9:  1 Official-style mint cover  2 IFC credits  3–8 Main Act I including COVER TABLEAU  9 Ad A  10–13 Main Act II  14 Ad B  15–18 SIDE STORY (4 pages)  19 Ad C  20–24 Main Act III + THE END  25 Pinup close-up  26 Pinup full-body (1996 month pose guide)  27 Subscription house ad  28 Heathen Mail  29 Next-issue HOUSE ad  30 Lil' Heathens club comic-ad $45  31 Ad D  32 Back cover   E. AD ROTATION — SWITCH THE SLATE EVERY ISSUE  Required new products across 4–9: VIM!, Nuka-Cola Quantum,  Nuka-Girl Halloween costume (No. 8), Nuka-World Park.   F. WOMEN / PINUPS FOR 4–9  No. 4 VESPERA — the Corsair Queen. Signs: Vespera  No. 5 ZAHRA — desert ward. Signs: Zahra  No. 6 MAULA — war-maiden of Mars. Copper-red skin. Signs: Maula  No. 7 RHEA — tavern girl. Signs: Rhea  No. 8 YLVA — snow-witch / frost-bride. Signs: Ylva  No. 9 IONE — temple novice. Signs: Ione   P24 pose guide (1996 month ENERGY only — never copy a photo):  APR No.4 standing, hip cocked, looking back over one shoulder  MAY No.5 lying on her SIDE on silk/sand, propped on elbow  JUN No.6 kneeling on heels, back arched, hands behind head  JUL No.7 standing, one foot up on a bench, leaning forward  AUG No.8 on her stomach on furs, ankles crossed in the air  NOV No.9 standing against a carved pillar, one arm overhead   G. STILL IN FORCE  Native-aspect bind. No crop. Grognak never green-skinned.  No chibi. No prompt-leak text. No \"PUBLISHING QUALITY PRINTS\" chrome.  QC every page before bind.   H. QC EXAMINATION PASS  Fail and regen if: prompt-leak copy, style break, lore break,  extra limbs, wrong prices, green Grognak, face-swap, three ads  in a row, unsigned pinup, cropped official cover.   ------------------------------------------------------------------------  22. ISSUE 4 LOCKED CARD — In the Bosom of the Corsair Queen  ------------------------------------------------------------------------  Date 24 APR. $23.  Woman: THE CORSAIR QUEEN. She is the official FO4 cover woman.  NO second named queen on STORY pages.  (Pinups shipped signed Vespera + red coat — leave those two pages  if the user says keep pinups.)   OFFICIAL COVER WOMAN KIT (story pages MUST match this):  auburn-orange hair, purple patterned headband, gold hoop earring,  purple military bodice with TWO columns of gold buttons + side lacing,  white poet sleeves with WHITE FUR cuffs/collar, purple skirt/dress  with gold edge, tall rust-red boots, cutlass.  NO gold crown. NO crimson coat. NO tricorn. NO red royal gown.   P01 = mint restore of the EXACT official FO4 painting.  Do NOT redraw a new composition.   PLOT: taken by her brig / cabin prize / boarders / cover clinch is  the oath-kiss. THE END. Next month is desert.   SIDE STORY: The First Mate's Riddle (P15–P18).  ADS: P09 Quantum P14 Vim P19 Fancy Lads P31 Giddyup P32 Nuka-World.  NEXT: Demon Slaves, Demon Sands • 22 MAY • $23.   ------------------------------------------------------------------------  22. COVER = OFFICIAL FO4 ASSET, MINT (user 17 SEP 2026)  ------------------------------------------------------------------------  P01 of EVERY issue is a brand-new newsstand copy of the official  Fallout 4 magazine cover for that issue. Same pose, same characters,  same color key, same title lockup. Not a new composition that  \"feels like\" it.   Issue 4 official: user-attached FO4 magazine painting, mint restore only.  Issue 5 official: orange desert, DEMON SLAVES, DEMON SANDS. 22 MAY $23.  Issue 6 official: red Mars, ENTER MAULA: WAR MAIDEN OF MARS. 22 JUN.  Issue 7 official: FATHERLESS CUR! 24 JUL $23.  Issue 8 official: LOST IN THE SNOWS OF LUST. 24 AUG.  Issue 9 official: MUST match the iconic FO3/FNV Grognak cover —  IN THE LAIR OF THE VIRGIN EATER. 14 NOV $23.   DIALOG ON STORY PAGES  Balloons are 3–8 words, one sentence, sequential.  After generation, overlay locked lines if the print is soup.   ------------------------------------------------------------------------  23. ISSUE 4 COVER LOCK — USER 17 SEP 2026  ------------------------------------------------------------------------  P01 is the official Fallout 4 Corsair Queen cover COMPOSITION, mint.   DO NOT invent a new pose, ship the weathered photo, or generate a  different painting and call it official.   DO mint-restore that exact official composition.  $23 and 24 APR visible. HUBRIS COMICS complete (the S).  Title IN THE BOSOM OF THE CORSAIR QUEEN complete including In.  Keep pinups P23/P24 as shipped (red-coat Vespera signed).  Story interiors use the purple gold-button cover kit.   Shipped p01: issue4/pages/p01.jpg 1583x2048 mint official composition.  PDF: Grognak_the_Barbarian_04_In_the_Bosom_of_the_Corsair_Queen.pdf       submitted by     /u/DonkStomp     to     r/FalloutMods       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FalloutMods/comments/1wj7ri5/fo4_grognak_comics_ai_generated/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T22:01:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T22:02:15.981Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac6369660c608403974b32"
+    },
+    "message_id": "reddit_t3_1wj7rhc",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "📢 Air Comfort Solutions Okc [HIRING] a Journeyman Hvac Service Technician!",
+    "text": "📢 Air Comfort Solutions Okc [HIRING] a Journeyman Hvac Service Technician!\n\nCompany: Air Comfort Solutions Okc   Location: Moore, OK 📍   Date Posted: September 16, 2026 📅   Categories: #entrylevel   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=hvacindustryjobs.com&rurl=aHR0cHM6Ly9odmFjaW5kdXN0cnlqb2JzLmNvbS9qb2JzL2pvdXJuZXltYW4taHZhYy1zZXJ2aWNlLXRlY2huaWNpYW4tN2RhYzZhMWQ=    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wj7rhc/air_comfort_solutions_okc_hiring_a_journeyman/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T22:01:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T22:02:17.394Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac6369660c608403974b33"
+    },
+    "message_id": "reddit_t3_1wj7rha",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "MotorBuzz",
+    "username": "gaukmotors",
+    "title": "BMW's hydrogen iX5 fills up in five minutes while its electric models are still plugged in for half an hour",
+    "text": "BMW's hydrogen iX5 fills up in five minutes while its electric models are still plugged in for half an hour\n\nThe iX5 Hydrogen refuels faster than any battery BMW currently sells, but the infrastructure to actually use it barely exists.    BMW's iX5 Hydrogen refuels in five minutes. That's the same time it takes to fill a diesel X5, and roughly six times faster than fast-charging an iX to 80 percent. The fuel cell prototype has been running in small numbers since late 2022, and BMW keeps insisting production versions might arrive in the second half of this decade. Whether anyone will be able to refuel one is another question entirely.   The iX5 uses two 700-bar tanks holding about six kilograms of hydrogen total. Range sits at 504 kilometres on the WLTP cycle, which is respectable but not exceptional. The fuel cell generates 125 kilowatts, supplemented by a battery kicking in another 143 kilowatts when needed. It's a sensible setup. The problem is not the car.   There are roughly 60 hydrogen stations in the United States. For context, there are more than 50,000 EV charging locations. Europe is marginally better supplied, but not by much. BMW has developed a hydrogen vehicle that refuels like a combustion car in a world where the refueling infrastructure is functionally non-existent. That is not a small oversight.   The partnership with Toyota, ongoing since 2013, is the most interesting part of this story. Toyota has been running the Mirai for years, refueling in the same five-minute window, and has learned the hard way that building excellent hydrogen vehicles does not conjure hydrogen stations into existence. Hyundai tried the same thing with the Nexo. Both companies are still waiting for infrastructure to catch up to their engineering.   BMW produced about 100 iX5 Hydrogen prototypes for testing and demonstration purposes. Not for sale. Not for lease programs open to the public. Demonstration. That tells you what the company actually thinks about hydrogen's readiness for mass deployment.   Like this? Get the Buzz:  GAUK Motorbuzz  All your favourite motoring channels, publishers, motorsports, news & reviews. Curated Automotive Awesomeness   Compare this to the current state of BMW's battery electric lineup. The iX and i4 need 30 to 40 minutes on a fast charger to reach 80 percent. At home on a wallbox, you're looking at eight to eleven hours for a full charge. Neither option is convenient in the way filling a tank is convenient, but at least the infrastructure exists. You can charge a battery BMW almost anywhere. You can refuel a hydrogen BMW almost nowhere.   The appeal of hydrogen is obvious. Five-minute refueling solves the single most irritating aspect of electric vehicle ownership, which is standing around waiting for electrons to trickle into a battery pack. Hydrogen also bypasses the weight problem. A fuel cell setup is lighter than the battery capacity needed to match its range, which matters in larger vehicles. BMW is not wrong to explore this.   What BMW has not explained is how it plans to address the infrastructure gap. Building hydrogen stations is expensive. The fuel itself is expensive to produce cleanly... most of it still comes from natural gas reformation, which defeats the environmental argument. The business case for rolling out thousands of hydrogen stations when battery charging networks already exist is unclear at best.   Tesla's Supercharger V3 can add 200 miles to a Model 3 in 15 minutes. That is three times slower than hydrogen, but the difference between 15 minutes and five minutes is not the difference between viable and unviable. It is the difference between mildly irritating and genuinely quick.   BMW says production hydrogen vehicles could arrive in the second half of the 2020s. That is careful language. Could arrive. Not will arrive. The iX5 Hydrogen works as advertised. It refuels quickly. It drives like a normal SUV. It emits only water vapor.   The company is hedging. It has battery electrics in production now, hydrogen in limited testing, and combustion engines it will keep selling as long as regulations allow. That is a rational strategy for a manufacturer trying to predict which technology will dominate in 2035. It is not a signal that hydrogen is ready.   Honda killed the Clarity Fuel Cell in 2021 after five years of trying to make hydrogen work for consumers. Mercedes-Benz ran a GLC F-CELL pilot program from 2018 to 2020 and quietly walked away. Both companies built competent hydrogen vehicles. Both concluded the infrastructure would not materialize in time to justify continued investment. BMW is walking the same path and expecting a different result.   Those 100 demonstration iX5s are still running. The fuel cell technology works. The refueling time is real. The production timeline remains conditional.   Sources: BMW official specifications, Toyota Mirai and Hyundai Nexo technical data, US Department of Energy Alternative Fuels Data Center, Tesla Supercharger network specifications       submitted by     /u/gaukmotors     to     r/MotorBuzz       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MotorBuzz/comments/1wj7rha/bmws_hydrogen_ix5_fills_up_in_five_minutes_while/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T22:01:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T22:02:17.596Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac6369660c608403974b34"
+    },
+    "message_id": "reddit_t3_1wj7rgq",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "IllustriousMove9818",
+    "title": "Level: 601~620 4⭐ Summer Matsuri #8074",
+    "text": "Level: 601~620 4⭐ Summer Matsuri #8074\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/IllustriousMove9818     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wj7rgq/level_601620_4_summer_matsuri_8074/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T22:01:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T22:02:17.802Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac6391aeeb96c1c63b908b"
+    },
+    "message_id": "reddit_t3_1wj7s64",
+    "topic_key": "barber",
+    "search_keyword": "barber",
+    "platform": "reddit",
+    "subreddit": "Nbamemes",
+    "username": "Barber_09",
+    "title": "Imagine Chet trying to post up Shaq",
+    "text": "Imagine Chet trying to post up Shaq\n\nsubmitted by     /u/Barber_09     to     r/Nbamemes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Nbamemes/comments/1wj7s64/imagine_chet_trying_to_post_up_shaq/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T22:02:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T22:02:57.191Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aac6391aeeb96c1c63b908c"
+    },
+    "message_id": "reddit_t3_1wj7s55",
+    "topic_key": "background check",
+    "search_keyword": "background check",
+    "platform": "reddit",
+    "subreddit": "ufc",
+    "username": "antisocial_element44",
+    "title": "Gable Stevenson is a soft target for Jon Jones haters.Let's look at the facts of his case where a drunk woman accused him after a party:",
+    "text": "Gable Stevenson is a soft target for Jon Jones haters.Let's look at the facts of his case where a drunk woman accused him after a party:\n\nLet’s talk about the absolute clown show in the MMA community right now.   You clowns love using the word \"grapist\" but let’s look at the actual legal facts that your double-digit IQ brains keep ignoring:      THE LAW DID NOT SAVE HIM. The Hennepin County Attorney explicitly stated there was INADEQUATE EVIDENCE. It wasn’t a loophole victory; it was a lack of proof because conflicting stories don't hold up in court. Even his legal team confirmed that if the law was changed back then, he still walks free because HE DID NOTHING ILLEGAL.     EVERY MULTI-BILLION DOLLAR ORG CLEARED HIM. You think the International Olympic Committee, the NFL, the WWE, and now Dana White’s UFC don’t do thorough corporate background checks? If there was even a 1% chance he was dirty, these massive brands wouldn't touch him with a ten-foot pole.     YOU’RE JUST MAD HE TRAINS WITH BONES. You can’t handle the fact that this Olympic Gold Medalist is 4-0, genetically gifted, and learning from the greatest to ever do it in Albuquerque.      Keep crying in the comment section thats all your pathetic ass can do.Some of you pass sweeping judgements as if you know more law than attornies and judges.The legal system cleared him, the biggest sports orgs in the world cleared him, but your parasocial hatred won't let you see reality. Stay mad.       submitted by     /u/antisocial_element44     to     r/ufc       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ufc/comments/1wj7s55/gable_stevenson_is_a_soft_target_for_jon_jones/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T22:02:35Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T22:02:57.427Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aac63a1660c608403974b35"
+    },
+    "message_id": "reddit_t3_1wj7sjt",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AlignmentChartFills",
+    "username": "shield_x",
+    "title": "Which niche job offers medium pay?",
+    "text": "Which niche job offers medium pay?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/shield_x     to     r/AlignmentChartFills       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlignmentChartFills/comments/1wj7sjt/which_niche_job_offers_medium_pay/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T22:03:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T22:03:13.762Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac63a1660c608403974b36"
+    },
+    "message_id": "reddit_t3_1wj7sjj",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "📢 Crisafulli Bros . Plumbing & He [HIRING] a Residential Hvac Service Technician!",
+    "text": "📢 Crisafulli Bros . Plumbing & He [HIRING] a Residential Hvac Service Technician!\n\nCompany: Crisafulli Bros. Plumbing & He   Location: Glens Falls, New York 📍   Date Posted: September 17, 2026 📅   Categories: #fulltime   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=hvacindustryjobs.com&rurl=aHR0cHM6Ly9odmFjaW5kdXN0cnlqb2JzLmNvbS9qb2JzL3Jlc2lkZW50aWFsLWh2YWMtc2VydmljZS10ZWNobmljaWFuLThkYzQyZDBm    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wj7sjj/crisafulli_bros_plumbing_he_hiring_a_residential/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T22:03:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T22:03:13.962Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac63a2660c608403974b37"
+    },
+    "message_id": "reddit_t3_1wj7siz",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "IllustriousMove9818",
+    "title": "Level: 601~620 3⭐ Summer Matsuri #8079",
+    "text": "Level: 601~620 3⭐ Summer Matsuri #8079\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/IllustriousMove9818     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wj7siz/level_601620_3_summer_matsuri_8079/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T22:03:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T22:03:14.163Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac63a2660c608403974b38"
+    },
+    "message_id": "reddit_t3_1wj7sgi",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "WordGameArcade",
+    "username": "Grand-Permission2643",
+    "title": "🟨 Unscramble This 5-Letter Word (by u/Grand-Permission2643)",
+    "text": "🟨 Unscramble This 5-Letter Word (by u/Grand-Permission2643)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Grand-Permission2643     to     r/WordGameArcade       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WordGameArcade/comments/1wj7sgi/unscramble_this_5letter_word_by/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T22:02:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T22:03:14.374Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac63a2660c608403974b39"
+    },
+    "message_id": "reddit_t3_1wj7sg8",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Tickets",
+    "username": "Livid-Dragonfruit467",
+    "title": "[FS] 3 Tickets for Harry Styles - Pasadena, CA (April 23rd) - Instant Delivery via StubHub",
+    "text": "[FS] 3 Tickets for Harry Styles - Pasadena, CA (April 23rd) - Instant Delivery via StubHub\n\nI have posted 3 tickets for sale for the date April 23rd in Pasadena, California. Check StubHub if interested. Can buy together or individually.    Section where tickets are located         submitted by     /u/Livid-Dragonfruit467     to     r/Tickets       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Tickets/comments/1wj7sg8/fs_3_tickets_for_harry_styles_pasadena_ca_april/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T22:02:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T22:03:14.573Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac63a2660c608403974b3a"
+    },
+    "message_id": "reddit_t3_1wj7sg3",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DesignerEye",
+    "username": "BadPanda666",
+    "title": "The bottleneck paradox",
+    "text": "The bottleneck paradox\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/BadPanda666     to     r/DesignerEye       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DesignerEye/comments/1wj7sg3/the_bottleneck_paradox/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T22:02:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T22:03:14.774Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac63a2660c608403974b3b"
+    },
+    "message_id": "reddit_t3_1wj7sfw",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "LGBTBooks",
+    "username": "RuthieEbun",
+    "title": "The Glass of Water - Novel",
+    "text": "The Glass of Water - Novel\n\nI recently published a mlm romance about a ceo and employee. I’m really hoping to get some opinions and see if I’ll find my audience:     https://weink.app/books/5QmlqcpQ3G   Blurb:    THE GLASS OF WATER     He didn't know he was falling. He knew he wasn't supposed to.    One night, one stranger, one mistake Ethan Carter has no intention of repeating.   Then morning comes, and so does the email: Hale Industries has acquired his family's company. Incoming CEO, Lucas Hale. The same Lucas Hale who left him breathless on a hotel terrace twelve hours earlier, and who somehow isn't surprised to see him at all.   It gets worse. Buried in a contract his father signed years ago and never mentioned, Ethan discovers he isn't just Lucas's newest employee. He's his fiancé.   Forced into Lucas's office as his personal assistant and into his penthouse as his intended, Ethan tells himself none of it counts: not the jealousy they can't hide, not the fights that end with his fingers in Lucas's hair, not the way this man, cold enough to freeze a boardroom silent, keeps leaving a glass of water beside him without being asked. Lucas Hale doesn't do soft. He doesn't do trust. He's starting to do both anyway, and it terrifies him more than losing everything he was born to inherit.   Because everything is exactly what's on the table. A grandfather who treats marriage like a merger. A rival who offers Ethan the easy love Lucas never learned how to give. And a secret buried thirty years deep that, once it surfaces, will make Ethan question whether any of this, the contract, the company, even that first night, was ever really his choice at all.   He can walk away with his freedom. Or stay and bet everything on a man who was built never to let go of anything he owns.    Some contracts you sign with a pen. This one, he signs with his heart, and doesn't realize until it's far too late.     https://weink.app/books/5QmlqcpQ3G        submitted by     /u/RuthieEbun     to     r/LGBTBooks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LGBTBooks/comments/1wj7sfw/the_glass_of_water_novel/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T22:02:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T22:03:14.975Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac63a3660c608403974b3c"
+    },
+    "message_id": "reddit_t3_1wj7ses",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "megabajillionaire",
+    "title": "[Sticker Giveaway] Enter to win a 5 Stars Orchid Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 5 Stars Orchid Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/megabajillionaire     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wj7ses/sticker_giveaway_enter_to_win_a_5_stars_orchid/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T22:02:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T22:03:15.186Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac63a3660c608403974b3d"
+    },
+    "message_id": "reddit_t3_1wj7sed",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "hometheater",
+    "username": "Eaten4656",
+    "title": "Budget subwoofer in EU 2026",
+    "text": "Budget subwoofer in EU 2026\n\nHi all! I wanted a subwoofer for my 2.0 \"home theater\" setup, but don't see any good options available to buy in the EU right now without paying 600€+. It seems like all good budget options are only available (or feasible) in North America. Am I missing something? What would you suggest?   Thanks.       submitted by     /u/Eaten4656     to     r/hometheater       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hometheater/comments/1wj7sed/budget_subwoofer_in_eu_2026/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T22:02:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T22:03:15.385Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac63a3660c608403974b3e"
+    },
+    "message_id": "reddit_t3_1wj7sdo",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FantasyFootballers",
+    "username": "Thin-Parsley7576",
+    "title": "Commissioner forced through a trade involving Amon-Ra St. Brown 7 hours before kickoff, then reversed it after pushback — did he overstep?",
+    "text": "Commissioner forced through a trade involving Amon-Ra St. Brown 7 hours before kickoff, then reversed it after pushback — did he overstep?\n\nTwo managers in our league agreed to a trade on ESPN that included Amon-Ra St. Brown (who plays Thursday night). The trade was proposed but wasn’t going to process in time for tonight’s game — it was set to go through Saturday or the following Tuesday.  One of the managers said he didn’t even see the trade until Monday (three days late), which is why it wasn’t accepted earlier.  Instead of leaving it alone, the commissioner stepped in roughly 7 hours before kickoff and manually pushed the trade through so Amon-Ra would count for the new team tonight.  A couple of us (myself included) immediately pushed back hard. This is a $500 league with real money and serious stakes, and we felt the commissioner had no business interjecting and changing the outcome of a game that was already locked. After the complaints, he reversed the trade and put everything back the way it was.  Now I’m curious what the rest of Reddit thinks:  • Was the commissioner justified in forcing the trade through so it could process before Thursday night, or should he have stayed out of it completely?  • Once he did force it, was reversing it the right call, or did that just make the whole situation messier?  Looking for unbiased opinions so I can take them back to our group chat. Appreciate any thoughts.       submitted by     /u/Thin-Parsley7576     to     r/FantasyFootballers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FantasyFootballers/comments/1wj7sdo/commissioner_forced_through_a_trade_involving/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T22:02:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T22:03:15.591Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aac63a3660c608403974b3f"
+    },
+    "message_id": "reddit_t3_1wj7sda",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",

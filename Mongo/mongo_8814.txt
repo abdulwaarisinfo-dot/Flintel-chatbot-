@@ -1,0 +1,416 @@
+    "subreddit": "",
+    "username": "homegymcoop",
+    "title": "When buying gym equipment, if you're wondering if it's actually been tested, look for the following ASTM certs:\n\n- F2276 - Stability &amp; Integrity\n- F2571 - Load Testing\n- F2216  - Selectorized Machines\n\nMuch of the cheap, budget-ended equipment is never actually tested. https://t.co/6hEAwt5rLd",
+    "text": "When buying gym equipment, if you're wondering if it's actually been tested, look for the following ASTM certs:\n\n- F2276 - Stability &amp; Integrity\n- F2571 - Load Testing\n- F2216  - Selectorized Machines\n\nMuch of the cheap, budget-ended equipment is never actually tested. https://t.co/6hEAwt5rLd",
+    "post_url": "https://twitter.com/homegymcoop/status/2046954810126061796",
+    "score": 190,
+    "num_comments": 12,
+    "created_utc": {
+      "$date": "2026-04-22T14:10:31Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:59:28.429Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe43042dd0e95b5bad4eb"
+    },
+    "message_id": "twitter_2100525825921823229",
+    "topic_key": "budget load testing",
+    "search_keyword": "budget load testing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "adil_kadival",
+    "title": "Kids as load testers - best sanity check for UI responsiveness.",
+    "text": "Kids as load testers - best sanity check for UI responsiveness.",
+    "post_url": "https://twitter.com/adil_kadival/status/2100525825921823229",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T10:02:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:59:28.644Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe43042dd0e95b5bad4ec"
+    },
+    "message_id": "twitter_2062458872791462209",
+    "topic_key": "budget load testing",
+    "search_keyword": "budget load testing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "0xCortexl",
+    "title": "HE SPENT DAYS TESTING MAC MINI 16G AGAINST RTX 4070TI ON LOCAL AI - AND THE HONEST NUMBERS ARE NOT WHAT ANYONE WANTS TO HEAR\n\ntwo setups, same model - Mac Mini 16G vs RTX 4070Ti 12G running Qwen 3.5 9B - the best model that actually fits on either machine - Qwen 3.6 doesn't even load\n\n4070Ti hits 65 TPS - Mac Mini hits 12 TPS and thinks for 2+ minutes per response - both machines completely maxed, 4070Ti temperature jumped from 40°C to 60°C\n\nhe plugged the 9B model into Claude Code - tools don't work, basically useless for anything agentic\n\nthe real number nobody talks about - for Mac Mini to handle actual agentic workflows you need 48G memory and a 27-35B model with MLX - hardware that starts at $2,800 and up\n\nhis verdict after days of testing: local models eat money, eat time, small models are too weak and large models need a budget most people can't justify\n\nshort term - he's done with local models\n\nmost people think \"I'll just run it locally\" - he actually did it and the math doesn't work",
+    "text": "HE SPENT DAYS TESTING MAC MINI 16G AGAINST RTX 4070TI ON LOCAL AI - AND THE HONEST NUMBERS ARE NOT WHAT ANYONE WANTS TO HEAR\n\ntwo setups, same model - Mac Mini 16G vs RTX 4070Ti 12G running Qwen 3.5 9B - the best model that actually fits on either machine - Qwen 3.6 doesn't even load\n\n4070Ti hits 65 TPS - Mac Mini hits 12 TPS and thinks for 2+ minutes per response - both machines completely maxed, 4070Ti temperature jumped from 40°C to 60°C\n\nhe plugged the 9B model into Claude Code - tools don't work, basically useless for anything agentic\n\nthe real number nobody talks about - for Mac Mini to handle actual agentic workflows you need 48G memory and a 27-35B model with MLX - hardware that starts at $2,800 and up\n\nhis verdict after days of testing: local models eat money, eat time, small models are too weak and large models need a budget most people can't justify\n\nshort term - he's done with local models\n\nmost people think \"I'll just run it locally\" - he actually did it and the math doesn't work",
+    "post_url": "https://twitter.com/0xCortexl/status/2062458872791462209",
+    "score": 62,
+    "num_comments": 12,
+    "created_utc": {
+      "$date": "2026-06-04T08:58:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:59:28.859Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe43142dd0e95b5bad4ed"
+    },
+    "message_id": "twitter_2089074957661651301",
+    "topic_key": "budget load testing",
+    "search_keyword": "budget load testing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "EugBass",
+    "title": "THE $170 AI BILL OR A MAC MINI M4 INSTEAD?\n\nmany developers think they absolutely need expensive cloud pipelines to handle routine agentic workflows, but they are just blindly burning their saas infrastructure budget\n\nthe cloud model is no longer the only viable option\n\nthe leverage point has completely shifted to localized hybrid edge-compute stacks\n\nif you want to stop paying indefinitely for every single prompt and code refactor, you need to understand the hardware economics beneath your desk:\n\n- running claude code or open-source agents against a local ollama instance retains full file editing and terminal capabilities for zero ongoing inference fees\n\n- apple silicon unified memory allows local models to load once with zero pc-style overhead between the cpu and gpu vram\n\n- a baseline m4 architecture delivers 120 gb/s of memory bandwidth while consuming a silent 10 to 30 watts under continuous load\n\nstop fixing your mounting subscription overhead by cutting down your automated workflow volume\n\nthe future belongs to builders who offload routine documentation, scripting, and unit testing to local runtimes while reserving premium cloud tokens exclusively for complex multi-file reasoning",
+    "text": "THE $170 AI BILL OR A MAC MINI M4 INSTEAD?\n\nmany developers think they absolutely need expensive cloud pipelines to handle routine agentic workflows, but they are just blindly burning their saas infrastructure budget\n\nthe cloud model is no longer the only viable option\n\nthe leverage point has completely shifted to localized hybrid edge-compute stacks\n\nif you want to stop paying indefinitely for every single prompt and code refactor, you need to understand the hardware economics beneath your desk:\n\n- running claude code or open-source agents against a local ollama instance retains full file editing and terminal capabilities for zero ongoing inference fees\n\n- apple silicon unified memory allows local models to load once with zero pc-style overhead between the cpu and gpu vram\n\n- a baseline m4 architecture delivers 120 gb/s of memory bandwidth while consuming a silent 10 to 30 watts under continuous load\n\nstop fixing your mounting subscription overhead by cutting down your automated workflow volume\n\nthe future belongs to builders who offload routine documentation, scripting, and unit testing to local runtimes while reserving premium cloud tokens exclusively for complex multi-file reasoning",
+    "post_url": "https://twitter.com/EugBass/status/2089074957661651301",
+    "score": 32,
+    "num_comments": 10,
+    "created_utc": {
+      "$date": "2026-08-16T19:40:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:59:29.075Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe43142dd0e95b5bad4ee"
+    },
+    "message_id": "twitter_2094070556857373028",
+    "topic_key": "budget load testing",
+    "search_keyword": "budget load testing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "AIQnetLab",
+    "title": "I measured QNet's real TPS. Here's the honest number — and why my old numbers were wrong.\n\nThe throughput figures I published earlier were what most chains actually publish: a lab benchmark — one node, localhost, transactions pumped straight into the engine, no network between machines, no finality. That measures how fast a single process can chew transactions. It's not a blockchain number. I've dropped it.\n\nWhat I measured instead. A live 5-node testnet on ordinary budget VPS (~€10/month class; the weakest are plain 8-vCPU machines with slow disks) — real network gossip between five independent machines, producer rotation every 30 blocks, failover armed, post-quantum signature verification on every node, deterministic re-execution of every block by every validator, a Merkle state root every block. A transfer only counts when it is finalized by a BFT checkpoint — not when it lands in a mempool, not when it's merely included.\n\nResult: 13,000 finalized transfers per second, sustained for 10 straight minutes. 99.8% of everything submitted was included AND finalized, on 1-second blocks (the 12k rung ran 932 blocks in exactly 932 seconds), hard finality ~109s median. Peak in 5-minute windows: 16,000/s. Push harder and the network degrades gracefully — it queues and self-drains, no forks and no network halt. 13k is the honest sustained ceiling of €10 machines, found by stepping the load up until it broke and confirming the last step that held.\n\nSingle transactions (one post-quantum signature each): ~450/s on this hardware. Not a design flaw — the price of quantum safety. An ML-DSA-65 signature is 3,309 bytes, and no standardized batch verification exists for ML-DSA — each signature verifies individually. For scale: one such signature doesn't even fit in Solana's 1,232-byte packet.\n\nThis is where QNet's architecture earns its keep. Batch transfers put up to 1,000 payments under ONE post-quantum signature — 3.3 bytes of signature per transfer. Every batch is signed and verified with plain, unmodified FIPS 204 ML-DSA — no custom crypto, the signature simply covers more payload. That's what makes PQ crypto practical at scale today, and it's why a network of €10 VPSes moves 13k quantum-safe transfers a second while a PQ-retrofitted classical chain would manage an estimated ~2-4k.\n\nPotential: signature verification and block application scale with CPU. On Solana-validator-grade servers the same code projects to ~5k singles and 40-80k batched transfers per second.\n\nWhat's next. The rolling node-update system and super-node onboarding are done and hardened. What's left is consensus soak-testing: if it runs clean for several days straight, I'm opening the testnet. The LLC is also nearly ready — which unlocks publishing the mobile apps to the stores.\n\nEvery number above is reproducible end-to-end over public RPC: submit → include → finalize.",
+    "text": "I measured QNet's real TPS. Here's the honest number — and why my old numbers were wrong.\n\nThe throughput figures I published earlier were what most chains actually publish: a lab benchmark — one node, localhost, transactions pumped straight into the engine, no network between machines, no finality. That measures how fast a single process can chew transactions. It's not a blockchain number. I've dropped it.\n\nWhat I measured instead. A live 5-node testnet on ordinary budget VPS (~€10/month class; the weakest are plain 8-vCPU machines with slow disks) — real network gossip between five independent machines, producer rotation every 30 blocks, failover armed, post-quantum signature verification on every node, deterministic re-execution of every block by every validator, a Merkle state root every block. A transfer only counts when it is finalized by a BFT checkpoint — not when it lands in a mempool, not when it's merely included.\n\nResult: 13,000 finalized transfers per second, sustained for 10 straight minutes. 99.8% of everything submitted was included AND finalized, on 1-second blocks (the 12k rung ran 932 blocks in exactly 932 seconds), hard finality ~109s median. Peak in 5-minute windows: 16,000/s. Push harder and the network degrades gracefully — it queues and self-drains, no forks and no network halt. 13k is the honest sustained ceiling of €10 machines, found by stepping the load up until it broke and confirming the last step that held.\n\nSingle transactions (one post-quantum signature each): ~450/s on this hardware. Not a design flaw — the price of quantum safety. An ML-DSA-65 signature is 3,309 bytes, and no standardized batch verification exists for ML-DSA — each signature verifies individually. For scale: one such signature doesn't even fit in Solana's 1,232-byte packet.\n\nThis is where QNet's architecture earns its keep. Batch transfers put up to 1,000 payments under ONE post-quantum signature — 3.3 bytes of signature per transfer. Every batch is signed and verified with plain, unmodified FIPS 204 ML-DSA — no custom crypto, the signature simply covers more payload. That's what makes PQ crypto practical at scale today, and it's why a network of €10 VPSes moves 13k quantum-safe transfers a second while a PQ-retrofitted classical chain would manage an estimated ~2-4k.\n\nPotential: signature verification and block application scale with CPU. On Solana-validator-grade servers the same code projects to ~5k singles and 40-80k batched transfers per second.\n\nWhat's next. The rolling node-update system and super-node onboarding are done and hardened. What's left is consensus soak-testing: if it runs clean for several days straight, I'm opening the testnet. The LLC is also nearly ready — which unlocks publishing the mobile apps to the stores.\n\nEvery number above is reproducible end-to-end over public RPC: submit → include → finalize.",
+    "post_url": "https://twitter.com/AIQnetLab/status/2094070556857373028",
+    "score": 34,
+    "num_comments": 12,
+    "created_utc": {
+      "$date": "2026-08-30T14:31:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:59:29.291Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe43142dd0e95b5bad4ef"
+    },
+    "message_id": "twitter_2085752405552140509",
+    "topic_key": "budget load testing",
+    "search_keyword": "budget load testing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "lazy_IT_guy",
+    "title": "My side business is currently generating $12K a month in untaxed revenue.\n\nI supply rare Japanese microgreens to 3 Michelin-starred restaurants.\n\nGrowing these specific greens requires a perfectly controlled, high-humidity environment and uninterrupted UV light.\n\nCoincidentally, that is the exact climate of the newly retrofitted Server Room B.\n\nOur CEO recently read an article about edge computing and demanded we upgrade our local infrastructure.\n\nHe authorized $400K for high-density server racks that we absolutely didn't need.\n\nI used the budget to install automated hydroponic irrigation trays and high-intensity full-spectrum LED panels.\n\nI stacked them vertically between the legacy Cisco routers.\n\nLast Tuesday, the facilities director asked why Server Room B smelled like a botanical garden.\n\nI told him we were beta-testing a new biological filtration mesh to reduce our carbon footprint.\n\nI used the phrase \"photosynthetic carbon sequestration.\"\n\nHe was so impressed he asked if we could write a press release about it.\n\nI told him it was proprietary technology and the patent was still pending, so we had to keep it completely dark.\n\nHe agreed and ordered the janitorial staff to never enter the room.\n\nNow the company is paying the water and power bills for a massive indoor agricultural operation.\n\nI even linked the irrigation sensors to our enterprise network monitoring dashboard.\n\nIf the pH balance in the water drops, I get a critical alert on my company phone.\n\nEvery Friday at 4 PM, I load 30 pounds of premium arugula into my trunk under the guise of off-site tape backups.\n\nI'm pioneering the intersection of enterprise infrastructure and farm-to-table dining.\n\nI think I'm going to start growing weed next.",
+    "text": "My side business is currently generating $12K a month in untaxed revenue.\n\nI supply rare Japanese microgreens to 3 Michelin-starred restaurants.\n\nGrowing these specific greens requires a perfectly controlled, high-humidity environment and uninterrupted UV light.\n\nCoincidentally, that is the exact climate of the newly retrofitted Server Room B.\n\nOur CEO recently read an article about edge computing and demanded we upgrade our local infrastructure.\n\nHe authorized $400K for high-density server racks that we absolutely didn't need.\n\nI used the budget to install automated hydroponic irrigation trays and high-intensity full-spectrum LED panels.\n\nI stacked them vertically between the legacy Cisco routers.\n\nLast Tuesday, the facilities director asked why Server Room B smelled like a botanical garden.\n\nI told him we were beta-testing a new biological filtration mesh to reduce our carbon footprint.\n\nI used the phrase \"photosynthetic carbon sequestration.\"\n\nHe was so impressed he asked if we could write a press release about it.\n\nI told him it was proprietary technology and the patent was still pending, so we had to keep it completely dark.\n\nHe agreed and ordered the janitorial staff to never enter the room.\n\nNow the company is paying the water and power bills for a massive indoor agricultural operation.\n\nI even linked the irrigation sensors to our enterprise network monitoring dashboard.\n\nIf the pH balance in the water drops, I get a critical alert on my company phone.\n\nEvery Friday at 4 PM, I load 30 pounds of premium arugula into my trunk under the guise of off-site tape backups.\n\nI'm pioneering the intersection of enterprise infrastructure and farm-to-table dining.\n\nI think I'm going to start growing weed next.",
+    "post_url": "https://twitter.com/lazy_IT_guy/status/2085752405552140509",
+    "score": 248,
+    "num_comments": 9,
+    "created_utc": {
+      "$date": "2026-08-07T15:38:19Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:59:29.507Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe43142dd0e95b5bad4f0"
+    },
+    "message_id": "twitter_2091108225806454802",
+    "topic_key": "budget load testing",
+    "search_keyword": "budget load testing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ProfBuehlerMIT",
+    "title": "Grok @bot is incredible - and they can even manufacture real physical objects! Here is a little experiment I did last night: I created a team of bots and asked them to solve a complex engineering problem end to end - starting from four images as design cues, inferring transferable structural principles from the pixels, synthesizing an executable interactive physics simulator, running and reasoning over experiments, optimizing the design & finally manufacturing the best designs.\n\nThe entire loop worked remarkably well - and I was even able to communicate with the agents from my Apple Watch. (Do we live in the future yet?) \n\nTeam of agents\n\n1⃣ Chief of Staff coordinates the workflow: watches the other agents, pulls results into the main chat, transfers files between them, and keeps the job moving.\n2⃣ Physics Experimenter is the scientist-coder. It interprets the design cues and images, writes the simulator, runs experiments, analyzes the results, and produces a detailed LaTeX scientific report.\n3⃣ 3D Printing Bot operates the fabrication workflow: prepares and slices the models, generates manufacturing code, sends the job, and monitors the printer.\n\nThe workflow\n\nI provided an initial task based on four unregistered reference photographs containing different objects at different scales (pinnate leaf venation, a Voronoi-like areole mesh, a stochastic fibrous lattice, and a radial/circumferential web).\n\nThe prompt asked the agents to infer transferable design principles - hierarchy, branching, interfaces, redundancy, disorder, load paths - and use them to build an interactive laboratory for hierarchical materials and fracture.\n\nThe scientific question was: at fixed material budget, how do hierarchy depth, redundancy, disorder, and interlevel strength change stiffness, peak load, energy absorption, and the brittle-to-progressive transition?\n\nIn ~20 minutes, the Physics Experimenter produced a 2D hierarchical Euler–Bernoulli beam-network laboratory. Coarse veins persist and remain thicker; finer infill is added inside cells; members connecting levels are treated as interfaces with relative strength κ; and total material volume is conserved. The four source photographs remain visible in an editable interpretation panel. The app generates geometry, steps or runs the network to failure, compares A/B/C designs, and exports JSON, CSV, PNG, and STL geometry for fabrication.\n\nAfter validation the Physics Experimenter used the app and conducted 47 simulation experiments, including six holdouts.\n\nIt found something scientifically interesting: extra hierarchy is not \"free\" toughness. At fixed volume, initial stiffness changed by only about 20%, while work-to-failure varied by several-fold. Infill steals cross-section from the main axial veins, so deeper and more redundant networks often absorbed less energy than a simple depth-1 grid. Weak interfaces behaved as distributed fuses, producing more progressive failure and reducing localization. The specific H2 hypothesis - that hierarchy becomes detrimental primarily because interfaces form a mechanical bottleneck - was rejected; the dominant effect instead came from redistribution of a fixed material budget across structural levels.\n\nThe Physics Experimenter then assembled the methods, tests, results, hypothesis evaluation, and conclusions into a detailed scientific report.\n\nThe best designs were passed to the 3D Printing Bot. It opened Bambu Studio and brought the Bambu Lab H2D online. Both STLs were placed on one build plate at the same 50x scale and sliced using a 0.20 mm PLA process. The prints completed within less than an hour.\n\nThe loop \n\nimages → structural abstraction → executable physics → autonomous experiments → hypothesis testing → design selection → STL → slicing/manufacturing code → physical object\n\nThat last transition is what I find especially interesting: AI is beginning to operate across the entire scientific and physical workflow - converting observations into models, models into experiments, experimental evidence into revised designs, and those designs into manufactured matter by directly operating machines. This starts to blur the boundary between AI that reasons about the physical world and AI that can actually act on it. \n\nShoutout to the @bot team - you are building something very special here! The way these agents can move naturally from reasoning, to experiments, to operating machines in the physical world feels like an important step.",
+    "text": "Grok @bot is incredible - and they can even manufacture real physical objects! Here is a little experiment I did last night: I created a team of bots and asked them to solve a complex engineering problem end to end - starting from four images as design cues, inferring transferable structural principles from the pixels, synthesizing an executable interactive physics simulator, running and reasoning over experiments, optimizing the design & finally manufacturing the best designs.\n\nThe entire loop worked remarkably well - and I was even able to communicate with the agents from my Apple Watch. (Do we live in the future yet?) \n\nTeam of agents\n\n1⃣ Chief of Staff coordinates the workflow: watches the other agents, pulls results into the main chat, transfers files between them, and keeps the job moving.\n2⃣ Physics Experimenter is the scientist-coder. It interprets the design cues and images, writes the simulator, runs experiments, analyzes the results, and produces a detailed LaTeX scientific report.\n3⃣ 3D Printing Bot operates the fabrication workflow: prepares and slices the models, generates manufacturing code, sends the job, and monitors the printer.\n\nThe workflow\n\nI provided an initial task based on four unregistered reference photographs containing different objects at different scales (pinnate leaf venation, a Voronoi-like areole mesh, a stochastic fibrous lattice, and a radial/circumferential web).\n\nThe prompt asked the agents to infer transferable design principles - hierarchy, branching, interfaces, redundancy, disorder, load paths - and use them to build an interactive laboratory for hierarchical materials and fracture.\n\nThe scientific question was: at fixed material budget, how do hierarchy depth, redundancy, disorder, and interlevel strength change stiffness, peak load, energy absorption, and the brittle-to-progressive transition?\n\nIn ~20 minutes, the Physics Experimenter produced a 2D hierarchical Euler–Bernoulli beam-network laboratory. Coarse veins persist and remain thicker; finer infill is added inside cells; members connecting levels are treated as interfaces with relative strength κ; and total material volume is conserved. The four source photographs remain visible in an editable interpretation panel. The app generates geometry, steps or runs the network to failure, compares A/B/C designs, and exports JSON, CSV, PNG, and STL geometry for fabrication.\n\nAfter validation the Physics Experimenter used the app and conducted 47 simulation experiments, including six holdouts.\n\nIt found something scientifically interesting: extra hierarchy is not \"free\" toughness. At fixed volume, initial stiffness changed by only about 20%, while work-to-failure varied by several-fold. Infill steals cross-section from the main axial veins, so deeper and more redundant networks often absorbed less energy than a simple depth-1 grid. Weak interfaces behaved as distributed fuses, producing more progressive failure and reducing localization. The specific H2 hypothesis - that hierarchy becomes detrimental primarily because interfaces form a mechanical bottleneck - was rejected; the dominant effect instead came from redistribution of a fixed material budget across structural levels.\n\nThe Physics Experimenter then assembled the methods, tests, results, hypothesis evaluation, and conclusions into a detailed scientific report.\n\nThe best designs were passed to the 3D Printing Bot. It opened Bambu Studio and brought the Bambu Lab H2D online. Both STLs were placed on one build plate at the same 50x scale and sliced using a 0.20 mm PLA process. The prints completed within less than an hour.\n\nThe loop \n\nimages → structural abstraction → executable physics → autonomous experiments → hypothesis testing → design selection → STL → slicing/manufacturing code → physical object\n\nThat last transition is what I find especially interesting: AI is beginning to operate across the entire scientific and physical workflow - converting observations into models, models into experiments, experimental evidence into revised designs, and those designs into manufactured matter by directly operating machines. This starts to blur the boundary between AI that reasons about the physical world and AI that can actually act on it. \n\nShoutout to the @bot team - you are building something very special here! The way these agents can move naturally from reasoning, to experiments, to operating machines in the physical world feels like an important step.",
+    "post_url": "https://twitter.com/ProfBuehlerMIT/status/2091108225806454802",
+    "score": 1156,
+    "num_comments": 87,
+    "created_utc": {
+      "$date": "2026-08-22T10:20:26Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:59:29.723Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe43142dd0e95b5bad4f1"
+    },
+    "message_id": "twitter_2089315529425301889",
+    "topic_key": "budget load testing",
+    "search_keyword": "budget load testing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "SCR01111",
+    "title": "All you need to prepare for Intuit Software Engineer roles 📌\n\nIf Intuit is one of your target product companies, don't prepare with a generic FAANG roadmap.\n\nIntuit's engineering work sits at the intersection of:\n\nSoftware Engineering\n+\nFintech\n+\nAI\n+\nCloud\n+\nLarge-scale systems\n\nHere's how I'd prepare.\n\n1. Pick your primary language\n\nFor Intuit India, I'd prioritize:\n\nJava\nor\nScala\nor\nGo\n\nIf you're already strong in Java, stick with Java.\n\nDon't waste your preparation time learning a new language just because the job description mentions it.\n\nCurrent Intuit roles use a polyglot stack including Java, Go, Python, React and other technologies.\n\nResource:\n\nJava:\nhttps://t.co/nLgxIFcDUZ\n\nGo:\nhttps://t.co/VhqJzq7z0o\n\nScala:\nhttps://t.co/KbYdvScpu2\n\n2. DSA\n\nYou still need strong DSA.\n\nFocus on:\n\n• Arrays\n• Hashing\n• Strings\n• Two Pointers\n• Sliding Window\n• Binary Search\n• Linked List\n• Stack / Queue\n• Trees\n• Heap\n• Graphs\n• Greedy\n• Backtracking\n• Dynamic Programming\n\nDon't aim for 500 random problems.\n\nAim for around 120 to 150 quality problems and re-solve the ones you get wrong.\n\nResource:\n\nhttps://t.co/mrFXGOEA4h\n\n3. Core computer science\n\nDon't treat CS fundamentals as optional.\n\nFocus on:\n\nOS\n• Processes\n• Threads\n• Memory\n• Concurrency\n• Synchronization\n\nDBMS\n• SQL\n• Indexing\n• Transactions\n• ACID\n• Isolation\n• Schema design\n\nNetworking\n• TCP\n• HTTP\n• DNS\n• TLS\n• REST\n• APIs\n\nLinux\n• Processes\n• Files\n• Permissions\n• Networking\n• Shell\n\nIntuit's current engineering roles specifically mention algorithms, networking, Linux and software engineering fundamentals.\n\nResource:\n\nhttps://t.co/M4oomjHeTX\n\n4. Backend engineering\n\nThis should be one of your biggest priorities.\n\nLearn:\n\n• REST APIs\n• API design\n• Authentication\n• Authorization\n• Microservices\n• Service-to-service communication\n• Error handling\n• Logging\n• Testing\n• Database design\n• Caching\n• Observability\n\nFor Java:\n\nSpring Boot\n→ REST\n→ JPA\n→ Security\n→ Testing\n→ Production deployment\n\nResource:\n\nhttps://t.co/ED7MgpeOBq\n\n5. SQL and data\n\nIntuit deals with huge amounts of financial and customer data.\n\nBe comfortable writing SQL without relying on an ORM for everything.\n\nKnow:\n\n• Joins\n• Aggregations\n• Subqueries\n• CTEs\n• Window functions\n• Indexes\n• Transactions\n• Query optimization\n• Relational schema design\n\nResource:\n\nhttps://t.co/r9eA4aXvle\n\n6. Kafka and event-driven systems\n\nThis is particularly relevant for Intuit backend preparation.\n\nCurrent Intuit engineering roles mention Kafka, RabbitMQ, Amazon SQS and messaging patterns.\n\nLearn:\n\n• Producer\n• Consumer\n• Topics\n• Partitions\n• Consumer groups\n• Offsets\n• Ordering\n• Retries\n• Dead-letter queues\n\nThen understand why you would use events instead of synchronous APIs.\n\nResource:\n\nhttps://t.co/fTgCH9BtsY\n\n7. Microservices\n\nDon't just memorize the word \"microservices.\"\n\nUnderstand:\n\n• Service boundaries\n• API contracts\n• Service discovery\n• Communication\n• Failure handling\n• Retries\n• Timeouts\n• Circuit breakers\n• Distributed transactions\n• Observability\n\nThen ask:\n\nWhat happens when one service goes down?\n\nWhat happens when a request is duplicated?\n\nWhat happens when a downstream service takes 10 seconds?\n\nResource:\n\nhttps://t.co/IJ6ITsZqGc\n\n8. Cloud and containers\n\nIntuit's current engineering platform uses cloud-native technologies including AWS, Kubernetes, Istio, Envoy and other infrastructure components.\n\nFor a normal SWE interview, don't try to become a Kubernetes administrator.\n\nKnow:\n\n• AWS fundamentals\n• Docker\n• Kubernetes basics\n• Deployments\n• Services\n• ConfigMaps\n• Secrets\n• CI/CD\n• Monitoring\n\nResources:\n\nAWS:\nhttps://t.co/vtFUQtUzOp\n\nDocker:\nhttps://t.co/H0jL9iIk42\n\nKubernetes:\nhttps://t.co/QNBMGaoCfj\n\n9. System design\n\nThis matters more as you move toward experienced SWE roles.\n\nStart with:\n\n• Load balancing\n• Caching\n• Queues\n• Databases\n• Replication\n• Partitioning\n• Rate limiting\n• CDN\n• Microservices\n• Observability\n\nThen design systems relevant to Intuit:\n\n• Payment processing\n• Financial transaction system\n• Expense tracking\n• Tax calculation system\n• Fraud detection\n• Credit scoring\n• Recommendation system\n• Notification system\n\nResource:\n\nhttps://t.co/kj8QBHCZvh\n\n10. AI\n\nDon't ignore this section.\n\nIntuit is heavily investing in AI through Intuit Intelligence, with AI, ML, NLP and agentic experiences becoming part of its products and engineering platform.\n\nYou don't need to become an ML researcher for a normal SWE role.\n\nKnow:\n\n• LLM basics\n• Embeddings\n• RAG\n• Tool calling\n• Agents\n• AI APIs\n• Evaluation\n• AI-assisted development\n\nResource:\n\nhttps://t.co/Xm4cM5VI0o\n\n11. Build one Intuit-style project\n\nDon't build another basic banking CRUD application.\n\nBuild something that demonstrates:\n\nBackend\n+\nData\n+\nEvents\n+\nAI\n+\nProduction thinking\n\nExample:\n\nAI Financial Assistant\n\nJava + Spring Boot\n+\nPostgreSQL\n+\nRedis\n+\nKafka\n+\nLLM API\n+\nDocker\n\nFeatures:\n\n• Transaction ingestion\n• Categorization\n• Spending analysis\n• Budget alerts\n• Financial insights\n• Async event processing\n• Authentication\n• Audit logs\n\nThen be ready to explain:\n\nWhy PostgreSQL?\n\nWhy Redis?\n\nWhy Kafka?\n\nWhy asynchronous processing?\n\nHow would you handle duplicate transactions?\n\nHow would you protect financial data?\n\nHow would you scale it?\n\n12. Intuit's craft demonstration\n\nThis is something you should NOT ignore.\n\nIntuit's official hiring process describes a craft demonstration/case study as part of the engineering interview process.\n\nYou may need to demonstrate how you approach a problem and explain your work.\n\nSo don't just build the project.\n\nPractice presenting it.\n\nBe able to explain:\n\nProblem\n↓\nWhy you built it\n↓\nArchitecture\n↓\nTechnology choices\n↓\nTrade-offs\n↓\nFailures\n↓\nTesting\n↓\nScale\n↓\nWhat you'd improve\n\nResource:\n\nhttps://t.co/ze96Szby4Y\n\n13. Behavioral preparation\n\nIntuit's interview process also includes team-member and manager conversations.\n\nPrepare stories around:\n\n• Ownership\n• Learning quickly\n• Handling failure\n• Working with others\n• Conflict\n• Technical decisions\n• Customer impact\n• Leadership\n• Feedback\n\nDon't memorize answers.\n\nPrepare real stories from your projects, internships and work.\n\nResource:\n\nhttps://t.co/ze96Szby4Y\n\n14. 12-week preparation plan\n\nWeeks 1 to 4\n\nDSA: 2 hr/day\nJava: 1 hr/day\nSQL: 45 min/day\nCS fundamentals: 45 min/day\n\nTarget:\n\n30 to 40 DSA problems.\n\nStart your project.\n\nWeeks 5 to 8\n\nDSA: 1.5 hr/day\nBackend: 1 hr/day\nKafka / Microservices: 45 min/day\nSystem Design: 45 min/day\nProject: 1 hr/day\n\nYour project should now work end to end.\n\nWeeks 9 to 12\n\nDSA revision: 1.5 hr/day\nTimed problems: 45 min/day\nSystem Design: 45 min/day\nProject: 1 hr/day\nBehavioral / Craft Demo: 30 min/day\n\nStart applying.\n\nStart mocks.\n\nStop collecting courses.\n\n15. What Intuit-specific preparation should look like\n\nDon't prepare only for:\n\n\"Can I solve this LeetCode problem?\"\n\nPrepare for:\n\nCan I write good code?\n\nCan I explain my design?\n\nCan I work with data?\n\nCan I build APIs?\n\nCan I reason about distributed systems?\n\nCan I debug production problems?\n\nCan I explain my project?\n\nCan I communicate with another engineer?\n\nCan I use AI effectively without blindly trusting it?\n\n16. What not to do\n\nDon't learn five programming languages.\n\nDon't spend three months only on LeetCode.\n\nDon't build five basic CRUD projects.\n\nDon't ignore SQL.\n\nDon't ignore Linux and networking.\n\nDon't memorize system design diagrams.\n\nDon't learn Kubernetes deeply before understanding backend systems.\n\nDon't build an AI wrapper and call it an AI project.\n\nDon't put every technology you've touched on your resume.\n\nAnd don't wait until you're completely ready before applying.\n\nThe Intuit preparation stack:\n\nJava / Scala / Go\n↓\nDSA\n↓\nCS Fundamentals\n↓\nSQL\n↓\nBackend\n↓\nKafka + Microservices\n↓\nCloud + Kubernetes basics\n↓\nSystem Design\n↓\nAI fundamentals\n↓\nOne serious project\n↓\nCraft Demo\n↓\nBehavioral\n↓\nMocks + Applications\n\nIntuit isn't just looking for someone who can solve coding problems.\n\nIts engineering teams are building AI-powered financial products used by around 100 million customers, so the bigger goal is becoming someone who can build, explain, and operate real software at scale.\n\nThat's how I'd prepare specifically for Intuit.",
+    "text": "All you need to prepare for Intuit Software Engineer roles 📌\n\nIf Intuit is one of your target product companies, don't prepare with a generic FAANG roadmap.\n\nIntuit's engineering work sits at the intersection of:\n\nSoftware Engineering\n+\nFintech\n+\nAI\n+\nCloud\n+\nLarge-scale systems\n\nHere's how I'd prepare.\n\n1. Pick your primary language\n\nFor Intuit India, I'd prioritize:\n\nJava\nor\nScala\nor\nGo\n\nIf you're already strong in Java, stick with Java.\n\nDon't waste your preparation time learning a new language just because the job description mentions it.\n\nCurrent Intuit roles use a polyglot stack including Java, Go, Python, React and other technologies.\n\nResource:\n\nJava:\nhttps://t.co/nLgxIFcDUZ\n\nGo:\nhttps://t.co/VhqJzq7z0o\n\nScala:\nhttps://t.co/KbYdvScpu2\n\n2. DSA\n\nYou still need strong DSA.\n\nFocus on:\n\n• Arrays\n• Hashing\n• Strings\n• Two Pointers\n• Sliding Window\n• Binary Search\n• Linked List\n• Stack / Queue\n• Trees\n• Heap\n• Graphs\n• Greedy\n• Backtracking\n• Dynamic Programming\n\nDon't aim for 500 random problems.\n\nAim for around 120 to 150 quality problems and re-solve the ones you get wrong.\n\nResource:\n\nhttps://t.co/mrFXGOEA4h\n\n3. Core computer science\n\nDon't treat CS fundamentals as optional.\n\nFocus on:\n\nOS\n• Processes\n• Threads\n• Memory\n• Concurrency\n• Synchronization\n\nDBMS\n• SQL\n• Indexing\n• Transactions\n• ACID\n• Isolation\n• Schema design\n\nNetworking\n• TCP\n• HTTP\n• DNS\n• TLS\n• REST\n• APIs\n\nLinux\n• Processes\n• Files\n• Permissions\n• Networking\n• Shell\n\nIntuit's current engineering roles specifically mention algorithms, networking, Linux and software engineering fundamentals.\n\nResource:\n\nhttps://t.co/M4oomjHeTX\n\n4. Backend engineering\n\nThis should be one of your biggest priorities.\n\nLearn:\n\n• REST APIs\n• API design\n• Authentication\n• Authorization\n• Microservices\n• Service-to-service communication\n• Error handling\n• Logging\n• Testing\n• Database design\n• Caching\n• Observability\n\nFor Java:\n\nSpring Boot\n→ REST\n→ JPA\n→ Security\n→ Testing\n→ Production deployment\n\nResource:\n\nhttps://t.co/ED7MgpeOBq\n\n5. SQL and data\n\nIntuit deals with huge amounts of financial and customer data.\n\nBe comfortable writing SQL without relying on an ORM for everything.\n\nKnow:\n\n• Joins\n• Aggregations\n• Subqueries\n• CTEs\n• Window functions\n• Indexes\n• Transactions\n• Query optimization\n• Relational schema design\n\nResource:\n\nhttps://t.co/r9eA4aXvle\n\n6. Kafka and event-driven systems\n\nThis is particularly relevant for Intuit backend preparation.\n\nCurrent Intuit engineering roles mention Kafka, RabbitMQ, Amazon SQS and messaging patterns.\n\nLearn:\n\n• Producer\n• Consumer\n• Topics\n• Partitions\n• Consumer groups\n• Offsets\n• Ordering\n• Retries\n• Dead-letter queues\n\nThen understand why you would use events instead of synchronous APIs.\n\nResource:\n\nhttps://t.co/fTgCH9BtsY\n\n7. Microservices\n\nDon't just memorize the word \"microservices.\"\n\nUnderstand:\n\n• Service boundaries\n• API contracts\n• Service discovery\n• Communication\n• Failure handling\n• Retries\n• Timeouts\n• Circuit breakers\n• Distributed transactions\n• Observability\n\nThen ask:\n\nWhat happens when one service goes down?\n\nWhat happens when a request is duplicated?\n\nWhat happens when a downstream service takes 10 seconds?\n\nResource:\n\nhttps://t.co/IJ6ITsZqGc\n\n8. Cloud and containers\n\nIntuit's current engineering platform uses cloud-native technologies including AWS, Kubernetes, Istio, Envoy and other infrastructure components.\n\nFor a normal SWE interview, don't try to become a Kubernetes administrator.\n\nKnow:\n\n• AWS fundamentals\n• Docker\n• Kubernetes basics\n• Deployments\n• Services\n• ConfigMaps\n• Secrets\n• CI/CD\n• Monitoring\n\nResources:\n\nAWS:\nhttps://t.co/vtFUQtUzOp\n\nDocker:\nhttps://t.co/H0jL9iIk42\n\nKubernetes:\nhttps://t.co/QNBMGaoCfj\n\n9. System design\n\nThis matters more as you move toward experienced SWE roles.\n\nStart with:\n\n• Load balancing\n• Caching\n• Queues\n• Databases\n• Replication\n• Partitioning\n• Rate limiting\n• CDN\n• Microservices\n• Observability\n\nThen design systems relevant to Intuit:\n\n• Payment processing\n• Financial transaction system\n• Expense tracking\n• Tax calculation system\n• Fraud detection\n• Credit scoring\n• Recommendation system\n• Notification system\n\nResource:\n\nhttps://t.co/kj8QBHCZvh\n\n10. AI\n\nDon't ignore this section.\n\nIntuit is heavily investing in AI through Intuit Intelligence, with AI, ML, NLP and agentic experiences becoming part of its products and engineering platform.\n\nYou don't need to become an ML researcher for a normal SWE role.\n\nKnow:\n\n• LLM basics\n• Embeddings\n• RAG\n• Tool calling\n• Agents\n• AI APIs\n• Evaluation\n• AI-assisted development\n\nResource:\n\nhttps://t.co/Xm4cM5VI0o\n\n11. Build one Intuit-style project\n\nDon't build another basic banking CRUD application.\n\nBuild something that demonstrates:\n\nBackend\n+\nData\n+\nEvents\n+\nAI\n+\nProduction thinking\n\nExample:\n\nAI Financial Assistant\n\nJava + Spring Boot\n+\nPostgreSQL\n+\nRedis\n+\nKafka\n+\nLLM API\n+\nDocker\n\nFeatures:\n\n• Transaction ingestion\n• Categorization\n• Spending analysis\n• Budget alerts\n• Financial insights\n• Async event processing\n• Authentication\n• Audit logs\n\nThen be ready to explain:\n\nWhy PostgreSQL?\n\nWhy Redis?\n\nWhy Kafka?\n\nWhy asynchronous processing?\n\nHow would you handle duplicate transactions?\n\nHow would you protect financial data?\n\nHow would you scale it?\n\n12. Intuit's craft demonstration\n\nThis is something you should NOT ignore.\n\nIntuit's official hiring process describes a craft demonstration/case study as part of the engineering interview process.\n\nYou may need to demonstrate how you approach a problem and explain your work.\n\nSo don't just build the project.\n\nPractice presenting it.\n\nBe able to explain:\n\nProblem\n↓\nWhy you built it\n↓\nArchitecture\n↓\nTechnology choices\n↓\nTrade-offs\n↓\nFailures\n↓\nTesting\n↓\nScale\n↓\nWhat you'd improve\n\nResource:\n\nhttps://t.co/ze96Szby4Y\n\n13. Behavioral preparation\n\nIntuit's interview process also includes team-member and manager conversations.\n\nPrepare stories around:\n\n• Ownership\n• Learning quickly\n• Handling failure\n• Working with others\n• Conflict\n• Technical decisions\n• Customer impact\n• Leadership\n• Feedback\n\nDon't memorize answers.\n\nPrepare real stories from your projects, internships and work.\n\nResource:\n\nhttps://t.co/ze96Szby4Y\n\n14. 12-week preparation plan\n\nWeeks 1 to 4\n\nDSA: 2 hr/day\nJava: 1 hr/day\nSQL: 45 min/day\nCS fundamentals: 45 min/day\n\nTarget:\n\n30 to 40 DSA problems.\n\nStart your project.\n\nWeeks 5 to 8\n\nDSA: 1.5 hr/day\nBackend: 1 hr/day\nKafka / Microservices: 45 min/day\nSystem Design: 45 min/day\nProject: 1 hr/day\n\nYour project should now work end to end.\n\nWeeks 9 to 12\n\nDSA revision: 1.5 hr/day\nTimed problems: 45 min/day\nSystem Design: 45 min/day\nProject: 1 hr/day\nBehavioral / Craft Demo: 30 min/day\n\nStart applying.\n\nStart mocks.\n\nStop collecting courses.\n\n15. What Intuit-specific preparation should look like\n\nDon't prepare only for:\n\n\"Can I solve this LeetCode problem?\"\n\nPrepare for:\n\nCan I write good code?\n\nCan I explain my design?\n\nCan I work with data?\n\nCan I build APIs?\n\nCan I reason about distributed systems?\n\nCan I debug production problems?\n\nCan I explain my project?\n\nCan I communicate with another engineer?\n\nCan I use AI effectively without blindly trusting it?\n\n16. What not to do\n\nDon't learn five programming languages.\n\nDon't spend three months only on LeetCode.\n\nDon't build five basic CRUD projects.\n\nDon't ignore SQL.\n\nDon't ignore Linux and networking.\n\nDon't memorize system design diagrams.\n\nDon't learn Kubernetes deeply before understanding backend systems.\n\nDon't build an AI wrapper and call it an AI project.\n\nDon't put every technology you've touched on your resume.\n\nAnd don't wait until you're completely ready before applying.\n\nThe Intuit preparation stack:\n\nJava / Scala / Go\n↓\nDSA\n↓\nCS Fundamentals\n↓\nSQL\n↓\nBackend\n↓\nKafka + Microservices\n↓\nCloud + Kubernetes basics\n↓\nSystem Design\n↓\nAI fundamentals\n↓\nOne serious project\n↓\nCraft Demo\n↓\nBehavioral\n↓\nMocks + Applications\n\nIntuit isn't just looking for someone who can solve coding problems.\n\nIts engineering teams are building AI-powered financial products used by around 100 million customers, so the bigger goal is becoming someone who can build, explain, and operate real software at scale.\n\nThat's how I'd prepare specifically for Intuit.",
+    "post_url": "https://twitter.com/SCR01111/status/2089315529425301889",
+    "score": 55,
+    "num_comments": 7,
+    "created_utc": {
+      "$date": "2026-08-17T11:36:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:59:29.939Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe43242dd0e95b5bad4f2"
+    },
+    "message_id": "twitter_2039537432715211188",
+    "topic_key": "budget load testing",
+    "search_keyword": "budget load testing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "sonalshukla3377",
+    "title": "How To Learn Claude ✳️\n\nEverything you need to know about Claude.\n\n━━━━━━━━━━━━━━━━━━━\n\n1. Chat\n🔺️https://t.co/jkPYsjxbDp\nThe starting point. Ask anything, write anything, analyse anything: drafts, research, strategy, legal review, thinking out loud.\n\n✅️BEST FOR:\nEveryone. If you use the internet, you should be using this.\n\n━━━━━━━━━━━━━━━━━━━\n\n2. Reasoning\n🔺️Extended Thinking\nClaude works through a problem step by step before answering. Use it for complex decisions where a quick answer isn't good enough.\n\n✅️BEST FOR:\n●Founders and analysts stress-testing a big decision, a deal, or a financial model.\n\n━━━━━━━━━━━━━━━━━━━\n\n3. Developer\n🔺️API\nAccess Claude directly to build products, automate workflows and run Claude inside your own tools.\n\n✅️BEST FOR:\nDevelopers and technical teams building AI-powered products or internal tools.\n\n━━━━━━━━━━━━━━━━━━━\n\n4. Build\n🔺️Artifacts\nClaude builds interactive files, dashboards, trackers and tools directly in the chat. Live outputs you can use, edit and download.\n\n✅️BEST FOR:\nAnyone who needs a working deliverable, a budget calculator, a tracker, a planner, anything non-text based.\n\n━━━━━━━━━━━━━━━━━━━\n\n5. Automation\n🔺️Cowork\nA desktop tool that reads your actual files and creates real documents, Excel, Word, PDF, directly into your folder.\n\n✅️BEST FOR:\nOps managers and executive assistants handling high volumes of documents daily.\n\n━━━━━━━━━━━━━━━━━━━\n\n6. Coding\n🔺️Claude Code\nA command line tool for agentic coding. Claude reads your codebase, writes code, runs tests and ships changes autonomously.\n\n✅️BEST FOR:\nDevelopers and technical founders who want to move faster without sacrificing quality.\n\n━━━━━━━━━━━━━━━━━━━\n\n7. Browser\n🔺️Claude in Chrome\nA browsing agent that operates inside Chrome. Claude searches, reads pages and completes web tasks on your behalf.\n\n✅️BEST FOR:\nResearchers and strategists who spend hours manually pulling information from the web.\n\n━━━━━━━━━━━━━━━━━━━\n\n8. Instructions\n🔺️Skills\nReusable instruction packs that auto-load for specific tasks. Claude knows your tone, rules and workflow without you having to explain them every session.\n\n✅️BEST FOR:\nMarketing leads and brand managers who need Claude to write consistently in a specific voice.\n\n━━━━━━━━━━━━━━━━━━━\n\n9. Integrations\n🔺️Connectors\nLink Slack, Google Drive, Notion and 50+ tools. Claude searches them mid-chat, no uploading, no screenshots.\n\n✅️BEST FOR:\nTeams working across multiple platforms who want one place to find everything.\n\n━━━━━━━━━━━━━━━━━━━\n\n10. Context\n🔺️Projects\nSave your files and instructions once. Every new chat inside that Project picks up exactly where you left off.\n\n✅️BEST FOR:\nAnyone doing recurring work: content teams, legal, finance, client servicing.\n\n━━━━━━━━━━━━━━━━━━━\n\n❤️ Like\n🔁 Retweet\n🔖 Bookmark\n\nFollow @sonalshukla3377 for more such posts",
+    "text": "How To Learn Claude ✳️\n\nEverything you need to know about Claude.\n\n━━━━━━━━━━━━━━━━━━━\n\n1. Chat\n🔺️https://t.co/jkPYsjxbDp\nThe starting point. Ask anything, write anything, analyse anything: drafts, research, strategy, legal review, thinking out loud.\n\n✅️BEST FOR:\nEveryone. If you use the internet, you should be using this.\n\n━━━━━━━━━━━━━━━━━━━\n\n2. Reasoning\n🔺️Extended Thinking\nClaude works through a problem step by step before answering. Use it for complex decisions where a quick answer isn't good enough.\n\n✅️BEST FOR:\n●Founders and analysts stress-testing a big decision, a deal, or a financial model.\n\n━━━━━━━━━━━━━━━━━━━\n\n3. Developer\n🔺️API\nAccess Claude directly to build products, automate workflows and run Claude inside your own tools.\n\n✅️BEST FOR:\nDevelopers and technical teams building AI-powered products or internal tools.\n\n━━━━━━━━━━━━━━━━━━━\n\n4. Build\n🔺️Artifacts\nClaude builds interactive files, dashboards, trackers and tools directly in the chat. Live outputs you can use, edit and download.\n\n✅️BEST FOR:\nAnyone who needs a working deliverable, a budget calculator, a tracker, a planner, anything non-text based.\n\n━━━━━━━━━━━━━━━━━━━\n\n5. Automation\n🔺️Cowork\nA desktop tool that reads your actual files and creates real documents, Excel, Word, PDF, directly into your folder.\n\n✅️BEST FOR:\nOps managers and executive assistants handling high volumes of documents daily.\n\n━━━━━━━━━━━━━━━━━━━\n\n6. Coding\n🔺️Claude Code\nA command line tool for agentic coding. Claude reads your codebase, writes code, runs tests and ships changes autonomously.\n\n✅️BEST FOR:\nDevelopers and technical founders who want to move faster without sacrificing quality.\n\n━━━━━━━━━━━━━━━━━━━\n\n7. Browser\n🔺️Claude in Chrome\nA browsing agent that operates inside Chrome. Claude searches, reads pages and completes web tasks on your behalf.\n\n✅️BEST FOR:\nResearchers and strategists who spend hours manually pulling information from the web.\n\n━━━━━━━━━━━━━━━━━━━\n\n8. Instructions\n🔺️Skills\nReusable instruction packs that auto-load for specific tasks. Claude knows your tone, rules and workflow without you having to explain them every session.\n\n✅️BEST FOR:\nMarketing leads and brand managers who need Claude to write consistently in a specific voice.\n\n━━━━━━━━━━━━━━━━━━━\n\n9. Integrations\n🔺️Connectors\nLink Slack, Google Drive, Notion and 50+ tools. Claude searches them mid-chat, no uploading, no screenshots.\n\n✅️BEST FOR:\nTeams working across multiple platforms who want one place to find everything.\n\n━━━━━━━━━━━━━━━━━━━\n\n10. Context\n🔺️Projects\nSave your files and instructions once. Every new chat inside that Project picks up exactly where you left off.\n\n✅️BEST FOR:\nAnyone doing recurring work: content teams, legal, finance, client servicing.\n\n━━━━━━━━━━━━━━━━━━━\n\n❤️ Like\n🔁 Retweet\n🔖 Bookmark\n\nFollow @sonalshukla3377 for more such posts",
+    "post_url": "https://twitter.com/sonalshukla3377/status/2039537432715211188",
+    "score": 292,
+    "num_comments": 31,
+    "created_utc": {
+      "$date": "2026-04-02T02:56:31Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:59:30.156Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe43242dd0e95b5bad4f3"
+    },
+    "message_id": "twitter_2082909527515779164",
+    "topic_key": "budget load testing",
+    "search_keyword": "budget load testing",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "BrianRoemmele",
+    "title": "BREAKTHROUGH: A full, unmodified 2.78-trillion-parameter Kimi K3 on a consumer laptop by streaming only the activated experts from NVMe.\n\nYOU CAN’T RUN KIMI K3 “ON THAT” THEY DECLARED. \n\nThere are many paths to do it. \n\nThis is one:\n\nMarco Bambini Just Gave Us the Full Kimi K3 on a Laptop\n\nMeet Marco Bambini he did something that felt impossible only a day ago.\n\nHe built WASTE  Weight-Aware Streaming Tensor Engine a clean, dependency-free C inference engine that runs the complete, unmodified 2.78-trillion-parameter Kimi K3 model by streaming only the activated experts straight from NVMe. \n\nNo distillation. \n\nNo pruning. \n\nNo cloud. \n\nThe full open-weight model.\n\nWe have it running in the lab right now.\n\nWhat Marco Actually Built\nKimi K3 is a sparse Mixture-of-Experts system. \n\nOnly about 4 % of its weights fire on any given token. Marco’s insight was simple and ruthless: the idle experts do not need to live in RAM. They only need to be reachable in time.\n\nWASTE keeps the model’s “trunk” (attention, shared components, embeddings) resident in memory — roughly 27 GB on the converted container. \n\nThe 82,000+ routed experts stay on disk as tightly packed residual vector-quantized records. When the router selects its 16 experts per layer, the engine issues direct, cache-bypassing reads from the internal NVMe and feeds them into a bounded expert cache. \n\nThe rest of the machine’s RAM becomes working space for that cache.\n\nOn a 64 GB MacBook Pro with the container on the internal SSD, we are measuring 0.32–0.34 tokens per second at a comfortable memory budget. \n\nPrefill sits a little higher. The vision tower works. Logits match the reference implementation to within a few parts in a million. It is the real model.\n\nThe container itself is 982 GiB after conversion from the original 1.42 TB MXFP4 weights. Minimum RAM floor is just over 29 GB for short context. Push the budget higher and the expert cache hit rate climbs; push too high and you start paging and the speed collapses. The sweet spot on current consumer hardware is clear and measurable.\n\nHow We Are Testing It\n\nWe converted the official weights, verified the container, and began systematic runs the same day the engine stabilized.\n\nFirst we confirmed numerical fidelity against the PyTorch reference on short prompts. Then we moved to longer generation, vision inputs, and multi-turn chat using Kimi’s native XTML format. \n\nWe are measuring wall-clock decode, expert I/O versus compute split, cache hit rates at different RAM budgets, and thermal behavior under sustained load. \n\nWe are also exercising the OpenAI-compatible server that sits on top of the same C library so we can drop the model into existing agent loops without rewriting anything.\n\nEarly observations:\n\n•Expert I/O dominates the timeline, as expected. On a fast internal NVMe the engine is already near the practical ceiling of the storage subsystem.\n\n•The architecture’s sparsity is the entire enabler. A dense model of this size would be dead on arrival for local use.\n\n•Context length is currently limited by RAM more than by the model itself. Practical working contexts sit comfortably in the tens of thousands of tokens on 64 GB hardware; the full million-token window will need more memory or smarter KV management.\n\n•Thinking tokens are expensive at this speed. Long internal monologues turn into multi-hour runs. For agent work we are already experimenting with tighter control over when full reasoning is requested.\n\nWe are treating this as a research instrument, not a finished product. Every run teaches us something about expert locality, prefetch opportunities, and how far pure software streaming can push trillion-scale inference on ordinary machines.\n\n1 of 2",
+    "text": "BREAKTHROUGH: A full, unmodified 2.78-trillion-parameter Kimi K3 on a consumer laptop by streaming only the activated experts from NVMe.\n\nYOU CAN’T RUN KIMI K3 “ON THAT” THEY DECLARED. \n\nThere are many paths to do it. \n\nThis is one:\n\nMarco Bambini Just Gave Us the Full Kimi K3 on a Laptop\n\nMeet Marco Bambini he did something that felt impossible only a day ago.\n\nHe built WASTE  Weight-Aware Streaming Tensor Engine a clean, dependency-free C inference engine that runs the complete, unmodified 2.78-trillion-parameter Kimi K3 model by streaming only the activated experts straight from NVMe. \n\nNo distillation. \n\nNo pruning. \n\nNo cloud. \n\nThe full open-weight model.\n\nWe have it running in the lab right now.\n\nWhat Marco Actually Built\nKimi K3 is a sparse Mixture-of-Experts system. \n\nOnly about 4 % of its weights fire on any given token. Marco’s insight was simple and ruthless: the idle experts do not need to live in RAM. They only need to be reachable in time.\n\nWASTE keeps the model’s “trunk” (attention, shared components, embeddings) resident in memory — roughly 27 GB on the converted container. \n\nThe 82,000+ routed experts stay on disk as tightly packed residual vector-quantized records. When the router selects its 16 experts per layer, the engine issues direct, cache-bypassing reads from the internal NVMe and feeds them into a bounded expert cache. \n\nThe rest of the machine’s RAM becomes working space for that cache.\n\nOn a 64 GB MacBook Pro with the container on the internal SSD, we are measuring 0.32–0.34 tokens per second at a comfortable memory budget. \n\nPrefill sits a little higher. The vision tower works. Logits match the reference implementation to within a few parts in a million. It is the real model.\n\nThe container itself is 982 GiB after conversion from the original 1.42 TB MXFP4 weights. Minimum RAM floor is just over 29 GB for short context. Push the budget higher and the expert cache hit rate climbs; push too high and you start paging and the speed collapses. The sweet spot on current consumer hardware is clear and measurable.\n\nHow We Are Testing It\n\nWe converted the official weights, verified the container, and began systematic runs the same day the engine stabilized.\n\nFirst we confirmed numerical fidelity against the PyTorch reference on short prompts. Then we moved to longer generation, vision inputs, and multi-turn chat using Kimi’s native XTML format. \n\nWe are measuring wall-clock decode, expert I/O versus compute split, cache hit rates at different RAM budgets, and thermal behavior under sustained load. \n\nWe are also exercising the OpenAI-compatible server that sits on top of the same C library so we can drop the model into existing agent loops without rewriting anything.\n\nEarly observations:\n\n•Expert I/O dominates the timeline, as expected. On a fast internal NVMe the engine is already near the practical ceiling of the storage subsystem.\n\n•The architecture’s sparsity is the entire enabler. A dense model of this size would be dead on arrival for local use.\n\n•Context length is currently limited by RAM more than by the model itself. Practical working contexts sit comfortably in the tens of thousands of tokens on 64 GB hardware; the full million-token window will need more memory or smarter KV management.\n\n•Thinking tokens are expensive at this speed. Long internal monologues turn into multi-hour runs. For agent work we are already experimenting with tighter control over when full reasoning is requested.\n\nWe are treating this as a research instrument, not a finished product. Every run teaches us something about expert locality, prefetch opportunities, and how far pure software streaming can push trillion-scale inference on ordinary machines.\n\n1 of 2",
+    "post_url": "https://twitter.com/BrianRoemmele/status/2082909527515779164",
+    "score": 1254,
+    "num_comments": 86,
+    "created_utc": {
+      "$date": "2026-07-30T19:21:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:59:30.390Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe43842dd0e95b5bad4f5"
+    },
+    "message_id": "twitter_2100283480382840867",
+    "topic_key": "budget microservices consultant",
+    "search_keyword": "budget microservices consultant",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "mardehaym",
+    "title": "Deloitte told its own consultants in May that the hourly consulting model is finished.\n\nA partner in the US public sector practice put a chart on screen at an internal town hall showing hours-based consulting shrinking to a sliver of the professional services market by 2035, with AI agents taking the rest, and when the Wall Street Journal reviewed the recording one consultant in the room summed it up for them: \"They heavily implied our model is toast.\"\n\nThe chart shows the end of the model, so it's worth saying what the model looked like from the client's side while it was still working. \n\nA consultancy has to feed a very expensive person at $350 an hour billed by the man-day, which means the engagement is built to keep that person fed, so scope grows, the team grows, the second phase gets sold in month three, and by the end you've spent $500K on a deck about unlocking your potential. \n\nAnyone two levels below the executive who signed will tell you the consultant was selling cover for a decision nobody wanted to own.\n\nThere is a version of the hourly model that earned its money, which is the specialist at $10K an hour who unblocks the system that's been strangling your operations for two years, and I've paid for that trade without complaint. \n\nGeneric advice was where the hour was always a trap, and now a model hands you the framework in thirty seconds, so if your strategy needs a $350-an-hour outsider to tell you what it is, the honest move is to change jobs.\n\nDeloitte's own 2026 enterprise survey explains why the chart looks the way it does, since 84% of companies haven't redesigned a single job around AI and only 21% have a mature way to govern agents, while nearly three quarters plan to deploy them within two years. \n\nClosing that gap is engineering work rather than advisory work, and engineering stopped billing by the hour the moment 98% of the code we ship stopped being handwritten.\n\nSo the question I'd put to any vendor claiming to be AI-native is how many people they've let go and why they're hiring more, because a pod for us is one senior engineer, agents across the delivery cycle, and a fractional architect, about 1.5 FTE where a five-person team used to sit, at $17K a month with proof of value in month one. \n\nEvery engagement we run has fewer people on it now than when it started, because the harness takes more of the load as the use cases get done, and we've never grown faster.\n\nMcKinsey says a third of its fees are already tied to outcomes, Deloitte just told its people the other two thirds are heading the same way, and the firms still standing in 2035 will be the ones that were shipping while the rest were preparing slide decks.",
+    "text": "Deloitte told its own consultants in May that the hourly consulting model is finished.\n\nA partner in the US public sector practice put a chart on screen at an internal town hall showing hours-based consulting shrinking to a sliver of the professional services market by 2035, with AI agents taking the rest, and when the Wall Street Journal reviewed the recording one consultant in the room summed it up for them: \"They heavily implied our model is toast.\"\n\nThe chart shows the end of the model, so it's worth saying what the model looked like from the client's side while it was still working. \n\nA consultancy has to feed a very expensive person at $350 an hour billed by the man-day, which means the engagement is built to keep that person fed, so scope grows, the team grows, the second phase gets sold in month three, and by the end you've spent $500K on a deck about unlocking your potential. \n\nAnyone two levels below the executive who signed will tell you the consultant was selling cover for a decision nobody wanted to own.\n\nThere is a version of the hourly model that earned its money, which is the specialist at $10K an hour who unblocks the system that's been strangling your operations for two years, and I've paid for that trade without complaint. \n\nGeneric advice was where the hour was always a trap, and now a model hands you the framework in thirty seconds, so if your strategy needs a $350-an-hour outsider to tell you what it is, the honest move is to change jobs.\n\nDeloitte's own 2026 enterprise survey explains why the chart looks the way it does, since 84% of companies haven't redesigned a single job around AI and only 21% have a mature way to govern agents, while nearly three quarters plan to deploy them within two years. \n\nClosing that gap is engineering work rather than advisory work, and engineering stopped billing by the hour the moment 98% of the code we ship stopped being handwritten.\n\nSo the question I'd put to any vendor claiming to be AI-native is how many people they've let go and why they're hiring more, because a pod for us is one senior engineer, agents across the delivery cycle, and a fractional architect, about 1.5 FTE where a five-person team used to sit, at $17K a month with proof of value in month one. \n\nEvery engagement we run has fewer people on it now than when it started, because the harness takes more of the load as the use cases get done, and we've never grown faster.\n\nMcKinsey says a third of its fees are already tied to outcomes, Deloitte just told its people the other two thirds are heading the same way, and the firms still standing in 2035 will be the ones that were shipping while the rest were preparing slide decks.",
+    "post_url": "https://twitter.com/mardehaym/status/2100283480382840867",
+    "score": 157,
+    "num_comments": 17,
+    "created_utc": {
+      "$date": "2026-09-16T17:59:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:59:36.452Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe43942dd0e95b5bad4fc"
+    },
+    "message_id": "twitter_2099748052265210210",
+    "topic_key": "budget microservices consultant",
+    "search_keyword": "budget microservices consultant",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "mjovanovictech",
+    "title": "Don't start with Microservices. ❌\n\nEven when you're convinced the application will eventually be large enough to need them.\n\nBecause Microservices come with a premium:\n\n- Eventual consistency\n- More team coordination\n- More ways for things to fail\n- More complex deployments\n- More infrastructure to provision\n- More services to monitor and maintain\n\nYou are paying that price before you know where the real boundaries are.\n\nA less risky strategy:\n\n- Start with a Monolith\n- Keep the modules clearly separated\n- Discover the real service boundaries\n- Extract a Microservice only when there is a clear reason\n\nThat reason could be independent scaling, separate deployments, team ownership, or a different reliability requirement.\n\nMicroservices are not the starting point.\n\nThey are one possible outcome of a system that has grown enough to justify them.\n\nLearn more about building Modular Monoliths here: https://t.co/d4EKguDgu8\n\n---\n\nP.S. I built this AI programming pack for Clean Architecture to make your life easier. More than 10,000+ developers are already using it. Get it here (it's free): https://t.co/34o1NguaZ6",
+    "text": "Don't start with Microservices. ❌\n\nEven when you're convinced the application will eventually be large enough to need them.\n\nBecause Microservices come with a premium:\n\n- Eventual consistency\n- More team coordination\n- More ways for things to fail\n- More complex deployments\n- More infrastructure to provision\n- More services to monitor and maintain\n\nYou are paying that price before you know where the real boundaries are.\n\nA less risky strategy:\n\n- Start with a Monolith\n- Keep the modules clearly separated\n- Discover the real service boundaries\n- Extract a Microservice only when there is a clear reason\n\nThat reason could be independent scaling, separate deployments, team ownership, or a different reliability requirement.\n\nMicroservices are not the starting point.\n\nThey are one possible outcome of a system that has grown enough to justify them.\n\nLearn more about building Modular Monoliths here: https://t.co/d4EKguDgu8\n\n---\n\nP.S. I built this AI programming pack for Clean Architecture to make your life easier. More than 10,000+ developers are already using it. Get it here (it's free): https://t.co/34o1NguaZ6",
+    "post_url": "https://twitter.com/mjovanovictech/status/2099748052265210210",
+    "score": 42,
+    "num_comments": 5,
+    "created_utc": {
+      "$date": "2026-09-15T06:32:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:59:37.947Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe43a42dd0e95b5bad4fd"
+    },
+    "message_id": "twitter_2100374489305604122",
+    "topic_key": "budget microservices consultant",
+    "search_keyword": "budget microservices consultant",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "danialhasan",
+    "title": "Inference engineering is core to serving models at scale. But playing with the GPUs is only the core of it; its wrapped in an API called an inference provider. \n\nThis article covers how to build one! like openrouter, morphllm, etc https://t.co/O8N3Gdvt6x",
+    "text": "Inference engineering is core to serving models at scale. But playing with the GPUs is only the core of it; its wrapped in an API called an inference provider. \n\nThis article covers how to build one! like openrouter, morphllm, etc https://t.co/O8N3Gdvt6x",
+    "post_url": "https://twitter.com/danialhasan/status/2100374489305604122",
+    "score": 106,
+    "num_comments": 8,
+    "created_utc": {
+      "$date": "2026-09-17T00:01:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:59:38.164Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe43a42dd0e95b5bad500"
+    },
+    "message_id": "twitter_2100538341330678017",
+    "topic_key": "budget microservices consultant",
+    "search_keyword": "budget microservices consultant",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "hasananjum_tech",
+    "title": "You trust the provider.\n\nYou like working with them.\n\nTheir quote is cheaper.\n\nSo how does the project still become painfully expensive?\n\nI explain the mistake in today’s video.\n\n#TechnologyLeadership #SoftwareDevelopment #ITStrategy https://t.co/ZbWM40pb9Y",
+    "text": "You trust the provider.\n\nYou like working with them.\n\nTheir quote is cheaper.\n\nSo how does the project still become painfully expensive?\n\nI explain the mistake in today’s video.\n\n#TechnologyLeadership #SoftwareDevelopment #ITStrategy https://t.co/ZbWM40pb9Y",
+    "post_url": "https://twitter.com/hasananjum_tech/status/2100538341330678017",
+    "score": 1,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T10:52:21Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:59:38.820Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe43b42dd0e95b5bad501"
+    },
+    "message_id": "twitter_2100489046137229326",
+    "topic_key": "budget microservices consultant",
+    "search_keyword": "budget microservices consultant",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "yashmp2004",
+    "title": "3 backend offers. 3 YOE. Bangalore.\n\nPhonePe - ₹28 LPA\n\n• Payments scale\n• On-call\n• Strong systems exposure\n\nFreshworks - ₹24 LPA\n\n• Product SaaS\n• Cleaner hours\n• Slower jump later\n\nAl infra startup - ₹20 LPA + 0.8%\n\n• Build from scratch\n• Rust/Go/Python mix\n• High variance\n\nWhere are you signing?",
+    "text": "3 backend offers. 3 YOE. Bangalore.\n\nPhonePe - ₹28 LPA\n\n• Payments scale\n• On-call\n• Strong systems exposure\n\nFreshworks - ₹24 LPA\n\n• Product SaaS\n• Cleaner hours\n• Slower jump later\n\nAl infra startup - ₹20 LPA + 0.8%\n\n• Build from scratch\n• Rust/Go/Python mix\n• High variance\n\nWhere are you signing?",
+    "post_url": "https://twitter.com/yashmp2004/status/2100489046137229326",
+    "score": 10,
+    "num_comments": 3,
+    "created_utc": {
+      "$date": "2026-09-17T07:36:28Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:59:39.035Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe43b42dd0e95b5bad502"
+    },
+    "message_id": "twitter_2100072446980194339",
+    "topic_key": "budget microservices consultant",
+    "search_keyword": "budget microservices consultant",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "freeCodeCamp",
+    "title": "Microservices shift some complexity from the backend into the frontend of your apps.\n\nIn this article, @abisoyeOladayo shows you how to coordinate multiple services, handle inconsistent data, and design around latency.\n\nHe covers API contracts, fallbacks, and strategies for building reliable user experiences.\n\nhttps://t.co/LrS8R8sWDm",
+    "text": "Microservices shift some complexity from the backend into the frontend of your apps.\n\nIn this article, @abisoyeOladayo shows you how to coordinate multiple services, handle inconsistent data, and design around latency.\n\nHe covers API contracts, fallbacks, and strategies for building reliable user experiences.\n\nhttps://t.co/LrS8R8sWDm",
+    "post_url": "https://twitter.com/freeCodeCamp/status/2100072446980194339",
+    "score": 239,
+    "num_comments": 5,
+    "created_utc": {
+      "$date": "2026-09-16T04:01:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:59:39.250Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe43b42dd0e95b5bad504"
+    },
+    "message_id": "twitter_2100444635818840335",
+    "topic_key": "budget microservices consultant",
+    "search_keyword": "budget microservices consultant",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "shubh19",
+    "title": "From ₹3 LPA to ₹1 Cr+ in the AWS path:\n\n₹3–6 LPA\n→ Cloud Support / AWS Intern\n\n₹6–12 LPA\n→ Cloud Engineer / AWS Engineer\n\n₹12–25 LPA\n→ DevOps / Platform Engineer\n\n₹25–45+ LPA\n→ Senior Cloud Engineer / Solutions Architect\n\n₹40 LPA–₹1 Cr+\n→ Cloud Architect / Principal Architect\n\nThe numbers aren't guaranteed.\n\nBut the skill progression tells you something important:\nYour responsibilities have to grow with your salary.",
+    "text": "From ₹3 LPA to ₹1 Cr+ in the AWS path:\n\n₹3–6 LPA\n→ Cloud Support / AWS Intern\n\n₹6–12 LPA\n→ Cloud Engineer / AWS Engineer\n\n₹12–25 LPA\n→ DevOps / Platform Engineer\n\n₹25–45+ LPA\n→ Senior Cloud Engineer / Solutions Architect\n\n₹40 LPA–₹1 Cr+\n→ Cloud Architect / Principal Architect\n\nThe numbers aren't guaranteed.\n\nBut the skill progression tells you something important:\nYour responsibilities have to grow with your salary.",
+    "post_url": "https://twitter.com/shubh19/status/2100444635818840335",
+    "score": 25,
+    "num_comments": 3,
+    "created_utc": {
+      "$date": "2026-09-17T04:40:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:59:39.679Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe43c42dd0e95b5bad507"
+    },
+    "message_id": "twitter_2098620241408315417",
+    "topic_key": "budget microservices consultant",
+    "search_keyword": "budget microservices consultant",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "FutureOurWork",
+    "title": "Microservices break applications into smaller parts so systems can change without slowing everything down. \n\nAs complexity grows, this approach helps teams update features faster, fix issues locally, and keep services running without large disruptions. \n\nMicroblog by @antgrasso. https://t.co/ncNSu48Fmc",
+    "text": "Microservices break applications into smaller parts so systems can change without slowing everything down. \n\nAs complexity grows, this approach helps teams update features faster, fix issues locally, and keep services running without large disruptions. \n\nMicroblog by @antgrasso. https://t.co/ncNSu48Fmc",
+    "post_url": "https://twitter.com/FutureOurWork/status/2098620241408315417",
+    "score": 15,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-12T03:50:30Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:59:40.321Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe44242dd0e95b5bad508"
+    },
+    "message_id": "twitter_2098073294020948112",
+    "topic_key": "budget mobile app developer",
+    "search_keyword": "budget mobile app developer",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ammanspeaks",
+    "title": "I’m testing a theory:\n\nYou don’t need a huge team to make money from an app.\n\nMy stack:\n\n• Claude Code → coding\n• Supabase → backend\n• RevenueCat → paywall\n• TikTok → organic distribution\n\nI’ll build, launch and market it publicly.\n\nIf I don’t make $10,000+ in 6 months, I’ll pay you $1,000.\n\nTime to put it to the test.",
+    "text": "I’m testing a theory:\n\nYou don’t need a huge team to make money from an app.\n\nMy stack:\n\n• Claude Code → coding\n• Supabase → backend\n• RevenueCat → paywall\n• TikTok → organic distribution\n\nI’ll build, launch and market it publicly.\n\nIf I don’t make $10,000+ in 6 months, I’ll pay you $1,000.\n\nTime to put it to the test.",
+    "post_url": "https://twitter.com/ammanspeaks/status/2098073294020948112",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T15:37:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:59:46.421Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabe44342dd0e95b5bad50e"
+    },
+    "message_id": "twitter_2100550913161335112",
+    "topic_key": "budget mobile app developer",

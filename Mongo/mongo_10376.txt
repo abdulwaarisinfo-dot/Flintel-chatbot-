@@ -1,0 +1,416 @@
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3f72660c608403979536"
+    },
+    "message_id": "reddit_t3_1wjqjbu",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "SelfHostedAI",
+    "username": "coco-coin",
+    "title": "Talos: a local-first personal agent where a readable security kernel gates every tool call (Ollama, MIT)",
+    "text": "Talos: a local-first personal agent where a readable security kernel gates every tool call (Ollama, MIT)\n\nTalos is a personal agent (Telegram bot, CLI, scheduler) built around a security kernel. Every tool call - shell, files, browser, messages - goes through  policy.py , which is 919 lines and readable in one sitting. The model can ask for whatever it wants, the kernel decides what actually happens. Capability tokens, autonomy levels, standing approvals, append-only audit  log.It  works with Ollama out of the box, that's my daily setup on a Pi 5. claude-cli and hermes-cli work too if you want the bigger models. Fun bug I hit along the way: Ollama's SSE stream comes without a charset, so requests fell back to Latin-1 per RFC 2616 and my German answers showed up as \"GrÃ¼ÃŸe\" instead of \"Grüße\". The reasoner decodes the bytes itself now.2817 unit tests, 254 adversarial cases. Releases are signed (ed25519) and the installer runs the whole test suite on your machine before it finishes. The demo GIF in the README is a real recording against a local model, kernel approval prompt and all.Caveats since this sub appreciates them: it's alpha, I'm the only deployment so far, single maintainer. The kernel rules are stable, the surface around them is not.Repo:  https://github.com/talos-kernel/TalosSite  + installer:  https://talos-agent.chAsk  me anything. Also genuinely curious what it would take for you to trust an agent with your own machine.       submitted by     /u/coco-coin     to     r/SelfHostedAI       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SelfHostedAI/comments/1wjqjbu/talos_a_localfirst_personal_agent_where_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T13:40:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T13:41:06.225Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3f72660c608403979537"
+    },
+    "message_id": "reddit_t3_1wjqjaz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "RepLadiesRehomes",
+    "username": "closetcurated",
+    "title": "BK 30",
+    "text": "BK 30\n\nBrand New Never Used  BK 30 - way too small for me  Gorgeous Imported Togo in Noir  Upgraded Gold Hardware  H Zippers  Serial Coded  Lock, key, clochette, dust bag included  Highest quality  Paid $700  Asking $585 shipped  I am happy to provide additional pictures to serious buyers only. Please do not ask for payment info or additional information just to ghost , it’s a total waste of time!  I will ship 24/48 hours(usually 24) after payment. I will provide proof of tracking. Once the package leaves me, it’s no longer my responsibility- I am not liable for delays in updated tracking or delivery.  Payment preferred via Zelle but will accept PPFF and Venmo.       submitted by     /u/closetcurated     to     r/RepLadiesRehomes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RepLadiesRehomes/comments/1wjqjaz/bk_30/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T13:40:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T13:41:06.432Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3f72660c608403979538"
+    },
+    "message_id": "reddit_t3_1wjqjaa",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "UKRepBST",
+    "username": "Impossible_Check9678",
+    "title": "[WTS] [UK/WW] Clean Rolex GMT Master II Pepsi V3 on Jubilee",
+    "text": "[WTS] [UK/WW] Clean Rolex GMT Master II Pepsi V3 on Jubilee\n\n£450 - Clean Rolex GMT Pepsi V3 (UV Bezel) on Jubilee     With Chamfered Bracelet and Polished Rehaut    DM for videos or other photos    MOVEMENT:  Asia Clone DD3285 Automatic GMT movement with decorated bridges & rotor with correct hand stack (Hour Hand Adjustable)   CASE DIAMETER:  40mm   THICKNESS:  12.1mm   DIAL COLOR:  Black Dial with Round Markers (Correct Hand Stack) - Superlume Applied   CASE MATERIAL:  High Grade Solid Stainless Steel 904L (Rehaut at 6:00 has random serial like Genuine)   BRACELET:  High Grade Solid Stainless Steel 904L Jubilee Bracelet with Updated Rolesor Clasp   FRONT GLASS:  Sapphire Crystal with etched crown at 6:00 position (With light AR on Cyclops like Genuine)   CASE BACK:  Solid case back   BEZEL:  Red/Blue Ceramic Bezel with Platinum coated numerals (Imported High Grade Quality Ceramic used)   CLASP TYPE:  Rolesor Clasp   DATE INDICATOR:  At 3:00 (Adjusted via crown)    SHIPPING:  Worldwide via Royal Mail International Tracked (at buyers risk) and Signed, UK via Tracked 24    SECURITY:  Shipped the same day or next day if post office closed.    PAYMENT:  Bank transfer, Revolut / Paypal F&F   RM Tracked 24 included   +£5 for UK RM Special Delivery   +£10 for EU/Worldwide Delivery       submitted by     /u/Impossible_Check9678     to     r/UKRepBST       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UKRepBST/comments/1wjqjaa/wts_ukww_clean_rolex_gmt_master_ii_pepsi_v3_on/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T13:40:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T13:41:06.634Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3f72660c608403979539"
+    },
+    "message_id": "reddit_t3_1wjqja3",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "loztriforce",
+    "title": "What song do you really like that’s in a genre you normally don’t listen to?",
+    "text": "What song do you really like that’s in a genre you normally don’t listen to?\n\nsubmitted by     /u/loztriforce     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wjqja3/what_song_do_you_really_like_thats_in_a_genre_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T13:40:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T13:41:06.835Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3f73660c60840397953a"
+    },
+    "message_id": "reddit_t3_1wjqj9o",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "bikefit",
+    "username": "Tiny_Hovercraft_9686",
+    "title": "Considering buying a steeper stem (-17°) to relieve sitbones",
+    "text": "Considering buying a steeper stem (-17°) to relieve sitbones\n\nLooking for some bike fit advice. I think my position is pretty close overall, but I can’t seem to get rid of sit bone pain after about 1-2 hours of riding.   I’ve tried many (probably too many) different saddles, and none of them have really solved the problem. I'am currently using a Selle SMP VT20C and it is the least painful.    I’ve also experimented with lowering the saddle by 1–2 cm, but the pain was basically the same. If anything, I just felt less powerful and a bit crammed in that position.   One thing I’ve noticed is that riding in the drops sometimes seems to relieve some of the pressure on my sit bones. Because of that, I’m considering buying a cheap -17° 100 mm stem to replace my current -6° 100 mm stem. It would lower my hands slightly and potentially allow me to rotate my pelvis forward and put a bit more pressure on the front of my pelvis rather than directly on my sit bones.   I’ve never experienced any discomfort or soft-tissue pressure at the front, so I’m wondering whether shifting some of the load forward could actually help in my case.   Does that reasoning make sense, or am I looking in the wrong direction? Any other fit issues you’d look at based on this?       submitted by     /u/Tiny_Hovercraft_9686     to     r/bikefit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/bikefit/comments/1wjqj9o/considering_buying_a_steeper_stem_17_to_relieve/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T13:40:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T13:41:07.047Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3f73660c60840397953b"
+    },
+    "message_id": "reddit_t3_1wjqj8x",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789738841349",
+    "text": "[PROBE] 1789738841349\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wjqj8x/probe_1789738841349/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T13:40:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T13:41:07.250Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3f73660c60840397953c"
+    },
+    "message_id": "reddit_t3_1wjqj8p",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Life_abroad_Panama",
+    "username": "NDM_Law_firm",
+    "title": "Buying a used car in Panama? Please don't treat it like buying a used TV on Marketplace.",
+    "text": "Buying a used car in Panama? Please don't treat it like buying a used TV on Marketplace.\n\nFinding the car is the easy part.   Before handing over money, you also want to know exactly what you're buying, legally, not just mechanically.   Beyond having a mechanic inspect the vehicle, we'd pay attention to things like:   → Who legally owns the vehicle  → Whether the seller is actually authorized to transfer it  → Whether there are outstanding obligations associated with it  → Whether the vehicle information matches the documentation  → How the ownership transfer will be handled  → What documentation you'll receive when the transaction is completed   And don't confuse these two checks:    A mechanic tells you whether the car is worth buying.     The paperwork tells you whether the transaction is safe to complete.    You want both.   We have a practical guide for foreigners looking at buying a vehicle in Panama here:    https://www.ndm.com.pa/buying-a-car-in-panama-with-trusted-dealers-and-legal-assistance/     Anyone who's bought a used car here: what's one thing you'd tell a newcomer to check before paying?        submitted by     /u/NDM_Law_firm     to     r/Life_abroad_Panama       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Life_abroad_Panama/comments/1wjqj8p/buying_a_used_car_in_panama_please_dont_treat_it/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T13:40:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T13:41:07.464Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3f73660c60840397953d"
+    },
+    "message_id": "reddit_t3_1wjqj8l",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "80s_dublin",
+    "title": "What are your weekend plans?",
+    "text": "What are your weekend plans?\n\nsubmitted by     /u/80s_dublin     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wjqj8l/what_are_your_weekend_plans/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T13:40:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T13:41:07.664Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3f73660c60840397953e"
+    },
+    "message_id": "reddit_t3_1wjqj7r",
+    "topic_key": "nike",
+    "search_keyword": "Nike",
+    "platform": "reddit",
+    "subreddit": "CoutureReps",
+    "username": "IndependentNo1686",
+    "title": "Massive 10kg+ Closet Refresh! 📦 Alo Yoga, Nike Essentials, Acne Studios, Casablanca, EE Shorts (W2C in comments)",
+    "text": "Massive 10kg+ Closet Refresh! 📦 Alo Yoga, Nike Essentials, Acne Studios, Casablanca, EE Shorts (W2C in comments)\n\nsubmitted by     /u/IndependentNo1686     to     r/CoutureReps       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CoutureReps/comments/1wjqj7r/massive_10kg_closet_refresh_alo_yoga_nike/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T13:40:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T13:41:07.868Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3fac660c608403979549"
+    },
+    "message_id": "reddit_t3_1wjqkar",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "RedditGames",
+    "username": "Big-Stand5436",
+    "title": "[Choose] Baal or Moloch ?",
+    "text": "[Choose] Baal or Moloch ?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Big-Stand5436     to     r/RedditGames       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RedditGames/comments/1wjqkar/choose_baal_or_moloch/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T13:41:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T13:42:04.116Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3fac660c60840397954a"
+    },
+    "message_id": "reddit_t3_1wjqkai",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "lebanon",
+    "username": "ali5andro",
+    "title": "[Modes Approved] Wafferli: an app to save money",
+    "text": "[Modes Approved] Wafferli: an app to save money\n\nI’m trying to make everyday shopping cheaper in Lebanon.   I’m not sharing this as a “build in public” post. I’m genuinely trying to make living in Lebanon a little more affordable.   I’m the founder of Wafferli, a platform that helps shoppers find deals on things they want, like shoes, phones, fragrances, and more, as well as things they need, like groceries and seasonal items.   Grocery prices have skyrocketed since 2021, while salaries haven’t/won’t keep up. With Wafferli, you can create a shopping list and find the best or cheapest offers around you. You can also favorite a store to quickly see its offers, or simply search for a specific item.   There are already around 8,000 discounted items listed on the platform.   I built Wafferli for two main reasons:   - To make shopping cheaper for people   - To help neighboring businesses access affordable technology and reach more customers.   Analytics are anonymous. I don’t collect personal information, will never sell user data, and will never charge end users a fee.   Happy to hear your thoughts, app reviews, or ideas on how/what could make it easier for people in Lebanon to find deals and save money.    https://wafferli.com        submitted by     /u/ali5andro     to     r/lebanon       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/lebanon/comments/1wjqkai/modes_approved_wafferli_an_app_to_save_money/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T13:41:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T13:42:04.316Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3fac660c60840397954b"
+    },
+    "message_id": "reddit_t3_1wjqka6",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "KoreanBeauty",
+    "username": "fippywayz",
+    "title": "Beware the Narka Matcha Shampoo",
+    "text": "Beware the Narka Matcha Shampoo\n\nDuring the recent Olive Young sale I decided to splurge on the Narka Fresh Cooling Matcha-PDRN Pack Shampoo. It advertises a mask pack-like texture, matcha scent, and strong scalp cooling sensation.    Personally I think cooling shampoos are totally a gimmick, but I was willing to just enjoy the novelty of the product. The shampoo has scalp-nourishing ingredients and reviews indicated the shampoo wasn't overly stripping and left hair feeling softer, which are the two things I was looking for in a shampoo, and I hoped that the matcha scent and fun texture would just add to the experience of using it.   I have used \"cooling\" shampoos before but never has one burned my eyes and the skin on my face so badly. I have an enclosed glass shower, so even with the bathroom fan on and door open this turned my shower into a menthol gas chamber 😭😭😭 I didn't even get the product in my eyes, but just the vapours from the steam were enough to sting my eyes for the next 15 minutes or so.   The smell is disgusting. Matcha where? For all the fancy fragrance notes they indicate are included, all you get is a strong menthol covering up a sort of tart and floral scent... My fiance said all he smells is pumpkin guts and since he said that it's all I smell, too.    On top of that, I didn't get any of the hair softening benefits indicated in reviews. Granted I just got my highlights touched up and my hair is damaged from bleach, but I use K18 and other treatments and so I was surprised with how dry and tangled my hair felt after using the Narka.   I'm just so jaded with viral marketing claims these days... OY won't let you return anything used, even if it causes a reaction or irritation, so I wanted to warn others to skip this one and not believe the hype!       submitted by     /u/fippywayz     to     r/KoreanBeauty       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/KoreanBeauty/comments/1wjqka6/beware_the_narka_matcha_shampoo/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T13:41:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T13:42:04.521Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3fac660c60840397954d"
+    },
+    "message_id": "reddit_t3_1wjqk9s",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "Nikon",
+    "username": "JTR280",
+    "title": "Verde en verde | Green in green | Felis catus! | 17/Sep/2026 | 12:34 PM | Guatemala",
+    "text": "Verde en verde | Green in green | Felis catus! | 17/Sep/2026 | 12:34 PM | Guatemala\n\nVerde en verde | Green in green   Felis catus!   Nikon D5300 + Nikkor AF-S 300mm F4D ED IF.   ISO 100 | F4 | T-Exp: 1/1250s.   No se usó trípode | No tripod was used.   Iluminación | Lighting:   Flash: No.   Sol | Sun.   17/Sep/2026 | 12:34 PM   #jo_crespo112358 #felis #catus #gato #cat #black #verde #green #guatemala #nikon #negro #macrotenebrism #macrotenebrismo #tenebrismo #tenebrismofotográfico #tenebrism #phototenebrism #clavebaja #low #key #photo #foto #fotografia #photography #art #arte #artemacro #macroart #jacc_112358 #jtr280       submitted by     /u/JTR280     to     r/Nikon       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Nikon/comments/1wjqk9s/verde_en_verde_green_in_green_felis_catus/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T13:41:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T13:42:04.921Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3fad660c60840397954e"
+    },
+    "message_id": "reddit_t3_1wjqk9f",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "bali",
+    "username": "zantyboiii",
+    "title": "Bali Arrival Card Question",
+    "text": "Bali Arrival Card Question\n\nWill be arriving in Bali soon and was just filling the Vali Arrival Card Online (on the website), the card where you add declarations and everything. Will be traveling in a group and just wanted to know if I will be getting only one qr code for the entire group? Or different qr codes for each person?    I got different IDs for one person, was wondering about the qr        submitted by     /u/zantyboiii     to     r/bali       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/bali/comments/1wjqk9f/bali_arrival_card_question/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T13:41:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T13:42:05.124Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3fad660c60840397954f"
+    },
+    "message_id": "reddit_t3_1wjqk99",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "SaltLakeCity",
+    "username": "ObservatoryChill",
+    "title": "Salt lake Running shoe exchange?",
+    "text": "Salt lake Running shoe exchange?\n\nIs there a local version of Supwell app? Marketplace and eBay have a lot of fakes on them, and I’m interested in selling (at discount) or trading some like new running shoes.   I’ve got a large collection of running shoes now and don’t need them all. I usually try a pair for about ten miles and know of I’ll use them regularly or not, then they sit on the shelf. I’d love to start an exchange locally, maybe a discord for something specific to local running gear?   Anything like this already exist and I’m just missing out? Anyone interested in an exchange group?       submitted by     /u/ObservatoryChill     to     r/SaltLakeCity       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SaltLakeCity/comments/1wjqk99/salt_lake_running_shoe_exchange/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T13:41:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T13:42:05.324Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3fad660c608403979550"
+    },
+    "message_id": "reddit_t3_1wjqk8c",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "YoutubeEspanol",
+    "username": "Vivid_Ice6641",
+    "title": "COMENTEN SUS HISTORIAS",
+    "text": "COMENTEN SUS HISTORIAS\n\n¿alguien me comenta sus historias de reddit para subirlas a youtube?       submitted by     /u/Vivid_Ice6641     to     r/YoutubeEspanol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/YoutubeEspanol/comments/1wjqk8c/comenten_sus_historias/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T13:41:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T13:42:05.529Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3fad660c608403979551"
+    },
+    "message_id": "reddit_t3_1wjqk7u",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "EverydayCarry_India",
+    "username": "I_Witness_",
+    "title": "Selling Bosch GLM-40 for 1.5k",
+    "text": "Selling Bosch GLM-40 for 1.5k\n\n₹1500 - no negotiations   40 meters range.    Can measure in feets and millimetres    Distance, area, volume measurement, and memory function.   Very rugged.    AAA cell.        submitted by     /u/I_Witness_     to     r/EverydayCarry_India       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/EverydayCarry_India/comments/1wjqk7u/selling_bosch_glm40_for_15k/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T13:41:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T13:42:05.731Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3fad660c608403979552"
+    },
+    "message_id": "reddit_t3_1wjqk6b",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "b2bmarketing",
+    "username": "iamnottheuser",
+    "title": "B2B SaaS | Clicks signup but not converting",
+    "text": "B2B SaaS | Clicks signup but not converting\n\nHi,   I am currently working at a b2b SaaS startup targeting mostly dev/founders mainly in the US.    We’ve been testing and running ads mostly on meta and google search (but also tested on x and reddit, which brought such low intent traffic they mostly seem to bounce) and while we do get some consistent cta clicks (ctr of our landing pages are pretty decent at around 15-20%, which might include bots but then the ad creatives are pretty specific in their messaging)…   The problem is,    Sure its a web app and requires work emails but still, im scratching my head whether there’s something seriously wrong.   Is it just how it is these days? Should we just stop meta ads? I do suspect some new users come back to the site and finish signing up although due to cookie consent and possibly switching devices (between mobile and laptop) this is hard to prove.   Any suggestions would be appreciated. Thanks!!       submitted by     /u/iamnottheuser     to     r/b2bmarketing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/b2bmarketing/comments/1wjqk6b/b2b_saas_clicks_signup_but_not_converting/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T13:41:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T13:42:05.942Z"
+    },
+    "reddit_comments": 0
+  },

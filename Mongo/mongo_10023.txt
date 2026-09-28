@@ -1,0 +1,416 @@
+    "created_utc": {
+      "$date": "2026-09-18T08:02:29Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T08:02:48.521Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aacf028aeeb96c1c63b9423"
+    },
+    "message_id": "reddit_t3_1wjk0es",
+    "topic_key": "crm",
+    "search_keyword": "CRM",
+    "platform": "reddit",
+    "subreddit": "foss",
+    "username": "Jealous_Pea_3915",
+    "title": "A key that's never assembled: 10 open-source apps where a stolen database is worthless",
+    "text": "A key that's never assembled: 10 open-source apps where a stolen database is worthless\n\nThe idea: instead of encrypting with a key that lives somewhere the app can reach (an env var, a KMS the app can call), the key that decrypts is never assembled at all. It exists only as shares across ~20 independent nodes and never gets put back together, not even to decrypt. A read is an agreement between the nodes (14 of 20), and only if a quorum of your admins granted that user a reading role. Revoke the role and reads stop. So the sensitive fields sit in the database as ciphertext with no key next to them, and a stolen dump, backup or server is worthless. Your own server can't quietly read the data either.   To prove the pattern on real code instead of a demo, I forked 10 open-source projects and sealed the fields that matter. Each link is the fork:   - [OpenEMR]( https://github.com/sashyo/openemr ) (patient names + SSNs)   - [Rocket.Chat]( https://github.com/sashyo/Rocket.Chat ) (message bodies)   - [Twenty]( https://github.com/sashyo/twenty ) (CRM contacts)   - [Chatwoot]( https://github.com/sashyo/chatwoot ) (contacts + messages)   - [Cal.com]( https://github.com/sashyo/cal.diy ) (attendee details)   - [Documenso]( https://github.com/sashyo/documenso ) (docs + signatures)   - [Firefly III]( https://github.com/sashyo/firefly-iii ) (payees + IBANs)   - [Medusa]( https://github.com/sashyo/medusa ) (customer details)   - [Paperless-ngx]( https://github.com/sashyo/paperless-ngx ) (titles + OCR text)   - [Formbricks]( https://github.com/sashyo/formbricks ) (survey answers)   Node, Ruby, PHP, Python. It's a small sidecar plus one hook at each app's data layer, off by default.   The part I actually want opinions on: So for the apps with a clean seam I've opened discussions asking for a small field-transform hook upstream (one on write, one on read), so this could be a plugin you opt into instead of a patched fork. That same hook would help anyone doing encryption, audit, redaction or tokenization, not just me:   - Twenty:  https://github.com/twentyhq/twenty/discussions/26122    - Medusa:  https://github.com/medusajs/medusa/discussions/16847    - Rocket.Chat:  https://github.com/orgs/RocketChat/discussions/42188    - Chatwoot:  https://github.com/orgs/chatwoot/discussions/15868    - Paperless-ngx:  https://github.com/paperless-ngx/paperless-ngx/discussions/14163    The Prisma-based apps already needed no fork, since a client extension is a supported seam.   So the honest question for this sub: when you need to intercept every read and write in an app you don't own, what do you do? Fork and rebase forever, monkeypatch, or push for a real extension point and wait?   Honest status: proof of concept on the Tide network, MIT licensed. The enterprise version is TideCloak, made by the Tide team; this is a mini version of it. The README is upfront about what's been run live and what hasn't.   All of it in one place:  https://dauth.me    Repo:  https://github.com/sashyo/minidauth        submitted by     /u/Jealous_Pea_3915     to     r/foss       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/foss/comments/1wjk0es/a_key_thats_never_assembled_10_opensource_apps/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T08:02:26Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T08:02:48.889Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aacf029aeeb96c1c63b9424"
+    },
+    "message_id": "reddit_t3_1wjk0e1",
+    "topic_key": "electrician",
+    "search_keyword": "electrician",
+    "platform": "reddit",
+    "subreddit": "Career_Advice",
+    "username": "Sittin_Fat",
+    "title": "Chat am I cooked?",
+    "text": "Chat am I cooked?\n\n23M, graduated last summer with BS in Business Admin no minor (I know right… great choice) have worked in warehouses and construction forever, recently worked as a waterjet operator at a job shop machine shop. Live in PNW    I have zero desire to work in corporate. I have interviewed for a dozen corporate roles, received offers for some, turned them down because everything about it made me wanna loose my mind.    I’m super used to the blue collar environment, but I’m learning the trades aren’t the cash cow unless you want to donate the next 15-20 years for it.    I don’t have any real sales experience but I know that’s a bridge between from being able to trade my time for money to trading results for money, but I don’t know where to start and I don’t want to waste time doing door to door like I did in middle school and highschool.    Any career advice is helpful, just trying to see what’s out there.   Have thoughts about traveling wind technician, electrician, and some technical sales roles       submitted by     /u/Sittin_Fat     to     r/Career_Advice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Career_Advice/comments/1wjk0e1/chat_am_i_cooked/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T08:02:23Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T08:02:49.140Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aacf043660c6084039777f5"
+    },
+    "message_id": "reddit_t3_1wjk0r2",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "WildHorsesIslandsRbx",
+    "username": "wildsso1213",
+    "title": "Trading/selling",
+    "text": "Trading/selling\n\nHello I’m trading/selling these horses/items I mainly want to trade them but can accept money for some I will hold items max is two days    If you have questions about any of the horses or items such as colors let me know and I’ll answer. The Accessories that are in black are nft most of these items are on tack sets so I may be picky, also all the unicorn academy acc and tack and dyes are strictly nft/sell but they’re was way to many for me to mark so sorry for the inconvenience. Also forgot to mark the black and white ww are nft or sell but I forgot to mark em.   Important information    the blessed Arabian is really only for a black coat swap and I can add for it.   The beach Andy is for trades only ,mainly for an iuh Arabian but I can take a look at any offer for it.   Items I’m looking for I won’t take only these items but they are things I’m looking for    Prismatic obsidian/shiny black Clear quartz or pearl ,pearl purple blessed life rings  Prismatic ww  Float acc such as bat kites or other floating items with the colors prismatic or obsidian/shiny black or pearl/clear quartz or white.  Prismatic obsidian blessed oil lantern  Or blessed colored accessories  Black acc  Witch hats  Lava cakes  Unicorn academy hair dyes acc tack and island decor  Iuhs  V1 fris (no black unless cross coat blacks and no black pinto)  V1 Fri ghost  Iuh Arabs        submitted by     /u/wildsso1213     to     r/WildHorsesIslandsRbx       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WildHorsesIslandsRbx/comments/1wjk0r2/tradingselling/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T08:03:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T08:03:15.261Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aacf043660c6084039777f6"
+    },
+    "message_id": "reddit_t3_1wjk0ph",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BangaloreMarketplace",
+    "username": "kinjal3175",
+    "title": "Whirlpool 245L 3-Star Frost-Free Double Door Refrigerator – ₹7,000 | Bangalore",
+    "text": "Whirlpool 245L 3-Star Frost-Free Double Door Refrigerator – ₹7,000 | Bangalore\n\nSelling my  Grey Whirlpool 245L, 3-Star, Frost-Free Double Door Refrigerator  for  ₹5,000 .  • Used for  ~3.5 years max   • Fully functional  • Colour: Grey  • Capacity: 245L  • Frost-free, double door   • ₹500 extra discount  if you can pick it up  before 19th September  → ₹6,500   • Pickup:  Byrasandra, CV Raman Nagar (near BTP back gate)   • Transport/moving to be arranged by buyer    DM if interested.       submitted by     /u/kinjal3175     to     r/BangaloreMarketplace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BangaloreMarketplace/comments/1wjk0ph/whirlpool_245l_3star_frostfree_double_door/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T08:02:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T08:03:15.467Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aacf043660c6084039777f8"
+    },
+    "message_id": "reddit_t3_1wjk0oo",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MapBasedPolls",
+    "username": "AloneConcern4802",
+    "title": "Is it taboo for a man in his 20s to have feelings for a woman in her 40s?",
+    "text": "Is it taboo for a man in his 20s to have feelings for a woman in her 40s?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/AloneConcern4802     to     r/MapBasedPolls       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MapBasedPolls/comments/1wjk0oo/is_it_taboo_for_a_man_in_his_20s_to_have_feelings/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T08:02:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T08:03:15.868Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aacf044660c6084039777f9"
+    },
+    "message_id": "reddit_t3_1wjk0nf",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FactOrCap",
+    "username": "emmanuel573",
+    "title": "Is it justified | FactOrCap",
+    "text": "Is it justified | FactOrCap\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/emmanuel573     to     r/FactOrCap       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FactOrCap/comments/1wjk0nf/is_it_justified_factorcap/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T08:02:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T08:03:16.076Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aacf044660c6084039777fa"
+    },
+    "message_id": "reddit_t3_1wjk0mp",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "wordgrind",
+    "username": "VaLo1206",
+    "title": "Translate — what's \"tree\" in French?",
+    "text": "Translate — what's \"tree\" in French?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/VaLo1206     to     r/wordgrind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wordgrind/comments/1wjk0mp/translate_whats_tree_in_french/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T08:02:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T08:03:16.277Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aacf044660c6084039777fb"
+    },
+    "message_id": "reddit_t3_1wjk0ml",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FitTheWord",
+    "username": "DifferentMusician341",
+    "title": "🪜 Turn PET into DOG in 3 steps — can you? (created by u/DifferentMusician341)",
+    "text": "🪜 Turn PET into DOG in 3 steps — can you? (created by u/DifferentMusician341)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/DifferentMusician341     to     r/FitTheWord       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FitTheWord/comments/1wjk0ml/turn_pet_into_dog_in_3_steps_can_you_created_by/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T08:02:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T08:03:16.477Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aacf044660c6084039777fc"
+    },
+    "message_id": "reddit_t3_1wjk0mf",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "poemsbyreddit",
+    "username": "shutupandcallmedaddy",
+    "title": "original",
+    "text": "original\n\nI don’t fear the devil.  But I can feel him near.   Maybe a lifetime of having to figure things out alone teaches you to see things other people will never see nor understand.   There was never much help.   When the hard times came, they were faced alone.   The weight was carried alone.   The lessons were learned the hard way.   Nobody had to explain what pain looked like.   Nobody had to explain what disappointment felt like.   Eventually, you learn to read people.   Not just what they say.   What they mean.   The smallest change in tone.   A pause that wasn’t   The hesitation behind a word.   The difference between someone’s kindness and someone’s performance.   You can meet someone for the first time  and sometimes know.   Genuine or not.   There’s a difference between looking someone in the eyes and actually seeing them.   People wear masks.   Some don’t even realize they’re wearing one.   Some don’t realize they’re manipulating you.   Some don’t realize how transparent the lie is.   Some honestly believe the version of themselves they’re showing you.   But when you’ve spent your whole life paying attention, the mask is forever noticeable.   You see the pattern underneath it.   That’s the emotional architecture of people.   The way guilt gets placed.  The way blame gets moved.  The way affection changes when something is wanted.  The way someone’s voice changes when they aren’t getting what they expected.   Most people only hear the words.   You hear the space between them.   And that’s not something that was chosen.  It was learned.   Because when there was nobody there to help you through the hard parts,  paying attention became a way of protecting yourself.   So no, it’s not that everyone suddenly changed.  Some were exactly who they appeared to be.  Others just weren’t.   And sometimes the hardest part isn’t realizing someone changed.   It’s realizing they were never what you thought they were in the first place.   That can make trust difficult.   Because once you’ve seen behind enough masks, it’s hard to pretend you don’t see them anymore.   There isn’t any need for pity.   There never was.   Just an understanding that some people became strong, because nobody came when they needed them.   And some became quiet..  because they learned that seeing everything  doesn’t mean anyone wants to hear what you’ve seen.   So you stop explaining.   You watch.   You listen.   You carry your own weight.   And when someone asks why you seem so distant, there usually isn’t a simple answer. Or rather, they wouldn’t understand.    Sometimes distance isn’t anger.   Sometimes it’s what remains after a lifetime of learning that the safest person to depend on was always going to be..   yourself       submitted by     /u/shutupandcallmedaddy     to     r/poemsbyreddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/poemsbyreddit/comments/1wjk0mf/original/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T08:02:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T08:03:16.680Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aacf044660c6084039777fd"
+    },
+    "message_id": "reddit_t3_1wjk0m9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "NoSpite6707",
+    "title": "Grab 25⚡ from u/NoSpite6707!",
+    "text": "Grab 25⚡ from u/NoSpite6707!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/NoSpite6707     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wjk0m9/grab_25_from_unospite6707/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T08:02:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T08:03:16.883Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aacf045660c6084039777fe"
+    },
+    "message_id": "reddit_t3_1wjk0lh",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "NMS_PanGalactic_Cabs",
+    "username": "henerykelin",
+    "title": "Local taxi service in Bacchus Marsh",
+    "text": "Local taxi service in Bacchus Marsh\n\nEnjoy convenient and comfortable travel with a reliable  local taxi service in Bacchus Marsh . Book your ride for local trips, airport transfers, business travel, and everyday journeys.       submitted by     /u/henerykelin     to     r/NMS_PanGalactic_Cabs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NMS_PanGalactic_Cabs/comments/1wjk0lh/local_taxi_service_in_bacchus_marsh/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T08:02:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T08:03:17.084Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aacf045660c6084039777ff"
+    },
+    "message_id": "reddit_t3_1wjk0le",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "pakistan",
+    "username": "Upset-Dot-468",
+    "title": "if you're not interested in deep discussions, books or philosophy please ignore this",
+    "text": "if you're not interested in deep discussions, books or philosophy please ignore this\n\nI've noticed something: Pakistan has communities for basically everything — memes, crypto, cricket, career advice    but almost nowhere to sit with people who want to talk about ideas. Real ones.    Philosophy, psychology, books that actually changed how you see things, questions that don't have neat answers.   Most conversations stay on the surface. You bring up something you've been chewing on — free will, stoicism, why we do what we do — and people either change the subject or give you a one-line reply and move on.   Not because people here aren't smart. I just think there's no space built for it.   So I'm thinking of starting one. A WhatsApp community for people in Pakistan who read, think, and want to talk about it with others who won't glaze over five minutes in.   What this is:   ➡️ A place to discuss books, philosophy, psychology, and ideas in general   ➡️ Room for genuine debate — disagreement is welcome, disrespect isn't   What this isn't:   ➡️ A place to just drop book titles and never discuss them   ➡️ A self-help echo chamber   ➡️ A place that dies after week one because nobody actually engages   If you've ever finished a book and had no one to talk to about it, or found yourself thinking about something for days with nowhere to put it — this might be for you.   If you guys genuinely would vibe with it, please drop a comment AND DO UPVOTE SO IT GETS TO AS MANY PEOPLE AS POSSIBLE        submitted by     /u/Upset-Dot-468     to     r/pakistan       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pakistan/comments/1wjk0le/if_youre_not_interested_in_deep_discussions_books/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T08:02:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T08:03:17.284Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aacf045660c608403977801"
+    },
+    "message_id": "reddit_t3_1wjk0kq",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PiercingAdvice",
+    "username": "Various_Avocado_1692",
+    "title": "Where do you actually buy skin-safe body jewelry? Tired of reactions",
+    "text": "Where do you actually buy skin-safe body jewelry? Tired of reactions\n\nsubmitted by     /u/Various_Avocado_1692     to     r/PiercingAdvice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PiercingAdvice/comments/1wjk0kq/where_do_you_actually_buy_skinsafe_body_jewelry/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T08:02:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T08:03:17.685Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aacf045660c608403977802"
+    },
+    "message_id": "reddit_t3_1wjk0kl",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "Career_Advice",
+    "username": "aissaavjr",
+    "title": "Career advice: moving from FX Derivatives Operations to Compliance",
+    "text": "Career advice: moving from FX Derivatives Operations to Compliance\n\nHi everyone,   I’m looking for some career advice from people working in finance.   I’m a 24-year-old french finance professional  currently work in Singapore for a French financial institution, in FX and derivatives operations (back office). My role involves trade reconciliation, checking trade details, supporting settlements and working with different stakeholders (Front Office, counterparties, etc.).   By the end of my current experience, I will have around 2 years of experience in this field.   Before moving to Singapore, I worked for 2 years in Paris in Securities Operations, mainly on corporate actions.  My academic background is finance-oriented: I studied accounting and finance before completing a business school program, where I focused on finance-related subjects and international business management.   I now have around 4 years of experience in financial operations, but I would like to move away from pure operations and transition into a role that is more analytical and closer to regulatory topics.   I’m particularly interested in Compliance, especially areas such as sanctions, AML/KYC or markets compliance, as I enjoy geopolitical topics and understanding how regulations impact financial institutions.   One of my motivations for changing career path is also that my current role can be quite stressful due to market deadlines, cut-off times, urgent requests and the constant dependency on trade flows. I’m looking for a role where I can still be challenged intellectually and have responsibilities, but with a better work-life balance and a more sustainable working environment.   My long-term goal would be to work in an international financial hub such as New York.   I would love to hear your opinions:   Do you think moving from FX/derivatives operations to Compliance is a realistic transition?   Which areas of Compliance would fit best with my background?   Would my markets operations experience be an advantage?   Would you recommend certifications or learning specific regulations (OFAC, AML, etc.)?   Are technical skills (Python, data analysis, SQL, etc.) becoming important for these roles?   What salary range could someone with my background realistically expect in New York?   Thanks!       submitted by     /u/aissaavjr     to     r/Career_Advice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Career_Advice/comments/1wjk0kl/career_advice_moving_from_fx_derivatives/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T08:02:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T08:03:17.888Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aacf046660c608403977803"
+    },
+    "message_id": "reddit_t3_1wjk0k7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789718561123",
+    "text": "[PROBE] 1789718561123\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wjk0k7/probe_1789718561123/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T08:02:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T08:03:18.091Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aacf080660c608403977804"
+    },
+    "message_id": "reddit_t3_1wjk1c9",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "indiansinusa",
+    "username": "Logical_Albatross773",
+    "title": "Facing US B1/B2 visa issue, please suggest!!",
+    "text": "Facing US B1/B2 visa issue, please suggest!!\n\nHey guys, I’m looking for some advice regarding my US B1/B2 visa.   I first paid the visa fee sometime around September 2022 but couldn’t get an interview slot. Around that time, the US visa portal changed to the new system, and I somehow lost track of my application. I ended up paying the fee again and eventually got an interview around Dec 2023 / Jan-Feb 2024 (I honestly don’t remember the exact month), but unfortunately, my visa was refused.   The interview itself was quite straightforward. The officer asked my name, purpose of travel, and whether I had appeared for a US visa interview before. I said no and I feel that I messed up in the 3rd que because I had actually paid the fee earlier, although I had never attended an interview.   So, my current situation is:   1.I have paid the visa fee twice.   2.I have appeared for the interview only once.   3.My company was ready to send me to the US previously, but I couldn’t travel because I didn’t get the visa.   4.I recently got another opportunity to travel to the US last week, but the visa situation is again becoming a major barrier.   I wanted to get your views on whether I should apply again now or wait for some more time. Also, if i get the interview and officer asks how many times I've appeared for the interview or how many times I've applied, what should be the best possible answer.     Also, if anyone has the contact details of a reliable visa agent/consultant who can help with the process in Mumbai or Hyderabad, please DM me.    Thanks in advance!       submitted by     /u/Logical_Albatross773     to     r/indiansinusa       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/indiansinusa/comments/1wjk1c9/facing_us_b1b2_visa_issue_please_suggest/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T08:04:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T08:04:16.052Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aacf080660c608403977805"
+    },
+    "message_id": "reddit_t3_1wjk1c0",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "DunkSlapBigShaw",
+    "title": "Grab 100 hammers from u/DunkSlapBigShaw!",
+    "text": "Grab 100 hammers from u/DunkSlapBigShaw!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/DunkSlapBigShaw     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wjk1c0/grab_100_hammers_from_udunkslapbigshaw/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T08:04:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T08:04:16.252Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aacf080660c608403977806"
+    },
+    "message_id": "reddit_t3_1wjk1bt",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "AlertVegas",
+    "username": "MugShots",
+    "title": "NV Energy Alert",
+    "text": "NV Energy Alert\n\nNVEnergy Alert Planned Shutdown for Service Improvement in 89414 Verified customers affected ORT: Verified ETR: Verified       submitted by     /u/MugShots     to     r/AlertVegas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlertVegas/comments/1wjk1bt/nv_energy_alert/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T08:04:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T08:04:16.454Z"

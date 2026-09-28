@@ -1,0 +1,416 @@
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T09:10:13.955Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabae766508d45f3d2d69ad"
+    },
+    "message_id": "reddit_t3_1wiou5c",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "wordgrind",
+    "username": "Playful_Clue_1210",
+    "title": "Idiom — fill in the blank: \"reach for the ___\"",
+    "text": "Idiom — fill in the blank: \"reach for the ___\"\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Playful_Clue_1210     to     r/wordgrind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wordgrind/comments/1wiou5c/idiom_fill_in_the_blank_reach_for_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T09:09:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T09:10:14.156Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabae766508d45f3d2d69ae"
+    },
+    "message_id": "reddit_t3_1wiou57",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789636181148",
+    "text": "[PROBE] 1789636181148\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wiou57/probe_1789636181148/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T09:09:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T09:10:14.353Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabae9c798842c4ceffa394"
+    },
+    "message_id": "reddit_t3_1wiouoo",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "BIWave",
+    "username": "Mikhail-Mikushin",
+    "title": "Forget Everything You've Heard About Tabular Model Definition Language",
+    "text": "Forget Everything You've Heard About Tabular Model Definition Language\n\nWhat is the semantic model in Power BI?   The semantic model in Power BI defines tables, relationships, data types, hierarchies,  DAX measures , and security rules.   You can connect multiple reports to one semantic model.   When you publish a Power BI report on the service, the model splits into 2 layers:      The data layer  contains everything about the data: tables, relationships, DAX measures, calculated columns,  row-level security , and refresh schedules.    The visual layer  contains everything about the presentation: pages,  visuals , filters, bookmarks, tooltips, and theme. The visual layer sends  DAX queries  to the semantic model to get what it needs to render.     TMDL:   Tabular Model Definition Language (TMDL) is an object model definition syntax for tabular data models.   There are two TMDL concepts:      TMDL  language and files: The language itself and the files and TMDL language.    TMDL view : the editing interface for scripts, edits, previews, and model metadata. There are two views: one for Power BI desktop and the second for Power BI web.     The editor modifies metadata only. You still need a manual or scheduled data refresh to get the full update.   TMDL uses a YAML-like syntax with indentation to show parent-child structure. It stores semantic models in a text format, so you have version control: you can track, commit, and review changes to the model like any other code.   It can store semantic model definitions as TMDL.   You can save the Power BI project in PBIP format.   External tools can support TMDL:      Tabular Editor : Batch editing, Best Practice Analyzer, CLI automation.    VS Code TMDL extension:  syntax highlighting, auto-complete, and error highlighting.    pbi-tools:  it unpacks the data layer into source code. Share     Semantic model architecture:   TMDL separates tables, columns, measures, relationships,  partitions , perspectives, roles, and cultures into .tmdl files.   A semantic model consists of multiple components:      Tables:  Fact and dimension tables.    Table relationships:  They store the direction and type of connection (one-to-one, many-to-many, one-to-many).    DAX  measures.    Row-level security : restricted data access based on user identity and role membership.    Storage mode:  it shows how a semantic model retrieves and stores data ( Import, DirectQuery, or Direct Lake ).    XMLA endpoint : External tools can access semantic models through that.     Calculation Groups   :  Power BI stores calculation groups separately from the DAX measures, even when they use those.    Perspectives : They show specific portions of a semantic model to different users or groups. They work in a similar way to  SQL views , but should not be used as a security feature. Use RLS and OLS instead.     Power BI Project Files:   PBIP format:   Power BI stores a report and semantic model as folders and  text  files in the PBIP format.   The format was designed to have a source control.   Here is the project structure example:    SalesAnalytics/ ├── SalesAnalytics.pbip ├── SalesAnalytics.Report/ │ └── definition.pbir └── SalesAnalytics.SemanticModel/ ├── definition.pbism └── definition/ ├── database.tmdl ├── model.tmdl ├── relationships.tmdl └── tables/ ├── sales.tmdl └── date.tmdl     How to Enable TMDL in PBIP:      Go to  File > Options and settings > Options > Preview features      Check the box for “Store semantic model using TMDL format”     Save the PBIP project.     Then Power BI will show prompt, asking to upgrade the semantic model to TMDL. This step is irreversible for your file.      Best Practices:     Start new Power BI projects as PBIP with TMDL from the beginning.   Put the folder under Git with a short root path.   Add a quality gate before you scale: Tabular Editor Best Practice Analyzer on semantic models and PBI Inspector for reports.   Use the TMDL view for bulk changes and the folder search for broad renames.     Limitations:     You cannot directly save PBIP projects to OneDrive or SharePoint. Use a local synced folder instead.   Windows path length caps at 260 characters by default. PBIP nests many files under long table names, so you shoould use short root paths.   Fabric item APIs do not return RLS role members, and incremental refresh partitions export as a single partition from the refresh policy.   A field rename in the TMDL view can break report visuals that reference that field.   Direct Lake does not save TMDL scripts unless the model has a PBIP export, and Power BI does not support publishing Direct Lake PBIP projects from Desktop.   The TMDL view on the web is currently in preview with separate View and Edit modes.   Migration to TMDL from legacy Tabular Model Scripting Language (TMSL) is irreversible.     Performance optimization:       Use Star schema   .  This is the most effective way to organize the data model.     Remove unused columns  . Try to do that as early as possible and push the steps upstream to the  source database .     Reduce the column cardinality   with integer surrogate keys.    Disable auto    date/time  .     AI:   When you use a Power BI project, you can use AI to help you update it.   An AI agent can change names, expressions, relationships, descriptions, security properties, and deployment targets.   You should prepare semantic models before using AI:     Set  naming standards .   Use star schema.    Validate upstream  data quality first.     Otherwise AI would not understand the  context  and provide incorrect results.   Skills:   Microsoft created a semantic-model-authoring skill for AI agents that can help you work with semantic models, for example, create new measures, visuals, and much more.   MCP:   There are several MCPs developed by Microsoft you can use with your semantic model:      Power BI MCP Server (Remote) : read-only / data layer MCP. You can use it to run  DAX queries .   P ower BI MCP Server (Local) : create and update tables, columns, measures, and relationships, run bulk operations, apply best practices, and validate DAX. It works on TMDL and PBIP files.         submitted by     /u/Mikhail-Mikushin     to     r/BIWave       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BIWave/comments/1wiouoo/forget_everything_youve_heard_about_tabular_model/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T09:10:33Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T09:10:52.642Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabae9c798842c4ceffa395"
+    },
+    "message_id": "reddit_t3_1wiounx",
+    "topic_key": "checkout",
+    "search_keyword": "checkout",
+    "platform": "reddit",
+    "subreddit": "tottenhamhotspur",
+    "username": "GurRevolutionary8025",
+    "title": "NLD Tickets",
+    "text": "NLD Tickets\n\nOn Tuesday, I was inches away from getting an NLD ticket and then the awful e-ticketing website decided to check I wasn’t a robot while I was about to checkout.   Please let me know if anybody cannot make the game and can transfer their ticket(s) to my CRN.   After last night, I’m sure I will have plenty of options.   Thanks guys       submitted by     /u/GurRevolutionary8025     to     r/tottenhamhotspur       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/tottenhamhotspur/comments/1wiounx/nld_tickets/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T09:10:31Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T09:10:52.859Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabae9d798842c4ceffa396"
+    },
+    "message_id": "reddit_t3_1wiounc",
+    "topic_key": "checkout",
+    "search_keyword": "checkout",
+    "platform": "reddit",
+    "subreddit": "DemonSlayerScales",
+    "username": "Thre4dripper",
+    "title": "Checkout - Infinity Castle I made :)",
+    "text": "Checkout - Infinity Castle I made :)\n\nsubmitted by     /u/Thre4dripper     to     r/DemonSlayerScales       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DemonSlayerScales/comments/1wiounc/checkout_infinity_castle_i_made/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T09:10:31Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T09:10:53.075Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabae9d798842c4ceffa397"
+    },
+    "message_id": "reddit_t3_1wiouky",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "OnlineESLTeaching",
+    "username": "space_pirate666",
+    "title": "13 classes of online teaching a week and I’m exhausted!",
+    "text": "13 classes of online teaching a week and I’m exhausted!\n\nAm I doing something wrong? I work for two language schools, have my private students. Start by day at 10 and finish at 7:30. I do get 2-3hr windows between classes. I teach both Business English and General English, depending on the needs of the students classes are 45,60 or 90mins, groups and individual.  My screentime is terrible, mostly because on top of hosting lessons on zoom/teams/google meet, the schools expect me to communicate with students from my private number - send hw/check in to see if anyone is satisfied and that eats up a lot of time. I feel exhausted. I try to go on brisk walks/to a gym in my spare time but can’t just wind down after my Business classes. On top of that I’m starting CELTA part time this Friday. If any of your seasoned tutors have any advice, I’d appreciate that.        submitted by     /u/space_pirate666     to     r/OnlineESLTeaching       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OnlineESLTeaching/comments/1wiouky/13_classes_of_online_teaching_a_week_and_im/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T09:10:25Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T09:10:53.349Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabaeaf6508d45f3d2d69af"
+    },
+    "message_id": "reddit_t3_1wiouxf",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "exodustravels",
+    "username": "Exo_1974",
+    "title": "Why does B Corp certification matter when choosing a tour company?",
+    "text": "Why does B Corp certification matter when choosing a tour company?\n\nMore travellers are asking how their holidays impact local communities and the environment.   One way to compare operators is through independent certifications such as B Corp.   B Corp certification assesses a company's social and environmental performance, transparency and accountability.   For many travellers, sustainability isn't just about reducing impact. It's also about ensuring travel creates positive benefits for local people through locally employed leaders, community partnerships and responsible tourism initiatives.   When researching companies, look for evidence of long-term commitments rather than one-off sustainability campaigns.   Do you consider how sustainable your holiday is when booking?       submitted by     /u/Exo_1974     to     r/exodustravels       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/exodustravels/comments/1wiouxf/why_does_b_corp_certification_matter_when/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T09:10:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T09:11:11.255Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabaeaf6508d45f3d2d69b1"
+    },
+    "message_id": "reddit_t3_1wiouwy",
+    "topic_key": "give me today top three conversation about e commerce",
+    "search_keyword": "e commerce",
+    "platform": "reddit",
+    "subreddit": "rdr2online",
+    "username": "Quick-Economist-8067",
+    "title": "1 an jour pour jour sur Red Dead Online",
+    "text": "1 an jour pour jour sur Red Dead Online\n\nPlus de 1000 heures de jeu au compteur, et je ne m’en lasse toujours pas.   En un an, j’ai vécu énormément de choses dans cet univers. J’ai parcouru les quatre coins de la carte, découvert des endroits magnifiques, admiré des paysages incroyables, rencontré des personnages hauts en couleur et vécu énormément d’aventures.   Entre les chasses, les primes, le commerce, la collection, le moonshine, les voyages à cheval et tous ces petits événements qui rendent le monde vivant, j’ai vraiment eu l’impression de construire ma propre histoire dans ce Far West.   Et malgré ces plus de 1000 heures, il m’arrive encore de simplement m’arrêter quelque part, regarder le paysage et me dire que ce jeu est vraiment magnifique.   La seule chose qui a changé ces dernières semaines, c’est que je joue désormais en lobby privé, après avoir fini par être lassé des moddeurs. Mais ça ne change rien à mon plaisir de parcourir ce monde.   Vivement la deuxième année.        submitted by     /u/Quick-Economist-8067     to     r/rdr2online       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/rdr2online/comments/1wiouwy/1_an_jour_pour_jour_sur_red_dead_online/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T09:10:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T09:11:11.651Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabaeaf6508d45f3d2d69b2"
+    },
+    "message_id": "reddit_t3_1wiouwg",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "swtor",
+    "username": "themenacehimself",
+    "title": "Ya'll Trippin, DLSS 5 is TOP TIER in SWTOR and I'm Fully Prepared for Downvotes.",
+    "text": "Ya'll Trippin, DLSS 5 is TOP TIER in SWTOR and I'm Fully Prepared for Downvotes.\n\nDownvote me all you want. DLSS 5 Makes this game look incredible. I'm running on 5060 ti 16gb. Without DLSS5 i get 60 fps. With DLSS5 im getting at 40-50 fps both in and out of cutscenes. There is minimal ghosting and i haven't seen any flickering. Say what you want about Ai (im on the side of indifference), but you have to admit this objectively looks better and revitalizes the game. I haven't touched this game in 6 years and after seeing these post  https://www.reddit.com/r/swtor/comments/1w3g6wt/swtor_using_dlss_5/     https://www.reddit.com/r/swtor/comments/1wfiemp/vulkan_raytracing_dlss_mxao_really_gives_the_game/     https://www.reddit.com/r/DLSS/comments/1w6pckm/swtor/    i had to see it for myself and i dont think i can ever go back to the regular graphics. I know most of the world is against anything ai so im ready to see a bunch of downvotes on this. Im sharing it for anyone who wants to see what a huge visual difference DLSS 5 makes and wants to try it for themselves.       submitted by     /u/themenacehimself     to     r/swtor       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/swtor/comments/1wiouwg/yall_trippin_dlss_5_is_top_tier_in_swtor_and_im/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T09:10:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T09:11:11.851Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabaeb06508d45f3d2d69b4"
+    },
+    "message_id": "reddit_t3_1wiouw3",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "OpenAI",
+    "platform": "reddit",
+    "subreddit": "codex",
+    "username": "MysteriousInsect3226",
+    "title": "From an OpenAI and Anthropic user: looking for alternatives to support the existing subscriptions",
+    "text": "From an OpenAI and Anthropic user: looking for alternatives to support the existing subscriptions\n\nHi everyone. I'm a subscriber on both Codex and Claude, I spend around $500+/month (Codex 20x, Codex 5x, Claude 20x), and all this is almost entirely focused on coding.   The problem is that lately the usage limits have become unsustainable... I've noticed a real, drastic cut. That said, I don't know much about other providers (Google, Kimi, GLM, Deepseek, etc.), I'm only really familiar with OpenAI and Anthropic.   I wanted to ask you all: at this point, what's the best move? Are there other subscriptions or solutions out there that are actually worth it? Maybe with other providers, including non-US ones. Obviously nothing can really replace Fable and Astra (I'm  NOT  planning to drop OpenAI and Anthropic, they can not be entirely replaced), but I'm wondering if there are other ways to cut down or ease the usage load.   Could be subscriptions to other services, or maybe pay-as-you-go LLMs (Chinese models, perhaps).   If anyone has feedback I'd really appreciate it, there's so much new info coming out every day that it's hard to keep up.       submitted by     /u/MysteriousInsect3226     to     r/codex       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/codex/comments/1wiouw3/from_an_openai_and_anthropic_user_looking_for/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T09:10:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T09:11:12.245Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabaeb06508d45f3d2d69b6"
+    },
+    "message_id": "reddit_t3_1wiouvv",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "claudexplorers",
+    "username": "Most_Art507",
+    "title": "Claude for tech problems",
+    "text": "Claude for tech problems\n\nI was using my meshtastic wio tracker L1 yesterday, on the app it said new firmware download, so I tried to download it, several times, turns out I bricked the device because it doesn't allow ota updates.   I asked Claude ( sonnet 4.6) Claude told me how to see if the bootloader was corrupted and not,how to find stable firmware and how to install it, the device works perfectly now.       submitted by     /u/Most_Art507     to     r/claudexplorers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/claudexplorers/comments/1wiouvv/claude_for_tech_problems/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T09:10:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T09:11:12.635Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabaeb06508d45f3d2d69b7"
+    },
+    "message_id": "reddit_t3_1wiouvu",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Emergency_Accident36",
+    "title": "Grab 100 hammers from u/Emergency_Accident36!",
+    "text": "Grab 100 hammers from u/Emergency_Accident36!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Emergency_Accident36     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wiouvu/grab_100_hammers_from_uemergency_accident36/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T09:10:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T09:11:12.831Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabaeb16508d45f3d2d69b8"
+    },
+    "message_id": "reddit_t3_1wiouvj",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MapBasedPolls",
+    "username": "Dragslayer200",
+    "title": "Did your favourite food originate in your country?",
+    "text": "Did your favourite food originate in your country?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Dragslayer200     to     r/MapBasedPolls       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MapBasedPolls/comments/1wiouvj/did_your_favourite_food_originate_in_your_country/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T09:10:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T09:11:13.045Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabaeb16508d45f3d2d69b9"
+    },
+    "message_id": "reddit_t3_1wiouu9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DesignerEye",
+    "username": "Slow_Individual528",
+    "title": "Custom level by Slow_Individual528",
+    "text": "Custom level by Slow_Individual528\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Slow_Individual528     to     r/DesignerEye       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DesignerEye/comments/1wiouu9/custom_level_by_slow_individual528/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T09:10:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T09:11:13.252Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabaeb16508d45f3d2d69ba"
+    },
+    "message_id": "reddit_t3_1wiouty",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "PuzzlesandSurvival",
+    "username": "King_shot507",
+    "title": "GV middleman in discord is a scammer! Username: gamevault7. Scam server: G4ming Velt Store",
+    "text": "GV middleman in discord is a scammer! Username: gamevault7. Scam server: G4ming Velt Store\n\nThis is a group of Indonesian scammers that steal accounts and sell to unsuspecting customers. All accounts in their server are stolen. They have changed their names in discord many times. He makes posts in the channel saying they impersonate him but he is the scammers always, just changes usernames which in discord is allowed and he tries to fool others by saying it's not really him but someone who impersonated him. IT IS ALWAYS HIM AND RUN AWAY FROM THIS SERVER AS SOON AS SOMEONE INVITES YOU HERE.   They use Indonesian banks and crypto, whoever paid them talk to your law enforcement and tell them money went to that Indonesian bank. Stay safe people!       submitted by     /u/King_shot507     to     r/PuzzlesandSurvival       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PuzzlesandSurvival/comments/1wiouty/gv_middleman_in_discord_is_a_scammer_username/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T09:10:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T09:11:13.470Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabaeb16508d45f3d2d69bb"
+    },
+    "message_id": "reddit_t3_1wiout1",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "hotwheelsbangalore",
+    "username": "Next-Target007",
+    "title": "Selling ferrari 12cilindri bangalore",
+    "text": "Selling ferrari 12cilindri bangalore\n\nsubmitted by     /u/Next-Target007     to     r/hotwheelsbangalore       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hotwheelsbangalore/comments/1wiout1/selling_ferrari_12cilindri_bangalore/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T09:10:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T09:11:13.692Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabaeb16508d45f3d2d69bc"
+    },
+    "message_id": "reddit_t3_1wiousq",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "NoStupidQuestions",
+    "username": "AdventurousSafety868",
+    "title": "Did people care so much about \"the human touch\" in careers before the AI wave?",
+    "text": "Did people care so much about \"the human touch\" in careers before the AI wave?\n\nI'm not a supporter in any way of the gen AI overuse that has taken many industries by storm over the past 4 years. However, I see this particular narrative a lot among many people who claim that while   work can be handled by   AI implementations, there still needs to be a human at the end to ensure quality work, provide [opinion/experience], etc. Many people have started to take a more anthropic (ironically) angle to work that is being done just to defy AI.   I'm just curious and OOTL if people had a similar attachment before or was it just a given or an unsaid background thing before AI started to show its impacts. Take math for example. A lot of computational math has existed before, but now, we see all of these mathematicians come forward with a consensus that math has never been more of a creative field, filled with a \"human\" argument that pushes ideas forward. I've just not seen people be so incredibly optimistic about the human processes of creation and inspiration outside of the obvious creative industries, though said optimism is surely welcome in this era currently.   Welcome to hear about opposing or differing opinions on the matter! Love, an oblivious student       submitted by     /u/AdventurousSafety868     to     r/NoStupidQuestions       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NoStupidQuestions/comments/1wiousq/did_people_care_so_much_about_the_human_touch_in/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T09:10:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T09:11:13.909Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabaeb26508d45f3d2d69bd"
+    },
+    "message_id": "reddit_t3_1wiouse",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "th3l0n3r4n93r",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Mustard Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Mustard Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/th3l0n3r4n93r     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wiouse/sticker_giveaway_enter_to_win_a_4_stars_mustard/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T09:10:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T09:11:14.127Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabaeb26508d45f3d2d69be"
+    },
+    "message_id": "reddit_t3_1wiousb",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "SteamFrame",
+    "username": "NaughtyBudgie",
+    "title": "Using an Active USB cable + USB hub for the dongle",
+    "text": "Using an Active USB cable + USB hub for the dongle\n\nI've looked at most of the reviews but haven't seen this mentioned as yet and I appreciate, it's probably to early to know with any certainty.    We live in a 500 year old cottage with very thick clay lump walls. My gaming PC is upstairs in our small bedroom so my main play space (Apart from Elite Dangerous, Flight sim etc) will be in the lounge downstairs.   In the lounge I have a hard wired Wifi7 AP but, I would like to use the frames ability to use the best connection possible buy having the dongle & AP in close proximity and let it choose the best connection.   I'm thinking of getting  this  active USB cable but it's not something I've used before. In theory, would I be able to plug one end into my PC, and at the lounge end plug it into a powered USB hub then run the dongle through the hub? If so, anything to look out for specifically on the hub?   I'm going the hub route instead of directly plugging the dongle into the active cable as eventually I'm going to run a fibreoptic HDMI cable from my PC to the lounge TV so will also be using the hub for wireless kb+m.       submitted by     /u/NaughtyBudgie     to     r/SteamFrame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SteamFrame/comments/1wiousb/using_an_active_usb_cable_usb_hub_for_the_dongle/",
+    "score": 0,
+    "num_comments": 0,

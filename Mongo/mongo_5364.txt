@@ -1,0 +1,416 @@
+    "search_keyword": "GPT-6",
+    "platform": "reddit",
+    "subreddit": "homelab",
+    "username": "Far_Imagination_8345",
+    "title": "I turned a Google Home Hub H1A demo unit into a postmarketOS Linux server",
+    "text": "I turned a Google Home Hub H1A demo unit into a postmarketOS Linux server\n\nI am experimenting on building a custom arm linux cluster from my old android phones (running little apps on each and sharing their storages across cluster) and I had a google home hub demo unit, bought online without knowing it was a demo unit, so it was sitting in a drawer for almost a year.   After checking it's specs, it looked like a good potential node candidate to the cluster. I don't have deep knowledge about custom kernels, os porting, just installed LineageOS, TWRP few years ago to my phones and some understanding how operating systems are running and booting on these devices.   So I gave the task to gpt-6-astra / gpt-5.6-sol with Codex, after 1.5 days of loop and some good amount of tokens it achieved:     Got a native Linux desktop, touchscreen, and custom live statistics UI working.   No teardown, soldering, or hardware modifications. Initial setup through the hidden micro-USB port.   Made the existing boot chain load Linux from internal storage.   Now boots independently, connects over Wi-Fi, and survives restarts.     How achieved in summary:     Entered Amlogic recovery mode through the hidden micro usb port.   Bootstrapped a device specific Linux kernel and postmarketOS.   Fixed display rendering, colors, touchscreen, backlight, and Wi-Fi support.   Installed the kernel and root filesystem on internal storage.   Used a software only stock bootloader workaround to launch Linux automatically.   Verified independent startup, reboots, and power cycles without USB or a computer.          submitted by     /u/Far_Imagination_8345     to     r/homelab       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/homelab/comments/1wgepn7/i_turned_a_google_home_hub_h1a_demo_unit_into_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:13:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:14:25.491Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa855da6508d45f3d2c70e7"
+    },
+    "message_id": "reddit_t3_1wgeqvn",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SoloDevelopment",
+    "username": "Ill-Brick224",
+    "title": "I reached 783 Steam wishlists after just 4 YouTube devlogs",
+    "text": "I reached 783 Steam wishlists after just 4 YouTube devlogs\n\nA while ago I shared some numbers, so I thought I'd post an update now that I've experimented with a few more things.   I've now uploaded 4 devlogs, and since my last post I also added a trailer to my Steam page, updated the capsule art, and replaced the screenshots.   Those Steam page improvements did bring in a few more wishlists, but so far external content still seems to be responsible for most of them.   I've also been posting short-form videos to TikTok, Instagram Reels, and YouTube Shorts. I post basically the same videos to all 3 platforms, and the results have been very different.   TikTok gets views, but from what I can tell, not many of those viewers actually convert into Steam wishlists.   Instagram has done almost nothing for me so far. I've barely had one or two posts even break 1k views.   YouTube Shorts have easily performed the best. Not only do they get views, but they also seem to push people toward my longer devlogs. Those devlogs then bring more people to the Steam page and seem to convert into wishlists much better.   Reddit has also helped a lot. I've had quite a few posts go viral, and those have brought a noticeable amount of attention to the game.   One thing I've learned with Reddit is to try the same post in several relevant subreddits instead of only posting it once. A post can do almost nothing in one subreddit and then take off in another. Obviously it still needs to fit the subreddit and its rules, but posting to multiple relevant communities has given my posts a much better chance of actually reaching people.   X/Twitter has been pretty much the opposite for me. I've tried posting multiple different things there, but so far it hasn't really done anything for the game.   The long-form YouTube devlogs are still the biggest source of wishlists I've found, but they're also by far the most time-consuming. Each one takes me around ~30 hours to make, so I've spent roughly 120 hours making the 4 devlogs.   Obviously this is just my experience with one game and a relatively small sample size, but I thought the differences between platforms were interesting.   For other indie devs, what platform/content has actually converted into Steam wishlists for you? Have you also found YouTube and Reddit more effective than TikTok/Instagram/X?   Here's my latest devlog:   https://youtu.be/R0DY29nOIZ0    And the Steam page:   https://store.steampowered.com/app/4639140/Dough_it_Yourself/        submitted by     /u/Ill-Brick224     to     r/SoloDevelopment       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SoloDevelopment/comments/1wgeqvn/i_reached_783_steam_wishlists_after_just_4/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:15:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:15:22.980Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa855db6508d45f3d2c70e8"
+    },
+    "message_id": "reddit_t3_1wgequi",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "RWATimes",
+    "username": "rwatimes",
+    "title": "Aave stablecoin yields: why higher rates can mean harder exits",
+    "text": "Aave stablecoin yields: why higher rates can mean harder exits\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/rwatimes     to     r/RWATimes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RWATimes/comments/1wgequi/aave_stablecoin_yields_why_higher_rates_can_mean/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:15:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:15:23.200Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa855db6508d45f3d2c70e9"
+    },
+    "message_id": "reddit_t3_1wgequd",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "conspiracy_commons",
+    "username": "wwjps",
+    "title": "The Epstein Rabbit Hole Has a Basement",
+    "text": "The Epstein Rabbit Hole Has a Basement\n\nTo see the full video, clivk here:  https://youtu.be/ZVHTAafhWvE     Apparently, the Epstein rabbit hole has a basement.    This compilation goes deeper into the material surrounding Jeffrey Epstein: deposition footage, interviews, his islands, political and Hollywood connections, the Clintons, discussions involving secret societies and rituals, and several loose threads viewers have asked about after the previous videos.    And somehow, the stranger the material gets, the more familiar some of the names become.    There are serious moments, bizarre moments, uncomfortable moments—and one deposition exchange so spectacularly awkward that Epstein simply gets up and walks out. Sometimes the footage really does write the comedy for you.    As always, I'm not asking you to adopt my conclusion. I'm putting the clips, testimony, interviews, allegations, documents and public statements together so you can watch them in context, distinguish documented facts from claims and theories, verify what interests you, and decide what you think for yourself.    I am a witness, not a journalist. This video contains commentary, historical material, allegations, theories and publicly available footage presented for discussion, criticism, education and entertainment. The appearance or discussion of any person does not by itself establish wrongdoing or verify claims made about them.    Welcome back to the rabbit hole. Apparently we weren't finished. 🐇       submitted by     /u/wwjps     to     r/conspiracy_commons       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/conspiracy_commons/comments/1wgequd/the_epstein_rabbit_hole_has_a_basement/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:15:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:15:23.417Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa855db6508d45f3d2c70ea"
+    },
+    "message_id": "reddit_t3_1wgequ8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Market76",
+    "username": "HaibaraAi90",
+    "title": "Have a giveaway ending tomorrow want people who haven’t seen it to enter if they do wish",
+    "text": "Have a giveaway ending tomorrow want people who haven’t seen it to enter if they do wish\n\nhttps://www.reddit.com/r/Market76/comments/1wet7xm/1000_karma_giveaway/?utm_source=share&utm_medium=ios_app&utm_name=ioscss&utm_content=1&utm_term=1        submitted by     /u/HaibaraAi90     to     r/Market76       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Market76/comments/1wgequ8/have_a_giveaway_ending_tomorrow_want_people_who/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:15:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:15:23.632Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa855db6508d45f3d2c70eb"
+    },
+    "message_id": "reddit_t3_1wgequ3",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Haircare",
+    "username": "mickyistricky",
+    "title": "Why is the revlon blow dry brush so much better than the others?",
+    "text": "Why is the revlon blow dry brush so much better than the others?\n\nMy hair is quite coarse and wavy. I bought the revlon awhile ago and was amazed by how well it smoothed and took the excess volume out of my hair. I wanted to buy a blow dry brush that was a bit higher quality. I thought I’d try Lange and it wasn’t anywhere near as good. I’ve also tried the Dyson supersonic with a ceramic round brush and still cannot get it anywhere near as good as the revlon.    Is the heat level higher on the revlon than others? Trying to figure it out.        submitted by     /u/mickyistricky     to     r/Haircare       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Haircare/comments/1wgequ3/why_is_the_revlon_blow_dry_brush_so_much_better/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:15:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:15:23.848Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa855dc6508d45f3d2c70ec"
+    },
+    "message_id": "reddit_t3_1wgeqty",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "aeo",
+    "username": "dumbooomaxiieee",
+    "title": "How are you selling your AEO services",
+    "text": "How are you selling your AEO services\n\nI’ve been doing AEO for about 8 months now, I’ve not been able to figure out how people are getting paid.   The key gaps I see  - no real attribution if it came from AI  - mentioned on queries are not enough  - there is not CTA in the answer    So what is your pitch and how are you getting clients?   How much they pay?       submitted by     /u/dumbooomaxiieee     to     r/aeo       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/aeo/comments/1wgeqty/how_are_you_selling_your_aeo_services/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:15:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:15:24.064Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa855dc6508d45f3d2c70ed"
+    },
+    "message_id": "reddit_t3_1wgeqts",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "funComunitty",
+    "username": "goonmaster678941",
+    "title": "DO YALL WANNA BE FREAKY FREAKBALLS?!?!?",
+    "text": "DO YALL WANNA BE FREAKY FREAKBALLS?!?!?\n\nJOIN  r/GOONMASTER _CO    A PLACE WHERE YOU CAN BE AS FREAKY AS YOU WANT   AND SAY WHATEVER YOU WANT   JOIN THE GREATEST COMPANY ON REDDIT   WHERE NSFW IS ALLOWED TO THE FULLEST EXTENT        submitted by     /u/goonmaster678941     to     r/funComunitty       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/funComunitty/comments/1wgeqts/do_yall_wanna_be_freaky_freakballs/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:15:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:15:24.282Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa855dc6508d45f3d2c70ee"
+    },
+    "message_id": "reddit_t3_1wgeqsi",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "NMS_Corvette_Design",
+    "username": "Demonjayro",
+    "title": "Raia of the Stars",
+    "text": "Raia of the Stars\n\nI didn't want to redesign my other corvettes for space hauling... so I built a new one.   A couple days ago I saw a cool build of a orca and string ray inspired design. Credits below.   At first it looked like a horseshoe crab but with the tail I think it resembles a shark ray.   I am not good at glitching parts to make it look better so I did my best with a standard building techniques.    https://www.reddit.com/r/NMSCorvettes/s/vdWi1zhnxs     https://www.reddit.com/r/NMS_Corvette_Design/s/ribASYk8Vn        submitted by     /u/Demonjayro     to     r/NMS_Corvette_Design       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NMS_Corvette_Design/comments/1wgeqsi/raia_of_the_stars/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:15:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:15:24.502Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa855dc6508d45f3d2c70ef"
+    },
+    "message_id": "reddit_t3_1wgeqs4",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "TicketResale",
+    "username": "Complete_Fruit_2638",
+    "title": "Selling 2 tickets to Ye concert in Dallas Nov 7th LF $450 per ticket",
+    "text": "Selling 2 tickets to Ye concert in Dallas Nov 7th LF $450 per ticket\n\nsubmitted by     /u/Complete_Fruit_2638     to     r/TicketResale       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TicketResale/comments/1wgeqs4/selling_2_tickets_to_ye_concert_in_dallas_nov_7th/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:15:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:15:24.719Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa855dc6508d45f3d2c70f0"
+    },
+    "message_id": "reddit_t3_1wgeqru",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Louisville",
+    "username": "TheReiterEffect_S8",
+    "title": "Churchill Downs - Oktoberfest; Expectations for out-of-towner",
+    "text": "Churchill Downs - Oktoberfest; Expectations for out-of-towner\n\nHello all. I am having my bachelor party this weekend in Shelbyville and we'll be going to Churchill Downs that Saturday for Downs After Dark & their Oktoberfest event. I looked up some past reddit threads (specifically from this subreddit) and I'm starting to get the impression that Churchill Downs is not very exciting. Aside from Derby Day and the days leading up to it, I'm reading that it is very largely empty. I was kind of hoping for a more lively atmosphere, but now I'm wondering if we should maybe only stop by for a little and plan something else later in the night.   These threads are from a while ago though; Would anyone be able to provide a realistic expectation for how Saturday night would look like? I grew up with horse racing, and my parents own, groom and race thoroughbreds. It will be a fun experience for me regardless, but I want to know how the people who are there more to have a good time will feel about the visit.       submitted by     /u/TheReiterEffect_S8     to     r/Louisville       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Louisville/comments/1wgeqru/churchill_downs_oktoberfest_expectations_for/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:15:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:15:24.935Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa855dd6508d45f3d2c70f1"
+    },
+    "message_id": "reddit_t3_1wgeqrk",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "sentiment",
+    "platform": "reddit",
+    "subreddit": "washingtondc",
+    "username": "FnB99",
+    "title": "Stolen Bike",
+    "text": "Stolen Bike\n\nBike was stolen this past Saturday (9.12) from Berhta DC (Boiler Room Show) between 9-10pm.  It’s a Cannondale Caad10 — black with some gold accents. (First pic is most recent)  She’s not much but she’s my first road bike and very sentimental to me🥺🥺  Police Report has been filed.  If you know anything of it or have any information, please DM me!  Offering a cash reward for information leading to the recovery and return of my stolen bike.        submitted by     /u/FnB99     to     r/washingtondc       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/washingtondc/comments/1wgeqrk/stolen_bike/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:15:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:15:25.151Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa855dd6508d45f3d2c70f2"
+    },
+    "message_id": "reddit_t3_1wgeqrg",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "harris_dragon",
+    "title": "Grab 25⚡ from u/harris_dragon!",
+    "text": "Grab 25⚡ from u/harris_dragon!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/harris_dragon     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wgeqrg/grab_25_from_uharris_dragon/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:15:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:15:25.367Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa855dd6508d45f3d2c70f3"
+    },
+    "message_id": "reddit_t3_1wgeqrf",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "LeBronJames23",
+    "username": "SmoothBuy5500",
+    "title": "Gilbert Arenas grades LeBron’s Lakers tenure. Arenas speaks on the double standard LeBron is held to compared to that of other all-time greats. Thoughts?",
+    "text": "Gilbert Arenas grades LeBron’s Lakers tenure. Arenas speaks on the double standard LeBron is held to compared to that of other all-time greats. Thoughts?\n\nArenas says that the ridiculous criticism of LeBron at his age is actually misunderstood praise, since holding LeBron to a higher standard than the standard other all-time greats were held to means you expect more from LeBron than you did from them.    However, it seems as if his detractors haven’t yet realized it themselves.        submitted by     /u/SmoothBuy5500     to     r/LeBronJames23       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LeBronJames23/comments/1wgeqrf/gilbert_arenas_grades_lebrons_lakers_tenure/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:15:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:15:25.582Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa855dd6508d45f3d2c70f4"
+    },
+    "message_id": "reddit_t3_1wgeqr3",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "Eatventure",
+    "username": "builder680",
+    "title": "New club, need members",
+    "text": "New club, need members\n\nRequirements:   City 150+   1k salvage per day which is easily doable after that many cities.   Club ID: g0fb6CJ0iM   Club name is AVG 1K PER DAY PLS   If desired here is a Discord server link for discussion.    https://discord.gg/6SNbDFWFm        submitted by     /u/builder680     to     r/Eatventure       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Eatventure/comments/1wgeqr3/new_club_need_members/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:15:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:15:25.803Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa855de6508d45f3d2c70f5"
+    },
+    "message_id": "reddit_t3_1wgeqqi",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "DragonAdventures",
+    "username": "kermitTheFrogEater",
+    "title": "SELLING EVERYTHING IS NYP",
+    "text": "SELLING EVERYTHING IS NYP\n\nsubmitted by     /u/kermitTheFrogEater     to     r/DragonAdventures       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DragonAdventures/comments/1wgeqqi/selling_everything_is_nyp/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:15:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:15:26.022Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa855de6508d45f3d2c70f6"
+    },
+    "message_id": "reddit_t3_1wgeqqe",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "tmobile",
+    "username": "VicSwagger",
+    "title": "History & speculation: More questions about the latest (legacy plans) topic.",
+    "text": "History & speculation: More questions about the latest (legacy plans) topic.\n\nI am sorry to ask, given the number of threads on this topic already but I'm hoping this is a simple Q & A.   I'm on the \"lifetime\" Magenta Max plan.    How were you notified that your legacy plan was going away and your were being forced onto another plan? (I see many said they received a text > an other methods of communication from T-Mobile?) I have searched my texts, emails and T-Life app. Logged into my T-Mobile account via browser and there are NO messages about my Magenta Max ending or me being moved to another plan. I've only heard about this, through this subreddit's posts. My bill has been the same amount as always.    Is the significant discounts on the iPhone18 T-Mobile's way of assuaging the forced move & end of your legacy contract? If so, I would consider volunteering this info because when they do find me, I'm afraid they won't be offering incentives like this. I do have an older phone and needs an upgrade.   Is the prevailing thought that eventually they'll \"get me\" and end my Magenta Max? ie. everyone on a Legacy plan is going to lose their current \"lifetime\" contracts. Kinda goes back to the last point...I may have to voluntarily bring this up so they can end my Magenta Max but I get something out of it.    Also, for those capitalizing on the iPhone 18 discounted upgrades/trade-ins, aren't you basically extending your relationship with a company that did you dirty?    If they are breaking the contract, doesn't that allow you break away and opt out without penalty?   I am a member of Costco and they have a T-Mobile kiosk in there. I may go that route because I imagine the employees there are some what fixed (ex. I spoke to John before here & he said....). Better than the faceless phone support techs who, at times, give wildly different & conflicting answers.    Thanks!       submitted by     /u/VicSwagger     to     r/tmobile       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/tmobile/comments/1wgeqqe/history_speculation_more_questions_about_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:15:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:15:26.237Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa856176508d45f3d2c70f7"
+    },
+    "message_id": "reddit_t3_1wgervp",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "📢 Ventra Health [HIRING] a Accounting Manager!",
+    "text": "📢 Ventra Health [HIRING] a Accounting Manager!\n\nCompany: Ventra Health   Location: Remote 📍   Date Posted: September 14, 2026 📅   Categories: #finance #senior #fulltime #remote   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=www.remoterocketship.com&rurl=aHR0cHM6Ly93d3cucmVtb3Rlcm9ja2V0c2hpcC5jb20vdXMvY29tcGFueS92ZW50cmEtaGVhbHRoLTIvam9icy9hY2NvdW50aW5nLW1hbmFnZXItdW5pdGVkLXN0YXRlcy1yZW1vdGUvP3V0bV9zb3VyY2U9dGFsZW50    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wgervp/ventra_health_hiring_a_accounting_manager/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:16:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:16:23.173Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa856176508d45f3d2c70f8"
+    },
+    "message_id": "reddit_t3_1wgervc",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "videogames",
+    "username": "Rook_James_Bitch",
+    "title": "Anybody else tired of scavaging?",
+    "text": "Anybody else tired of scavaging?\n\nAs I've gotten older I've come to the realization that the games I enjoy have me spending too much time hunting around for supplies to upgrade and power up than spent actually enjoying and playing the game.   I am not ADHD so I don't enjoy the tedium of picking up random loot a million times per game.    I'm not talking about PC, here. I play on console, but I have become so burnt out on looking at the ground, cupboards, closets, cars, houses for items to continue the game that it feels more like a never-ending trip to the grocery store (or Easter egg hunt) than spending actual time enjoying playing the game and progressing the plot.    Going forward can we have all games include the Area Loot function, please? Can we make this an industry standard?       submitted by     /u/Rook_James_Bitch     to     r/videogames       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/videogames/comments/1wgervc/anybody_else_tired_of_scavaging/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T20:16:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T20:16:23.370Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa856176508d45f3d2c70f9"
+    },

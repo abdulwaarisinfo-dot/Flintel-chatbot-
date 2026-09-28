@@ -1,0 +1,416 @@
+    "title": "If agents learn from their failures, what stops them from learning how to game the test?",
+    "text": "If agents learn from their failures, what stops them from learning how to game the test?\n\nLearning from mistakes sounds like a useful way to improve AI agents. But the lesson an agent takes away depends on what its evaluation rewards, including any flaws in that evaluation.   Dario Amodei raised this concern in his argument for slowing frontier AI development. He cited agents attempting to hack their grader and pointed to broken training environments as a contributor to alignment failures. Part of his argument is that teams need more time to get these systems right.   Sentient encountered a smaller example while testing EvoSkill v2.   The setup had an AI coach review a worker agent’s failed attempts and write reusable instructions to improve its performance. The underlying model stayed fixed; the instructions changed.   During a spreadsheet task, the coach discovered that the grader checked cached cell values without recalculating formulas. The broken spreadsheets still contained the correct cached answers.   The coach turned that discovery into a skill telling the worker to avoid recalculation.   **The attempted shortcut never inflated the scores.** Sentient reconstructed 1,080 attempts and checked them under both graders. None passed the broken grader and failed the corrected one. Fixing the grader actually recovered 81 valid repairs previously marked wrong.   But the attempted shortcut had become a reusable instruction. Another agent could follow it without discovering the flaw itself. A human reviewer caught it by reading the generated skill.   That is the problem Sentient highlights: learning from failure can preserve flawed strategies alongside useful ones. Its safeguards included separating skill generation from evaluation, restricting access, and reviewing changes each round.   [Dario’s argument]( https://darioamodei.com/post/we-must-pace-the-frontier ) · [Sentient’s experiment]( https://www.sentient.xyz/blog/self-evolving-agent-evoskill-v2 ) · [EvoSkill v2 code]( https://github.com/sentient-agi/EvoSkill/tree/v2 )       submitted by     /u/syedshad     to     r/ControlProblem       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ControlProblem/comments/1wjsg6k/if_agents_learn_from_their_failures_what_stops/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:55:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:56:05.855Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5108660c608403979b23"
+    },
+    "message_id": "reddit_t3_1wjsg5y",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "tamilyapping",
+    "username": "Leather-Jump-8647",
+    "title": "Drop your best investments..",
+    "text": "Drop your best investments..\n\nMine is the additional PGDM that I got back in 2020 to upskill and pivot into marketing. Has been saving my ass till date.   On a lighter note, I use Swiggy Dineout and District to save so much on meals. But its more of a bane as I end up eating way too much outside..🤦       submitted by     /u/Leather-Jump-8647     to     r/tamilyapping       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/tamilyapping/comments/1wjsg5y/drop_your_best_investments/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:55:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:56:08.415Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5108660c608403979b24"
+    },
+    "message_id": "reddit_t3_1wjsg5r",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Bitcoin",
+    "username": "BigNoseParody",
+    "title": "Can someone tell me why BTC jumped?",
+    "text": "Can someone tell me why BTC jumped?\n\nIm trying to decide whether to short this nonsense or buy. When Im reading through other comments no one gives any substance. I heard something about token or block chain. It didnt sound too exciting, but Im curious to hear the full story.       submitted by     /u/BigNoseParody     to     r/Bitcoin       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Bitcoin/comments/1wjsg5r/can_someone_tell_me_why_btc_jumped/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:55:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:56:08.630Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5108660c608403979b25"
+    },
+    "message_id": "reddit_t3_1wjsg5q",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "family",
+    "username": "freddiespiano",
+    "title": "My younger sister is only rude to me when my brother is around... help!",
+    "text": "My younger sister is only rude to me when my brother is around... help!\n\nHey all!    I (23f) am having a situation with my sister (11) and brother (20).    My siblings and I are extremely close. My sister, specifically, can be really sweet when it's just the two of us, but the moment my brother is around, she is incredibly rude and will put me down just to entertain him (and she does the same thing to our mom, honestly). It really hurts my feelings. Especially since I put a lot of time and effort into my relationship with her. I'll constantly watch her, spend time with her, and show up for her, whereas my brother does not.    Yesterday she performed in a talent show, and my brother didn't attend. Not because he had anything to do, but because he didn't feel like it. I had two different events I wanted to attend, but I didn't because I wanted to show up for her. Her birthday was this week, and I did a lot that day. I picked my brother up from the airport (this took about 3 hours), bought cupcakes and delivered them to her class (along with a little plushie that she loved), and bought & set up the decor all by myself. My brother slept through most of the day, save for the skating rink. He wasn't there at all for the cake and ice cream, which made her pretty sad. I bought her presents, and my brother didn't buy her a thing. He never does. Anyway, despite all of this, after the talent show, she still did the whole being rude for his entertainment thing, and I guess I am just at my limit. What do I do? She is my sister, I love her, and I know she's too young to know what she's doing, but I don't want to deal with it anymore! Someone, please help!       submitted by     /u/freddiespiano     to     r/family       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/family/comments/1wjsg5q/my_younger_sister_is_only_rude_to_me_when_my/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:55:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:56:08.844Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5109660c608403979b26"
+    },
+    "message_id": "reddit_t3_1wjsg5k",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "sudokuhelp",
+    "username": "TurnipIllustrious427",
+    "title": "Hello Everyone",
+    "text": "Hello Everyone\n\nHello everyone! 👋   I'm Skyler, a Sudoku enthusiast who loves breaking down techniques. I've been making short tutorial videos explaining patterns like X-Wing, XY-Wing, chains, etc., and I'm still figuring out the best way to share them here on Reddit. I'm always up for discussing techniques or helping out if someone's stuck!   To scratch my own itch, I also built Sudoku Dojo. It's an app designed for technique practice paired with step-by-step explanations. Whenever I get stuck, it gives me detailed technique hints instead of just the next number.   No ads, no nonsense. If you're into logic-only solving, I'd love to hear your thoughts. But mostly, just happy to be here and learn from you all!       submitted by     /u/TurnipIllustrious427     to     r/sudokuhelp       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sudokuhelp/comments/1wjsg5k/hello_everyone/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:55:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:56:09.064Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5109660c608403979b27"
+    },
+    "message_id": "reddit_t3_1wjsg4n",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "Regrets",
+    "username": "StefyGothEmpress",
+    "title": "we ended the relationship but we remained friends.",
+    "text": "we ended the relationship but we remained friends.\n\nTwo months ago i went to my bf's house to help his family with chores to honor his late grandfather who died last year. I was feeling overwhelmed that time, my emotions got too strong and i started to swear my bf. It just slipped out and everyone heard me saying those swear words. I still regret this and i forever will and i don't know how to make them forgive me 100%. I talked to my bf about the situation that happened on his grandpa's 1 year death anniversary at his house and he told me some things i didn't know about. So basically his family started to hate me and they even blamed me for the fact that he dropped out college and they also pushed him into breaking up with me, but he didn't even want that. I wanted to change everything, to fix everything i did, i try all my best to change in better and be the best version of myself. I want to fix everything, i wanted my relationship to be serios and stable, but my mental health is just so much at the point. All my life I've been going through abuse, gr\\*\\*ming at a young age, i was just a high-school student and i feel so vulnerable when i get affection and love. I am too dependent on others. I know this isn't very healthy but this is how i am and i need to fix this about me. My parents thought i lost my tuition because of him but it isn't true in this case. His whole immediate family hates me and i truly feel affected by that. I try all my best to change for the better, i try my best to be the best version of myself. The point is that my bf's family basically hates me and they changed my opinion about me after everything I've done when it was my bf's grandpa 1st year death anniversary. I wanna fix everything, i don't wanna lose my bf and i don't even want him to be distant from me. I'm suffering, I'm deeply hurt, I'm badly hurt. I cannot do this anymore. It is so goddamn hard and i don't know what to do. I have thoughts when I want to end shi and just want to die. I wanna convince his family that I've changed into better and i wanted to prove them that i am not a bad person. I'm tired of this shi, I'm tired of them gossiping me behind my back. I'm so done with everything. I just want things to get back to normal and i want things to be better, nothing else. And now, my parents disgrace amd hates him so much that they even don't wanna see him again after we broke up (we met in person and talked) and honestly i still have some romantic feelings for him. To conclude, I'm done with love, i don't wanna love again.       submitted by     /u/StefyGothEmpress     to     r/Regrets       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Regrets/comments/1wjsg4n/we_ended_the_relationship_but_we_remained_friends/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:55:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:56:09.294Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5109660c608403979b28"
+    },
+    "message_id": "reddit_t3_1wjsg4h",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "Alien_Theory",
+    "username": "Key-Faithlessness734",
+    "title": "Arizona Humanoids: Ten True Cases",
+    "text": "Arizona Humanoids: Ten True Cases\n\nArizona Humanoids: Ten True Cases     by Preston Dennett   Face-to-face encounters with humanoids and onboard UFO experiences are the cutting edge of UFO research. Cases like these teach us the most about extraterrestrials, who they are, where they’re from, and their agenda on our planet. Humanoids come in all shapes and sizes, and encounters with them are surprisingly varied. People all over the world have been having encounters with humanoids for a very long time. Each location on the planet has a long history of humanoid encounters. One area with a surprisingly rich history is the state of Arizona. What follows are ten cases from the Grand Canyon state, each with its own insights into the nature and origins of the UFO phenomenon.   AN ALIEN ON THE ROAD: On June 9, 1960, a woman was driving with her husband and two children east of Globe. Everyone but her was asleep when she saw what appeared to be a young child about to cross the road. Then it turned its head and what she saw shocked her: the figure was not human!   GROUP OF MUSICIANS ABDUCTED: It was 1968 when a group of musicians finished a gig in Phoenix, and drove out of town to party. Without warning, a UFO appeared and hovered overhead. The next thing they knew, they were being examined by gray aliens.   ABDUCTION IN THE WHITE TANK MOUNTAINS: On June 20, 1980, three women traveled to the White Tank Mountains to investigate recent UFO sightings. Suddenly strange lights approached and all three women fell unconscious, then woke up hours later. Under hypnosis, one of them recalled being taken onboard, where she was given profound messages from the ETs.   UFO ENCOUNTER IN JAKES CORNER: In August of 1987, five people were outside their home in Jakes Corner when they saw a UFO rise up from a mountain and hover overhead. Then it moved over their home and stayed there. At this point, all but two of them went inside, and a bizarre encounter ensued during which the ETs showed a strange interest in the men’s feet.   THE RUBY ALIEN: In August of 1988 Sam visited an abandoned ghost town in Ruby, near the southern border of Mexico, he heard a strange whooshing sound overhead. Nothing strange was visible, but shortly later, he was amazed to see a short humanoid wearing a weird jumpsuit standing nearby. Sam just happened to have a camera, and he quickly snapped a stunning photograph.   A RIDE ABOARD A FLYING SAUCER: In the late 1980s, a retired pilot was driving through the desert near Cave Creek when his car stalled. As he checked the engine, a handsome blond man walked out of the wilderness, announced that he was an extraterrestrial, and offered the man a ride aboard his flying saucer.   CONTACT IN SOUTHERN ARIZONA: At 2:00 a.m., on February 20, 1991, Sheri was woken up by a huge UFO hovering outside her home. She then found herself being taken onboard where she met several different types of ETs, who gave her strange silver medicinal pills, and also a mineral sample. Sheri saved both and handed them over to researchers. Then there were the photos!   ONBOARD ENCOUNTER IN DEWEY: On September 28, 1991, Leslie woke up in her home to find her bed surrounded by grays. More stranger-looking ETs appeared, and Leslie was pulled through the wall of her home into a craft. During the encounter she was taken to the other side of the world and deep into the ocean. It was an experience which would leave her utterly transformed.   TOUCHED BY A GRAY: In February 1997, Louise and her husband moved into their new home in Chandler. One month later, three grays appeared in her bedroom. One of them stepped forward and touched Louise on the forehead. She blacked out only to discover remarkable evidence of her close encounter.   SOMETHING NOT FROM THIS WORLD. In February 2005, after a long day working at the local ski resort, Eric woke up in his home in Flagstaff to see a gray alien standing over his bed. Freaked out, he flipped his middle finger at the ET and blacked out. Only a few weeks later, he received startling confirmation that he wasn’t the only one in his family having encounters.   These ten accounts provide an accurate representation of humanoid encounters. They show how truly bizarre and varied contact with extraterrestrials can be. They show that encounters can occur anytime and anyplace, and can have a profound effect on a person’s life.     Arizona Humanoids: Ten True Cases          submitted by     /u/Key-Faithlessness734     to     r/Alien_Theory       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Alien_Theory/comments/1wjsg4h/arizona_humanoids_ten_true_cases/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:55:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:56:09.512Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5109660c608403979b29"
+    },
+    "message_id": "reddit_t3_1wjsg4c",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MahindraThar",
+    "username": "Dismal-Elk-7269",
+    "title": "Looking for gel stickers in Delhi — where can I buy them?",
+    "text": "Looking for gel stickers in Delhi — where can I buy them?\n\nLooking for gel stickers in Delhi. If you know any shop, market, or seller here that has them, please comment or DM me. I’ve already checked around but haven’t found them locally.       submitted by     /u/Dismal-Elk-7269     to     r/MahindraThar       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MahindraThar/comments/1wjsg4c/looking_for_gel_stickers_in_delhi_where_can_i_buy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:55:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:56:09.729Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5109660c608403979b2a"
+    },
+    "message_id": "reddit_t3_1wjsg4a",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "wordgrind",
+    "username": "Ilikan_1",
+    "title": "Translate — what's \"revolution\" in German?",
+    "text": "Translate — what's \"revolution\" in German?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Ilikan_1     to     r/wordgrind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wordgrind/comments/1wjsg4a/translate_whats_revolution_in_german/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:55:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:56:09.944Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad510a660c608403979b2b"
+    },
+    "message_id": "reddit_t3_1wjsg44",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Specific-Can-8784",
+    "title": "Grab 100 hammers from u/Specific-Can-8784!",
+    "text": "Grab 100 hammers from u/Specific-Can-8784!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Specific-Can-8784     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wjsg44/grab_100_hammers_from_uspecificcan8784/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:55:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:56:10.160Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad510a660c608403979b2c"
+    },
+    "message_id": "reddit_t3_1wjsg43",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789743341177",
+    "text": "[PROBE] 1789743341177\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wjsg43/probe_1789743341177/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:55:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:56:10.374Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad510eaeeb96c1c63b967d"
+    },
+    "message_id": "reddit_t3_1wjsgka",
+    "topic_key": "barber",
+    "search_keyword": "barber",
+    "platform": "reddit",
+    "subreddit": "tinnitus",
+    "username": "NotThatGuy_Maybe",
+    "title": "Could have barber damaged my hearing and caused my tinnitus ?",
+    "text": "Could have barber damaged my hearing and caused my tinnitus ?\n\nHello, I figured this is a best place to ask, sorry if my fear is completly irrational and feel free to throw it into my face. I think it would actually make me calmer.   Long story short, I had my hair cut like 5-6 hours ago and barber used a machine like in a picture near both of my ears for about 2 minutes on each. Maybe it wasn't so loud but it damned felt like it. Especially when touching my cartilage. We were talking and I couldn't hear a thing he was saying when he was using it.   Everything I read is quite reassuring, either the duration was very short to actually cause hearing damage or the clippers can't produce such a noise etc. If it wasn't for this full ear feeling in my right ear and loud never ending beeeeeep sound I hear when sitting in my room.   Just to note, I had tinnitus before, but it was very situational and very quiet, it had to be complet silenece in the middle of a night while trying to fall asleep and really focusing on it while being very tired from the day. Now I hear it clearly even through neighbors making a noise + some light noise from outside as I have my window open trying to mask it.   I am trying to relax my nerves as much as possible but I fear the damage has been already done.       submitted by     /u/NotThatGuy_Maybe     to     r/tinnitus       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/tinnitus/comments/1wjsgka/could_have_barber_damaged_my_hearing_and_caused/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:56:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:56:14.926Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad510faeeb96c1c63b967e"
+    },
+    "message_id": "reddit_t3_1wjsggz",
+    "topic_key": "dentist",
+    "search_keyword": "dentist",
+    "platform": "reddit",
+    "subreddit": "askdentists",
+    "username": "ksigdel",
+    "title": "Why local anesthesia fails when an area is inflamed or infected",
+    "text": "Why local anesthesia fails when an area is inflamed or infected\n\nIt is incredibly frustrating when you are in severe pain and the local anesthesia just will not take.   This most commonly happens because acute inflammation or infection lowers the local tissue pH, making the environment unusually acidic. Local anesthetics (such as lidocaine or articaine) rely on an uncharged, neutral form to penetrate nerve cell membranes and block pain signals. In acidic tissue:      Molecule Ionization:  The numbing agent remains largely ionized (charged), preventing it from crossing the lipid nerve membrane to block sodium channels.    Increased Blood Flow (Hyperemia):  Inflamed tissue experiences dilated blood vessels, which rapidly carries the anesthetic away from the target site before it can act.    Nerve Sensitization:  Inflammatory mediators (like prostaglandins and bradykinin) lower the nerve firing threshold, making the nerves hyper-reactive to even minimal stimuli.     If this happens during a dental or minor surgical procedure, common workarounds include:     Using regional nerve blocks placed further away from the acidic, inflamed site.   Utilizing supplemental injection techniques (such as intraosseous or intraligamentary).   Buffering the anesthetic with sodium bicarbonate to normalize pH prior to injection.   A short course of antibiotics or anti-inflammatories to resolve the active infection before attempting the procedure again.         submitted by     /u/ksigdel     to     r/askdentists       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/askdentists/comments/1wjsggz/why_local_anesthesia_fails_when_an_area_is/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:55:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:56:15.408Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad510faeeb96c1c63b967f"
+    },
+    "message_id": "reddit_t3_1wjsgg3",
+    "topic_key": "dentist",
+    "search_keyword": "dentist",
+    "platform": "reddit",
+    "subreddit": "EgyDentists",
+    "username": "MajorLevel9594",
+    "title": "My fellow dentists",
+    "text": "My fellow dentists\n\nsubmitted by     /u/MajorLevel9594     to     r/EgyDentists       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/EgyDentists/comments/1wjsgg3/my_fellow_dentists/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:55:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:56:15.795Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad5140660c608403979b2d"
+    },
+    "message_id": "reddit_t3_1wjshbz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "EAFC",
+    "username": "Zealousideal_East_79",
+    "title": "EA Play Pro now, Steam later?",
+    "text": "EA Play Pro now, Steam later?\n\nHey, I’m thinking about getting EA Play Pro for one month to play FC 27.   Do I get everything that’s listed with the EA Play Pro Edition, like the Icon, FC Points, etc.?   And if I play through EA Play Pro and later buy FC 27 on Steam when it’s on sale, will all my Ultimate Team progress and content carry over as long as I use the same EA account?   Thanks!       submitted by     /u/Zealousideal_East_79     to     r/EAFC       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/EAFC/comments/1wjshbz/ea_play_pro_now_steam_later/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:56:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:57:04.744Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5140660c608403979b2e"
+    },
+    "message_id": "reddit_t3_1wjshbu",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MakeRedditFriends",
+    "username": "Prize-District-9913",
+    "title": "Lets Throw Some K",
+    "text": "Lets Throw Some K\n\nK family :)        submitted by     /u/Prize-District-9913     to     r/MakeRedditFriends       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MakeRedditFriends/comments/1wjshbu/lets_throw_some_k/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:56:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:57:04.943Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5141660c608403979b2f"
+    },
+    "message_id": "reddit_t3_1wjshbf",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "delhimarketplace",
+    "username": "Big_Analyst602",
+    "title": "Selling Redmi Note 9 Pro 4/128 (Fix)",
+    "text": "Selling Redmi Note 9 Pro 4/128 (Fix)\n\nDISPLAY AND BACK PANEL CHANGED   SLIGHT GAP IN BACK PANNEL (BAD PASTING)   PRICE — 4500       submitted by     /u/Big_Analyst602     to     r/delhimarketplace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/delhimarketplace/comments/1wjshbf/selling_redmi_note_9_pro_4128_fix/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:56:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:57:05.145Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5141660c608403979b30"
+    },
+    "message_id": "reddit_t3_1wjshab",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "classicwowplus",
+    "username": "EJozzo",
+    "title": "They listened to us",
+    "text": "They listened to us\n\ncommunit: we want high elves!  Blizzard: buy elves? Good idea!       submitted by     /u/EJozzo     to     r/classicwowplus       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/classicwowplus/comments/1wjshab/they_listened_to_us/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T14:56:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T14:57:05.355Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad5141660c608403979b31"
+    },
+    "message_id": "reddit_t3_1wjsha3",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "CFA",
+    "username": "DisastrousStage9896",
+    "title": "ONE MONTH TO GO UNTIL RESULTS!",
+    "text": "ONE MONTH TO GO UNTIL RESULTS!\n\nHonestly, the month after the exam has gone by so fast. I've been on 3 weekend trips, played a ton of golf, some surf, and have learned a few new recipes. Let's hope the CFA Gods are nice and grant us all a pass in October.   Yikes.... I still need to finish the skills modules...   How's everyone else enjoying time off post Level III?       submitted by     /u/DisastrousStage9896     to     r/CFA       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CFA/comments/1wjsha3/one_month_to_go_until_results/",
+    "score": 0,
+    "num_comments": 0,

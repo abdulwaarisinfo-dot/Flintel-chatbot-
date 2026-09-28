@@ -1,0 +1,416 @@
+    "post_url": "https://www.reddit.com/r/Domains/comments/1wlt663/wholesale_portfolio/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T21:15:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T21:15:27.543Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab04cef660c60840398986c"
+    },
+    "message_id": "reddit_t3_1wlt65j",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "devBR",
+    "username": "mlkpiranha_",
+    "title": "Quando o chatGPT toma seu emprego",
+    "text": "Quando o chatGPT toma seu emprego\n\nsubmitted by     /u/mlkpiranha_     to     r/devBR       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devBR/comments/1wlt65j/quando_o_chatgpt_toma_seu_emprego/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T21:15:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T21:15:27.745Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab04cf0660c60840398986f"
+    },
+    "message_id": "reddit_t3_1wlt63o",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "windowsphone",
+    "username": "ThiagoAraujoReal",
+    "title": "[FEATURE UPDATE] Unison UWP 1.8.3 ~ WhatsApp Web port for Windows",
+    "text": "[FEATURE UPDATE] Unison UWP 1.8.3 ~ WhatsApp Web port for Windows\n\n🚀 Unison UWP 1.8.3 — HUGE UPDATE! 📱🔥    [20/09/2026] Version 1.8.3 is now available! 🎉    This is one of the biggest Unison updates yet! We've completed  Phases 1–3 of the architecture extraction , moving the UI away from the monolithic  IWhatsAppService  and toward dedicated façades, alongside a long list of  mobile-first fixes, history improvements, and Unison Shell polish.  💪   The goal? A cleaner, more maintainable architecture without sacrificing the Windows 10 Mobile experience. ❤️   ⚠️  Recommendation:  If pins or history look incorrect after upgrading, perform a device resync.   🏗️ Architecture — WhatsAppService Extraction   The foundation of Unison is evolving! This release introduces three major phases of architectural improvements.   ✅ Phase 1 — UI Frontier Closed     ViewModels and views now communicate through dedicated façades:    💬 Chat   📜 History   🔌 Connection   👤 Contact   👥 Group      Removed direct UI dependencies on  IWhatsAppService .     ✅ Phase 2 — Inverted Client Reporting     The client now reports events.   Façades subscribe to those events through  Attach*  inversion.   🎯  No intended behavior changes.  This is an architectural improvement designed to make the codebase easier to maintain.     ✅ Phase 3 — Live Data & Core Improvements     💬 Live chat list + offline replay moved to  ChatFacade .   📨 Timeline accept, revoke, and in-chat pin operations moved to  MessageFacade .   ⚙️ IncomingPump rules and dozens of pure helpers extracted into  Unison.Core .   🧪 Added tests for core logic.   🔄 App-state mute/pin mapping aligned with Baileys  7.0.0-rc14 .     📌 Chat List, Pins, Mute & Last Message   A major collection of fixes to make the chat list behave correctly, even during synchronization and offline replay! 📱   📌 Pins & Mute     ✅ Pins and mutes now survive history tip refreshes.   ✅ Mid-sync writes no longer accidentally lose state.   ✅ Mute-only cache stubs now preserve known fields through write-merge.   🔄 Pinned rows are re-sorted during sync, even with safe-mode batching enabled.   🛠️ Protocol pin handling fixed:     AppliesPin  now handles missing timestamps while still pinning.   After a local wipe, an app-state snapshot is forced so  pin_v1  is re-reported.   PN/LID dual-write keeps list rows and store keys aligned.          💡  Important:  Chat pins are not the same as WhatsApp Favourites. The Favourites API is still not implemented.     💬 Groups & Unread Counts     👤 Group author strips now survive application restarts.   🚫 Group titles are no longer incorrectly displayed as senders.   🏷️ LID digit labels upgrade to real names when they become available.   🔢 Offline unread counts no longer double-count messages.   🧩 Offline replay no longer blanks group author strips.   ⚡ Cold-load now applies pin/mute state before sorting.   📉 More frugal sync budget for devices experiencing mobile memory pressure.     💬 Chat Details, Media & Groups   🗳️ Rich Message History   The following content now survives history synchronization through SQLite:     🗳️ Polls   👤 Shared contacts   📍 Locations   💬 Quotes referencing these message types     Also fixed:     ✂️ Live quote bodies no longer get truncated at 50 characters.   🎙️ Voice-note MediaPlayer and panel listeners are cleaned up when leaving or unloading.   🛡️ Hardened paths that could unlink data after failed group queries or stuck sockets.   🗑️ Deleting a chat no longer causes endless history requests for the same JID.   📞 Calling from chat info now uses  tel:  with confirmation.     🎨 Unison vs WhatsApp Shell   More polish for the Unison experience, especially on Windows 10 Mobile! 📱✨     🪟 Separated Unison and WhatsApp shell behavior.   📱 W10M-safe pages.   ✔️ Updated  UnisonIcons  checkmarks.   🎨 Media circle chrome.   💬 Sent-bubble color improvements.     📸 Status Improvements   The Status viewer receives several important fixes to media loading and playback.     🔑 Media-key merge on upsert prevents later chunks from wiping download keys.   🖼️ Thumbnail/poster fallback support.   ⏳ No more forever spinner when media duration is  0 .   📦 Improved reliability when status media arrives in multiple chunks.     📜 History Catch-Up & Diagnostics   History synchronization is now more resilient, especially in situations involving quiet pages and empty ACKs.   🔄 FULL_HISTORY     📖 Catch-up now continues across quiet batches instead of stopping after the first full page.   🛑 ACK-accepted and banner-begin events no longer count as meaningful progress.   🔁 Empty-ACK loops can now stagnate and stop instead of continuing indefinitely.     🧪 Runtime Diagnostics     📋 Copy logs directly to the clipboard.   📜 Request Full History on-demand.   🐞 The same history request button is also available in Debug.   🔧 Improved tools for investigating synchronization issues.     🌍 i18n & Settings     🇩🇪 Added the  de-DE  language pack.   🔤 String parity for new debug and diagnostics UI.   🎨 Shell theme is applied correctly when opening a toast or resuming the app on Mobile.     ⚠️ Known Limitations   A few things are still in progress:     👥  Group message sending:  May still fail on some accounts due to protocol/query edge cases.   🏗️  WhatsAppService:  Still present as the compatibility host during the migration.   🔌  Background broker:  The raw socket has not yet been transferred to the out-of-process background broker.   ⭐  WhatsApp Favourites:  The Favourites list is not implemented yet. Current pins are chat-list pins only.     📲 Installation    Install the new APPX as an update.  🔄   If pins or history look incorrect after upgrading:     Open  Debug / Diagnostics .   Select  Request Full History On-demand .   If issues persist, perform a device resync. 🔁     📦 Download Repositories   🏪 WinArchive   An amazing Microsoft Store replacement featuring software updates and a web store.   🏪 Metrostore   Another great Microsoft Store replacement. Manual app installation is required.   🔗 GDrive Repositories   Unison / WinArchive / Metrostore:    https://drive.google.com/drive/folders/1nI6XezesNzj7dTbyL1XqV4X4iOMUoHcC?usp=sharing    💻 GitHub Source Code   Preview work is available on:      feature/1.7     feature/refactor/phase1–3      Check the release and PR pages for the exact source code.    PRs and feedback are welcome!  ❤️   🔗  MaskNinjaSquared/Unison     A UWP WhatsApp client aimed primarily at Windows 10 Mobile.    🙏 Credits   Huge thanks to the contributors who helped make this release possible! ❤️      u/MaskNinjaSquared     u/Mayconus     u/Negociation     u/jjb-pro      🎉 Thank You!   Unison 1.8.0 is a major step toward a cleaner architecture, stronger offline behavior, and a more reliable mobile experience.    Enjoy the update, and let us know what you think! 🚀📱    #Unison #UWP #Windows10Mobile #WhatsApp #OpenSource #WindowsPhone #SoftwareUpdate       submitted by     /u/ThiagoAraujoReal     to     r/windowsphone       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/windowsphone/comments/1wlt63o/feature_update_unison_uwp_183_whatsapp_web_port/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T21:15:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T21:15:28.353Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab04cf0660c608403989870"
+    },
+    "message_id": "reddit_t3_1wlt63m",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Switch",
+    "username": "sangrejoven",
+    "title": "MOBAPAD Chitu2 HD controllers",
+    "text": "MOBAPAD Chitu2 HD controllers\n\nI went all in on the MOBAPAD Chitu2 HD controllers. Now me and my two kids have solid pro controllers with TMR sticks, and essentially all of the same features offered by Nintendo’s Pro Controller 2.    The controllers by themselves are only $49.99 on Amazon, and the matte black one with the dock costs 65.99. I wanted the matte black version, so the only way to get that color is to buy it with the dock. The way I see it, though, I’ll definitely get lots of use out of that dock with three controllers, so it’s all good. 😁       submitted by     /u/sangrejoven     to     r/Switch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Switch/comments/1wlt63m/mobapad_chitu2_hd_controllers/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T21:15:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T21:15:28.557Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab04cf0660c608403989871"
+    },
+    "message_id": "reddit_t3_1wlt639",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "LocalLLM",
+    "username": "alefello",
+    "title": "Best GPU to run local LLM",
+    "text": "Best GPU to run local LLM\n\nHello   I've an RTX3080 10GB and an RTX3060 12GB at home. Which one will be better to run LLM locally? Or should I sell them and buy another card with more VRAM even if maybe older, like a P5000 or a Tesla?   Thank you       submitted by     /u/alefello     to     r/LocalLLM       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LocalLLM/comments/1wlt639/best_gpu_to_run_local_llm/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T21:15:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T21:15:28.758Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab04cf0660c608403989872"
+    },
+    "message_id": "reddit_t3_1wlt62s",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "NFLv2logs",
+    "username": "open-mod",
+    "title": "u/No_Box119 removed a post from r/NFLv2",
+    "text": "u/No_Box119 removed a post from r/NFLv2\n\nOn 20/9/2026, at approximately 21:12,  u/No_Box119  removed a post from  r/NFLv2    Complete Mod Log        Action   Moderator   Details   Description          addremovalreason   No_Box119   21   20. Advertisement       removelink   No_Box119   remove           Original Title     [ Removed by Reddit ]     Original Body     [ Removed by Reddit on account of violating the  content policy . ]     URL      https://www.reddit.com/r/NFLv2/comments/1wlt2c6/removed_by_reddit/      Permalink      https://reddit.com/r/NFLv2/comments/1wlt2c6/removed_by_reddit/         This content was automatically generated, and correct at the time of posting. Changes to the referenced content, such as edits or deletions, may not be reflected here. All times are in UTC.        submitted by     /u/open-mod     to     r/NFLv2logs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NFLv2logs/comments/1wlt62s/uno_box119_removed_a_post_from_rnflv2/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T21:15:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T21:15:28.963Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab04cf1660c608403989873"
+    },
+    "message_id": "reddit_t3_1wlt62l",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "LR024",
+    "title": "Grab 25⚡ from u/LR024!",
+    "text": "Grab 25⚡ from u/LR024!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/LR024     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wlt62l/grab_25_from_ulr024/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T21:15:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T21:15:29.164Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab04cf7aeeb96c1c63ba82e"
+    },
+    "message_id": "reddit_t3_1wlt6e0",
+    "topic_key": "electrician",
+    "search_keyword": "electrician",
+    "platform": "reddit",
+    "subreddit": "AskElectricians",
+    "username": "JudgeAlarming3743",
+    "title": "Want to add 6-50r receptacle for welder in garage, gfci breaker is now required by code. I keep hearing though that the gfci will trip while welder is in use. Is this a common thing and is there a work around I don’t want to hardwire welder since that would no longer make it portable.",
+    "text": "Want to add 6-50r receptacle for welder in garage, gfci breaker is now required by code. I keep hearing though that the gfci will trip while welder is in use. Is this a common thing and is there a work around I don’t want to hardwire welder since that would no longer make it portable.\n\nsubmitted by     /u/JudgeAlarming3743     to     r/AskElectricians       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskElectricians/comments/1wlt6e0/want_to_add_650r_receptacle_for_welder_in_garage/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T21:15:22Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T21:15:35.225Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab04cf7aeeb96c1c63ba82f"
+    },
+    "message_id": "reddit_t3_1wlt69w",
+    "topic_key": "cpa",
+    "search_keyword": "CPA",
+    "platform": "reddit",
+    "subreddit": "ChronicPain",
+    "username": "Connect_Shopping_910",
+    "title": "Glute trigger point",
+    "text": "Glute trigger point\n\nAnyone have tips for persistent (almost a year) trigger point in glute casting si joint and it band pain. I have done 2 months of pt with little relief and 2 sessions of dry needling.    Any recommendations for type of doctor to see? My pcp hasn’t been much help        submitted by     /u/Connect_Shopping_910     to     r/ChronicPain       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ChronicPain/comments/1wlt69w/glute_trigger_point/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T21:15:16Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T21:15:35.728Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab04d1d9f8856bec23850eb"
+    },
+    "message_id": "reddit_serp_1k1mmb1",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/AI_Agents/comments/1k1mmb1/for_people_out_there_making_ai_agents_how_are_you/",
+    "text": "For people out there making AI agents, how are you evaluating the performance of your agent?\n\nHey everyone - I've recently realized testing AI agents beyond manual QA is not trivial, and I don't have a framework for properly testing my agent. Looked at LangSmith and Arize, and it seems like they offer evaluation solutions. Wanted to ask if anyone has encountered testing AI agents beyond just \"vibe-testing\".       submitted by     /u/Remarkable-Long-9388       [link]       [comments]",
+    "username": "Remarkable-Long-9388",
+    "subreddit_or_channel": "AI_Agents",
+    "posted_at": "2025-04-17T20:18:28+00:00",
+    "fetched_at": {
+      "$date": "2026-09-20T21:16:13.927Z"
+    },
+    "google_rank": 8,
+    "search_keyword": "can you find me sales",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-20T21:16:13.927Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab04d29660c608403989874"
+    },
+    "message_id": "reddit_t3_1wlt75e",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "HeresTheCatch",
+    "username": "BeneficialPrice5456",
+    "title": "[Whats the catch?] I wish I was 6 foot tall, couldn't contract a disease or disorder, could not have an unfortunate event",
+    "text": "[Whats the catch?] I wish I was 6 foot tall, couldn't contract a disease or disorder, could not have an unfortunate event\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/BeneficialPrice5456     to     r/HeresTheCatch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HeresTheCatch/comments/1wlt75e/whats_the_catch_i_wish_i_was_6_foot_tall_couldnt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T21:16:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T21:16:25.526Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab04d29660c608403989875"
+    },
+    "message_id": "reddit_t3_1wlt759",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "kraw",
+    "username": "wyvernofwhimsy",
+    "title": "APPLE brought their whole belly today.",
+    "text": "APPLE brought their whole belly today.\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/wyvernofwhimsy     to     r/kraw       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/kraw/comments/1wlt759/apple_brought_their_whole_belly_today/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T21:16:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T21:16:25.725Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab04d29660c608403989876"
+    },
+    "message_id": "reddit_t3_1wlt752",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "TravelTown",
+    "username": "chaotic-painter",
+    "title": "did trade reset time change 😭",
+    "text": "did trade reset time change 😭\n\nI had promised someone my last 2 sends at trade reset time (5 am EST for me) before going premium and claiming the weekly goals chest, but my trades don’t seem to have reset?    This is really strange to me because I trade between trade reset time & daily challenge reset time all the time. (This is my first time trying to send a card before claiming weekly goals rewards though)   Thought I’d make a post to see if this happened to anyone else    🫠🫠🫠       submitted by     /u/chaotic-painter     to     r/TravelTown       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TravelTown/comments/1wlt752/did_trade_reset_time_change/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T21:16:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T21:16:25.926Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab04d2a660c608403989877"
+    },
+    "message_id": "reddit_t3_1wlt74b",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "AskParents",
+    "username": "Chemical-Scar7340",
+    "title": "How do you maintain safe sleep while traveling?",
+    "text": "How do you maintain safe sleep while traveling?\n\nDuring November and December we will be traveling internationally to my husbands home country so that his family can get to know the baby. Baby will be 4-5 months old during this time. At home he sleeps in a bedside bassinet. Does anyone have any suggestions for a safe sleep arrangement during this time? My baby is huge and already over the size limits for travel bassinets. We have a pack n play and are discussing bringing it, but it is SO bulky and heavy and we’ll regularly be moving between different homes and various locations around the country, and some of these moves will include bus rides and additional flights, so it seems wildly inconvenient .   Any suggestions???       submitted by     /u/Chemical-Scar7340     to     r/AskParents       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskParents/comments/1wlt74b/how_do_you_maintain_safe_sleep_while_traveling/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T21:16:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T21:16:26.131Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab04d2a660c608403989878"
+    },
+    "message_id": "reddit_t3_1wlt742",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "Yosemite",
+    "username": "OkBumblebee7117",
+    "title": "Dome fire outlook questions - Alternative suggestions ~9/30?",
+    "text": "Dome fire outlook questions - Alternative suggestions ~9/30?\n\nHey all!    My partner and I are from Maine, and we never have to worry about much besides the regular few feet of snow dropping in a given week- wildfires are not something I’ve experienced or understand the potential outlooks of.    I downloaded Watch Duty, and I’ve seen it grow from ~100 acres on 9/15 to now over 3k today 9/20 with 15% containment. I don’t know if those are rookie numbers for Cali, but it has me pretty concerned 😅.   My question is when to start making changes to plans, and what factors into that? We have a road trip from Oregon to California planned starting next week into early October. We hit Yosemite on the 30th, and plan to stay a few days. I understand a lot can change in 2 weeks, good or bad.    When would you call it for your trip? When does the park typically close for visitors in these situations?    In the event we need to change plans, what would you guys recommend instead? We planned to do Sequoia after Yosemite, but we may replace the latter with Kings Canyon if the wildfire squanders plans.    Thanks in advance, and apologies if this is a little redundant considering some other recent posts! Our plans are a little further out, and we are getting ready to leave in a few days. I’m a planner, and I don’t want to leave going into this blind haha!        submitted by     /u/OkBumblebee7117     to     r/Yosemite       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Yosemite/comments/1wlt742/dome_fire_outlook_questions_alternative/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T21:16:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T21:16:26.337Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab04d2a660c608403989879"
+    },
+    "message_id": "reddit_t3_1wlt73z",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Shoddy_Cranberry_645",
+    "title": "What’s the first thing you notice about someone?",
+    "text": "What’s the first thing you notice about someone?\n\nsubmitted by     /u/Shoddy_Cranberry_645     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wlt73z/whats_the_first_thing_you_notice_about_someone/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T21:16:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T21:16:26.537Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab04d2a660c60840398987a"
+    },
+    "message_id": "reddit_t3_1wlt72t",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "VideoEditors",
+    "username": "Auraxco",
+    "title": "Getting hired advice",
+    "text": "Getting hired advice\n\nI I really need a job but am having so much problems finding any and my I just want to make some money I do more vlogs travel and cooking videos editing I also do Roblox videos but I really want to get some money doing video editing so if anyone needs I also want to share some videos it’s not the best but I think it’s a great start  https://www.tiktok.com/t/ZP8T6hkE7/        submitted by     /u/Auraxco     to     r/VideoEditors       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/VideoEditors/comments/1wlt72t/getting_hired_advice/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T21:16:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T21:16:26.744Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab04d2a660c60840398987b"
+    },
+    "message_id": "reddit_t3_1wlt72a",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "cybersecurity_help",
+    "username": "Bissexual_Introvert",
+    "title": "Please help!! my HBO Max account was taken over, my card was charged, and now I’m finding signs that my email/laptop may be compromised",
+    "text": "Please help!! my HBO Max account was taken over, my card was charged, and now I’m finding signs that my email/laptop may be compromised\n\nHi, Reddit. Never imagined my first time making a post here would be about this, but here we go.   Today I was watching a show on the HBO Max app on my phone when I suddenly received a notification for a purchase with my credit card from HBO Max. It was not made by me. I immediately opened my bank app and did what was necessary to protect my bank account. I also checked if there were any other suspicious movements and thankfully didn't find anything else. When I went back to the HBO app to check my account, I found that I had been logged out and I couldn't log back in. I immediately contacted support and then went to check my email.   That's when things got even more concerning. I found a lot of attempts to access accounts I didn't even remember I had, like Discord (which I never really used but apparently had an account) and a gaming platform. I immediately changed my email password and reinforced the security of my email account. I basically only use this email nowadays for my HBO Max account and a new SHEIN account that I barely used, besides some university research stuff. I started scrolling through my inbox to see if there was any more damage and stumbled upon this [screenshots with the post]. The credentials shown there are from websites I haven't accessed in years, and the passwords listed are ones I had already changed before I stopped using those accounts. I panicked for a while before trying to calm myself down. I reported the email as phishing and started checking my spam folder and the rest of my inbox. I've been deleting accounts associated with this email that I no longer use, and I've also been checking my other email account, which has this email as a recovery/verification email.   What I'm seriously concerned about is my HBO Max account and, most importantly, my credit card information. I also have some university research information on my devices, which makes me even more worried.   Then I remembered something else. A couple of days ago, some files named README appeared on my laptop desktop. There were several of them, with numbers from 1 to 5, like \"README-1\", \"README-2\", etc. I had a pretty bad feeling about it, so I ran a full scan with my antivirus to check my laptop. After that, I also went through my files and documents and everything seemed fine. Once I finished checking everything, I deleted the README files using Shift + Delete. My laptop is currently with a trusted friend who knows much more about cybersecurity than I do, and he's going to check it properly to see if I missed anything. But now I'm starting to get really anxious again because that laptop had this same email account logged into it.   So, is there anything else I should be doing? Any tips or advice would be really appreciated.   So far I have:   - Changed my email password   - Activated 2-step verification   - Set up the option to change my password every 72 days   - Ran a security scan on my phone   - Checked my bank account for suspicious activity   - Contacted HBO Max support   - Started removing old/unnecessary accounts connected to this email   I'm honestly pretty overwhelmed by all of this, so any advice on what else I should check or do would be very appreciated. Thanks! Sorry if this post is confusing, English is not my first language and I'm still kinda nervous. I'll try to clarify anything in the comments if anyone is willing to help.       submitted by     /u/Bissexual_Introvert     to     r/cybersecurity_help       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cybersecurity_help/comments/1wlt72a/please_help_my_hbo_max_account_was_taken_over_my/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T21:16:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T21:16:26.950Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab04d2b660c60840398987c"
+    },
+    "message_id": "reddit_t3_1wlt71o",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "MapBasedPolls",
+    "username": "Accomplished_Word429",
+    "title": "quick naturalisation paired with high immigration is effectively a mass selling of a country's democracy and voting rights.",
+    "text": "quick naturalisation paired with high immigration is effectively a mass selling of a country's democracy and voting rights.\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Accomplished_Word429     to     r/MapBasedPolls       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MapBasedPolls/comments/1wlt71o/quick_naturalisation_paired_with_high_immigration/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T21:16:06Z"
+    },

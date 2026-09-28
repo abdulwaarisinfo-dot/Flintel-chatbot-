@@ -1,0 +1,416 @@
+    "username": "No_Bed7527",
+    "title": "My first insaurance claim and the car seems to have dissapeared. Can people guide in the right direction?",
+    "text": "My first insaurance claim and the car seems to have dissapeared. Can people guide in the right direction?\n\nHi everyone, looking for advice on how to handle my ongoing car insuarance claim. This has been my first insaurance claim so I am completely cludeless.    Timeline: First week of august:  Japanese improted prius had a minor accident, I made a claim on the insaurace. Car was still driveable and I used it to commute to work. Insuarance team asked for driver license details etc. I supplied the same day. Radio silence after that with no phone calls or emails. I kept asking in the app about any updates where they said its ongoing and no further updates. ** Last week of august:** I am called by Copart while I am at work, they said when can we collect the car, I said i am at work currently with the car, they said who allowed me to drive it, i said no body said you cant drive it. They said that is a surprise to them as they have been asked to collect the car as its been deemed a total loss write off. I said okay you can you come to collect car tomorrow. Later same week car is collected.    1st week of september : no update    2nd week of september:  i am called by an engineer representative, asked to drive my car to their garage for assessment and to pay excess, I informed i dont have the car to her total surprise and I tell i was told by copart its a total loss write off so I am confused. She also told me I have been deemed to be at complete fault in the accident (news to me as I thought its 50/50). She said she will confirm the car location and get back to me, never does.   Next day I recive another call from another garage, asking my permission for inspection of the car at my house, I tell them I dont have the car, they again say okay we will confirm and let you know. They never do.   I put in a formal complaint to my insurance company complaints email address.    3rd week of september:  still no update, radiosilence from the insaurance company. Insaurance company did send an acknowledgement letter for my formal complaint.   I did not get a courtesy car with my insaurance policy, as a shift worker using train/bus/hire cars to commute to the other city where I work, can anyone tell me what else am I supposed to be doing? There is no phone number for this company as its a totally online company, the Live chat tells me the car is still at the copart wearhouse and they are confirming its status. I really regret buying the car in the first place then getting this insaurance policy and then not getting a courtesy car. Its been more than a month since my actual accident, I thought insaurance settles things in days rather than weeks. Completely at my wit's end, any help or guiadance would be really really appreiated       submitted by     /u/No_Bed7527     to     r/CarTalkUK       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CarTalkUK/comments/1wgyn9b/my_first_insaurance_claim_and_the_car_seems_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:11:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:12:23.128Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa936276508d45f3d2cbbe5"
+    },
+    "message_id": "reddit_t3_1wgyn8v",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "ratemycommanders",
+    "username": "LavishnessPrimary",
+    "title": "Rate my future commander",
+    "text": "Rate my future commander\n\nthose are the four commander decks I'm planning to make and I wanted to know what y'all think about them.    I also wanted to to a Kibo deck but it seems that there's not enough goo monkey to make a real tribal deck, and I'm also thinking about a sliver deck but discussions are held with my group.       submitted by     /u/LavishnessPrimary     to     r/ratemycommanders       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ratemycommanders/comments/1wgyn8v/rate_my_future_commander/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:11:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:12:23.353Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa936276508d45f3d2cbbe6"
+    },
+    "message_id": "reddit_t3_1wgyn8g",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "renoise",
+    "username": "volrat1",
+    "title": "About Song.xml in .xrns files and LLMs, and possible source for improvements in Renoise copy-paste methods and project merging, and other findings.",
+    "text": "About Song.xml in .xrns files and LLMs, and possible source for improvements in Renoise copy-paste methods and project merging, and other findings.\n\nI'm not sure what to feel about what i'm gonna share with you guys, but maybe you can help me figure it out. Sorry for my english, not a native speaker.    1) Context  Last week i realized that within the .xrns there is a Song.xml file. You can access it changing .xrns for .zip in the file. An xml is a kind of simpler html, a plain text structured format for data. In renoise, it represents the song, notes, mixing and mastering parameters, routing, relation to samples and instruments, basically everything.   2) Copy-paste and project merging  And i thought, hey, with this i could transfer song info from one template to another, because natively Renoise force you to do it pattern by pattern, and its extremely time consuming and inefficient compared to other DAWs (dont misunderstand me, i love Renoise, its my favourite DAW and i use it almost exclusively).    The thing is that pasing the Song.xml files of two tracks to an LLM (such as GPT, Claude, or similars), not only allows you to transfer note data, but nowadays it can handle transfering also the instruments you are using. And not just transfering, also merging two templates!   I'm not suggesting to include a kind of \"Renoise copilot\" or any awful idea such as that, but i think the developpers could use this to device and oficial way to merge projects or do transfer of masive notes, fx, and instruments data from one template to another.   3) Arrangement and variation   After that i realized, that if the LLM can manipulate the xml file for productivity, it could also help in the crafting of a track. I'm gonna tell you from the outset, i let myself get carried away with enthusiasm when i discover stuff but i will spoil you with what i feel right now to avoid misunderstandings: i feel the result like a form of evil-muzak and i'm pretty damn sure i wont use this again, not even for side projects. The thing is i trew into this four \"discarded\" xrns i had, ranging from 30 seconds to 5 minutes of techno-house-like tracks and was able to \"fill them\" up to 5-6 minutes tracks. The result wasnt inmediatly usable, it made weird stuff, sometimes broke the xml file compatibility, but with iteration it worked. But as i said before, in the long run, this is not for me and wont be using the result for any release nor real side project, because it feels like a bizarro-production, part me, part evil-muzak.   4) Mixing and mastering   Well pretty much the same, it can tweak all knobs, and by sending the result to the LLM (.wav) and the xml, it could tweak it and improve the mixing/mastering a lot. The result is kind of generic and i checked with a friend with is a sound engineer and told me it sounds \"semi-pro or good-amateur and could improve bass\", so no silver bullet. But it freaked me out that could this fast as hell, i crunched in a weekend stuff i wouldnt be able to do in months (im not good at mixmastering). also, i felt alienated with the result and besides the initial enthusiasm, in the end i dont feel the same happiness i feel with all my other hobby stuff i do with 100% control, even if the results are \"poor\" soundwise.    5) Lua   i havent explored the Lua side of Renoise and i guess its super related to all this.   6) Conclusions   Anyways, i wanted to report that in summary, even if renoise has not a \"copilot\" like some other modern DAWS (and i would NOT like that to happen), it is possible to \"emulate\" that behaviour through the XML file within the .xrns file and prompting it with LLMs.   In the end i feel its not for me and im droping this method after having toyed with it during this \"weekend project\" and making a faux-LP. Maybe others might find a legitimate use for this, and i think from the side of development could be really useful to find solutions for long existing limitations of renoise in copy-pasting large stuff and project merging, or maybe could help the community for solve stuff like that meanwhile.        submitted by     /u/volrat1     to     r/renoise       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/renoise/comments/1wgyn8g/about_songxml_in_xrns_files_and_llms_and_possible/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:11:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:12:23.569Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa936276508d45f3d2cbbe7"
+    },
+    "message_id": "reddit_t3_1wgyn89",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ShopeePH",
+    "username": "VacationLost2434",
+    "title": "Shower gift card?",
+    "text": "Shower gift card?\n\nHello! I’m from US but boyfriend ko stays sa Philippines. Is it possible to buy a gift card and send him the link nalang to use? Like how amazon is?    Thank you in advance po!        submitted by     /u/VacationLost2434     to     r/ShopeePH       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ShopeePH/comments/1wgyn89/shower_gift_card/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:11:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:12:23.787Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa936286508d45f3d2cbbe9"
+    },
+    "message_id": "reddit_t3_1wgyn80",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "triples",
+    "username": "tokkipan",
+    "title": "260915 13-Year Rookie Kim ChaeYeon : Instagram Update with tripleS ChaeYeon and YooYeon",
+    "text": "260915 13-Year Rookie Kim ChaeYeon : Instagram Update with tripleS ChaeYeon and YooYeon\n\nsubmitted by     /u/tokkipan     to     r/triples       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/triples/comments/1wgyn80/260915_13year_rookie_kim_chaeyeon_instagram/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:11:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:12:24.215Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa9365f6508d45f3d2cbbea"
+    },
+    "message_id": "reddit_t3_1wgyo7e",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "BracketFills",
+    "username": "Rabbitterton",
+    "title": "Best Fictional Sword User: Inigo Montoya (Princess Bride) vs. Link (Legend of Zelda)",
+    "text": "Best Fictional Sword User: Inigo Montoya (Princess Bride) vs. Link (Legend of Zelda)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Rabbitterton     to     r/BracketFills       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BracketFills/comments/1wgyo7e/best_fictional_sword_user_inigo_montoya_princess/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:13:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:13:19.780Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa9365f6508d45f3d2cbbeb"
+    },
+    "message_id": "reddit_t3_1wgyo7b",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "unpopularopinion",
+    "username": "General-Kalani",
+    "title": "Rocket is disgusting",
+    "text": "Rocket is disgusting\n\nRocket is disgusting and Europe needs to stop serving it with everything.    It’s just super bitter, awfully textured leaves that ruin every meal it touches. As a garnish it adds nothing to the appearance of the plate and serves as nothing more than an annoyance to dig around.        submitted by     /u/General-Kalani     to     r/unpopularopinion       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/unpopularopinion/comments/1wgyo7b/rocket_is_disgusting/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:13:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:13:19.996Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa936606508d45f3d2cbbec"
+    },
+    "message_id": "reddit_t3_1wgyo6u",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "iPhoneDuo",
+    "username": "DarthRaider559",
+    "title": "iPhone duo inner screen protector",
+    "text": "iPhone duo inner screen protector\n\nDoes the inner screen already have a screen protector on it, like the Samsung folds?  If not, do or should you buy one for the inner screen? I like privacy screen protectors,so I would like to put one of those on when I get one. But what do y'all think        submitted by     /u/DarthRaider559     to     r/iPhoneDuo       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/iPhoneDuo/comments/1wgyo6u/iphone_duo_inner_screen_protector/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:13:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:13:20.212Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa936606508d45f3d2cbbed"
+    },
+    "message_id": "reddit_t3_1wgyo6t",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "IndiaWatchesExchange",
+    "username": "darkestboi",
+    "title": "[WTS] Casio G-Shock GWG-1000 Mudmaster — Excellent Condition [Timestamp – Yes] [Price – Yes]",
+    "text": "[WTS] Casio G-Shock GWG-1000 Mudmaster — Excellent Condition [Timestamp – Yes] [Price – Yes]\n\nSelling my G-Shock GWG-1000 Mudmaster, purchased on 6 July 2026.   Condition: Excellent  Features: Tough Solar, Multi Band 6, Bluetooth for time correction  Water Resistance: 200M  Box & papers: All available  Invoice: Yes  Warranty: Yes  Location: Bangalore  Price: ₹43000 including shipping  Selling as I’m consolidating my collection.   Timestamp and detailed photos attached.       submitted by     /u/darkestboi     to     r/IndiaWatchesExchange       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IndiaWatchesExchange/comments/1wgyo6t/wts_casio_gshock_gwg1000_mudmaster_excellent/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:13:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:13:20.428Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa936606508d45f3d2cbbee"
+    },
+    "message_id": "reddit_t3_1wgyo6g",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Rezurektion",
+    "title": "Grab 100 hammers from u/Rezurektion!",
+    "text": "Grab 100 hammers from u/Rezurektion!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Rezurektion     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wgyo6g/grab_100_hammers_from_urezurektion/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:13:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:13:20.645Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa936606508d45f3d2cbbef"
+    },
+    "message_id": "reddit_t3_1wgyo54",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ReferralsMetaQuest",
+    "username": "tserof",
+    "title": "Meta Quest device referral",
+    "text": "Meta Quest device referral\n\n30 € or 30$ if you buy a meta quest headset  https://www.meta.com/referrals/link/tserof/        submitted by     /u/tserof     to     r/ReferralsMetaQuest       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ReferralsMetaQuest/comments/1wgyo54/meta_quest_device_referral/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:13:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:13:20.873Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa936616508d45f3d2cbbf0"
+    },
+    "message_id": "reddit_t3_1wgyo4o",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "OculusReferralLinks",
+    "username": "tserof",
+    "title": "Meta Quest device referral",
+    "text": "Meta Quest device referral\n\n30 € or 30$ if you buy a meta quest headset  https://www.meta.com/referrals/link/tserof/        submitted by     /u/tserof     to     r/OculusReferralLinks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OculusReferralLinks/comments/1wgyo4o/meta_quest_device_referral/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:13:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:13:21.090Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa936616508d45f3d2cbbf1"
+    },
+    "message_id": "reddit_t3_1wgyo4n",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "SOKeyholder",
+    "title": "Cuckolds, wannabe cucks, and former cuckolds of Reddit: How did you become a cuck, and what’s one of the most memorable experiences that shaped your path?",
+    "text": "Cuckolds, wannabe cucks, and former cuckolds of Reddit: How did you become a cuck, and what’s one of the most memorable experiences that shaped your path?\n\nsubmitted by     /u/SOKeyholder     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wgyo4n/cuckolds_wannabe_cucks_and_former_cuckolds_of/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:13:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:13:21.305Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa936616508d45f3d2cbbf2"
+    },
+    "message_id": "reddit_t3_1wgyo4g",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Var Energi AS - 15 sep 2026 @ 13:55 -> Kr.53.72",
+    "text": "Buy Signal Var Energi AS - 15 sep 2026 @ 13:55 -> Kr.53.72\n\nTicker:  VAR.OL    ![Logo]( https://www.getagraph.com/logos/VAR.OL.png )   Exchange:  OSL    Time:  15 sep 2026 @ 13:55    Price:  Kr.53.72    Link:  https://getagraph.com/AAA/trading/OSL/VAR.OL/analysis/signals        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wgyo4g/buy_signal_var_energi_as_15_sep_2026_1355_kr5372/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:13:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:13:21.521Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa936616508d45f3d2cbbf3"
+    },
+    "message_id": "reddit_t3_1wgyo3j",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "📢 Sayed Farms Limited [HIRING] a Truck Driver At Sayed Farms Limited!",
+    "text": "📢 Sayed Farms Limited [HIRING] a Truck Driver At Sayed Farms Limited!\n\nCompany: Sayed Farms Limited   Date Posted: September 15, 2026 📅   Categories: #fulltime   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=jobs.freshtalent.africa&rurl=aHR0cHM6Ly9qb2JzLmZyZXNodGFsZW50LmFmcmljYS9qb2JzL3RydWNrLWRyaXZlci1hdC1zYXllZC1mYXJtcy1saW1pdGVkLWQ1NDFjNDAx    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wgyo3j/sayed_farms_limited_hiring_a_truck_driver_at/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:13:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:13:21.740Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa936616508d45f3d2cbbf4"
+    },
+    "message_id": "reddit_t3_1wgyo2u",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PreguntasReddit",
+    "username": "GlumImpact1681",
+    "title": "¿Cuál es esa comida que amas con locura pero que a los demás les parece asquerosa o incomible?",
+    "text": "¿Cuál es esa comida que amas con locura pero que a los demás les parece asquerosa o incomible?\n\nsubmitted by     /u/GlumImpact1681     to     r/PreguntasReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PreguntasReddit/comments/1wgyo2u/cuál_es_esa_comida_que_amas_con_locura_pero_que_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:12:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:13:21.958Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa936626508d45f3d2cbbf5"
+    },
+    "message_id": "reddit_t3_1wgyo1y",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "WildHorseIslands",
+    "username": "WaitWhat3333",
+    "title": "Is this a fair offer? Need advice!",
+    "text": "Is this a fair offer? Need advice!\n\nI  still  don’t understand SIUC values… help 😭 would a dusty brindle shire plus 2 cute mid IUH (either 2 from a pearly black bay icey, chestnut pearly pink Andy, or chestnut volcanic orange icey) be fair for any Arab with either blowing snow, mother of pearl, royal dun, dusty brindle, or cracked lava coat? Matching hair doesn’t matter to me! I would love your opinion “yes or no” OR if you have one of those and are interested in a trade, you’d make my day 🥰 if your answer is “no” please please lmk what you think I should add to achieve my goal! Thank you so much! 💚       submitted by     /u/WaitWhat3333     to     r/WildHorseIslands       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WildHorseIslands/comments/1wgyo1y/is_this_a_fair_offer_need_advice/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:12:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:13:22.178Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa936626508d45f3d2cbbf6"
+    },
+    "message_id": "reddit_t3_1wgyo1u",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "TheBattleCatsReddit",
+    "username": "iJustObserveStuff",
+    "title": "Niceeee (☞ ͡° ͜ʖ ͡°)☞",
+    "text": "Niceeee (☞ ͡° ͜ʖ ͡°)☞\n\nsubmitted by     /u/iJustObserveStuff     to     r/TheBattleCatsReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TheBattleCatsReddit/comments/1wgyo1u/niceeee_ʖ/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:12:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:13:22.395Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa936626508d45f3d2cbbf7"
+    },
+    "message_id": "reddit_t3_1wgyo0n",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "libsofreddit",
+    "username": "ResponsibleLeague437",
+    "title": "Utopia.",
+    "text": "Utopia.\n\nsubmitted by     /u/ResponsibleLeague437     to     r/libsofreddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/libsofreddit/comments/1wgyo0n/utopia/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:12:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:13:22.614Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa936626508d45f3d2cbbf8"
+    },
+    "message_id": "reddit_t3_1wgyo0h",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",

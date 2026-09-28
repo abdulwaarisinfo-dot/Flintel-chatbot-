@@ -1,0 +1,416 @@
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "selfhosted",
+    "username": "Kaysyn",
+    "title": "I tracked used homelab hardware prices on eBay for a week. Here is what things actually sell for.",
+    "text": "I tracked used homelab hardware prices on eBay for a week. Here is what things actually sell for.\n\nI kept buying used gear with no idea whether the price was fair. Every listing looks reasonable on its own. So I built something to tell me.   It polls eBay every six hours, records every listing for two dozen products, and builds a rolling median. Here is where things sit right now, median total cost including shipping, last three days:        Hardware   Listings   Median   Lowest          Samsung PM983 3.84TB NVMe   81   $799   $499       Dell R730xd   90   $635   $262       Dell R640   76   $437   $255       Dell R730   59   $350   $180       Supermicro X10 barebones   76   $337   $138       HPE DL360 Gen9   89   $310   $125       HPE DL380 Gen9   81   $300   $155       Lenovo M720q Tiny   99   $175   $60       Dell OptiPlex 7060 Micro   96   $171   $74       HP EliteDesk 800 G4 Mini   112   $145   $54       Dell R220   42   $131   $80       Lenovo M920q Tiny   178   $130   $79       Mellanox ConnectX-4 25GbE   90   $57   $26       Intel X520-DA2 10GbE   106   $23   $15        Four things I did not expect.    The M920q is cheaper than the M720q.  $130 against $175, despite being newer with two M.2 slots instead of one. The answer looks like supply: 178 M920q listings versus 99 M720q, which reads like a corporate refresh cycle dumping inventory. If you are building a cluster, the newer machine is the cheaper one right now.    10GbE costs nothing.  An X520-DA2 at a $23 median is less than a decent cable run. There is no reason left to stay on gigabit between your NAS and your hypervisor.    The 1U and 2U HPE boxes cost the same.  DL360 Gen9 at $310, DL380 Gen9 at $300. You are choosing between rack units and drive bays, not paying more for one. Take the 2U unless space is genuinely tight, because the fan noise difference is not subtle.    Enterprise NVMe is still expensive.  PM983 3.84TB at a $799 median is about $208 per TB against roughly $60 for consumer drives. You pay that for power loss protection and sustained write performance, which matters for VM storage and nothing else.   One thing I learned building it: searching by model name is useless without price filtering. A search for \"Dell PowerEdge R640\" returns bezels, caddies and rail kits alongside complete servers. My first run produced 294 fake deals because the junk had cut every median in half. I had to set a price floor per product before any of the numbers meant anything.   It runs on a Proxmox VM here at home. Python scraper, Postgres, static site built from the database and pushed to Cloudflare, no open ports. The whole thing updates itself four times a day.   Site is racksniper.com if the numbers are useful to you.   Disclosure: I plan to add eBay affiliate links once my application clears, so eventually I would get a small cut if someone buys through it. Nothing is paywalled and I am not selling anything.   Tell me what I am missing and I will add it. I track servers, mini PCs, NAS units, drives and NICs right now, and I am short on switches.       submitted by     /u/Kaysyn     to     r/selfhosted       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/selfhosted/comments/1wdboao/i_tracked_used_homelab_hardware_prices_on_ebay/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T09:49:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T09:50:07.293Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3cecf035b0f36efccb660"
+    },
+    "message_id": "reddit_t3_1wdbo9i",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "cofounderhunt",
+    "username": "Top_Blackberry7276",
+    "title": "Looking for a Co-Founder — Baby Food Brand | India 🇮🇳",
+    "text": "Looking for a Co-Founder — Baby Food Brand | India 🇮🇳\n\nHey everyone,   I’m currently building a baby food brand and am looking for a co-founder who can bring strong experience in creative marketing, branding, storytelling, and growth.   We’re at a point where things are already moving — I’ve had 6–7 meetings with VC’ s and am actively exploring fundraising opportunities. Now I’m looking for someone who can come on board as a genuine partner and help take the brand to the next level.   Ideally, you:   - Have experience in creative marketing / D2C / consumer brands   - Understand how to build a brand that parents genuinely trust   - Are strong at content, campaigns, storytelling, and unconventional marketing   - Are entrepreneurial and willing to get hands-on   - Are interested in building something long-term rather than just taking up a role   I’m not looking for an employee or freelancer — I’m looking for a co-founder who wants to build and own this journey together.       submitted by     /u/Top_Blackberry7276     to     r/cofounderhunt       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cofounderhunt/comments/1wdbo9i/looking_for_a_cofounder_baby_food_brand_india/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T09:49:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T09:50:07.502Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3cf06a72f4cb7ae30b7a9"
+    },
+    "message_id": "reddit_serp_114zfgc",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/homeowners/comments/114zfgc/are_these_reasonable_prices_for_septic_services/",
+    "text": "Are these reasonable prices for septic services?\n\nHey y'all, I am a new homeowner and I have no reference for whether these are reasonable prices for septic services. I was very upfront about my lack of knowledge, so now I am feeling some buyers remorse, like did I do something wrong and leave myself open to predatory pricing or something? Can you help me understand if I got ripped off?     Pump 1000 Gallon × 1 = $475.00   Pump Drainfield 12 × 1 = $878.00   remove concrete baffle × 1 = $550.00   Baffle T × 1 = $550.00   Remediation Treatment × 1 = $758.00         submitted by     /u/1point21giggawats       [link]       [comments]",
+    "username": "1point21giggawats",
+    "subreddit_or_channel": "homeowners",
+    "posted_at": "2023-02-17T22:23:26+00:00",
+    "fetched_at": {
+      "$date": "2026-09-11T09:51:02.704Z"
+    },
+    "google_rank": 8,
+    "search_keyword": "affordable septic tank service",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-11T09:51:02.704Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3cf0b035b0f36efccb661"
+    },
+    "message_id": "reddit_t3_1wdbozd",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Guitar",
+    "username": "tinytepidtendons",
+    "title": "Do I really need a tube amp?",
+    "text": "Do I really need a tube amp?\n\nI've been wanting to try out electric guitar after playing acoustic for awhile, and have decided to invest in a used setup. A friend of mine that is a fairly experienced player has been guiding me through what to look for in guitars and amps, which has been great since I know very little, and there's a ton to learn. He is definitely someone who likes to buy very nice things though, and I'm wondering if I really need to spend as much as he is recommending. Especially for amps, he has said that there is no point in even playing on a solid state amp, and I absolutely need to invest in a fairly expensive tube amp. I'm just going to be playing in my house, and have no plans whatsoever on going to gigs or even playing with/for other people. Would it really be shooting myself in the foot to start out with something like an orange micro dark (there's one for sale at a pretty cheap price near me), and upgrade down the road if I need to?        submitted by     /u/tinytepidtendons     to     r/Guitar       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Guitar/comments/1wdbozd/do_i_really_need_a_tube_amp/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T09:50:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T09:51:07.098Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3cf0b035b0f36efccb662"
+    },
+    "message_id": "reddit_t3_1wdboyg",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "kencarson",
+    "username": "Suspicious-Ad-9539",
+    "title": "Is it legit?",
+    "text": "Is it legit?\n\nSo for a long time now I wanted to buy m8i gaskit vol 1 drumkit, and I found this sketchy website, is it trusted and safe?       submitted by     /u/Suspicious-Ad-9539     to     r/kencarson       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/kencarson/comments/1wdboyg/is_it_legit/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T09:50:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T09:51:07.322Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3cf0b035b0f36efccb663"
+    },
+    "message_id": "reddit_t3_1wdboxp",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ShopeePH",
+    "username": "purpumpkin",
+    "title": "Legit items?",
+    "text": "Legit items?\n\nPlanning to buy printer sa store na to, legit po ba? Thank youu.       submitted by     /u/purpumpkin     to     r/ShopeePH       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ShopeePH/comments/1wdboxp/legit_items/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T09:50:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T09:51:07.543Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3cf0b035b0f36efccb664"
+    },
+    "message_id": "reddit_t3_1wdbos6",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "AIMusicCraft",
+    "username": "peakygabe",
+    "title": "Create professional video in minutes for your tracks — here's why I'm using HeyGen",
+    "text": "Create professional video in minutes for your tracks — here's why I'm using HeyGen\n\nBeen exploring AI video tools lately (alongside my AI music production experiments), and HeyGen has genuinely impressed me. Wanted to share what makes it worth checking out.    Quick note: this post is specifically about using HeyGen to produce awesome videos for your music — think promo clips, visualizers with a talking intro, translated versions for wider reach, or content to pair with your tracks on social media.     What HeyGen actually does:    🎬  Script-to-video, no camera needed  — type or paste a script, pick an avatar, and get a polished talking-head video in minutes. No filming, no studio, no lighting setup. Great for a quick \"new track dropping\" intro or behind-the-scenes clip.   🗣️  140+ languages with lip-sync translation  — upload an existing video and HeyGen can translate and re-lip-sync it into another language, keeping the speaker's face and voice style intact. Useful if you want your music promo reaching audiences beyond your primary language.   👤  140+ stock avatars, or build your own  — need a consistent \"face\" for your artist brand or content? Create a custom avatar trained on your own likeness so every video/promo feels consistent.   🤖  Video Agent  — an AI-driven conversational interface that walks you from a rough idea all the way through to a finished video, without needing to know any editing tools.   📊  Built for scale  — teams use it for training, marketing, onboarding, and internal comms — but for musicians specifically, it's a fast way to keep a steady stream of promo/content videos flowing without hiring a videographer for every release.    Who it's actually good for:   Content creators, musicians, marketers, educators, agencies — basically anyone who needs to produce video regularly but doesn't want to deal with cameras, editing software, or hiring talent every time.    Try it yourself:    https://www.heygen.com/?sid=rewardful&utm_content=creator&utm_medium=influencera&via=606c65        submitted by     /u/peakygabe     to     r/AIMusicCraft       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AIMusicCraft/comments/1wdbos6/create_professional_video_in_minutes_for_your/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T09:50:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T09:51:07.780Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3cf47035b0f36efccb665"
+    },
+    "message_id": "reddit_t3_1wdbpkj",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "HireaWriter",
+    "username": "Neither_Activity_825",
+    "title": "[Hire me] NSFW/SFW Writing Commission!!",
+    "text": "[Hire me] NSFW/SFW Writing Commission!!\n\nHey y’all!! The long and short is, I want a bit of extra money to be able to buy stuff so I’m selling my soul and using my skills to hopefully fund this desire!!   ONLY LIMITS  Scat (watersports/piss is fine)  Pedophilia  Bestiality   That’s kinda it! I feel like most of you are freaky but other than that pretty normal and I’m a mega freak so nothing will weird me out and you won’t be judged! I love writing different kinks! You can also of course get a SFW fic!! This isn’t only NSFW lol but yea!! And any fandom or character is fine, I will do research! Okay now prices!!   $10 per 1k words   +$3 for a custom playlist to go with it   $3 off total if you’re a repeat customer    Give me any important information and yea!! Here are some of my examples of comms/trades I’ve done so far!   NSFW    https://archiveofourown.org/works/89569156     https://archiveofourown.org/works/86360081     https://archiveofourown.org/works/79131546    SFW    https://archiveofourown.org/works/85665661     https://archiveofourown.org/works/90683371     https://archiveofourown.org/works/91133796    DM or comment if interested!! Thank you all! :b       submitted by     /u/Neither_Activity_825     to     r/HireaWriter       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HireaWriter/comments/1wdbpkj/hire_me_nsfwsfw_writing_commission/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T09:51:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T09:52:07.396Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3cf47035b0f36efccb666"
+    },
+    "message_id": "reddit_t3_1wdbpji",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "greaternoida",
+    "username": "Minute_Pool_2029",
+    "title": "Places to buy/thrift aesthetic clothes",
+    "text": "Places to buy/thrift aesthetic clothes\n\nHi guys, just moved in here!   Please suggest me places where I can get low-cost aesthetic clothes. Basically, something like a Sarojini Market, even if not as expansive and on a smaller scale.       submitted by     /u/Minute_Pool_2029     to     r/greaternoida       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/greaternoida/comments/1wdbpji/places_to_buythrift_aesthetic_clothes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T09:51:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T09:52:07.595Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3cf47035b0f36efccb667"
+    },
+    "message_id": "reddit_t3_1wdbpio",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "surat",
+    "username": "Classic_Source7509",
+    "title": "Noisefit Rep 24x7 Tracker Pre booking pass for sale",
+    "text": "Noisefit Rep 24x7 Tracker Pre booking pass for sale\n\nI've got Noise fit rep pre-booking pass worth 999/- that offer the tracker at 8,999/- discounted price from the actual price of 9,999/-   You just have to add the pass on promo code field and make payment of 7,999/- to purchase the brand new tracker.   You can find item specification on the official website. Sharing the link of the tracker-  https://www.gonoise.com/a/h/noise-rep-fitness-tracker    If you want to purchase the tracker please reach out/DM to get the code.       submitted by     /u/Classic_Source7509     to     r/surat       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/surat/comments/1wdbpio/noisefit_rep_24x7_tracker_pre_booking_pass_for/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T09:51:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T09:52:07.793Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3cf47035b0f36efccb668"
+    },
+    "message_id": "reddit_t3_1wdbpif",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "IndieGaming",
+    "username": "GoyskiGames",
+    "title": "OSRS inspired single player RPG with 100 simulated players",
+    "text": "OSRS inspired single player RPG with 100 simulated players\n\nhttps://reddit.com/link/1wdbpif/video/pesn2mjh3voh1/player    I’ve recently got the Steam page up for my game Emberholme. It’s an Old School RuneScape-inspired “singleplayer MMO”, and I’m aiming for the perfect mix of OSRS-style gameplay and a cosy, chill vibe. I’m not ready to release yet, but I want to share my current progress and a bit about the project.   A whistle stop tour of some of the features:   - 13 skills covering combat, gathering and crafting, with equipment and activities to unlock as you progress. Combat and skilling run on a 0.6 second tick system.   - 100 living adventurers with their own skills, equipment, banks and goals. They discover things as they play, with eight personality types shaping what they aim for, from completing the collection log to preparing for PK trips and building wealth through trading.   - An Exchange where you and those adventurers buy and sell items. Merchants work towards building their wealth through trading. Every item sold on the exchange comes from either you or one of the 100 living adventurers, nothing is pre generated.   - Quests, bosses, minigames and clue trails, with plenty to get sidetracked by along the way.   - Ten Ember Cycles to progress through. Rekindling means starting over with selected heirlooms and permanent unlocks. Early cycles have fast XP but much rarer drops; later cycles slow down levelling and make combat harder while improving rare-drop chances.   - Your own home to build and customise, with storage, workshops and places to display your finds.   - Collection logs, rare equipment, capes and companions to work towards.   Some of my own assets are still very much WIP and will be improved as dev continues. The character models are by KayKit, so credit to them for those, i think they fit really well with the vibe i was aiming for! Please ask any questions about the game or its development I’d love to talk more about it!    AI Disclosure : AI has been used during development - I have used AI for debugging and error investigations, there have been multiple instances of bug hunting or rounds of fixes where ive been overlooking something or simply looking at things from the wrong angle and AI has helped steer the investigation in the right direction. AI has also been used to enhance in game imagery for the steam hero art work, this is intended to be temporary to allow me to get my store page live, and will be replaced by real, human authored art work before I come to release the project.      Wishlist on steam         submitted by     /u/GoyskiGames     to     r/IndieGaming       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IndieGaming/comments/1wdbpif/osrs_inspired_single_player_rpg_with_100/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T09:51:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T09:52:07.991Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3cf48035b0f36efccb669"
+    },
+    "message_id": "reddit_t3_1wdbpg2",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "TeluguJournals",
+    "username": "Hallucinat0R",
+    "title": "A call out for a healthy lifestyle (second post)",
+    "text": "A call out for a healthy lifestyle (second post)\n\nGood Afternoon Fam 🌞   I’m back with another small appeal: join me in this journey for the next 60 days! ❤️    What is this?    There’s an app called Koshiqa that tracks your steps, rewards you for maintaining your streak, and conducts challenges every few months.   This time, the challenge is Madhya Pradesh contest and the task is to complete 6,00,000 steps in 60 days!    Vammo… 6 lakhs aah anukokandi!  😄   If you average 10,000 steps a day, it’s absolutely doable. It just needs a little planning and, more importantly, a little dedication.   And ee contest lo naaku nachina thing enti ante…   Oka roju 10K complete cheyyalekapothe, tension avasaram ledu.   You can make up for the deficit the next day.   You can do a maximum of 15,000 steps per day, and all those 15K will count towards your 6 lakh target. Anything above 15K won’t be counted.   So, occasional ga oka day miss aina journey spoil aipodu. 👍    Why am I asking you to join?    I came to know about this app via Reddit. Fist contest, I asked my colleagues to join and they did. Then the previous contest, I posted asking for our Sub members to join and almost 30 people joined. Now this appeal!!    What do you get for ₹200?    Honestly, the biggest return is something money can’t really buy, a healthier you. ❤️   But apart from that, you also get:   A medal, a completion certificate, a tree planted in your name, along with a certificate and a T-shirt if you maintain the complete 60-day streak   And of course, the satisfaction of completing 6 lakh steps! 💪    How to join our team??    Download the Koshiqa app.   When it asks for a referral code, enter g4g0eu (not mandatory).   Enter your details and purchase the pass for the challenge.   When prompted for a team code, enter  r7p9t1xl .   You’ll be added to our team:  Tempo   Travellers .   And don’t worry, your personal details and phone number will remain hidden. Others can only see your stats, daily steps and streak, not your contact details.   Let’s do this together!   The idea isn't just about a medal or a T-shirt.   It’s about making each other accountable, cheering each other on when someone is doing well, pushing each other when someone is falling behind, and most importantly… building a little team spirit while doing something good for our health. ❤️   Walk for your health.   Walk for the medal.   Walk for the streak.   And let everything else follow. 😄    The challenge starts on Monday, 20-Sep-2026.    Naatoh vachhedevaru?? 😁🚶‍♂️   PS: Mods and anyone who might be wondering,  this is NOT a promotion or marketing post . I’m sharing this purely because I genuinely believe getting people to walk more and live healthier can only be a good thing. 🫶   Unta mari… you all have a wonderful day ahead!   Stay blessed and spread love... 💕    Previous post        submitted by     /u/Hallucinat0R     to     r/TeluguJournals       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TeluguJournals/comments/1wdbpg2/a_call_out_for_a_healthy_lifestyle_second_post/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T09:51:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T09:52:08.195Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3cf48035b0f36efccb66b"
+    },
+    "message_id": "reddit_t3_1wdbpfv",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "LumberTycoon2",
+    "username": "Square_Health6011",
+    "title": "buying gingerbread axe",
+    "text": "buying gingerbread axe\n\nI want to buy a gingerbread axe for koa wood so i can make an auto wood sorter for koa wood and also for building. i think that koa can help me in tons of builds.       submitted by     /u/Square_Health6011     to     r/LumberTycoon2       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LumberTycoon2/comments/1wdbpfv/buying_gingerbread_axe/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T09:51:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T09:52:08.587Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3cf4aa72f4cb7ae30b7aa"
+    },
+    "message_id": "reddit_serp_ps___www_reddit_com_r_freightforwarding_",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/freightforwarding/",
+    "text": "SOFTWARE ONLY\n\nPlease use the thread for any software/AI/Research       submitted by     /u/FraytFurwid       [link]       [comments]",
+    "username": "FraytFurwid",
+    "subreddit_or_channel": "freightforwarding",
+    "posted_at": "2026-08-18T10:12:10+00:00",
+    "fetched_at": {
+      "$date": "2026-09-11T09:52:10.231Z"
+    },
+    "google_rank": 2,
+    "search_keyword": "affordable freight forwarder",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-11T09:52:10.231Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3cf83035b0f36efccb66c"
+    },
+    "message_id": "reddit_t3_1wdbq65",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "MLjobs",
+    "username": "Odd-Ship226",
+    "title": "[For Hire] AI/ML Engineer — AI, LLMs, MLOps & Backend",
+    "text": "[For Hire] AI/ML Engineer — AI, LLMs, MLOps & Backend\n\nHi everyone, I’m Abdelrhman, an AI/ML Engineer from Egypt. I’m currently open to full-time and part-time opportunities, internships, freelance work, and open-source collaborations, including remote opportunities.   I focus on building end-to-end AI systems, from model development and data pipelines to backend APIs, deployment, cloud infrastructure, and monitoring.   What I Can Help With     End-to-end AI/ML systems   LLM applications and RAG   AI agents and automation   Model training and fine-tuning   Backend/API development   AI-powered applications and tools   MLOps and ML infrastructure   AWS cloud infrastructure   Docker and Kubernetes   CI/CD pipelines   Application monitoring and observability   Data processing and ML pipelines     Tech Stack   Languages: Python, SQL, Bash   AI/ML: PyTorch, Hugging Face, Transformers, NumPy, Pandas, scikit-learn   LLM / AI: LangChain, LangGraph, LangSmith, RAG, Qdrant, Pinecone, ChromaDB   Backend: FastAPI, PostgreSQL   Infrastructure & MLOps: AWS, Docker, Kubernetes, GitHub Actions, CI/CD, DVC, MLflow, Prometheus, Grafana   I’m comfortable taking a project from an initial idea or requirements through development, integration, deployment, and monitoring, rather than only working on an individual component.   I’m also interested in contributing to open-source projects and collaborating with existing engineering or research teams.   Availability   I’m currently available for new opportunities and open to remote work with international teams.   I’m particularly interested in:   AI/ML Engineering · LLMs · MLOps · AI Infrastructure · Backend Engineering · Model Development   Rates   For freelance work, my current rate is around $10/hour, with flexibility depending on the project and scope.   I’m also open to fixed-price projects.   Contact   GitHub:  https://github.com/AbdelrhmanEbied    Email: [ abdelrhmanebied170@gmail.com ](mailto: abdelrhmanebied170@gmail.com )   If you’re hiring, looking for an AI/ML intern, need help with an AI/ML project, or have an open-source project that could use a contributor, feel free to DM me.   I’d be happy to discuss the opportunity and see if I’m a good fit.       submitted by     /u/Odd-Ship226     to     r/MLjobs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MLjobs/comments/1wdbq65/for_hire_aiml_engineer_ai_llms_mlops_backend/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T09:52:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T09:53:07.895Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3cf86035b0f36efccb678"
+    },
+    "message_id": "reddit_t3_1wdbq4t",
+    "topic_key": "httpswarisdevisadev find me for customers",
+    "search_keyword": "REST API",
+    "platform": "reddit",
+    "subreddit": "B2BForHire",
+    "username": "MarketIndependent713",
+    "title": "[For Hire] Correcciones Android y backend / Android & backend fixes — 24h",
+    "text": "[For Hire] Correcciones Android y backend / Android & backend fixes — 24h\n\nHola, somos Dream de Rigor Core, un estudio de desarrollo venezolano.   Ayudamos a resolver problemas técnicos concretos con comunicación clara y entrega rápida:   • Bugs, crashes, Gradle y UI en Android/Kotlin   • Problemas con APIs REST, autenticación y Firebase   • Debugging de backend y herramientas pequeñas con Node.js/TypeScript   • Automatizaciones y flujos de mensajería   Trabajamos especialmente bien sobre proyectos existentes con un problema definido. La mayoría de los fixes pequeños se pueden entregar en 24 horas.   Tarifas desde $30/hora o proyectos cerrados de $35–$100 según alcance.   Portfolio:  https://www.rigorcore.com/portfolio    Envíanos una descripción breve, logs o una grabación de pantalla y te diremos el alcance probable antes de comenzar.   ---   Hi, we’re Dream from Rigor Core, a Venezuela-based software studio.   We help solve focused technical problems with clear communication and fast delivery:   • Android/Kotlin bugs, crashes, Gradle issues, and UI fixes   • REST API, authentication, and Firebase troubleshooting   • Backend debugging and small Node.js/TypeScript tools   • Automation and messaging workflows   We work especially well with existing projects and clearly defined issues. Most small fixes can be delivered within 24 hours.   Rates start at $30/hour or $35–$100 fixed-price, depending on scope.   Portfolio:  https://www.rigorcore.com/portfolio        submitted by     /u/MarketIndependent713     to     r/B2BForHire       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/B2BForHire/comments/1wdbq4t/for_hire_correcciones_android_y_backend_android/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T09:52:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T09:53:10.282Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3cf86035b0f36efccb679"
+    },
+    "message_id": "reddit_t3_1wdbq2u",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Litbuy",
+    "username": "Consistent-Past-5731",
+    "title": "Supreme yellow box tee, MM6 shorts with the calendar print, and a few other drops including Bape Miami camo and Loewe fire pocket",
+    "text": "Supreme yellow box tee, MM6 shorts with the calendar print, and a few other drops including Bape Miami camo and Loewe fire pocket\n\nsubmitted by     /u/Consistent-Past-5731     to     r/Litbuy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Litbuy/comments/1wdbq2u/supreme_yellow_box_tee_mm6_shorts_with_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T09:52:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T09:53:10.490Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3cf86035b0f36efccb67a"
+    },
+    "message_id": "reddit_t3_1wdbq2m",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "eupersonalfinance",
+    "username": "thevforces",
+    "title": "Question about structuring our family finances",
+    "text": "Question about structuring our family finances\n\nHi everyone,   I am in the process of tidying up our family finances and I would appreciate some guidance from more experienced people in the matter:)     Long term investment   Firstly, regarding our long term investment, my wife and I are thinking to DCA in VWCE through IBKR and DCA monthly in a joint investment account.     Emergency fund   In respect to our emergency fund we are thinking of saving around 6 months of expenses. The question is where do we keep this amount? In a joint account in the bank (no interest)? Somewhere else where we will earn some interest?     Savings for big purchases/expenses   We also plan to save some money each month for possible big purchases or expenses (e.g. buying a car, going to vacations etc.). Similarly to the question above, where do we keep this amount? In a joint bank account?     Joint vs separate accounts   We are thinking of doing this in joint accounts so we both have access to our finances and know how we are doing together. What is your opinion on that? Would you suggest separate accounts instead?    What do you guys think? I appreciate any guidance. Thanks:)       submitted by     /u/thevforces     to     r/eupersonalfinance       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/eupersonalfinance/comments/1wdbq2m/question_about_structuring_our_family_finances/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T09:52:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T09:53:10.691Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3cfa4a72f4cb7ae30b7ab"
+    },
+    "message_id": "reddit_serp_1d70hy4",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/UKPersonalFinance/comments/1d70hy4/does_anybody_use_personal_budgeting_software_or/",
+    "text": "Does anybody use personal budgeting software, or can recommend something?\n\nI want something that can handle 2 people, 3 bank accounts, two credit cards and 2-3 income sources.   Would like to know where the money is going!   [edit]   Am trying out YNAB, which seems to have the most votes here.    Really appreciate all the suggestions, and I'll try the others if this doesn't work out. Thank you all.       submitted by     /u/fucknozzle       [link]       [comments]",
+    "username": "fucknozzle",
+    "subreddit_or_channel": "UKPersonalFinance",
+    "posted_at": "2024-06-03T09:40:31+00:00",
+    "fetched_at": {
+      "$date": "2026-09-11T09:53:40.572Z"
+    },
+    "google_rank": 3,
+    "search_keyword": "budget review platform",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-11T09:53:40.572Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3cfc0035b0f36efccb67b"
+    },
+    "message_id": "reddit_t3_1wdbqt6",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",

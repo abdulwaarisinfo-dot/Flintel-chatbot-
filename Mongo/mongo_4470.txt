@@ -1,0 +1,416 @@
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "neogeo",
+    "username": "kawai777",
+    "title": "Neo Geo SDK v1.7.0",
+    "text": "Neo Geo SDK v1.7.0\n\nHello everyone,   We are happy to announce that **NeoGeoSDK v1.7.0** is now available.   **GitHub repository:**    https://github.com/eaglesoftware777/neogeosdk    **NeoGeoSDK v1.7.0 release:**    https://github.com/eaglesoftware777/neogeosdk/releases/tag/v1.7.0    Since the first public version, we have continued improving the SDK based on feedback from the Neo Geo homebrew community. With v1.7.0, the project has grown beyond its original demo environment into a broader toolkit for creating self-made games, demos and experiments for SNK's Neo Geo MVS and AES systems.   This is our **2D engine release**. It brings together reusable game systems, graphics and sound pipelines, more examples, desktop authoring tools, and expanded documentation, while keeping direct hardware access available.   ## Main improvements   - A reusable 2D game engine in plain C and a compatible C++14 version   - Character animation, action scripts, NPC behavior, collision and physics   - Joystick handling, hitboxes, movement history and special-move recognition   - Camera following, scrolling levels, parallax, particles, screen shake, depth effects and palette effects   - More structured sprite allocation, scene cleanup and deferred rendering   - An improved Artbox pipeline with whole-image palette fitting, additional per-tile palette banks, transparent padding and animation palette handling   - Updated sprite and FIX-layer conversion, text and HUD support   - ADPCM-A effects and recorded voices, ADPCM-B music beds, FM tracks, SSG melodies and MML tooling through the custom YM2610 / Z80 sound stack   - Live FM and SSG tempo controls, LFO controls, sample looping, fades, and rate-aware sample conversion with 32 kHz ADPCM-B beds by default   - Revised 68000-to-Z80 command handling and sound transition helpers   - A multi-game build system with separate assets, sound, ROM sets and configuration for each project   - Updated 68000 toolchain bundles and installation documentation for Linux, WSL and native Windows development   - Artbox Studio and Sound Studio desktop tools for graphics and audio work   - A 26-chapter showcase covering the engine and sound systems, with chapter navigation and playable shooter examples   - Sky Lance, a vertical arcade shooter, alongside other bundled games, a C++ example, a tutorial and a minimal hello-world project   - Expanded MAME testing, debugging and automated asset/audio checks   - A programmer's manual, C and C++ API references, build guides, tutorials and a printable PDF documentation set   Some of the original feedback asked for better documentation, clearer separation of SDK parts, easier onboarding, and more complete tooling. Those points have continued to guide this release. The examples now show how the individual systems can work together in a game, rather than only demonstrating isolated hardware calls.   NeoGeoSDK remains hardware-centered: developers can work directly with VRAM, palettes, sprite strips, FIX tiles and the YM2610 sound subsystem, or use the higher-level engine helpers where they make development easier. The aim is to make real Neo Geo homebrew development practical with modern tools, without hiding how the original hardware works.   Documentation and API references are included in the repository.   ## Downloads & Media   - **PDF Overview:**  https://github.com/eaglesoftware777/neogeosdk/releases/download/v1.7.0/neogeosdk_v1.7.0_overview.pdf    - **PDF Manual:**  https://github.com/eaglesoftware777/neogeosdk/releases/download/v1.7.0/neogeosdk_v1.7.0_manual.pdf    - **ROM Demo:**  https://github.com/eaglesoftware777/neogeosdk/releases/download/v1.7.0/neogeosdk_v1.7.0_demo_777.zip    - **YouTube demo:**  https://www.youtube.com/watch?v=HOlLYSepElQ    - **YouTube announcement:**  https://www.youtube.com/watch?v=ClqJZa1rj04    This is an open-source project, and the release is an opportunity for the community to help test the SDK across different development setups. We welcome feedback, examples, bug reports and suggestions, especially       submitted by     /u/kawai777     to     r/neogeo       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/neogeo/comments/1wfqenw/neo_geo_sdk_v170/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T02:01:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T02:01:26.950Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa755776508d45f3d2c218b"
+    },
+    "message_id": "reddit_t3_1wfqeni",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Meowi",
+    "username": "CartographerLife9851",
+    "title": "[Choose] Life or Death",
+    "text": "[Choose] Life or Death\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/CartographerLife9851     to     r/Meowi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Meowi/comments/1wfqeni/choose_life_or_death/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T02:01:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T02:01:27.184Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa755776508d45f3d2c218c"
+    },
+    "message_id": "reddit_t3_1wfqemy",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "midnightowlgo",
+    "title": "Grab 25⚡ from u/midnightowlgo!",
+    "text": "Grab 25⚡ from u/midnightowlgo!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/midnightowlgo     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wfqemy/grab_25_from_umidnightowlgo/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T02:01:12Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T02:01:27.420Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa755776508d45f3d2c218d"
+    },
+    "message_id": "reddit_t3_1wfqemk",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "EntitledReviews",
+    "username": "reddiogaga",
+    "title": "Small business charges like a small business",
+    "text": "Small business charges like a small business\n\nBetter make sure they start warning customers \"these are $3 each\" so the next customer can say \"are you implying we can't afford them?\"       submitted by     /u/reddiogaga     to     r/EntitledReviews       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/EntitledReviews/comments/1wfqemk/small_business_charges_like_a_small_business/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T02:01:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T02:01:27.654Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa755776508d45f3d2c218e"
+    },
+    "message_id": "reddit_t3_1wfqemd",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Tickets",
+    "username": "TheModestDuchess",
+    "title": "Buying 1x ticket to Doja Cat in Boston on 11/23 (November 23rd)",
+    "text": "Buying 1x ticket to Doja Cat in Boston on 11/23 (November 23rd)\n\nAny seat is fine!       submitted by     /u/TheModestDuchess     to     r/Tickets       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Tickets/comments/1wfqemd/buying_1x_ticket_to_doja_cat_in_boston_on_1123/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T02:01:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T02:01:27.887Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa755786508d45f3d2c218f"
+    },
+    "message_id": "reddit_t3_1wfqel4",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "Welltimetohavefun77",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Tulip Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Tulip Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Welltimetohavefun77     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wfqel4/sticker_giveaway_enter_to_win_a_4_stars_tulip/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T02:01:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T02:01:28.125Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa755786508d45f3d2c2190"
+    },
+    "message_id": "reddit_t3_1wfqel0",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "TechLifeTravel",
+    "username": "sharovcom",
+    "title": "Testing! Ping ping pingPS: Approved by subreddit owner, this post will be deleted soon. Thank you.",
+    "text": "Testing! Ping ping pingPS: Approved by subreddit owner, this post will be deleted soon. Thank you.\n\nTesting new styles and features.       submitted by     /u/sharovcom     to     r/TechLifeTravel       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TechLifeTravel/comments/1wfqel0/testing_ping_ping_pingps_approved_by_subreddit/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T02:01:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T02:01:28.358Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa755786508d45f3d2c2192"
+    },
+    "message_id": "reddit_t3_1wfqekx",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "PortalExperiencer",
+    "username": "TheWhiteWizard65",
+    "title": "\"San Quintín, Baja California, Mexico, 30 June 2026\"",
+    "text": "\"San Quintín, Baja California, Mexico, 30 June 2026\"\n\nThis 20 second recording was taken in San Quintín, Baja California, Mexico, on 30 June 2026. The file posted here is 1440 × 2560 resolution at 25 frames per second, encoded in AV1, with stereo AAC audio.   The date is supported by the witness's statement that the incident occurred at the same time as an earthquake in Sinaloa. The Red Sísmica del Noroeste de México records a significant magnitude 5.9 earthquake south of Topolobampo, Sinaloa, on 30 June 2026. Mexican outlet POSTA subsequently published the San Quintín recording on 1 July 2026 at 13:13.   POSTA did not identify the witness by name, but the later source trail attributes the original Facebook material to the account Daniel el Aventurero and preserves several direct Facebook posts associated with the San Quintín recordings. POSTA independently reported that the description accompanying the recording stated that the witness had experienced an intense buzzing sensation, dizziness and nausea, and that the incident coincided with seismic activity in Sinaloa.   Spoken Audio - English translation:   \"I recorded it. Listen carefully to the sound the sphere is emitting.   Listen. Look at that sphere. I've seen it several times before, but I had never been able to record it. And I recognise it because it opens up as though it has scales, and then it starts making you feel like you're going to vomit. It's the same one.\"   Witness Testimony:   \"I was walking through the mountains when I heard something making a very loud buzzing sound. I suddenly felt dizzy and like I was going to vomit, with intense nausea. Then I saw a sphere spinning on its own axis, emitting high-pitched sounds that were making me feel weak. Suddenly, it disappeared right before my eyes at an incredibly high speed unlike anything I had ever seen, and all my symptoms immediately vanished.   It was the strangest thing that has ever happened in my short life. Can anyone explain what happened?   This happened in San Quintín, Baja California, at the exact time an earthquake was occurring in Sinaloa.\"   Location: San Quintín, Baja California, Mexico   Viewing direction: Not established   Date: 30 June 2026   Time: Not established   Witness/camera operator: Daniel el Aventurero   Original Source: Daniel el Aventurero (Facebook)   Secondary source: POSTA, published 1 July 2026   The footage is presented for examination and discussion. Viewers are encouraged to consider both anomalous and conventional explanations and reach their own conclusions from the evidence currently available.       submitted by     /u/TheWhiteWizard65     to     r/PortalExperiencer       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PortalExperiencer/comments/1wfqekx/san_quintín_baja_california_mexico_30_june_2026/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T02:01:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T02:01:28.822Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa755796508d45f3d2c2193"
+    },
+    "message_id": "reddit_t3_1wfqekv",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "LitecoinTraders",
+    "username": "AutoModerator",
+    "title": "Weekly General Discussion - September 14, 2026",
+    "text": "Weekly General Discussion - September 14, 2026\n\nPlease use this thread for general discussion.       submitted by     /u/AutoModerator     to     r/LitecoinTraders       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LitecoinTraders/comments/1wfqekv/weekly_general_discussion_september_14_2026/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T02:01:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T02:01:29.055Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa755796508d45f3d2c2194"
+    },
+    "message_id": "reddit_t3_1wfqekp",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Dry_Lychee4842",
+    "title": "How have you successfully added a new habit into your daily routine?",
+    "text": "How have you successfully added a new habit into your daily routine?\n\nsubmitted by     /u/Dry_Lychee4842     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wfqekp/how_have_you_successfully_added_a_new_habit_into/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T02:01:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T02:01:29.288Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa755796508d45f3d2c2195"
+    },
+    "message_id": "reddit_t3_1wfqek1",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "IndianCricket",
+    "username": "FamousMan245407",
+    "title": "Just like the men’s team, India Women also refused to collect their medals and Asia Cup trophy from ACC President Mohsin Naqvi. #INDvSL #AsiaCup #Pakistan #Cricket",
+    "text": "Just like the men’s team, India Women also refused to collect their medals and Asia Cup trophy from ACC President Mohsin Naqvi. #INDvSL #AsiaCup #Pakistan #Cricket\n\nsubmitted by     /u/FamousMan245407     to     r/IndianCricket       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IndianCricket/comments/1wfqek1/just_like_the_mens_team_india_women_also_refused/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T02:01:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T02:01:29.522Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa755796508d45f3d2c2196"
+    },
+    "message_id": "reddit_t3_1wfqejb",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "adviceph",
+    "username": "orashare0511",
+    "title": "Is financial difference a major consideration for men nowadays?",
+    "text": "Is financial difference a major consideration for men nowadays?\n\nProblem/Goal: I’m worried na baka maging issue eventually sa boyfriend ko yung financial difference namin. I earn less and most of my salary goes to bills, so survival mode talaga ako. He’s more financially comfortable and can think about growing his money, traveling, hobbies, and a better lifestyle.   Context: I come from a family that isn’t well-off and may family debt, although wala akong sariling utang and hindi ako yung nagbabayad nito. Masipag naman ako and I know I can improve financially. Sadyang mahirap lang talaga ngayon with inflation and the cost of living.   3 months pa lang kami, pero we’re both in our 30s and looking for something serious. He has never made me feel bad about our differences and I will not come to a point where he needs to support me financially. Pero may fear ako na if I continue to have financial struggles, baka eventually makita niya yung difference namin as incompatibility. :( Kasi hindi ako makakasabay sa ibang gusto niya gawin or lakad   Ayoko rin na lagi siyang mag-adjust sa kung ano lang yung kaya ko or feel like he has to give up certain experiences or lifestyle dahil hindi ko afford. Sometimes I wonder if he might eventually be happier with someone who can contribute more financially.   Previous Attempts: I remind myself na I’m hardworking and capable of improving my situation and that I can contribute to a relationship in ways other than money. Pero hindi ko pa rin maiwasang isipin kung magiging important factor ba talaga ito for him in the long run.    Do men consider financial compatibility a major factor when choosing a serious, long-term partner?        submitted by     /u/orashare0511     to     r/adviceph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/adviceph/comments/1wfqejb/is_financial_difference_a_major_consideration_for/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T02:01:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T02:01:29.758Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa755796508d45f3d2c2197"
+    },
+    "message_id": "reddit_t3_1wfqei3",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "BankBuster",
+    "username": "Gloomy-Decision-1803",
+    "title": "Can You Crack the Code? Puzzle by Gloomy-Decision-1803",
+    "text": "Can You Crack the Code? Puzzle by Gloomy-Decision-1803\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Gloomy-Decision-1803     to     r/BankBuster       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BankBuster/comments/1wfqei3/can_you_crack_the_code_puzzle_by/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T02:01:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T02:01:29.998Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa755b26508d45f3d2c2198"
+    },
+    "message_id": "reddit_t3_1wfqfgw",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "DraftKingsDiscussion",
+    "username": "DMontgomery13",
+    "title": "Sunday Night Football Live Bets",
+    "text": "Sunday Night Football Live Bets\n\nCowboys/Giants 2H Over 23.5       submitted by     /u/DMontgomery13     to     r/DraftKingsDiscussion       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DraftKingsDiscussion/comments/1wfqfgw/sunday_night_football_live_bets/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T02:02:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T02:02:26.651Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa755b26508d45f3d2c2199"
+    },
+    "message_id": "reddit_t3_1wfqfgu",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SlogoReddit",
+    "username": "nono_3232",
+    "title": "My pictures pls critic",
+    "text": "My pictures pls critic\n\nsubmitted by     /u/nono_3232     to     r/SlogoReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SlogoReddit/comments/1wfqfgu/my_pictures_pls_critic/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T02:02:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T02:02:26.886Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa755b36508d45f3d2c219a"
+    },
+    "message_id": "reddit_t3_1wfqfgk",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Luxeladies",
+    "username": "closetcurated",
+    "title": "Closet Cleanout",
+    "text": "Closet Cleanout\n\nAll items are brand new and never used  All items are highest quality  All items include dust bag    I am happy to provide additional pictures to serious buyers only. Please do not ask for payment info or additional information just to ghost , it’s a total waste of time!  I will ship 24/48 hours(usually 24) after payment. I will provide proof of tracking. Once the package leaves me, it’s no longer my responsibility- I am not liable for delays in updated tracking or delivery.  Payment preferred via Zelle but will accept PPFF and Venmo.      BV Denim Andiamo - Large Size - From Yuan -  Paid $488  Asking $350 plus $15 shipping      Ce&ine Hobo - Saddle Brown - includes inside bag - From Luska  Paid $358  Asking $295 plus $10 shipping      YSL Raffia - From Yuan  Paid $335  Asking $245 plus $10 shipping           submitted by     /u/closetcurated     to     r/Luxeladies       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Luxeladies/comments/1wfqfgk/closet_cleanout/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T02:02:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T02:02:27.123Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa755b36508d45f3d2c219b"
+    },
+    "message_id": "reddit_t3_1wfqfgi",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "GuessMy_",
+    "username": "tomk23_reddit",
+    "title": "Guess my age, Over 18",
+    "text": "Guess my age, Over 18\n\nsubmitted by     /u/tomk23_reddit     to     r/GuessMy_       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GuessMy_/comments/1wfqfgi/guess_my_age_over_18/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T02:02:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T02:02:27.358Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa755b36508d45f3d2c219c"
+    },
+    "message_id": "reddit_t3_1wfqfgg",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "funComunitty",
+    "username": "Living-Jump2553",
+    "title": "quitting Reddit :(",
+    "text": "quitting Reddit :(\n\n(Mods if I did something wrong in this please inform me! I don’t want to break the rules in my potentially last post ever on this sub so please tell me)   I’ve made three of these posts already so I’m gonna keep this one snappy:   i’m quitting Reddit due to a combination of my mental health needing to get better (I used to check this site every two to five minutes and was addicted) and because I want to chase my dreams of music.   I’ll mostly be posting art and music from now on, maybe once a month or once every two months, but it will be far between.   i hope you understand my decision and feel free to ask a few questions if you have them!       submitted by     /u/Living-Jump2553     to     r/funComunitty       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/funComunitty/comments/1wfqfgg/quitting_reddit/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T02:02:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T02:02:27.594Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa755b36508d45f3d2c219d"
+    },
+    "message_id": "reddit_t3_1wfqffp",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "ViolatingBadgers",
+    "title": "Who is your favourite non-gaming streamer?",
+    "text": "Who is your favourite non-gaming streamer?\n\nsubmitted by     /u/ViolatingBadgers     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wfqffp/who_is_your_favourite_nongaming_streamer/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T02:02:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T02:02:27.833Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa755b46508d45f3d2c219e"
+    },

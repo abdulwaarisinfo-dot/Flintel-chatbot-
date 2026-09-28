@@ -1,0 +1,416 @@
+    "post_url": "https://www.reddit.com/r/ITManagers/comments/1wjxq1t/it_sector_managers_why_are_you_so_contr_olling/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:09:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:09:25.510Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e55660c60840397aab4"
+    },
+    "message_id": "reddit_t3_1wjxq1j",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "pumpkin_888",
+    "title": "How do you feel right now?",
+    "text": "How do you feel right now?\n\nsubmitted by     /u/pumpkin_888     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wjxq1j/how_do_you_feel_right_now/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:09:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:09:25.724Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e55660c60840397aab5"
+    },
+    "message_id": "reddit_t3_1wjxq19",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "thoughts_undertaken",
+    "title": "Whom do you consider your best friend?",
+    "text": "Whom do you consider your best friend?\n\nsubmitted by     /u/thoughts_undertaken     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wjxq19/whom_do_you_consider_your_best_friend/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:09:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:09:25.939Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e56660c60840397aab6"
+    },
+    "message_id": "reddit_t3_1wjxq18",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ScrapMechanic",
+    "username": "SpartanG01",
+    "title": "[Tool] Scrap Mechanic Toolkit (1.0.6 Compatible)",
+    "text": "[Tool] Scrap Mechanic Toolkit (1.0.6 Compatible)\n\nhttps://preview.redd.it/wk8qyxf4kbqh1.png?width=1672&format=png&auto=webp&s=eb2dcf5b2ac382efb63355db34e99d507bc6418d     https://preview.redd.it/sh4d64h8kbqh1.png?width=2560&format=png&auto=webp&s=7b5bd04444ec10ddd05bf878dc5fe403ecc589ca     Scrap Mechanic Toolkit    - Updated for 1.0.6   Yeah, yeah, I know... y'all thought it was fake... it's ok. I get it. It's 100% real though and officially released!    (don't make fun of my wrench, y'all whined about the AI icons before so I did this one myself. I tried my best lol I even watched a like 2 hour tutorial on shading and tried to stay within the SM art aesthetic but I still think it looks goofy... I just can't really put my finger on why. I'm an engineer, not an artist.)     Proof Video     Scrap Mechanic Toolkit  is   not a mod  .   It is an external tool that can be used on vanilla or modded games, on existing or new saves, and in any game mode.   Scrap Mechanic Toolkit contains a collection of functions for Scrap Mechanic that includes building tools, exploration tools, and yes... cheats. It is not just a collection of cheats though. Many of the features are designed to enable new behavior, expand existing behavior, improve quality of life, or to just be novel and fun.   The real goal of Scrap Mechanic Toolkit is to give you more control over how you play.   Let me know what features you’d like to see in the future! I’m always down to add new features if I think they are useful or interesting, but I’d like to prioritize what you guys would actually want.   Save Safety   My primary concern for all of the game tools I have made has always been save data safety. I was even more concerned when it came to Scrap Mechanic because the save system in this game is essentially just real time data persistence. I have tested this as thoroughly as I know how and have spent multiple hours doing every stupid, irresponsible, unsafe thing I could think of to try to cause it to corrupt save data... it hasn't corrupted a single save in the entire time I've been developing and testing it. I'm never going to say \"it's impossible for this to create a problem\" but I do not believe that normal use of this tool can lead to any save corruption. There are validation checks prior to executing any function, validation checks after to verify the function executed properly, automatic state roll-backs for failure events, and automatic state reversions on disconnect or unload. The app will refuse to close if it's in the middle of one of these operations and on connection the first thing it does is verify it didn't screw anything up the last time it was used. z    If you actually manage to corrupt your save data using this tool..... send me a copy of your save and I'll fix it, and    may God have mercy on your soul.     Multiplayer Compatibility   Scrap Mechanic Toolkit does work in Multiplayer, technically.  You can load it and the functions will execute (except maybe No Clip and Activate Object, those might actually fail)  but  I do not have a reliable way of testing how authoritative the host of a multiplayer game is compared to the client so at the moment I don't actually know if all of the functions will actually work as the client of a game you are not hosting. I plan to do more testing and improve multiplayer compatibility though. If you run into any issues please report them on the nexus page. There are few things I hate more in this world than an open bug report so that is a very reliable way to get me to address something ASAP.   Features   Cheats    Ragdoll   Instantly ragdoll your character.   Why? Because I think the animation is hilarious.    I don't know why lol I can't get over it. It gets me every time.     Retrieve Death Bag   Teleport your death bags to you.   The sheer amount of you people getting your stuff stuck in walls or in the floor on Reddit is insane.    This teleports your death bags, all of them, directly in front of you.    It only works on your bag, it will not interfere with any other player.    It also only works in the currently loaded world state, if your death bag is in the overworld and you're in a mining layer, it won't work.     Quick heal   Restores 25 HP to your character.   This is just the default Quick Heal cheat implemented as native code because it was the first experiment I did when building this and I figured why not just leave it in.     Revive   Revives you in place from a downed state.   This picks you up from downed just like a Revival Baguette would.     Invulnerable   Makes you invulnerable.   Keeps you from taking damage from any source. Dunno what else to say.     Infinite Ammo   Disables ammunition consumption.   This does not grant infinite ammo. It disables consumption.    This does not work on Container fed parts.    Spud Guns mounted on a vehicle will not have Infinite Ammo.     Infinite Fuel   Disables fuel consumption.   This does not grant infinite fuel. It disables consumption.    This does not work on Container fed parts.    Engines with Gas in them will work without using that Gas.    Engines connected to a Gas Tank will still consume Gas from the Gas Tank.     No Raids   Prevents new raids while allowing crops to continue growing and become harvestable.   This prevents new raids from being triggered when planting crops and removes the \"Raid_Complete\" flag requirement for crop harvestability.     No Aggro   Disables bots ability to target players.   This doesn't make you invisible to bots, it disables their ability to target the player.    This also means things like the door sensor thing in Growlabs won't work while this is enabled.     Unit Spawner   Spawns selected unit 10 meters in front of your character.   Supports various NPCs including Enemies, Baby Woc, and even some surprises that do not naturally spawn in game.    Warning: Baby Woc cannot be killed. If you spawn it before unlocking it there is no way to unsummon it currently. The next build of this app will include a \"kill current target\" feature for fixing this.     Unlock All Cosmetics    Garments  |  All Cosmetics    Garments : Unlocks cosmetics from the garment-box tiers.   All Cosmetics : Unlocks literally all cosmetics from the game’s registered wearable catalog. This includes DLC and Achievement based cosmetics.   DLC Cosmetics still require you to own the DLC.    Warning: These unlocks are permanent for your local profile.    Building    All Recipes Unlocked   Unlock all Craftbot recipes.   This is temporary and is automatically reversed when the feature is disabled or the app is disconnected     Creative Inventory   Enables access to a modified Creative Inventory that includes every placable object in the game.   This includes hundreds of objects that are not normally accessible. Everything from Rocks, Trees, Ingots, and Farmers to pieces of the Packing Stations and giant scenery objects.    Warning: Some of these objects are very difficult to remove once placed, if you aren't sure what something is then test it in a disposable or in Creative Mode first please.     Copy Target Object   Copy the object you’re aiming at into your inventory, leaving the original in place.   This can copy just about anything. Everything from Rocks, Trees, Ingots, and Farmers to pieces of the Packing Stations and giant scenery objects.    Warning: Some of these objects are very difficult to remove once placed and some are impossible to remove without using the other features of this tool.     Custom Paint Swatch   Replace the Paint Tool’s White swatch with a custom color.  Choose a color using the color picker or enter an eight-digit RRGGBBAA value.   The Alpha setting here doesn't really do anything except indicate when paint should be \"removed\" from something.     Claygun Material Selector   Choose the terrain material fired by the Claygun.  The dropdown will display all available materials for your currently loaded level.   The game has an 8 entry pallet for destructible terrain which is specific to the currently loaded zone.    Materials can only be selected if they would naturally spawn in your currently loaded zone. There isn't really any way around this without rebuilding the entire pallet system at runtime which would not be efficient or sane to do.     Destructible Bedrock   This makes typically indestructible terrain like Bedrock destructible.    Bulk Paint    Blocks  |  All   This allows you to paint every block in a creation or every block and part in a creation with a single spray.   Blocks : Paints blocks only.   All : Paints blocks and parts.    No Building Restrictions   Removes building placement and removal restrictions as well as enabling all connection points of all objects   This allows you to build and remove things in the Warehouse or Growlabs, it also allows you to pick up things like Elevator parts or Pod Doors in world.    This also allows you to see all connection points for any object and interact with connection points you typically would not be able to like Warehouse and Growlab elevators.    Warning: There are objects in the world which are scripted to their connections and will break if you pick them up and cannot be fixed simply by placing them back down and reconnecting them.     Block Replacement   This allows you to swap one block for another without having to remove it.   This does not break connections or associations. You can use it on blocks connected to bearings or wheels or anything else without risking breaking anything.     No Lift Restrictions   Enables all Lift features including creation import and deletion.   Deletion Refund:  Choose whether deleting a creation through the Lift refunds its materials.    Mirror Creation   Create a separate reflected copy of the creation on a nearby Lift, leaving the original intact.   This intelligently preserves the connection points of parts like bearings, pistons, etc... that would otherwise by disconnected by true reflection.     Toggle Creation Destructibility   This allows you to make an entire creation indestructible.   The creation must be on the lift when you toggle its destructibility and this effect is persistent even after you quit and reload the game.    Exploration    Activate Target Object   Activates the nearest scripted object.   This can be used to open Warehouse and Growlab Elevator doors, activate the elevators themselves, open boss or fight room doors inside grow labs, etc...     Teleport    Mark  |  Recall    Mark : Save your current position.   Recall : Teleport back to your saved position.   Currently Teleporting wipes the marked location, I meant to fix this before release but forgot. I'll update this in the next day or so with a version that preserves the marked location.     Waypoint Teleport    Active Quests  |  Beacons  |  Points of Interest  |  Delivery  |  NPCs  |  Misc  |  Growlabs  |  Warehouses  |  Side Quests   Select a destination from the waypoint list and teleport to it.   Destinations must be in your current loaded world state. Entries for other worlds are unavailable.     No Clip   Fly and move through walls and terrain.  Both Normal and Sprint speed are independently configurable and are saved in the app between launches.    Unlimited Render Distance   Renders terrain and basic LODs out to the world boundary (~32k m)   It can take time for everything to load as the game loads cell by cell     Unlimited LOD Range   This disables the game internal distance relative culling system so LODs remain visible out to the world boundary.   Whether or not these LODs are visible is still determined by whether or not that cell is loaded.    Warning: This can dramatically increase GPU ram usage.     Full Detail   This loads all geometry at its highest resolution.   Warning: This    will    dramatically increase GPU ram usage.     Full Bright   This removes level fog and renders all objects at full global illumination.   This doesn't actually make things \"bright\" it just renders them as though they were fully lit. Great for navigating the mines outside the map.    Controls & Interface    Configurable Hotkeys   Every Feature has an assignable Hot Key   Click   Set Key   to assign a key or key combination.   Escape   cancels.   Right-click   the key button to change or clear its binding.    Bindings are saved between launches.    Hotkeys start unassigned and only work while the game is currently focused.     Compact / Expanded Mode   Switch between the Compact and Expanded view of the app.   Expanded reveals all of the features and the Activity Log in a single window.     Activity Log   View feature results, connection messages, and explanations when an action cannot be completed.    Connect / Disconnect   Connect or Disconnect the app from the running game instance.   Disconnecting first reverts all currently enabled features to their default state before disconnecting and then safely unloads the injected dll. This makes it possible to connect, disconnect, and reconnect without having the restart the game.        submitted by     /u/SpartanG01     to     r/ScrapMechanic       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ScrapMechanic/comments/1wjxq18/tool_scrap_mechanic_toolkit_106_compatible/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:09:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:09:26.163Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e56660c60840397aab7"
+    },
+    "message_id": "reddit_t3_1wjxpzy",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal MKS Inc - 18 Sep 2026 @ 14:06 -> $246.59",
+    "text": "Buy Signal MKS Inc - 18 Sep 2026 @ 14:06 -> $246.59\n\nTicker:  MKSI    Exchange:  NASDAQ    Time:  18 Sep 2026 @ 14:06    Price:  $246.59    Link:  https://getagraph.com/AAA/trading/NASDAQ/MKSI/analysis/signals        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wjxpzy/buy_signal_mks_inc_18_sep_2026_1406_24659/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:09:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:09:26.402Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e56660c60840397aab8"
+    },
+    "message_id": "reddit_t3_1wjxpzf",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "Norse_Organics",
+    "username": "NorseOrganicsTeam",
+    "title": "Why Do I Still Have Acne in My 20s or 30s?",
+    "text": "Why Do I Still Have Acne in My 20s or 30s?\n\nTurns out acne doesn't check your ID. And if you're still dealing with breakouts well past your teens, it's usually one of a few things: your hormones are doing their own thing (cycles, pregnancy, coming off the pill, PCOS can all show up as breakouts along the jaw and chin), stress is quietly wrecking your skin (more cortisol means more oil means more clogged pores), your skin barrier has taken one too many hits from harsh cleansers or over-exfoliating and is barely holding on, or you're using something \"natural\" that's still sneaking pore-clogging ingredients onto your face.   None of that means you're doing something wrong. It just means the usual advice \"wash more, exfoliate harder\" is probably making it worse, not better.   Now the question is:  does Norse Organics actually work for acne?     We got tired of watching people fight their skin instead of working with it. So we built Norse without water, without fillers, without anything in there just to bulk out the formula. We trust our ingredients, and here's a quick rundown on a few so you can too: let's cover the bases. First, sea buckthorn and rosehip because they actually calm inflammation. Then some beeswax because your skin needs a barrier, not a strip-down. And our lucky third, cold-pressed arctic thistle oil because it goes after acne where it starts, not just where it shows up.    We don't think adult acne needs more product. We think it needs the right one, and for us, that means fewer ingredients doing more work. You can check it out without fear. Thanks to our guarantee, if it doesn't work for you, you get your money back.        submitted by     /u/NorseOrganicsTeam     to     r/Norse_Organics       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Norse_Organics/comments/1wjxpzf/why_do_i_still_have_acne_in_my_20s_or_30s/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:09:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:09:26.621Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e56660c60840397aab9"
+    },
+    "message_id": "reddit_t3_1wjxpyz",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "LezBoobLover",
+    "title": "Grab 25⚡ from u/LezBoobLover!",
+    "text": "Grab 25⚡ from u/LezBoobLover!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/LezBoobLover     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wjxpyz/grab_25_from_ulezbooblover/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:09:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:09:26.837Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e83aeeb96c1c63b978c"
+    },
+    "message_id": "reddit_t3_1wjxqvr",
+    "topic_key": "cardiologist",
+    "search_keyword": "cardiologist",
+    "platform": "reddit",
+    "subreddit": "DoodledMoments",
+    "username": "CardiologistAny1423",
+    "title": "A baby tried to eat my egg through the glass in ikea",
+    "text": "A baby tried to eat my egg through the glass in ikea\n\nsubmitted by     /u/CardiologistAny1423     to     r/DoodledMoments       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DoodledMoments/comments/1wjxqvr/a_baby_tried_to_eat_my_egg_through_the_glass_in/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:09:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:10:11.010Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e83aeeb96c1c63b978d"
+    },
+    "message_id": "reddit_t3_1wjxqu4",
+    "topic_key": "dentist",
+    "search_keyword": "dentist",
+    "platform": "reddit",
+    "subreddit": "halifax",
+    "username": "fostercaresurvivor",
+    "title": "Dentists that only charge what the CDCP will cover?",
+    "text": "Dentists that only charge what the CDCP will cover?\n\nI was just approved for 100% coverage through the Canada Dental Care Plan. My effective coverage date is Tuesday. I have several cavities, so I’m really grateful for this coverage and program.    I don’t have a lot of money going spare, or really  any  money going spare. I’m on disability for pretty severe schizoaffective disorder. I know that the CDCP, even at 100% coverage, will only cover up to a certain maximum cost for each treatment, and that the amount they tend to cover is less than what a dentist actually charges in an urban area like Halifax. I was wondering if anyone knows of any dentists that do match the amount that the CDCP covers. I know the amount I might be expected to pay might only be like $20, but I don have $20. I googled before asking here, but dentists that came up are ones I know for a fact charge more than the CDCP will cover.        submitted by     /u/fostercaresurvivor     to     r/halifax       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/halifax/comments/1wjxqu4/dentists_that_only_charge_what_the_cdcp_will_cover/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:09:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:10:11.403Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e83aeeb96c1c63b978e"
+    },
+    "message_id": "reddit_t3_1wjxqsd",
+    "topic_key": "painter",
+    "search_keyword": "painter",
+    "platform": "reddit",
+    "subreddit": "ImaginaryLandscapes",
+    "username": "DigitalFineArt",
+    "title": "Digital painting - painterly landscape with a tree (Ps+ma-brushes2)",
+    "text": "Digital painting - painterly landscape with a tree (Ps+ma-brushes2)\n\nsubmitted by     /u/DigitalFineArt     to     r/ImaginaryLandscapes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ImaginaryLandscapes/comments/1wjxqsd/digital_painting_painterly_landscape_with_a_tree/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:09:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:10:11.709Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e8f660c60840397aaba"
+    },
+    "message_id": "reddit_t3_1wjxr3n",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "BunnyTrials",
+    "username": "HighCorpsey",
+    "title": "How do you gain wealth?",
+    "text": "How do you gain wealth?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/HighCorpsey     to     r/BunnyTrials       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BunnyTrials/comments/1wjxr3n/how_do_you_gain_wealth/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:10:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:10:23.241Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e8f660c60840397aabb"
+    },
+    "message_id": "reddit_t3_1wjxr2h",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "fut",
+    "username": "aholeinasock",
+    "title": "If you could disable women for yourself, would you?",
+    "text": "If you could disable women for yourself, would you?\n\nSo many complains about woman being in FUT. If at the beginning of FC27 you had an option to disable woman for yourself - meaning you would never pack any and you could not buy any - would you do that?       submitted by     /u/aholeinasock     to     r/fut       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/fut/comments/1wjxr2h/if_you_could_disable_women_for_yourself_would_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:10:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:10:23.448Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e8f660c60840397aabc"
+    },
+    "message_id": "reddit_t3_1wjxr1q",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "exchangestudents",
+    "username": "ViniciusGomesBr",
+    "title": "EF SCHOOL - REAL FEEDBACK",
+    "text": "EF SCHOOL - REAL FEEDBACK\n\nHey guys, I'm currently in  BRIGHTON  with  EF SCHOOL  and I'd like to share a little bit about the  DREAM  they sell you.   The first contact is amazing. They sell you a dream and treat you like you're someone super special, like they have no other clients, and it works. Their sales team is really good at that. But my friend, the moment you sign that damn contract, the staff start treating you like a piece of shit.   When I got to Brighton, during the summer, the real hell of trying to get any support began. In my first homestay, the host had zero standards of basic hygiene. The house was filthy: dust everywhere, stained floors, dog and cat hair all over the place. On top of that, we couldn't make any noise at all, because the host worked from the living room and was constantly on calls. The last straw for me was that she used the floor rag to dry the dishes. I reported everything to EF, but they didn't lift a finger to move me. Luckily, I'm allergic to cats, so I was able to use that as legal leverage to force a change of homestay. Even so, it took two weeks of back-and-forth messages while being treated like an illiterate, brain-dead child.   I got moved to a second homestay, where the hosts at least kept the house minimally clean, but this place had a different problem: FOOD and ANTISOCIAL HOSTS. They kept serving us canned food, they were extremely antisocial, and RUDE in the way they talked to us. That wasn't a big deal until the host banned us from leaving food on the plate or throwing it away, even though the food was awful. Other students in the house pushed back on this, and ever since then she treated all of us with hostility and made everyone uncomfortable. In this case I spent an ENTIRE MONTH talking to EF's ACCOMMODATION TEAM plus EF BRAZIL, and was treated like shit by both teams: ignored messages, days without replies, endless stalling and zero solutions.   I got moved again to another homestay, and honestly I don't have much to complain about here, because the host is actually honoring the contract and is a genuinely nice person.   Today I contacted EF and the travel insurance because I've been having wisdom tooth pain, and their answer was that I should avoid going to the doctor. According to the saleswoman, the travel insurance they sell doesn't operate 24/7, but the insurer's website says it does. And if I need any assistance in the meantime, I'm supposed to contact EF, not the insurance.   Let me be clear: I'm not expecting a 5-star service. I'm expecting a  human  service, where people actually care about the customer experience, and where hosts meet a basic standard of \"cleanliness\" and give students some flexibility. Not cooking isn't the problem. But not cooking AND banning students from using the kitchen is a fucking huge problem. And even worse is EF treating the student like shit even after the situation has been reported.   This is complete negligence, a fucking disgrace, and this company isn't worth a single penny.   Honestly, if you're planning a long-term exchange, look into  ILAC in Canada . I spent 5 months with them and paid way less than what I'm paying EF now, just to live in a homestay and get treated like shit. And every EF staff member just keeps telling you to sort out your problem with someone else, bouncing you around like a ping-pong ball until you start threatening legal action.   Anyway, I needed to write this because EF has tons of positive reviews on Google that, in my opinion, don't reflect the reality most students go through, and they end up burying the negative ones. So before you sign anything, do your homework: check company review sites like Trustpilot, search for EF, and read what other students are actually saying. The bad reviews aren't hard to find if you look.       submitted by     /u/ViniciusGomesBr     to     r/exchangestudents       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/exchangestudents/comments/1wjxr1q/ef_school_real_feedback/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:10:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:10:23.662Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e90660c60840397aabe"
+    },
+    "message_id": "reddit_t3_1wjxr14",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "DrPepper",
+    "username": "N2929",
+    "title": "Score! The last two creamy coconut.",
+    "text": "Score! The last two creamy coconut.\n\nWas at Fred Meyer(Kroger). April 2027 Best Buy date.       submitted by     /u/N2929     to     r/DrPepper       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DrPepper/comments/1wjxr14/score_the_last_two_creamy_coconut/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:10:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:10:24.070Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e90660c60840397aabf"
+    },
+    "message_id": "reddit_t3_1wjxr0x",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "PuertoRicoTravel",
+    "username": "StrawberryFar7175",
+    "title": "Advice for ethical lodging?",
+    "text": "Advice for ethical lodging?\n\nMy family (8 of us) are traveling to PR next year. We'll need to rent a big enough place for all of us, but I obviously don't want to get a place that ends up being owned by a rental company. We'd like to support the locals if possible. Is there a site other than Airbnb we can use to find a house rental that would be better? Any other suggestions?        submitted by     /u/StrawberryFar7175     to     r/PuertoRicoTravel       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PuertoRicoTravel/comments/1wjxr0x/advice_for_ethical_lodging/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:10:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:10:24.272Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e90660c60840397aac0"
+    },
+    "message_id": "reddit_t3_1wjxr0s",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Independent_Copy7903",
+    "title": "For those who have used the Sincerely app, what was your experience like?",
+    "text": "For those who have used the Sincerely app, what was your experience like?\n\nsubmitted by     /u/Independent_Copy7903     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wjxr0s/for_those_who_have_used_the_sincerely_app_what/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:10:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:10:24.474Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e90660c60840397aac1"
+    },
+    "message_id": "reddit_t3_1wjxr0l",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "Parakeets",
+    "username": "Fit-Ice956",
+    "title": "best app",
+    "text": "best app\n\nParakeet AI is a real-time interview assistant that offers a pay-per-use credit model, making it suitable for candidates who only need assistance for one or two interviews. The tool transcribes the interviewer's audio, detects questions, and surfaces ChatGPT-generated answers on a desktop overlay.        submitted by     /u/Fit-Ice956     to     r/Parakeets       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Parakeets/comments/1wjxr0l/best_app/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:10:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:10:24.677Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e91660c60840397aac4"
+    },
+    "message_id": "reddit_t3_1wjxr0k",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "wrikecommunity",
+    "username": "WrikeCommunity",
+    "title": "How do you automate stakeholder status reports without redoing the same spreadsheet every Friday?",
+    "text": "How do you automate stakeholder status reports without redoing the same spreadsheet every Friday?\n\nWe used to write the stakeholder update from scratch every Friday, and that's what was actually eating the time, not sending it. Once we had one report already built for it, the update turned into open it, skim it, hit send.   Here's roughly how we set it up, and  Wrike's reporting tools  is what we use. Create a reusable report or analytics board scoped to the project or portfolio, and configure it with the fields stakeholders actually care about, status, owner, due date, and whatever your blockers field is called. Filter it down to what matters so you're not scrolling past forty rows to find the two that are late. Whether that ends up as a saved report or a widget on an analytics board depends on what you're building, they're different surfaces under the hood, but either one gets you a single view you're not rebuilding from scratch.   For stakeholders who have access to it, a public link beats another exported attachment, you're pointing people at something that's already  current  instead of pulling a fresh export every Friday. That depends on your plan and their permissions though, so check that before you promise it as the whole answer. And if you need a report delivered to someone’s inbox automatically, check whether your Wrike plan supports scheduled report emails — this can be done natively. Use Wrike Integrate or Zapier when you need a more customized export-and-send workflow.   For the written part, the actual paragraph summarizing what happened this week, Wrike now has an MCP server, so something like Claude can go look at the project itself, what's the status, who owns what, what's overdue, what changed recently, and draft you a first pass off that instead of you reconstructing it from memory. I still read it over before sending anything, it only knows what it actually retrieves and how you asked it, but it takes care of the annoying part, remembering everything that happened, so you're just editing instead of starting cold.   Curious what everyone else is doing for the actual distribution piece, especially when half your stakeholders don't have logins. Public link, PDF export, something else entirely?       submitted by     /u/WrikeCommunity     to     r/wrikecommunity       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wrikecommunity/comments/1wjxr0k/how_do_you_automate_stakeholder_status_reports/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:10:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:10:25.278Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad7e91660c60840397aac5"
+    },
+    "message_id": "reddit_t3_1wjxr05",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Meowi",
+    "username": "mehefin",
+    "title": "[Choose] Inclement weather",
+    "text": "[Choose] Inclement weather\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/mehefin     to     r/Meowi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Meowi/comments/1wjxr05/choose_inclement_weather/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:10:05Z"

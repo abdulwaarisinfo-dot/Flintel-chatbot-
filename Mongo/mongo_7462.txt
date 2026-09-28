@@ -1,0 +1,416 @@
+    "text": "African American Civil War Pensioners Amos Powell & Preston Ledbetter both born in Richmond County NC in the 1840's. Both moved to Anson County by the time of the 1870 Census.\n\nAmos Powell was an African American gentleman who apparently was born in Richmond County NC about 1841. He was enslaved by Charles Powell. Amos & Charles Powell both served in the Civil War Company D of the 23rd Richmond County NC Regiment. I don’t know when Amos Powell came to live in Anson County but he began receiving a Civil War pension in 1926 or 1927. Amos Powell died in Wadesboro NC on June 4 1932 & was buried in an unmarked grave at Old Westview Cemetery off of Salisbury Street & Henry Street in Wadesboro.   Anson County Commissioners Proceedings – August 1, 1927 – Ordered that Amos Powell be paid four dollars & 38 cents for round trip ticket to the Old Soldiers Reunion at Raleigh NC. I have a photocopy of an old picture of Amos Powell in my local black history collection at the Anson County Historical Society office in Wadesboro. In the picture, Amos Powell is standing beside Preston Ledbetter who was another African American Civil War veteran.   Preston Ledbetter must have also been born in Richmond County NC about 1845 & served in Company A of the 23rd Richmond County Regiment. He was enslaved by Frank Billingsley. Preston also began receiving a Civil War pension in either 1926 or 1927. Preston Ledbetter died in Wadesboro on April 27, 1930 & buried in an unmarked grave at Sneedsboro AME Zion Church Cemetery in Wadesboro.    https://preview.redd.it/qmkkia9ygvph1.png?width=1080&format=png&auto=webp&s=bd1b7db80121bacc234c592ccae173eb78dceb1c        submitted by     /u/Character-Fig-671     to     r/AnsonCountyNCHistory       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AnsonCountyNCHistory/comments/1whv8tm/african_american_civil_war_pensioners_amos_powell/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:01:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:02:07.442Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa85786508d45f3d2d2ac8"
+    },
+    "message_id": "reddit_t3_1whv9uo",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "teenagers",
+    "username": "ky1ven",
+    "title": "I jss wanted to share this",
+    "text": "I jss wanted to share this\n\nIdk why but atp Nothing feels interesting I stress too much abt my career but don't take actions I'm freaking ambitious and adaptive idk bro    And I gotta reddit now I am using it too much bye sayonara        submitted by     /u/ky1ven     to     r/teenagers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/teenagers/comments/1whv9uo/i_jss_wanted_to_share_this/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:02:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:03:04.841Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa85796508d45f3d2d2ac9"
+    },
+    "message_id": "reddit_t3_1whv9ua",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "mbta",
+    "username": "idekimirrelevant",
+    "title": "Probably a stupid question about the commuter rail",
+    "text": "Probably a stupid question about the commuter rail\n\nLike the title says, this might be a stupid question but I couldn't find any info online or in this subreddit.   Does it matter which car you sit in on the commuter rail? I always try to sit in the double deckers since the one time I sat in a regular car (several years ago) I was told to move to a double decker, but does it actually matter? Are the regular cars reserved for a certain subset of commuter rail riders or could I sit there? If it matters for context, I pretty much only take the Newburyport-Rockport line.       submitted by     /u/idekimirrelevant     to     r/mbta       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mbta/comments/1whv9ua/probably_a_stupid_question_about_the_commuter_rail/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:02:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:03:05.060Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa85796508d45f3d2d2aca"
+    },
+    "message_id": "reddit_t3_1whv9u8",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "SideProject",
+    "username": "okaylevi",
+    "title": "Not another SaaS: I built a free, offline first micro CMS packaged inside a single PNG image",
+    "text": "Not another SaaS: I built a free, offline first micro CMS packaged inside a single PNG image\n\nTLDR:  I saw  a recent top post about the flood of useless apps and SaaS cash grabs , and honestly, it struck a chord.   Minilith isn't a startup. It has no pricing tiers, and there's nothing to buy. It is an experiment in the small web (a database-free micro CMS where the entire content payload, interface, and logic lives inside a single portable PNG image.)   The goal was just to build some neat tech that approaches a very common problem (web publishing and CMS bloat) from a totally different angle.    The inspiration:    I was tired of the network waterfall, 40-table MySQL nightmares, and the assumption publishing words on the internet requires a $10/mo hosting subscription. I wanted something that combined:   - The cartridge portability of PICO-8  - The raw utility of an old-school pastebin like txti  - The radical restraint of Bear Blog    How it works under the hood:    Instead of pinging a backend, the image is the DB!   -  Zero Dependencies:  No React, no NPM modules, no external libraries  -  Steganographic Storage:  The entire state is compressed and injected into the RGB channels of a 256x256 PNG  -  Native Web APIs:  It relies entirely on native browser standards (Web Crypto API for ECDSA signatures, Canvas API for extraction, and the native Compression Streams) to unpack and render the DOM locally  -  Offline-First:  You can edit, read, and export a standalone site container with zero network connection. It empowers completely free publishing, forever.    Live Demo:    To celebrate putting the architecture through its paces, I have been posting to the Minilith Blog and detailing the exact ethos behind the project.   You can read my most recent post here:  https://blog.minilith.site/#posts/why-your-next-cms-should-be-an-image    Note the site you are looking at is extracted and rendered entirely out of the Minilith image container, and it is hosted for free via the Cloudflare connector!   I mentioned the recent post I saw about a flood of useless apps. I will admit I did zero research on this! I started this as a passion months back and have been chipping away at it slowly! I did not build it to revolutionize the enterprise (although I think the enterprise could benefit from removing un needed bloat). I built it for myself, I built it as an experiment and a way to rethink how data lives on the web today!    I am keeping the core of Minilith closed for a short window as I continue to stress test the storage engine and touch up the code. It will be open sourced shortly.    I'd love your thoughts.   Sorry for the multiple post attempts mobile formatting on reddit is tough… :/       submitted by     /u/okaylevi     to     r/SideProject       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SideProject/comments/1whv9u8/not_another_saas_i_built_a_free_offline_first/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:02:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:03:05.276Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa85796508d45f3d2d2acc"
+    },
+    "message_id": "reddit_t3_1whv9tr",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "Orbitsolution",
+    "username": "Existing-Manager-759",
+    "title": "👋 Welcome to r/Orbitsolution - Introduce Yourself and Read First!",
+    "text": "👋 Welcome to r/Orbitsolution - Introduce Yourself and Read First!\n\nLooking for Businesses Ready to Grow Online?    We’re  OrbitSolution , a digital marketing team helping businesses build a stronger online presence and generate meaningful results.   Our services include:  • SEO & Local SEO  • Social Media Marketing  • Meta & Google Ads  • Content Marketing  • Website & Landing Page Optimization  • Branding & Digital Strategy   If you’re a  small business, startup, entrepreneur, or growing brand  looking for digital marketing support, we’d love to connect.   💬  Comment below or DM us  with your business/website and what you’re looking to improve.   Let’s discuss how we can help your business grow online.        submitted by     /u/Existing-Manager-759     to     r/Orbitsolution       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Orbitsolution/comments/1whv9tr/welcome_to_rorbitsolution_introduce_yourself_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:02:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:03:05.709Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa85796508d45f3d2d2acd"
+    },
+    "message_id": "reddit_t3_1whv9tj",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Intelligent_Cow_3310",
+    "title": "How do you think the judicial repercussions and public sympathy would’ve been like if the Lindsay Clancy case involved dogs instead of her children?",
+    "text": "How do you think the judicial repercussions and public sympathy would’ve been like if the Lindsay Clancy case involved dogs instead of her children?\n\nsubmitted by     /u/Intelligent_Cow_3310     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1whv9tj/how_do_you_think_the_judicial_repercussions_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:02:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:03:05.926Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa857a6508d45f3d2d2ace"
+    },
+    "message_id": "reddit_t3_1whv9su",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "HorrorJunkie0666",
+    "title": "What was that time you embarrassed yourself on purpose in order to embarrass someone?",
+    "text": "What was that time you embarrassed yourself on purpose in order to embarrass someone?\n\nsubmitted by     /u/HorrorJunkie0666     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1whv9su/what_was_that_time_you_embarrassed_yourself_on/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:02:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:03:06.160Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa857a6508d45f3d2d2acf"
+    },
+    "message_id": "reddit_t3_1whv9sk",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "JapanTravelTips",
+    "username": "nico_nice_c0ck",
+    "title": "Where to stay in tokyo?",
+    "text": "Where to stay in tokyo?\n\nHi guys, me and my gf are going to travel to japan next year for 30 days. We want to know where to stay in the first 5 days in tokyo. Because at the end of the travel we will be for 13 days in shinjuku or shibuya. So we want to see for the first 5 days like the east side of tokyo, but we dont want to stay at a place, that has NO nightlife at all or where are no convenciene stores.    We will also go to kyoto and Osaka, but we already got an accomondation there.   I also heard that you can go by the train to the east side of tokyo, but I think its cooler to stay there for a few days.   So we want a mix of nightlife and many stores and like calm anime looking streets.   What places should we go? And why?       submitted by     /u/nico_nice_c0ck     to     r/JapanTravelTips       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/JapanTravelTips/comments/1whv9sk/where_to_stay_in_tokyo/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:02:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:03:06.377Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa857a6508d45f3d2d2ad1"
+    },
+    "message_id": "reddit_t3_1whv9sj",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "WeHeartData",
+    "username": "yt-app",
+    "title": "New CNA Insider Upload: How Bangladesh’s Fuel Crisis Is Disrupting Fertiliser Production & Food Supply | A Life Without Oil",
+    "text": "New CNA Insider Upload: How Bangladesh’s Fuel Crisis Is Disrupting Fertiliser Production & Food Supply | A Life Without Oil\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/yt-app     to     r/WeHeartData       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WeHeartData/comments/1whv9sj/new_cna_insider_upload_how_bangladeshs_fuel/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:02:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:03:06.805Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa857b6508d45f3d2d2ad2"
+    },
+    "message_id": "reddit_t3_1whv9s5",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "TwentiesIndia",
+    "username": "LopsidedAd5028",
+    "title": "What is the greatest human invention ?",
+    "text": "What is the greatest human invention ?\n\nAccording to me alcohol and adult movies. What is your opinion ?       submitted by     /u/LopsidedAd5028     to     r/TwentiesIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TwentiesIndia/comments/1whv9s5/what_is_the_greatest_human_invention/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:02:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:03:07.021Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa857b6508d45f3d2d2ad3"
+    },
+    "message_id": "reddit_t3_1whv9s1",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Value_investor_india",
+    "username": "AaThi_MuThu_S",
+    "title": "Intrest rate ( finance series -5)",
+    "text": "Intrest rate ( finance series -5)\n\n🏦 *FINANCE SERIES — PART 5*   💰 *INTEREST RATES — SIMPLE VS COMPOUND INTEREST*   Hi guys! 👋   In Part 4, we learned about inflation and why the purchasing power of money changes over time.   Now let's understand another fundamental concept in finance:   👉 *INTEREST*   You see interest everywhere:   🏦 *Savings accounts*   💰 *Fixed deposits*   💳 *Credit cards*   🏠 *Home loans*   🚗 *Car loans*   📈 *Investments*   💼 *Business financing*   But what exactly is interest?   And what's the difference between simple interest and compound interest?   Let's break it down. 👇   💰 *1. WHAT IS INTEREST?*   *Interest is essentially the cost of borrowing money or the return earned for lending/saving money.*   If you borrow money:   👉 *You generally pay interest.*   If you lend or deposit money:   👉 *You may earn interest.*   For example:   You borrow *₹1,00,000 at 10% annual interest.*   If the interest is calculated simply for one year:   *₹1,00,000 × 10% = ₹10,000*   So the interest for that year would be *₹10,000.*   🏦 *2. INTEREST RATE*   *An interest rate tells you how much interest is charged or earned relative to the amount of money involved.*   For example:   💰 *Principal = ₹1,00,000*   📈 *Interest rate = 10% per year*   Simple one-year interest:   *₹1,00,000 × 10% = ₹10,000*   The rate itself is not the same thing as the total interest you'll eventually pay or earn.   Other factors matter too:   📅 *Time*   🔄 *Compounding frequency*   💳 *Fees*   📊 *Loan structure*   🏦 *Terms and conditions*   🧮 *3. WHAT IS SIMPLE INTEREST?*   *Simple interest is calculated only on the original principal.*   The basic formula is:   👉 *Simple Interest = Principal × Rate × Time*   Example:   *Principal = ₹1,00,000*   *Rate = 10% per year*   *Time = 3 years*   Simple Interest:   *₹1,00,000 × 10% × 3*   *= ₹30,000*   Total amount:   *₹1,00,000 + ₹30,000*   *= ₹1,30,000*   *The interest does not itself earn additional interest under this simple-interest setup.*   📈 *4. WHAT IS COMPOUND INTEREST?*   Compound interest is different.   Here, *interest can be added to the principal, and future interest can then be calculated on the larger amount.*   In simple words:   👉 *You earn interest on your interest.*   That's why *compounding can become extremely powerful over long periods.*   🔥 *5. SIMPLE EXAMPLE OF COMPOUNDING*   Suppose you invest:   💰 *₹1,00,000*   at:   📈 *10% annual compound growth*   After Year 1:   *₹1,10,000*   After Year 2:   *₹1,21,000*   After Year 3:   *₹1,33,100*   Notice something important:   *Year 1 interest = ₹10,000*   *Year 2 interest = ₹11,000*   *Year 3 interest = ₹12,100*   *The amount of growth increases because the base is getting larger.*   🧠 *6. THE POWER OF TIME*   This is where compounding becomes really interesting.   Suppose:   💰 *Initial investment = ₹1,00,000*   📈 *Annual return = 10%*   If it compounds annually:   *After 10 years → approximately ₹2.59 lakh*   *After 20 years → approximately ₹6.73 lakh*   *After 30 years → approximately ₹17.45 lakh*   You started with ₹1 lakh.   Over a long period, *the growth can become much larger.*   *That's the power of time + compounding.*   ⚠️ *7. COMPOUNDING WORKS BOTH WAYS*   This is extremely important.   *Compounding isn't only your friend.*   *It can also work against you.*   📈 *Investments:*   *Your returns can generate additional returns.*   💳 *Debt:*   *Unpaid balances can potentially accumulate interest and charges, depending on the product's terms.*   That's why *high-cost debt can become difficult to manage when balances remain unpaid.*   💰 *8. SAVING ₹10,000 IS NOT THE SAME AS GROWING ₹10,000*   Suppose you keep:   *₹1,00,000*   without earning any return.   After 10 years:   *₹1,00,000*   Nominally, you still have ₹1 lakh.   But *inflation may have reduced what that ₹1 lakh can buy.*   Now suppose the money earns a return over those 10 years.   Your final amount could be higher.   But remember:   👉 *Investment returns are not guaranteed.*   👉 *Higher potential returns usually involve higher risk.*   📊 *9. COMPOUND ANNUAL GROWTH RATE (CAGR)*   You may hear another important term:   📈 *CAGR — Compound Annual Growth Rate*   *CAGR tells you the annualized rate at which an investment would have grown if it had grown at a constant rate over a period.*   For example:   Investment:   *₹1,00,000*   Final value:   *₹2,00,000*   Time:   *5 years*   *The CAGR would be approximately 14.87%.*   Real investments usually don't grow at exactly the same rate every year.   *CAGR is simply a useful way of expressing the overall growth rate.*   💡 *10. INTEREST RATE ≠ INVESTMENT RETURN*   These terms are often confused.   An interest rate may be specified for products such as:   🏦 *Deposits*   💳 *Loans*   💰 *Bonds*   Investment returns can come from:   📈 *Price appreciation*   💵 *Dividends*   💰 *Interest*   📊 *Distributions*   And *investment returns can fluctuate.*   For example:   *A fixed deposit may offer a stated interest rate.*   *A stock does not promise a fixed annual return.*   Its price can:   📈 *Rise*   📉 *Fall*   ➡️ *Or remain relatively unchanged.*   🏦 *11. WHY DO LOAN INTEREST RATES MATTER?*   Suppose you take a *₹20 lakh loan.*   A small difference in the interest rate can *significantly affect the total interest paid over many years.*   For example:   *A lower rate can reduce your borrowing cost.*   *A higher rate can increase it.*   That's why when comparing loans, don't look only at:   👉 *EMI*   Also consider:   📈 *Interest rate*   📅 *Loan tenure*   💸 *Total interest payable*   🧾 *Fees and charges*   📊 *Whether the rate is fixed or floating*   💳 *12. LOWER EMI DOESN'T ALWAYS MEAN CHEAPER LOAN*   Imagine two loans.   Loan A:   💰 *Lower EMI*   📅 *Longer tenure*   Loan B:   💰 *Higher EMI*   📅 *Shorter tenure*   Loan A may look more affordable every month.   But because you pay interest for a longer period, *the total interest cost could be significantly higher.*   So always ask:   👉 *\"How much will I pay in total?\"*   Not just:   👉 *\"What's the monthly EMI?\"*   🔥 *13. FREQUENCY OF COMPOUNDING MATTERS*   Interest can compound:   📅 *Annually*   📆 *Quarterly*   🗓️ *Monthly*   ⏰ *Or at other frequencies*   Generally, *with the same nominal rate and comparable conditions, more frequent compounding can produce a higher effective return.*   But always check the actual terms of the financial product.   🧮 *14. EFFECTIVE ANNUAL RATE*   Suppose a product advertises:   📈 *12% annual nominal rate*   But compounds monthly.   *The effective annual rate is slightly higher than 12%.*   That's why it's useful to distinguish between:   👉 *Nominal interest rate*   and   👉 *Effective annual rate*   *The effective rate reflects the impact of compounding.*   ⚠️ *15. DON'T IGNORE TAXES*   Suppose your investment earns:   💰 *₹10,000 interest.*   You may not necessarily get to keep the entire ₹10,000.   Depending on the investment and your tax situation, *taxes may apply.*   So when comparing financial products, think about:   📈 *Gross return* - 🧾 *Taxes* - 💸 *Fees* = 👉 *Net return*   💡 *16. THE RULE OF 72*   Here's a useful mental shortcut.   *The Rule of 72 estimates approximately how long it takes money to double at a given annual growth rate.*   Formula:   👉 *72 ÷ annual rate ≈ years to double*   For example:   At 8%:   *72 ÷ 8 = 9 years*   At 12%:   *72 ÷ 12 = 6 years*   It's only an approximation, but it's useful for quick calculations.   🎯 *17. SIMPLE INTEREST VS COMPOUND INTEREST*   🧮 *SIMPLE INTEREST:*   *Interest is calculated on the original principal.*   📈 *COMPOUND INTEREST:*   *Interest can be added to the balance, allowing future interest to be earned on previous interest.*   In simple terms:   *Simple interest = linear growth*   *Compound growth = growth on a growing base*   🧠 *THE BIG LESSON*   The biggest advantage in compounding isn't necessarily having a huge amount of money.   It's:   ⏳ *TIME*   Starting earlier gives your money more time to potentially compound.   That's why:   *₹5,000 invested consistently for many years can potentially become much more valuable than waiting until later and trying to invest a much larger amount over a shorter period.*   Of course, *actual investment returns vary and are never guaranteed.*   🎯 *KEY TAKEAWAY*   Remember these four things:   💰 *Interest = cost of borrowing / return on lending or saving*   🧮 *Simple interest = based on the original principal*   📈 *Compound interest = growth can build on previous growth*   ⏳ *Time = one of the most powerful factors in compounding*   And remember:   👉 *Compounding can build wealth when it works for you—and magnify debt when it works against you.*   Double Tap ❤️ For Part-6       submitted by     /u/AaThi_MuThu_S     to     r/Value_investor_india       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Value_investor_india/comments/1whv9s1/intrest_rate_finance_series_5/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:02:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:03:07.238Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa857b6508d45f3d2d2ad4"
+    },
+    "message_id": "reddit_t3_1whv9ry",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "cjbos",
+    "title": "Old Wonders and Treetop Folk Under the Green Canopy",
+    "text": "Old Wonders and Treetop Folk Under the Green Canopy\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/cjbos     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1whv9ry/old_wonders_and_treetop_folk_under_the_green/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:02:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:03:07.465Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa857b6508d45f3d2d2ad5"
+    },
+    "message_id": "reddit_t3_1whv9rw",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MapBasedPolls",
+    "username": "Organic_Contract_172",
+    "title": "How do you mostly see Czechs",
+    "text": "How do you mostly see Czechs\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Organic_Contract_172     to     r/MapBasedPolls       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MapBasedPolls/comments/1whv9rw/how_do_you_mostly_see_czechs/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:02:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:03:07.681Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa857b6508d45f3d2d2ad6"
+    },
+    "message_id": "reddit_t3_1whv9rq",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "GiftHuddle",
+    "username": "Rich_Opinion2404",
+    "title": "🎮 DEAL ALERT — Save 15% on GameSir G7 Pro Wired XBOX Controller,TMR Sticks,1000Hz PC | XBOX Series X|S,Hall Effect Triggers, 4 Remappable Buttons,PC & Android Controller!",
+    "text": "🎮 DEAL ALERT — Save 15% on GameSir G7 Pro Wired XBOX Controller,TMR Sticks,1000Hz PC | XBOX Series X|S,Hall Effect Triggers, 4 Remappable Buttons,PC & Android Controller!\n\n💰 Was: £89.99 | Now: £76.49 💸 You save: £13.50 (15% off)   TRI-MODE CONNECTIVITY FOR XBOX, PC & ANDROID - Switch seamlessly between wired mode for XBOX Series X|S and XBOX One, 2.4GHz wireless or wired mode for PC, and Bluetooth for Android devices. Includes a detachable cabl…   👉 See the full deal:  https://www.gift-huddle.com/deals/9d63a29a-6086-44df-ad59-b6e382088d9e?utm\\_source=reddit&utm\\_medium=social&utm\\_campaign=deal\\_post    GiftHuddle  r/GameSir  #GamingDeals #deals #giftideas #ukdeals       submitted by     /u/Rich_Opinion2404     to     r/GiftHuddle       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GiftHuddle/comments/1whv9rq/deal_alert_save_15_on_gamesir_g7_pro_wired_xbox/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:02:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:03:07.898Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa857c6508d45f3d2d2ad7"
+    },
+    "message_id": "reddit_t3_1whv9rd",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "bald",
+    "username": "Moha7654",
+    "title": "Council check",
+    "text": "Council check\n\nWant the council opinion if it’s time.       submitted by     /u/Moha7654     to     r/bald       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/bald/comments/1whv9rd/council_check/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:02:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:03:08.116Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa857c6508d45f3d2d2ad8"
+    },
+    "message_id": "reddit_t3_1whv9r9",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "windsurfing",
+    "username": "j9r6f",
+    "title": "Progressing on a Bic Techno 283",
+    "text": "Progressing on a Bic Techno 283\n\nI've gotten into windsurfing over the last few months, mostly using a big 200L long board at the sailing center I work at. I can comfortably tack, gybe, go upwind, uphaul, and all the other beginner skills. I've also started to get more comfortable in the harness. I feel like I'm reaching the point where I won't be able to progress much more on this board, and want to move on to something smaller. In a perfect world, I'd want to try a short board with a retractable daggerboard, like a Starboard Go Windsurfer, but I don't have access to anything like that, there are no places around me to rent from, and I'm trying not to buy a board until I get better.   I do, however, have free access to the board pictured above. It's in good condition and just needed to be cleaned up. It has a few different sized freeride fins, which are also in good condition.    I've been told to avoid older boards, as they tend to be more narrow and harder to learn on. Does this board fall into that category? I'd like to try to progress on this board, and I'm fine with spending a lot of time in the water, but if this board will be overly frustrating and detrimental to my learning I'll try to find something else.    Also, for reference I am 178cm and around 70kg.       submitted by     /u/j9r6f     to     r/windsurfing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/windsurfing/comments/1whv9r9/progressing_on_a_bic_techno_283/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:02:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:03:08.331Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa857c6508d45f3d2d2ad9"
+    },
+    "message_id": "reddit_t3_1whv9r3",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "camouflage",
+    "username": "GDE2301",
+    "title": "Today's range trip was brought to you but Paddyflage",
+    "text": "Today's range trip was brought to you but Paddyflage\n\nWent for something a bit unusual today for my trip to the range, my 2003 Irish DPM trousers.   Works quite well in the Welsh countryside, that makes sense it's less than as the crow flies it's about 150 miles from my location.       submitted by     /u/GDE2301     to     r/camouflage       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/camouflage/comments/1whv9r3/todays_range_trip_was_brought_to_you_but/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:02:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:03:08.547Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa857c6508d45f3d2d2ada"
+    },
+    "message_id": "reddit_t3_1whv9qf",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "pillarchase2",
+    "username": "Reborn-Eclipse",
+    "title": "Opinion yap session about the new testing",
+    "text": "Opinion yap session about the new testing\n\nNew testing with being able to choose perks, dodging and sentinel. Ts is not it.   ———————————————————————    Perks :   Well they made it were you can pick two perks instead of it being random which is nice. Though it doesn’t really change the fact that the perks don’t make survivor gameplay interesting at all and just makes it worse to play survivor and even as monster I just found it boring to go up against survivors with perks. In all honestly perks just don’t work well and especially don’t work well as a replacement to classes.    Dodging:    to give credit dodging is a somewhat interesting idea and with changes I feel like it could work in the base game. THIS actually does make survivor gameplay more interesting which I like. it can be annoying to deal with as monster so the changes I would make to it is that you still get debuffs and character like Rosemary still get the speed buff when hitting a survivor. The dodging system could work but it does need some tweaks.   Sentinel:   I am going to be so honest here, the sentinel‘s fucking suck. This is supposed to be the helpful role for the survivors but the sentinels are just the normal classes with not much to their kit that makes them that strong. I would not want this to come to base game, it’s just the regular classes, just gives more time to the monster, also it just means other survivors get more boring gameplay. If they really wanted to addd this to the base game I think it would work better as a special gamemode with changes to how strong of a buff the classes get. But for regular rounds hell nah.   ————————————————————————   Im going to be honest, classes just need to stay as they are. They are more interesting to play as and go against as monster. This testing with the changes really wasn’t fun to play as survivor and even monster gameplay was less interesting in my opinion.   I am just going hope they keep classes in the game.       submitted by     /u/Reborn-Eclipse     to     r/pillarchase2       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pillarchase2/comments/1whv9qf/opinion_yap_session_about_the_new_testing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:02:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:03:08.766Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa857c6508d45f3d2d2adb"
+    },
+    "message_id": "reddit_t3_1whv9qa",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "PakistaniTwenties",
+    "username": "buttercup_1606",
+    "title": "Is palmistry actually a real thing?",
+    "text": "Is palmistry actually a real thing?\n\nI don’t believe in these things and honestly have zero knowledge about it but yesterday I got my palm read just for fun at work because everyone was doing it. It was done by a colleague who claimed she knows about palmistry. She’s also a pretty spiritual person and believes in such things.  So she read my palm and told me some pretty scary things that I’m emotionally and physically weak, have “bad naseeb,” that my marriage won’t be good in future , that two of my future engagements will break (I’m currently single), and that I might get into a severe accident.  I know I shouldn’t take it seriously, and I genuinely don’t want to believe any of it but still tbh I’d be lying if I said it didn’t scare me a little.  For people who actually know about palmistry can these things really be determined from someone’s palm? Is there any truth to this or was she just lying or making interpretations?       submitted by     /u/buttercup_1606     to     r/PakistaniTwenties       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PakistaniTwenties/comments/1whv9qa/is_palmistry_actually_a_real_thing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:02:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T12:03:08.982Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa857d6508d45f3d2d2adc"
+    },
+    "message_id": "reddit_t3_1whv9ps",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "wordgrind",

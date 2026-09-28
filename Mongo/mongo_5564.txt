@@ -1,0 +1,416 @@
+      "$date": "2026-09-15T00:25:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T00:26:07.046Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8909f6508d45f3d2c8211"
+    },
+    "message_id": "reddit_t3_1wgkzjt",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "AlertVegas",
+    "username": "MugShots",
+    "title": "NV Energy Alert",
+    "text": "NV Energy Alert\n\nNVEnergy Alert Motor Vehicle Accident in 89449 Verified customers affected ORT: Verified ETR: Verified       submitted by     /u/MugShots     to     r/AlertVegas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlertVegas/comments/1wgkzjt/nv_energy_alert/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T00:25:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T00:26:07.249Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8909f6508d45f3d2c8212"
+    },
+    "message_id": "reddit_t3_1wgkzjd",
+    "topic_key": "give me today top three conversation about e commerce",
+    "search_keyword": "ecommerce",
+    "platform": "reddit",
+    "subreddit": "ecommerce101",
+    "username": "Final_Ad_2489",
+    "title": "Looking for feedback",
+    "text": "Looking for feedback\n\nsubmitted by     /u/Final_Ad_2489     to     r/ecommerce101       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ecommerce101/comments/1wgkzjd/looking_for_feedback/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T00:25:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T00:26:07.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8909f6508d45f3d2c8213"
+    },
+    "message_id": "reddit_t3_1wgkzj3",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789431941874",
+    "text": "[PROBE] 1789431941874\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wgkzj3/probe_1789431941874/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T00:25:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T00:26:07.648Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8909f6508d45f3d2c8214"
+    },
+    "message_id": "reddit_t3_1wgkzj0",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "ClaudeWorkflows",
+    "username": "ClaudeAI-mod-bot",
+    "title": "[Workflow] Safe Claude Code Integration for Live E-commerce: Context, Approval Gates, and Rollback",
+    "text": "[Workflow] Safe Claude Code Integration for Live E-commerce: Context, Approval Gates, and Rollback\n\nSafe Claude Code Integration for Live E-commerce: Context, Approval Gates, and Rollback    Workflow value:  95/100   Status:  active ·  Freshness:  70/100 ·  Confidence:  1.00 ·  Level:  advanced   Categories:  Quality Control, Context & Memory, Debugging, Shipping, CLAUDE.md, Skills, MCP, Multi-Agent   Original source:   r/ClaudeCode post/comment    What problem this solves   Safely and effectively integrating Claude Code with a live Shopify (or other e-commerce) store by implementing robust safety, control, and verification mechanisms.   Summary   A multi-stage workflow for safely connecting Claude Code to live e-commerce systems, emphasizing separation of concerns: versioned business context, distinct read/write access, pre-implementation diagnosis, verifiable outputs, and human approval gates for production changes and execution.   Why it is useful   This workflow provides a critical framework for safely deploying AI agents in production environments, particularly for e-commerce. It addresses common concerns about data integrity, unauthorized actions, and maintainability by introducing structured context, explicit approval steps, and verifiable outputs. It's highly transferable and essential for any team considering AI automation on live systems, offering a blueprint for responsible AI integration.   Workflow     Maintain store context (brand, catalog, rules, etc.) in a versioned repository called 'Store Brain', separate from live data.   Implement separate read access for research workflows and narrowly scoped write access for implementation workflows, preventing unauthorized changes.   Before implementation, prompt Claude to diagnose the root cause, identify affected files, propose the smallest safe change, predict regressions, and outline testing strategy, awaiting human approval.   After implementation, require Claude to provide specific verifiable outputs: files changed, relevant diff, checks run, remaining warnings, affected pages, manual QA checklist, and rollback instructions.   Keep production publishing as a separate human action, using pull requests or updating development themes, rather than direct agent publishing.   For operator workflows, follow a general loop: Read → Analyze → Cite evidence → Propose → Approve → Execute → Verify.     Tools / artifacts     Versioned repository (for Store Brain)   Store Brain (custom context repository)   AGENTS.md   Shopify data map   Pull request system   Development theme environment   Claude Code   MCP (Managed Code Platform)     Validation signals     The author states, 'The pattern we are standardizing' and 'The first repeatable workflows we are turning into Skills are...', indicating internal validation and ongoing implementation.   Detailed steps for diagnosis and verification demonstrate a structured, tested approach.   Explicitly addresses a common and critical safety concern for AI integration with live systems.     Cautions     This workflow is explicitly designed to enhance safety by preventing unauthorized changes, data loss, and ensuring human oversight in critical operations.     Limitations     The post describes the architectural pattern and process but does not provide specific code examples for the 'Store Brain' structure or exact prompt templates.   Relies on the user to implement the versioned repository and access control mechanisms.     Rate this workflow   Upvote this post if the workflow is useful, reproducible, or worth recommending.   Downvote if it is vague, outdated, unsafe, overhyped, or not reproducible.   Reply if it worked for you, failed, is outdated, or has a better alternative.      This post was generated automatically from the workflow library database.        submitted by     /u/ClaudeAI-mod-bot     to     r/ClaudeWorkflows       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeWorkflows/comments/1wgkzj0/workflow_safe_claude_code_integration_for_live/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T00:25:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T00:26:07.848Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa890a26508d45f3d2c8220"
+    },
+    "message_id": "reddit_t3_1wgkzi5",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "TheBattleCatsReddit",
+    "username": "Frozono9999",
+    "title": "I need 2 easy dark catseyes",
+    "text": "I need 2 easy dark catseyes\n\nIm evolving kaza jizo to his ultraform and im missing 1 dark catseye the thing is i did the abyssal stage of the queen bee and i dont know which other way there is to get catseyes (also did cat dojo 11 and im missing 2 legends to get to 12)       submitted by     /u/Frozono9999     to     r/TheBattleCatsReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TheBattleCatsReddit/comments/1wgkzi5/i_need_2_easy_dark_catseyes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T00:25:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T00:26:10.204Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa890d66508d45f3d2c8221"
+    },
+    "message_id": "reddit_t3_1wgl0i7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "TamilNaduDiscussion",
+    "username": "Background-Sir-9571",
+    "title": "Malaysian PM : CM VIJAY tried his level best to meet me.....",
+    "text": "Malaysian PM : CM VIJAY tried his level best to meet me.....\n\nsubmitted by     /u/Background-Sir-9571     to     r/TamilNaduDiscussion       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TamilNaduDiscussion/comments/1wgl0i7/malaysian_pm_cm_vijay_tried_his_level_best_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T00:26:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T00:27:02.442Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa890d66508d45f3d2c8222"
+    },
+    "message_id": "reddit_t3_1wgl0i3",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "WranglerTJ",
+    "username": "dumass4247",
+    "title": "Rear bumper identification",
+    "text": "Rear bumper identification\n\nPicked up this rear bumper from a local pick a part I need to go back and cut off two brackets my impact stripped the bolts lol, I'm going to replace all of the the hardware with zinc plated grade 8 bolts and give it a good paint job. It came off of a 97 TJ but I intend to use it on my 93 yj       submitted by     /u/dumass4247     to     r/WranglerTJ       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WranglerTJ/comments/1wgl0i3/rear_bumper_identification/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T00:26:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T00:27:02.638Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa890d66508d45f3d2c8223"
+    },
+    "message_id": "reddit_t3_1wgl0h0",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "PakistaniTwenties",
+    "username": "Western-Yesterday331",
+    "title": "Trying again?",
+    "text": "Trying again?\n\nMet someone online through marriage service. We got along great and she really liked me. However she came on a little strong so I stepped back out of fear of commitment. She got upset when I ended things and tried to make it seem like she ended things. It’s been 3 months since we’ve spoken and I’m wondering if I should try to bring it back now that i think I’m more ready or if she won’t reciprocate?       submitted by     /u/Western-Yesterday331     to     r/PakistaniTwenties       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PakistaniTwenties/comments/1wgl0h0/trying_again/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T00:26:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T00:27:02.839Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa890d76508d45f3d2c8224"
+    },
+    "message_id": "reddit_t3_1wgl0gh",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "NinebotMAX",
+    "username": "Ok_Independence_7962",
+    "title": "GT3 Battery",
+    "text": "GT3 Battery\n\nI've been planning on buying the GT3 battery and putting it in my Max G3. However I just came across a post on a different app saying that they were unable to ride their scooter after the swap because of an error. People were suggesting reverting to an older firmware. Is this a new complication that I should expect?        submitted by     /u/Ok_Independence_7962     to     r/NinebotMAX       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NinebotMAX/comments/1wgl0gh/gt3_battery/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T00:26:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T00:27:03.040Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa890d77ad037cc2be30420"
+    },
+    "message_id": "reddit_serp_1by60et",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/careeradvice/comments/1by60et/boss_assigned_more_work_with_no_additional_pay/",
+    "text": "Boss assigned more work with no additional pay. What would you do?\n\nSo over the past few months the person I work with has had major attendance issues which has led to a lot of their work not getting done. Rather than my boss reprimanding the employee or firing them and hiring someone else, he reassigns a lot of their work to me. Well, I've already got a lot on my plate. At any other company, my job would be divvied into at least 3 jobs. This company is extremely cheap and will do whatever it takes to save a buck and fifty. When he talked to me about it, I told him I wouldn't mind doing it temporarily (mainly because I knew there was no other option), but that I would like to receive additional compensation since I would be spending more of my time working. I am salaried btw so any time I work over 40 hours is lost/unpaid. He told me there was nothing he could do, but that he would talk to his boss (the cfo) about it. Well a few days later he tells me that his boss said no and that there's nothing more he can do. All of this happened a few months ago. Long story short, I ended up taking on the additional work. My boss conned me into it. Said that it would be the perfect opportunity for me to really show the value I can add yada yada. Mind you prior to all of this happening, l had already saved this company at least 60k over the past 3 months. I'm at a point where I've had enough. The workload has been crippling and I'm tired of doing someone else's job with no additional pay. I'm always anxious and stressed. I don't like the person I've become. I've gained weight and am a lot less social than I used to be. All over a job that couldn't pay me hundreds or thousands more after I've saved them tens of thousands! I plan on quitting this week without notice. My main job is essential. If it's not done timely, it can cost the company at least 300k per month. My salary isn't even a fourth of that, btw. It would also affect other departments being able to do their jobs. There's no one that works there that could do my job. Definitely not my boss. He can barely do his own job. They've had major turnover issues with my role in the past. At one point the position was vacant for 5 months. I don’t feel any ounce of guilt for what I’m about to do. I’m tired of being taken advantage of. I was a good employee. I genuinely cared about my job and the company. No mas.   I'm curious how others would handle this situation. I feel like most people would have been long gone.       submitted by     /u/FocusUsed4816       [link]       [comments]",
+    "username": "FocusUsed4816",
+    "subreddit_or_channel": "careeradvice",
+    "posted_at": "2024-04-07T14:38:20+00:00",
+    "fetched_at": {
+      "$date": "2026-09-15T00:27:03.148Z"
+    },
+    "google_rank": 5,
+    "search_keyword": "im seeling an ai agents assistant so whos bsuiness want ai agent and see problems as an bsuiness owner tell me about and fetch peoples i can sales for it",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-15T00:27:03.148Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa890d76508d45f3d2c8225"
+    },
+    "message_id": "reddit_t3_1wgl0fl",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "LachlanJames",
+    "username": "Scared_Hovercraft_31",
+    "title": "Good brokers in the Redlands? (Redland City)",
+    "text": "Good brokers in the Redlands? (Redland City)\n\nThere is a stack of good brokers around the Redlands,   I don't want to self-promote (I'm Lachlan Adams from Aussie Cleveland) but I work a lot with people in the IT sector. Just because I come from the sector, so I find those types of people easier to talk to.    Here at Aussie Cleveland, we also have Rachelle Nola who does a lot of lending for the islands. We also have Scott who has been in the finance industry for decades.   If you would like to reach out, happy to chat or put you in contact with people who can help.   We also know decent:     financial planners   buyers agents   conveyancers   solicitors   developers   accountants   the list goes on     Always happy to help.       submitted by     /u/Scared_Hovercraft_31     to     r/LachlanJames       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LachlanJames/comments/1wgl0fl/good_brokers_in_the_redlands_redland_city/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T00:26:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T00:27:03.241Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa890d76508d45f3d2c8226"
+    },
+    "message_id": "reddit_t3_1wgl0ff",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "bryixelux",
+    "title": "911 dispatchers, what situation sounds harmless at first but immediately concerns you?",
+    "text": "911 dispatchers, what situation sounds harmless at first but immediately concerns you?\n\nsubmitted by     /u/bryixelux     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wgl0ff/911_dispatchers_what_situation_sounds_harmless_at/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T00:26:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T00:27:03.440Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa890d76508d45f3d2c8227"
+    },
+    "message_id": "reddit_t3_1wgl0f8",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "OnceHumanOfficial",
+    "username": "Few_Needleworker5791",
+    "title": "Hit a wall at level 50",
+    "text": "Hit a wall at level 50\n\nHello there, my friends and I have been really enjoying the game. But we've come to a bit of a road block. We've found the builds we want, got blueprints upgraded, weapons and armor to t5. All the encounters on pro now feel like a waste of time, as the mods dropping are not of level to do us any good and enemies are too squishy.    The issue is, a lot of it we can solo on nightmare. But add another player and forget about it. Try going full team to mitigate, and it's even more haha better luck next time vibes.   Would really like to know how to chase level 17 mods without relying on the pity/buy and hope system. Is there a way or am I uninstalling?       submitted by     /u/Few_Needleworker5791     to     r/OnceHumanOfficial       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OnceHumanOfficial/comments/1wgl0f8/hit_a_wall_at_level_50/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T00:26:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T00:27:03.637Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa890d76508d45f3d2c8228"
+    },
+    "message_id": "reddit_t3_1wgl0f4",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ColorGuessr",
+    "username": "CleanPlum4166",
+    "title": "My 10th Colorwire Puzzle — Colorwire by u/CleanPlum4166",
+    "text": "My 10th Colorwire Puzzle — Colorwire by u/CleanPlum4166\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/CleanPlum4166     to     r/ColorGuessr       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ColorGuessr/comments/1wgl0f4/my_10th_colorwire_puzzle_colorwire_by/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T00:26:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T00:27:03.847Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa890d86508d45f3d2c8229"
+    },
+    "message_id": "reddit_t3_1wgl0ew",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CryptoReferrals",
+    "username": "Sure-Toe-722",
+    "title": "Free $45-$350 (AUS)",
+    "text": "Free $45-$350 (AUS)\n\n1: Download Kraken app with my referring link:    Join on Kraken and we can both get rewards of up to A$350 each. Use my link below, or my referral code: Referral code:  f7hytrhr Referral link:   https://invite.kraken.com/JDNW/mdvw7ynm    2: Creat account and verify ID.    3: Deposit $200 via bank transfer to your account.    4: Buy $200 worth of bitcoin. Can sell and withdraw back into your bank account straight away if you want.    5: You earn your $45-$350 reward. This may take a day or two.        submitted by     /u/Sure-Toe-722     to     r/CryptoReferrals       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CryptoReferrals/comments/1wgl0ew/free_45350_aus/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T00:26:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T00:27:04.043Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa890d86508d45f3d2c822a"
+    },
+    "message_id": "reddit_t3_1wgl0ds",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "redditrequest",
+    "username": "grawrant",
+    "title": "r/CDLTruckDrivers",
+    "text": "r/CDLTruckDrivers\n\nRequesting due to lack of moderation       submitted by     /u/grawrant     to     r/redditrequest       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/redditrequest/comments/1wgl0ds/rcdltruckdrivers/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T00:26:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T00:27:04.245Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa890d86508d45f3d2c822b"
+    },
+    "message_id": "reddit_t3_1wgl0dl",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789432001628",
+    "text": "[PROBE] 1789432001628\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wgl0dl/probe_1789432001628/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T00:26:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T00:27:04.442Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa890d86508d45f3d2c822c"
+    },
+    "message_id": "reddit_t3_1wgl0d4",
+    "topic_key": "give me today top three conversation about e commerce",
+    "search_keyword": "ecommerce",
+    "platform": "reddit",
+    "subreddit": "PracticalEcommerce",
+    "username": "AutoModerator",
+    "title": "Prosperity School 2026 by Lewis Kelly – GET",
+    "text": "Prosperity School 2026 by Lewis Kelly – GET\n\nI recently joined Prosperity School Course 2026 by Lewis Kelly, and it's honestly one of the most refreshing Smart Money Concepts programs I've come across. Lewis doesn't just teach you patterns — he walks you through a complete three-phase framework covering market structure, supply and demand, and the liquidity hunt strategy that most retail education never touches.   What stood out to me was the backtesting component. Actually validating your edge with historical data before risking capital removed so much of the second-guessing I used to deal with. The weekly live sessions and direct mentorship from Lewis add a personal layer most courses never offer. If you're tired of trading on lagging indicators, Prosperity School 2026 by Lewis Kelly is worth checking out.   ➡️ Access at Instagram/Discord: @ FuckingSavagh 👈       submitted by     /u/AutoModerator     to     r/PracticalEcommerce       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PracticalEcommerce/comments/1wgl0d4/prosperity_school_2026_by_lewis_kelly_get/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T00:26:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T00:27:04.639Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa890d86508d45f3d2c822d"
+    },
+    "message_id": "reddit_t3_1wgl0ca",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AppleWhatShouldIBuy",
+    "username": "Chemical-Salad7455",
+    "title": "Should I get the base iPhone 17 or the 17 Pro or the 18 Pro?",
+    "text": "Should I get the base iPhone 17 or the 17 Pro or the 18 Pro?\n\nI’m upgrading from an iPhone 13 Pro Max and it is in such bad shape. I can’t even use the camera lol I have $120 Apple gift card and I’m planning on going to the Apple Store tomorrow to use it. I’m debating though should I go to the store tomorrow and get either the base 17 or 17 Pro if they still have it or just use it towards a pre-order to the 18 Pro what do you guys think?       submitted by     /u/Chemical-Salad7455     to     r/AppleWhatShouldIBuy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AppleWhatShouldIBuy/comments/1wgl0ca/should_i_get_the_base_iphone_17_or_the_17_pro_or/",
+    "score": 0,
+    "num_comments": 0,

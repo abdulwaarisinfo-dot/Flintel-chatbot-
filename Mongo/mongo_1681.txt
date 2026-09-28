@@ -1,0 +1,416 @@
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T06:43:27.989Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fae90f0819e6636a947a3"
+    },
+    "message_id": "reddit_t3_1wagr7u",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "SingleParents",
+    "username": "EveningPerfect6739",
+    "title": "Having a hard time moving on from dating a single mom",
+    "text": "Having a hard time moving on from dating a single mom\n\nThe internet makes a crazy deal about dating a single parent as someone without kids. We were high school sweethearts, split soon after, talked a little bit every six months while she had a son with one guy and started a family with another. We rekindled things four years ago with the goal in mind to move forward with buying a house and getting married.    Well she broke up with me after watching the kids grow up in that time. The connection was quickly lost then replaced the next week by another single parent. She still wants to be friends but I miss the kids a lot. One of the dads invited me to see his son at some point and hang out with him but being in my 30’s, are these moments the part that single men with no kids try to avoid? If so it’s really hard so I get it. I love seeing a mom be a mom. I don’t have a problem with single moms and would recommend it to anyone who wants to know what it’s like to have a family when you don’t have one yourself. But the hardest time is when they’re taken away from you because legally they can be. This affected the both of us because we grew up seeing our moms cycle through men as well.    She does want to remain friends but with boundaries.        submitted by     /u/EveningPerfect6739     to     r/SingleParents       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SingleParents/comments/1wagr7u/having_a_hard_time_moving_on_from_dating_a_single/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T06:42:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T06:43:28.191Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9fae90f0819e6636a947a4"
+    },
+    "message_id": "reddit_t3_1wagr6f",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "kneecap",
+    "username": "Pangur_Ban88",
+    "title": "An anarchist group is cautioning activists from buying tickets to the Kneecap gig in Greece because of the allegations of sexual assault against one of them.",
+    "text": "An anarchist group is cautioning activists from buying tickets to the Kneecap gig in Greece because of the allegations of sexual assault against one of them.\n\nsubmitted by     /u/Pangur_Ban88     to     r/kneecap       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/kneecap/comments/1wagr6f/an_anarchist_group_is_cautioning_activists_from/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T06:42:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T06:43:28.391Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9faeed91bc12a96dd6408e"
+    },
+    "message_id": "reddit_serp_1rzxe8a",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/softwarearchitecture/comments/1rzxe8a/migrating_from_a_shopify_store_to_a_custom_made/",
+    "text": "Migrating from a shopify store to a custom made ecommerce/prebuilt solution - Advice needed\n\nI hope this is the right place to ask this.   Hi. So I'm evaluating whether to build a custom ecommerce platform or use an opensource solution like saleor or vendure. The business is a meat delivery company with many physical stores and a significant amount of orders per day. Currently theyre on shopify but are now getting hurt by some customization and technical limits and higher costs as well. I need to migrate off and eventually become a multi vendor marketplace where other butcheries can sell through us.   I've spent a few days exploring options like saleor, vendure, oscar, and medusa. But I don't have ecommerce experience. I've worked in different domains and ecommerce has never been one of them. So what exactly are these platforms offering that I can't build myself for my use case?   When I look at what they provide:       Product catalog  with variants and attributes. This is just database models and a CRUD API. I can probably build this in a week or less with the help of cursor.      Shopping cart . Anonymous session or user session. Maybe not trivial but not complex either. Just database models and a CRUD API around it.      Checkout flow . Collect shipping info, apply any discounts/promotions, payment third-party integration, process payment. This just looks like a state machine. Also nothing complex.      Order management . Database with state machine and transitions, pagination, indexing etc      Promotions and discounts . Maybe a rule based engine, percentage or fixed amount, with some conditions. Slightly complex but again it is a well understood problem and classes could be defined to allow custom promotional classes for extension.      Admin dashboard.  Django Admin or a custom frontend dashboard. This is mostly just reading and updating.      Essentially it is just CRUD by with extra steps and states. I understand that the overall system design might get complicated, but what do they opensource solutions provide??   So what are these platforms making easy? Is it time saving on development hours or something else that I'm not aware of given I lack e-commerce experience?   Also for context, here's what our use case is:       Multi vendor marketplace . We want to onboard other butcheries and let them sell their product for a commission.      Delivery slots during checkout . We guarantee 3 hour delivery and want to block slots for each order based on whatever was selected. This also means handling this differently during a surge or a sale. We need slot capacity management and overbooking prevention, based on the customer's location at the time of order placement.      Variable weight orders . Meat orders are variable in nature so stock management is a bit confusing. 1 kg of lamb might be delivered as 1.05 kg. How we're handling this on Shopify is that we have virtually unlimited stock.      Anyone whos built an ecommerce platform from scratch, what was harder than expected? What did you wish you'd known before starting? What were all the problems you experienced?   And people who've used these open source solutions, which one did you use and why? How did the platform actually save you from building and was it worth it?   Our stack here is python so prebuilt solutions on other languages is something that will not be approved by stakeholders       submitted by     /u/Dethrot       [link]       [comments]",
+    "username": "Dethrot",
+    "subreddit_or_channel": "softwarearchitecture",
+    "posted_at": "2026-03-21T17:30:37+00:00",
+    "fetched_at": {
+      "$date": "2026-09-08T06:45:01.254Z"
+    },
+    "google_rank": 3,
+    "search_keyword": "custom marketplace integration",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-08T06:45:01.254Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9faefe1790aa25e94b8ce1"
+    },
+    "message_id": "reddit_t3_1wagsg8",
+    "topic_key": "recruiter",
+    "search_keyword": "recruiter",
+    "platform": "reddit",
+    "subreddit": "clinicalresearch",
+    "username": "colincampbell76",
+    "title": "By popular demand - a TL:DR for my previous question on the ethics of trials investigating non-surgical treatment of appendecitis",
+    "text": "By popular demand - a TL:DR for my previous question on the ethics of trials investigating non-surgical treatment of appendecitis\n\nThere was a lot of grumbling about my previous long question being too long.. So I’ll try squeeze the elephant into the matchbox here..    Its still quite long..   Surgery has been the standard first line of treatment for appendicitis for well over 100 years - and still is. Antibiotics came along in the 1940 and immediately became an important tool in the surgeons toolbox for helping to treat appendicitis. Initially there was optimism among surgeons that antibiotics could be used as an alternative to surgery. Trials in the 1950’s determined that there was a high long term(5 yrs) recency rate and a significant risk of missed neoplasm, especially in older patients. So surgery continued to be the ‘gold standard’ treatment to today, and antibiotics only used is specific cases where surgery was not available or risky..   In 2006 there was a RCT trial in Sweden that reported a low (14% to 15%) reoccurrence rate and ignored the missed neoplasm risk.. This was widely ridiculed in the medical literature at the time and has since been largely discredited as now seen as hopelessly over-optomistic in real-world conditions/fundings.   However - a certain small minority got very enthusiastic about the possibility of using antibiotics as an alternative to surgery - it really struck a chord in some it seems - so the Sweden trials have spawned several recent large RCT comparing surgery to IV antibiotic treatment of appendicitis. The largest of these, the CODA trial in the US recruited over 1000 patents.   These trials have found nothing new - a high rate of reoccurrence, about 50% by year 5, and a serious risk of missed neoplasm.. However - this is where things start to get a bit sketchy..   These trials had to recruit participants. To recruit participants these trials suggest the reoccurrence rate is between 15% and 25%. They don’t mention the missed neoplasm and subsequent appendix cancer risk. One current paediatric trial in the UK found a 60% reoccurrence rate at 6 months in their feasibility trial then went in to start their main trial involving hundreds of children by again telling parents there was a 15% risk of reoccurrence..    A 2026 retrospective study of over 1000 appendicitis patients in Glasgow found that in about 1 in 30 cases the appendicitis was caused by a missed neoplasm in the appendix.. Normaly these neoplasms can’t be seen in scans and only found in pathology after appendectomy. They also found a 43% reoccurrence rate of appendicitis by year 3, and suggested a 50% reoccurrence rate by year 5. The study concludes;    “   Conclusion    - Antibiotic treatment of appendicitis is associated with high recurrence and risk of missed neoplasms. Appendicectomy is safe, with low rates of significant complication. When offering nonoperative management for appendicitis, patients should be informed about the risk of recurrence and missing sinister pathologies.”    Looking at the scripts used by recruiters in the RCT’s - a reoccurring theme in these trials is the downplaying of the risks - resulting in serious harm and death. There is a ‘informed consent’ issue here..   The vast majority of surgeons seem to regard the promotors of these trials as “evangelical” about the use of antibiotics as an alternative to surgery for treating uncomplicated appendicitis.. There have been cases where misinformed surgeons have refused surgery to a patient with uncomplicated appendicitis, telling the patient “surgery to treat appendicitis is a mistake if the past and antibiotics is better and the future of treatment..”. I am one of those cases - and it turned out much later I had a tumour in my appendix causing my appendicitis - with dire consequences for me.. This drew my attention to the issue..   I understand there are risks to be managed in all clinical research - but my question to all you Clinical Researchers is - how are these trials getting past ethics committees?       submitted by     /u/colincampbell76     to     r/clinicalresearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/clinicalresearch/comments/1wagsg8/by_popular_demand_a_tldr_for_my_previous_question/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T06:45:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T06:45:18.161Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9faefe1790aa25e94b8ce2"
+    },
+    "message_id": "reddit_t3_1wagsec",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "tableau",
+    "username": "haligma",
+    "title": "help practicing beginnner noob",
+    "text": "help practicing beginnner noob\n\nim following  this yt tutorial  to learn visualizations on tableau, but ive run into a problem. i followed exactly what this dude did in his tutorial, yet i cant get the same results on my map.    in this case, the postal codes of all states on this map are supposed to show up as dots, but it dosnt work for me? i tried changing the map tyoe to the one with circles, but it doesnt let me, though its not the same for him. im guesssing its a new update thing? how do i get around this? i tried changing the size of the circles & not only does it not work, the size symbol for me is a bit different than for him, though im not sure whether thats also an update thig or not.       submitted by     /u/haligma     to     r/tableau       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/tableau/comments/1wagsec/help_practicing_beginnner_noob/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T06:44:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T06:45:18.430Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9faefe1790aa25e94b8ce3"
+    },
+    "message_id": "reddit_t3_1wagsdd",
+    "topic_key": "checkout",
+    "search_keyword": "checkout",
+    "platform": "reddit",
+    "subreddit": "X_VPN",
+    "username": "Plenty-Result-35",
+    "title": "Make Sure You're Copying the Right Cheat Sheet on X-VPN's Back-to-School Price",
+    "text": "Make Sure You're Copying the Right Cheat Sheet on X-VPN's Back-to-School Price\n\nSome of you are still copying off the kid who didn't do the homework. Here are the right answers.   X-VPN teams up with Student Beans and designs special bonus for students (not for beans)   Start from  X-VPN's own landing page , which routes you straight into BeansID verification, get verified, get the code, redeem it at checkout. You can also start the procedure from our brand page on Student Beans.   No matter you are suck at math or not, this is the math that you should learn:    2-year plan      Student Beans: $2.59/mo (We offer you 3 bonus months! Almost a semester!   CAUTION:   We won't prolong your study time.)   Regular checkout: $2.99/mo      1-year plan      Student Beans: $3.04/mo, 75% off   Regular checkout: $3.99/mo, 67% off (Though some of you might like 67, your wallet don't.)     Sad thing to tell: this only works for verified students in the UK, US, Australia, Canada, Germany, or France right now. If you're outside those six, the verification just won't go through yet, 67 is also good!    TL;DR      Student Beans beats the regular checkout price on both plans   2-year: $2.59/mo (Student Beans, bonus months included) vs $2.99/mo (regular)   1-year: $3.04/mo, 75% off (Student Beans) vs $3.99/mo, 67% off (regular)   Only live for verified students in UK, US, Australia, Canada, Germany, France right now   Verification runs through BeansID via  X-VPN's landing page , then redeem the code at checkout         submitted by     /u/Plenty-Result-35     to     r/X_VPN       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/X_VPN/comments/1wagsdd/make_sure_youre_copying_the_right_cheat_sheet_on/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T06:44:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T06:45:18.674Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9faefe1790aa25e94b8ce4"
+    },
+    "message_id": "reddit_t3_1wagscj",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "kolhapur",
+    "username": "Neither-Baseball18",
+    "title": "I am an interior designer",
+    "text": "I am an interior designer\n\nHi everyone! I am an interior designer offering freelance design and execution support for residential and commercial projects.   Here’s what I can help you with:   - Complete interior design for residential & commercial spaces   - AutoCAD working drawings — layouts, furniture, electrical, ceiling plans, etc.   - SketchUp 3D modelling with realistic renders using Enscape/D5   - 3D walkthroughs and animations for client presentations   - Moodboards for material selection & design development   - furniture working drawings and custom furniture design.   - Site execution and coordination   I have an ongoing 4 BHK residential site going on in Kolhapur.   If you’re an architect, interior designer, contractor, or client looking for freelance designer for working drawings, 3D visualization, or execution assistance, feel free to reach out. I’d be happy to discuss your project and see how I can help.       submitted by     /u/Neither-Baseball18     to     r/kolhapur       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/kolhapur/comments/1wagscj/i_am_an_interior_designer/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T06:44:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T06:45:18.901Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9faf08f0819e6636a947a5"
+    },
+    "message_id": "reddit_t3_1wagsgn",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "proxyjapanservice",
+    "username": "JDM-Parts-Expert-JP",
+    "title": "HA1/HA2/HA3/HA4 Honda Acty EN07A distributor 30105-PZ3-006",
+    "text": "HA1/HA2/HA3/HA4 Honda Acty EN07A distributor 30105-PZ3-006\n\nIn Japan, rebuilt parts are divided into dealer-certified and aftermarket types. Dealer-certified parts are reliable, and specific parts are replaced with brand-new ones. Aftermarket rebuilt parts often use Chinese components and are mainly sold on Yahoo! Auctions and Mercari, and are also kept in stock and sold on eBay.   Dealer-certified parts are generally not available to the general public, so you have to order them through a parts distributor or a Honda shop. A neighbor initially asked me to help with maintenance, so I prepared a maintenance kit, but then they changed their mind and said they wanted a rebuilt part. So, I had it rebuilt by having all internal bearings and wiring replaced with brand-new ones. It cost 17,000 yen plus 1,500 yen for return shipping, totaling 18,500 yen.   I used to ship to the US as well, but I stopped after import taxes were introduced. However, looking at it recently, it seems like people are buying them for around 60,000 yen, so I'm considering listing this on eBay too.   With eBay, under Japan's tax system, import taxes are applied even to the shipping cost, which makes it extra expensive, and the fees also go up depending on the total amount, so it gets pretty costly.   I ended up with leftover maintenance kits. I'm thinking of selling them on eBay or somewhere since they look like they'd sell for a good price. Sambar igniters seem to have a pretty high profit margin, so I ordered a few extra and plan to list them soon.       submitted by     /u/JDM-Parts-Expert-JP     to     r/proxyjapanservice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/proxyjapanservice/comments/1wagsgn/ha1ha2ha3ha4_honda_acty_en07a_distributor/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T06:45:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T06:45:28.716Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9faf08f0819e6636a947a6"
+    },
+    "message_id": "reddit_t3_1wagse6",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "HeadphoneAdvice",
+    "username": "Bumblebeetuna07",
+    "title": "Would a dongle improve the sound of a Senheiser HD560s? If so, is it worth the money?",
+    "text": "Would a dongle improve the sound of a Senheiser HD560s? If so, is it worth the money?\n\nI have a pair of senheiser HD560s that I plug directly into my pc to use for gaming and listening to music. I’m curious if a cheap dongle would improve the sound at all?    I have been looking at the fiio KA11 dongle for $35 because I use the headphones so much. Or would even a 1v Apple dongle improve the sound? I’d be open to buying a dac/amp like the fiioK11 but so many other forums say it’s not worth it for the senheiser HD560S        submitted by     /u/Bumblebeetuna07     to     r/HeadphoneAdvice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HeadphoneAdvice/comments/1wagse6/would_a_dongle_improve_the_sound_of_a_senheiser/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T06:44:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T06:45:28.922Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9faf09f0819e6636a947a7"
+    },
+    "message_id": "reddit_t3_1wagsdv",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "SustainableFashion",
+    "username": "manupc2002",
+    "title": "Gymwear made of natural fibers",
+    "text": "Gymwear made of natural fibers\n\nHello community!   I am exploring the opportunity of gym wear made of natural fibers. If you go to the gym often your opinion matters to me and for this project.    I give you some context and the link attached to it. If you have any feedback on it feel free to share it.   Most sportswear today is made almost entirely from synthetic fibers - polyester, spandex - which shed microplastics with every wash and wear. I’m exploring a gym wear line made instead from natural fibers (organic cotton, merino wool), and I’d like to know your honest take.   It’s a 6-8 minute survey, completely anonymous, and there are no right answers - “I wouldn’t buy this” is just as useful to me as “I love it.”    https://delicate-bush-2a86.naturalsportswear.workers.dev/    Thanks so much, this genuinely helps to shape what actually gets made.       submitted by     /u/manupc2002     to     r/SustainableFashion       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SustainableFashion/comments/1wagsdv/gymwear_made_of_natural_fibers/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T06:44:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T06:45:29.127Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9faf3391bc12a96dd6408f"
+    },
+    "message_id": "reddit_serp_1o81mwv",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/shopify/comments/1o81mwv/best_shopify_app_to_centralize_marketplace_orders/",
+    "text": "best Shopify app to centralize marketplace orders + 3PL fulfillment workflow\n\nHi everyone,   I run a brand in the  beauty / personal care / health  niche, and I’m designing a setup where  Shopify is the single operational hub . I want it to serve both as my direct‐to‐consumer store and as the central aggregator for orders from various marketplaces (eBay, Etsy, Cdiscount, Temu, Bol, etc.).   The ideal workflow I aim for:     Marketplace orders import into Shopify.   Shopify forwards those to my  3PL partner  for fulfillment.   When the 3PL marks an order as shipped + provides tracking, it updates Shopify.   Shopify then sends tracking back to the originating marketplace and updates order status there.     Gonna needs inventory sync too.   So the flow is:  marketplaces → Shopify → 3PL → Shopify → marketplace .   so, if you can suggest solutions for:     Shopify Apps (or integrations) that reliably handle  multi-marketplace order sync + stock sync + tracking feedback .   Real experiences (good or bad) using such apps in Europe and/or with marketplaces like Cdiscount, Bol, etc.     I don't care about manage catalog or attributes, i prefer to do that manually in every specific marketplace, because every marketplace has their fields and categories...   Has anyone built a similar architecture in this sector? What tools did you pick and why, and what pitfalls did you hit?   in simple words, i just want Shopify to be my central b2c hub for oders so i can automate them with the 3PL   Thanks any insights will help a lot.       submitted by     /u/Carmico       [link]       [comments]",
+    "username": "Carmico",
+    "subreddit_or_channel": "shopify",
+    "posted_at": "2025-10-16T09:32:06+00:00",
+    "fetched_at": {
+      "$date": "2026-09-08T06:46:11.625Z"
+    },
+    "google_rank": 7,
+    "search_keyword": "custom marketplace integration",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-08T06:46:11.625Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9faf45f0819e6636a947a8"
+    },
+    "message_id": "reddit_t3_1wagt77",
+    "topic_key": "nike",
+    "search_keyword": "Nike",
+    "platform": "reddit",
+    "subreddit": "KobeReps",
+    "username": "Leather-Maybe-3938",
+    "title": "Nike Air Max 95",
+    "text": "Nike Air Max 95\n\nHow do these look? I’m not really good at spotting flaws on shoes.       submitted by     /u/Leather-Maybe-3938     to     r/KobeReps       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/KobeReps/comments/1wagt77/nike_air_max_95/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T06:46:19Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T06:46:29.810Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9faf47f0819e6636a947ae"
+    },
+    "message_id": "reddit_t3_1wagt3b",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PlayArtsKai",
+    "username": "simontheclarke",
+    "title": "Red Gray Fox and Red Raiden",
+    "text": "Red Gray Fox and Red Raiden\n\nLooking to sell a Red Gray Fox (opened, some paint peel on one side of the sword) and a Red Variant Raiden (brand new and sealed). Can ship to most places at buyers expense from Australia. Can combine shipping if buying both together.   Shoot me a message and make an offer!       submitted by     /u/simontheclarke     to     r/PlayArtsKai       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PlayArtsKai/comments/1wagt3b/red_gray_fox_and_red_raiden/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T06:46:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T06:46:31.092Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9faf47f0819e6636a947af"
+    },
+    "message_id": "reddit_t3_1wagt2b",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CarsIndia",
+    "username": "ManishArora7901",
+    "title": "Classic Corvette Buy In India?",
+    "text": "Classic Corvette Buy In India?\n\nRecently saw this gorgeous car in Vegas on a trip.    Can one buy a Classic Corvette C3 in India? If so where and how?    What conditions might such a car be in and what might be an estimated price?        submitted by     /u/ManishArora7901     to     r/CarsIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CarsIndia/comments/1wagt2b/classic_corvette_buy_in_india/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T06:46:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T06:46:31.308Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9faf47f0819e6636a947b0"
+    },
+    "message_id": "reddit_t3_1wagt05",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "askteddit",
+    "username": "bapunpahari",
+    "title": "Performance marketing salary in Bangalore",
+    "text": "Performance marketing salary in Bangalore\n\nCan you share approx Performance marketing salary in Bangalore? Who knows Meta, Google, and LinkedIn ads? Experience 5 years       submitted by     /u/bapunpahari     to     r/askteddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/askteddit/comments/1wagt05/performance_marketing_salary_in_bangalore/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T06:45:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T06:46:31.526Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9faf47f0819e6636a947b1"
+    },
+    "message_id": "reddit_t3_1wagszz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "FitnessTrackers",
+    "username": "Straight-Pin4761",
+    "title": "Launching Fitness Tracker",
+    "text": "Launching Fitness Tracker\n\nGym people: If you could build the perfect screenless fitness tracker, what would you actually want it to do?   Hey everyone,  I work as a VP at a consumer electronics brand (can’t disclose the brand just yet), and we’re in the final stage of launching a  screenless fitness/health tracker .  Think along the lines of WHOOP / Noise REP  no screen, minimal distraction, worn 24/7 , with a pretty serious focus on sensors and health/fitness data.  I’m deliberately not posting the full feature list yet because I actually want to hear from people who  train regularly , rather than build something based on a generic product checklist.  We’re currently figuring out:   1. What should the app actually tell you?   Obviously things like HR, HRV, sleep, recovery, activity, workout tracking etc. are expected.  But what would make you open the app every morning and think:   “Okay, THIS is actually useful.”   For example:  Better recovery/readiness recommendations?  Training load / overtraining warnings?  More useful workout analysis?  Sleep → workout recommendations?  HR zone analysis?  Progress over weeks/months rather than just daily scores?  Nutrition/hydration integration?  Something completely different?   2. What do existing trackers get wrong?   If you’ve used WHOOP, Noise REP, Oura, Fitbit, Garmin, Amazfit, etc., what is the one thing that annoys you?  Could be anything inaccurate data, useless insights, bad app UX, subscription model, charging, comfort, workout tracking, notifications, whatever.   3. What would you actually pay?   This is where I’m genuinely stuck.  Similar screenless trackers seem to sit roughly in the  ₹5k–₹10k+ range , but we’re trying to decide where a new brand should sit.  Would you rather have:   A. ₹4,999–₹5,999, affordable, buy it and own it    B. ₹6,999–₹7,999, more premium hardware + better app    C. ₹9,999+ , genuinely premium positioning   And personally, how much does  “no mandatory subscription”  influence your decision?   4. One last thing - branding.   We currently have three colour options:  ⚫ Black  ⚪ Silver  🔵 Blue  Any callout that may catch the eye.  I’m especially interested in answers from people who  actually lift/run/cycle/train regularly , rather than casual smartwatch users.  I’ll share some pictures of the  actual hardware + app UI  in the comments once I get the internal approval.  And yes, we’re trying to lock the branding this week, so  roast it if you have to 😂   Would genuinely appreciate brutally honest feedback.       submitted by     /u/Straight-Pin4761     to     r/FitnessTrackers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FitnessTrackers/comments/1wagszz/launching_fitness_tracker/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T06:45:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T06:46:31.741Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9faf591790aa25e94b8ce5"
+    },
+    "message_id": "reddit_t3_1wagtab",
+    "topic_key": "conversion optimization",
+    "search_keyword": "conversion optimization",
+    "platform": "reddit",
+    "subreddit": "digitalmarketing201",
+    "username": "ManiWill_Digital",
+    "title": "Conversion Optimization UK",
+    "text": "Conversion Optimization UK\n\nTurn more website visitors into customers with conversion optimization from  ManiWill  Digital Agency. Improve user experience, reduce friction, and create a website journey designed to encourage enquiries, purchases, and leads.       submitted by     /u/ManiWill_Digital     to     r/digitalmarketing201       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/digitalmarketing201/comments/1wagtab/conversion_optimization_uk/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T06:46:27Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T06:46:49.055Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9faf591790aa25e94b8ce6"
+    },
+    "message_id": "reddit_t3_1wagtaa",
+    "topic_key": "dentist",
+    "search_keyword": "dentist",
+    "platform": "reddit",
+    "subreddit": "WebsiteSEO",
+    "username": "Lucky_BAGO",
+    "title": "Is AEO/GEO about to become the Apple of search?",
+    "text": "Is AEO/GEO about to become the Apple of search?\n\nI’m starting to think AEO/GEO could be the “Apple” of search.   Apple’s big advantage was making technology incredibly simple. Instead of asking people to understand the complexity behind it, they made the experience intuitive. You didn’t need to know how it worked. You just needed to know what you wanted.   AI answer engines are doing something similar with information.   People don’t necessarily want to search through 10 blue links, open five different websites, compare everything, and figure it out themselves. They want to ask a question and get the answer immediately.   Now think about this:   You’re a doctor, dentist, or lawyer in a big city, and there are hundreds of professionals offering the same service.   But someone asks AI: “Who are the best 5 doctors/dentists/lawyers for this?”   AI gives them five names.   The question is no longer just:   “Can people find me?”   It becomes:   “Will AI recommend me?”   And if your name consistently appears among those five recommendations, that could become incredibly valuable.   That’s where I see AEO/GEO heading: not just helping brands rank, but helping them become the answer AI gives.   So who is going to own those five spots when AI becomes the first place people go for recommendations?   Just a reminder of the shift we’re living through right now.   Whoever adapts survives. Whoever doesn’t gets left behind. 😉   The shift is already happening…   Helping companies become the answer AI gives!       submitted by     /u/Lucky_BAGO     to     r/WebsiteSEO       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WebsiteSEO/comments/1wagtaa/is_aeogeo_about_to_become_the_apple_of_search/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T06:46:27Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T06:46:49.257Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9faf6591bc12a96dd64090"
+    },
+    "message_id": "reddit_serp_1vqm9y3",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/ShopifyeCommerce/comments/1vqm9y3/marketplace_connect_disaster/",
+    "text": "Marketplace Connect Disaster\n\nIs anyone else unable to list via Marketplace Connect due to this eBay photo error glitch? It's really bad now it's been nearly 5 days and I can't list anything until it's sorted out, support have given no timeframe as to when it'll be fixed. eBay have had issues with uploading images recently but it has been sorted on their main website (Listings can be created and images uploaded) but Marketplace Connect is still not working       submitted by     /u/Covrt       [link]       [comments]",
+    "username": "Covrt",
+    "subreddit_or_channel": "ShopifyeCommerce",
+    "posted_at": "2026-08-17T08:17:43+00:00",
+    "fetched_at": {
+      "$date": "2026-09-08T06:47:01.594Z"
+    },
+    "google_rank": 10,
+    "search_keyword": "custom marketplace integration",
+    "client_id": "Flintel",

@@ -1,0 +1,416 @@
+    "_id": {
+      "$oid": "6aad26aa660c608403978ca8"
+    },
+    "message_id": "reddit_t3_1wjo4or",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "pwnhub",
+    "username": "technadu",
+    "title": "Three researchers used Claude to chain an image-decoder RCE with an SSO flaw and reach OpenAI’s private code repo",
+    "text": "Three researchers used Claude to chain an image-decoder RCE with an SSO flaw and reach OpenAI’s private code repo\n\nThis is a much more interesting story than “AI hacked OpenAI.”   Researchers at  Hacktron AI  found two vulnerabilities that became significantly more serious when chained together.   The first was an RCE involving  libheif , the image-processing library used by Discourse, which powers OpenAI's developer forum.   Full technical breakdown below.    https://www.technadu.com/researchers-used-anthropics-claude-to-breach-openais-internal-systems/637764/    The second involved  SSO .   Put them together, and the researchers say they were able to move from the forum to compromising an  OpenAI employee's ChatGPT account , then reach OpenAI's private software repository.   They could apparently  read internal code and propose changes .   To prove the access without unnecessarily touching sensitive code, they used the compromised employee's connected coding assistant to open  one benign pull request  in an internal repository.   Then they stopped and reported it.   OpenAI patched the issue and paid a bug bounty.   One thing that stood out to me is what the researchers said about the resources required:     “We're just three guys with Claude and Codex subscriptions.”     They reportedly spent  less than $3,000 in AI tokens  while developing the exploit chain.   That's probably the more important discussion here.   AI didn't magically discover one giant “hack OpenAI” vulnerability. It helped researchers work through vulnerabilities and combine weaknesses across different trust boundaries until they had a viable path:    image upload → RCE → SSO weakness → employee account → connected development tooling → private repository    That kind of chaining has traditionally required a lot of manual research and specialist time.   If AI substantially reduces that work, then the defender's problem isn't necessarily a flood of brand-new vulnerability classes.   It may simply mean  attackers can explore more paths and test more combinations of existing weaknesses in the same amount of time.    There's also a practical takeaway for anyone self-hosting Discourse.   The researchers warn that older Docker images may still contain the vulnerable dependency. Their recommendation is to rebuild the installation rather than assuming a web-interface update replaced everything underneath it.   For the security researchers here:    Are AI coding agents actually changing vulnerability research, or are they mainly compressing the time and cost needed to do work skilled researchers were already capable of doing?    The exploit chain is what makes this one worth reading.   A vulnerability in an image-processing dependency might initially look like one problem. An SSO weakness looks like another.   But chained together, the researchers say they reached an employee's ChatGPT account and eventually OpenAI's private repository.   This was  responsible security research , not a malicious intrusion. Hacktron reported the vulnerabilities, OpenAI fixed the issue and paid a bounty, and the researchers limited their repository demonstration to a benign PR.   The bigger question for me is the economics:  if a small research team can use off-the-shelf AI subscriptions to investigate and chain vulnerabilities for a few thousand dollars, how much does that change the number of viable exploit paths attackers can afford to explore?        submitted by     /u/technadu     to     r/pwnhub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pwnhub/comments/1wjo4or/three_researchers_used_claude_to_chain_an/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:55:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:55:22.620Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad26ab660c608403978cab"
+    },
+    "message_id": "reddit_t3_1wjo4ok",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "redditonwiki",
+    "username": "Careful-Champion-411",
+    "title": "AITA for calling the cops on a family that was using the chairs and umbrellas I left on the beach?",
+    "text": "AITA for calling the cops on a family that was using the chairs and umbrellas I left on the beach?\n\nsubmitted by     /u/Careful-Champion-411     to     r/redditonwiki       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/redditonwiki/comments/1wjo4ok/aita_for_calling_the_cops_on_a_family_that_was/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:55:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:55:23.271Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad26ab660c608403978cac"
+    },
+    "message_id": "reddit_t3_1wjo4od",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Meowi",
+    "username": "Lonely_Strangerr",
+    "title": "[Spin] Your lantern spectrum",
+    "text": "[Spin] Your lantern spectrum\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Lonely_Strangerr     to     r/Meowi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Meowi/comments/1wjo4od/spin_your_lantern_spectrum/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:55:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:55:23.486Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad26ab660c608403978cad"
+    },
+    "message_id": "reddit_t3_1wjo4oc",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "troll_defuse",
+    "username": "ToMistyMountains",
+    "title": "A web of lies is ready. Can you find the truth? 👇",
+    "text": "A web of lies is ready. Can you find the truth? 👇\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/ToMistyMountains     to     r/troll_defuse       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/troll_defuse/comments/1wjo4oc/a_web_of_lies_is_ready_can_you_find_the_truth/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:55:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:55:23.700Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad26ab660c608403978cae"
+    },
+    "message_id": "reddit_t3_1wjo4o7",
+    "topic_key": "how is sentiment around notion changing over the last 30 days",
+    "search_keyword": "Notion",
+    "platform": "reddit",
+    "subreddit": "buddhiststudies",
+    "username": "soohgangho",
+    "title": "How Does Emptiness Follow from Causal Dependence?",
+    "text": "How Does Emptiness Follow from Causal Dependence?\n\nHow Does Emptiness Follow from Causal Dependence?   The Siderits-Westerhoff Debate on Causation, Conceptual Construction, and Svabhāva   I would like to introduce a philosophical problem that arises between Abhidharma and Madhyamaka.  Abhidharma traditions hold that dharmas arise in dependence on causes and conditions while maintaining that ultimately real dharmas possess svabhāva, or intrinsic nature. Madhyamaka, by contrast, argues that whatever arises in dependence on causes and conditions lacks svabhāva. But does the fact that something is “produced from causes” really entail that it “lacks intrinsic nature”? This is precisely the issue that Mark Siderits and Jan Westerhoff have debated over many years. Siderits taught in the Department of Philosophy at Seoul National University, and Westerhoff currently works on Buddhist philosophy at the University of Oxford.  The first question is how svabhāva should be understood. If Abhidharma svabhāva is taken simply to mean “existing entirely on its own, without depending on anything else,” the debate ends before it begins, since anything produced from causes obviously lacks svabhāva in that sense. But the Abhidharma notion of svabhāva as explained by Siderits is closer to “a thing’s own nature, not borrowed from something else.” The heat of fire belongs to fire itself, whereas if water becomes hot because of fire, that heat is a property the water has acquired from elsewhere. Abhidharma can therefore hold that a dharma arises from causes and nevertheless possesses its own nature in this sense.  The issue is thus not, “How can something dependent on causes have svabhāva?” but rather, “Must the nature of something produced from causes itself be a nature borrowed from elsewhere?” Madhyamaka has, broadly speaking, two possible routes for showing this: it can argue either that the nature in question is borrowed from elsewhere, or that it is conceptually constructed. Siderits’s Principle P in 2004 mainly follows the second route, while the red-quartz discussion considered below tests the first (Siderits 2004, pp. 394–396, 411–413; Siderits 2014).  One important precursor to this problem is Richard Hayes’s 1994 criticism. Siderits summarizes Hayes’s point as follows. A cloth’s dependence on threads and a mental event’s dependence on the meeting of a sense faculty with an object are not the same kind of dependence. The first is dependence on parts or materials; the second is causal dependence. Even if an argument succeeds in showing that something composed of parts lacks svabhāva, it is a separate question whether the same argument can simply be applied to everything that arises causally. Siderits largely accepts this criticism but thinks that an argument capable of filling the gap can be found in the critique of causation in Chapter 1 of the Mūlamadhyamakakārikā (Siderits 2004, pp. 399–401).  In his 2004 paper, Siderits offers a modern reconstruction of the critique of causation in Chapter 1 of the Mūlamadhyamakakārikā. When the cause exists, the effect does not yet exist; when the effect exists, the cause has already passed away. Where, then, is the relation of “producing” that is supposed to connect cause and effect? The argument relies on the premise that for a relation to obtain, both relata must in some sense be available. When the effect does not yet exist, the cause cannot stand in a relation to a nonexistent thing. Siderits compares this to a real person being unable to place a garland made of sky-flowers on anything.  And yet we connect a present cause with a not-yet-existent effect causally. What fills the gap, on his account, is our expectation that “an effect of this sort will soon occur.” One might instead suppose that past, present, and future causes and effects all exist together, but this moves toward the sort of eternalist picture criticized by Madhyamaka (Siderits 2004, pp. 408–409). Siderits therefore concludes that conceptual activity on our part enters into causal relations.  But the emptiness of dharmas themselves does not immediately follow. Even if a causal relation is conceptually constructed, it does not follow that the two relata—the cause and the effect—are themselves conceptually constructed. Sherlock Holmes may be fictional, but London does not thereby become fictional.  This is why Siderits introduces what he calls Principle P. Principle P is meant to go beyond the claim that causal relations are conceptually constructed and to challenge the Abhidharma thesis that a causally produced dharma may still possess svabhāva. The idea is that if something can have a certain property only by standing in a particular relation, and that relation is conceptually constructed, then the property must likewise be conceptually constructed (Siderits 2004, p. 411). Being a father, for example, cannot be instantiated without the relation to a child.  There is, however, an important difference between cases such as fathers or chariots and ultimately real dharmas. A person can lose the relational property of being a father without the person thereby ceasing to exist. But an ultimately real dharma, as Siderits reconstructs the Abhidharma view, has no further substrate left over apart from its nature. What is ultimately real is exhausted by its intrinsic nature, and that nature must be svabhāva rather than something conceptually constructed.  Therefore, if “having arisen from a cause” enters essentially into what the dharma is, and if the causal relation is conceptually constructed, then the dharma’s nature is also conceptually constructed. It therefore cannot be svabhāva and cannot be ultimately real (Siderits 2004, pp. 398, 411–413). In 2004, Siderits uses examples such as gandharvas and Sherlock Holmes to explain how the status of a property attribution can track the status of the relation on which it depends. This is precisely the point that he reexamines ten years later.  In 2009, Westerhoff accepts Principle P and adds the idea of a “causal field.” When an explosion occurs, many factors are present—a spark, oxygen, gasoline, pressure, and so on—but we group some of them together as “the causes of the explosion” because we take the explosion as the effect relative to which the group is defined.  Westerhoff does not claim that individual items such as the spark or gasoline would cease to exist if the effect did not exist. What depends on the effect is not the existence of those items as such, but their status as members of a single “causal bundle” (Westerhoff 2009, p. 98). This idea of mutual dependence between cause and effect later becomes important again in his 2023 account of the difference between Humean causation and Madhyamaka.  In 2014, Siderits first tests the route of “borrowed nature.” To say that a nature is borrowed from elsewhere, we need to be able to distinguish the explanation of why the thing came into existence from the explanation of why it has that particular nature. Consider red quartz. We can distinguish why the quartz itself came into existence from why the quartz became red, so redness can be described as a property the quartz acquired from other conditions.  But in a Sautrāntika-style picture, an ultimately real dharma is not a substrate bearing several properties; it is closer to a momentary event in which a single property occurs. If the dharma itself is simply “an occurrence of redness for one moment,” it becomes difficult to separate why that dharma arose from why that dharma is red. The route from “it arose from causes” to “its nature is borrowed from elsewhere” is then blocked (Siderits 2014).  Siderits adds another assumption about causation. A Sautrāntika-style opponent can understand causation not as a necessary productive power but merely as a regular pattern: events of one type are regularly followed by events of another type. From this Humean standpoint, even if Madhyamaka objects that “there is no special power in the cause that produces the effect,” the opponent can reply: “I never claimed that there was such a power. There is only regular succession.”  The nature of a dharma is simply what kind of property it is, while causation is only the regular sequence among events of those kinds. There is therefore no obvious reason to accept from the start that the causal fact of “where it came from” must be included in the very nature of the dharma.  For this reason, Siderits in 2014 concedes that his own Principle P may beg the question against such an opponent. Principle P works only if “the fact that the dharma arose from a cause” is included in the dharma’s nature, but this is exactly what the opponent rejects. Siderits does not claim that this strategy has clearly succeeded, and he expresses doubt about whether Madhyamaka texts contain an argument that decisively refutes a Humean theory of causation (Siderits 2014, p. 448).  This does not mean that Madhyamaka is thereby shown to be false. Siderits’s point is rather that Madhyamaka may not possess a single master argument capable of refuting every opponent at once; different reductio arguments may be required depending on the opponent’s premises.  Westerhoff takes up the problem again in 2023 but diagnoses the bottleneck somewhat differently. Abhidharma can grant that wholes such as chariots depend on mental construction. Since it already accepts projection or construction in the relation between wholes and parts, Principle P can be applied there without great difficulty. What Abhidharma does not grant is that the causal order among dharmas is itself made by the mind.  The real task, then, arises prior to Principle P: why should we think that causal relations themselves contain a contribution from mind or conceptualization? (Westerhoff 2023, nn. 34, 38).  An important question immediately reappears. Did Siderits not already argue in 2004 that causes and effects do not coexist in the same moment and that, if only the present exists, causation would have to connect something presently existent with something not yet existent? Westerhoff acknowledges that this argument is not sufficient against the Sautrāntika.  The claims that cause and effect do not occur in the same moment and that only the present exists are premises the Sautrāntika can already accept, while nevertheless recognizing a mind-independent regular order. Those two premises alone therefore do not yet show that causal relations are conceptually constructed (Westerhoff 2023, pp. 9–10).  To strengthen the argument, Westerhoff turns to contemporary theories of causation. The mere fact that “B repeatedly follows A” does not by itself tell us whether A is genuinely a cause of B. Streets are often wet on days when many people carry umbrellas, but umbrellas do not make the streets wet.  To speak of causation, we appear to need judgments such as: “What would happen to B if A were removed?” or “Would B still have occurred if A had not occurred?” These are interventionist and counterfactual judgments. In other words, “these things occur together” is not the same as “this happens because of that.”  Westerhoff argues on this basis that mere regularity has difficulty fully explaining the causal concept we actually use. A Siderits-style response might be: “Perhaps the world simply exhibits such regularities, and there is nothing further to explain.” Westerhoff’s reply is to ask whether something that cannot account at all for interventionist or counterfactual judgments should still be called causation (Westerhoff 2023, p. 12).  Yet this still does not immediately yield the conclusion that “causation is made by the mind.” Westerhoff’s argument also depends on further commitments: that intervention and counterfactual dependence are essential to the concept of causation, that these elements are conceptually added to mere regularities, and that “having arisen from a cause” belongs to the nature of the object. An opponent may instead argue that nature itself contains real causal structure over and above regularity.  Westerhoff then turns to the problem of time. Even a Humean theory of causation ultimately requires an objective temporal ordering in which “A is earlier and B is later.” But the critique of time in Chapter 19 of the Mūlamadhyamakakārikā is not merely an attack on the claim that time exists independently.  If the present depends on the past and future, then all three would seem to have to be available together, yet the past no longer exists in the present. Conversely, if the present does not depend on the past and future, it becomes difficult to explain the temporal passage by which the future becomes present. In either case, Westerhoff argues, it is difficult to fix time as an independent “thing” (Westerhoff 2023, pp. 13–14).  Taken one step further, Westerhoff’s temporal argument can also lead to a problem of individuation. If a Sautrāntika dharma is understood as “a single property occurring for one moment,” what distinguishes two momentary dharmas instantiating the same property as two numerically different individuals?  To explain why “this redness” differs from “that redness,” one may have to appeal to spatiotemporal location—when and where each occurrence took place. The question then returns whether that spatiotemporal location itself is established independently of mind. It is safer, however, to regard this not as Westerhoff’s own central argument but as a further problem of individuation that can be developed from his argument about time.  The present state of the debate can be summarized roughly as follows. Principle P, proposed by Siderits in 2004, became difficult by 2014 to use as a decisive bridge against a Humean Sautrāntika opponent, and the Madhyamaka claim that causal relations are themselves conceptually constructed still requires further argument.  Westerhoff attempts to strengthen the case by bringing in contemporary theories of causation and arguments about time, but his own reasoning also rests on a number of assumptions about causal concepts and temporality. The broader question that remains is whether, within a web of dependence, one can still preserve “islands of independence”—intrinsic natures and causal structures that are independent of mind in the way Abhidharma might require (Westerhoff 2023, p. 17).  Ultimately, this debate asks how rigorously we can explain the familiar Buddhist formula that “because things arise dependently, they are empty.” Following the Abhidharma challenge, Siderits’s Principle P and his later self-criticism, and Westerhoff’s reexamination of causation and time shows us that even a short doctrinal formula may require a highly complex philosophical argument. Repeated criticism and revision can, in this sense, make Buddhist doctrinal philosophy more precise and more robust.   References  Hayes, Richard P. 1994. “Nāgārjuna’s Appeal.” Journal of Indian Philosophy 22: 299–378.  Siderits, Mark. 2004. “Causation and Emptiness in Early Madhyamaka.” Journal of Indian Philosophy 32: 393–419.  Westerhoff, Jan. 2009. Nāgārjuna’s Madhyamaka: A Philosophical Introduction. Oxford University Press.  Siderits, Mark. 2014. “Causation, ‘Humean’ Causation and Emptiness.” Journal of Indian Philosophy 42: 433–449.  Westerhoff, Jan. 2023. “Does Causation Entail Emptiness? On a Point of Dispute between Abhidharma and Madhyamaka.” Asian Journal of Philosophy 2.  Siderits, Mark. 2025. “Has Candrakīrti Refuted a Humean Account of Causation?” Asian Journal of Philosophy 4.       submitted by     /u/soohgangho     to     r/buddhiststudies       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/buddhiststudies/comments/1wjo4o7/how_does_emptiness_follow_from_causal_dependence/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:55:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:55:23.926Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad26ac660c608403978cb1"
+    },
+    "message_id": "reddit_t3_1wjo4o1",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "yeat",
+    "username": "Far_Amphibian_1780",
+    "title": "genuine opinion on cocoon 6/7!",
+    "text": "genuine opinion on cocoon 6/7!\n\nearnedit is shit holy. i can tell he tryna go viral on tiktok w the girlies using as a sound. in2that is solid. last 4 thooo damnnnnnn especially holy water and cocoon. so yeah i liked it very much cuz it shows he tryna get back to his old self tho i can see m goat lost his touch sadly.       submitted by     /u/Far_Amphibian_1780     to     r/yeat       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/yeat/comments/1wjo4o1/genuine_opinion_on_cocoon_67/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:55:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:55:24.781Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad26ad660c608403978cb2"
+    },
+    "message_id": "reddit_t3_1wjo4nk",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "UndervaluedStonks",
+    "username": "TheExpectationGap",
+    "title": "Reddit at $153: how much upside is left?",
+    "text": "Reddit at $153: how much upside is left?\n\nMy model says some optimism is already priced into Reddit.   At $152.97, today's price only works in my model if cash flow grows about 12.1% a year for the next 10 years. Recently, revenue grew about 48.9% a year (FY2022-FY2025). The hurdle uses unlevered cash flow; the historical figure above measures revenue.   Two operating details behind the valuation:   - Q2 FY2026: Reddit's latest-quarter revenue grew 61.1% year over year, compared with 69.1% year-over-year growth in the previous reported quarter.   - Reddit's reported FCF margin is 36.7%, up from -15.0% in the oldest comparable period.   The price is above my $115 base case but below my $231 bull case. There may still be upside, but the company needs to beat my central case to justify it.   Model assumptions: 10.3% discount rate and 2.5% long-run growth. These are assumptions, not a forecast of the share price.   What could break the case: Users move to newer platforms and formats.   Is there enough upside left for the risk?   The video goes through the assumptions behind the range, the stress test, and what would change my conclusion. I broke down the full case in a video:  https://youtu.be/9IznpuunN_A    Snapshot: I built the model; video production is AI-assisted. Not financial advice.       submitted by     /u/TheExpectationGap     to     r/UndervaluedStonks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UndervaluedStonks/comments/1wjo4nk/reddit_at_153_how_much_upside_is_left/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:55:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:55:25.002Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad26ad660c608403978cb3"
+    },
+    "message_id": "reddit_t3_1wjo4nf",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "topofreddit",
+    "username": "topredditbot",
+    "title": "Supportive Parents During a Difficult Time [r/MadeMeSmile by u/EmergencyRead5254]",
+    "text": "Supportive Parents During a Difficult Time [r/MadeMeSmile by u/EmergencyRead5254]\n\nsubmitted by     /u/topredditbot     to     r/topofreddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/topofreddit/comments/1wjo4nf/supportive_parents_during_a_difficult_time/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:55:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:55:25.217Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad26ad660c608403978cb4"
+    },
+    "message_id": "reddit_t3_1wjo4mi",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "mummasassy",
+    "username": "CN_TAL",
+    "title": "Nieces speech",
+    "text": "Nieces speech\n\nBy the sound from the live, LM wants to go home because she would get attention from the parents while MS could spend time on live. Now she doesn’t have an escape from being a mother, or have anyone to fob her off to.   The niece wrote that in her speech. She’s stripped lm away from everyone I reckon, haVENT heard of lm spending time with the rest of the family anymore. POS       submitted by     /u/CN_TAL     to     r/mummasassy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mummasassy/comments/1wjo4mi/nieces_speech/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:54:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:55:25.439Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad26ad660c608403978cb5"
+    },
+    "message_id": "reddit_t3_1wjo4lz",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "forumRBI",
+    "username": "beta_student",
+    "title": "Phase 2 Strategy discussion thread",
+    "text": "Phase 2 Strategy discussion thread\n\nPlease discuss your phase 2 strategy below        submitted by     /u/beta_student     to     r/forumRBI       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/forumRBI/comments/1wjo4lz/phase_2_strategy_discussion_thread/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:54:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:55:25.657Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad26c6aeeb96c1c63b9569"
+    },
+    "message_id": "reddit_t3_1wjo4yh",
+    "topic_key": "electrician",
+    "search_keyword": "electrician",
+    "platform": "reddit",
+    "subreddit": "electricians",
+    "username": "AnotherMulchyy",
+    "title": "Does this price seem fair? Are your rates skyrocketing due to rising costs?",
+    "text": "Does this price seem fair? Are your rates skyrocketing due to rising costs?\n\nHad an electrician come out for a quote to install six wired smoke detectors. A new wire will have to be installed and ran between them. All detectors are within a 750sqft radius split between two floors.   The electrician quoted roughly $2200 for parts and labor. This price seemed steep to me compared to work I've had done in the past five years, but I live in a high cost of living area and costs are rising at a pace I can't keep track of.    Does this quote seem fair and these rates are the new normal? Even if this price is on the premium side, the electrician was extremely professional and great to work with so we would like to continue to work with them if the pricing seems reasonable.   How much are your rates rising in general in response to rising costs?       submitted by     /u/AnotherMulchyy     to     r/electricians       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/electricians/comments/1wjo4yh/does_this_price_seem_fair_are_your_rates/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:55:25Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:55:50.301Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad26c6aeeb96c1c63b956a"
+    },
+    "message_id": "reddit_t3_1wjo4xr",
+    "topic_key": "accountant",
+    "search_keyword": "accountant",
+    "platform": "reddit",
+    "subreddit": "adultingphwins",
+    "username": "Vegetable-Bed-7814",
+    "title": "Slept for more than 8 hrs today! 🥹🥳",
+    "text": "Slept for more than 8 hrs today! 🥹🥳\n\nHi, I'm back to celebrate my small win!!!   As someone who's been making up for 10 months of sleep deprivation, quality enough sleep has been the #1 in my priorities.   For context, I am an accountant and I was diagnosed with Generalized Anxiety Disorder last April, the same month I resigned my prev toxic job.    I was prescribed escitalopram to help me with my stress and sleep because I was sleeping for 2-6 hrs back then with no deep sleep. It affected me a lot and caused me to have a lot of big painful pimples, migraines, and severe hairfall.    When I moved back home and rested for almost 5 months, that's when I met the healthiest version of me. I was able to consistently have 8 or more quality sleep and that is something I want to preserve as I move from unemployment to employment once again.   So with my neurologist's guidance, I was able to accept my current job, which is Senior Accounting Analyst at a big BPO company. My main worry is it's a 9pm - 6 am shift.    She told me that since I have no symptoms na I am cleared for work, just need to continue my medication because a sudden stop gives me nightmares. I told Dra. that I will do my best na lang to manage my sleep, exercise and nutrition so I will be able to build a life around this work.    She told me that I should give this opportunity a chance since it's an established company and who knows baka it's really better than my previous role. This echoes in my head whenever I think of how I feel with my work today.   Fast forward, I am happy with my work! The pay, benefits, workplace, workload, and growth trajectory is great.    What I like is the company is very supportive when it comes to mental health. We even have a poster in the walls saying, \"Mental health affects anyone.\" tas may mga instructions sa baba how to get assistance for mental health issues.   I felt very safe emotionally, mentally, socially, and financially. Pumapasok at umuuwi ako from work na masaya.    Here comes the problem, given my GY shift, lately I was sleeping for 6 hrs only, which does not meet my daily goal of 7-8 hrs.    Sounds silly right? But I made it a promise to myself to always prioritize myself. Maybe a lot of people take sleep for granted. I was one of them once but it took me a lot of pimples and hairfall to understand that sleep is what repairs the body. Not just enough sleep but DEEP, QUALITY sleep.   During my almost five months of unemployment, I was able to sleep a lot. Iniwan ako ng mga pimples and malalang hairfall. Kaya nga lang, nagiwan syempre ng mga peklat at ung anit, ko kitang kita na sa nipis ng hair ko doon.   Kaya naman ayan, pati sa planner ko, nakasulat na sleep is nambawan for me!    I started my work during the first day of September and I struggled transitioning from normal sleep to morning sleep.    1st week: 3 hrs sleep   2nd week: 5 hours - 7 hrs   This week: 6 hrs - 7 hrs   Today: 8 hrs and 52 mins of quality sleep with deep sleep of 2 hrs and 25 mins 🥹🥹🥹🥹❤️🎉!!!!   Sa bahay namin kasi 8-9 hrs sleep ang tulog ko palagi but since need ko magrelocate sa city, nagadjust katawan ko hindi lang sa tulog kundi sa everyday environment and routine.    Kagabi (technically kaninang 9 am), ginoal ko talaga na maka8 hrs of sleep kasi inaantok na ako sa work pag 6 hrs lang tulog ko haha. Inalis ko distractions and nagfocus sa pagrerelax bago matulog. It helped naman kasi nakatulog ako ng tuloy tuloy.    Hindi n rin ako nakaclench (I have Temporomandibular Joint Disorder din) so major win rin un for me. Nagising akong well-rested ang pakiramdam at wala ring muscle pains. As an accountant na heavily mental and stressful ang line of work, this is a big deal for me.    Hindi ko rin namimiss ung antidepressants ko and it help me alot to sleep. Actually, qualified na nga ako for PWD ID because of my mental illness and out of curiosity I researched why ganon.    Turns out that the law recognizes that people with mental illness like GAD, although not absolutely incapable of working, needs extra costs, effort, and assistance to function.    Like me for example, I am consistently taking escitalopram for 3 months now and still need to attend regular check up with my neurologists. Although it's manageable, in my case, unlike normal people, I needed help to regulate my brain chemistry as it was disrupted due to prolonged exposure to chronic stress. That is the job of escitalopram.   The law knows how expensive it is and the check ups are so it allows discount for people like me. I appreciate it a lot because it's a huge expense on my part.    The cheapest brand I am buying is P19/pc and consultation fee is P1-1.5k per 30 mins - 1 hr session. I've been taking escitalopram since April and will continue to do so until I am cleared of my symptoms.   Ang simple lang nung win ko no pero ang dami ko nakwento? haha.   Ganto nga talaga siguro pag trentahin na (26F), mga simple na lang kaligayahan sa life. It makes me feel so happy na all of my efforts to choose me and take care of me e nagbubunga na.   Big deal 'to sa akin as someone na struggled to choose myself and admit that I, the helper, needs help, too.    As a breadwinner and eldest child, my ego struggled to ask help or feel like a burden kaya naman when I finally sought help mentally and let go of my need to solve every problem, I was able to take a huge breath of relief.   Indeed, we can't pour from an empty cup. Pinili ko na alagaan sarili ko, sana kayo rin!!!   Good morning sa akin and good night sa inyo!!!       submitted by     /u/Vegetable-Bed-7814     to     r/adultingphwins       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/adultingphwins/comments/1wjo4xr/slept_for_more_than_8_hrs_today/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:55:24Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:55:50.565Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad26c6aeeb96c1c63b956b"
+    },
+    "message_id": "reddit_t3_1wjo4xq",
+    "topic_key": "cardiologist",
+    "search_keyword": "cardiologist",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Both_Cardiologist509",
+    "title": "Grab 100 hammers from u/Both_Cardiologist509!",
+    "text": "Grab 100 hammers from u/Both_Cardiologist509!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Both_Cardiologist509     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wjo4xq/grab_100_hammers_from_uboth_cardiologist509/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:55:23Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:55:50.778Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad26da9f8856bec2384fb4"
+    },
+    "message_id": "reddit_serp_1m6uoz6",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/hellofresh/comments/1m6uoz6/is_hello_fresh_worth_it/",
+    "text": "Is hello fresh worth it?\n\nHey everyone, I’ve been thinking about trying HelloFresh, but I’ve heard really mixed opinions. Some people say it’s amazing, others say it’s just not worth the cost.   I tried a Gusto box recently and made some really lovely meals, but honestly, I found it pretty pricey — especially being on a small income. It was fun to cook and everything tasted great, but I’m not sure I can justify the price long-term.   For those who’ve used HelloFresh (or both), is it any better value? Or are there cheaper meal kit options out there that are still good quality and convenient?   Would love to hear your thoughts or experiences — especially if you’re also trying to stick to a tight budget!       submitted by     /u/Ok-Platypus-8987       [link]       [comments]",
+    "username": "Ok-Platypus-8987",
+    "subreddit_or_channel": "hellofresh",
+    "posted_at": "2025-07-23T00:15:38+00:00",
+    "fetched_at": {
+      "$date": "2026-09-18T11:56:10.258Z"
+    },
+    "google_rank": 3,
+    "search_keyword": "hello",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-18T11:56:10.258Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad26e4660c608403978cb6"
+    },
+    "message_id": "reddit_t3_1wjo5fi",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "Extraordinary_Tales",
+    "username": "Still-Childhood9373",
+    "title": "\"Open your eyes.\"",
+    "text": "\"Open your eyes.\"\n\n\"Open your eyes.\"   A mantle blurred into view. I sat up, gasped. The bathwater-littered with dead squid-veered, slapped soft bodies against ceramic. I blinked. \"I can't open my eyes underwater. It stings.\"   \"But I need you to look dead.\"   I untangled a tentacle from the plug chain. The water carried it-slack, filmy-past my torso.   \"Lars, darling, the photos won't look right if you don't look dead.\"   \"I'm cold.\"   \"I can't add hot water. It'll affect the squid. Look, get under there, hold your breath, open your eyes. Come on, I haven't much film. And I can't waste this; I spent good money at that fishmonger's.\"   A fine art teacher, my mother led a yearly trip to Aberystwyth, Wales. During one of these trips, in the communal bathroom of a seafront B&B that hadn't seen an update since the fifties, my mother began a photography project that would span decades of my life. I have modelled in baths, glass cases, on beds, beaches, in forests. My body covered in dead fish, offal, dried flowers, ashes. My body cast, photographed, filmed, watched by gallery audience. My mother's instructions always:  Look dead, Lars, look more dead.    I peered over the rim of the jaundiced tub at the rotten cork linoleum. My mother adjusted her weight, checked the light balance on her Nikon. A rancid odour lapped up from the dead squid. I could barely detect the cloying mix of bleach and antiseptic that announced the bathroom's cracked mirror and lacklustre tiling. I looked down at my legs, at the squid drifting against my shins.  Look dead, Lars, look more dead.  I inhaled, slipped below the water. Cold swallowed, blunted. I heard the muffled click of my mother photographing me, the squid. I waited one last moment, opened my eyes.     My Mother Photographs Me in a Bath of Dead Squid,   Voice of the Fish: A Lyric Essay by Lars Horn       submitted by     /u/Still-Childhood9373     to     r/Extraordinary_Tales       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Extraordinary_Tales/comments/1wjo5fi/open_your_eyes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:56:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:56:20.732Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad26e4660c608403978cb7"
+    },
+    "message_id": "reddit_t3_1wjo5em",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Quiet_Cupcake805",
+    "title": "What's your favourite YouTube comments section?",
+    "text": "What's your favourite YouTube comments section?\n\nsubmitted by     /u/Quiet_Cupcake805     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wjo5em/whats_your_favourite_youtube_comments_section/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:56:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:56:20.947Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad26e5660c608403978cb8"
+    },
+    "message_id": "reddit_t3_1wjo5dz",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "redditstreak",
+    "username": "No_Equipment_43",
+    "title": "20 Days Streak.",
+    "text": "20 Days Streak.\n\nIn those 20 days I almost lost it 9 times. 🥲       submitted by     /u/No_Equipment_43     to     r/redditstreak       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/redditstreak/comments/1wjo5dz/20_days_streak/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:56:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:56:21.179Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad26e5660c608403978cb9"
+    },
+    "message_id": "reddit_t3_1wjo5dw",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Toncoin USD - 18 Sep 2026 @ 07:53 -> $1.361",
+    "text": "Buy Signal Toncoin USD - 18 Sep 2026 @ 07:53 -> $1.361\n\nTicker:  TONUSD    Exchange:  CRYPTO    Time:  18 Sep 2026 @ 07:53    Price:  $1.361    Link:  https://getagraph.com/AAA/crypto-currencies/TONUSD/ENG        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wjo5dw/buy_signal_toncoin_usd_18_sep_2026_0753_1361/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T11:56:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T11:56:21.392Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad26e5660c608403978cba"
+    },
+    "message_id": "reddit_t3_1wjo5d2",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",

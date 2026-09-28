@@ -1,0 +1,416 @@
+    "search_keyword": "chargebacks",
+    "platform": "reddit",
+    "subreddit": "FamilyFirstLifeBREACH",
+    "username": "The_HOF_Broker",
+    "title": "Why this community was created",
+    "text": "Why this community was created\n\nAbout 50 of us received emails that align with the current chargeback circumstances were experiencing at a much higher level than we historically have. I am both a Hall Of Fame Producer and a Hall Of Fame Agency with Family First Life. I used to be a captive agent and agency owner and made the move to FFL and it has been nothing short of amazing.    I have great leaders for the most part and a well oiled system in terms of my agency thriving. That's until recently, everyone has been getting pounded by debt and chargebacks. Plenty of us received an email recently regarding our books of business being involved in a Data Breach. If anyone has had a similar experience in terms of an unusually high amount of chargebacks, debt, or can share anything of value so we can work on uncovering how our books of business were accessed as a community please do.       submitted by     /u/The_HOF_Broker     to     r/FamilyFirstLifeBREACH       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FamilyFirstLifeBREACH/comments/1wff42f/why_this_community_was_created/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T18:12:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T18:13:07.888Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6e7b46508d45f3d2bffe4"
+    },
+    "message_id": "reddit_t3_1wff41r",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "vacation",
+    "platform": "reddit",
+    "subreddit": "HuluLive",
+    "username": "Unhappy-Lake-1411",
+    "title": "Can’t access Hulu on vacation",
+    "text": "Can’t access Hulu on vacation\n\nI downloaded a bunch of movies to watch on vacation where I don’t have internet. I get to vacation, Hulu suddenly has me logged out and won’t let me log in without internet connection so I cannot access movies. It’s maddening. The whole thing was completely pointless. Did this happen to anyone else?       submitted by     /u/Unhappy-Lake-1411     to     r/HuluLive       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HuluLive/comments/1wff41r/cant_access_hulu_on_vacation/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T18:12:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T18:13:08.110Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6e7b46508d45f3d2bffe5"
+    },
+    "message_id": "reddit_t3_1wff41c",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "totalwarhammer",
+    "username": "asksaboutstuff",
+    "title": "The Monstrous Infantry Royal Rumble! (extensive unit testing)",
+    "text": "The Monstrous Infantry Royal Rumble! (extensive unit testing)\n\nWhat are the best monstrous infantry in Total Warhammer 3? I can't tell you, but I  can  tell you who wins if you just smash them into each other and watch the carnage! I decided to run some tests to figure out the top 1v1 monstrous infantry in the game and share the results below. I've also made a  video  covering the tests if that appeals to anyone.    UNIT SELECTION    I set 1000 gold as a cutoff since I was looking for the most elite monstrous infantry. For units with multiple weapon variants I chose the best-performing option (always great weapons). For lizardmen units I used blessed versions over normals. I decided that the chaos god marked units are sufficiently different from each other to count them as separate units. I also restricted the list to melee units with a couple exceptions. I included Sepulchral Stalkers since they have an anti-large armor-piercing melee that lets them compete in melee. However, I only tested their melee potential; they weren't allowed to use ranged attacks. I also included Rotting Prometheans (Gunnery Mobs). These are unique in that they keep firing their ranged attack while in melee, so it directly contributes to their melee performance. I do still recognize that including them violates the 'only melee' rule that everything else follows, so I also included the melee Rotting Prometheans to show their purely melee performance. This resulted in a grand total of 27 units being tested.    TESTING METHODOLOGY    I tested every unit against every other unit in a round-robin format. Each matchup consisted of five simultaneous 1v1 matchups on a flat map with no lord via  this mod . Each 1v1 was sufficiently far apart from the others to prevent morale impacts from nearby units. I recorded the number of wins and losses in each matchup as well as the health remaining on the winner in each 1v1. If the unit being tested won, their remaining HP percentage was recorded as a positive number. If they lost, the remaining HP percentage on their opponent was recorded as a negative number. As an example, Stone Trolls won three of their five fights against Yhetees and had 37.5%, 34.5%, and 29.1% of their max HP left in those wins. In the two losses, Yhetees still had 23.3% and 29.4% HP left. So these results would get counted as 37.5, 34.5, 29.1, -23.3, -29.4, and averaged together to give Stone Trolls a +9.7% HP margin of victory of Yhetees. I then went a step further and averaged the MoV from all matchups for each unit to give their avg HP margin against the field. Units were then ranked by number of winning matchups. The HP margins were used to determine how close each matchup was in the 3rd graph. All tests were done on WH3 version 8.1.1.    DISCUSSION    The results of the test can be seen in the attached graphs. Unsurprisingly, the top five were all expensive (≥1300 gold) anti-large specialists. Plague Ogres came out on top through sheer stat advantage and their massive HP pool. Khorne Minotaurs and Maneaters were basically dead even for 2nd and 3rd, with Khornataurs just barely taking the win. Normal Minotaurs and Fimir rounded out the top five.    Rotting Promethean Gunners were the top finisher outside of the anti-large specialists, neck-and-neck with Blessed Sacred Kroxigors and Golgfag's Maneaters. The guns made a huge difference in their melee performance and took visible chunks out of the opposition's HP with each salvo. Golgfag's Maneaters are anti-infantry, but they are also super elite (1600 gold) and have amazing all-around stats. The Blessed Sacred Kroxigors are similarly super tanky with solid stats that let them punch through most opposition before they could be brought down.   Champions of Slaanesh were a bit disappointing since they fill a similar mold as Golgfag's Maneaters but are even more expensive (1750 gold!). Slaanesh units tend to not do great in these competitions since they miss out on their flanking bonuses and the speed doesn't help at all, but I still expected a bit more given the obscene price tag. I was actually more impressed with the Fiends of Slaanesh, who managed only one less win than the Champions while suffering the same disadvantages and only costing 1325 gold.    Bloodbeasts were probably the most impressive performers relative to their cost, breaking into the top half despite being one of the cheaper units in the competition (1100 gold). They don't even have an anti-large bonus, just solid offensive stats and frenzy, which is very powerful. Skin wolves had a similarly impressive performance which is less surprising given their huge AL bonus of 30, although they did have to overcome a lack of AP damage.   Sepulchral Stalkers held their own decently in melee, although from a cost-efficiency standpoint it's obviously important for them to get some ranged attacks off rather than just getting thrown into melee.   Nurgle and Khorne came out on top in the Spawn showdown, followed by Tzeentch and then Slaanesh in a distant last place. Nurgle Spawn's defensive stats and poison work well with unbreakable to let them grind down the opposition in long, close fights. All the spawn flavors have a pretty sharp dichotomy in their matchups driven by their extremely high weapon strength but lack of AP damage. They hit above their weight class against lightly armored opposition, but really struggle at killing heavily armored units.    The weak leadership of Stone Trolls and Bile Trolls definitely cost them some close matchups. I can remember several fights where the trolls were winning but broke and ran anyway. Defensive lineholders like Rotting Prometheans and Oceanids really struggled to actually kill things and so performed pretty poorly. Oceanids of course are also anti-infantry, which does them no favors here.   Blessed Kroxigors are also anti-infantry, but I was expecting their armor to carry them to at least a few more wins here. Unfortunately, they performed very poorly across the board. Vargheists did the worst of all, which was expected given their extremely low max HP. Flying units usually have lower stats than comparably-priced grounded units, so Vargheists being super cheap (relative to the opposition here) flyers didn't bode well for them.    FINAL THOUGHTS    This took a while to put together, but I had a lot of fun testing things out. Plus I got to deliver the shocking discovery that the most expensive anti-large monstrous infantry in the game won the monstrous infantry fight! Please let me know if you have any questions or requests for things you would like to see tested next!   Other tests:    Elite melee infantry 1v1s     Elite cavalry 1v1s     Elite anti-large infantry testing     Trash tier infantry 1v1s    SEMs vs infantry  Part 1 / Part 2        submitted by     /u/asksaboutstuff     to     r/totalwarhammer       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/totalwarhammer/comments/1wff41c/the_monstrous_infantry_royal_rumble_extensive/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T18:12:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T18:13:08.334Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6e7b46508d45f3d2bffe6"
+    },
+    "message_id": "reddit_t3_1wff3zy",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "SoundTripPh",
+    "username": "PinkLayover",
+    "title": "MU yaaan?",
+    "text": "MU yaaan?\n\nthere was a time na sobrang nag hit tong kantang to. Haha pero bakit wala sa spotify yung version na to?    Yung nasa spotify kasi parang ibang version eh.   Binabalik balikan ko to sa youtube, till now amaze parin ako sa talin nya sa pag gawa ng kanta.        submitted by     /u/PinkLayover     to     r/SoundTripPh       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SoundTripPh/comments/1wff3zy/mu_yaaan/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T18:12:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T18:13:08.563Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6e7eb6508d45f3d2bffe7"
+    },
+    "message_id": "reddit_t3_1wff52w",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "blanks",
+    "username": "Western_Daikon_3491",
+    "title": "Fill in the blanks: Kentucky ___.",
+    "text": "Fill in the blanks: Kentucky ___.\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Western_Daikon_3491     to     r/blanks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/blanks/comments/1wff52w/fill_in_the_blanks_kentucky/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T18:13:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T18:14:03.647Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6e7eb6508d45f3d2bffe8"
+    },
+    "message_id": "reddit_t3_1wff527",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "sapphicr4r_EU",
+    "username": "Local_Ordinary_1774",
+    "title": "Welcome to r/sapphicr4r_EU - A place I haven't found yet, that I am trying to build now, because we have to start somewhere!",
+    "text": "Welcome to r/sapphicr4r_EU - A place I haven't found yet, that I am trying to build now, because we have to start somewhere!\n\nHello all! I am , an AroAce Spec Lesbian from Germany, craving for real life, local connections, because there is juat something about hanging out with someone, quietly doing your own thing, but knowing you're not alone.   Someone said it in  r/lesbianr4r ... Almost everyone is from the US! It's so difficult to look for the few posts that may be close by, nevermind that not everyone wants to disclose their location immediately. So, why not have our own space?   I'm going to need people!   I've never run a Subreddit before. While I have the heart, I do think it's going to need more, if we want this place to actually grow!   I will probably put together a survey for Mod applications a bit later, once a few people have actually seen this place, until then I will do my best!   Important to mention   I want this place to be positive, uplifting and inclusive. We're all part of a community, don't take away from that!   I can't control people, but skip the downvote button because you simply don't like a post. Maybe even upvote it, so someone who might be just right for that person has the chance to see their post!    When you post   Tell people about yourself!    Who are you, what do you enjoy doing?   How old are you?    But also what you're looking for!    Is it a friendship, relationship? Something slow with potential, or are you looking for something specific?    Let people know, and don't be shy to respond to posts yourself!    Sure it might be daunting, but in the end, we're all here to make connections! 💜        submitted by     /u/Local_Ordinary_1774     to     r/sapphicr4r_EU       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sapphicr4r_EU/comments/1wff527/welcome_to_rsapphicr4r_eu_a_place_i_havent_found/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T18:13:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T18:14:03.870Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6e7ec6508d45f3d2bffe9"
+    },
+    "message_id": "reddit_t3_1wff513",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "CaminoDeSantiago",
+    "username": "Immediate_Good_8803",
+    "title": "Commuting back from Santiago to Viana do Castelo",
+    "text": "Commuting back from Santiago to Viana do Castelo\n\nHi everyone! I am trying to figure out the best way to travel back from  Santiago de Compostela to Viana do Castelo , but I'm running into some logistical roadblocks and could use some advice.   I tried looking into the train options, but the Renfe website isn't giving me any options or showing results for my October dates yet (is it just too early because the booking window hasn't opened?), and I'm struggling to get a concrete itinerary together.   For those who have done this route:     Is it normal for Renfe regional/media distancia tickets to be blocked this far in advance, or is there a trick to booking the Santiago to Vigo-Guixar leg?   Once in Vigo, catching the Celta train down to Viana do Castelo seems straightforward, but do I need to book that separately via CP?   Would I save myself a massive headache by just taking a FlixBus from the Santiago Intermodal station instead?     If anyone has recent experience with this connection or better alternatives, I'd really appreciate the guidance!       submitted by     /u/Immediate_Good_8803     to     r/CaminoDeSantiago       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CaminoDeSantiago/comments/1wff513/commuting_back_from_santiago_to_viana_do_castelo/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T18:13:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T18:14:04.106Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6e7ec6508d45f3d2bffeb"
+    },
+    "message_id": "reddit_t3_1wff50h",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "CBaeyens",
+    "title": "Grab 100 hammers from u/CBaeyens!",
+    "text": "Grab 100 hammers from u/CBaeyens!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/CBaeyens     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wff50h/grab_100_hammers_from_ucbaeyens/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T18:13:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T18:14:04.549Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6e7ec6508d45f3d2bffec"
+    },
+    "message_id": "reddit_t3_1wff503",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "freefolk",
+    "username": "ProffesorOfPain",
+    "title": "I have a special place in my heart for princes that would’ve made great rulers :(",
+    "text": "I have a special place in my heart for princes that would’ve made great rulers :(\n\nFella on the first slide is Prince Mustafa from a Turkish show called Magnificent Century, him are Baelor are very different characters but both are my favs cuz I guess I love the trope of capable princes dying too early    Goddamnit I don’t care if plenty in the MC fandom doesn’t like Mustafa, he’s my goat and Baelor reminds me of him 😭    I do wonder how a conversation between them would go, they’re both part of the “should’ve been rulers” club in my opinion        submitted by     /u/ProffesorOfPain     to     r/freefolk       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/freefolk/comments/1wff503/i_have_a_special_place_in_my_heart_for_princes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T18:13:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T18:14:04.767Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6e7ec6508d45f3d2bffed"
+    },
+    "message_id": "reddit_t3_1wff4zd",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "KKKOfficial",
+    "username": "StayAway1721",
+    "title": "I miss the daily episode discussion that we used to have where someone posted the entire recap or what they liked or dislike and then we would give our opinions 😭",
+    "text": "I miss the daily episode discussion that we used to have where someone posted the entire recap or what they liked or dislike and then we would give our opinions 😭\n\nPlease bring it back.        submitted by     /u/StayAway1721     to     r/KKKOfficial       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/KKKOfficial/comments/1wff4zd/i_miss_the_daily_episode_discussion_that_we_used/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T18:13:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T18:14:04.989Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6e7ed6508d45f3d2bffee"
+    },
+    "message_id": "reddit_t3_1wff4z6",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AskPinoyMen",
+    "username": "Efficient-Lake-8075",
+    "title": "i’m not used to 50/50 dates. how do i tell him?",
+    "text": "i’m not used to 50/50 dates. how do i tell him?\n\nhello. pls don’t resort to name-calling or insults. i’m really just here to ask    i’m currently in a relationship. we’re both in our 20s. we’re both still studying (he’s a senior undergrad, i’m in post grad). we both live alone since both our families live really far. we’d often sleep at each other’s place. his parents know and they actually like us staying together so he wouldn’t be alone. my parents don’t bc they’re very traditional. this has been our set up ever since our first sleepover. we figured it’s practical for both of us too.    regarding finances, we’d split the necessities, like groceries. but he’s the kind of guy who insists on paying for dates. he’s been like that since we met and we actually talked about his preference for that. sometimes he’d buy things for me but won’t ask me to pay. i’d do the same too.    a few months ago i noticed he was a bit quiet so i asked what’s wrong. it actually took me a while to get him to open up. he said that he never wanted to tell me this, that he doesn’t even know if it’s right to bring it up, but he eventually told me that he’s a bit stressed about how he handles money. that sometimes he’d feel guilty about our setup since it wasn’t his money he’s spending, it’s his parents’. he said that he’d sometimes shoulder some of my expenses since it would be like soap, detergent, shampoo, etc, (things that he thinks i shouldn’t pay him for anymore) but these can pile up naman talaga and would deduct a significant amount. he said na he didn’t want to bring it up because he’d always been the kind of guy who believes he’s supposed to provide, but right now he can’t fully do that pa naman. (100% gets)   i completely understood of course. and i’ve always offered to pay naman kahit dati. although i felt hurt as well since it’s not a one-way street naman when it comes to this. we both help each other out whenever the other needs it. i told him that we can be more strict in splitting our expenses nalang. no more paying for each other’s daily necessities. he agreed.   i’m totally fine with this arrangement. wala namang problem. it’s just that i noticed that when we’re computing our expenses, he’d add half of what we spent on our dates sa payables ko. at first i didn’t mind kasi i recall ako naman nag aya. but the second time ,, i felt off already. idk maybe it’s because i’m not used to him being like that. maybe because we never really talked about it. when we discussed our finances, it was only about necessities. we also don’t even go out on dates often since we’re busy, so it doesn’t take much from his budget. for context we used to go out at least once a month, now it’s once every 3 months at best. i also don’t require fancy dates naman, study dates at cafes make me so happy already.    i’m far from materialistic so pls don’t call me one. i think hindi lang talaga to yung nakasanayan ko sakanya. i don’t know how to deal with it.       submitted by     /u/Efficient-Lake-8075     to     r/AskPinoyMen       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskPinoyMen/comments/1wff4z6/im_not_used_to_5050_dates_how_do_i_tell_him/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T18:13:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T18:14:05.208Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6e7ed6508d45f3d2bffef"
+    },
+    "message_id": "reddit_t3_1wff4yq",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "Hot-Maybe-9334",
+    "title": "Grateful Rugged Beauty and Plum Cream Pound Cake",
+    "text": "Grateful Rugged Beauty and Plum Cream Pound Cake\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Hot-Maybe-9334     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wff4yq/grateful_rugged_beauty_and_plum_cream_pound_cake/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T18:13:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T18:14:05.431Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6e7ed6508d45f3d2bfff0"
+    },
+    "message_id": "reddit_t3_1wff4yp",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MapBasedPolls",
+    "username": "i_Like_Soup3",
+    "title": "What religion has had the most impact on your country?",
+    "text": "What religion has had the most impact on your country?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/i_Like_Soup3     to     r/MapBasedPolls       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MapBasedPolls/comments/1wff4yp/what_religion_has_had_the_most_impact_on_your/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T18:13:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T18:14:05.649Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6e7ed6508d45f3d2bfff1"
+    },
+    "message_id": "reddit_t3_1wff4yg",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "hatethissmug",
+    "username": "Electrical_Path7198",
+    "title": "I really hate when Reddit recommends me posts like this when there already thousands of comments",
+    "text": "I really hate when Reddit recommends me posts like this when there already thousands of comments\n\nIf it already has thousands of comments, what's the point of commenting? Why are you even recommending it? My comment will just get lost in a sea of thousands of others and nobody will read it.    It seems like the Reddit algorithm does that on purpose just to screw me over       submitted by     /u/Electrical_Path7198     to     r/hatethissmug       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hatethissmug/comments/1wff4yg/i_really_hate_when_reddit_recommends_me_posts/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T18:13:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T18:14:05.867Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6e7f4a18b546d423dc17f"
+    },
+    "message_id": "reddit_serp_1dml82u",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/help/comments/1dml82u/what_does_it_mean_when_reddit_says_looks_like/",
+    "text": "What does it mean when reddit says\" looks like reddit is having some trouble\" when I try to go into somebody's profile? I was chatting with someone suddenly there was no reply. Then...\n\nAnyone please please help me reach this account please we used to chat everyday. Damn miss that account so much please.    DM me if you can help me please i will give the username please help me 😭. User was such a great person. Never had a friend like that user. If you can i will DM you. Please 🥺 help me        submitted by     /u/OriginalUniversity26       [link]       [comments]",
+    "username": "OriginalUniversity26",
+    "subreddit_or_channel": "help",
+    "posted_at": "2024-06-23T12:38:54+00:00",
+    "fetched_at": {
+      "$date": "2026-09-13T18:14:12.743Z"
+    },
+    "google_rank": 7,
+    "search_keyword": "search in reddit about",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-13T18:14:12.743Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6e827a18b546d423dc180"
+    },
+    "message_id": "reddit_serp_https___www_reddit_com_r_questions_",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/questions/",
+    "text": "If you could choose your final resting place, would you choose a tree instead of a grave?\n\nImagine your family visiting a tree years after you're gone, rather than a traditional gravestone.   The concept is Capsula Mundi, created by Italian designers Anna Citelli and Raoul Bretzel.       submitted by     /u/KarmaVoyager       [link]       [comments]",
+    "username": "KarmaVoyager",
+    "subreddit_or_channel": "questions",
+    "posted_at": "2026-09-13T13:40:07+00:00",
+    "fetched_at": {
+      "$date": "2026-09-13T18:15:03.798Z"
+    },
+    "google_rank": 10,
+    "search_keyword": "search in reddit about",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-13T18:15:03.798Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6e8286508d45f3d2bfff2"
+    },
+    "message_id": "reddit_t3_1wff63r",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "diabetes_t1",
+    "username": "Eazi419",
+    "title": "Is t1d a disability (uk)?",
+    "text": "Is t1d a disability (uk)?\n\nDo you think or would you class it as a disability ?  I try to live life and do whatever I want , but there are challenges. People around me say it’s not a disability and act like it’s a minor insignificance.  Whats everyone’s opinion?        submitted by     /u/Eazi419     to     r/diabetes_t1       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/diabetes_t1/comments/1wff63r/is_t1d_a_disability_uk/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T18:14:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T18:15:04.140Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6e8286508d45f3d2bfff3"
+    },
+    "message_id": "reddit_t3_1wff62a",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "wholefoodscustomers",
+    "username": "veryonline_queen",
+    "title": "Self checkout policy",
+    "text": "Self checkout policy\n\nMy Whole Foods just implemented a 20 items or less policy at self checkout which is really annoying. I travel 30 minutes to WF so I like my groceries bagged a certain way for transit. The lady kicked me out of self checkout and I went to the lane with an attendant and the guy literally dumps all of my groceries into one bag and is PILING produce on top of each other. Ugh really frustrating but guess I will be bagging my own with someone scanning for me now.        submitted by     /u/veryonline_queen     to     r/wholefoodscustomers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wholefoodscustomers/comments/1wff62a/self_checkout_policy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T18:14:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T18:15:04.349Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6e8286508d45f3d2bfff5"
+    },
+    "message_id": "reddit_t3_1wff628",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "indiranagar",
+    "username": "HighlightMassive392",
+    "title": "Earning almost ₹50L, but feeling poor in Indiranagar — is it just me?",
+    "text": "Earning almost ₹50L, but feeling poor in Indiranagar — is it just me?\n\nI earn almost ₹50 lakh a year, which I know is a very good income by Indian standards. I’m genuinely grateful for it.   But living in and around Indiranagar, I sometimes feel surprisingly… poor.   You see people spending casually at expensive restaurants, driving luxury cars, buying/renting very expensive apartments, taking frequent international trips, etc. And after a while, ₹50L starts feeling like an average salary rather than something exceptional.   Do other people in Indiranagar feel this way too?       submitted by     /u/HighlightMassive392     to     r/indiranagar       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/indiranagar/comments/1wff628/earning_almost_50l_but_feeling_poor_in/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T18:14:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T18:15:04.739Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6e8296508d45f3d2bfff7"
+    },
+    "message_id": "reddit_t3_1wff61r",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",

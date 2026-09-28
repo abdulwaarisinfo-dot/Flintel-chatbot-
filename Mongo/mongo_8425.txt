@@ -1,0 +1,416 @@
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T16:48:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:16:22.210Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcc0642dd0e95b5bab0be"
+    },
+    "message_id": "twitter_2093374639196000547",
+    "topic_key": "commercial cart recovery",
+    "search_keyword": "commercial cart recovery",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "0xthe0",
+    "title": "7 things in AI worth knowing today — Aug 28\n\n1. Qwen just previewed the architecture behind Qwen4\n\nQwen3.8-Flash-Next is an open multimodal model built around a highly sparse architecture with very few active parameters per token.\n\nMy take: if this direction holds for Qwen4, long-running agents could get dramatically cheaper without needing tiny models.\n\n2. GLM-5.3-Flash is huge — but only 18B parameters are active\n\nThe model has ~320B total parameters, while activating only ~18B per token. https://t.co/SWu2vQVWft claims better results than GLM-5.2 at roughly 10x lower cost and near-frontier coding/agent performance.\n\nMy take: vendor benchmarks need independent testing, but this is exactly the kind of model worth benchmarking on real coding workflows.\n\n3. 7th graders built an AI shopping product on top of a grocery chain’s MCP\n\nRussian retailer VkusVill opened an MCP interface for agent shopping, and a team of school students used it to build an AI sous-chef that can recommend products and assemble a cart.\n\nMy take: this is a much bigger signal than the grocery use case itself. Companies are starting to expose real commercial actions to agents — which means other people can build businesses on top.\n\n4. Codex limits may have been cut much harder than people realized\n\nA circulating analysis claims effective Codex quotas were reduced by roughly 70%. The exact number still needs verification, but heavy users are independently reporting noticeably faster quota burn.\n\nMy take: if your workflow depends on subscription-backed agents, usage limits are now part of your infrastructure risk.\n\n5. mistakes.md might be the cheapest agent-memory upgrade I’ve seen this week\n\nSimple idea: give your agent a persistent file where it records mistakes and how they were fixed.\n\nMy take: generic memory is useful. Memory specifically structured around “what did I screw up and how do I avoid doing it again?” may be much more valuable.\n\n6. Real agent tasks are starting to run for hours — sometimes days\n\nPeople are casually reporting agent jobs that last 20–50 minutes, 2–3 hours, and even multiple days.\n\nMy take: once agents run that long, queues, recovery, resumability, notifications and state become more important than another few benchmark points.\n\n7. Don’t trust an API aggregator just because it tells you the model name\n\nUsers are reporting cases where models happily identify themselves as whatever model ID the wrapper passes them.\n\nMy take: if you’re buying cheap inference through resellers, the label alone proves almost nothing. Model identity needs external verification if it actually matters to your workflow.\n\nMain takeaway:\n\nThe model race is getting cheaper and weirder, but the bigger shift is happening around the models:\nagents are getting longer-running, more commercial, and more trusted with real actions.\n\nThat makes infrastructure, permissions, state and cost control increasingly important.",
+    "text": "7 things in AI worth knowing today — Aug 28\n\n1. Qwen just previewed the architecture behind Qwen4\n\nQwen3.8-Flash-Next is an open multimodal model built around a highly sparse architecture with very few active parameters per token.\n\nMy take: if this direction holds for Qwen4, long-running agents could get dramatically cheaper without needing tiny models.\n\n2. GLM-5.3-Flash is huge — but only 18B parameters are active\n\nThe model has ~320B total parameters, while activating only ~18B per token. https://t.co/SWu2vQVWft claims better results than GLM-5.2 at roughly 10x lower cost and near-frontier coding/agent performance.\n\nMy take: vendor benchmarks need independent testing, but this is exactly the kind of model worth benchmarking on real coding workflows.\n\n3. 7th graders built an AI shopping product on top of a grocery chain’s MCP\n\nRussian retailer VkusVill opened an MCP interface for agent shopping, and a team of school students used it to build an AI sous-chef that can recommend products and assemble a cart.\n\nMy take: this is a much bigger signal than the grocery use case itself. Companies are starting to expose real commercial actions to agents — which means other people can build businesses on top.\n\n4. Codex limits may have been cut much harder than people realized\n\nA circulating analysis claims effective Codex quotas were reduced by roughly 70%. The exact number still needs verification, but heavy users are independently reporting noticeably faster quota burn.\n\nMy take: if your workflow depends on subscription-backed agents, usage limits are now part of your infrastructure risk.\n\n5. mistakes.md might be the cheapest agent-memory upgrade I’ve seen this week\n\nSimple idea: give your agent a persistent file where it records mistakes and how they were fixed.\n\nMy take: generic memory is useful. Memory specifically structured around “what did I screw up and how do I avoid doing it again?” may be much more valuable.\n\n6. Real agent tasks are starting to run for hours — sometimes days\n\nPeople are casually reporting agent jobs that last 20–50 minutes, 2–3 hours, and even multiple days.\n\nMy take: once agents run that long, queues, recovery, resumability, notifications and state become more important than another few benchmark points.\n\n7. Don’t trust an API aggregator just because it tells you the model name\n\nUsers are reporting cases where models happily identify themselves as whatever model ID the wrapper passes them.\n\nMy take: if you’re buying cheap inference through resellers, the label alone proves almost nothing. Model identity needs external verification if it actually matters to your workflow.\n\nMain takeaway:\n\nThe model race is getting cheaper and weirder, but the bigger shift is happening around the models:\nagents are getting longer-running, more commercial, and more trusted with real actions.\n\nThat makes infrastructure, permissions, state and cost control increasingly important.",
+    "post_url": "https://twitter.com/0xthe0/status/2093374639196000547",
+    "score": 13,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-08-28T16:26:21Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:16:22.407Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcc0642dd0e95b5bab0bf"
+    },
+    "message_id": "twitter_2081835748282826852",
+    "topic_key": "commercial cart recovery",
+    "search_keyword": "commercial cart recovery",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ourhermitage",
+    "title": "My first article on Twitter, and of course it’s about Beyoncé. I've been working on this for months. I got tired of editing. https://t.co/burRAtJ2aY",
+    "text": "My first article on Twitter, and of course it’s about Beyoncé. I've been working on this for months. I got tired of editing. https://t.co/burRAtJ2aY",
+    "post_url": "https://twitter.com/ourhermitage/status/2081835748282826852",
+    "score": 109,
+    "num_comments": 6,
+    "created_utc": {
+      "$date": "2026-07-27T20:14:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:16:22.604Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcc0642dd0e95b5bab0c0"
+    },
+    "message_id": "twitter_2064908362161217550",
+    "topic_key": "commercial cart recovery",
+    "search_keyword": "commercial cart recovery",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "JulianGoldieSEO",
+    "title": "🚨 𝗪𝗘𝗗𝗡𝗘𝗦𝗗𝗔𝗬 𝗣𝗔𝗬𝗗𝗔𝗬. 𝗟𝗔𝗦𝗧 𝗦𝗘𝗔𝗧. 𝟯 𝗛𝗢𝗨𝗥𝗦. 𝗔𝗟𝗟 𝗧𝗛𝗥𝗘𝗘 𝗣𝗢𝗧𝗦, 𝗢𝗡𝗘 𝗗𝗘𝗣𝗟𝗢𝗬. 🚨 → https://t.co/Ppmk5h9rw3\n\n🚨 𝟰 𝗦𝗘𝗔𝗧𝗦 𝗚𝗢𝗡𝗘. 𝗢𝗡𝗘 𝗟𝗘𝗙𝗧. 𝗖𝗟𝗔𝗜𝗠𝗘𝗗 𝗢𝗥 𝗠𝗜𝗗𝗡𝗜𝗚𝗛𝗧, 𝗧𝗛𝗘 𝗙𝗥𝗘𝗘 𝗔𝗚𝗘𝗡𝗧𝗦 𝗖𝗟𝗢𝗦𝗘 𝗔𝗡𝗗 𝗧𝗛𝗘 𝗙𝗢𝗨𝗡𝗗𝗘𝗥 𝗗𝗘𝗔𝗟 𝗦𝗧𝗔𝗬𝗦. 𝗟𝗜𝗙𝗘𝗧𝗜𝗠𝗘 𝗣𝗥𝗜𝗖𝗘 𝗟𝗢𝗖𝗞. 🚨 → https://t.co/Ppmk5h9rw3\n\n🚨 𝗟𝗔𝗦𝗧 𝗦𝗘𝗔𝗧. 𝟯 𝗛𝗢𝗨𝗥𝗦. 𝗜𝗙 𝗬𝗢𝗨'𝗥𝗘 𝗥𝗘𝗔𝗗𝗜𝗡𝗚 𝗧𝗛𝗜𝗦 𝗜𝗧 𝗜𝗦 𝗦𝗧𝗜𝗟𝗟 𝗬𝗢𝗨𝗥𝗦. 🚨 → https://t.co/Ppmk5h9rw3\n\n4 seats gone. One left. 3 hours.\n\nHere's exactly what the 5th person does tonight, because the real power isn't any one agent. It's all three running at once.\n\nThey go annual and deploy the three. The Audience Activation Agent starts working their quiet list and followers. The Conversion Recovery Agent goes after every ghosted lead, abandoned cart, and dead DM.\n\nThe Backend Cash Pull Agent goes to past customers with the next offer. Three agents, three pots of money they already own, all pulling at the same time, from day one.\n\nNotice what's not on that list. No new ad budget.\n\nNo new audience to build. No waiting on strangers to discover them.\n\nEvery dollar these agents go after is money already inside the business, just sitting in places nobody was working. That's why it's the fastest payday there is.\n\nAnd it all runs on the engine they keep for life. HERMES OS with all 10 agents, the Revenue Blueprint and Client Magnet feeding them what to say, the Agent OS cockpit running it from one screen, the vault and the Boardroom behind it.\n\nLocked at $399 for life, before the price climbs.\n\nIf you're reading this, the last seat is still yours. 3 hours.\n\n👉 Take the last seat → https://t.co/Ppmk5h9rw3\n\n🎯 𝗗𝗘𝗣𝗟𝗢𝗬 𝗔𝗟𝗟 𝗧𝗛𝗥𝗘𝗘 𝗔𝗧 𝗢𝗡𝗖𝗘:\n✅ Audience Activation ... your quiet audience\n✅ Conversion Recovery ... your almost-buyers\n✅ Backend Cash Pull ... your past customers\n\n💎 𝗣𝗟𝗨𝗦 𝗧𝗛𝗘 𝗙𝗨𝗟𝗟 𝗘𝗡𝗚𝗜𝗡𝗘, 𝗟𝗢𝗖𝗞𝗘𝗗 𝗙𝗢𝗥 𝗟𝗜𝗙𝗘:\n✅ HERMES OS (10 revenue agents) + Revenue Blueprint + Client Magnet + the Agent OS cockpit\n✅ Complete SOP Playbook (115+ Systems) ... $25,000 value\n✅ Sales Team SOP ... $15,000 value\n✅ Commercial License ... $5,000 value\n✅ Custom GPT Collection ... $8,000 value\n✅ Private Vlog and Podcast Archive ... $12,000 value\n✅ 189+ Thumbnails + Tweet Library + Ad Swipe File ... $25,500 value\n✅ SEO Elite Circle (1 year) ... $997 value\n✅ $1,000 Agency Credit\n✅ 2 Bonus Memberships (partner and VA) ... $798 value\n✅ All Future Courses FREE ... $5,000+ value\n✅ Lifetime Price Lock at $399 ... Priceless\n\n📦 𝗣𝗟𝗨𝗦 𝗘𝗩𝗘𝗥𝗬𝗧𝗛𝗜𝗡𝗚 𝗜𝗡𝗦𝗜𝗗𝗘 𝗧𝗛𝗘 𝗕𝗢𝗔𝗥𝗗𝗥𝗢𝗢𝗠:\n✅ OpenClaw + Claude + Hermes courses\n✅ AI Avatar Clone ($600/day proven)\n✅ $5K High Ticket Formula\n✅ 105 Agency-Level Prompts (every prompt priced for revenue)\n✅ 1,000+ n8n automations (entire workflow vault)\n\n👉 Daily Q&A with custom video tutorials\n👉 5 live coaching calls every week with me\n👉 Unlimited support and 3,000+ members\n👉 30+ new trainings per week\n👉 $8K+ monthly giveaways\n\nLast seat. 3 hours. If you're reading this it is still yours.\n\n👉 Take it before the 3 hours run out → https://t.co/Ppmk5h9rw3",
+    "text": "🚨 𝗪𝗘𝗗𝗡𝗘𝗦𝗗𝗔𝗬 𝗣𝗔𝗬𝗗𝗔𝗬. 𝗟𝗔𝗦𝗧 𝗦𝗘𝗔𝗧. 𝟯 𝗛𝗢𝗨𝗥𝗦. 𝗔𝗟𝗟 𝗧𝗛𝗥𝗘𝗘 𝗣𝗢𝗧𝗦, 𝗢𝗡𝗘 𝗗𝗘𝗣𝗟𝗢𝗬. 🚨 → https://t.co/Ppmk5h9rw3\n\n🚨 𝟰 𝗦𝗘𝗔𝗧𝗦 𝗚𝗢𝗡𝗘. 𝗢𝗡𝗘 𝗟𝗘𝗙𝗧. 𝗖𝗟𝗔𝗜𝗠𝗘𝗗 𝗢𝗥 𝗠𝗜𝗗𝗡𝗜𝗚𝗛𝗧, 𝗧𝗛𝗘 𝗙𝗥𝗘𝗘 𝗔𝗚𝗘𝗡𝗧𝗦 𝗖𝗟𝗢𝗦𝗘 𝗔𝗡𝗗 𝗧𝗛𝗘 𝗙𝗢𝗨𝗡𝗗𝗘𝗥 𝗗𝗘𝗔𝗟 𝗦𝗧𝗔𝗬𝗦. 𝗟𝗜𝗙𝗘𝗧𝗜𝗠𝗘 𝗣𝗥𝗜𝗖𝗘 𝗟𝗢𝗖𝗞. 🚨 → https://t.co/Ppmk5h9rw3\n\n🚨 𝗟𝗔𝗦𝗧 𝗦𝗘𝗔𝗧. 𝟯 𝗛𝗢𝗨𝗥𝗦. 𝗜𝗙 𝗬𝗢𝗨'𝗥𝗘 𝗥𝗘𝗔𝗗𝗜𝗡𝗚 𝗧𝗛𝗜𝗦 𝗜𝗧 𝗜𝗦 𝗦𝗧𝗜𝗟𝗟 𝗬𝗢𝗨𝗥𝗦. 🚨 → https://t.co/Ppmk5h9rw3\n\n4 seats gone. One left. 3 hours.\n\nHere's exactly what the 5th person does tonight, because the real power isn't any one agent. It's all three running at once.\n\nThey go annual and deploy the three. The Audience Activation Agent starts working their quiet list and followers. The Conversion Recovery Agent goes after every ghosted lead, abandoned cart, and dead DM.\n\nThe Backend Cash Pull Agent goes to past customers with the next offer. Three agents, three pots of money they already own, all pulling at the same time, from day one.\n\nNotice what's not on that list. No new ad budget.\n\nNo new audience to build. No waiting on strangers to discover them.\n\nEvery dollar these agents go after is money already inside the business, just sitting in places nobody was working. That's why it's the fastest payday there is.\n\nAnd it all runs on the engine they keep for life. HERMES OS with all 10 agents, the Revenue Blueprint and Client Magnet feeding them what to say, the Agent OS cockpit running it from one screen, the vault and the Boardroom behind it.\n\nLocked at $399 for life, before the price climbs.\n\nIf you're reading this, the last seat is still yours. 3 hours.\n\n👉 Take the last seat → https://t.co/Ppmk5h9rw3\n\n🎯 𝗗𝗘𝗣𝗟𝗢𝗬 𝗔𝗟𝗟 𝗧𝗛𝗥𝗘𝗘 𝗔𝗧 𝗢𝗡𝗖𝗘:\n✅ Audience Activation ... your quiet audience\n✅ Conversion Recovery ... your almost-buyers\n✅ Backend Cash Pull ... your past customers\n\n💎 𝗣𝗟𝗨𝗦 𝗧𝗛𝗘 𝗙𝗨𝗟𝗟 𝗘𝗡𝗚𝗜𝗡𝗘, 𝗟𝗢𝗖𝗞𝗘𝗗 𝗙𝗢𝗥 𝗟𝗜𝗙𝗘:\n✅ HERMES OS (10 revenue agents) + Revenue Blueprint + Client Magnet + the Agent OS cockpit\n✅ Complete SOP Playbook (115+ Systems) ... $25,000 value\n✅ Sales Team SOP ... $15,000 value\n✅ Commercial License ... $5,000 value\n✅ Custom GPT Collection ... $8,000 value\n✅ Private Vlog and Podcast Archive ... $12,000 value\n✅ 189+ Thumbnails + Tweet Library + Ad Swipe File ... $25,500 value\n✅ SEO Elite Circle (1 year) ... $997 value\n✅ $1,000 Agency Credit\n✅ 2 Bonus Memberships (partner and VA) ... $798 value\n✅ All Future Courses FREE ... $5,000+ value\n✅ Lifetime Price Lock at $399 ... Priceless\n\n📦 𝗣𝗟𝗨𝗦 𝗘𝗩𝗘𝗥𝗬𝗧𝗛𝗜𝗡𝗚 𝗜𝗡𝗦𝗜𝗗𝗘 𝗧𝗛𝗘 𝗕𝗢𝗔𝗥𝗗𝗥𝗢𝗢𝗠:\n✅ OpenClaw + Claude + Hermes courses\n✅ AI Avatar Clone ($600/day proven)\n✅ $5K High Ticket Formula\n✅ 105 Agency-Level Prompts (every prompt priced for revenue)\n✅ 1,000+ n8n automations (entire workflow vault)\n\n👉 Daily Q&A with custom video tutorials\n👉 5 live coaching calls every week with me\n👉 Unlimited support and 3,000+ members\n👉 30+ new trainings per week\n👉 $8K+ monthly giveaways\n\nLast seat. 3 hours. If you're reading this it is still yours.\n\n👉 Take it before the 3 hours run out → https://t.co/Ppmk5h9rw3",
+    "post_url": "https://twitter.com/JulianGoldieSEO/status/2064908362161217550",
+    "score": 0,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-06-11T03:11:32Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:16:22.801Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcc0d42dd0e95b5bab0c1"
+    },
+    "message_id": "twitter_2099607189295869958",
+    "topic_key": "commercial chargeback management",
+    "search_keyword": "commercial chargeback management",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "michaelajayiope",
+    "title": "A customer purchased a single order for $87.50 and got charged twice, four seconds apart. The database holds a single order record for that customer but two payment records for the same order. The affected customers were refunded manually, buying time for engineering to trace the bug to its root and raise a hotfix subsequently.\n \nThe Anatomy\n A single business outcome comprises one or more units of work, all working together to fulfill a single request. In our case study, the business outcome is to process the order for a customer. It might resemble this roughly: \n \n- Receive and validate the request.\n- Look up an existing customer record or create a new one.\n- Create an order record with an initial state (pending).\n- Make a call to an external payment provider to collect payment.\n- Decide on the response from the external provider.\n- On successful request, fulfill the order and write the records to the database.\n- Return on error and perform rollbacks where necessary.",
+    "text": "A customer purchased a single order for $87.50 and got charged twice, four seconds apart. The database holds a single order record for that customer but two payment records for the same order. The affected customers were refunded manually, buying time for engineering to trace the bug to its root and raise a hotfix subsequently.\n \nThe Anatomy\n A single business outcome comprises one or more units of work, all working together to fulfill a single request. In our case study, the business outcome is to process the order for a customer. It might resemble this roughly: \n \n- Receive and validate the request.\n- Look up an existing customer record or create a new one.\n- Create an order record with an initial state (pending).\n- Make a call to an external payment provider to collect payment.\n- Decide on the response from the external provider.\n- On successful request, fulfill the order and write the records to the database.\n- Return on error and perform rollbacks where necessary.",
+    "post_url": "https://twitter.com/michaelajayiope/status/2099607189295869958",
+    "score": 5,
+    "num_comments": 4,
+    "created_utc": {
+      "$date": "2026-09-14T21:12:17Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:16:29.125Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcc0e42dd0e95b5bab0c6"
+    },
+    "message_id": "twitter_2074538200081817934",
+    "topic_key": "commercial chargeback management",
+    "search_keyword": "commercial chargeback management",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "GRelaxyuso",
+    "title": "Amazon Vendor Central ——\nDirect Fulfillment is NOT a backup plan.\n\nOne of the biggest misconceptions among Amazon 1P vendors:\n\n“Direct Fulfillment is only used when Amazon runs out of inventory, so suppliers ship orders instead.”\n\nThat understanding is too shallow.\n\nDF is not simply an alternative to FBM.\n\nIt is a strategic fulfillment model designed to create inventory redundancy, improve availability, and optimize Amazon's supply chain economics.\n\nHere are the key points every brand should understand before adopting DF.\n\n1. The real purpose of DF: Inventory insurance\n\nThe biggest value of Direct Fulfillment is not emergency replenishment.\n\nIt is redundancy.\n\nWhen Amazon's fulfillment network faces inventory gaps, DF allows customers to continue purchasing instead of seeing:\n\n“Currently unavailable.”\n\nThis matters even more during:\n\nPrime events\nHoliday seasons\nDemand spikes\nNew product launches\n\nAmazon inventory replenishment has lead times.\n\nCustomer demand does not wait.\n\nDF creates a flexible backup lane that protects sales continuity.\n\n2. What products are suitable for DF?\nGood candidates:\n\n✅ High ASP products\n✅ Bulky products\n✅ Multi-box products\n✅ Seasonal products\n✅ Long-tail assortment\nExamples:\nAppliances\nFurniture\nLarge fitness equipment\n\nHome improvement products\n\nWhy?\nBecause these products usually have:\nHigher margin tolerance\nMore complex inventory requirements\n\nHigher cost of holding Amazon inventory\n\nDF allows brands to expand selection without forcing Amazon to carry every SKU.\n\nPoor candidates:\n❌ Low ASP products\n❌ Small lightweight products\n❌ High-volume commodity items\nExamples:\n\nPens\n\nSmall accessories\n\nLow-cost household items\nThe fulfillment cost of picking, packing, and shipping individual orders can destroy margin.\nAnother important factor:\n\nIf your warehouse is not prepared for consumer-level fulfillment, DF can become an operational nightmare.\n\nB2B shipping capability ≠ DTC fulfillment capability.\n3. The winning strategy: PO + DF hybrid model\nFor seasonal or unpredictable demand:\n\nThe best strategy is often:\n\nStandard PO + Amazon inventory + DF backup\n\nExample:\n\nNormal demand:\n→ Amazon holds inventory through PO\n\nDemand spike:\n→ DF handles additional orders\n\nThis separates:\n\nStability + Flexibility\n\nInstead of relying on one fulfillment model.\n\n4. Can DF reduce chargebacks?\n\nYes, but that should NOT be the main reason to adopt DF.\nMany vendors see chargeback reductions because DF gives brands more control over:\n\nInventory availability\nShipping timing\n\nOrder execution\n\nHowever:\n\nDF does not replace operational discipline.\n\nAmazon still expects:\n\nFast processing\n\nAccurate shipment confirmation\n\nReliable delivery performance\n5. DF operational KPIs you cannot ignore\nIf you operate DF, monitor:\n\nOn-time Shipping Compliance\n\nAmazon tracks:\n\nActual ship date vs required ship date.\n\nPoor performance impacts account health.\nCarrier Cut-off Time\nEvery carrier has different pickup deadlines.\nYour warehouse team must understand:\n\nOrder cutoff\n\nPickup schedule\n\nProcessing capacity\n\nMissing the cutoff means missing Amazon's SLA.\n\nResponsibility Transfer Point\n\nUnderstand when liability transfers:\n\nAmazon carrier:\n→ responsibility transfers after pickup\n\nYour own carrier:\n→ responsibility may remain until delivery confirmation\n\nThis impacts:\nClaims\nDamages\n\nDisputes\n\nInternal fulfillment speed\n\nA strong DF operation usually requires:\n\nOrder received → Pick → Pack → Ship\nwithin 24 hours.\n\nPreparation matters:\nSKU instructions\n\nPackaging rules\n\nLabels\nWarehouse workflow\nDo not build this during peak season.\n6. DF can become a negotiation tool with Amazon\n\nThis is the part many brands overlook.\n\nSometimes Amazon encourages vendors to move certain products into DF because it helps Amazon:\n\nReduce inventory risk\n\nLower fulfillment costs\n\nImprove selection economics\nWhen Amazon benefits financially, vendors should understand:\nThere may be room for negotiation.\nDo not simply accept the request.\n\nUnderstand:\n\nWhy does Amazon want DF?\n\nWhat problem are they solving?\n\nWhat value are you providing?\n\nThen negotiate:\nBetter terms\nSupport programs\n\nCost sharing\n\nCommercial agreements\n\nFinal thoughts\n\nDirect Fulfillment is not:\n\n❌ “Amazon has no inventory, so suppliers rescue the order.”\n\nIt is:\n\n✅ A strategic fulfillment model\n✅ An inventory risk management tool\n✅ A way to expand selection\n✅ A negotiation lever with Amazon\n\nThe brands that win on Amazon are not the ones using one fulfillment method.\n\nThey are the ones designing the right supply chain architecture.\n\nCan help you handle critical tasks.\n\n→Assess whether your brand qualifies for Amazon Vendor (1P).\n\n→Determine whether the 1P (Vendor) or 3P (Seller) model is the right strategy for your business.\n\n→Design a sustainable profit structure to improve competitiveness, reduce the risk of being phased out, and negotiate better commercial terms.\n\n#Amazon #VendorCentral #DirectFulfillment #Amazon1P #SupplyChain #EcommerceStrategy #Retail",
+    "text": "Amazon Vendor Central ——\nDirect Fulfillment is NOT a backup plan.\n\nOne of the biggest misconceptions among Amazon 1P vendors:\n\n“Direct Fulfillment is only used when Amazon runs out of inventory, so suppliers ship orders instead.”\n\nThat understanding is too shallow.\n\nDF is not simply an alternative to FBM.\n\nIt is a strategic fulfillment model designed to create inventory redundancy, improve availability, and optimize Amazon's supply chain economics.\n\nHere are the key points every brand should understand before adopting DF.\n\n1. The real purpose of DF: Inventory insurance\n\nThe biggest value of Direct Fulfillment is not emergency replenishment.\n\nIt is redundancy.\n\nWhen Amazon's fulfillment network faces inventory gaps, DF allows customers to continue purchasing instead of seeing:\n\n“Currently unavailable.”\n\nThis matters even more during:\n\nPrime events\nHoliday seasons\nDemand spikes\nNew product launches\n\nAmazon inventory replenishment has lead times.\n\nCustomer demand does not wait.\n\nDF creates a flexible backup lane that protects sales continuity.\n\n2. What products are suitable for DF?\nGood candidates:\n\n✅ High ASP products\n✅ Bulky products\n✅ Multi-box products\n✅ Seasonal products\n✅ Long-tail assortment\nExamples:\nAppliances\nFurniture\nLarge fitness equipment\n\nHome improvement products\n\nWhy?\nBecause these products usually have:\nHigher margin tolerance\nMore complex inventory requirements\n\nHigher cost of holding Amazon inventory\n\nDF allows brands to expand selection without forcing Amazon to carry every SKU.\n\nPoor candidates:\n❌ Low ASP products\n❌ Small lightweight products\n❌ High-volume commodity items\nExamples:\n\nPens\n\nSmall accessories\n\nLow-cost household items\nThe fulfillment cost of picking, packing, and shipping individual orders can destroy margin.\nAnother important factor:\n\nIf your warehouse is not prepared for consumer-level fulfillment, DF can become an operational nightmare.\n\nB2B shipping capability ≠ DTC fulfillment capability.\n3. The winning strategy: PO + DF hybrid model\nFor seasonal or unpredictable demand:\n\nThe best strategy is often:\n\nStandard PO + Amazon inventory + DF backup\n\nExample:\n\nNormal demand:\n→ Amazon holds inventory through PO\n\nDemand spike:\n→ DF handles additional orders\n\nThis separates:\n\nStability + Flexibility\n\nInstead of relying on one fulfillment model.\n\n4. Can DF reduce chargebacks?\n\nYes, but that should NOT be the main reason to adopt DF.\nMany vendors see chargeback reductions because DF gives brands more control over:\n\nInventory availability\nShipping timing\n\nOrder execution\n\nHowever:\n\nDF does not replace operational discipline.\n\nAmazon still expects:\n\nFast processing\n\nAccurate shipment confirmation\n\nReliable delivery performance\n5. DF operational KPIs you cannot ignore\nIf you operate DF, monitor:\n\nOn-time Shipping Compliance\n\nAmazon tracks:\n\nActual ship date vs required ship date.\n\nPoor performance impacts account health.\nCarrier Cut-off Time\nEvery carrier has different pickup deadlines.\nYour warehouse team must understand:\n\nOrder cutoff\n\nPickup schedule\n\nProcessing capacity\n\nMissing the cutoff means missing Amazon's SLA.\n\nResponsibility Transfer Point\n\nUnderstand when liability transfers:\n\nAmazon carrier:\n→ responsibility transfers after pickup\n\nYour own carrier:\n→ responsibility may remain until delivery confirmation\n\nThis impacts:\nClaims\nDamages\n\nDisputes\n\nInternal fulfillment speed\n\nA strong DF operation usually requires:\n\nOrder received → Pick → Pack → Ship\nwithin 24 hours.\n\nPreparation matters:\nSKU instructions\n\nPackaging rules\n\nLabels\nWarehouse workflow\nDo not build this during peak season.\n6. DF can become a negotiation tool with Amazon\n\nThis is the part many brands overlook.\n\nSometimes Amazon encourages vendors to move certain products into DF because it helps Amazon:\n\nReduce inventory risk\n\nLower fulfillment costs\n\nImprove selection economics\nWhen Amazon benefits financially, vendors should understand:\nThere may be room for negotiation.\nDo not simply accept the request.\n\nUnderstand:\n\nWhy does Amazon want DF?\n\nWhat problem are they solving?\n\nWhat value are you providing?\n\nThen negotiate:\nBetter terms\nSupport programs\n\nCost sharing\n\nCommercial agreements\n\nFinal thoughts\n\nDirect Fulfillment is not:\n\n❌ “Amazon has no inventory, so suppliers rescue the order.”\n\nIt is:\n\n✅ A strategic fulfillment model\n✅ An inventory risk management tool\n✅ A way to expand selection\n✅ A negotiation lever with Amazon\n\nThe brands that win on Amazon are not the ones using one fulfillment method.\n\nThey are the ones designing the right supply chain architecture.\n\nCan help you handle critical tasks.\n\n→Assess whether your brand qualifies for Amazon Vendor (1P).\n\n→Determine whether the 1P (Vendor) or 3P (Seller) model is the right strategy for your business.\n\n→Design a sustainable profit structure to improve competitiveness, reduce the risk of being phased out, and negotiate better commercial terms.\n\n#Amazon #VendorCentral #DirectFulfillment #Amazon1P #SupplyChain #EcommerceStrategy #Retail",
+    "post_url": "https://twitter.com/GRelaxyuso/status/2074538200081817934",
+    "score": 2,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-07-07T16:57:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:16:30.111Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcc0e42dd0e95b5bab0c7"
+    },
+    "message_id": "twitter_2039343846119686479",
+    "topic_key": "commercial chargeback management",
+    "search_keyword": "commercial chargeback management",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Agentproof_sh",
+    "title": "https://t.co/ziCR7jsJTD",
+    "text": "https://t.co/ziCR7jsJTD",
+    "post_url": "https://twitter.com/Agentproof_sh/status/2039343846119686479",
+    "score": 2,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-04-01T14:07:16Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:16:30.309Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcc0f42dd0e95b5bab0cb"
+    },
+    "message_id": "twitter_2038617366591107426",
+    "topic_key": "commercial chargeback management",
+    "search_keyword": "commercial chargeback management",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "PayAINetwork",
+    "title": "https://t.co/yNgI9Nl2sH",
+    "text": "https://t.co/yNgI9Nl2sH",
+    "post_url": "https://twitter.com/PayAINetwork/status/2038617366591107426",
+    "score": 88,
+    "num_comments": 13,
+    "created_utc": {
+      "$date": "2026-03-30T14:00:30Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:16:31.087Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcc0f42dd0e95b5bab0cf"
+    },
+    "message_id": "twitter_2099868548277350576",
+    "topic_key": "commercial chargeback management",
+    "search_keyword": "commercial chargeback management",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Discretion_VIP",
+    "title": "Adult merchants have historically faced far higher chargeback rates than mainstream e-commerce, alongside stricter monitoring and more expensive payment processing.\n\nThat’s why payment infrastructure isn’t a boring back-office issue in adult.\n\nIt can decide whether a business survives.",
+    "text": "Adult merchants have historically faced far higher chargeback rates than mainstream e-commerce, alongside stricter monitoring and more expensive payment processing.\n\nThat’s why payment infrastructure isn’t a boring back-office issue in adult.\n\nIt can decide whether a business survives.",
+    "post_url": "https://twitter.com/Discretion_VIP/status/2099868548277350576",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T14:30:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:16:31.866Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcc1442dd0e95b5bab0d1"
+    },
+    "message_id": "reddit_t3_1wir4v9",
+    "topic_key": "local pest control",
+    "search_keyword": "local pest control",
+    "platform": "reddit",
+    "subreddit": "SeattleAreaRE",
+    "username": "OwlZealousideal4779",
+    "title": "Is it actually better not to spray ants when you see them?",
+    "text": "Is it actually better not to spray ants when you see them?\n\nI've heard this come up a few times in home maintenance discussions, and I'm curious if it's actually true.  Apparently, with some common household ants, spraying the ants you see can sometimes make the problem worse because the colony may split into smaller colonies instead of dealing with the nest itself.    I asked a local pest control company, AMPM Exterminators, about it, and they said sprays can act as repellents rather than something the ants carry back to the colony. They also mentioned that bait works differently because the ants can take it back to the nest.    For anyone who's dealt with ants around Seattle homes, is this actually how it works? Have you found bait to work better than spraying?       submitted by     /u/OwlZealousideal4779     to     r/SeattleAreaRE       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SeattleAreaRE/comments/1wir4v9/is_it_actually_better_not_to_spray_ants_when_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T11:16:25Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:16:36.378Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcc1542dd0e95b5bab0d2"
+    },
+    "message_id": "reddit_t3_1wir4pf",
+    "topic_key": "cpa",
+    "search_keyword": "CPA",
+    "platform": "reddit",
+    "subreddit": "CorpoChikaPH",
+    "username": "Blue_bubblesCPA",
+    "title": "Anyone working at Chevron? Would love to hear your honest experience",
+    "text": "Anyone working at Chevron? Would love to hear your honest experience\n\nHi everyone!    I’m planning to join  Chevron in a Finance role  and would love to hear from current/former employees.    How’s the  work environment, culture, work-life balance, overtime, management, and benefits ?    Also, how’s the  career growth  in Finance?   Would really appreciate any honest experiences, good or bad. Thanks!       submitted by     /u/Blue_bubblesCPA     to     r/CorpoChikaPH       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CorpoChikaPH/comments/1wir4pf/anyone_working_at_chevron_would_love_to_hear_your/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T11:16:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:16:37.071Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcc1642dd0e95b5bab0d3"
+    },
+    "message_id": "twitter_2087059259569606824",
+    "topic_key": "commercial checkout",
+    "search_keyword": "commercial checkout",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "BabyD1111229",
+    "title": "To all the Supermarkets and big commercial stores that operate 'Self Check-outs'....\n\nYou are heading towards almost exclusively self-checkout now.  Yesterday I went shopping at one such store and the lady checking receipts at the exit was stopping everyone. \n\nI didn't choose to participate in that nonsense, I had already filled my trolly, emptied my trolly and scanned the items, refilled my trolly, and so I just skipped the exit line and left. \n\nI heard her saying \"Umm - Excuse me “ as I kept walking and raised the receipt above my head, leaving the store. \n\nYou can either trust me to do self-checkout, or you can put your cashiers back in place like it used to be. \n\n• I'm not interested in proving that I did your job for you. \n\n• If you want me to be a cashier with no training then that's your problem not mine. \n\n• Keep employing young people and give them job opportunities. \n\nYOU DON'T PAY ME TO SCAN MY OWN SHOPPING.\nYOU DON’T GIVE ME STAFF DISCOUNT FOR WORKING FOR YOU. \n\nSigned…\nAll of us\n\nProfits be for people…\n#Truth",
+    "text": "To all the Supermarkets and big commercial stores that operate 'Self Check-outs'....\n\nYou are heading towards almost exclusively self-checkout now.  Yesterday I went shopping at one such store and the lady checking receipts at the exit was stopping everyone. \n\nI didn't choose to participate in that nonsense, I had already filled my trolly, emptied my trolly and scanned the items, refilled my trolly, and so I just skipped the exit line and left. \n\nI heard her saying \"Umm - Excuse me “ as I kept walking and raised the receipt above my head, leaving the store. \n\nYou can either trust me to do self-checkout, or you can put your cashiers back in place like it used to be. \n\n• I'm not interested in proving that I did your job for you. \n\n• If you want me to be a cashier with no training then that's your problem not mine. \n\n• Keep employing young people and give them job opportunities. \n\nYOU DON'T PAY ME TO SCAN MY OWN SHOPPING.\nYOU DON’T GIVE ME STAFF DISCOUNT FOR WORKING FOR YOU. \n\nSigned…\nAll of us\n\nProfits be for people…\n#Truth",
+    "post_url": "https://twitter.com/BabyD1111229/status/2087059259569606824",
+    "score": 37404,
+    "num_comments": 1552,
+    "created_utc": {
+      "$date": "2026-08-11T06:11:17Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:16:38.430Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcc1642dd0e95b5bab0d5"
+    },
+    "message_id": "twitter_2098426631920513039",
+    "topic_key": "commercial checkout",
+    "search_keyword": "commercial checkout",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "StoreSupply",
+    "title": "Fall gets busy fast. Make sure your checkout is ready.\n\nKeep checkout bags restocked so purchases stay organized and transactions keep moving when the store picks up.\n\nCheck the gaps. Restock the essentials. Stay ready. Shop now at https://t.co/7oMfsbqiYE https://t.co/zpQMU1BaL9",
+    "text": "Fall gets busy fast. Make sure your checkout is ready.\n\nKeep checkout bags restocked so purchases stay organized and transactions keep moving when the store picks up.\n\nCheck the gaps. Restock the essentials. Stay ready. Shop now at https://t.co/7oMfsbqiYE https://t.co/zpQMU1BaL9",
+    "post_url": "https://twitter.com/StoreSupply/status/2098426631920513039",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T15:01:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:16:38.821Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcc1742dd0e95b5bab0d6"
+    },
+    "message_id": "twitter_2100332582017667082",
+    "topic_key": "commercial checkout",
+    "search_keyword": "commercial checkout",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "AnnieM2022",
+    "title": "Little things like this make a difference for check out when it comes to seniors. This checkout staff did a phenomenal job all the paperwork it was in order, highlighted pertinent things. This is one that takes pride in their job. https://t.co/UbdRBMb98y",
+    "text": "Little things like this make a difference for check out when it comes to seniors. This checkout staff did a phenomenal job all the paperwork it was in order, highlighted pertinent things. This is one that takes pride in their job. https://t.co/UbdRBMb98y",
+    "post_url": "https://twitter.com/AnnieM2022/status/2100332582017667082",
+    "score": 3,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T21:14:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:16:39.017Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcc1742dd0e95b5bab0d7"
+    },
+    "message_id": "twitter_2098321543038439605",
+    "topic_key": "commercial checkout",
+    "search_keyword": "commercial checkout",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "gocashfree",
+    "title": "70% of carts get abandoned because checkout takes too long. ⏳\n\nSo we built Checkout360, launched today at #GFF2026. \n\nAn Al-powered, zero-scroll checkout with prefilled details, auto-offers, and Voice A recovery for 5-second buys. \n\nZero scroll. Max conversions. ⚡️\n#GFF2026 #CashfreeAtGFF",
+    "text": "70% of carts get abandoned because checkout takes too long. ⏳\n\nSo we built Checkout360, launched today at #GFF2026. \n\nAn Al-powered, zero-scroll checkout with prefilled details, auto-offers, and Voice A recovery for 5-second buys. \n\nZero scroll. Max conversions. ⚡️\n#GFF2026 #CashfreeAtGFF",
+    "post_url": "https://twitter.com/gocashfree/status/2098321543038439605",
+    "score": 3,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T08:03:35Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:16:39.213Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcc1742dd0e95b5bab0d8"
+    },
+    "message_id": "twitter_2100199542784160247",
+    "topic_key": "commercial checkout",
+    "search_keyword": "commercial checkout",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "legacywithsha",
+    "title": "They only look for a lawyer when someone is already gone.\n\nWhen the land is untitled in the right name.\n\nWhen the shares were “understood.”\n\nWhen the will was verbal.\n\nWhen the business was built on “alam naman nating lahat ’yan.” (We all know this). By then, it is no longer a paperwork problem. It is a family problem.\n\nI used to be remembered for arriving after the mess. That is not the work I want founders to need. The work that actually protects a legacy happens earlier:\n\n1️⃣ Papers in order,\n2️⃣ Roles written down,\n3️⃣ Deals documented, and\n4️⃣ A plan if something happens.\n\nNot tiwala lang (trust only) until there is no trust left. That is why the Family Business Legal Starter Kit exists under Legally Clicked. It is a self-help set of tools for Filipino founders and family enterprises who want structure before conflict:\n\n• A short guide on 6 legal risks that quietly show up in family businesses\n\n• A guided legal audit checklist to map what is actually missing\n\n• Editable Word templates for partnership arrangements, family agreements, commercial leases, and NDAs\n\n• One 60-minute strategy session to walk through how to use the tools in your own setup.\n\nOne-time access: ₱9,999 during the current founders’ launch window (regular price ₱14,999).\n\nNo monthly retainer. Instant delivery after checkout. This kit is an educational resource. It is not legal representation, and buying it does not create an attorney-client relationship. If a matter later needs formal counsel, that is a separate engagement.\n\nIf your business still runs on handshake agreements, start with the foundation. Link:\n\nhttps://t.co/jivNn2BB5n\n\n#LegacyWithSha #LegallyClicked #FamilyBusiness #BuildingLegacies",
+    "text": "They only look for a lawyer when someone is already gone.\n\nWhen the land is untitled in the right name.\n\nWhen the shares were “understood.”\n\nWhen the will was verbal.\n\nWhen the business was built on “alam naman nating lahat ’yan.” (We all know this). By then, it is no longer a paperwork problem. It is a family problem.\n\nI used to be remembered for arriving after the mess. That is not the work I want founders to need. The work that actually protects a legacy happens earlier:\n\n1️⃣ Papers in order,\n2️⃣ Roles written down,\n3️⃣ Deals documented, and\n4️⃣ A plan if something happens.\n\nNot tiwala lang (trust only) until there is no trust left. That is why the Family Business Legal Starter Kit exists under Legally Clicked. It is a self-help set of tools for Filipino founders and family enterprises who want structure before conflict:\n\n• A short guide on 6 legal risks that quietly show up in family businesses\n\n• A guided legal audit checklist to map what is actually missing\n\n• Editable Word templates for partnership arrangements, family agreements, commercial leases, and NDAs\n\n• One 60-minute strategy session to walk through how to use the tools in your own setup.\n\nOne-time access: ₱9,999 during the current founders’ launch window (regular price ₱14,999).\n\nNo monthly retainer. Instant delivery after checkout. This kit is an educational resource. It is not legal representation, and buying it does not create an attorney-client relationship. If a matter later needs formal counsel, that is a separate engagement.\n\nIf your business still runs on handshake agreements, start with the foundation. Link:\n\nhttps://t.co/jivNn2BB5n\n\n#LegacyWithSha #LegallyClicked #FamilyBusiness #BuildingLegacies",
+    "post_url": "https://twitter.com/legacywithsha/status/2100199542784160247",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:26:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:16:39.410Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcc1742dd0e95b5bab0d9"
+    },
+    "message_id": "twitter_2098456045022539862",
+    "topic_key": "commercial checkout",
+    "search_keyword": "commercial checkout",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "commercialbankc",
+    "title": "La rentrée est passée, la routine reprend.\nStation, pharmacie ou mall du samedi…\nAvec CB‑Pay, payez en un bip et continuez.\nAïcha dispo 24/7 au 8080 et 691741107.\n\n#CBPay #POS #ContactlessPayment #CommercialBank #Cameroun https://t.co/3EVObaGf3v",
+    "text": "La rentrée est passée, la routine reprend.\nStation, pharmacie ou mall du samedi…\nAvec CB‑Pay, payez en un bip et continuez.\nAïcha dispo 24/7 au 8080 et 691741107.\n\n#CBPay #POS #ContactlessPayment #CommercialBank #Cameroun https://t.co/3EVObaGf3v",
+    "post_url": "https://twitter.com/commercialbankc/status/2098456045022539862",
+    "score": 1,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T16:58:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:16:39.606Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcc1742dd0e95b5bab0da"
+    },
+    "message_id": "twitter_2099199900516778074",
+    "topic_key": "commercial checkout",
+    "search_keyword": "commercial checkout",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ZedkrPay",
+    "title": "https://t.co/yjBc7F0pw0",
+    "text": "https://t.co/yjBc7F0pw0",
+    "post_url": "https://twitter.com/ZedkrPay/status/2099199900516778074",
+    "score": 19,
+    "num_comments": 3,
+    "created_utc": {
+      "$date": "2026-09-13T18:13:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:16:39.802Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcc1742dd0e95b5bab0db"
+    },
+    "message_id": "twitter_2098448103926100135",
+    "topic_key": "commercial checkout",
+    "search_keyword": "commercial checkout",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "seventensuited",
+    "title": "New at the Las Vegas Convention Center North Hall!\n\nA new First Class Drinks & Snacks market is now using Amazon’s Just Walk Out technology.\n\nTap your debit/credit card to enter, grab your drinks and snacks, then tap to exit. \n\nNo checkout line.\n\nThe market is advertised as open 24/7.\n\nOther Just Walk Out markets can also be found at T-Mobile Arena and Harry Reid International Airport.",
+    "text": "New at the Las Vegas Convention Center North Hall!\n\nA new First Class Drinks & Snacks market is now using Amazon’s Just Walk Out technology.\n\nTap your debit/credit card to enter, grab your drinks and snacks, then tap to exit. \n\nNo checkout line.\n\nThe market is advertised as open 24/7.\n\nOther Just Walk Out markets can also be found at T-Mobile Arena and Harry Reid International Airport.",
+    "post_url": "https://twitter.com/seventensuited/status/2098448103926100135",
+    "score": 32,
+    "num_comments": 5,
+    "created_utc": {
+      "$date": "2026-09-11T16:26:29Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T11:16:39.999Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabcc1842dd0e95b5bab0dc"
+    },
+    "message_id": "twitter_2099112997566152992",
+    "topic_key": "commercial checkout",
+    "search_keyword": "commercial checkout",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ravenledgererp",
+    "title": "From fabrics and trims to MRP, production costing and finance—see how RavenLedger connects garment manufacturing in one ERP. Read: https://t.co/0evRFaR9qU #GarmentERP https://t.co/xdNzL1FBVw",

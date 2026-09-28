@@ -1,0 +1,416 @@
+  },
+  {
+    "_id": {
+      "$oid": "6aaa53ce6508d45f3d2d1888"
+    },
+    "message_id": "reddit_t3_1whrcsi",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "IndianTeenBffs",
+    "username": "Routine_Image_6663",
+    "title": "Being stuck in CET 1 while wanting to do Advanced is destroying my mental peace.",
+    "text": "Being stuck in CET 1 while wanting to do Advanced is destroying my mental peace.\n\nHey everyone, 16M here. Just need to vent a bit and hopefully connect with people who get it. A while back, I actually got the call/offer to move into the JEE Advanced batch. But my parents turned it down, claiming I \"don't study enough\" and wouldn't be able to handle it. So now I'm in CET 1. It's not that I can't solve Advanced-level problems—I know I can. But every time I see the Advanced batch students hanging out, focused, and looking like tight friends, it brings up this weird mix of trauma, frustration, and isolation. It feels like a constant reminder of a choice that was stripped away from me. On top of that, home doesn't feel like a safe space to even express this. If I'm on my phone, they assume I'm hiding something bad. If I get upset, I just get hit with lectures or unwanted advice instead of someone actually listening. The first mega test is over, so shifting batches now isn't an option. Honestly, I'm just looking for friends to talk to, rant with, or just hang out with online who understand what this kind of pressure feels like. DM me or comment below if you relate or just want to chat.       submitted by     /u/Routine_Image_6663     to     r/IndianTeenBffs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IndianTeenBffs/comments/1whrcsi/being_stuck_in_cet_1_while_wanting_to_do_advanced/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T08:30:35Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T08:31:10.281Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa53ce6508d45f3d2d1889"
+    },
+    "message_id": "reddit_t3_1whrcsh",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devplatform_triggers",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789547435340",
+    "text": "[PROBE] 1789547435340\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devplatform_triggers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devplatform_triggers/comments/1whrcsh/probe_1789547435340/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T08:30:35Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T08:31:10.479Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa53df798842c4ceff9b58"
+    },
+    "message_id": "reddit_t3_1whrd6u",
+    "topic_key": "checkout",
+    "search_keyword": "checkout",
+    "platform": "reddit",
+    "subreddit": "marketingagency",
+    "username": "Final_Dfhyentist5095",
+    "title": "I've been asked to prove connected TV worked, is incrementality testing the only way to measure retail sell-through?",
+    "text": "I've been asked to prove connected TV worked, is incrementality testing the only way to measure retail sell-through?\n\nWe are running connected TV ads for a CPG brand expanding nationally. Since there is no meaningful direct checkout to track, media mix measurement has been the only reliable recommendation I have received though it is both slow and costly. Most of our volume moves through retail channels. Website traffic is not a reliable indicator and retailer data is delayed and aggregated, so the typical performance TV advertising approach which relies on pixel tracking and direct conversions does not apply to our situation.  Industry peers usually use a combination of matched market testing and syndicated sales data. While it may be effective, this approach may typically require a full quarter and significant investment before providng insights. I want to avoid investing in a performance platform only to evaluate it using brand campaign metrics, as this seems redundant and inefficient. For those in CPG, what methods have you found effective for measuring the impact of TV advertising on retail sell through?       submitted by     /u/Final_Dfhyentist5095     to     r/marketingagency       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/marketingagency/comments/1whrd6u/ive_been_asked_to_prove_connected_tv_worked_is/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T08:31:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T08:31:27.850Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa53e0798842c4ceff9b59"
+    },
+    "message_id": "reddit_t3_1whrd13",
+    "topic_key": "shopify",
+    "search_keyword": "Shopify",
+    "platform": "reddit",
+    "subreddit": "EcommerceWebsite",
+    "username": "Shuuuuaib",
+    "title": "how to separate infrastructure problems from architecture problems after a peak traffic incident?",
+    "text": "how to separate infrastructure problems from architecture problems after a peak traffic incident?\n\nOutdoor gear retailer at €28M GMV, and this past week our September promo event pushed us to 3.5 to 4 times normal order volume and exposed a database connection limit we hadn't properly stress-tested.   This cost us roughly 3 hours of effective downtime during what should have been the highest-revenue day of Q3.   We've come out of it with a short-term patch, a Redis session handler, a tuned connection pool at 300 concurrent connections, a dedicated read replica for catalog queries, and pre-generated category pages for our top 50 SKUs.   And that combination should hold for a 4x event, but we've also started an architectural review because our Black Friday target is 6 to 7x and we're not confident the same fixes scale that far.   The framework we're using to think about it distinguishes between stateful session handling under high concurrency (which is theoretically fixable at the infra layer), and monolithic order processing that can't parallelize beyond a certain point.   The latter is a platform architecture problem that patching doesn't resolve, and our engineers are split on which category we're actually in.   Names that came up in our research are SCAYLE for the multi-market composable route and Shopify Plus as the simpler managed alternative, but we haven't started a formal evaluation yet.   But whether any of that makes sense now or belongs in a Q1 evaluation is what we're still working through.   Sharing this because I've seen a lot of posts about whether to replatform but not many about how to run the diagnostic first.   So if anyone has a clean framework for separating an infrastructure problem from an architecture problem after a peak incident, that's what would actually be useful.       submitted by     /u/Shuuuuaib     to     r/EcommerceWebsite       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/EcommerceWebsite/comments/1whrd13/how_to_separate_infrastructure_problems_from/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T08:31:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T08:31:28.551Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa54066508d45f3d2d188a"
+    },
+    "message_id": "reddit_t3_1whrdll",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "hatsune",
+    "username": "Wildreddit2",
+    "title": "My alt-rock album with Miku: 'RUNAWAYS' is out today!!! I hope you enjoy it ☺️🤘💗 x",
+    "text": "My alt-rock album with Miku: 'RUNAWAYS' is out today!!! I hope you enjoy it ☺️🤘💗 x\n\nsubmitted by     /u/Wildreddit2     to     r/hatsune       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hatsune/comments/1whrdll/my_altrock_album_with_miku_runaways_is_out_today/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T08:31:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T08:32:06.946Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa54076508d45f3d2d188b"
+    },
+    "message_id": "reddit_t3_1whrdld",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "AdeleMareeSnark",
+    "username": "Honest_Woodpecker187",
+    "title": "Second hand embarassment",
+    "text": "Second hand embarassment\n\nI feel like I’ve piled on with this Bali trip but the content she is giving us is too much. I am embarrassed for her copying her new bestie so much ✌🏼🤪       submitted by     /u/Honest_Woodpecker187     to     r/AdeleMareeSnark       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AdeleMareeSnark/comments/1whrdld/second_hand_embarassment/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T08:31:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T08:32:07.146Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa54076508d45f3d2d188c"
+    },
+    "message_id": "reddit_t3_1whrdla",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "IllustriousMove9818",
+    "title": "Level: 601~620 1⭐ Summer Matsuri #7595",
+    "text": "Level: 601~620 1⭐ Summer Matsuri #7595\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/IllustriousMove9818     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1whrdla/level_601620_1_summer_matsuri_7595/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T08:31:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T08:32:07.345Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa54076508d45f3d2d188d"
+    },
+    "message_id": "reddit_t3_1whrdj1",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "Weddingattireapproval",
+    "username": "Charming-Nature-2709",
+    "title": "Need opinions",
+    "text": "Need opinions\n\nGoing to an October wedding. Is the navy blue dress okay for an autumn color scheme? (I feel as if it’s more of a winter color but not sure). I like the brown dress as well but not sure if it’s too white with the floral pattern. Would love some outside opinions.        submitted by     /u/Charming-Nature-2709     to     r/Weddingattireapproval       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Weddingattireapproval/comments/1whrdj1/need_opinions/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T08:31:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T08:32:07.558Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa54076508d45f3d2d188e"
+    },
+    "message_id": "reddit_t3_1whrdj0",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Mysterious2Anonymous",
+    "title": "Grab 100 hammers from u/Mysterious2Anonymous!",
+    "text": "Grab 100 hammers from u/Mysterious2Anonymous!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Mysterious2Anonymous     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1whrdj0/grab_100_hammers_from_umysterious2anonymous/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T08:31:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T08:32:07.757Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa54076508d45f3d2d188f"
+    },
+    "message_id": "reddit_t3_1whrdiw",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "delhiuniversity",
+    "username": "Willing-Weakness7163",
+    "title": "Aaj baat DU ke Women's college's ki hogi. (Politics) Related",
+    "text": "Aaj baat DU ke Women's college's ki hogi. (Politics) Related\n\nThose who think student union election are pointless. Can avoid this.    If you don't know why we need it then there's no point of you reading this.    MH is a member of DUSU.. they know very well how to handle it. Aur aukaat kisko kaise dikhani hai. Irrespective of party.    Now there's DRC, GARGI. LSR, KNC, Bharati, Kalindi, IHE, Lady Irwin , JMC, MAITREYI    They think it's cool to be away from politics. I have never been to any of these. Unlike some cunts who die to get in a women's college for obvious reasons.    But I know for a fact in sab colleges ki kisi na kisi tarah se lanka lagi hui hai.    DRC, Bharati , MAITREYI has hostels. IHE ka bhi hai , male staff bhi hai. Someone made a post on reddit about the male staff of college mess in DRC. Doing some inappropriate things. Wo post bhi gayab aur ispe baat bhi nahi Hui.    Aisa hai bhi nahi ki ye colleges kuch teer maar rahe hai. 🤡. And those who know there was a Time LSR had the ambition to become autonomous. 🤡 Ab wo RSS ke events organise karwata hai    WHAT GARGI STUDENTS DID. IS APPRECIABLE BUT I KNOW PEOPLE THErE WHO can't SPEAK ABOUT THEIR PROFESSOR'S MANMANI.    AUR DU ke lagbhag har college mei marks ko leke dhamkaya jata hai.    One candidate went to talk to NCC peeps.    And i posted something which said.    Those who are trained to follow orders ,lose the will to ask questions.    So it's kinda pointless talking to them. Kyunki NCC ka circus koi kaise ho improve karega.    LBC aur SPMC hai union mei. Lekin waha to already kabza ho rakha hai ek specific union ka. 😂       submitted by     /u/Willing-Weakness7163     to     r/delhiuniversity       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/delhiuniversity/comments/1whrdiw/aaj_baat_du_ke_womens_colleges_ki_hogi_politics/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T08:31:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T08:32:07.958Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa54086508d45f3d2d1890"
+    },
+    "message_id": "reddit_t3_1whrdic",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "Creampie118",
+    "title": "Grab 25⚡ from u/Creampie118!",
+    "text": "Grab 25⚡ from u/Creampie118!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Creampie118     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1whrdic/grab_25_from_ucreampie118/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T08:31:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T08:32:08.172Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa54086508d45f3d2d1891"
+    },
+    "message_id": "reddit_t3_1whrdhz",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789547505401",
+    "text": "[PROBE] 1789547505401\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1whrdhz/probe_1789547505401/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T08:31:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T08:32:08.372Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa54086508d45f3d2d1892"
+    },
+    "message_id": "reddit_t3_1whrdhb",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ntnu",
+    "username": "emnaabid",
+    "title": "Okay, student life question…",
+    "text": "Okay, student life question…\n\nYou suddenly need something for  just a few hours .    You search online (Finn, Facebook .. ) . Nothing nearby.  You ask around…  no one has one.     Buying one feels ridiculous for something you’ll barely use. And honestly…  where would you even put it?      So what do you do?    I’m running a  2-minute survey  to find out how students deal with situations like this.     [Take the survey:   https://tally.so/r/44MYEO   ]    Your answer could actually help shape what comes next.        submitted by     /u/emnaabid     to     r/ntnu       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ntnu/comments/1whrdhb/okay_student_life_question/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T08:31:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T08:32:08.573Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa54086508d45f3d2d1893"
+    },
+    "message_id": "reddit_t3_1whrdgx",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devplatform_triggers",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789547501929",
+    "text": "[PROBE] 1789547501929\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devplatform_triggers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devplatform_triggers/comments/1whrdgx/probe_1789547501929/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T08:31:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T08:32:08.774Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa54086508d45f3d2d1894"
+    },
+    "message_id": "reddit_t3_1whrdgi",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MapBasedPolls",
+    "username": "Inevitable_Gainz",
+    "title": "Do you believe illegal immigration is a real issue, or is it fake news?",
+    "text": "Do you believe illegal immigration is a real issue, or is it fake news?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Inevitable_Gainz     to     r/MapBasedPolls       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MapBasedPolls/comments/1whrdgi/do_you_believe_illegal_immigration_is_a_real/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T08:31:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T08:32:08.975Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa54096508d45f3d2d1895"
+    },
+    "message_id": "reddit_t3_1whrdgd",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "IllustriousMove9818",
+    "title": "Level: 601~620 1⭐ Summer Matsuri #7594",
+    "text": "Level: 601~620 1⭐ Summer Matsuri #7594\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/IllustriousMove9818     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1whrdgd/level_601620_1_summer_matsuri_7594/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T08:31:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T08:32:09.174Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa54096508d45f3d2d1896"
+    },
+    "message_id": "reddit_t3_1whrdfo",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Pixelary",
+    "username": "Evuinha",
+    "title": "What did u/Evuinha draw?",
+    "text": "What did u/Evuinha draw?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Evuinha     to     r/Pixelary       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Pixelary/comments/1whrdfo/what_did_uevuinha_draw/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T08:31:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T08:32:09.375Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa54096508d45f3d2d1897"
+    },
+    "message_id": "reddit_t3_1whrdfk",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "TamilNaduDiscussion",
+    "username": "Affectionate_Act560",
+    "title": "Why do Tamils have to protest for Tamil to be used in Temples in their own land in the first place. Is BJP ruling out state for only Sanskrit to be used?",
+    "text": "Why do Tamils have to protest for Tamil to be used in Temples in their own land in the first place. Is BJP ruling out state for only Sanskrit to be used?\n\nsubmitted by     /u/Affectionate_Act560     to     r/TamilNaduDiscussion       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TamilNaduDiscussion/comments/1whrdfk/why_do_tamils_have_to_protest_for_tamil_to_be/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T08:31:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T08:32:09.575Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa54096508d45f3d2d1898"
+    },
+    "message_id": "reddit_t3_1whrdfi",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "SteamFrame",
+    "username": "Narrow_Awareness2830",
+    "title": "Multi Monitor setup with Steam Frame",
+    "text": "Multi Monitor setup with Steam Frame\n\nI'm planning on buying the steam frame now that its released, but I've ben wondering, would it be possible to connect it to my pc and run a multimonitor setup with the steam frame in VR.       submitted by     /u/Narrow_Awareness2830     to     r/SteamFrame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SteamFrame/comments/1whrdfi/multi_monitor_setup_with_steam_frame/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T08:31:37Z"
+    },
+    "fetched_at": {

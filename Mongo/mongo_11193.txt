@@ -1,0 +1,416 @@
+      "$oid": "6aae1023660c60840397d7e9"
+    },
+    "message_id": "reddit_t3_1wkcbbt",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "sername35353555",
+    "title": "What outfit/article of clothing do you feel sexiest in?",
+    "text": "What outfit/article of clothing do you feel sexiest in?\n\nsubmitted by     /u/username35353555     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wkcbbt/what_outfitarticle_of_clothing_do_you_feel/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T04:31:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T04:31:31.937Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae1024660c60840397d7ea"
+    },
+    "message_id": "reddit_t3_1wkcbbe",
+    "topic_key": "tell me about gpt 6 astra in reddit what peoples saying about",
+    "search_keyword": "GPT 6 Astra",
+    "platform": "reddit",
+    "subreddit": "aerospace",
+    "username": "Available_Stuff2958",
+    "title": "Gpt 6 astra mechanical engineering?",
+    "text": "Gpt 6 astra mechanical engineering?\n\nI am an undergrad student of mechanical engineering currently in the 3rd year. I am 21 years old and have too much anxiety about this Ai and AGI.   Like what was the point of studying this much when at the end ai is here who can think better than you think who can design better that you design and much more. Worst era we living inm       submitted by     /u/Available_Stuff2958     to     r/aerospace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/aerospace/comments/1wkcbbe/gpt_6_astra_mechanical_engineering/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T04:31:12Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T04:31:32.140Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae1024660c60840397d7eb"
+    },
+    "message_id": "reddit_t3_1wkcbb1",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SMAPI",
+    "username": "zirkkun",
+    "title": "Custom NPC schedule not working correctly",
+    "text": "Custom NPC schedule not working correctly\n\nHi! I don't use Reddit that often but I wasn't quite sure where else to go for help. I'm currently making a custom NPC mod, just for personal use so I'm not really worried about making it compatible with other mods that I'm not using. I'm decently new to modding, in that the last mod I made was some portrait/sprite replacements and dialogue additions in version 1.5, and that's the only other mod I've made.    Pretty much everything I've tested with my current NPC mod seems to be working at present other than the schedules. The schedule code itself seems to load in no problem, but the NPC won't move outside of the starting map... at best.   Originally, this character started out in the Tunnel map and was supposed to walk outside to the Backwoods, stand next to some bushes, then walk over to the Bus Stop and stand by some bushes there... and other stuff but he's never gotten that far. The first time I booted up the game with this schedule, he would actually get out to the Backwoods at some point, but then got himself wedged between two bushes that weren't even close to the path I thought I'd set up. He'd be stuck there for the rest of the day. I tried to fix it, and as a result he stopped leaving the Tunnel completely.   I decided to move him out of the Tunnel map to see if that was the problem. So, in the current state of the code, he instead starts in the Backwoods. He has pretty much the same routine at the start of each schedule other than marriage, so if it doesn't work here I assume it breaks everywhere. Here's just his spring schedule as an example:     \"spring\": \"800 Backwoods 28 28 0/900 Backwoods 41 32 2/1000 BusStop 31 5 0/1100 BusStop 38 14 2/1200 Town 29 54 2 \\\"Strings\\\\schedules\\\\{{ModId}}_Jared:spring.000\\\"/1400 Town 109 56 1/1500 Town 109 91 3/1600 Town 89 103 2/1900 Backwoods 25 28 2 jared_sit\"     This is his starting position, also:    \"Home\": [ { \"Id\": \"Default\", \"Location\": \"Backwoods\", \"Tile\": { \"X\": 25, \"Y\": 28 }, \"Direction\": \"down\" ]     When starting from the Backwoods, he will go to both target locations in the Backwoods at the proper times. Then, when 10:00 rolls around, he just stands there. Does not go to the Bus Stop, doesn't move at all. But, when 11:00 rolls around, he flips himself around and starts walking until he wedges himself between some bushes in the Backwoods tile 31, 27! My assumption is that he's trying to get the top map exit that leads to the Mountains, to try and loop around the long way to the Bus Stop? But why at 11:00 and not 10:00?? This is also the same place he got himself wedged into when I first loaded his previous schedule where he started in the Tunnel, as well.   I'm referencing as much of the vanilla material and the modding section of the wiki as I can, and even tried to look at a couple of other mods and tutorials just to try and figure out if I wrote something incorrectly somewhere, but I'm at a complete loss.   I suspect there's some sort of problem with where the NPC warps between maps are, and that's confusing the schedule pathing, but I cannot for the life of me figure out how to fix that (nor do I know if that's actually the issue). I do not have any custom maps I am using for this, all of the locations are entirely vanilla. My map-making experience is a spouse room and patio that I have yet to test to see if either actually function. If there's a way to fix my schedule problem by modding the vanilla maps, I'm perfectly fine with learning how, I just have no idea where the problem lies at this point to even get started with that.   Any help at all would be greatly appreciated, and even if you just took the time to read this it means a lot!       submitted by     /u/zirkkun     to     r/SMAPI       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SMAPI/comments/1wkcbb1/custom_npc_schedule_not_working_correctly/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T04:31:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T04:31:32.341Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae1024660c60840397d7ec"
+    },
+    "message_id": "reddit_t3_1wkcbaz",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "kraw",
+    "username": "Total-Assumption-256",
+    "title": "XXX is fully fluffed, no notes.",
+    "text": "XXX is fully fluffed, no notes.\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Total-Assumption-256     to     r/kraw       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/kraw/comments/1wkcbaz/xxx_is_fully_fluffed_no_notes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T04:31:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T04:31:32.541Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae1024660c60840397d7ed"
+    },
+    "message_id": "reddit_t3_1wkcbau",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "gaydating",
+    "username": "Witty_Tutor_8328",
+    "title": "35 | Dallas, United States of America | Looking for long term relationship",
+    "text": "35 | Dallas, United States of America | Looking for long term relationship\n\nEasygoing guy looking to meet a kind, sweet man who’s interested in building a genuine relationship. I love traveling, spending time with family and friends, discovering great coffee spots, and enjoying a good drink and good conversation.  I’m hoping to meet someone around my age or older who’s kind, affectionate, emotionally mature, and enjoys the simple things in life. Chemistry is important, but so are honesty, laughter, and feeling comfortable being yourselves together.  If you’re looking for something meaningful, say hi. Tell me a little about yourself and maybe we can see where things go. ☕️✈️❤️       submitted by     /u/Witty_Tutor_8328     to     r/gaydating       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/gaydating/comments/1wkcbau/35_dallas_united_states_of_america_looking_for/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T04:31:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T04:31:32.747Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae1024660c60840397d7ee"
+    },
+    "message_id": "reddit_t3_1wkcb9w",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "OLED_Gaming",
+    "username": "YetTheory",
+    "title": "Swap my 98\" QLED for a 98\" Mini LED?",
+    "text": "Swap my 98\" QLED for a 98\" Mini LED?\n\nHey yall   So I purchased a 98in TCL 4K QLED a few months ago. It had a massive sale and scooped it for under $1200. It's a great size. However, My cinema eye just cant help but notice the blooming and lack of deep blacks on this TV...   So as the title states, Im sorta eyeing now the same brand and size but now Mini LED! It's priced at $2000 now.   Is it worth going through the hassle of selling the first TV, then getting the new Mini LED installed? Or should I just stick with my QLED and enjoy it?       submitted by     /u/YetTheory     to     r/OLED_Gaming       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OLED_Gaming/comments/1wkcb9w/swap_my_98_qled_for_a_98_mini_led/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T04:31:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T04:31:32.953Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae1025660c60840397d7ef"
+    },
+    "message_id": "reddit_t3_1wkcb9r",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "AIAssistedAcademy",
+    "username": "AutoModerator",
+    "title": "[AI Agency] AI Assisted Academy by Kane & Alessia Minkus",
+    "text": "[AI Agency] AI Assisted Academy by Kane & Alessia Minkus\n\nAs more companies look for practical ways to adopt artificial intelligence, there is growing demand for professionals who can connect  AI technology with real business problems .  AI Consulting Certification by Kane & Alessia Minkus  is designed around that role, providing a structured path for consultants, entrepreneurs, and service providers who want to help businesses implement AI without necessarily becoming developers themselves.   The program covers both the technical and commercial sides of building an  AI consulting business . Participants learn how to assess a company's AI requirements, identify opportunities across marketing, sales, customer service, HR, finance, and operations, and translate those opportunities into practical AI strategies. Topics include  AI automation, business process optimization, LLMs, internal chatbots, prompt engineering, AI-powered lead generation, data strategy, productivity systems, and custom AI workflows .   A significant part of the training also focuses on turning those capabilities into marketable services. This includes  AI service packaging, pricing, offer creation, client acquisition, consulting strategy, workshops, and agency scaling , along with ready-to-use workflows, templates, prompts, and implementation frameworks. The goal is to help participants move beyond simply knowing how to use AI tools and become capable of advising businesses on where and how AI can create measurable value.   Overall,  AI Consulting Certification  is suited for  consultants, agency owners, business strategists, coaches, and entrepreneurs  looking to develop expertise in  AI consulting, AI implementation, business automation, and AI agency services  while building a professional service offering around the rapidly evolving AI ecosystem.   👉 Access to this course is available NOW at website:  Course24h(.)com        submitted by     /u/AutoModerator     to     r/AIAssistedAcademy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AIAssistedAcademy/comments/1wkcb9r/ai_agency_ai_assisted_academy_by_kane_alessia/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T04:31:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T04:31:33.156Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae1025660c60840397d7f3"
+    },
+    "message_id": "reddit_t3_1wkcb9j",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "pakistanSufiDiscourse",
+    "username": "Worth_Key_936",
+    "title": "Explanation of Masnavi Rumi",
+    "text": "Explanation of Masnavi Rumi\n\nWhen the Seeker of Truth instills contemplation of the truth in their heart, during separation [from the Beloved], remembrance of the truth gives them rapture. Then, this remembrance of the truth leads them towards the pleasure of familarity and unites them with the essence of truth.   -Makhdoom Mahmood Mastwaar Qalandar    Book: Asrar-e-Mastwaar    Urdu: Talib-e-Haq jab apne dil mein Yaad-e-Haq ko basa leta hai tou firaq mein Zikr-e-Haq use maza deta hai, phir yeh Zikr-e-Haq use lazzat-e-ashnai ki taraf le jata hai aur phir yehi Zikr-e-Haq us ko Zaat-e-Haq se mila deta hai.       submitted by     /u/Worth_Key_936     to     r/pakistanSufiDiscourse       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pakistanSufiDiscourse/comments/1wkcb9j/explanation_of_masnavi_rumi/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T04:31:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T04:31:33.954Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae1026660c60840397d7f4"
+    },
+    "message_id": "reddit_t3_1wkcb8t",
+    "topic_key": "nike",
+    "search_keyword": "Nike",
+    "platform": "reddit",
+    "subreddit": "Repcnbuy",
+    "username": "ediblescholarship",
+    "title": "Streetwear Haul Vol. 2 Clean Tees Hoodies Denim and Daily Fits",
+    "text": "Streetwear Haul Vol. 2 Clean Tees Hoodies Denim and Daily Fits\n\nSAINT Short-Sleeved Shirt    https://weidian.com/item.html?itemID=7740371965    Washed/distressed graphic, soft cotton. Relaxed fit, TTS.   PUREY Short-Sleeved Shirt    https://weidian.com/item.html?itemID=7752906958    Bold graphic, soft cotton. Relaxed fit, TTS.   Off-White Short-Sleeved Shirt    https://weidian.com/item.html?itemID=7749953885    Arrow graphic, soft cotton. Oversized fit, TTS.   Chrome Hearts Hoodie    https://weidian.com/item.html?itemID=7748580955    Graffiti-style cross print, French terry. Boxy cropped fit, TTS.   NBA Short-Sleeved Shirt    https://weidian.com/item.html?itemID=7748756759    Team logo print, breathable mesh. Athletic fit, TTS.   FOG x Nike Short-Sleeved Shirt    https://weidian.com/item.html?itemID=7743306278    Collab branding, soft cotton. Standard fit, TTS.   ERD Hoodie    https://weidian.com/item.html?itemID=7751547152    Washed/distressed letter print, heavy fleece. Oversized fit, TTS.   ERD Short-Sleeved Shirt    https://weidian.com/item.html?itemID=7751825468    Artistic graphic print, soft cotton. Relaxed fit, TTS.   Purple Jeans    https://weidian.com/item.html?itemID=7749905049    Slim fit with subtle distressing. Quality denim, TTS.   Prada Short-Sleeved Shirt    https://weidian.com/item.html?itemID=7751950408    Embroidered logo, soft cotton. Standard fit, TTS.   Carhartt Casual Pants    https://weidian.com/item.html?itemID=7751717838    Multi-pocket cargo style, durable cotton. Relaxed fit, TTS.   Purple Jeans    https://weidian.com/item.html?itemID=7752904992    Vintage wash, straight leg. Good weight denim, TTS.   DEPT Pants    https://weidian.com/item.html?itemID=7751924434    Splatter paint effect, relaxed sweatpant style. Comfortable, TTS.   NOCTA Pants    https://weidian.com/item.html?itemID=7748683461    Tapered sweatpants, comfortable fleece. TTS.   ERD Short-Sleeved Shirt    https://weidian.com/item.html?itemID=7744450182    Artistic portrait print, soft cotton. Relaxed fit, TTS.   Balenciaga Short-Sleeved Shirt    https://weidian.com/item.html?itemID=7740344097    Oversized fit, clean logo print. Soft cotton, TTS.   CD Sweatshirt    https://weidian.com/item.html?itemID=7749643561    Clean design, soft fleece. Relaxed fit, TTS.   Chrome Hearts Short-Sleeved Shirt    https://weidian.com/item.html?itemID=7740302557    Cross graphic sharp, premium heavyweight cotton. Slightly cropped fit, TTS.   New Balance 740    https://weidian.com/item.html?itemID=7744392948    Classic runner silhouette, mesh and suede. Comfortable, TTS.   Yeezy Slippers    https://weidian.com/item.html?itemID=7751613416    Comfortable foam, simple design. Runs large, size down.       submitted by     /u/ediblescholarship     to     r/Repcnbuy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Repcnbuy/comments/1wkcb8t/streetwear_haul_vol_2_clean_tees_hoodies_denim/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T04:31:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T04:31:34.158Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae1028660c60840397d800"
+    },
+    "message_id": "reddit_t3_1wkcb8i",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PakistaniSkincare",
+    "username": "Particular_Duty9841",
+    "title": "Girls please help me out",
+    "text": "Girls please help me out\n\nHas anyone ordered any skin1004 products from dubuy? Is it authentic?        submitted by     /u/Particular_Duty9841     to     r/PakistaniSkincare       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PakistaniSkincare/comments/1wkcb8i/girls_please_help_me_out/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T04:31:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T04:31:36.542Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae1028660c60840397d802"
+    },
+    "message_id": "reddit_t3_1wkcb8g",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "YouTubeCreators",
+    "username": "Money_Patience_5927",
+    "title": "New Spanish Tech Channel!",
+    "text": "New Spanish Tech Channel!\n\nHey guys, I recently opened a Spanish tech channel called TodoTechHD in which I review, compare or have my opinion about news.    Channel link:  https://youtube.com/@todotechhd?si=nT7dbkpacvhw3t82        submitted by     /u/Money_Patience_5927     to     r/YouTubeCreators       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/YouTubeCreators/comments/1wkcb8g/new_spanish_tech_channel/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T04:31:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T04:31:36.941Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae1029660c60840397d803"
+    },
+    "message_id": "reddit_t3_1wkcb86",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "RedactedCharts",
+    "username": "joejaboom",
+    "title": "What do these countries have in common?",
+    "text": "What do these countries have in common?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/joejaboom     to     r/RedactedCharts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RedactedCharts/comments/1wkcb86/what_do_these_countries_have_in_common/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T04:31:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T04:31:37.143Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae1029660c60840397d804"
+    },
+    "message_id": "reddit_t3_1wkcb85",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Standard-Sleep-3355",
+    "title": "Is it okay to lie sometimes when it’s better to? What do you guys think?",
+    "text": "Is it okay to lie sometimes when it’s better to? What do you guys think?\n\nsubmitted by     /u/Standard-Sleep-3355     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wkcb85/is_it_okay_to_lie_sometimes_when_its_better_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T04:31:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T04:31:37.344Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae105f660c60840397d805"
+    },
+    "message_id": "reddit_t3_1wkcc1g",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "TheWire",
+    "username": "Ambitious-Chair6413",
+    "title": "Why did The Greek trust Marlo’s recommendation on who should inherit his connect?",
+    "text": "Why did The Greek trust Marlo’s recommendation on who should inherit his connect?\n\nAt the end of the show when the collection of dealers pay 10 million dollars to Marlo in exchange for him connecting them to The Greek, why would the Greek be receptive? Just to get The Greek to be content working with Marlo rather than Prop Joe, Marlo had to make multiple onerous overtures over the course of a few episodes. Furthermore, soon after The Greek switches their main buyer to Marlo, the cops arrest many from each of their crews and seize what is easily a few hundred thousand dollars worth of drugs. After that, wouldn’t they be infuriated and never want to work with Marlo again, let alone trust his recommended successor?       submitted by     /u/Ambitious-Chair6413     to     r/TheWire       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TheWire/comments/1wkcc1g/why_did_the_greek_trust_marlos_recommendation_on/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T04:32:20Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T04:32:31.257Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae105f660c60840397d806"
+    },
+    "message_id": "reddit_t3_1wkcc17",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "tamilyapping",
+    "username": "Sugomi_121",
+    "title": "KEPOM....",
+    "text": "KEPOM....\n\nDO POLITICAL OPINION MATTERS FOR YOU IN CHOOSING YOUR PARTNERS ??       submitted by     /u/Sugomi_121     to     r/tamilyapping       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/tamilyapping/comments/1wkcc17/kepom/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T04:32:19Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T04:32:31.458Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae105f660c60840397d807"
+    },
+    "message_id": "reddit_t3_1wkcc14",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Elegant-Aspect5888",
+    "title": "Grab 100 hammers from u/Elegant-Aspect5888!",
+    "text": "Grab 100 hammers from u/Elegant-Aspect5888!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Elegant-Aspect5888     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wkcc14/grab_100_hammers_from_uelegantaspect5888/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T04:32:19Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T04:32:31.658Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae105f660c60840397d808"
+    },
+    "message_id": "reddit_t3_1wkcc10",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "IMGreddit",
+    "username": "EconomistMurky1705",
+    "title": "Kindly give suggestions regarding my signals( silver ).",
+    "text": "Kindly give suggestions regarding my signals( silver ).\n\nNon us img, visa requiring, YOG 2025, P|255|252, 4 USCE ( Observerships ), published 2 case reports in cureus and one study in a weak journal. All the following lie within my geo pref except trinity Oakland and montefiore SLC      Baton rogue    U conn waterbury    Metro west    St mary waterbury    Wellstar spalding    HES/ pine ridge.    Texas health resources- bedford/denton    Willis knighton    Montefiore st luke cornwall    Trinity Oakland/ WSU    MUSC- Lancaster    MUSC- Florence     Am i undershooting or overcoming it by giving signals? I fear of overshooting than undershoot.       submitted by     /u/EconomistMurky1705     to     r/IMGreddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IMGreddit/comments/1wkcc10/kindly_give_suggestions_regarding_my_signals/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T04:32:19Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T04:32:31.857Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae1060660c60840397d809"
+    },
+    "message_id": "reddit_t3_1wkcc0h",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "NoisyNeighbours",
+    "username": "musicnote95",
+    "title": "Sound traveling through vents",
+    "text": "Sound traveling through vents\n\nsubmitted by     /u/musicnote95     to     r/NoisyNeighbours       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NoisyNeighbours/comments/1wkcc0h/sound_traveling_through_vents/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T04:32:17Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T04:32:32.058Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae1060660c60840397d80a"
+    },

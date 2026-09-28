@@ -1,0 +1,416 @@
+      "$date": "2026-09-17T13:30:31Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:39:18.205Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabed8642dd0e95b5bae242"
+    },
+    "message_id": "twitter_2100571142687760697",
+    "topic_key": "freelance api gateway",
+    "search_keyword": "freelance API gateway",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "TheWPMinute",
+    "title": "AI, with open source and data, effectively solves complex issues without third-party reliance. This approach offers all necessary code, data, and context for seamless fixes, paving the way for future hosting solutions. #AI #OpenSource https://t.co/tROPBHjmLv",
+    "text": "AI, with open source and data, effectively solves complex issues without third-party reliance. This approach offers all necessary code, data, and context for seamless fixes, paving the way for future hosting solutions. #AI #OpenSource https://t.co/tROPBHjmLv",
+    "post_url": "https://twitter.com/TheWPMinute/status/2100571142687760697",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:02:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:39:18.417Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabed8642dd0e95b5bae243"
+    },
+    "message_id": "twitter_2099924961863606612",
+    "topic_key": "freelance api gateway",
+    "search_keyword": "freelance API gateway",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Qashu24",
+    "title": "why pay for 10 ai tools when you can use their free tiers? 😳\n\nfound another open source FREELLMAPI tool \n\none api for multiple free ai providers\n\ngoogle, groq, cerebras, mistral, openrouter, nvidia + more\n\nhow to use:\n\n→ download the desktop app\n→ add your provider api keys\n→ choose your favorite model\n→ start cooking\nit can automatically switch providers when one hits its limit\nworks with claude code, codex, gemini cli, cursor and cline\none api → hundreds of free endpoints 😭\n\nanother open-source hit worth bookmarking\n\nhttps://t.co/F4O9Wnivow",
+    "text": "why pay for 10 ai tools when you can use their free tiers? 😳\n\nfound another open source FREELLMAPI tool \n\none api for multiple free ai providers\n\ngoogle, groq, cerebras, mistral, openrouter, nvidia + more\n\nhow to use:\n\n→ download the desktop app\n→ add your provider api keys\n→ choose your favorite model\n→ start cooking\nit can automatically switch providers when one hits its limit\nworks with claude code, codex, gemini cli, cursor and cline\none api → hundreds of free endpoints 😭\n\nanother open-source hit worth bookmarking\n\nhttps://t.co/F4O9Wnivow",
+    "post_url": "https://twitter.com/Qashu24/status/2099924961863606612",
+    "score": 5,
+    "num_comments": 3,
+    "created_utc": {
+      "$date": "2026-09-15T18:15:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:39:18.630Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabed8642dd0e95b5bae244"
+    },
+    "message_id": "twitter_2100579835982819506",
+    "topic_key": "freelance api gateway",
+    "search_keyword": "freelance API gateway",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "AdityaPat_",
+    "title": "WAKE UP, BABE, HIGGSFIELD API JUST DROPPED.\n\n50+ frontier models. \nOne endpoint.\nPay per generation. \nNo subscription tax.\n\njust with 50% off on your top 3 models for 7 days!!\n\nStop stacking APIs.\nJust ship and FAFO",
+    "text": "WAKE UP, BABE, HIGGSFIELD API JUST DROPPED.\n\n50+ frontier models. \nOne endpoint.\nPay per generation. \nNo subscription tax.\n\njust with 50% off on your top 3 models for 7 days!!\n\nStop stacking APIs.\nJust ship and FAFO",
+    "post_url": "https://twitter.com/AdityaPat_/status/2100579835982819506",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:37:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:39:18.842Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabed87660c6084039724e2"
+    },
+    "message_id": "reddit_t3_1wiua3a",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "AiChatGPT",
+    "username": "Sad-Objective3996",
+    "title": "Colorcam Image Gen Project",
+    "text": "Colorcam Image Gen Project\n\nI’ve been developing two AI/VFX systems called ColorCam and NukeCam, and the architecture is probably more interesting than the names.   I’ve spent a long time experimenting with AI-assisted image generation, compositing, color, lighting, pixels, and visual effects.  Eventually I stopped thinking of the process as simply:   prompt → image   and started treating it more like an imaging pipeline.  That’s where  ColorCam  and  NukeCam  came from.   ColorCam   ColorCam is my conceptual  photonic/image intelligence layer .  The idea is to describe an image in terms of more than just semantic objects.  Instead of only saying:  “Make a person standing in a room.”  the system can reason about things such as:  color relationships  light behavior  contrast  material response  spatial relationships  depth  texture  atmospheric effects  pixel structure  compositional geometry  transformations between image states  The important distinction is that ColorCam isn’t supposed to be “an AI that makes pretty pictures.”  It’s an attempt to define an  intermediate representation of visual information  that can then be manipulated.   NukeCam   NukeCam sits on the other side of that architecture.  Where ColorCam concerns itself with the  what/how of the visual information , NukeCam is concerned with  rendering and assembling the result .  I think of the relationship roughly like:   ColorCam → visual specification / transformation    NukeCam → rendering / compositing / output   That separation matters.  If everything is one monolithic image model, changing one part of the process can affect everything else.  With a separated architecture, I can theoretically modify the representation, renderer, pixel structure, effects pipeline, or output format without redefining the entire system.   Why construct it this way?   Because I’ve been trying to get away from treating an AI image model as a black box.  A black box basically says:   INPUT → MAGIC → OUTPUT   I’m interested in:   INPUT → REPRESENTATION → TRANSFORMATION → COMPOSITING → RENDER → OUTPUT   That gives me places where individual operations can be inspected, modified, audited, reproduced, or replaced.  This also connects to some of my other work.  For example, I’ve experimented with  Pixkel , where a pixel becomes more than simply an RGB value — essentially treating the pixel as a structured unit carrying multiple dimensions of visual information.  I’ve also developed concepts around  π360 , recursive color/image transformations, encoding, and other representations that can sit between the conceptual image and the final rendered image.  So ColorCam and NukeCam aren’t really two competing “AI image generators.”  They’re intended to be  different architectural layers of a larger imaging system.   And that’s the part I’m curious about.  Has anyone else experimented with building an intermediate visual representation between an AI model and the final image?  Not just prompting an image model differently, but actually asking:   What should exist between the model’s reasoning and the pixels?   That’s the problem I’ve been exploring with ColorCam/NukeCam.       submitted by     /u/Sad-Objective3996     to     r/AiChatGPT       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AiChatGPT/comments/1wiua3a/colorcam_image_gen_project/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:39:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:39:19.234Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabed87660c6084039724e5"
+    },
+    "message_id": "reddit_t3_1wiua38",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "glutenfree",
+    "username": "rdpl_",
+    "title": "unpopular opinion: everyone has gluten-issues",
+    "text": "unpopular opinion: everyone has gluten-issues\n\ngo to your local bakery in the morning and watch who is lining up for bread. all of them are bloated, swollen faces, none of them is in shape none of them looks healthy. walking zombies needing a morning fix   modern wheat is basically edible glue engineered with insane gluten levels. it causes low-grade inflammation in literally everyone. most people just think their daily bloating, brain fog, and trash skin is \"normal aging\" but you are just addicted to a slow poison   and before the armchair scientists reply with \"b-but celiac and intolerance are completely different things\", shut up. nobody cares about your textbook definitions. celiac is just the extreme end. the rest of you are still walking around with inflamed guts and swollen bakery-faces thinking you are perfectly fine. you are not       submitted by     /u/rdpl_     to     r/glutenfree       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/glutenfree/comments/1wiua38/unpopular_opinion_everyone_has_glutenissues/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:39:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:39:19.870Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabed88660c6084039724e6"
+    },
+    "message_id": "reddit_t3_1wiua35",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "TwoSentenceHorror",
+    "username": "Fit_Tap_1951",
+    "title": "Broken Proof",
+    "text": "Broken Proof\n\nClaude published the 1000 page proof for a replacement for the encryption broken by quantum computers. Only frontier models could see and utilise the fault introduced on page 17 when they laid their plans.       submitted by     /u/Fit_Tap_1951     to     r/TwoSentenceHorror       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TwoSentenceHorror/comments/1wiua35/broken_proof/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:39:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:39:20.083Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabed88660c6084039724e7"
+    },
+    "message_id": "reddit_t3_1wiua2s",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Dahab",
+    "username": "WeirdLingonberry2022",
+    "title": "Informational Post from our experience travelling from Amman, jordan to Dahab.",
+    "text": "Informational Post from our experience travelling from Amman, jordan to Dahab.\n\nJordan → Dahab: Our Experience and Practical Travel Notes   Hello all! This is a very long post about our experience traveling to and from Dahab, in Sinai, Egypt.   When researching this trip, I found that a lot of the information available was either out of date, unconfirmed, or simply incomplete. I hope that if you are considering a trip to Dahab — or to Sinai, Egypt, in general — this write-up will be helpful.    This is based entirely on our experience.  Some information may be different for other travelers, and some of our perceptions may have been influenced by the fact that we were only there for five days and four nights. We had an excellent time in Dahab, and I would gladly welcome others to add their own experiences in the comments.   This isn't intended to be a blog post. Rather, it's a collection of practical details from our trip, written to help people who may be considering making a similar journey.    AI notice:  I mostly brain-dumped this information into a note on my phone as we went through the experience, then used AI to help organize it for readability and spelling. Although I have reviewed it before posting, please understand that some things may still have been written or formatted incorrectly.   Getting from Aqaba to Tala Bay   We opted for AB Maritime Ferry from Tala Bay near Aqaba to Taba Heights, departing at 9:30 am. Your ticket will say that you need to be there an hour before departure. We discovered this was not so strict of a time, as people were still boarding the boat maybe 15 minutes before departure. So definitely still try to get there when they ask, but don’t feel like you’ll be denied boarding if you're later than that.    To get from Aqaba proper to Tala Bay, we took a taxi. We didn’t know how strict the arrival time was, and ended up feeling forced to go with a driver who unfortunately took advantage of our perceived lateness.   Prices differ from driver to driver for this route, but generally, you can expect it to be more expensive to hire a driver to take you to Tala Bay, because it's uncommon for them to find a rider to bring back to Aqaba. So, you're effectively paying for their route there and their return trip.   However, paying more than  10 JD  is typically outrageous. One particular driver told us that people should never pay more than  7 or 8 JD  for that ride — but sometimes beggars can't be choosers.    Make sure you have exact change for the fare , or tell the driver to stop somewhere so you can make change. There isn't really anywhere in Tala Bay that can easily make change for you, especially if you're taking an early-morning boat and most places are closed. We did not have exact change, and the driver used that to his advantage.  (We had plenty of other drivers who were honorable, God-fearing men who treated us well and fairly. Part of our issue was feeling like we were going to be late and didn’t have time to refuse the first offer we received)   Arriving at Tala Bay and Finding the Ferry   Our driver dropped us at the gates of Tala Bay, where security guards welcomed us and directed us to wait with some other travelers (See photos).   By this point, it was about  8:50 a.m.  We waited maybe 5–10 minutes before a man with a truck and small trailer arrived and helped everyone load their bags into the trailer. We were then ushered through the gates and walked through Tala Bay toward the area outside the  AB Maritime  gathering location. There are visible signs and boats with logos on them, so you really can't miss it.   The luggage trailer did not arrive shortly after us, as most of us expected. Instead, it waited at the highway road for a few more passengers to fill up before making the short trip down to the gathering area. To be honest, you may as well just take your own luggage — it really isn't that far of a walk.   At the gathering area, there's a small café table with tea, coffee, and probably just about anything else you might want.   We checked in at the desk after making our way through the queue. Several very kind and professional men were receiving people, processing documents, handing out paper tickets, and collecting the  10 JD per-person Jordanian exit fee . Several of them spoke excellent English — perhaps better than me!   The luggage trailer arrived maybe 10–20 minutes before departure, and everyone gathered around it to collect their bags as they were unloaded. There was a couple we'd seen earlier who went through security and boarded the boat, apparently assuming their bags would be taken and loaded separately. Staff eventually found the couple and confirmed the bags belonged to them — it was maybe half an hour after they got their bags back that the boat finally departed.    So, make sure you collect your own bags before boarding.    Jordanian Exit Procedures and Overstay Fees   We grabbed our bags and continued through security. All bags go onto a conveyor belt to be X-rayed. After that, you come to the customs table. Everything here was pretty customary: they scanned our passport barcodes, checked visa stamps, checked the dates of our last entry, and checked whether we had registered at a police station.   In my case, we knew going in that I'd probably have to pay an overstay fee, since I had overstayed my visa by a few days.    Here's an important thing to note:  if you're traveling and you know — or suspect — you might have to pay an overstay fee,  you cannot pay it at this checkpoint at Tala Bay.  They cannot accept payment for an overstay fee or stamp your passport for it here.   Again, you CANNOT pay overstay fees at the Harbor in Tala Bay.    We learned this at the customs counter. To their credit, the security officer there was on the phone for half an hour trying to work something out, but his hands were tied. Unfortunately for us, this meant we had to reschedule our trip to the following day to give us time to go to the appropriate government office and pay the fee. AB Maritime was very quick to rebook our tickets, no extra charge. Our 10jd exit fees were also refunded to us.  We were especially grateful to the owner of the hotel we mostly stayed at (mentioned later) and the driver who was scheduled to pick us up (also mentioned later) for being very quick to reschedule our reservations for no extra charge.  Nothing in Tala Bay was open, as it was 9 am on a Friday morning.   The government office nearest Tala Bay, which we were directed to, is sometimes referred to as the  Aqaba Passenger Terminal . Here's the Maps location when you search that:  https://maps.app.goo.gl/DxQs7wyenPta3VsK7     IMPORTANT:  This location is actually accessed through here:  https://maps.app.goo.gl/fsrm4H1QzZagCEFfA    Trying to drive to the official location will not get you there.   We went to the A qaba Passenger Terminal  the next day and arrived several hours before our boat's departure time to leave room for unexpected delays. We got there just before  4:00 p.m.  and finished around  4:18 p.m. , so the process took about 20 minutes. This will depend on how busy the terminal is, and it would probably help to have someone with you who speaks Arabic well enough to quickly explain what you need.   The place is a bit of a maze to get to. The officials we worked with were very kind and quick to help us. We moved through terminals where many people were waiting for their boats.    Bring exact cash for your overstay fee.  As of our experience in 2026, we were told it was  3 JD per day . You'll receive a roughly half-page-sized stamp in your passport — mine was stamped on a page that already had another Jordanian entry stamp on it.   When we asked, we were told the office is open 24/7, specifically for Borders and Residency concerns. I'm not sure I'd plan on relying on that, and I wouldn't be particularly excited about navigating the place at night.    The overstay fee must be paid on the day you leave Jordan    Another important note:  you must pay the overstay fee on the same day you're traveling.  If you tried to pay it earlier, the next day you'd apparently rack up another overstay fee, which you'd again need to pay at the same government office. I don't know if you can pay in advance for a future overstay — I suspect not.   The Ferry from Jordan to Egypt   Round two of the boat ride was very easy. We showed up, paid the exit fee again (which was refunded to us the day before), and were refunded once it became clear we wouldn't be able to board the previous day.   With the overstay fee paid and the passport stamp in place, the entire passport-check and exit process took maybe  five minutes for two people . There's a duty-free shop available after the security checkpoint, and then you move on to the boat.   The boat itself is quite nice — nothing luxurious, but comfortable for a one-hour ride. Ours was quite full, but there was still a good amount of room to move around the cabin. There are two bathrooms and a small café with simple things for sale, like bottled water, sodas, and ice cream. Naturally, prices are quite high — a small can of Matrix cola was  1 JD . As far as we could tell, no food or drinks were prohibited from being brought onboard, so you could probably plan to bring your own refreshments.   The scheduled departure time was  7:00 p.m. , but we ended up casting off around  7:15–7:20 p.m.  It was a lovely time for a sunset view, and we were surprised to see flying fish while we still had sunlight!  A large tour group was returning to Egypt from I suppose a trip to Petra/Wadi Rum, so the boat was quite full! However, it was still a comfortable experience.    We were given some basic customs forms on the boat which we ended up handing to the official at the Harbor in Egypt before getting our passports stamped. The form asked for basic passport information, address of where you’ll be staying, etc.   Arriving in Taba, Egypt   Our arrival in Egypt was very chill. We arrived around  8:20 p.m.  I don't think I heard any kind of announcement — everybody just seemed to know we were arriving. People made their way off the boat through one stairway; we were some of the last off, and therefore some of the last in line. We got off the boat around  8:25 p.m.  and finally finished customs and immigration close to or after  9:00 p.m.    The customs process was pretty normal and straightforward, but a bit jarring: a security check and baggage scan involving the removal of shoes, watches, phones, and other metal objects into small baskets along with your luggage, all onto a conveyor belt to be scanned. The whole thing takes place in a somewhat narrow hallway. After the scan and a metal detector, we waited in a single line for passport control. It was pretty bearable, but it was also nighttime — I'd wonder if it gets quite hot during the day.   When it was finally our turn, the passport-control officer, who spoke very good English, asked basic questions about our stay — whether it was our first time, what our plans were, and particularly whether we'd be staying in Sinai or traveling elsewhere. This is important, because you get a free Sinai Visa if you’re only planning to stay in the Sinai area.   As we left the customs station, we were greeted by quite sight of a security guard, very happy to see tourists arriving, leaning on the barrel of his AK-47 as we made our way to the parking lot.   Getting from Taba Heights to Dahab   We had made arrangements in advance for a private driver to pick us up. I had hoped to chat with the taxi drivers waiting to make deals with tourists, but unfortunately I wasn't able to. It was clear, though, that there were many taxi drivers prepared and ready to take people wherever they wanted to go — I just wasn't able to inquire about their price range on arrival as I just could not communicate my intent to our driver, who had already met us and was eager to move on.   Our driver was good: simple, straightforward, and reliable. We were very thankful that he was willing to rearrange things at no extra cost after our unexpected change of plans. We had originally arranged for a car, but because of the rearrangement, the original driver sent his brother with a van instead. In earlier discussions I'd been quoted $80 for the van, but they still honored the original price ($60) we'd agreed on for the car, which simply wasn't available that day. (contact information for different drivers at the end of this post).   The drive from the port to Dahab was very simple and unexceptional, mainly because it was nighttime and there wasn't much to see. There are gas stations and convenience stores where you can stop for bathrooms, snacks, or refreshments. However, there was really no place to change money at the harbor — so at that point, your options are to hope that a store accepts cards or another currency you happen to be carrying. The store we stopped at near our hotel in Dahab wouldn't accept Jordanian dinars, but it did have a dusty card reader they managed to get working after leaving it on the charger for a while.   Our Stay in Dahab   Our stay in Dahab was excellent! There are so many things to do, and the city itself is very walkable. We especially enjoyed renting bikes for a day and biking around the city and along the coast.   I asked several different shops about bike-rental prices. One of the first shops quoted me  $25 for a day . The place we ended up renting from gave us a full-day,  12-hour rental for $4 . So clearly, you want to ask around and get a feel for prices before going with the first quote.   This kind of price variation showed up elsewhere too. For example, we asked around different shops about a particular pair of pants we wanted to buy. Quotes for the same pair ranged from  200 Egyptian pounds (about $4)  to  2,000 Egyptian pounds (about $40) . Naturally, the shops quoting the higher prices were the more typical pushy tourist vendors.   Getting Around Dahab: Walking, Bikes, and Taxis   We only actually took a taxi in the city once — about a  10-minute ride , for which we paid  150 Egyptian pounds (about $3) . We didn't take more taxis simply because the city was so walkable, and riding bikes was so accessible and fun.   Getting a taxi is a bit different from what we're used to in Jordan. Taxis in Dahab often consist of pickup trucks you quickly learn to recognize. They drive around town, and you'll know them by short little beeps that aren't loud, more like bells. You negotiate your price  before  climbing into either the cab or the bed of the pickup.   A word on renting bikes   Wherever you rent from, inspect the bike before officially choosing it. Our rental place was very nice, but they also had lots of bikes that looked good while the hardware wasn't quite ready — some probably would have had problems shortly after being taken out.   At least at our place, the process was rather informal:     Payment upfront.   No contract.   No documentation.   I actually had to ask the person for his phone number and name.   They asked me to leave a form of ID.     My US driver's license was sufficient. When returning the bikes, the owner pulled out a huge stack of other people's driver's licenses, matched my face to the photo, and asked my name.   Of course, different rental businesses may have different processes — this was just our experience.   Accommodation in Dahab   There are many places to stay — everything from resorts and hotels to shacks. We even saw people with parked cars next to the beach, sleeping in the shade of their cars. There are lots of options on  Booking.com , Airbnb, Google, Agoda, and other platforms, and you can find something for just about any group or interest: quiet parts of town, villas on the beach, residences attached to scuba-diving centers, just about anything.   The universal truth, at least from what we found, was that places to stay were substantially less expensive in Dahab than in Taba or Nuweiba — you can compare for yourself.   We found a place on  Booking.com  that was really nice for a very affordable price. It was unavailable on the last night of our stay, though, so we stayed at a place we'd previously been looking at — and came to discover we were very thankful we hadn't stayed there for the whole trip.    Our accommodation   Here's the contact for the owner of the place where we stayed for the majority of our time. He was very kind, honorable, and respectable. When we somehow broke a soap dispenser in the bathroom, he very politely asked us to pay a replacement fee of about 200 Egyptian pounds. The apartment had a fully equipped kitchen and was very reasonably priced. We met him briefly on our way out, and he seemed like a guy who manages his properties well and genuinely cares about guests having a great experience.  For both places we stayed, we were asked for copies of our passports. When booking on  Booking.com , or other similar services, it’s important to pay attention when paying for the booking whether it will be fully paid online, OR is an online deposit is done to reserve the booking and the full payment actually happens in cash on the property.     Mohammed of Serenity Lodges and Property Management     WhatsApp  +20 (eleven)1141(four)443    (Note: I've written the phone number like this in an attempt to protect it a little from robot scam callers.)    Booking Everything Yourself vs. Using a Travel Agency   We opted to plan our whole trip ourselves and pay for everything separately. However, there are many travel and tour agencies in Amman, Jordan, that offer all-inclusive packages for really good deals. One we heard about was  Montana Travel Agency  — you can look them up yourself and check their current prices.    [Photo: pricing guide Montana Travel Agency sent me]     You'd need to confirm this before booking , but when I was inquiring, their packages were described as all-inclusive, meaning they could include:     Transportation from Amman.   The exit ticket from Jordan.   Transportation from Jordan to Dahab.   The hotel.   Different packages that included food and drinks, or just the stay.     There are many different options to choose from.  You can also mix and match different elements, and they can also just arrange all the transportation for you for a cost that was only a little more expensive than what we paid.   How We Felt in Dahab   We always felt very comfortable in Dahab. Riding our bikes along the oceanside boardwalk was lovely; riding on the busy main thoroughfare was chaotic but still very doable. Not counting interactions with shop owners or people trying to get us into their restaurants, our interactions with people were really great.    There are many different culinary experiences to choose from in Dahab. Some were good but quickly forgotten. Others were excellent, and we were still talking about them weeks after getting back — one of the most memorable was one of the most authentic Chinese restaurants we've had in a long time.   It was not uncommon to see people leaving their belongings unattended for prolonged periods. In one café, there was an unattended MacBook with a backpack and plenty of other valuables. We never saw the owner inside during our whole time there — we eventually discovered he was outside, in the back of the café, sleeping.   Dress and atmosphere   Dahab was quite the melting pot when it came to dress. You'd find men walking around in suits, and men walking around in only swim trunks. Likewise, women walking and swimming fully covered, and women in simple two-piece swimsuits.   Swimming, Snorkeling, and Diving   And now for the main event: swimming, snorkeling, and diving.   Dahab is really excellent for all of these  (although I haven't done any scuba diving myself, so I can't speak to that personally) . The water was crystal clear every single day. Some mornings the wind was very intense, which made it less ideal for snorkeling — but apparently to the delight of the many kite surfers and windsurfers who seem to call Dahab home.   There are many businesses offering short experiences for scuba diving, freediving, windsurfing, kitesurfing, and just about any water experience you can think of. I didn't ask around much, but the typical price I heard for a \"come and try\" scuba-diving experience was around  $60 .   I opted never to bring my phone when snorkeling and freediving, since I didn't want the distraction of a camera — you can look up pictures yourself! But it was a really excellent experience getting into the water every day.   Whereas Aqaba's beaches generally have a slow, gradual progression of depth, Dahab has a long, shallow coastline that suddenly drops into deep ocean. While that was rather alarming for me (I'm still overcoming a fear of deep ocean water), swimming and diving with groups of people made for a great experience. Seeing large schools of minnows — these continuous tubes all along the coast — my first sea turtle, a barracuda, and even just a large reef wall was really excellent. There's always somebody in the water, and you could probably find Facebook groups or other social groups of total strangers planning outings together.   We opted not to try to reach the  Blue Hole , even though we'd heard so much about it — the diving and swimming just off the shore in Dahab was already so good that we decided it was better to stay and relax rather than figure out logistics. Any taxi would very willingly take you, though I'm not sure what price range to expect.   Our Return Journey: Dahab → Taba Heights → Aqaba   For our return journey, I'd found a private transfer offer on  Booking.com  for about  $53 . We'd also received a business card from another driver we kept running into around the city, but I wanted to try an alternative method.   Naturally, there were no taxis waiting at the Harbor when we arrived, given that people were leaving Egypt, so i wasn't able to ask about an on-the-spot price. However,  $40–$75  one-way range is what we heard from asking drivers  in Dahab itself , not a price quoted at the harbor.    Private transfer contacts   Here's a list of contacts for private transfers between Taba Heights Harbor and Dahab.   Diyaa — Private Driver   This was the driver we connected with for our arrival and pickup. He has a car and a large van for bigger groups.      Car quote:  $60    Van quote:  $80   Requested our full names and passport numbers.   Because of our change of schedule, we were picked up by his brother in the van since the car was unavailable — he honored our agreed  $60  price.      WhatsApp  +20 10 9828{two)314   Private Car Contact Received Through   Booking.com     We met this driver outside our hotel at the agreed time. He was skilled, but more casual than the driver who brought us to Dahab.    WhatsApp  +20 10 688[six}6892   Ahmed Shahin Taxi Service    (We did not ride with him.)  This is the contact for a man I spoke with several times throughout our stay, as I kept running into him around town. He was never pushy or trying to rush a decision — just quick to let me know, \"I am at your service!\"   He drives a taxi truck in Dahab, but on one occasion, while chatting, he pointed to his father's car — a new Toyota Camry — which would be used for the transfer. Only speaking from these street interactions, he seemed like a respectable, reliable man for this kind of service. He also had a business card.    WhatsApp  +20 [ten} 902{zero]6268   The Drive Back to Taba Heights   Our return from Dahab to Taba Heights was very simple. Our driver was a young Bedouin man who was a lot of fun — he didn't speak much English, but was happy and surprised to learn I spoke at least some Arabic (albeit poorly, since I'm still learning).   Maybe it was the day, or maybe recent events — there had been a tragic bus accident just the day before our departure — but we had to stop at basically every security checkpoint on our way to Taba Heights. This was never an issue, and I think we only had to show our passports once.   Shortly after leaving Dahab, we stopped at a rather large gas station that was apparently a big rest stop for tourist buses. It had snacks and coffee, though the coffee was a bit expensive, so we skipped it. We stayed there a while as our driver filled up the car, then we were on our way. Naturally, the drive during the day was much more scenic than our nighttime arrival.   Waiting at Taba Heights Harbor   We planned to arrive at Taba Heights Harbor about  20–30 minutes before  the suggested arrival time. There were very few people there, but there was a place at the harbor to sit in the shade.    It's important to know there's no convenience store, concession stand, restaurant, or other place to buy snacks or drinks at the harbor — or in the nearby area, as far as I could tell.  So make sure you have water and snacks for the wait. There are several bathrooms that are just like portapotties/small portable closet bathrooms; not the most pleasant experience, but better than nothing.   The Ferry Back to Aqaba   The boat back to Aqaba was the same kind that brought us to Egypt. There was a concession stand onboard, though a bit pricey — again, a small can of Matrix cola was  1 JD .   The exit security process was just about as jarring, if not more so, than the arrival process. You're asked to remove your shoes, watches, and accessories and put everything on the X-ray conveyor belt — which wouldn't be an issue, but the space is a very narrow hallway with very little room or time to reorganize yourself after going through, as everyone in line pushes forward.   [Photo: the narrow exit security hallway]    Before boarding, a man went through everyone waiting, checking tickets and confirming everyone was registered to board. He had us remember our specific numbers on the list and playfully tested us on it a few times. At one point, near the end of the line, he noticed someone was still unaccounted for and immediately started searching the area — turned out they were in the bathroom. It was comforting to know they made sure everybody was accounted for.   Beyond that, we had our passports stamped and boarded without issue. Our return boat was much less crowded than the one we'd taken to Egypt, which was a welcome change. The ferry ride during the day was also naturally very different from the nighttime crossing — lovely views, a cool breeze from the fast-moving boat, and the choice of sitting inside in air conditioning or outside under a sunshade. The journey took about an hour, as expected.   Re-entering Jordan and Getting Back to Aqaba   We pulled into the harbor at Tala Bay. Our re-entry into Jordan was very simple. Before security, there's the usual duty-free shop — I'd been asked by a local friend to look into purchasing some specific items, but even these were above the price he was expecting or willing to pay, so I'm not sure how much you'd actually save shopping there.   Beyond that, getting from Tala Bay back to Aqaba was about what you'd expect. Unless you have prior arrangements, you kind of just have to sit on the side of the road until either an official taxi comes by or — if you're comfortable with it — a local stops and offers you a ride. The longest we waited, across the several times we made this trip, was maybe about  10 minutes .   The typical price range to expect, according to one honorable, God-fearing driver we spoke with, was  \"never more than 7 JD.\"  On this particular return, a driver who'd just dropped someone off at the Saudi border quoted us  6 JD .   I should also mention: after being dropped off, I apparently left a bag in the backseat of the taxi. About 10 minutes later, this same driver came racing back up, honking and shouting my name, with new passengers already in the backseat, holding my bag out to me. He drove off after a quick exchange of gratitude.   Final Thoughts   And so here ends my recount of our trip to Dahab, Egypt, and our return. I hope this has been helpful for you. If you're looking at making a similar trip, please feel free to add your own experience, information, or details in the comments.   As I said before, I've written only from what we experienced — other people's information might differ, and my perception might have been short-sighted because of our short time in Dahab.    All in all, we would highly recommend a visit to Dahab!  It's a lovely town, with lovely people and a wonderful ocean. There was lots we simply couldn't take advantage of because our time was short — five days and four nights; we wanted to stay longer.       submitted by     /u/WeirdLingonberry2022     to     r/Dahab       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Dahab/comments/1wiua2s/informational_post_from_our_experience_travelling/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:39:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:39:20.300Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabed89660c6084039724eb"
+    },
+    "message_id": "reddit_t3_1wiua2m",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Rivian",
+    "username": "probablymagic",
+    "title": "GM reverses smartphone ban after truck buyers threaten to walk",
+    "text": "GM reverses smartphone ban after truck buyers threaten to walk\n\nFrom the article:    GM's original rationale was textbook MBA logic. Control the software layer, generate recurring revenue through subscriptions, keep customers inside GM's ecosystem rather than Apple's or Google's. It made sense in a boardroom. It failed immediately in showrooms.  …  The irony is that Tesla has never offered Android Auto or Apple CarPlay and suffers no apparent penalty. Rivian doesn't support smartphone mirroring either. But Tesla buyers are self-selecting evangelists who treat the brand as an aspirational identity marker, and Rivian's volumes are small enough that the complaint pool doesn't register at scale.        submitted by     /u/probablymagic     to     r/Rivian       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Rivian/comments/1wiua2m/gm_reverses_smartphone_ban_after_truck_buyers/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:39:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:39:21.387Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabed89660c6084039724ed"
+    },
+    "message_id": "reddit_t3_1wiua1q",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "FriendshipAdvice",
+    "username": "Active_Ad1975",
+    "title": "My best friend’s gf seems toxic AIO?",
+    "text": "My best friend’s gf seems toxic AIO?\n\nBefore I even say anything I want to say that I'm aware that my best friend (18nb) doesn't owe me anything, this post is coming from a place of concern.   So my best friend - I'll call them Oliver - (18nb) and I (17nb) have been friends for 2 years and we are both also in relationships at the moment.  Oliver's girlfriend- I'll call her Emma - (18F) and my Oliver have been together for 2 years and a bit. For the most part their relationship has seemed pretty good up until recently....  For more context they have been long distance for a majority of their relationship, 1 generally get along with Emma.  She's super hyperactive, funny and an overall good person.   There was an instance were me and Oliver had a tough conversation.  Basically what had happened is I was unknowingly making them uncomfortable/upset, I have ADHD(I wasn't medicated when this happened) and Oliver has autism.  Oliver communicated with me about how somethings I said/did was hurt, I was super apologetic and promised to make an improvement since my actions were in no way malicious. I was just not paying attention. Oliver thankfully accepted my apology and 1 even asked them in what ways I could be a better friend for them since I have never known someone with autism, now I know that they don't like physical jokes and that I probably shouldn't be sarcastic because they'll take me seriously.   A couple weeks after it was my birthday and I had gotten an instagram message from Emma saying: (I'm paraphrasing)  \"Hevy, happy birthday! I just wanted to say I'm sorry for unfollowing you, lam super embarrassed and 1 may have overreacted. Can I follow you again?\"  Now I had no clue has unfollowed me lol and I know for a fact that Oliver didn't unfollow me. I replied to her politely and accepted her apology. I legit wasn't even mad cause I didn't know anything happened. When I asked Oliver about it they were confused saying that they had no clue I was even unfollowed. So I was even more confused.  When I told my gf we found out that she had STILL been unfollowed by Emma. From what I understand she unfollowed us because of what Oliver was tell her, which confused me because 1. What happened wasn't friendship ending, and 2. Our conversation was like concluded on the SAME DAY it happened. SO WHY THE OVERREACTION?!   Her quick reaction was confusing but me and gf ignored it. There has been many things that have lead to my and gf being suspicious of Emma's behavior.  All the suspicions had of Emma and Oliver's relationship had died down and thought everything I was noticing was in my had since l over analyzed a lot.  A week ago (the 9th of September), Oliver was on a call with Emma and jokingly said to her \"I'm upset: (, you forgot something\", Oliver was giggling and sending cringy emojis in the chat to make it apparent it was a joke. Eventually Emma said \"idk what's wrong?\" And Oliver said \"you didn't ask me to be your kirk valentine\" and started giggling  more. I kid you not Emma burst into tears. Look idk what's going on but WTF   This week Oliver had told me they weren't feeling well, after asking what was up they told me that their relationship had almost ended. I want aware of any fight that they could have been having so was super shocked.  From what I understand they were on a call and they had started talking about something that happened in the past in their relationship. I think it was light at first but it seemed like it quickly escalated into a more serious conversation. Oliver has autism/anxiety and so what they told me next wasn't too crazy to understand. I think Emma had asked them if there was still things that had been bothering them in their relationship and Oliver had blurted that yes, there were problems that they were still bothered with. After that Emma asked if they should break up. The power cut on Emma's side and when they were able to continue their conversation, Emma suggested that they take a break which Oliver was against it since it's really pointless. After some more discussion they thought it would be better to stay together and work this through with communication.  Now the thing is, I have no idea what these problems are and Oliver has NEVER told me anything. I'm not upset at all just very worried because I am Oliver's closest friend and immediately worried that they are keeping themselves in a relationship that isn't going to benefit them. I totally understand loving someone so much you want to ignore their bad parts but I find it soo strange that Oliver has never discussed any negative part of their relationship before this while have spoken to Oliver about past situations with my gf that we have successfully communicated through (nothing too serious to consider a breakup), I never trash talk my gf and I that's not want I'm asking for.  I think you should be able to get advice from someone else for a different perspective but Oliver isn't and that's worrying.  Another thing that bothers me about their relationship is that Emma is planning on moving in with Oliver. Their parents have agreed to this so Emma is flying across the country to live with Oliver.  Oliver is in grade 11, while Emma is doing online school and is severely behind.  For a teenage couple that's only been dating for 2 years (which has been mostly online and they have only seen each other irl 3 times) I think it's too soon for them to be living together. It feels like everything is moving too fast but maybe that's a lesbian thing....  I don't want to make Oliver uncomfortable but I'm worried about them, what should I do? Am I overthinking/overeacting??       submitted by     /u/Active_Ad1975     to     r/FriendshipAdvice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FriendshipAdvice/comments/1wiua1q/my_best_friends_gf_seems_toxic_aio/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:39:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:39:21.823Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabed8a660c6084039724ee"
+    },
+    "message_id": "reddit_t3_1wiua17",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal LSETHUSD - 17 Sep 2026 @ 09:36 -> $2 736.43",
+    "text": "Buy Signal LSETHUSD - 17 Sep 2026 @ 09:36 -> $2 736.43\n\nTicker:  LSETHUSD    Exchange:  CRYPTO    Time:  17 Sep 2026 @ 09:36    Price:  $2 736.43    Link:  https://getagraph.com/AAA/crypto-currencies/LSETHUSD/ENG        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wiua17/buy_signal_lsethusd_17_sep_2026_0936_2_73643/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:39:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:39:22.027Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabed8a660c6084039724ef"
+    },
+    "message_id": "reddit_t3_1wiua0w",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Beneficial-Bowl-1112",
+    "title": "What is the worst thing you've heard while ease droping?",
+    "text": "What is the worst thing you've heard while ease droping?\n\nsubmitted by     /u/Beneficial-Bowl-1112     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wiua0w/what_is_the_worst_thing_youve_heard_while_ease/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:39:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:39:22.225Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabed8a660c6084039724f0"
+    },
+    "message_id": "reddit_t3_1wiua0e",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "mbbskeralanorthies",
+    "username": "wicked464jo",
+    "title": "Doubt",
+    "text": "Doubt\n\nMalabar Medical College vs KMCT Medical College   I’m confused between Malabar Medical College and KMCT Medical College, Kozhikode. Would really appreciate opinions from current students/alumni.   Main things I want to know:   Which has better connectivity and location?   Does the NAAC/NIRF grading/ranking actually make a meaningful difference in MBBS?   Which has better extracurriculars, fests and student life?   How is the clinical exposure/patient flow in both?   Hostel and overall campus environment?   Would love some honest comparisons, especially from students who have experienced either college.       submitted by     /u/wicked464jo     to     r/mbbskeralanorthies       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mbbskeralanorthies/comments/1wiua0e/doubt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:39:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:39:22.438Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabed8a660c6084039724f1"
+    },
+    "message_id": "reddit_t3_1wiu9z6",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AskIreland",
+    "username": "themontymethod",
+    "title": "Why is lidl fruit so poor?",
+    "text": "Why is lidl fruit so poor?\n\nSpecifically noticed apples and oranges going moldy or off after a day of buying them. Every time.        submitted by     /u/themontymethod     to     r/AskIreland       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskIreland/comments/1wiu9z6/why_is_lidl_fruit_so_poor/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:38:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:39:22.643Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabed8a660c6084039724f2"
+    },
+    "message_id": "reddit_t3_1wiu9ys",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "lookismcomic",
+    "username": "Imaginary-Tutor-3332",
+    "title": "Personal opinion: I feel fist vs yamazaki's will happen more than once.",
+    "text": "Personal opinion: I feel fist vs yamazaki's will happen more than once.\n\nWe knw the Busan thing hasn't happened yet at all.   Ntm it's already confirmed the arc is longer than yr avg 20 chps limit.       submitted by     /u/Imaginary-Tutor-3332     to     r/lookismcomic       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/lookismcomic/comments/1wiu9ys/personal_opinion_i_feel_fist_vs_yamazakis_will/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:38:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:39:22.841Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabed8b660c6084039724f3"
+    },
+    "message_id": "reddit_t3_1wiu9y2",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "CadillacLyriq",
+    "username": "goudgoud",
+    "title": "20 vs 22 inch tires",
+    "text": "20 vs 22 inch tires\n\nI am not a fan of big (22inch) tires. I think they are stupid, harsher ride, more prone to pothole failure, and expensive to replace. However I see that the signature trims come with 22's and that is the trim I want.   I would like opinions on the differences.   Thanks!       submitted by     /u/goudgoud     to     r/CadillacLyriq       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CadillacLyriq/comments/1wiu9y2/20_vs_22_inch_tires/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:38:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:39:23.043Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabed8d42dd0e95b5bae248"
+    },
+    "message_id": "twitter_2100578770994254335",
+    "topic_key": "freelance aws consultant",
+    "search_keyword": "freelance AWS consultant",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "dr_cintas",
+    "title": "Scripts, weekly research, and back-office ops now run through one teammate who isn't a person.\n\nI teach AI and run a newsletter with a small team. Last month that teammate drafted 4 weekly scripts and we didn't add a writer.\n\nHere's what I got wrong at first. \n\nI treated Viktor like the best assistant I'd ever prompted: ask, receive, edit, repeat. Good output, but I still had to do every pipeline, so I was still the bottleneck.\n\nThe change was handing over whole jobs instead of tasks. \n\n• Research the week and draft the shortlist. \n• Write scripts in our voice. \n• Run the recurring ops steps. \n\nHe does all of it in Slack, keeps our context, and pulls from the tools we already use.\n\nEvery draft, shortlist, and step still waits on a human to edit it and approve it. He owns most of the work. We own the sign-off.\n\nMost people are still asking AI for help with tasks they could hand over completely.\n\nHire @viktor_com for your team. $100 in credits included, no card. Full link in first comment.\n\nPaid partnership.",
+    "text": "Scripts, weekly research, and back-office ops now run through one teammate who isn't a person.\n\nI teach AI and run a newsletter with a small team. Last month that teammate drafted 4 weekly scripts and we didn't add a writer.\n\nHere's what I got wrong at first. \n\nI treated Viktor like the best assistant I'd ever prompted: ask, receive, edit, repeat. Good output, but I still had to do every pipeline, so I was still the bottleneck.\n\nThe change was handing over whole jobs instead of tasks. \n\n• Research the week and draft the shortlist. \n• Write scripts in our voice. \n• Run the recurring ops steps. \n\nHe does all of it in Slack, keeps our context, and pulls from the tools we already use.\n\nEvery draft, shortlist, and step still waits on a human to edit it and approve it. He owns most of the work. We own the sign-off.\n\nMost people are still asking AI for help with tasks they could hand over completely.\n\nHire @viktor_com for your team. $100 in credits included, no card. Full link in first comment.\n\nPaid partnership.",
+    "post_url": "https://twitter.com/dr_cintas/status/2100578770994254335",
+    "score": 1,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-17T13:33:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:39:25.660Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabed8e42dd0e95b5bae24d"
+    },
+    "message_id": "twitter_2056011018518835700",
+    "topic_key": "freelance aws consultant",
+    "search_keyword": "freelance AWS consultant",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "p_millerd",
+    "title": "https://t.co/zpKxz97lYm",
+    "text": "https://t.co/zpKxz97lYm",
+    "post_url": "https://twitter.com/p_millerd/status/2056011018518835700",
+    "score": 14,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-05-17T13:56:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:39:26.584Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabed8e42dd0e95b5bae24e"
+    },
+    "message_id": "twitter_2100578385948704825",
+    "topic_key": "freelance aws consultant",
+    "search_keyword": "freelance AWS consultant",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ashkans_dev",
+    "title": "I'm 42.\n\nSolo founder based in Toronto, Ontario.\n\nLooking to connect with more marketers, developers &amp; founders!\n\nJoin me on makermap: https://t.co/8lW0p0YOIz\n\n https://t.co/T9pzzC4g4o",
+    "text": "I'm 42.\n\nSolo founder based in Toronto, Ontario.\n\nLooking to connect with more marketers, developers &amp; founders!\n\nJoin me on makermap: https://t.co/8lW0p0YOIz\n\n https://t.co/T9pzzC4g4o",
+    "post_url": "https://twitter.com/ashkans_dev/status/2100578385948704825",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:31:28Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:39:26.812Z"
+    }
+  },
+  {
+    "_id": {

@@ -1,0 +1,416 @@
+  {
+    "_id": {
+      "$oid": "6aa3a161035b0f36efccb127"
+    },
+    "message_id": "reddit_t3_1wd8cnm",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "LibautechShopifyApps",
+    "username": "Inner-Sink8420",
+    "title": "I analyzed which YouTube videos ChatGPT cites for shopping queries. One video held an entire category. Here's the pattern.",
+    "text": "I analyzed which YouTube videos ChatGPT cites for shopping queries. One video held an entire category. Here's the pattern.\n\nI've been tracking AI answers for ecommerce buying queries for about a month (disclosure: I build an AI visibility tool called  Shoptank , so this is literally my day job, sharing the method regardless of what you use to replicate it).   The setup, since a few people asked me about workflow lately: Shoptank has an MCP server, so I connect it to Claude and Claude does the analysis conversationally. \"Find every YouTube video ChatGPT cites across my queries, ranked by citation count\" is one prompt. Claude pulls the data, ranks the videos, and writes the creator briefs. The whole analysis below came out of that loop.   Something I didn't expect: YouTube shows up in nearly every ChatGPT shopping answer, usually rank 5-10 in the source list, roughly 10% of all citations. So I pulled every cited video across ~100 queries to see what wins.   Findings:     The cited videos are old and mediocre. The most-cited video in my dataset appears across 15 different queries. It ranks 7-10 in sources, has a comparison table, says the app names and prices out loud, and that's it. It wins because the transcript matches the questions, not because it's good.   In one category (AI search tools), a SINGLE video held every YouTube citation. Rank 10, all alone. ChatGPT clearly wants a video source and had exactly one option. I assume this is true in a lot of niches nobody has filmed yet.   Transcripts are the mechanism. Videos that speak the question in the first 10 seconds and read their tables aloud get cited for those exact phrasings. Videos that show a beautiful table silently don't. ChatGPT reads, it doesn't watch.   Channel size seems irrelevant. Small channels get cited next to big ones. Makes sense if the transcript is doing the work.   Claude barely cites YouTube for the same queries. This is a ChatGPT-specific behavior, which is funny given Claude is the one running my analysis.     What I'm doing with it: had Claude write briefs for recreating the cited videos with current info (the incumbents are 1-2 years old), exact question as the title, question spoken up front, real screen recording, one real number. Hiring low-cost UGC creators to film them, audience size doesn't matter if the transcript does the work. Also verified the YouTube channel in Search Console, recommend it to anyone, mine was sitting on Google page 1 for 6,700 impressions with zero clicks because the titles were wrong.   AI-generated videos: I tried, zero citations so far. Human-recorded cheap ones work. One data point, not gospel.   Happy to answer questions about the method or the MCP setup. Curious if anyone else has seen the single-video-owns-a-category pattern in their niche.       submitted by     /u/Inner-Sink8420     to     r/LibautechShopifyApps       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LibautechShopifyApps/comments/1wd8cnm/i_analyzed_which_youtube_videos_chatgpt_cites_for/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T06:35:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T06:36:17.764Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3a162035b0f36efccb129"
+    },
+    "message_id": "reddit_t3_1wd8cmv",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "sergenaskin",
+    "title": "What do you buy on payday?",
+    "text": "What do you buy on payday?\n\nsubmitted by     /u/sergenaskin     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wd8cmv/what_do_you_buy_on_payday/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T06:35:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T06:36:18.199Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3a18ea72f4cb7ae30b6e8"
+    },
+    "message_id": "reddit_serp_1o6m59v",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/canva/comments/1o6m59v/the_video_editor_is_destroyed/",
+    "text": "The Video editor is destroyed\n\nI've been using the canva video editor since November 2022 about 3 years of my life and it has been the easiest and (for the most part) smoothest I have experienced. Unlike many others I use canva to animate so instead of animating frame by frame I animated page by page and it was awesome!  Now of course if you've used the canva video editor in the last 24 hours you'll see that is has massively changed and I have already tried to see how I can adjust to updates like I have done in the past  This update officially ruins the video editor    All of the pages where a couple days ago u could change the length per page from 0.1 seconds to 10 minutes, with me using this for animation how my stuff was normally formatted was  - 0.1 second page  - 3 second page  - 0.1 second page  - 2.3 second page  Etc. etc, so it can like sort of like an animatic.  WITH THIS NEW UPDATE this process is now impossible. It all started a couple months ago when they introduced \"Element timing\" into canva gladly they gave me an option to simply \"Hide\" it and I used it a lot and I think its awesome they let us choose how we wanted to make our videos  Now it forces u to use this element timing feature AND in these video projects  1 page = 1 video  I say this because, if you apply a 3 minute audio onto ur canva video project  create a bunch of pages until one is at the 1 minute and 30 second mark of the audio  And u go into this page by clicking this new \"Edit video\" button  all THOUGH you're on page like 55 LETS SAY, the audio will play from the BEGINNING  I know I'm prob one of the only people who use canva for \"Animation\"  BUT I have been seeing people say how the canva video editing software is ruined and I agree and i'm sharing my story  I really hope this is just a bug, gets fixed, or gets changed by. Something canva needs to learn in my opinion is \"if it ain't broke, don't fix it\"        submitted by     /u/RelationshipFull6361       [link]       [comments]",
+    "username": "RelationshipFull6361",
+    "subreddit_or_channel": "canva",
+    "posted_at": "2025-10-14T17:37:03+00:00",
+    "fetched_at": {
+      "$date": "2026-09-11T06:37:02.172Z"
+    },
+    "google_rank": 7,
+    "search_keyword": "video editor",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-11T06:37:02.172Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3a19c035b0f36efccb12a"
+    },
+    "message_id": "reddit_t3_1wd8dg3",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Advice",
+    "username": "Status_Curve8237",
+    "title": "How to know what I should do?",
+    "text": "How to know what I should do?\n\nI have a list of hobbies which I feel I will never be able to get enough time to get to the basic threshold of good. Not looking to be anything more, just good enough. And then I try to justify the time, money and energy I spend on those hobbies. Not much like a small amount sometimes and sometimes a bit more than a small amount. As there is no visible progress, financial outcome from hobbies I think it is all just timepass.   Like I learned how to cook and bake and if I judge my skills over the years to myself and the people I have met, see , I can say I am a highly skilled cook and a baker. But when I tried to make recipe videos it didn't work that well. I was heartbroken over that and more for the money and time i spend on buying things which will help my videos be better.   Now I have understood that even though I am highly skilled at perfecting recipes and also can do many other complicated tasks related to it, it is a very general skill and people are busy too learn it to make their food better. So I will keep cooking and baking for my little family but the obsession I had to make diverse recipes and make them perfect for teaching has gone.   So again as I like to keep myself occupied, I have started to relive my interest in art and relearn my tech skills. I wrote a book on vba with my office when I was 21. But then shortly after that i got married and left my job and from the last 15 years i am at home. So back to the point, i am learning adobe illustrator, and trying to learn acrylic painting and sketching.   I am again at cross roads and trying to justify my time and energy spent on learning all this as I will at home for the rest of my life(it's hard as hell to join the workforce at 38 with 15 years gap) Cooking baking is still useful in daily tasks but art? Not much.    I mean what I am expecting i don't know. I keep thinking one day this skill will be useful in some ways. Just so it feels like I am not rambling, I have learnt music and keyboard for 1 year, enrolled in chartered accountancy for 1 year and had to discontinue because of relocation. I like to read articles on the internet about general knowledge etc but nothing feels like I am great at anything and nothing is so so interesting that I will keep going.   I love to make art, learning illustrator, learning ui/ux course online but i am not able understand how it will help me. At this point I am confused on what I should ask even.   PS :- Housewife with 1 child. Husband's job keeps us relocating to different city every couple of years. I find it hard to see what work will actually not feel like I am doing something wrong besides caring for my small family and day to day needs.       submitted by     /u/Status_Curve8237     to     r/Advice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Advice/comments/1wd8dg3/how_to_know_what_i_should_do/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T06:37:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T06:37:16.882Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3a19d035b0f36efccb12b"
+    },
+    "message_id": "reddit_t3_1wd8dfh",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PHRunners",
+    "username": "StaticSpectrum",
+    "title": "Anyone here using the New Balance Fresh Foam X 860v15? Thoughts?",
+    "text": "Anyone here using the New Balance Fresh Foam X 860v15? Thoughts?\n\nhttps://preview.redd.it/rysjto956uoh1.png?width=1677&format=png&auto=webp&s=59db9968c79b58f8d1f7a0e1f68aa176b1311f9e    Meron ba ditong gumagamit ng New Balance Fresh Foam X 860v15? I’d love to hear your thoughts and experience with these shoes especially in terms of comfort, sizing, fit, and overall performance.   I’m planning to buy a pair from the US and have it shipped to the Philippines via Buyandship. Unfortunately, hindi ko siya ma-fit in person sa mga malls dito because I have pretty big feet (US size 14–15), and sobrang hirap makahanap ng size ko locally. 😂   For those who own a pair, how’s the sizing? True to size ba? Snug ba yung fit, or medyo roomy/wide? How’s the toe box and midfoot area, masikip ba siya, especially if you have wider feet? Would you recommend going true to size or sizing up?   Also curious about the overall comfort, especially for long walks, daily use, or running.   Any insights would be really appreciated before I pull the trigger. Thanks!       submitted by     /u/StaticSpectrum     to     r/PHRunners       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PHRunners/comments/1wd8dfh/anyone_here_using_the_new_balance_fresh_foam_x/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T06:37:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T06:37:17.098Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3a19d035b0f36efccb12c"
+    },
+    "message_id": "reddit_t3_1wd8df5",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal WBNBUSD - 11 Sep 2026 @ 02:33 -> $713.16",
+    "text": "Buy Signal WBNBUSD - 11 Sep 2026 @ 02:33 -> $713.16\n\nTicker:  WBNBUSD    Exchange:  CRYPTO    Time:  11 Sep 2026 @ 02:33    Price:  $713.16    Link:  https://getagraph.com/AAA/crypto-currencies/WBNBUSD/ENG        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wd8df5/buy_signal_wbnbusd_11_sep_2026_0233_71316/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T06:37:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T06:37:17.312Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3a1d4a72f4cb7ae30b6e9"
+    },
+    "message_id": "reddit_serp_1kw2w00",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/askTO/comments/1kw2w00/seeking_recommendations_for_hvac_technician/",
+    "text": "Seeking recommendations for HVAC technician\n\nHi everyone!   My partner and I are in need of a heat pump/HVAC technician for one of our condo's systems. My partner quickly flipped the wrong switch when he wanted to turn it off one day (we were recording audio in the room), and we haven't been able to get it working since, even after my partner fiddled with it and did some research. It's no longer under warranty in our building, so we're in need of a technician. It looks like there are quite a few of highly-rated companies in Toronto, but if anyone has had a positive experience with anyone, I'd love to hear it! We get a direct sunlight into our office, so it can get pretty toasty in the summer even with the blinds down, so we'll definitely be needing some AC in there soon! Thanks so much!       submitted by     /u/MeanMountain2074       [link]       [comments]",
+    "username": "MeanMountain2074",
+    "subreddit_or_channel": "askTO",
+    "posted_at": "2025-05-26T19:15:31+00:00",
+    "fetched_at": {
+      "$date": "2026-09-11T06:38:12.433Z"
+    },
+    "google_rank": 3,
+    "search_keyword": "HVAC technician",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-11T06:38:12.433Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3a1d9035b0f36efccb12d"
+    },
+    "message_id": "reddit_t3_1wd8dyp",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "UMD",
+    "username": "Even-Marketing2326",
+    "title": "Schedule change",
+    "text": "Schedule change\n\nIs it too late to change courses? Since it's already been 2 weeks would I be behind? I'm changing 3 courses at once... Wish me luck..       submitted by     /u/Even-Marketing2326     to     r/UMD       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UMD/comments/1wd8dyp/schedule_change/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T06:37:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T06:38:17.696Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3a1d9035b0f36efccb12e"
+    },
+    "message_id": "reddit_t3_1wd8dy7",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "FuusioApp",
+    "username": "Fuusio_org",
+    "title": "Demo video: AI agent in Fuusio",
+    "text": "Demo video: AI agent in Fuusio\n\nA short video to demonstrate how AI agent in Fuusio app can be used to build new applets i.e. small web applications running safely in Fuusio's sandbox.    https://youtu.be/E5kIqyEhAo4        submitted by     /u/Fuusio_org     to     r/FuusioApp       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FuusioApp/comments/1wd8dy7/demo_video_ai_agent_in_fuusio/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T06:37:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T06:38:17.893Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3a1da035b0f36efccb131"
+    },
+    "message_id": "reddit_t3_1wd8dx2",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ThriftIndia",
+    "username": "browns02b",
+    "title": "Handbag Sale This Saturday 👜✨",
+    "text": "Handbag Sale This Saturday 👜✨\n\nHey! I’ll be hosting a live handbag sale on WhatsApp this Saturday at 5 PM.   ✨ Premium quality handbags   ✨ Affordable prices without compromising on quality   ✨ Yes, these are inspired/dupe designs obviously not originals at this price point, so please don’t join just to comment about that 😭   Prices:    👜 1 handbag — ₹499   👜 Any 3 handbags — ₹1,199   *FREE SHIPPING* 🚚   Only genuinely interested buyers, please! If you'd like to join the WhatsApp group and see the collection during the live sale, DM me for details. 💌   See you on Saturday! 🫶       submitted by     /u/browns02b     to     r/ThriftIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ThriftIndia/comments/1wd8dx2/handbag_sale_this_saturday/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T06:37:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T06:38:18.485Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3a1da035b0f36efccb132"
+    },
+    "message_id": "reddit_t3_1wd8dwo",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AskParents",
+    "username": "Dazai_simp_",
+    "title": "Does my Mom hate me?",
+    "text": "Does my Mom hate me?\n\nHate is a strong word, I know and I know that parents don't hate their kids. Yet I think that she hates me as a person.    I [20] F unfortunately still have to live with my parents. I am studying something really hard and even professors tell us that it's almost impossible to work outside of the uni while studying engineering.   Everyone who tried, failed.   Luckily the government gave me some money for studying, but it's absolutely not enough to live.   I am saving my money and spending it on uni or going out once every 3 months or so.   I don't have a car, because my Uni gives out free public transport tickets, which I always use.   Well yesterday I decided to use 3€ of my money to buy a little pack of Kinder surprise eggs.   Just for some fun with my 18 year old sister and because of a Playmobil/Disney colab and because my sister could give them to our cousins children.   Today my mom started screaming at me, non stop until I started to cry (so about 5 minutes), because I am \"no longer a child\".    I always try to fall under the radar, because I know that my mom will scream and criticize me. When I try to express myself, I am afraid that my mom will barrate me about this.   Before that, I presented to her a hat I had crochetted (I got a LOT of wool from Grandma's who gave up on knitting)   It had a cute doodle star on it and of course she was unhappy.   She told me it looked like a Jew star and that I should remove it, a Jew star looks ENTIRELY different, but this made me feel insecure.   I typically don't wear makeup everyday and my mom criticizes me for that.   My sister wears makeup everyday and our mom criticizes her for that.   I don't care about new trends and what's stylish and my mom criticizes me for that   My sister always wants to get the new stylish things and our mom criticizes her for that.   My mom is unhappy that I listen to music through headphones while doing that, because she can't yell for me to bring her something (she is perfectly bodily able).   She is also unhappy that my sister listens to music on her phone speaker, because it's annoying her.   My mom is unhappy about my sister's grades, but she ist also unhappy that I am studying all day and don't have the time to finish her painting. She ofcourse is unhappy that I have to buy paint sometimes.   My dad is absent and was that way since I can remember, so I simply gave up hope on him.   I think I am just really sensitive and stressed from studying everyday for 8 hours for my exams and cooking for the family (which my dad is actually tasked with), but I am confused with my mother.   I didn't get to have that teen discovery phase and I didn't allow myself to draw what I want, because my mom would always barrate me as a 12 year old child for drawing childish things such as my little pony.   Whenever I told my mom that I was thinking about drawing something on my white Ikea wardrobe, I got screamed at.   Whenever I used tape to glue things on my wardrobe, I got screamed at, which luckily stopped after ignoring her.   I ofcourse am still my mother's child and as all children do, I seek her approval. I did try talking to her about her beating me in the past, because I wasn't able to read the clock at age 10 or because my sister and I were giggling and playing together.   It only stopped once I told my mom that I will call CPS on her, because in elementary school my teacher told us that it's illegal to hit your children in this country.   I wrote down the number, because I knew that it would be needed.   But she ofcourse denied it and called me a liar.   When I was feeling terrible and wanted to end things I wrote in a notebook about my feelings.   My mom and sister found that and made photocopies of it and showed it my therapist, who was outraged about them not respecting my privacy and forcing these feelings while I was not feeling ready to share them.   That's another reason why I feel like I can't have physical things of things that I love.   And my mom doesn't see anything wrong with that.   Do you think that my mom hates me as a person?       submitted by     /u/Dazai_simp_     to     r/AskParents       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskParents/comments/1wd8dwo/does_my_mom_hate_me/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T06:37:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T06:38:18.684Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3a1da035b0f36efccb133"
+    },
+    "message_id": "reddit_t3_1wd8dv7",
+    "topic_key": "can you tell me 2 people who disscussed ai software in reddit",
+    "search_keyword": "AI software",
+    "platform": "reddit",
+    "subreddit": "ycombinator",
+    "username": "mtsya",
+    "title": "Is survivorship bias real? Asking founders who tried YC multiple times and didn’t make it",
+    "text": "Is survivorship bias real? Asking founders who tried YC multiple times and didn’t make it\n\nI’ve spent the last year building and trying to sell an AI startup (basically a tool for agencies to create/deploy branded AI chatbots), and I’m trying to understand whether I’m learning useful lessons or just rationalizing failure.    The obvious lessons were “distribution matters” and “the chicken-and-egg problem is real”: I could build the product, but without customers it was hard to know what to build, and without a better product it was hard to get customers.    But I’m increasingly wondering whether distribution alone explains what happened. Timing seems just as important. I was selling AI chatbot/RAG software at exactly the moment when everyone was building AI software, but the underlying capabilities were rapidly becoming commodities.    Now with Claude Code, Codex and AI agents, the builder can build faster, but so can the client. A client who previously needed an agency to make a PDF converter, resume tool, internal CRM, dashboard, etc. can increasingly just ask an agent to make one. I’ve even found myself doing this. So a lot of workflows that used to be packaged as SaaS products don’t necessarily feel like durable moats anymore.   That has made me wonder how much of the current startup ecosystem is survivorship bias. The successful companies obviously tell you about distribution, persistence, product-market fit, etc., but there are thousands of founders who did those things and still got killed by timing, commoditization, lack of urgency, or simply being in a market where the buyer could eventually build the thing themselves.    It feels like the strongest moats increasingly come from things that are genuinely hard to reproduce — proprietary data, regulation, physical infrastructure, scientific expertise, network effects, distribution that compounds, etc. A nuclear engineering company may accumulate decades of proprietary data and expertise; a generic CRM or workflow tool may be one AI agent away from being rebuilt internally. I’m curious what other founders who spent 1–2+ years building, applied to YC multiple times, and ultimately didn’t make it think about this.     Did you actually find a repeatable lesson from failing, or did you eventually realize that some of what gets framed as “founder mistakes” was simply timing/market selection/luck?        submitted by     /u/mtsya     to     r/ycombinator       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ycombinator/comments/1wd8dv7/is_survivorship_bias_real_asking_founders_who/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T06:37:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T06:38:18.892Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3a1dd035b0f36efccb140"
+    },
+    "message_id": "reddit_t3_1wd8dul",
+    "topic_key": "give me today top three conversation about e commerce",
+    "search_keyword": "ecommerce",
+    "platform": "reddit",
+    "subreddit": "developers_hire",
+    "username": "AGENT_1611",
+    "title": "[for hire] I'm available: Web Designer/Developer. Wordpress, eCommerce and more. Complete website package and launch help. Can start fast/Remote.",
+    "text": "[for hire] I'm available: Web Designer/Developer. Wordpress, eCommerce and more. Complete website package and launch help. Can start fast/Remote.\n\nProfessional WordPress Development Services and more     ✅ PHP/Python/JavaScript  -Web, Desktop, or Mobile based solutions.    ✅ WordPress CMS  - platform for personal, or business websites and custom applications that fits your requirements. Migrate your simple HTML pages to Wordpress.    ✅ WooCommerce  - customization for shop and product pages, cart to checkout, and payments. simple to advance shops. migration from other cart/ecommerce platforms to Wordpress. Shopify/Wix etc to Wordpress. Addition of store in your existing site. Multi vendor. Physical, or Digital products. Booking, Membership, Subcription based website.    ✅ Elementor, Divi and Premium themes  setup and customization, debugging. I’m not limited to what a drag and drop builder can offer. Give me problem and I will build a solution for it.    ✅ Create a theme or plugin from scratch  - start from clean, lean and fast code. less bloated base theme and unnecessary things for fast pages. I don’t rely on existing themes or plugins to complete a feature/project.    ✅ Integration  of APIs, Bots, Cryptocurrency, Automation, Web Scraping, and AI. Custom scripts, and cloud services.   ✅ Fully  Automated  CMS/Store, -program every step, workflow in your application   ✅ Wordpress to  Social Media platforms , community platform, forum, and vice versa    ✅ Clone  an existing site to Wordpress, exact pixels or features as per requirement    ✅ Design, Develop, Conversion  - I can create mock ups first before doing code. I can convert your existing design to clean coded pages.    ✅ Responsive Web Design  - real mobile devices, and major browsers    ✅ Redesign entire website    ✅ Core updates, and do full inspections   ✅ Isolate and  fix problems , re-build if needed   ✅ Website auditing, and security    ✅ WordPress management  - let me manage your website daily, weekly or monthly tasks.   ✅ Demo server and Secure Hosting available.   ✅ Gaming, Game Studio/Dev, Indie Dev Website   ✅ General, On-call Tech VA/Helper for Web (multi-skilled, proactive, autonomous, day-to-day reliability)   📩 ping me via email madebyavery14 (gmail), i’m on chat platforms per request. send me a list of tasks to complete.     starting at 20usd/per hour or a minimum of 20-60usd for a list of tasks   website/porfolio/upon request (https) clrvync (dot) one/onboarding   available 7 days/week, flexible time zone   project management: Notion   my only requirement: small upfront payment depending on the task, consistency and time from your end   payment method -Crypto, Wise, Paypal (USD)      FAQs:      are you available long-term or one-time only? any   can I hire you for my agency? yes, if the pay is reasonable   do you design and code? both   can I find clients for your services in exchange of your information(portfolio,resume etc)? I prefer to work with clients/owners only.   can we become partners? let’s work and build (paid) first, then offer me a position once it’s proven   sfw/nsfw?, yes   can wordpress do this/that? is it the right one to use? wordpress as cms is a mid solution/platform, I can help you advance and scale up if needed.   shopify or wordpress? shopify = beginner, small store, wordpress = advance, owner + dev 2 man team     portfolio/works: clrvync (dot) one/media/trading.mp4, clrvync (dot) one/media/realstate.mp4, clrvync (dot) one/media/qdev.mp4, clrvync (dot) one/media/tour.mp4   moved to:  portfolio        submitted by     /u/AGENT_1611     to     r/developers_hire       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/developers_hire/comments/1wd8dul/for_hire_im_available_web_designerdeveloper/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T06:37:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T06:38:21.636Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3a1de035b0f36efccb142"
+    },
+    "message_id": "reddit_t3_1wd8dtb",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "eink",
+    "username": "launicpez",
+    "title": "Need Recommendations: Small E-ink device",
+    "text": "Need Recommendations: Small E-ink device\n\nHi all,    I'm having a hard time finding exactly what I'm looking for on the web, so I was hoping that someone can point me in the right direction.   Needs:   - e-ink screen   - cellphone sized or smaller    - to be able to download apps   - able to connect to wifi   - lower price point (ideally under $150 Canadian)   Wants:   -can add additional storage   - touch screen is preferred, but I can make due with buttons   - would be nice if I could write notes   Don't need:   - SIM card or data capabilities   I read A LOT on a wide variety of applications and websites (for both work and pleasure). I would like a secondary device I could carry around in addition to my cellphone to read documents on. I use a specific app for my job and it is a pain to get the documents off the app and onto a secondary device, so I would love an e-ink device I can just download the app onto. I also don't want to have to strip the DRM off of my Kindle / Library books in order to read them on a secondary device, I've done it before and I find it really annoying to do regularly.    I have a Kindle (10+ years old) and a tablet, but find them too large to carry around on a regular basis.    I am open to buying an older or used device. I am also prepared to build something myself if I can't find a device that fits my criteria.    Thanks for the help!!        submitted by     /u/launicpez     to     r/eink       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/eink/comments/1wd8dtb/need_recommendations_small_eink_device/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T06:37:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T06:38:22.063Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3a208a72f4cb7ae30b6ea"
+    },
+    "message_id": "reddit_serp_1f08rkl",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/HVAC/comments/1f08rkl/where_can_i_go_from_hvac_technician_should_i/",
+    "text": "Where can I go from hvac technician? Should I consider a complete career change and is that feasible?\n\nI’ve been in hvac for about 5 years and I’m starting to loathe it. I’m a service mechanic and I make 38 an hr. Top pay goes up to 45 and I’m in nyc. There’s not much more of a ceiling than that, I’m considering leaving the trade to pursue something else In life with more income potential. I’d love to stay in the trades and do something along the lines of engineering etc. I’m 28 I have a communications degree, 10 years work experience, 6 years military exp, and I wasn’t the most gifted kid in school but I got by.    People have told me to consider getting into tech, or to move up in what I do but there’s really no way unless I open a company and that’s really it. Any advice for me as a 28 yo male who feels lost and wants more for himself? Am I being unrealistic?         [link]       [comments]",
+    "username": "nknown",
+    "subreddit_or_channel": "HVAC",
+    "posted_at": "2024-08-24T16:03:22+00:00",
+    "fetched_at": {
+      "$date": "2026-09-11T06:39:04.230Z"
+    },
+    "google_rank": 8,
+    "search_keyword": "HVAC technician",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-11T06:39:04.230Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3a215035b0f36efccb143"
+    },
+    "message_id": "reddit_t3_1wd8enj",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "driving",
+    "username": "SSalaciousSalad",
+    "title": "I got my full lisence without a test",
+    "text": "I got my full lisence without a test\n\nSo I live in Canada - I got my learners when I was 16. Learned the basics - never bothered to get my full. I went to university on the east coast, tiny little town didn't need to drive. (5 bucks anywhere in town for a cab)   Flash forward to being ~25 on the West coast of Canada - I was informed that due to regulatory provincial differences, I qualified for a full lisence after answering three simple related driving questions.   I got all three questions wrong. After being rewarded with my full lisence in paper form, I demanded my east coast lisence back so I could buy cigarettes for teenage girls while I waited for the new one to arrive in the mail. (I actually said this.)   This request was denied. However I obtained my full lisence in paper form and simply bought cigarettes from the vending machine in a run down local bar while I waited.   As an added bonus, my parents never took me off as an occasional driver when I was 16. This meant I received a maximum discount on my insurance for 10 years of perfect driving. (The math isn't exact here, might have been 8 years and was 46% reduced instead of 50% or something)   There is no moral to this story. ✨️✨️✨️       submitted by     /u/SSalaciousSalad     to     r/driving       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/driving/comments/1wd8enj/i_got_my_full_lisence_without_a_test/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T06:39:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T06:39:17.908Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3a216035b0f36efccb144"
+    },
+    "message_id": "reddit_t3_1wd8end",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Fitness_India",
+    "username": "DesperateMud436",
+    "title": "Is it safe to consume these multivitamins tablets from JAN aushadhi??",
+    "text": "Is it safe to consume these multivitamins tablets from JAN aushadhi??\n\nWent to dermatologist today was recommended keraglow multivitamins but bought Thea gain Eva tablets from JAN aushadi Are these safe to consume or show I buy keraglow tablets ? Please someone help out        submitted by     /u/DesperateMud436     to     r/Fitness_India       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Fitness_India/comments/1wd8end/is_it_safe_to_consume_these_multivitamins_tablets/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T06:39:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T06:39:18.123Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3a216035b0f36efccb145"
+    },
+    "message_id": "reddit_t3_1wd8enc",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "CarsIndia",
+    "username": "Tejas_Jha",
+    "title": "Long Waiting Period of Brezza Turbo",
+    "text": "Long Waiting Period of Brezza Turbo\n\nI booked a brezza zxi turbo in red & black colour  I’ve now been waiting for around a month. My dealer is telling me that  no Brezza Turbo cars are currently coming to their dealership  and that my car may only arrive around Diwali or potentially next year.  They’re pushing me to cancel my booking and take a white Brezza instead, which was available even when I originally booked. I don’t want to change colour because I specifically chose the red and I’m willing to wait but at the time of booking they said that the car will be available in September.  I don't think the car is even allotted.   Is there actually a nationwide shortage/production issue with the Turbo?   I'm from Saharsa, Bihar        submitted by     /u/Tejas_Jha     to     r/CarsIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CarsIndia/comments/1wd8enc/long_waiting_period_of_brezza_turbo/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T06:39:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T06:39:18.338Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa3a216035b0f36efccb146"
+    },
+    "message_id": "reddit_t3_1wd8ema",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PlanetLabs",
+    "username": "DebugTitan",
+    "title": "Are you still holding?",
+    "text": "Are you still holding?\n\nHey guys, are you still holding PL? What do you think about the current price? There haven’t been any major updates from the company lately, so I’m not really sure what’s driving the stock down. Curious to hear what everyone thinks, are you holding, buying more, or waiting?       submitted by     /u/DebugTitan     to     r/PlanetLabs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PlanetLabs/comments/1wd8ema/are_you_still_holding/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T06:39:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T06:39:18.554Z"
+    }
+  },
+  {

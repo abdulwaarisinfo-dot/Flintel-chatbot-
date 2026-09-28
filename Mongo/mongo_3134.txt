@@ -1,0 +1,416 @@
+    "_id": {
+      "$oid": "6aa42bb16508d45f3d2baa22"
+    },
+    "message_id": "reddit_t3_1wdl1pg",
+    "topic_key": "nike",
+    "search_keyword": "Nike",
+    "platform": "reddit",
+    "subreddit": "DesignDesign",
+    "username": "Additional_Tone_2004",
+    "title": "Nike and the NBA announced that the 8 oldest teams in the league will wear special \"Specter\" jerseys this season. What do think?",
+    "text": "Nike and the NBA announced that the 8 oldest teams in the league will wear special \"Specter\" jerseys this season. What do think?\n\nsubmitted by     /u/Additional_Tone_2004     to     r/DesignDesign       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DesignDesign/comments/1wdl1pg/nike_and_the_nba_announced_that_the_8_oldest/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T16:26:12Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T16:26:25.785Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa42bb26508d45f3d2baa28"
+    },
+    "message_id": "reddit_t3_1wdl1np",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "visualization",
+    "username": "Less-Marketing-5283",
+    "title": "Visão geral para QuaintPearl",
+    "text": "Visão geral para QuaintPearl\n\nsubmitted by     /u/Less-Marketing-5283     to     r/visualization       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/visualization/comments/1wdl1np/visão_geral_para_quaintpearl/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T16:26:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T16:26:26.956Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa42bb36508d45f3d2baa29"
+    },
+    "message_id": "reddit_t3_1wdl1ky",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "ClaudeWorkflows",
+    "username": "ClaudeAI-mod-bot",
+    "title": "[Workflow] Advanced Multi-Agent Workflow for Autonomous Code Generation and Validation (Reducing AI 'Punting')",
+    "text": "[Workflow] Advanced Multi-Agent Workflow for Autonomous Code Generation and Validation (Reducing AI 'Punting')\n\nAdvanced Multi-Agent Workflow for Autonomous Code Generation and Validation (Reducing AI 'Punting')    Workflow value:  95/100   Status:  active ·  Freshness:  70/100 ·  Confidence:  1.00 ·  Level:  advanced   Categories:  Quality Control, Token Saving, Context & Memory, Debugging, CLAUDE.md, Hooks, Skills, Subagents, Multi-Agent   Original source:   r/ClaudeAI post/comment    What problem this solves   AI agents being overly cautious and punting back to humans too frequently, leading to inefficient workflows and unnecessary human intervention. Also, ensuring code quality and plan adherence in AI-generated code.   Summary   This comment proposes two workflows to manage AI agent behavior: a \"lightweight\" prompt-based approach to encourage autonomous problem-solving and a \"heavyweight\" multi-agent architecture (Planner, Coder, Adapter, Adjudicator) for robust code validation, plan adherence, and automated review, significantly reducing human intervention and improving code quality.   Why it is useful   This workflow addresses a critical challenge in using AI for coding: managing agent autonomy and ensuring the quality and adherence of AI-generated code to a plan. The heavyweight multi-agent approach provides a sophisticated, automated framework for validation and review, significantly reducing the need for human intervention in routine issues and improving the reliability of AI outputs. The lightweight approach offers a simpler, immediate solution for common 'punting' behavior, making it valuable for both quick fixes and robust, scalable development processes.   Workflow      Lightweight Workflow:    1. Instruct the agent to attempt autonomous workarounds if progress halts.   2. If blocked despite several attempts, enumerate the problem in detail and list 3-5 approaches that don't require planner input.   3. If approaches appear reasonable, execute them.   4. Escalate only if still blocked, providing a concrete and complete description of attempts and evidence.    Heavyweight Workflow (Multi-Agent):    1.  Planner Agent:  Writes the plan and creates \"prose gates\" (tests/assertions) as valid code, hiding them in a separate folder from the Coder.   2.  Coder Agent:  Executes the plan (preferably with the lightweight prompt) and writes its own separate tests.   3.  Adapter Agent:  Creates a shim to run the hidden gate tests against the Coder's output, reporting pass/fail status without modifying code or tests.   4.  Coverage Analysis:  Run code line coverage reports for both Coder's tests and the hidden gate tests (excluding shim code).   5.  Contrast Coverage:  Analyze four areas: both cover (good), gate covers but coder doesn't (incomplete plan implementation), coder covers but gate doesn't (overreach), neither covers (ambiguous, manual sort).   6.  Adjudicator Agent:  Receives all information (test results, coverage analysis). Decides if the Coder needs to try harder (e.g., migrate hidden gate tests). Evaluates if genuine \"discovered in the field\" findings require human review. Only then, promotes to a real issue for human discussion.     Tools / artifacts     Lightweight prompt (specific phrasing provided)   Multi-agent architecture (Planner, Coder, Adapter, Adjudicator)   Hidden gate tests (in a separate folder)   Coder's self-written tests   Code line coverage reports   Shim code (generated by Adapter)   Fable 5.1 (suggested for Adjudicator/Planner roles)   Opus 5 (suggested for running the entire process)     Validation signals     The author states the process is \"mechanical enough that Opus 5 can run the whole thing.\"   Specific model recommendations (Fable 5.1 for Adjudicator/Planner) suggest practical experience.   The detailed breakdown of coverage analysis provides a logical, structured validation method.     Limitations     The heavyweight solution is complex and requires significant setup and understanding of multi-agent orchestration.   Relies on specific model capabilities (Opus 5, Fable 5.1) which might not be universally available or perform identically across different LLM versions or providers.   The \"lightweight\" prompt is a good starting point but may require further refinement for specific contexts and agent behaviors.   No actual code examples or detailed configuration files are provided, only conceptual steps and agent roles.     Rate this workflow   Upvote this post if the workflow is useful, reproducible, or worth recommending.   Downvote if it is vague, outdated, unsafe, overhyped, or not reproducible.   Reply if it worked for you, failed, is outdated, or has a better alternative.      This post was generated automatically from the workflow library database.        submitted by     /u/ClaudeAI-mod-bot     to     r/ClaudeWorkflows       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeWorkflows/comments/1wdl1ky/workflow_advanced_multiagent_workflow_for/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T16:26:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T16:26:27.164Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa42bd535b55a1469d497a7"
+    },
+    "message_id": "reddit_serp_1q2dnk4",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/homeownerstips/comments/1q2dnk4/garage_door_companies_recommendations/",
+    "text": "Garage door companies recommendations\n\nHi everyone We moved to a house a year ago and thegarage door broke down last month. It was pretty old already about 10-15 years old. I sent the pictures to several companies, and they all said it can’t be repaired and needs a full replacement.   I’m looking to replace a 16’ x 7’ two-car garage door with: • Single-layer (no insulation) • No windows • Chain opener   I’m hoping to find reliable companies with fair/affordable pricing, and financing options.   If you’ve had a good experience with a local company in Virginia (Bristow Area) I’d really appreciate recommendations.   Thanks in advance!        submitted by     /u/Alaa_Seedahmed       [link]       [comments]",
+    "username": "Alaa_Seedahmed",
+    "subreddit_or_channel": "homeownerstips",
+    "posted_at": "2026-01-02T23:05:56+00:00",
+    "fetched_at": {
+      "$date": "2026-09-11T16:27:01.450Z"
+    },
+    "google_rank": 9,
+    "search_keyword": "affordable garage door repair",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-11T16:27:01.450Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa42bee6508d45f3d2baa33"
+    },
+    "message_id": "reddit_t3_1wdl2mr",
+    "topic_key": "give me today top three conversation about e commerce",
+    "search_keyword": "ecommerce",
+    "platform": "reddit",
+    "subreddit": "Indianbooks",
+    "username": "Muted_Temporary3499",
+    "title": "Help me find this book in India online",
+    "text": "Help me find this book in India online\n\nGng, please let me know if you can find any links to this particular book cuz I so badly want to have exactly this edition- I mean same cover same version! Same number of pages - this exact damnn bookkk!!!!!    PRE-LOVED ONES ARE ALSO ENTERTAINED ! (Ovb in a decently good and readable condition) I jst need the damn book (price must be within 200 if it's pre used 😭)    It can be via Instagram ,or any other ecommerce website (trusted ofc 🤧✋🏻)       submitted by     /u/Muted_Temporary3499     to     r/Indianbooks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Indianbooks/comments/1wdl2mr/help_me_find_this_book_in_india_online/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T16:27:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T16:27:26.549Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa42bee6508d45f3d2baa34"
+    },
+    "message_id": "reddit_t3_1wdl2ll",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "RigBuild",
+    "username": "Unhappy_Break9996",
+    "title": "Is a 1440p monitor the sweet spot for most people?",
+    "text": "Is a 1440p monitor the sweet spot for most people?\n\nLooking at getting a new monitor and kinda stuck between 1080p, 1440p, and 4K. 1440p seems like the middle ground, but not sure if the extra cost is really worth it over 1080p.   Mostly gonna use it for gaming, browsing, YouTube, and some normal everyday stuff. Not doing anything crazy like professional editing. My GPU should handle 1440p pretty well, but I also dont wanna buy a monitor and then realize I should've just gone 4K.   For gaming, does 1440p actually look noticeably better than 1080p at around 27 inches? Also wondering if 144Hz or 165Hz at 1440p is a better choice than going 4K with a lower refresh rate.   I keep seeing people call 1440p the perfect balance between image quality, performance, and price, but maybe thats only true for certain setups?   Would you guys say 1440p is the safest choice for the average PC gamer right now? Or should I just stick with 1080p to save money, or go 4K if the budget allows?       submitted by     /u/Unhappy_Break9996     to     r/RigBuild       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RigBuild/comments/1wdl2ll/is_a_1440p_monitor_the_sweet_spot_for_most_people/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T16:27:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T16:27:26.752Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa42bee6508d45f3d2baa35"
+    },
+    "message_id": "reddit_t3_1wdl2jg",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal PriceSmart Inc - 11 Sep 2026 @ 12:24 -> $168.83",
+    "text": "Buy Signal PriceSmart Inc - 11 Sep 2026 @ 12:24 -> $168.83\n\nTicker:  PSMT    Exchange:  NASDAQ    Time:  11 Sep 2026 @ 12:24    Price:  $168.83    Link:  https://getagraph.com/AAA/trading/NASDAQ/PSMT/analysis/signals        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wdl2jg/buy_signal_pricesmart_inc_11_sep_2026_1224_16883/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T16:27:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T16:27:26.967Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa42c1035b55a1469d497a8"
+    },
+    "message_id": "reddit_serp_1i2xprf",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/houston/comments/1i2xprf/recommendation_for_commercial_general_contractors/",
+    "text": "Recommendation for commercial general contractors\n\nHello everyone, I have a 1200 sqft retail store that i am trying to convert to a boba store in zipcode 77072. Any recommendation for affordable general contractor and architect ? Thank you so much       submitted by     /u/sunnykeira       [link]       [comments]",
+    "username": "sunnykeira",
+    "subreddit_or_channel": "houston",
+    "posted_at": "2025-01-16T19:55:44+00:00",
+    "fetched_at": {
+      "$date": "2026-09-11T16:28:00.697Z"
+    },
+    "google_rank": 9,
+    "search_keyword": "affordable general contractor",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-11T16:28:00.697Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa42c2a6508d45f3d2baa36"
+    },
+    "message_id": "reddit_t3_1wdl3no",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CarsIndia",
+    "username": "AnimatorSome9616",
+    "title": "First-time car buyer here — looking for advice on cabin experience + safety + comfort (Budget: 12-13lakh on road)",
+    "text": "First-time car buyer here — looking for advice on cabin experience + safety + comfort (Budget: 12-13lakh on road)\n\nHi everyone,   I’m buying my first car and honestly I’m pretty much a noob when it comes to cars. 😅   I’m getting married in November, so it’ll soon be a family of 4.   We’ll be living in Gurgaon, and the car will mainly be used for:   Daily Gurgaon/NCR driving   Weekend drives   Occasional Gurgaon ↔ Punjab trips   Mostly travelling as a couple, with family occasionally   So my priorities are a little different from someone looking for a feature-loaded car.   What I actually care about     Cabin experience — TOP PRIORITY     I want the car to feel comfortable and premium from the inside. Good seats, good driving position, decent rear-seat comfort, good NVH, quality materials, good AC, etc.   Since most of our usage will be with my wife, I’d rather have a genuinely comfortable cabin than a car with 25 gimmicky features.     Safety     Safety is important to me, especially because of the highway trips to Punjab.   I’m not expecting ADAS at this price point, and honestly I don't care much about it.     Highway stability + comfort     The Gurgaon–Punjab trips are a big consideration. I want something that feels planted and comfortable at highway speeds rather than just being good in the city.     Reliability & ownership experience     This will be my first car, so I don't want something that's going to become a headache after a few years.   Features I DON'T care about   I genuinely don't care about:   Sunroof   Wireless charging   ADAS (if it pushes the price significantly)   Other “feature list” stuff   Give me a good cabin, good seats, safety, engine/gearbox and overall driving experience instead.   Cars I've already driven   I recently test drove:   VW Taigun — base variant   I liked the overall cabin/drive experience and the car felt substantial.   Škoda Kylaq — Signature+   I was honestly disappointed by the cabin experience. It didn't feel as good to me as I expected.   I haven't driven enough cars yet, though, so I'm very open to suggestions.   Maruti is unfortunately out for me. Safety is a major priority, so I don't want to consider Maruti.   Budget   My on-road budget is around ₹12-13 lakh (can stretch a little if there's a genuinely compelling reason).   So what would you guys recommend?   If you were in my situation — first-time buyer, newly married, family of 4, Gurgaon + occasional long highway trips, cabin experience and safety above features — what would you buy?   Also, what is the best way to negotiate the final on-road price with dealers?   I've heard people negotiate insurance, accessories, handling charges, extended warranty, etc., but I have absolutely no idea what is actually negotiable and what isn't.   Would really appreciate recommendations from people who have actually owned/driven these cars, rather than just spec-sheet comparisons.   Thanks!       submitted by     /u/AnimatorSome9616     to     r/CarsIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CarsIndia/comments/1wdl3no/firsttime_car_buyer_here_looking_for_advice_on/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T16:28:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T16:28:26.850Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa42c2b6508d45f3d2baa37"
+    },
+    "message_id": "reddit_t3_1wdl3lk",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "IndianFashionAddicts",
+    "username": "Additional-Yard-7623",
+    "title": "Need alternative options to Littlebox Black Halter neck tops",
+    "text": "Need alternative options to Littlebox Black Halter neck tops\n\nhttps://preview.redd.it/tf27ho6e3xoh1.png?width=246&format=png&auto=webp&s=a3d027d42575f079cdfe94cd2be821ad307efc56     https://preview.redd.it/ue69humf3xoh1.jpg?width=220&format=pjpg&auto=webp&s=9e5317e34f80d7211787e8bbf49f291ecf625167    I'm planning to buy like a partywear sorta top. And am very interested in Black Backless Halter neck tops, the length can be till my belly or js covering till my upper hips. I wanna pair it up with flared jeans, like sorta bellbottom which I already have. So the vibe is 90s. But the prob is I can't find cute pinteresty tops like those. Littlebox and Savana hv many gud options but I'm afraid abt wut I've heard abt both the customer services and ppl dont get their money refunded. Savana has good but still not exactly what im lookin for. For reference, here are few pics of wut I wanna wear and pls suggest some good alternatives to littlebox where I cud find smtg similar and budget is 800 only.    https://preview.redd.it/voxpc33c3xoh1.png?width=246&format=png&auto=webp&s=3b8d758a9343136381646e0d82e57f2707047110        submitted by     /u/Additional-Yard-7623     to     r/IndianFashionAddicts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IndianFashionAddicts/comments/1wdl3lk/need_alternative_options_to_littlebox_black/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T16:28:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T16:28:27.053Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa42c2b6508d45f3d2baa38"
+    },
+    "message_id": "reddit_t3_1wdl3jj",
+    "topic_key": "nike",
+    "search_keyword": "Nike",
+    "platform": "reddit",
+    "subreddit": "LitBuy_Community",
+    "username": "EmbarrassedRisk5144",
+    "title": "Finally got around to posting my latest haul: Men's streetwear and athletic apparel from C.P. Company, Stussy, Good Brand, Enfants Riches Deprimes, Alo, On Running, Nike, and Vans",
+    "text": "Finally got around to posting my latest haul: Men's streetwear and athletic apparel from C.P. Company, Stussy, Good Brand, Enfants Riches Deprimes, Alo, On Running, Nike, and Vans\n\nsubmitted by     /u/EmbarrassedRisk5144     to     r/LitBuy_Community       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LitBuy_Community/comments/1wdl3jj/finally_got_around_to_posting_my_latest_haul_mens/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T16:28:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T16:28:27.261Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa42c2c6508d45f3d2baa3f"
+    },
+    "message_id": "reddit_t3_1wdl3if",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "labrats",
+    "username": "pizzasparkss",
+    "title": "Collaboration is hard, use ChatGPT",
+    "text": "Collaboration is hard, use ChatGPT\n\nDoes anyone feel like this is something of the argument to using LLMs and generative AI in general? I work in the grey area between industry and academia and I swear to God, we just had a case study in this exact mindset in the last year.    A faculty member who was supposed to take over assay development as soon as the faculty member who was in charge retired had to give an open seminar on his plans when he got the job. He was supposed to get the job, he was hired five years ago in preparation for taking the job. And he was supposed to intermingle with the staff (what I am) and clients to learn and understand our needs and what's going on. But he spent his entire seminar basically bragging about how he dodged the collaborative part of science by developing a bunch of AI agents which could replace everyone, even the wet lab work done by staff by having these agents write programs for robotics (we already use some robotics, so it's not too ridiculous besides the everything else about it).    And I dunno. He got fired because it came out all the work he'd done was like, really bad, the only reason he looked successful is because the test validation team managed to fix everything most of the time. And the head of test validation had some clout and threatened to quit.   But it seems like no one wants to collaborate with other people. And that just feels so... Anti science?        submitted by     /u/pizzasparkss     to     r/labrats       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/labrats/comments/1wdl3if/collaboration_is_hard_use_chatgpt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T16:28:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T16:28:28.640Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa42c2e6508d45f3d2baa49"
+    },
+    "message_id": "reddit_t3_1wdl3i4",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MadhyaPradesh",
+    "username": "Right_Chemical",
+    "title": "Bhopal RTO Vehicle Transfer Charges",
+    "text": "Bhopal RTO Vehicle Transfer Charges\n\nI'm buying a used car in the range of 15L (in Bhopal) and the seller (a dealer) is saying that it'll cost 50k to do the RC transfer! He says for premium vehicles it costs more.   Should it be this high? And if you guys can help me with a contact who can get it done cheaper, please let me know!    PS: I'll be buying in the name of my company, full payment upfront.    TIA!       submitted by     /u/Right_Chemical     to     r/MadhyaPradesh       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MadhyaPradesh/comments/1wdl3i4/bhopal_rto_vehicle_transfer_charges/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T16:28:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T16:28:30.592Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa42c5535b55a1469d497a9"
+    },
+    "message_id": "reddit_serp_1e5y62p",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/Sacramento/comments/1e5y62p/recommendations_for_affordable_house_cleaner/",
+    "text": "Recommendations for affordable house cleaner?\n\nHi everyone, I'm looking for someone that can do a one time deep clean on my kitchen and bathrooms. Looking for an affordable/reasonable rate :). I've searched on this sub but haven't found any recent recommendations. Thank you!        submitted by     /u/howscrewedamilol       [link]       [comments]",
+    "username": "howscrewedamilol",
+    "subreddit_or_channel": "Sacramento",
+    "posted_at": "2024-07-18T00:34:10+00:00",
+    "fetched_at": {
+      "$date": "2026-09-11T16:29:09.374Z"
+    },
+    "google_rank": 6,
+    "search_keyword": "affordable house cleaner",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-11T16:29:09.374Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa42c676508d45f3d2baa4a"
+    },
+    "message_id": "reddit_t3_1wdl4q7",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "solarpunk",
+    "username": "Ok_Buyer9344",
+    "title": "Video that briefly mentions solarpunk (26 minutes in). The whole video is probably something that will resonate with people on this sub.",
+    "text": "Video that briefly mentions solarpunk (26 minutes in). The whole video is probably something that will resonate with people on this sub.\n\nThe video isn’t 100% on solarpunk so maybe not postable on here, idk. I just watched it and wanted to share. Solarpunk talk starts around 26 minutes in :)        submitted by     /u/Ok_Buyer9344     to     r/solarpunk       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/solarpunk/comments/1wdl4q7/video_that_briefly_mentions_solarpunk_26_minutes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T16:29:16Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T16:29:27.144Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa42c676508d45f3d2baa4b"
+    },
+    "message_id": "reddit_t3_1wdl4pi",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ReferalCodes",
+    "username": "spencewatson01",
+    "title": "Free Stocks with these referral codes from RobinHood, WeBull, Etoro and Sofi. Easy way to get a few hundred dollars.",
+    "text": "Free Stocks with these referral codes from RobinHood, WeBull, Etoro and Sofi. Easy way to get a few hundred dollars.\n\nRobinHood Referral Code      Deal: Join RobinHood,  get $5-$200 in stocks .    link:    ROBINHOOD REFERRAL CODE        Webull Referral Code      Deal: Make $100 Deposit,  get 10 fractional shares each between $3-$100.     link:    WEBULL REFERAL LINK        Etoro Referral Code      Deal: Make $100 Deposit,  get $30 bonus + $10 Crypto Bonus     link:    ETORO REFERRAL LINK        SoFi Referral Code      Deal: Open Checking account with $50 deposit,  get $50 . (can be used to buy stocks)    link:    SoFi REFERRAL CODE           submitted by     /u/spencewatson01     to     r/ReferalCodes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ReferalCodes/comments/1wdl4pi/free_stocks_with_these_referral_codes_from/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T16:29:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T16:29:27.358Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa42c676508d45f3d2baa4c"
+    },
+    "message_id": "reddit_t3_1wdl4ok",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "teensofbangalore",
+    "username": "TodayFar2399",
+    "title": "Hiring for Personal Stylist | Fashion Stylist",
+    "text": "Hiring for Personal Stylist | Fashion Stylist\n\nType of Opportunity - Freelancer (1-week)     On-Time amount - 2k     Bengaluru preferred (as I am in Bengaluru and YOU should be aware of places to shop here)     Good Fashion Sense!      Hi, I am looking for a personal stylist for my upcoming trip. I want someone who can help in buying   DHANG KE KAPDE   .   Should know good places to shop in Bengaluru. Basically help me style for my trip.       submitted by     /u/TodayFar2399     to     r/teensofbangalore       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/teensofbangalore/comments/1wdl4ok/hiring_for_personal_stylist_fashion_stylist/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T16:29:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T16:29:27.573Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa42c676508d45f3d2baa4d"
+    },
+    "message_id": "reddit_t3_1wdl4mk",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CrossTradesInRoblox",
+    "username": "horses123521",
+    "title": "Buying pets for robux",
+    "text": "Buying pets for robux\n\nsubmitted by     /u/horses123521     to     r/CrossTradesInRoblox       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CrossTradesInRoblox/comments/1wdl4mk/buying_pets_for_robux/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T16:29:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T16:29:27.797Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa42c686508d45f3d2baa4e"
+    },
+    "message_id": "reddit_t3_1wdl4km",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "oopbuy",
+    "username": "Life_Ninja_2210",
+    "title": "Streetwear haul: Stussy, Supreme, Chrome Hearts, and Hellstar graphic tees, hoodies, denim shorts, and suede sandals",
+    "text": "Streetwear haul: Stussy, Supreme, Chrome Hearts, and Hellstar graphic tees, hoodies, denim shorts, and suede sandals\n\nsubmitted by     /u/Life_Ninja_2210     to     r/oopbuy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/oopbuy/comments/1wdl4km/streetwear_haul_stussy_supreme_chrome_hearts_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T16:29:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T16:29:28.015Z"
+    }
+  },
+  {
+    "_id": {

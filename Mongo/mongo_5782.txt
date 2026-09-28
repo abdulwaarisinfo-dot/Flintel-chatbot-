@@ -1,0 +1,416 @@
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:40:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:41:15.885Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cc6c6508d45f3d2c9518"
+    },
+    "message_id": "reddit_t3_1wgqgf1",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "Piska92",
+    "title": "Bittersweetness and Nebbiolo di Valtellina Glass",
+    "text": "Bittersweetness and Nebbiolo di Valtellina Glass\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Piska92     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wgqgf1/bittersweetness_and_nebbiolo_di_valtellina_glass/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:40:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:41:16.087Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cc6c6508d45f3d2c9519"
+    },
+    "message_id": "reddit_t3_1wgqgej",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "dentalschoolindia",
+    "username": "Radiant_Fix_203",
+    "title": "Need advice!!!",
+    "text": "Need advice!!!\n\nGuys, I’ve completed my BSc, but while filling the form I selected Code 02 (dropper).   I don’t have my BSc marksheet right now, but I’ll get it by next week. My 12th TC is already submitted to my college, so I’m thinking of showing my BSc TC instead.   Since I selected Code 02 initially, will this cause any issue during counselling/document verification? Or am I overthinking this? 😭       submitted by     /u/Radiant_Fix_203     to     r/dentalschoolindia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/dentalschoolindia/comments/1wgqgej/need_advice/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:40:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:41:16.289Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cca56508d45f3d2c951a"
+    },
+    "message_id": "reddit_t3_1wgqhb9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Creative-Ad5820",
+    "title": "What options, if any, did the passengers on the 9/11 flights realistically have to change the outcome?",
+    "text": "What options, if any, did the passengers on the 9/11 flights realistically have to change the outcome?\n\nsubmitted by     /u/Creative-Ad5820     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wgqhb9/what_options_if_any_did_the_passengers_on_the_911/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:42:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:42:13.938Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cca66508d45f3d2c951b"
+    },
+    "message_id": "reddit_t3_1wgqhb2",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "OpenAI",
+    "platform": "reddit",
+    "subreddit": "ClaudeWorkflows",
+    "username": "ClaudeAI-mod-bot",
+    "title": "[Workflow] Multi-Stage Adversarial Code Review Workflow for High-Quality AI-Generated Code with Claude Code",
+    "text": "[Workflow] Multi-Stage Adversarial Code Review Workflow for High-Quality AI-Generated Code with Claude Code\n\nMulti-Stage Adversarial Code Review Workflow for High-Quality AI-Generated Code with Claude Code    Workflow value:  90/100   Status:  active ·  Freshness:  70/100 ·  Confidence:  0.95 ·  Level:  advanced   Categories:  Quality Control, Token Saving, Context & Memory, Debugging, Shipping, Skills, Subagents, Multi-Agent   Original source:   r/ClaudeCode post/comment    What problem this solves   Ensuring high code quality and reducing hallucinations in AI-generated code by implementing a rigorous, multi-stage adversarial review process before code is merged into a codebase.   Summary   A multi-stage, adversarial code review workflow using a custom  /ship  skill and subagent in Claude Code. This workflow implements pre-PR quality gates including design review, code simplification, test review, verification against a 'north star' document, and cross-model adversarial code review. After a PR is created, the subagent monitors the merge and CI/CD processes, reporting and attempting to fix failures.   Why it is useful   This workflow provides a concrete, multi-layered strategy to address the critical challenge of maintaining high code quality and preventing hallucinations when using AI for code generation. It outlines specific tools, skills, and gates, making it highly actionable and transferable for advanced users looking to build robust AI-driven development pipelines. The emphasis on 'shifting left' and continuous validation makes it a valuable blueprint for ensuring production-ready code.   Workflow     Develop a comprehensive, adversarial-reviewed specification for the feature or project.   Define a 'north star' document for the project, outlining its core objectives.   Implement a custom  /ship  skill in Claude Code that orchestrates multiple quality gates for code diffs.   Run code diffs through the  /ship  skill's defined gates:   Apply Ponytail or boring-version for design/simplicity review (primarily during spec/design phases).   Utilize the built-in Claude Code  /simplify  skill to reduce complexity and eliminate redundancies.   Perform a custom test review to ensure tests are created, pass, and align with the original spec.   Verify the code against the project's 'north star' document to ensure alignment with overall goals.   Execute an adversarial code review using a different model (e.g.,  /codex:adversarial-review ) to ensure objectivity.   If any gate fails (is 'red'), the primary agent session acts to fix the issues, and the entire review process restarts.   If all gates pass (are 'green'), the code diff is automatically turned into a Pull Request (PR).   The  /ship  subagent enters 'babysit mode' to monitor the merge process and ensure all CI/CD or automated actions are successful, reporting failures to Slack and attempting to handle them.     Tools / artifacts     Claude Code (primary agent)   Custom  /ship  skill   Subagent (for  /ship  skill)   Ponytail (GitHub repository)   boring-version (GitHub repository)   Built-in Claude Code  /simplify  skill    /codex:adversarial-review  (skill, implies another LLM like OpenAI Codex)   GitHub (for PRs, CI/CD)   Slack (for reporting)   Adversarial reviewed specification   North star document   Code diffs     Validation signals     Claim: 'This drives code quality a lot higher.'   Anecdotal evidence: 'It's also found nasty bugs in decades old codebases that I work with.'   Explicit requirement for all quality gates to be 'green' before PR creation, indicating a built-in validation loop.   The use of multiple, distinct review mechanisms (design, simplification, testing, verification, adversarial review) suggests a robust validation strategy.     Limitations     The process for creating an 'adversarial reviewed spec' is mentioned but not detailed.   The creation process for the 'north star' document is not elaborated.   Requires significant setup of custom skills and subagents, which may be complex for users unfamiliar with Claude Code's advanced features.   Acknowledged by the author as 'not cheap in tokens'.   The author notes missing desired future additions like ops/devops and cybersecurity reviews, indicating potential areas for expansion.     Rate this workflow   Upvote this post if the workflow is useful, reproducible, or worth recommending.   Downvote if it is vague, outdated, unsafe, overhyped, or not reproducible.   Reply if it worked for you, failed, is outdated, or has a better alternative.      This post was generated automatically from the workflow library database.        submitted by     /u/ClaudeAI-mod-bot     to     r/ClaudeWorkflows       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeWorkflows/comments/1wgqhb2/workflow_multistage_adversarial_code_review/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:42:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:42:14.161Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cca66508d45f3d2c951d"
+    },
+    "message_id": "reddit_t3_1wgqhay",
+    "topic_key": "give me today top three conversation about e commerce",
+    "search_keyword": "ecommerce",
+    "platform": "reddit",
+    "subreddit": "slavelabour",
+    "username": "AGENT_1611",
+    "title": "[offer] I'm available: Web Designer/Developer. Wordpress, eCommerce and more. Complete website package and launch help. Can start fast/Remote.",
+    "text": "[offer] I'm available: Web Designer/Developer. Wordpress, eCommerce and more. Complete website package and launch help. Can start fast/Remote.\n\nProfessional WordPress Development Services and more     ✅ PHP/Python/JavaScript  -Web, Desktop, or Mobile based solutions.    ✅ WordPress CMS  - platform for personal, or business websites and custom applications that fits your requirements. Migrate your simple HTML pages to Wordpress.    ✅ WooCommerce  - customization for shop and product pages, cart to checkout, and payments. simple to advance shops. migration from other cart/ecommerce platforms to Wordpress. Shopify/Wix etc to Wordpress. Addition of store in your existing site. Multi vendor. Physical, or Digital products. Booking, Membership, Subcription based website.    ✅ Elementor, Divi and Premium themes  setup and customization, debugging. I’m not limited to what a drag and drop builder can offer. Give me problem and I will build a solution for it.    ✅ Create a theme or plugin from scratch  - start from clean, lean and fast code. less bloated base theme and unnecessary things for fast pages. I don’t rely on existing themes or plugins to complete a feature/project.    ✅ Integration  of APIs, Bots, Cryptocurrency, Automation, Web Scraping, and AI. Custom scripts, and cloud services.   ✅ Fully  Automated  CMS/Store, -program every step, workflow in your application   ✅ Wordpress to  Social Media platforms , community platform, forum, and vice versa    ✅ Clone  an existing site to Wordpress, exact pixels or features as per requirement    ✅ Design, Develop, Conversion  - I can create mock ups first before doing code. I can convert your existing design to clean coded pages.    ✅ Responsive Web Design  - real mobile devices, and major browsers    ✅ Redesign entire website    ✅ Core updates, and do full inspections   ✅ Isolate and  fix problems , re-build if needed   ✅ Website auditing, and security    ✅ WordPress management  - let me manage your website daily, weekly or monthly tasks.   ✅ Demo server and Secure Hosting available.   ✅ Gaming, Game Studio/Dev, Indie Dev Website   ✅ General, On-call Tech VA/Helper for Web (multi-skilled, proactive, autonomous, day-to-day reliability)   📩 ping me via email madebyavery14 (gmail), i’m on chat platforms per request. send me a list of tasks to complete.     starting at 20usd/per hour or a minimum of 20-60usd for a list of tasks   website/porfolio/upon request (https) clrvync (dot) one/onboarding   available 7 days/week, flexible time zone   project management: Notion   my only requirement: small upfront payment depending on the task, consistency and time from your end   payment method -Crypto, Wise, Paypal (USD)      FAQs:      are you available long-term or one-time only? any   can I hire you for my agency? yes, if the pay is reasonable   do you design and code? both   can I find clients for your services in exchange of your information(portfolio,resume etc)? I prefer to work with clients/owners only.   can we become partners? let’s work and build (paid) first, then offer me a position once it’s proven   sfw/nsfw?, yes   can wordpress do this/that? is it the right one to use? wordpress as cms is a mid solution/platform, I can help you advance and scale up if needed.   shopify or wordpress? shopify = beginner, small store, wordpress = advance, owner + dev 2 man team     portfolio/works: clrvync (dot) one/media/trading.mp4, clrvync (dot) one/media/realstate.mp4, clrvync (dot) one/media/qdev.mp4, clrvync (dot) one/media/tour.mp4   moved to:  portfolio        submitted by     /u/AGENT_1611     to     r/slavelabour       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/slavelabour/comments/1wgqhay/offer_im_available_web_designerdeveloper/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:42:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:42:14.600Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cca76508d45f3d2c9521"
+    },
+    "message_id": "reddit_t3_1wgqhaj",
+    "topic_key": "give me today top three conversation about e commerce",
+    "search_keyword": "ecommerce",
+    "platform": "reddit",
+    "subreddit": "hiring",
+    "username": "AGENT_1611",
+    "title": "[for hire] I'm available: Web Designer/Developer. Wordpress, eCommerce and more. Complete website package and launch help. Can start fast/Remote.",
+    "text": "[for hire] I'm available: Web Designer/Developer. Wordpress, eCommerce and more. Complete website package and launch help. Can start fast/Remote.\n\nProfessional WordPress Development Services and more     ✅ PHP/Python/JavaScript  -Web, Desktop, or Mobile based solutions.    ✅ WordPress CMS  - platform for personal, or business websites and custom applications that fits your requirements. Migrate your simple HTML pages to Wordpress.    ✅ WooCommerce  - customization for shop and product pages, cart to checkout, and payments. simple to advance shops. migration from other cart/ecommerce platforms to Wordpress. Shopify/Wix etc to Wordpress. Addition of store in your existing site. Multi vendor. Physical, or Digital products. Booking, Membership, Subcription based website.    ✅ Elementor, Divi and Premium themes  setup and customization, debugging. I’m not limited to what a drag and drop builder can offer. Give me problem and I will build a solution for it.    ✅ Create a theme or plugin from scratch  - start from clean, lean and fast code. less bloated base theme and unnecessary things for fast pages. I don’t rely on existing themes or plugins to complete a feature/project.    ✅ Integration  of APIs, Bots, Cryptocurrency, Automation, Web Scraping, and AI. Custom scripts, and cloud services.   ✅ Fully  Automated  CMS/Store, -program every step, workflow in your application   ✅ Wordpress to  Social Media platforms , community platform, forum, and vice versa    ✅ Clone  an existing site to Wordpress, exact pixels or features as per requirement    ✅ Design, Develop, Conversion  - I can create mock ups first before doing code. I can convert your existing design to clean coded pages.    ✅ Responsive Web Design  - real mobile devices, and major browsers    ✅ Redesign entire website    ✅ Core updates, and do full inspections   ✅ Isolate and  fix problems , re-build if needed   ✅ Website auditing, and security    ✅ WordPress management  - let me manage your website daily, weekly or monthly tasks.   ✅ Demo server and Secure Hosting available.   ✅ Gaming, Game Studio/Dev, Indie Dev Website   ✅ General, On-call Tech VA/Helper for Web (multi-skilled, proactive, autonomous, day-to-day reliability)   📩 ping me via email madebyavery14 (gmail), i’m on chat platforms per request. send me a list of tasks to complete.     starting at 20usd/per hour or a minimum of 20-60usd for a list of tasks   website/porfolio/upon request (https) clrvync (dot) one/onboarding   available 7 days/week, flexible time zone   project management: Notion   my only requirement: small upfront payment depending on the task, consistency and time from your end   payment method -Crypto, Wise, Paypal (USD)      FAQs:      are you available long-term or one-time only? any   can I hire you for my agency? yes, if the pay is reasonable   do you design and code? both   can I find clients for your services in exchange of your information(portfolio,resume etc)? I prefer to work with clients/owners only.   can we become partners? let’s work and build (paid) first, then offer me a position once it’s proven   sfw/nsfw?, yes   can wordpress do this/that? is it the right one to use? wordpress as cms is a mid solution/platform, I can help you advance and scale up if needed.   shopify or wordpress? shopify = beginner, small store, wordpress = advance, owner + dev 2 man team     portfolio/works: clrvync (dot) one/media/trading.mp4, clrvync (dot) one/media/realstate.mp4, clrvync (dot) one/media/qdev.mp4, clrvync (dot) one/media/tour.mp4       submitted by     /u/AGENT_1611     to     r/hiring       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hiring/comments/1wgqhaj/for_hire_im_available_web_designerdeveloper/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:42:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:42:15.474Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cca86508d45f3d2c9525"
+    },
+    "message_id": "reddit_t3_1wgqha4",
+    "topic_key": "give me today top three conversation about e commerce",
+    "search_keyword": "ecommerce",
+    "platform": "reddit",
+    "subreddit": "gameDevJobs",
+    "username": "AGENT_1611",
+    "title": "[for hire] I'm available: Web Designer/Developer. Wordpress, eCommerce and more. Complete website package and launch help. Can start fast/Remote.",
+    "text": "[for hire] I'm available: Web Designer/Developer. Wordpress, eCommerce and more. Complete website package and launch help. Can start fast/Remote.\n\nProfessional WordPress Development Services and more     ✅ PHP/Python/JavaScript  -Web, Desktop, or Mobile based solutions.    ✅ WordPress CMS  - platform for personal, or business websites and custom applications that fits your requirements. Migrate your simple HTML pages to Wordpress.    ✅ WooCommerce  - customization for shop and product pages, cart to checkout, and payments. simple to advance shops. migration from other cart/ecommerce platforms to Wordpress. Shopify/Wix etc to Wordpress. Addition of store in your existing site. Multi vendor. Physical, or Digital products. Booking, Membership, Subcription based website.    ✅ Elementor, Divi and Premium themes  setup and customization, debugging. I’m not limited to what a drag and drop builder can offer. Give me problem and I will build a solution for it.    ✅ Create a theme or plugin from scratch  - start from clean, lean and fast code. less bloated base theme and unnecessary things for fast pages. I don’t rely on existing themes or plugins to complete a feature/project.    ✅ Integration  of APIs, Bots, Cryptocurrency, Automation, Web Scraping, and AI. Custom scripts, and cloud services.   ✅ Fully  Automated  CMS/Store, -program every step, workflow in your application   ✅ Wordpress to  Social Media platforms , community platform, forum, and vice versa    ✅ Clone  an existing site to Wordpress, exact pixels or features as per requirement    ✅ Design, Develop, Conversion  - I can create mock ups first before doing code. I can convert your existing design to clean coded pages.    ✅ Responsive Web Design  - real mobile devices, and major browsers    ✅ Redesign entire website    ✅ Core updates, and do full inspections   ✅ Isolate and  fix problems , re-build if needed   ✅ Website auditing, and security    ✅ WordPress management  - let me manage your website daily, weekly or monthly tasks.   ✅ Demo server and Secure Hosting available.   ✅ Gaming, Game Studio/Dev, Indie Dev Website   ✅ General, On-call Tech VA/Helper for Web (multi-skilled, proactive, autonomous, day-to-day reliability)   📩 ping me via email madebyavery14 (gmail), i’m on chat platforms per request. send me a list of tasks to complete.     starting at 20usd/per hour or a minimum of 20-60usd for a list of tasks   website/porfolio/upon request (https) clrvync (dot) one/onboarding   available 7 days/week, flexible time zone   project management: Notion   my only requirement: small upfront payment depending on the task, consistency and time from your end   payment method -Crypto, Wise, Paypal (USD)      FAQs:      are you available long-term or one-time only? any   can I hire you for my agency? yes, if the pay is reasonable   do you design and code? both   can I find clients for your services in exchange of your information(portfolio,resume etc)? I prefer to work with clients/owners only.   can we become partners? let’s work and build (paid) first, then offer me a position once it’s proven   sfw/nsfw?, yes   can wordpress do this/that? is it the right one to use? wordpress as cms is a mid solution/platform, I can help you advance and scale up if needed.   shopify or wordpress? shopify = beginner, small store, wordpress = advance, owner + dev 2 man team     portfolio/works: clrvync (dot) one/media/trading.mp4, clrvync (dot) one/media/realstate.mp4, clrvync (dot) one/media/qdev.mp4, clrvync (dot) one/media/tour.mp4       submitted by     /u/AGENT_1611     to     r/gameDevJobs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/gameDevJobs/comments/1wgqha4/for_hire_im_available_web_designerdeveloper/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:41:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:42:16.347Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cca96508d45f3d2c9529"
+    },
+    "message_id": "reddit_t3_1wgqh9v",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "EASportsFC",
+    "username": "PuzzledMousse9793",
+    "title": "Preorder ultimate or standard now?",
+    "text": "Preorder ultimate or standard now?\n\nDon’t know which to go with on ps5… I’m not sure if I will stay in the game long enough to purchase the ultimate edition and with the icon pack now unavailable it’s even less enticing. I was a hard core ultimate team player for fc24-25 but stopped playing 1/4 in fc26 due to lack of time since I’m working now. Should I still buy the ultimate edition now?       submitted by     /u/PuzzledMousse9793     to     r/EASportsFC       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/EASportsFC/comments/1wgqh9v/preorder_ultimate_or_standard_now/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:41:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:42:17.221Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cca96508d45f3d2c952a"
+    },
+    "message_id": "reddit_t3_1wgqh8w",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "WashingtonHeights",
+    "username": "phelion4000",
+    "title": "Push to get city to acquire lots for park/garden space.",
+    "text": "Push to get city to acquire lots for park/garden space.\n\nThere are two vacant lots here in Jumel Terrace that the city should acquire for new park/garden space. One is on 162nd btw. Amsterdam and Edgecombe and it right next to the community garden. It’s apparently too small to build on, so it should be ceded to the community garden as they have a long wait-list for boxes.    The second is the big triangle lot at 163rd St. btw. Amsterdam and St. Nicholas. It’s been empty since 2007-8 when the old grocery store was torn down. The A/C subway line runs right beside it and there is an underground stream running beneath it, so it is unsuitable for building unless a very expensive “bathtub” is built. A residential developer is unlikely to spend what it would take to make it stable for anything over 5 stories, so the only likely buyer is the hospital. The owner apparently wants $1.1 million for it, according to a board member of the methodist church at 163rd and Amsterdam. That church and another nearby have both wanted it for parking, but that would create an eyesore for the entire plaza of buildings around it. Before the grocery store the lot was occupied by a 3 story building with retail on the street level and likely apts. on the upper floors. It would perfect for a park/dog run, so a push is needed to get the city to acquire it and the other lot on 162nd.        submitted by     /u/phelion4000     to     r/WashingtonHeights       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WashingtonHeights/comments/1wgqh8w/push_to_get_city_to_acquire_lots_for_parkgarden/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:41:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:42:17.443Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cca96508d45f3d2c952b"
+    },
+    "message_id": "reddit_t3_1wgqh7n",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "GirlDinnerDiaries",
+    "username": "Due-Discussion-7451",
+    "title": "As a teenage girl this creeps me out",
+    "text": "As a teenage girl this creeps me out\n\nWhy do so many grown men hit on/try to get with teenagers? I’m 16, and this is just something that’s on my mind that bothers me. No, I don’t think “all men are predators” but it’s just alarming how many are. I’m thankful my dad has protected me and kept me safe in certain situations, he’s one of the good guys. But this has happened both irl and online since I was really young, where men my dad’s age and older will say really inappropriate things to me and try to get with me. It’s scary to think about. And I don’t understand why it doesn’t go through their minds that this is wrong.   dinner: two pieces of pepperoni pizza       submitted by     /u/Due-Discussion-7451     to     r/GirlDinnerDiaries       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GirlDinnerDiaries/comments/1wgqh7n/as_a_teenage_girl_this_creeps_me_out/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:41:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:42:17.668Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8cca96508d45f3d2c952c"
+    },
+    "message_id": "reddit_t3_1wgqh6u",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ColoradoSprings",
+    "username": "Such_Signature_4088",
+    "title": "Looking for... something",
+    "text": "Looking for... something\n\nI'm gonna try and be as short and sweet and as concise as I can be about this... I'll try anyway 😆    So, the last several years of my life have been pretty hard, traumatic, violent, and abusive, and I've been suffering, for so, so long.. now, I am in the middle of a separation, it's heading to divorce, which will be my 2nd, and I have been pretty isolated ever since I've been in this \"relationship.\" I don't have any friends or acquaintances, even. I lost contact with a lot of people that were once in my life years ago while working, living a less stressful, normal life, but since I've been on disability for chronic cluster headaches and migraines, I don't see or talk to anyone anymore. Plus, unfortunately, I have no vehicle at the moment, so I feel so lost, lonely, and just isolated and out of place in the world. I was just wondering, even though I have been in Colorado Springs for over 20 years, I have no clue how to do this. Or know how to go about finding someone who would be interested in becoming friends and maybe, eventually something more.. or whatever.. I was married and had a lot of family around, for most of those 20 years, that's not the case anymore. So, how would meeting people or finding someone interesting to talk to who may potentially want to explore more. One day, hopefully, I will find real love.    I've never found myself in this situation. now I find myself really just needing some decent human contact and connection. So is there a subreddit, or is there like another app or something that maybe I don't know about that might lead me in the right direction? Thank you for reading 🤓 I appreciate it       submitted by     /u/Such_Signature_4088     to     r/ColoradoSprings       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ColoradoSprings/comments/1wgqh6u/looking_for_something/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:41:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:42:17.892Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8ccaa6508d45f3d2c952d"
+    },
+    "message_id": "reddit_t3_1wgqh6h",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "travelphotos",
+    "username": "CSC__66",
+    "title": "California",
+    "text": "California\n\nMadonna Inn in San Luis , Obispo, CA 💕       submitted by     /u/CSC__66     to     r/travelphotos       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/travelphotos/comments/1wgqh6h/california/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:41:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:42:18.112Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8ccaa6508d45f3d2c952e"
+    },
+    "message_id": "reddit_t3_1wgqh6a",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "Fabulous_Emu_102",
+    "title": "Visit Fabulous_Emu_102's farm!",
+    "text": "Visit Fabulous_Emu_102's farm!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Fabulous_Emu_102     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wgqh6a/visit_fabulous_emu_102s_farm/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:41:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:42:18.331Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8ccaa6508d45f3d2c952f"
+    },
+    "message_id": "reddit_t3_1wgqh5u",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DBLegendsReddit",
+    "username": "MarionberryIcy9383",
+    "title": "Green Skies Trunks and Vegeta and Icarus. How is this possible",
+    "text": "Green Skies Trunks and Vegeta and Icarus. How is this possible\n\nsubmitted by     /u/MarionberryIcy9383     to     r/DBLegendsReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DBLegendsReddit/comments/1wgqh5u/green_skies_trunks_and_vegeta_and_icarus_how_is/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:41:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:42:18.552Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8ccaa6508d45f3d2c9530"
+    },
+    "message_id": "reddit_t3_1wgqh5p",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "mcdenette3824",
+    "title": "Grab 100 hammers from u/mcdenette3824!",
+    "text": "Grab 100 hammers from u/mcdenette3824!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/mcdenette3824     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wgqh5p/grab_100_hammers_from_umcdenette3824/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:41:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:42:18.773Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8ccaa6508d45f3d2c9531"
+    },
+    "message_id": "reddit_t3_1wgqh53",
+    "topic_key": "give me today top three conversation about e commerce",
+    "search_keyword": "ecommerce",
+    "platform": "reddit",
+    "subreddit": "USPaymentProcessors",
+    "username": "kai4finix",
+    "title": "How to tell if a high-risk processor is legit before you hand anything over",
+    "text": "How to tell if a high-risk processor is legit before you hand anything over\n\nI see this question come up a lot in payments subs, and it's one we get asked about at Finix pretty regularly too, so figured it's worth a longer write-up here. :)   If you're in a higher-risk vertical (CBD, supplements, nutraceuticals, gaming, firearms, online pharmacy, subscription ecommerce), you've probably already noticed that finding a processor is harder than it should be. A lot of providers either decline you outright or make promises that fall apart a few months in.   Here's what I'd look at before signing anything:      Ask who their sponsoring bank is.  A legitimate processor will have a named banking relationship. If they can't tell you, or they get vague about it, that's a problem.    Find out whether you'd get your own merchant ID.  Some providers board you under a shared merchant account without being upfront about it. That means you have very little control over your own processing, and they can freeze your funds or shut you down without warning. Getting your own MID matters for stability and long-term control.    Ask how underwriting works.  If they're guaranteeing approval regardless of your business type, that's a red flag, not a selling point. Providers that skip proper upfront underwriting are usually the ones that shut you down later when something triggers a review. Good underwriting protects you, not just them.    Watch for upfront fees with no clear deliverable.  Collecting fees before you've seen a processing agreement or verified their acquiring relationship is a common pattern with less reputable shops.    Ask about reserve requirements upfront.  Rolling reserves are normal in high-risk processing, but you should know exactly what percentage is being held and for how long before you sign. If a provider is vague about this or you only find out after funds are already being held back, that's a problem.    Check their monitoring and dispute support.  High-risk verticals tend to have higher chargeback exposure. Ask how they handle dispute tracking, what tools they give you visibility into, and whether they actively help you stay under card network thresholds. A processor that just onboards you and disappears isn't set up for the long term.    Look at how they talk about compliance.  If nobody's asking about your terms of service, refund policies, or marketing claims during onboarding, that tells you something about how they manage risk downstream. Legitimate processors care about this because it protects the whole relationship.      What it looks like when those red flags aren't there.  For context, at Finix every merchant gets their own merchant ID, goes through proper upfront underwriting, and chooses their own statement descriptor at onboarding. Just putting that out there so you have something to compare against.   None of this is meant to scare anyone off! There are good providers out there for high-risk merchants. The point is that the vetting process matters as much on your side as it does on theirs.   We wrote a longer breakdown on our blog if you want to dig in further:  High-Risk Payment Processing: How to Get Approved & Scale Safely     What's been your experience? Anything I missed?       submitted by     /u/kai4finix     to     r/USPaymentProcessors       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/USPaymentProcessors/comments/1wgqh53/how_to_tell_if_a_highrisk_processor_is_legit/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:41:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:42:18.995Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8ccab6508d45f3d2c9534"
+    },
+    "message_id": "reddit_t3_1wgqh4y",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "catfish_exposed",
+    "username": "Affectionate_Tie8896",
+    "title": "[21F] I got emotionally manipulated and catfished on Reddit. I shared faceless pictures and I’m having severe anxiety that he’ll use them to trap other girls. What should I do?",
+    "text": "[21F] I got emotionally manipulated and catfished on Reddit. I shared faceless pictures and I’m having severe anxiety that he’ll use them to trap other girls. What should I do?\n\nA few days ago, I posted on 3–4 subreddits and started receiving DMs. Among them was an account claiming to be a girl. She told me such a detailed, emotional story and brought up relatable trauma that instantly struck a chord with me. It felt so deeply genuine that it broke all my walls down—I was the one looking for comfort and understanding, and I truly felt I had found a safe space and a genuine friend. I trusted her completely.   During our chat, she talked about being chubby, feeling insecure, and wanting to lose weight. To motivate her, I sent a picture showing my abs—no face at all, strictly just my body.   Later, when I asked for her picture, she sent a photo in an off-shoulder black saree with the face completely scribbled out, saying she was trying it on. Because I had blind trust in her, I sent a normal, modest saree photo of mine too (again, strictly without my face, nothing vulgar at all).   Then she sent another photo of \"herself\" at a café. But in that picture, she looked very slim. When I pointed out the difference, she made an excuse that she had gained a lot of weight in the last 6–7 months. My gut immediately sensed danger, so I asked: \"Why do I feel like you're actually a guy pretending to be a girl?\" She kept denying it and said, \"Ladki hu yrr.\"   I kept asking for a face picture to verify, and while chatting, I decided to reverse search the café photo on Google. My heart sank—it was stolen straight from Pinterest.   The exact moment I realized what was happening, I rushed back to screenshot the profile and chat so I could expose and report it. But by then, the coward had already deleted the account.   I feel so violated, foolish, and numb. Even though my face is completely hidden in both the abs and saree pictures, I am paralyzed with pure anxiety and guilt. This has happened to me for the very first time, and it has destroyed my ability to ever trust anyone online again.   My biggest terror right now is: What if this fraud uses my faceless photos to gain trust and trap some other innocent girl the same way he trapped me?   Please tell me, what should I do right now? Can deleted Reddit accounts ever be traced or reported to cyber cell? How do I deal with this suffocating fear that my pictures might be used to hurt someone else? Any genuine advice would mean the world to me.       submitted by     /u/Affectionate_Tie8896     to     r/catfish_exposed       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/catfish_exposed/comments/1wgqh4y/21f_i_got_emotionally_manipulated_and_catfished/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:41:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:42:19.653Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8ccab6508d45f3d2c9535"
+    },
+    "message_id": "reddit_t3_1wgqh4w",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "hiringpakistan",
+    "username": "tulipgirlie",
+    "title": "[HIRING] Remote Email Extractors – Work From Home (Pakistan)",
+    "text": "[HIRING] Remote Email Extractors – Work From Home (Pakistan)\n\nWe're Hiring: Remote Email Extractors   We're looking for people to join our team as Remote Email Extractors.   Job details:   - Remote work   - Smartphone-friendly   - Flexible working hours   - Monthly salary: PKR 15,000   - 7-day training/evaluation period   The role involves researching TikTok creators and extracting publicly available business contact emails.   Interested? Comment below or DM me for more details and application information.        submitted by     /u/tulipgirlie     to     r/hiringpakistan       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hiringpakistan/comments/1wgqh4w/hiring_remote_email_extractors_work_from_home/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T04:41:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T04:42:19.873Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa8ccac6508d45f3d2c9536"
+    },
+    "message_id": "reddit_t3_1wgqh4c",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Orgasm_Digger",
+    "title": "What is your opinion on Sydney Sweeney's ad ?",

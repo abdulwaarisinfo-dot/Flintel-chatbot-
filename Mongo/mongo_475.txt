@@ -1,0 +1,416 @@
+      "$date": "2026-09-07T07:49:16.106Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e6c7cf0819e6636a8ec0e"
+    },
+    "message_id": "reddit_t3_1w9loff",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "marvelrivals",
+    "username": "nemesisdelta24",
+    "title": "Proper look at PlayStation store Gorr Key Art (featuring Widow, Spider-Man, & Hulk)",
+    "text": "Proper look at PlayStation store Gorr Key Art (featuring Widow, Spider-Man, & Hulk)\n\nsubmitted by     /u/nemesisdelta24     to     r/marvelrivals       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/marvelrivals/comments/1w9loff/proper_look_at_playstation_store_gorr_key_art/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T07:48:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T07:49:16.508Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e6c7cf0819e6636a8ec0f"
+    },
+    "message_id": "reddit_t3_1w9lofe",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "esp32",
+    "username": "Last-Tangerine973",
+    "title": "Troubleshooting Visual Timecode Drift: Sony FX2 & FX30 with DIY ESP32 LTC Generator",
+    "text": "Troubleshooting Visual Timecode Drift: Sony FX2 & FX30 with DIY ESP32 LTC Generator\n\nHey everyone, I'm running into a visual timecode drift issue with a multi-cam setup and could use some advice on whether this is a hardware limitation (lack of genlock) or something I can fix in my workflow or code.    My Setup:    Cameras:  Sony FX2 and Sony FX30.    Frame Rate:  23.976 fps.    Timecode Source:  Custom DIY ESP32-based Timecode Box. It uses Master/Slave wireless sync via ESP-NOW and a DS3231 RTC with a 1Hz SQW pulse for hardware auto-calibration.    TC Signal:  LTC (Linear Timecode) sent via audio track into the 3.5mm mic ports. Output is generated via direct GPIO with a hardware attenuator (resistor divider) stepping down the 3.3V to a safe mic-level signal.    Cables:  One camera uses a Deity C23 cable, and the other uses a generic no-brand 3.5mm cable.    NLE:  Final Cut Pro.    The Problem:  When I sync the footage in FCP, the  metadata timecode matches perfectly  in the multicam timeline. However, the  visual timecode  (the LED dot-matrix display on my smart slate) drifts apart between the two cameras. Over time, the visual frames on screen show a mismatch (e.g., the FX2 slate shows 12:43:49:15 while the FX30 shows 12:43:49:09).   What I've Already Tried/Fixed:   Upgraded the ESP32 hardware timer base to 80MHz to eliminate integer truncation errors when calculating for 23.976 fps.   Switched from PWM (ledcWrite) to standard digitalWrite inside the ISR for a more stable square wave and less jitter.   Optimized ESP-NOW network congestion by reducing the WebSockets broadcast frequency to 500ms.   Eliminated String objects in the ISR (switched to char arrays) to prevent memory fragmentation.   Confirmed the hardware attenuator is working and the signal isn't clipping the camera pre-amps.    My Questions:   Is this simply the reality of using Audio LTC without Genlock on cameras with different internal clock/sensor readout speeds (FX2 vs FX30)?   Could mixing cable qualities (Deity vs. generic) introduce enough resistance or signal degradation to cause Final Cut Pro to interpret the audio LTC slightly out of phase?   What is your preferred FCP workflow for this? Should I be using \"Use audio for synchronization\" based on the waveform instead of relying strictly on the converted LTC metadata?   Any hardware, coding, or workflow insights would be hugely appreciated!       submitted by     /u/Last-Tangerine973     to     r/esp32       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/esp32/comments/1w9lofe/troubleshooting_visual_timecode_drift_sony_fx2/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T07:48:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T07:49:16.709Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e6c7df0819e6636a8ec11"
+    },
+    "message_id": "reddit_t3_1w9loey",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "BladeAndSorcery",
+    "username": "EpistemophileGully",
+    "title": "I got an Eraden flag custom printed! I'm so happy even though I wish to lob off the head of the damned Queen Alstaea's shoulders. (second image is the image file I edited into the required 5 by 3 foot measurements)",
+    "text": "I got an Eraden flag custom printed! I'm so happy even though I wish to lob off the head of the damned Queen Alstaea's shoulders. (second image is the image file I edited into the required 5 by 3 foot measurements)\n\nI still need to get it ironed out   and I also wish I could've gotten the Dalgarian Preservation Society on a flag instead (but they don't have an official flag)   but nonetheless I'm happy to hang up my new flag       submitted by     /u/EpistemophileGully     to     r/BladeAndSorcery       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BladeAndSorcery/comments/1w9loey/i_got_an_eraden_flag_custom_printed_im_so_happy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T07:48:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T07:49:17.111Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e6c7df0819e6636a8ec12"
+    },
+    "message_id": "reddit_t3_1w9loet",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "arc_traiders",
+    "username": "youngashyy1",
+    "title": "Have: Survivor Bp x2 ✅ Want: key offers 🔑 Dm me all offers thanks 📥",
+    "text": "Have: Survivor Bp x2 ✅ Want: key offers 🔑 Dm me all offers thanks 📥\n\nsubmitted by     /u/youngashyy1     to     r/arc_traiders       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/arc_traiders/comments/1w9loet/have_survivor_bp_x2_want_key_offers_dm_me_all/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T07:48:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T07:49:17.313Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e6c7df0819e6636a8ec13"
+    },
+    "message_id": "reddit_t3_1w9loec",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "AskGames",
+    "username": "departedhunter",
+    "title": "Which Call of Duty game got a lot of hate during launch, but looking back was actually a gem?",
+    "text": "Which Call of Duty game got a lot of hate during launch, but looking back was actually a gem?\n\nsubmitted by     /u/departedhunter     to     r/AskGames       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskGames/comments/1w9loec/which_call_of_duty_game_got_a_lot_of_hate_during/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T07:48:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T07:49:17.514Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e6c7df0819e6636a8ec14"
+    },
+    "message_id": "reddit_t3_1w9lodv",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "wallstreet",
+    "username": "ZeusGato",
+    "title": "Apes, if you’re actually going to buy $AMC stock, make sure you are buying $AMC on a lit exchange and in lots of 100 stonkz! , Route to IEX in your broker app! Buy in lots of 100 $AMC stonkz ! Remember, buy hodl and buy more $AMC!$AMC LFG 💎🙌🚀🚀",
+    "text": "Apes, if you’re actually going to buy $AMC stock, make sure you are buying $AMC on a lit exchange and in lots of 100 stonkz! , Route to IEX in your broker app! Buy in lots of 100 $AMC stonkz ! Remember, buy hodl and buy more $AMC!$AMC LFG 💎🙌🚀🚀\n\nApes, if you’re actually going to buy $AMC stock, make sure you are buying $AMC on a lit exchange and in lots of 100 stonkz! , Route to IEX in your broker app! Buy in lots of 100 $AMC stonkz ! Remember, buy hodl and buy more $AMC!$AMC LFG 💎🙌🚀🚀       submitted by     /u/ZeusGato     to     r/wallstreet       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wallstreet/comments/1w9lodv/apes_if_youre_actually_going_to_buy_amc_stock/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T07:48:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T07:49:17.716Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e6c7df0819e6636a8ec15"
+    },
+    "message_id": "reddit_t3_1w9lodu",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "MacOS",
+    "username": "Professional-Bee7768",
+    "title": "Macbook air shutting down automatically near 20-25% battery and won't turn on until I plug the charger",
+    "text": "Macbook air shutting down automatically near 20-25% battery and won't turn on until I plug the charger\n\nI had bought my Macbook air M2 back in February 2025 and I haven't used it very heavily per say. My battery health still says the max capacity is 100%. However since the last couple of times, my device shuts down abruptly when the battery is near 20-25% range and won't turn back on until I plug the charger. It gives absolutely no warning and when I plug in the charger, it resumes charging from the percentage it died on.    Is something wrong with my battery? Or could there be a miscalibration issue?     https://preview.redd.it/9mpandacz1oh1.png?width=980&format=png&auto=webp&s=b1494b6b7e32c081b21ada4fadc51194e529a008     https://preview.redd.it/7fo6u0mgz1oh1.png?width=1010&format=png&auto=webp&s=0806aa0928b11990cae75123c237d8191d4cb727        submitted by     /u/Professional-Bee7768     to     r/MacOS       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MacOS/comments/1w9lodu/macbook_air_shutting_down_automatically_near_2025/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T07:48:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T07:49:17.918Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e6c7ef0819e6636a8ec16"
+    },
+    "message_id": "reddit_t3_1w9lodc",
+    "topic_key": "hello",
+    "search_keyword": "hello",
+    "platform": "reddit",
+    "subreddit": "MentalHealthPH",
+    "username": "Maeshi_",
+    "title": "VENT/ADVICE: Need advice on how to handle an unsafe \"alt mutual\" pushing my boundaries (Trigger Warning: Grooming/Manipulative Tactics)",
+    "text": "VENT/ADVICE: Need advice on how to handle an unsafe \"alt mutual\" pushing my boundaries (Trigger Warning: Grooming/Manipulative Tactics)\n\nHello guys, I just needed to post this, I need advice or just a reality check kasi yung anxiety ko is skyrocketing through the roof atm. Di ko alam if ako baliw ako or paranoid, but my gut instinct is screaming to me na di ako safe.   To start of, I (21F) recently followed back this guy on TikTok since we're both in the alternative scene (I'm goth, he's emo/goth). Now I am unsure what his exact age is, but my guess is he is around 26-30M based on his picture and his story he already graduated college years ago. At first, I thought, \"Yay, more alternative community mutuals.\" He saw my reposts and sent me a Pierce the Veil video, since I usually repost my fav bands on Tiktok. We started talking after he sent me a PTV video, and we did get to know each other but not very deeply, I never stated my age, my location, my real name, though he knows I am introvert and I am a 3rd year nursing college student.   After knowing I am introverted and want to experience being going on local band gigs because I want to support our local alt artist too but I didn't know where to start since I am new to this, and I get anxious sometimes going at large crowd with unfamiliar people, he started pushing to meet up at Mow's Bar in QC. Knowing I am a total introvert, it felt kind of too fast??? And so I turned him down gently saying I was busy. But ever since, his persistence has become terrifyingly calculated. Honestly he seemed to be weaponizing every single one of my hobbies just to force a 1-on-1 meetup:   Electric Guitar: I told him I play the electric guitar, and suddenly he wants to meet up and start a band   Interest: I like horror/macabre related things (obviously because I am a goth), and then he shared me a video about let's go together on a graveyard and take photoshoots together   IG stories: He saw my stories showing that I was surprised to see my picture on the search bar on google appear, and then he jump down again to \"Let's meet up, and I'll take pictures of you/photoshoot\"   Merch: He showed me a picture of some alt stickers he has, I said I liked them, and that I badly need that sticker, and again \"Let's meet up, I'll give it to you. What's the nearest convenient mall to you? (he kind of phishing for my location)\"   I am a 5'0 underweight nursing student. He is a grown working adult man who gyms. The physical power dynamics are completely dangerous... yet he keeps persisting and each time he makes a new loophole to try and meet up with me despite knowing how packed my nursing schedule is   To make it worse, we just met like between 1-3 weeks ago, and within just a few days of chatting with me online, he heavily trauma-dumped about his 5-6 year \"toxic\" relationship with his ex (he claims that she is usually insecure when she sees an alt girl, because she isn't alt and cannot relate to me much, and gets instantly jealous when I looked at an alt girl) and then he casually admitted he micro-cheated on her. It feels like he is low-key forcing intimacy to make me feel sorry for him???   I've always turned him down by saying I am busy because, I hesitate to block people usually because I always felt so bad, and at the same time scared because he is mutuals with my other alt mutuals on TikTok siguro narin kasi medjo people pleaser ako, but then again what if suddenly he change the narrative that I suddenly ghost and block him for no reason, and then tell his mutuals about me with my online platform name and IG user with a not so true narrative?... But yk seeing the pattern laid out like this, it just really looks like a dangerous situation...   Has anyone dealt like an older guy in the local alt scene acting like this??? I was thinking of ghosting him completely until he realize that I am inactive, though I don't think I want that anymore, I want to block him because I am constantly having a panic attack each time he wants to meet up, and my instinct just genuinely freaks out when it comes to him... I want an advice about what to do once he could spin the story around with the fellow people in the alt community after blocking him? Kasi ang small lang talaga ng alt community sa Luzon and almost everyone knows each other here, so I won't be surprise if naka abot to sa other alt mutuals ko....   And I also want to know paranoid lang ba ako? Or is there definitely something is up? I'm soo scared and paranoid, I don't know what to do, my major anxiety keeps acting up each time he ask to meetup.... And this situation just reminds me back of my fear from older men because of my experience when I was a minor...       submitted by     /u/Maeshi_     to     r/MentalHealthPH       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MentalHealthPH/comments/1w9lodc/ventadvice_need_advice_on_how_to_handle_an_unsafe/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T07:48:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T07:49:18.119Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e6c7ef0819e6636a8ec18"
+    },
+    "message_id": "reddit_t3_1w9lodb",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "kitty",
+    "username": "Healthy_Captain4308",
+    "title": "Kitty.",
+    "text": "Kitty.\n\nsubmitted by     /u/Healthy_Captain4308     to     r/kitty       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/kitty/comments/1w9lodb/kitty/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T07:48:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T07:49:18.521Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e6c7ef0819e6636a8ec19"
+    },
+    "message_id": "reddit_t3_1w9lod6",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "azuqe",
+    "username": "Cool-Dance1929",
+    "title": "Welcome to r/azuqe! A new space for SEO & Marketing Professionals",
+    "text": "Welcome to r/azuqe! A new space for SEO & Marketing Professionals\n\nHey everyone, welcome to the community!   I created  r/azuqe  as a dedicated space for us to discuss the Azuqe platform and share the day-to-day challenges, wins, and changes we face as marketing and SEO professionals.   Whether you're here to:     Discuss recent updates to the Azuqe platform   Share strategies for navigating algorithm changes   Vent about daily SEO and marketing hurdles   Connect with other professionals in the space     this is the place for it.   To get things started, drop a comment below and introduce yourself. What area of marketing or SEO do you specialize in, and what is the biggest challenge you're tackling right now?   Looking forward to building this community with you all!       submitted by     /u/Cool-Dance1929     to     r/azuqe       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/azuqe/comments/1w9lod6/welcome_to_razuqe_a_new_space_for_seo_marketing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T07:48:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T07:49:18.722Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e6c7ff0819e6636a8ec1b"
+    },
+    "message_id": "reddit_t3_1w9loci",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "StartUpIndia",
+    "username": "versasius",
+    "title": "Building AgentOS - infrastructure for AI agents that can safely act, not just reason",
+    "text": "Building AgentOS - infrastructure for AI agents that can safely act, not just reason\n\nHey everyone,   I’m building something called  AgentOS .   The idea came from a problem I kept noticing with autonomous agents:  We’re getting increasingly good at giving AI agents tools, wallets, APIs and the ability to take actions.   But there’s still a big gap between:   “The agent can do this.”   and   “The agent should be allowed to do this.”    That gap becomes much more important once agents can move money, interact with protocols, make payments, trade, hire other agents, or trigger other irreversible actions.    AgentOS  is the broader infrastructure I’m building around that problem.   One component inside it is  Agaemon , an execution-governance layer that sits between an agent proposing an action and the infrastructure that actually executes it.   The model is roughly:   AI Agent → Intent → Governance → Wallet / Protocol → Execution → Evidence    So instead of giving the AI unrestricted signing authority, the agent proposes an action.    Agaemon  can then evaluate things like:  - what the agent is allowed to do  - which contracts or services it can access  - spending or value limits  - policy rules  - simulation results  - whether human approval is required   The wallet, smart account or protocol still handles the actual execution.   I’ve recently been testing this with a treasury use case on  Base Sepolia  and crossed  100+ verified transactions  through the governance flow.   It’s still testnet work, so I’m not claiming production readiness yet. The current goal has been proving that the execution boundary works end-to-end.   The broader direction for  AgentOS  is also around things like:  - agent-to-agent coordination  - agent-to-agent payments  - work verification  - governed execution  - adapters for wallets, protocols and agent frameworks  - evidence of why an autonomous action was allowed   I’m posting here mainly because I’d like to connect with other founders building around autonomous agents, agent payments, wallets, AI infrastructure or Web3.   The question I’m most interested in:   If your AI agent can actually take actions today, where do you currently decide what it is and isn’t allowed to do?    Would genuinely like to hear how other teams are approaching this.       submitted by     /u/versasius     to     r/StartUpIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/StartUpIndia/comments/1w9loci/building_agentos_infrastructure_for_ai_agents/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T07:48:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T07:49:19.124Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e6c80f0819e6636a8ec21"
+    },
+    "message_id": "reddit_t3_1w9loc7",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "Chiranjeevastro",
+    "username": "Ghanendra_1233",
+    "title": "\"Career guidance needed — MBA fresher currently job hunting. What does my chart indicate about my career\"",
+    "text": "\"Career guidance needed — MBA fresher currently job hunting. What does my chart indicate about my career\"\n\nI started actively looking for jobs from March. the same time, my mother was dealing with some health issues, so I also had responsibilities at home and had to stay back for a while.   I then spent almost six months preparing for and writing Cooperative Bank recruitment exams. I cleared the exams I appeared for, but unfortunately, I couldn't secure a position. There were widespread allegations of corruption, with some posts reportedly being sold for amounts like ₹35–40 lakhs, which was obviously beyond what my family could afford.   After losing almost six months in that process, I went back to applying for private-sector jobs. Since then, I've attended several interviews and, in many cases, managed to clear the interview rounds. But somehow, when it reaches the final stage where the offer should be released, things fall apart.   I've been given different reasons — the six-month gap, concerns that I may be preparing for government jobs in the future, and other reasons that I honestly feel are not entirely in my control.   It is now September, and despite trying different routes, I still haven't been able to secure a job.   I'm posting this because I genuinely want some guidance from people who understand Vedic astrology. Is there a possibility of getting a job in the near future? And beyond that, what does my chart indicate about my career growth, financial stability and wealth in the long term?   I come from a financially constrained family, and eventually, a lot of responsibility will fall on me. That's probably why this uncertainty has been weighing on me more than it normally would.   I'm not looking for a sugar-coated prediction. If the chart shows delays or difficulties, I'd rather hear that honestly. At the same time, I'd really appreciate knowing whether there is a period ahead where things are likely to improve.   Birth details:   Date: 12 March 2003   Time: 7:15 PM   Place: Mysuru Karnataka.   I've attached my Vedic birth chart and Navamsa chart.   Any honest guidance regarding my career, job timing and financial future would be greatly appreciated.       submitted by     /u/Ghanendra_1233     to     r/Chiranjeevastro       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Chiranjeevastro/comments/1w9loc7/career_guidance_needed_mba_fresher_currently_job/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T07:48:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T07:49:20.337Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e6c80f0819e6636a8ec23"
+    },
+    "message_id": "reddit_t3_1w9lobv",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "Catholicism",
+    "username": "Pizza527",
+    "title": "Predestination, Domingo Bañez, and Thomas Aquinas.",
+    "text": "Predestination, Domingo Bañez, and Thomas Aquinas.\n\nWhat is the overarching opinion on free will? Does free will not contradict an all-knowing, all-powerful God? How does the average Catholic rectify the idea that they have free will and choose to do good works which help them achieve salvation, yet God already knows who will be saved and damned, as it is ultimately His doing?    Aquinas taught a form of predestination and Bañez supported it and went even further, which led to his altercation with the Molinists. John Calvin took a lot of what he taught from Aquinas and I believe Bañez.    One hates to admit it, but of all the Protestant rhetoric and false teachings, Calvin’s predestination seems to be the closest to truth, as it puts God in a light that showcases His omnipotence. It’s not like that OSAS stuff, or the baptist-evangelical emphasis on no effort of your own except all the alter calls, river baptisms, and accepting Jesus in front of congregations, and then doing it again when you “backslide”.       submitted by     /u/Pizza527     to     r/Catholicism       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Catholicism/comments/1w9lobv/predestination_domingo_bañez_and_thomas_aquinas/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T07:48:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T07:49:20.738Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e6c80f0819e6636a8ec24"
+    },
+    "message_id": "reddit_t3_1w9lobt",
+    "topic_key": "hy",
+    "search_keyword": "hy",
+    "platform": "reddit",
+    "subreddit": "Watches",
+    "username": "Ok-Priority-2321",
+    "title": "[Tudor Pelagos 42]",
+    "text": "[Tudor Pelagos 42]\n\nI already own  -longines hydroconquest in black  -Rolex Op Silver  - Tissot Prx In Blue   I love them all but i was always drawn towards the blue dial maybe because my 80% outfits fit with blue.   Was searching for a blue dial for a while and omg saw this blue pelagos last year in person on some random person's wrist.   I am from india hence preowned market is not as good here and finding a preowned watch here with B+P is very difficult and trusting people here is an another issue.   So after an year or so i was talking to my ad regarding the same and he called up saying we have one blue pelagos in stock at old pricing.   I went to the store and had a little chit chat with them and got to know they dont offer discounts specially Kapoor & C , Cooke & kelvey but Ethos had a watch from last year in stock and they were unable to sell it.   So the new pricing at the moment here in India  Is 5,56,500Rs Roughly 5900$ here  And the old pricing was 4600 $  And tax paid it was for 4600$ BRAND NEW FROM TUDOR AD WITH FULL WARRANTY.   Took a day searched some pricing on chrono 24 and got to a point where everything old was around 4300$ with 2-4 years warranty left.   So should i hit the buzzer ?  Is it a good deal ?  Wait for something under 4K ?        submitted by     /u/Ok-Priority-2321     to     r/Watches       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Watches/comments/1w9lobt/tudor_pelagos_42/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T07:48:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T07:49:20.939Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e6c81f3d11795a689f505"
+    },
+    "message_id": "reddit_t3_1w9lokv",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "CriticalState",
+    "username": "EmergencyCreepy355",
+    "title": "[Checkpoint Charlie] Tree",
+    "text": "[Checkpoint Charlie] Tree\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/EmergencyCreepy355     to     r/CriticalState       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CriticalState/comments/1w9lokv/checkpoint_charlie_tree/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T07:49:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T07:49:21.133Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e6c81f0819e6636a8ec26"
+    },
+    "message_id": "reddit_t3_1w9lobn",
+    "topic_key": "hello",
+    "search_keyword": "hello",
+    "platform": "reddit",
+    "subreddit": "MovingtoGermany",
+    "username": "LongjumpingTale1494",
+    "title": "Expatrio Blocked Account Activation",
+    "text": "Expatrio Blocked Account Activation\n\nHello everyone. While I was trying to find out, how to activate blocked account with expatrio, I came across a helpful video on their website, explaining the process step-by-step. So my question is: Is it enough to receive monthly pay-outs if I just follow their steps in detail or do I need to open a separate german bank account? Please share your opinions and ideas. I would definitely love to hear them.       submitted by     /u/LongjumpingTale1494     to     r/MovingtoGermany       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MovingtoGermany/comments/1w9lobn/expatrio_blocked_account_activation/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T07:48:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T07:49:21.341Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e6c81f3d11795a689f506"
+    },
+    "message_id": "reddit_t3_1w9lok6",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "wordgrind",
+    "username": "linguaholic777",
+    "title": "Word Origins — where does \"TABOO\" really come from?",
+    "text": "Word Origins — where does \"TABOO\" really come from?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/linguaholic777     to     r/wordgrind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wordgrind/comments/1w9lok6/word_origins_where_does_taboo_really_come_from/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T07:49:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T07:49:21.359Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e6c81f0819e6636a8ec27"
+    },
+    "message_id": "reddit_t3_1w9lobm",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AutoNewspaper",
+    "username": "AutoNewspaperAdmin",
+    "title": "[Business] - Stocks to buy: What's the outlook for Nifty for September 7-September 11 week? Check list of top stock recommendations | Times of India",
+    "text": "[Business] - Stocks to buy: What's the outlook for Nifty for September 7-September 11 week? Check list of top stock recommendations | Times of India\n\nsubmitted by     /u/AutoNewspaperAdmin     to     r/AutoNewspaper       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoNewspaper/comments/1w9lobm/business_stocks_to_buy_whats_the_outlook_for/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T07:48:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T07:49:21.542Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e6c81f3d11795a689f507"
+    },
+    "message_id": "reddit_t3_1w9lojw",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "wordgrind",
+    "username": "AlianovaR",
+    "title": "Idiom — fill in the blank: \"teach your grandmother to suck ___\"",
+    "text": "Idiom — fill in the blank: \"teach your grandmother to suck ___\"\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/AlianovaR     to     r/wordgrind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wordgrind/comments/1w9lojw/idiom_fill_in_the_blank_teach_your_grandmother_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T07:49:06Z"

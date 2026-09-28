@@ -1,0 +1,416 @@
+  },
+  {
+    "_id": {
+      "$oid": "6ab03013aeeb96c1c63ba78e"
+    },
+    "message_id": "reddit_t3_1wlpwvx",
+    "topic_key": "crm",
+    "search_keyword": "CRM",
+    "platform": "reddit",
+    "subreddit": "itboard",
+    "username": "Longjumping-Clue-529",
+    "title": "💰 Top 5 Highest-Paying IT Jobs in Switzerland 🇨🇭",
+    "text": "💰 Top 5 Highest-Paying IT Jobs in Switzerland 🇨🇭\n\n💼 Ranked by the maximum published annual salary on itboard.ch   🔹  Senior Fullstack Software Engineer  | 🏢 Ergon Informatik AG | 📍 Zürich  💰  CHF 110'000–165'000  | 💻 Kotlin • Angular • Vue • Scrum • Kanban • SAFe  🔗  View job    🔹  IT Security Officer (Airlock)  | 🏢 Ergon Informatik AG | 📍 Zürich  💰  CHF 120'000–158'000  | 💻 Kubernetes • Cloud Security • ISMS • ISO 27001 • CISSP • CISM  🔗  View job    🔹  Teamleiter Requirements und Test Engineering (a)  | 🏢 Helsana Versicherungen AG | 📍 Zürich  💰  CHF 141'500–157'200  | 💻 AI • Test Automation • Test Frameworks • Requirements Engineering  🔗  View job    🔹  Senior Enterprise Architect  | 🏢 Ergon Informatik AG | 📍 Zürich  💰  CHF 100'000–150'000  | 💻 TOGAF • Cloud • AI • ERP • CRM • IAM  🔗  View job    🔹  Senior Software Developer Yard  | 🏢 Die Schweizerische Post | 📍 Bern  💰  CHF 133'300–148'300  | 💻 C# • .NET • Java • Kubernetes • AWS • CI/CD  🔗  View job    🌐 More Swiss IT jobs:  https://www.itboard.ch     Ranking based on the upper end of salary ranges published on itboard.ch on 20 September 2026.        submitted by     /u/Longjumping-Clue-529     to     r/itboard       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/itboard/comments/1wlpwvx/top_5_highestpaying_it_jobs_in_switzerland/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:12:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:12:19.390Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab03013aeeb96c1c63ba78f"
+    },
+    "message_id": "reddit_t3_1wlpwv8",
+    "topic_key": "cpa",
+    "search_keyword": "CPA",
+    "platform": "reddit",
+    "subreddit": "buildapc",
+    "username": "Ranter619",
+    "title": "Assistance required finding a motherboard & case for a dual GPU build. Also inner layout topography. General build recommendations welcome too.",
+    "text": "Assistance required finding a motherboard & case for a dual GPU build. Also inner layout topography. General build recommendations welcome too.\n\nHello good people. I come to seek help for a difficult    I currently own 2x rtx 3090 24GB GPUs but only using one. With the situation being what it is right now, manufacturing- and pricing-wise, it doesn't seem like it's worth to wait to build a new PC from scratch with better GPU + VRAM within the next 2 years, so I'd like to use my two GPUs and build around them.   END GOAL:      Gaming  - The second GPU doesn't do anything for gaming over the single that I'm already using for 1080p 144hz. Technically, I could get a 4k monitor since the 3090 supports it with some settings lowered but I'm not that pressed about super gaphics.  - I recently read an article about people being able to use a second GPU to handle DLSS 5, reducing frame loss.  - I hope on the revival of VR gaming, but I'm not holding my breath. I think that everyone should try Elite;Dangerous in VR with HOTAS once in their life.      Local AI   - This here is why I want to build a PC with a second 24GB VRAM card. I'd like to be able to run local LLM models, as well as do image, audio & video generation. I am not looking to make a living out of it and my work is not related to it either. But I want the freedom, privacy and lack of censorship that comes with locally run models.     Misc info  - I own a Sound Card and I want to keep using it. I like musing and I play in an amateur band.      BUDGET:   With the 2 GPUs already in my hands, I would hope for close to 3,000, no more than 5,000 Euro, most of which is going to go for the RAM. Let's assume for the moment that money is not infinite but not the main concern either.   CURRENTLY OWN (AND WANT TO KEEP USING):   Asus STRIX GAMING OC GeForce RTX 3090 24 GB Video Card  Gigabyte AORUS XTREME GeForce RTX 3090 24 GB Video Card  Creative Labs Sound Blaster Z SE 24-bit 192 kHz Sound Card  Noctua NH-D15 82.5 CFM CPU Cooler ( this is a big boy and I'm not as tied to it as the three pieces above. If it has to be downsized, c'est la vie )   PLANNING TO UPGRADE WITH:   AMD Ryzen 9 9950X3D 4.3 GHz 16-Core Processor  Corsair Vengeance 96 GB (2 x 48 GB) DDR5-6000 CL30 Memory ( or equivalent 2 x 48 that I can find on the market )  Western Digital WD_Black SN850X 2 TB M.2-2280 PCIe 4.0 X4 NVME Solid State Drive  Western Digital WD_Black SN850X 4 TB M.2-2280 PCIe 4.0 X4 NVME Solid State Drive    pcpartpicker link  which also includes peripherals that are not relevant enough to be listed.    YOUR HELP KINDLY REQUESTED FOR:      MOTHERBOARD (!)     I simply don't know what to look for and how. The problem is the 2x  THICC  GPUs + the sound card. How can I know if they fit? Each GPU will cover two additional slots or so. Furthermore, I asked around and I was told to look for \" bifurcated x8/x8 lane \" in order for the two GPUs to work simultaneously but this is not something that has a filter in pcpartpicker and, also, it's probably an everyday description that the motherboard manufacturers don't use in the specs of their machines. The closest I found was   \" When both PCIEX16_1 and PCIEX16_2 are in use, they will each run in x8 mode. \" which I assume is this, but not 100% certain.   I was also mentioned PCIe cable riser, if the GPUs don't fit. That would mean further considerations about the size of not only the motherboard but, by extension, the case as well. Plus where to fit it / mount it.   Another headache is the GPU fans. Will one of them be blowing air on the other?   I was told to look for EATX. However I was also told that EATX is not about height and PCIe slots and spacing but about width. So, which is it?     CASE (!)     Comes after the motherboard, but is directly tied to it. Yes, I'd also love your help here but I understand it's pointless to do so before finding the motherboard.     POWER SUPPLY     Comes last.    CONCLUSION:    I definitely need help with picking a motherboard for such a setup.  If any experienced with the intended usage as I described above have any recommendations to make to the [PLANNING TO UPGRADE WITH] section, I'd gladly read all suggestions.   Thank you.       submitted by     /u/Ranter619     to     r/buildapc       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/buildapc/comments/1wlpwv8/assistance_required_finding_a_motherboard_case/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:12:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:12:19.620Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab03013aeeb96c1c63ba790"
+    },
+    "message_id": "reddit_t3_1wlpwtb",
+    "topic_key": "therapist",
+    "search_keyword": "therapist",
+    "platform": "reddit",
+    "subreddit": "AskAnOCDTherapist",
+    "username": "PerformerMental7808",
+    "title": "Weird arousal feelings are keeping this going, how do you make them stop for good (POCD)",
+    "text": "Weird arousal feelings are keeping this going, how do you make them stop for good (POCD)\n\n(24M) - I feel I've NOT been making progress with my recovery and things have been getting worse, but, whether it's anxiety or arousal, the weird excitement feelings and groinal responses are still keeping this going. There's even precum still and this urge to masturbate but I don’t fucking want to!!! and that makes me feel like nothing is ever going to change.    I think I know why this is happening; I foolishly gave into testing compulsions and thought I was just gaining certainty, but what I was really doing was conditioning myself, my mind and my consciousness into some kind of fucked up sexual connection in me to something that I don't naturally get aroused by. That's what gets me; I don't naturally get aroused by thoughts like these.    Now check this out .. now, I don’t even have intrusive thoughts anymore. It’s just groinals/arousals. Like I’ll just look at a picture of a adolescent/t33n who is wearing very tight clothes or revealing clothes like a bikini or some bs and BOOM !!!! there it is ..   I feel like was completely fine and I ruined myself without even realizing it and now I don't know how to turn it back. I've mutated myself, all because I foolishly listened to the horrible, evil trickster OCD. Someone tell me, please, how do you make groinal responses and all the weird arousal feelings stop completely? I don't want any compromises, I don't want to live with this and not have it affect me, I want them to stop, I want all this to go away forever. I feel sick writing all this out.       submitted by     /u/PerformerMental7808     to     r/AskAnOCDTherapist       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskAnOCDTherapist/comments/1wlpwtb/weird_arousal_feelings_are_keeping_this_going_how/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:12:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:12:19.921Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab0303d9f8856bec2385092"
+    },
+    "message_id": "reddit_serp_1mgcphx",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/n8n/comments/1mgcphx/just_built_my_first_ai_customer_support_workflow/",
+    "text": "Just built my first AI customer support workflow using ChatGPT, n8n, and Supabase\n\nI recently finished building an ai powered customer support system, and honestly, it taught me more than any course I’ve taken in the past few months.   The idea was simple: let a chatbot handle real customer queries like checking order status, creating support tickets, and even recommending related products but actually connect that to real backend data and logic. So I decided to build it with tools I already knew a bit about OpenAI for the language understanding, n8n for automating everything, and Supabase as the backend database.   Workflow where a single AI assistant first classifies what the user wants whether it's order tracking, product help, or filing an issue or just a normal conversation and then routes the request to the right sub agent. Each of those agents handles one job really well checking the order status by querying Supabase, generating and saving support tickets with unique IDs, or giving product suggestions based on either product name or category.If user does not provide required information it first asks about it then proceed .    For now production recommendation we are querying the supabase which for production ready can integrate with the api of your business to get recommendation in real time for specific business like ecommerce.   One thing that made the whole system feel smarter was session-based memory. By passing a consistent session ID through each step, the AI was able to remember the context of the conversation which helped a lot, especially for multi-turn support chats. For now i attach the simple memory but for production we use the postgresql database or any other database provider to save the context that will not lost.   The hardest and interesting part was prompt engineering. Making sure each agent knew exactly what to ask for, how to validate missing fields, and when to call which tool required a lot of thought and trial and error. But once it clicked, it felt like magic. The AI didn’t just reply it acted upon our instructions i guide llm with the few shots prompting technique.   If you are curious about building something similar. I will be happy to share what I’ve learned help out or even break down the architecture.       submitted by     /u/Forsaken_Passenger80       [link]       [comments]",
+    "username": "Forsaken_Passenger80",
+    "subreddit_or_channel": "n8n",
+    "posted_at": "2025-08-03T06:56:25+00:00",
+    "fetched_at": {
+      "$date": "2026-09-20T19:13:01.769Z"
+    },
+    "google_rank": 5,
+    "search_keyword": "can you find me sales",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-20T19:13:01.769Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab03042660c608403988f80"
+    },
+    "message_id": "reddit_t3_1wlpxqa",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "Marriage",
+    "username": "babie764",
+    "title": "My husband is threatening divorce because I want an abortion",
+    "text": "My husband is threatening divorce because I want an abortion\n\nHi everyone. I’m a 31-year-old woman, and I’ve been married to my husband (41) for three years. We have a 20-month-old daughter.  I moved to Europe almost three years ago, and since then I’ve been focusing on learning the language so that I can eventually start working. At the moment, my husband is the only one working, and although he does the best he can, we are still struggling financially.  I recently found out that I’m pregnant, and I was devastated because this pregnancy was completely unplanned. I told my husband that I wanted to have an abortion because I’m simply not ready for another child — financially, emotionally, physically, or in any other way. I already feel overwhelmed with everything going on in our lives and with raising our daughter.  I asked my husband not to tell our families because this is something very personal, and I wanted to have time to process everything myself. Unfortunately, he went ahead and told our families anyway because he is strongly against the abortion.  He has even gone as far as threatening me with divorce if I go through with it.  I feel like he is being selfish and is thinking mostly about what he wants rather than what this pregnancy would mean for me. He works a lot, while I’m the one at home caring for our daughter most of the time. Being the primary caregiver has already been very stressful and has honestly discouraged me from wanting another child anytime soon.  I know that people may have different opinions about abortion, and I respect that. But I’m not looking for an argument about whether abortion is right or wrong. I’m certain about what I want for myself, but emotionally, this situation has been extremely difficult, especially because I feel like my husband is not respecting my decision or my privacy.  I’m feeling very low right now and could really use some encouraging words.  I would also really like to hear from women who have been in a similar situation — especially those whose partners disagreed with their decision or threatened separation/divorce. How did things turn out for you? How did you cope emotionally, and what happened in your relationship afterward?  Thank you to anyone willing to share their experience.       submitted by     /u/babie764     to     r/Marriage       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Marriage/comments/1wlpxqa/my_husband_is_threatening_divorce_because_i_want/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:12:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:13:06.654Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03043660c608403988f82"
+    },
+    "message_id": "reddit_t3_1wlpxpz",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "Humble_Turnip7286",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Otis Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Otis Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Humble_Turnip7286     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wlpxpz/sticker_giveaway_enter_to_win_a_4_stars_otis/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:12:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:13:07.057Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03043660c608403988f83"
+    },
+    "message_id": "reddit_t3_1wlpxpe",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "lego",
+    "username": "Jazzlike_Dot1526",
+    "title": "I’m not tripping right? ✌️",
+    "text": "I’m not tripping right? ✌️\n\n46-91 just isn’t in the instructions at all       submitted by     /u/Jazzlike_Dot1526     to     r/lego       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/lego/comments/1wlpxpe/im_not_tripping_right/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:12:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:13:07.262Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03043660c608403988f84"
+    },
+    "message_id": "reddit_t3_1wlpxpc",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "PakistaniTwenties",
+    "username": "Adventurous_Bird10",
+    "title": "22M — Ask Me Anything",
+    "text": "22M — Ask Me Anything\n\n​   I’m 22, working full-time and figuring life out as I go.   Work, money, fitness, family, hobbies, cricket, football, gaming, life in Pakistan — whatever you’re curious about.   Ask me anything.        submitted by     /u/Adventurous_Bird10     to     r/PakistaniTwenties       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PakistaniTwenties/comments/1wlpxpc/22m_ask_me_anything/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:12:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:13:07.464Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03043660c608403988f85"
+    },
+    "message_id": "reddit_t3_1wlpxoo",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "fnaftheories",
+    "username": "TheReallyBadTheorist",
+    "title": "Theory: The Nightmares and Phantoms are Purely Agony Conjurations Produced by William",
+    "text": "Theory: The Nightmares and Phantoms are Purely Agony Conjurations Produced by William\n\nThis is a revised version of an idea I created just a bit ago (which did get reposted to this subreddit), but have now decided is alright enough to turn into an actual theory. I personally call this revised version \"WillConjurer,\" but it doesn't matter what it's called.   This post will be split into a few theories, but the main idea at the start will be that the Phantom and the Nightmare are agony creatures conjured with intention by William.   Let’s start by establishing why connecting William to wizards it’s not a completely unfounded comparison. Most of this evidence is also under “WillMagician” (the theory that William Afton worked as a magician), so I suggest looking into that theory page if you want more evidence, but I’ll go over some of the good points:     At the table in Security Breach with the bots that represent the Afton family, a magician is used to represent William Afton   The soundtrack of the Security Puppet minigame is called “Alchemist’s Fantasy,” and alchemy is, of course, considered magic. It’s likely an alchemist’s fantasy because he’s been given the opportunity to collect remnant via Charlie.   In GGY, Dr. Rabbit is described as \"The magician's favorite apprentice,\" with the magician presumably being Glitchtrap, and even if you believe GlitchMimic (which I personally do), the Mimic is still trying to imitate William, so it’s interesting.     One last point, and the one I think is important, is that William is known to create illusions of demonic creatures in both the novels and Fazbear Frights; however, in those, he was using illusion discs and hallucinogenic gas respectively, but one thing that we need to keep in mind is that neither of those things are ever explicitly a part of the game universe, so we must ask ourselves: what do we explain when we add illusion discs and hallucinogenic gas to the games? Well, the two groups of animatronics that stand to gain by far the most from these inclusions are the Phantoms and the Nightmares.   Obviously, in the books, the nightmare animatronic are illusions, firstly in the novels where the Twisted animatronics are like their stand-ins (and they’re created with illusion discs), and then in Dittophobia with hallucinogenic gas. Also, yes, the nightmares are illusions in the game, which we know because of Nightmare Fredbear’s voiceline “THIS TIME, THERE IS MORE THAN AN ILLUSION TO FEAR.”   Now you may be wondering WHY I’m choosing to believe William is some kind of mage instead of just porting illusion discs or hallucinogenic gas into the games, and to explain that, I need to bring up the Shadow Freddy Chain.     Check out the page on ShadowAlly if you want more info, but ShadowStand is the theory that Shadow Freddy is a “stand” of sorts created by William Afton, evidenced by the fact that Shadow Freddy seemingly helps William in the minigames where he appears, luring the animatronics to him.    Also, in the story “Hide-And-Seek” RWQFSFASXC, an entity likely similar to Shadow Freddy, grows stronger as Toby's negative emotions intensify, suggesting these beings thrive on suffering and despair.   Shadow Freddy is also notably purple, like William’s sprite, rather than black like RWQFSFASXC.      There’s also a good amount of evidence for ShadowNightmare (again, check out its own page for more info), the idea that Nightmare and Shadow Freddy are the same person.    Notably, Nightmare is called “Shadow Freddy” in the FNAF 4 game files, and Cawthon has been quoted saying \"I don't think any game developer likes to have his game decompiled, but it's just a reality of the internet. I've kind of come to accept it, leaving little easter eggs for the people who do it.\"   Since we’re already assuming ShadowStand, we can also bring up the UCN voice line “I AM YOUR WICKEDNESS MADE FLESH,” which would be literally true if he was Shadow Freddy, or at least the same sort of entity.      NightmareSame, that Nightmare and Nightmarionne are the same entity, is also quite interesting. The main piece of evidence is, of course, that he’s literally a reskinned Nightmare; they share (practically) the same jumpscare, have the same laugh, and the same gameplay.    Nightmarionne also has the voiceline where he claims to be “a fearful reflection of what you have created” to William, which from a certain point of view, could mean the same thing as Nightmare’s voiceline about being William’s wickedness.   We also know Nightmarionne must be somewhat canon due to appearing in Help Wanted and being added to UCN by TOYSNHK        With all that in mind, we can conclude that William has the ability to summon agony creatures into the world to lure, scare, and maybe do even more to people he wants to torment (also it is still likely the Nightmares were some kind of experiment, given the FNAF 4 room is on the SL map and such), but why stop there?   If we’ve already concluded that William is creating Nightmare and Nightmarionne from agony, and that these agony powers are the game version of hallucinogenic gas and illusion discs, why not just take it all the way? It wouldn’t really make much sense if he was just summoning one creature from agony. That’s why, I suggest, ALL the nightmares were beings that William conjured using agony.   It simply makes sense, given what I’ve already concluded. As much as I dislike using this term for FNAF theories, it relates to Occam’s Razor; it would be strange if he was using both hallucinogenic gas AND these powers for the nightmare experiments, so as long as I’m arguing some of them were conjurations, I’ll take the stance that they all were.   The other nightmare animatronic voicelines could also be used to argue for this point, though this may be a stretch on my part: Nightmare Freddy’s line “I AM REMADE, BUT NOT BY YOU, BY THE ONE YOU SHOULD NOT HAVE KILLED,” which not on;y confirms that William creates the Nightmare Animatronics, but it’s also strange phrasing if the nightmares were literally just hallucinations made by hallucinogenic gas or illusion discs; however, if the nightmares were conjurations made by William, then it makes a bit more sense to say he “made” them.   That’s why I believe William conjured the Nightmares, but let’s get to a take that may be a bit more agreeable; William conjured the phantoms from agony. As one deleted Reddit user says, “What We Found suggests that the Phantoms are in fact directly caused by Springtrap's presence, they're not ghosts or normal hallucinations. The hallucinations don't start until Springtrap enters the building in both FNaF3 and WWF, and they share Springtrap's eyes in FNaF3. And in WWF, everything is perfectly fine until Springtrap enters the building, and Hudson immediately goes absolutely nuts, with constant hallucinations poking at his past trauma to make him vulnerable.”   It also stands to reason that Springtrap would hold the ability to conjure agony creatures, given that William himself is, at this point, likely producing quite a bit of agony on his own. Plus, since we’ve determined that these conjuration powers are the game substitute for illusions, it seems most likely that the phantoms also come from that, and the most likely source of them would then, of course, be Springtrap, William Afton. Remember, this is all further supported by William’s magician parallels.   That’s why, I believe, some time before the games, William found some way to tap into the Flipside (essentially an interconnected network of memories and dreams that overlaps with the physical \"real world.\" Strong emotions/memories leave imprints on the Flipside that, in turn, affect the \"real world.\" Agony can infect the Flipside, creating and bringing things such as agony-corrupted creatures into the world. See Network Theory for more info) and control agony, almost like an actual wizard, and we mainly see him use such powers via the summoning of agony creatures into the world.   That’s my theory.   ANYWAY, as a smaller secondary mini-theory, I’d also like to address what I see as one of the big holes in my idea: Where William got the agony to create the nightmares and such from before anything personally tragic happened to him.   Well, this mini-theory, which is essentially just a combination of WillFallFestFire and the less known NightFallFestFire (the latter of which already tends includes the former) is that William intentionally caused the FallFest fire, which has a fair bit of evidence, and it’s worth looking into, but here I’ll just mention that, in the welcome show, Mrs. Helpful (who is voiced by Fiona Murray) can be seen with a Purple Snake behind her, which does seem to symbolize that William Afton could’ve caused her death (which we already know was likely at FallFest).   The evidence of NightFallFestFire, I will admit, is a bit less compelling; however, it’s mainly that Jackie, who was likely at FallFest due to being a clown robot (circuses seem to be present at FallFest), has some strange connections to Nightmarionne, such as gaining black stripes that were not there prior to M2 putting on the suit, which are similar to those found on Nightmarionne, as well as losing her nose after being crushed by a gate, and beginning to leak a black liquid from where her eyes used to be. Overall, Jackie weirdly seems to slowly become more Nightmarionne-like, almost like she was present at the same event which created Nightmarionne and this chase scene is bringing back that agony somehow.   This mini-theory (which is, again, completely derivative of two other theories) essentially holds that William caused the FallFest fire with the explicit purpose of creating agony, which is how he initially conceived of the nightmare animatronics.   That's my mini-theory.       submitted by     /u/TheReallyBadTheorist     to     r/fnaftheories       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/fnaftheories/comments/1wlpxoo/theory_the_nightmares_and_phantoms_are_purely/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:12:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:13:07.676Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03044660c608403988f87"
+    },
+    "message_id": "reddit_t3_1wlpxok",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "Polaroid",
+    "username": "PMYourTitsIfNotRacst",
+    "title": "Is this a light leak? - Polaroid The Button w/600",
+    "text": "Is this a light leak? - Polaroid The Button w/600\n\nI got a The Button and some 600 film, cranked the exposure compensation to as dark as it goes, and took these pictures. I did my best to shield the film with my hand with all the pictures as soon as they came out of the camera, since the frog tongue only stays active for about 1 second and then slaps off once most of the picture is out of the camera.   Two where sun was hitting the camera directly have some very noticeable lines on them, the one on the bridge with the locks (#3) was getting hit by son at the front, while the one with the trees on both sides (#6) was getting hit from behind.   The ones that perplexes me is the one of the table, where there was bright sunlight, but no light was directly hitting the camera, and the one with the giant strip down the middle, since no sun directly hit the film, only the back of the camera.   Initially I thought it was an issue with the rollers, but it would have been all the photos, not just 2.       submitted by     /u/PMYourTitsIfNotRacst     to     r/Polaroid       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Polaroid/comments/1wlpxok/is_this_a_light_leak_polaroid_the_button_w600/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:12:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:13:08.082Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03044660c608403988f88"
+    },
+    "message_id": "reddit_t3_1wlpxoi",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "cozygames",
+    "username": "queerbong",
+    "title": "A game list i made as a picky gamer who struggles but loves cozy!!",
+    "text": "A game list i made as a picky gamer who struggles but loves cozy!!\n\nWarning I made this post mofe for girl games as a whole so my wording is for that!!!    A list of games I love!! Some known well some new some less known etc!!! First is games I own and play! 💫   Glitfermitten grove - a resource fairy community management game! You build the homes and the fairies collect things like food and sparkles and you take care of them. Plan for seasons with less crops and plant crops in other times and let sunlight flow. It is hands on but I loved it and fairies are my everything!!!! I had it in itch io but I see it is on steam!!!   Forager - one of many farming sim types but I think this one is unique. Not sure how to explain and was just on sale (i had it on Xbox game pass once and just bought it on steam and been playing again) so may be 6 dollars still! Can have fairy wings when you unlock then too!! It does have combat and such!   Arcade spirits (played 1 jusy bought 2) - visual novel dating thing with custom creation for you! Set in a future retro arcade world and I played 1 a lot but just got 2 on sale to try as well and I saw 2 has more mini games and a rival! I think you can romance them and create their looks too but not certain yet (legit may play right now tbh)    Our life beginnings and always - visual novel super wholesome childhood romance meet as kids and grow up together shown in summers. Can buy dlc for 2 other love interests. All love interests are male but yiu can be any identity and there is a lot of choices for how you feel gender and sexuality! There is a demo for a second one (our life now and forever) also a childhood grow up together romance but set in fall and there is a girl crush and someone who is nonbinary as you grow older! I didnt play as much but I think patreon has some more than demo but not full release stuff.    Coral island - another farming sim i did find this ine a bit harder than some. I should say stardew I I at it is hard and confuses me. So this one feels easier but probably hardest on this list ive made. But mermaids is cool and the vibes I love. I like the goddess over most religious things and I love the cultures it shows and many crush choices! I love romance btw!!!    Fields of mistria - not far in this but the qol stuff ive seen is enough to find it better than stardew and love the color vibes and magical vibes!! If i can get fairy wings I will be happy and I bet I can.    Kitty powers matchmaker makeover - so this is a match making mini games thing i had on the phone and they have made an og and a revamp on steam!!! You got many little games and you get to like pair people which I like. Its lgbt and the creator mascot is a drag queen and you can make a profile to put online for friends to send you on dates!    Mixed spirits bartender - omg so I love this it is brand new came on bday and it is a job simulator puzzle thing of mixing drinks! Itll be like needs sour and sweet so you add those and its been easy for my brain but not so easy its boring! So far has get to know npcs too but idk if romance will come in yet. Its very pretty and this studio actually makes so many games like guys check out rouge duck if you like job games or sorting games (im less into sorting but im gonna bring these guys up again and they have ones of like checking tas luggage or sorting stamps and such and they have others coming out still they also have a perfume and candle mixing ones that looks like this one and a sushi one I havent gotten yet)    Papas mocharia, freezeria, pizzeria - the papa louies are slowly coming!! These 3 are out and I got the first 2 cause they are mire my style for easy ness. I like mocha for doing more line leveling and such and they always got like having to keep things in a cup or so. Pizza I find harder with toppings.    Moonlight peaks - so this one ive seen mixed things but i like the mechanics and being a magical vampire and the flowers and such!! Im weird with these games and I love this one being a bit easier with storage and energy and I ljke the plants being less real cause I have a weird habit I like to eat things id eat irl in game and that is hard when I for real like like 4 things as is. Like maybe 3 fruits and 1 veggie for real so when it is less real of food I can disconnect better not sure why (to spoil tbe next in my time at sandrock the sandberries I imagine taste like an orange kool aid juice in a grape form lol)    The my time at series - so there is my time at portia and my time at snadrock right now. Portia I love the vibes and the green and such. Sandrock is a desert vibe I was eh on but one i became a cowboy I loved it!! So these are more of being a builder in a dystopian hopeful world over being a farmer. You can farm and such but mining and building and commissions is the main and I like that!! BTW I hate farming and fishing in games cause again im weird but I wanna live a slice of life romance and get to know the town life in games lol. So these two are real great cause the farming is easy af and I can still have fsrm animals and pets and a partner and kids and such! Also both have a disbaled partner choice!! Sadly the gender clothing is strict but the gayness is allowed and adopting kids is allowed! In sandrock the kids also can wander the town!    All nancy drew games like I love them so much ask me whatever and I I be able to help you pick one (there is over 30) so these are point and click puzzle mystery games and just my while world and life. Nancy is amazing and these games did so much for me when i was a young girl    Paralives - new game and om the mroe expensive side for sure for less in game live play content. But 1 it is an investment for that one and 2 if you love to build and make characters more then its in perfect condition already!! If you've had sims 3 and 4 and still always make many ocs you never play just to look at GET THIS ONE!! I use it for ocs and its so cool and the mods workshop is so much and cool too!!! I also love it to build cause I cant build for crap in any of the sims tbh but I love making references for my fanfic and roleplays and oc x oc stories! It is so amazing honestly.    Sims 3 specifically - so for in game fun I like sims 3 most. Open world and a lot of stuff To do and cool and 2000s vibes is always fun!    Sticky business - sticker creator fun for sorting snd creating and mixing the clip art to make stickers!! Been a bit but they got many more choices since I played    Witchy life story - a visual novel short thing of being a witch. However this one you pick flowers and make magic things fie the residents they order like potions and incense and such and you have an alter to decorate along with in game tarot with real short info on cards!! I used this for tarot before I had a deck !! And its pretty and got character custom and 3 crush choices of a male female and nonbinary person!    Witchy business - this one is another rouge duck and this one you are a witch selling potions and other things!! I played a bit then took a break and forgot things so im not far and gotta restart cause thats my brain but I know I waa loving it and saw you can customize your garden and such and make potions!!    Vending machine co - rogue duck again you run vending machines!! You put them in towns and see what sells well and stock them!! Like if nerds are around often you add nerdy things and toys for kids and makeup for idols or so etc and there is foods too ! Its cool so far too!!    Little friends puppy island - just got this one! It looks like it'll be semi nintendog like so fsr but ive read its more focused on exploring with the dogs as you care for them not just caring for them but tou can clean and feed and walk and train and play and dress up your dogs!!    Games in my wishlist 🌼   Love ghostie - another match maker you are a ghost and you help get people together i played a demo before it was out tbh and loved it byt havent bought yet.    Cozy marbles - looks cute and has a sandbox mode to make marbel set ups and a normal mode of some kind with directions. Looks very roller coaster tycoon but with marbles and it says you can customize them including flailing arms!!    Bits of love an otome game - a visual novel that it seems you also run a café! Set girl with male romances type thing so I havent gotten it yet.    Thegame of life 2 - legit the boardgame as a game. There is a 1 and they both look good but 2 looks cooler. I had it in my cart and didnt pay attention to the day the sale ended on accident but I plan to get it anywqys as soon as I can full price ot not    Call of Boba - looks cute like a normal farm sim shop manager nothing so out going i want it asap but I do want it    Bookbinding dark cozy sim - thus looks cute but its new and ive read the story may not be finished? But it also seems to have a real cool tarot system and thats enough to make me curious plus the book binding looks very unique too!!    Sunny orchard - rogue duck a new farming sim coming out but its all fruit and jam and pie!!!! As I said im weird about in game foods and I honestly love at least the idea of jam and fruit and pie. Im still a bit too picky for it but its one i always can suspend my thoughts on im a world where im abled enough to even be a farmer. So this one seems amazing to me!!    Sunset artisan chocolate - rogue duck again!!! This one is coming soon too and you are a chocolatier! Weigh chocolate and mix flavors!    Dressmaker - comes out the 21st of sept!! Be a dress maker with measuring and picking fabric and sketching ideas. Add decor and bows and many things!!! Looks so good probably gonna buy the second it drops.    Barbie rewind - IF YOU DONT KNOW THIS IS COMING IT IS COMING!!! A game collection of many barbie games put together!! Im most looking forward to barbie and the 12 dancing princesses as the one i played the most as a kid but it has horse ones and so many more !!!    Ravenwood academy a wizard 101 story - demo out coming soon and this is a single player puzzle game for wizard 101 in the past school before everything happened.    Tearoom of terror - not out but is a paper doll dark style game of detective work. I saw this ine on tiktok by the creators!   nivalis nights - coming out soon and has high promises we will see about. Says it'll be a cyberpunk world running shops and growing food and interacting but also alloaed to sabotage and such too im hoping to just live life in a cyberpunk world though.    So i hope this list is good or so and gives some game ideas!! Now for the lore drop i am ftm and use he/they and such but im super fem and slice of life girly and cutesy. I love to create and customize and decorate ir make pretty things or romance or just be a fairy.    I also will take any game recs after this list I made!!! Let me know!!       submitted by     /u/queerbong     to     r/cozygames       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cozygames/comments/1wlpxoi/a_game_list_i_made_as_a_picky_gamer_who_struggles/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:12:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:13:08.286Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03044660c608403988f8a"
+    },
+    "message_id": "reddit_t3_1wlpxo3",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Background-Sun2187",
+    "title": "What is your fav movie?",
+    "text": "What is your fav movie?\n\nsubmitted by     /u/Background-Sun2187     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wlpxo3/what_is_your_fav_movie/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:12:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:13:08.700Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03044660c608403988f8b"
+    },
+    "message_id": "reddit_t3_1wlpxnv",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DailyGuess",
+    "username": "TORUBA",
+    "title": "Can You Guess This 5-Letter Word? Puzzle by u/TORUBA",
+    "text": "Can You Guess This 5-Letter Word? Puzzle by u/TORUBA\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/TORUBA     to     r/DailyGuess       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DailyGuess/comments/1wlpxnv/can_you_guess_this_5letter_word_puzzle_by_utoruba/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:12:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:13:08.902Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03045660c608403988f8c"
+    },
+    "message_id": "reddit_t3_1wlpxn5",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "plassing",
+    "username": "jhnysuh",
+    "title": "Octapharma opinions??",
+    "text": "Octapharma opinions??\n\nI use to donate in a different city for years. I never had any issues other than a ridiculous wait line, but I recently moved, so I had to go to a different Octapharma center.    Since then, they are quick, but they have dress coded me (for wearing a tank top because my bra strap was showing?) and they now don’t do express passes anymore because of in-fighting… I have a year express pass that has about 5 months left on it that took me a very long time get. Is that allowed??    I’m just confused.       submitted by     /u/jhnysuh     to     r/plassing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/plassing/comments/1wlpxn5/octapharma_opinions/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:12:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:13:09.108Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03045660c608403988f8d"
+    },
+    "message_id": "reddit_t3_1wlpxmw",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "plushies",
+    "username": "pinkmango77",
+    "title": "To be loved for 40 years … is to be changed",
+    "text": "To be loved for 40 years … is to be changed\n\nI know we have all seen our fair share of “to be loved is to be changed” posts over the years and they still make me incredibly happy whenever I see one.    Hase (German for “rabbit” - I know, not a very creative name), has been with me from birth and traveled to many places. I can’t sleep without him.    I don’t know where he came from and my parents don’t remember who gifted him to me, but he had his share of adventure: he has had one ear and arm sowed back on because it was torn off by another kid on a playground, had been lost a night, and relocated for studying abroad.   Nowadays, he mostly waits for me on my bed, wears different little pullovers to protect his fur where it has worn a little thin (I got these from AliExpress: you can find them when you look for lalafan duck clothes).   I wanted to share him here since he’s just been the best friend throughout the last 40 years and I can’t wait to see what the next 40 bring :)       submitted by     /u/pinkmango77     to     r/plushies       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/plushies/comments/1wlpxmw/to_be_loved_for_40_years_is_to_be_changed/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:12:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:13:09.311Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03045660c608403988f8e"
+    },
+    "message_id": "reddit_t3_1wlpxmu",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ShoheiOhtani",
+    "username": "flyyyyyyyvan",
+    "title": "Ohtani Greatest hits blacks /299. Selling individually or take all 3 for $130 shipped",
+    "text": "Ohtani Greatest hits blacks /299. Selling individually or take all 3 for $130 shipped\n\nLet me know if you have any questions. If buying individually, add $6 for BMWT shipping and thanks so much 🙌       submitted by     /u/flyyyyyyyvan     to     r/ShoheiOhtani       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ShoheiOhtani/comments/1wlpxmu/ohtani_greatest_hits_blacks_299_selling/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:12:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:13:09.520Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03045660c608403988f90"
+    },
+    "message_id": "reddit_t3_1wlpxmc",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "Rants",
+    "username": "depressedgrey6",
+    "title": "I hate that stupid cat",
+    "text": "I hate that stupid cat\n\nPlease don't give me your opinion, I just want to rant.    So my roommate brought home a cat about a month ago, yes I expressed permission, I do want to acknowledge that but holy shit if I knew what that would entail I would've said no. So this cat was a stray for at least part of it's life, the cat is 3 years old so who knows how many of those 3 years he was a stray, but honestly idgaf, cuz it is so fucking annoying. I have a dog at my parent's house who loves food but this cat will eat anything in site. I've had multiple times where I've seen him trying to climb into the trash or try to get the leftover cat food remains from the sink and yes, it is quite easy to just put him down but why tf do I have to be vigilant when all I want to do is just eat my breakfast and get to class on time.    Now every morning my roommate is at work (who is his actual owner) I typically feed him cuz I'm up earlier than my other roommate and it's not difficult, you just open the can and put the food in the bowl but after that the cat is a fucking menance. It's trying to eat what I'm eating, it's jumping on the sink, on the counters, tries to get into my room and just doesn't stop meowing for attention. Today idk something inside me just snapped, I was trying to keep the cat quiet so my roommate wouldn't wake up but no matter what I did the cat wouldn't stop meowing so I just shoved him in my roommate's room. I like animals, even though I'm personally more a dog person but something about this cat.    The cat fucking ate part of my bread and then my roommate just wouldn't stop apologizing to the point where I wanted to tell her to stop. Like can you please stop putting your anxiety on me, like either train the cat, rehome the cat, or just stop talking. Hell I wanted to meal prep after I came back from campus and I can't even let my chicken defrost cuz as soon as it's not frozen ik for a fact he's going to try to eat the chicken. I told my roommate something needs to change, there needs to be actual discipline instead of \"I'm sorry for his actions but I think he's perfect\" like FUCK FUCK FUCK. Okay I feel better now.       submitted by     /u/depressedgrey6     to     r/Rants       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Rants/comments/1wlpxmc/i_hate_that_stupid_cat/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:12:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:13:09.926Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03046660c608403988f91"
+    },
+    "message_id": "reddit_t3_1wlpxm8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Reasonable_Guess_934",
+    "title": "Bi folks, how did you feel the first time you fell in love with someone of your own gender?",
+    "text": "Bi folks, how did you feel the first time you fell in love with someone of your own gender?\n\nsubmitted by     /u/Reasonable_Guess_934     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wlpxm8/bi_folks_how_did_you_feel_the_first_time_you_fell/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T19:12:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T19:13:10.130Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab03046660c608403988f92"
+    },
+    "message_id": "reddit_t3_1wlpxm4",
+    "topic_key": "chatgpt sentiment on reddit today",

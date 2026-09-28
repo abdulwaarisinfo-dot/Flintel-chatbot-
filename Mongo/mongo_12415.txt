@@ -1,0 +1,416 @@
+    "topic_key": "rag pipeline",
+    "search_keyword": "RAG pipeline",
+    "platform": "reddit",
+    "subreddit": "Rag",
+    "username": "randombanana--",
+    "title": "I'm an intern building a full-blown internal AI assistant with literally no one to review my architecture. Some notes on what I've learned.",
+    "text": "I'm an intern building a full-blown internal AI assistant with literally no one to review my architecture. Some notes on what I've learned.\n\nSo a bit of context before the technical stuff: I'm an intern. There is no senior AI engineer at my org checking my work. Every architecture decision in this post, RAG vs fine-tuning, classifier vs LLM for routing, whether to build my own observability tooling, I made alone, googled my way through, and then just... shipped. My manager is supportive but she's not an AI person, she's the one who pitched the initiative and now owns the roadmap politically, not technically. So when I say \"I decided X,\" what I mean is \"I read a lot, made a call, and hoped I wasn't about to build something that falls over at 20k users.\" That's been the actual hardest part of this project, more than any of the technical stuff below. Not the RAG pipeline. The being alone with the decisions.   Anyway. The system itself: it's an internal assistant for a big org (semiconductor company, tens of thousands of employees) that does two pretty different things under one roof. One side is a knowledge assistant, ask it something, it pulls from internal docs and past support tickets and answers you. The other side is a ticketing agent that actually touches our ITSM system, creates tickets, fetches status, handles some manager-approved priority routing stuff. That second piece was actually a requirement that got added midstream, and the way it hooks into the first piece is the part I like most: if the knowledge assistant answers you and it doesn't actually solve your problem, you can file a ticket straight from there instead of starting over somewhere else. It's meant to be the fallback when the AI genuinely can't help, not a separate thing bolted on.   I didn't plan for it to split this way, it just became obvious that \"answer a question helpfully\" and \"decide which team should get this ticket\" are completely different problems that both happen to sit next to a support workflow. The second one needs to be consistent and explainable in a way an LLM call just isn't, so ticket routing ended up being its own trained classifier, not something I'm asking the model to figure out on the fly. Took me embarrassingly long to arrive at that split.   The knowledge assistant side runs what I've been calling source-aware deterministic RAG, which is a fancier name than it deserves for two decisions I made mostly out of paranoia. Source-aware: every answer has to carry which doc or ticket it actually pulled from, because when you're the only person who built this thing and there's no one to catch you if it hallucinates, you need a way for the *user* to catch it instead. If it can't point to where an answer came from, I don't trust it and neither should they. Deterministic: same query, same retrieved context, every time. No nondeterministic reranking, low temperature, fixed retrieval logic. Not because it makes answers better exactly, but because \"why did it say something different this time\" is a debugging nightmare I really didn't want to sign up for solo.   One wrinkle on the source-aware part: the underlying sources don't all update at the same pace. Some sync as often as every hour, others much less frequently, so \"source-aware\" also means being honest with myself about how fresh a given answer actually is, not just where it came from.   Latency was another thing I got wrong at first. I was just looking at one number, total response time, and it told me nothing useful. Now I log each stage separately, retrieval vs. the model call vs. total, and that alone took p99 latency from somewhere around 70 seconds down to about 25. Most of that gain, honestly, was just finally being able to see which stage was the actual problem instead of guessing.   There's also a whole second dimension to this I haven't mentioned yet: it's not just a chat UI. It's being built dual-use, exposed as an MCP server so other internal tools and clients can consume it programmatically, alongside its own UI for people who just want to open it and ask something. Designing for \"a human clicking around\" and \"another piece of software calling you as a tool\" at the same time turned out to need more thought than I expected, mostly around how much you can assume about the caller's context.   The deployment side is probably the part I'm least confident talking about publicly because it's the newest to me. Multi-region, with the requirement that logs and query data stay local to each region rather than pooling centrally. The hot-swapping piece isn't swapping the model itself, it's the vector index. I needed to be able to roll a rebuilt FAISS index into a region without taking retrieval down, which matters a lot once you're updating the knowledge base regularly and can't afford downtime every time docs change.   And then there's the observability thing, which honestly still stings a little. The obvious move would've been to just use LangSmith and call it a day. Couldn't do it, the data residency requirement means query content can't leave our infra, full stop, which rules out basically every third-party LLM observability tool I looked at. So I built my own. It's not as good as LangSmith. It's a console that shows structured logs, per-stage latency, and metrics together, and I'm honestly proud of it given the constraints, but I built it alone, with no one telling me if the approach was even sane.   One thing I haven't solved: alerts currently just show up as a banner in the console. Fine if I'm staring at it, useless at 2am. Still figuring out how much alerting infra is worth building solo vs. keeping it dumb and simple.   If anyone's been in a similar spot, sole technical owner, no one senior enough to sanity-check you, I'd genuinely like to hear how you dealt with the isolation part, not just the technical part. That's been harder than any of the engineering.       submitted by     /u/randombanana--     to     r/Rag       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Rag/comments/1wl3ocj/im_an_intern_building_a_fullblown_internal_ai/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:36:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:36:57.109Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaf38b9aeeb96c1c63ba1a4"
+    },
+    "message_id": "reddit_t3_1wl3o90",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "hermesagent",
+    "username": "AL_throwaway_123",
+    "title": "Best LLM for getting sxxt done? I'm using ChatGPT 5.6 SOL and feel like it's running in circles sometimes.",
+    "text": "Best LLM for getting sxxt done? I'm using ChatGPT 5.6 SOL and feel like it's running in circles sometimes.\n\nFor context, I'm trying to do a little bit of everything with my Hermes agent:  1. Solopreneuring. It manages my website and my socmed (using buffer).  2. It also runs various cron jobs like pulling in job postings that I see online.  3. In conjunction with Apify, it shows me what is trending on twitter.    Yesterday, after integrating Buffer into a social media automation workflow, item number 2 broke and now I'm telling ChatGPT 5.6 SOL to fix the problem.    I don't want to complain and point the finger at ChatGPT and say, \"Oh it's all this thing's fault.\" or whatever have you. But before I started using Claude, earlier this year, I noticed that Chat GPT would oftentimes send me in circles when just using the web browser to communicate with it and asking it how to fix problems.    Claude was also able to fix a problem with a PC game that I had had for over a year and I was able to play on my laptop before I switched to my desktop. Chat GPT was never able to guide me to properly resolving this issue.    I want to hear what your number one choice and alternatives to Chat GPT are. I'm tired of getting sent in circles by Open AI. I might keep their twenty dollar tier weekly as a backup reserve, but I also like to use it as a language tutor anyway.       submitted by     /u/AL_throwaway_123     to     r/hermesagent       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hermesagent/comments/1wl3o90/best_llm_for_getting_sxxt_done_im_using_chatgpt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:36:31Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:36:57.695Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaf38baaeeb96c1c63ba1a5"
+    },
+    "message_id": "reddit_t3_1wl3o7t",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "saasforsale",
+    "username": "AJKari",
+    "title": "Selling ShopFloorOS - Full Manufacturing MES / Shop Floor SaaS",
+    "text": "Selling ShopFloorOS - Full Manufacturing MES / Shop Floor SaaS\n\nI've spent a pretty stupid amount of time building this, and I'm considering selling it rather than continuing to be the person responsible for taking it all the way through sales and scaling.   The app is a multi-tenant manufacturing operations platform built for small and midsize discrete manufacturers called ShopFloorOS.   This isn't a landing page and a half-finished MVP. It's a large working application covering most of the day-to-day shop floor stack. It is pre-revenue, but versions are in use in 2 real shops, both door manufacturers.   Some of what's already built:     Work orders and production routing   Real-time visual production FlowBoard   Barcode scanning and operator kiosks   Mobile/PWA operator interface   Scheduling and capacity planning   Inventory and purchasing   QC inspections, checklists, photos and rework   Employee training and certification matrix   Time studies and continuous improvement tools   Production analytics and custom dashboards   Barcode and label designer   Job packets / BOMs / build instructions   Maintenance and PM system   Machine monitoring architecture   Customer and sales order management   Customer order-status portal   Shop floor layout / spaghetti mapping   Audit logging   Role-based permissions   Multi-shop / multi-tenant support     There's also quite a bit of automation under the hood: automatic inventory consumption, finished-goods production, scheduling, inventory monitoring, PM notifications, audit logging, customer stats, order imports, etc.   The application currently has 65+ pages, 60+ data entities, 55+ backend functions and 15+ automated workflows.   Tech stack is React, Tailwind, Vite and TypeScript on Base44. It's installable as a PWA and supports desktop, tablets, phones, cameras and physical barcode scanners.   There are also integrations/work already built around Epicor, Google Sheets, Google Calendar, email order intake, WMS imports and OPC UA / Modbus machine data.   AI is used where it actually makes sense rather than being the entire product: PDF/job packet extraction, dashboard creation, workflow setup, dimension recognition and some planning assistance.   The reason I built it is that I've spent years managing and working in actual manufacturing environments, particularly doors, cabinetry and woodworking. A lot of smaller manufacturers are stuck between spreadsheets and ERP/MES systems that are expensive, complicated and painful to implement.   ShopFloorOS was built around that gap.   It has also been used and tested against real manufacturing workflows rather than being designed entirely from a software-development perspective.   I'm not selling this based on an MRR multiple. The value here is the completed product, codebase, architecture, domain-specific development and the amount of work already done.   There is still plenty for a buyer to do commercially. Someone who already sells into manufacturing, runs a vertical SaaS portfolio, or knows how to sell B2B software would probably be a much better owner for it than someone looking for a passive SaaS acquisition.    Asking: $30,000    I'm open to reasonable offers and potentially other deal structures if the buyer is a good fit.   Happy to provide a live demo, screenshots, architecture details and a deeper feature breakdown to serious buyers.   DM me if you're interested.       submitted by     /u/AJKari     to     r/saasforsale       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/saasforsale/comments/1wl3o7t/selling_shopflooros_full_manufacturing_mes_shop/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:36:28Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:36:58.014Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaf38bf660c608403983b7b"
+    },
+    "message_id": "reddit_t3_1wl3oi3",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "schott",
+    "username": "Konadog-23",
+    "title": "WTS Schott P213 Black Lambskin - Size Large",
+    "text": "WTS Schott P213 Black Lambskin - Size Large\n\nExcellent condition Schott P213 black lambskin leather Perfecto jacket in size Large. This is a fantastic jacket, and it fits me perfectly. The only reason I'm selling is that I have two other black leather jackets (a RMC J100 and a Lewis Dominator), and I don't need three in sunny Los Angeles. Measurements follow:    Shoulder - 19”  Pit to Pit - 23.75”  Sleeve - 26.75”  Back Length - 24\"  Waist = 21\"     $575 + shipping. US sale        submitted by     /u/Konadog-23     to     r/schott       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/schott/comments/1wl3oi3/wts_schott_p213_black_lambskin_size_large/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:36:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:37:03.359Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf38bf660c608403983b7c"
+    },
+    "message_id": "reddit_t3_1wl3ogv",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "GachaTouristCringe",
+    "username": "PollutionSad8867",
+    "title": "It can't be THAT bad",
+    "text": "It can't be THAT bad\n\nSorry, I just had to rant.   I've seen posts, but I didn't think it was THAT bad in the other subreddit.   How do they remove an unhinged Nekomata (148cm) gif but allow a Roxy (144cm) post like that?       submitted by     /u/PollutionSad8867     to     r/GachaTouristCringe       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GachaTouristCringe/comments/1wl3ogv/it_cant_be_that_bad/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:36:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:37:03.567Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf38bf660c608403983b7d"
+    },
+    "message_id": "reddit_t3_1wl3ogn",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "dating_advice",
+    "username": "Big_Mine_8155",
+    "title": "Am I intimidating?",
+    "text": "Am I intimidating?\n\nI’ve tried online dating but no one seems to bite. Lol I quit. I’m going to buy a cat now        submitted by     /u/Big_Mine_8155     to     r/dating_advice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/dating_advice/comments/1wl3ogn/am_i_intimidating/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:36:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:37:03.768Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf38bf660c608403983b7e"
+    },
+    "message_id": "reddit_t3_1wl3ogm",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "Aggravating_Dingo698",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Mustard Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Mustard Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Aggravating_Dingo698     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wl3ogm/sticker_giveaway_enter_to_win_a_4_stars_mustard/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:36:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:37:03.967Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf38c0660c608403983b7f"
+    },
+    "message_id": "reddit_t3_1wl3of3",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "FriendshipAdvice",
+    "username": "Adorable_Concept_744",
+    "title": "I need advice about a friendship that got complicated after a friend found out I liked her.",
+    "text": "I need advice about a friendship that got complicated after a friend found out I liked her.\n\nHi everyone. I need some advice because I’m going through a situation that’s leaving me quite confused and sad. I have a friend—let's call her Isabelly. Our friendship began in 2024, and for a long time, we were close. We used to chat on WhatsApp, sometimes even late into the night. She helped me come out of my shell and always treated me like a true friend. For instance, there was a time I mentioned I was hungry and didn't have money to buy anything, so she gave me a  coxinha  (a chicken snack). I have many fond memories of this friendship. The problem is that, at some point, I started developing romantic feelings for her. She found out, and I told her I only wanted to be friends. Later, she found out again that I still had feelings for her. I know I was wrong not to be completely honest earlier, and I understand that this might have made her uncomfortable and caused her to lose trust in me. After that, she deleted my number from WhatsApp, unfollowed me on Instagram, and became much more distant at church. I was really worried, thinking I had lost a friendship that had lasted years. So, I decided to apologize directly. I sent a message acknowledging my mistake and saying I understood if she was upset or uncomfortable. I explained that I wasn't looking for a relationship—just her friendship—and that I would respect whatever boundaries or space she needed without pressuring her. She replied simply: \"Hi, good morning. Peace of the Lord,\" followed by \"Thank you 🙏.\" I had expected a longer response—perhaps something indicating whether she still wanted to be friends or not. Since she didn't say anything about that, I was left not knowing what to think. After that, I stopped sending messages to respect her space. For a while, she didn't speak to me in person at church, either. Later—about 22 days later—something happened that really surprised me: she actually greeted me at church, saying, \"Peace of the Lord, Gabriel.\" It was the first time she spoke directly to me after that period of distance. Since then, I still haven't known how to handle the situation. I don't want to pressure her or repeat past mistakes, but I also don't want to simply let a years-long friendship fade away due to a lack of communication. My question is: What do you think I should do moving forward? Should I keep giving her space and wait for her to show more openness? Should I send a simple message at some point? Or would it be better to leave the initiative entirely up to her?       submitted by     /u/Adorable_Concept_744     to     r/FriendshipAdvice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FriendshipAdvice/comments/1wl3of3/i_need_advice_about_a_friendship_that_got/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:36:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:37:04.175Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf38c0660c608403983b80"
+    },
+    "message_id": "reddit_t3_1wl3oet",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "VelocityFrequentFlyer",
+    "username": "Far_Career6033",
+    "title": "SYD-BNE one way - 9.9k for Economy or 15.5k for Business, which one is overall better value?",
+    "text": "SYD-BNE one way - 9.9k for Economy or 15.5k for Business, which one is overall better value?\n\nWill require checked luggage for this trip which reward seats provide for Economy as well.    It’s sort of a tough choice as I know the lowest fare band for Reward seats in Economu for this route starts at 5.9k…. Ahhh decisions decisions        submitted by     /u/Far_Career6033     to     r/VelocityFrequentFlyer       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/VelocityFrequentFlyer/comments/1wl3oet/sydbne_one_way_99k_for_economy_or_155k_for/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:36:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:37:04.379Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf38c0660c608403983b81"
+    },
+    "message_id": "reddit_t3_1wl3oen",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Cruise",
+    "username": "Intelligent-Dot-8969",
+    "title": "Things We Learned on Our First Viking River Cruise",
+    "text": "Things We Learned on Our First Viking River Cruise\n\nMy wife and I took our first Viking River cruise last December, a Christmas Markets cruise on the Danube.   We’ve always been Caribbean all-inclusive resort people, so a European river cruise was a pretty big departure for us. We had a lot of questions and a few concerns going in.   We absolutely loved the experience. So much so that after we got home, we didn’t spend much time thinking about whether we’d cruise with Viking again. We booked our second cruise, a springtime Rhine River cruise in 2027.   For anyone considering their first Viking River cruise, here are some of the questions we had before we went, and what we found.    Would the cruise be full of old people?   We’re 64 and 57, and we wondered whether we’d be among the younger people on the ship. I’d say the average age was probably somewhere in the mid-50s to mid-60s. There were definitely some older passengers, but there were also a number of couples in their 40s. We never felt out of place, and I don’t think anyone would feel out of place on a Viking River cruise based on age. If you’re younger and wondering whether you’ll fit in, I wouldn’t worry about it.    Would the food on the ship be OK?   One of us (me) is a somewhat picky eater, so I worried that I might have trouble finding things I liked. That was never an issue. Breakfast is a buffet with plenty of familiar breakfast staples. Lunch has a good variety, although most days we chose to eat lunch while we were out exploring. And if nothing else appealed, there was always a cheeseburger. Dinner had more variety, with different choices each night, but there was always a relatively “basic” option such as chicken or steak. There were usually several other choices as well. I’m sure food is subjective, but I never came away from a meal thinking, “Well, I guess I’ll have to find something to eat later.”    Should we buy the drink package?   We enjoy a glass or two of wine or a cocktail in the evening, but we decided not to buy the drink package. For our cruise, the math just didn’t work for us. A couple of glasses of house wine or basic cocktails didn’t come close to the cost of the package. And house wine and beer are included with meals. I’m sure this depends on how much you drink and what you order, but for us, paying as we went made more sense.    Would we bristle at the forced socialization at meals?   This was something we wondered about before the cruise, and it turned out to be a non-issue. At breakfast and lunch, it was always just the two of us at a table. At dinner, we found a table for two a couple of times in the Aquavit Terrace. Otherwise, we sat with other couples or groups. We always enjoyed the conversations and never felt like we were being forced into an awkward social situation.    Is a balcony necessary?   We booked a room with a balcony, and while we enjoyed having it, we honestly only spent a few minutes on it each time we stepped outside. Part of that was because we were on a December cruise, so the weather wasn’t exactly balcony-friendly. But the bigger reason was that we weren’t on the ship very much while it was cruising during the day. Most of the cruising happened at night. When we did want to enjoy the scenery, we usually went up to the Sundeck or sat in the lounge. Would we get a balcony again? Probably. But I wouldn’t consider it essential.    Was the onboard entertainment worthwhile?   Honestly, no. And I don’t mean that as a criticism of Viking.This isn’t an ocean cruise with big production shows. You’re more likely to have local entertainment or an onboard lounge singer. It was pleasant enough while sitting in the lounge with a drink, but the entertainment was never a highlight of the cruise. For us, the cities, excursions, scenery and experience were the entertainment.    Do you need to buy the optional excursions?   We found the included walking tours to be a great introduction to each city. They helped us get our bearings, learn a little about the history and figure out what we wanted to explore on our own. Most of the time, that was plenty for us. We did one optional excursion, and there was another we wanted to do but waited too long to book. By then, it was sold out. So our lesson from that experience is simple: if there’s an optional excursion you really want to do, book it early.    Did we have enough time in each city?   Yes and no. The cruise gave us a wonderful introduction to a number of European cities. But there were definitely places where we wished we had two or three days to explore more deeply. That’s one of the tradeoffs of a river cruise. You get to see a lot of places, but you don’t necessarily get enough time to experience every one of them in depth.    What will we do differently next time?   Two things. First, we’ve already booked a couple of optional excursions for our 2027 cruise, rather than waiting. Second, we’re upgrading our flights to business class. That long overseas flight in economy was not our favorite part of the trip.    Was it worth it?   Absolutely. Yes, a Viking river cruise is a chunk of change. But for us, the experience was worth it. We went into our first cruise as Caribbean all-inclusive resort people who weren’t sure whether river cruising would be our thing. We came home having already decided to do another one.       submitted by     /u/Intelligent-Dot-8969     to     r/Cruise       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Cruise/comments/1wl3oen/things_we_learned_on_our_first_viking_river_cruise/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:36:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:37:04.579Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf38c0660c608403983b83"
+    },
+    "message_id": "reddit_t3_1wl3oda",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789868201326",
+    "text": "[PROBE] 1789868201326\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wl3oda/probe_1789868201326/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:36:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:37:04.985Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf38c1660c608403983b86"
+    },
+    "message_id": "reddit_t3_1wl3oc3",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "AusRenters",
+    "username": "noidles17",
+    "title": "Our rental is being sold",
+    "text": "Our rental is being sold\n\nHi,  So we are in QLD and we got approved of a house in May, we paid the 2 weeks + Bond and got the paperwork. Signed it all and got a little welcome package. Once everything was verified, the agent tells us, we can only do 6 months because the house is MIGHT be going up for sale. Kind of wish they told us before hand because we wouldn’t have given any money or signed anything.    A couple months later, we get a call from an agent saying the house is going up for sale. This was on a wednesday, they say “we’ll be coming around for a photoshoot on Friday”, how about ask not tell? I didn’t want to be an ass (yet) because they offered to help us find a new place as the owner willingly offered to let us go fee-free.    A week goes by, haven’t heard it off our own real estate yet. So we started to get pissed off.    Anyway, I send a message to the selling agent saying “Please don’t wear shoes in the house, its white from floor to ceiling and I don’t like shoe prints on the clean tiles, drives me mad”. He acknowledges it. Friday rolls around and I’m on placement and hubby’s at work. We come home and oh my god! Muddy shoe prints through the house. All our belongings and moved and LEFT in the garage. Upstairs is all carpet and there is muddy shoe prints throughout the bedrooms. Our drawers in our bedroom are open. So, I figured I will match the disrespect and I call our real estate. Explain the situation and they are just as pissed off as I am. 20 minutes later, I get an email.    “Dear Tenants,  I would like to formally apologise for the mess we left in the house. We were in a rush and we forgot to put things back. I also apologise for leaving lights on throughout the house. As per the RTA legislation, is 12:30-1:30pm next Saturday okay for us to book an open home?” - Bruh. I replied saying yes, but if I find a single thing touched, moved or dirtied. I’m gonna be pissed off.    Anyway, that saturday rolls around. We go out look at some houses and do our weekend errands. Come home and it’s like a bomb hit it. I take photos and call the RTA to get advice. Got none.    Later that week, another entry notice. No communication. Just a message saying, “Please view your entry notice”, I reply. Absolutely not. 1 rule. No shoes, the rest is common sense. He started being a cocky prick and my husband’s messaging me pissed off with how I’m being treated. I reply back after being called sour and a bitch- professionally of course. Now they crossed a line. I sent back a stern passive aggressive email telling them to bite my ass and the intimidation tactics are working. (They threatened to tell the home owner about this altercation & get him to revoke the fee-free and make us stay right until the last day of our lease.)    Next day, who finally calls? Our real estate. They ran to them and had a sook, I sent her screenshots of all the emails. She was pissed. She had our back though because she knows we are calm cool collected renters who always pay on time. Never had a single problem.    A week later, we received a apology from the selling agent and now they are respectful of our rules & time. We say no to a open home, they say okay. I only started becoming an asshole because after they offered to help us find a house. They retraced their steps and only offered a reference.    Months of this shit & we are stressed tf out 🫪   So any, moral of the story, Fuck LJ Hooker 🫳🏻🎤       submitted by     /u/noidles17     to     r/AusRenters       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AusRenters/comments/1wl3oc3/our_rental_is_being_sold/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:36:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:37:05.593Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf38c1660c608403983b87"
+    },
+    "message_id": "reddit_t3_1wl3obi",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "PokemonTCG",
+    "username": "Some_Suggestion_3751",
+    "title": "Legendary PSA 10",
+    "text": "Legendary PSA 10\n\nSelling my psa 10 Graded pokemon slab I just freshly pulled. I’m from Philippines and shipping cost is costly for me I’m willing to surrender my account or anything also can do video call/facetime while cooperating with you. inshort you can have my gotya account and you can ship the card to yourself cause I’m just lucky to pulled out this card after creating this account lol       submitted by     /u/Some_Suggestion_3751     to     r/PokemonTCG       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PokemonTCG/comments/1wl3obi/legendary_psa_10/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:36:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:37:05.801Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf38c2660c608403983b88"
+    },
+    "message_id": "reddit_t3_1wl3oau",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "datacenter",
+    "username": "knightof99",
+    "title": "EE or BAS?",
+    "text": "EE or BAS?\n\nWorking in data center currently with a refrigeration/mechanical background. Pretty well versed in electrical and I worked a contract job for jci and got to do a good bit of metasys training and install/commissioning work.    My question is would it be more valuable long term for me to pick up a cert or associates in building automation systems or electrical/electronics engineering.    Already have a refrigeration diploma, just looking to increase my value and long term pay opportunities. The local college near me offers both programs. The electronics engineering associates has specialization in controls and instrumentation. The building automation systems associates is purely focused on that.    A lot of the data center work seems to lump mechanical and electrical work together under technician roles. Wonder if either of these on top of all my experience and certs would be enough to get me sitting interviews for controls engineer / facilities engineer roles. Pay seems to be pretty lucrative if you can get into the controls programming or engineering positions.   BAS seems to be the better pair with my mechanical background to me but I also don’t want to get that degree if I’m going to have to go backwards in the controls world and work my way up again. I know it’s a complex field and  Typically takes time to get into a programming role but I would not be interested in going backwards in pay. Looking for upward leverage from my current position.   Looking to hear peoples opinions on what might be the stronger pairing for me. A business or management program is also an option although I think I would rather keep my technical competitive moat versus competing with the many people focused on career management.    Thanks.        submitted by     /u/knightof99     to     r/datacenter       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/datacenter/comments/1wl3oau/ee_or_bas/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:36:35Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:37:06.016Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf38c2660c608403983b89"
+    },
+    "message_id": "reddit_t3_1wl3oas",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "friendlyjordies",
+    "username": "DigitalDiogenesAus",
+    "title": "Canadians have an opinion on Angus Taylor...",
+    "text": "Canadians have an opinion on Angus Taylor...\n\nTech channel weighs in       submitted by     /u/DigitalDiogenesAus     to     r/friendlyjordies       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/friendlyjordies/comments/1wl3oas/canadians_have_an_opinion_on_angus_taylor/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:36:35Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:37:06.217Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf38c2660c608403983b8a"
+    },
+    "message_id": "reddit_t3_1wl3oae",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Meowi",
+    "username": "AutumnSeaBreeze",
+    "title": "[Fill the blank] I wish, I wish I was a ___",
+    "text": "[Fill the blank] I wish, I wish I was a ___\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/AutumnSeaBreeze     to     r/Meowi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Meowi/comments/1wl3oae/fill_the_blank_i_wish_i_wish_i_was_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:36:34Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:37:06.427Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf38c2660c608403983b8b"
+    },
+    "message_id": "reddit_t3_1wl3oa7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devplatform_triggers",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789868194303",
+    "text": "[PROBE] 1789868194303\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devplatform_triggers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devplatform_triggers/comments/1wl3oa7/probe_1789868194303/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:36:34Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:37:06.626Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf38fb660c608403983b8c"
+    },
+    "message_id": "reddit_t3_1wl3p6d",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "EtsyCommunity",
+    "username": "Realistic-Mode-7681",
+    "title": "Small business owners, what product and what equipment do you use?",
+    "text": "Small business owners, what product and what equipment do you use?\n\nHappy weekend, folks.   I have been running a small Etsy shop for a few years now, mostly custom apparel and small batch orders (Mostly selling creative T-shirt stuff and hats). I've bought a lot of equipment along the way, some of it great, some of it a waste of money. I definitely need some advice for the future upgrade from some embroidery gurus here. ::))   went through a few phases. First was the cheap Amazon heat press that worked fine until it didn't. Then I got an auto press which fixed most of my problems, should've done that sooner tbh. 😅    The biggest mistake was a sublimation printer I bought thinking I would expand into mugs. That thing was a paperweight within two months. Clogged nozzles, colors that looked nothing like the screen, and I couldn't get a single decent transfer out of it. Sold it at a loss and just went back to vinyl.   Now I'm looking at embroidery since I keep getting requests for hats and polos, and hopefully get a multi needle machine for myself. Been hesitating between Poolin EOM, htvront E15, Happy Voyager and Bai Mirror.   Please give me some advice for the upgrade of my business. Would really appreciate any input!       submitted by     /u/Realistic-Mode-7681     to     r/EtsyCommunity       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/EtsyCommunity/comments/1wl3p6d/small_business_owners_what_product_and_what/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-20T01:37:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-20T01:38:03.930Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaf38fc660c608403983b8d"
+    },
+    "message_id": "reddit_t3_1wl3p69",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "Drugs",
+    "username": "KAR_SO1",

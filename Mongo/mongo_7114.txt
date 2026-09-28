@@ -1,0 +1,416 @@
+    },
+    "message_id": "reddit_t3_1whoyac",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "PythonLearning",
+    "username": "broutsider",
+    "title": "Learning Python APIs: I finally got Instagram data working",
+    "text": "Learning Python APIs: I finally got Instagram data working\n\nThis is not a promo.   I'm a relative beginner with Python, and one of the things I've been trying to learn is how to work with APIs.   My goal was pretty simple: make a chart to show the follower amount through time. I understood the general idea of an API, but actually making a request from Python felt a little intimidating at first.   I ended up getting Instagram data working with just a few lines of Python using  HikerAPI , a REST API for Instagram data.   Here's the basic example I started with:    import requests headers = {\"x-access-key\": \"YOUR_KEY\"} r = requests.get(\"https://api.hikerapi.com/v2/user/by/username\", params={\"username\": \"nasa\"}, headers=headers) print(r.json())     As I understand it now:      import requests  loads the Python library that lets me make HTTP requests.    headers = ...  sets the API access key that authenticates the request.    requests.get(...)  sends a GET request to the API. The  params  part passes the username I want to look up.    print(r.json())  converts the JSON response into Python data and prints it so I can see what I got back.     The fact that this was enough to get a real response was honestly pretty satisfying.   One thing that tripped me up was getting all the parameters set and making the key secret. I initially thought I would have to do somethign super complex, but eventually realized I just had to update the snippet with these info and that was it.   From there, I've been experimenting with recharts, and it's been a nice way to make Python feel more practical than just working through isolated exercises.   I'm still very much learning, so I'm sure there are things I'm doing inefficiently or misunderstanding.    For people who learned Python by working with APIs, what tips or habits would you recommend to someone at my level?        submitted by     /u/broutsider     to     r/PythonLearning       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PythonLearning/comments/1whoyac/learning_python_apis_i_finally_got_instagram_data/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T06:13:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T06:14:14.297Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa33b66508d45f3d2d0bac"
+    },
+    "message_id": "reddit_t3_1whoy9l",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "KutGeparkeerd",
+    "username": "DesignerMaximum1342",
+    "title": "Kut leest reddit",
+    "text": "Kut leest reddit\n\nstaat vanmorgen een stuk beter dan gisteren ( https://www.reddit.com/r/KutGeparkeerd/comments/1wgvltf/kut\\_moest\\_poepen\\_denk\\_ik/ )       submitted by     /u/DesignerMaximum1342     to     r/KutGeparkeerd       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/KutGeparkeerd/comments/1whoy9l/kut_leest_reddit/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T06:13:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T06:14:14.520Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa33b66508d45f3d2d0bad"
+    },
+    "message_id": "reddit_t3_1whoy9h",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "PTCGL",
+    "username": "Oni-Village0960",
+    "title": "Mega Greninja players, who's your second attacker?",
+    "text": "Mega Greninja players, who's your second attacker?\n\nWith 30th anniversary just around the corner, i'm curious on what mega greninja players are/would-be running in there decks for a backup attacker, when they don't have Mega greninja out yet or it was just KO'd. I'm a strong believer for Mega Greninja, and all the tier lists that call this a fraud deck are slowly retracting that once they realized how scary the new greninja ex will be. I want to list my opinions on the potential mons that I've seen paired with him and I really want to hear your voice for them, either with criticism or a different angle of thinking. Btw, this talking is from someone with Zoro as the dedicated draw engine.    Dragapult:   Not gonna beat around the bush, I don't see the vision. The built in draw engine is nice but it is clearly overshadowed from N's zoro and Duduns. Also, you either have to make space for energies to allow multiple pults to attack, or stick with one Neo upper and have everything crumble when it gets ko'd. So many decks and players are well accustomed on what to do against a pult, not worth the risk imho.    Blaziken:   Honestly, the quintessential support mon when you keep pinging damage and discarding energy. The sad fact is, that it's leaving after rotation. I've seen videos pair this with greninja and the synergy is absolutely there, you don't have to run many energy retrieval cards or even Rosa when blaziken already does that trick for you. Also, it allows you to cover against the many many grass decks that are rampant right now, especially more on the way even before rotation. Much less of a sacrifice when having to put fire energy, another stage 2 benefiting from rare candies already being in the deck, grass coverage. It's a triple threat.    Lopunny:   I've seen this paired as a 1/1 when they already had another attacker and I can really only see two reasons: The deck already benefits a lot from switching to fulfill the the first attack requirement, and now they have a crustle answer. I'm seeing the vision in this a lot and I have plans to incorporate lopunny from that. 1 colorless energy to swing for 230, enough to kill many support mons like fez, lillie, meowth, or secure a kill with one or two mortal shurikens on active with the abundant retreat/switch cards in deck. Really the only problem is that 1/1 line enough? They see this as a backup to the backup, and once they see a buneary, they already know your're gonna want to do some switching shenanigans. Also being weak to fighting, where fighting decks like lucario and fossil are on the rise, it can be very unsafe and game losing to send mega lopunny for a revenge kill. If you have ideas on how to keep this as your second attacker, or what you pair this with, let me know.    Feraligatr:   I think this was worth mentioning. Saw one buddy at a local have this in my deck with greninja and i was definitely shellshocked. Another stage two, surfing beach support, amazing synergy with mortal shuriken, it all makes sense. Unfortunately i don't have the data or experience to really say anything on this. Also the three energy attack cost is very detrimental, i've seen decks run between 5-7 water energies, not enough to reliably send ping damage to bench when you have to send to active if it's a healthy pokemon for feraligatr to OHKO. Neo upper helps but once it's on feraligatr, it's gone.    Starmie:   I've been a mega starmie fan since it got released but it's definitely underwhelming as a second attacker. One energy cost is very nice, and help ping even more damage to the bench, when one mortal shuriken wasn't enough. Surfing beach synergy, stage 1 mon. Decks with tera greninja already run ignition energy which helps mega starmie counter against crustle, a huge plus. But on it's own, it can't properly ko many pokemon (unless it's ramped with ignition). Is mega starmie really your answer when you have a heavily weakened greninja in active or it was just ko'd? I have my doubts with this, and i don't see myself replacing what i have right now with starmie.    Froslass:   Saved the best for last. Froslass really is the best second attacker, from what i seen and played. Stage 1 mon, 1 energy cost, surfing beach synergy, extremely huge potential to deal heavy damage against greedy players. Froslass really is  the  answer if you want to boss up something and if they have more than 7+ cards, or used as a follow up if they killed your mega because they have to draw 3 prize cards. Unfortunately, this card really does suffer when against 1 prizers (so much damage that it's overkill) and the mindset from the opponent where all they have to do to counter this is, just discard cards. Players that fall against froslass either, draw too many cards without realizing or didn't have the tools necessary to discard to survive a resentful refrain. Which talking about out loud, are very noob-beginner traps. An intermediate player 99% of the time will have an answer to counter this. Every other mon here can properly kill from the skill from the player, instead of relying on the mistake from the opponent. Then how is it the best second attacker? I just really like froslass, that's all. I have ideas to still include a 1/1 line, so this would be the backup to my second attacker, considering the synergies it has already.    Tera/30th Greninja ex:   I think it goes without saying that Tera geninja is absolutely critical to include with mega greninja. There are still plenty of decks that are played right now that simply run tera and leave mega greninja behind. Not including tera is seriously handicapping yourself. Now the new greninja ex is a whole other world. One mortal shuriken and stealthy slash (60+180=240) means they can snipe any support mon, two (120 + 360 = 480) and it practically kill any mon, even with hero's cape. I am 100% running this with mega greninja, only problem is how many? \"Y ou already answered your own question for a second attacker .\" You can only run 4 froakies, it's gonna be impossible to reliably satisfy everything and in time. One tera in active, two mega, one greninja ex is probably the dream setup, but who knows the factors as, if any are in my prize pool, no rare candies, evos in prize pool, etc etc. The whole point of this talk is to ask who can reliably setup with mega greninja that wouldn't hinder him and actually benefit from what the deck offers.   This might be me yapping a lot, but i plan to run mega greninja until it rotates out. If you haven't seen the new full art greninja ex, is it absolutely beautiful.        submitted by     /u/Oni-Village0960     to     r/PTCGL       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PTCGL/comments/1whoy9h/mega_greninja_players_whos_your_second_attacker/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T06:13:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T06:14:14.738Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa33b76508d45f3d2d0baf"
+    },
+    "message_id": "reddit_t3_1whoy96",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "autocompanion",
+    "username": "AutoCompanion",
+    "title": "New BMW Deal - AutoCompanion Shop Easy",
+    "text": "New BMW Deal - AutoCompanion Shop Easy\n\nLast updated: September 16, 2026     Current program: September 2026     Updated monthly.  This post gets refreshed with each new BMW program, so bookmark it.   Below are this month's 2026 and 2027 BMW lease deals from AutoCompanion, covering the X1, X3, X5, X5 M, X6, X7, 3 Series, 5 Series, i4, i5, M3, M4, and M5.    These are sample payments.  They come straight from our live listings at  autocompanion.com  and are based on sample or comparable vehicles, not a specific car in stock. Your final payment depends on the exact build, your state, taxes, and credit approval. All payments assume top tier credit.    Financing or paying cash?  The payments below are lease payments, but the same discounts also apply to finance and cash deals.   Who We Are      Not a dealer.  AutoCompanion is a car lease concierge and consumer advocate.    Since 2020 , we've helped over 30,000 customers lease their next car.    Pre-negotiated pricing  through our BMW dealer network, so there's no haggling and no surprise add-ons.    See what customers say:   Read our customer reviews      Where These Deals Apply      Nationwide:  BMW pricing is available in 49 states.    Delivery:  Home delivery is available, and delivery costs depend on your location.    Confirmed by ZIP:  Send us your ZIP and build, and we'll confirm the exact payment before you commit.     BMW Lease Deals   All payments are pre-tax. Terms vary by model, so each one is listed. Click any trim for the full deal page.    🔥 2026 BMW X1       X1 M35i : $503/month (39/7,500) | MSRP $47,000    X1 xDrive28i : $546/month (39/7,500) | MSRP $55,000      🔥 2026 BMW X3       X3 30 xDrive : $543/month (39/7,500) | MSRP $56,000 | 12% off    X3 M50 xDrive : $730/month (39/7,500) | MSRP $68,000 | 10% off      🔥 2026 BMW X5       X5 xDrive40i : $841/month (39/7,500) | MSRP $76,000 | 11% off    X5 xDrive50e Plug-In Hybrid : $884/month (39/7,500) | MSRP $82,000 | 11% off    X5 M60i : $1,140/month (39/7,500) | MSRP $99,000 | 10% off    X5 M Competition : $1,955/month (36/7,500) | MSRP $139,500 | 9% off      🔥 2026 & 2027 BMW X6       2026 X6 xDrive40i : $1,086/month (39/7,500) | MSRP $84,000 | 10% off    2027 X6 xDrive40i : $1,099/month (39/7,500) | MSRP $85,000 | 10% off      🔥 2027 BMW X7       X7 xDrive40i : $1,072/month (39/10,000) | MSRP $95,500 | 11% off      🔥 2026 BMW 3 SERIES       330i xDrive Sedan : $469/month (39/7,500) | MSRP $55,000    M340i xDrive Sedan : $747/month (39/7,500) | MSRP $70,000      🔥 2026 & 2027 BMW 5 SERIES       2026 530i xDrive Sedan : $600/month (39/7,500) | MSRP $66,000    2027 530i Sedan : $666/month (39/7,500) | MSRP $66,000    2027 530i xDrive Sedan : $676/month (39/7,500) | MSRP $67,000    2026 550e xDrive Sedan : $686/month (39/7,500) | MSRP $76,000    2026 540i xDrive Sedan : $735/month (39/7,500) | MSRP $72,000 | 8% off    2027 540i xDrive Sedan : $817/month (39/7,500) | MSRP $73,000    2027 550e xDrive Sedan : $819/month (39/7,500) | MSRP $77,000 | 10% off      🔥 2026 BMW i4       i4 xDrive40 Gran Coupe : $542/month (36/7,500) | MSRP $65,000      🔥 2026 & 2027 BMW i5       2026 i5 eDrive40 Sedan : $646/month (36/7,500) | MSRP $73,000    2026 i5 xDrive40 Sedan : $677/month (36/7,500) | MSRP $76,000 | 12% off    2027 i5 eDrive40 Sedan : $757/month (36/7,500) | MSRP $74,000    2027 i5 xDrive40 Sedan : $782/month (36/7,500) | MSRP $77,000    2026 i5 M60 Sedan : $868/month (36/7,500) | MSRP $86,000      🔥 2027 BMW M MODELS       M4 Competition xDrive Convertible : $1,356/month (42/7,500) | MSRP $98,000 | 8% off    M5 Sedan : $2,068/month (24/7,500) | MSRP $135,000 | 10% off    M3 Competition xDrive Sedan : $2,236/month (24/7,500) | MSRP $105,000      🔥 DEMO SPECIAL       2026 840i Gran Coupe (demo, 6,500 miles) : $952/month (39/7,500) | MSRP $104,000 | 20.5% off     BMW Conditional Rebates   Payments shown are before conditional rebates.   Lower payments available when qualifying for BMW Loyalty or Corporate Fleet.   BMW Lease Deal Details   Inceptions due at signing + first month   $799 concierge fee    Click Here To Inquire    Discounts may vary if a specific vehicle configuration is requested    Which BMW are you shopping for?        submitted by     /u/AutoCompanion     to     r/autocompanion       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/autocompanion/comments/1whoy96/new_bmw_deal_autocompanion_shop_easy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T06:13:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T06:14:15.173Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa33b76508d45f3d2d0bb0"
+    },
+    "message_id": "reddit_t3_1whoy8m",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789539221556",
+    "text": "[PROBE] 1789539221556\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1whoy8m/probe_1789539221556/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T06:13:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T06:14:15.395Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa33b76508d45f3d2d0bb1"
+    },
+    "message_id": "reddit_t3_1whoy87",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "abusiverelationships",
+    "username": "Visual-Durian6738",
+    "title": "27(M) planning to leave my emotionally abusive wife",
+    "text": "27(M) planning to leave my emotionally abusive wife\n\nHi everyone.    Sorry for the long post and potential spelling errors. I havent slept in maybe 4-5 days as i am planning on leaving next week. I am terrified.    I dont post much on reddit but im at a low point and need some advice/encouragment.    I am currently planning on leaving my wife. we were together for a year before getting engaged, we were engaged for 1 year and have been married for just over a year.    We dated previously when we were younger and I ended up leaving because I felt it was abusive. I came back 2 years later thinking things would be better but they have just slowly gotten worse.    She has began to cut me off from family and friends. stating that my friends wives and partners are all trying to sleep with me and it makes her uncomfortable, therefore meaning that i can not contact or be around them. This has also prevented me from buying pet food as the women who served me was nice and this made my wife uncomfortable.    She doesnt want to be around my family and constantly tells me how uncomfortable she is and how much she doesnt want to be there or get close with them. I have always had a good relationship with my parents and they regularly ask to catch up for dinner or if we would like to go away to the beach with them. she constantly tells me she doesnt want to but doesnt want to say no so i have to find an excuse. This has become so bad that i wont even raise the point of asking to go to see family as she always has an excuse or if she does come to join, after the event i am met with short temper and constant anger on how i didnt show her enough attention or how i was talking to my cousins GF too much and it seemed i was more interested in her than my own wife. this of course is not the case.    I drive her everywhere as she has never got her license or even attempted to try to learn to drive. I drop her at work every morning and every night i pick her up. I have expressed that this impacts my own work day and that it is a large load for me to have every single day. I was told that i did not need to pick her up. I proceeded to stop and then was met most mornings asking if i could take her as she was running late and when i didnt pick her up i was given the silent treatment and was told she was too tired from the trip home to do any house work. She hasnt done any house work in 3 years, I clean, tidy, cook dinner, clean up after dinner, pack her lunch, clean litters and clean up after our puppy. I am also the only person who will get up to feed the pets, if i do not get up she wont move for around 2 hours until the pets are starting to become painful and even then it is met with a strong sigh and passive aggressive body language.    I am tired and have asked for help but im met with a stone wall. saying that she is more tired and her depression is getting worse. when i try to be there for her it always seems to be the wrong way to support her and nothing i do helps. It then falls back on me for making her upset and not knowing what to do.   I have been pulled away from my hobbies as i wasnt doing them with her and this showed that i cared more about the activity than her. I have been pulled away from doing anything i enjoy as if she doesnt feel like getting up to join me then i cant go by myself because she feels rejected and alone.    I can no longer even see my GP alone as she insists i go to everyone of her appointments although i try to encourage her to learn to do this herself. When it comes to me having an appointment if i dont invite her in i get questioned on why she wasnt in there or why it needed to be private.    I have only ever made one set of goalposts for her. I would like her to get her license or be very close to recieving driving licence before we try to have kids. I believed this was reasonable but was met with upset and anger. I was told this is her phobia and it is unreasonable of me to have expectations like that for her.    She told me recently that if i get her name tattood on myself she will maybe trust me finally. She has always insisted for the 3-4 years that she has never trusted me and i need to do x,y,z to make her trust me. I got her initials on my wrist, i guess this wasnt enough as she brought it up in passing that i couldnt even get her actual full name tattood so i musnt care that much. This is after i had strongly expressed i was uncomfortable getting the tattoo, yet i did it anyway and was still made to feel i did the wrong thing.    I constantly try to give her another chance or try to fix myself when i am told everything i do wrong in the relationship. I have never said no to her as when i have tried i get made to feel i am the worst husband ever.    My mates and therapist have really strongly suggested leaving as this constantly happens and never improves like i tell them it will.    My wife has given me a suicide safety plan for her but refuses to give it to her other friends or family as she does not want anyone else to be there for her other than me. I am extremely worried that when i finally decide to leave she will do something silly and rash. I am scared and overwhelmed with guilt as i dont want that for her and i want her to be safe. What can i do or how to handle this in the best way possible with out any risks.   TL;DR -    My emotionally abusive wife has cut me off from family, not allowed them to come to weddings or will not even say hi to them if they come past the house. I no longer can talk to friends or family without her assuming i am trying to leave her out or organise something without her. I am nervous and scared for her as she has expressed multiple times that she would end her life, and has in the past told me if i left that she wouldnt be able to live.    please if anyone could provide some advice or maybe provide some words of wisdom it would be much appreciated.        submitted by     /u/Visual-Durian6738     to     r/abusiverelationships       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/abusiverelationships/comments/1whoy87/27m_planning_to_leave_my_emotionally_abusive_wife/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T06:13:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T06:14:15.612Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa33b86508d45f3d2d0bb4"
+    },
+    "message_id": "reddit_t3_1whoy81",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "smallbusinessindia",
+    "username": "sora_noir",
+    "title": "Looking for small business ideas in Chennai for my aunt",
+    "text": "Looking for small business ideas in Chennai for my aunt\n\nHi everyone, looking for some genuine advice.   My aunt (53F) is currently unemployed and wants to start something of her own rather than return to her previous work as a caretaker. She’s very good at managing people and cooking, especially vegetarian food.   I’m 25M, working full-time, but I can help her during evenings, mornings and WFH days.   We’re based in Chennai and have some savings available to start a small business, but we have no existing customers, commercial space, or previous business experience.   What are some realistic small businesses she could start in Chennai that have relatively low risk and could eventually generate around ₹20–30k/month in net income?   Would especially appreciate advice from anyone who has actually started a small business in Chennai. What worked for you, and what should a beginner avoid?   Thanks!       submitted by     /u/sora_noir     to     r/smallbusinessindia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/smallbusinessindia/comments/1whoy81/looking_for_small_business_ideas_in_chennai_for/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T06:13:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T06:14:16.260Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa33b86508d45f3d2d0bb5"
+    },
+    "message_id": "reddit_t3_1whoy7u",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "📢 Highlevel [HIRING] a Product Manager II - Payment Orchestration!",
+    "text": "📢 Highlevel [HIRING] a Product Manager II - Payment Orchestration!\n\nCompany: Highlevel   Location: India 📍   Date Posted: September 15, 2026 📅   Categories: #PM #fulltime   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=brenxor.com&rurl=aHR0cHM6Ly9icmVueG9yLmNvbS9qb2ItZGV0YWlscy0xODkyNjAtcHJvZHVjdC1tYW5hZ2VyLWlpLSUyYi1wYXltZW50LW9yY2hlc3RyYXRpb24=    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1whoy7u/highlevel_hiring_a_product_manager_ii_payment/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T06:13:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T06:14:16.479Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa33b86508d45f3d2d0bb6"
+    },
+    "message_id": "reddit_t3_1whoy7l",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "musicimade",
+    "username": "reno-outrunner",
+    "title": "Nuovo EP italiano trip hop/downtempo",
+    "text": "Nuovo EP italiano trip hop/downtempo\n\nTrip hop/downtempo cantato in italiano. Che ne pensate?       submitted by     /u/reno-outrunner     to     r/musicimade       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/musicimade/comments/1whoy7l/nuovo_ep_italiano_trip_hopdowntempo/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T06:13:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T06:14:16.696Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa33b86508d45f3d2d0bb7"
+    },
+    "message_id": "reddit_t3_1whoy73",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "oatfast",
+    "title": "What is something you realized embarrassingly late in life that everyone else seemed to just know ?",
+    "text": "What is something you realized embarrassingly late in life that everyone else seemed to just know ?\n\nsubmitted by     /u/oatfast     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1whoy73/what_is_something_you_realized_embarrassingly/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T06:13:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T06:14:16.913Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa33b96508d45f3d2d0bb8"
+    },
+    "message_id": "reddit_t3_1whoy6x",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "kraw",
+    "username": "NiceABCD",
+    "title": "BLAZE is hungry, please feed.",
+    "text": "BLAZE is hungry, please feed.\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/NiceABCD     to     r/kraw       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/kraw/comments/1whoy6x/blaze_is_hungry_please_feed/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T06:13:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T06:14:17.130Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa33cf798842c4ceff9afc"
+    },
+    "message_id": "reddit_t3_1whoyne",
+    "topic_key": "api gateway",
+    "search_keyword": "API gateway",
+    "platform": "reddit",
+    "subreddit": "technepal",
+    "username": "Salt-Suggestion-4106",
+    "title": "HIRING Senior Full-Stack Developer — 10+ YOE — Kathmandu / Remote — Competitive Compensation",
+    "text": "HIRING Senior Full-Stack Developer — 10+ YOE — Kathmandu / Remote — Competitive Compensation\n\nWe’re hiring a  Senior Full-Stack Developer  at Decimal Tech.    Location:  Kathmandu, Nepal   Work:  Remote   Type:  Full-Time   Level:  Senior → Staff   Experience:  10+ years   Working hours:  Primarily aligned with Melbourne time   Compensation:   Competitive and based on experience and impact    Compensation   We’re intentionally offering  competitive compensation for the level of engineering ownership this role requires  .   The exact package will depend on your  professional experience, technical depth, scope of responsibility, and demonstrated impact . We’re open to discussing compensation with strong candidates rather than applying a rigid one-size-fits-all number.   About the role   This is a  hands-on senior engineering role .   We build SaaS products, AI applications, automation systems and cloud-native platforms for international companies. Some of the products we work on operate at significant scale, including systems serving millions of users.   You’ll be involved in architecture, backend, frontend, AWS infrastructure, scalability, reliability and mentoring.   We’re looking for someone who enjoys  both writing production code and owning technical decisions .   Stack     React / Next.js / TypeScript   Node.js / TypeScript   AWS Lambda / API Gateway   DynamoDB / PostgreSQL   SQS / EventBridge   AWS / SST / AWS CDK   Terraform / Pulumi   GitHub Actions   OpenAI / Anthropic   Python     Required     10+ years of professional software engineering experience   5+ years of AWS experience   Strong Node.js and TypeScript experience   Strong React and modern frontend experience   Production experience with Lambda, API Gateway, DynamoDB, SQS and EventBridge   Infrastructure-as-Code experience with SST, CDK, Terraform or Pulumi   Experience designing and operating scalable production systems   Experience leading technical initiatives and mentoring engineers     If you're slightly below the 10-year requirement but can demonstrate  Staff-level scope and impact , we're still interested in hearing from you.   Nice to have   Laravel, Ruby on Rails, Docker, ECS, Kubernetes, AI/ML integrations, MLOps, or experience building large-scale SaaS or consumer platforms.   What we offer     Competitive compensation based on experience and impact   High ownership and autonomy   Remote / hybrid flexibility   International product and engineering work   Modern cloud-native and AI technology   Opportunity to grow toward Staff / Principal   Work on products operating at significant scale     This isn't a management-only role.    You’ll help decide how systems are built — and you’ll be expected to write the code yourself.    Apply    Apply to Decimal Tech    Please include:     Resume/CV   GitHub, if available   LinkedIn, if available   A short description of the most relevant system you've designed, built, or scaled      Only shortlisted candidates will be contacted.        submitted by     /u/Salt-Suggestion-4106     to     r/technepal       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/technepal/comments/1whoyne/hiring_senior_fullstack_developer_10_yoe/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T06:14:19Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T06:14:39.157Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa33ee6508d45f3d2d0bb9"
+    },
+    "message_id": "reddit_t3_1whoz3d",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ForHireFreelance",
+    "username": "Longjumping-Mix-112",
+    "title": "Hiring for my PR team (only 34 vacancy)",
+    "text": "Hiring for my PR team (only 34 vacancy)\n\nNeed 34 people for my PR team   You will get a post or comment, you will have to copy it and post where we will tell you,    Salary will be weekly,    Money per post 1$   Rules:-    You can post any amt of post you want a day   Reddit account should have 50+ karma   If interested, ⬆️ vote this post and leave a reply \"interested\".   And join this discord server     https://discord.gg/R4YWhF9Mq    People who have done ⬆️, and reply and joined the server will be selected.       submitted by     /u/Longjumping-Mix-112     to     r/ForHireFreelance       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ForHireFreelance/comments/1whoz3d/hiring_for_my_pr_team_only_34_vacancy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T06:14:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T06:15:10.150Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa33ee6508d45f3d2d0bba"
+    },
+    "message_id": "reddit_t3_1whoz36",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Sneydor",
+    "title": "Grab 100 hammers from u/Sneydor!",
+    "text": "Grab 100 hammers from u/Sneydor!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Sneydor     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1whoz36/grab_100_hammers_from_usneydor/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T06:14:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T06:15:10.359Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa33ee6508d45f3d2d0bbb"
+    },
+    "message_id": "reddit_t3_1whoz2q",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "IllustriousMove9818",
+    "title": "Level: 601~620 2⭐ Summer Matsuri #7008",
+    "text": "Level: 601~620 2⭐ Summer Matsuri #7008\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/IllustriousMove9818     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1whoz2q/level_601620_2_summer_matsuri_7008/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T06:14:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T06:15:10.561Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa33ee6508d45f3d2d0bbc"
+    },
+    "message_id": "reddit_t3_1whoz1d",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "LegalAdviceIndia",
+    "username": "Confident-Stand5268",
+    "title": "Title: MyFitness cancelled a ₹3,000 goodwill compensation offer after I tried to negotiate. What are my options? I’m looking for advice from people familiar with consumer complaints.",
+    "text": "Title: MyFitness cancelled a ₹3,000 goodwill compensation offer after I tried to negotiate. What are my options? I’m looking for advice from people familiar with consumer complaints.\n\n​   I placed a peanut butter order with MyFitness/Tanvi Fitness Private Limited on 7 July 2025. The order value was ₹859.   The order was not delivered properly, and the company eventually refunded the ₹859. However, on 25 July 2025, the company also promised to send me a peanut butter or oats product free of cost as compensation for the inconvenience. They stated that it would be delivered within 5–7 working days.   The compensation product was not delivered within that period. I repeatedly followed up, and I was repeatedly told that there were logistical delays. Later, the company informed me that the package had been returned to the warehouse/RTO because of delivery-partner issues.   I then sent a formal written complaint/notice to the company. The company responded through its legal team and stated that its response was being provided without admission of liability and without prejudice to its legal rights.   After further correspondence, the company offered:   - First, peanut butter or oats products worth ₹2,000 as a goodwill gesture.   - Later, they revised the offer to peanut butter or oats products worth ₹3,000.   - They repeatedly stated that the offer was not an admission of liability and was intended to resolve the matter amicably.   I did not immediately accept the ₹3,000 product offer because I was trying to negotiate a monetary settlement instead. I made it clear that I preferred cash rather than more products, as the original issue had already caused considerable inconvenience and I did not want to place another order or continue dealing with the same process.   After several rounds of negotiation, I became frustrated and decided that I would accept the ₹3,000 product offer simply because I no longer wanted to spend more time negotiating. I communicated that I was willing to accept it for that reason, while also making it clear that I was not satisfied with the resolution.   The company has now replied that:   «“As it was not accepted, the offer is no longer valid, and we are unfortunately not in a position to revisit it at this stage.”»   So, they have withdrawn the ₹3,000 offer because I did not accept it earlier.   I have not received the ₹3,000 products, and I have not signed any settlement agreement or stated that I have no further claims. I have only exchanged emails with the company.   My questions are:      Can the company withdraw the ₹3,000 offer after repeatedly communicating it during settlement discussions?     Does my later willingness to accept the offer have any legal significance, even though they now say it had expired?     Is this something I can take to the National Consumer Helpline or through e-Jagriti/e-Daakhil?     Would a consumer complaint have a realistic chance of obtaining the ₹3,000 product compensation or some reasonable compensation?     Would it be worth pursuing legally for this amount, considering the time, cost, and possible delay?     Should I send one final legal-style email, or should I directly approach the consumer authorities?     Are there any risks in filing a complaint, and what evidence should I preserve?      I am not looking to claim an exaggerated amount. My main objective is either to receive the previously offered ₹3,000 product compensation or obtain a reasonable resolution for the repeated delays, failed assurances, and prolonged inconvenience.   I have the order records, refund details, company emails, my follow-ups, the compensation offers, and the company’s latest refusal. I can share redacted screenshots if needed.   Any practical advice from people who have handled similar consumer disputes in India would be appreciated.       submitted by     /u/Confident-Stand5268     to     r/LegalAdviceIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LegalAdviceIndia/comments/1whoz1d/title_myfitness_cancelled_a_3000_goodwill/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T06:14:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T06:15:10.782Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa33ee6508d45f3d2d0bbd"
+    },
+    "message_id": "reddit_t3_1whoz06",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "claudeskills",
+    "username": "Pleasant-Taste1417",
+    "title": "This is going to change how we use AI agents",
+    "text": "This is going to change how we use AI agents\n\nMade a plugin for myself, an agentic “photoshop”, was sick of copying and pasting screenshot / recordings, writing long prompts to describe visual edits which I could just doodle or point at, found it very useful when used in various kind of platform and software from full stack dev, to simulation and robotics. released open source on clawhub, wonder how would you like it, and which tools and functionality would you add?   I claim this agentic interaction should be the new higher abstraction layer of any agentic platform, which the toolbar be custom built for the use case the agentic platform is tailored to.   Right now compatible only for Linux later on for other OS, and a cursor and Claude code plugin is in the making.   Have fun ;)       submitted by     /u/Pleasant-Taste1417     to     r/claudeskills       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/claudeskills/comments/1whoz06/this_is_going_to_change_how_we_use_ai_agents/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T06:14:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T06:15:10.987Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa33f16508d45f3d2d0bc9"
+    },
+    "message_id": "reddit_t3_1whoz04",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "classicwow",
+    "username": "Melodic-Marketing341",
+    "title": "Blizz after checking Reddit and somehow finding even more creative complaints.",
+    "text": "Blizz after checking Reddit and somehow finding even more creative complaints.\n\nThis sub should have a tag for negative whinings just like 'nsfw' posts.       submitted by     /u/Melodic-Marketing341     to     r/classicwow       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/classicwow/comments/1whoz04/blizz_after_checking_reddit_and_somehow_finding/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T06:14:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T06:15:13.339Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa33f16508d45f3d2d0bcb"
+    },
+    "message_id": "reddit_t3_1whoyzq",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "SpainDaily",
+    "username": "TheRichestDev",
+    "title": "Nothing Happened in Spain Today. Except This.",
+    "text": "Nothing Happened in Spain Today. Except This.\n\n1️⃣ Spain's inflation hits 4.3% as fuel prices surge    August inflation rose to 4.3%, the highest since early 2023, driven by a 16.9% year-on-year jump in gasoline prices. Core inflation, excluding energy and fresh food, cooled to 2.9%, while food prices rose 2.3%. Households face higher fuel and food costs. -  El Diario     2️⃣ New labor transparency rules take effect Oct. 5    From October 5, companies must provide workers with more information on salaries, schedules, probation periods, and any use of algorithms or AI in decisions like pay, promotions, or dismissals. Existing workers can request the data; employers have 30 business days to respond. The decree transposes a 2019 EU directive. -  El Diario     3️⃣ Congress rejects Sumar law banning home sales to funds    Congress rejected a Sumar proposal for a second time to prohibit the sale of homes to legal entities, aiming to stop mass purchases by companies for rental purposes. PP, Vox, and Junts voted against; PSOE and PNV abstained. The decision leaves housing policy unchanged for now. -  El Diario     4️⃣ EU allows workers to claim social security across member states    The European Commission approved rules for fair labor mobility, including a digital European Social Security Passport. Workers and companies across the EU will be able to digitally request and receive documents such as the European Health Insurance Card and the A1 form by the end of the year. -  El Diario     5️⃣ Bolaños accuses Supreme Court of altering electoral census    Minister Félix Bolaños accused the Supreme Court of altering the electoral census by suspending voting rights for CERA-registered people who obtained nationality through the 'ley de nietos'. He demanded a final ruling before 2027, saying there are now first-class and second-class Spaniards. -  20 Minutos     6️⃣ Feijóo proposes stripping nationality for serious crimes    PP leader Alberto Núñez Feijóo announced an organic law to withdraw Spanish nationality from foreign nationals convicted of serious crimes such as murder, terrorism, or repeated rape. He called nationality 'an act of trust' that must be maintained. -  Heraldo     7️⃣ First Diplodocus remains found outside North America in Teruel    Researchers in Teruel identified 14 tail vertebrae from the Late Jurassic, about 150 million years old, as belonging to the genus Diplodocus. If confirmed, it would be the first evidence of this dinosaur in Europe. The fossils were found at La Tejería in El Castellar. -  20 Minutos    💬  What's hit your monthly budget harder lately - fuel or food?    📩  This is part of today's news.  The full edition, with a direct link to every story, goes out by email each morning:  Subscribe .    This digest is based on real news, created with the help of AI and reviewed by a human.        submitted by     /u/TheRichestDev     to     r/SpainDaily       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SpainDaily/comments/1whoyzq/nothing_happened_in_spain_today_except_this/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T06:14:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T06:15:13.738Z"
+    }
+  },
+  {

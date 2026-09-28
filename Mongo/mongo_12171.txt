@@ -1,0 +1,416 @@
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T21:11:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T21:11:18.347Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaefa76660c6084039827f5"
+    },
+    "message_id": "reddit_t3_1wkxqtp",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Dash USD - 19 Sep 2026 @ 17:08 -> $58.52",
+    "text": "Buy Signal Dash USD - 19 Sep 2026 @ 17:08 -> $58.52\n\nTicker:  DASHUSD    Exchange:  CRYPTO    Time:  19 Sep 2026 @ 17:08    Price:  $58.52    Link:  https://getagraph.com/AAA/crypto-currencies/DASHUSD/ENG        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wkxqtp/buy_signal_dash_usd_19_sep_2026_1708_5852/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T21:11:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T21:11:18.548Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaefa76660c6084039827f6"
+    },
+    "message_id": "reddit_t3_1wkxqtn",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "ClaudeWorkflows",
+    "username": "ClaudeAI-mod-bot",
+    "title": "[Workflow] How to Build and Calibrate an AI Skill: The 'Easter Egg' Example and Guardrail Best Practices",
+    "text": "[Workflow] How to Build and Calibrate an AI Skill: The 'Easter Egg' Example and Guardrail Best Practices\n\nHow to Build and Calibrate an AI Skill: The 'Easter Egg' Example and Guardrail Best Practices    Workflow value:  85/100   Status:  active ·  Freshness:  70/100 ·  Confidence:  1.00 ·  Level:  intermediate   Categories:  Quality Control, Context & Memory, Debugging, Shipping, Skills, Multi-Agent   Original source:   r/ClaudeAI post/comment    What problem this solves   This workflow addresses two main problems: 1) How to subtly integrate pop-culture references into documents without compromising their original meaning or clarity. 2) More broadly, it provides a valuable meta-workflow for AI skill developers on how to effectively calibrate an AI skill, manage the interaction between instructions and examples in  SKILL.md , and implement robust guardrails for safety and quality control in AI agents.   Summary   This post describes the 'Easter Egg' skill, which integrates pop-culture references into documents at varying subtlety levels. Crucially, it details the development process, including a specific test for output quality, insights into calibrating skill behavior by reorganizing examples in  SKILL.md , and the implementation of comprehensive guardrails to prevent inappropriate modifications. The skill is open-source, installable via CLI, and compatible with multiple Claude-based agents.   Why it is useful   This post is highly valuable because it goes beyond merely showcasing a skill; it provides a detailed, concrete workflow for developing, testing, and calibrating AI skills. The author shares critical insights into how examples in  SKILL.md  can influence behavior more than explicit instructions, offering a practical solution (grouping examples). Furthermore, the comprehensive description of built-in guardrails for safety, quality, and review processes makes this a robust and transferable guide for anyone looking to build reliable and well-behaved AI agents.   Workflow     Install the 'Easter Egg' skill using  npx skills add DaveEuson/easter-egg-skill .   Provide a document or text to the skill for processing.   Optionally, specify a desired subtlety level by saying 'louder' or 'subtler'.   Review the skill's output and the accompanying note that details exactly what changes were made and where.   Apply the validation test: delete the added reference; if the sentence becomes empty or loses its original meaning, the reference was decorative and should not ship.   For skill developers: When calibrating a skill, carefully review how examples in  SKILL.md  might implicitly override explicit instructions; consider grouping examples by desired behavior level to improve control.   For skill developers: Implement robust guardrails to prevent the skill from making inappropriate or unsafe modifications (e.g., on sensitive topics, critical data, or existing references).     Tools / artifacts     Easter Egg skill   SKILL.md (for skill definition and examples)   npx skills add command   GitHub repository (github.com/DaveEuson/easter-egg-skill)   Anthropic's plugin directory     Validation signals     Author describes a specific 'test' for the skill's output: delete the reference, if the sentence goes empty, it's decoration and doesn't ship.   Author details a calibration process, identifying and fixing an issue where examples in  SKILL.md  contradicted instructions, leading to a change in behavior.   Implementation of explicit guardrails for quality control and safety (e.g., skipping sensitive topics, not touching deadlines/config values).   The skill returns a note showing exactly what it changed and where, enabling human review.     Cautions     The skill includes explicit guardrails to skip humor entirely on sensitive topics like layoffs, legal, and health messages.   It avoids modifying critical information such as deadlines or configuration values to prevent potential issues when pasted into tickets.   It scans for references already present in the document before adding new ones to prevent redundancy.   It returns a note showing exactly what was changed and where, ensuring nothing ships without human review.     Limitations     The primary stated goal of the skill is 'fun' rather than 'useful', which might lead some users to overlook the valuable underlying workflow insights.   Community validation is currently low, with only 1 upvote and no comments.   The author notes that 'Stealth examples are the hard part and mine could be better,' indicating ongoing refinement is needed for the skill's subtle behavior.     Rate this workflow   Upvote this post if the workflow is useful, reproducible, or worth recommending.   Downvote if it is vague, outdated, unsafe, overhyped, or not reproducible.   Reply if it worked for you, failed, is outdated, or has a better alternative.      This post was generated automatically from the workflow library database.        submitted by     /u/ClaudeAI-mod-bot     to     r/ClaudeWorkflows       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeWorkflows/comments/1wkxqtn/workflow_how_to_build_and_calibrate_an_ai_skill/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T21:11:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T21:11:18.747Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaefa79660c608403982804"
+    },
+    "message_id": "reddit_t3_1wkxqt6",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "📢 Entry Level [HIRING] a Compliance Analyst!",
+    "text": "📢 Entry Level [HIRING] a Compliance Analyst!\n\nCompany: Entry Level   Location: Robertson, Anschutz, Schneid, Crane & Partners 📍   Date Posted: September 16, 2026 📅   Level: Entry-Level 👶   Categories: #entrylevel   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=www.cyberjobshub.com&rurl=aHR0cHM6Ly93d3cuY3liZXJqb2JzaHViLmNvbS9qb2JzL2NvbXBsaWFuY2UtYW5hbHlzdC1lbnRyeS1sZXZlbC01ZWU3OWY5ZQ==    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wkxqt6/entry_level_hiring_a_compliance_analyst/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T21:11:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T21:11:21.512Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaefa79660c608403982805"
+    },
+    "message_id": "reddit_t3_1wkxqs6",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "findaleague",
+    "username": "willow3211",
+    "title": "Need someone to take over this stacked team Yahoo 12 M PPR 100$ LS",
+    "text": "Need someone to take over this stacked team Yahoo 12 M PPR 100$ LS\n\nLook for someone to take over this team, they are 0-1.   Yahoo PPR 12 man, winner takes all through league safe. Already got some guys from Reddit around 4.    QB  J. DANIELS    RB  B. ROBINSON   RB  B. HALL    WR  G. PICKENS    WR  G. WILSON    TE  D. GOEDERT    WRT  D. METCALF    K  H. MEVIS   DEF  CHIEFS   S. DIGGS    T. MCLAURIN    B. CORUM    K. MURRAY   D. SCHULTZ    T.SPEARS        submitted by     /u/willow3211     to     r/findaleague       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/findaleague/comments/1wkxqs6/need_someone_to_take_over_this_stacked_team_yahoo/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T21:11:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T21:11:21.717Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaefa79660c608403982806"
+    },
+    "message_id": "reddit_t3_1wkxqrw",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "classicliterature",
+    "username": "HorribleDepature1",
+    "title": "Is Invisible Man by Ralph Ellison the Great American Novel?",
+    "text": "Is Invisible Man by Ralph Ellison the Great American Novel?\n\nI finished this masterpiece some hours ago and the sheer force of its brilliance has held me spellbound. This is certainly a work of genius. I can't believe he only released one novel. The level of technical quality Ellison poured into the novel is so impressive. It wasn't an easy read all through but I found it very rewarding. I have never read a book like this. Certainly, one of the greatest books I have ever read. I earnestly look forward to rereading and studying it. It has so much in it.    What do you think about this masterpiece? In your opinion, what is the Great American novel?        submitted by     /u/HorribleDepature1     to     r/classicliterature       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/classicliterature/comments/1wkxqrw/is_invisible_man_by_ralph_ellison_the_great/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T21:10:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T21:11:21.924Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaefa7a660c608403982807"
+    },
+    "message_id": "reddit_t3_1wkxqre",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "Advice",
+    "username": "PuzzledDistance729",
+    "title": "How do I deal with my SILs hurtful messages, when she just gave birth?",
+    "text": "How do I deal with my SILs hurtful messages, when she just gave birth?\n\nSorry this is a long story I'll cut as much as possible. If you have questions ask. Identifying details changed.   I (f)lost my husband m(30's) almost 2 years ago. He went in to the hospital in late summer for what only should have been few days, mistakes happened, and I lost him a few months later. I still struggle a lot he was love of my life. I am pretty sure I have PTSD around hospitals beause two years prior I almost lost my aunt after a car accident due to hospital neglect. My husbands bro & SIL recently had a baby born premature. Baby is 3 weeks old now in NICU. Thats the back story.   Things were scary for a while, the baby is a premie but ok, I have been getting updates from MIL/FIL and our family chat. I just can't bring myself to go to the hospital and visit, its also restricted. I wanted to try and do something nice since for them, so I bought healthy snacks and easy to heat food up for the hospital trips they make daily. I got a thank you from BIL but SIL sent a a long text about how she is worried about me being around the baby now that its here and I seemed different. How this is a a happy time for her and her husbands family. Like I wasnt married to her BIL   It was very upsetting becuase. 1. She is acting like I'm not a safe person to be around her baby and she is concerned about it. 2. She was talking about the family like im not part of it.   I moved 45 minutes away from where my husband and I lived to get away from the memories at the same time she got pregnant. I thought moving would make me feel better but hurts to live near our memories and hurts to not be around them at the same time. It has been very hard mentally took me 6 months to go through everything and move. Some weekends I went out to the old house and only packed one box & cried. I was living in the new house with bare essentials only for a while. During this time I also switched jobs, it just a lot of change at once.   We were maybe going to get together but I had the last of the house to finish. A few days later they went to the emergency room and that was it, I went and took care of the dogs for them that day. My mom has also been having some health episodes which is hard to deal with especially when it is such a difficult time of year already. Being at big happy family events is hard without my husband. I've also been having bad dreams, which I know aren't real but upset me regardless, my dreams are messed up right now, so sleep is pretty bad.   I sent her a text back and it seems to be resolved sort of, but now I feel super self conscious about everything, If I look at her wrong, im too quiet, if I dont seem happy enough, or im having a sad day. She doesnt seem to understand that just because she is happy not everyone happy and it's not all about her and it really was disturbing things to say. She should have asked if some was bothering me before going on a disturbing path.   The problem:   SIL's birthday, the rest of the family birthdays, and the holidays are coming up. We usually do family dinners. I just dont feel comfortable going anymore. I feel too self conscious and probably will seem off. I dont want to put a burden on my in-laws, my MIL's mom recently passed and this is probably the only happy thing in a while. I have a dental procedure coming up next week so I can exaggerate the pain and get out of the next event but the rest are still coming. I am so upset and hurt she went to such a disturbing place about me instead of just the simple hey you seemed off recently everything ok. I don't even want to hold my niece now anymore because im afraid she'll say I did something or looked at her funny and she is worried. I dont want her to use my presence to not bring her to see the in-laws or put anyone in a position because of me. I love my in-laws like they are my second parents and I never want them to feel uncomfortable being around us both or lose any moment with their grandchild. I am afraid if I seem different to her one day she'll say those disturbing things about me again, Holidays & celebrations are harder without my husband its about everything we are missing together, not being upset at anyone. Thats why I didnt go to any weddings last year I didnt want to cry, be upset, and ruin someone else's big day and make it about me. It was better just to not go then put myself in an situation im uncomfortable or make a scene.   The reasons I could see things not going well is becuase she is not always self aware and likes attention. A few little things that I remember now being a few one offs below.    She intially told me the due date was my husband's death date which was not the case, maybe that was a mistake. Some medical assistance was involved, they just switched clinics and that case you usually know the due date. After my hubs passed she confessed that she asked MIL about the being favorite DIL, i just brushed it off as guilt from grief initially. No big deal at the time she felt bad when she told me. On the way home from the second funeral she kept saying how her hormones were messed up (fertility drugs) and she went on about how she didnt want BIL to touch her & he was annoying. MIL said something to her about not talking like that in front of me how would she feel if her husband were gone. The last thing another person in the family mentioned to me she wore a big white dress to a cousin's wedding last year with small blue flowers, I skipped the event so I can't verify, the wedding album isn't posted, and im not asking.    None of these stood out to me before because we all are human and say things we dont mean in bad times or get caught up in emotions and you still love your family. Also, I know people dont understand the level of grief until it happens to you. What she said could also be part of PPD. But now I am concerned being around her. Is SIL trying to push me out of the family? This is situation is confusing, I am thinking about stepping back and only seeing the in-laws seperate for a while. I dont want to hurt them or ruin the experience of getting to know their first and probably only grandchild    I came up with a few ideas, Renting somewhere else for a few months is an option I work remote. I could go a few hours away to just not be around. Staying with family is an also option, Or do I just go to everything and pretend like she didn't say that to me. But I just dont feel comfortable around her right now and I'm sure people will pick up on that, also dont want to be anywhere I could end up alone with her. I am hurt and not good at hiding feelings anymore obviously, I cry at everything since my husband passed. I sometimes shut down when upset. Do I just tell the in-laws what she said so they are aware?        So What would you do? Is there something I am not piecing together. I'm not at my best these days?        submitted by     /u/PuzzledDistance729     to     r/Advice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Advice/comments/1wkxqre/how_do_i_deal_with_my_sils_hurtful_messages_when/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T21:10:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T21:11:22.129Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaefa7a660c608403982808"
+    },
+    "message_id": "reddit_t3_1wkxqr0",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "pictishheritage",
+    "username": "DifficultCase3262",
+    "title": "From Incised Granite to Christian Cross-Slabs: Decoding Class I, Class II, and Class III Pictish Stones",
+    "text": "From Incised Granite to Christian Cross-Slabs: Decoding Class I, Class II, and Class III Pictish Stones\n\nWhen traveling through the river valleys and ancient churchyards of Scotland—from Deeside and Strathbogie down to Perthshire—one of the most striking legacies left by the Picts is their carved stonework.   To make sense of these monuments, 19th-century antiquarians J. Romilly Allen and Joseph Anderson created a classification system based on carving technique, artwork, and religious iconography. This three-part framework remains the standard way archaeologists divide Pictish sculpture today.   Here is a breakdown of the differences between  Class I ,  Class II , and  Class III  Pictish stones, and what they reveal about the evolution of Pictish society.   1. Class I Stones: The Pure, Un-Christianized Symbols (c. 5th–7th Centuries AD)   Class I stones are the earliest, rawest expression of Pictish visual language.      Stone Form:  Unworked, naturally shaped boulders or rough granite slabs. The stone was not dressed, squared, or shaped before carving.    Carving Technique:  Incised lines. The symbols are cut directly into the weathered surface of the rock using sharp iron chisels or punch tools.    Iconography:  Purely native Pictish symbols. You will  never  find a Christian cross on a Class I stone. Instead, they feature geometric motifs (such as the  Crescent and V-Rod  or  Double Disc and Z-Rod ), high-status personal items ( Mirror and Comb ), and abstract animals ( The Pictish Beast ,  Salmon ,  Bull , or  Eagle ).    Landscape Context:  Found standing in open fields, near ancient river crossings, guarding royal hall enclosures (such as the  Craw Stane  or  Rhynie Man  at Rhynie), or marking elite burial cairns.    Purpose:  Served as territorial markers, boundary stones, personal memorials, or visual declarations of clan alliances and lineage.     2. Class II Stones: The Great Christian Synthesis (c. 8th–9th Centuries AD)   Class II stones represent a monumental cultural shift: the blending of native Pictish artistic traditions with Insular Christian art following the conversion of the Pictish kingdoms.      Stone Form:  Carefully dressed, shaped, and slab-like monoliths. The stone masons actively carved and squared the edges of the slab before adding artwork.    Carving Technique:  Relief carving. Instead of simple incised lines, stone carvers cut away the background stone so that the figures, crosses, and symbols stand out in raised, three-dimensional relief.    Iconography:  A fusion of pagan/native and Christian imagery. One face of the slab is dominated by a large, ornate  Christian Cross  filled with intricate knotwork, key-patterns, or interlaced beasts. The reverse side (or surrounding panels) retains traditional Class I Pictish symbols, alongside dynamic scenes of mounted warriors, stag hunts, biblical stories (like David and Goliath), and monastic figures.    Famous Examples:   The Maiden Stone  near Bennachie, the  Aberlemno Churchyard Stone , and the  Hilton of Cadboll Stone .    Purpose:  Erected by elite Christianised kings and patrons to serve as public monuments of faith, political power, and Christianised royal majesty.     3. Class III Stones: The Fully Christianised Era (c. 9th–10th Centuries AD)   Class III stones mark the final phase of Pictish sculpture, coinciding with the political merger of the Pictish and Gaelic realms into the Kingdom of Alba.      Stone Form:  Dressed cross-slabs, free-standing high crosses, recumbent grave markers, and stone sarcophagi.    Carving Technique:  Relief carving, often featuring deep, complex interlace, high-relief figures, and master-level stonemasonry.    Iconography:   The ancient Pictish symbols disappear entirely.  There are no V-rods, Z-rods, mirrors, combs, or Pictish Beasts. The imagery is purely Christian: elaborate relief crosses, angels, saints, biblical scenes, and intricate Insular artwork (similar to the Book of Kells or High Crosses of Ireland).    Famous Examples:  The  Dupplin Cross  (associated with the southern court at Forteviot), the  St Andrews Sarcophagus , and various recumbent grave slabs across Perthshire and Angus.    Purpose:  Functioned exclusively within Christian ecclesiastical contexts—as altar surroundings, royal burial monuments, and churchyard crosses.     Quick Comparison Guide         Feature     Class I     Class II     Class III            Approximate Date    5th – 7th Century AD   8th – 9th Century AD   9th – 10th Century AD        Stone Condition    Rough, unworked natural boulder   Dressed, shaped flat slab   Dressed slab, free-standing cross, sarcophagus        Carving Style    Incised lines   Raised relief carving   High relief & free-standing sculpture        Christian Cross?     No     Yes  (On one side of the slab)    Yes  (Dominates the entire monument)        Pictish Symbols?     Yes  (Pure symbol canon)    Yes  (Paired alongside the cross)    No  (Symbols completely absent)        Key Motif    Geometric rods, animals, mirror/comb   Cross + Symbols + Hunting/Warriors   Biblical scenes, angels, interlace, bosses        What the Transition Tells Us   The evolution from Class I to Class III is a visual timeline of Pictland’s cultural transformation:      Class I  shows us a confident, non-Christian tribal society using a sophisticated abstract code to mark territory and lineage.    Class II  captures the golden age of synthesis—where Pictish rulers adopted Christianity without abandoning their ancestral visual heritage.    Class III  reflects the complete integration of Pictland into the broader Gaelic-Christian world of medieval Scotland.     ❓ Discussion Questions for the Sub     Which style of stone do you find visually most appealing—the raw simplicity of Class I, or the complex relief carving of Class II?   Why do you think the traditional Pictish symbols were completely abandoned during the Class III period?   What is your favorite individual Pictish stone in Scotland?         submitted by     /u/DifficultCase3262     to     r/pictishheritage       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pictishheritage/comments/1wkxqr0/from_incised_granite_to_christian_crossslabs/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T21:10:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T21:11:22.338Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaefa7a660c60840398280a"
+    },
+    "message_id": "reddit_t3_1wkxqpy",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "Chicagoweddings",
+    "username": "bubblesthebride",
+    "title": "I've been shooting since 2012 and I'm planning my own wedding now. Here's what I'd actually ask a photographer before booking.",
+    "text": "I've been shooting since 2012 and I'm planning my own wedding now. Here's what I'd actually ask a photographer before booking.\n\nbeing on the other side of this has been genuinely humbling. I've been behind the camera at weddings since 2012 and I still fumbled my way through my own search, so here's the list I wish I'd walked in with.    ask to see one full gallery, start to finish.  not a highlight reel, not the instagram grid. a complete wedding from getting ready through the last dance. anyone can put together twenty incredible frames. what you actually want to know is whether hour seven looks as good as hour one, because that's when the light is gone and everyone is tired and the real skill shows.    ask who is physically shooting your day.  some studios book under one name and send whoever is available. that's not automatically bad but you should know before, not after. ask to see that specific person's work.    ask what happens if they wake up sick.  a good answer is a named network of people they'd call and have worked with before. a vague answer is a real gap.    ask about their gear redundancy.  specifically, two camera bodies and cards that write to two slots at once. this sounds nerdy but a single card failing is the one disaster you cannot fix afterward.    ask how they handle your reception light.  receptions are dark, and how someone deals with that is the single biggest difference in how your photos will feel. ask to see reception images specifically, not just golden hour portraits.    ask about the originals.  how long do they keep unedited files, and can you get them re-delivered if your hard drive dies in three years.    ask how they run family photos.  the ones who ask you for a list in advance and want a family member designated to round people up are the ones who have done this a lot. it's also the part of the day most likely to eat your cocktail hour.   the thing nobody tells you is that you're not really hiring a style, you're hiring how someone behaves for ten hours in a room with your family. the photos follow from that.   happy to answer anything if you're mid search.       submitted by     /u/bubblesthebride     to     r/Chicagoweddings       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Chicagoweddings/comments/1wkxqpy/ive_been_shooting_since_2012_and_im_planning_my/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T21:10:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T21:11:22.742Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaefa7a660c60840398280b"
+    },
+    "message_id": "reddit_t3_1wkxqpn",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "BankBuster",
+    "username": "Scifinerdster",
+    "title": "Can You Crack the Code? Puzzle by Scifinerdster",
+    "text": "Can You Crack the Code? Puzzle by Scifinerdster\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Scifinerdster     to     r/BankBuster       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BankBuster/comments/1wkxqpn/can_you_crack_the_code_puzzle_by_scifinerdster/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T21:10:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T21:11:22.945Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaefa7b660c60840398280c"
+    },
+    "message_id": "reddit_t3_1wkxqoz",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "azdiamondbacks",
+    "username": "Snakebotv2",
+    "title": "GAME THREAD: Yankees (89-64) @ D-backs (80-74) - 5:10 PM",
+    "text": "GAME THREAD: Yankees (89-64) @ D-backs (80-74) - 5:10 PM\n\nYankees (89-64) @ D-backs (80-74)    First Pitch : 5:10 PM at Chase Field        Team   Starter   TV   Radio           Yankees     Cam Schlittler  (14-6, 1.95 ERA)              D-backs     Brandon Pfaadt  (7-3, 3.77 ERA)                   MLB   Fangraphs   Baseball Savant   Reddit Stream   IRC Chat           Gameday     Game Graph     Strikezone Map     Live Comments     Libera: ##baseball              Line Score - Pre-Game            1   2   3   4   5   6   7   8   9   R   H   E   LOB          NYY                               0     0     0     -        AZ                               0     0     0     -         Box Score    Posted at 2:10 PM.   Updates start at game time.       Remember to  sort by new  to keep up!       submitted by     /u/Snakebotv2     to     r/azdiamondbacks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/azdiamondbacks/comments/1wkxqoz/game_thread_yankees_8964_dbacks_8074_510_pm/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T21:10:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T21:11:23.146Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaefa7b660c60840398280d"
+    },
+    "message_id": "reddit_t3_1wkxqot",
+    "topic_key": "can you find me top posts on reddit which has over 10k views per month from ai tech industry",
+    "search_keyword": "artificial intelligence",
+    "platform": "reddit",
+    "subreddit": "Vent",
+    "username": "naotoxic",
+    "title": "I’m scared of the future",
+    "text": "I’m scared of the future\n\nIn the past few days, I had this weird feeling. I cannot stop thinking about the future. Things like artificial intelligence and brain chips are scaring we, what if these will be so necessary like smartphones? The global warming is also scary       submitted by     /u/naotoxic     to     r/Vent       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Vent/comments/1wkxqot/im_scared_of_the_future/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T21:10:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T21:11:23.346Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaefa7b660c60840398280e"
+    },
+    "message_id": "reddit_t3_1wkxqop",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "blender",
+    "username": "GoriceXI",
+    "title": "Trying to get my Linux machine to recognize my GPU in Cycles",
+    "text": "Trying to get my Linux machine to recognize my GPU in Cycles\n\nHey guys, I new to this subreddit,   I've been doing some 3D art in Blender for the past few weeks. Everything runs great, but I'd like the Cycles renderer to recognize my GPU so I can speed up render times. Thing is, I use ubuntu linux, so there are issues with trying to find the right drivers and installing them correctly. I've already done several installations, with no effect. I'm coming here because I don't see any other solutions.   First off, my system:    https://preview.redd.it/nesnrwfpijqh1.png?width=428&format=png&auto=webp&s=00dc3677e6bf5cecdfb95b9c6ef58891ba81f947    I have a Radeon RX 7600. So, the first thing I went to the AMD website and downloaded this file:   amdgpu-install_31.50.315000-1_all.deb   It was listed as being for 'ubuntu 24.04' systems.   But when I ran 'apt install ./amdgpu-install_31.50.315000-1_all.deb', I get this message,    https://preview.redd.it/7625pupmjjqh1.png?width=1808&format=png&auto=webp&s=dce76fca403bf01f99d93fceb19ff104dd4144e0    So, this was frustrating. There was nothing I could do to actually run the installer file I had downloaded from the website.   Elsewhere on the internet I learned about the 'amdgpu-install --usecase' command, so I ran both:   amdgpu-install --usecase=graphics,hip -y   amdgpu-install --usecase=graphics,rocm   Many files were downloaded and installed, but Blender Cycles still didn't recognize my gpu.   The exact wording of the error message in Blender is this:     https://preview.redd.it/3eqh2drukjqh1.png?width=234&format=png&auto=webp&s=50034686c5ba4330ab838ffc385f8518679d2637    So after downloading and installing both hip and rocm with amdgpu-install, I have neither of these drivers. Perhaps if I was actually able to run the installer program I downloaded from the AMD website, I might be able to solve this. But I've also heard this may break your system and you should always go through the standard repos.   This isn't really a huge deal, since I can do 3D modeling reasonable well in my current state, it's just odd that Cycles is slowed down because it's not recognizing my GPU. If anyone has any suggestions, I'd greatly appreciate it!        submitted by     /u/GoriceXI     to     r/blender       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/blender/comments/1wkxqop/trying_to_get_my_linux_machine_to_recognize_my/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T21:10:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T21:11:23.554Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaefab2660c60840398280f"
+    },
+    "message_id": "reddit_t3_1wkxrqn",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "Minecraftbuilds",
+    "username": "MouseGraft",
+    "title": "San Felipe de Neri Church, Albuquerque, New Mexico 1 : 1.5 scale",
+    "text": "San Felipe de Neri Church, Albuquerque, New Mexico 1 : 1.5 scale\n\nI am relatively new to Minecraft (my kid started playing and I wanted to see what it was. Next thing I know I have strong feelings about the scale of architectural models) and am brand new to sharing my efforts.   Built in 1793, San Felipe de Neri is one of the oldest surviving buildings in Albuquerque. It was built to replace the original Franciscan mission, which had collapsed.   The bell towers and pitched roofs were added during the mid-19th century, but the original thick adobe walls and vigas remain, resulting in the current eclectic mix of colonial Spanish and neo-Gothic elements.   The one-story building with papel picado banners hanging on the front (images 11 &12) was Albuquerque's first public school, built by Jesuits in 1878.   In photos 5 & 6 you can see a large cottonwood stump with the Guadelupe carved into it. The tree was in the back parking lot until it died.   I am working on the rest of the Old Town Plaza, and more pics of this build and also of some other ABQ builds (Historic Route 66 near UNM) are at  Planet Minecraft .   The main challenge with recreating American Southwest architecture in my opinion is 1) the fairly limited beige slab choice and 2) the fact that in real life it's very blocky, so it's hard to add the details that make MC builds look cool.   Thanks for reading!       submitted by     /u/MouseGraft     to     r/Minecraftbuilds       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Minecraftbuilds/comments/1wkxrqn/san_felipe_de_neri_church_albuquerque_new_mexico/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T21:12:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T21:12:18.628Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaefab2660c608403982810"
+    },
+    "message_id": "reddit_t3_1wkxrpv",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "zurich",
+    "username": "LethalPuppy",
+    "title": "bike stolen from stadelhofen",
+    "text": "bike stolen from stadelhofen\n\nhey everyone, someone had the bright idea to steal my locked bike from the stadelhofen train station today. i'm very grateful for any tips, so if you've seen anything or you know a spot where stolen bikes tend to end up, please let me know!   i depend on this bike to go to work/school and i ride it during my free time, and i had just fitted new tires the other day. i'm a poor student and i can't really afford a new bike. even a cheap old city bike wouldn't work for me as i have to do the steep climb to witikon every day as part of my commute.   the new tires i just put on the bike are all black continental GP5000 without the tan sidewall you can see in the picture. other than that, it should look exactly like the photo minus the top tupe bag and bidons. there are these semi transparent stickers on the frame that protect it from my frame bag i use on my bikepacking trips. there's also a theft insurance sticker at the bottom of the top tube that expired one year after purchase (i bought this bike in september 2024).       submitted by     /u/LethalPuppy     to     r/zurich       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/zurich/comments/1wkxrpv/bike_stolen_from_stadelhofen/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T21:12:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T21:12:18.832Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaefab3660c608403982811"
+    },
+    "message_id": "reddit_t3_1wkxrpf",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "paydaytheheist",
+    "username": "Dense-Bison7629",
+    "title": "Anybody else kinda disappointed with the new changes coming to Payday 3?",
+    "text": "Anybody else kinda disappointed with the new changes coming to Payday 3?\n\nEver since Operation Medic Bag, Payday 3 has felt less and less like Payday: The Heist. While Payday 2 is fun, I was really excited when Payday 3 was supposed to be more of a return to the series' roots. And at launch, the game was, in my opinion, a great evolution of PDTH's formula (obviously except for the glaring issues at launch)   But with the ammo tweaks, Armor 2.0, and now with weapon perks, the game is starting to feel like that fantasy power sim rather than a grounded heisting game   While PDTH is unrealistic, it's not too fantastical that you can't suspend your disbelief. Events like Panic Room and the First World Bank are grounded, they  could  happen. But regenerating your own flesh via the bullets of an SMG is just so unrealistic that it just reminds me that I am playing a video game   My main worry is that PD3 will become just like PD2, and any sense of a grounded, real-ish reality will be gone       submitted by     /u/Dense-Bison7629     to     r/paydaytheheist       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/paydaytheheist/comments/1wkxrpf/anybody_else_kinda_disappointed_with_the_new/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T21:12:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T21:12:19.038Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaefab3660c608403982812"
+    },
+    "message_id": "reddit_t3_1wkxrpb",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "travel",
+    "username": "analognomaddotnet",
+    "title": "Issues with signing up on Didi app - \"too many attempts\"",
+    "text": "Issues with signing up on Didi app - \"too many attempts\"\n\nHi all, I am currently in Oaxaca Ciudad, in Mexico, and am attempting to sign up for Didi for the first time. I'm having an issue with the step where it asks me to enter my mobile number - even though I've never had a Didi account before, and already on my first try, it rejects my number by saying 'too many attempts - try again later'. Of course, when I try again later, it's the same thing.   I've deleted and re-installed the app and the same thing happens. I have a US phone number that I'm using as well. iOS 18. Anyone have any advice? especially since I'm in Oaxaca, where Didi is used to hail official taxis. Thanks in advance!       submitted by     /u/analognomaddotnet     to     r/travel       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/travel/comments/1wkxrpb/issues_with_signing_up_on_didi_app_too_many/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T21:12:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T21:12:19.237Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaefab3660c608403982813"
+    },
+    "message_id": "reddit_t3_1wkxrp8",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "mangaindia",
+    "username": "Imaginary_Oven_2788",
+    "title": "Selling original manga TOKYO GHOUL",
+    "text": "Selling original manga TOKYO GHOUL\n\nTokyo ghoul boxset 1-14   40%off mrp   Mrp-11999   Selling price-7000   Location -Bhubaneswar   Shipping pan India       submitted by     /u/Imaginary_Oven_2788     to     r/mangaindia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mangaindia/comments/1wkxrp8/selling_original_manga_tokyo_ghoul/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T21:12:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T21:12:19.436Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaefab3660c608403982814"
+    },
+    "message_id": "reddit_t3_1wkxroq",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "funkoswap",
+    "username": "Stryker412",
+    "title": "[US-NJ] [H] Marvel, LOTR, Star Wars, and more! [W] Paypal",
+    "text": "[US-NJ] [H] Marvel, LOTR, Star Wars, and more! [W] Paypal\n\nClearing out my collection. Please ask all questions before purchase. PayPal G&S only. Shipping is extra.        Franchise   Name   Pop #   Price          Star Wars   A Lesson in the Force [Galactic Convention]   382   $20       Star Wars   Anakin Skywalker (The Clone Wars)   271   $20       Star Wars   Cad Bane   580   $5       Star Wars   Cara Dune   327   $5       Star Wars   Chewbacca   195   $5       Star Wars   Darth Maul   450   $10       Star Wars   Darth Vader   428   $5       Star Wars   Darth Vader   343   $10       Star Wars   Darth Vader vs. Luke Skywalker   612   $15       Star Wars   Emperor Palpatine   614   $5       Star Wars   Grand Admiral Thrawn   683   $10       Star Wars   Han Solo with Tauntaun   125   $15       Star Wars   Hondo Ohnaka   302   $5       Star Wars   Luke Skywalker   501   $5       Star Wars   Qui-Gon Jinn (Tatooine)   422   $5       Star Wars   R2-D2   625   $20       Star Wars   Rey (box dmg)   307   $5       Star Wars   The Child   368   $5       Star Wars   The Mandalorian   345   $5       Star Wars   The Mandalorian with The Child   390   $10       Star Wars   Wampa   372   $15       Marvel   Ant-Man   340   $5       Marvel   Black Panther   130   $5       Marvel   Captain America   573   $5       Marvel   Captain Marvel   425   $5       Marvel   Dancing Groot   65   $5       Marvel   Doctor Strange   161   $10       Marvel   Iron Man [I am Iron Man]   580   $10       Marvel   Spider-Gwen   146   $10       Marvel   Spider-Man (Upgraded Suit)   470   $5       Marvel   Star-Lord   47   $5       Lord of the Rings   Aragorn   531   $15       Lord of the Rings   Boromir   630   $25       Lord of the Rings   Frodo Baggins   444   $10       Lord of the Rings   Gandalf   443   $15       Lord of the Rings   Gimli   629   $10       Lord of the Rings   Legolas   628   $5       Lord of the Rings   Merry Brandybuck   528   $50       Lord of the Rings   Pippin Took   530   $30       Lord of the Rings   Samwise Gamgee   445   $25       Voltron   Allura   472   $10       Voltron   Hunk   477   $15       Voltron   Keith   474   $50       Voltron   Lance   475   $60       Voltron   Pidge   476   $15       Voltron   Shiro   473   $25       Voltron   Voltron   471   $15       Voltron Lot         $165       DC   Clark Kent   625   $70       WWE   D-Generation X   N/A   $10       WWE   The Rock   78   $10       Transformers   Optimus Prime (QTY 2)   120   $15/ea        Photos:  https://imgur.com/a/reddit-funko-sale-wDQiRil        submitted by     /u/Stryker412     to     r/funkoswap       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/funkoswap/comments/1wkxroq/usnj_h_marvel_lotr_star_wars_and_more_w_paypal/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {

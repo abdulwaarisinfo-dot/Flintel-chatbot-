@@ -1,0 +1,416 @@
+    "username": "Independent_Quiet_27",
+    "title": "how do i come back from this",
+    "text": "how do i come back from this\n\nhi, i’m sorry if i don’t write this properly. i’m not very good at this and i believe this to be my first ever reddit post. this is sort of last resort for me right now   i was unschooled from birth. i have seen psychiatrists and have ocd, very potentially autism and/or adhd (though they also mentioned that it might have been my upbringing that is causing the autism/adhd traits.)   right now i am 22, living at home, unable to get a job, or be in education. this is due to a big lack in social skills, big anxiety, a lot of other issues i cant put into words, severe emetophobia, potentially developing agoraphobia. and also just a severe lack of motivation and discipline. it is mostly my emetophobia which is a big big problem. my ocd makes this 10x worse, too.   i know that i should be in therapy, and im awaiting it. but i just feel like ive been stuck in time, i believe i have a cozy video game addiction, and i have no motivation to do anything every day. i severely lack skills, from maths and english to every other subject. i do not know much of anything, and i do not know how to learn anything.   i do love to learn, but i just don’t know what to learn or where to even start.   i also struggle with exercise and daily routine, i would love to have a productive routine and stick to it, but again i just don’t know where to even start. i do try, but then it seems like i just give up.   could anybody give me any advice? please help me       submitted by     /u/Independent_Quiet_27     to     r/HomeschoolRecovery       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HomeschoolRecovery/comments/1wkpsyb/how_do_i_come_back_from_this/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:55:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:56:13.332Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeb09d660c608403981142"
+    },
+    "message_id": "reddit_t3_1wkpsxs",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "ObsideAI",
+    "username": "Obside_AI",
+    "title": "I let Jev AI trade every 30 seconds for more than 24h. Results after ~730 trades so far.",
+    "text": "I let Jev AI trade every 30 seconds for more than 24h. Results after ~730 trades so far.\n\nI built a futures scalping bot that uses Jev for decision making. The first results are rough, so I wanted to share the mechanics and the numbers.   The bot started with $100,000 in simulated capital. After roughly 24 hours:   - 731 trades   - About $3,150 lost, or 3.15%   - Roughly $1,650 of that loss come from trading fees   - Only 21% of trades profitable after fees   Subtracting that fee line still leaves roughly $1,500 in losses. Trading costs are a major problem, but they don’t explain the entire result.   For context, Jev is a \"System One\" model. It reads a structured state and returns probabilities over predefined answers without generating text. One recorded decision took 779 milliseconds.     The experiment (with guardrails I implemented)    Every 30 seconds, the bot asks Jev what to do on three CME micro futures: MNQ (Nasdaq), MBT (Bitcoin), and MGC (Gold). The code then executes the selected actions.   Here’s the context it receives:   - Candle history: the last 30 one-minute candles, 12 five-minute candles, and 8 fifteen-minute candles. The current one-minute candle is also included in the data sent.   - Indicators: EMA 9/21, RSI 7/14, ATR 14, a 60-minute VWAP, Bollinger %B and width, MACD histogram, relative volume, returns over 1/5/15/60 minutes, realized volatility, and the price’s location within the last hour’s range.   - Trading costs: commission, exchange fees, slippage, and the round-trip cost in ticks.   - Current trade status: direction, entry, unrealised P&L in ticks and dollars, stop status, and best/worst excursion since the trade was opened.   - Account state: equity, cash, open positions, and the last five closed scalps.   When flat, Jev chooses \"long\", \"short\", or \"wait\". The question is whether a move clearly larger than the round-trip cost is likely over the next few minutes.   An entry requires the chosen action’s probability to exceed 50%. Simply ranking long above short and wait isn’t enough. Waiting is also recorded as a decision.   When already in a position, it chooses \"close\", \"break-even\", or \"hold\".   There’s no probability threshold for position management. The highest-probability action is selected.    - The code closes a position if its loss exceeds $500, regardless of Jev’s answer.   - The simulation uses NinjaTrader’s monthly-plan fee structure: $0.29 commission per micro contract per side, plus exchange and NFA fees.     Findings so far    What interests me here is that the model already knows the trading costs and is explicitly asked whether a move is worth taking given those costs. Despite that, the trades it took still generated substantial turnover and lost money.   The response speed (637 ms between to render a decision) makes frequent decisions practical, but so far I haven’t established that those decisions provide a profitable edge.   One day is far too short to draw a broad conclusion about Jev. The next useful tests would be longer intervals between decisions, stricter entry requirements, and checking whether higher action probabilities actually correspond to better outcomes after costs.   You can see the whole experiment here:  https://app.obside.com/labs/ai-scalping     TLDR:   I built a scalping bot that uses Jev and give it a $100k paper account. It's making decisions every 30 seconds on 3 micro futures. Roughly 24 hours later: 731 trades, $3,150 lost (-3.15%), including $1,650 in fees. Even without those fees, we’re still down $1,500.  The model knows the trading costs and responds in under a second. So far, it’s very efficient at generating commissions. Finding a profitable edge will take more work. Too early for broad conclusions, but speed alone clearly isn’t enough.   I'll keep you posted, thanks for reading!       submitted by     /u/Obside_AI     to     r/ObsideAI       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ObsideAI/comments/1wkpsxs/i_let_jev_ai_trade_every_30_seconds_for_more_than/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:55:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:56:13.537Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeb09d660c608403981143"
+    },
+    "message_id": "reddit_t3_1wkpsxg",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PalmReading",
+    "username": "Boyle2376",
+    "title": "55M, right hand dominant.",
+    "text": "55M, right hand dominant.\n\nRegarding buying new house...       submitted by     /u/Boyle2376     to     r/PalmReading       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PalmReading/comments/1wkpsxg/55m_right_hand_dominant/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:55:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:56:13.742Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeb09d660c608403981144"
+    },
+    "message_id": "reddit_t3_1wkpsxe",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "glutenfreepunishment",
+    "title": "Visit glutenfreepunishment's farm!",
+    "text": "Visit glutenfreepunishment's farm!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/glutenfreepunishment     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wkpsxe/visit_glutenfreepunishments_farm/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:55:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:56:13.941Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeb09e660c608403981145"
+    },
+    "message_id": "reddit_t3_1wkpsx9",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "hyderabad_telugu",
+    "username": "Top-Association-7266",
+    "title": "Looking for my Girl from Telangana or Andhra Pradesh.",
+    "text": "Looking for my Girl from Telangana or Andhra Pradesh.\n\nLooking for my Girl from Telangana or Andhra Pradesh.   Im 29M from Hyderabad - Working HR Professional in Banking Industry also Building a passive income.   I’m a 29-year-old guy from Hyderabad, working in HR in the banking sector. I’m an easy-going, ambitious person who enjoys good conversations, travelling, fitness, and spending time with close friends and family.   A few things about me:   • 5.4Ft with 70KG BW  • Gym & fitness enthusiast  • Love travelling and exploring new places  • Good conversations over coffee > forced small talk  • Ambivert — social when comfortable, peaceful when needed  • Family-oriented and value loyalty, respect and consistency   If caste really matters - @ Munnurkapu   I’m here hoping to meet someone who is genuine, emotionally mature and interested in building a meaningful connection. Not looking to rush anything — happy to start with conversations, get to know each other and see where things naturally go.   If you’re also looking for something genuine, feel free to DM me. 😊       submitted by     /u/Top-Association-7266     to     r/hyderabad_telugu       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hyderabad_telugu/comments/1wkpsx9/looking_for_my_girl_from_telangana_or_andhra/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:55:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:56:14.141Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeb09e660c608403981146"
+    },
+    "message_id": "reddit_t3_1wkpsx3",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "TarotReadersOfReddit",
+    "username": "persephone_c",
+    "title": "Offering yes/no readings ✨",
+    "text": "Offering yes/no readings ✨\n\nHi everyone, I am offering a single card pull yes/no reading. If you have a question that can be answered with a yes/no, put it in the comments and I will get back to you right there.  If you do end up resonating with the message (or not), let me know and I would much appreciate it.  Thank you for letting me read for you!   Please NO PRIVATE DMS, they are very hard to keep track of for these shorter reads and I will end up not responding there anyways.  I do not need your initials to do a read for you, so don’t feel compelled to do that   Please be patient as I get back to you.   I want to emphasis these readings are for entertainment purposes only.        submitted by     /u/persephone_c     to     r/TarotReadersOfReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TarotReadersOfReddit/comments/1wkpsx3/offering_yesno_readings/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:55:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:56:14.341Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeb09e660c608403981147"
+    },
+    "message_id": "reddit_t3_1wkpswy",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "beercash",
+    "username": "zion1994",
+    "title": "Pet blog has been paying for my house for 6 months now",
+    "text": "Pet blog has been paying for my house for 6 months now\n\nok so this is a weird one but bear with me   i have a pet blog. i don't own a pet. never have. probably never will as i travel too much. and yet every month amazon sends me enough to cover rent because people on the internet are buying stuff for their dogs and cats through my site.   bought my pet blog a few months ago from a marketplace called NicheBlogZone for $199. came already built, articles already up, amazon links already in there. i spent one afternoon doing interlinking basically just connecting related posts to each other so search engines understand the site structure and then closed my laptop and genuinely forgot about it for weeks.   here's what that's looked like:     march: $710   april: $995   may: $1,461   june: $1,647   july: $1,461   august so far: $1,545 (amazon pays 2 months delayed so this is june's money landing now)     march scared me. went from nearly $1k in february down to $710 and i was convinced something had broken. checked everything, found nothing wrong, did nothing. it just came back the next month on its own.   pet people spend insane amounts on their animals btw. like i knew this intellectually but seeing the commission data is something else. dog food subscriptions, orthopedic beds, grooming kits, vet supplements. and because of the 24 hour cookie i get a cut of everything in their cart not just whatever article they landed on.   i do literally nothing to maintain this. no new posts, no ads, no instagram for pets i don't have. i just own the thing and amazon does its thing.   my landlord has been getting paid every month and has no idea a pet blog is behind it. honestly sometimes i forget too until the deposit shows up.   anyone else running a niche they have zero personal connection to? curious if the detachment makes it easier or harder to care about growing it.    https://preview.redd.it/iwidnppg1iqh1.jpg?width=1080&format=pjpg&auto=webp&s=13aee4d1865cb26f8784163e87c895707eac322d        submitted by     /u/zion1994     to     r/beercash       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/beercash/comments/1wkpswy/pet_blog_has_been_paying_for_my_house_for_6/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:55:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:56:14.541Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeb09e660c608403981149"
+    },
+    "message_id": "reddit_t3_1wkpswp",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FitTheWord",
+    "username": "ConsistentTraffic90",
+    "title": "Rank superheros (created by u/ConsistentTraffic90)",
+    "text": "Rank superheros (created by u/ConsistentTraffic90)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/ConsistentTraffic90     to     r/FitTheWord       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FitTheWord/comments/1wkpswp/rank_superheros_created_by_uconsistenttraffic90/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:55:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:56:14.940Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeb09f660c60840398114a"
+    },
+    "message_id": "reddit_t3_1wkpswk",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MapBasedPolls",
+    "username": "Main-Forever-4814",
+    "title": "Does your country have convenience stores?",
+    "text": "Does your country have convenience stores?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Main-Forever-4814     to     r/MapBasedPolls       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MapBasedPolls/comments/1wkpswk/does_your_country_have_convenience_stores/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:55:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:56:15.141Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeb0b6aeeb96c1c63b9eb4"
+    },
+    "message_id": "reddit_t3_1wkptc0",
+    "topic_key": "translator",
+    "search_keyword": "translator",
+    "platform": "reddit",
+    "subreddit": "HairTransplants",
+    "username": "Tyrone493",
+    "title": "My experience with Now Hair Time & Dr. Deniz – Istanbul 🇹🇷",
+    "text": "My experience with Now Hair Time & Dr. Deniz – Istanbul 🇹🇷\n\nJust wanted to share my experience with Now Hair Time in Istanbul as I’ve just had my hair transplant done.  Honestly, so far I can’t fault the staff. Everyone at Now Hair Time has been really nice and welcoming from the minute I arrived. They make you feel comfortable and treat you really well.  The translators were honestly amazing as well. They were with me throughout and explained everything properly whenever I had questions. Being in Turkey and not speaking the language, that made the whole experience a lot easier.   Dr Deniz and his team did my procedure , and I’m really happy with how the hairline looks at the moment. Obviously, I know it’s way too early to judge the final result, so I’ll have to wait and see how everything grows over the next few months.  The procedure itself went well. The worst part for me so far has probably been the itching 😂 and having to be really careful with the grafts.  I’m only a few days post-op, so I’m not going to pretend I know what the final result will look like. I’ll keep updating this post as the months go by and put some pictures up so people can see the progress.  But yeah,  so far I’m really happy with Now Hair Time.  The staff have been amazing, everyone has been so welcoming, and the translators deserve a special mention because they’ve been brilliant.  Hopefully I’ll have a good result to show you all in a few months 🤞       submitted by     /u/Tyrone493     to     r/HairTransplants       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HairTransplants/comments/1wkptc0/my_experience_with_now_hair_time_dr_deniz_istanbul/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:56:18Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:56:38.612Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaeb0b6aeeb96c1c63b9eb5"
+    },
+    "message_id": "reddit_t3_1wkptb1",
+    "topic_key": "dentist",
+    "search_keyword": "dentist",
+    "platform": "reddit",
+    "subreddit": "Invisalign",
+    "username": "dayydrm",
+    "title": "Bite not biting",
+    "text": "Bite not biting\n\nMy Invisalign plan is 89 trays and I’m currently on tray 62 however, I have been stuck at tray 62 for 3 months now and my trays are wrecked. As I progress through my trays the bites on both sides begin to have bigger and bigger gaps. So the dentist decided to use 4 rubber bands to the teeth to meet each other again. Is it normal for it to progress this slow? I’m so frustrated cause I’m currently on the steps in which there’s gap in my teeth and it does not good visually.       submitted by     /u/dayydrm     to     r/Invisalign       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Invisalign/comments/1wkptb1/bite_not_biting/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:56:17Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:56:38.949Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaeb0d7660c60840398114b"
+    },
+    "message_id": "reddit_t3_1wkptx0",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "UberEatsDrivers",
+    "username": "keredat899",
+    "title": "How do I get insurance cover to be an Uber eats or Deliveroo driver?",
+    "text": "How do I get insurance cover to be an Uber eats or Deliveroo driver?\n\nSo I’m from the UK currently signing up to be a driver for Uber (Uber eats to be specific but eventually will go to the taxi service) and currently Deliveroo and Amazon Flex - using a car. These companies will only accept if your motor insurance covers delivering and/or travel with paying passengers.   So my predicament is that I am going to be using my dad’s car, where I’m a named driver. I live in the property and the car stays on the driveway. If it’s worth it, then I’ll end up buying the car from my dad but right now it’s under his name. The insurance is AXA, and covered for social, domestic & pleasure and it’s fully comprehensive. Changing it to social & business still doesn’t cover delivery and paying passengers. Also to note, I’ve had my full UK driving license for over 10 years, and it’s spotless - and I myself have no convictions or anything of that nature.  I’m looking at using delivery/hire & reward insurance as an add-on. I’ve already tried Zego and they couldn’t quote me, and gave no reason why. I suspect because I’m not the owner of the technical owner of the car. Zego would be have been ideal because of their Pay As You Go feature, before committing to long term insurance.  I don’t want to keep signing up to different insurance companies only to find out I’m not eligible right at the end. Does anyone have any advice or be able to point me in the right direction for motor insurance cover to be driver for Uber Eats and similar?        submitted by     /u/keredat899     to     r/UberEatsDrivers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UberEatsDrivers/comments/1wkptx0/how_do_i_get_insurance_cover_to_be_an_uber_eats/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:56:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:57:11.023Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeb0d7660c60840398114d"
+    },
+    "message_id": "reddit_t3_1wkptw1",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MensJewelry",
+    "username": "CAM_BINO",
+    "title": "Thinking of trading up my Thai baht chain (pic included)",
+    "text": "Thinking of trading up my Thai baht chain (pic included)\n\nI've been wearing this layered setup: a 20-inch chain and pendant paired with a 26-inch, 2-baht chain and pendant.   ​I bought the 2-baht chain in Bangkok on Yaowarat last year. At the time, I went with 26 inches because I already had the shorter chain and wanted to stack them. The shop where I bought the baht chain mentioned I could bring it back anytime if I ever wanted to swap for something else or trade up.   ​Lately, I’ve been thinking about simplifying to just one chain.. going thicker and slightly shorter, maybe a 4 or 5-baht chain at 24 inches the next time we are in Bangkok.   ​To pull this off, I would probably sell my smaller 22k chain (10g) and 24k pendant (5.9g) to offset the upgrade cost without putting up too much cash, depending on gold prices at the time.   ​Another option I’m considering: Does anyone know if gold shops on Yaowarat will accept a 1 oz gold bar (like a PAMP or RCM bar) towards a trade-up alongside my current chain?   ​I’m still on the fence because I do like my current setup, but after seeing how a chunkier, single baht chain sits, it’s been stuck in my head!   ​Has anyone gone through a similar \"trade-up\" itch after buying a chain in Thailand? Would love to hear your thoughts on current layered setup vs stepping up to a single heavier chain.       submitted by     /u/CAM_BINO     to     r/MensJewelry       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MensJewelry/comments/1wkptw1/thinking_of_trading_up_my_thai_baht_chain_pic/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:56:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:57:11.459Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeb0d7660c60840398114e"
+    },
+    "message_id": "reddit_t3_1wkptvu",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ColorGuessr",
+    "username": "Alexo368",
+    "title": "Colorwire by u/Alexo368",
+    "text": "Colorwire by u/Alexo368\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Alexo368     to     r/ColorGuessr       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ColorGuessr/comments/1wkptvu/colorwire_by_ualexo368/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:56:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:57:11.676Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeb0d7660c60840398114f"
+    },
+    "message_id": "reddit_t3_1wkptv5",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "Advice",
+    "username": "Minmiki_",
+    "title": "One of my best friends is homophobic and I don’t know how to help her",
+    "text": "One of my best friends is homophobic and I don’t know how to help her\n\nThis feels a bit stupid, but I have two best friends, I’ll just call them Burger and Turkey.    I’ve known them both for 3 years now, and in that timeframe we’ve only talked about lgbtqia+ like 4ish times. Most of which were started by Turkey. Her family is deeply homophobic because they are a Muslim family, so naturally Turkey got gay = bad drilled into her head.    Whenever she brought it up (very rarely) it was always her hiding behind the excuse that “I don’t HATE hate gay people, but I don’t like when they make it their whole personality” For example, we know a trans person (ftm) and apparently he’s “cool” or “chill” and “not like the other people” (we aren’t close at all) or she shows me and Burger an instagram post about like oh some dad arguing with a masc woman (her being masc has NOTHING to do with the argument btw) and Turkey says “Honestly, respect to the dad for standing up to the lesbian woman) it wasn’t mentioned once?? What her sexuality was?? And even if she was lesbian what would be the correlation??    I’ve tried to gently ask her why she thinks this way, but she just always shuts down the conversation and changes the topic. But if I’m too adamant abt it the whole vibe goes awkward, and I feel like a weirdo for being so fixated on this.    While it’s fine to have different opinions, the only problem I have is that Turkey is quite popular in school. Whenever she complains about gay people, (I don’t think she knows the difference between gay and other sexualities) other girls jump in to agree with her opinion?? Despite having no valid reason to???? For example Burger, and my other friends. Now if I WANT to talk to Turkey about this I’ll feel I’m the only one who feels this way and that it isn’t that deep.    What do I freaking do? Though it doesn’t affect me, I feel so uncomfortable when she complains about this.       submitted by     /u/Minmiki_     to     r/Advice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Advice/comments/1wkptv5/one_of_my_best_friends_is_homophobic_and_i_dont/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:56:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:57:11.897Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeb0d8660c608403981150"
+    },
+    "message_id": "reddit_t3_1wkptv2",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "TicketResale",
+    "username": "motelroomkey",
+    "title": "SELLING: GA 3 FLOOR HARRY STYLES TORONTO MAY 7TH",
+    "text": "SELLING: GA 3 FLOOR HARRY STYLES TORONTO MAY 7TH\n\nI panic bought these during the AMEX presale but ended up getting disco pod tickets during general, so I’m just looking to get back what I paid and let someone else enjoy the show! $225 each or $450 for the pair.   Happy to hop on a FaceTime call with a serious buyer to verify and transfer everything! :)        submitted by     /u/motelroomkey     to     r/TicketResale       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TicketResale/comments/1wkptv2/selling_ga_3_floor_harry_styles_toronto_may_7th/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:56:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:57:12.117Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeb0d8660c608403981152"
+    },
+    "message_id": "reddit_t3_1wkptv1",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Bloggers",
+    "username": "zion1994",
+    "title": "Pet blog has been paying for my house for 6 months now",
+    "text": "Pet blog has been paying for my house for 6 months now\n\nok so this is a weird one but bear with me   i have a pet blog. i don't own a pet. never have. probably never will as i travel too much. and yet every month amazon sends me enough to cover rent because people on the internet are buying stuff for their dogs and cats through my site.   bought my pet blog a few months ago from a marketplace called NicheBlogZone for $199. came already built, articles already up, amazon links already in there. i spent one afternoon doing interlinking basically just connecting related posts to each other so search engines understand the site structure and then closed my laptop and genuinely forgot about it for weeks.   here's what that's looked like:     march: $710   april: $995   may: $1,461   june: $1,647   july: $1,461   august so far: $1,545 (amazon pays 2 months delayed so this is june's money landing now)     march scared me. went from nearly $1k in february down to $710 and i was convinced something had broken. checked everything, found nothing wrong, did nothing. it just came back the next month on its own.   pet people spend insane amounts on their animals btw. like i knew this intellectually but seeing the commission data is something else. dog food subscriptions, orthopedic beds, grooming kits, vet supplements. and because of the 24 hour cookie i get a cut of everything in their cart not just whatever article they landed on.   i do literally nothing to maintain this. no new posts, no ads, no instagram for pets i don't have. i just own the thing and amazon does its thing.   my landlord has been getting paid every month and has no idea a pet blog is behind it. honestly sometimes i forget too until the deposit shows up.   anyone else running a niche they have zero personal connection to? curious if the detachment makes it easier or harder to care about growing itPet blog has been paying for my house for 6 months now       submitted by     /u/zion1994     to     r/Bloggers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Bloggers/comments/1wkptv1/pet_blog_has_been_paying_for_my_house_for_6/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:56:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:57:12.545Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeb0d8660c608403981154"
+    },
+    "message_id": "reddit_t3_1wkptun",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AlignmentChartFills",
+    "username": "Range-Spiritual",
+    "title": "What are the top 4 best Final Fantasy games?",
+    "text": "What are the top 4 best Final Fantasy games?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Range-Spiritual     to     r/AlignmentChartFills       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlignmentChartFills/comments/1wkptun/what_are_the_top_4_best_final_fantasy_games/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T15:56:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T15:57:12.981Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aaeb0d9660c608403981155"
+    },
+    "message_id": "reddit_t3_1wkptuh",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Xpulse210",
+    "username": "Maleficent-Ad5730",
+    "title": "2ND HAND, HELP ME OUT",
+    "text": "2ND HAND, HELP ME OUT\n\nHey guys I'm planning to buy an xpulse 200v 2023 model 23000kms ridden at 75k in gurgaon.   Is it worth it or I shouldn't go with it, help me out...!!!   If any xpulse owner who could help me lives in gurgaon for this please tell, it's in sector 9       submitted by     /u/Maleficent-Ad5730     to     r/Xpulse210       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Xpulse210/comments/1wkptuh/2nd_hand_help_me_out/",

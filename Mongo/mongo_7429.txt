@@ -1,0 +1,416 @@
+    "text": "claude-red - a library of offensive-security skill files that load expert red-team methodology into Claude on demand, for authorized testing\n\nThis is a curated set of SKILL.md files for Claude's skills system, each one priming the model with structured methodology for a specific security testing surface. Drop a skill in and, within its area, the model works less like a general assistant and more like a specialist that knows the standard techniques, tooling and pitfalls for that domain. Skills load on demand from conversational triggers, so you don't spend context on the ones you aren't using.   Whatever you think of the category, it's clearly filling a real gap: it's one of the most-starred security repos to appear this year, which says a lot of practitioners wanted exactly this.    What's inside:    - 78 skills across 23 categories, from web application testing and API security to Active Directory, cloud, mobile, wireless, containers and Kubernetes, exploit development, fuzzing, reconnaissance and reporting   - Each skill is a plain structured Markdown file with methodology, not an executable and not an exploit dump, so you can read exactly what it primes the model with before you use it   - Several install paths: clone the whole thing into your Claude skills directory, sparse-checkout a single category, pipe one skill into Claude Code as a system file, or paste a skill into a Claude.ai project. An interactive install script handles category selection   - Utility skills for the unglamorous but essential parts: fast triage checklists and professional engagement reporting   - A published roadmap toward roughly 130 skills, built on an existing open offensive-checklist collection that's credited in the acknowledgements   The honest framing, because this is the part that matters more than the feature list. The stated use cases are authorized red team engagements, bug bounty triage, security research, CTF preparation and operator training, and that \"authorized\" is doing all the work. This is dual-use tooling. Several of the categories, EDR evasion, command-and-control, supply chain, phishing, cover techniques that are a crime to use against systems you don't own or have written permission to test. The tool doesn't and can't check that you have that permission. So the responsible read is: this is genuinely useful if you do this work professionally and have scope in writing, and it's a fast way to get yourself in serious legal trouble if you point it at anything without that. Know which side of that line you're on before you clone it.   It's also worth knowing that a skill file is a set of instructions you're loading into a model, so read what you're installing rather than trusting the label, the same advice that applies to any skill registry.   MIT licensed,  5,500 stars and 714 forks  as of writing, verified via the GitHub API.    https://github.com/SnailSploit/claude-red        submitted by     /u/company_url_finder     to     r/BestGitHubRepos       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BestGitHubRepos/comments/1whuhrg/claudered_a_library_of_offensivesecurity_skill/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T11:25:33Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T11:25:52.272Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa7cc0798842c4ceff9bfe"
+    },
+    "message_id": "reddit_t3_1whuhq4",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "Seiko",
+    "username": "Atoms-82",
+    "title": "[Seiko Cronos Special] – Salmon & Silver Twins from the Rivalry Behind Grand Seiko (Suwa) and King Seiko (Daini)",
+    "text": "[Seiko Cronos Special] – Salmon & Silver Twins from the Rivalry Behind Grand Seiko (Suwa) and King Seiko (Daini)\n\nMeet my Seiko Chronos Special Twins (Ref.15039).    One has a cool silver-grey dial and the other with an unusual dial that shifts between champagne rose and salmon.   Post-war Seiko was driven by competition between two factories:   Suwa Seikosha developed the Seiko Marvel and Seiko Crown models —the latter becoming the foundation of the first Grand Seiko Ref 3180 in 1960.    Daini Seikosha responded with the thinner Seiko Cronos models, whose architecture evolved into the first King Seiko Ref J14102 in 1961.   The Cronos Special followed around 1962 as Daini’s answer to Suwa’s Crown Special. Its hand-wound Calibre 810 was essentially a simplified first-generation King Seiko movement: 23 jewels rather than King Seiko’s 25 jewels, without the KS fine regulator or two jeweled barrel bearings, but retaining much of the same bridge architecture.   1963 Japanese catalogues placed the Cronos Special in Seiko’s “semi-luxury” group beside the Lord Marvel, Goldfeather and Crown Special—below the \"luxury\" Grand Seiko, Liner Chronometer and King Seiko watches. The the gold-filled models cost ¥11,000 at the time compared with ¥15,000 for King Seiko gold filled model.   Both watches carry the star emblem at 6'oclock which represents the 'Special Dial' variants - with applied solid gold indices and 23-jewel Calibre 810.    Production apparently lasted only around 1.5 years from 1962–63, —making the Seiko Chronos Special a short-lived, rarer and more expensive watch as compared to Seiko Crown Specials.    These watches are a memory of the rivalry that shaped Grand Seiko and King Seiko watches of today.        submitted by     /u/Atoms-82     to     r/Seiko       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Seiko/comments/1whuhq4/seiko_cronos_special_salmon_silver_twins_from_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T11:25:29Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T11:25:52.540Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa7cc0798842c4ceff9bff"
+    },
+    "message_id": "reddit_t3_1whuhpf",
+    "topic_key": "shopify",
+    "search_keyword": "Shopify",
+    "platform": "reddit",
+    "subreddit": "AutomateShopify",
+    "username": "growthweb_nisha",
+    "title": "What should I look for when choosing a Shopify theme for a new store?",
+    "text": "What should I look for when choosing a Shopify theme for a new store?\n\nsubmitted by     /u/growthweb_nisha     to     r/AutomateShopify       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutomateShopify/comments/1whuhpf/what_should_i_look_for_when_choosing_a_shopify/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T11:25:28Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T11:25:52.753Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa7cdb6508d45f3d2d27b9"
+    },
+    "message_id": "reddit_t3_1whui49",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "StopKillingGames",
+    "username": "Mr_Presidentle",
+    "title": "The Commission has crashed into SKG (again), 15pm UTC Stream with Ross on Twitch",
+    "text": "The Commission has crashed into SKG (again), 15pm UTC Stream with Ross on Twitch\n\nTL;DR:  We planned a nice little catch-up stream. Then the European Commission announced the EU Kids Act, we got the leaked proposal, and it turns out it directly threatens game preservation and community servers.    So the agenda changed.     Today, 15:00–CEST — live from the European Parliament on the official Stop Killing Games Twitch channel, with Ross, Moritz and a bunch of other guests.     Originally, we had planned to have a nice stream for you guys: explain what has been going on during Parliament’s summer break, talk about what comes next, and make some exciting announcements.   The European Commission decided that ain’t going to happen.   Commission President Ursula von der Leyen has just announced during the EU’s State of the Union speech that Europe is getting its own Online Safety Act — protect le children law.   The  EU Kids Act .   And we have a leak of the thing.   Now, why does SKG specifically care?   First, as we explained before, we are going to help get  Stop Killing the Internet  off the ground precisely so SKG does not lose focus every time legislation like this appears.   And second:   “The Kids Act is the most draconian piece of legislation proposed on video games I’ve ever seen. It starts with a reasonable concept: that online games targeted at minors should have some sort of parental controls, something few would disagree with. It then uses that concept as cover for the most radical and consumer-hostile piece of legislation ever proposed on video games.   As it stands, it would make all game servers that do not collect personal data from customers unlawful in the EU, including discontinued and community-run ones, even if the publisher allows them. Its definition of “online games” is open to interpretation as to whether it means any game sold digitally, regardless of whether it actually connects online.   Most importantly to us, it would make running any video game after support ends unlawful. This is similar to banning all books that a publisher is no longer printing.   Most of the EU Kids Act goes far beyond child safety, directly placing large burdens on thousands of game developers, favoring large corporations, and making the preservation of online games illegal. The proposals put forth in it are something out of a dystopian science fiction story. They are an attempt to ensure that customers will never have anything even resembling ownership of a game they pay for moving forward.   In the United States, the Entertainment Software Association recently declared private servers, such as Minecraft servers, illegal. This statement was widely mocked due to its dishonesty and outrageousness, but now the European Commission is trying to make that, and much worse, a reality.” (Ross,Moritz)   So, yes. This has just become a very direct SKG issue.   And since we are already sitting in the European Parliament, we might as well talk about it.   As originally planned, we will also go through everything that happened during the summer break and where things stand now:    **• The EU Kids Act** what is actually in the leaked proposal and why SKG suddenly has a very large problem with it. **• The Digital Fairness Act** or, as we like to call it, getting SKG into EU law. **• The POG Act** getting SKG into California law. **• Sony** and the ongoing suing situation. **• Stop Killing the Internet: new ECI “Stop Killing the Internet”** **• What happened over the summer,** including the stuff we have not properly talked about yet. **• What comes next for Stop Killing Games.**     And because apparently that was not enough, we will also have MEPs joining us.    Fan favorite Markéta  will be back, and we are hoping to be joined by a new guest as well:  Martin Sonneborn , if he can make it.    Today — 17:00–19:00 CEST.     Live from the European Parliament.     Official Stop Killing Games Twitch channel.    This was supposed to be the nice stream :)           submitted by     /u/Mr_Presidentle     to     r/StopKillingGames       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/StopKillingGames/comments/1whui49/the_commission_has_crashed_into_skg_again_15pm/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T11:26:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T11:26:19.369Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa7cdb6508d45f3d2d27ba"
+    },
+    "message_id": "reddit_t3_1whui46",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "IndianTeenagers",
+    "username": "Routine_Image_6663",
+    "title": "I genuinely don’t think I’ve met anyone similar to me yet 😭",
+    "text": "I genuinely don’t think I’ve met anyone similar to me yet 😭\n\n16M  JEE Aspirant 🚀  Future tech entrepreneur & creator. Rationalist, atheist, center-left.  Into politics, cricket, MCU & tech history.  Goal: Build a startup, travel the world, and contribute to social justice.   I’m into tech, startups, politics, cricket, MCU, history, philosophy and random rabbit holes. You definitely don’t need to like all of that. A few shared interests and similar values would be nice though. I’m a little quiet at first, but once I’m comfortable, apparently I have a lot to say. My height, unfortunately, did not get the same memo 💀 Also, JEE exists. Just curious to see who’s out there, honestly. Anyone else feel like finding people you genuinely click with is weirdly difficult?  Something you actually care about. \"       submitted by     /u/Routine_Image_6663     to     r/IndianTeenagers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IndianTeenagers/comments/1whui46/i_genuinely_dont_think_ive_met_anyone_similar_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T11:26:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T11:26:19.572Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa7cdb6508d45f3d2d27bb"
+    },
+    "message_id": "reddit_t3_1whui3y",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "fpv",
+    "username": "TerraBound_",
+    "title": "Link quality issue",
+    "text": "Link quality issue\n\nI just purchased a mobula8 from a guy on ebay. After getting set up last night, I tried flying a bit, was fine. I got up this morning to test it again, was flying great. After a few laps (and hitting a tree lol) I packed up and moved to a new spot. Now all of a sudden my rssi dbm is showing above -70 when I have the controller in the same room. I can get the signal to improve to -50ish if I literally touch my controller to my drone.   Here is some footage of my osd, this is when it was running good    https://reddit.com/link/1whui3y/video/ab51i3ycavph1/player        submitted by     /u/TerraBound_     to     r/fpv       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/fpv/comments/1whui3y/link_quality_issue/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T11:26:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T11:26:19.771Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa7cdb6508d45f3d2d27bc"
+    },
+    "message_id": "reddit_t3_1whui2k",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "Persephona90",
+    "title": "Grab 25⚡ from u/Persephona90!",
+    "text": "Grab 25⚡ from u/Persephona90!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Persephona90     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1whui2k/grab_25_from_upersephona90/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T11:26:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T11:26:19.977Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa7cdc6508d45f3d2d27bd"
+    },
+    "message_id": "reddit_t3_1whui23",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "atlanticdiscussions",
+    "username": "MeghanClickYourHeels",
+    "title": "Wednesday Inspiration ✨ Checking for Updates 🖱️",
+    "text": "Wednesday Inspiration ✨ Checking for Updates 🖱️\n\nsubmitted by     /u/MeghanClickYourHeels     to     r/atlanticdiscussions       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/atlanticdiscussions/comments/1whui23/wednesday_inspiration_checking_for_updates/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T11:26:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T11:26:20.178Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa7cdc6508d45f3d2d27be"
+    },
+    "message_id": "reddit_t3_1whui1h",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "headphonesindia",
+    "username": "letsgoinzique",
+    "title": "Is this a gimmick in CMF Buds?",
+    "text": "Is this a gimmick in CMF Buds?\n\nI bought CMF Buds and came across this setting.  Dirac Opteo was supposed to be something to improve sound quality in CMF buds by using some digital audio optimization technology. But I hear no difference between this and the Pop EQ. Lol. Am i tripping?       submitted by     /u/letsgoinzique     to     r/headphonesindia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/headphonesindia/comments/1whui1h/is_this_a_gimmick_in_cmf_buds/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T11:26:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T11:26:20.379Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa7cdc6508d45f3d2d27bf"
+    },
+    "message_id": "reddit_t3_1whui1d",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Meowi",
+    "username": "Resplendent-Sun",
+    "title": "[Ruin the sentence] The hills are alive with the sound of music 🎶",
+    "text": "[Ruin the sentence] The hills are alive with the sound of music 🎶\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Resplendent-Sun     to     r/Meowi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Meowi/comments/1whui1d/ruin_the_sentence_the_hills_are_alive_with_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T11:26:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T11:26:20.577Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa7cdc6508d45f3d2d27c0"
+    },
+    "message_id": "reddit_t3_1whui1c",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "autism",
+    "username": "Low_War2882",
+    "title": "24M with autism, with barely any dating experience, never had a GF, and wanting to enter the dating scene - any tips for dating with autism? Australian, if that helps 🇦🇺",
+    "text": "24M with autism, with barely any dating experience, never had a GF, and wanting to enter the dating scene - any tips for dating with autism? Australian, if that helps 🇦🇺\n\nFYI, this is my very first Reddit post, despite having Reddit for a few months or so now, so here we go. Also, I'm not sure if I'd consider this a vent or not, but I'm not making this sound like a sob story.   As a straight Aussie male (obviously living in Australia) with autism and barely any dating experience, I'm feeling like I'm falling behind all my peers, and having almost no dating experience at my age is a bit of a struggle, especially knowing that most people about my age here have had a few relationships or are already in a committed relationship.   I've also never kissed a girl before, and still celibate. I don't mind being celibate and waiting until I meet the right person, but I have to hide the fact that I've never kissed anyone, as I fear judgment and embarrassment. At 24, soon to be 25, I'm feeling a bit worried that this embarrassment will only get worse.   To anyone who can help, what tips or words of wisdom would you give to an autistic young male like me, who has barely dated and wants to enter the dating scene? I've tried the dating apps but haven't had much luck on there (though I've scored 2 dates through there, despite it never progressing past the first date, which has happened each time). Any tips for my first potential relationship is appreciated too, but this may take some time, of course.   I've always struggled with reading social cues among people, expressing my feelings for people, especially expressing my love for women I like (I know, sounds cringe), people interpreting me as rude even when I don't mean to, and many, many other social aspects. I  REALLY  struggle with explaining things and putting them into words, even like how my day was or explaining a basic task at work.   If it helps, here's a bit of info about me, without revealing anything personal. Almost all of my friends are in a relationship or actively dating. I go to the gym 3-4 times a week. I'll soon be working full time and also have a part time business. I try my best to go to a run club on the weekend, if I'm already not occupied, to meet new people and work on my social confidence. I go to church as well, though I don't know if it's just me, but it feels like I'm one of the oldest ones there, and one of the very few single individuals. I solo travel quite a bit, and try to visit a new country at least once a year, entirely solo, which improves my social confidence each time I go.   I also have some female friends who I'm comfortable around, and work with mainly women in my job and business, and there've been periods of my life where all my friends were only female. I'm fine with talking to women if it's platonic and actually feel confident, but struggle to flirt, take it to the next level, etc.   Again, what tips or words of wisdom would you give to a young autistic male like me who has almost no dating experience and is feeling behind, but wants to enter the dating scene? I've not been on a date in a year, so I truly do want to start again and experience love, as love is a wonderful feeling.   Also, first Reddit post, so hope this is okay. Thank you :)       submitted by     /u/Low_War2882     to     r/autism       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/autism/comments/1whui1c/24m_with_autism_with_barely_any_dating_experience/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T11:26:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T11:26:20.778Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa7cdd6508d45f3d2d27c2"
+    },
+    "message_id": "reddit_t3_1whui10",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "HappyFunComunitty",
+    "username": "LiontariRyodari",
+    "title": "Going onto a Microlable account and being QueerPhobic is just insane. So fucking stupid. Hell, the subreddit where it's from is stupid.",
+    "text": "Going onto a Microlable account and being QueerPhobic is just insane. So fucking stupid. Hell, the subreddit where it's from is stupid.\n\nStraight Lesbian:   Someone who isn't a woman who still identifies as a lesbian.   TransMasc   Enby   Etc etc etc.   Bisexual is liking more than one gender.   SL is only liking women.       submitted by     /u/LiontariRyodari     to     r/HappyFunComunitty       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HappyFunComunitty/comments/1whui10/going_onto_a_microlable_account_and_being/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T11:25:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T11:26:21.174Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa7cdd6508d45f3d2d27c3"
+    },
+    "message_id": "reddit_t3_1whui0v",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CamilleMains",
+    "username": "Electrical_Sorbet_31",
+    "title": "Why don't more Camilles build Endless Hunger?",
+    "text": "Why don't more Camilles build Endless Hunger?\n\nLate game it gives 40 haste, insane omnivamp, tenacity, AD... it seems like the perfect item for Camille! So why does it only have a 0.38% pick rate on op.gg? I get that she needs to itemize tankier third item, but going Endless fourth or fifth item seems like a really good option and I always feel really strong after buying it.       submitted by     /u/Electrical_Sorbet_31     to     r/CamilleMains       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CamilleMains/comments/1whui0v/why_dont_more_camilles_build_endless_hunger/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T11:25:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T11:26:21.374Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa7cdd6508d45f3d2d27c4"
+    },
+    "message_id": "reddit_t3_1whuhzw",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "whereidlive",
+    "username": "Every_Temporary1567",
+    "title": "where id live; where do you think im from?",
+    "text": "where id live; where do you think im from?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Every_Temporary1567     to     r/whereidlive       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/whereidlive/comments/1whuhzw/where_id_live_where_do_you_think_im_from/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T11:25:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T11:26:21.577Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa7cdd6508d45f3d2d27c5"
+    },
+    "message_id": "reddit_t3_1whuhz0",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "youngentrepreneur",
+    "username": "vayroy",
+    "title": "Anyone interested in starting something together?",
+    "text": "Anyone interested in starting something together?\n\nI have a few ideas and I’m looking for someone to build with.   I have a tech background and can build the product. Looking for someone who’s good at marketing, understanding user behaviour, sales/growth, etc.   We can discuss my ideas, your ideas, and see if we can build something together.   If you’re interested, DM me. Tell me a little about yourself and what you’re good at (completely optional btw)       submitted by     /u/uvayroy     to     r/youngentrepreneur       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/youngentrepreneur/comments/1whuhz0/anyone_interested_in_starting_something_together/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T11:25:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T11:26:21.781Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa7cdd6508d45f3d2d27c6"
+    },
+    "message_id": "reddit_t3_1whuhyw",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "FastPayoutCasinosCA",
+    "username": "Practical_Cream6552",
+    "title": "Highest RTP slots in Canada (2026) – how to avoid withdrawal KYC delays on CAD sites",
+    "text": "Highest RTP slots in Canada (2026) – how to avoid withdrawal KYC delays on CAD sites\n\nHey guys, quick update for anyone searching for better payout rates on Canadian slots without getting locked into endless identity verification checks when you hit a big win.   If you’ve played on provincial apps (like OLG or PlayNow), you’ve probably noticed that spin speed limits, low RTP builds, and zero Bonus Buy options can make sessions feel pretty restricted. I spent the last few weeks testing international CAD platforms to see which ones offer unthrottled payout rates with fast e-Transfer cashouts.    What I found after testing different CAD operators:       Unrestricted Game Engine:  Offshore operators give access to official developer builds for best online slots canada (Pragmatic, Hacksaw, NoLimit City) with full Bonus Buy features and zero spin delays.    No Conversion Fees:  Always choose platforms with native CAD wallets so you don't lose 3-5% on currency exchange rates when depositing via Interac.    Fast Interac e-Transfers:  Top-tier interac casino canada hubs process cashouts directly to your bank (RBC, TD, Scotiabank, BMO) in under 30 minutes without requiring 10 layers of paperwork for normal amounts.    Risk-Free Testing:  Look for active sign-up offers before playing. I picked up a solid no deposit bonus canada 2026 promo just by confirming my email address.     I put together an updated sheet with verified Interac cashout speeds, original RTP configurations, and active promo codes here:  Verified CA Interac & High RTP Slots Directory     Are these platforms legal for Canadian punters?  Yes—it is completely legal for individuals in Canada to register and play at offshore platforms operating under valid international licenses (such as Curaçao or MGA). Just make sure you play on SSL-encrypted sites with certified RNG servers.   If you are looking for verified real money online casino canada sites or want to check which platforms process instant payouts today, check out the  Canada Instant Cashout Leaderboard  before signing up.   Drop a comment below if you’ve tested any of these or if you know other CAD sites with instant Interac processing!       submitted by     /u/Practical_Cream6552     to     r/FastPayoutCasinosCA       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FastPayoutCasinosCA/comments/1whuhyw/highest_rtp_slots_in_canada_2026_how_to_avoid/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T11:25:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T11:26:21.981Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa7cde6508d45f3d2d27c7"
+    },
+    "message_id": "reddit_t3_1whuhyu",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "OffMyChestIndia",
+    "username": "Competitive-Candy655",
+    "title": "always had a fantasy of marrying an older, more powerful woman who is stronger than me. 2 years ago I grinded to 18 LPA and got placed under her - 80 employees report to her and she lives alone in a penthouse with a temple room and a Great Dane.",
+    "text": "always had a fantasy of marrying an older, more powerful woman who is stronger than me. 2 years ago I grinded to 18 LPA and got placed under her - 80 employees report to her and she lives alone in a penthouse with a temple room and a Great Dane.\n\ni am 29 yo mech engineer pg graduated from a premier institute that ppl die to go to in india it names starts from i you know. so ok this story is my tale of marraige with my boss lady i always had fantasy of marrying a older more powerful women , which is stornger than me in multiple feilds. So i 2 yrs ago i graduated and worked my ass harder to get good pacakge of 18inr lpa so i am a mech engineer but went into it sector cause i am into design and all and it a fucking giant mnc works in automobiles and all and i was a employee there offcource in a tier 1 city i grinded my ass for half a decade to get a 18lpa package so, i grinded all this yrs cause i in mind knew that i will get powerful and rich women and milfies in big coorporate , btw yes i am virgin porn addict and i also do calisthenics and i am vegan for good health but see corn and edging as a meditation. So when she took my interview cause i was enntering the firm through application not clg placemnt, i entered the building that was fking damn big, i have never seen this type of shit cause i come from a tier 3 town and mostly spend my life watchin corn and studying so that shit was mfking unreal for me they had plants and trees in building arear i have never seen, there were 5 chairs in which 4males and 1 female was sitting and they took my interview they had a caffe francise in which they ordered caffe and these mfs were unintrested in their jobs but there was a strang thing a women was sitting in black balzer and heels who was examining my bio very carefully and when she showed her face she looked not more than 25 she was looking so young and i was surpriesd to know she is on of the it directors of the company and she was sitting with ppl looking like her dad's age, i seroiusly got boner seeing her but i gave all the right answers and got selected out of 341 ppl, and they litreally has that type of meeting hall they have in foreign 5 star hotels. So i got placed and she was later termed as team head of 80 senior employes, i was happy casue my desk was next to her cabin and broo she was damn moomy, she was highly intelligent and The floor where she sits - everyone lowers their voice when she walks past. Not because she shouts, she rarely raises her voice. She just asks one question that shows she read the entire report and they didn't. She has elegance and had 8 figure inr package. She had myths and rumors i heard for about her for 4 months she kept her life very private and no friendly relation with ppl in office,On that floor, everyone has a version. Some say she was married. Some say she was almost married. One senior said she came back from leave one day and stopped wearing a ring and told HR to remove emergency contact. After that, people started whispering that she doesn't take disobedience lightly. No one knows what's true. That's why no one disobeys her twice.Everyone else was trying to impress her in one meeting. I knew I would lose that game. So I stopped playing the short game.     She would test - not reply for 3 days, give a project to someone else to see if I get jealous, say something sharp to see if I leave. Other men left. I didn't. Not because I was waiting like a dog, because I understood - that was her checking if I was like the others.     I can wait 10 years, not because I am obsessed with getting her in bed. Because I am obsessed with being the one person who finally gets her head.I read my psycology books and all but i in mind knew she wants something diifrent.and then later one month It was my first day in that gym. First time in my life in a place like that.     I couldn't afford this type of gym growing up. I learned everything on the ground - parks, terrace, bars. Calisthenics. No weights, just bodyweight. Cheap and honest.     Everyone there was grunting with plates, checking mirror, checking who is checking them.     I was in the corner. Old shoes, plain vegan t-shirt, 6ft skinny but cut - not gym-big, athletic. The kind you get from years of pushups, not protein tubs.     I started - slow muscle-ups on the bar, then L-sit to handstand, then pistol squats. No noise. No show.     The trainers stopped. Two guys doing bench stopped mid-set.     Because calisthenics when done clean mogs everything. No machine can fake it. Either you can hold your body or you can't.     She was watching from the treadmill. She had stopped running.     She came closer, not too close. Arms crossed.     \"You don't lift?\" she asked. Sharp tone, but curious.     \"I can't afford to fake strength,\" I said. \"Calisthenics doesn't let you lie. You either lift yourself or you fall.\"     She raised an eyebrow. \"Philosophy with pushups?\"     \"Vegan, middle-class, 6ft with no money for whey. Had to learn how to use what I have.\"     That line - honest, not flexing. No other man in that elite gym would say \"I can't afford\". They all pretend.     She looked at my form, not my body. She is intelligent, she looks at discipline, not biceps.     \"Do that again,\" she said. \"The L-sit thing.\"     I did. Held it 12 seconds. Sweat dripping, but face calm. Controlled breathing.     She didn't say wow. Women like her never say wow.     She just said, \"Most men here buy strength. You built it. That's... irritating.\"     Irritating was her word for attractive. I knew.     She went back to treadmill, but kept it slow so she could watch in the mirror.     I went back to my corner. Didn't look at her again. That's what got her.     She is used to men staring till she leaves. I gave her space to stare.     When I was leaving, she said without looking, \"Tomorrow. Same time. Show me how you do that without falling.\"     No touch. No number. But she reserved the bar next to mine next day with her towel.     I did muscle up like it was nothing and she said to teach her so that day      Next day I was early. Same corner.     I was angry that day. Not at her, at life. So I took it out on the bar.     30 pull-ups. Straight. No swing, chin over bar, dead hang down. 1...10...20...30. Breath steady. Vegan, skinny, 6ft, but I don't get tired fast - calisthenics gave me endurance, not just show muscle.     The whole functional area went quiet.     She was on the rower, but she stopped at 15. Just watching.     I dropped, hands a bit torn, but didn't make a face.     She walked up. Water bottle in hand. That perfect penthouse woman in gym wear, still looking like she owns the building.     \"Do it again and I'll believe it's not a fluke,\" she said. Sharp, teasing.     \"I don't do flukes. I do reps,\" I said.     She smiled. That 1cm shoulder drop again.     \"Teach me muscle-up then. If you're that elite.\"     This was her test again. She can do everything with money, but muscle-up can't be bought.     I said, \"You have the strength. You don't have the timing. You pull too early because you want to control it. Muscle-up needs you to let go for a second.\"     She frowned. \"I don't like letting go.\"     \"I know.\"     That line hit. She looked away for a second.     I said, \"I can send you slow-mo breakdown. Your ID? I'll send reels of the transition part.\"     Normal guys ask insta to stalk. I asked to teach. That's the difference.     She paused. She never gives her ID. She is that private, penthouse, robot-cleaner woman who doesn't let anyone in.     Then she said, very intimidated way - like she was trying to make it sound casual but it wasn't - \"You don't even know how to ask a woman out properly. You want my ID to send tutorials?\"     She was flipping it. She was asking me out while making it sound like I was slow.     I got it. EQ.     I said, \"Then teach me. How should I ask you out?\"     She looked at the bar, then at me. Teasing, but ears a bit red - which she tried to hide by tying her hair.     \"Dinner. Tomorrow. 8. You pick a place that doesn't try to impress me. If you try to impress me, I will leave in 10 minutes. If you make me forget I am... me, I will stay.\"     No number, no ID. She just said it and walked to the locker. Like an order. But it was a yes.     She left her towel on the bar next to mine. Reserved again.     Next day I didn't send reels. I sent one message through the gym reception - \"L-sit hold practice - 15 sec today. See you at 8. No fancy place. Just talk.     i was so intimidated by her in office and later knew that she has 2 modes and she is calm creature outside. I was fking super nervous when we went on dinner     She came 10 minutes late. On purpose. Power move.     Not office clothes. Simple black, no logo, hair open. She looked... normal. Which was more dangerous than boss mode. Because now I could see she was trying.     We didn't go fancy. Small place, no loud music, wooden tables. I picked it so she doesn't have to perform rich.     First 15 minutes she was testing. Sharp tongue on.     \"So, calisthenics vegan boy thinks he can afford dinner here?\"     \"Can't. But I can afford to listen,\" I said.     She smirked.     Then she started turning it on. Not cheap. Elite way.     Leg crossed towards me, leaning a bit, voice lower, asking personal things - \"Do you live alone? Do you like older women? Have you ever been with someone who is... in control?\"     Every question was bait. Any other man would have started talking about bed, sex, fantasies.     I am hard. Physically hard, mentally hard to break. That's my power.     I didn't look at her lips. I looked at her eyes.     I said, \"You are trying to see if I am like them. If I start talking about bed, you win. You get to put me in the same box and leave early feeling bored but safe.\"     She stopped playing with her glass.     \"You don't want to ask me anything sexual?\" she asked. Direct. Trying to corner.     \"I want to. But not tonight. Tonight I want to know why a woman who has robots to clean her perfect house on 30th floor still leaves one lamp on at night.\"     Her hand froze.     No one ever noticed the lamp. She never told anyone.     \"Who told you about the lamp?\" she whispered. Not boss voice. Real voice.     \"No one. I guessed. People who live alone and control everything during day, leave one small thing imperfect at night so it feels like someone is home.\"     That was it. I read her mind. That turned her on more than any sexual line.     She went silent for 20 seconds. Then did what she never does - she invited.     \"Come up. Now. My place. See the lamp yourself.\"     Every man in her life would have said yes in 1 second.     I said no. Intelligent no.     \"If I come up tonight, tomorrow you will think I came for the penthouse, not for you. And you will hate me for making you feel cheap. And I will hate myself for proving you right about men.\"     I paused.     \"I can wait. Even 10 years. I want the dinner where you don't need to invite me to prove you are desirable. You already are. I want the night you invite me because you are tired of being alone in that perfect house.\"     She stared. Not angry. Exposed.     Then she did something I never saw. She took off her watch - that loose watch - and kept it on the table. Like she didn't need to track time with me.     She said, teasing but voice a bit shaky, \"You are the first submissive man who told me no and made it feel like he won. Irritating.\"     She paid. She never lets anyone pay. But she let me split. Because I didn't try to impress.     Outside, she said, \"Same time gym. And next time, don't wear that... actually wear whatever you want. You mog everyone anyway with those 30 pull-ups.\"     No kiss. No touch. But she texted ID that night. First time. One reel - not of muscle-up, of that one lamp in a dark room.     later we went to dates but very less and met in gym i barely do weights cause my body was enough, later one day     I was coming out of the elite gym, my old bag on shoulder. I had just done my 30 pull-ups in a row. I was tired, hands burning.     Her car was parked. Window down. She was still in gym wear, 5'9, strong, 10 years in that gym look. That Brahmastra penthouse woman who usually never waits for anyone.     She said, \"Hey, vegan calisthenics.\"     I said, \"Hey, muscle-up.\"     She hated that I call her that. But she smiled. That small one.     \"You said you would check my L-sit form. I have video at home,\" she said.     I said, \"Send it on ID. I'll see.\"     She got out. She didn't ask twice. She came and held my wrist. Not my hand, my wrist. Firm. Strong grip. Gym-strong, not soft.     \"Don't be intelligent for 10 minutes,\" she said. \"You tease me every day with your 'I understand you' lines and then you say no to dinner, no to penthouse. Today I am dragging you. You can leave in 10 minutes if you want. I won't stop.\"     I could have pulled back. I am 6ft, athletic skinny but I can hold my own. But I didn't. Because for first time she was not playing boss. She was asking in her intimidating way.     I said, \"10 minutes.\"     She didn't leave my wrist till lift. She pressed 30. Top floor.     In the lift, that infinity pool penthouse smell - chlorine and that incense she burns at 7:30. Robots were docked near the glass, blinking.     She opened door. One lamp was on. Same lamp from dinner story.     She left door open. Said, \"Water?\"     I said, \"Yeah.\"     She gave me water in a steel glass, not fancy. Hands slightly shaking. That 5'9 strong woman who mogs everyone in gym, her hands were shaking because I was finally in her perfect clean house.     She sat on the floor near pool, not on sofa. Said, \"Sit. Don't look at house. Look at me. For once don't read my mind, just be here.\"     I sat. 2 feet away. Virgin, yes. Never been to a woman's house like this. But I didn't look at bed, didn't talk sex. I was hard, but I kept my eyes on her eyes.     I said, \"You dragged me here because you were tired of testing me.\"     She said, \"Yes.\"     I said, \"Now what?\"     She said, \"Now you tell me I am irritating again.\"     I looked at the whole house and that was a mini museum she had painting a swimming pool and big temple like room in which brahama god murthy was at centre and there were kept many religeous books and all at sides of it that idol was 2 feet and it was designed so precisely it worth in lakhs. Her wall paints were aesthetic of hindu gods and ancient scripture, she had a large swimming pool with glass as sides very beautiful and that was the top of building and the view was like i can pay money to sit there for at night it was brain melting.     Her home had books and a dog of great dane species it was so large and tied inside bedroom i dont have the idea why and was very well trained cause listened to her , she had wordrobe of expensive clothes and had expensive gadgets like massarger i have never seen from germany and sun tan bed that radiated red light, when i was watching all raoming she suddenly apperead like ghost and     She didn't drag me to bed. She dragged me to sit.     After the water, she stood and said, \"Come.\"     I thought pool side. She went to bedroom. Door open, that one lamp on again near bed, not overhead light. Perfect clean bed, but one pillow was already used, dented. She lives alone, she sleeps on one side only.     She sat on the edge. Patted next to her. Not like seduction, like tired.     \"Sit for 2 minutes. Then you can go if you want,\" she said.     I sat. We were not touching. Both in gym wear, both sweating a bit from earlier 30 pull-ups and her rowing.     She said, \"You know why I pulled your wrist downstairs? Because if I ask normally, you will say some intelligent line about waiting 10 years and leave. I am tired of men who wait to impress me. I want a man who stays because I asked.\"     I said, \"I stayed.\"     She turned. For first time she was close. I could see small scar near her eyebrow from years ago, gym or something. She never lets anyone see that close.     She said, \"You tease me in gym every day. 'You pull too early because you want to control it.' Now I am pulling you. Tell me you don't want it.\"     I was hard, yes. Virgin, yes. But I didn't talk sex. That's my line.     I said, \"I want to be here. But I don't want to be another guy who came to your penthouse for the pool and the bed and then you regret tomorrow.\"     She put her hand on my forearm. Strong grip again, 10 years gym grip.     \"Then don't be that guy. Be the one who held my wrist in lift and didn't let go,\" she whispered.     She leaned back. Not pulling me down. Just making space next to her. Inviting, not dragging.     She said, \"Lie for 1 minute. No sex talk. Just lie. If you feel cheap after, I will call your cab myself.\"     I lay. 2 feet gap. Then she closed gap herself. Head on my shoulder. Her hair smelled like that same incense.     No bed talk. No explicit. Just her breathing slow, finally not boss, not sharp tongue. Just tired woman in her own house who finally let someone see the dented pillow side.     She said, \"See? This is how you turn me on. You don't try.\"     That was the intimate moment it was 6:34 pm in evening . She dragged me with wrist, but kept me with that one lamp and dented pillow.     btw when we doing our work the bed was 4feet tall i dont know why and the two robost were standing there and blinking like they were there to watch show she made them go out and and she made me sit at her bed and gave water to me and her dog was tied and i dont know why he untied himhe was barking at me and i asked her its name and she made it sit in the balcony of bedroom she removed her tshirt and she was wearing burberry innerwear, we stared removing clothes and from drower she threw lelo hex protection pack at my face which i didnt like i was calm as monk, and when she was clothless our mf ceo called her and she talked very calmly and for 8 minutes that call she was standing infront of me i was looking at her body very devloped toned quads and good capped shoulder brahma god tatoo at her back and a name written at her chest in sanskrit and she has written something at her calves and call ended she gave me death stare and started undressing me and when we ended i was coming and in entire flowstate it melted my brain i fell on ground cause she was in position on lying on the bed and i went unconcious and fell and banged my head at table she pickedd me and laid me on bed in between sax dog was trying to disturb and intimidate me she once threw it out of bed and it went straight sitting in balcony eating like a monk. i woke up at 4 am which is my standar time of waking up she was nowhere in the house i wore my underwear and stood in balcony and then...        submitted by     /u/Competitive-Candy655     to     r/OffMyChestIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OffMyChestIndia/comments/1whuhyu/always_had_a_fantasy_of_marrying_an_older_more/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T11:25:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T11:26:22.183Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa7cde6508d45f3d2d27c8"
+    },
+    "message_id": "reddit_t3_1whuhy3",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "Careless-Dog-681",
+    "title": "Strange Vanilla Cream Soda",
+    "text": "Strange Vanilla Cream Soda\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Careless-Dog-681     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1whuhy3/strange_vanilla_cream_soda/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T11:25:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T11:26:22.586Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa7cde6508d45f3d2d27c9"
+    },
+    "message_id": "reddit_t3_1whuhxm",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AskTurkey",
+    "username": "Specific_Contact8136",
+    "title": "Where to buy online 2mm velvet yarn?",
+    "text": "Where to buy online 2mm velvet yarn?\n\nHi! Idk where the right sub is for this so I'm asking anywhere atp.   I'm a foreigner wanting to buy online some Turkish yarn that can be worked with a 2mm crochet hook and it is baby/velvet.   If anyone knows where, please let me know!       submitted by     /u/Specific_Contact8136     to     r/AskTurkey       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskTurkey/comments/1whuhxm/where_to_buy_online_2mm_velvet_yarn/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T11:25:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-16T11:26:22.787Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aaa7d176508d45f3d2d27ca"
+    },
+    "message_id": "reddit_t3_1whuisv",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "asksg",

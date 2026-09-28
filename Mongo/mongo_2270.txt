@@ -1,0 +1,416 @@
+    "created_at": {
+      "$date": "2026-09-09T18:54:11.482Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1ab8647709d84b65bfea8"
+    },
+    "message_id": "reddit_serp_1v4nilp",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/salesforce/comments/1v4nilp/we_ship_native_apps_on_both_salesforce/",
+    "text": "We ship native apps on both Salesforce AppExchange and HubSpot Marketplace. The two ecosystems are wildly different and nobody talks about it.\n\nDisclosure up front: I cofounded  Appnigma , we build native CRM integrations for B2B SaaS companies (started Salesforce only, recently expanded to HubSpot). So this comparison comes from shipping on both, not from reading docs.   If your SaaS sells to companies that run a CRM, you will eventually face the \"which marketplace do we list on first\" question. Here is what the two actually look like from the inside.   Architecture is the biggest difference   Salesforce native means your code literally runs inside their platform. Apex, Lightning components, a managed package installed into the customer's org. Your product lives in their UI.   HubSpot is the opposite model. A public app talks to their APIs via OAuth, your code runs on your infrastructure, and you surface inside HubSpot through CRM cards and UI extensions. You never ship code into their system.   Neither is better in the abstract. Salesforce native is deeper and enterprise buyers expect it. HubSpot's model is faster to build and easier to maintain because you control the runtime.   The review gates are night and day   Salesforce Security Review: $999 per attempt for paid apps, weeks of waiting, roughly half of first attempts fail, and the standards (CRUD/FLS, sharing, injection, encoding) are a genuine engineering bar.   HubSpot app certification: free, lighter, measured in days not months, focused on API usage quality and user experience more than deep code audit (since your code never enters their platform).   If Salesforce review is a thesis defense, HubSpot certification is a code review from a colleague.   Maintenance burden is inverted   Salesforce ships 3 major releases a year and any of them can break your package. Ongoing maintenance is a real cost you must budget.   HubSpot's API versioning is calmer. Once your app is stable it mostly stays stable.   The buyer expectations differ too   Salesforce customers, especially enterprise, ask \"is it native\" as a qualifying question. Middleware answers lose deals.   HubSpot customers mostly ask \"does it connect.\" The native-vs-integration distinction barely exists in their buying process.   What this means practically for a B2B SaaS deciding where to list first:      If your deals die on \"do you have a Salesforce integration,\" that answers it. Enterprise gravity pulls toward AppExchange regardless of difficulty.     If your ICP skews mid market and runs HubSpot, list there first. The build is faster, the review is gentler, and you will be live in a fraction of the time.     If you need both, sequence them. The Salesforce build teaches you your data model the hard way, and the HubSpot version afterward feels easy. Doing it in reverse makes Salesforce feel brutal.      Happy to answer questions on either ecosystem, the review processes, or the listing mechanics. We have shipped a lot of these now and the pattern differences are consistent.       submitted by     /u/AppX_Unmanaged       [link]       [comments]",
+    "username": "AppX_Unmanaged",
+    "subreddit_or_channel": "salesforce",
+    "posted_at": "2026-07-23T19:10:31+00:00",
+    "fetched_at": {
+      "$date": "2026-09-09T18:55:02.425Z"
+    },
+    "google_rank": 5,
+    "search_keyword": "certified marketplace integration",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-09T18:55:02.425Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1ab8a035b0f36efcc7cf6"
+    },
+    "message_id": "reddit_t3_1wbumlr",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MiserableiraqiforTeen",
+    "username": "Zealousideal-Buy8402",
+    "title": "😝😝",
+    "text": "😝😝\n\nsubmitted by     /u/Zealousideal-Buy8402     to     r/MiserableiraqiforTeen       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MiserableiraqiforTeen/comments/1wbumlr/_/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T18:54:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T18:55:06.194Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1ab8a035b0f36efcc7cf7"
+    },
+    "message_id": "reddit_t3_1wbumkd",
+    "topic_key": "hello",
+    "search_keyword": "Hello",
+    "platform": "reddit",
+    "subreddit": "Car_Insurance_Help",
+    "username": "Nearby_Object2829",
+    "title": "2004 Acura 5SX (169k miles)",
+    "text": "2004 Acura 5SX (169k miles)\n\nHello everyone. Two days ago, I was hit by an older gentleman while I was on my way home from school.   I was initially behind him, but I moved into the right lane and started coming up alongside him. As I was passing, he suddenly turned into my lane and hit me. It was 100% his fault and the cops knew right away. Fortunately I had  dashcam.     The damage is pretty extensive. Just the replacement parts alone are around  $2,300 . The impact damaged my left side, including the  subframe, steering knuckle, wheel bearing, strut, rim, bumper, and fender . Somehow, his car took most of the impact through his tire. I’m still in school and really don’t have a lot to pay for a new car.    Luckily, my school has an auto repair shop, so I may be able to have the car repaired there without paying labor costs. That would obviously help a lot.   I don't have the other driver's contact information because I have to wait about a week for the police report. I tried getting his information at the scene, but he never gave it to me.   My biggest concern is what happens if his insurance decides to total the car instead of paying to repair it. My car is older, and KBB is showing a value of roughly  $950–$2,500 , but I don't believe that accurately represents what my car was worth before the accident.   I have been finding comparable cars on other third-party websites and Facebook Marketplace listed for  $5,000+ . Before the accident, my car was in excellent condition for its age. The interior was very clean, the seats were in excellent condition, and the paint looked great. I had also paint-corrected the car. There were only a few minor exterior scratches and a couple of deeper scratches that I couldn't completely remove.   If the insurance adjuster gives me a low ball offer, what is the best way to fight it? Listings from third-party websites? Facebook Marketplace? Before-accident photos showing the condition of my car? Maintenance/repair records   Also, if they offered something like $1,000 when the actual repair costs are significantly higher, what would be the best way to respond?   I'm just trying to understand what I should do if I get lowballed by the insurance company. Any advice from people who have dealt with this before would be greatly appreciated.   I'll include some photos I had of the car from before the accident below.   Photos        submitted by     /u/Nearby_Object2829     to     r/Car_Insurance_Help       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Car_Insurance_Help/comments/1wbumkd/2004_acura_5sx_169k_miles/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T18:54:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T18:55:06.415Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1ab8a035b0f36efcc7cf8"
+    },
+    "message_id": "reddit_t3_1wbumib",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "Businessowners",
+    "username": "Mrcurios9653",
+    "title": "I will analyze your top 3 competitors and build an offensive strategy to take their market share (Free Case Study)",
+    "text": "I will analyze your top 3 competitors and build an offensive strategy to take their market share (Free Case Study)\n\n​I specialize in competitive analysis, pricing mechanics, and aggressive business growth.   ​Most owners are too busy to systematically track why competitors are stealing their clients or where their sales funnel is leaking margin.   ​I will run a complete breakdown for your business:   ​Competitor Teardown: Exposing competitor weaknesses, pricing traps, and hidden gaps.   ​Margin & Funnel Audit: Identifying drop-offs and missed upsells in your current offer.   ​Market-Takeover Plan: A clear action plan to pull customers away from rival businesses.   ​I'm doing this for 2 businesses this week to build case studies for long-term growth consulting roles.   ​If interested, DM me:   ​Your industry & business type.   ​The main bottleneck or rival you're fighting right now.       submitted by     /u/Mrcurios9653     to     r/Businessowners       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Businessowners/comments/1wbumib/i_will_analyze_your_top_3_competitors_and_build/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T18:54:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T18:55:06.636Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1ab8a035b0f36efcc7cf9"
+    },
+    "message_id": "reddit_t3_1wbumi2",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "FugglerCollectors",
+    "username": "Jazzlike-Cap-3054",
+    "title": "2018 spinmaster fuggs for sale.",
+    "text": "2018 spinmaster fuggs for sale.\n\nJust have these 2 left to sell. Both from 2018 and both do not have the original boxes or adoption papers just the fuggs. Adding 50 each or buy both for 90 shipped. ​   The 1st one is sasquoosh he is in gray condition   2nd is Teddy bear nightmare.   Shoot me an offer if you are interested.       submitted by     /u/Jazzlike-Cap-3054     to     r/FugglerCollectors       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FugglerCollectors/comments/1wbumi2/2018_spinmaster_fuggs_for_sale/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T18:54:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T18:55:06.851Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1ab8b035b0f36efcc7cfa"
+    },
+    "message_id": "reddit_t3_1wbumgq",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ThrottleStop",
+    "username": "SuAr69",
+    "title": "cpu temps hitting 100°C under load (URGENT)",
+    "text": "cpu temps hitting 100°C under load (URGENT)\n\nHey everyone,   I’m trying to confirm if my thermal paste is completely dead and need some advice on buying replacement parts.    Specs:  Lenovo Legion 5 15ARH05 (Ryzen 5 4600H, GTX 1650). Currently on 16GB RAM.    The Issue:  When I run a CPU stress test in Performance Mode (Red LED), my CPU Tctl/Tdie instantly spikes to 99.5°C and core temps hit 100°C. However, when I disable Turbo Boost (setting max processor state to 99%), it idles perfectly at 40-45°C and stays cool during standard college work, coding, and web browsing.   Back in March, I completely took the cooling system apart, cleaned the whole fan assembly and vents, and repasted everything using Thermalright TF7. Because of the instant temperature spikes, it seems the paste has completely pumped out in just six months.   On top of this, my left-side CPU fan has a failing bearing. Interestingly, a few months ago when I only had 8GB of RAM, it used to rattle and scrape constantly because the system was always ramping the fans up and down. Since I upgraded to 16GB, the rattling is way less frequent. The fan seems to stabilize perfectly from centrifugal force when spinning at max speed, but it still wobbles and scrapes when running at low RPMs (Quiet Mode).    My Plan:      Replace the failing left CPU fan (FRU: 5F10S13917).   Repaste the CPU and GPU using Honeywell PTM7950 instead of standard thermal paste to avoid pump-out.      My Questions:      Does this hardware diagnosis sound 100% correct to you guys based on the temperature spikes?   Can anyone recommend a trusted online seller that ships  genuine  Honeywell PTM7950 (0.2mm) in India? I don't want to get scammed by fake pads.              submitted by     /u/SuAr69     to     r/ThrottleStop       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ThrottleStop/comments/1wbumgq/cpu_temps_hitting_100c_under_load_urgent/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T18:54:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T18:55:07.072Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1abc6035b0f36efcc7cfb"
+    },
+    "message_id": "reddit_t3_1wbunq3",
+    "topic_key": "hello",
+    "search_keyword": "Hello",
+    "platform": "reddit",
+    "subreddit": "HelloKitty",
+    "username": "swaetdr00p",
+    "title": "ISO trade for kuromi give blood sticker!",
+    "text": "ISO trade for kuromi give blood sticker!\n\ni donated with my partner and got duplicate stickers, willing to trade for kuromi sticker!!       submitted by     /u/swaetdr00p     to     r/HelloKitty       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HelloKitty/comments/1wbunq3/iso_trade_for_kuromi_give_blood_sticker/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T18:55:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T18:56:06.683Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1abc6035b0f36efcc7cfc"
+    },
+    "message_id": "reddit_t3_1wbuno7",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "hyderabad",
+    "username": "NovaCarto",
+    "title": "Why are they here ?",
+    "text": "Why are they here ?\n\nMe & my friends, we went to Cream Stone in Himayath Nagar for Ice Cream at 23:00 (sept 9), and after our errand, we were about to leave the place, then a little girl with handful of puffy animal keychains approached me, and kept pestering me to buy one, she said she couldn't sell any today, and wanted me to buy one... the girl, she had light brown skin, had innocent round eyes, dry cheeks & lips, and few white spots(sign of vitamin deficiency or malnutrition) on her face...    I was sorta sad, guilty & angry at the same time... And I started asking her questions about her age, what was she doing here at 23:00 without a guardian, about parents or any guardian, if she goes to school... And she said, she was 10, said she doesn't do this usually, she's doing it because her mom's tired at the moment (a trained answer), she kept saying she doesn't have a father, but only a mom and a brother, her brother wasn't there... And we asked her if she would like to have something to eat at a near by veg & non-veg rolls place, she said no, she pointed towards a curry point across the road, and said wanted parcel... I was losing it, but also wanted her to have a nice meal before I call 1098, then my friend pulled me aside and told me, he saw this girl before at the same spot multiple times with the same trained answers she was giving us rn, and he even pointed me towards the direction of the girl's mom, who was keeping her sights on everything, while also acting like she isn't anyone's mum from a close distance. He also told me that If I buy her a meal, her mom's gonna get most of it.   I told my friend, we should've recorded stuff, let's go and ask her again with a cam this time, and I'd call 1098 after that... and he told me something, others have tried it already in the past, even if you luckily connect with a person from 1098, and even if they understand the situation and arrive by luck, she ain't gonna be taken for protective care, her mom's gonna take her away before that, or gonna cause a ruckus, they won't be able to take her away. It's hard to leave, but it's the only thing we can do now... And we left, without turning back.   And It broke my heart, we couldn't do anything... Why do every undeserving person gets to be a parent ? Why don't they leave children under the care of child welfare services or orphanages if they can't raise kids ? Is it to use them for sympathy/guilty trip to sell stuff at high prices ? Are we contributing more to this cycle by buying stuff from these neglected kids who are being used ? Why can't our system do anything about this ? Why can't we do anything about this ? Why do people have kids ? Why ? I couldn't do anything about it.       submitted by     /u/NovaCarto     to     r/hyderabad       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/hyderabad/comments/1wbuno7/why_are_they_here/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T18:55:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T18:56:06.902Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1abc7035b0f36efcc7cfd"
+    },
+    "message_id": "reddit_t3_1wbuno4",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "transmascdiy",
+    "username": "j4x_mdz",
+    "title": "Switching to ethenate?",
+    "text": "Switching to ethenate?\n\nSo I normally use Cypionate, ive never used any other type of testosterone. However, the cypionate I normally buy is out of stock, does ethenate do the same thing and is it safe to switch? I would rather just wait for Cypionate to come back in stock but the issue is that when I messaged my dealer he said it would be in stock next week about 2&½ weeks ago. Getting worried I will run out.       submitted by     /u/j4x_mdz     to     r/transmascdiy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/transmascdiy/comments/1wbuno4/switching_to_ethenate/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T18:55:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T18:56:07.114Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1abc7035b0f36efcc7cfe"
+    },
+    "message_id": "reddit_t3_1wbunnw",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "TravelMaps",
+    "username": "chrisdematos",
+    "title": "I marked everywhere I've traveled to and turned it into an A3-sized poster. No need to buy those gray scratch-off maps!",
+    "text": "I marked everywhere I've traveled to and turned it into an A3-sized poster. No need to buy those gray scratch-off maps!\n\nsubmitted by     /u/chrisdematos     to     r/TravelMaps       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TravelMaps/comments/1wbunnw/i_marked_everywhere_ive_traveled_to_and_turned_it/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T18:55:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T18:56:07.327Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1abc7035b0f36efcc7cff"
+    },
+    "message_id": "reddit_t3_1wbunni",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AppleIndia",
+    "username": "Ironnmaann",
+    "title": "17 Pro Max",
+    "text": "17 Pro Max\n\nShall I buy the 17pro max today?? Will there be price increase even if the product is discontinued??       submitted by     /u/Ironnmaann     to     r/AppleIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AppleIndia/comments/1wbunni/17_pro_max/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T18:55:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T18:56:07.539Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1abc7035b0f36efcc7d00"
+    },
+    "message_id": "reddit_t3_1wbunnh",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Colognes",
+    "username": "Low_Construction5316",
+    "title": "So many more I would like to buy",
+    "text": "So many more I would like to buy\n\nsubmitted by     /u/Low_Construction5316     to     r/Colognes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Colognes/comments/1wbunnh/so_many_more_i_would_like_to_buy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T18:55:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T18:56:07.750Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1abc7035b0f36efcc7d01"
+    },
+    "message_id": "reddit_t3_1wbunnf",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "micro_saas",
+    "username": "Wild-Cantaloupe-2125",
+    "title": "Do customers notice AI slop",
+    "text": "Do customers notice AI slop\n\nI’m building this website and I’m playing with UI/UX FOR MORE THAN TWO WEEEKSSSS EVERY DAY.   I kinda got to a point where I want it to be - and it seems that the website style I LIKE is giving that AI slop vibe. But I like it and it fits the product.. so I don’t know if I should keep beating myself and continue tweaking little things here and there or leave it as is - nothing too special, nothing extraordinary, just tidy website with generic layout and fonts and that’s it.   I wanted it to look special, but whenever I tried throwing some super turbo good design example (or even a medium looking one) it just didn’t fit the product.   Those who have been designing SaaS - any notices? Do you have generic looking websites which still perform?  I have no doubt in my tool, it’s good and performs well, but what if front end will send people flying?   P.S. It’s not that purple glowy vibe, but basic enough to be suspicious. I’m NOT looking for any website / tool recommendations.       submitted by     /u/Wild-Cantaloupe-2125     to     r/micro_saas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/micro_saas/comments/1wbunnf/do_customers_notice_ai_slop/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T18:55:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T18:56:07.961Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1abc8035b0f36efcc7d02"
+    },
+    "message_id": "reddit_t3_1wbunjk",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "Esthetics",
+    "username": "Fuzzy-Hamster-8163",
+    "title": "Esties - what are we using for booking sites??",
+    "text": "Esties - what are we using for booking sites??\n\nI have no idea what to chose for a booking site 🥲 I’ve been in the industry for two years and I hate Vagaro and love MangoMint but I don’t know if I’ll be able to afford MangoMint since I’m going out on my own… is it worth it, what other booking sites do yall love???       submitted by     /u/Fuzzy-Hamster-8163     to     r/Esthetics       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Esthetics/comments/1wbunjk/esties_what_are_we_using_for_booking_sites/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T18:55:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T18:56:08.183Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1abc8035b0f36efcc7d03"
+    },
+    "message_id": "reddit_t3_1wbunjg",
+    "topic_key": "hello",
+    "search_keyword": "Hello",
+    "platform": "reddit",
+    "subreddit": "Biohacking",
+    "username": "Retamonktide",
+    "title": "Metabolic adaptation?",
+    "text": "Metabolic adaptation?\n\nHello everyone, feel free to absolutely tear me apart in the comment section. Ive been on reta since may 5th at first like most i dropped a ton of weight quickly (see screenshots) slowly it has tapered off until around end of july/ start of august i hit a wall and weightloss has almost all but stalled(at least slowed down heavily). My starting weight was 419lbs and my CW fluctuates between 363-370 for the last 2 weeks. Reta has completely killed my appetite and most days i struggle to even get 2000 calories, i lift at minimum 4 days a week and my steps are anywhere from 8-12k daily. My TDEE is and should be very high comparatively to someone small and less active. Am i making a big deal out of nothing? Is there something obvious im missing? Am i out of touch? Please let me know any suggestions or thoughts or feel free to just call me stupid 😂.   Started lifting/ taking the gym seriously around the same i started to stall out.    Started on 2mg  Now at 6mg every 6 days.  Also take  Motsc 3mg before workouts  Klow daily (cycled off atm)  Just started SS31 3mg with motsc  25 Y/O Male   If anything needs to be clarified ill answer it and edit it into the post.        submitted by     /u/Retamonktide     to     r/Biohacking       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Biohacking/comments/1wbunjg/metabolic_adaptation/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T18:55:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T18:56:08.395Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1abc947709d84b65bfea9"
+    },
+    "message_id": "reddit_serp_vhfya3",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/salesforce/comments/vhfya3/is_it_possible_for_pricing_book_entries_to_have/",
+    "text": "Is it possible for Pricing Book Entries to have Formula-Based Prices\n\nHere's the use case:      A jewellery repairs shop uses SalesForce at the shop counter to create an opportunity record at the point of customer enquiry.   All of the repairs processes offered are stored as products in SalesForce.   A single opportunity record may have many different repairs processes associated with it, which are assigned as products to each opportunity as necessary.   The price quoted for undertaking many of those repairs processes is dependent on a range of factors. One of the most complex would be a ring resizing, which uses a formula to calculate the price based on the precious metal, metal purity, width, depth, number of sizes up, mark-up rates and so on.   Most of the formulas are much more simple, for example a fixed price for the first soldering operation, and a discounted price for every one thereafter.     I would like to be able to set up SalesForce so that once an opportunity record is created and the relevant products assigned to it, the user is presented with a flow that allows them to capture all of the information need for a formula to be able to calculate the price.    I absolutely want to avoid having to create a unique pricing book entry for every possible combination of factors that a repairs processes price may be reliant on. There would be hundreds, and it would encumber customer interactions.   Those with deeper SalesForce knowledge than mine; is this at all possible?   Thanks in advance.       submitted by     /u/Amaffi       [link]       [comments]",
+    "username": "Amaffi",
+    "subreddit_or_channel": "salesforce",
+    "posted_at": "2022-06-21T15:28:48+00:00",
+    "fetched_at": {
+      "$date": "2026-09-09T18:56:09.875Z"
+    },
+    "google_rank": 6,
+    "search_keyword": "certified pricing tool",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-09T18:56:09.875Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1ac0147709d84b65bfeaa"
+    },
+    "message_id": "reddit_serp_lobznx",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/FulfillmentByAmazon/comments/lobznx/fastest_way_to_get_amazon_brand_registered_and/",
+    "text": "Fastest way to get Amazon brand registered and start listing/selling my products via trademark?\n\nI want to start selling ASAP and launching different products. I don’t want to have to get every product approved by Amazon seller support in order to create listings (Error 5665). I rather file for a trademark first and become brand registered. I’ve recently seen people online becoming Amazon brand registered in about 7-10 days based on Amazon accepting pending trademarks.    Would you recommend I do a “plan to use” trademark application for Amazon brand registry since I don’t have my branded products yet?      OR     Would you recommend getting the branded products made first and then applying for the “in use” trademark for Amazon Brand Registry?    Based on my understanding to file a “in use” trademark application I would need to have photos of the branded packaging and product.       submitted by     /u/ReadyIntroduction0       [link]       [comments]",
+    "username": "ReadyIntroduction0",
+    "subreddit_or_channel": "FulfillmentByAmazon",
+    "posted_at": "2021-02-20T17:29:53+00:00",
+    "fetched_at": {
+      "$date": "2026-09-09T18:57:05.744Z"
+    },
+    "google_rank": 8,
+    "search_keyword": "certified product listing service",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-09T18:57:05.744Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1ac03035b0f36efcc7d04"
+    },
+    "message_id": "reddit_t3_1wbuos8",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BPDlovedones",
+    "username": "pl4ntw1tch",
+    "title": "BPD upstairs neighbor",
+    "text": "BPD upstairs neighbor\n\nI'm currently fighting with my apartment management bc of my unstable neighbor.    Things started out friendly but as time went on I knew this wasn't someone I wanted to continue a relationship with.    Her mom and younger sister lived with her and her husband for a while and there were numerous occasions where I was close to calling the police. One day I heard her jump up and down shaking the entire building, screaming at her sister who is all of 7. She always tried to say it was her mom who was abusive, and even if that's true, it is clear as day she is no better. I have also heard the neighbor across from me yelling at her for being too loud.    She has shown a pattern of boundary pushing and outrageous expectations, lying and manipulation. Small things on their own but when they're all put together it just paints a picture of an extremely immature, unregulated, unaccountable, selfish person.    Some examples: trying to take me away from plans she knew I had, asking to have furniture I am currently using, asking me to take her to do things during my work hours, pressuring me to buy a gift card for a far away store I don't go to, ringing my doorbell late at night simply bc there's a sign that says don't ring the bell and lying about it, trying to tell me all the time my house smells like smoke bc I told her I got stoned one day (I eat edibles). She asked me about my sexuality and after finding out I was bi she started giving me kisses on the cheek and would offer me massages and shit like that when I was stressed. Being noticeably louder when I didn't give in to a request (she doesn't drive and can't do anything for herself), or respond to a text message. Laughing at my experience being misdiagnosed with BPD when it was in fact ADHD, she basically tried to tell me I do have it bc she has it too. She barely knew me at this point and I found it incredibly rude and immediately picked up on the projection or some sort of jealousy that I \"escaped\" the diagnosis and she didn't.    The final straw was being sick and asking nicely (twice) if she could be more mindful of her step bc she walks like a fucking elephant on any given day, and it's worse when she's having a tantrum. She was dismissive of course, and then continued throughout the day and I couldn't get any rest. So I asked her again if it would kill her to be considerate of my peace bc the shit on my walls was shaking. She of course responded that she was walking how she always walks and said \"please stop texting me,\" as if asking for a modicum of consideration was some form of harassment. All the love bombing she did and the moment I ask for anything I actually need instead of taking her up on shit she used to try to manipulate my loyalty, and this is how she acts.    So I asked for my books back, and said she needed to find a other ride to this immigration interview her and her husband begged me to take them to even though it didn't work with my work schedule. And I called her an \"inconsiderate fucking person.\" Blocked her.    So now I've sent an email to the rental company advising them of the disturbance. I've been here a long time and have had 2 other neighbors up there who weren't an issue at all. At first the landlady was supportive but then of course the neighbor told her I swore at her and she spun this whole sob story about how she's devastated bc we were friends and gave this shit about cooking a chicken and closing a window, and how her knees are bad, and how it should be better now that her mom and sister are out. And the landlady is going on about how we should be able to meet in the middle and how hard her job as a rental manager is. Which honestly pissed me off so bad bc what \"meeting in the middle\" actually means is to self abandon and put up with my BPD neighbors bullshit bc my peace/needs are inconvenient and they don't want to deal with them.    I responded firmly that it has nothing to do with chicken, closing a window, her mom, or her sister. Told the landlady she is manipulative and has BPD and all I asked for was consideration, like idk lay down a fucking rug. And that I didn't care about the sob story bc I have a right to peaceful enjoyment of my place. I said all she needs to do is take some accountability, stop being such a selfish person, and quit making excuses as to why she can't consider other people. I even went so far as to tell the landlady I wasn't going to maintain a relationship with this unhealthy individual bc I don't have to. Told her I don't need her to referee an adult relationship, I just need for my walls not to shake.    Having to defend my initially polite requests for the bare fucking minimum, not just to a PwBPD but to a spinless, easily manipulated people pleaser is infuriating.        submitted by     /u/pl4ntw1tch     to     r/BPDlovedones       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BPDlovedones/comments/1wbuos8/bpd_upstairs_neighbor/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T18:56:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-09T18:57:07.285Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa1ac03035b0f36efcc7d05"
+    },
+    "message_id": "reddit_t3_1wbuorx",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Starcitizen_trades",
+    "username": "Furios93",
+    "title": "[WTS] Galaxy to Tyilui, Apollo Triage to M80.",
+    "text": "[WTS] Galaxy to Tyilui, Apollo Triage to M80.\n\nHi everyone, looking to sell a couple of items from my hangar.   * All prices include PayPal fees (invoice).   * Payment via PayPal Invoice (Goods and Services) only.   * Buyers must be RSI Verified and leave a comment on this thread before sending a PM/Chat.   - CCU Galaxy to Tyilui $25 1 Left   - CCU Apollo Triage to M80 $25 1 Left   **How it works:**     Reply to this post with \"PM\" or \"Interested\".   Send me a PM with your PayPal Email and RSI Email.   I will send a PayPal invoice. Once paid, the item will be gifted to your RSI email.         submitted by     /u/Furios93     to     r/Starcitizen_trades       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Starcitizen_trades/comments/1wbuorx/wts_galaxy_to_tyilui_apollo_triage_to_m80/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-09T18:56:52Z"
+    },
+    "fetched_at": {

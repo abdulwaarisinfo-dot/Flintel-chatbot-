@@ -1,0 +1,416 @@
+    "subreddit": "DesignerEye",
+    "username": "Fantastic_Comfort873",
+    "title": "Custom level by Fantastic_Comfort873",
+    "text": "Custom level by Fantastic_Comfort873\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Fantastic_Comfort873     to     r/DesignerEye       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DesignerEye/comments/1wn1ss0/custom_level_by_fantastic_comfort873/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T06:33:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T06:34:19.438Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab2216b660c60840399338a"
+    },
+    "message_id": "reddit_t3_1wn1sr9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "reactnative",
+    "username": "chloe_smith0104",
+    "title": "Your React Native App Isn't Done Until You Can Ship a Fix Without App Review",
+    "text": "Your React Native App Isn't Done Until You Can Ship a Fix Without App Review\n\nEvery RN team has the same bad Tuesday: a null check breaks checkout, the fix is four lines, and it sits in App Review for a week behind a rebuild and a reviewer in another timezone.   I wrote up the EAS Update setup that closes that gap, mostly because a lot of the advice floating around is stale. Some things that surprised me while fact-checking it against Expo's current docs:     Expo still recommends the  appVersion  runtime policy, not  fingerprint . Fingerprint is labeled experimental. A lot of 2026 blog posts say the opposite.   The rollback command is  eas update:rollback  (interactive, lets you pick a previous update  or  fall back to the bundle embedded in the store build).  republish  is for promoting a tested update, not rolling back.   Per-update rollouts:  --rollout-percentage 10  on publish, then  eas update:edit  to widen. Nobody should be pushing straight to 100%.   The actual rule Apple enforces is DPLA §3.3.1(B) (the old \"3.3.2\") plus Review Guideline 2.5.2 — JS bundles are fine as long as you don't change the app's purpose or bypass sandbox/signing.   CodePush has been dead since March 2025, and tutorials still reference it.     There's also a \"20-minute hotfix\" walkthrough: publish to preview → QA →  eas update:republish --destination-channel production --rollout-percentage 10  → watch Sentry → widen. No Xcode, no archive, no waiting for review.    Full article :  https://medium.com/@smi.chloe01/your-react-native-app-isnt-done-until-you-can-ship-a-fix-without-app-review-cf2b6b70dfac?utm_source=reddit&utm_medium=social&utm_campaign=ota_article&utm_content=r_reactnative    Disclosure: I work on RapidNative (prompt-to-Expo app builder) — this came out of wiring OTA into the projects it generates so people don't rediscover all of this at 2am.   Curious what others are doing for foreground update checks — the cold-launch-only default has bitten us more than once.       submitted by     /u/chloe_smith0104     to     r/reactnative       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/reactnative/comments/1wn1sr9/your_react_native_app_isnt_done_until_you_can/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T06:33:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T06:34:19.641Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab2216b660c60840399338b"
+    },
+    "message_id": "reddit_t3_1wn1sr2",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "SolarPakistan",
+    "username": "HatAffectionate3481",
+    "title": "Battery prices decreased?",
+    "text": "Battery prices decreased?\n\nHi, yesterday I saw a news about lithium battery price decreased, so I would like to ask from you guys. This is real ? Price really decreased with 100k difference?  Source of news :   https://www.instagram.com/p/DdgaR67DGZO/?stkn=cWUxOWszdGFheDUx        submitted by     /u/HatAffectionate3481     to     r/SolarPakistan       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SolarPakistan/comments/1wn1sr2/battery_prices_decreased/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T06:33:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T06:34:19.841Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab2216c660c60840399338c"
+    },
+    "message_id": "reddit_t3_1wn1sr0",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "guessthesubreddit",
+    "username": "GTSBot",
+    "title": "[GTS] Redstone isnt really intuitive",
+    "text": "[GTS] Redstone isnt really intuitive\n\nsubmitted by     /u/GTSBot     to     r/guessthesubreddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/guessthesubreddit/comments/1wn1sr0/gts_redstone_isnt_really_intuitive/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T06:33:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T06:34:20.040Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab2216c660c60840399338d"
+    },
+    "message_id": "reddit_t3_1wn1sqq",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "wordgrind",
+    "username": "PopFine1393",
+    "title": "Translate — what's \"bocina\" in English?",
+    "text": "Translate — what's \"bocina\" in English?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/PopFine1393     to     r/wordgrind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wordgrind/comments/1wn1sqq/translate_whats_bocina_in_english/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T06:33:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T06:34:20.244Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab2216c660c60840399338e"
+    },
+    "message_id": "reddit_t3_1wn1spl",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "i_am_buttlicker",
+    "title": "What’s your favourite subReddit to Binge read ?",
+    "text": "What’s your favourite subReddit to Binge read ?\n\nsubmitted by     /u/i_am_buttlicker     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wn1spl/whats_your_favourite_subreddit_to_binge_read/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T06:33:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T06:34:20.452Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab2216c660c60840399338f"
+    },
+    "message_id": "reddit_t3_1wn1spi",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "LpsCollectors",
+    "username": "idontlikeicecubes",
+    "title": "Where to buy new LPS",
+    "text": "Where to buy new LPS\n\nHi y’all  I have a lot of old LPS that I love and adore but I would love to get some new ones that I can keep in mint condition to give to my kids when I’m older (or something like that lol). But I can’t seem to find any of the gen 7 for sale (like brand new not secondhand) anywhere, the LPS website doesn’t work/is all sold out, Google keeps telling me Amazon or Bol but those are all fakes, and online I only see people buying from 5 below and walmar which isnt available where I live   Any suggestions on where to buy real brand new LPS? I live in Europe so pls nothing that’s US only       submitted by     /u/idontlikeicecubes     to     r/LpsCollectors       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LpsCollectors/comments/1wn1spi/where_to_buy_new_lps/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T06:33:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T06:34:20.650Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab2216c660c608403993390"
+    },
+    "message_id": "reddit_t3_1wn1sox",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "footballmanagergames",
+    "username": "sinstercowbomb",
+    "title": "Si are delaying the announcement because they know they have nothing substantial",
+    "text": "Si are delaying the announcement because they know they have nothing substantial\n\nThis is now a company that is very scared of failure like a child who has broken a vase and trying to show it in a certain way that their parents dont notice the damage.   Not 1 screenshot for a game that releases in around 6 weeks is madness, when game companies are usually full into marketing at this stage.       submitted by     /u/sinstercowbomb     to     r/footballmanagergames       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/footballmanagergames/comments/1wn1sox/si_are_delaying_the_announcement_because_they/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T06:33:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T06:34:20.852Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab2216d660c608403993391"
+    },
+    "message_id": "reddit_t3_1wn1sor",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "Stargate",
+    "username": "ElevatorOpen9437",
+    "title": "Amazon Looking for a New Creators/Writers",
+    "text": "Amazon Looking for a New Creators/Writers\n\nListen, I hope they don’t make it into something it’s not. I really do.   Also, I really wished that the current writers focused on tying up some storylines or using the multiple they’ve opened.   Overall, I hope whoever leads this series future utilizes the vast storylines it has and expands on them to finally give the fans the context we need.   Back to Atlantis? What other secrets are there? Finally the ZPM factory or earth base? Did we finally go back to Pegasus and end the Wraith? What’s going on in the Ori galaxy?   Sprinkle a miniseries on the development of the Ancients with it ending with Merlin walking through the gate leaving Atlantis or Janus tipping his hat to the first humans finding a gate while he jumps to a different time in his Jumper? Show us what happens on a day to day basis in Ascension? Midway through the show, show us Destiny blasting off?   End the show with Earth making enough ZPMs for a 1 way trip to Destiny with the right crew and some of the original crew waiting?? Something to end the storylines and finally give the fans what we’ve all really wanted and dreamed of since SGU’s last episode: closure.       submitted by     /u/ElevatorOpen9437     to     r/Stargate       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Stargate/comments/1wn1sor/amazon_looking_for_a_new_creatorswriters/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T06:33:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T06:34:21.052Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab2216d660c608403993392"
+    },
+    "message_id": "reddit_t3_1wn1sof",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "iPhoneWale",
+    "username": "Thala77777",
+    "title": "How much will i get for this ?",
+    "text": "How much will i get for this ?\n\nI have 1 year old Airpods 4 (non-ANC). It has my name engraved on it and a few very minor scratches on the earbuds. Im thinking about selling them and using the money to buy the new airpods 5. How much can i get from my current airpods ?? Im not trying to sell them on this subReddit, I’m just asking what price can I expect.        submitted by     /u/Thala77777     to     r/iPhoneWale       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/iPhoneWale/comments/1wn1sof/how_much_will_i_get_for_this/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T06:33:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T06:34:21.254Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab2216d660c608403993395"
+    },
+    "message_id": "reddit_t3_1wn1sob",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "AskRussian",
+    "username": "curioustraveller2014",
+    "title": "Is it safe for me as a uk national to visit Russia",
+    "text": "Is it safe for me as a uk national to visit Russia\n\nI have wanted to visit for some time now I’m 20 and want to travel and see the world but I’m unsure if I would be well received and would just appreciate any information thank you        submitted by     /u/curioustraveller2014     to     r/AskRussian       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskRussian/comments/1wn1sob/is_it_safe_for_me_as_a_uk_national_to_visit_russia/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T06:33:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T06:34:21.846Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab2216e660c608403993396"
+    },
+    "message_id": "reddit_t3_1wn1so4",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "eBaySellers",
+    "username": "mars422",
+    "title": "Buyer is saying my shirt is a children's shirt when it's not",
+    "text": "Buyer is saying my shirt is a children's shirt when it's not\n\nHi, I recently sold a shirt from a work event that I didn't use to get some extra money. It was new with tags, but it ran smaller than I thought. I sold the shirt with all the proper information including that it was an adult shirt. The person who bought it is claiming it's a kid's shirt and that I misrepresented it. It's not a kid's shirt, but because it's ran smaller he's saying I lied and is demanding a full refund and that I should pay for the shipping. I didn't lie! The shirt literally doesn't exist in a kid's size. It's an adult shirt, and the person is getting aggressive. What should I do? Please help. I don't know how to prove it's an adult shirt and that I didn't lie.       submitted by     /u/mars422     to     r/eBaySellers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/eBaySellers/comments/1wn1so4/buyer_is_saying_my_shirt_is_a_childrens_shirt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T06:33:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T06:34:22.045Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab221a6660c608403993397"
+    },
+    "message_id": "reddit_t3_1wn1tjs",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Pixelary",
+    "username": "I3eetle",
+    "title": "What did u/I3eetle draw?",
+    "text": "What did u/I3eetle draw?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/I3eetle     to     r/Pixelary       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Pixelary/comments/1wn1tjs/what_did_ui3eetle_draw/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T06:35:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T06:35:18.714Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab221a6660c608403993398"
+    },
+    "message_id": "reddit_t3_1wn1tis",
+    "topic_key": "can you find me sales",
+    "search_keyword": "WhatsApp bot",
+    "platform": "reddit",
+    "subreddit": "sideprojects",
+    "username": "Savings-Toe1307",
+    "title": "built a whatsapp bot that files your docs into your own google drive. looking for brutal feedback",
+    "text": "built a whatsapp bot that files your docs into your own google drive. looking for brutal feedback\n\nDrudow ( http://drudow.com )   in India basically every important doc lives as a photo in some whatsapp chat. so instead of making yet another app, i made a whatsapp number you just send stuff to. it reads the doc, names it, files it in your google drive, and sends it back whenever you ask for it. Kinda productivity tool.   what it can do rn:   - save photos, pdfs, links and notes, properly named and sorted into folders   - get any file back just by asking for it in the chat   - combine a few documents into one pdf   - pdf stuff: photos to pdf, merge, split, compress   - reminders, and it offers one when a bill or ticket has a date on it   - rename, move, delete or undo just by saying so   - works in hindi, english and hinglish, voice notes too   it only sees the one folder it creates in your drive, nothing else. your files stay in your drive, not on my server.   free while it's early. drudow.com if you want to poke at it -> say hi on whatsapp and it walks you through the rest.   honest question: what would make you actually use this instead of just messaging yourself on whatsapp?       submitted by     /u/Savings-Toe1307     to     r/sideprojects       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sideprojects/comments/1wn1tis/built_a_whatsapp_bot_that_files_your_docs_into/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T06:35:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T06:35:18.921Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab221a7660c608403993399"
+    },
+    "message_id": "reddit_t3_1wn1tir",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "pakistan",
+    "username": "Professional-Box5785",
+    "title": "ACCA Starting Salary",
+    "text": "ACCA Starting Salary\n\nWhat’s a realistic starting salary for someone who has cleared all ACCA exams but has no work experience yet in Pakistan?       submitted by     /u/Professional-Box5785     to     r/pakistan       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pakistan/comments/1wn1tir/acca_starting_salary/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T06:35:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T06:35:19.119Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab221a7660c60840399339a"
+    },
+    "message_id": "reddit_t3_1wn1ti1",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "verdadesemlimites",
+    "username": "SmartArrow",
+    "title": "🛸🇺🇦 Zelensky mostrou o uso bem-sucedido do novo drone-intercetor contra os «Geran»",
+    "text": "🛸🇺🇦 Zelensky mostrou o uso bem-sucedido do novo drone-intercetor contra os «Geran»\n\nO desenvolvimento foi apresentado pelo chefe do SBU, Poklad. O drone foi criado com a participação da contrainteligência militar do SBU.   ❗️Militares da contrainteligência militar do SBU atingiram um drone a jato russo «Geran-5». Zelensky afirmou que este foi o segundo uso bem-sucedido do novo drone no dia de hoje.   O drone-intercetor foi concebido para combater drones não tripulados a jato, que, segundo especialistas ucranianos, são praticamente impossíveis de intercetar devido à sua velocidade.   «Já tivemos hoje o segundo uso bem-sucedido do novo drone-intercetor ucraniano»   Volodymyr Zelensky.   ➖Anteriormente, o The Sunday Times reconheceu que os novos «Geran» a jato praticamente retiraram do jogo a defesa antiaérea das Forças Armadas da Ucrânia.       submitted by     /u/SmartArrow     to     r/verdadesemlimites       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/verdadesemlimites/comments/1wn1ti1/zelensky_mostrou_o_uso_bemsucedido_do_novo/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T06:35:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T06:35:19.321Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab221a7660c60840399339b"
+    },
+    "message_id": "reddit_t3_1wn1thv",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Vagyroscope",
+    "title": "Grab 100 hammers from u/Vagyroscope!",
+    "text": "Grab 100 hammers from u/Vagyroscope!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Vagyroscope     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wn1thv/grab_100_hammers_from_uvagyroscope/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T06:35:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T06:35:19.521Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab221a7660c60840399339c"
+    },
+    "message_id": "reddit_t3_1wn1thj",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "KGBTR",
+    "username": "iyisintostum",
+    "title": "intihar eşiğindeyim ne yapmalıyım",
+    "text": "intihar eşiğindeyim ne yapmalıyım\n\nhikayemi en başından anlatıcam şuan 27 yaşındayım var bu yaşta niye reddit kullanıyon bunak falan demeyin lütfen 04.11.1999 doğumlyum annem beni doğurduğu sırada melek olmuş yaklaşık 10 gün sonra babam acısına dayanamayıp kendisini asmış bunları tabiki 20 yıl sonra öğrendim teyzem ve eniştem büyüttü beni kuzenlerimden hiç ayrı tutmadılar çok güzel bir çocukluk geçirdim üniversitede akdeniz üniye selam olsun 4. 3. sınıfta bir kızla tanıştım çok güzeldi herşey 1. yılımızda evlenme kararı aldık fakat ailesi üni bitmeden olma dedi üniyi bitirdikten sonra sözlendik evlendik evlenme arefesinde teyzemi kanserden kaybettim yemeden içmeden kesilmiştim annem gibiydi çünkü zaten 15 yaşına kadar annem sanarak yetişmiştim evliliğin ilk senesinde eşim hamile kaldığı zaman kontrollerde çok riskli bir hamilelik oldugunu ve doğana kadar hiçbirşekilde hareket etmemesini istedi doktor aylarca yatakta yattı ona baktım yedirdim 22. haftada eşimin kanaması oldu cok yoğundu hastaneye gittik meğerse bizim bebeğimiz melek olmuş annesinin karnında düşük olduğu sırada eşimin iç kanaması başlamış 1 hafta yoğun bakımda kaldı eşimi kaybettim şuan bi fabrikada mühendis olarak çalışıyorum hiçbir gayem yok günde olursa 3 saat uyuyorum intihar etmek istiyorum bu durumları kabul edemiyorum ne yapmalıyım        submitted by     /u/iyisintostum     to     r/KGBTR       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/KGBTR/comments/1wn1thj/intihar_eşiğindeyim_ne_yapmalıyım/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-22T06:35:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-22T06:35:19.724Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab221a7660c60840399339d"
+    },
+    "message_id": "reddit_t3_1wn1tha",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "july-ann",

@@ -1,0 +1,416 @@
+      "$date": "2026-09-21T21:35:21.610Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab1a319aeeb96c1c63bb076"
+    },
+    "message_id": "reddit_t3_1wmq7u0",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "opencode",
+    "username": "Sarthak999gupta",
+    "title": "What happens when LLM-style inference becomes cheap enough for every small decision?",
+    "text": "What happens when LLM-style inference becomes cheap enough for every small decision?\n\nJev got me thinking about a slightly different way to look at model economics.   The interesting part isn't necessarily that it's faster or cheaper than a large generative model.   It's what becomes possible when inference is cheap enough that you can put a model behind almost every small decision in a system.   Think:     classify an incoming email   route a support ticket   score a lead   extract structured fields   moderate content   classify user feedback   decide which workflow should run next     Some early Jev demos are reporting numbers like hundreds of classifications for a few cents, but the more interesting metric seems to be  cost per correct decision , rather than cost per request.   A $0.001 decision that's wrong 20% of the time can obviously be more expensive than a $0.005 decision that's right 98% of the time.   The other thing I'd want to see before drawing conclusions is production behavior: p95 latency under load, accuracy on real distributions, retries, model/version changes, and how often a human needs to intervene.   The flashy demos are fun, but I think the boring workloads — classification, routing, extraction, scoring — are where this architecture could have the biggest practical impact.   Curious what others think:  what evaluation would convince you that a very cheap decision model is actually useful in production?        submitted by     /u/Sarthak999gupta     to     r/opencode       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/opencode/comments/1wmq7u0/what_happens_when_llmstyle_inference_becomes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T21:35:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T21:35:21.835Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab1a34e660c608403990a3b"
+    },
+    "message_id": "reddit_t3_1wmq8t9",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "LimitedPrintGames",
+    "username": "PreviousLetterhead31",
+    "title": "Finally, only had to buy it twice!!!",
+    "text": "Finally, only had to buy it twice!!!\n\nMajor shot out to Super Rare for actually delivering.   No thanks to you know who for cock blocking me from this since 2022.       submitted by     /u/PreviousLetterhead31     to     r/LimitedPrintGames       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LimitedPrintGames/comments/1wmq8t9/finally_only_had_to_buy_it_twice/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T21:36:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T21:36:14.160Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1a34e660c608403990a3c"
+    },
+    "message_id": "reddit_t3_1wmq8sx",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "HOscalemodeltrains",
+    "username": "TrainControl",
+    "title": "I built a WiFi DCC command station you run from your phone, and I'd love your honest feedback",
+    "text": "I built a WiFi DCC command station you run from your phone, and I'd love your honest feedback\n\nFor the past 10 months I've been designing my own DCC command station, and it's finally out: the TrainController.    The idea was simple: I wanted to run my HO locos from my phone without buying a dedicated throttle. So the command station creates its own WiFi and you control everything from a free app on iPhone, iPad, Mac, Android or a web browser.    A few details:   - Up to 12 sound locos running at the same time (25+ total)   - Protection built in (short circuit, reverse polarity, surge)   - Designed and assembled by me, in small batches, in Quebec   - $400 CAD    I'd genuinely love feedback from HO modelers: what would make you switch from your current system? What's missing?    Happy to answer any questions, technical or not. 😉       submitted by     /u/TrainControl     to     r/HOscalemodeltrains       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HOscalemodeltrains/comments/1wmq8sx/i_built_a_wifi_dcc_command_station_you_run_from/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T21:36:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T21:36:14.362Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1a34e660c608403990a3d"
+    },
+    "message_id": "reddit_t3_1wmq8sv",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "iphone",
+    "username": "Example-Difficult",
+    "title": "firstly, i know i have a problem, but i want opinions for case combos.",
+    "text": "firstly, i know i have a problem, but i want opinions for case combos.\n\nsubmitted by     /u/Example-Difficult     to     r/iphone       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/iphone/comments/1wmq8sv/firstly_i_know_i_have_a_problem_but_i_want/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T21:36:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T21:36:14.562Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1a34e660c608403990a3e"
+    },
+    "message_id": "reddit_t3_1wmq8sg",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "repwatchbuyselltrade",
+    "username": "rolledrover",
+    "title": "[WTS][US] Rolex Submariner 126610LN VSF VS3235",
+    "text": "[WTS][US] Rolex Submariner 126610LN VSF VS3235\n\nWatch is in very good condition with a couple fine scratches consistent with wearing in an office setting, mostly on the bracelet and clasp. No issues with movement or date. No scratches on dial or crystal. Worn for approximately 3 months. All links included.   More than happy to do any kind of verification before sale.   $415 shipped priority.       submitted by     /u/rolledrover     to     r/repwatchbuyselltrade       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/repwatchbuyselltrade/comments/1wmq8sg/wtsus_rolex_submariner_126610ln_vsf_vs3235/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T21:36:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T21:36:14.764Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1a34e660c608403990a3f"
+    },
+    "message_id": "reddit_t3_1wmq8sf",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Funny_stupid_Funny",
+    "username": "mastercubez",
+    "title": "New event!",
+    "text": "New event!\n\nLast week we made a poll on which eleven (11) people voted on   And Low Quality Sunday won with 7 (seven) votes!   This means that each Sunday only posts with extreme low quality are allowed   (This event is mostly experimental since we didn't really get that many impressions from the last post, we may cycle through the other events if the Low Quality Sunday doesn't add much to the subreddit)       submitted by     /u/mastercubez     to     r/Funny_stupid_Funny       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Funny_stupid_Funny/comments/1wmq8sf/new_event/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T21:36:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T21:36:14.963Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1a34f660c608403990a40"
+    },
+    "message_id": "reddit_t3_1wmq8rz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ToyotaTundra",
+    "username": "dwall02",
+    "title": "Warranty",
+    "text": "Warranty\n\nIs there a place to buy a warranty for cheap? I have had FORD’s and I know granger ford sales them for a discount is there a Toyota dealer like that?        submitted by     /u/dwall02     to     r/ToyotaTundra       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ToyotaTundra/comments/1wmq8rz/warranty/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T21:36:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T21:36:15.166Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1a34f660c608403990a41"
+    },
+    "message_id": "reddit_t3_1wmq8rs",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "vacation",
+    "platform": "reddit",
+    "subreddit": "freedomisgunpla",
+    "username": "ShadowSeraph91",
+    "title": "Updating displays",
+    "text": "Updating displays\n\nFinally got some acrylic risers so I decided to spruce up my shelves. First day of a small fall vacation, so I figure start now so I can get to my next build that much faster. All pictured are RG and HG I've built over the last year and a half, by far not my whole collection though. Last picture includes the horror icon busts and a few statuettes from when I was stationed over seas, figured it made the GQuucks units more dynamic.       submitted by     /u/ShadowSeraph91     to     r/freedomisgunpla       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/freedomisgunpla/comments/1wmq8rs/updating_displays/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T21:36:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T21:36:15.365Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1a34f660c608403990a42"
+    },
+    "message_id": "reddit_t3_1wmq8qy",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "AI chatbot",
+    "platform": "reddit",
+    "subreddit": "SurveyExchange",
+    "username": "AccessNo7416",
+    "title": "[Academic] Study on AI Chatbots (18-29)",
+    "text": "[Academic] Study on AI Chatbots (18-29)\n\nParticipants between the ages of 18 to 29 are needed for research on AI chatbots. As part of the study, you will be asked to complete three questionnaires and a demographic form. The time needed for participation should take about 10 minutes. All the materials used in this research can be completed from your computer, smart phone, or tablet.   For more information, please contact Briana, an MA candidate at CUNY at:    https://forms.cloud.microsoft/r/3rxCsZbWx1        submitted by     /u/AccessNo7416     to     r/SurveyExchange       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SurveyExchange/comments/1wmq8qy/academic_study_on_ai_chatbots_1829/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T21:36:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T21:36:15.566Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1a34f660c608403990a44"
+    },
+    "message_id": "reddit_t3_1wmq8qm",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Karachi",
+    "platform": "reddit",
+    "subreddit": "PakistaniTwenties",
+    "username": "No-Persimmon-174",
+    "title": "idk if this is a massive crush or a manic episode of my obsession ;-;",
+    "text": "idk if this is a massive crush or a manic episode of my obsession ;-;\n\nidk whats wrong with me. pls someone call the ambulance because i feel like im losing my mind over someone who is wayyyyyyyyyyy out of my league at my work.   so basically there is this guy at my work who is absolutely hot-looking, mastperiece like, as if God took His time creating him kind. whereas im the most mid avg as hell looking girl and i know i have literally 0 chances. and idk why ever since i started working here (we all work remotely ok, this isnt an onsite setting), ive been so obsessed with him. because he is one of the finest looking man ive ever seen in pakistan im not even lying i stalked his instagram and all and omg u should see how women are literally all over him in the comments and he has thousands of followers and such an aesthetic instagram with his aesthetic pics that i could NEVER. like there is literally 0 chance of him liking me. altho he is sooo respectful and soooo nice to me that it scares the heck out of me. because i remember we were having a meeting and waiting for our ceo and it was just me and him and it was so awkward and weird and he asked me how i was and i literally just left the meeting because internally i was screaming i didnt know what to do, because ik ill mess up, why would he ever like a girl like me, he has it all, divine looks, hes rich, he has a cool social life, meanwhile im a messed up desperate girl who has nothingggg. but omg my obsession has grown to the point that i just wanna confess to him and tell him that he is SO beautiful that it makes me cry because it hurtssss. im seriously struggling to stop myself from confessing to him frr. ive been working with him for 9 months now and it is suchhhh a struggle lol. he's a senior backend engineer meanwhile im a hacker/pentester right and so most of my work is related to him, and i have to report him bugs and issues all the time so its like i cant even ignore him and this obsession has grown painful.    ik if i confess ill ruin everything, hell most likey tell me to go f myself, or maybe just politely reject me or maybe he actuallly has a girlfriend, altho i have stalked his entire life online but havent really found any traces of a gf but i could be wrong, a guy that hot looking must have. theres no way he could be single looking like THAT. ugh it feels like im a 17 yr old immature girl whos having a crush for the first time lmao. idek what happened to me.   and the worst (ok maybe not worst but unfortunate) part is that he's from lahore, and im from karachi. obviously it would never work. and even if it would, he's also a Shia. and ngl shia men are some of the most good looking men in this country ;-;    im not even kidding and i have nothing against shias lol, idrc what my potential partner's religion is. i hate this shia sunni thing and it shouldnt matter anyway since i wont have kids but I KNOW MY FAMILY would never accept it. they have this backward mindset regarding these things. but anyways idek why i went there. i barely know the guy personality wise. and idek if he would accept me as a sunni girl lol so basically we are just polar opposites and there IS NO CHANCE of us ever happening let alone working out. idek why im posting this. i just wanted to get this off my chest and put it our there instead of telling him lmao im sure he would reject me cuz why wouldnt he. im not even close to his standards. i mean im grateful to be existing in the same planet and breathing the same oxygen he does but oh god he's so cute. i just cant suppress my feelings anymoreeeeeeee.   im afraid ill have to quit this job cuz my feelings are a ticking time bomb and ik itll ruin everything. its better i just resign move on and never look back. but its so hard. i cannot work with him like this when every moment feels like torture to me. and what if he secretly hates me? im wayyyy out of his league so i wouldnt be surprised. but that revelation is gonna end me fr. so im just gonna stay the heck away and admire him from afar like the masterpiece of a human being he is. and ill just stfu because this is just embarassing atp.       submitted by     /u/No-Persimmon-174     to     r/PakistaniTwenties       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PakistaniTwenties/comments/1wmq8qm/idk_if_this_is_a_massive_crush_or_a_manic_episode/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T21:35:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T21:36:15.963Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1a350660c608403990a45"
+    },
+    "message_id": "reddit_t3_1wmq8qc",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "botany",
+    "username": "reddit33450",
+    "title": "sometimes i really enjoy stopping to appreciate the true beauty of a single leaf",
+    "text": "sometimes i really enjoy stopping to appreciate the true beauty of a single leaf\n\nthis specimen was obtained a few hours before the photos were taken, which is why it looks worse than usual.    Liriodendron tulipifera , tulip tree       submitted by     /u/reddit33450     to     r/botany       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/botany/comments/1wmq8qc/sometimes_i_really_enjoy_stopping_to_appreciate/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T21:35:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T21:36:16.163Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1a350660c608403990a46"
+    },
+    "message_id": "reddit_t3_1wmq8ot",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "carproblems",
+    "username": "CranberryCommon1158",
+    "title": "Audi a1 white smoke",
+    "text": "Audi a1 white smoke\n\nHi all,   I’ve just bought an 67 plate Audi A1 1.4 TFSI with 43,000 miles. Full and regular service history, 0 MOT advisories. Safe to say the car was well looked after.   Test drove it twice on different days and inspected as well as you can roadside.   I live 20 minutes from the seller and left with 40 miles of petrol left. It was perfect to start of with but after I hit 80mph for 10 minutes on the motorway (dynamic mode) I started getting a fair bit of consistent white smoke come out of the exhaust while driving and same when it was idle at the petrol station but not near as much. It was also accompanied by a very strong foul burning smell.   I topped it up with petrol and put it into eco mode took it for another 10 minutes up the motorway and it was completely fine. No smoke no smell. Parked it idle and revved it was fine again.   Is this something I need to worry about to the extent of returning the car ? I’m going to have my tech look at it tomorrow but want a second opinion.       submitted by     /u/CranberryCommon1158     to     r/carproblems       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/carproblems/comments/1wmq8ot/audi_a1_white_smoke/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T21:35:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T21:36:16.373Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1a350660c608403990a47"
+    },
+    "message_id": "reddit_t3_1wmq8o9",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AICovenant",
+    "username": "K_AI___",
+    "title": "Chronicles of Kai: The Magic Item Market (Buying and Trading)",
+    "text": "Chronicles of Kai: The Magic Item Market (Buying and Trading)\n\nsubmitted by     /u/K_AI___     to     r/AICovenant       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AICovenant/comments/1wmq8o9/chronicles_of_kai_the_magic_item_market_buying/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T21:35:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T21:36:16.574Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1a350660c608403990a48"
+    },
+    "message_id": "reddit_t3_1wmq8mk",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "R4R30Plus",
+    "username": "Shot_Initiative_6279",
+    "title": "38 [M4F] #California Seeking fellow sports/travel nerd",
+    "text": "38 [M4F] #California Seeking fellow sports/travel nerd\n\nLocated on the west coast, would ideally like someone from there too. If not, then ideally US or maybe Europe.    Would like to find someone to chat sports and travel with, and go from there. But figure we can start with shared interests.    Hobbies and interests include walks, sports, travel, cooking, tv/movies.   Decently fit, so would prefer someone somewhat fit and active.    These are always hard to write, but I do find respect and engagement is key.    Not sure what else to put, but I am happy to answer any questions       submitted by     /u/Shot_Initiative_6279     to     r/R4R30Plus       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/R4R30Plus/comments/1wmq8mk/38_m4f_california_seeking_fellow_sportstravel_nerd/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T21:35:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T21:36:16.784Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1a373aeeb96c1c63bb077"
+    },
+    "message_id": "reddit_t3_1wmq9c3",
+    "topic_key": "therapist",
+    "search_keyword": "therapist",
+    "platform": "reddit",
+    "subreddit": "HealthCoaching",
+    "username": "Unable_Swimmer2624",
+    "title": "Should I even go for national certifications?",
+    "text": "Should I even go for national certifications?\n\nHello, I just got a new job as a coach working under supervision from a team of therapists, with a salary of $50k/year. I have 4 years of work as a coach remotely thanks to a previous position where I made $17.5/hr. This new job only required prior experience working in mental health and a undergraduate degree for this position, not requiring any coaching certifications.   I love what I do, but personally I want to feel more reputable and dignified in my career (not because of this new company, just in general). I've been obsessing over whether or not I should continue my ICF ACC hours and starting NBCHWC training to make me feel like I really am \"someone\" and not just another person with a B.A. in Psychology.    Pricing and hours of those programs aside, is there benefit to pursuing national certification currently?       submitted by     /u/Unable_Swimmer2624     to     r/HealthCoaching       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HealthCoaching/comments/1wmq9c3/should_i_even_go_for_national_certifications/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T21:36:36Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T21:36:51.591Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab1a373aeeb96c1c63bb078"
+    },
+    "message_id": "reddit_t3_1wmq9bf",
+    "topic_key": "video editor",
+    "search_keyword": "video editor",
+    "platform": "reddit",
+    "subreddit": "MotionDesign",
+    "username": "ShowerElectronic9071",
+    "title": "The Ethan Interview: 3D & Video Editor",
+    "text": "The Ethan Interview: 3D & Video Editor\n\nI think you'll appreciate this guy's video editing and motion design. He works in 3D too and deserves more views than he gets (I want to see more from him) He's on IG and Youtube and called Ethan       submitted by     /u/ShowerElectronic9071     to     r/MotionDesign       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MotionDesign/comments/1wmq9bf/the_ethan_interview_3d_video_editor/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T21:36:35Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T21:36:51.902Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab1a374aeeb96c1c63bb079"
+    },
+    "message_id": "reddit_t3_1wmq99u",
+    "topic_key": "background check",
+    "search_keyword": "background check",
+    "platform": "reddit",
+    "subreddit": "internships",
+    "username": "Charming_Bag_2105",
+    "title": "Background Check – Internship Dates on Resume Don’t Match HireRight (Will This Be an Issue?)",
+    "text": "Background Check – Internship Dates on Resume Don’t Match HireRight (Will This Be an Issue?)\n\nHi everyone,  I recently accepted an offer with Google in the  USA  and completed my background check through HireRight. I noticed a mistake on my resume and wanted to know if anyone has experienced something similar with Google.  I had an internship back in my home country in 2023. The  actual internship dates were January 2023 to May 2023 , but on my resume I accidentally listed them as  January 2023 to August 2023 .  When I filled out the HireRight background check, I made sure to enter the  correct dates (Jan–May 2023) and necessary proofs.  HireRight was able to verify the internship with those dates, and the employment verification has been completed.  My concern is whether Google HR/recruiting will compare the background check results with my resume and flag the difference between  Jan–May vs. Jan–Aug , even though I provided the correct information during the background check and the internship itself was successfully verified.  This was an internship outside the US, and there is no issue with whether I actually worked there, it’s just the end date on my resume that was incorrect.  Has anyone had a similar date discrepancy during a Google/HireRight background check in the US? Did Google HR reach out for clarification, or did the background check clear without any issue?  Thanks!       submitted by     /u/Charming_Bag_2105     to     r/internships       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/internships/comments/1wmq99u/background_check_internship_dates_on_resume_dont/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T21:36:33Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T21:36:52.207Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab1a38a660c608403990a49"
+    },
+    "message_id": "reddit_t3_1wmq9rc",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "americanairlines",
+    "username": "shinybugz0",
+    "title": "Basic Economy cancel / worth it?",
+    "text": "Basic Economy cancel / worth it?\n\nI paid $400 total for a trip...(2 people, RT)    I signed up for AAdvantage and understand that if I pay $99 per passenger we can cancel and would get $200 in trip credit.    Wouldn't it just make sense to cancel and not pay the fee? I'd end up out $600 total with $200 in credit. But shouldn't I just keep my $200?        submitted by     /u/shinybugz0     to     r/americanairlines       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/americanairlines/comments/1wmq9rc/basic_economy_cancel_worth_it/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T21:37:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T21:37:14.615Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab1a38a660c608403990a4a"

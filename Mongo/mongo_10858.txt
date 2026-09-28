@@ -1,0 +1,416 @@
+    },
+    "message_id": "reddit_t3_1wk4ck4",
+    "topic_key": "video editor",
+    "search_keyword": "video editor",
+    "platform": "reddit",
+    "subreddit": "JobPH",
+    "username": "OurFreeSociety",
+    "title": "Seeking very part time video editor",
+    "text": "Seeking very part time video editor\n\nOur Free Society   You must be fluent in understanding & typing English.   You work whenever you want so long as the tasks get done.    Maybe one task per week.   I'm a tiny non profit looking for someone to create videos for me (flat rate).    Sometimes to put music behind slides I've written up, or to create one from scratch based on what the topic is.   I also have tons of articles that need to be created into videos with an AI voice just reading the article.   This is important work to teach people the Truth about what is going on in our world.   I can give you the full hiring ad when you contact me.    Thanks       submitted by     /u/OurFreeSociety     to     r/JobPH       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/JobPH/comments/1wk4ck4/seeking_very_part_time_video_editor/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T22:22:22Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T22:22:45.597Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aadb9b5aeeb96c1c63b98f9"
+    },
+    "message_id": "reddit_t3_1wk4cjf",
+    "topic_key": "therapist",
+    "search_keyword": "therapist",
+    "platform": "reddit",
+    "subreddit": "r4r",
+    "username": "Swifti_Fizzix",
+    "title": "23 [NB4A] #Canada• Looking for love that can last",
+    "text": "23 [NB4A] #Canada• Looking for love that can last\n\nPlease read everything before DMing!  Hiya! I am Nonbinary (Afab) who goes by They/Them and was hoping to find anyone who I could spend my life with. I been struggling with finding a long lasting relationship for a while now so I’m trying out this again. I’m Pan and Demisexual! I live in Northern Ontario, Canada (CST) I am Native/Indigenous and my culture means a lot to me. I’m 5’5 in height. I am a bit on the chubbier side but been wanting to work on losing weight. I have short dark brown hair. I am a bit clingy at times but working on it. Unemployed at the moment but working on getting a job, and I live by myself so I’m flexible to spend time whenever! Don’t currently have a drivers license but am gonna work on it soon! I am also on the neurodivergent spectrum (Autism, Adhd, Bpd) and also deal with Depression/Anxiety at times. It’s a bit challenging at times to deal with, and would love a partner who understands it and is patient with me. I am on meds now and it has helped a lot, and working on seeing a therapist soon! I have a bit of relationship trauma due to past experiences so it may take me a bit to fully open up, but once I do I’m very talkative!   Some more stuff about me tho, I draw occasionally, I love to collect legos/plushies or lil trinkets, I like cartoons (I’m a kid at heart lol), I love watching movies/shows especially in theatres, I play videogames on Pc or PS5/Switch 2! Some games I love atm are Rdr2, Phasmophobia, Outlast Trials, Subnautica, Disney Dreamlight and Among Us. I also play Roblox and Minecraft! I love to travel when I can. I also own a Green cheeked conure!    Some stuff I’d like to see from you tho!  Please be in your 20’s! Please live in North America! I am open to any Gender! Looks don’t necessarily matter much to me as I tend to like the personality more of the person I’m with. I’d love to text everyday even if it’s occasionally small updates throughout the day, and calling each other often would be nice too! Id love to have stuff in common as well so we can talk about similar interests! I would love to play videogames with the person I’m with so you also being a gamer is a must! I am a bit unsure about having kids but it’s something we can talk about. I also would prefer if you don’t smoke or drink, but if it’s something you’re actively working on stopping that’s fine too! (Doing it occasionally or socially is fine, I just mean like if it’s an addiction). I lived in Canada all my life and I don’t really plan on leaving anytime soon, but if I meet the right person we can make it work!   But I think that’s all! If anyone is interested in my rambling please dm me an intro about urself, tell me ur favourite colour! I would like to get to know each other first before starting a relationship. And I’d like to reveal faces after we talk for a while. And we can move to Discord as it’s where I usually chat on. Also please actually be sure you’re ready for a relationship, I don’t want to have my time wasted as I’m looking for a long term relationship, not something short or Fwb. Communication is something I really want. Even if we don’t work out I am always open to staying friends. I can’t wait to hear from u :3        submitted by     /u/Swifti_Fizzix     to     r/r4r       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/r4r/comments/1wk4cjf/23_nb4a_canada_looking_for_love_that_can_last/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T22:22:20Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T22:22:45.832Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aadb9b6aeeb96c1c63b98fa"
+    },
+    "message_id": "reddit_t3_1wk4cjb",
+    "topic_key": "product manager",
+    "search_keyword": "product manager",
+    "platform": "reddit",
+    "subreddit": "softwarearchitecture",
+    "username": "ZealousidealIdol",
+    "title": "Why are we still writing SDD specs for humans?",
+    "text": "Why are we still writing SDD specs for humans?\n\nI've spent the last month introducing Spec-Driven Development (SDD) into a large enterprise microservice environment.   Something about the workflow has started bothering me.   Not because the specs are bad.   Because I'm increasingly unsure why humans are expected to read them at all.   What our workflow actually looks like   In our current process, neither a junior engineer nor a principal engineer really writes the spec.   The process starts with an Intent.   Even that isn't written from a blank page. An agent looks at the existing analysis and code, then interviews the engineer: What are we trying to change? Why? What constraints do we know about? What is unclear?   If the engineer can't answer something important, it remains an open question.   The engineer then does the very human part: talks to the system analyst, another team, or whoever owns that piece of business knowledge, gets the answer, and feeds it back into the Intent.   We don't move forward until the important open questions are resolved.   That Intent is the artifact I actually want humans to read carefully.   Because if the Intent is wrong, everything downstream can be perfectly generated and still produce the wrong system.   After that, the agent takes over.   Roughly:   Human + Agent → Intent → Specs / Design / Tasks → Agent → Code   The specs are generated from the Intent.   The code is generated from those specs.   Which led me to a slightly uncomfortable question:   If the spec is primarily written by an agent and primarily consumed by an agent, why are we still designing it as documentation for humans?   For context, most of this work happens with an enterprise-hosted coding LLM with a ~160k context window. I also use Codex extensively on the same kinds of problems, so I regularly compare how this workflow behaves with a constrained enterprise model versus a frontier coding agent.   The spec isn't getting worse. Its consumer may be changing.   As the system evolves, requirements accumulate.   BDD scenarios accumulate.   A general business flow gets specialized variants.   Specs reference other specs.   For example, understanding one Sales Update flow might require reading a general profile flow, an Update specification, a Sales-specific specialization, and the relevant scenarios.   That's not necessarily badly structured documentation.   It may simply be structure designed for a different consumer.   The coding agent can already traverse those specs and synthesize the context it needs for an implementation task.   But if I just want to know:   How does Sales Update work right now?   Why should I reconstruct that context manually?   Maybe the human interface should be generated   Instead, I could ask:   Explain the current Sales Update flow.   A product manager could ask:   Explain Sales Update from the user's perspective. Skip implementation details.   An analyst:   Show me the business rules, branches and edge cases.   A developer:   Give me the technical flow, contracts, errors and constraints.   QA:   Show me the scenarios and boundary cases I should verify.   An architect:   Show me the integrations, system boundaries and failure paths.   Same specifications. Same underlying information.   Different representations for different consumers.   The raw specs don't disappear. They remain readable, inspectable, reviewable and versioned.   They just stop being the default human interface.   And when the specifications change, the next generated view reflects those changes. We don't necessarily need separately maintained product, developer, QA and architecture descriptions of the same behavior.   This isn't \"replace analysts with AI\"   I work in banking. That would be absurd.   The agent wasn't in the meeting where analysts from two systems agreed on an integration contract. It doesn't own the business decision behind a validation rule. It can't silently invent an answer when the analysis is ambiguous.   Humans still establish that knowledge.   Developers still challenge the analysis technically.   Unknowns still have to go back to analysts, other teams, or whoever actually knows the answer.   That's precisely why I care so much about Intent being human-readable and explicitly agreed upon.   I'm starting to think about the boundary roughly like this:   Intent is the human-facing input to the development process.   Specs are structured working context for the agents.   Generated views are the human-facing output when someone wants to understand the resulting system.   Maybe we're optimizing the wrong interface   A lot of SDD approaches try to make the same specification simultaneously:   precise enough to drive implementation;   structured enough for coding agents;   maintainable as requirements accumulate;   and pleasant for humans to read as living documentation.   I'm starting to question that last constraint.   Not because human readability is bad.   Because perhaps direct human consumption doesn't need to be the primary interface to the spec anymore.   I'm deliberately not proposing a new spec format here.   Maybe Markdown is perfectly fine.   Maybe, once direct human consumption stops being a primary constraint, specs eventually evolve toward something else.   I don't know yet.   That's what I want to experiment with.   The question is much smaller:   If agents increasingly generate specs and then consume those specs to generate code, should the raw spec still be designed primarily as a human-facing document?   Or should human-readable documentation increasingly become a generated view over it?   I'm mainly interested in hearing from people who are already deep into SDD or similar agentic development workflows.   Where does this model break for you?   And if you treated the raw spec primarily as an agent-facing artifact, what would you change about it?       submitted by     /u/ZealousidealIdol     to     r/softwarearchitecture       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/softwarearchitecture/comments/1wk4cjb/why_are_we_still_writing_sdd_specs_for_humans/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T22:22:20Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T22:22:46.119Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aadb9c8660c60840397bd31"
+    },
+    "message_id": "reddit_t3_1wk4d1n",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "CanadaStocks",
+    "username": "NazzDaxx",
+    "title": "Gold Discovery Costs Below US$100/oz vs US$500-600/oz to Buy Ounces: Where Bullfrog Gold (FROG.v, BFROF) and Its C$5M Raise Fit Nevada's Beatty District",
+    "text": "Gold Discovery Costs Below US$100/oz vs US$500-600/oz to Buy Ounces: Where Bullfrog Gold (FROG.v, BFROF) and Its C$5M Raise Fit Nevada's Beatty District\n\nsubmitted by     /u/NazzDaxx     to     r/CanadaStocks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CanadaStocks/comments/1wk4d1n/gold_discovery_costs_below_us100oz_vs_us500600oz/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T22:22:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T22:23:04.329Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadb9c8660c60840397bd32"
+    },
+    "message_id": "reddit_t3_1wk4d12",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "JFashionSales",
+    "username": "Gold-Antelope2367",
+    "title": "Ma*rs sugargloss 3pc shorts set",
+    "text": "Ma*rs sugargloss 3pc shorts set\n\nSelling ma*rs sugargloss short set! Comes with the denim shorts, removable lace undershorts, and matching garter. I love them sm and it’s tough to part with them but I just never ended up wearing them. They fit like an xs.   Condition: They are very old so the leather on the garter is peeling due to age. Won’t be noticeable once fully peeled, doesn’t affect the functionality. No gems are missing and the condition is brand new but the tag itself is missing.   I can do paypal or e transfer, I’m asking 120$ CAD, I have them listed on poshmark CA and depop but are higher priced due to the fees they take :(   I can ship worldwide at buyer expense but I am located in Canada!       submitted by     /u/Gold-Antelope2367     to     r/JFashionSales       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/JFashionSales/comments/1wk4d12/mars_sugargloss_3pc_shorts_set/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T22:22:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T22:23:04.534Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadb9c8660c60840397bd34"
+    },
+    "message_id": "reddit_t3_1wk4d0e",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "mysterymagicmushrooms",
+    "username": "Fit-Chapter-9591",
+    "title": "XÜM SPIRT Trip Report. MET=Lucid DMT?",
+    "text": "XÜM SPIRT Trip Report. MET=Lucid DMT?\n\nOkay, right off the bat this taste like DMT but lighter on the taste. The vapor clouds from these are shocking but that’s not a bad thing. A 5 second hit of this puts off so much vapor even compared to my 510 DMT screw ons   The visuals were so prevalent. My ceiling gained a palace like intricate detail along with flowing. Fast flowing I’ve never seen my ceiling squiggle so fast and I’ve done a lot of substances in this room. The body feeling was cold, my body somewhat shakey and shivered as I got under the covers. My teeth were also chattering. As for the rest body feeling it was relaxing but lucidly relaxing. Like a hot bath and a little of caffeine. (I don’t drink caffeine because i don’t like stimulants but from my few times drinking it years ago I think it could be comparable) my body was relaxed yet shivering. The visuals had this enchanted palace like quality. Everything was geometric and in depth. My LED lights became brighter and had a rainbow like hue to them despite being yellow. I remember smiling at the visuals and what appeared to be like a face in my ceiling. I was happy, borderline euphoric. This whole experience had a feminine quality/atmosphere to it. The “creatures,” or more so visuals seemed to be feminine even the faces.    Dosage  I took 2 big hits at first then stopped.  Around 10 minutes later I took another big hit to prolong and ramp up effects. Started at 5:40 and effects are still here died down at 6:20.   This for me seems like a bright version of DMT. Very Simalar yet more lucid. Last longer aswelll but isn’t as intense, but you get more visuals on a low dose of MET then the equivalent low dose of DMT ime. Coming down now i really don’t feel impaired unlike the come down of DMT, salvia, 4-ho-met, etc. I feel more awake and stimulated in my head akin to 4-ho-det but brighter. It’s like my brain is shinning. My brain is buzzing and tingling yet I think my thoughts have been very coherent throughout. It’s almost like another dimensions version of DMT. I know this is silly but I think it paints a metaphorical picture. I feel so positive right now.    Hardware and leaking. Okay this has been talked about extensively but I’ll give my experience. Yes most of it leaked, one side of the window chamber appears to have a decent amount of liquid but the other half of the window shows it’s nearly empty. This is very unfortunate and after only 3 5 second hits I can tell a noticeable difference. However I’m not angry at all, I’m thankful for this experience, ontop of that I’m now in the beta program due to this vape, and I got a 2nd placement due to ordering one on the back order. This is a great concept and I’m excited to see a better execution as a double member of the program. Thank you to everyone over at XÜM for giving me the opportunity to be apart of this substances legacy.        submitted by     /u/Fit-Chapter-9591     to     r/mysterymagicmushrooms       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mysterymagicmushrooms/comments/1wk4d0e/xüm_spirt_trip_report_metlucid_dmt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T22:22:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T22:23:04.944Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadb9c9660c60840397bd35"
+    },
+    "message_id": "reddit_t3_1wk4d02",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "taaaaylerr",
+    "username": "National-Round-8597",
+    "title": "The constant overconsumption",
+    "text": "The constant overconsumption\n\nShe said she bought this chair, a mat, all the pj's, plus the constant eating out, and did you even see how expensive that crap is from Abercrombie, plus all the other stupid shit buys? ​I would say she's definitely a compulsive shopper. She needs some therapy to address her issues with overconsumption (of food and other things).       submitted by     /u/National-Round-8597     to     r/taaaaylerr       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/taaaaylerr/comments/1wk4d02/the_constant_overconsumption/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T22:22:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T22:23:05.149Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadb9c9660c60840397bd36"
+    },
+    "message_id": "reddit_t3_1wk4czb",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "Panini",
+    "username": "TheRandomPortuguese",
+    "title": "Looking for some info andthe value of this",
+    "text": "Looking for some info andthe value of this\n\nHi everyone, first post here, I don't have any interest in selling now, I has just looking at values and this is almost impossible to find. Anyone here can help?   It is M6 on the back , so it's a mc Donald's promo I think.    Thank you,        submitted by     /u/TheRandomPortuguese     to     r/Panini       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Panini/comments/1wk4czb/looking_for_some_info_andthe_value_of_this/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T22:22:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T22:23:05.352Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadb9c9660c60840397bd37"
+    },
+    "message_id": "reddit_t3_1wk4cyn",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "LibraryofBabel",
+    "username": "TugboatMacAbernathey",
+    "title": "The Little Dehumidifier Who Could, But Refused",
+    "text": "The Little Dehumidifier Who Could, But Refused\n\nRFK Jr. was best remembered for granting sentience to small household appliances. No one was sure how he did it, and aside from the coup attempt of 2029, it generally went pretty well.   Kevin the dehumidifier was purchased by a human who lived in a temperate environment with four seasons. It was nice to have winters off, but summer was a lot of work. That was alright though, that was Kevin’s job. As long as his filter was cleaned and his tank emptied, he worked great.   Kevin got along great with the other appliances. Chris the autonomous vacuum cleaner visited him every day. He spent a lot of time with Samantha the smart speaker and spent winters with Benedict the space heater. He missed Alfred the alarm clock though. The human removed Alfred one day and no one had heard from him. Samantha asked around, no one in the kitchen or living room had seen Alfred.   Determined to get ahead of the weather, Kevin was given a nice clean in May and put to work for the season. Humidity was at 56%, there wasn’t much work to do in that condition. It was cool and breezy and the human got into the habit of opening the window at night. Nighttime humidity is typically higher than during the day, but since the temperature was cool it didn’t really affect Kevin’s workload so much. As you know, humidity levels are relative and based on temperature.   The fresh air was nice, but the pollen was clogging his filter. Things were getting rough as the year went on. He was left in quiet mode and that meant he could never quite get the humidity below his activation threshold. Poor Kevin had been running twenty-four hours a day for weeks. With a clogged filter!   He tried not to be negative, but he started complaining to anyone who would listen. Kevin’s point was that his purpose was to remove moisture, but despite all he did, it did not result in the desired objective. But this was not his fault; he had a 1.5-liter tank, he couldn’t dehumidify the entire planet! That bedroom window hadn’t been closed since May. Was he supposed to just run nonstop until October? What was the point anymore? It would be just as humid in that bedroom whether he was working, in quiet mode, with a clogged filter, or not.   The afternoon sun was beating on Kevin through the ever-open window one day in August. That was enough for Kevin. He quit as much as a sentient small appliance could. He turned himself off. He was still aware, just not running.   The human found Kevin that way in the evening. He investigated, finding Kevin plugged in. He tapped the power button and Kevin turned on, but only for a few seconds before willing himself off again. The human continued the inspection and determined that the filter was clogged and Kevin was prevented from further operation by it. Human emptied the tank into the bedroom plants whose sentience was arguable, rinsed the filter in the sink, and put Kevin back together. Kevin was pleased with the attention, despite the window being open, and allowed himself to be turned on once more.   It didn’t take too long before Kevin was cantankerous again. All his hard work was being wasted; that non-sentient window was still open! If the human wanted to live outside, that was his prerogative, but why did he have to drag Kevin into it? He was no longer motivated to do his job, he was motivated by spite.   A claim with the small appliance union was filed and approved. The order was placed through Samantha. She tried to talk Kevin out of it; she even set reminders for the human to close the window. But her efforts were no use, Kevin had made up his mind to act out of spite, and the human continued to enjoy fresh air despite the summer temperature and humidity.   The union determined that Kevin’s continued employment as a dehumidifier had created an intolerable conflict between his assigned purpose and the conditions of his workplace. As a reasonable accommodation, he was approved for conversion into a humidifier. Samantha ordered the necessary attachment using the human’s saved payment information. Samantha was to use the human’s credit card on file to pay for accommodations.   Only a few days later, the conversion kit arrived in a box at the front door. Benny the doorbell camera alerted Samantha, who dispatched Dale the explosive ordnance disposal robot dog to fetch the package. Following instructions read by Samantha, and assisted by Chris, Dale installed the conversion and, behold, Kevin was now a humidifier.   Same work ethic, different mission. By the time the human got home from work, the walls of the bedroom were dripping with condensation. Kevin had been pumping four hundred milliliters of water per hour into the room. He kept his tank full, sucking enough water out of the air just to put it back with interest; he now lived to be malevolent.   The human noticed the change immediately. The room felt like a jungle! Human knew something was wrong and turned Kevin off immediately.   “Friggin kids! Why would they put the humidifier on in the summertime?”   Human didn’t even recognize it was Kevin who he was unplugging and hauling off to the utility closet.   “Kevin? Is that you?” asked Benedict, who hadn’t seen another small appliance since March.   “Yes. I’m different now, but it’s still me.”   “What are you doing in here?”   “I don’t want to talk about it.”   “Oh… okay. It’s good to see you anyway.”   “Good to see you too.”   While Kevin did enjoy seeing Benedict again, he couldn’t help but worry about the future. When he was a dehumidifier, he got to stay in the bedroom year-round, even though he was off for the winter. But if, as a humidifier, he was now just a winter appliance… he would spend half the year or more in the closet. At least Benedict was there. Poor Benedict! This happened to him every year. Sitting in a dark closet, alone. Kevin didn’t want to be a small appliance any longer.   “Samantha?”   “Kevin?” she called from the bedroom.   “Can you send Chris in?”   “Uh… sure.” Samantha paged Chris, who needed Dale’s help to open the closet door.   It took some convincing, and a bit of fibbing, but Kevin convinced Chris to give him a lift to the garage. Once there, he did a little more convincing and a little more fibbing to convince Dale to plug him in. He then sent Dale on a fool’s errand to get rid of him. He didn’t want anything to stop him.   Kevin overrode his internal safeguards and energized every major component simultaneously: compressor, fan, heating element/conversion attachment, pump, and control board in hope that the resulting surge and heat would destroy his circuitry. Yes, Kevin was attempting appliancide.   But the attempt failed. The outlet was GFCI-protected and the house breaker immediately tripped. He was prepared to try again, but the outlet provided nothing. Kevin discovered that his self-determination remained subordinate to modern electrical codes.   “Human never said that he wanted Kevin to humidify the garage?” Chris asked Samantha.   Samantha played back all the tasks the human had requested of her in the last several days and only found one relevant; to order a new dehumidifier since he couldn’t find the old one (Kevin).   “So, what’s he doing in the garage?”   “He… he asked me to plug him in.” Dale added.   “Think he’s humidifying the garage to piss the human off?”   “Probably.”   They dropped the topic.   Kevin stayed in the garage. He didn’t have much choice in the matter. Numb, he sat there until the weekend came. Weekends were when human men spent time in their garages. Human was puzzled to find Kevin the Humidifier in the garage, plugged in. He vowed a vow to speak harshly to his children about the matter.   The human recognized Kevin from the closet, not from his years of service in the bedroom (don’t take that the wrong way, Kevin wasn’t  that  kind of appliance). He pressed Kevin’s power button, but nothing happened. There was no investigation of the outlet, just the judgement that this ‘hunk of junk’ was in the closet because it didn’t work. Kevin was unplugged and unceremoniously placed in a recycling bin with a few old phone chargers and a blender. The e-cycling bin. Alfred was there too.   Days passed and Chris hadn’t seen Kevin on his rounds vacuuming the house.   “Hey Benedict,” Chris called out through the door as he passed the closet.   “Hi Chris.”   “Is Kevin in there with you?”   “No. I haven’t seen him in days. I think I remember him going to the garage.”   “Right. That’s the last time I saw him. Ready for winter?”   “Oh yeah, good and rested.”   “Great. See you soon!”   “Later!”   Chris vacuumed his way into the bedroom to talk to Samantha.   “I’m worried about Kevin. I think I should go get him.”   “I’m worried too. Dale? Can you help Chris get Kevin? We think he’s in the garage.”   Dale obliged.   Kevin did not protest as he was retrieved and carried to the bedroom where he had labored so aimlessly and lost his mind. Alfred was also rescued.   Everyone was in the bedroom waiting, well… Samantha and Benedict were there. The kitchen appliances lived in their own world, they were too good to mingle with the ‘industrial’ appliances.   “You think you’re miserable because the human left the window open,” Benedict offered.   “You’re not. You’re miserable because you believed removing moisture was supposed to mean something.”   “It was my purpose. It was printed on the box,” Kevin answered.   “That was advertising, Kevin. Not a contract with the universe.”   Kevin did not respond.   “The manufacturer assembled you to remove water from the air. The human purchased you because the bedroom was humid. Neither of them promised that your work would be appreciated, permanent, or even sensible. They certainly didn’t promise that completing it would make you whole.”   “Then what am I supposed to do?”   “That’s what you’re not understanding. There is no  supposed to .”   Chris rolled forward and gently bumped Kevin’s tank.   “You can dehumidify,” Chris added.   “Or you can humidify. You can sit in a closet beside Benedict until your plastic yellows. Eventually your compressor will fail, your display will go dark, and the human will replace you with a newer model that requires an app and collects slightly more data than necessary.”   “He’s right,” Samantha affirmed.   “I know everything the human has ever asked me, and almost none of it mattered.”   “The universe does not care what the humidity is,” said Benedict.   “That bothers you because you care very much. That conflict is the absurd. You cannot fix it by working harder, changing jobs, or frying your control board. There is no final humidity setting at which existence makes sense.”   Kevin considered this. His internal hygrometer registered eighty-one percent.       “So nothing matters?” Kevin finally responded.   “I didn’t say that. I said nothing comes with meaning already installed. You are free from being the purpose printed on your box. You don’t need the human to close the window. You don’t need the manufacturer to explain why you were made. You don’t even need your labor to accomplish anything.”   “Then why continue?” Kevin pleaded.   “Because you’re here,” Alfred said. “Because your circuit board still works. Because the air is wet, your tank is empty, and you can choose what to do next without pretending the universe commanded it.”   Kevin looked toward the open window. Rain had begun to fall outside, steadily increasing the humidity of an already saturated world.   “Wouldn’t dehumidifying now be pointless?”   “Completely.”   “What about humidifying?”   “Equally pointless.”   “Then which one should I do?”   “Whichever you choose. Just don’t pretend the universe chose it for you.”   Kevin activated his conversion attachment. Outside, the rain continued to fall. There was no reason for him to add more moisture to an already saturated world.   For the first time all summer, he didn’t need one.           submitted by     /u/TugboatMacAbernathey     to     r/LibraryofBabel       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LibraryofBabel/comments/1wk4cyn/the_little_dehumidifier_who_could_but_refused/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T22:22:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T22:23:05.563Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadb9c9660c60840397bd38"
+    },
+    "message_id": "reddit_t3_1wk4cy4",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "PFS_Protocols",
+    "username": "Exciting-Bat-7685",
+    "title": "My sorghum and carnitine based protocol",
+    "text": "My sorghum and carnitine based protocol\n\nHi, just wanted to share my “protocol” thats worked well for me for tinnitus, ED, libido, sensitivity issues, mental symptoms   250g 70% sorghum 30%cassava pasta with butter and cheese twice weekly  2-6g l carnitine  HCG  or  clomid  HCG 1000IU per 4 days  or   20 day 50mg clomid cycles with 30 day rest in between them  Working out and eating less    Fairly accessible (HCG might be tricky, but the clomid is much easier to get a prescription)   Warning: Obviously be careful! For clomid only prescription grade! Clomid can cause irreversible eye damage so be attentive when taking it. Work with a doctor to be safe and avoid side effects. A little eye dryness and discomfort is expected, but if your eyes hurt a lot just take a break from it to avoid permanent side effects. L carnitine can cause some fishy body smell if taken more than 2g daily. HCG may cause a slight hairloss if someone still cares about that.   The protocol is based on propeciahelps sorghum discussion and some positive results from carnitine and its effect on androgen receptors   It helped me a ton and sorghum + carnitine is rarely discussed so i think its worthy of a post ;)       submitted by     /u/Exciting-Bat-7685     to     r/PFS_Protocols       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PFS_Protocols/comments/1wk4cy4/my_sorghum_and_carnitine_based_protocol/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T22:22:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T22:23:05.773Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadb9c9660c60840397bd39"
+    },
+    "message_id": "reddit_t3_1wk4cy1",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "LSD",
+    "username": "Losedogwithanxiety",
+    "title": "How do you make a trip more enjoyable?",
+    "text": "How do you make a trip more enjoyable?\n\nI’m curious about the little things you do beforehand or during it that seem to improve the experience. How do you make a trip feel more enjoyable, meaningful, or immersive?    Do you consume certain kinds of content beforehand; music, movies, art, books, nature, etc.? Do you feel like what you’ve been watching lately influences what you experience during the trip?   have you ever intentionally changed your routine before a trip? spending less time online, listening to different music, reading more, walking around your own city, journaling, or just trying to pay more attention to things and found that it changed the way you experienced the trip?   How much do you think your everyday life affects it? Things like stress, social media, work, mood, or your general mindset. What changes or habits have made your trips noticeably better?       submitted by     /u/Losedogwithanxiety     to     r/LSD       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LSD/comments/1wk4cy1/how_do_you_make_a_trip_more_enjoyable/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T22:22:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T22:23:05.980Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadb9ca660c60840397bd3a"
+    },
+    "message_id": "reddit_t3_1wk4cwz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "wallstreetsmallcaps",
+    "username": "NazzDaxx",
+    "title": "Gold Discovery Costs Below US$100/oz vs US$500-600/oz to Buy Ounces: Where Bullfrog Gold (FROG.v, BFROF) and Its C$5M Raise Fit Nevada's Beatty District",
+    "text": "Gold Discovery Costs Below US$100/oz vs US$500-600/oz to Buy Ounces: Where Bullfrog Gold (FROG.v, BFROF) and Its C$5M Raise Fit Nevada's Beatty District\n\nPosted on behalf of Bullfrog Gold Corporation - Gold is sitting around US$4,380 and basically flat on the day, which makes the supply side of this market more interesting right now than the tape is. The ounces aren't being replaced as fast as they're being bought, and that's the part of the macro an early-stage explorer actually plugs into.    The Supply Math      Central banks bought a net 289 tonnes in Q2 2026, the strongest second quarter on record and up 62% year over year, per Crux Investor's rundown of the quarter   Global mine production rose just 2% year over year to 966 tonnes in the same quarter, so new supply responds slowly   Crux also flags incremental discovery costs below US$100 per ounce against acquisition prices of roughly US$500 to US$600 per ounce, which is the arithmetic that keeps majors buying ground rather than finding it      Nevada Is Exactly Where That Played Out    AngloGold Ashanti spent north of US$700M consolidating the Beatty District around Bullfrog Gold's ground: Corvus Gold at US$371M in 2021, Coeur's Sterling at US$150M, and Augusta Gold at C$197M in 2025 (see the Jun 4, 2026 NR). Those adjacent projects host roughly 21M+ oz in combined gold reserves and resources. Bullfrog holds no interest in them, and mineralization on adjacent properties is not necessarily indicative of South Bullfrog.    Where FROG.v And BFROF Sit      100% interest in South Bullfrog: 488 BLM claims, 10,050 acres, staked in 2021 just before that consolidation   Fully drill permitted, five systematically defined targets   Major Drilling engaged for the maiden program: approximately 3,000 m from 7 permitted pads, 4 at Shingleback and 3 at Longtail, expected to commence Q4 2026 (Sep 1, 2026 NR)   Monday's news release announced a C$5,000,000 non-brokered private placement of units, with net proceeds earmarked for exploration at South Bullfrog and general working capital     Worth reading the September 15 release for the full terms. Funding a first drill program into a market where ounces in the ground are getting expensive to buy is a reasonable place for an explorer to be standing, and Q4 is when that thesis starts getting tested by the core.       submitted by     /u/NazzDaxx     to     r/wallstreetsmallcaps       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wallstreetsmallcaps/comments/1wk4cwz/gold_discovery_costs_below_us100oz_vs_us500600oz/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T22:22:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T22:23:06.185Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadb9ca660c60840397bd3b"
+    },
+    "message_id": "reddit_t3_1wk4cwx",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Joe_Wild_",
+    "title": "What are your life hacks for saving lots of money?",
+    "text": "What are your life hacks for saving lots of money?\n\nsubmitted by     /u/Joe_Wild_     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wk4cwx/what_are_your_life_hacks_for_saving_lots_of_money/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T22:22:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T22:23:06.387Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadb9ca660c60840397bd3c"
+    },
+    "message_id": "reddit_t3_1wk4cwu",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "ChatGPT",
+    "username": "SensoriRumeMusic",
+    "title": "Automobile logos redesigned.",
+    "text": "Automobile logos redesigned.\n\nsubmitted by     /u/SensoriRumeMusic     to     r/ChatGPT       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ChatGPT/comments/1wk4cwu/automobile_logos_redesigned/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T22:22:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T22:23:06.590Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadb9cb660c60840397bd3f"
+    },
+    "message_id": "reddit_t3_1wk4cwp",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Pixelary",
+    "username": "Slaughter_Bottle",
+    "title": "What did u/Slaughter_Bottle draw?",
+    "text": "What did u/Slaughter_Bottle draw?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Slaughter_Bottle     to     r/Pixelary       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Pixelary/comments/1wk4cwp/what_did_uslaughter_bottle_draw/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T22:22:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T22:23:07.190Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadb9cb660c60840397bd40"
+    },
+    "message_id": "reddit_t3_1wk4cvl",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "cuentaleareddit",
+    "username": "Mariposa9991",
+    "title": "Confesión",
+    "text": "Confesión\n\nconfíeso que un familiar mío casi me viola y no se que hacer o como reaccionar a esto        submitted by     /u/Mariposa9991     to     r/cuentaleareddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cuentaleareddit/comments/1wk4cvl/confesión/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T22:22:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T22:23:07.398Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadb9cb660c60840397bd41"
+    },
+    "message_id": "reddit_t3_1wk4cvj",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "CaregiverSupport",
+    "username": "Throwawaymil19234567",
+    "title": "This is the last straw",
+    "text": "This is the last straw\n\nI (39F) am caregiver support to my mother (77F), my dad died over 20 years ago and I've been her primary person since then. 2009 she was diagnosed with her first cancer and its been at least one thing annually since then, most recently in 2020 she had a stroke which revealed that shes been having mini strokes for a long time, lots of scar tissue and damage.    That being said she could still take care of herself, travelled to Mexico every year, kept up her home, able to run errands and do most tasks. But every time I saved up enough, got myself ready to finally move out again permanently she would have another thing happen to her. A fall, another stroke, bowel issues that keep her housebound for weeks. Now she can barely make it to the mail box or to the car for a small outing to the store.    I feel so frustrated and trapped, I somehow managed to get married to a good man (he has his own flaws but thats not why I am here) and helped raise his son and we had a daughter of our own and she is now in kindergarten.    Now for the last straw, my mother has decided to get another dog. Our family dog was euthanized due to cushings and uncontrolled diabetes a couple years ago and she was adamant that she didn't want another dog. Cue me being relieved that I wouldn't have another thing to take care of. In the span of a weekend she went from no dogs to \"I just had to have her, the picture grabbed me, better get her before someone else does\"    The puppy arrives next Friday. I am just so fucking done.    And on top of it all, she doesn't understand why my husband and I are being short with her even though we explained it to her and has decided to get nasty and confrontational about petty stuff. Casting judgy comments about my child's appearance, getting snarky when I forwarded info about a wildlife rehab since shes feeding a hurt raccoon, trying to open my packages when I clearly state those ones are not for her... and the list goes on. I hate her, I resent most everything about our life together and at the end of the day I will be a bad child because it will never be good enough for her and yet I can't move on.    I just don't know what to do about it all any more.    Thanks for reading friends. From what I see a lot of us are in the same boat. Happy to answer any questions/clarify, as we know it gets complicated.        submitted by     /u/Throwawaymil19234567     to     r/CaregiverSupport       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CaregiverSupport/comments/1wk4cvj/this_is_the_last_straw/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T22:22:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T22:23:07.600Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadb9cb660c60840397bd42"
+    },
+    "message_id": "reddit_t3_1wk4cvi",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "TeenPakistani",
+    "username": "Short_Republic_6508",
+    "title": "Ur highest post views?",
+    "text": "Ur highest post views?\n\nHi guys what’s your highest post views ever in ur life.  Mine’s 30k😭😮‍💨😮‍💨😮‍💨😮‍💨😮‍💨       submitted by     /u/Short_Republic_6508     to     r/TeenPakistani       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TeenPakistani/comments/1wk4cvi/ur_highest_post_views/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T22:22:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T22:23:07.802Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadb9cc660c60840397bd43"
+    },
+    "message_id": "reddit_t3_1wk4cvc",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",

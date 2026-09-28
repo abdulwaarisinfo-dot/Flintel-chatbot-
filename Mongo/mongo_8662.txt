@@ -1,0 +1,416 @@
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabdbc042dd0e95b5bac76e"
+    },
+    "message_id": "twitter_2098788428678627698",
+    "topic_key": "pricing tool",
+    "search_keyword": "pricing tool",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "EgorJioo",
+    "title": "A new open-source Skill can look at your app and tell you how to monetize it\n\nHaimingDev just released haiming-app-monetization, and it reached 168 stars in two days\n\nThe Skill reads your project, researches how similar products are priced, then builds a monetization plan around onboarding, paywalls and subscription tiers\n\nThe output is structured so Claude Code, Codex or Cursor can actually implement it\n\nThe best part is how conservative it is\n\nBy default, it only evaluates the project and does not touch the code. If pricing cannot be verified, it marks it as unverified instead of inventing numbers\n\nFor AI apps with ongoing inference costs, it also avoids blindly recommending unlimited lifetime plans\n\nAnd the acceptance docs explicitly say it cannot promise conversion rates\n\nThat restraint makes it more useful than another AI tool promising perfect monetization\n\nInstall it with:\n\nnpx skills add HammingDev/haiming-app-monetization",
+    "text": "A new open-source Skill can look at your app and tell you how to monetize it\n\nHaimingDev just released haiming-app-monetization, and it reached 168 stars in two days\n\nThe Skill reads your project, researches how similar products are priced, then builds a monetization plan around onboarding, paywalls and subscription tiers\n\nThe output is structured so Claude Code, Codex or Cursor can actually implement it\n\nThe best part is how conservative it is\n\nBy default, it only evaluates the project and does not touch the code. If pricing cannot be verified, it marks it as unverified instead of inventing numbers\n\nFor AI apps with ongoing inference costs, it also avoids blindly recommending unlimited lifetime plans\n\nAnd the acceptance docs explicitly say it cannot promise conversion rates\n\nThat restraint makes it more useful than another AI tool promising perfect monetization\n\nInstall it with:\n\nnpx skills add HammingDev/haiming-app-monetization",
+    "post_url": "https://twitter.com/EgorJioo/status/2098788428678627698",
+    "score": 19,
+    "num_comments": 8,
+    "created_utc": {
+      "$date": "2026-09-12T14:58:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:23:28.845Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabdbc142dd0e95b5bac76f"
+    },
+    "message_id": "twitter_2098714638552559806",
+    "topic_key": "pricing tool",
+    "search_keyword": "pricing tool",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "de1lymoon",
+    "title": "https://t.co/DurwHBIcEg",
+    "text": "https://t.co/DurwHBIcEg",
+    "post_url": "https://twitter.com/de1lymoon/status/2098714638552559806",
+    "score": 72,
+    "num_comments": 5,
+    "created_utc": {
+      "$date": "2026-09-12T10:05:36Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:23:29.043Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabdbc142dd0e95b5bac773"
+    },
+    "message_id": "twitter_2099577563492253914",
+    "topic_key": "pricing tool",
+    "search_keyword": "pricing tool",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ecommcowboy",
+    "title": "Here's a free tool to find your next SKU.\n\n@colindougherty, Host on Ecomm Cowboy, built Signal to Shelf with @perplexity_ai.\n\nThe workflow pulls weekly news, macro headlines, published research, and trend reports. Then it connects those signals to a product your brand could launch.\n\nThe demo walked through a women’s creatine concept, with outputs covering:\n\n• The conversation informing the product angle\n• Category strength and buyer fit\n• Buyer age breakdown\n• Suggested purchase and subscription pricing\n• Positioning and a mock landing page\n\nOne of the goals is to make scientific research easier for an operator to actually use.\n\nFor a brand exploring a SKU extension, this helps a team evaluate who the new product is for, how to talk about it, what to charge, and what to test.\n\nEcomm Cowboy is live M-F at 12P CT.",
+    "text": "Here's a free tool to find your next SKU.\n\n@colindougherty, Host on Ecomm Cowboy, built Signal to Shelf with @perplexity_ai.\n\nThe workflow pulls weekly news, macro headlines, published research, and trend reports. Then it connects those signals to a product your brand could launch.\n\nThe demo walked through a women’s creatine concept, with outputs covering:\n\n• The conversation informing the product angle\n• Category strength and buyer fit\n• Buyer age breakdown\n• Suggested purchase and subscription pricing\n• Positioning and a mock landing page\n\nOne of the goals is to make scientific research easier for an operator to actually use.\n\nFor a brand exploring a SKU extension, this helps a team evaluate who the new product is for, how to talk about it, what to charge, and what to test.\n\nEcomm Cowboy is live M-F at 12P CT.",
+    "post_url": "https://twitter.com/ecommcowboy/status/2099577563492253914",
+    "score": 7,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-14T19:14:34Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:23:29.829Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabdbc242dd0e95b5bac774"
+    },
+    "message_id": "twitter_2100181390939529436",
+    "topic_key": "pricing tool",
+    "search_keyword": "pricing tool",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "88n77n",
+    "title": "GPT-6 ASTRA BUILT A 300-AGENT MONEY MACHINE THAT LIVED FOR 28 MINUTES\n\nI kept making the same mistake with multi-agent systems: treating the agents like permanent employees\n\nThat sounds powerful until 300 workers start producing updates, retries, contradictions and tool calls around the clock. The workforce becomes another system you have to manage\n\nSo I rebuilt it around one objective instead\n\nGPT-6 Astra breaks the job into 10 workstreams - demand, research, numbers, build, offer, pricing, outreach, risk, memory and review\n\nThen it launches 30 K3 agents into each stream\n\nThey don't return 300 separate answers. Every useful finding updates one shared state. A new signal can change the route, wake another group, trigger verification or send a weak branch back for another pass\n\nFor 28 minutes, the swarm researches the market, challenges its own assumptions, builds the asset, prices it, prepares the offer and assembles the outreach\n\nWhat survives the merge is one working package:\n\n> validated demand\n> a finished asset\n> an offer and price\n> an outreach batch\n> risks and contradictions\n> decision memory for the next run\n\nThen the 300 agents disappear\n\nNo permanent swarm burning tokens. No giant workforce to keep synchronized. The system keeps the result and the memory, then rebuilds a fresh crew when the next real objective arrives\n\nThat is the part I mean by a money machine. Not a magic box that prints cash, but an architecture that can take an opportunity from signal to something ready to sell while I keep the final approval",
+    "text": "GPT-6 ASTRA BUILT A 300-AGENT MONEY MACHINE THAT LIVED FOR 28 MINUTES\n\nI kept making the same mistake with multi-agent systems: treating the agents like permanent employees\n\nThat sounds powerful until 300 workers start producing updates, retries, contradictions and tool calls around the clock. The workforce becomes another system you have to manage\n\nSo I rebuilt it around one objective instead\n\nGPT-6 Astra breaks the job into 10 workstreams - demand, research, numbers, build, offer, pricing, outreach, risk, memory and review\n\nThen it launches 30 K3 agents into each stream\n\nThey don't return 300 separate answers. Every useful finding updates one shared state. A new signal can change the route, wake another group, trigger verification or send a weak branch back for another pass\n\nFor 28 minutes, the swarm researches the market, challenges its own assumptions, builds the asset, prices it, prepares the offer and assembles the outreach\n\nWhat survives the merge is one working package:\n\n> validated demand\n> a finished asset\n> an offer and price\n> an outreach batch\n> risks and contradictions\n> decision memory for the next run\n\nThen the 300 agents disappear\n\nNo permanent swarm burning tokens. No giant workforce to keep synchronized. The system keeps the result and the memory, then rebuilds a fresh crew when the next real objective arrives\n\nThat is the part I mean by a money machine. Not a magic box that prints cash, but an architecture that can take an opportunity from signal to something ready to sell while I keep the final approval",
+    "post_url": "https://twitter.com/88n77n/status/2100181390939529436",
+    "score": 6,
+    "num_comments": 3,
+    "created_utc": {
+      "$date": "2026-09-16T11:13:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:23:30.028Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabdbc242dd0e95b5bac775"
+    },
+    "message_id": "twitter_2098039740259856545",
+    "topic_key": "pricing tool",
+    "search_keyword": "pricing tool",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Lummox_eth",
+    "title": "A WALL STREET OPS DESK JUST REBUILT OVERNIGHT RECON ON GPT-6 ASTRA\n\ntool calls still fail 3-15% of the time, and one bad blotter write is a p&l event, not a wrong paragraph\n\nintake → extract → reconcile → exception → human → file\n\nthe desk uses 8 seats, but only 1 is allowed to file to the system of record. the other 7 ingest confirms, extract trades, match custody and cash, draft break memos, verify, and escalate\n\nastra brings 1,050,000 tokens of context, 88.0% first-attempt success and 99.2% within four attempts\n\npast 272K input, pricing also jumps to 2x input and 1.5x output\n\nthis is less about “better prompts” and more about running a night shift that can miss and still not corrupt the book. bookmark this\n\nBold the first line in the X editor if it lets you. Attach the mp4 as native video, not as a photo",
+    "text": "A WALL STREET OPS DESK JUST REBUILT OVERNIGHT RECON ON GPT-6 ASTRA\n\ntool calls still fail 3-15% of the time, and one bad blotter write is a p&l event, not a wrong paragraph\n\nintake → extract → reconcile → exception → human → file\n\nthe desk uses 8 seats, but only 1 is allowed to file to the system of record. the other 7 ingest confirms, extract trades, match custody and cash, draft break memos, verify, and escalate\n\nastra brings 1,050,000 tokens of context, 88.0% first-attempt success and 99.2% within four attempts\n\npast 272K input, pricing also jumps to 2x input and 1.5x output\n\nthis is less about “better prompts” and more about running a night shift that can miss and still not corrupt the book. bookmark this\n\nBold the first line in the X editor if it lets you. Attach the mp4 as native video, not as a photo",
+    "post_url": "https://twitter.com/Lummox_eth/status/2098039740259856545",
+    "score": 41,
+    "num_comments": 12,
+    "created_utc": {
+      "$date": "2026-09-10T13:23:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:23:30.227Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabdbc242dd0e95b5bac777"
+    },
+    "message_id": "twitter_2100212471269085424",
+    "topic_key": "pricing tool",
+    "search_keyword": "pricing tool",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "0xLupenn",
+    "title": "Oxford gives its first-year math students 2 lectures to understand complex numbers.\n\nThe same math that JPMorgan pays $300k+ to use for pricing derivatives. The same math behind signal processing at every semiconductor company on earth. The same math Nvidia's engineers used to build the chips running every AI model today.\n\nTwo lectures. Then you're expected to know it.\n\nThis is Lecture 2 from Oxford Mathematics - filmed live in the lecture hall, first-year undergraduates, no cuts. The professor is writing on a blackboard in real time. Students are passing around questionnaires. Someone drops something loud at minute 31.\n\nIt's the most honest math lecture you'll find on YouTube.\n\nHere's what actually gets taught:\n\nYou start with polar coordinates and the argument of a complex number. Then you prove that when you multiply two complex numbers, their arguments add. This looks like a coincidence. The professor stops and says: \"This looks a bit like a logarithm. That's not a coincidence. There are no coincidences in mathematics.\"\n\nThat one line is worth the whole lecture.\n\nFrom there: de Moivre's theorem. Roots of unity. Euler's formula - e to the power of i times theta equals cos theta plus i sin theta. The professor writes it on the board and says \"take 10 seconds to just absorb how lovely that is.\"\n\nThen the Fundamental Theorem of Algebra: every complex polynomial of degree n has exactly n roots. Every. Single. Time. No exceptions. This theorem is so important it's literally called the Fundamental Theorem of Algebra.\n\nWatch the moment:\n\nAround 33 minutes in, the professor introduces Euler's formula and admits she now thinks about complex numbers almost entirely in this form - not the a + bi form she started with, not the R cos theta form she learned later, but e to the i theta. Then she says something unusually honest for a math lecture: if this feels uncomfortable, that's normal. That's what happens when you meet something new. You reach for the old tools. But the new tool is better and you should force yourself to use it until it feels natural.\n\nThat's not a math lesson. That's how expertise actually works.\n\nOxford first year. Complex Numbers, Lecture 2. Free on YouTube.\n\nbookmark this",
+    "text": "Oxford gives its first-year math students 2 lectures to understand complex numbers.\n\nThe same math that JPMorgan pays $300k+ to use for pricing derivatives. The same math behind signal processing at every semiconductor company on earth. The same math Nvidia's engineers used to build the chips running every AI model today.\n\nTwo lectures. Then you're expected to know it.\n\nThis is Lecture 2 from Oxford Mathematics - filmed live in the lecture hall, first-year undergraduates, no cuts. The professor is writing on a blackboard in real time. Students are passing around questionnaires. Someone drops something loud at minute 31.\n\nIt's the most honest math lecture you'll find on YouTube.\n\nHere's what actually gets taught:\n\nYou start with polar coordinates and the argument of a complex number. Then you prove that when you multiply two complex numbers, their arguments add. This looks like a coincidence. The professor stops and says: \"This looks a bit like a logarithm. That's not a coincidence. There are no coincidences in mathematics.\"\n\nThat one line is worth the whole lecture.\n\nFrom there: de Moivre's theorem. Roots of unity. Euler's formula - e to the power of i times theta equals cos theta plus i sin theta. The professor writes it on the board and says \"take 10 seconds to just absorb how lovely that is.\"\n\nThen the Fundamental Theorem of Algebra: every complex polynomial of degree n has exactly n roots. Every. Single. Time. No exceptions. This theorem is so important it's literally called the Fundamental Theorem of Algebra.\n\nWatch the moment:\n\nAround 33 minutes in, the professor introduces Euler's formula and admits she now thinks about complex numbers almost entirely in this form - not the a + bi form she started with, not the R cos theta form she learned later, but e to the i theta. Then she says something unusually honest for a math lecture: if this feels uncomfortable, that's normal. That's what happens when you meet something new. You reach for the old tools. But the new tool is better and you should force yourself to use it until it feels natural.\n\nThat's not a math lesson. That's how expertise actually works.\n\nOxford first year. Complex Numbers, Lecture 2. Free on YouTube.\n\nbookmark this",
+    "post_url": "https://twitter.com/0xLupenn/status/2100212471269085424",
+    "score": 11,
+    "num_comments": 5,
+    "created_utc": {
+      "$date": "2026-09-16T13:17:27Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:23:30.621Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabdbc242dd0e95b5bac778"
+    },
+    "message_id": "twitter_2070497820478501114",
+    "topic_key": "pricing tool",
+    "search_keyword": "pricing tool",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "MCarbonaraFL",
+    "title": "🚨 DISGUSTING: Oil and gas companies are using an AI tool called \"Kalibrate\" to inflate pricing at the pump.\n\nThis NEEDS to end.\n\nProps to President Trump for stepping in and speaking out against the injustice. https://t.co/fGvG7TniS1",
+    "text": "🚨 DISGUSTING: Oil and gas companies are using an AI tool called \"Kalibrate\" to inflate pricing at the pump.\n\nThis NEEDS to end.\n\nProps to President Trump for stepping in and speaking out against the injustice. https://t.co/fGvG7TniS1",
+    "post_url": "https://twitter.com/MCarbonaraFL/status/2070497820478501114",
+    "score": 6536,
+    "num_comments": 223,
+    "created_utc": {
+      "$date": "2026-06-26T13:22:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:23:30.821Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabdbc342dd0e95b5bac779"
+    },
+    "message_id": "twitter_2099918012459475405",
+    "topic_key": "pricing tool",
+    "search_keyword": "pricing tool",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "devendyyy",
+    "title": "Google just launched Gemini 3.8 Live and apparently talking is now only one of the things it can do\n\nthe new model can:\n\n- speak across 97 languages and switch languages mid-conversation\n- see what you’re seeing and reason about it with you\n- call tools/APIs without stopping the conversation\n- let you interrupt naturally and change direction\n- listen without constantly trying to respond\n- handle codes, IDs and long strings much more accurately\n- reason through longer multi-step tasks with a 128k context window\n\nand the async tool calling is probably one of the coolest additions here.\n\nbasically, if it needs to fetch data or use an API to complete something for you, you don’t necessarily have to sit there in silence waiting for it.\n\nyou can keep talking.\n\nit can also use extended thinking while doing all of this, meaning you could be having a normal voice conversation while the model is reasoning through a much bigger task underneath.\n\ngoogle also added SynthID watermarking to generated audio.\n\npricing comes in at $0.005/min for audio input and $0.018/min for audio output.\n\nthere’s a lot packed into this release.\n\ni think voice agents are getting scary good very quickly 😭",
+    "text": "Google just launched Gemini 3.8 Live and apparently talking is now only one of the things it can do\n\nthe new model can:\n\n- speak across 97 languages and switch languages mid-conversation\n- see what you’re seeing and reason about it with you\n- call tools/APIs without stopping the conversation\n- let you interrupt naturally and change direction\n- listen without constantly trying to respond\n- handle codes, IDs and long strings much more accurately\n- reason through longer multi-step tasks with a 128k context window\n\nand the async tool calling is probably one of the coolest additions here.\n\nbasically, if it needs to fetch data or use an API to complete something for you, you don’t necessarily have to sit there in silence waiting for it.\n\nyou can keep talking.\n\nit can also use extended thinking while doing all of this, meaning you could be having a normal voice conversation while the model is reasoning through a much bigger task underneath.\n\ngoogle also added SynthID watermarking to generated audio.\n\npricing comes in at $0.005/min for audio input and $0.018/min for audio output.\n\nthere’s a lot packed into this release.\n\ni think voice agents are getting scary good very quickly 😭",
+    "post_url": "https://twitter.com/devendyyy/status/2099918012459475405",
+    "score": 16,
+    "num_comments": 3,
+    "created_utc": {
+      "$date": "2026-09-15T17:47:23Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:23:31.020Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabdbc342dd0e95b5bac77a"
+    },
+    "message_id": "twitter_2098038279178477630",
+    "topic_key": "pricing tool",
+    "search_keyword": "pricing tool",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "SarahAnnabels",
+    "title": "🚨 I was genuinely surprised that we are overpaying AI agents for e-commerce tasks!!\n\nI used to think the best AI agent was simply the one with the BEST output.\n\nI don't think that anymore.\n\nI recently compared 3 AI agents by giving them the same real-world e-commerce tasks:\n\n1️⃣ Accio\n2️⃣ Claude Code\n3️⃣ OpenAI Codex\n\nI wasn't testing who could write the best paragraph.\n\nI wanted to see how they handled the messy stuff businesses actually deal with:\n\nSupplier research.\nPricing.\nProduct listings.\nEmails.\nMarket research.\nMulti-step decisions.\n\nAnd Accio genuinely surprised me.\n\nAccio is the most cost-effective E-commerce AI tool for SMEs\n\nThe biggest difference I noticed wasn't just the output.\n\nIt was how Accio approached the work.\n\nWith Accio,\nI noticed it wasn't trying to use maximum compute for every single step.\n\nRoutine tasks are handled by lightweight, e-commerce specific models, while more complicated parts got deeper reasoning.\n\nThat sounds simple,\nbut it's actually a pretty big deal for e-commerce.\n\nWhy should I spend the compute of a massive reasoning model just to extract information from a supplier quote?\n\nAccio seems to understand that distinction.\n\nAnd it goes even further.\n\nIt can reuse cached information, compress context and coordinate different agents instead of repeatedly processing the same stuff.\n\nLess duplicated work.\n\nLess unnecessary processing.\n\nLess wasted tokens.\n\nAnd that's when I started understanding why Accio can be so much more cost-effective.\n\nIt's not simply trying to find the CHEAPEST model.\n\nIt's trying to use the right AI Model for every task.\n\nI then looked at a benchmark across 107 real e-commerce tasks:\n\n→ Accio: $3.69\n→ OpenAI Codex: $9.27\n→ Claude Code: $9.51\n\nAccio came in at 50%+ lower cost, with comparable completion quality.\n\nAnd these weren't made-up toy tasks.\n\nThe benchmark was built from real merchant activity:\n\n10M SMB users\n1.6M real conversations\n200K execution traces\n\nThat's what makes the result interesting to me.\n\nBecause e-commerce isn't just\n\n“ask AI a question → get an answer.”\n\nReal business work is messy.\n\nYou have different suppliers, conflicting information, changing prices, huge amounts of context and dozens of little decisions happening inside one workflow.\n\nThat's where I think Accio has an interesting advantage.\n\nIt's built specifically around commerce workflows, rather than treating every problem like a generic AI problem.\n\nSo I've changed how I look at AI agents.\n\nI don't necessarily want the agent that uses the biggest model.\n\nI want the agent that knows when to use expensive AI Models & when to use CHEAPER models !!\n\nAnd for e-commerce, that's why I'd pick Accio.",
+    "text": "🚨 I was genuinely surprised that we are overpaying AI agents for e-commerce tasks!!\n\nI used to think the best AI agent was simply the one with the BEST output.\n\nI don't think that anymore.\n\nI recently compared 3 AI agents by giving them the same real-world e-commerce tasks:\n\n1️⃣ Accio\n2️⃣ Claude Code\n3️⃣ OpenAI Codex\n\nI wasn't testing who could write the best paragraph.\n\nI wanted to see how they handled the messy stuff businesses actually deal with:\n\nSupplier research.\nPricing.\nProduct listings.\nEmails.\nMarket research.\nMulti-step decisions.\n\nAnd Accio genuinely surprised me.\n\nAccio is the most cost-effective E-commerce AI tool for SMEs\n\nThe biggest difference I noticed wasn't just the output.\n\nIt was how Accio approached the work.\n\nWith Accio,\nI noticed it wasn't trying to use maximum compute for every single step.\n\nRoutine tasks are handled by lightweight, e-commerce specific models, while more complicated parts got deeper reasoning.\n\nThat sounds simple,\nbut it's actually a pretty big deal for e-commerce.\n\nWhy should I spend the compute of a massive reasoning model just to extract information from a supplier quote?\n\nAccio seems to understand that distinction.\n\nAnd it goes even further.\n\nIt can reuse cached information, compress context and coordinate different agents instead of repeatedly processing the same stuff.\n\nLess duplicated work.\n\nLess unnecessary processing.\n\nLess wasted tokens.\n\nAnd that's when I started understanding why Accio can be so much more cost-effective.\n\nIt's not simply trying to find the CHEAPEST model.\n\nIt's trying to use the right AI Model for every task.\n\nI then looked at a benchmark across 107 real e-commerce tasks:\n\n→ Accio: $3.69\n→ OpenAI Codex: $9.27\n→ Claude Code: $9.51\n\nAccio came in at 50%+ lower cost, with comparable completion quality.\n\nAnd these weren't made-up toy tasks.\n\nThe benchmark was built from real merchant activity:\n\n10M SMB users\n1.6M real conversations\n200K execution traces\n\nThat's what makes the result interesting to me.\n\nBecause e-commerce isn't just\n\n“ask AI a question → get an answer.”\n\nReal business work is messy.\n\nYou have different suppliers, conflicting information, changing prices, huge amounts of context and dozens of little decisions happening inside one workflow.\n\nThat's where I think Accio has an interesting advantage.\n\nIt's built specifically around commerce workflows, rather than treating every problem like a generic AI problem.\n\nSo I've changed how I look at AI agents.\n\nI don't necessarily want the agent that uses the biggest model.\n\nI want the agent that knows when to use expensive AI Models & when to use CHEAPER models !!\n\nAnd for e-commerce, that's why I'd pick Accio.",
+    "post_url": "https://twitter.com/SarahAnnabels/status/2098038279178477630",
+    "score": 109,
+    "num_comments": 40,
+    "created_utc": {
+      "$date": "2026-09-10T13:18:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:23:31.219Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabdbc342dd0e95b5bac77b"
+    },
+    "message_id": "twitter_2098760133908033582",
+    "topic_key": "pricing tool",
+    "search_keyword": "pricing tool",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "RetroValix",
+    "title": "https://t.co/NvPNy7I28U",
+    "text": "https://t.co/NvPNy7I28U",
+    "post_url": "https://twitter.com/RetroValix/status/2098760133908033582",
+    "score": 5,
+    "num_comments": 2,
+    "created_utc": {
+      "$date": "2026-09-12T13:06:23Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:23:31.419Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabdbc342dd0e95b5bac77c"
+    },
+    "message_id": "twitter_2098397564739690844",
+    "topic_key": "pricing tool",
+    "search_keyword": "pricing tool",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "eashish93",
+    "title": "Just sold minform for $2000 via @trust_mrr . It's a very small amount that I would not bother to even tweet, but I'm tweeting for you guys to share a lesson.\n\nThis is a failure story of how I built minform in the dark, never promoted it, earned $70K indirectly through freelancing and finally sold it on @trust_mrr for mere $2000.\n\nI started this form builder project around 2023 before AI era. I built the v1 quickly and shared on reddit and got good traction at that time. A user found me from there and he wanted to build a similar project with several more features.\nI got work from him worth $70k which ran over a year. It was a SaaS project similar to monday or any project management tool you see on web.\nThe full project I coded with my bare hands, because AI/LLM was not a thing at that time.\n\nDuring my free time I also kept working on minform to acquire customers, but I was and still am bad at marketing and due to this I was unable to get even a single paying user.\nThen I started lifetime deals and shared in facebook groups (kenmoo), from there I got $1.4K worth of sales within two months.\n\n2025 started and AI apps were blowing up. Everyone was building with AI and adding AI features on their SaaS.\nI thought minform would not survive without AI and I wanted to quit working on it. Then I got a subscriber out of thin air which motivated me to work on it more. I built on it for 6 more months and launched with all the AI stuff. This was first of its kind form builder at that time where you chat with AI to build forms.\n\nAs I was heavily bad on marketing, this work also went to waste. With so many AI startups popping up fast, I got distracted and thought to build a new startup, but also didn't want to quit on minform. I kept adding more and more features every week, now with AI help in v2, but didn't even bother to market it.\nOn the pricing side, I tried every possible way from paywalled to experimenting with pricing but nothing changed.\n\nI then heard about @trust_mrr and finally decided to list it for sale. I initially listed at $8K which was about 8x of revenue. For about 2 months nothing moved on the platform, not a single message.\nOne day this miracle happened, I got 2 subscribers out of thin air while I was talking to claude about whether to quit minform or not. I was getting very emotional with claude that day btw.\nI then removed the listing and decided to give minform nth try, but since this form builder space (even AI forms) is so crowded I had no idea where to market.\n\nMonths passed and nothing moved on sales side. 2026 started and my second startup kitful which is in AI SEO space was doing very good. So this time I decided no matter what, I will not remove it from trust_mrr. My mrr on minform had also increased a bit and I lowered the price to $3k. After a month on the second listing I got a buyer who was asking $2k. I sold it without even thinking.\n\nReason I wanted to sell: I believe this startup kept me stuck for more than 2 years. Yes I earned $70k indirectly from it via freelancing, but I couldn't move on to building other stuff.\n\nAnd the guy who spent $70K on his startup also failed and never launched, because he also kept improving it more and more. He quit right before the AI wave and I lost my biggest client.\n\nSo the biggest lesson I learned after all this: work on marketing from day 1, build stuff which can have a one time price, and don't get attached to a single startup if you're solo.\n\nAnd thanks to @marclou who created @trust_mrr platform for indiehackers like us.",
+    "text": "Just sold minform for $2000 via @trust_mrr . It's a very small amount that I would not bother to even tweet, but I'm tweeting for you guys to share a lesson.\n\nThis is a failure story of how I built minform in the dark, never promoted it, earned $70K indirectly through freelancing and finally sold it on @trust_mrr for mere $2000.\n\nI started this form builder project around 2023 before AI era. I built the v1 quickly and shared on reddit and got good traction at that time. A user found me from there and he wanted to build a similar project with several more features.\nI got work from him worth $70k which ran over a year. It was a SaaS project similar to monday or any project management tool you see on web.\nThe full project I coded with my bare hands, because AI/LLM was not a thing at that time.\n\nDuring my free time I also kept working on minform to acquire customers, but I was and still am bad at marketing and due to this I was unable to get even a single paying user.\nThen I started lifetime deals and shared in facebook groups (kenmoo), from there I got $1.4K worth of sales within two months.\n\n2025 started and AI apps were blowing up. Everyone was building with AI and adding AI features on their SaaS.\nI thought minform would not survive without AI and I wanted to quit working on it. Then I got a subscriber out of thin air which motivated me to work on it more. I built on it for 6 more months and launched with all the AI stuff. This was first of its kind form builder at that time where you chat with AI to build forms.\n\nAs I was heavily bad on marketing, this work also went to waste. With so many AI startups popping up fast, I got distracted and thought to build a new startup, but also didn't want to quit on minform. I kept adding more and more features every week, now with AI help in v2, but didn't even bother to market it.\nOn the pricing side, I tried every possible way from paywalled to experimenting with pricing but nothing changed.\n\nI then heard about @trust_mrr and finally decided to list it for sale. I initially listed at $8K which was about 8x of revenue. For about 2 months nothing moved on the platform, not a single message.\nOne day this miracle happened, I got 2 subscribers out of thin air while I was talking to claude about whether to quit minform or not. I was getting very emotional with claude that day btw.\nI then removed the listing and decided to give minform nth try, but since this form builder space (even AI forms) is so crowded I had no idea where to market.\n\nMonths passed and nothing moved on sales side. 2026 started and my second startup kitful which is in AI SEO space was doing very good. So this time I decided no matter what, I will not remove it from trust_mrr. My mrr on minform had also increased a bit and I lowered the price to $3k. After a month on the second listing I got a buyer who was asking $2k. I sold it without even thinking.\n\nReason I wanted to sell: I believe this startup kept me stuck for more than 2 years. Yes I earned $70k indirectly from it via freelancing, but I couldn't move on to building other stuff.\n\nAnd the guy who spent $70K on his startup also failed and never launched, because he also kept improving it more and more. He quit right before the AI wave and I lost my biggest client.\n\nSo the biggest lesson I learned after all this: work on marketing from day 1, build stuff which can have a one time price, and don't get attached to a single startup if you're solo.\n\nAnd thanks to @marclou who created @trust_mrr platform for indiehackers like us.",
+    "post_url": "https://twitter.com/eashish93/status/2098397564739690844",
+    "score": 4,
+    "num_comments": 7,
+    "created_utc": {
+      "$date": "2026-09-11T13:05:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:23:31.622Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabdbc342dd0e95b5bac77d"
+    },
+    "message_id": "twitter_2100254904858341717",
+    "topic_key": "pricing tool",
+    "search_keyword": "pricing tool",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "xmayeth",
+    "title": "my Polymarket stack that brings in $150,000 a year. every tool here is ready to go, just grab it and use it.\n\nbookmark it\n  \nthis stack lets you spot moves early, get in at the best price and catch pricing gaps across platforms. put together, that's your edge                                                             \n\n@Polysights - their insider finder tracks wallets that win consistently and shows where they're putting money. ready-made trade ideas\n\n@xspreadmap - where i find sports arbitrage between Polymarket and sportsbooks. i bet both sides and pocket the difference either way. my average ROI is 3.5% per trade\n\n@kairostradex - i open positions through it at the best price. it sees prices on three platforms at once and fills wherever it's cheaper. backed by a16z\n\n@Poly_Helper - puts a bonds tab right on the market page: almost-resolved markets with annualized yield. not farming their points for the airdrop, i'm here for the bonds",
+    "text": "my Polymarket stack that brings in $150,000 a year. every tool here is ready to go, just grab it and use it.\n\nbookmark it\n  \nthis stack lets you spot moves early, get in at the best price and catch pricing gaps across platforms. put together, that's your edge                                                             \n\n@Polysights - their insider finder tracks wallets that win consistently and shows where they're putting money. ready-made trade ideas\n\n@xspreadmap - where i find sports arbitrage between Polymarket and sportsbooks. i bet both sides and pocket the difference either way. my average ROI is 3.5% per trade\n\n@kairostradex - i open positions through it at the best price. it sees prices on three platforms at once and fills wherever it's cheaper. backed by a16z\n\n@Poly_Helper - puts a bonds tab right on the market page: almost-resolved markets with annualized yield. not farming their points for the airdrop, i'm here for the bonds",
+    "post_url": "https://twitter.com/xmayeth/status/2100254904858341717",
+    "score": 66,
+    "num_comments": 9,
+    "created_utc": {
+      "$date": "2026-09-16T16:06:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:23:31.821Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabdbc442dd0e95b5bac77f"
+    },
+    "message_id": "twitter_2099430425428918488",
+    "topic_key": "pricing tool",
+    "search_keyword": "pricing tool",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "pmitu",
+    "title": "https://t.co/DBs0CQFPT8",
+    "text": "https://t.co/DBs0CQFPT8",
+    "post_url": "https://twitter.com/pmitu/status/2099430425428918488",
+    "score": 90,
+    "num_comments": 17,
+    "created_utc": {
+      "$date": "2026-09-14T09:29:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:23:32.215Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabdbc442dd0e95b5bac780"
+    },
+    "message_id": "twitter_2094740953554932149",
+    "topic_key": "pricing tool",
+    "search_keyword": "pricing tool",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "pmitu",
+    "title": "Interesting GTM tool for direct sales!\n\nPricing model is quite competitive: no subscriptions, $0.0089 per lead\n\nProducts can build an automated workflow to reach 1B+ contacts across all networks through @treg_ai\n\nFully open source 👌\n\nFounders, reach your potential users every day!",
+    "text": "Interesting GTM tool for direct sales!\n\nPricing model is quite competitive: no subscriptions, $0.0089 per lead\n\nProducts can build an automated workflow to reach 1B+ contacts across all networks through @treg_ai\n\nFully open source 👌\n\nFounders, reach your potential users every day!",
+    "post_url": "https://twitter.com/pmitu/status/2094740953554932149",
+    "score": 220,
+    "num_comments": 34,
+    "created_utc": {
+      "$date": "2026-09-01T10:55:36Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:23:32.413Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabdbc442dd0e95b5bac781"
+    },
+    "message_id": "twitter_2098161579795841058",
+    "topic_key": "pricing tool",
+    "search_keyword": "pricing tool",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "wstickevers",
+    "title": "AI Won’t Replace Astrologers—But Astrologers Using AI Will Outperform Those Who Don’t\n\nAstrologers, I've got some bad news for the AI resistance movement:\n\nAI ISN'T GOING AWAY.\n\nYou can hate it. Mock it. Refuse to use it. Block every AI image that crosses your Facebook feed.\n\nIt won't matter.\n\nBecause AI doesn't need the astrology community's permission to keep advancing.\n\nAnd here's the part I think a lot of astrologers still haven't grasped:\n\nToday's AI is probably the WORST AI you will ever have to compete with.\n\nRead that again.\n\nWe're looking at the primitive version.\n\nThe systems will get better at research. Better at mathematics. Better at handling enormous bodies of text. Better at analyzing data. Better at images. Better at software. Better at maintaining context. Better at catching patterns. Better at working across multiple tools.\n\nAnd yes—better at astrology.\n\nThat's where this gets uncomfortable.\n\nAI is going to know an enormous amount about astrology.\n\nTraditional astrology. Modern astrology. Mundane astrology. Financial astrology. Hellenistic astrology. Medieval texts. Planetary cycles. Aspect doctrine. House systems. Thousands upon thousands of books, articles, lectures, charts, and historical examples.\n\nSo what happens when basic astrological information becomes virtually free?\n\nINFORMATION LOSES ITS PREMIUM.\n\nKnowing what Saturn square Venus “means” isn't going to distinguish a professional astrologer when anyone can ask an AI and receive a competent explanation in seconds.\n\nGenerating a 20-page natal report won't distinguish you either.\n\nThat part of the business is headed toward commodity pricing.\n\nSo what's left?\n\nPlenty.\n\nBut it's the hard stuff.\n\nExperience. Judgment. Discernment. Specialization. Original research. A forecasting record. Knowing which technique matters. Knowing which technique DOESN'T matter. And knowing when the machine is confidently feeding you bullshit.\n\nThat's where the professional astrologer's value moves.\n\nI've been practicing astrology professionally since 1989. One thing decades of looking at charts teaches you is that accumulating information isn't the same as acquiring judgment.\n\nAI can ingest 10,000 astrology books.\n\nThat doesn't automatically give it 30 years of lived professional experience.\n\nBut here's the kicker:\n\nPut that technology in the hands of somebody who DOES have 30 years of experience, and now you've got something entirely different.\n\nThat's where the leverage gets serious.\n\nAn experienced mundane astrologer using AI can potentially examine more historical precedents, compare more charts, interrogate larger datasets, search more obscure sources, test more hypotheses, generate more counterarguments, and identify mistakes faster than the same astrologer working alone.\n\nWhat once took weeks can increasingly take days.\n\nWhat took days can take hours.\n\nAnd what previously required an astrologer, researcher, editor, graphic designer, and technical assistant may increasingly be accomplished by one knowledgeable person directing a suite of AI tools.\n\nThat's not the death of expertise.\n\nThat's expertise with a POWER TOOL.\n\nAnd astrologers should understand this better than almost anybody.\n\nRemember when charts were calculated by hand?\n\nToday we punch data into Solar Fire and get a horoscope in seconds.\n\nNobody screams:\n\n“FAKE ASTROLOGY! THE COMPUTER CALCULATED IT!”\n\nWhy not?\n\nBecause we understand the distinction.\n\nThe computer performs the calculation.\n\nThe astrologer performs the delineation and exercises judgment.\n\nAI takes that relationship one step further because now the machine can participate in research, language, comparison, visualization, and even interpretation.\n\nThat absolutely raises new problems.\n\nAI hallucinates.\n\nAI can fabricate sources.\n\nAI can produce generic interpretations.\n\nAI can sound authoritative while being completely wrong.\n\nAnd AI can turn a mediocre astrologer into a much faster mediocre astrologer.\n\nThat's why the answer isn't blind adoption.\n\nBut it sure as hell isn't blind rejection either.\n\nThe answer is:\n\nMASTER THE DAMN TOOL.\n\nCheck its work.\n\nChallenge it.\n\nCorrect it.\n\nVerify the sources.\n\nReject the hallucinations.\n\nMake it defend its reasoning.\n\nBring your own techniques.\n\nBring your own research.\n\nBring your own worldview.\n\nAnd above all:\n\nBRING YOUR OWN BRAIN.\n\nBecause the astrologer who simply asks AI, “Interpret this chart for me,” and posts the answer is going to produce exactly the generic AI slop everyone is complaining about.\n\nBut that's not serious AI-assisted astrology.\n\nThe serious practitioner uses AI as leverage while remaining the final authority over the work.\n\nAnd that leads to a prediction I think the astrology profession needs to hear:\n\nAI probably isn't going to eliminate the professional astrologer.\n\nBut AI-assisted professionals are going to put enormous competitive pressure on professionals who refuse to use these tools.\n\nThe same thing will happen in law.\n\nMedicine.\n\nFinance.\n\nEngineering.\n\nResearch.\n\nMedia.\n\nConsulting.\n\nAnd astrology isn't sitting in some magical force field outside technological change.\n\nThere's an economic consequence here too.\n\nDon't compete with AI at what AI can make cheap.\n\nGeneric interpretations?\n\nCheap.\n\nBasic astrological definitions?\n\nCheap.\n\nCookie-cutter reports?\n\nCheap.\n\nSummaries of standard textbook meanings?\n\nIncreasingly cheap.\n\nSo move UP the value chain.\n\nOriginal research.\n\nSpecialized expertise.\n\nForecasting.\n\nConsultation.\n\nSynthesis.\n\nHuman judgment.\n\nAccountability.\n\nA recognizable intellectual framework.\n\nA body of work that demonstrates you actually know what you're talking about.\n\nThat's where the moat is.\n\nAnd there's an irony here.\n\nAstrologers spend their lives studying cycles of change.\n\nWe tell clients that circumstances evolve. That old structures break down. That new eras demand adaptation.\n\nThen along comes one of the biggest technological disruptions of our lifetime, and suddenly some astrologers announce:\n\n“NO THANKS. I'D LIKE 2019 BACK.”\n\nGood luck with that.\n\nThe future isn't asking permission.\n\nSo don't worship AI.\n\nDon't trust AI blindly.\n\nDon't outsource your mind to AI.\n\nAnd don't let AI turn your distinctive voice into corporate oatmeal.\n\nBut don't pretend ignoring the technology is a strategy.\n\nLEARN IT.\n\nTEST IT.\n\nCHALLENGE IT.\n\nMASTER IT.\n\nBecause five years from now, I doubt the important distinction will be between “AI astrologers” and “real astrologers.”\n\nIt will increasingly be between astrologers who learned how to multiply their expertise with these tools...\n\n…and astrologers who didn't.\n\nThe telescope extended the eye.\n\nThe calculator extended arithmetic.\n\nThe computer extended computation.\n\nThe internet extended access to information.\n\nAI is beginning to extend cognition.\n\nAnd we're still near the beginning.\n\nSo here's my message to my fellow astrologers:\n\nAI WON'T REPLACE YOU JUST BECAUSE IT EXISTS.\n\nBut the astrologer sitting next to you who has your level of expertise AND knows how to use AI?\n\nThat's who you need to worry about.\n\nBecause today's AI is probably the worst AI either of you will ever use.\n\nAnd tomorrow's astrologer had better be better.",
+    "text": "AI Won’t Replace Astrologers—But Astrologers Using AI Will Outperform Those Who Don’t\n\nAstrologers, I've got some bad news for the AI resistance movement:\n\nAI ISN'T GOING AWAY.\n\nYou can hate it. Mock it. Refuse to use it. Block every AI image that crosses your Facebook feed.\n\nIt won't matter.\n\nBecause AI doesn't need the astrology community's permission to keep advancing.\n\nAnd here's the part I think a lot of astrologers still haven't grasped:\n\nToday's AI is probably the WORST AI you will ever have to compete with.\n\nRead that again.\n\nWe're looking at the primitive version.\n\nThe systems will get better at research. Better at mathematics. Better at handling enormous bodies of text. Better at analyzing data. Better at images. Better at software. Better at maintaining context. Better at catching patterns. Better at working across multiple tools.\n\nAnd yes—better at astrology.\n\nThat's where this gets uncomfortable.\n\nAI is going to know an enormous amount about astrology.\n\nTraditional astrology. Modern astrology. Mundane astrology. Financial astrology. Hellenistic astrology. Medieval texts. Planetary cycles. Aspect doctrine. House systems. Thousands upon thousands of books, articles, lectures, charts, and historical examples.\n\nSo what happens when basic astrological information becomes virtually free?\n\nINFORMATION LOSES ITS PREMIUM.\n\nKnowing what Saturn square Venus “means” isn't going to distinguish a professional astrologer when anyone can ask an AI and receive a competent explanation in seconds.\n\nGenerating a 20-page natal report won't distinguish you either.\n\nThat part of the business is headed toward commodity pricing.\n\nSo what's left?\n\nPlenty.\n\nBut it's the hard stuff.\n\nExperience. Judgment. Discernment. Specialization. Original research. A forecasting record. Knowing which technique matters. Knowing which technique DOESN'T matter. And knowing when the machine is confidently feeding you bullshit.\n\nThat's where the professional astrologer's value moves.\n\nI've been practicing astrology professionally since 1989. One thing decades of looking at charts teaches you is that accumulating information isn't the same as acquiring judgment.\n\nAI can ingest 10,000 astrology books.\n\nThat doesn't automatically give it 30 years of lived professional experience.\n\nBut here's the kicker:\n\nPut that technology in the hands of somebody who DOES have 30 years of experience, and now you've got something entirely different.\n\nThat's where the leverage gets serious.\n\nAn experienced mundane astrologer using AI can potentially examine more historical precedents, compare more charts, interrogate larger datasets, search more obscure sources, test more hypotheses, generate more counterarguments, and identify mistakes faster than the same astrologer working alone.\n\nWhat once took weeks can increasingly take days.\n\nWhat took days can take hours.\n\nAnd what previously required an astrologer, researcher, editor, graphic designer, and technical assistant may increasingly be accomplished by one knowledgeable person directing a suite of AI tools.\n\nThat's not the death of expertise.\n\nThat's expertise with a POWER TOOL.\n\nAnd astrologers should understand this better than almost anybody.\n\nRemember when charts were calculated by hand?\n\nToday we punch data into Solar Fire and get a horoscope in seconds.\n\nNobody screams:\n\n“FAKE ASTROLOGY! THE COMPUTER CALCULATED IT!”\n\nWhy not?\n\nBecause we understand the distinction.\n\nThe computer performs the calculation.\n\nThe astrologer performs the delineation and exercises judgment.\n\nAI takes that relationship one step further because now the machine can participate in research, language, comparison, visualization, and even interpretation.\n\nThat absolutely raises new problems.\n\nAI hallucinates.\n\nAI can fabricate sources.\n\nAI can produce generic interpretations.\n\nAI can sound authoritative while being completely wrong.\n\nAnd AI can turn a mediocre astrologer into a much faster mediocre astrologer.\n\nThat's why the answer isn't blind adoption.\n\nBut it sure as hell isn't blind rejection either.\n\nThe answer is:\n\nMASTER THE DAMN TOOL.\n\nCheck its work.\n\nChallenge it.\n\nCorrect it.\n\nVerify the sources.\n\nReject the hallucinations.\n\nMake it defend its reasoning.\n\nBring your own techniques.\n\nBring your own research.\n\nBring your own worldview.\n\nAnd above all:\n\nBRING YOUR OWN BRAIN.\n\nBecause the astrologer who simply asks AI, “Interpret this chart for me,” and posts the answer is going to produce exactly the generic AI slop everyone is complaining about.\n\nBut that's not serious AI-assisted astrology.\n\nThe serious practitioner uses AI as leverage while remaining the final authority over the work.\n\nAnd that leads to a prediction I think the astrology profession needs to hear:\n\nAI probably isn't going to eliminate the professional astrologer.\n\nBut AI-assisted professionals are going to put enormous competitive pressure on professionals who refuse to use these tools.\n\nThe same thing will happen in law.\n\nMedicine.\n\nFinance.\n\nEngineering.\n\nResearch.\n\nMedia.\n\nConsulting.\n\nAnd astrology isn't sitting in some magical force field outside technological change.\n\nThere's an economic consequence here too.\n\nDon't compete with AI at what AI can make cheap.\n\nGeneric interpretations?\n\nCheap.\n\nBasic astrological definitions?\n\nCheap.\n\nCookie-cutter reports?\n\nCheap.\n\nSummaries of standard textbook meanings?\n\nIncreasingly cheap.\n\nSo move UP the value chain.\n\nOriginal research.\n\nSpecialized expertise.\n\nForecasting.\n\nConsultation.\n\nSynthesis.\n\nHuman judgment.\n\nAccountability.\n\nA recognizable intellectual framework.\n\nA body of work that demonstrates you actually know what you're talking about.\n\nThat's where the moat is.\n\nAnd there's an irony here.\n\nAstrologers spend their lives studying cycles of change.\n\nWe tell clients that circumstances evolve. That old structures break down. That new eras demand adaptation.\n\nThen along comes one of the biggest technological disruptions of our lifetime, and suddenly some astrologers announce:\n\n“NO THANKS. I'D LIKE 2019 BACK.”\n\nGood luck with that.\n\nThe future isn't asking permission.\n\nSo don't worship AI.\n\nDon't trust AI blindly.\n\nDon't outsource your mind to AI.\n\nAnd don't let AI turn your distinctive voice into corporate oatmeal.\n\nBut don't pretend ignoring the technology is a strategy.\n\nLEARN IT.\n\nTEST IT.\n\nCHALLENGE IT.\n\nMASTER IT.\n\nBecause five years from now, I doubt the important distinction will be between “AI astrologers” and “real astrologers.”\n\nIt will increasingly be between astrologers who learned how to multiply their expertise with these tools...\n\n…and astrologers who didn't.\n\nThe telescope extended the eye.\n\nThe calculator extended arithmetic.\n\nThe computer extended computation.\n\nThe internet extended access to information.\n\nAI is beginning to extend cognition.\n\nAnd we're still near the beginning.\n\nSo here's my message to my fellow astrologers:\n\nAI WON'T REPLACE YOU JUST BECAUSE IT EXISTS.\n\nBut the astrologer sitting next to you who has your level of expertise AND knows how to use AI?\n\nThat's who you need to worry about.\n\nBecause today's AI is probably the worst AI either of you will ever use.\n\nAnd tomorrow's astrologer had better be better.",
+    "post_url": "https://twitter.com/wstickevers/status/2098161579795841058",
+    "score": 5,
+    "num_comments": 3,
+    "created_utc": {
+      "$date": "2026-09-10T21:27:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:23:32.612Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabdbcf42dd0e95b5bac786"
+    },
+    "message_id": "twitter_2099692356492513582",
+    "topic_key": "print on demand",
+    "search_keyword": "print on demand",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "x52xofficial",
+    "title": "@grok helped\n\nShort version: \n\nthe Snoopy cups will sell out and print a fat unit margin. They will not move the SBUX P&L by themselves. The money is in the traffic they pull, not the $40 glass. \nScale first\n\n•  Last reported quarter (Q3 FY26, ended Jun 28): $9.32B revenue. TTM ~$38B. \n•  41,304 stores. US: 16,933. \n•  In-store mix is still drinks + food. \n\nLatest quarter: beverage 58%, food 20%, “Other” 22%. That “Other” bucket is not merch — it’s packaged coffee, Nestlé/CPG, royalties, ingredients, and serveware. Starbucks does not disclose tumbler/cup sales as a line item. \nSo “merch is a quarter of revenue” is way too high. In-store collectible cups are a thin slice of that 22% Other plus whatever gets rung in as an add-on at the register.\n\nWhat one of these drops is actually worth\n\nHero SKU: Snoopy Glass Cold Cup at $39.95, 2-per-customer cap, limited run, launches tomorrow (Sept 15). \n\nBack-of-envelope (not company guidance):\n\n•  500k cups → ~$20M retail\n•  1M cups → ~$40M\n•  2M cups → ~$80M\n\nunit economics: $40 is ~2–3x a normal tumbler. Glass + knit hat + Woodstock topper + Peanuts royalty is not free, but COGS is still a fraction of retail. High gross margin, zero replenishment once they break. That’s the collectible model, not a recurring merch engine.\n\nThe part that does matter for $SBUX\nBearista (Nov 2025, $29.95 glass cup) is the analog. Card-data shop estimated ~$64M incremental spend over two weeks — not all cup sales. \n\nLaunch day: transactions +36%, AOV +16%, daily spend +58%. Traffic stayed elevated after sell-out because people still came in looking. Management credited it for holiday-week traffic. \nThat’s the play: scarce $40 object → line out the door → PSL / food attached → comps.\n\nNorth America last quarter already ran +8.1% comps (US +7.9%, transactions +4.2%, ticket +3.6%). They guided US Q4 comps 6.5%+. A Peanuts sell-out helps that ticket/traffic mix. It does not change the year. \n\nBottom line\n\n•  Limited supply + $40 + no replacement = they will sell through. Your read on demand is right.\n\n•  Direct merch dollars: tens of millions, not hundreds. Not “a quarter of merch,” and merch itself is not a quarter of the company.\n\n•  Real contribution: a few days/weeks of extra transactions and attached drinks. Same job Bearista did.\n\n•  Stock impact: only if this drop plus PSL season keeps US comps in that 6.5%+ guide. The cup is a marketing weapon, not a revenue segment.",
+    "text": "@grok helped\n\nShort version: \n\nthe Snoopy cups will sell out and print a fat unit margin. They will not move the SBUX P&L by themselves. The money is in the traffic they pull, not the $40 glass. \nScale first\n\n•  Last reported quarter (Q3 FY26, ended Jun 28): $9.32B revenue. TTM ~$38B. \n•  41,304 stores. US: 16,933. \n•  In-store mix is still drinks + food. \n\nLatest quarter: beverage 58%, food 20%, “Other” 22%. That “Other” bucket is not merch — it’s packaged coffee, Nestlé/CPG, royalties, ingredients, and serveware. Starbucks does not disclose tumbler/cup sales as a line item. \nSo “merch is a quarter of revenue” is way too high. In-store collectible cups are a thin slice of that 22% Other plus whatever gets rung in as an add-on at the register.\n\nWhat one of these drops is actually worth\n\nHero SKU: Snoopy Glass Cold Cup at $39.95, 2-per-customer cap, limited run, launches tomorrow (Sept 15). \n\nBack-of-envelope (not company guidance):\n\n•  500k cups → ~$20M retail\n•  1M cups → ~$40M\n•  2M cups → ~$80M\n\nunit economics: $40 is ~2–3x a normal tumbler. Glass + knit hat + Woodstock topper + Peanuts royalty is not free, but COGS is still a fraction of retail. High gross margin, zero replenishment once they break. That’s the collectible model, not a recurring merch engine.\n\nThe part that does matter for $SBUX\nBearista (Nov 2025, $29.95 glass cup) is the analog. Card-data shop estimated ~$64M incremental spend over two weeks — not all cup sales. \n\nLaunch day: transactions +36%, AOV +16%, daily spend +58%. Traffic stayed elevated after sell-out because people still came in looking. Management credited it for holiday-week traffic. \nThat’s the play: scarce $40 object → line out the door → PSL / food attached → comps.\n\nNorth America last quarter already ran +8.1% comps (US +7.9%, transactions +4.2%, ticket +3.6%). They guided US Q4 comps 6.5%+. A Peanuts sell-out helps that ticket/traffic mix. It does not change the year. \n\nBottom line\n\n•  Limited supply + $40 + no replacement = they will sell through. Your read on demand is right.\n\n•  Direct merch dollars: tens of millions, not hundreds. Not “a quarter of merch,” and merch itself is not a quarter of the company.\n\n•  Real contribution: a few days/weeks of extra transactions and attached drinks. Same job Bearista did.\n\n•  Stock impact: only if this drop plus PSL season keeps US comps in that 6.5%+ guide. The cup is a marketing weapon, not a revenue segment.",
+    "post_url": "https://twitter.com/x52xofficial/status/2099692356492513582",
+    "score": 2,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-15T02:50:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:23:43.382Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabdbd142dd0e95b5bac790"
+    },
+    "message_id": "twitter_2098008463401980345",
+    "topic_key": "print on demand",
+    "search_keyword": "print on demand",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "pressmonitorin",
+    "title": "[5] Essential Gold & Precious Metals Stories for Investors\nhttps://t.co/lTVWBs4bs4\n\nAccording to Press Monitor's tracking of Indian publications, this press review combines media monitoring and media intelligence to cover five essential stories on gold and precious metals. From RBI's tokenisation breakthrough to smuggling threats and bond yield shifts, these developments are reshaping the bullion landscape. This print media monitoring report delivers news on gold that matters for investors, traders, and policymakers.\n\n1. RBI Explores Gold Tokenisation on UMI\nA front-page report in Business Line says gold climbed on Wednesday, supported by a softer US dollar, while investors weighed inflationary pressures from renewed attacks in West Asia. Spot gold rose 1.1 per cent to $4,401.60 per ounce by 116 GMT, while US gold futures for December delivery gained 0.1 per cent to $4,445.30, and copper traded near record highs despite West Asian worries.\n\nWhy it matters: The Reserve Bank of India's exploration of gold tokenisation on its Unified Markets Interface represents a landmark shift in how precious metals are tracked, traded, and settled digitally. This move could transform India's gold market by enabling fractional ownership and automated compliance.\n\nKey detail: RBI Executive Director P Vasudevan announced the initiative at the Global Fintech Fest in Mumbai, noting the central bank has already tested tokenisation with 248 certificate-of-deposit transactions worth Rs 17,000 crore. Token-based systems embedding legal rights and smart contracts are essential, he emphasised.\n\nSource: Times of India, Asian Age, Deccan Chronicle\n\nNext step: Watch for UMI pilot expansions and regulatory frameworks that could accelerate institutional adoption of tokenised gold assets.\n\n2. Gold Climbs as Dollar Weakens\nA front-page report in Times of India says the Reserve Bank of India is exploring gold tokenisation to overcome operational bottlenecks in traditional models. Executive director P Vasudevan emphasised that digitalisation alone is insufficient, advocating for token-based systems that facilitate fractional ownership, embed legal rights, and utilise smart contracts for automated asset lifecycle management.\n\nWhy it matters: A softer US dollar and renewed West Asian tensions drove spot gold higher, signalling sustained safe-haven demand amid inflationary concerns. Copper also traded near record highs, underscoring broad commodity strength.\n\nKey detail: Spot gold rose 1.1 per cent to $4,401.60 per ounce, while US gold futures for December delivery gained 0.1 per cent to $4,445.30. Global investors are weighing inflationary pressures from West Asian attacks against the dollar's decline.\n\nSource: Business Line\n\nNext step: Monitor dollar index movements and West Asia developments for short-term gold price direction.\n\n3. Gold Prices Rise by 2 Lakh 1,520 Rupees per 10 Grams\nA front-page report in The Pioneer says gold prices rose by 2 lakh 1,520 rupees to 2 lakh 15,200 rupees per 10 grams in futures trade on Wednesday. Speculators created fresh positions on firm spot demand, driving the Multi Commodity Exchange October delivery contract higher by 190 rupees in a business turnover of 635 lots. Gold futures also rose 0.65 per cent to 4,384.16 dollars per ounce in New York.\n\nWhy it matters: Indian gold futures surged on firm spot demand, with speculators creating fresh positions that pushed the Multi Commodity Exchange October contract sharply higher. This domestic pricing move reflects strong local appetite for bullion.\n\nKey detail: Gold rose 2 lakh 1,520 rupees to 2 lakh 15,200 rupees per 10 grams in futures trade, with the MCX contract up 190 rupees on a turnover of 635 lots. Gold futures also rose 0.65 per cent to $4,384.16 per ounce in New York.\n\nSource: The Pioneer\n\nNext step: Track MCX open interest and spot demand trends to gauge whether the rupee-denominated rally has further room.\n\n4. Gold Smuggling Hits Indian Bullion Market\nA front-page report in Economic Times says surging smuggled gold is distorting India's bullion market, offering discounts of up to Rs 8,000 per 10 grams due to a recent import duty hike to 15 percent. Industry estimates warn over 100 tonnes could enter through illegal channels this year, prompting Directorate of Revenue Intelligence operations that recently seized 27 kilograms and arrested 12 individuals. Officials argue that lowering duties instead of raising them would curb the lucrative grey market and protect legitimate jewellers.\n\nWhy it matters: Surging smuggled gold is distorting India's bullion market, undercutting legitimate jewellers with discounts of up to Rs 8,000 per 10 grams. The recent import duty hike to 15 percent has inadvertently fuelled a lucrative grey market.\n\nKey detail: Industry estimates warn over 100 tonnes could enter through illegal channels this year. The Directorate of Revenue Intelligence recently seized 27 kilograms and arrested 12 individuals, while officials argue that lowering duties would be more effective than raising them.\n\nSource: Economic Times\n\nNext step: Follow DRI enforcement actions and policy debates on import duty adjustments to curb the grey market.\n\n5. Bond Yields Push Rates Up\nA front-page report in Free Press Journal says that rising bond yields are triggering higher interest rates across loans, potentially stoking inflation despite higher rates, and that the global bond market tops US$58 trillion. India ranks eighth globally with US$2.8 trillion, and higher yields are pushing gold prices down.\n\nWhy it matters: Rising global bond yields are triggering higher interest rates across loans, with potential inflationary side effects. As the world's eighth-largest bond market at US$2.8 trillion, India is not immune to these cross-currents.\n\nKey detail: The global bond market tops US$58 trillion, and higher yields are pushing gold prices down even as other commodity signals remain mixed. India's bond market ranks eighth globally, reflecting its growing financial weight.\n\nSource: Free Press Journal\n\nNext step: Watch for RBI monetary policy responses and yield curve movements that could influence gold's near-term trajectory.\n\nWhich of these five stories will have the biggest impact on your portfolio this week? Share your thoughts and tag the analysts and institutions tracking these shifts.\n\n#GoldPrices #Commodities #WestAsia",
+    "text": "[5] Essential Gold & Precious Metals Stories for Investors\nhttps://t.co/lTVWBs4bs4\n\nAccording to Press Monitor's tracking of Indian publications, this press review combines media monitoring and media intelligence to cover five essential stories on gold and precious metals. From RBI's tokenisation breakthrough to smuggling threats and bond yield shifts, these developments are reshaping the bullion landscape. This print media monitoring report delivers news on gold that matters for investors, traders, and policymakers.\n\n1. RBI Explores Gold Tokenisation on UMI\nA front-page report in Business Line says gold climbed on Wednesday, supported by a softer US dollar, while investors weighed inflationary pressures from renewed attacks in West Asia. Spot gold rose 1.1 per cent to $4,401.60 per ounce by 116 GMT, while US gold futures for December delivery gained 0.1 per cent to $4,445.30, and copper traded near record highs despite West Asian worries.\n\nWhy it matters: The Reserve Bank of India's exploration of gold tokenisation on its Unified Markets Interface represents a landmark shift in how precious metals are tracked, traded, and settled digitally. This move could transform India's gold market by enabling fractional ownership and automated compliance.\n\nKey detail: RBI Executive Director P Vasudevan announced the initiative at the Global Fintech Fest in Mumbai, noting the central bank has already tested tokenisation with 248 certificate-of-deposit transactions worth Rs 17,000 crore. Token-based systems embedding legal rights and smart contracts are essential, he emphasised.\n\nSource: Times of India, Asian Age, Deccan Chronicle\n\nNext step: Watch for UMI pilot expansions and regulatory frameworks that could accelerate institutional adoption of tokenised gold assets.\n\n2. Gold Climbs as Dollar Weakens\nA front-page report in Times of India says the Reserve Bank of India is exploring gold tokenisation to overcome operational bottlenecks in traditional models. Executive director P Vasudevan emphasised that digitalisation alone is insufficient, advocating for token-based systems that facilitate fractional ownership, embed legal rights, and utilise smart contracts for automated asset lifecycle management.\n\nWhy it matters: A softer US dollar and renewed West Asian tensions drove spot gold higher, signalling sustained safe-haven demand amid inflationary concerns. Copper also traded near record highs, underscoring broad commodity strength.\n\nKey detail: Spot gold rose 1.1 per cent to $4,401.60 per ounce, while US gold futures for December delivery gained 0.1 per cent to $4,445.30. Global investors are weighing inflationary pressures from West Asian attacks against the dollar's decline.\n\nSource: Business Line\n\nNext step: Monitor dollar index movements and West Asia developments for short-term gold price direction.\n\n3. Gold Prices Rise by 2 Lakh 1,520 Rupees per 10 Grams\nA front-page report in The Pioneer says gold prices rose by 2 lakh 1,520 rupees to 2 lakh 15,200 rupees per 10 grams in futures trade on Wednesday. Speculators created fresh positions on firm spot demand, driving the Multi Commodity Exchange October delivery contract higher by 190 rupees in a business turnover of 635 lots. Gold futures also rose 0.65 per cent to 4,384.16 dollars per ounce in New York.\n\nWhy it matters: Indian gold futures surged on firm spot demand, with speculators creating fresh positions that pushed the Multi Commodity Exchange October contract sharply higher. This domestic pricing move reflects strong local appetite for bullion.\n\nKey detail: Gold rose 2 lakh 1,520 rupees to 2 lakh 15,200 rupees per 10 grams in futures trade, with the MCX contract up 190 rupees on a turnover of 635 lots. Gold futures also rose 0.65 per cent to $4,384.16 per ounce in New York.\n\nSource: The Pioneer\n\nNext step: Track MCX open interest and spot demand trends to gauge whether the rupee-denominated rally has further room.\n\n4. Gold Smuggling Hits Indian Bullion Market\nA front-page report in Economic Times says surging smuggled gold is distorting India's bullion market, offering discounts of up to Rs 8,000 per 10 grams due to a recent import duty hike to 15 percent. Industry estimates warn over 100 tonnes could enter through illegal channels this year, prompting Directorate of Revenue Intelligence operations that recently seized 27 kilograms and arrested 12 individuals. Officials argue that lowering duties instead of raising them would curb the lucrative grey market and protect legitimate jewellers.\n\nWhy it matters: Surging smuggled gold is distorting India's bullion market, undercutting legitimate jewellers with discounts of up to Rs 8,000 per 10 grams. The recent import duty hike to 15 percent has inadvertently fuelled a lucrative grey market.\n\nKey detail: Industry estimates warn over 100 tonnes could enter through illegal channels this year. The Directorate of Revenue Intelligence recently seized 27 kilograms and arrested 12 individuals, while officials argue that lowering duties would be more effective than raising them.\n\nSource: Economic Times\n\nNext step: Follow DRI enforcement actions and policy debates on import duty adjustments to curb the grey market.\n\n5. Bond Yields Push Rates Up\nA front-page report in Free Press Journal says that rising bond yields are triggering higher interest rates across loans, potentially stoking inflation despite higher rates, and that the global bond market tops US$58 trillion. India ranks eighth globally with US$2.8 trillion, and higher yields are pushing gold prices down.\n\nWhy it matters: Rising global bond yields are triggering higher interest rates across loans, with potential inflationary side effects. As the world's eighth-largest bond market at US$2.8 trillion, India is not immune to these cross-currents.\n\nKey detail: The global bond market tops US$58 trillion, and higher yields are pushing gold prices down even as other commodity signals remain mixed. India's bond market ranks eighth globally, reflecting its growing financial weight.\n\nSource: Free Press Journal\n\nNext step: Watch for RBI monetary policy responses and yield curve movements that could influence gold's near-term trajectory.\n\nWhich of these five stories will have the biggest impact on your portfolio this week? Share your thoughts and tag the analysts and institutions tracking these shifts.\n\n#GoldPrices #Commodities #WestAsia",
+    "post_url": "https://twitter.com/pressmonitorin/status/2098008463401980345",
+    "score": 1,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-10T11:19:31Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:23:45.350Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabdbd142dd0e95b5bac791"
+    },
+    "message_id": "twitter_2100223626540699858",
+    "topic_key": "print on demand",
+    "search_keyword": "print on demand",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "gethorsehelp",
+    "title": "💥Top Off Your Look With An MG Hat!\n\nGet your hands on a premium custom MG hat! 🧢✨ Made-to-order with print-on-demand convenience, so you can rep MG style wherever you go. Order yours today!\n\n✨Shop now at https://t.co/mIS8kzLn40✨\n\n#horse #horses #horseapparel #equestrian #horseriding #equine #equestrianlife #pony #horselove #horsehelp",
+    "text": "💥Top Off Your Look With An MG Hat!\n\nGet your hands on a premium custom MG hat! 🧢✨ Made-to-order with print-on-demand convenience, so you can rep MG style wherever you go. Order yours today!\n\n✨Shop now at https://t.co/mIS8kzLn40✨\n\n#horse #horses #horseapparel #equestrian #horseriding #equine #equestrianlife #pony #horselove #horsehelp",
+    "post_url": "https://twitter.com/gethorsehelp/status/2100223626540699858",
+    "score": 3,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-16T14:01:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:23:45.550Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabdbd942dd0e95b5bac796"
+    },
+    "message_id": "twitter_2100177629731053793",
+    "topic_key": "product listing service",
+    "search_keyword": "product listing service",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Execelsuccesss",
+    "title": "Most Shopify stores don’t fail because the product is weak.\nThey fail because the product page doesn’t convert.\nI’ve seen it over and over:\ngreat products, decent traffic…\nand a page that makes people think instead of buy.\nNo clear photos.\nWeak title.\nDescription that talks but doesn’t sell.\nNo video.\nNo FAQ.\nNo proof.\nNo smart upsell.\nSo the customer leaves “to think about it”\nand never comes back.\nWhen I redesign a product page, I focus on the things that actually move the needle:\n→ Images that show the product the way a buyer needs to see it\n→ H1 titles written for Google and for the shopper\n→ Descriptions structured with SEO H3s so they’re readable and searchable\n→ A product video that explains what the photos can’t\n→ FAQs that answer the doubts before they kill the sale\n→ Features and materials that build trust\n→ Testimonial video from a real customer\n→ Recommendations that increase average order value\n→ Promos that feel like a reason to buy now — not a discount dump\nIf your store looks “fine” but sales feel stuck,\nit’s usually not the product.\nIt’s the page.\nComment PAGE if you want me to look at yours.\n\n#shopifydesign #ecommerce #shopifydevelopment #shopifystore #onlinestore #websitedesign #productpage #shopifyexpert #conversionrate #ecommercetips #shopifytips #productphotography #seo #smallbusinessowner",
+    "text": "Most Shopify stores don’t fail because the product is weak.\nThey fail because the product page doesn’t convert.\nI’ve seen it over and over:\ngreat products, decent traffic…\nand a page that makes people think instead of buy.\nNo clear photos.\nWeak title.\nDescription that talks but doesn’t sell.\nNo video.\nNo FAQ.\nNo proof.\nNo smart upsell.\nSo the customer leaves “to think about it”\nand never comes back.\nWhen I redesign a product page, I focus on the things that actually move the needle:\n→ Images that show the product the way a buyer needs to see it\n→ H1 titles written for Google and for the shopper\n→ Descriptions structured with SEO H3s so they’re readable and searchable\n→ A product video that explains what the photos can’t\n→ FAQs that answer the doubts before they kill the sale\n→ Features and materials that build trust\n→ Testimonial video from a real customer\n→ Recommendations that increase average order value\n→ Promos that feel like a reason to buy now — not a discount dump\nIf your store looks “fine” but sales feel stuck,\nit’s usually not the product.\nIt’s the page.\nComment PAGE if you want me to look at yours.\n\n#shopifydesign #ecommerce #shopifydevelopment #shopifystore #onlinestore #websitedesign #productpage #shopifyexpert #conversionrate #ecommercetips #shopifytips #productphotography #seo #smallbusinessowner",
+    "post_url": "https://twitter.com/Execelsuccesss/status/2100177629731053793",
+    "score": 3,
+    "num_comments": 2,
+    "created_utc": {
+      "$date": "2026-09-16T10:59:00Z"
+    },

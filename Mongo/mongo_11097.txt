@@ -1,0 +1,416 @@
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T02:48:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T02:48:20.767Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadf7f4660c60840397cfd7"
+    },
+    "message_id": "reddit_t3_1wka93y",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "LirouVanes",
+    "title": "Grab 25⚡ from u/LirouVanes!",
+    "text": "Grab 25⚡ from u/LirouVanes!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/LirouVanes     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wka93y/grab_25_from_ulirouvanes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T02:48:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T02:48:20.969Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadf7f5660c60840397cfd8"
+    },
+    "message_id": "reddit_t3_1wka93n",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "vacation",
+    "platform": "reddit",
+    "subreddit": "countwithchickenlady",
+    "username": "ScoobyWithADobie",
+    "title": "75279",
+    "text": "75279\n\nJust a girl on vacation in Honolulu        submitted by     /u/ScoobyWithADobie     to     r/countwithchickenlady       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/countwithchickenlady/comments/1wka93n/75279/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T02:48:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T02:48:21.170Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadf7f5660c60840397cfd9"
+    },
+    "message_id": "reddit_t3_1wka92u",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "arch",
+    "username": "bluonek",
+    "title": "Omarchy: LUKS + TPM + Secure Boot + Snapshot Rollback",
+    "text": "Omarchy: LUKS + TPM + Secure Boot + Snapshot Rollback\n\nOmarchy: LUKS + TPM2 PIN + Secure Boot + Snapshot Rollback   A verified, working runbook for converting a stock Omarchy install (btrfs, Limine snapshots boot) to:     Unlock the disk with a  TPM2-sealed PIN    Create a  passphrase  and a  recovery key  as fallback slots   Run under  Secure Boot , signed with your own keys (NO MICROSOFT KEYS)   Keep  Limine snapshot boot entries  working, including under Secure Boot   Keep all this automated on every update of anything     Every command below was run and verified on a ThinkPad T470s.    Order matters: initramfs conversion → Secure Boot → recovery key → TPM.  PCR 7 measures Secure Boot state, so enrolling the TPM before Secure Boot is on guarantees you'll have to redo it.     0. Before you start   Record these three values — you'll need them throughout:    bash lsblk -o NAME,TYPE,FSTYPE,SIZE,MOUNTPOINTS # find your LUKS partition, e.g. /dev/nvme0n1p2 cryptsetup luksUUID /dev/nvme0n1p2 # the LUKS UUID cat /proc/cmdline | grep -o 'root=[^ ]*' # the mapper name, e.g. root=/dev/mapper/root systemd-cryptenroll --tpm2-device=list # confirm a TPM2 is present      Strongly recommended: back up the LUKS header before touching anything.  This is your only undo path if a header operation goes wrong (it does  not  protect against forgetting your passphrase — only against header corruption).    bash sudo cryptsetup luksHeaderBackup /dev/nvme0n1p2 --header-backup-file /path/on/removable-media/luks-header.img     Treat that file like the disk itself — it contains wrapped key material.   Also check ESP headroom ( df -h /boot ) — every snapshot carries a full UKI, and a 1 GB ESP fills up fast.     Phase 1 — Convert to a systemd-based initramfs   Omarchy ships the busybox  encrypt  hook by default, which has  no TPM2 support . Clevis could bolt on auto-unlock but can't do a PIN. A PIN requirement forces this conversion; everything else is additive.    /etc/mkinitcpio.conf.d/omarchy_hooks.conf  is owned by the omarchy package and gets restored on every update —  never edit it . Drop a later-sorting file in  /etc/mkinitcpio.conf.d/  instead; mkinitcpio sources that directory alphabetically and the last assignment to  HOOKS  wins.    bash sudo tee /etc/mkinitcpio.conf.d/zz-local-systemd.conf >/dev/null     Note  sd-btrfs-overlayfs , not  btrfs-overlayfs  — the busybox variant is incompatible with the systemd hooks, and is also what breaks  limine-snapper-sync  rollback under stock Omarchy in the first place.   Tell the systemd initramfs how to open root via  /etc/crypttab.initramfs  rather than editing the kernel cmdline — the stale  cryptdevice=  parameter on the cmdline is simply ignored by a systemd initramfs, and  root=/dev/mapper/root  keeps working as-is:    bash sudo tee /etc/crypttab.initramfs >/dev/null   none EOF sudo chmod 600 /etc/crypttab.initramfs     The first field must match the mapper name from  root=/dev/mapper/  .   Rebuild — ** sudo limine-mkinitcpio , not  mkinitcpio -P ** (a no-op on Omarchy, which builds UKIs via  limine-entry-tool  rather than preset images):    bash sudo limine-mkinitcpio     Watch for  [systemd] ,  [sd-encrypt] ,  [sd-btrfs-overlayfs]  in the hook list. Then sanity-check the effective  HOOKS  before rebooting:    bash ( HOOKS=(); source /etc/mkinitcpio.conf for f in /etc/mkinitcpio.conf.d/*.conf; do source \"$f\" >/dev/null 2>&1; done echo \"${HOOKS[*]}\" )      Reboot. Confirm you still get a passphrase prompt  (systemd's prompt looks slightly different from busybox's)  and that a snapshot entry from the Limine menu still boots.  Do not continue until both work.   To verify after the fact that the switch actually took effect (not just \"looks the same\"), check that  systemd-cryptsetup@root.service  ran during this boot — that unit only exists under  sd-encrypt , never under the old busybox hook:    bash journalctl -b -u 'systemd-cryptsetup@*' --no-pager       Phase 2 — Secure Boot    bash sudo pacman -S --needed sbctl sudo sbctl status     If  Setup Mode  already shows  Enabled , you can skip straight to key creation. Otherwise, reboot into UEFI firmware and use Security → \"Reset to Setup Mode\" / \"Clear Secure Boot keys\", save, and boot back in.    Choice point — Microsoft keys:   -m  keeps Windows dual-boot and any option-ROM/vendor firmware that expects Microsoft's UEFI CA working under Secure Boot. Omitting it (or removing them afterward) is a stricter, fully self-owned trust chain, at the cost of that compatibility.    ```bash sudo sbctl reset # clears the Platform Key, back to Setup Mode sudo sbctl enroll-keys # own keys only, no -m   if this reports \"File is immutable\" on KEK/db efivars:   sudo sbctl enroll-keys --ignore-immutable sudo sbctl status # Vendor Keys: none ```    --ignore-immutable  forces past a kernel safety guard on the Secure Boot EFI variables — understand what you're doing before using it.   Sign every EFI binary on the ESP, including Limine's own loader and any existing snapshot UKIs:    bash sudo find /boot -type f \\( -iname '*.efi' -o -iname '*.efi_sha256_*' -o -iname '*.efi_b3_*' \\) \\ ! -path '*/Microsoft/*' ! -iname 'BOOTIA32.EFI' ! -iname '*.bak' -print0 \\ | sudo xargs -0 -n1 sbctl sign -s sudo sbctl verify      Ordering trap:  Limine embeds a checksum of  limine.conf  into  limine_x64.efi . Any time  limine.conf  changes, that checksum must be re-enrolled with  limine-enroll-config  — which rewrites  limine_x64.efi  and invalidates its signature. Always  enroll, then sign :    bash sudo limine-enroll-config sudo sbctl sign -s /boot/EFI/limine/limine_x64.efi     Reboot into firmware,  enable Secure Boot , save. Verify:    bash sudo sbctl status # Secure Boot: Enabled bootctl status | grep -i 'secure boot'     Keeping future snapshots signed (automatic)    limine-snapper-sync  creates a new UKI (with a content-hash suffix) every time a snapshot is taken — whether from a pacman transaction or from the always-running  limine-snapper-watcher.service  reacting to a manual  snapper create . None of those get signed automatically out of the box.   Rather than relying on a third-party package for this (none currently exists to my knowledge as of this guide), use the hook mechanism  limine-snapper-sync  already ships and already runs on every sync:  /etc/boot/hooks/post.d/ .   ```bash sudo install -m 755 -o root -g root /dev/stdin /etc/boot/hooks/post.d/95-sbctl-sign-all    !/usr/bin/env bash   Signs any unsigned EFI binary under /boot (new snapshot UKIs included)   after every boot-entry sync. Runs after 90-limine-enroll-config so   limine_x64.efi gets re-signed if that step just changed it.   set -uo pipefail   LOG=/var/log/omarchy-secureboot-sign.log { echo \"=== $(date -Iseconds) sbctl auto-sign (caller: ${HOOK_CALLER:-unknown}) ===\" command -v sbctl >/dev/null 2>&1 || { echo \"sbctl not installed, skipping\"; exit 0; }    find /boot -type f \\( -iname '*.efi' -o -iname '*.efi_sha256_*' -o -iname '*.efi_b3_*' \\) \\ ! -path '*/Microsoft/*' ! -iname 'BOOTIA32.EFI' ! -iname '*.bak' -print0 | while IFS= read -r -d '' f; do sbctl sign -s \"$f\" done sbctl verify     } >>\"$LOG\" 2>&1   exit 0 EOF ```   Test it fires correctly:    bash sudo limine-snapper-sync sudo tail -20 /var/log/omarchy-secureboot-sign.log # should show \"caller: limine-snapper-sync\"     This runs on  both  pacman-triggered syncs and out-of-band ones (manual snapshots, timeline snapshots if enabled), because it's hooked into  limine-snapper-sync  itself rather than into pacman.     Phase 3 — Recovery key   Run this yourself, interactively, in your own terminal — it needs your existing passphrase and it prints a new high-entropy secret to the screen that should never pass through a script, log, or chat transcript.    bash sudo systemd-cryptenroll --recovery-key /dev/nvme0n1p2      Write down or photograph the recovery key (and QR code) and store it offline , away from this machine. Confirm the slot landed:   ```bash sudo systemd-cryptenroll /dev/nvme0n1p2   expect: 0 password, 1 recovery   ```   Slot 0 (your original passphrase) is untouched.     Phase 4 — TPM2 with PIN   Also run interactively yourself — same reasoning: it needs your existing passphrase, then a new PIN typed twice.    bash sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=7 --tpm2-with-pin=yes /dev/nvme0n1p2      PCR choice:  PCR 7 alone binds to Secure Boot state and survives firmware updates. Adding PCR 0 ( --tpm2-pcrs=0+7 ) also measures firmware code — stricter, but every BIOS update then forces a re-enroll. With your own keys enrolled and a signed UKI chain, PCR 7 alone is the sane default.   Once that's done, wire it into the initramfs and rebuild:    bash sudo sed -i 's|^root\\(.*\\)none.*|root\\1none tpm2-device=auto|' /etc/crypttab.initramfs cat /etc/crypttab.initramfs sudo limine-mkinitcpio sudo sbctl verify     Reboot. Expected: Limine menu → PIN prompt → desktop, no full passphrase. Verify the final slot state:   ```bash sudo systemd-cryptenroll /dev/nvme0n1p2   expect: password, recovery, tpm2   ```     Refreshing snapshots after this setup   Any snapshot taken  before  Phase 1/4 has an older initrd baked in that doesn't know to attempt TPM unlock at all — it will always just ask for the full passphrase (slot 0), forever. That's expected, not broken; the passphrase still works.   Any snapshot taken  after  Phase 4 automatically supports the PIN, because its initrd is a copy of the current one.   To make an existing pre-TPM snapshot support the PIN, take a fresh one:    bash sudo snapper -c root create --description \"post-TPM2-PIN setup\" sudo limine-snapper-sync sudo sbctl verify     ( limine-snapper-sync  runs automatically via the watcher service, but running it explicitly right after is a good way to confirm the new entry landed and got signed immediately.)     Ongoing maintenance        Event   What to do          Firmware update or Secure Boot key change breaks TPM unlock   Passphrase still works. Re-enroll:  sudo systemd-cryptenroll --wipe-slot=tpm2 /dev/nvme0n1p2 , then the Phase 4 enroll command again.       Rotating the passphrase, recovery key, or PIN    No per-snapshot action needed.  All LUKS keyslots live in one header shared by every boot entry; rotating any of them takes effect everywhere immediately.        limine.conf  changes outside this flow ( omarchy-refresh-limine , manual edits)    sudo limine-enroll-config  then re-sign  limine_x64.efi  — same enroll-then-sign order as Phase 2.       Full Secure Boot key  replacement  (not routine LUKS rotation)   This is the one case needing a bulk step: re-run the Phase 2 `find       Major Omarchy update   Re-run the effective- HOOKS  check from Phase 1 — the  zz-  drop-in should still win, but verify.       ESP filling up   Trim  TIMELINE_LIMIT_*  in  /etc/snapper/configs/root  — every snapshot carries a full UKI.          Troubleshooting    Won't boot at all:  Disable Secure Boot in firmware first — signatures are inert when Secure Boot is off, so this almost always gets you back in. Then  sbctl verify , re-sign as needed, re-enable Secure Boot. If the initramfs itself is broken, boot an older snapshot from the Limine menu, or boot the Omarchy ISO, unlock the LUKS volume, mount  @  and  /boot ,  arch-chroot  in, and re-run  limine-mkinitcpio .    Blake2b hash mismatch on a boot entry:  Recompute and compare directly rather than guessing:    bash grep 'path: boot' /boot/limine.conf # hash embedded in the entry b2sum /boot/EFI/Linux/omarchy_linux-omarchy.efi # actual current file hash     If these match, the entry is fine and the mismatch you saw was from a stale intermediate state (e.g. mid-rebuild) — reboot again to confirm. If they genuinely differ, the file was modified (e.g. re-signed)  after   limine.conf  recorded its hash; re-run  limine-mkinitcpio  (main entry) or  limine-snapper-sync  (snapshot entries) to regenerate the entry from the current file.    PIN prompt doesn't appear on an older snapshot, password works instead:  Expected — see  Refreshing snapshots  above. Not a bug.    Plymouth swallows the PIN/passphrase prompt:  Temporarily drop  splash  from the kernel cmdline in  /etc/default/limine  and rebuild to see what's actually happening underneath.   Passphrase and recovery key both remain valid through every failure mode above — nothing in this flow can permanently lock you out of the disk.   DISCLAIMER: This work was created in Omarchy using a Claude agent along with my own knowledge of bootloaders and TPM and a LOT of hand holding the AI through this. Still it was fairly impressive to see AI sorta come up with something it couldn't find the end to end solution to on the internet (to my knowledge!)       submitted by     /u/bluonek     to     r/arch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/arch/comments/1wka92u/omarchy_luks_tpm_secure_boot_snapshot_rollback/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T02:48:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T02:48:21.404Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadf7f5660c60840397cfda"
+    },
+    "message_id": "reddit_t3_1wka919",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "7oh",
+    "username": "DeadbeatDelete",
+    "title": "I might have a bigger problem",
+    "text": "I might have a bigger problem\n\nI might be more addicted to buying 7oh than 7oh itself…       submitted by     /u/DeadbeatDelete     to     r/7oh       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/7oh/comments/1wka919/i_might_have_a_bigger_problem/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T02:47:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T02:48:21.819Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadf7f6660c60840397cfdb"
+    },
+    "message_id": "reddit_t3_1wka90h",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "UCantCMe10",
+    "title": "[Sticker Giveaway] Enter to win a 5 Stars Gus Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 5 Stars Gus Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/UCantCMe10     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wka90h/sticker_giveaway_enter_to_win_a_5_stars_gus/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T02:47:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T02:48:22.022Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadf7f6660c60840397cfdc"
+    },
+    "message_id": "reddit_t3_1wka901",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "peacecorps",
+    "username": "crimsoncrack1987",
+    "title": "Is peace corp for me?",
+    "text": "Is peace corp for me?\n\nHe guys i found this sub reddit and I thought id ask for you alls advice.   Im 39, no wife or kids. I love the idea of traveling and seeing different cultures and parts of the world. I have no problem with helping people. I was thinking of applying to peace corps so do you think id be a good candidate? Does anyone know of there is any sort of salary for the job? Id really appreciate any advice.       submitted by     /u/crimsoncrack1987     to     r/peacecorps       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/peacecorps/comments/1wka901/is_peace_corp_for_me/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T02:47:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T02:48:22.232Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadf7f6660c60840397cfde"
+    },
+    "message_id": "reddit_t3_1wka8zl",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "nursing",
+    "username": "CelticNomad95",
+    "title": "Is it common for you to stay well past an hour for report?",
+    "text": "Is it common for you to stay well past an hour for report?\n\nJust asking as I have been observing RNs in a number of facilities in Oklahoma. The last instance was on a med surg/oncology unit. Every single nurse on day shift would stay almost an hour after 7 simply for report and vice versa. Is report really supposed to take that long? These guys/gals aren’t leaving until at least 8.    What adds insult to injury, at least in my opinion, is that the nurses aren’t compensated with OT for the extra time spent past their 12 hours.    Is this common everywhere, or is it only something you would expect in non-unionized/red state hospitals?       submitted by     /u/CelticNomad95     to     r/nursing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/nursing/comments/1wka8zl/is_it_common_for_you_to_stay_well_past_an_hour/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T02:47:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T02:48:22.632Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadf7f6660c60840397cfdf"
+    },
+    "message_id": "reddit_t3_1wka8z4",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "ChatGPT",
+    "username": "OmYogi",
+    "title": "What ChatGPT (or my version) would tell Sam Altman about the current problems",
+    "text": "What ChatGPT (or my version) would tell Sam Altman about the current problems\n\nI was chatting with chat trying to puzzle out what is happening with credit drainage and the demand for resets. I asked it what it would do if it were an advisor to OpenAI. Interesting stuff.   Then I asked what it would advise Sam Altman at this juncture. (I hope chat didn't view his response as confidential). It said:    Dear Sam:   Before launching the next fleet of 🚢🚢🚢, please make sure passengers can see the fuel gauge.  Users can tolerate expensive AI. What they cannot comfortably use is  unpredictably expensive AI .  A reset would restore goodwill now. But the lasting fix is much simpler: show the cost of each agentic task while it runs, let users set a spending cap, and make it unmistakably clear when an ordinary-looking interaction has crossed from Chat into Work/Codex/computer-use billing.  If a task consumes 400 credits, users should be able to see exactly  which task, which model, which mode, which tools, and why .  Then ship away. 🚢   Before crafting this note, Chat said it would be the wisest thing to do to do a global reset, and work out a way to remove the confusion that currently rules. Oh, and fix the drainage problem.       submitted by     /u/OmYogi     to     r/ChatGPT       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ChatGPT/comments/1wka8z4/what_chatgpt_or_my_version_would_tell_sam_altman/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T02:47:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T02:48:22.834Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadf812aeeb96c1c63b9a7f"
+    },
+    "message_id": "reddit_t3_1wka9kk",
+    "topic_key": "cpa",
+    "search_keyword": "CPA",
+    "platform": "reddit",
+    "subreddit": "JurassicPark",
+    "username": "Logical_Education332",
+    "title": "Indonines rex vs Australia",
+    "text": "Indonines rex vs Australia\n\nCan the indonines rex survive possibly the most dangerous country in the world Australia can it take on the environment and its animal residents tell me what are your thoughts on this possible matchup.       submitted by     /u/Logical_Education332     to     r/JurassicPark       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/JurassicPark/comments/1wka9kk/indonines_rex_vs_australia/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T02:48:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T02:48:50.195Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aadf812aeeb96c1c63b9a80"
+    },
+    "message_id": "reddit_t3_1wka9is",
+    "topic_key": "dermatologist",
+    "search_keyword": "dermatologist",
+    "platform": "reddit",
+    "subreddit": "Patna",
+    "username": "Poolistic",
+    "title": "Dermatologist recommendation for Cystic Grade 4 Hormonal Acne",
+    "text": "Dermatologist recommendation for Cystic Grade 4 Hormonal Acne\n\nHi there, I am looking for a good dermatologist in patna who can actually help me cure my hormonal acne (which I have been suffering from for the past 10 years) from the root. I have tried multiple doctors here but none actually do even a hormonal panel for starters to test a root cause and directly end up writing worthless patchy topical medication.   Please help me with your actual experiences and if I should actually look outside Patna (other cities like delhi/hyderabad/banglore) for proper treatment.       submitted by     /u/Poolistic     to     r/Patna       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Patna/comments/1wka9is/dermatologist_recommendation_for_cystic_grade_4/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T02:48:35Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T02:48:50.503Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aadf812aeeb96c1c63b9a81"
+    },
+    "message_id": "reddit_t3_1wka9e1",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "EDHBrews",
+    "username": "OpheliAmazing",
+    "title": "Geist of Saint Thalia, Board Protection",
+    "text": "Geist of Saint Thalia, Board Protection\n\nHey all, I saw the new mono-blue toys we're getting in Reality Fracture and I felt like building Sphinx's Approach. Problem I've been running into in playtesting is a lack of board protection/control. I realize in blue my options are limited, but there has to be a way to sweep the board without losing my sphinxes I've tutored out, since they're far too expensive to cast normally. Deck list below, as well as a simplified question: How would I impose board presence and/or sweepers without losing my sphinxes in Bracket 2? Currently, I'm running mostly bounce spells focused on attacking creatures. Thank you, and may Saint Thalia watch over all of your board-states.   Deck list:  https://moxfield.com/decks/p2QwC0s4RkmhBdRzDlYNOg        submitted by     /u/OpheliAmazing     to     r/EDHBrews       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/EDHBrews/comments/1wka9e1/geist_of_saint_thalia_board_protection/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T02:48:25Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T02:48:50.991Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aadf813aeeb96c1c63b9a82"
+    },
+    "message_id": "reddit_t3_1wka9d2",
+    "topic_key": "handyman",
+    "search_keyword": "handyman",
+    "platform": "reddit",
+    "subreddit": "Bedbugs",
+    "username": "WayNo3174",
+    "title": "How to find bedbugs in a vacant house with no furniture or carpet?",
+    "text": "How to find bedbugs in a vacant house with no furniture or carpet?\n\nI have a rental house that was recently trashed by tenants. There is no carpet. I moved the couches, rugs, curtains, etc out spending about 6 hours there the first day. Cleaners cleaned for about 8 hours. A handyman worked in there, a floor restorer, an hvac company, and a professional painter. Someone took the 2 couches for free. It’s been about 6 weeks and none of these people noticed any bed bug activity. The guy who took the couches said no bugs. Someone who took a vacuum cleaner and an empty dresser said they have bed bugs from these items. I called the exterminator and he thoroughly combed the house and found no signs of bed bugs. He checked baseboards, door hinges, remotes, barstools, behind mirrors, along picture frames, etc. He said a professional painter likely would’ve seen signs on the baseboards. He also said with so much work done to the house it’s possible evidence is now gone. He also said with bed bugs nothing is 100% and it’s possible they could be hiding and will surface when new tenants move in. Does anyone have any advice to flush them out BEFORE people move in?       submitted by     /u/WayNo3174     to     r/Bedbugs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Bedbugs/comments/1wka9d2/how_to_find_bedbugs_in_a_vacant_house_with_no/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T02:48:23Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T02:48:51.210Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aadf830660c60840397cfe2"
+    },
+    "message_id": "reddit_t3_1wka9xd",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Paraguay",
+    "username": "T0rocandil",
+    "title": "Moderador de este subReddit.",
+    "text": "Moderador de este subReddit.\n\nTengo un par de humildes preguntas existenciales:   ¿Cómo terminó siendo Mbokayapire el moderador de este subReddit?   ¿ Hay alguna manera democrática de elegir o postular a otros moderadores ?    Para que no se malinterprete, esto no es un cuestionamiento, al contrario, me encanta como hace su trabajo y hasta tengo que admitir que cuando aparece y pone orden, o elimina posteos de bajo esfuerzo y amenaza con baneo... una mezcla de takuchi y sed de poder me invaden.   Gracias por existir señor moderador.       submitted by     /u/T0rocandil     to     r/Paraguay       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Paraguay/comments/1wka9xd/moderador_de_este_subreddit/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T02:49:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T02:49:20.337Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadf830660c60840397cfe3"
+    },
+    "message_id": "reddit_t3_1wka9x4",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BAGGU",
+    "username": "Negative_Bat4916",
+    "title": "Styles you like BUT won't Buy?",
+    "text": "Styles you like BUT won't Buy?\n\nHello. Wanted to propose this question for the group and wonder if others feel the same about certain colorways/prints/styles they adore but cannot see themselves really owning?  For example, I've eyeballed the Med. Crescent in Cream Polka Dot for so long but with every opportunity to buy second-hand - even if it's reasonable - I can't see myself actually committing. Like it's so pretty to look at, but even if it was $2, I can't see myself using it more than once. Same goes for certain colors like Fuchsia and Wild Plum.    Do you feel the same way?        submitted by     /u/Negative_Bat4916     to     r/BAGGU       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BAGGU/comments/1wka9x4/styles_you_like_but_wont_buy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T02:49:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T02:49:20.536Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadf830660c60840397cfe4"
+    },
+    "message_id": "reddit_t3_1wka9x1",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "crtgaming",
+    "username": "breivow",
+    "title": "Minimalist stand for my 14\" PVM - help/suggestions",
+    "text": "Minimalist stand for my 14\" PVM - help/suggestions\n\nI recently acquired a  Sony PVM-1442QM 14\"  and am looking into buying a stand for it.  I'm looking for something like Dieter Rams's  Braun Atelier 1  stereo unit from the 80s - minimalist and bench-like.  All the help and suggestions are greatly appreciated        submitted by     /u/breivow     to     r/crtgaming       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/crtgaming/comments/1wka9x1/minimalist_stand_for_my_14_pvm_helpsuggestions/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T02:49:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T02:49:20.735Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadf830660c60840397cfe5"
+    },
+    "message_id": "reddit_t3_1wka9w8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "100Fanojo",
+    "username": "itsyaboi_kroggu",
+    "title": "Banme- no, Hajime bio overhaul!",
+    "text": "Banme- no, Hajime bio overhaul!\n\nheya folks, it's been a while   so one of my fanojos i've introduced in this subreddit is named Tsuneni Banme, but now i felt like she needed a slight tweak - the name's kinda clunky now that i think about it   so, Tsuneni Banme is now rechristened as Tsuneni Hajime! her gimmick's changed a bit from \"unlucky overachiever athlete who's unfavored by her parents\" to \"unlucky overachiever athlete who knows she's pushing herself too hard but desperately wants to prove herself to her parents who doesn't care about her\".   lemme know what you think!       submitted by     /u/itsyaboi_kroggu     to     r/100Fanojo       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/100Fanojo/comments/1wka9w8/banme_no_hajime_bio_overhaul/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T02:49:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T02:49:20.946Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadf831660c60840397cfe6"
+    },
+    "message_id": "reddit_t3_1wka9vz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ClashRoyale",
+    "username": "Big_Fox_3996",
+    "title": "Is this a glitch? Why can’t i buy it?",
+    "text": "Is this a glitch? Why can’t i buy it?\n\nsubmitted by     /u/Big_Fox_3996     to     r/ClashRoyale       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClashRoyale/comments/1wka9vz/is_this_a_glitch_why_cant_i_buy_it/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T02:49:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T02:49:21.147Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aadf831660c60840397cfe7"
+    },
+    "message_id": "reddit_t3_1wka9uo",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "neetpgcounselling",
+    "username": "wittyescapist",
+    "title": "Neet pg counselling md psychiatry",
+    "text": "Neet pg counselling md psychiatry\n\nCan someone please give me the college wise preference for md psychiatry in Andhra Pradesh and telengana?   Is it good in every college or are there some we should avoid?       submitted by     /u/wittyescapist     to     r/neetpgcounselling       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/neetpgcounselling/comments/1wka9uo/neet_pg_counselling_md_psychiatry/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T02:49:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T02:49:21.355Z"

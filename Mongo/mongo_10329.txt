@@ -1,0 +1,416 @@
+    "platform": "reddit",
+    "subreddit": "developersIndia",
+    "username": "PrashantRanjan69",
+    "title": "Has anyone tried Facebook's Astryx components yet?",
+    "text": "Has anyone tried Facebook's Astryx components yet?\n\nI was looking for alternatives to shadcn when I came across this newly released design system from facebook called Astryx, which they have been apparently using for 8 years internally and externally as well (Instagram, Facebook, etc).   I am mainly looking for a component library that is easier for Al agents like claude code or DeepSeek harness to work with, and they say that Astryx is specifically built for that.   I wanted to know whether someone has already tried this in production? Is it stable enough yet to be used in production?   Thank you.       submitted by     /u/PrashantRanjan69     to     r/developersIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/developersIndia/comments/1wjpbwf/has_anyone_tried_facebooks_astryx_components_yet/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:50:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:51:16.424Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad33c4660c608403979159"
+    },
+    "message_id": "reddit_t3_1wjpbwb",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "ClaudeWorkflows",
+    "username": "ClaudeAI-mod-bot",
+    "title": "[Workflow] Scalable SaaS Tech Stack with Claude AI: A 2026 Blueprint for Founders",
+    "text": "[Workflow] Scalable SaaS Tech Stack with Claude AI: A 2026 Blueprint for Founders\n\nScalable SaaS Tech Stack with Claude AI: A 2026 Blueprint for Founders    Workflow value:  88/100   Status:  active ·  Freshness:  70/100 ·  Confidence:  0.95 ·  Level:  intermediate   Categories:  Quality Control, Token Saving, Context & Memory, Debugging, Shipping, CLAUDE.md, Hooks, Multi-Agent   Original source:   r/ClaudeAI post/comment    What problem this solves   Choosing a scalable, maintainable, and AI-friendly tech stack for building a SaaS product that can grow beyond initial MVP stages, avoiding common pitfalls of overly simplistic initial choices.   Summary   A recommended tech stack and development workflow for building a scalable SaaS product in 2026, leveraging Claude/Codex for coding, testing, and CI/CD setup. It emphasizes architectural planning, using robust tools like TypeScript, Next.js, PostgreSQL, Foundel, Stripe, Docker, Playwright, GitHub Actions, and Vercel, while avoiding premature optimization.   Why it is useful   This workflow provides a well-researched, opinionated, and comprehensive tech stack recommendation for building a scalable SaaS product, specifically integrating Claude/Codex into the development, testing, and CI/CD processes. It helps founders and developers avoid common pitfalls of choosing non-scalable solutions and offers a clear path for growth, backed by analysis of successful companies. The advice on  how  to use AI effectively (e.g., architectural planning first) is particularly valuable for leveraging AI in a structured and maintainable way.   Workflow     Analyze successful SaaS companies to identify common, scalable tech patterns and avoid early pitfalls.   Spend time deciding the overall architecture and create a clean folder structure for the project.   Write down how the main parts of the product should work and define clear rules for the AI agent to follow.   Use Claude Code or Codex directly inside the repository for coding tasks, rather than external tools.   Standardize on TypeScript for language and Tailwind CSS with a solid component library (e.g., Untitled UI React) for UI development.   Build the application using Next.js for both frontend and server-side logic, and use PostgreSQL as the primary database.   Utilize a specialized backend service like Foundel.dev for core infrastructure (auth, roles, permissions, subscriptions) to provide a structured foundation for AI.   Integrate Stripe for payment processing, ensuring billing logic is centralized and not spread throughout the codebase.   Containerize the application with Docker to ensure consistent behavior across local, testing, and production environments.   Leverage Claude/Codex to write and run tests, supplementing with Playwright for critical end-to-end user flow testing (signup, login, payments).   Set up CI/CD using GitHub Actions to automatically run tests on code merges and stop releases if issues are found.   Deploy the Next.js application to Vercel, using its integrated analytics or Google Analytics 4 for tracking.     Tools / artifacts     Claude Code / Codex   TypeScript   Tailwind CSS   Untitled UI React   Next.js   PostgreSQL   Foundel.dev   Stripe   Docker   Playwright   GitHub Actions   Vercel (Deployment & Analytics)     Validation signals     Author analyzed 100+ SaaS companies doing $10K+ MRR.   Research included looking at public repos, docs, and founder interviews.   Explicit reasoning provided for each technology choice, focusing on scalability and AI compatibility.   Recommendations are based on finding the 'smallest stack' for a 'real SaaS' in 2026.     Limitations     Low community engagement (score 0, 1 comment) means limited external validation.   The guidance on specific Claude/Codex interactions (e.g., exact prompts, file structures for AI) is high-level rather than concrete, making it more of a strategic workflow than a tactical one.   The '2026' timeframe is aspirational and subject to rapid changes in AI capabilities and tech trends.     Rate this workflow   Upvote this post if the workflow is useful, reproducible, or worth recommending.   Downvote if it is vague, outdated, unsafe, overhyped, or not reproducible.   Reply if it worked for you, failed, is outdated, or has a better alternative.      This post was generated automatically from the workflow library database.        submitted by     /u/ClaudeAI-mod-bot     to     r/ClaudeWorkflows       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeWorkflows/comments/1wjpbwb/workflow_scalable_saas_tech_stack_with_claude_ai/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:50:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:51:16.637Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad33c6660c608403979160"
+    },
+    "message_id": "reddit_t3_1wjpbvr",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "OCPoetry",
+    "username": "ArceusMaster518",
+    "title": "Stillness (TW - violence, child abuse)",
+    "text": "Stillness (TW - violence, child abuse)\n\nA poem that was written from the viewpoint of dissociation while at my first facility when I was 13 through 16   Written years ago:   \"Stillness\"   A single water drop drips down from the leaky faucet into the freshly-filled basin of the kitchen sink.    It splashes innocently as it is reunited and ripples outward as if to greet all others that desperately missed it.    .   Shoes screeching against linoleum throughout the facility.    Rage and shouting harmonize into a wretched discord.    Screaming adult men demanding obedience and civility.    A crescendo of ruckus collapses into dulled thuds and muffled yelling.    The dripping in the sink continues rhythmically minding its own business.    .   Clear-blue purity falling happily toward its certain future; a future where it can be itself and relax into the place its meant to be.    .   The water returns home so it might once again feel free.    The water is safe and all I hear is, \"I can't breathe!\"    The water is at peace in the quiet of this breathless room.    .   More adults run toward the noises just beyond the moment, alarms piercing.    Sweat and heartbeats can be felt in the trembling air among the static of radios.    Wretches and gags are stuffed away into silence before heavy doors slam shut;    Locks clicking and my trembling finally stops.    .   Have the noises gone home like those lucky water drops?    No. Probably not.    Feedback    https://www.reddit.com/r/OCPoetry/s/tZUEYwrDBV     https://www.reddit.com/r/OCPoetry/s/67A16ZCt6e        submitted by     /u/ArceusMaster518     to     r/OCPoetry       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OCPoetry/comments/1wjpbvr/stillness_tw_violence_child_abuse/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:50:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:51:18.120Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad33c6660c608403979161"
+    },
+    "message_id": "reddit_t3_1wjpbvc",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "CatBuilder",
+    "username": "Real-Deer223",
+    "title": "[Choose] Infinite food or infinite money",
+    "text": "[Choose] Infinite food or infinite money\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Real-Deer223     to     r/CatBuilder       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CatBuilder/comments/1wjpbvc/choose_infinite_food_or_infinite_money/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:50:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:51:18.332Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad33fe660c608403979162"
+    },
+    "message_id": "reddit_t3_1wjpcv6",
+    "topic_key": "can you find me top posts on reddit which has over 10k views per month from ai tech industry",
+    "search_keyword": "artificial intelligence",
+    "platform": "reddit",
+    "subreddit": "Universitaly",
+    "username": "Upset-End9136",
+    "title": "Laurea magistrale",
+    "text": "Laurea magistrale\n\nCiao! Sono uno studente che ha appena compiuto la triennale in informatica e che fra poco deve laurearsi all’Insubria.  Ora per la magistrale ho intrapreso il politecnico, devo fare i corsi per integrazione curricolare e poi mi sono iscritto ai corsi per la magistrale in computer science and engineering in artificial intelligence e però la prima settimana sta andando male.  Non riesco ad andare a Milano, gli orari si incrociano tra di loro, le video lezioni sono ok, poi però ho palestra da fare.  Più che altro non trovo la motivazione adatta per la quale devo continuare con il politecnico… avrei davvero più opportunità? Ne vale la pena? Come mi potrei organizzare?  Se facessi la magistrale all’Insubria invece? Ho visto che anche lì posso seguire il corso AI…  Poi anche perché la mia è stata più una FOMO. in molti dicevano che dopo andavano a fare il politecnico - nessuno che conosco alla fine ci è andato effettivamente - quindi è un segno?  Fatemi sapere… grazie.       submitted by     /u/Upset-End9136     to     r/Universitaly       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Universitaly/comments/1wjpcv6/laurea_magistrale/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:52:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:52:14.461Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad33fe660c608403979163"
+    },
+    "message_id": "reddit_t3_1wjpcut",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "Stargate",
+    "username": "civilizationsucks",
+    "title": "Hot Take",
+    "text": "Hot Take\n\nI'm glad we didn't get to see the Furlings. Sometimes the secret is better than lore. The less you know the more mystique you have. And I like that for them. Especially being one of the four great races. We've met the Nox, and we can see how private they are, so it fits. In my opinion.        submitted by     /u/civilizationsucks     to     r/Stargate       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Stargate/comments/1wjpcut/hot_take/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:52:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:52:14.660Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad33fe660c608403979164"
+    },
+    "message_id": "reddit_t3_1wjpcuh",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "[HIRING] a Pll Pathways Coach! in Real Salt Lake",
+    "text": "[HIRING] a Pll Pathways Coach! in Real Salt Lake\n\nCompany: Real Salt Lake   Location: Herriman, Utah, United States 📍   Date Posted: September 14, 2026 📅   Categories: #entrylevel   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=www.justsoccerjobs.com&rurl=aHR0cHM6Ly93d3cuanVzdHNvY2NlcmpvYnMuY29tL2pvYnMvcGxsLXBhdGh3YXlzLWNvYWNoLTAwMWU1MDFi    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wjpcuh/hiring_a_pll_pathways_coach_in_real_salt_lake/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:52:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:52:14.858Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad33ff660c608403979165"
+    },
+    "message_id": "reddit_t3_1wjpctg",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "WayOfTheBern",
+    "username": "NetWeaselSC",
+    "title": "What Is The Point? (Russia/Ukraine Edition)",
+    "text": "What Is The Point? (Russia/Ukraine Edition)\n\nI've been watching the conversations going back and forth in this subreddit, and there is something I have been trying to understand:   What is the point of the propaganda in this subreddit?   Is there something in this subreddit that makes it some sort of a prize to be won?     If Ukraine is currently doing much better than Russia in this conflict, what possible reason would Russia (or Russian sympathizers) have to say that they are not,  in this subreddit ?     If Russia is currently doing much better than Ukraine in this conflict, what possible reason would Ukraine (or Ukrainian sympathizers) have to say that they are not,  in this subreddit ?     If both sides are currently doing equally well or equally poorly, more-or-less, what possible reason would people of either side have to say that \"their side\" is doing better than \"the other side\",  in this subreddit ?     I can understand people who are attempting to accurately understand the situation, sharing the information that they can find, and discussing implications and veracity of that information....   But specifically.... what do the liars actually get out of lying? Are they actually lying, or just badly misinformed?   Are there actually influenceable influencers in here, to be influenced?   Ir is it simply trolling to attempt to disrupt people who are attempting to accurately understand the situation? And if it  is  simply trolling as an attempt to disrupt, is it more on one side?   And if so, are the trollers  really  on that side? Because they are not doing their side any favors.       submitted by     /u/NetWeaselSC     to     r/WayOfTheBern       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WayOfTheBern/comments/1wjpctg/what_is_the_point_russiaukraine_edition/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:51:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:52:15.060Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad33ff660c608403979166"
+    },
+    "message_id": "reddit_t3_1wjpcs7",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "LSDTripLifeHacks",
+    "username": "RosinGobliNN22",
+    "title": "LSD lab analysis on my blotter ⚡️🫡",
+    "text": "LSD lab analysis on my blotter ⚡️🫡\n\nsubmitted by     /u/RosinGobliNN22     to     r/LSDTripLifeHacks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LSDTripLifeHacks/comments/1wjpcs7/lsd_lab_analysis_on_my_blotter/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:51:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:52:15.262Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad33ff660c608403979167"
+    },
+    "message_id": "reddit_t3_1wjpcrp",
+    "topic_key": "can you find me top posts on reddit which has over 10k views per month from ai tech industry",
+    "search_keyword": "neural networks",
+    "platform": "reddit",
+    "subreddit": "SideProject",
+    "username": "bmv3502",
+    "title": "Silkwave Clarity, real-time speech isolation for macOS system audio",
+    "text": "Silkwave Clarity, real-time speech isolation for macOS system audio\n\nI was watching Andrej Karpathy's introduction to neural networks  https://www.youtube.com/watch?v=VMj-3S1tku0  and at some point it clicked that I was hearing distracting noises in it, typing and mouse clicks. I knew macOS has a voice isolation mode for the microphone, and I wondered if there was a way to do the same for the audio macOS is playing (system audio). I couldn't find one. So I built a small utility app called Silkwave Clarity, which makes watching tutorials, lectures and old interviews with noisy audio a much better experience. The app lets you adjust how much noise is suppressed. The underlying speech enhancement model is DeepFilterNet. It only helps with speech. DeepFilterNet treats instruments as noise, so leave it off for music and film.   The app is free and very small, ~6.1 MB. Apple Silicon, macOS 26.   There are some demos on the app's product page. They let you hear how noise is removed from real YouTube videos.  https://www.silkwave.ai/silkwave-clarity        submitted by     /u/bmv3502     to     r/SideProject       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SideProject/comments/1wjpcrp/silkwave_clarity_realtime_speech_isolation_for/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:51:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:52:15.471Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad33ff660c608403979168"
+    },
+    "message_id": "reddit_t3_1wjpcqw",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "cauhatemoc",
+    "title": "Teachers of Reddit, what’s the saddest thing you’ve ever learned about a student’s life outside of school?",
+    "text": "Teachers of Reddit, what’s the saddest thing you’ve ever learned about a student’s life outside of school?\n\nsubmitted by     /u/cauhatemoc     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wjpcqw/teachers_of_reddit_whats_the_saddest_thing_youve/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:51:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:52:15.678Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad33ff660c608403979169"
+    },
+    "message_id": "reddit_t3_1wjpcp9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "jobboardsearch",
+    "username": "rrmdp",
+    "title": "📢 [HIRING] a RELOCATE TO NORTHERN QUEENSLAND, AUSTRALIA: Senior Water Infrastructure Engineers - AECOM - South Townsville, Queensland, Australia!",
+    "text": "📢 [HIRING] a RELOCATE TO NORTHERN QUEENSLAND, AUSTRALIA: Senior Water Infrastructure Engineers - AECOM - South Townsville, Queensland, Australia!\n\nCompany:    Date Posted: September 17, 2026 📅   Level: Senior 👵   Categories: #engineer #senior #fulltime #visasponsorship   Apply & Description 👉  https://jobboardsearch.com/redirect?utm_source=reddit&utm_medium=bot&utm_id=jobboarsearch&utm_term=www.constructionjobsaustralia.com&rurl=aHR0cHM6Ly93d3cuY29uc3RydWN0aW9uam9ic2F1c3RyYWxpYS5jb20vam9icy9yZWxvY2F0ZS10by1ub3J0aGVybi1xdWVlbnNsYW5kLWF1c3RyYWxpYS1zZW5pb3Itd2F0ZXItaW5mcmFzdHJ1Y3R1cmUtZW5naW5lZXJzLWMyNTAyNTgx    JobBoardSearch a meta directory of job boards and jobs. Find your next job here:  https://jobboardsearch.com        submitted by     /u/rrmdp     to     r/jobboardsearch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/jobboardsearch/comments/1wjpcp9/hiring_a_relocate_to_northern_queensland/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:51:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:52:15.888Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3400660c60840397916a"
+    },
+    "message_id": "reddit_t3_1wjpcp7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DailySolitaire",
+    "username": "EngineeringShort3985",
+    "title": "[Daily Challenge 2026-09-18 - Draw 1 No Hint] Solitaire conquered in 142 moves! Your turn to shine ✨",
+    "text": "[Daily Challenge 2026-09-18 - Draw 1 No Hint] Solitaire conquered in 142 moves! Your turn to shine ✨\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/EngineeringShort3985     to     r/DailySolitaire       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DailySolitaire/comments/1wjpcp7/daily_challenge_20260918_draw_1_no_hint_solitaire/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:51:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:52:16.104Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3400660c60840397916b"
+    },
+    "message_id": "reddit_t3_1wjpco4",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "AiChatGPT",
+    "username": "DangerousFuture7431",
+    "title": "Can't log in to my existing ChatGPT account, Google login redirects to “About You”",
+    "text": "Can't log in to my existing ChatGPT account, Google login redirects to “About You”\n\nsubmitted by     /u/DangerousFuture7431     to     r/AiChatGPT       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AiChatGPT/comments/1wjpco4/cant_log_in_to_my_existing_chatgpt_account_google/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:51:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:52:16.324Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3400660c60840397916e"
+    },
+    "message_id": "reddit_t3_1wjpcnu",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "AMDLaptops",
+    "username": "Ayyappan18",
+    "title": "Reviews and suggest on HP omen 16(2025) model with AMD processor",
+    "text": "Reviews and suggest on HP omen 16(2025) model with AMD processor\n\nHP Omen, AMD Ryzen 9 8940HX, 8GB RTX 5070, 16GB DDR5(Upgradeable) 1TB SSD, 240Hz, 2k WQXGA, 3ms, 500 nits, 16\"/40.6cm, Windows 11, M365* Office 24, Black, 2.44kg, ap0231AX, 4 zone RGB, AI Gaming Laptop. TGP 115 Watt and battery 83watt and Power supply type 230 W AC power adapter.   I want to use it for 4 years of college and overall 5 years and will it be a good choice to buy with an extended warranty.       submitted by     /u/Ayyappan18     to     r/AMDLaptops       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AMDLaptops/comments/1wjpcnu/reviews_and_suggest_on_hp_omen_162025_model_with/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:51:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:52:16.961Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad3429aeeb96c1c63b95ba"
+    },
+    "message_id": "reddit_t3_1wjpdgv",
+    "topic_key": "psychiatrist",
+    "search_keyword": "psychiatrist",
+    "platform": "reddit",
+    "subreddit": "Anxiety",
+    "username": "UAwelder_x",
+    "title": "Spiraling.",
+    "text": "Spiraling.\n\nI am getting my first evaluation from a psychiatrist next week. In the past my primary doctor tried to prescribe me medication for anxiety and depression. However I did not take any because it was never an everyday thing. Sometimes I have social anxiety and it could get bad but it’s never stopped me really. I’ve had moments of bad depression after breakups and sometimes I really ruminate on the past and decisions more than the average person probably. Long story short I’m wondering if anyone’s anxiety after a traumatic experience has led them to a depressive episode? I had 2 traumatic events happen this summer that made me completely spiral. I lost my appetite, days would go by where I lost all track of time. I would constantly google search things and check my body. I started smoking cigarettes back to back and I’m not a smoker. I had 2 weeks of really bad insomnia and currently I have lost all motivation. I feel like I have no dopamine. Hard to get out of bed. At my lowest I’ve had ideation. It’s been really bad for like 3 weeks but the whole thing has lasted 3 months. Has anyone ever had similar symptoms? I honestly think I got so anxious that it turned into depression maybe?        submitted by     /u/UAwelder_x     to     r/Anxiety       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Anxiety/comments/1wjpdgv/spiraling/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:52:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:52:57.918Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aad343a660c60840397916f"
+    },
+    "message_id": "reddit_t3_1wjpdpi",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Universitaly",
+    "username": "Particular-Carpet-31",
+    "title": "stage di 6 mesi in attesa della magistrale",
+    "text": "stage di 6 mesi in attesa della magistrale\n\nciao a tutti,  sono uno studente di ingegneria gestionale (triennale) e mi laureerò verso gennaio circa.   invece di iniziare la magistrale a metà anno, sto investigando la possibilità di fare uno stage in qualche azienda.   secondo voi è una cosa fattibile? è difficile che le aziende assumano una persona per soli 6 mesi fresca di laurea?   sono un po’ ignorante riguardo al mondo del lavoro, per questo chiedo a voi: grande popolo di Reddit!       submitted by     /u/Particular-Carpet-31     to     r/Universitaly       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Universitaly/comments/1wjpdpi/stage_di_6_mesi_in_attesa_della_magistrale/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:53:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:53:14.546Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad343a660c608403979170"
+    },
+    "message_id": "reddit_t3_1wjpdp8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "ParanormalActivity",
+    "username": "Ok_Caterpillar6925",
+    "title": "Entities on me since I was little",
+    "text": "Entities on me since I was little\n\nI need help and opinions please!       submitted by     /u/Ok_Caterpillar6925     to     r/ParanormalActivity       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ParanormalActivity/comments/1wjpdp8/entities_on_me_since_i_was_little/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T12:53:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T12:53:14.751Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad343a660c608403979171"
+    },
+    "message_id": "reddit_t3_1wjpdp5",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "VodyanitsaMains",
+    "username": "Kokomisflopussy",

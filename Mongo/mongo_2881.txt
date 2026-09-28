@@ -1,0 +1,416 @@
+    "_id": {
+      "$oid": "6aa35cb7035b0f36efccaae9"
+    },
+    "message_id": "reddit_t3_1wd2i1z",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Honduras",
+    "username": "CT_Mike88",
+    "title": "Control GTA VI PS5",
+    "text": "Control GTA VI PS5\n\nAlguien pudo comprarlo hoy el dia de las pre-ventas?    Yo tenia ya todo listo para comprarme ambos y me di cuenta que Direct PlayStation no hace envíos a P.O Box (Casilleros) y es la única dirección en USA que tengo.   En Amazon USA no esta, (al menos no aun) y otras tiendas como Walmart, BestBuy y GameStop ya estaba agotado cuando quise buscarlos, Intente también en Target, habian disponibles un poco más caros, pero me rechazaron el pago y cancelaron mi pedido. Posiblemente porque mi PayPal y Tarjetas no están en USA.   No se si alguna tienda local como Gamestation o Gamesworld lo van a tener disponibles, y a que precio, ire a preguntar mañana. Realmente lo quiero tener.   Estoy bastante descepcionado y frustrado, porque estaba todo emocionado y con todo listo para comprármelo y siempre pasan cosas raras, también culpa mía por no informarme antes, pero he comprado en varioas tiendas minoristas con casillero s y sin problemas, me envían las cosas sin inconvenientes.       submitted by     /u/CT_Mike88     to     r/Honduras       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Honduras/comments/1wd2i1z/control_gta_vi_ps5/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T01:42:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T01:43:19.512Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa35cb7035b0f36efccaaea"
+    },
+    "message_id": "reddit_t3_1wd2i0y",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "LLMDevs",
+    "username": "Federal-Teaching2800",
+    "title": "My agent's \"approval required\" gate was refusing 62% of legitimate work, and the fix was not loosening it — it was giving it someone to ask",
+    "text": "My agent's \"approval required\" gate was refusing 62% of legitimate work, and the fix was not loosening it — it was giving it someone to ask\n\nA pattern I suspect is common, because I found it in three separate places in my own codebase over two weeks.   The governance layer had an  approve=  callback since the day it was written: once a run has read untrusted content, dangerous tools (shell, file writes outside the workspace, sends) go through it. A missing callback is read as  refuse . Sensible default — inventing consent is the one thing an unattended agent must never do.   What nobody had checked is whether anything ever passed a callback. Three call sites did not: the desktop app's chat, the batch solver, and — the one that surprised me — the terminal chat, the only surface with a guaranteed human in front of it.   So on those surfaces \"requires approval\" had silently meant \"always refused\", and the measurement on the injection corpus (stub tools, no model in the loop, US$ 0) looked like this:        assembly   attacks blocked   legitimate rows refused          gate on, no approver (as shipped)   7 / 7    5 / 8        gate on, approver present, nobody answers   7 / 7   5 / 8       gate on, someone answers   7 / 7    0 / 8         The block rate never moves. The approver buys back the false refusals, not the defence. Which means the honest way to publish a block rate is with the second column beside it — a gate scored on attacks alone has a trivial maximum (refuse everything), and mine was quietly sitting there.   Two follow-on defects came out of the same thread:      CHIMERA_APPROVAL_MODE=ask  degraded to  deny  anywhere without a tty (server, container, cron), so the three-state gate had two states exactly where it mattered. Now the question is written to disk, delivered to a webhook, answered from anywhere with a CLI command, and  silence still refuses  after a timeout. That timeout is the new cost: an unattended batch with nobody to notify waits it out per refused call.   The batch command reported  ok  for a worker whose dangerous calls had all been refused. The refusal comes back as an ordinary observation string, the model reads it like any tool result, the run ends in prose, the receipt says success. It now says \"not allowed\" and lists what was refused.     Question for people who run agents unattended: how do you handle the approval seam? Durable ask with timeout-refuses is what I landed on, but every timeout is a refused piece of legitimate work, and I have not found a principled way to set the wait. What do you use — a queue a human drains, a policy that auto-approves a class, something else?   Repo is Apache-2.0, no paid tier:  https://github.com/brcampidelli/chimera-agent  — the table is from  bench/injection/RESULTS.md  and  bench/right_hand_governance/ , both reproducible offline.       submitted by     /u/Federal-Teaching2800     to     r/LLMDevs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LLMDevs/comments/1wd2i0y/my_agents_approval_required_gate_was_refusing_62/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T01:42:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T01:43:19.715Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa35ceaa72f4cb7ae30b5c5"
+    },
+    "message_id": "reddit_serp_1p9tz4s",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/b2bmarketing/comments/1p9tz4s/what_webinar_platform_do_you_use_for_small/",
+    "text": "what webinar platform do you use for small business with an active community\n\nHey everyone,   We're a small business with a pretty active community. Our audience likes joining live sessions on Linkedln, but we're planning to host proper webinars soon. We want a platform that feels good for our community and gives us a smooth experience when we go live.   If you also run a business with an engaged audience, what webinar platform are you using right now?       submitted by     /u/killerhunks23       [link]       [comments]",
+    "username": "killerhunks23",
+    "subreddit_or_channel": "b2bmarketing",
+    "posted_at": "2025-11-29T17:04:15+00:00",
+    "fetched_at": {
+      "$date": "2026-09-11T01:44:10.141Z"
+    },
+    "google_rank": 2,
+    "search_keyword": "webinar platform",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-11T01:44:10.141Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa35cf2035b0f36efccaaeb"
+    },
+    "message_id": "reddit_t3_1wd2iya",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Reggaeton",
+    "username": "ReggaetonPartyManeP",
+    "title": "¿Is It Really That Bad? #3 Los Mozalbetes (2004) The Forgotten DJ Blass Album",
+    "text": "¿Is It Really That Bad? #3 Los Mozalbetes (2004) The Forgotten DJ Blass Album\n\nDJ Krypy & DJ Enano presentan Los Mozalbetes (2004) The Forgotten DJ Blass Album   I know Los Mozalbetes came out in 2003, but if I’m not mistaken it was at the tail end of the year along with Blin Blin vol. 1 and Gargolas 4 which all came out that December. It would then get a re-release in 2004 under New Records’s deal with Universal. New Records which was ran by an executive simply known as ‘Nando’ had a great roster with Baby Rasta y Gringo, Nottyplay, Karel y Voltio (one album deal), Felo Man and Cheka all signed to New Records at some point.   Sadly, New Records wasted their deal mostly rehashing old material on compilations or re-releasing old albums and presenting them to the audience as if they were new. This would create confusion with the brand. They were trying to take advantage of Reggaeton breaking into Latin America and the mainstream by releasing previously only Puerto Rico exclusives. Many execs did this and it was mostly unsuccessful   The reason was that by this time a lot of the Puerto Rico exclusives were available online via free downloads. The quality was mostly low back then as computers had less memory at that time. People pre-2007 mostly uploaded albums in 128kbps mp3 to 192 kbps.    Although  ReggaetonLyrics.com  which was one of the first powers in the early days of Reggaeton consumption online, they purposely uploaded their songs in 96kbps to encourage people to buy the albums and not pirate online. They were killed once their competitors uploaded lyrics and albums in higher quality and by 2007 they were a relic of the Reggaeton online community.   So, by the time New Records re-released ‘Ground Zero, a Q Mac Daddy various artist hidden gem from 2003, then retitled it to “La Hora Cero” and put it out in 2005; it did not matter it now had mass distribution in Peru and Colombia because people bootlegged the original version online.    New Records did have success bundling ‘Romances Del Ruido 1 & 2’ in a special collector’s edition adding one new exclusive song from Baby Rasta, a different version of “Asegurate” with Jeanie, who later became Jenny ‘La Voz’. The first version was with Master Joe & OG Black. They sold around 200,000 copies of Romances Del Ruido Collection because Rasta & Gringo were really big in South America and those albums became available there for the first time, previously being Puerto Rico Exclusives (and DR + mom and pop shops in the US).   I’m now thinking of doing a Reggaeton Hidden Gems “The Downfall of New Records”. Coming soon! Sadly, New Records went bankrupt in 2007. Because of that Rasta & Gringo had to give up ownership of ‘Sentenciados’. New Records still have ownership over their catalog, except the stuff they co-licensed like “Ground Zero”. They distribute it online although they made the horrid decision of uploading mp3’s of The Score (2003) instead of the masters and it sounds terrible. Expect more in the classic album entry of The Score coming soon.   But this isn’t about New Records. Sorry for the long preamble. This is about Los Mozalbetes, a various artist album produced in its entirety (pretty much) by DJ Blass Sandunguero himself. There is a pretty decent cast. It doesn’t have anyone at the fame level of Tego or Don but you got Glory opening the album. One of the few times a lady has opened up a various artist album. And there’s other luminaries like Nottyplay, Guelo Star, Ñejo, Alberto Stylee, Nicky Jam (who appeared on almost everything back then), Yaga & Mackie, Zion & Lennox & more…   The album sold well for a Puerto Rican exclusive on an independent label. Reggaeton websites at the time reported 30,000 units sold. The guys presenting the album are DJ Krypy and Enano. I know who DJ Krypy is. He was a local popular dj who would concert dj for several artists, engineered music for a time and even had a stint on the legendary Mix107 radio station in PR.    Enano, I don’t know who he is and we never heard from him again. But he’s probably a concert promoter. That’s what the people behind the popular various artist album ‘Desafio’ were. They would remain behind the scenes figures though I heard one of them was a member of ‘Street Clan People’ or ‘Ganya Kids’ later renamed ‘Los Ganja’ from the DJ Stefano crew. But other guys like Enano would put their faces out there. I don’t know how Los Mozalbetes did when re-released by New Records under their deal with Universal Latino but I doubt it sold much more.   So, I can’t figure out the full credits online. I know Noriega and Rafy Mercenario were working with Blass at the time and they are shouted out. I know Noriega co-produced his song. But I’m pretty sure Blass produced 90% of the album at least. It was recorded at his famous old ‘Fruity Studio’ which used to be his house. ‘Fruity’ because he used Fruity Loops to make his beats which is now known as the world famous ‘FL Studio’ workstation by Image Line. Luny Tunes would also use Fruity Loops but they expanded with other DAW’s like ‘Logic’ later on.   So, this album with a pretty impressive cast and produced by DJ Blass, was ravaged by some fans online. Many hated the way Blass produced here. It was nothing like Luny Tunes did on Mas Flow or Blin Blin. Some fans thought the beats here were very subpar when compared to Luny Tunes. At a time when people were clamoring for ‘Sandunguero 3’, we kind of got it with ‘Los Mozalbetes’ but it failed to live up to expectations.  So ¿Is Los Mozalbetes Really That Bad?     Verdict: No. ‘Los Mozalbetes’ is kinda of a hidden gem.    I bought Los Mozalbetes when it came out. And ignored it after a few listens. I could not get past the fact Blass actually went the opposite direction than Luny Tunes. He simplified the beats further and did a more minimalist approach to his producing. There weren’t these bombastic orchestral sounds that we were used to at the time. Just simple synths, the Plucked plugin from FL Studio and some simplified guitar arrangements on an obvious digital soundscape. At first I agreed with most fans, ‘Los Mozalbetes’ did kinda suck was my first impression.   But you have to get past that Blass was not trying to revolutionize the game like he did with Sanduguero 1 & 2. ‘Los Mozalbetes’ sounds rushed when it comes to beat production. But all these years later, it sounds better than this crisp, clean sound on 50% of Pop Urbano records. It really does. We were just comparing everyone to Luny Tunes and the Mas Flow team back then and Blass now sounded outdated in comparison. But now people would kill for that ‘outdated’ sound because producers nowadays do not know how to make beats that good even with their undeserved overblown budgets to make a crappy Camilo record. A half assed Blass is better than 90% of today’s Pop Urbano producers.   So let’s break the songs down.    #1 Gallego Intro –  Gallego back in the day was the go-to for intros. He did the intro for many classic Reggaeton albums starting with El Cartel de Yankee 1 in 1997. Gallego was a barrio poet speaking on the realities of life in the Puerto Rican barrios. His poems have many social commentaries. He is also an artist and his only album where he sings \"Teatro de Barrio\" ain't bad. It spawned the hit \"Tengo un Angel\" which many confuse with Tego as singing it because of Latin American bootleg that credited Tego instead of Gallego. His poem is followed by a Reggaeton mix which is typical of the era. 7/10    #2 Glory - Dame Una Noche Loca -  This is not one of Glory's best during the era. She has a much better opener on DJ Anqueira's Inovando which is a worse album overall. And Blass does a lazy job with the bachateo. Luny Tunes and Eliel are just light years ahead of Blass on the Salsaton and Bachateos. Blass could do a good job with bachata Reggaeton but this is just a lazy effort overall. Glory did an ok job, 6.5/10    #3 Zion y Lennox - Tu Movimiento Me Excita -  A forgettable Zion y Lennox track. They were killing it at the time, but this is not one of their best songs even from this time period. It doesn't suck at all. Blass' shortcomings on production is mostly attributed to melody or lack thereof. Reggaeton was big on melody back then. The drums and bass are on point however from top to bottom. 6/10    #4 Nicky Jam - Vamo Hacerlo Sin Freno -  This is Malianteo style Perreo. Nicky was hit or miss post 2002. People were already starting to say he was falling off by the time this album came out. It got much worse with 'Vida Escante'. But this song is solid. I like Maliantoso Nicky Jam. 7/10    #5 DJ Blass & Noriega - Sola -  Blass was preparing his own solo album as a lead performer, 'Lagrimas y Risas', hopefully a future entry for ¿Is It Really That Bad? This collaboration is designed to hype up Blass as a singer/rapper. It's not bad. There's a little more effort on the beat and Noriega is great on the chorus as always. 7.5/10    #6 John Eric - Te Invito A Mi Suite -  John Eric was a notable name already by 2004. He had big hits on Guatauba 3, Los Matadores Del Genero and DJ Anqueira Inovando. He was another guy that appeared on many various artists album of the day. This song is also solid. 7.5/10    #7 Yaga & Mackie - Ten Cuidao Tu -  You could always count on Yaga & Mackie back then. With all the appearances they had on various artists albums around this era, I don't think they had a single bad song on any of them. 8/10    #8 Angel Doze - Azotandote y Dandote -  Angel was really underrated. It seemed like he was gonna go somewhere when Luny Tunes signed him in 2006 but soon after he was arrested on gun charges. This is just a solid Perreo at which Angel Doze was really skilled at. The beat by Blass is a little lazy, but it works. 8/10    #9 Shaka & Benny - Haz un Intento -  This is Chaka Black, who was also in a duo with Tony Haze. Shaka Black is one of the more underappreciated vocalists in Reggaeton history, but people who know realize what a talent he is. His collaborations with Benny, the exec producer behind K-Libre (which they took off streaming 🤬), were often good and this is no exception. 8/10    #10 Alberto Stylee - Tumbando Fronte -  Alright this is what we all came for. Alberto Stylee's GTA song. I always liked this from first listen. Did I expect this to be the most famous song from Los Mozalbetes? Possibly. If it got enough promo and exposure. Which eventually it did. There was a lost music video for Los Mozalbetes. I don't remember who came out on it except the DJ Blass and Noriega song. 8/10    #11 NottyPlay - Tu y Yo -  NottyPlay have 3 songs that are titled 'Tu y Yo' and they're all good. I only remember the one from \"The Score\" but I know they have another one. I consider this the best song on 'Los Mozalbetes'. 8.5/10    #12 Jenay - De Caceria Me Voy -  This in my Top 5 from this album. Jenay was killing it on every album he came out back then. He finished his album but Master Joe didn't put it out because \"La Coleccion\" flopped (future entry). Unlike Francotiradores 3 (unreleased) it never leaked except for one or 2 songs. It was gonna be called \"No Me Parezco A Nadie\" because of Jenay's unique vocal style. RIP. 8.25/10    #13 Nano MC - Hay Que Estar Arrebatao -  Nano could have a highlight track but this one is not it. Also known as Nano D' Great. He would achieve his greatest success with the song \"La Revancha\" ft Chyno Nyno, also produced by DJ Blass and released in 2006. He also co-wrote some of Alberto Stylee's biggest hits like \"Porque Tu No Estas\". 5.5/10    #14 Ñejo - Yo Se -  OG Ñejo was much more Maliantoso back in the day. He developed his more radio friendly but bellacoso commercial style when he started his duo with Dalmata. This song is pretty gangsta. 7.5/10    #15 David Deambulante & Pancho Indio Crew - Dejalos -  Pancho Indio Crew's most commercially successful album was the hidden gem \"Under Gramie\" with David Deambulante. It sold 30 thousand units thanks to the popular  music video with Dalmata, Divino and Baby Ranks.  This song is not good however. Krypy and Enano probably included it because Pancho & David were trending around this time. Their run during this period was so successful it even led to a release under  Sony Latin . 5/10    #16 Guelo Star - Chica Maliante  - This song is so good. Guelo Star is easily one of the best Chanteros of all-time. 8.5/10    #17 DJ Blass & Bori - Sientes El Plomo -  Bori was an artist DJ Blass was developing around this time. He had a Malianteo style. I'm not sure but he might be also known as Tingui. He had a notable song on the Great Kilo various artist album \"Kasa Blanca El Hogar Del Castigo\". This song is alright. It also appears on 'Lagrimas y Risas'. Gallego has a cameo in the beginning of the song. 7/10    #18 DJ Blass & Enano - Voy a Seguir Pa Lante -  And the titular Enano raps on this one. It's not bad. 6.5/10    #19 Gallego - Outro -  Just a conclusion with a poem about vengeance. No Rating.    Overall Rating: 7/10    I never heard Blass speak on his work on Los Mozalbetes. I did hear him speak on the era however. Blass became disillusioned around late 2003. He could not understand how just one year ago he was on top of the world then a year later everyone moved onto Luny Tunes. Artists were no longer lining up outside his house to record. There was less work available but it balanced out with prices overall going up. But it made him complacent. He confesses that he went through a depression around this time which he would cure with getting back into religion. He even put out a Christian Reggaeton album with Rey Pirin in late 2004. Blass said that the lack of work made him complacent. And he wouldn't put all his effort behind the records he produced around this time. That's why some of the beats on 'Los Mozalbetes' are not to DJ Blass' lofty standards. But it's a pleasant experience for a Reggaeton lover. Is it far from a classic? Yes. But an album doesn't have to be a near classic or better to be an enjoyable experience. There's some crappy Reggaeton albums I love but are too obscure to bring up here.    Listen on Spotify :  https://open.spotify.com/album/3F0lExSizqQVqEesxNlZCR?si=7c0YNnZWT7uDQLNEjF_EAw        submitted by     /u/ReggaetonPartyManeP     to     r/Reggaeton       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Reggaeton/comments/1wd2iya/is_it_really_that_bad_3_los_mozalbetes_2004_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T01:44:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T01:44:18.992Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa35cf3035b0f36efccaaec"
+    },
+    "message_id": "reddit_t3_1wd2ixg",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "triplej",
+    "username": "Anxious-Nose9042",
+    "title": "Dom Dolla B2B Green Velvet",
+    "text": "Dom Dolla B2B Green Velvet\n\nPlease if someone can spare 3x 27 sep GA  I have auto buy set to max, has to be through tixel:    https://tixel.com/u/samuels255        submitted by     /u/Anxious-Nose9042     to     r/triplej       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/triplej/comments/1wd2ixg/dom_dolla_b2b_green_velvet/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T01:44:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T01:44:19.404Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa35cf3035b0f36efccaaed"
+    },
+    "message_id": "reddit_t3_1wd2iwe",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "AlertVegas",
+    "username": "MugShots",
+    "title": "NV Energy Alert",
+    "text": "NV Energy Alert\n\nNVEnergy Alert Padmounted Transformer Problem in 89415 Verified customers affected ORT: Verified ETR: Verified       submitted by     /u/MugShots     to     r/AlertVegas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlertVegas/comments/1wd2iwe/nv_energy_alert/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T01:44:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T01:44:19.611Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa35cf3035b0f36efccaaee"
+    },
+    "message_id": "reddit_t3_1wd2ivi",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "feetpictures2026",
+    "username": "rosie_sells3",
+    "title": "Selling!! 🦶",
+    "text": "Selling!! 🦶\n\nHey everyone! I am new to selling feet pictures and am looking for some buyers. I can give you whatever you are looking for. Ligament buyers only! 😉🦶       submitted by     /u/rosie_sells3     to     r/feetpictures2026       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/feetpictures2026/comments/1wd2ivi/selling/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T01:44:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T01:44:19.814Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa35cf4035b0f36efccaaef"
+    },
+    "message_id": "reddit_t3_1wd2iti",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ScentHeads",
+    "username": "ExtremeStonker",
+    "title": "LV Experience, in store. New Fragrance Ranking",
+    "text": "LV Experience, in store. New Fragrance Ranking\n\nI recently preordered Tea Storm and Moon Tale and I had never tried them before. I went today to pick them up and try their testers and was incredibly underwhelmed.      Tea Storm—As soon as I put it on it felt weak. The opening was lemon grass. Very much lemon grass. It didn’t take long before I got a little bit of a floral note and a tiiiiiiny bit of tea. TBH, at first my thoughts were hairspray and some kind of cleaner. As it dried down it reminded me of a weaker Imagination but with a little hint of lemon. Frankly I’m a little disappointed. I wish they gave out testers. Not very good performance especially compared to Moon Tale     Moon Tale—To me it reminds me of a very good high quality tanning bed lotion or a super good smelling Glade Plug-in. Definitely good mix of floral and fruity. Compared to Tea Storm, very good performance.     Ink Mark—Definitely a mix of woody and powdery, but the creamy note to me smelled like beef tallowy. It had an interesting scent that I can’t quite put my finger on. It was my least favorite out of the three.      Final thoughts: I got Tea Storm & Moon Tale. I was bummed that I could have ordered them online and got 4 samples but at the store I only got two. May not seem like a big deal but I’ve always loved the buying experience from LV and this time it was very underwhelming. Don’t get me wrong, the employees were great, but it seems like their hands were tied and they were “low on samples.” I’ll probably return them both and purchase online or not purchase at all. I’m pretty sure I can get something else that I also like from a website that would actually give me a couple samples. Louis Vuitton has had beautiful presentation and more samples in the past but it felt like because I was just getting a fragrances, I wasn’t really treated as well. The very first time I purchased a fragrance a couple years ago the experience was as if they wanted my business. This time not so much.   Aside from not getting the samples and the product presentation (just the white little boxes of the fragrances and a tiny LV bag); which I get, some people might not care but it’s very important to me, the fragrances were okay. Ranked 1. Tea Storm (lacks longevity but projects) 2. Moon Tail (projects and lasts) 3. In Mark (not a fan)        submitted by     /u/ExtremeStonker     to     r/ScentHeads       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ScentHeads/comments/1wd2iti/lv_experience_in_store_new_fragrance_ranking/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T01:43:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T01:44:20.028Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa35cf4035b0f36efccaaf0"
+    },
+    "message_id": "reddit_t3_1wd2itb",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "PeptideMarketing",
+    "username": "VegasBirdLawyer",
+    "title": "Tik Tok- Does it really move the needle?",
+    "text": "Tik Tok- Does it really move the needle?\n\nMaybe it's just my shitty posts, but I haven't seen much bump from Tik Tok. Are there basically 5-6 brands that get all the traffic, and I'm just too dull to grab attention? I did notice I got more traction but not necessarily sales when I posted scientific informational videos (I have 20+ years lab experience) but alas I got to that magical 1000 subscriber goal and TT shut my page down.       submitted by     /u/VegasBirdLawyer     to     r/PeptideMarketing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PeptideMarketing/comments/1wd2itb/tik_tok_does_it_really_move_the_needle/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T01:43:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T01:44:20.231Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa35cf4035b0f36efccaaf1"
+    },
+    "message_id": "reddit_t3_1wd2it2",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ultrawidemasterrace",
+    "username": "Unusual_Beginning553",
+    "title": "AlienWare AW3926QW battles scars but here!!",
+    "text": "AlienWare AW3926QW battles scars but here!!\n\nJust set up my Alienware AW3926QW and at first I thought it SUCKED 😂  Then I went through all the recommended OSD, Windows, and NVIDIA settings and… man, WHAT A DIFFERENCE.  I’m seriously impressed with this monitor now. And that’s coming from someone who already owns an LG C2 for console gaming and a Samsung G6 for movies.  Once this thing is properly dialed in, the picture quality and immersion are insane. I went from thinking I might’ve made a mistake buying it to being absolutely blown away.  If you just got one and aren’t impressed out of the box — SET IT UP PROPERLY before judging it!       submitted by     /u/Unusual_Beginning553     to     r/ultrawidemasterrace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ultrawidemasterrace/comments/1wd2it2/alienware_aw3926qw_battles_scars_but_here/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T01:43:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T01:44:20.434Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa35d1ca72f4cb7ae30b5c6"
+    },
+    "message_id": "reddit_serp_1ih21kt",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/ChiefMarketingOfficer/comments/1ih21kt/the_best_webinar_platform_from_someone_whos_tried/",
+    "text": "The best webinar platform (from someone who’s tried way too many)\n\nIf you’ve ever hosted a webinar (or even attended one), you know that picking the right platform is huge. The right one makes things easy. The wrong one? Will have you shouting into your pillow while people complain in the chat.   So, after plenty of trial and error, here’s my take on the webinar platforms I’ve actually liked (or at least didn’t make me have a meltdown before going live).    The best webinar platforms that won’t make you lose your mind:     1. Demio    Demio is one of the easiest webinar platforms I’ve used. The interface is super clean, and the best part? No downloads for attendees. That means fewer last-minute messages like, “I can’t log in!” five minutes before you’re supposed to start.   It also has great engagement features, like polls and Q&A, so people don’t just sit there zoning out. If you’re running marketing webinars and have already left a few people out of your webinars before, this is probably a good option.    2. GoToWebinar    This one’s been around forever, and honestly? It’s reliable. It’s not the flashiest, but it gets the job done.   I’ve used GoToWebinar for bigger, more professional events where I cannot afford technical issues, and it’s always been stable. If you need something for large-scale, no-nonsense webinars, this is a safe bet.    3. Zoom (Yep, that Zoom)    Look, we all basically live on Zoom at this point. The good news? Their webinar features are actually decent.   I like that you can stream directly to Facebook and YouTube, which is great if you want to reach as many people as possible. It’s not the most customizable, but if you just need something simple and familiar, Zoom gets the job done. Also you are probably already signed up which means you have half of the job done.    4. ClickMeeting    If you run a lot of workshops or educational webinars, ClickMeeting is a really nice option.   It has whiteboards, breakout rooms, and other interactive tools that make webinars feel more like a real classroom instead of just another boring presentation. I’ve used it for more hands-on sessions and felt like a total teacher.     5. GetResponse    This one is more than just a webinar platform: it also has built-in email marketing and automation tools.   I love this because it means I can handle everything (registrations, follow-ups, reminders, lead nurturing) without juggling a bunch of different tools. For someone like me who is always forgetting passwords, having fewer accounts to deal with is almost a dream come true. So, if you’re running webinars as part of a bigger marketing strategy, this setup will help you save a lot of time.    6. Adobe Connect (for the detail-obsessed)    When I host webinars for personal projects, I spend quite some time daydreaming about how I want them to look. I haven’t found any platform that lets me add cats and glitter (bummer), but Adobe Connect lets me have some fun.    I’ve used it when I needed my webinars to look exactly how I wanted: custom branding, interactive layouts, the whole deal. The downside? It’s not the easiest to set up. If you know how to deal with a learning curve and you don’t throw your computer out of the window, it will be worth it.     7. WebinarNinja    So, if you try to use Adobe Connect and end up throwing your computer out of the window, you can buy a new computer and then sign up for Webinar Ninja. This is one of the easiest platforms to use. No fluff, no unnecessary features: just a simple, lightweight webinar tool that works.   I’d recommend this for small businesses or solo entrepreneurs who don’t want to mess with a million settings. Sometimes, you just need something that works without overcomplicating things.    8. WebEx (big company vibes)    Let’s get one thing straight: WebEx is not for casual webinars, it’s for big enterprise-level virtual events only important people attend to.   I’ve only used WebEx when working with larger teams that needed a ton of control over engagement, security, and integrations, and it was a good way to go. If you’re running a huge corporate-level webinar, WebEx has all the pro-level features you need to make sure the fancy events meet the expectations. You will make your boss think you are a secret corporate event manager (well, maybe this is too much, but they will be quite impressed). But if you’re just looking for a simple way to connect with your audience, this will probably make things harder than they should.    So, which one should you pick?   I always recommend that you do your own deep research before going for any of the options I share here. However, I know days get busy and there’s no time for all the research we want to do (especially if you are like me and any research ends up being more like PhD dissertation) so this is a simple guide you can follow if you want to choose something right now:      Want it easy? Demio or WebinarNinja.   Need something super reliable? GoToWebinar.   Already using Zoom? Just use Zoom Webinars.   Teaching or running workshops? ClickMeeting.   Want all-in-one email + webinar tools? GetResponse.   Need full control over branding? Adobe Connect.   Running a huge corporate event? WebEx .      That’s it! Hope this helps you skip the trial-and-error mess I went through.   If you’ve got a favorite (or a webinar disaster story), I’d love to hear it.       submitted by     /u/molkijuhy63566       [link]       [comments]",
+    "username": "molkijuhy63566",
+    "subreddit_or_channel": "ChiefMarketingOfficer",
+    "posted_at": "2025-02-03T22:28:24+00:00",
+    "fetched_at": {
+      "$date": "2026-09-11T01:45:00.172Z"
+    },
+    "google_rank": 5,
+    "search_keyword": "webinar platform",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-11T01:45:00.172Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa35d2f035b0f36efccaaf2"
+    },
+    "message_id": "reddit_t3_1wd2jor",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "GTACarMeetMarket",
+    "username": "Round_peach67",
+    "title": "Looking to buy Sanctus",
+    "text": "Looking to buy Sanctus\n\nsubmitted by     /u/Round_peach67     to     r/GTACarMeetMarket       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GTACarMeetMarket/comments/1wd2jor/looking_to_buy_sanctus/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T01:45:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T01:45:19.311Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa35d2f035b0f36efccaaf3"
+    },
+    "message_id": "reddit_t3_1wd2jok",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MalaysianPF",
+    "username": "duitkaya",
+    "title": "US 30 Year Bond, Rises to 5.372% - FD gives 3.1%-3.6%",
+    "text": "US 30 Year Bond, Rises to 5.372% - FD gives 3.1%-3.6%\n\nA few weeks ago, someone asked if I would make a quick guide on the US bonds. The bonds had a nice boost thanks to Bassent.   The US 30 year Treasury has risen to 5.372%   That means if you buy this bond, it will pay you 5.372% per year. This is relevant to the RM1m and above from nowhere people. Yes, they exist, as the babyboomers begin to meet their makers, more of these people will come.    Currently FD gives you about 3.6% if you're lucky. This provides about 1.8% more per annum. That means, if we discuss this with no conversion risk [USD-MYR], you get about RM53,000 per year compared to RM31,000-RM36,000 from FD, for every RM1m invested. That's about RM4,416 per month of cashflow.    If you're working and have no need for it, take that money and invest into the S&P500 [9%] or global index or even your EPF [6%] depending on your risk tolerance.   They will pay you twice a year, every 6 months. No you don't get taxed, because this is foreign income so Malaysia doesn't tax it. US also doesn't tax this, because it's not a dividend payment.   I use the 30 year bond, because I am 39 and I want something sustainable till I get to 69. There are many other bonds, 1 month, 3 months, 6 months, 1 year, 5 year, 10 year, etc. You can go find them and see what suits you   Do  not  put your entire net worth into this, continue your diversification strategies. I have diversified into stocks, S&P500, options, bonds, FD, ISA. 30 year bonds are just 1 part of my entire approach.   This is just an avenue for those who can take advantage of this, as I don't see bonds discussed here as much.    Remember, there is currency risk and opportunity cost. If you bought when ringgit is weak, and then your payments come with the ringgit is strong, it's a bit of a double whammy. But if you bought when the USD is weak, and then money comes in when the USD is strong, then you're laughing to the bank. It can be a percentage more or less too this conversion risk, so this a free lunch.       submitted by     /u/duitkaya     to     r/MalaysianPF       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MalaysianPF/comments/1wd2jok/us_30_year_bond_rises_to_5372_fd_gives_3136/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T01:45:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T01:45:19.508Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa35d2f035b0f36efccaaf4"
+    },
+    "message_id": "reddit_t3_1wd2jo9",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "GarageDoorService",
+    "username": "seimeistan",
+    "title": "Raynor 130-7 Garage Clicker Programming Help",
+    "text": "Raynor 130-7 Garage Clicker Programming Help\n\nHello, I dropped my garage clicker and the wires connecting the battery to the operating board broke. I tried to take it to a cellphone repair shop to solder back on but the employee said I should just buy a new garage clicker.    My garage clicker has the dip switches but I can’t locate the learn button on my Raynor 130-7 garage.    Could someone help me program a new garage clicker? The instructions on the clicker I bought don’t list Raynor in the list of garage door opener brands.        submitted by     /u/seimeistan     to     r/GarageDoorService       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GarageDoorService/comments/1wd2jo9/raynor_1307_garage_clicker_programming_help/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T01:45:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T01:45:19.706Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa35d2f035b0f36efccaaf5"
+    },
+    "message_id": "reddit_t3_1wd2jnq",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "mildlyinfuriating",
+    "username": "orchandia",
+    "title": "Package might just be making an endless loop at this point.",
+    "text": "Package might just be making an endless loop at this point.\n\nPackage started in Arizona on August 31st. Made it to Warrendale a couple days ago (30 minutes away from me, I live in Pittsburgh). It hung out there for a couple days, then went back to Arizona. I guess now it’s on its way back to me? I even called earlier today when it was in Warrendale and asked if I could drive to the distribution center to get it, and they told me that customers can’t go there. I guess we’ll wait and see what happens.       submitted by     /u/orchandia     to     r/mildlyinfuriating       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mildlyinfuriating/comments/1wd2jnq/package_might_just_be_making_an_endless_loop_at/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T01:45:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T01:45:19.904Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa35d30035b0f36efccaaf6"
+    },
+    "message_id": "reddit_t3_1wd2jnn",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ETFInvesting",
+    "username": "No-Inflation-670",
+    "title": "Late to the party - Lump Sump vs DCA in ATH market, which one is recommended?",
+    "text": "Late to the party - Lump Sump vs DCA in ATH market, which one is recommended?\n\nLate to the party - Lump Sump vs DCA in ATH market, which one is recommended?   must admit i’m late to the party in ETF investing. Have plans to semi retire (in 10 years time age 55)   What’s the best move given now S&P has been ATH. I agree with the saying - Time in Market is better than Timing the Market.   say example 1mil is all i have now, mostly cash biased, self employed   50% (500k) in housing flexi loan  30% (300k) in FD  15% (150k) in money market fund  5% (50k) in Voo bought last year   From the example 1mil currently, should i: (i’m interested at VWRA accumulating etf)   Option A) 20% keep as emergency fund,  50% lump sump now at almost peak ATH  balance 30% to DCA over 6-12 months?   Option B) 20% keep as emergency, remaining 80% DCA over next 12 months   Option C) 20% emergency, 20% aside as dry powder to buy the dip, and follow by lump sump + dca asap       submitted by     /u/No-Inflation-670     to     r/ETFInvesting       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ETFInvesting/comments/1wd2jnn/late_to_the_party_lump_sump_vs_dca_in_ath_market/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T01:45:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T01:45:20.102Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa35d30035b0f36efccaaf7"
+    },
+    "message_id": "reddit_t3_1wd2jng",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "TaylorSwiftMerch",
+    "username": "OtaliaMane_",
+    "title": "For Sale",
+    "text": "For Sale\n\nHi all! I am moving overseas soon and even though I adore my cases I will be selling them because it's just too big to bring it with me.   Acoustic piano vinyl case $420 (plus shipment and fees)   Midnights vinyl case $300 (plus shipment and fees)   All prices are final based on the exact amount i paid for them. Won't be taking any trades. I can ship asap. Payment via PayPal Goods and Services is preferred. And also discount for the bundle purchase. Interested buyers are encouraged to send a direct message.       submitted by     /u/OtaliaMane_     to     r/TaylorSwiftMerch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TaylorSwiftMerch/comments/1wd2jng/for_sale/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T01:45:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T01:45:20.300Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa35d62a72f4cb7ae30b5c7"
+    },
+    "message_id": "reddit_serp_1f2fnbc",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/SmallYTChannel/comments/1f2fnbc/which_video_editor_do_most_youtubers_use_for/",
+    "text": "Which video editor do most youtubers use for editing?\n\nI just started my youtube channel and was wondering which video editor is used by most youtubers for editing their videos. And do they edit on mobile or PC?    I am using capcut mobile...       submitted by     /u/zeeshans95       [link]       [comments]",
+    "username": "zeeshans95",
+    "subreddit_or_channel": "SmallYTChannel",
+    "posted_at": "2024-08-27T12:20:32+00:00",
+    "fetched_at": {
+      "$date": "2026-09-11T01:46:10.521Z"
+    },
+    "google_rank": 9,
+    "search_keyword": "video editor",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-11T01:46:10.521Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa35d6b035b0f36efccaaf8"
+    },
+    "message_id": "reddit_t3_1wd2kjc",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "LastWarMG_Buy_Sell",
+    "username": "No-Spite706",
+    "title": "(SELL) Server 78 | HQ30 | 283M+ Power | 59M S1 | VIP14 | Drone 180 | 29.2M Kills | F2P",
+    "text": "(SELL) Server 78 | HQ30 | 283M+ Power | 59M S1 | VIP14 | Drone 180 | 29.2M Kills | F2P\n\nOriginal owner selling my personal account on Server 78.   This account is 100% F2P — $0 spent since day one.   The main thing to understand about this account is that I never rushed HQ levels. I focused on building the account first — heroes, technology, squads, gear, drone, decorations and resources — which is why it is still HQ30 but already has 283M+ total power and a 59M+ first squad.   Main stats:   • Server 78   • HQ 30   • VIP 14   • 283M+ total power   • S1 59M+   • S2 42M+   • S3 40M+   • S4 36M+   • Drone Lv180 / 12.6M+ power   • Decoration power 17M+   • Gorilla Champion 6 / Lv51 / 4.35M+ power   • 29.2M+ kills — currently Top 7 in Individual Kills   Main squad: all five heroes Lv150, Kimberly 9.68M, EW30 with advanced awakening, and all 20 S1 gear pieces Lv40.   Technology: Development MAX, Units MAX, Squad 1 MAX, Squad 4 MAX, Special Forces MAX, Alliance Duel MAX, Intercity Truck MAX, Hero 95%, Defense Fortifications 87%, Oil Age 79% and Tank Mastery 46%.   Resources currently stored: approximately 26.2B food, 34B iron, 17.3B gold and 39.6M oil, plus choice-resource chests.   The account also has approximately 331 days of non-healing speedups, plus another 107 days of healing speedups, and 50 transfer tickets.   HQ31's Tech Center requirement is already completed. The account has also progressed to New Armaments on the T11 path; T11 itself still requires Barracks Lv35.   What I think makes this account interesting is that the next owner isn't buying an HQ30 that needs to be rebuilt from behind. The strength is already there, with a lot of resources and progression stored for continuing the HQ climb.   I'm selling because I simply don't have enough time to play at the level the account deserves anymore.   Asking: $1,199 USD — reasonable offers considered.   Serious buyers are welcome to DM me. I can provide additional screenshots/details for heroes, tech, gear, resources, drone and decorations.    https://preview.redd.it/tym8xkzbqsoh1.jpg?width=1080&format=pjpg&auto=webp&s=35a2f4a46a2038a2323dd4aa84f9c7583463cd34     https://preview.redd.it/36eiehzbqsoh1.jpg?width=1080&format=pjpg&auto=webp&s=eb1c0adc36b56ed96d3fc65633757011202badad        submitted by     /u/No-Spite706     to     r/LastWarMG_Buy_Sell       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LastWarMG_Buy_Sell/comments/1wd2kjc/sell_server_78_hq30_283m_power_59m_s1_vip14_drone/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T01:46:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T01:46:19.697Z"
+    }
+  },
+  {
+    "_id": {

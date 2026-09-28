@@ -1,0 +1,416 @@
+    "username": "soldierseekerschemer",
+    "title": "What are your favorite things about the “Freshman Cast” of C4?",
+    "text": "What are your favorite things about the “Freshman Cast” of C4?\n\nBasically the post! Using “Freshman Cast” because it’s their first time being cast members in a main/long running campaign rather than mini campaigns, guest spots in previous campaigns, and spin off series (IE Candela Obscura or their many past live one-shots). It would feel odd calling them the ‘new cast’ when a majority of them are certainly not new to the Critical Role space.   But yeah, I’ve personally been loving this new group and I thought it’d be fun to spread the positivity and see what everyone else enjoys about them! I’ll share my thoughts first (because I have quite a lot of them).   Alex: It’s really hard to pick a single favorite thing about Alex’s playstyle, seeing as him playing Isaac in New York by Night is what got me into watching Actual Plays to begin with. But my favorite thing about him as Occtis specifically is the way he flavors his spells and behaves in combat. I don’t see people actively sharing the verbal components for their spells very often so watching him summon Gaya Seremai with such clear intention and casting Wither and Bloom the way he did in the most recent episode was SUCH a treat. His commitment to staying in character even when not being spoken to is also something I really respect.   Luis: This is a player who knows the rules and knows them well. I’m a Rule of Cool player and GM myself for the most part but seeing a player stick so well to the rules while still leaving room for some amazing roleplay is such a breath of fresh air. I also love that he integrated his Latinx background into his character inspiration for Azune (which I believe he shared in his Fireside Chat) and Azune’s themes surrounding identity, memory, and trying to find ‘roots’ again after them being so abruptly stripped from you.   Aabria: Again, watching Aabria as Fuego in New York by Night is one of the things that got me into watching actual plays so it is quite hard to find just one thing I love about her playstyle. But to borrow from something Brennan said (I believe in a Fireside Chat w Matt, iirc) she is so generous as a player to other players AND the GM. When she is given the opportunity to resolve a high roll, her descriptions are so in depth and we know exactly what Thaisha is feeling and thinking as the “roll” is being resolved. There are no blanks for the GM to fill. I also think the dynamic she and Alex have formed with Thaisha and Occtis is so interesting to watch, especially considering the “surrogate mother and son” thing was NOT the original plan they had (see: an interview Alex did with Temple of Geek).   Whitney: So many people on this subreddit have said this already, but GOD Whitney’s humor in this campaign is great. She has an energy very similar to what I had when I first started learning + playing D&D where she tries things because they seem cool and fun, not exactly because they may be the most optimized solution to the problem. It’s so real and it’s so refreshing and god she’s such a delight to watch.   Robbie: Okay, I KNOW that Robbie technically joined the cast in Campaign 3 but Dorian was not a main stay character the way that Kattigan is. Feel free to exclude him from your answers based on technicality if you wish. But I’m going to include him because when I first met Kattigan, I thought he was going to be towards the bottom of my character ranking. I am not usually one for the ‘drunken Jack Sparrow with a secretly tragic backstory’ type but through slow revelations of Kattigan’s backstory and motivations, he’s grown to be so much more than that. And the fact that Kattigan’s dimensions were revealed more slowly than other characters makes me feel like we’re always going to want more answers from him in a way that’s exciting, not exhausting.   OKAY YOUR TURN HAVE FUN!!!       submitted by     /u/soldierseekerschemer     to     r/fansofcriticalrole       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/fansofcriticalrole/comments/1wfb9mx/what_are_your_favorite_things_about_the_freshman/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T15:49:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T15:50:07.119Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6c62f6508d45f3d2bf54f"
+    },
+    "message_id": "reddit_t3_1wfb9lu",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "MEDICOreTARDS",
+    "username": "Tejastar123",
+    "title": "How do I exit from MCC counselling right now?",
+    "text": "How do I exit from MCC counselling right now?\n\nI have gotten a seat in my state counselling in r2, but I haven't been upgraded in mcc round 2. I want to exit from mcc counselling and lock in my state college and take admission.   This is possible, right? How do I exit from counselling? Will a window be opened? Right now I have just two options in my mcc, freeze or float. I want to choose neither of them.   I am sorry if this is considered seat blocking. I truly had no choice, my parents wanted me to study in AIIMS but fortunately or unfortunately I didn't get one close enough to home. My states top gmc is much better than what AIIMS colleges I wouldve gotten anyways. Welp, that's all I have to ask. Thank you!       submitted by     /u/Tejastar123     to     r/MEDICOreTARDS       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MEDICOreTARDS/comments/1wfb9lu/how_do_i_exit_from_mcc_counselling_right_now/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T15:49:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T15:50:07.524Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6c62f6508d45f3d2bf550"
+    },
+    "message_id": "reddit_t3_1wfb9lo",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "AIcodingProfessionals",
+    "username": "Fantastic-Sleep-3352",
+    "title": "How are you running autonomous coding agents safely on real repos?",
+    "text": "How are you running autonomous coding agents safely on real repos?\n\nI've been testing coding agents that can take a task, modify a repository, run tests and open a PR with very little human intervention.   The code generation isn't really the part I'm worried about anymore.   I'm more interested in the control layer:   * How do you know which agent/session produced a commit? * How do you keep the agent scoped to a specific task/repository? * How do you prevent an agent from approving or merging its own work? * What happens when the PR changes after human review? * How do you distinguish agent-generated work from changes someone made directly in GitHub?   I've been building a system around this called SUTRA, and I'm currently looking for a few developers who actually use Claude Code/Codex/Cursor/other coding agents on real repositories to test it.   **I'm not looking for people to just look at a demo. I want people to connect a real non-critical repo, give their agent a real task, and tell me where the system breaks.**   If you're already doing this, comment with your setup or DM me. I'm opening a small private beta.       submitted by     /u/Fantastic-Sleep-3352     to     r/AIcodingProfessionals       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AIcodingProfessionals/comments/1wfb9lo/how_are_you_running_autonomous_coding_agents/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T15:49:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T15:50:07.726Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6c62f6508d45f3d2bf551"
+    },
+    "message_id": "reddit_t3_1wfb9lk",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "aigamedev",
+    "username": "AffectionateBag8448",
+    "title": "I built an iOS backgammon app with AI - why a simple, evergreen game could be a great place to start",
+    "text": "I built an iOS backgammon app with AI - why a simple, evergreen game could be a great place to start\n\nLike a lot of you, I tried building several games with AI and kept getting stuck. It couldn't hold my artistic vision, and it was inconsistent with character and world building. I'd sink hours into a creative idea and end up with something I knew wasn't sustainable or going to find an audience.   I don't think that's permanent. AI will get there, or my skills with the current models will. But for now I went back to the drawing board and looked for something that didn't need much artistic design to work and that people would still have a lot of fun playing.   I spend a lot of my free time on chess apps, and I grew up playing backgammon with my family. Every backgammon app I downloaded was outdated, buggy, or shoving coin purchases down my throat. Artistically, all I needed was a board that looked decent - which still took me longer than I expected. Everything else was reliable online and bot play.   That became  Backgammon Reserve :  https://apps.apple.com/us/app/backgammon-reserve/id6772647848    One month after release:     5.0 rating from 19 reviews   207 total users   61 active this week   17 active in the past 24 hours   1,099 bot games   344 live games   184 async games (24 hours per move)     Fewer users than I hoped for at this point. The bright side is that the people who found it stick around, and a smaller base has given me room to work out the kinks without doing it in front of a crowd. I think if I keep at it and ramp up marketing it could become one of the most popular backgammon apps on the store.    The point of this post:  if you're a beginner like me, a simple evergreen game is a good way to get your feet wet on something that actually ships. The rules already exist, there's no world to build, and you can put your effort into the parts AI is genuinely good at. There's a lot of outdated evergreen games where you can see from reviews that people are hoping for something more modern and better. There's amazing stuff being made in this community, but I think the reality is that most of the ambitious ideas by beginners will stall before they're playable.   Built this entirely with Claude Code and Supabase is the backend database that supports multiplayer and tracking of stats. It took me about 3 months to get it live on the app store. Happy to answer anything about the build if it's useful.       submitted by     /u/AffectionateBag8448     to     r/aigamedev       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/aigamedev/comments/1wfb9lk/i_built_an_ios_backgammon_app_with_ai_why_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T15:49:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T15:50:07.927Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6c6306508d45f3d2bf553"
+    },
+    "message_id": "reddit_t3_1wfb9l5",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "pcmasterrace",
+    "username": "Senseless_One696",
+    "title": "Am I The Only One Who Thinks Case Builds, The Choice of RGB Looks Disgusting?",
+    "text": "Am I The Only One Who Thinks Case Builds, The Choice of RGB Looks Disgusting?\n\nThe first three images is what I am arguing, especially the first one that to me is blinding & repellant. The rest are what I actually like in case design and think they look good.    As title says, I just think these fish tank cases, these too many RGB, waste, too expensive, mediocre performance, and just too overwhelming of the build. I think most are actually incredibly ugly.   I think taste is important and that actually less RGB looks better than TOO much.   I fell for the RGB craze back in 2020, and 'twas good, but now I'm grown up. And I do not like 90% of the current market. They either are too much, or just plain ugly lighting, plus the software to run them is a headache, as the software is the worst part.   Armory Crate should be removed from the world, and uninstalled on every computer.  Icue is not much better, not even my beloved Signal RGB, but desperate times call for desperate measures. I've had all Corsair builds, Lian Li and Be Quiet! Being my more go to brands, I recently quit on Corsair, indefinitely and will never be buying a product of theirs again.   I am not happy at all with design. Or the Flair of build.   I am moving to more compact, less fucking massive fishtank on my desk taking up space, and will be going gradually to micro atx.   What are your thoughts on such things? Do you share same view as me?   I like cases more like the EX 5 MAX, and the SUP01, I am currently going to rebuild and minimize, in a SUP01 case. And see how it goes from there.   Again I just do not like fish tank look at all. All cases are copying each other, company's mimicking, no one is standing out or doing something different. Rare I see cases like some in the included photos. Still waiting for the ONE.       submitted by     /u/Senseless_One696     to     r/pcmasterrace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pcmasterrace/comments/1wfb9l5/am_i_the_only_one_who_thinks_case_builds_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T15:49:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T15:50:08.329Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6c6306508d45f3d2bf554"
+    },
+    "message_id": "reddit_t3_1wfb9l2",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "sleeptrain",
+    "username": "Various-Librarian-11",
+    "title": "Confusion with ST 7.5 moths",
+    "text": "Confusion with ST 7.5 moths\n\nMy LO is 7.5 months and has been on the following schedule since 5 months:   5-6pm: Dinner  6:30-7pm: Bath Book Bottle  4:30am: feed/change  9:30am: Awake for the day  11am-12:30pm: Nap 1  3:30-5:30pm: Nap 2  5-6pm: Dinner  6:30-7pm: Bath Book Bottle   We haven’t formally “Sleep Trained” him but he is good at sleeping and napping in his crib. Up until 6 months he has fallen asleep to his bottle, but now we find he is screaming/crying after we put him down. I will usually go in and feed him until he settles and falls asleep. We recently came back from an international trip (first time in pack and play and on a plane) where he slept horribly then immediately got sick when he came home.    The last 3 weeks since we’ve been back he has been waking up every 3 hours- which is severely impacting my sleep and in turn my health. My husband works a job where he must be fully rested for his safety so he cannot get up with my LO at night. He helps on the weekends but i’m still struggling. We are ready to ST!    I also am starting to get involved in some activities that go from 9-12 and LO does not really contact nap…. so unsure of where to go from here. All help appreciated!!!        submitted by     /u/Various-Librarian-11     to     r/sleeptrain       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sleeptrain/comments/1wfb9l2/confusion_with_st_75_moths/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T15:49:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T15:50:08.530Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6c6696508d45f3d2bf555"
+    },
+    "message_id": "reddit_t3_1wfbapf",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "careerguidance",
+    "username": "Equal_Ant3887",
+    "title": "Take the job or pursue a passion project?",
+    "text": "Take the job or pursue a passion project?\n\nSo I finished my PhD roughly a year ago, and co-founded a company related to my research. Despite our best efforts, We never got any funding/income/investment, so I wasn't really paid for any of the work of trying to get this going, it was more of a passion project. In the meantime, I was unemployed and didn't really have much money coming in, I was getting by on unemployment benefits and my partner's modest income, while also looking for a more stable job, with no luck finding one for a while. Recently I have been reaching the end of ability to continue on like this financially, but I finally got a job offer, which was a big relief. I would be working on something I'm not necessarily excited about, but the pay and benefits are excellent (like triple what I've ever made in a single year), and the employer has a reputation as a great, stable place to work. So I took the job offer, scheduled to start a few weeks from now.    Then last week, we heard back from a federal grant we had applied to through the start-up a while back - we won! It would give us funding for a 9-month project in milestone-based installments, with a chance to apply for more if we meet our goals. The pay and benefits would be way worse than what I would get through the job, but of course I am an owner of the startup with lots of equity. Its also a chance to work on something I'm passionate about. But its only 9 months; if it doesn't work out, I could be unemployed again in less than a year. And it would probably take 2-3 months and a bit of negotiation to actually get the funds, its not like the money is already in our account. We are hopeful that this grant could open the door to other funding that could give us a little more runway.   Realistically, I can't do both the grant and the job; there's just no way it could work given some unique demands of this job that I don't want to get into. So I need to choose between taking a job that could offer near-permanent financial stability for me and my family (at least as close to that as I could hope for at the moment anyway), or taking a big leap to work on something I am excited about (and that could also be very financially rewarding if everything works out). In the short term, it feels a bit like betting ~$100,000 on myself, which is scary to think about. I'm also dreading the possibility of calling my soon-to-be employer to re-neg on the job. I know it shouldn't be a critical factor, but I hate the idea of going back on my word.    What do people think? The grant or the job?       submitted by     /u/Equal_Ant3887     to     r/careerguidance       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/careerguidance/comments/1wfbapf/take_the_job_or_pursue_a_passion_project/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T15:50:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T15:51:05.254Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6c6696508d45f3d2bf556"
+    },
+    "message_id": "reddit_t3_1wfbaow",
+    "topic_key": "how is sentiment around notion changing over the last 30 days",
+    "search_keyword": "Notion",
+    "platform": "reddit",
+    "subreddit": "HyundaiPalisade",
+    "username": "notIONIQ5N",
+    "title": "WE ARE BACK (AGAIN)! Anyone in the US still need Bluelink?",
+    "text": "WE ARE BACK (AGAIN)! Anyone in the US still need Bluelink?\n\nAnyone in the US still need Bluelink? Reply with your email or send it to me..   For anyone that messaged me before, please message me again with your email.   Message for mods:   I recently spoke with one of the moderators and went through the entire process of how I am able to do this with him. I have access to the Hyundai portal since I work for them. Hyundai employees are enabled to give out bluelink trials at their leisure. Please message me if there's anything in question.       submitted by     /u/notIONIQ5N     to     r/HyundaiPalisade       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HyundaiPalisade/comments/1wfbaow/we_are_back_again_anyone_in_the_us_still_need/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T15:50:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T15:51:05.457Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6c6696508d45f3d2bf558"
+    },
+    "message_id": "reddit_t3_1wfbaoh",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "IllustriousMove9818",
+    "title": "Level: 601~620 4⭐ Summer Matsuri #6479",
+    "text": "Level: 601~620 4⭐ Summer Matsuri #6479\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/IllustriousMove9818     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wfbaoh/level_601620_4_summer_matsuri_6479/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T15:50:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T15:51:05.859Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6c66a6508d45f3d2bf559"
+    },
+    "message_id": "reddit_t3_1wfbany",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SoulSpeakReadings",
+    "username": "Putrid_Lie_3028",
+    "title": "🍂SOUL SPEAK BINGO PULL-September”HELLO FALL”🍂",
+    "text": "🍂SOUL SPEAK BINGO PULL-September”HELLO FALL”🍂\n\nHi, beautiful souls. It is Lucy, here is the daily bingo pull.   🍂September 13TH Bingo Pull: Got a reading done by Soul Speak.    ✨Click this link for a new bingo card and how to play:  https://www.reddit.com/r/SoulSpeakReadings/s/EGE5yF52Hp        submitted by     /u/Putrid_Lie_3028     to     r/SoulSpeakReadings       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SoulSpeakReadings/comments/1wfbany/soul_speak_bingo_pullseptemberhello_fall/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T15:50:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T15:51:06.061Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6c66a6508d45f3d2bf55a"
+    },
+    "message_id": "reddit_t3_1wfband",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "Kerala",
+    "username": "Sure_Damage_2698",
+    "title": "26F visiting Kerala solo for 4 days ♥️looking for a slow, peaceful itinerary 🌴🌊",
+    "text": "26F visiting Kerala solo for 4 days ♥️looking for a slow, peaceful itinerary 🌴🌊\n\nHey everyone! I’m planning a solo trip to Kerala soon and I’ll be landing in Kochi. I’ve technically visited Kerala before, but that was when I was around 14, so I feel like this is basically my first proper trip there 😂  I’m going solo and I’m not really looking to rush around trying to tick off every tourist spot. I kind of just want to slow down for a few days, chill, eat good food, sit by the water and generally reset a little.  I  LOVE water  so I’d especially love recommendations for beautiful beaches, rivers, backwaters, lakes, little swimming spots etc. Places where I can just sit around or safely get into the water would be amazing. Since I’ll be travelling alone, I’d also really appreciate places that are generally comfortable/safe for a solo woman.  I’ll have around  4 days , starting from Kochi, so I’d love suggestions for a realistic itinerary rather than trying to cover half of Kerala in four days 😭  Also looking for:  • cute/peaceful beaches  • pretty river or backwater spots  • places where I can just sit by the water for hours  • cute cafés and little local food spots  • pretty towns/villages worth spending a day in  • any must-try Kerala experiences  • places I should absolutely skip because they’re overrated/touristy  • and any solo female travel tips you think I should know  Basically, I’m looking for  slow Kerala, pretty Kerala, water + food + peace  rather than a packed sightseeing trip.  Would love to hear your recommendations! 🫶       submitted by     /u/Sure_Damage_2698     to     r/Kerala       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Kerala/comments/1wfband/26f_visiting_kerala_solo_for_4_days_looking_for_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T15:50:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T15:51:06.266Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6c66a6508d45f3d2bf55b"
+    },
+    "message_id": "reddit_t3_1wfban1",
+    "topic_key": "make a comparsion table of nike adidas both conversation on reddit tell me in numbers",
+    "search_keyword": "Adidas",
+    "platform": "reddit",
+    "subreddit": "Yupoo",
+    "username": "ediblescholarship",
+    "title": "New stuff just dropped, and there are some total bargains!",
+    "text": "New stuff just dropped, and there are some total bargains!\n\nAdidas EVO: https://weidian.com/item.html?itemID=7578524044    Adidas Samba: https://weidian.com/item.html?itemID=7435970552    AJ3: https://weidian.com/item.html?itemID=7432771521    Spiridon Caged 2: https://weidian.com/item.html?itemID=7778348464    Shox TL13: https://weidian.com/item.html?itemID=7722108783    YEEZY 500: https://weidian.com/item.html?itemID=7432751549    NB 1906R: https://weidian.com/item.html?itemID=7434623594    Air Max 95: https://weidian.com/item.html?itemID=7461115400    BV: https://weidian.com/item.html?itemID=7467313667    VaporMax 2023: https://weidian.com/item.html?itemID=7432846335    CPF x AF1: https://weidian.com/item.html?itemID=7434717954    Timberland Boots: https://weidian.com/item.html?itemID=7434698704    Dunk Off-White: https://weidian.com/item.html?itemID=7434671082    OW: https://weidian.com/item.html?itemID=7475761424    AJ10: https://weidian.com/item.html?itemID=7637965104        submitted by     /u/ediblescholarship     to     r/Yupoo       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Yupoo/comments/1wfban1/new_stuff_just_dropped_and_there_are_some_total/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T15:50:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T15:51:06.467Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6c66a6508d45f3d2bf55c"
+    },
+    "message_id": "reddit_t3_1wfbamv",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "canadamusic",
+    "username": "maquetemusicale",
+    "title": "Boutique Feelings au Festival Triptyque!",
+    "text": "Boutique Feelings au Festival Triptyque!\n\nsubmitted by     /u/maquetemusicale     to     r/canadamusic       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/canadamusic/comments/1wfbamv/boutique_feelings_au_festival_triptyque/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T15:50:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T15:51:06.669Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6c66a6508d45f3d2bf55d"
+    },
+    "message_id": "reddit_t3_1wfbamd",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "pcmasterrace",
+    "username": "Suspicious-Map-639",
+    "title": "Too many people underestimate the R5 5500",
+    "text": "Too many people underestimate the R5 5500\n\nIn my opinion, quite a solid CPU budget, especially if you play story games.        submitted by     /u/Suspicious-Map-639     to     r/pcmasterrace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pcmasterrace/comments/1wfbamd/too_many_people_underestimate_the_r5_5500/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T15:50:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T15:51:06.871Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6c66b6508d45f3d2bf55e"
+    },
+    "message_id": "reddit_t3_1wfbalm",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PokemonGoVivillon",
+    "username": "wetmoose_",
+    "title": "So close!",
+    "text": "So close!\n\nHiya! I'm looking for Icy Snow, Tundra, Archipelago and Sun folks!    So many kind people from all over added me and have been helping me get these vivillions! At first I just wanted the ones I loved most and now that I'm so close, I'm itching to get these remaining ones!    I have like 103 friends on here now because of reddit and I gift every day but obviously can't get to everyone every day, I will prioritize gifting you if you're helping me acquire these specific vivillions though!   I'm in the modern region which I know isn't the cooliest but if you need that I gotcha! Haha       submitted by     /u/wetmoose_     to     r/PokemonGoVivillon       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PokemonGoVivillon/comments/1wfbalm/so_close/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T15:50:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T15:51:07.073Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6c66b6508d45f3d2bf55f"
+    },
+    "message_id": "reddit_t3_1wfbali",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "FortnitePlayersz",
+    "username": "Remarkable_Use_1668",
+    "title": "Best and safest marketplace to buy a stacked Fortnite account without getting pulled back?",
+    "text": "Best and safest marketplace to buy a stacked Fortnite account without getting pulled back?\n\nsubmitted by     /u/Remarkable_Use_1668     to     r/FortnitePlayersz       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FortnitePlayersz/comments/1wfbali/best_and_safest_marketplace_to_buy_a_stacked/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T15:50:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T15:51:07.274Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6c66b6508d45f3d2bf560"
+    },
+    "message_id": "reddit_t3_1wfbalh",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "lumo",
+    "username": "ADMECA",
+    "title": "Lumo systematically disconnects whenever the Android app is no longer in the foreground.",
+    "text": "Lumo systematically disconnects whenever the Android app is no longer in the foreground.\n\nIs there any plan for Lumo to be able to run in the background on Android ?   At the moment, if you ask it to do something that takes a little time, such as summarizing several pages of documents or working through a more complex line of reasoning, you have to keep tapping the phone regularly to prevent the screen from turning off. You also can’t really do anything else on the phone while Lumo is processing the request.   Mistral Vibe, ChatGPT, and basically every other chatbot app I’ve used do not have this problem.   I first tested Lumo back in July, and this issue was already a deal-breaker for me at the time. It doesn’t seem like something that should be particularly difficult to fix, unless this is a deliberate choice by Proton to discourage long interactions with Lumo in order to reduce server load ?   It’s really a shame, because without this issue I would seriously consider switching to Lumo for the chatbot side of things. But having to keep the phone awake and prevent the screen from turning off just so a response can finish is simply unbearable.       submitted by     /u/ADMECA     to     r/lumo       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/lumo/comments/1wfbalh/lumo_systematically_disconnects_whenever_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T15:50:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T15:51:07.475Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6c66c6508d45f3d2bf563"
+    },
+    "message_id": "reddit_t3_1wfbal9",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "JackSucksAtLife",
+    "username": "28Izzy_f1d",
+    "title": "Guitar tips?",
+    "text": "Guitar tips?\n\nHey Kai! Since your hosting this week's Reddit video I thought it would be a great opportunity to ask for some guitar tips. I've been playing for just over a year now and I'm taking 1-1 lessons but I was just wondering if you had any advice you'd deem important?        submitted by     /u/28Izzy_f1d     to     r/JackSucksAtLife       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/JackSucksAtLife/comments/1wfbal9/guitar_tips/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T15:50:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T15:51:08.101Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6c66c6508d45f3d2bf564"
+    },
+    "message_id": "reddit_t3_1wfbal7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "CoinStats",
+    "username": "Puzzleheaded-Pen3823",
+    "title": "Bitcoin Cash distribution history",
+    "text": "Bitcoin Cash distribution history\n\nhttps://www.reddit.com/r/Coinbase/s/pfAyHfcbXW        submitted by     /u/Puzzleheaded-Pen3823     to     r/CoinStats       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CoinStats/comments/1wfbal7/bitcoin_cash_distribution_history/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-13T15:50:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-13T15:51:08.302Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa6c66c6508d45f3d2bf565"
+    },
+    "message_id": "reddit_t3_1wfbakg",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",

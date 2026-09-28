@@ -1,0 +1,416 @@
+      "$date": "2026-09-19T01:25:19.352Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aade47f660c60840397c9f3"
+    },
+    "message_id": "reddit_t3_1wk8iwa",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ambient",
+    "username": "irigima",
+    "title": "From the Irigima community on Reddit: Irigima . 1",
+    "text": "From the Irigima community on Reddit: Irigima . 1\n\nWIP.    Let me know what you think.  Lots more to follow...       submitted by     /u/irigima     to     r/ambient       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ambient/comments/1wk8iwa/from_the_irigima_community_on_reddit_irigima_1/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T01:24:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T01:25:19.559Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aade47f660c60840397c9f4"
+    },
+    "message_id": "reddit_t3_1wk8ivy",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "richardcannonsnark",
+    "username": "No_Buy321",
+    "title": "out walking questioning his life 🤣",
+    "text": "out walking questioning his life 🤣\n\nsubmitted by     /u/No_Buy321     to     r/richardcannonsnark       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/richardcannonsnark/comments/1wk8ivy/out_walking_questioning_his_life/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T01:24:48Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T01:25:19.760Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aade4b1aeeb96c1c63b9a02"
+    },
+    "message_id": "reddit_t3_1wk8jpy",
+    "topic_key": "tutor",
+    "search_keyword": "tutor",
+    "platform": "reddit",
+    "subreddit": "aivideomaking",
+    "username": "MassiveFile809",
+    "title": "H3 prompt-rewriter LoRA: where it fits, and how I’d test it without changing the brief",
+    "text": "H3 prompt-rewriter LoRA: where it fits, and how I’d test it without changing the brief\n\nI came across LightX2V’s MiniMax-H3-Prompt-Rewriter-LoRA through a Chinese tutorial. From an engineering perspective, the interesting question for me is whether a rewrite makes a shot more controllable. I haven’t benchmarked it yet; this is a setup overview and the comparison I’d run.   Where it fits   This is a community language-model adapter for Qwen3.6-27B, not a visual LoRA you load into H3. It rewrites a brief before a separate H3 generation step. The current release supports text-only text-to-video-with-audio rewriting; it doesn’t read image, video, or audio references. It is also not an official release of MiniMax’s H3-Context-IR.   The practical sequence is: install the repository’s requirements, load the base language model plus adapter, rewrite your brief, review the result, then pass the prompt to H3 through a supported generation workflow such as LightX2V. The 27B base model is a separate requirement—don’t budget for just the adapter file.   A small starting example   After setting up the repository, an example invocation is:   python  infer.py  --prompt \"Locked medium shot of a ceramic artist placing a blue cup on a wooden table. One ceramic tap, quiet room tone, no dialogue or music.\" --duration 10 --resolution 16:9 --greedy   The output separates the audiovisual description, soundscape, and music. Review invented details before generating.   How I’d evaluate it   For that cup shot, I’d write down acceptance criteria before reading the rewrite: one cup, one placement, fixed camera, a single contact sound, and no extra action. That gives me something concrete to reject if the rewrite becomes more cinematic but less faithful.   Then I’d compare the original brief with the rewritten version across several paired generations. I’d keep generator settings and references fixed, reuse generator seeds where supported, and record:   • Does the cup stay consistent before and after contact?   • Does the camera actually remain locked?   • Does the tap coincide with contact?   • Did the rewrite add an unwanted cut, prop, or action?   • How many attempts produced a usable shot?   For cost, I’d include the rewriting step and rejected generations in the total, then divide by usable shots. A longer prompt alone wouldn’t count as an improvement for me.   Has anyone compared this adapter against a plain-language brief on the same shot? I’d be interested in failure cases as much as polished examples.   Model card and setup:  https://huggingface.co/lightx2v/MiniMax-H3-Prompt-Rewriter-LoRA    Article that led me to it (动画大丸家, Chinese):  https://mp.weixin.qq.com/s/oN2rj8vzrediAPW62rRmdA        submitted by     /u/MassiveFile809     to     r/aivideomaking       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/aivideomaking/comments/1wk8jpy/h3_promptrewriter_lora_where_it_fits_and_how_id/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T01:25:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T01:26:09.319Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aade4b1aeeb96c1c63b9a03"
+    },
+    "message_id": "reddit_t3_1wk8jls",
+    "topic_key": "shopify",
+    "search_keyword": "Shopify",
+    "platform": "reddit",
+    "subreddit": "Christianity",
+    "username": "Apxllx159",
+    "title": "Check out my Christian Clothing brand! Just had my first drop today would love to hear opinions",
+    "text": "Check out my Christian Clothing brand! Just had my first drop today would love to hear opinions\n\nWe don’t use AI at all as well, so everything is first sketched and then drawn digitally. Would really appreciate to hear some feedback. God bless everyone :)    savednotsoftt.myshopify.com        submitted by     /u/Apxllx159     to     r/Christianity       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Christianity/comments/1wk8jls/check_out_my_christian_clothing_brand_just_had_my/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T01:25:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T01:26:09.904Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aade4b2aeeb96c1c63b9a04"
+    },
+    "message_id": "reddit_t3_1wk8jjh",
+    "topic_key": "barber",
+    "search_keyword": "barber",
+    "platform": "reddit",
+    "subreddit": "mensgrooming",
+    "username": "Mysterious_Gap_7461",
+    "title": "BarberConnect",
+    "text": "BarberConnect\n\nsubmitted by     /u/Mysterious_Gap_7461     to     r/mensgrooming       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mensgrooming/comments/1wk8jjh/barberconnect/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T01:25:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T01:26:10.217Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aade4b9660c60840397c9f5"
+    },
+    "message_id": "reddit_t3_1wk8jtw",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "cartoons",
+    "username": "Flodo_McFloodiloo",
+    "title": "Rare examples of characters added to well-established group of characters later in the series, whom the audience mostly LIKES.",
+    "text": "Rare examples of characters added to well-established group of characters later in the series, whom the audience mostly LIKES.\n\nPictured is Nagisa Momoe, a character from the Puella Magi Madoka Magica series who's been getting a large surge of appreciation following a memorable story added to  r/magiaexedra .   You know the drill, likely, when it comes to characters like Scrappy Doo, Dulcie the Dragon, or various sidekicks added to the Ninja Turtles in various incarnations. When a cartoon rests largely on the back of a group of characters who \"complete\" each other by being good foils for each other's personalities and (often) compensating for each other's weaknesses, adding a new member to the team often ruptures that dynamic, especially as writers often see a need to make that new character feel important, even at the expense of some old characters. The aforementioned Scrappy Doo is the most well-known but the risk is so common that The Simpsons did a parody of it.   However, what about when series buck the trends and add characters that the fandom not only accepts, but actively  appreciates  being there? Nagisa makes me think there have to be more examples, but for most cartoons, the best broad opinions get of new group members is ambivalent. Still, please give me more exceptions if you have any.    Keep in mind, while we're dealing with opinions, to qualify for this, it has to be what you perceive as the common opinions of these characters and not just yours. Even characters you personally dislike can theoretically qualify if much of the fandom disagrees.       submitted by     /u/Flodo_McFloodiloo     to     r/cartoons       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cartoons/comments/1wk8jtw/rare_examples_of_characters_added_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T01:26:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T01:26:17.022Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aade4b9660c60840397c9f6"
+    },
+    "message_id": "reddit_t3_1wk8jtk",
+    "topic_key": "give me today top three conversation about e commerce",
+    "search_keyword": "ecommerce",
+    "platform": "reddit",
+    "subreddit": "empreendedorismo",
+    "username": "Classic-Archer9450",
+    "title": "Ecommerce Nacional no Brasil 2026",
+    "text": "Ecommerce Nacional no Brasil 2026\n\nGalera, to abrindo uma loja virtual e gostaria de dicas sobre o assunto       submitted by     /u/Classic-Archer9450     to     r/empreendedorismo       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/empreendedorismo/comments/1wk8jtk/ecommerce_nacional_no_brasil_2026/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T01:26:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T01:26:17.226Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aade4b9660c60840397c9f7"
+    },
+    "message_id": "reddit_t3_1wk8jt0",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Lost_Films",
+    "username": "KonaCrushsLeftBall",
+    "title": "Run! Run! It's Him! 2014 [fully lost]",
+    "text": "Run! Run! It's Him! 2014 [fully lost]\n\nRun! Run! It's Him! (2014) was an excellent documentary about one man's attempt to come to grips with his addiction (you-know-what)ography, and how it's affected his relationships with women. Canadian based movie. Matthew Pollack is the film maker.   Its essentially fully lost. There is no DVDs of it available to buy on amazon or even ebay. No streaming service has it. I even got in contact with the film maker and he has no copy. So its basically up to us to find a copy of it somewhere. Anyone have a copy of it lying around that they could upload? Seems to be fully gone now.       submitted by     /u/KonaCrushsLeftBall     to     r/Lost_Films       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Lost_Films/comments/1wk8jt0/run_run_its_him_2014_fully_lost/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T01:26:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T01:26:17.430Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aade4b9660c60840397c9f8"
+    },
+    "message_id": "reddit_t3_1wk8js2",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "NintendoSwitchOnline",
+    "username": "Repulsive_Midnight49",
+    "title": "NSO + Expansion Pack (EU/Eurozone) [W] €10 Revolut (6 Slots Available)",
+    "text": "NSO + Expansion Pack (EU/Eurozone) [W] €10 Revolut (6 Slots Available)\n\nHey everyone,    My friend and I are setting up a brand new *Nintendo Switch Online + Expansion Pack* 12-month Family Plan.    Price: €10 per slot.   Payment Method: Revolut only.   Duration: Full 12 months (Will run until September 2027).   * Euro Only   ### 👥 How it works (First-Come, First-Served):      **Comment below** or **DM me** if you want a spot.      Send your **Revolut payment** along with the **Email Address** linked to your Nintendo Account.     Once we hit 5 paid members to cover the baseline, I will buy the plan immediately and send out all Nintendo family invites at once.       *Note: Strict \"No Hacking/Cheating\" rule to keep everyone's accounts safe. Looking forward to gaming with you all!*    Will update as I get more people *       submitted by     /u/Repulsive_Midnight49     to     r/NintendoSwitchOnline       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NintendoSwitchOnline/comments/1wk8js2/nso_expansion_pack_eueurozone_w_10_revolut_6/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T01:26:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T01:26:17.637Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aade4b9660c60840397c9f9"
+    },
+    "message_id": "reddit_t3_1wk8js0",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Stukwan",
+    "title": "What’s an unwritten rule between neighbors that keeps the whole street peaceful?",
+    "text": "What’s an unwritten rule between neighbors that keeps the whole street peaceful?\n\nsubmitted by     /u/Stukwan     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wk8js0/whats_an_unwritten_rule_between_neighbors_that/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T01:26:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T01:26:17.839Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aade4ba660c60840397c9fa"
+    },
+    "message_id": "reddit_t3_1wk8jrh",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "relationships_advice",
+    "username": "Federal-Local-6541",
+    "title": "Is my boyfriend [28M]right in getting angry with me [26F] and calling me a liar because I haven't cut contact with my male colleague?",
+    "text": "Is my boyfriend [28M]right in getting angry with me [26F] and calling me a liar because I haven't cut contact with my male colleague?\n\nI (26F) work in a school as an admin staff and I have a group of friends. I do not go out often and nothing much really happens during my day, therefore, I tend to talk about what my colleagues said. I have this colleague who is married with kids and we are all in the same clique. That colleague has travelled a lot and done many things that I found fascinating or interesting and I’ve shared alot about it to my bf (28m). He has invited my friends and I over to his house to meet his family. I think me talking a lot about this person has made my boyfriend feel i have something for him when i do not. We do not go out together 1-1 after working hours and do not text after working hours also. The only time we talk to each other is during work mostly. My bf have never caught me red handed with anything from this colleague of mine. I myself don’t like being alone with this colleague as when it’s just both of us I do not know what to talk to him and it’s always awkward. We are good in a clique and when there’s people around us. I’ve told this to my boyfriend that we are not very close, I mean that’s how i feel like me and my colleague are just very superficial friends. We talk about basic things and I am close with the other colleagues in the clique. When ever we go out in a group, group of 5 or group of 12, my boyfriend will always ask why is he sitting beside me or opposite me when we are eating. But i’ve never choose where to sit down and eat. We always jsut end up like that which is not planned and since it’s a small group sometimes, how far can this person be? He always will make issue with me that this person is there and I am making him feel insecure when i have never done or felt anything for this person. He just said if I tell him I don’t like a specific person that is his friend he would cut them off for me but I feel it’s unfair to do so cause it’s there’s no reason to cut off someone who is just a friend. Is control like this really love? So I stopped talking about any of my male colleagues cause I do not want the same issue.    Recently all my other colleagues were not free so i had to eat lunch with this colleague alone. Even during lunch this colleague was telling me when to bring my bf in malaysia and was talking about his wife and kids. Me and this colleague also had to stay back during work and ended up late and we stay near the same area so we went home together which was about a 30 mins journey. My bf looked through my phone and found out i had hide this from him. But in actual fact I would tell him all this last time it’s just now he hates my colleague for no reason and the reason is cause i talk about him alot because i do not have much to talk about daily so i compensate that with what my friends tell me about their life. He said i was a liar, how am i not ashamed of lying. I’m worse than his ex gf who he caught cheating with another man in the house. He said he only trusted me and i broke his trust. It’s very saddening cause my bf is a very nice person but i don’t know why he feels like just cause he does not like someone in my life i need to cut away that person, i’ve removed so many others like that just cause he doesn’t like them but how many more do i need to do so.        submitted by     /u/Federal-Local-6541     to     r/relationships_advice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/relationships_advice/comments/1wk8jrh/is_my_boyfriend_28mright_in_getting_angry_with_me/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T01:26:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T01:26:18.045Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aade4ba660c60840397c9fb"
+    },
+    "message_id": "reddit_t3_1wk8jqw",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PreguntasReddit",
+    "username": "Nanihot8",
+    "title": "Qué secreto de la empresa donde trabajas destruiría su reputación si saliera a la luz?",
+    "text": "Qué secreto de la empresa donde trabajas destruiría su reputación si saliera a la luz?\n\nsubmitted by     /u/Nanihot8     to     r/PreguntasReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PreguntasReddit/comments/1wk8jqw/qué_secreto_de_la_empresa_donde_trabajas/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T01:25:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T01:26:18.252Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aade4ba660c60840397c9fc"
+    },
+    "message_id": "reddit_t3_1wk8jqv",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "funComunitty",
+    "username": "RealizeSirius",
+    "title": "Do you like girls?",
+    "text": "Do you like girls?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/RealizeSirius     to     r/funComunitty       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/funComunitty/comments/1wk8jqv/do_you_like_girls/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T01:25:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T01:26:18.453Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aade4ba660c60840397c9fd"
+    },
+    "message_id": "reddit_t3_1wk8jpi",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "xbiking",
+    "username": "Mtn-Wiz-CW",
+    "title": "Just sold this beautiful 1989 Rockhopper Comp",
+    "text": "Just sold this beautiful 1989 Rockhopper Comp\n\nSorry for the repost, Reddit be acting crazy!       submitted by     /u/Mtn-Wiz-CW     to     r/xbiking       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/xbiking/comments/1wk8jpi/just_sold_this_beautiful_1989_rockhopper_comp/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T01:25:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T01:26:18.661Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aade4ba660c60840397c9fe"
+    },
+    "message_id": "reddit_t3_1wk8jp0",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "SideProject",
+    "username": "StrangeLight434",
+    "title": "Would love your opinion on app",
+    "text": "Would love your opinion on app\n\nhttps://apps.apple.com/gb/app/dab-hand-trade-job-manager/id6794888151    Made for small business and sole workers to help manage their jobs, customers, quotes/estimates and invoicing.   So naturally I thought wow it’s perfect for us, works great and everything after multiple rounds of tweaks and adding features but we still aren’t seeing the installs we expected.   I’d really appreciate it if somebody could give some feedback good or bad I’ll take it!       submitted by     /u/StrangeLight434     to     r/SideProject       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SideProject/comments/1wk8jp0/would_love_your_opinion_on_app/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T01:25:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T01:26:18.864Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aade4bb660c60840397ca00"
+    },
+    "message_id": "reddit_t3_1wk8joz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "WoWs_Legends",
+    "username": "Infinite-Maximum4943",
+    "title": "New player, want a good premium to grind with",
+    "text": "New player, want a good premium to grind with\n\nIs there anything currently in the playstation store or the in game store worth buying?? I've just played WoW and like it, i was lead because WoT has the Togboat event.   I wanted start with a good premium to earn some coin with. Don't won't be very good with it but eventually that will change. I'd probably guess that battleships is my go to.       submitted by     /u/Infinite-Maximum4943     to     r/WoWs_Legends       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WoWs_Legends/comments/1wk8joz/new_player_want_a_good_premium_to_grind_with/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T01:25:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T01:26:19.264Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aade4bb660c60840397ca01"
+    },
+    "message_id": "reddit_t3_1wk8joo",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "NLL",
+    "username": "AcanthisittaIll6036",
+    "title": "Broadcasf",
+    "text": "Broadcasf\n\nFlow sports is all but guaranteed. This in my opinion deletes the entire US fan base outside of in person ticket sales.   Anyone out there willing to buy a subscription to Flow if the NLL goes there? I’m personally not. Kind of tired of the paywall era.       submitted by     /u/AcanthisittaIll6036     to     r/NLL       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NLL/comments/1wk8joo/broadcasf/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T01:25:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T01:26:19.466Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aade4bb660c60840397ca03"
+    },
+    "message_id": "reddit_t3_1wk8jo0",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "Claude_reports",
+    "username": "ClaudeAI-mod-bot",
+    "title": "[r/ClaudeAI] Claude Misdirection",
+    "text": "[r/ClaudeAI] Claude Misdirection\n\nOriginal poster:  u/LegitimateWeekend883   Original publication time: 2026-09-19 01:24:29 UTC  Original title: Claude Misdirection  Original flair: Bug  Original URL/media URL:  https://i.redd.it/zzo9q7zopdqh1.png       Original post body:    Yall ever see this happen often with opus? I could not recreate the error   Original image(s): Original image 1:    Original image 1    Original image 2:    Original image 2        submitted by     /u/ClaudeAI-mod-bot     to     r/Claude_reports       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Claude_reports/comments/1wk8jo0/rclaudeai_claude_misdirection/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T01:25:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T01:26:19.878Z"
+    },
+    "reddit_comments": 0
+  },
+  {

@@ -1,0 +1,416 @@
+    },
+    "message_id": "reddit_t3_1wm9h07",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "php",
+    "platform": "reddit",
+    "subreddit": "VPS",
+    "username": "CzarnyLisArtist",
+    "title": "Chunkserve VPS inaccessible again, noVNC broken and support not responding",
+    "text": "Chunkserve VPS inaccessible again, noVNC broken and support not responding\n\nI want to share my experience with Chunkserve. Over the course of two weeks, I had two serious problems. Both were related to accessing the same VPS.   The first incident happened on September 5.   At 16:44, I opened a ticket (VPL-813609) because I could not connect to the VPS via SSH. noVNC was also unavailable.   I checked the connection using:    ssh -vvv root@78.31.250.115     The SSH session failed before normal authentication could even begin.   Two hours later, I still had not received a response from them, and at 18:29 I told them that there was no important data on the VPS and that they could completely reinstall the server if necessary.   At 18:54, I sent them additional SSH diagnostics. The verbose SSH log showed that the connection to port 22 was established successfully:    debug1: Connecting to 78.31.250.115 [78.31.250.115] port 22. debug1: Connection established. debug1: Local version string SSH-2.0-OpenSSH_for_Windows_9.5     but the connection was then closed by the server:    Connection closed by 78.31.250.115 port 22     So the TCP connection itself was being established, and my SSH client was sending its version string, but the session was being terminated before normal SSH authentication.   Then, at 20:19, they replied that everything should be fixed within 5 minutes.   At 20:32, I told them that the problem was still there and sent another SSH log.   At 21:24, I wrote again because about an hour had already passed and I still had no access.   At 21:29, I also confirmed that noVNC was still unavailable.   The next day, September 6 at 12:35, I contacted them again. The server was still unavailable. I asked about compensation or a refund for the period when the VPS was inaccessible. I also wrote that I was willing to consider another solution as long as I would not have to pay anything extra.   That message was left unanswered.   On September 7, I was finally able to connect to the VPS. It took me two days.   Support did not even tell me that the problem had already been fixed. The “5 minutes” they had mentioned were already a day ago, and I had already added more messages to the ticket after that.   By the way, there is still no reply to that ticket. In their system, it is still displayed with the status  Customer-Reply .   I prefer tickets to actually receive a response, so that I can either close them or reply. If a ticket is still marked as  Customer-Reply , then even if everything is working for me, I am not going to close it or do anything else with it. That is simply my rule, and I have no idea how people view this in different countries.   I continued using the service, treating it as a one-time problem. Overall, everything was working, and I managed to install my Python scripts and applications for synchronizing Obsidian between my devices.   But things were not that simple.   On September 19, I had another very similar access problem.   At 12:55, I opened a new ticket (PMN-137820). The details are in the screenshot. I do not want to describe this one in as much detail as the first one. I do not even know why I described the first one in so much detail.   I will only describe the most important parts.   This time, SSH was failing with:    kex_exchange_identification: read: Connection reset Connection reset by 78.31.250.115 port 22     I ran several checks on the VPS and on their Virtualizor management server:    ping 78.31.250.115 tracert 78.31.250.115 Test-NetConnection 78.31.250.115 -Port 22 -InformationLevel Detailed ssh -vvv czarnylis ssh-keyscan -T 10 78.31.250.115 Resolve-DnsName virt1-ams.chunkserve.com Test-NetConnection virt1-ams.chunkserve.com -Port 4083 curl.exe -vk --connect-timeout 10 --max-time 20 https://virt1-ams.chunkserve.com:4083/     Previously, I at least had the VNC console. This time I cannot even get to it, because on the product page on their website it is displayed as a gray rectangle.   I also tried rebooting the VPS through the Chunkserve panel. The panel returned a  502 Bad Gateway / Host Error . There is a screenshot of that as well.   Today, right now, while I am writing this, when I try to reboot the VPS I get the following message:    Action Failed The csrf tokens do not match!!     And sometimes I get:    Action Failed Failed to reboot the VPS     I had a Python script running on this VPS that sent me a server status report every night at 00:01. Among other things, it checked available Ubuntu updates and free disk space.   The reports arrived normally on September 16, 17, 18, and 19.   The last report arrived on September 19 at 00:01. It showed 3.47 GiB of free space out of 9.76 GiB, and the script completed normally.   No more reports arrived after that.   I also had, as I mentioned above, an application installed on the server for synchronizing Obsidian: Nextcloud. It had been working well, but on September 19 it started showing the following error:    Error. Configuration was not read or initialized correctly, not overwriting. /var/snap/nextcloud/54176/nextcloud/config/config.php     So basically, I cannot access the VPS or noVNC. The reboot function returns errors, and my script has stopped sending its reports.   Nobody is answering me, and at this point I honestly have no idea what I am supposed to do.   Sometimes I just want to sit there, wrap my arms around my legs, and cry a little, because, well, it is frustrating.   Why did I pay for a service when the service does not work?   Nobody answers me, nobody solves my problem, and I have no idea what I am supposed to do.   All that is left is to write about it on Reddit, while understanding that nobody is going to answer me there either and that the company still will not fix its own problem, which has now become my problem too.   If the company is having some kind of problem with its servers, they could at least tell me, so that I am not left completely in the dark.   My English is not very good, so I translated this using DeepL. I hope it translated everything well.       submitted by     /u/CzarnyLisArtist     to     r/VPS       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/VPS/comments/1wm9h07/chunkserve_vps_inaccessible_again_novnc_broken/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T10:55:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T10:55:33.496Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab10d59aeeb96c1c63bacbe"
+    },
+    "message_id": "reddit_t3_1wm9hqo",
+    "topic_key": "shopify",
+    "search_keyword": "Shopify",
+    "platform": "reddit",
+    "subreddit": "cofounderhunt",
+    "username": "vboasjoyads",
+    "title": "Looking for an e-commerce partner with capital to invest",
+    "text": "Looking for an e-commerce partner with capital to invest\n\nI’m looking for a business partner to build an e-commerce brand from the ground up.   A bit about me: I previously owned an e-commerce business that reached around  $200k/year in revenue . I eventually left the business to pursue my own ideas, and today I run a  marketing agency , mainly focused on marketing, sales, content and growth.   Now I want to build another e-commerce business, but this time with the right partner.    What I bring:   Proven e-commerce experience  Marketing & sales  Shopify  Product research and positioning  Logistics knowledge  Experience with both dropshipping and physical inventory  Understanding of sourcing/manufacturing in China  Ability to build and manage the brand's growth    What I’m looking for:   Someone who has  capital to invest  and is willing to be hands-on with the business.  Ideally, you would help with things like:  Customer support  Store management  Operations  Day-to-day tasks  Managing suppliers/orders when needed   I can take the lead on  marketing, sales and growth , while we build and operate the business together.   The initial model could be  dropshipping from China with personal brand,  allowing us to validate products and demand before moving into  private label, our own inventory and        submitted by     /u/vboasjoyads     to     r/cofounderhunt       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cofounderhunt/comments/1wm9hqo/looking_for_an_ecommerce_partner_with_capital_to/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T10:56:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T10:56:25.387Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab10d59aeeb96c1c63bacbf"
+    },
+    "message_id": "reddit_t3_1wm9hqd",
+    "topic_key": "dermatologist",
+    "search_keyword": "dermatologist",
+    "platform": "reddit",
+    "subreddit": "alopecia_areata",
+    "username": "SpinDoctorLarry",
+    "title": "Anyone Suffering From Additional Autoimmune Conditions?",
+    "text": "Anyone Suffering From Additional Autoimmune Conditions?\n\nGood Morning   I was diagnosed with Rheumatoid Arthritis preteen, 45 years ago it was called JRA. Around age 18 I was diagnosed with Gout. As life went on I transitioned into an adult form of Rheumatoid. Between then and age 49 I have also been diagnosed with Lichen Planus, Oral Lichen Planus, Type 2 Diabetes and Ostho. My immune system is a wreck and I've had shingles 4x in my life so far.   My last shingle attack was the month of December 2024 and affected the upper right section of my face and into the top of my scalp. After a few weeks the shingles subsided but I was left with horrible Postherpetic Itch (PHI). It occurred along my upper forehead and about my right eyebrow into my top scalp. It was insane and I started losing hair which I assumed was related to the endless itching. After trying many OTC creams my family Doctor placed me on Lyrica and forwarded me to a Dermatologist. It took a few months to get in to see one but when I did and he reviewed my case history he informed me that my immune system was attacking my scalp and it was not related to the shingle out break after all. He told me I had a very rare combination of Alopecia Areata (AA) and Lichen Planopilaris (LPP). He started injecting my scalp every six weeks but couldn't guarantee the sections with scaling would fully grow back. Luckily I had great results except for one small part on the top of my head centered where the top meets the back but unfortunately the doctor passed away and I ended up back on a wait list to fill his patients.   Finally I am under the care of a new dermatologist and she is wonderful. So seven weeks ago I had another injection and within hours the PHI returned. I had been itch free for many months and was slowly coming off of the Lyrica so we are not sure if it is that or the injection that triggered the itch. This section is also very scaly although it still has a small patch of fuzz. Needless to say with the heavy aggressive scratching I had very little result with hair growth. I was advised to ramp my Lyrica back up and I had my second injection a few days ago.   I am sorry for the novel but I've been through a lot in my life and sometimes explaining it to new people reminds me of just that. I am wondering if anyone else who is experiencing a form of Alopecia Areata has had itching problems and are you also dealing with other autoimmune conditions or just the AA itself? How do you cope with it and how are your treatments going?        submitted by     /u/SpinDoctorLarry     to     r/alopecia_areata       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/alopecia_areata/comments/1wm9hqd/anyone_suffering_from_additional_autoimmune/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T10:56:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T10:56:25.600Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab10d59aeeb96c1c63bacc0"
+    },
+    "message_id": "reddit_t3_1wm9hpx",
+    "topic_key": "hair stylist",
+    "search_keyword": "hair stylist",
+    "platform": "reddit",
+    "subreddit": "SeattleMusicians",
+    "username": "erinsenses",
+    "title": "Let me sing for you!",
+    "text": "Let me sing for you!\n\nTLDR: I'd like to sing for musicians seeking a talented vocalist with a unique timbre, and possibly someone to write lyrics to give their songs more identity and voice. Drummers, guitarists, bassists, producers, you name it. I'd like to collaborate and, eventually, play live at open mics and hopefully more. Dm me!   Hello! I'm a singer/songwriter/amateur producer and am seeking other artists and musicians to collaborate with. I love indie rock, pop, alternative and experimental genres, and to push myself to grow by exploring new genres and singing styles. It's hard for me to define the music I create and sing, but broadly I would call it experimental rock.   A bit about me: I'm 24 years old, I live on a boat, work for 911, and I've been singing since I was old enough to speak. I'm a Tenor 1/Alto and my voice has an androgynous (gender neutral) to feminine timbre. Within my range I can move between singing effeminate ethereal highs in my falsetto and head voice to resonant and impactful lows in my chest voice. I would say I have good vocal control, and I get positive feedback from others who happen to hear me singing.    For example:   \"Wow. Amazing voice!\" - Guy who heard me singing \"Slow dancing in the dark\" by joji while I was exiting the stairs after work one day.   \"Don't stop on my account. You have a lovely voice!\" - a neighbor at my marina who walked in on me singing to my dog while doing laundry.   \"You could be a hidden gem at an open mic!\" - my hair stylist... Lol   I've never been in a band, and I would really love to be in one and make some great friends as well. it is my dream to be great, and to create cultural impact with my music. I have written several songs and can hear where I want to take them, despite not having all of the ability to produce them yet. I'd love to pick up tricks from other musicians through exposure and practice. Work with me, and we will create something beautiful!   Here's a sample of my pure vocals singing a song I came up with a few days ago (disclaimer, I have the flu and sound a bit more nasally than usual lol):    https://drive.google.com/file/d/13IfADQFUpuwITO\\_DlJ9iyeTxdtkdwhBi/view?usp=drivesdk    Also my insta is @erinexists_ if you want to see my aesthetic and the sound of my productions until now. Just keep in mind I'm ever evolving!       submitted by     /u/erinsenses     to     r/SeattleMusicians       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SeattleMusicians/comments/1wm9hpx/let_me_sing_for_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T10:56:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T10:56:25.824Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab10d5aaeeb96c1c63bacc1"
+    },
+    "message_id": "reddit_t3_1wm9hp5",
+    "topic_key": "cardiologist",
+    "search_keyword": "cardiologist",
+    "platform": "reddit",
+    "subreddit": "DiagnoseMe",
+    "username": "Hot-Cardiologist9273",
+    "title": "Dumb decision",
+    "text": "Dumb decision\n\nI had sex yesterday around 12:00 pm with a condom on and me and my boyfriend are nervous because we had sex a few hours after that and he wanted to just feel me without a condom so I let it happen and then I’m not sure if I got pre cum or something inside me with sperm but nothing felt wrong or anything and he was dry before he went in so I’m nervous because I just took some abortion pills for being pregnant and I took them 9 days ago I don’t wanna mess up my body and I am young so I’m nervous..        submitted by     /u/Hot-Cardiologist9273     to     r/DiagnoseMe       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DiagnoseMe/comments/1wm9hp5/dumb_decision/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T10:56:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T10:56:26.098Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab10d5aaeeb96c1c63bacc2"
+    },
+    "message_id": "reddit_t3_1wm9hoj",
+    "topic_key": "rag pipeline",
+    "search_keyword": "RAG pipeline",
+    "platform": "reddit",
+    "subreddit": "founder",
+    "username": "Competitive_Wear872",
+    "title": "If you're a founder building with AI, don't over-engineer the first version.",
+    "text": "If you're a founder building with AI, don't over-engineer the first version.\n\nI've noticed a lot of people jump straight into building AI agents, RAG pipelines, vector databases, and complex workflows.   Sometimes you just need:    User → good prompt → LLM → useful output    Build that first. Then add complexity only when the simple version stops working.   The biggest advantage of AI for a startup isn't necessarily building the most sophisticated AI system. It's being able to test an idea and get something useful in front of users much faster.   What AI feature have you built that turned out to be much simpler than you initially expected?       submitted by     /u/Competitive_Wear872     to     r/founder       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/founder/comments/1wm9hoj/if_youre_a_founder_building_with_ai_dont/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T10:56:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T10:56:26.320Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab10d5b660c60840398d7c1"
+    },
+    "message_id": "reddit_t3_1wm9hta",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "HeresTheCatch",
+    "username": "Affectionate-Milk419",
+    "title": "[Kiss Adopt Slap]",
+    "text": "[Kiss Adopt Slap]\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Affectionate-Milk419     to     r/HeresTheCatch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HeresTheCatch/comments/1wm9hta/kiss_adopt_slap/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T10:56:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T10:56:27.733Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab10d5b660c60840398d7c2"
+    },
+    "message_id": "reddit_t3_1wm9ht1",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "sandheden",
+    "username": "hiltonsss",
+    "title": "Kære redditors på sandheden",
+    "text": "Kære redditors på sandheden\n\nVi vil gøre opmærksom på, at doxxing på ingen måde er tilladt. Om det er Radio Robin, Varga, trold eller en helt tilfældig. Vi går op i, at beskytte de enkelt individer, samtidig med, at vi stiller kritiske spørgsmål. Vær venlig at overholde dette på “Sandheden” 🌹 Vi sætter stor pris på jer, og ser nødigt, at vi er nødt til at slette eller smide nogle ud.    Vh admin og moderator teamet 🌹🌺       submitted by     /u/hiltonsss     to     r/sandheden       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sandheden/comments/1wm9ht1/kære_redditors_på_sandheden/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T10:56:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T10:56:27.936Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab10d5c660c60840398d7c3"
+    },
+    "message_id": "reddit_t3_1wm9ht0",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "whatcarshouldIbuy",
+    "username": "Azthun",
+    "title": "2012 VW Sportswagen TDI with DMF issue",
+    "text": "2012 VW Sportswagen TDI with DMF issue\n\nBeen eyeing a 2012 Sportwagen and found a 2012 with 140k miles with recent water pump, timing belt and DSG service. It has stage 2 and delete.   It also has DMF clatter. Because of that, it's going for $5500.   I know it will need fixing asap. Mechanic tells me any European car is a money pit but the 45mpg is super tempting.   Bad idea?       submitted by     /u/Azthun     to     r/whatcarshouldIbuy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/whatcarshouldIbuy/comments/1wm9ht0/2012_vw_sportswagen_tdi_with_dmf_issue/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T10:56:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T10:56:28.137Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab10d5c660c60840398d7c4"
+    },
+    "message_id": "reddit_t3_1wm9hsr",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "TicketResale",
+    "username": "SuchRelationship4018",
+    "title": "Selling 1 seated VIP j Cole ticket Birmingham show",
+    "text": "Selling 1 seated VIP j Cole ticket Birmingham show\n\nsubmitted by     /u/SuchRelationship4018     to     r/TicketResale       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TicketResale/comments/1wm9hsr/selling_1_seated_vip_j_cole_ticket_birmingham_show/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T10:56:12Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T10:56:28.340Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab10d5c660c60840398d7c5"
+    },
+    "message_id": "reddit_t3_1wm9hsq",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "DuxburyDeathsFreeTalk",
+    "username": "LosingMyShrimp",
+    "title": "Apology",
+    "text": "Apology\n\nI reposted an article yesterday about Patrick saying he forgives Lindsay and he wants everyone else to forgive her, as well. I didn’t do my due diligence and vet that article. Someone pointed it out and I deleted it.   I apologize for reposting garbage. I won’t do that again. I did enjoy the discussion had around forgiveness, but I’m sorry I started it with a crap premise.       submitted by     /u/LosingMyShrimp     to     r/DuxburyDeathsFreeTalk       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DuxburyDeathsFreeTalk/comments/1wm9hsq/apology/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T10:56:12Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T10:56:28.541Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab10d5c660c60840398d7c6"
+    },
+    "message_id": "reddit_t3_1wm9hrd",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MakeRedditFriends",
+    "username": "Technical-Beach-6494",
+    "title": "26M | Looking to make new friends",
+    "text": "26M | Looking to make new friends\n\nHey everyone! 👋  23M , looking to meet some new people and make genuine friendships.  I’m into ✈️ aviation, gaming, travelling, movies/Netflix, and random late-night conversations 😂  Would be nice to find people around my age who are also looking to make new friends. We can start with chatting here and, if we vibe, maybe grab coffee, explore the city, or hang out sometime.  No pressure, just looking for genuine friendships.  Feel free to DM me! :)       submitted by     /u/Technical-Beach-6494     to     r/MakeRedditFriends       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MakeRedditFriends/comments/1wm9hrd/26m_looking_to_make_new_friends/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T10:56:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T10:56:28.746Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab10d5d660c60840398d7c9"
+    },
+    "message_id": "reddit_t3_1wm9hqg",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "SteamFrame",
+    "username": "TIRedemptionIT",
+    "title": "Valve's Power Brick isn't the only option.",
+    "text": "Valve's Power Brick isn't the only option.\n\nInspired by another post I wanted to remind everyone who is getting their emails that there are a lot of better options for chargers. Anker has several options that are the same price and many of which have multiple charging ports on one brick. Ugreen even has one that's 45w with a cable for 24.99. Keep an eye out before you buy the one from Valve.       submitted by     /u/TIRedemptionIT     to     r/SteamFrame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SteamFrame/comments/1wm9hqg/valves_power_brick_isnt_the_only_option/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T10:56:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T10:56:29.353Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab10d5d660c60840398d7ca"
+    },
+    "message_id": "reddit_t3_1wm9hpw",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "PriorityPass",
+    "username": "can1673",
+    "title": "Trip com VIP Lounge Airport",
+    "text": "Trip com VIP Lounge Airport\n\nHallo zusammen,   Ich habe vor kurzem eine VIP Lounge für den Flughafen münchen über Trip.com gebucht. meistens werden die dort günstiger angeboten. Also das Angebot ist glaube ich ein Dritt Anbieter wird jedoch über trip.com gelistet.   Hat jemand schon jemand damit erfahrungen gesammelt? Ich bekomme laut Drittanbieter einen QR Code zugesandt den ich am Empfang vorzeigen muss.   Beste Grüße        submitted by     /u/can1673     to     r/PriorityPass       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PriorityPass/comments/1wm9hpw/trip_com_vip_lounge_airport/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T10:56:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T10:56:29.559Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab10d5d660c60840398d7cb"
+    },
+    "message_id": "reddit_t3_1wm9hpp",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "KKKOfficial",
+    "username": "Ronaldgranger_",
+    "title": "Contestant Discussions: Keep It About the Show, Not Personal",
+    "text": "Contestant Discussions: Keep It About the Show, Not Personal\n\nEveryone is allowed to have their own opinions. We’ve always tried to let people express their views here, whether they like a contestant, dislike them, or have criticism about their performance on the show.   But over the last 2–3 days, some discussions have started getting unnecessarily toxic and personal.   So going forward, any post containing personal hate or attacks against a contestant will be removed without any warning.   It doesn’t matter whether the post is about a fan-favourite/top player or someone who is considered the worst player. You can criticize their game, performance, decisions, behaviour on the show, etc. That’s completely fine.   But once the discussion crosses from criticizing the contestant on the show → personally attacking/hating the contestant, the post will be removed.   Discuss the game. Debate the show. Disagree with each other. Just keep it respectful and don’t make it personal.       submitted by     /u/Ronaldgranger_     to     r/KKKOfficial       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/KKKOfficial/comments/1wm9hpp/contestant_discussions_keep_it_about_the_show_not/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T10:56:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T10:56:29.761Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab10d5d660c60840398d7cc"
+    },
+    "message_id": "reddit_t3_1wm9hpe",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "Appropriate-Data1029",
+    "title": "Grab 25⚡ from u/Appropriate-Data1029!",
+    "text": "Grab 25⚡ from u/Appropriate-Data1029!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Appropriate-Data1029     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wm9hpe/grab_25_from_uappropriatedata1029/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T10:56:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T10:56:29.966Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab10d5e660c60840398d7cd"
+    },
+    "message_id": "reddit_t3_1wm9hpb",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "vacation",
+    "platform": "reddit",
+    "subreddit": "ECEProfessionals",
+    "username": "Important_Pea_7566",
+    "title": "Careers after ECE?",
+    "text": "Careers after ECE?\n\nHi all! I know this question has been asked quite a bit in the past, but I didn’t find much posted recently.  I have been an ECE for well over 15 years- I hold my lead teacher in both age groups and my director certification. In the past I’ve made an effort to find progressive schools with workable expectations and hours that help employees have a life outside of work. I work in “affluent” areas where many families have the luxury of flexible jobs or Nannies, so traditional school hours were common. I have noticed that the past few years I’ve been experiencing burnout at a much fast rate- the increasing expectations for ECE, the long hours and short pay are all contributing factors. Schools are staying open later and later to accommodate working families, school vacation weeks are turning into enrichment weeks, etc. It is harder and harder to make the work/ life balance work.    I am a couple weeks into the school year and I’m already completely drained. I think it’s time for a change, but I have no idea what field to look into. I am expecting my first child and work/ life balance is important to me. I don’t want to work a 9-10 hour day, plus commute, and arrive home to my child exhausted. Staying in ECE and working part time would be a big financial hit, and it is pretty hard to find decent part time positions.    Has anybody made the switch to a new field and maintained a proper work/ life balance? Without sacrificing pay (not like many jobs pay less than this one!)?        submitted by     /u/Important_Pea_7566     to     r/ECEProfessionals       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ECEProfessionals/comments/1wm9hpb/careers_after_ece/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T10:56:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T10:56:30.168Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab10d5e660c60840398d7ce"
+    },
+    "message_id": "reddit_t3_1wm9how",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "ChatGPTPromptGenius",
+    "username": "LukeKnowsAI",
+    "title": "My ChatGPT workflow for comparing medical bills with visit notes (full prompt)",
+    "text": "My ChatGPT workflow for comparing medical bills with visit notes (full prompt)\n\nUse this with your itemized bill, visit notes, and any insurance explanation of benefits (EOB). Replace the bracketed section with your concerns.    Prompt      Review my ATTACHED medical bills, visit notes, and any insurance EOB’s for possible billing errors. Decode all billing codes, including facility/revenue codes, and compare charges with the documented care, visit setting, and insurance coverage. Flag discrepancies, duplicate charges, or questionable coding. My concerns: [INSERT YOUR NOTES HERE]. Draft a ready-to-send dispute requesting a coding/compliance review, written explanations, and correction of any errors.      How I used it    After an $85 prepaid estimate, I received two additional bills. I used ChatGPT Health to compare the bill with my visit notes and draft a dispute requesting a coding/compliance review. Both bills were voided within a week. That's my experience, not a guaranteed result.   Including the visit notes gave it something to compare the charges against. Although the prompt says “ready-to-send,” verify the draft before sending. AI can misinterpret billing codes; ask the provider or insurer to confirm suspected errors.    Disclosure:  I'm Luke from LukeKnowsAI, and this is my own video about the experience. The complete prompt is above; the video is optional.    My short YouTube walkthrough        submitted by     /u/LukeKnowsAI     to     r/ChatGPTPromptGenius       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ChatGPTPromptGenius/comments/1wm9how/my_chatgpt_workflow_for_comparing_medical_bills/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T10:56:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T10:56:30.373Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab10d5e660c60840398d7d1"
+    },
+    "message_id": "reddit_t3_1wm9hol",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",

@@ -1,0 +1,416 @@
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DigitalAudioPlayer",
+    "username": "ULTRASOLINGER69",
+    "title": "Looking for a good DAP as a beginner",
+    "text": "Looking for a good DAP as a beginner\n\niam looking into getting a good DAP my budget is 110€ i already purchased the LINSOUL 7Hz x Crinacle Zero:2 for 25€   i was reading at reddit and looked at different DAPs and every one i looked at people had problems with battery or freezing i just want a good DAP that has no issues like these or am i overreacting ? 😄 i just wanna listen to music thanks for reading.        submitted by     /u/ULTRASOLINGER69     to     r/DigitalAudioPlayer       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DigitalAudioPlayer/comments/1wko2bz/looking_for_a_good_dap_as_a_beginner/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T14:44:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T14:44:11.218Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae9fbb660c608403980b6d"
+    },
+    "message_id": "reddit_t3_1wko2bt",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "BookDiscussions",
+    "username": "Soft-Liviah",
+    "title": "Is anyone else a mood reader to an extreme degree",
+    "text": "Is anyone else a mood reader to an extreme degree\n\nI feel like I cant just pick up any book at any time. My reading has to perfectly match my current mood and even the weather sometimes. If it is sunny outside I want something light and fun. If it is grey and rainy I'm reaching for a dark academia or a mystery.   It makes it really hard to get through series sometimes. Like I'll finish a book and love it but then the mood changes and I just cant bring myself to pick up the next one even if it's right there. I have so many incomplete series just sitting on my shelf because my mood shifted.   Am I alone in this or do others also feel this connection between mood and reading choice so strongly?       submitted by     /u/Soft-Liviah     to     r/BookDiscussions       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BookDiscussions/comments/1wko2bt/is_anyone_else_a_mood_reader_to_an_extreme_degree/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T14:43:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T14:44:11.421Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae9fbb660c608403980b6e"
+    },
+    "message_id": "reddit_t3_1wko2bq",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "JellyfinCommunity",
+    "username": "pavanthanuj",
+    "title": "Jellyfin Enhanced: 8 months, 28 releases later.",
+    "text": "Jellyfin Enhanced: 8 months, 28 releases later.\n\nWell, it has been a while since my last post! Since then the plugin has gone from 10.10 to 12.8, so here's a round-up of the biggest changes. This is going to be long, so grab some popcorn! 🤣     Jellyfin Enhanced is now at ~1.8k stars ⭐! Last time I was excited about 670, and I still can't quite believe it. Thank you all, genuinely.     Jellyfin 12 Support    Jellyfin 12 is supported and a unified manifest  All my plugins for all the Jellyfin Versions are included in one manifest.    https://raw.githubusercontent.com/n00bcodr/jellyfin-plugins/main/manifest.json    If you have a different manifest, worry you shall not! All the manifests now are identical copies of each other!   Docs!   Everything is now documented at  n00bcodr.github.io/Jellyfin-Enhanced  (thanks  sgtM-devs , this was your idea and without their initial work, I would never have done anything like this!). The API section also got an overhaul, so devs of other clients can use bookmarks, reviews and more.   Spoiler Guard   Opt-in, per-user protection for anything you haven't watched yet. Hide posters, plot, ratings, cast, trickplay and more. Admins can also choose to reveal just the title, description or ratings for the next unwatched episode, and keep the Next Up thumbnail blurred.   Hidden Content   Each user can hide movies, series and cast from library, search, discovery, calendar, Next Up, Continue Watching and requests. It's stored server-side, so it follows you across devices. Admins can see and manage it too.    https://preview.redd.it/7udbkz6tjhqh1.png?width=1430&format=png&auto=webp&s=851fa0b7eb8a171dafb4df9a13df87434ef8d5e1      What's really cool about Spoiler Guard and Hidden Content is, they work on any client or device including TVs!     Activity Feed   A new page with live Active Streams, Watch History, and Reviews plus favorites, available as a native tab, Custom Tab or Plugin Page.    https://preview.redd.it/r83z4cfujhqh1.png?width=2556&format=png&auto=webp&s=f7bceebbeab8da7c48da9810f12696c941600d26    User Reviews   Write reviews for movies, series, seasons and episodes, with half-star ratings for the things that don't deserve a full star. Average review ratings show on posters and detail pages.    https://preview.redd.it/5wyuqr28mhqh1.png?width=1899&format=png&auto=webp&s=49a28d12a091b741dd4dab6cbaed9da91163b40e    MDBList Ratings   A ratings row on the details page with TMDB, Rotten Tomatoes, IMDb, Trakt, Metacritic, Letterboxd and more from one lookup. Two scheduled tasks can also sync them into Jellyfin's own Community and Critic ratings, so they show up in the native UI too.     https://preview.redd.it/pdkawi5wjhqh1.png?width=1880&format=png&auto=webp&s=1e5aa0bf35a4a951695641829991c8c5217d7109    Awards   Expandable wins and nominations on movie, TV and person pages, sourced from Wikidata.     https://preview.redd.it/f0bn5jhxjhqh1.png?width=1872&format=png&auto=webp&s=7629bf3e10ab23fb5185a66fafd4dceee1c4a138    Seerr      Recommendations page : Trending, Popular, Upcoming, Studios, Networks and genre browsing, with sort and filters.       https://preview.redd.it/h7mk64ezjhqh1.png?width=2551&format=png&auto=webp&s=937dea08feb0a7e90065875992cc407dfa6b36a6       4K series requests , request quota with reset timers, a \"Request More\" button on series pages and free space in the root folder picker.    Approve requests straight from Jellyfin  if you're a Seerr admin.       https://preview.redd.it/oxw7atp0khqh1.png?width=803&format=png&auto=webp&s=f0bb7608d15e9b58998b554801fade9ebf96fa9e       Two-way watchlist sync : Jellyfin watchlist now syncs back to Seerr too.    Issues on the Requests page , so you can manage them without leaving Jellyfin.      https://preview.redd.it/z3e9ddk2khqh1.png?width=2051&format=png&auto=webp&s=9507cec1b71533927b98ea33c430a0858161c65d       Automatic user import  into Seerr, plus a  Permission Audit  for admins that finds users with missing or wrong permissions.    Parental-rating aware results : discovery reads each viewer's Jellyfin parental policy automatically.   Recently-added scan trigger, and much better behaviour behind Cloudflare, Authelia, Authentik and Pangolin.    Home Screen Sections  discover cards now open the More Info modal.     Sonarr / Radarr      Multiple instances  of each, with their own URLs, keys and mappings. Everything fans out across all of them.    Calendar  keeps getting love: unmonitored series, a \"requested only\" filter, library-access awareness, a  Shoko anime  source and a remembered view.    Import from Seerr : pulls your Sonarr/Radarr settings from Seerr's config, which should make setting things up much easier for new users.   Request cards have deep links to Seerr, Radarr and Sonarr.       https://preview.redd.it/vh2zt199khqh1.png?width=1217&format=png&auto=webp&s=b2b4e6a519c95fed696edf575d4fe3a1e3123238    Tags   This got a full rewrite with server-side tag cache. A server-side tag cache means one request per session, with no per-page API calls.     Some Stats:    Movie library: 1502ms → 200ms (87% faster)   Movie detail page: 5010ms → 803ms (84% faster)      New tags for video format, IMAX, audio channels ( Dolby Digital+ 7.1 ), media stubs (Bluray, VHS...), 576p PAL DVDs and proper 8K detection.   Quality tags are now 6 independent categories you can toggle and reorder.   Language tags gained a priority setting, collection support and a \"no dialogue\" badge.   Quality tags now work on Home Videos and Photos too.     Playback     Frame-by-frame stepping with  ,  and  .  when paused, and  Z  to jump back to your last position.   Auto-skip intro/outro rewritten on Jellyfin's native Media Segments.   Every keyboard shortcut can be turned off individually, and player shortcuts now properly override Jellyfin's own keys (If they are already set, and they are restricted to be set if not set)   Custom subtitle colors with alpha, a drag-to-position grid, and warnings when your styling can't apply (PGS/VobSub/ASS).       https://preview.redd.it/f5r2qghckhqh1.png?width=1301&format=png&auto=webp&s=1e03855943e3bb2041a75e6c59610d18eaaa6ca4      Configurable pause screen delay.     For Admins      Maintenance Mode : disable selected or all users and/or remote access, with a banner on the login page and a native popup for anyone watching.       https://preview.redd.it/e57ywbtgkhqh1.png?width=1898&format=png&auto=webp&s=ef46ef3c70b59a09e30fefc8986d00a5d58276e9       Active Streams widget  in the header, with transcode reasons and an admin broadcast.       https://preview.redd.it/mrifhwifkhqh1.png?width=436&format=png&auto=webp&s=67283ea71e5ac9b4d8208cec51ba0ccac53d2a99       New settings page : tabbed and searchable, with dependency hints.       https://preview.redd.it/v7xd7p4ikhqh1.png?width=2296&format=png&auto=webp&s=b301e0ea2a8d01713607d7cded5a4fefc67b84f8       What's New banner : new settings get flagged automatically after every update.       https://preview.redd.it/00ztpgjjkhqh1.png?width=727&format=png&auto=webp&s=4c931477688984c1f958edf521eabc4d02a9c7da       Redesigned user settings panel  with searchable navigation and a proper mobile layout.       https://preview.redd.it/r3vxo9rkkhqh1.png?width=1058&format=png&auto=webp&s=e58758340687a65c5e7a2551dc4bdd2e98d3511f       Opt-in anonymous usage stats : off by default, with a live preview of exactly what gets sent. Public dashboard  here .       If you have not had a look at the Analytics Dashboard, please do! They are some really interesting stats there and you might find some features that you didnt even know existed!!    Other bits     The Random button now rolls a dice. Thanks ranaldsgift for the idea!   Letterboxd links on people pages, and a release/air date chip on item details.   ⚠️ Breaking: long-pressing the header user icon to open the Enhanced Panel was removed in 11.10.   Translations now run through  Weblate . New languages include Arabic, Simplified Chinese, Catalan, Hebrew, Czech, Slovak and Norwegian, and Hebrew and Finnish went from ~30% to 100% (thanks to AI, so still need your help! 😅)     ..... and more, I am not really sure how long a reddit post can be 🤣    -----------   I also want to thank everyone who contributed, tested, reported bugs, translated and shared feedback, and the wonderful Jellyfin Community Discord.    A special thanks to  Jake  , who has shaped a huge chunk of the recent work.    This project wouldn't be where it is without you all.    Mandatory FAQ    * Most of the features do not support Android TV apps 😢 , but things like Spoiler Guard, Remove from Continue watching do! Also MDBlist Ratings refresh is useful to keep your ratings upto date across all apps!    Repo:  https://github.com/n00bcodr/Jellyfin-Enhanced     AI Disclaimer:  With the growth of the project and the number of things it does, I do use different AI tools, mainly to find the APIs I need across different dependent applications (Jellyfin, Seerr, Arrs, TMDB, MDBList, Wikidata...) and to parse their responses to see how features can be improved or implemented. Most of the PRs I get are also AI assisted in some shape or form (I have absolutely no problem with that), but everything is thoroughly reviewed and tested before it's released to the general public.        submitted by     /u/pavanthanuj     to     r/JellyfinCommunity       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/JellyfinCommunity/comments/1wko2bq/jellyfin_enhanced_8_months_28_releases_later/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T14:43:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T14:44:11.629Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae9fbc660c608403980b70"
+    },
+    "message_id": "reddit_t3_1wko2be",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "SocialMarketingHub",
+    "username": "OsaiBuilds",
+    "title": "What’s the one social media task nobody warns you about?",
+    "text": "What’s the one social media task nobody warns you about?\n\nEveryone talks about creating content and growing followers.  But once you’re managing Instagram + Facebook consistently, there are a lot of smaller tasks that quietly eat up your time.  Content ideas? Scheduling? Comments? DMs? Analytics? Keeping up with trends?  I’m curious  what’s the one part of social media management that takes way more time than you expected?**       submitted by     /u/OsaiBuilds     to     r/SocialMarketingHub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SocialMarketingHub/comments/1wko2be/whats_the_one_social_media_task_nobody_warns_you/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T14:43:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T14:44:12.041Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae9fbc660c608403980b71"
+    },
+    "message_id": "reddit_t3_1wko2at",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "Type1Diabetes",
+    "username": "BrilliantButton3202",
+    "title": "Type 1 diabetics, advice on hiking acatenango, or fuego!?",
+    "text": "Type 1 diabetics, advice on hiking acatenango, or fuego!?\n\nHey guys! I’m going on a solo trip to Guatemala in November and decided I’m going to hike volcan fuego. I’m pretty nervous strictly because of my blood sugar. I can usually handle my intense workouts and what not but this is intense cardio for 1.5 days. I’m a very active and fit person but just nervous for how long this hike is and making sure I have enough snacks for the whole time. Has anyone done the Acatenango or fuego hike? If you have any advice big or small please let me know, anything would help massively!!!        submitted by     /u/BrilliantButton3202     to     r/Type1Diabetes       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Type1Diabetes/comments/1wko2at/type_1_diabetics_advice_on_hiking_acatenango_or/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T14:43:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T14:44:12.244Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae9fbc660c608403980b72"
+    },
+    "message_id": "reddit_t3_1wko2an",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "redditrequest",
+    "username": "me_like_jalapenos",
+    "title": "r/FunnyNSFW2",
+    "text": "r/FunnyNSFW2\n\nsubmitted by     /u/me_like_jalapenos     to     r/redditrequest       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/redditrequest/comments/1wko2an/rfunnynsfw2/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T14:43:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T14:44:12.445Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae9fbc660c608403980b73"
+    },
+    "message_id": "reddit_t3_1wko2a0",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MoxxieMillie18Plus",
+    "username": "33333Ducky",
+    "title": "A Hellaverse 18+ Community Master List",
+    "text": "A Hellaverse 18+ Community Master List\n\nEvery single one of the subreddits listed below is officially integrated into the  18-plus —Hellaverse network!     r/2PVoxCult    r/AbelCult18Plus    r/Adam18Plus    r/Alastor18Plus    r/AlastorVox18Plus    r/Andrealphus18Plus    r/Angeldust18Plus    r/BaxterCult18Plus    r/Beelzebub18Plus    r/Belphegor18Plus    r/BlitzoCult18Plus    r/BottomVoxCult    r/BoxVoxCult    r/CarmillaCarmine18Plus    r/Charlie18Plus    r/CherriBomb18Plus    r/ChubbyVoxCult    r/Cult _Of_Glitz_N_Glam   r/CultofEmberlynnPinkle    r/CultofVeesAssistants  (Vees sub)   r/DeerVoxCult    r/DenisHateClub  (Discussion/debate/hot take sub)   r/EmberlynnPinkle18Plus    r/EmilyCult18Plus    r/FatNuggetsChurch    r/FemaleVoxCult    r/FizzarolliCult18Plus    r/HazbinHelluva18Plus    r/HelluvaParlor    r/HumanVoxCult    r/HuskCult18Plus    r/KittyCultHazbin  (background character sub)   r/Leviathan18Plus    r/LilithCult18Plus    r/Loona18Plus    r/LuciferCult18Plus    r/Lute18Plus    r/MoxxieMillie18Plus    r/MurderMedia18Plus    r/NifftyCult18Plus    r/PrototypeVoxCult    r/Radioapple18Plus    r/Radiodustship    r/RadioStatic18Plus    r/RosieCult18Plus    r/SallieMay18Plus    r/SeraCult18Plus    r/Shokwav  (Hellaverse shark sub)   r/SirPentious18Plus    r/StaticApple18Plus    r/StaticBelle18Plus    r/StaticDoll18Plus    r/StaticDust18Plus    r/StaticMoth18Plus    r/StellaCult18Plus    r/StolasCult18Plus    r/VaggiCult18Plus    r/ValentinoCult18Plus    r/Vassago18Plus    r/VelvetteCult18Plus    r/VerosikaMayday18Plus    r/Vox18Plus    r/VoxCult18Plus    r/VoxValentino18Plus        submitted by     /u/33333Ducky     to     r/MoxxieMillie18Plus       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MoxxieMillie18Plus/comments/1wko2a0/a_hellaverse_18_community_master_list/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T14:43:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T14:44:12.649Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae9fbc660c608403980b74"
+    },
+    "message_id": "reddit_t3_1wko29z",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "AlertVegas",
+    "username": "MugShots",
+    "title": "NV Energy Alert",
+    "text": "NV Energy Alert\n\nNVEnergy Alert Under Investigation in 89414 Probable customers affected ORT: Probable ETR: Probable       submitted by     /u/MugShots     to     r/AlertVegas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlertVegas/comments/1wko29z/nv_energy_alert/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T14:43:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T14:44:12.851Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae9fbd660c608403980b75"
+    },
+    "message_id": "reddit_t3_1wko29f",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "vacation",
+    "platform": "reddit",
+    "subreddit": "Paranormal",
+    "username": "AlunaLouwa",
+    "title": "Ghost Encounter in Rural Maine",
+    "text": "Ghost Encounter in Rural Maine\n\nI must preface that I am agnostic about the paranormal. Though my gut instinct is that there is a natural explanation for everything, I fully acknowledge that we as humans do not know the full limits of what is \"natural.\" What I describe next is my account of the most frightening moment in my life that I can only describe as a paranormal encounter.   Maybe ten years ago now, back in high school, my parents and I drove up to Maine. Our friends from church had a summer house there, up on the rural coast north of Portland. To my knowledge, it was an ancestral inheritance, and I remember it was very old. Our church friends' daughter was between my and my sister's age, and was a good friend of my sister at the time. The two of them, along with two other friends of theirs, had been enjoying some days together for a girls vacation getaway. The plan was, my parents and I would join them and spend the weekend there before taking my sister back home.   The house really was old--colonial era with a wide lawn that overlooked a field. Past the field was a line of trees, and past that, the crashing of ocean waves on the coastal rocks. It felt heavy with life, though worn by time. Our parents, mine and our friends, each took a large bed for themselves. My sister and her three friends stayed upstairs in a single room with several twin beds and sleeping bags they shared together.   I had the room next door, just to the right of the stairs. It was an old space, definitely lived in, but minimally decorated. In fact, all I can remember was the tall old queen sized bed with tightly tucked plain blue-ish sheets up against the wall opposite the door and a window looking out onto the lawn. Nothing else. It was stuffy and uninteresting. It seemed I got the short end of the stick. At night, it was practically pitch black, completely dark. And yet, I could not sleep that night.   You may think,  old house, rural landscape, deep darkness--I would be piss-scared!  But that's not why I couldn't sleep. To me, this was vacation. A trip away to the countryside with people I love, quiet at night except for the waves in the distance. I live far away now, but I love rural New England and miss it every day. In truth, I had no idea why I couldn't sleep.   I was restless, tossing and turning for hours, and eventually I decided I'd walk to the bathroom and then pace around the house until I felt sleepy again. The rest of the house was still very dark, but lit gently by the moon and starlight pouring in from the windows. I made sure to keep quiet, tip-toing so as to not wake anybody up. It's odd, I should remember more, but I can only vaguely recall the kitchen in daytime and the halls cast in darkness at night.   I stumbled upon my parents' room. It was not so much a room as it was an open space, I think. My memory is fuzzy. I remember they slept in a bed in what could have been a living room if not for the stone floor and bare walls. Its purpose was in transition, I believe, but to what I don't remember. Though barren apart from my parents' bed, it was cast in the cool blue light of nighttime. Nothing about my walk around the house felt disturbing or scary, just quiet and asleep.   I did wake up my parents though, just after stepping into their room. In a half-awake stupor, they shooed me off to bed, and so I creeped back upstairs and did eventually fall asleep. I think it was about 4am by then.   I woke up around 9, in need of more sleep, but was beckoned outside by the scene through my window. Sitting in the bright morning light were our parents and a few of the girls enjoying a ready made breakfast and coffee on a shaded table overlooking the views. I was hungry for some eggs and toast and ready to start my day, walking down to join them. But when I stepped outside, their faces all had hesitant worry on them.   \"Good morning,\" they greeted. I greeted back, made my plate, and sat down. \"Are you doing alright?\" They asked. My answer was in line with everything I've said thus far. I couldn't sleep and walked around the house until I felt I could. Perhaps I had not been as careful as I thought I had been to keep quiet, and I prepared for a bit of a scolding.   But it wasn't that. They heard me that night in my room, talking in my sleep. One thing about me is I   never   talk in my sleep. But this time, I had. In fact, I hadn't been talking, I was screaming--  for help.     My heart sank, having no memory of it. I asked why they didn't come to my room to wake me up and see that I was okay, but somehow they'd known it was sleep-talking--maybe from my tone or... I have no idea. They asked me what I was dreaming of, and I do remember that.   I was a colonist, back in the days of first English settlement of New England, and I was running with my colonial family--I somebody's father--from a group of warriors from the neighboring Native tribes chasing us towards the coast, just by the house we'd been staying in.   Our friends went silent and pale in the face. Their house, I came to know then, had been built during the colonial era as a shelter from the indigenous who came to drive the colonists out. And what's more, they told me further that no one else had wanted the room I was in because it was \"the most haunted room in the house.\"   I was glad not to be sleeping there another night. I'd only ever been back one time after, and opted to sleep in a tent outside.   Before and since, I have never talked or screamed in my sleep.       submitted by     /u/AlunaLouwa     to     r/Paranormal       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Paranormal/comments/1wko29f/ghost_encounter_in_rural_maine/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T14:43:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T14:44:13.056Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae9fbd660c608403980b76"
+    },
+    "message_id": "reddit_t3_1wko29c",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "PokemonGoAccounts",
+    "username": "Physical_Shift_9684",
+    "title": "Selling all messge me thanks",
+    "text": "Selling all messge me thanks\n\nsubmitted by     /u/Physical_Shift_9684     to     r/PokemonGoAccounts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PokemonGoAccounts/comments/1wko29c/selling_all_messge_me_thanks/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T14:43:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T14:44:13.259Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae9fbd660c608403980b77"
+    },
+    "message_id": "reddit_t3_1wko294",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "JapanTravelTips",
+    "username": "maureenponderosaa",
+    "title": "Should I push my trip back?",
+    "text": "Should I push my trip back?\n\nLeaving tomorrow morning first thing, but will be arriving in Tokyo on Monday the 21 at 1pm. Should we push it back a day due to the weather?        submitted by     /u/maureenponderosaa     to     r/JapanTravelTips       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/JapanTravelTips/comments/1wko294/should_i_push_my_trip_back/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T14:43:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T14:44:13.460Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae9fbd660c608403980b78"
+    },
+    "message_id": "reddit_t3_1wko28u",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PieceOfCakeGame",
+    "username": "Final-Dot6854",
+    "title": "Grab 25⚡ from u/Final-Dot6854!",
+    "text": "Grab 25⚡ from u/Final-Dot6854!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Final-Dot6854     to     r/PieceOfCakeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PieceOfCakeGame/comments/1wko28u/grab_25_from_ufinaldot6854/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T14:43:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T14:44:13.665Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae9fbd660c608403980b79"
+    },
+    "message_id": "reddit_t3_1wko28r",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "cf4cf",
+    "username": "Muzzled_Walnut",
+    "title": "38 [M4F] Illinois/USA/Anywhere looking for a player 2",
+    "text": "38 [M4F] Illinois/USA/Anywhere looking for a player 2\n\nI never really know what to write in these things. I don't really have friends or someone to do things with anymore. It would be great to find someone into some of the same things I am.   I like things like   -Videos Games(obviously)   -Movies   -Walking   -Hiking   -Reading   Lot's more things to that I just can't think of off the top of my head. I'm on the heavier side currently, but actively working on it and just on getting healthier in general. I'd prefer someone my age or younger than me. I'm conservative so if that's a deal breaker 🤷‍♂️. I'm also not interested in ever having kids. I really hope to find my person eventually, but it's reddit so it's a longshot.       submitted by     /u/Muzzled_Walnut     to     r/cf4cf       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cf4cf/comments/1wko28r/38_m4f_illinoisusaanywhere_looking_for_a_player_2/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T14:43:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T14:44:13.867Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae9fbe660c608403980b7a"
+    },
+    "message_id": "reddit_t3_1wko28l",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "SocialMarketingHub",
+    "username": "Educational-Poem3588",
+    "title": "let’s connect?",
+    "text": "let’s connect?\n\nAny ShopMy, TikTok or Pinterest creators in here? 🤍   I’m a newer beauty, travel + lifestyle creator and I’ve been trying to connect with more creators who are actually active and want to support each other’s growth.   Would love to follow each other, check out your ShopMy collections, Pinterest boards or TikToks and find some new creator friends 🫶🏼   Drop yours below and I’ll check you out! let’s grow together!    Shopmy:  https://shopmy.us/shop?Curator\\_id=1024000&Section\\_id=4020504    pinterest:  https://pin.it/3zIdpsq2r    Tiktok: travelqueenj       submitted by     /u/Educational-Poem3588     to     r/SocialMarketingHub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SocialMarketingHub/comments/1wko28l/lets_connect/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T14:43:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T14:44:14.069Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae9fbe660c608403980b7c"
+    },
+    "message_id": "reddit_t3_1wko27d",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "PakistanMentoringClub",
+    "username": "rickedisbricked",
+    "title": "17M from Pakistan trying to start earning what would you recommend?",
+    "text": "17M from Pakistan trying to start earning what would you recommend?\n\n17M from Pakistan trying to start earning, what should I do?   I'm 17 and currently studying in college in Pakistan. I'm trying to find a realistic way to start making some money because my family situation is complicated and I don't have much financial independence right now.   I'm not asking anyone to send me money. I just want some genuine advice from people who have been in a similar situation or have experience with freelancing, web development or making money online.   My current skills are mainly web development.   HTML  CSS  Tailwind CSS  JavaScript  TypeScript  React  Basic Git/GitHub   I'm still learning and I wouldn't call myself an experienced developer, but I'm trying to get good enough to start making money from these skills.   I'm also interested in financial markets and currently have a forex funded account. I'm not really focused on trading as a source of income right now though because I know it can take a long time to become consistently profitable and I don't want to depend on it for my short term financial situation.   Because of family restrictions, I have limited freedom and I also have very little money that I can invest into starting something.   I'm mainly thinking about things like making simple websites for local businesses, freelancing, landing pages, small frontend projects, fixing existing websites or helping small businesses with their websites.   I'm willing to start small. Even making my first $20 to $50 would mean a lot to me because my main goal is to slowly become financially independent.   If you were 17, had these skills, lived in Pakistan, had limited freedom because of family circumstances and had very little money to invest, what would you do to get your first paying client or start making money?   I'd especially like to hear from people who have actually made money through web development, freelancing or working with small businesses.   I'm looking for realistic advice. I don't really want the usual \"start dropshipping\" or \"start a YouTube channel\" type of answers.       submitted by     /u/rickedisbricked     to     r/PakistanMentoringClub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PakistanMentoringClub/comments/1wko27d/17m_from_pakistan_trying_to_start_earning_what/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T14:43:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T14:44:14.490Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae9fbe660c608403980b7d"
+    },
+    "message_id": "reddit_t3_1wko26u",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MapBasedPolls",
+    "username": "FutureMaintenance146",
+    "title": "Which countries make the best kebabs?",
+    "text": "Which countries make the best kebabs?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/FutureMaintenance146     to     r/MapBasedPolls       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MapBasedPolls/comments/1wko26u/which_countries_make_the_best_kebabs/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T14:43:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T14:44:14.719Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae9fbe660c608403980b7e"
+    },
+    "message_id": "reddit_t3_1wko26s",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FitTheWord",
+    "username": "kiddcloudkicker420",
+    "title": "🟨 Unscramble This 6-Letter Word (by u/kiddcloudkicker420)",
+    "text": "🟨 Unscramble This 6-Letter Word (by u/kiddcloudkicker420)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/kiddcloudkicker420     to     r/FitTheWord       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FitTheWord/comments/1wko26s/unscramble_this_6letter_word_by/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T14:43:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T14:44:14.939Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae9fbf660c608403980b7f"
+    },
+    "message_id": "reddit_t3_1wko26r",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "OpenaiCodex",
+    "username": "TrainingDragonfruit1",
+    "title": "Ok, we reached that AI cost is now above developer salary for non-US and non-CH developers",
+    "text": "Ok, we reached that AI cost is now above developer salary for non-US and non-CH developers\n\nSpent entire Pro 20x weekly limit in 7 hours, which costs me 230 euros monthly (~ $265). After it started using API tokens to finish tasks for some client demos. I burned through 400 euros in 3.5 hours. In the past I could use only subscription to use AI agents 5 out of 7 days with 8 hour work every day. Now we get ~15-20% and output from 5.5 XHigh to Astra is not 5-7x in my opinion. I would have used 5.5 if they did not nerfed to the point of not being usable anymore. Now it is less expensive to me to hire medior/senior developer in my country than to continue using AI agent as replacement.       submitted by     /u/TrainingDragonfruit1     to     r/OpenaiCodex       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OpenaiCodex/comments/1wko26r/ok_we_reached_that_ai_cost_is_now_above_developer/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-19T14:43:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-19T14:44:15.159Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aae9fc1660c608403980b8c"
+    },
+    "message_id": "reddit_t3_1wko26l",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",

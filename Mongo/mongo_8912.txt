@@ -1,0 +1,416 @@
+    "username": "061emergenciand",
+    "title": "#SaludResponde ☎️ | Juan José Cubillas, jefe de proyecto del Outsourcing de Salud Responde, explica cómo la tecnología y el conocimiento adquirido durante estos años han permitido desarrollar una nueva herramienta CRM que mejora la gestión de las demandas de la ciudadanía. https://t.co/A4yxhIsrjW",
+    "text": "#SaludResponde ☎️ | Juan José Cubillas, jefe de proyecto del Outsourcing de Salud Responde, explica cómo la tecnología y el conocimiento adquirido durante estos años han permitido desarrollar una nueva herramienta CRM que mejora la gestión de las demandas de la ciudadanía. https://t.co/A4yxhIsrjW",
+    "post_url": "https://twitter.com/061emergenciand/status/2098751360330002466",
+    "score": 3,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-12T12:31:31Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:25:20.114Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabea4042dd0e95b5baddb3"
+    },
+    "message_id": "twitter_2060394315998990520",
+    "topic_key": "emergency crm",
+    "search_keyword": "emergency CRM",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "HolySmokas",
+    "title": "I told you in this video 2 days ago… emergency load up on $CRM AND $NOW",
+    "text": "I told you in this video 2 days ago… emergency load up on $CRM AND $NOW",
+    "post_url": "https://twitter.com/HolySmokas/status/2060394315998990520",
+    "score": 297,
+    "num_comments": 31,
+    "created_utc": {
+      "$date": "2026-05-29T16:14:19Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:25:20.330Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabea4042dd0e95b5baddb4"
+    },
+    "message_id": "twitter_2097877254575358055",
+    "topic_key": "emergency crm",
+    "search_keyword": "emergency CRM",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "EmergMgt",
+    "title": "Amazon cargo plane pilot warned he was coming in too fast https://t.co/r0XDy0E8Y0\nCrew resource management failure when the pilot flying the plane did not listen to his partner in the cockpit. CRM isn't criticism, it's safety and risk reduction.",
+    "text": "Amazon cargo plane pilot warned he was coming in too fast https://t.co/r0XDy0E8Y0\nCrew resource management failure when the pilot flying the plane did not listen to his partner in the cockpit. CRM isn't criticism, it's safety and risk reduction.",
+    "post_url": "https://twitter.com/EmergMgt/status/2097877254575358055",
+    "score": 5,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T02:38:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:25:20.546Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabea4042dd0e95b5baddb5"
+    },
+    "message_id": "twitter_2099914830555623519",
+    "topic_key": "emergency crm",
+    "search_keyword": "emergency CRM",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ThorstenDembski",
+    "title": "I built a complete AI voice agent for a local business from scratch.\n\nIt answers the phone, answers questions, books appointments and texts the owner a summary after every call.\n\nThe full build is in the video below. I sped it up 3× so you can watch the whole thing in 18 minutes.\n\nBut the clicks aren't what make an agent good.\n\nThe decisions are.\n\nSo here are the rules I wish someone had given me before my first build. Bookmark this and keep it open while you watch.\n\n1. Write the prompt like a job description, not a wish list\n\nMost bad voice agents come from a prompt that says \"You are a helpful assistant for ABC Plumbing.\"\n\nThat's not enough to do a job.\n\nStructure it in 6 blocks:\n\n→ Role: who the agent is and who it works for → Business facts: services, service area, hours, prices it may share, prices it may NOT share → Goal: the ONE outcome of every call (usually: book the appointment) → Conversation flow: greet → understand the problem → collect details → book → confirm → Rules: what it must never do (promise prices, give diagnoses, argue) → Edge cases: emergencies, angry callers, existing customers, sales calls, \"can I talk to a person?\"\n\nA real employee would get this on day one. Your agent needs it too.\n\n2. Talk short\n\nThe #1 thing that makes AI sound like AI on the phone: long answers.\n\nPut this in the rules:\n\n\"Answer in 1–2 short sentences. Ask only one question at a time.\"\n\nNobody wants a paragraph read to them while they have a leaking pipe.\n\n3. Collect details in a fixed order and read them back\n\nName → phone number → address → problem → preferred time.\n\nThen:\n\n\"Let me make sure I have that right: [name], [number], [address]. Is that correct?\"\n\nNumbers and street names are where voice agents make mistakes. The read-back catches them before they reach the CRM.\n\n4. Always leave a door to a human\n\nTell the agent exactly when to transfer or take a message:\n\n→ The caller asks for a person twice → It's an emergency → The caller is upset → The question isn't in the knowledge base\n\nAn agent that traps people loses the business trust in week one. An agent that knows its limits keeps the client for years.\n\n5. Be honest that it's AI\n\nIf a caller asks \"Am I talking to a robot?\", the agent should say yes, kindly, and keep helping.\n\nCallers accept AI that is honest and useful. They hate AI pretending to be Sarah from the front desk. In some places disclosure is also a legal requirement, so check your client's local rules.\n\n6. Feed it a knowledge base, not a bigger prompt\n\nDon't cram 40 FAQs into the prompt.\n\nPut the business's FAQ, services list and policies into the knowledge base, and keep the prompt about behavior.\n\nGood sources you already have: their website, their Google Business profile, and the questions the owner says they get asked all the time.\n\n7. The call is only half the product\n\nWhat happens after the call is what the owner actually feels:\n\n→ The contact is created in the CRM automatically → The appointment lands in the calendar → The owner gets a text summary: who called, what they need, when they're booked → The caller gets a confirmation text → Missed or unfinished calls trigger a follow-up text\n\nIn HighLevel the agent, the CRM, the calendar and the automations live in one place, so this part doesn't need extra tools.\n\n8. Break it before the client does\n\nBefore any client hears it, make 20 test calls. Play these callers:\n\n→ Someone who mumbles their phone number → Someone who asks for a price → Someone who wants to cancel → Someone angry → Someone calling at 2am with an emergency → A salesperson → Someone who asks \"are you a real person?\" → Someone who changes their mind halfway\n\nEvery failure becomes a new line in the rules or the knowledge base. This step is what separates an agent that impresses from one that embarrasses you.\n\n9. Sell the outcome, not the agent\n\nThe owner doesn't care about voice models or prompts.\n\nThey care that calls after 5pm stop turning into lost jobs.\n\nSo the pitch is: \"Every call answered, every job booked, a text summary on your phone.\"\n\nCharge a monthly fee, because the value (answered calls) is monthly too.\n\n10. Your first build will be slow. That's normal.\n\nMine wasn't 18 minutes either. The video is sped up for a reason.\n\nBuild one for a fictional business first. Then build one as a demo for a real local business and show it to the owner. Nothing sells like hearing their own business name answered by an agent.\n\nIf you want to build along: the free 30-day HighLevel trial, the free bootcamp and my AI Receptionist Playbook (with the full prompts) are in my bio.",
+    "text": "I built a complete AI voice agent for a local business from scratch.\n\nIt answers the phone, answers questions, books appointments and texts the owner a summary after every call.\n\nThe full build is in the video below. I sped it up 3× so you can watch the whole thing in 18 minutes.\n\nBut the clicks aren't what make an agent good.\n\nThe decisions are.\n\nSo here are the rules I wish someone had given me before my first build. Bookmark this and keep it open while you watch.\n\n1. Write the prompt like a job description, not a wish list\n\nMost bad voice agents come from a prompt that says \"You are a helpful assistant for ABC Plumbing.\"\n\nThat's not enough to do a job.\n\nStructure it in 6 blocks:\n\n→ Role: who the agent is and who it works for → Business facts: services, service area, hours, prices it may share, prices it may NOT share → Goal: the ONE outcome of every call (usually: book the appointment) → Conversation flow: greet → understand the problem → collect details → book → confirm → Rules: what it must never do (promise prices, give diagnoses, argue) → Edge cases: emergencies, angry callers, existing customers, sales calls, \"can I talk to a person?\"\n\nA real employee would get this on day one. Your agent needs it too.\n\n2. Talk short\n\nThe #1 thing that makes AI sound like AI on the phone: long answers.\n\nPut this in the rules:\n\n\"Answer in 1–2 short sentences. Ask only one question at a time.\"\n\nNobody wants a paragraph read to them while they have a leaking pipe.\n\n3. Collect details in a fixed order and read them back\n\nName → phone number → address → problem → preferred time.\n\nThen:\n\n\"Let me make sure I have that right: [name], [number], [address]. Is that correct?\"\n\nNumbers and street names are where voice agents make mistakes. The read-back catches them before they reach the CRM.\n\n4. Always leave a door to a human\n\nTell the agent exactly when to transfer or take a message:\n\n→ The caller asks for a person twice → It's an emergency → The caller is upset → The question isn't in the knowledge base\n\nAn agent that traps people loses the business trust in week one. An agent that knows its limits keeps the client for years.\n\n5. Be honest that it's AI\n\nIf a caller asks \"Am I talking to a robot?\", the agent should say yes, kindly, and keep helping.\n\nCallers accept AI that is honest and useful. They hate AI pretending to be Sarah from the front desk. In some places disclosure is also a legal requirement, so check your client's local rules.\n\n6. Feed it a knowledge base, not a bigger prompt\n\nDon't cram 40 FAQs into the prompt.\n\nPut the business's FAQ, services list and policies into the knowledge base, and keep the prompt about behavior.\n\nGood sources you already have: their website, their Google Business profile, and the questions the owner says they get asked all the time.\n\n7. The call is only half the product\n\nWhat happens after the call is what the owner actually feels:\n\n→ The contact is created in the CRM automatically → The appointment lands in the calendar → The owner gets a text summary: who called, what they need, when they're booked → The caller gets a confirmation text → Missed or unfinished calls trigger a follow-up text\n\nIn HighLevel the agent, the CRM, the calendar and the automations live in one place, so this part doesn't need extra tools.\n\n8. Break it before the client does\n\nBefore any client hears it, make 20 test calls. Play these callers:\n\n→ Someone who mumbles their phone number → Someone who asks for a price → Someone who wants to cancel → Someone angry → Someone calling at 2am with an emergency → A salesperson → Someone who asks \"are you a real person?\" → Someone who changes their mind halfway\n\nEvery failure becomes a new line in the rules or the knowledge base. This step is what separates an agent that impresses from one that embarrasses you.\n\n9. Sell the outcome, not the agent\n\nThe owner doesn't care about voice models or prompts.\n\nThey care that calls after 5pm stop turning into lost jobs.\n\nSo the pitch is: \"Every call answered, every job booked, a text summary on your phone.\"\n\nCharge a monthly fee, because the value (answered calls) is monthly too.\n\n10. Your first build will be slow. That's normal.\n\nMine wasn't 18 minutes either. The video is sped up for a reason.\n\nBuild one for a fictional business first. Then build one as a demo for a real local business and show it to the owner. Nothing sells like hearing their own business name answered by an agent.\n\nIf you want to build along: the free 30-day HighLevel trial, the free bootcamp and my AI Receptionist Playbook (with the full prompts) are in my bio.",
+    "post_url": "https://twitter.com/ThorstenDembski/status/2099914830555623519",
+    "score": 0,
+    "num_comments": 3,
+    "created_utc": {
+      "$date": "2026-09-15T17:34:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:25:20.762Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabea4142dd0e95b5baddb7"
+    },
+    "message_id": "twitter_2100547838803337357",
+    "topic_key": "emergency crm",
+    "search_keyword": "emergency CRM",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "isaacvoss",
+    "title": "A CRM only works when the team uses it daily. Most CRM problems are discipline problems, not software problems. Make the next step clear, and follow-up gets easier.\n\nSchedule your relief-focused consult. https://t.co/un4AiEiy3f https://t.co/uvk1IBySxI",
+    "text": "A CRM only works when the team uses it daily. Most CRM problems are discipline problems, not software problems. Make the next step clear, and follow-up gets easier.\n\nSchedule your relief-focused consult. https://t.co/un4AiEiy3f https://t.co/uvk1IBySxI",
+    "post_url": "https://twitter.com/isaacvoss/status/2100547838803337357",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T11:30:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:25:21.205Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabea4142dd0e95b5baddb8"
+    },
+    "message_id": "twitter_2099924360584933516",
+    "topic_key": "emergency crm",
+    "search_keyword": "emergency CRM",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "CodingNoobie",
+    "title": "DAILY TECH NEWS ROUNDUP 🚨\n\nEverything important that happened in tech during the last 24 hours:\n\n• AWS said it cannot restore its Bahrain cloud region or one UAE availability zone after war-related infrastructure damage, exposing the limits of cloud resilience.\n\n• Meta launched Meta One, a paid subscription layer across Instagram, Facebook, WhatsApp and Meta AI, with plans starting at $2.99 per month.\n\n• MediaTek unveiled the Dimensity 9600 Pro, the first announced flagship smartphone chip built on 2nm, with major power-efficiency gains.\n\n• Microsoft shipped emergency Windows patches after September’s updates broke Remote Desktop, Hyper-V sharing and some USB audio setups.\n\n• Meta will report child-safety cases directly to India’s I4C, strengthening cooperation with Indian cybercrime authorities.\n\n• OpenAI said it has been coordinating with Anthropic and Google DeepMind on AI safety, raising fresh questions around industry coordination and antitrust.\n\n• Exein raised $270 million at a $1.7 billion valuation to secure robots, drones, vehicles and other connected physical-world devices.\n\n• Euclyd raised about $231 million from investors including Samsung to develop lower-power AI inference processors designed as alternatives to GPUs.\n\n• Apple expanded iCloud+ in India and 100+ markets by bundling Apple TV and Apple Arcade without increasing subscription prices.\n\n• Applied Materials announced a ₹3,600 crore Karnataka investment over the next decade to expand semiconductor equipment R&D and manufacturing.\n\n• NPCI will introduce a 0.4% MDR on eligible UPI merchant payments above ₹2,000 from October 15, creating a new revenue stream for the payments ecosystem.\n\n• Salesforce and NVIDIA launched Koa, Salesforce’s first CRM reasoning model, designed for complex multi-step enterprise workflows in Agentforce.\n\n• Factory raised $200 million at a $5 billion valuation to expand its AI software-engineering agents, more than tripling its valuation since April.\n\n• DoorDash agreed to acquire Grubhub’s campus dining business for $300 million and invest another $125 million in Wonder, expanding into university and venue food services.\n\n• The Gates Foundation committed at least $1 billion over two years to expand AI access in education, healthcare and agriculture, with major funding directed toward education and healthcare.",
+    "text": "DAILY TECH NEWS ROUNDUP 🚨\n\nEverything important that happened in tech during the last 24 hours:\n\n• AWS said it cannot restore its Bahrain cloud region or one UAE availability zone after war-related infrastructure damage, exposing the limits of cloud resilience.\n\n• Meta launched Meta One, a paid subscription layer across Instagram, Facebook, WhatsApp and Meta AI, with plans starting at $2.99 per month.\n\n• MediaTek unveiled the Dimensity 9600 Pro, the first announced flagship smartphone chip built on 2nm, with major power-efficiency gains.\n\n• Microsoft shipped emergency Windows patches after September’s updates broke Remote Desktop, Hyper-V sharing and some USB audio setups.\n\n• Meta will report child-safety cases directly to India’s I4C, strengthening cooperation with Indian cybercrime authorities.\n\n• OpenAI said it has been coordinating with Anthropic and Google DeepMind on AI safety, raising fresh questions around industry coordination and antitrust.\n\n• Exein raised $270 million at a $1.7 billion valuation to secure robots, drones, vehicles and other connected physical-world devices.\n\n• Euclyd raised about $231 million from investors including Samsung to develop lower-power AI inference processors designed as alternatives to GPUs.\n\n• Apple expanded iCloud+ in India and 100+ markets by bundling Apple TV and Apple Arcade without increasing subscription prices.\n\n• Applied Materials announced a ₹3,600 crore Karnataka investment over the next decade to expand semiconductor equipment R&D and manufacturing.\n\n• NPCI will introduce a 0.4% MDR on eligible UPI merchant payments above ₹2,000 from October 15, creating a new revenue stream for the payments ecosystem.\n\n• Salesforce and NVIDIA launched Koa, Salesforce’s first CRM reasoning model, designed for complex multi-step enterprise workflows in Agentforce.\n\n• Factory raised $200 million at a $5 billion valuation to expand its AI software-engineering agents, more than tripling its valuation since April.\n\n• DoorDash agreed to acquire Grubhub’s campus dining business for $300 million and invest another $125 million in Wonder, expanding into university and venue food services.\n\n• The Gates Foundation committed at least $1 billion over two years to expand AI access in education, healthcare and agriculture, with major funding directed toward education and healthcare.",
+    "post_url": "https://twitter.com/CodingNoobie/status/2099924360584933516",
+    "score": 8,
+    "num_comments": 2,
+    "created_utc": {
+      "$date": "2026-09-15T18:12:36Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:25:21.421Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabea4142dd0e95b5baddba"
+    },
+    "message_id": "twitter_2090452991681642921",
+    "topic_key": "emergency crm",
+    "search_keyword": "emergency CRM",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "nateherk",
+    "title": "https://t.co/gkVcLnwca9",
+    "text": "https://t.co/gkVcLnwca9",
+    "post_url": "https://twitter.com/nateherk/status/2090452991681642921",
+    "score": 170,
+    "num_comments": 5,
+    "created_utc": {
+      "$date": "2026-08-20T14:56:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:25:21.851Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabea4942dd0e95b5baddbd"
+    },
+    "message_id": "twitter_2089729034813149249",
+    "topic_key": "emergency devops engineer",
+    "search_keyword": "emergency DevOps engineer",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "govardhana_mk",
+    "title": "Once, my manager in Singapore told me: \n\nIf you don’t naturally wake up at 1 a.m. to spend 1 or 2 hours on production deployments, don’t call yourself a DevOps engineer. You need to fix up.\n\nTo be fair, his planning ineffeciency can't be my emergency.\n\n3 months later, I left that company. \n\n3 yrs later, I was in a leadership role at their competitor’s bank. \n\n2 yrs later, I left Singapore and returned to India.\n\n1 yr later, I started my consulting agency.\n\n1 yr later, that same company became my client, and I now work with their CTO to shape their cloud strategy. \n\n'The Manager' became a Sr. Manager recently. \n\nIt took him 7 years to get there. \n\nDo not budge to limitations - be it your boss, recession, AI, or circumstances. \n\nIn tech, you always get better chances. \n\nBe qualified and ready to grab them. \n\nMany a time, you can create that opportunity.\n\n50K+ read my DevOps and Cloud newsletter: https://t.co/WBucLdwLhJ\n\nWhat do we cover: \nDevOps, Cloud, Kubernetes, IaC, GitOps, MLOps\n\n🔁 Consider a repost if this is helpful.",
+    "text": "Once, my manager in Singapore told me: \n\nIf you don’t naturally wake up at 1 a.m. to spend 1 or 2 hours on production deployments, don’t call yourself a DevOps engineer. You need to fix up.\n\nTo be fair, his planning ineffeciency can't be my emergency.\n\n3 months later, I left that company. \n\n3 yrs later, I was in a leadership role at their competitor’s bank. \n\n2 yrs later, I left Singapore and returned to India.\n\n1 yr later, I started my consulting agency.\n\n1 yr later, that same company became my client, and I now work with their CTO to shape their cloud strategy. \n\n'The Manager' became a Sr. Manager recently. \n\nIt took him 7 years to get there. \n\nDo not budge to limitations - be it your boss, recession, AI, or circumstances. \n\nIn tech, you always get better chances. \n\nBe qualified and ready to grab them. \n\nMany a time, you can create that opportunity.\n\n50K+ read my DevOps and Cloud newsletter: https://t.co/WBucLdwLhJ\n\nWhat do we cover: \nDevOps, Cloud, Kubernetes, IaC, GitOps, MLOps\n\n🔁 Consider a repost if this is helpful.",
+    "post_url": "https://twitter.com/govardhana_mk/status/2089729034813149249",
+    "score": 6,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-08-18T15:00:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:25:29.214Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabea4942dd0e95b5baddbe"
+    },
+    "message_id": "twitter_2054462190912938442",
+    "topic_key": "emergency devops engineer",
+    "search_keyword": "emergency DevOps engineer",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Dhanush_Nehru",
+    "title": "🚨 NGINX is NOT deprecated. Stop panicking and rewriting your Dockerfiles. 🚨\n\nI’ve seen this rumor floating around a lot recently, causing a mini meltdown in the DevOps community. Let's clear up the confusion before your Manager schedules an emergency \"Migration Strategy\" meeting.\n\nHere is what is ACTUALLY happening:\n\n❌ What the rumor says: \"NGINX is dead! We have to replace our web servers!\" \n✅ The Reality: The core NGINX web server is perfectly fine. It is actively maintained, universally supported, and going nowhere. Serving your static React/Vue assets via NGINX in a container? Keep doing it. You're completely safe.\n\nSo, where did the panic come from? 🕵️‍♂️\n\nThe confusion stems from a specific Kubernetes component: the community-maintained ingress-nginx controller.\n\n🗓️ The Reality Check: As of March 2026, the community ingress-nginx project officially retired. It is no longer receiving updates, bug fixes or CVE patches.\n\nWhat does this mean for you? If you are managing K8s infrastructure and still relying on the community ingress-nginx controller for routing external traffic into your cluster, you are currently running unmaintained software. That is what needs to change.\n\nYour Action Plan: \n1️⃣ For App Devs: Keep using NGINX as your container web server. No action needed. \n2️⃣ For Platform/DevOps Engineers: If you missed the March deadline, your cluster ingress migration is now past due. You need to migrate to the Kubernetes Gateway API (the modern, standardized successor to traditional Ingress) or switch to a commercially supported controller ASAP.\n\nTech telephone is dangerous. \n\nShare this to save a DevOps engineer from an unnecessary panic attack today. ♻️",
+    "text": "🚨 NGINX is NOT deprecated. Stop panicking and rewriting your Dockerfiles. 🚨\n\nI’ve seen this rumor floating around a lot recently, causing a mini meltdown in the DevOps community. Let's clear up the confusion before your Manager schedules an emergency \"Migration Strategy\" meeting.\n\nHere is what is ACTUALLY happening:\n\n❌ What the rumor says: \"NGINX is dead! We have to replace our web servers!\" \n✅ The Reality: The core NGINX web server is perfectly fine. It is actively maintained, universally supported, and going nowhere. Serving your static React/Vue assets via NGINX in a container? Keep doing it. You're completely safe.\n\nSo, where did the panic come from? 🕵️‍♂️\n\nThe confusion stems from a specific Kubernetes component: the community-maintained ingress-nginx controller.\n\n🗓️ The Reality Check: As of March 2026, the community ingress-nginx project officially retired. It is no longer receiving updates, bug fixes or CVE patches.\n\nWhat does this mean for you? If you are managing K8s infrastructure and still relying on the community ingress-nginx controller for routing external traffic into your cluster, you are currently running unmaintained software. That is what needs to change.\n\nYour Action Plan: \n1️⃣ For App Devs: Keep using NGINX as your container web server. No action needed. \n2️⃣ For Platform/DevOps Engineers: If you missed the March deadline, your cluster ingress migration is now past due. You need to migrate to the Kubernetes Gateway API (the modern, standardized successor to traditional Ingress) or switch to a commercially supported controller ASAP.\n\nTech telephone is dangerous. \n\nShare this to save a DevOps engineer from an unnecessary panic attack today. ♻️",
+    "post_url": "https://twitter.com/Dhanush_Nehru/status/2054462190912938442",
+    "score": 9,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-05-13T07:22:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:25:29.430Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabea4942dd0e95b5baddbf"
+    },
+    "message_id": "twitter_2062867073353519434",
+    "topic_key": "emergency devops engineer",
+    "search_keyword": "emergency DevOps engineer",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "techie_piyush",
+    "title": "Should I prepare for a DevOps role? or SRE? Wait... there is a platform engineering role as well. 🤷‍♂️\n\nThat is what I hear from engineers every single day when they are looking for a job.\n\nWhen I started my career in 2012, the walls between teams were thick.\n\nDevelopers built code, and operations teams prayed it wouldn't break in production. \n\nThere was zero communication. This gap is exactly why these three distinct philosophies emerged to solve very specific problems.\n\nHere is how I break them down for anyone confused about their career path:\n\n→ DevOps started the revolution. It was created to bridge the gap between development and operations. The focus is entirely on speed and delivery through CI/CD pipelines and automation. \n\n→ SRE (Site Reliability Engineering) kept it alive. Google pioneered this to handle systems that were breaking as they scaled. If you love troubleshooting under pressure and managing error budgets, this is your path.\n\n→ Platform Engineering made it scalable. It is the newest shift, focusing on the developer experience. It solves the problem of tool sprawl by building internal developer platforms so engineers can self-serve without needing a ticket for every minor change.\n\nI often use a city analogy to explain this. \n\n>The DevOps engineer builds the roads. \n>The SRE is the traffic management and emergency response team. \n>The Platform engineer builds the GPS system so everyone can navigate without getting lost.\n\nIf you are just starting out, my advice is to follow the DevOps roadmap first. \n\nIt is the most generalist path and gives you the foundation to specialize later.\n\nThe goal isn't just to learn tools like Terraform or Kubernetes. \n\nIt is to understand which specific problem you actually enjoy solving. \n\nOne focuses on speed, one on stability, and one on ease of use.\n \nWhich one are you preparing for?\n\nVideo link is in the comment below",
+    "text": "Should I prepare for a DevOps role? or SRE? Wait... there is a platform engineering role as well. 🤷‍♂️\n\nThat is what I hear from engineers every single day when they are looking for a job.\n\nWhen I started my career in 2012, the walls between teams were thick.\n\nDevelopers built code, and operations teams prayed it wouldn't break in production. \n\nThere was zero communication. This gap is exactly why these three distinct philosophies emerged to solve very specific problems.\n\nHere is how I break them down for anyone confused about their career path:\n\n→ DevOps started the revolution. It was created to bridge the gap between development and operations. The focus is entirely on speed and delivery through CI/CD pipelines and automation. \n\n→ SRE (Site Reliability Engineering) kept it alive. Google pioneered this to handle systems that were breaking as they scaled. If you love troubleshooting under pressure and managing error budgets, this is your path.\n\n→ Platform Engineering made it scalable. It is the newest shift, focusing on the developer experience. It solves the problem of tool sprawl by building internal developer platforms so engineers can self-serve without needing a ticket for every minor change.\n\nI often use a city analogy to explain this. \n\n>The DevOps engineer builds the roads. \n>The SRE is the traffic management and emergency response team. \n>The Platform engineer builds the GPS system so everyone can navigate without getting lost.\n\nIf you are just starting out, my advice is to follow the DevOps roadmap first. \n\nIt is the most generalist path and gives you the foundation to specialize later.\n\nThe goal isn't just to learn tools like Terraform or Kubernetes. \n\nIt is to understand which specific problem you actually enjoy solving. \n\nOne focuses on speed, one on stability, and one on ease of use.\n \nWhich one are you preparing for?\n\nVideo link is in the comment below",
+    "post_url": "https://twitter.com/techie_piyush/status/2062867073353519434",
+    "score": 44,
+    "num_comments": 5,
+    "created_utc": {
+      "$date": "2026-06-05T12:00:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:25:29.646Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabea4942dd0e95b5baddc0"
+    },
+    "message_id": "twitter_2098051111269671419",
+    "topic_key": "emergency devops engineer",
+    "search_keyword": "emergency DevOps engineer",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Njuchi_",
+    "title": "In 2018 Joseph bought a new house and a new car.\nTwo weeks later he was laid off.\n\nHe was on an H1B visa. He had 60 days to find a job or leave the country.\n\nHe didn't find one in time. He packed up and flew back to India.\n\nMost people would have taken the first offer they got when they returned to the US. Joseph didn't. \n\nHe used the time in India to figure out what he actually wanted to build his career around — and he chose DevOps.\n\nA few years later he's a Staff Cybersecurity Engineer at PayPal, a Docker Captain, and an AWS Community Builder.\n\nI sat down with Joseph to hear the full story — the setback, the pivot, the rebuild, and what he'd tell engineers going through the same thing right now.\n\nFull interview now on Youtube 👇\nhttps://t.co/emV13ayqxt",
+    "text": "In 2018 Joseph bought a new house and a new car.\nTwo weeks later he was laid off.\n\nHe was on an H1B visa. He had 60 days to find a job or leave the country.\n\nHe didn't find one in time. He packed up and flew back to India.\n\nMost people would have taken the first offer they got when they returned to the US. Joseph didn't. \n\nHe used the time in India to figure out what he actually wanted to build his career around — and he chose DevOps.\n\nA few years later he's a Staff Cybersecurity Engineer at PayPal, a Docker Captain, and an AWS Community Builder.\n\nI sat down with Joseph to hear the full story — the setback, the pivot, the rebuild, and what he'd tell engineers going through the same thing right now.\n\nFull interview now on Youtube 👇\nhttps://t.co/emV13ayqxt",
+    "post_url": "https://twitter.com/Njuchi_/status/2098051111269671419",
+    "score": 130,
+    "num_comments": 3,
+    "created_utc": {
+      "$date": "2026-09-10T14:08:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:25:29.863Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabea4a42dd0e95b5baddc1"
+    },
+    "message_id": "twitter_2083178852629823624",
+    "topic_key": "emergency devops engineer",
+    "search_keyword": "emergency DevOps engineer",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "techyoutbe",
+    "title": "https://t.co/jcaDC6aWUa",
+    "text": "https://t.co/jcaDC6aWUa",
+    "post_url": "https://twitter.com/techyoutbe/status/2083178852629823624",
+    "score": 45,
+    "num_comments": 2,
+    "created_utc": {
+      "$date": "2026-07-31T13:11:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:25:30.091Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabea4b42dd0e95b5baddc6"
+    },
+    "message_id": "twitter_2099888132665586098",
+    "topic_key": "emergency devops engineer",
+    "search_keyword": "emergency DevOps engineer",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "devopsdotcom",
+    "title": "What if operations could act before disruption? \n\nExplore autonomous operational resilience and how systems can anticipate risk and respond before users feel the impact. \n\n📅 Sept 22 | 11am ET\n🎟️ Register now: https://t.co/2pf7qY5HCr\n#OperationalResilience #ITOperations https://t.co/gqHbWAL9c8",
+    "text": "What if operations could act before disruption? \n\nExplore autonomous operational resilience and how systems can anticipate risk and respond before users feel the impact. \n\n📅 Sept 22 | 11am ET\n🎟️ Register now: https://t.co/2pf7qY5HCr\n#OperationalResilience #ITOperations https://t.co/gqHbWAL9c8",
+    "post_url": "https://twitter.com/devopsdotcom/status/2099888132665586098",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T15:48:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:25:31.163Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabea4b42dd0e95b5baddc8"
+    },
+    "message_id": "twitter_2071606948945076562",
+    "topic_key": "emergency devops engineer",
+    "search_keyword": "emergency DevOps engineer",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "__karnati",
+    "title": "Most teams don't have an Infrastructure-as-Code problem.\n\nThey have an IaC readability problem.\n\nAnyone can write Terraform. Very few teams can maintain it a year later.\n\nHere's what usually happens:\n→ Engineers copy an old module because nobody knows which one is \"correct.\"\n→ PRs get approved with a quick 👍 because the blast radius is impossible to reason about.\n→ Someone makes an \"emergency\" console change.\n→ Six months later, Terraform wants to delete half the infrastructure.\n\nAt that point, it isn't Infrastructure as Code.\nIt's Infrastructure as Documentation.\n\nThe best IaC repositories I've seen have very little to do with Terraform itself.\n\nThey optimize for humans.\n→ Modules do one thing well.\n→ Every change has a reviewable blast radius.\n→ Drift is detected immediately, not during the next outage.\n→ A new engineer can understand the repository without a two-hour walkthrough.\n\nThe goal of IaC was never to automate infrastructure. It was to make infrastructure understandable, repeatable, and safe to change.\n\nHere's a simple test:\nCould your newest engineer make a production change in their first week with confidence?\n\nIf the answer is no...\nYour biggest infrastructure risk probably isn't AWS.\nIt's your Terraform repository.\n\nWhat's the hardest part of maintaining IaC as your infrastructure grows?\n\n#InfrastructureAsCode #Terraform #DevOps #PlatformEngineering",
+    "text": "Most teams don't have an Infrastructure-as-Code problem.\n\nThey have an IaC readability problem.\n\nAnyone can write Terraform. Very few teams can maintain it a year later.\n\nHere's what usually happens:\n→ Engineers copy an old module because nobody knows which one is \"correct.\"\n→ PRs get approved with a quick 👍 because the blast radius is impossible to reason about.\n→ Someone makes an \"emergency\" console change.\n→ Six months later, Terraform wants to delete half the infrastructure.\n\nAt that point, it isn't Infrastructure as Code.\nIt's Infrastructure as Documentation.\n\nThe best IaC repositories I've seen have very little to do with Terraform itself.\n\nThey optimize for humans.\n→ Modules do one thing well.\n→ Every change has a reviewable blast radius.\n→ Drift is detected immediately, not during the next outage.\n→ A new engineer can understand the repository without a two-hour walkthrough.\n\nThe goal of IaC was never to automate infrastructure. It was to make infrastructure understandable, repeatable, and safe to change.\n\nHere's a simple test:\nCould your newest engineer make a production change in their first week with confidence?\n\nIf the answer is no...\nYour biggest infrastructure risk probably isn't AWS.\nIt's your Terraform repository.\n\nWhat's the hardest part of maintaining IaC as your infrastructure grows?\n\n#InfrastructureAsCode #Terraform #DevOps #PlatformEngineering",
+    "post_url": "https://twitter.com/__karnati/status/2071606948945076562",
+    "score": 8,
+    "num_comments": 3,
+    "created_utc": {
+      "$date": "2026-06-29T14:49:19Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:25:31.592Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabea5342dd0e95b5baddd1"
+    },
+    "message_id": "twitter_2098318355438374946",
+    "topic_key": "emergency graphql developer",
+    "search_keyword": "emergency GraphQL developer",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "SamualTNorman",
+    "title": "I got made redundant this week. I'm a very passionate web developer. I got very used to wearing many hats from being fullstack, to sys-admin, to technical lead. DM me",
+    "text": "I got made redundant this week. I'm a very passionate web developer. I got very used to wearing many hats from being fullstack, to sys-admin, to technical lead. DM me",
+    "post_url": "https://twitter.com/SamualTNorman/status/2098318355438374946",
+    "score": 3,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T07:50:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:25:39.756Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabea5442dd0e95b5baddd3"
+    },
+    "message_id": "twitter_2100209850705973504",
+    "topic_key": "emergency graphql developer",
+    "search_keyword": "emergency GraphQL developer",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "athamxa",
+    "title": "i still remember the day a new lead joined our project and proposed we should move to graphql.\n\nthe architect told him let’s keep it low priority and then never took it up in the 2 years i was still there. \n\nwe had 2 endpoints lol.",
+    "text": "i still remember the day a new lead joined our project and proposed we should move to graphql.\n\nthe architect told him let’s keep it low priority and then never took it up in the 2 years i was still there. \n\nwe had 2 endpoints lol.",
+    "post_url": "https://twitter.com/athamxa/status/2100209850705973504",
+    "score": 11,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T13:07:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:25:40.199Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabea5442dd0e95b5baddd4"
+    },
+    "message_id": "twitter_2098068751023587409",
+    "topic_key": "emergency graphql developer",
+    "search_keyword": "emergency GraphQL developer",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "aacle_",
+    "title": "Testing GraphQL Security?\n\nI went through real HackerOne reports + research writeups covering IDOR/BOLA, auth gaps, CSRF, hidden mutations &amp; query abuse.\n\nPut the interesting cases + lessons into one short read 👇\n\nhttps://t.co/tkzdZ1dS68 https://t.co/sYra3YwYpf",
+    "text": "Testing GraphQL Security?\n\nI went through real HackerOne reports + research writeups covering IDOR/BOLA, auth gaps, CSRF, hidden mutations &amp; query abuse.\n\nPut the interesting cases + lessons into one short read 👇\n\nhttps://t.co/tkzdZ1dS68 https://t.co/sYra3YwYpf",
+    "post_url": "https://twitter.com/aacle_/status/2098068751023587409",
+    "score": 56,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-10T15:19:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:25:40.415Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabea5442dd0e95b5baddd5"
+    },
+    "message_id": "twitter_2100570584900055372",
+    "topic_key": "emergency graphql developer",
+    "search_keyword": "emergency GraphQL developer",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "MansiCodez",
+    "title": "Recently I interviewed a Senior Engineer.\n\nStrong candidate.\n\nKafka? ✅\nRedis? ✅\nMicroservices? ✅\nDistributed systems? ✅\n\nThen I asked:\n“Design PagerDuty.”\n\nA monitoring system sends 50,000 alerts per minute.\n\nOne service starts failing.\n\nThe same alert fires 400 times in 20 seconds from 80 replicas.\n\nYour system creates an incident and pages the on-call engineer.\n\nThe SMS is sent.\n\nBefore your service records “notification sent” and starts the escalation timer, the process crashes.\n\nThe alert keeps arriving.\n\nAnother replica picks it up.\n\nIt thinks nobody was paged.\n\nIt pages the secondary. Then the manager. Then the director.\n\nFour people get woken up for one incident.\n\nOr worse: the first page never actually left, the crash happened earlier, and nobody gets woken up at all.\n\n“Just use a unique alert key.”\nDoesn’t solve concurrent ingest.\n\n“Put it in Redis and set a TTL.”\nWhat happens when Redis is partitioned from the notifier?\n\n“Check if an incident already exists first.”\nTwo requests check at the same time. Both create. Both page.\n\nYour turn:\nHow do you design the incident + paging pipeline so that:\n\nthe same failing service becomes one incident, not 400\nat least one on-call person is definitely paged\n\nacknowledgements cancel escalations\na crash mid-notify does not double-page or silently drop the page\n\nThere’s a specific distributed-systems concept behind this.\n\nAnd you’ll encounter it everywhere reliability and on-call are involved.",
+    "text": "Recently I interviewed a Senior Engineer.\n\nStrong candidate.\n\nKafka? ✅\nRedis? ✅\nMicroservices? ✅\nDistributed systems? ✅\n\nThen I asked:\n“Design PagerDuty.”\n\nA monitoring system sends 50,000 alerts per minute.\n\nOne service starts failing.\n\nThe same alert fires 400 times in 20 seconds from 80 replicas.\n\nYour system creates an incident and pages the on-call engineer.\n\nThe SMS is sent.\n\nBefore your service records “notification sent” and starts the escalation timer, the process crashes.\n\nThe alert keeps arriving.\n\nAnother replica picks it up.\n\nIt thinks nobody was paged.\n\nIt pages the secondary. Then the manager. Then the director.\n\nFour people get woken up for one incident.\n\nOr worse: the first page never actually left, the crash happened earlier, and nobody gets woken up at all.\n\n“Just use a unique alert key.”\nDoesn’t solve concurrent ingest.\n\n“Put it in Redis and set a TTL.”\nWhat happens when Redis is partitioned from the notifier?\n\n“Check if an incident already exists first.”\nTwo requests check at the same time. Both create. Both page.\n\nYour turn:\nHow do you design the incident + paging pipeline so that:\n\nthe same failing service becomes one incident, not 400\nat least one on-call person is definitely paged\n\nacknowledgements cancel escalations\na crash mid-notify does not double-page or silently drop the page\n\nThere’s a specific distributed-systems concept behind this.\n\nAnd you’ll encounter it everywhere reliability and on-call are involved.",
+    "post_url": "https://twitter.com/MansiCodez/status/2100570584900055372",
+    "score": 9,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T13:00:28Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:25:40.631Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabea5442dd0e95b5baddd6"
+    },
+    "message_id": "twitter_2100204578604016007",
+    "topic_key": "emergency graphql developer",
+    "search_keyword": "emergency GraphQL developer",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "cavendishpros",
+    "title": "📱 Lead FS (Golang/React) Developer\n📍 Greece\n📱 Cezary Orchowski - 0203 0085 212\n▶️ Apply here - https://t.co/Ue11u0yWwJ\n\n#techhiring #techgreece https://t.co/Y1FiimwcBZ",
+    "text": "📱 Lead FS (Golang/React) Developer\n📍 Greece\n📱 Cezary Orchowski - 0203 0085 212\n▶️ Apply here - https://t.co/Ue11u0yWwJ\n\n#techhiring #techgreece https://t.co/Y1FiimwcBZ",
+    "post_url": "https://twitter.com/cavendishpros/status/2100204578604016007",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T12:46:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T13:25:40.847Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabea5542dd0e95b5baddd8"
+    },
+    "message_id": "twitter_2098264844990636148",
+    "topic_key": "emergency graphql developer",
+    "search_keyword": "emergency GraphQL developer",

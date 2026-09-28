@@ -1,0 +1,416 @@
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab18377660c60840398ff02"
+    },
+    "message_id": "reddit_t3_1wmmj2n",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MapBasedPolls",
+    "username": "triplediscount",
+    "title": "What would be worse?",
+    "text": "What would be worse?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triplediscount     to     r/MapBasedPolls       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MapBasedPolls/comments/1wmmj2n/what_would_be_worse/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T19:20:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T19:20:23.034Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab18377660c60840398ff04"
+    },
+    "message_id": "reddit_t3_1wmmj2h",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "AskBrits",
+    "username": "Maleficent-Still-260",
+    "title": "How do you feel about Palantir working with UK police and profiling people?",
+    "text": "How do you feel about Palantir working with UK police and profiling people?\n\nI just read a report from Liberty Investigates and Democracy for Sale about five police forces in the East Midlands ending their involvement in a Palantir \"real-time data sharing\" pilot called Project Nectar. (  https://libertyinvestigates.org.uk/articles/palantir-police-drop-nectar-surveillance-tool-east-midlands/  ). Palantir also works with US ICE (anti-immigration raids) and Israeli Ministry of Defense.    Some of what the article lays out:   Project Nectar was launched in 2023 to \"help police improve how they tackle crime\" by organising data police already hold.   An internal police document suggests this included creating a \"unified view\" of data on people's race, religion, sex life, political opinions, philosophical beliefs and genetic information.   Bedfordshire Police reportedly wanted Palantir to combine crime records and intelligence to create profiles of individuals including suspects and those \"about to commit a criminal offence.\"    The profiling angle is what gets me: building \"unified views\" of people's race, religion, political opinions and sex life, or profiling people \"about to commit a criminal offence.\" Is that a legitimate policing tool or a step too far?   Is it a good thing for a government to be doing this at all - handing sensitive public data to a private foreign contractor?        submitted by     /u/Maleficent-Still-260     to     r/AskBrits       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskBrits/comments/1wmmj2h/how_do_you_feel_about_palantir_working_with_uk/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T19:19:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T19:20:23.425Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab183b0660c60840398ff05"
+    },
+    "message_id": "reddit_t3_1wmmkdl",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Tekkens",
+    "username": "GameProfessional",
+    "title": "🥋 Tekkens | REXY=DEXY – Automatic",
+    "text": "🥋 Tekkens | REXY=DEXY – Automatic\n\nREXY=DEXY – Automatic     ![REXY=DEXY - Automatic>         REXY=DEXY – Automatic 🔥 STREAM NOW:  https://trapnation.komi.io    REXY=DEXY ✗  https://www.instagram.com/rexy_dexy_official/    ✗ Trap Nation’s Catalog:  https://broke.ffm.to/downloadbroke    rexydexy #automatic #trapnation #trap #edm     REXY=DEXY – Automatic     ![YouTube player]( https://i0.wp.com/i.ytimg.com/vi/KQjp63a8Yo0/hqdefault.jpg?w=1290&ssl=1 )           In the evolving landscape of software development and data management, the pursuit of automation is not merely a convenience—it’s a strategic imperative. REXY=DEXY represents a paradigm shift that aligns repository efficiency with seamless data exchange, enabling teams to move faster, reduce manual toil, and maintain stronger governance over their digital assets.   At its core, REXY=DEXY is about synchronizing two critical facets of modern workflows: repository operations and data exchange protocols. By establishing a formal equivalence between repository actions (code, configuration, and artifacts) and data exchange (schemas, contracts, and messages), organizations can automate complex end-to-end processes with confidence. This approach minimizes handoffs, mitigates errors, and creates a foundation where changes propagate predictably across environments and teams.   Key principles for implementing REXY=DEXY include:     Automation-First Design: Build pipelines, triggers, and validation steps that automatically translate repository updates into corresponding data exchange updates, and vice versa. – Governance by Design: Embed access controls, provenance tracking, and compliance checks within every automated step to ensure traceability and accountability. – Idempotent Operations: Design actions so repeated executions produce the same outcome, reducing drift and operational risk when pipelines run on schedule or in response to events. – Clear Contracts and Semantics: Maintain explicit schemas and message contracts that evolve through versioning, enabling downstream systems to adapt without breaking changes. – Observability and Feedback: Instrument pipelines with metrics, logs, and alerting to provide visibility into automation health and to support continuous improvement.     A practical implementation of REXY=DEXY might involve a few foundational components:   1) Repository Layer: Version-controlled definitions of workflows, configurations, and deployment manifests. These serve as the source of truth for how automation should behave and how data exchange should be structured.   2) Data Exchange Layer: Schemas, contracts, and message definitions that describe the structure and semantics of data flowing between systems. This layer enforces compatibility and enforces validation at boundaries.   3) Orchestration Layer: A workflow engine that translates repository state changes into automated actions on the data exchange layer, and monitors outcomes to maintain system integrity.   4) Governance Layer: Policy as code, role-based access controls, and audit trails that ensure compliance with organizational standards and regulatory requirements.   Designing effective automations under REXY=DEXY requires thoughtful consideration of integration points, failure modes, and rollback strategies. Teams should prioritize:     Clear Ownership: Define who owns each automation and who approves schema changes or contract migrations. – Safe Migration Paths: Support backward-compatible updates and deprecation schedules to avoid breaking downstream consumers. – Robust Testing: Implement unit, integration, and end-to-end tests that cover both repository changes and data exchange transformations. – Incremental Adoption: Start with a small, high-impact workflow and gradually expand as confidence and maturity grow.     In practice, this approach yields tangible benefits: accelerated release cycles, improved data quality, and enhanced visibility across the software supply chain. By treating repository changes and data exchange evolution as a single, coordinated domain, organizations can reduce friction, prevent misconfigurations, and sustain momentum in fast-moving environments.   Ultimately, REXY=DEXY is not just a technical construct—it is a mindset. It invites teams to design systems where automation is inherently aligned with governance, where data contracts are living artifacts, and where every update propagates with predictable, auditable outcomes. In doing so, enterprises can unlock the full potential of continuous delivery and continuous data exchange, delivering value with greater speed and reliability.    24/7 Video Game    All the best video games, all the time. Watch no commentary gaming videos live and on demand. By Adrian M ThePRO the  Game Professional .     Join The Pro Gamers Community     • You are a pro gamer! • Share your content! • Get discovered!   Join The Pro Gamers Community on social media or  login  to 24/7 Video Game and submit your posts right to this website.     Up Game Shop     New & used video games, consoles, handhelds, retro, and gaming merchandise. Up Game Shop has the latest and greatest video game deals on the internet.    ![](https://i0.wp.com/247videogame.com/wp-content/uploads/2026/09/hqdefault.jpg-2273.jpeg?resize=1024%2C1024&ssl=1 \"hqdefault-jpg-2273-jpeg\")                                            September 21, 2026 at 03:19PM   More Information   Follow for more content like this.   24/7 Video Game   All of the best video games, all of the time.   YouTube    Twitch    Kick    Facebook    Instagram    Reddit    TikTok    X    Up Game Shop   Donate To   St. Jude's Children's Research Hospital        submitted by     /u/GameProfessional     to     r/Tekkens       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Tekkens/comments/1wmmkdl/tekkens_rexydexy_automatic/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T19:21:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T19:21:20.858Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab183b1660c60840398ff06"
+    },
+    "message_id": "reddit_t3_1wmmkd7",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "UpGameShop",
+    "username": "GameProfessional",
+    "title": "⬆️ Game Shop | REXY=DEXY – Automatic",
+    "text": "⬆️ Game Shop | REXY=DEXY – Automatic\n\nREXY=DEXY – Automatic     ![REXY=DEXY - Automatic>         REXY=DEXY – Automatic 🔥 STREAM NOW:  https://trapnation.komi.io    REXY=DEXY ✗  https://www.instagram.com/rexy_dexy_official/    ✗ Trap Nation’s Catalog:  https://broke.ffm.to/downloadbroke    rexydexy #automatic #trapnation #trap #edm     REXY=DEXY – Automatic     ![YouTube player]( https://i0.wp.com/i.ytimg.com/vi/KQjp63a8Yo0/hqdefault.jpg?w=1290&ssl=1 )           In the evolving landscape of software development and data management, the pursuit of automation is not merely a convenience—it’s a strategic imperative. REXY=DEXY represents a paradigm shift that aligns repository efficiency with seamless data exchange, enabling teams to move faster, reduce manual toil, and maintain stronger governance over their digital assets.   At its core, REXY=DEXY is about synchronizing two critical facets of modern workflows: repository operations and data exchange protocols. By establishing a formal equivalence between repository actions (code, configuration, and artifacts) and data exchange (schemas, contracts, and messages), organizations can automate complex end-to-end processes with confidence. This approach minimizes handoffs, mitigates errors, and creates a foundation where changes propagate predictably across environments and teams.   Key principles for implementing REXY=DEXY include:     Automation-First Design: Build pipelines, triggers, and validation steps that automatically translate repository updates into corresponding data exchange updates, and vice versa. – Governance by Design: Embed access controls, provenance tracking, and compliance checks within every automated step to ensure traceability and accountability. – Idempotent Operations: Design actions so repeated executions produce the same outcome, reducing drift and operational risk when pipelines run on schedule or in response to events. – Clear Contracts and Semantics: Maintain explicit schemas and message contracts that evolve through versioning, enabling downstream systems to adapt without breaking changes. – Observability and Feedback: Instrument pipelines with metrics, logs, and alerting to provide visibility into automation health and to support continuous improvement.     A practical implementation of REXY=DEXY might involve a few foundational components:   1) Repository Layer: Version-controlled definitions of workflows, configurations, and deployment manifests. These serve as the source of truth for how automation should behave and how data exchange should be structured.   2) Data Exchange Layer: Schemas, contracts, and message definitions that describe the structure and semantics of data flowing between systems. This layer enforces compatibility and enforces validation at boundaries.   3) Orchestration Layer: A workflow engine that translates repository state changes into automated actions on the data exchange layer, and monitors outcomes to maintain system integrity.   4) Governance Layer: Policy as code, role-based access controls, and audit trails that ensure compliance with organizational standards and regulatory requirements.   Designing effective automations under REXY=DEXY requires thoughtful consideration of integration points, failure modes, and rollback strategies. Teams should prioritize:     Clear Ownership: Define who owns each automation and who approves schema changes or contract migrations. – Safe Migration Paths: Support backward-compatible updates and deprecation schedules to avoid breaking downstream consumers. – Robust Testing: Implement unit, integration, and end-to-end tests that cover both repository changes and data exchange transformations. – Incremental Adoption: Start with a small, high-impact workflow and gradually expand as confidence and maturity grow.     In practice, this approach yields tangible benefits: accelerated release cycles, improved data quality, and enhanced visibility across the software supply chain. By treating repository changes and data exchange evolution as a single, coordinated domain, organizations can reduce friction, prevent misconfigurations, and sustain momentum in fast-moving environments.   Ultimately, REXY=DEXY is not just a technical construct—it is a mindset. It invites teams to design systems where automation is inherently aligned with governance, where data contracts are living artifacts, and where every update propagates with predictable, auditable outcomes. In doing so, enterprises can unlock the full potential of continuous delivery and continuous data exchange, delivering value with greater speed and reliability.    24/7 Video Game    All the best video games, all the time. Watch no commentary gaming videos live and on demand. By Adrian M ThePRO the  Game Professional .     Join The Pro Gamers Community     • You are a pro gamer! • Share your content! • Get discovered!   Join The Pro Gamers Community on social media or  login  to 24/7 Video Game and submit your posts right to this website.     Up Game Shop     New & used video games, consoles, handhelds, retro, and gaming merchandise. Up Game Shop has the latest and greatest video game deals on the internet.    ![](https://i0.wp.com/247videogame.com/wp-content/uploads/2026/09/hqdefault.jpg-2273.jpeg?resize=1024%2C1024&ssl=1 \"hqdefault-jpg-2273-jpeg\")                                            September 21, 2026 at 03:19PM   More Information   Follow for more content like this.   24/7 Video Game   All of the best video games, all of the time.   YouTube    Twitch    Kick    Facebook    Instagram    Reddit    TikTok    X    Up Game Shop   Donate To   St. Jude's Children's Research Hospital        submitted by     /u/GameProfessional     to     r/UpGameShop       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UpGameShop/comments/1wmmkd7/game_shop_rexydexy_automatic/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T19:21:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T19:21:21.066Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab183b1660c60840398ff07"
+    },
+    "message_id": "reddit_t3_1wmmkcz",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DailyMix",
+    "username": "DrawingCactusCats",
+    "title": "Think you can find 4 hidden groups of 4 related words? Puzzle by u/DrawingCactusCats?",
+    "text": "Think you can find 4 hidden groups of 4 related words? Puzzle by u/DrawingCactusCats?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/DrawingCactusCats     to     r/DailyMix       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DailyMix/comments/1wmmkcz/think_you_can_find_4_hidden_groups_of_4_related/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T19:21:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T19:21:21.269Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab183b1660c60840398ff08"
+    },
+    "message_id": "reddit_t3_1wmmkcs",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "247videogame",
+    "username": "GameProfessional",
+    "title": "🌐 24/7 Video Game | REXY=DEXY – Automatic",
+    "text": "🌐 24/7 Video Game | REXY=DEXY – Automatic\n\nREXY=DEXY – Automatic     ![REXY=DEXY - Automatic>         REXY=DEXY – Automatic 🔥 STREAM NOW:  https://trapnation.komi.io    REXY=DEXY ✗  https://www.instagram.com/rexy_dexy_official/    ✗ Trap Nation’s Catalog:  https://broke.ffm.to/downloadbroke    rexydexy #automatic #trapnation #trap #edm     REXY=DEXY – Automatic     ![YouTube player]( https://i0.wp.com/i.ytimg.com/vi/KQjp63a8Yo0/hqdefault.jpg?w=1290&ssl=1 )           In the evolving landscape of software development and data management, the pursuit of automation is not merely a convenience—it’s a strategic imperative. REXY=DEXY represents a paradigm shift that aligns repository efficiency with seamless data exchange, enabling teams to move faster, reduce manual toil, and maintain stronger governance over their digital assets.   At its core, REXY=DEXY is about synchronizing two critical facets of modern workflows: repository operations and data exchange protocols. By establishing a formal equivalence between repository actions (code, configuration, and artifacts) and data exchange (schemas, contracts, and messages), organizations can automate complex end-to-end processes with confidence. This approach minimizes handoffs, mitigates errors, and creates a foundation where changes propagate predictably across environments and teams.   Key principles for implementing REXY=DEXY include:     Automation-First Design: Build pipelines, triggers, and validation steps that automatically translate repository updates into corresponding data exchange updates, and vice versa. – Governance by Design: Embed access controls, provenance tracking, and compliance checks within every automated step to ensure traceability and accountability. – Idempotent Operations: Design actions so repeated executions produce the same outcome, reducing drift and operational risk when pipelines run on schedule or in response to events. – Clear Contracts and Semantics: Maintain explicit schemas and message contracts that evolve through versioning, enabling downstream systems to adapt without breaking changes. – Observability and Feedback: Instrument pipelines with metrics, logs, and alerting to provide visibility into automation health and to support continuous improvement.     A practical implementation of REXY=DEXY might involve a few foundational components:   1) Repository Layer: Version-controlled definitions of workflows, configurations, and deployment manifests. These serve as the source of truth for how automation should behave and how data exchange should be structured.   2) Data Exchange Layer: Schemas, contracts, and message definitions that describe the structure and semantics of data flowing between systems. This layer enforces compatibility and enforces validation at boundaries.   3) Orchestration Layer: A workflow engine that translates repository state changes into automated actions on the data exchange layer, and monitors outcomes to maintain system integrity.   4) Governance Layer: Policy as code, role-based access controls, and audit trails that ensure compliance with organizational standards and regulatory requirements.   Designing effective automations under REXY=DEXY requires thoughtful consideration of integration points, failure modes, and rollback strategies. Teams should prioritize:     Clear Ownership: Define who owns each automation and who approves schema changes or contract migrations. – Safe Migration Paths: Support backward-compatible updates and deprecation schedules to avoid breaking downstream consumers. – Robust Testing: Implement unit, integration, and end-to-end tests that cover both repository changes and data exchange transformations. – Incremental Adoption: Start with a small, high-impact workflow and gradually expand as confidence and maturity grow.     In practice, this approach yields tangible benefits: accelerated release cycles, improved data quality, and enhanced visibility across the software supply chain. By treating repository changes and data exchange evolution as a single, coordinated domain, organizations can reduce friction, prevent misconfigurations, and sustain momentum in fast-moving environments.   Ultimately, REXY=DEXY is not just a technical construct—it is a mindset. It invites teams to design systems where automation is inherently aligned with governance, where data contracts are living artifacts, and where every update propagates with predictable, auditable outcomes. In doing so, enterprises can unlock the full potential of continuous delivery and continuous data exchange, delivering value with greater speed and reliability.    24/7 Video Game    All the best video games, all the time. Watch no commentary gaming videos live and on demand. By Adrian M ThePRO the  Game Professional .     Join The Pro Gamers Community     • You are a pro gamer! • Share your content! • Get discovered!   Join The Pro Gamers Community on social media or  login  to 24/7 Video Game and submit your posts right to this website.     Up Game Shop     New & used video games, consoles, handhelds, retro, and gaming merchandise. Up Game Shop has the latest and greatest video game deals on the internet.    ![](https://i0.wp.com/247videogame.com/wp-content/uploads/2026/09/hqdefault.jpg-2273.jpeg?resize=1024%2C1024&ssl=1 \"hqdefault-jpg-2273-jpeg\")                                            September 21, 2026 at 03:19PM   More Information   Follow for more content like this.   24/7 Video Game   All of the best video games, all of the time.   YouTube    Twitch    Kick    Facebook    Instagram    Reddit    TikTok    X    Up Game Shop   Donate To   St. Jude's Children's Research Hospital        submitted by     /u/GameProfessional     to     r/247videogame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/247videogame/comments/1wmmkcs/247_video_game_rexydexy_automatic/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T19:21:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T19:21:21.471Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab183b1660c60840398ff09"
+    },
+    "message_id": "reddit_t3_1wmmkcp",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "redditstock",
+    "username": "MissionJellyfish9479",
+    "title": "What has gotten better on Reddit, and what still annoys you?",
+    "text": "What has gotten better on Reddit, and what still annoys you?\n\nTwo examples from my own experience:    Positive : Search, including Reddit Answers, has noticeably improved. I find it much easier to find relevant conversations now.    Negative : When I have a post open and swipe through its picture gallery, swiping a bit too fast takes me to the next post instead of the next picture. Small thing, but really annoying.   What are yours? What's an improvement you've noticed, and what's something you wish they'd finally fix?       submitted by     /u/MissionJellyfish9479     to     r/redditstock       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/redditstock/comments/1wmmkcp/what_has_gotten_better_on_reddit_and_what_still/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T19:21:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T19:21:21.673Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab183b1660c60840398ff0a"
+    },
+    "message_id": "reddit_t3_1wmmkc5",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "GameProfessional",
+    "username": "GameProfessional",
+    "title": "🏆 Game Professional | REXY=DEXY – Automatic",
+    "text": "🏆 Game Professional | REXY=DEXY – Automatic\n\nREXY=DEXY – Automatic     ![REXY=DEXY - Automatic>         REXY=DEXY – Automatic 🔥 STREAM NOW:  https://trapnation.komi.io    REXY=DEXY ✗  https://www.instagram.com/rexy_dexy_official/    ✗ Trap Nation’s Catalog:  https://broke.ffm.to/downloadbroke    rexydexy #automatic #trapnation #trap #edm     REXY=DEXY – Automatic     ![YouTube player]( https://i0.wp.com/i.ytimg.com/vi/KQjp63a8Yo0/hqdefault.jpg?w=1290&ssl=1 )           In the evolving landscape of software development and data management, the pursuit of automation is not merely a convenience—it’s a strategic imperative. REXY=DEXY represents a paradigm shift that aligns repository efficiency with seamless data exchange, enabling teams to move faster, reduce manual toil, and maintain stronger governance over their digital assets.   At its core, REXY=DEXY is about synchronizing two critical facets of modern workflows: repository operations and data exchange protocols. By establishing a formal equivalence between repository actions (code, configuration, and artifacts) and data exchange (schemas, contracts, and messages), organizations can automate complex end-to-end processes with confidence. This approach minimizes handoffs, mitigates errors, and creates a foundation where changes propagate predictably across environments and teams.   Key principles for implementing REXY=DEXY include:     Automation-First Design: Build pipelines, triggers, and validation steps that automatically translate repository updates into corresponding data exchange updates, and vice versa. – Governance by Design: Embed access controls, provenance tracking, and compliance checks within every automated step to ensure traceability and accountability. – Idempotent Operations: Design actions so repeated executions produce the same outcome, reducing drift and operational risk when pipelines run on schedule or in response to events. – Clear Contracts and Semantics: Maintain explicit schemas and message contracts that evolve through versioning, enabling downstream systems to adapt without breaking changes. – Observability and Feedback: Instrument pipelines with metrics, logs, and alerting to provide visibility into automation health and to support continuous improvement.     A practical implementation of REXY=DEXY might involve a few foundational components:   1) Repository Layer: Version-controlled definitions of workflows, configurations, and deployment manifests. These serve as the source of truth for how automation should behave and how data exchange should be structured.   2) Data Exchange Layer: Schemas, contracts, and message definitions that describe the structure and semantics of data flowing between systems. This layer enforces compatibility and enforces validation at boundaries.   3) Orchestration Layer: A workflow engine that translates repository state changes into automated actions on the data exchange layer, and monitors outcomes to maintain system integrity.   4) Governance Layer: Policy as code, role-based access controls, and audit trails that ensure compliance with organizational standards and regulatory requirements.   Designing effective automations under REXY=DEXY requires thoughtful consideration of integration points, failure modes, and rollback strategies. Teams should prioritize:     Clear Ownership: Define who owns each automation and who approves schema changes or contract migrations. – Safe Migration Paths: Support backward-compatible updates and deprecation schedules to avoid breaking downstream consumers. – Robust Testing: Implement unit, integration, and end-to-end tests that cover both repository changes and data exchange transformations. – Incremental Adoption: Start with a small, high-impact workflow and gradually expand as confidence and maturity grow.     In practice, this approach yields tangible benefits: accelerated release cycles, improved data quality, and enhanced visibility across the software supply chain. By treating repository changes and data exchange evolution as a single, coordinated domain, organizations can reduce friction, prevent misconfigurations, and sustain momentum in fast-moving environments.   Ultimately, REXY=DEXY is not just a technical construct—it is a mindset. It invites teams to design systems where automation is inherently aligned with governance, where data contracts are living artifacts, and where every update propagates with predictable, auditable outcomes. In doing so, enterprises can unlock the full potential of continuous delivery and continuous data exchange, delivering value with greater speed and reliability.    24/7 Video Game    All the best video games, all the time. Watch no commentary gaming videos live and on demand. By Adrian M ThePRO the  Game Professional .     Join The Pro Gamers Community     • You are a pro gamer! • Share your content! • Get discovered!   Join The Pro Gamers Community on social media or  login  to 24/7 Video Game and submit your posts right to this website.     Up Game Shop     New & used video games, consoles, handhelds, retro, and gaming merchandise. Up Game Shop has the latest and greatest video game deals on the internet.    ![](https://i0.wp.com/247videogame.com/wp-content/uploads/2026/09/hqdefault.jpg-2273.jpeg?resize=1024%2C1024&ssl=1 \"hqdefault-jpg-2273-jpeg\")                                            September 21, 2026 at 03:19PM   More Information   Follow for more content like this.   24/7 Video Game   All of the best video games, all of the time.   YouTube    Twitch    Kick    Facebook    Instagram    Reddit    TikTok    X    Up Game Shop   Donate To   St. Jude's Children's Research Hospital        submitted by     /u/GameProfessional     to     r/GameProfessional       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GameProfessional/comments/1wmmkc5/game_professional_rexydexy_automatic/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T19:21:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T19:21:21.881Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab183b2660c60840398ff0b"
+    },
+    "message_id": "reddit_t3_1wmmkbn",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "BlackPeopleofReddit",
+    "username": "DAntoinette_Travel",
+    "title": "King Njoya of Bamum’s Writing System",
+    "text": "King Njoya of Bamum’s Writing System\n\nKing Njoya of Bamum invented an entire writing system from scratch, refined it three times in fourteen years, and the French destroyed it before it turned 25.   In 1895, after a dream told him to, King Njoya of the Bamum kingdom in Cameroon's Grassfields set out to give his people their own script. He didn't do it alone. He invited his subjects to contribute symbols, then personally oversaw the editing. The first version, in 1896, had somewhere between 400 and 600 pictographic and ideographic characters, too many to be practical for everyday writing. That's the test: can a king turn a symbol system nobody can memorize into one an entire kingdom can actually use.   He passed it in stages. By 1903, Njoya had cut the script down to a phonetic syllabary of around 80 signs, called A-ka-u-ku. He built schools to teach it, set up a printing press to produce it at scale, and used it to record law, medicine, history, and court proceedings that had only existed by memory before. Bamum became one of the only kingdoms in colonial Africa running its own literary tradition in its own invented script, not the colonizer's alphabet.   Then Cameroon became a French colony in 1919. The French banned the script from schools, destroyed Njoya's printing press, and burned much of what had been written in it. Njoya was exiled from his own kingdom in 1931 and died there. By the time Cameroon became independent, the script had fallen to the edge of extinction.   It's Bamum's own descendants doing the rebuilding now, not colonial permission. A project based in Foumban has spent the past two decades teaching A-ka-u-ku to a new generation, the same script King Njoya built by hand a century before anyone told him he couldn't.   Courtesy of: @Africa_rebirth on X       submitted by     /u/DAntoinette_Travel     to     r/BlackPeopleofReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BlackPeopleofReddit/comments/1wmmkbn/king_njoya_of_bamums_writing_system/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T19:21:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T19:21:22.085Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab183b2660c60840398ff0d"
+    },
+    "message_id": "reddit_t3_1wmmkb3",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "DesignerEye",
+    "username": "CouldBeALiar",
+    "title": "Custom level by CouldBeALiar",
+    "text": "Custom level by CouldBeALiar\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/CouldBeALiar     to     r/DesignerEye       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DesignerEye/comments/1wmmkb3/custom_level_by_couldbealiar/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T19:21:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T19:21:22.483Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab183b2660c60840398ff0e"
+    },
+    "message_id": "reddit_t3_1wmmka4",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "TeensofMaharashtra",
+    "username": "Jantarmantarbhuuuuu",
+    "title": "What's your opinion gng!?",
+    "text": "What's your opinion gng!?\n\nBhai he kaay chalu ahe 😭💔🥀   Share your thoughts gng 🙌🏻😭       submitted by     /u/Jantarmantarbhuuuuu     to     r/TeensofMaharashtra       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TeensofMaharashtra/comments/1wmmka4/whats_your_opinion_gng/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T19:21:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T19:21:22.686Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab183b2660c60840398ff0f"
+    },
+    "message_id": "reddit_t3_1wmmk9t",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MapBasedPolls",
+    "username": "SupremeKalki",
+    "title": "Do cousin marriages happen in your country?",
+    "text": "Do cousin marriages happen in your country?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/SupremeKalki     to     r/MapBasedPolls       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MapBasedPolls/comments/1wmmk9t/do_cousin_marriages_happen_in_your_country/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T19:21:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T19:21:22.886Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab183b3660c60840398ff10"
+    },
+    "message_id": "reddit_t3_1wmmk9s",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal OReilly Automotive Inc - 21 Sep 2026 @ 15:18 -> $83.47",
+    "text": "Buy Signal OReilly Automotive Inc - 21 Sep 2026 @ 15:18 -> $83.47\n\nTicker:  ORLY    Exchange:  NASDAQ    Time:  21 Sep 2026 @ 15:18    Price:  $83.47    Link:  https://getagraph.com/AAA/trading/NASDAQ/ORLY/analysis/signals        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wmmk9s/buy_signal_oreilly_automotive_inc_21_sep_2026/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T19:21:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T19:21:23.083Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab183b3660c60840398ff11"
+    },
+    "message_id": "reddit_t3_1wmmk9a",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "HaloInfinity",
+    "username": "GameProfessional",
+    "title": "💫 Halo Infinity | Are we in the time of postmodern superheroes?",
+    "text": "💫 Halo Infinity | Are we in the time of postmodern superheroes?\n\nAre we in the time of postmodern superheroes?     ![Are we in the time of postmodern superheroes?>         Lanterns writer Justin Britt-Gibson discusses recontextualizing superheroes in Lanterns on the latest episode of Lanterns: The Official Podcast.   About HBO Max: HBO Max is the premier global streaming platform from Warner Bros. Discovery that delivers the most unique and captivating stories, ranging from the highest quality in scripted programming, movies, documentaries, true crime, adult animation, and live sports and news (where available). HBO Max is the destination for prestigious entertainment brands such as HBO, Warner Bros., Max Originals, DC, Harry Potter, as well as iconic shows like “Friends” and “The Big Bang Theory,” all in one place.   GET HBO MAX  https://hbomax.com/    FOLLOW HBO MAX Follow HBO Max on YouTube:  https://hbom.ax/YouTube  Follow HBO Max on Instagram:  https://hbom.ax/Instagram  Follow HBO Max on TikTok:  https://hbom.ax/Tiktok  Follow HBO Max on Twitter:  https://hbom.ax/x  Follow HBO Max on Facebook:  https://hbom.ax/Facebook      Are we in the time of postmodern superheroes?     From the silver screen to the glossy pages of comic-book books and the vast corridors of streaming platforms, a distinctive strain of storytelling has taken hold: postmodern superheroes. These figures, rather than simply saving the day, invite audiences to question the very nature of heroism, authenticity, and the narratives we consume to make sense of a fractured world. The era they inhabit is not defined by capes alone, but by a kaleidoscope of mood, irony, and an almost scholarly skepticism about genre boundaries.   At the heart of postmodern superheroes is a recalibration of power. The traditional mantra—good triumphs over evil—still echoes, yet it arrives wrapped in irony, ambiguity, and a self-awareness that can feel rebellious in a culture saturated with overt moralism. Superheroes are not merely larger-than-life; they are mirrors reflecting contemporary anxieties: surveillance, political cynicism, data-driven omnipresence, and the fragility of institutional authority. The result is a roster of protagonists who struggle with consequences, question purposes, and acknowledge the gray zones that lie between heroism and pragmatism.   Narrative form has also become a site of experimentation. Meta-textual cues, non-linear storytelling, and fractured timelines invite readers and viewers to piece together meaning rather than passively receive it. The hero’s journey is deconstructed: motifs of origin become unreliable, sidekicks gain agency, and adversaries often double as moral debates. This formal play creates a kinship between the audience and the work’s construction—an invitation to critique not only what the hero does, but how the story asks us to interpret it.   Aesthetic choices reinforce the thematic complicity between the world and its tellers. Visuals lean into de-saturated palettes, urban brutality, and meticulous design details that foreground mood over the brute spectacle of power. Music, editing rhythms, and production design cultivate a sense of unease, as if the screen or page is constantly reminding us that certainty is a luxury we can ill afford. In such environments, the superhero becomes a kind of cultural symptom—a public figure who embodies both aspiration and reflexive doubt.   One enduring question has to do with relevance. If the postmodern superhero reveals the fragility of institutions, then what replaces them as sources of meaning or order? Some narratives answer with solidarity, community-driven resilience, and the idea that collective action can outpace centralized control. Others insist that the true heroism lies in personal accountability, in choosing side when the systems we inherit are compromised. Still others push for a political edge, using the genre as a vehicle to critique power structures and to imagine alternative futures that acknowledge imperfection without surrendering hope.   Yet skepticism does not preclude wonder. Even as stories acknowledge the fragility of truth and the contingency of victory, they also celebrate the human impulse to strive for something better. The postmodern superhero, then, is not a dismissal of heroism but an invitation to redefine it. Courage becomes less about flawless execution and more about persistent inquiry: What are we willing to defend? How do we repair what has been broken? And what stories do we tell to remind each other that striving, not certainty, is where resilience is born?   As audiences navigate an ecosystem of interconnected media, the postmodern superhero serves as a cultural barometer. The genre’s current mood—wary, self-referential, ethically unsettled—reflects broader shifts in how we understand truth, power, and community in a mediated age. Whether this is a passing phase or a lasting reorientation remains to be seen, but the trajectory is clear: heroes who grapple with doubt, who acknowledge the complexity of their choices, and who invite us to participate in the interrogation of what constitutes true valor in a world that rarely lends itself to absolutes.    24/7 Video Game    All the best video games, all the time. Watch no commentary gaming videos live and on demand. By Adrian M ThePRO the  Game Professional .     Join The Pro Gamers Community     • You are a pro gamer! • Share your content! • Get discovered!   Join The Pro Gamers Community on social media or  login  to 24/7 Video Game and submit your posts right to this website.     Up Game Shop     New & used video games, consoles, handhelds, retro, and gaming merchandise. Up Game Shop has the latest and greatest video game deals on the internet.    ![](https://i0.wp.com/247videogame.com/wp-content/uploads/2026/09/hqdefault.jpg-2272.jpeg?resize=1024%2C1024&ssl=1 \"hqdefault-jpg-2272-jpeg\")                                            September 21, 2026 at 03:18PM   More Information   Follow for more content like this.   24/7 Video Game   All of the best video games, all of the time.   YouTube    Twitch    Kick    Facebook    Instagram    Reddit    TikTok    X    Up Game Shop   Donate To   St. Jude's Children's Research Hospital        submitted by     /u/GameProfessional     to     r/HaloInfinity       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HaloInfinity/comments/1wmmk9a/halo_infinity_are_we_in_the_time_of_postmodern/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T19:21:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T19:21:23.287Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab183b3660c60840398ff12"
+    },
+    "message_id": "reddit_t3_1wmmk8w",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "GearsOfWars",
+    "username": "GameProfessional",
+    "title": "⚙️ Gears Of Wars | Are we in the time of postmodern superheroes?",
+    "text": "⚙️ Gears Of Wars | Are we in the time of postmodern superheroes?\n\nAre we in the time of postmodern superheroes?     ![Are we in the time of postmodern superheroes?>         Lanterns writer Justin Britt-Gibson discusses recontextualizing superheroes in Lanterns on the latest episode of Lanterns: The Official Podcast.   About HBO Max: HBO Max is the premier global streaming platform from Warner Bros. Discovery that delivers the most unique and captivating stories, ranging from the highest quality in scripted programming, movies, documentaries, true crime, adult animation, and live sports and news (where available). HBO Max is the destination for prestigious entertainment brands such as HBO, Warner Bros., Max Originals, DC, Harry Potter, as well as iconic shows like “Friends” and “The Big Bang Theory,” all in one place.   GET HBO MAX  https://hbomax.com/    FOLLOW HBO MAX Follow HBO Max on YouTube:  https://hbom.ax/YouTube  Follow HBO Max on Instagram:  https://hbom.ax/Instagram  Follow HBO Max on TikTok:  https://hbom.ax/Tiktok  Follow HBO Max on Twitter:  https://hbom.ax/x  Follow HBO Max on Facebook:  https://hbom.ax/Facebook      Are we in the time of postmodern superheroes?     From the silver screen to the glossy pages of comic-book books and the vast corridors of streaming platforms, a distinctive strain of storytelling has taken hold: postmodern superheroes. These figures, rather than simply saving the day, invite audiences to question the very nature of heroism, authenticity, and the narratives we consume to make sense of a fractured world. The era they inhabit is not defined by capes alone, but by a kaleidoscope of mood, irony, and an almost scholarly skepticism about genre boundaries.   At the heart of postmodern superheroes is a recalibration of power. The traditional mantra—good triumphs over evil—still echoes, yet it arrives wrapped in irony, ambiguity, and a self-awareness that can feel rebellious in a culture saturated with overt moralism. Superheroes are not merely larger-than-life; they are mirrors reflecting contemporary anxieties: surveillance, political cynicism, data-driven omnipresence, and the fragility of institutional authority. The result is a roster of protagonists who struggle with consequences, question purposes, and acknowledge the gray zones that lie between heroism and pragmatism.   Narrative form has also become a site of experimentation. Meta-textual cues, non-linear storytelling, and fractured timelines invite readers and viewers to piece together meaning rather than passively receive it. The hero’s journey is deconstructed: motifs of origin become unreliable, sidekicks gain agency, and adversaries often double as moral debates. This formal play creates a kinship between the audience and the work’s construction—an invitation to critique not only what the hero does, but how the story asks us to interpret it.   Aesthetic choices reinforce the thematic complicity between the world and its tellers. Visuals lean into de-saturated palettes, urban brutality, and meticulous design details that foreground mood over the brute spectacle of power. Music, editing rhythms, and production design cultivate a sense of unease, as if the screen or page is constantly reminding us that certainty is a luxury we can ill afford. In such environments, the superhero becomes a kind of cultural symptom—a public figure who embodies both aspiration and reflexive doubt.   One enduring question has to do with relevance. If the postmodern superhero reveals the fragility of institutions, then what replaces them as sources of meaning or order? Some narratives answer with solidarity, community-driven resilience, and the idea that collective action can outpace centralized control. Others insist that the true heroism lies in personal accountability, in choosing side when the systems we inherit are compromised. Still others push for a political edge, using the genre as a vehicle to critique power structures and to imagine alternative futures that acknowledge imperfection without surrendering hope.   Yet skepticism does not preclude wonder. Even as stories acknowledge the fragility of truth and the contingency of victory, they also celebrate the human impulse to strive for something better. The postmodern superhero, then, is not a dismissal of heroism but an invitation to redefine it. Courage becomes less about flawless execution and more about persistent inquiry: What are we willing to defend? How do we repair what has been broken? And what stories do we tell to remind each other that striving, not certainty, is where resilience is born?   As audiences navigate an ecosystem of interconnected media, the postmodern superhero serves as a cultural barometer. The genre’s current mood—wary, self-referential, ethically unsettled—reflects broader shifts in how we understand truth, power, and community in a mediated age. Whether this is a passing phase or a lasting reorientation remains to be seen, but the trajectory is clear: heroes who grapple with doubt, who acknowledge the complexity of their choices, and who invite us to participate in the interrogation of what constitutes true valor in a world that rarely lends itself to absolutes.    24/7 Video Game    All the best video games, all the time. Watch no commentary gaming videos live and on demand. By Adrian M ThePRO the  Game Professional .     Join The Pro Gamers Community     • You are a pro gamer! • Share your content! • Get discovered!   Join The Pro Gamers Community on social media or  login  to 24/7 Video Game and submit your posts right to this website.     Up Game Shop     New & used video games, consoles, handhelds, retro, and gaming merchandise. Up Game Shop has the latest and greatest video game deals on the internet.    ![](https://i0.wp.com/247videogame.com/wp-content/uploads/2026/09/hqdefault.jpg-2272.jpeg?resize=1024%2C1024&ssl=1 \"hqdefault-jpg-2272-jpeg\")                                            September 21, 2026 at 03:18PM   More Information   Follow for more content like this.   24/7 Video Game   All of the best video games, all of the time.   YouTube    Twitch    Kick    Facebook    Instagram    Reddit    TikTok    X    Up Game Shop   Donate To   St. Jude's Children's Research Hospital        submitted by     /u/GameProfessional     to     r/GearsOfWars       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GearsOfWars/comments/1wmmk8w/gears_of_wars_are_we_in_the_time_of_postmodern/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T19:21:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T19:21:23.498Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab183b3660c60840398ff13"
+    },
+    "message_id": "reddit_t3_1wmmk8r",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "alpharetta",
+    "username": "Soyatare",
+    "title": "Hand wash and deep clean car wash",
+    "text": "Hand wash and deep clean car wash\n\nComing back from a camping trip that got really muddy. Looking for a car wash that hand washes because last car wash I went to started chipping my paint. Thank you in advance!       submitted by     /u/Soyatare     to     r/alpharetta       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/alpharetta/comments/1wmmk8r/hand_wash_and_deep_clean_car_wash/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T19:21:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T19:21:23.699Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab183b3660c60840398ff14"
+    },
+    "message_id": "reddit_t3_1wmmk8b",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Tekkens",
+    "username": "GameProfessional",
+    "title": "🥋 Tekkens | Are we in the time of postmodern superheroes?",
+    "text": "🥋 Tekkens | Are we in the time of postmodern superheroes?\n\nAre we in the time of postmodern superheroes?     ![Are we in the time of postmodern superheroes?>         Lanterns writer Justin Britt-Gibson discusses recontextualizing superheroes in Lanterns on the latest episode of Lanterns: The Official Podcast.   About HBO Max: HBO Max is the premier global streaming platform from Warner Bros. Discovery that delivers the most unique and captivating stories, ranging from the highest quality in scripted programming, movies, documentaries, true crime, adult animation, and live sports and news (where available). HBO Max is the destination for prestigious entertainment brands such as HBO, Warner Bros., Max Originals, DC, Harry Potter, as well as iconic shows like “Friends” and “The Big Bang Theory,” all in one place.   GET HBO MAX  https://hbomax.com/    FOLLOW HBO MAX Follow HBO Max on YouTube:  https://hbom.ax/YouTube  Follow HBO Max on Instagram:  https://hbom.ax/Instagram  Follow HBO Max on TikTok:  https://hbom.ax/Tiktok  Follow HBO Max on Twitter:  https://hbom.ax/x  Follow HBO Max on Facebook:  https://hbom.ax/Facebook      Are we in the time of postmodern superheroes?     From the silver screen to the glossy pages of comic-book books and the vast corridors of streaming platforms, a distinctive strain of storytelling has taken hold: postmodern superheroes. These figures, rather than simply saving the day, invite audiences to question the very nature of heroism, authenticity, and the narratives we consume to make sense of a fractured world. The era they inhabit is not defined by capes alone, but by a kaleidoscope of mood, irony, and an almost scholarly skepticism about genre boundaries.   At the heart of postmodern superheroes is a recalibration of power. The traditional mantra—good triumphs over evil—still echoes, yet it arrives wrapped in irony, ambiguity, and a self-awareness that can feel rebellious in a culture saturated with overt moralism. Superheroes are not merely larger-than-life; they are mirrors reflecting contemporary anxieties: surveillance, political cynicism, data-driven omnipresence, and the fragility of institutional authority. The result is a roster of protagonists who struggle with consequences, question purposes, and acknowledge the gray zones that lie between heroism and pragmatism.   Narrative form has also become a site of experimentation. Meta-textual cues, non-linear storytelling, and fractured timelines invite readers and viewers to piece together meaning rather than passively receive it. The hero’s journey is deconstructed: motifs of origin become unreliable, sidekicks gain agency, and adversaries often double as moral debates. This formal play creates a kinship between the audience and the work’s construction—an invitation to critique not only what the hero does, but how the story asks us to interpret it.   Aesthetic choices reinforce the thematic complicity between the world and its tellers. Visuals lean into de-saturated palettes, urban brutality, and meticulous design details that foreground mood over the brute spectacle of power. Music, editing rhythms, and production design cultivate a sense of unease, as if the screen or page is constantly reminding us that certainty is a luxury we can ill afford. In such environments, the superhero becomes a kind of cultural symptom—a public figure who embodies both aspiration and reflexive doubt.   One enduring question has to do with relevance. If the postmodern superhero reveals the fragility of institutions, then what replaces them as sources of meaning or order? Some narratives answer with solidarity, community-driven resilience, and the idea that collective action can outpace centralized control. Others insist that the true heroism lies in personal accountability, in choosing side when the systems we inherit are compromised. Still others push for a political edge, using the genre as a vehicle to critique power structures and to imagine alternative futures that acknowledge imperfection without surrendering hope.   Yet skepticism does not preclude wonder. Even as stories acknowledge the fragility of truth and the contingency of victory, they also celebrate the human impulse to strive for something better. The postmodern superhero, then, is not a dismissal of heroism but an invitation to redefine it. Courage becomes less about flawless execution and more about persistent inquiry: What are we willing to defend? How do we repair what has been broken? And what stories do we tell to remind each other that striving, not certainty, is where resilience is born?   As audiences navigate an ecosystem of interconnected media, the postmodern superhero serves as a cultural barometer. The genre’s current mood—wary, self-referential, ethically unsettled—reflects broader shifts in how we understand truth, power, and community in a mediated age. Whether this is a passing phase or a lasting reorientation remains to be seen, but the trajectory is clear: heroes who grapple with doubt, who acknowledge the complexity of their choices, and who invite us to participate in the interrogation of what constitutes true valor in a world that rarely lends itself to absolutes.    24/7 Video Game    All the best video games, all the time. Watch no commentary gaming videos live and on demand. By Adrian M ThePRO the  Game Professional .     Join The Pro Gamers Community     • You are a pro gamer! • Share your content! • Get discovered!   Join The Pro Gamers Community on social media or  login  to 24/7 Video Game and submit your posts right to this website.     Up Game Shop     New & used video games, consoles, handhelds, retro, and gaming merchandise. Up Game Shop has the latest and greatest video game deals on the internet.    ![](https://i0.wp.com/247videogame.com/wp-content/uploads/2026/09/hqdefault.jpg-2272.jpeg?resize=1024%2C1024&ssl=1 \"hqdefault-jpg-2272-jpeg\")                                            September 21, 2026 at 03:18PM   More Information   Follow for more content like this.   24/7 Video Game   All of the best video games, all of the time.   YouTube    Twitch    Kick    Facebook    Instagram    Reddit    TikTok    X    Up Game Shop   Donate To   St. Jude's Children's Research Hospital        submitted by     /u/GameProfessional     to     r/Tekkens       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Tekkens/comments/1wmmk8b/tekkens_are_we_in_the_time_of_postmodern/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T19:21:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T19:21:23.902Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab183b4660c60840398ff15"
+    },
+    "message_id": "reddit_t3_1wmmk87",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "SocietyAmbitious9648",
+    "title": "In Search of Swallowed Eye",
+    "text": "In Search of Swallowed Eye\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/SocietyAmbitious9648     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1wmmk87/in_search_of_swallowed_eye/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T19:21:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T19:21:24.103Z"
+    },
+    "reddit_comments": 0
+  },

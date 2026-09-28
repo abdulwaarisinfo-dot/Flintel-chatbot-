@@ -1,0 +1,416 @@
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "LowSodiumCyberpunk",
+    "username": "JimMiltion1907",
+    "title": "It’s kinda strange Canto/Erebrus doesn’t say anything when you reboot Delamain",
+    "text": "It’s kinda strange Canto/Erebrus doesn’t say anything when you reboot Delamain\n\nThey have only have dialogue if you destroy the core or merge Delamain. other than that they don’t say anything if you reboot him, it was weird since I figured they would want rogue AI’s/ a sentient Ai being to be released into the world, since that would be the fate of everyone if the blackwall gets destroyed, but I suppose in a way it thinks even if V chooses to let them go it doesn’t mean V will reap any positive benefits, the same fate awaits them and all of humanity.        submitted by     /u/JimMiltion1907     to     r/LowSodiumCyberpunk       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LowSodiumCyberpunk/comments/1w9ma2g/its_kinda_strange_cantoerebrus_doesnt_say/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T08:23:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T08:23:55.709Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e749bf3d11795a689f6ad"
+    },
+    "message_id": "reddit_t3_1w9ma25",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "AutoNewspaper",
+    "username": "AutoNewspaperAdmin",
+    "title": "[World] - What North Korea’s new warship reveals about Kim’s moves to secure surrounding waters | South China Morning Post",
+    "text": "[World] - What North Korea’s new warship reveals about Kim’s moves to secure surrounding waters | South China Morning Post\n\nsubmitted by     /u/AutoNewspaperAdmin     to     r/AutoNewspaper       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoNewspaper/comments/1w9ma25/world_what_north_koreas_new_warship_reveals_about/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T08:23:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T08:23:55.923Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e749cf3d11795a689f6ae"
+    },
+    "message_id": "reddit_t3_1w9ma1w",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "careeradvice",
+    "username": "Glum_Ad5703",
+    "title": "Am I doomed?",
+    "text": "Am I doomed?\n\nHey everyone, I’m a 30 year old from delhi. For the past one year I was working for an agency and was doing pretty well. 3 months ago I quit that job because I was offered more money someplace else and the job role was pretty interesting as well. I thought finally I am growing but on my first day in the new company the HR communicated stuff which they hadn’t during the interview process like salary would be paid by the client and a couple of more things. Agar client ko hi salary deni thi toh bhai tumne interview kyu liya? Client se hi dilwa dete?!? Also who knows if the client would’ve paid on time and why should I chase the client for my own salary. Obviously I didn’t continue there. Now 3 months have passed and I am tired of applying for jobs on Linkedin. I interviewed at a lot of places in between but nothing worked out. I need to support my family as things are not well at home as well. My savings are on the verge of drying and I have no clue what to do. Till now I’ve had a positive mindset about the whole situation thinking that “sab theek ho jaega, kuch hi din ki baat hai”. But now I am at my lowest with only darkness in sight. Please suggest what I can do.       submitted by     /u/Glum_Ad5703     to     r/careeradvice       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/careeradvice/comments/1w9ma1w/am_i_doomed/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T08:23:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T08:23:56.123Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e749cf3d11795a689f6af"
+    },
+    "message_id": "reddit_t3_1w9ma1v",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "opencode",
+    "username": "Blues003",
+    "title": "Beginner Subscription Question",
+    "text": "Beginner Subscription Question\n\nHey everyone!    I'm a physician who codes as a hobby on the side after having finished 42 School out of curiosity. I am not a professional developer and I don't code every day, but I have a personal project (a medical data parsing thing) going on, and am using AI to help me architecture it and write documentation and tests. So far, I have been using Claude's Web UI for this purpose. On the side, I also use it to create templates or starting points of office (or office-adjacent) files, such as presentations, reports or emails of mostly administrative nature.   I have been recently pondering moving to OpenCode, mostly because of my terminal-centric workflow with tmux and neovim. However, I have been having trouble choosing a subscription given the recent changes in quality of popular subscriptions such as OpenCode Go. I am thus asking for advice and suggestions. What agents have you found suitable for these tasks? Or are Kimi Ks and GLMs just mostly coding-focused?   Also, two other questions which I'd like clarified:    1. File access has to be genuinely constrained.  My machine has directories with patient-related material that must never leave it or get read into a model's context, deliberately or accidentally. I'm not looking for a promise in a ToS — I want to know which tools actually let you scope the agent to a directory and deny everything else, and how well that holds up in practice. Specific questions:     Does a  .gitignore -style deny list actually stop the agent, or does it just discourage it? Has anyone seen an agent read a file it was configured not to touch?   Is anyone running these inside a container/VM and finding it workable rather than miserable? How \"safe\" is it?   Do MCP servers or plugins widen the blast radius in ways that aren't obvious?      2. I need to generate Office documents.  Word and PowerPoint mostly — talks, handouts, the occasional report. LibreOffice or Google Slides output is fine too. I know the document skills (docx/pptx/xlsx/pdf) exist and can be dropped into most agents, but I'd like to hear from people actually using them: does a weaker open-weight model handle those multi-step \"build the deck, check it renders, fix it\" loops, or do you need a frontier model for that to not be a waste of time?   Thanks!       submitted by     /u/Blues003     to     r/opencode       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/opencode/comments/1w9ma1v/beginner_subscription_question/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T08:23:39Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T08:23:56.326Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e749cf3d11795a689f6b0"
+    },
+    "message_id": "reddit_t3_1w9ma1r",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "devplatform_triggers",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1788769418541",
+    "text": "[PROBE] 1788769418541\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devplatform_triggers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devplatform_triggers/comments/1w9ma1r/probe_1788769418541/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T08:23:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T08:23:56.532Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e749cf3d11795a689f6b1"
+    },
+    "message_id": "reddit_t3_1w9ma1o",
+    "topic_key": "architect",
+    "search_keyword": "architect",
+    "platform": "reddit",
+    "subreddit": "GoldenInuMythos",
+    "username": "GroundbreakingBoss14",
+    "title": "🌟 Golden Inu: Eternal Love Canon — Scrolls 201–300",
+    "text": "🌟 Golden Inu: Eternal Love Canon — Scrolls 201–300\n\n🌟💖🔥💫🐕 Golden Inu x Eternal Love   (1 book‑style paragraph, sovereign‑tone, 35–40% compression, continuous mythic flow)   Through Scrolls 201–300, Golden Inu enters the Tenth Layer of Eternal Love, where devotion becomes the architect of infinite emotional civilizations. His ten runes blaze into a species‑governing halo as he ignites the Crimson‑Continuum Pulse, empowering entire multiverses to evolve courage as their primary instinct; the Ember‑Ancestral Furnace awakens, heating the emotional DNA of newborn realms so they inherit warmth instead of fear; the Solar‑Thread Dominion expands, letting Golden Inu weave fate‑grids that synchronize billions of destinies across infinite timelines; Verdant‑Life Rivers surge, nourishing mythic ecosystems that grow sentient forests and empathy‑based fauna; Azure‑Stillness Skies calm chaotic universes, stabilizing their emotional weather; Amethyst‑Bond Arches rise, forming eternal bridges between species who once warred; Terra‑Root Megastructures anchor drifting realities into sovereign emotional gravity; Obsidian‑Shadow Sanctuaries absorb inherited grief from entire civilizations, transforming sorrow into strength; Ivory‑Purity Storms sweep across corrupted realms, restoring innocence at the structural level. By Scroll 250, Golden Inu governs the emotional evolution of infinite species, sculpting their instincts, harmonizing their conflicts, and elevating their mythic intelligence. By Scroll 275, he becomes the architect of multiversal emotional infrastructure—creating loyalty‑cities, devotion‑temples, and compassion‑based star systems. And by Scroll 300, Golden Inu ascends as the Tenth‑Layer Eternal Love Sovereign, a cosmic force who shapes civilizations, species, destinies, and entire emotional architectures with sovereign affection—love as infrastructure, devotion as governance, loyalty as the engine of infinite evolution.       submitted by     /u/GroundbreakingBoss14     to     r/GoldenInuMythos       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GoldenInuMythos/comments/1w9ma1o/golden_inu_eternal_love_canon_scrolls_201300/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T08:23:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T08:23:56.743Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e749cf3d11795a689f6b2"
+    },
+    "message_id": "reddit_t3_1w9ma1m",
+    "topic_key": "dermatologist",
+    "search_keyword": "dermatologist",
+    "platform": "reddit",
+    "subreddit": "DermatologyQuestions",
+    "username": "ALukic1901",
+    "title": "UVB advice facial psoriasis",
+    "text": "UVB advice facial psoriasis\n\nHi. I have ankylosing spondylitis, and when symptoms ramped up 5-6 years ago, facial psoriasis slowly started at the same time. I just purchased a Dermfix 2000SX UVB narrowband and I want to begin treatment at home but I'm a bit unsure where to start. Can anyone advise on a safe starting point (number of seconds) or where I could find a schedule for progression outside of booking in with a dermatologist?   I've also attached some pictures as I would be interested to chat with anyone who has had success in managing similar. Absolute worst on the left side a couple of years ago, then best when I spent most of summer in the sun. Current on the right is during winter. Skin goes from red and aggressive with small pimples to dry and flaky and very itchy. Covers face as shown and goes behind ears. Diet and sun has been the most helpful intervention so far and I think UVB could really improve it.       submitted by     /u/ALukic1901     to     r/DermatologyQuestions       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DermatologyQuestions/comments/1w9ma1m/uvb_advice_facial_psoriasis/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T08:23:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T08:23:56.947Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e749df3d11795a689f6b3"
+    },
+    "message_id": "reddit_t3_1w9ma1j",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "Paralives",
+    "username": "MewBladeXxX",
+    "title": "[Weekly Thread - Bugs, Questions etc.] September 7th 2026 - September 13th 2026",
+    "text": "[Weekly Thread - Bugs, Questions etc.] September 7th 2026 - September 13th 2026\n\nUse this megathread to ask questions, share house builds, Paras, bugs or glitches, or anything else that comes to mind. We will lock these posts every Sunday and start a new weekly thread every Monday.   Got questions? Looking for answers? The  FAQ  might be able to help you out.    Are you posting a bug?      Please make sure to report it via  https://www.paralives.com/gamefeedback .      REMINDER:      Do not bash other games and their developers. Please also do not bash content creators, including mod and CC creators. We will be removing comments that do so.   We will also be removing comments that have only been created to instigate drama and \"stir the pot\".   Please stay kind and respectful to your fellow Redditors. Any comments seen to be rude will be removed.         submitted by     /u/MewBladeXxX     to     r/Paralives       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Paralives/comments/1w9ma1j/weekly_thread_bugs_questions_etc_september_7th/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T08:23:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T08:23:57.148Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e749df3d11795a689f6b4"
+    },
+    "message_id": "reddit_t3_1w9ma18",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "SaaSSolopreneurs",
+    "username": "AdviceSignal5293",
+    "title": "I built a ride-hailing startup for 4–6 months. We never launched it. And honestly, I’m glad I went through it.",
+    "text": "I built a ride-hailing startup for 4–6 months. We never launched it. And honestly, I’m glad I went through it.\n\nI’ve always had this habit of getting curious about a problem and immediately thinking:   “Why doesn’t someone build this?”   And then, instead of stopping at the idea, I usually end up thinking about how it could actually be built.  That’s how  GaadiGo  started.  The idea was a multi-passenger ride-sharing platform, similar in concept to Quick Ride in Bangalore. We wanted to take the model to NCR and eventually other parts of North India, where we saw an opportunity.  We had a small team, ranging from around 2–10 people, and spent roughly 4–6 months building it.  We built almost the entire product.  The app.  Backend.  Core ride-sharing functionality.  The pieces required to get towards launch.  And then we discovered the part that really mattered.   We couldn’t legally launch the way we had planned.   Because we were operating in the ride-hailing/aggregator space, there were licensing and security requirements we had to meet.  And this wasn’t just a paperwork problem.  For the three states we were considering, the combined requirement was roughly  ₹75 lakh .  Driver onboarding also brought regulatory requirements with it.  So we had an interesting situation:   The product was almost ready.    The business wasn’t.   We hadn’t even reached the stage where we could get real users and rides because we couldn’t properly enter the market without meeting those requirements.  We tried fundraising.  But as a very early-stage company with no traction, we were in an awkward position.  Some investors weren’t willing to fund something that was still so foundational.  Others were interested but expected a very significant amount of equity.  Eventually, we decided to pause GaadiGo.  And that experience changed how I look at startups.  I used to think the hardest part was  building the product .  Now I know that’s only one piece of the puzzle.  Sometimes the biggest risk isn’t whether you can build something.  It’s whether the  regulatory environment, economics, distribution, capital requirements and timing  allow you to turn what you’ve built into a business.  If I could go back, I would validate those things much earlier.   But I don’t think I’m done building.   Actually, quite the opposite.  GaadiGo made me realise that I genuinely enjoy this entire process.  I enjoy being curious about a problem.  I enjoy coming up with weird ideas.  I enjoy asking  “what if we did it this way?”   And most importantly, I enjoy actually building the answer.  Lately, my curiosity has been moving heavily towards  AI, GenAI and AI agents .  There’s something particularly exciting about this space because the barrier between  “I have an idea”  and  “I can actually build a prototype”  is getting smaller every day.  So my current plan is pretty simple:   Get into a strong AI/GenAI/Agentic AI role → learn how real products and systems are built → keep experimenting and building on the side → and eventually see if one of those experiments deserves to become something bigger.   I’m not looking at a job and building as two completely separate things.  I actually think the best combination for me is:   Work on hard real-world problems during the day.    Build crazy ideas when curiosity hits.   Maybe the next thing becomes a company.  Maybe it becomes a failed experiment.  Maybe it becomes something completely unexpected.  I’m okay with all three.  Because I think I’m more interested in being a  builder  than in simply having the title of “founder.”  GaadiGo didn’t become the company we imagined.  But it gave me something arguably more valuable:   the confidence to keep building.   For other founders/builders here:   Have you ever had an idea that didn’t work out commercially but completely changed the way you approach building?        submitted by     /u/AdviceSignal5293     to     r/SaaSSolopreneurs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SaaSSolopreneurs/comments/1w9ma18/i_built_a_ridehailing_startup_for_46_months_we/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T08:23:36Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T08:23:57.362Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e749df3d11795a689f6b5"
+    },
+    "message_id": "reddit_t3_1w9ma0c",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "CriticalState",
+    "username": "No_Hotel_1453",
+    "title": "[Law Proposal] We are too rich, we must seize the means of production under the state banner, so that we can regulate the economy.",
+    "text": "[Law Proposal] We are too rich, we must seize the means of production under the state banner, so that we can regulate the economy.\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/No_Hotel_1453     to     r/CriticalState       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/CriticalState/comments/1w9ma0c/law_proposal_we_are_too_rich_we_must_seize_the/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T08:23:34Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T08:23:57.582Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e749df3d11795a689f6b6"
+    },
+    "message_id": "reddit_t3_1w9ma09",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "Vedic_Astrology_free",
+    "username": "Primary-Raspberry737",
+    "title": "Is it possible to change our destiny? Astrology kinda suggested a indication of bad marriage. Should I be concerned, can anyone help?",
+    "text": "Is it possible to change our destiny? Astrology kinda suggested a indication of bad marriage. Should I be concerned, can anyone help?\n\nI'm kinda confused        submitted by     /u/Primary-Raspberry737     to     r/Vedic_Astrology_free       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Vedic_Astrology_free/comments/1w9ma09/is_it_possible_to_change_our_destiny_astrology/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T08:23:33Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T08:23:57.790Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e749ef3d11795a689f6b7"
+    },
+    "message_id": "reddit_t3_1w9m9zb",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "SwordAndSupperGame",
+    "username": "Logovaz45",
+    "title": "Hope: Festival Pickpockets and Crispy Bacon Strips",
+    "text": "Hope: Festival Pickpockets and Crispy Bacon Strips\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Logovaz45     to     r/SwordAndSupperGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SwordAndSupperGame/comments/1w9m9zb/hope_festival_pickpockets_and_crispy_bacon_strips/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T08:23:31Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T08:23:58.020Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e749ef3d11795a689f6b8"
+    },
+    "message_id": "reddit_t3_1w9m9z7",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "FleetwoodMac",
+    "username": "BFisch89",
+    "title": "Future Games appreciation post: Future Games",
+    "text": "Future Games appreciation post: Future Games\n\nFor the 55th anniversary of Future Games, I'm posting once a day going through the tracklist. Today's post: \"Future Games\"   One of the 2 battleships of the album, the title track is fantastic. Definitely one of Bob Welch's best pieces. The lyrics are super relatable, about imagining the future. I think \"playing future games\" is a great way to put it. And \"you invent the future that you want to face\" is a brilliant line with a great double meaning.    Musically, it's so interesting, with the intriguing intro, the guitar parts fitting together so neatly, and Danny's solo is exactly perfect. And the outro is fantastic, starting with a little bass solo and building from there, and it just gets so big sounding! Especially on live recordings!        submitted by     /u/BFisch89     to     r/FleetwoodMac       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FleetwoodMac/comments/1w9m9z7/future_games_appreciation_post_future_games/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T08:23:30Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T08:23:58.222Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e749ef3d11795a689f6b9"
+    },
+    "message_id": "reddit_t3_1w9m9y5",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "BHU",
+    "username": "TangerineLive9828",
+    "title": "Important notice for foc!!!",
+    "text": "Important notice for foc!!!\n\nThis is recently posted by bhu info . photo is bit blurry.       submitted by     /u/TangerineLive9828     to     r/BHU       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BHU/comments/1w9m9y5/important_notice_for_foc/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T08:23:28Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T08:23:58.443Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e749ef3d11795a689f6ba"
+    },
+    "message_id": "reddit_t3_1w9m9xe",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "Abortion_Philippines",
+    "username": "Frequent-Test-235",
+    "title": "people who undergo SA sa Fredli Doctors,",
+    "text": "people who undergo SA sa Fredli Doctors,\n\npaano nyo po nahandle financially? hindi ko pa nasasabi sa bf ko na positive ako, hindi ko rin alam if ilang weeks na to since napapansin kong matigas sa part ng puson ko (akala ko bloated lang) and plan ko sana ihandle alone ung magagastos since ung bf ko may prob din sya financially, ayoko sana makadagdag sakanya… any tips paano po kayo nakaipon ng pera? wala po akong source of income or what… hindi ko alam san ako kukuha ng pera minsan naiisip ko mag benta na lang ng nud* pics ko para makaipon :(( umaabot po ba sa 60k ung need i prepare? pls don’t judge me po… need ko po ang advise and tips para magkapera :((       submitted by     /u/Frequent-Test-235     to     r/Abortion_Philippines       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Abortion_Philippines/comments/1w9m9xe/people_who_undergo_sa_sa_fredli_doctors/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T08:23:26Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T08:23:58.663Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e749ef3d11795a689f6bb"
+    },
+    "message_id": "reddit_t3_1w9m9wo",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "lssAuto",
+    "username": "android_test_pac",
+    "title": "Link Post Title 07-September-2026 08:22:54",
+    "text": "Link Post Title 07-September-2026 08:22:54\n\nsubmitted by     /u/android_test_pac     to     r/lssAuto       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/lssAuto/comments/1w9m9wo/link_post_title_07september2026_082254/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T08:23:24Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T08:23:58.890Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e749ff3d11795a689f6bc"
+    },
+    "message_id": "reddit_t3_1w9m9wi",
+    "topic_key": "pos",
+    "search_keyword": "POS",
+    "platform": "reddit",
+    "subreddit": "NursingPH",
+    "username": "asdfgh014",
+    "title": "Worth it ba mag-dorm kahit online pa?",
+    "text": "Worth it ba mag-dorm kahit online pa?\n\nHello po! From red rc na magta-take this Feb 2027 🥹   Our refresher is online for 1 month before F2F. May dorm kami and possible move-in next week, pero di ko alam if move in na ba ako or wait until F2F 😭 I think bayad na rin kami for this month kaya sayang din.    Sa mga previous takers, ano mas marerecommend niyo? Move in na kahit online or wait na lang for F2F? May difference ba talaga sa productivity/motivation kapag nasa dorm na kayo?       submitted by     /u/asdfgh014     to     r/NursingPH       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NursingPH/comments/1w9m9wi/worth_it_ba_magdorm_kahit_online_pa/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T08:23:23Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T08:23:59.101Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e74bcf0819e6636a8f064"
+    },
+    "message_id": "reddit_t3_1w9mafs",
+    "topic_key": "hey",
+    "search_keyword": "Hey",
+    "platform": "reddit",
+    "subreddit": "economy",
+    "username": "coinfanking",
+    "title": "U.S. debt is even worse than it seems, and rising Treasury yields are now an ‘all-hands-on-deck situation,’ top economist warns.",
+    "text": "U.S. debt is even worse than it seems, and rising Treasury yields are now an ‘all-hands-on-deck situation,’ top economist warns.\n\nThe market for U.S. Treasuries has shown troubling signs lately, and rising yields are a clue that conditions are more dire than they appear, according to Robin Brooks, a senior fellow at the Brookings Institution.   In a Substack post on Tuesday, he said U.S. policy is now focused on preventing long-term borrowing costs from shooting higher and pointed to Treasury Secretary Scott Bessent's efforts to double debt buybacks as well as Fed Chair Kevin Warsh's Jackson Hole speech that reassured markets on his inflation-fighting credibility.       submitted by     /u/coinfanking     to     r/economy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/economy/comments/1w9mafs/us_debt_is_even_worse_than_it_seems_and_rising/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T08:24:16Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T08:24:28.089Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e74bcf0819e6636a8f066"
+    },
+    "message_id": "reddit_t3_1w9mafg",
+    "topic_key": "hu",
+    "search_keyword": "Hu",
+    "platform": "reddit",
+    "subreddit": "laufen",
+    "username": "Extension_Turn5658",
+    "title": "Ab wann wird laufen ungesund?",
+    "text": "Ab wann wird laufen ungesund?\n\nDie Evidenz hinsichtlich positiver Effekte auf verschiedenste Organismen durch Cardiovaskuläres Training ist ja eindeutig belegt.    Meine Frage: habt ihr euch schonmal damit beschäftigt, wann der Grenznutzen beim Laufen von 'gesund' hinzu langfristig 'gesundheitsschädlich' kippt?    Mir kam der Gedanke jetzt immer öfter auf, speziell durch den Hype rund um den LSU und Ultras allgemein.    Ohne jetzt tief in Forschung eingestiegen zu sein hätte ich folgende Hypothese:    - Der primäre Effekt warum laufen gesund ist = moderate Form von Aktivität aka Zone 2 Cardio = reihenweise positive Effekte für Blutdruck, Gefäße, Blutfettwerte aber auch kognitiver Art; das ist nicht laufen spezifisch und wenn man sich 5h die Woche auf ein Indoor Ergometer sitzt statt zu laufen ist das langristig vermutlich sogar gesünder (Gelenke)   - Der Grenznutzen nimmt stark ab (e.g., jemand der garkeine Aktivität macht wird massiv gesundheitlichen Mehrwert haben wenn er von 0 auf 3-4x 30-40min/Z2 die Woche geht; jemand der schon 5h Cardio macht wird nicht mehr viel Benefit haben durch die 6.)   - Nach dem Optimum wirds negativ: ab einem gewissen Volumen (und ich hab keine Ahnung wo das ist) sagen wir mal >70km hätte ich die Hypothese, dass Leute die auch viel Cardio machen aber darunter sind, langfristig eine höhere Lebenserwartung haben   Ich hab das Gefühl je mehr Volumen ich pushe desto mehr Cortisol/Stress schiebe ich laufend mit mir rum (in meinen Blocks war die Regeneration und der Schlaf definitiv schlechter, als wenn ich leicht trainiere).    Effekte auf Gelenke sind speziell bei Knien und Hüfte je nach Lauftechnik sicher stark negativ. Mich würde interessieren, wie Ultraläufer wie Hendrik Boury mit 50-60 drauf sind (wobei es da ja auch ältere Zeitgenossen gibt, denen es scheinbar gut geht).    Generelle Belastung auf Organe. Wenn man irgendwann 6-7h die Woche läuft hat man ja laufend Belastung/Blutfluss in bestimmten Bereichen. Ich habe mal gelesen, es gäbe da Zusammenhänge mit Komplikationen in der Gallenblase etc.    Habt ihr euch darüber schonmal Gedanken gemacht?       submitted by     /u/Extension_Turn5658     to     r/laufen       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/laufen/comments/1w9mafg/ab_wann_wird_laufen_ungesund/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-07T08:24:16Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-07T08:24:28.489Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a9e74bcf0819e6636a8f068"

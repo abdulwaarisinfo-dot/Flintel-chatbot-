@@ -1,0 +1,416 @@
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T13:04:22.831Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab12b57660c60840398e21d"
+    },
+    "message_id": "reddit_t3_1wmc830",
+    "topic_key": "can you find me top posts on reddit which has over 10k views per month from ai tech industry",
+    "search_keyword": "machine learning",
+    "platform": "reddit",
+    "subreddit": "scilab",
+    "username": "mrhoa31103",
+    "title": "Data-Driven Science and Engineering Series - Installment 15 - Fourier Series and Fourier Transforms",
+    "text": "Data-Driven Science and Engineering Series - Installment 15 - Fourier Series and Fourier Transforms\n\nWe're starting a new series off of the Steve Brunton's Data-Driven Science and Engineering Series. He's definitely one of my favorite instructors when it comes to numerical and data analysis.    This is the second topic of Data-Driven Science and Engineering Series but the first short course series in Fourier Series and Fourier Transforms.    For this first code example, it will be just introducing the topic of inner products while the second code will be a more in depth on    To follow the series (if you just jump into the subject here):   1) I do suggest you download the book (info below) and read the pertinent sections.   2) Download the data used for the short course. See below for location of the data.   3) I'm using Scilab 26.1.0.   I'm not sure how much coverage SciLab provides for this course but we'll see as we go along.    ====================================     These lectures (videos) follow Chapter 2 from the book (freely available in electronic form):    \"Data-Driven Science and Engineering: Machine Learning, Dynamical Systems, and Control\" by Brunton and Kutz     Data and Python and MATLAB Native Code at    https://databookuw.com/     Note: links to Matlab Code.zip + Data.zip on Main Page     Amazon:    https://www.amazon.com/Data-Driven-Sc   ... //If you want hardcopy book.     Book Website(s):    http://databookuw.com    //For Videos and such    X posting \"FREE PDF for 2ND EDITION OF OUR BOOK!!!\"  databookV2.pdf   //For Free Electronic Complete Textbook     Chapters available at:    http://databookuw.com/databook.pdf    //Free Electronic Version     He discusses getting code and data files in this lecture (from the SVD course)     https://www.youtube.com/watch?v=QQ8vxj-9OfQ&list=PLMrJAkhIeNNSVjnsviglFoY2nXildDCcv&index=5         Videos     Fourier Series Short Course Overview    https://www.youtube.com/watch?v=jNC0jxb0OxE&list=PLMrJAkhIeNNT_Xh3Oy0Y4LTj0Oxo8GqsC&index=1     Fourier Series Part 1: Lecture 2    https://www.youtube.com/watch?v=jNC0jxb0OxE&list=PLMrJAkhIeNNT_Xh3Oy0Y4LTj0Oxo8GqsC&index=2     Fourier Series Part 2: Lecture 3    https://www.youtube.com/watch?v=jNC0jxb0OxE&list=PLMrJAkhIeNNT_Xh3Oy0Y4LTj0Oxo8GqsC&index=3     Inner Products in Hilbert Space: Lecture 4    https://www.youtube.com/watch?v=jNC0jxb0OxE&list=PLMrJAkhIeNNT_Xh3Oy0Y4LTj0Oxo8GqsC&index=4     Complex Fourier Series: Lecture 5    https://www.youtube.com/watch?v=jNC0jxb0OxE&list=PLMrJAkhIeNNT_Xh3Oy0Y4LTj0Oxo8GqsC&index=5    The video for this specific  second  set of code is below:    Complex Fourier Series: Lecture 6 (figures 2.3 and 2.4 of section 2.1)    https://www.youtube.com/watch?v=jNC0jxb0OxE&list=PLMrJAkhIeNNT_Xh3Oy0Y4LTj0Oxo8GqsC&index=6    Output:    First Code Set: Program Echo only - \"Data-Driven Science and Engineering -Fourier and Wavelet Transforms\"   \"2026-08-09 15:12:25.705\"   Second Code Set: Program Echo only - \"Data-Driven Science and Engineering -Fourier Series Approximation to a Hat Function\"   \"2026-08-09 14:55:32.224\"    Plots:    https://preview.redd.it/dkqezbwaqeih1.jpg?width=2386&format=pjpg&auto=webp&s=a6693dcf46875215b0ee1df3f18510ac37b33a31     https://preview.redd.it/fimerycdqeih1.jpg?width=2320&format=pjpg&auto=webp&s=6c606603c6850f06e89556acaa30084e4aab5118     Figure 2.4: Fourier coefﬁ cients (top) and relative error of Fourier cosine ap-proximation with true function (bottom) for hat function in Fig. 2.3.     First Set of Code:   Code for Figure 2.1(Inner Products):     clear; clc; //close out all existing figures close(winsid()) disp(\"Data-Driven Science and Engineering -Fourier and Wavelet Transforms\",string(datetime())) //Section 2.1 Fourier Series and Fourier Transforms f = [0 0 .1 .2 .25 .2 .25 .3 .35 .43 .45 .5 .55 .5 .4 .425 .45 .425 .4 .35 .3 .25 .225 .2 .1 0 0]; g = [0 0 .025 .1 .2 .175 .2 .25 .25 .3 .32 .35 .375 .325 .3 .275 .275 .25 .225 .225 .2 .175 .15 .15 .05 0 0] -0.025; x = 0.1*(1:length(f)); xf = (.01:.01:x(end)); ff = interp1(x,f,xf,'spline') gf = interp1(x,g,xf,'spline') plot(xf(20:end-10),ff(20:end-10),'k','LineWidth',1.5) plot(x(2:end-1),f(2:end-1),'bo','MarkerFace','b') plot(xf(20:end-10),gf(20:end-10),'k','LineWidth',1.5) plot(x(2:end-1),g(2:end-1),'ro','MarkerFace','r') xlabel(\"Figure 2.1: Discretized Functions Used to Illustrate Inner Product\") ylabel(\"fn and gn\") legend('fn_fit','fn_data','gn_fit','gn_data',1) xgrid; //xlim([.1 2.7]) //ylim([-.1 .6]) set(gca(),'data_bounds',[.1,2.7,-.1,.6],'auto_scale','off','tight_limits','on') //set(gca,'XTick',[.1:.1:2.7],'LineWidth',1.2) //set(gca,'YTick',[]); //box off //set(gcf,'Position',[100 100 550 250]) //set(gcf,'PaperPositionMode','auto') //print('-depsc2', '-loose', '../figures/InnerProduct');     Code Figures 2.3 and 2.4    clear; clc; //close out all existing figures close(winsid()); disp(\"Data-Driven Science and Engineering -Fourier Series Approximation to a Hat Function\",string(datetime())) //Section 2.1 Fourier Series and Fourier Transforms //YouTube Lecture reference //https://www.youtube.com/watch?v=PP5ox7evg7o&list=PLMrJAkhIeNNT_Xh3Oy0Y4LTj0Oxo8GqsC&index=6 kmax = 7; dx = 0.001; L = %pi; x = (-1+dx:dx:1)*L; f = 0*x; n = length(f); nquart = floor(n/4); nhalf = floor(n/2); f(nquart:nhalf) = 4*(1:nquart+1)/n; f(nhalf+1:3*nquart) = 1-4*(0:nquart-1)/n; scf(0); clf; subplot(3,1,1) plot(x,f,'-','Color',[0 0 0],'thickness',1.5) //ylim([-.2 1.5]) //xlim([-1.25*L 1.25*L]) set(gca(),'data_bounds',[-1.25*L,1.25*L,-.2,1.5],'auto_scale','off','tight_limits','on') set(gca(),'thickness',1.2) //============begin custom ticks ==================== // Get handle to current axes ax = gca(); // gca = get current axes // Turn off automatic ticks for both axes ax.auto_ticks = [\"off\", \"off\", \"off\"]; // [x, y, z] // Set custom X ticks: positions and labels ax.x_ticks = tlist([\"ticks\", \"locations\", \"labels\"], ... [-2*L -L 0 L 2*L], ... // positions [\"-2pi\",\"-pi\",\"0\",\"pi\",\"2pi\"]); // labels ax.y_ticks = tlist([\"ticks\", \"locations\", \"labels\"], ... [0 1], ... // positions [\"0\",\"1\"]); // labels //=========end of custom ticks ==================== xlabel(\"Time\") title( \"Figure 2.3: Hat function and Fourier Cosine Series Approximation\") //set(gca(),'x_ticks',[-L 0 L]) //set(gca(),'x_ticks.labels',['-L','0','L','2L']) //set(gca(),'y_ticks',[0 1],'y_ticks.labels',{}); CC = colormap(jet(8)); // CCsparse = CC(5:5:end,:); // CCsparse(end+1,:) = CCsparse(1,:); CCsparse = CC(1:3:end,:); // subplot(3,1,2) L = %pi; A0 = sum(f.*ones(1,length(x)))*dx; plot(x,A0+0*f,'-','Color',CC(1,:),'thickness',1.2); fFS = A0/2; for k=1:kmax A(k) = sum(f.*cos(%pi*k*x/L))*dx; B(k) = sum(f.*sin(%pi*k*x/L))*dx; plot(x,A(k)*cos(k*%pi*x/L),'-','Color',CC(k,:)*.8,'thickness',1.2); // plot(x,B(k)*sin(2*k*%pi*x/L),'k-','thickness',1.2); fFS = fFS + A(k)*cos(k*%pi*x/L) + 0*B(k)*sin(k*%pi*x/L); end //ylim([-.7 .7]) //xlim([-1.25*L 1.25*L] set(gca(),'data_bounds',[-1.25*L,1.25*L,-.7,.7],'auto_scale','off','tight_limits','on') set(gca(),'thickness',1.2) //============begin custom ticks ==================== // Get handle to current axes ax = gca(); // gca = get current axes // Turn off automatic ticks for both axes ax.auto_ticks = [\"off\", \"off\", \"off\"]; // [x, y, z] // Set custom X ticks: positions and labels ax.x_ticks = tlist([\"ticks\", \"locations\", \"labels\"], ... [-2*L -L 0 L 2*L], ... // positions [\"-2pi\",\"-pi\",\"0\",\"pi\",\"2pi\"]); // labels ax.y_ticks = tlist([\"ticks\", \"locations\", \"labels\"], ... [-0.5 0 0.5], ... // positions [\"-0.5\",\"0\",\"0.5\"]); // labels //=========end of custom ticks ==================== //set(gca,'x_ticks.locations',[-L 0 L]) //set(gca,'XTickLabels',['-L','0','L','2L']) //set(gca,'YTick',[-.5 0 .5],'YTickLabels',{}); // subplot(3,1,1) plot(x,fFS,'-','Color',[1 0 0],'thickness',1.2) l1=legend('f','f_caret') subplot(3,1,3) A0 = sum(f.*ones(length(x),1)')*dx; plot(x,A0+0*f,'-','Color',CC(1,:),'thickness',1.2); fFS = A0/2; for k=1:7 Ak = sum(f.*cos(%pi*k*x/L))*dx; Bk = sum(f.*sin(%pi*k*x/L))*dx; plot(x,Ak*cos(k*%pi*x/L),'-','Color',CC(k,:)*.8,'thickness',1.2); // plot(x,Bk*sin(2*k*%pi*x/L),'k-','thickness',1.2); fFS = fFS + Ak*cos(k*%pi*x/L) + 0*Bk*sin(k*%pi*x/L); end //ylim([-.06 .06]) //xlim([-1.25*L 1.25*L]) set(gca(),'data_bounds',[-1.25*L,1.25*L,-.06,.06],'auto_scale','off','tight_limits','on') set(gca(),'thickness',1.2) //============begin custom ticks ==================== // Get handle to current axes ax = gca(); // gca = get current axes // Turn off automatic ticks for both axes ax.auto_ticks = [\"off\", \"off\", \"off\"]; // [x, y, z] // Set custom X ticks: positions and labels ax.x_ticks = tlist([\"ticks\", \"locations\", \"labels\"], ... [-2*L -L 0 L 2*L], ... // positions [\"-2pi\",\"-pi\",\"0\",\"pi\",\"2pi\"]); // labels ax.y_ticks = tlist([\"ticks\", \"locations\", \"labels\"], ... [-0.05 0 0.05], ... // positions [\"-0.05\",\"0\",\"0.05\"]); // labels //=========end of custom ticks ==================== //set(gca,'x_ticks.locations',[-L 0 L]) //set(gca,'XTickLabels',['-L','0','L','2L']) //set(gca,'YTick',[-.05 0 .05],'YTickLabels',{}); scf(1); clf; //set(gcf(),'Position',[100 100 550 400]) //set(gcf(),'PaperPositionMode','auto') print('-depsc2', '-loose', '../figures/FourierTransformSines'); // Plot amplitudes clear ERR clear A fFS = A0/2; A(1) = A0/2; Z1 = norm(f-fFS); Z2 = norm(f); ERR(1) = Z1/Z2; //original code does not normalize with norm(f) kmax = 200; for k=1:kmax /* //For L-periodic function, one would use this code A(k+1) = sum(f.*cos(2*%pi*k*x/L))*dx*2/L; B(k+1) = sum(f.*sin(2*%pi*k*x/L))*dx*2/L; // plot(x,B(k)*sin(2*k*%pi*x/L),'k-','thickness',1.2); fFS = fFS + A(k+1)*cos(2*k*%pi*x/L) + 0*B(k+1)*sin(2*k*%pi*x/L); Z1 = norm(f-fFS); Z2 = norm(f); ERR(k+1) = Z1/Z2; disp(\"ERR(\",k,\")=\",ERR(k+1)) */ // In our case, we're doing -pi to pi so this code is appropriate... // to obtain figure 2.4 from the book... A(k+1) = sum(f.*cos(%pi*k*x/L))*dx; B(k+1) = sum(f.*sin(%pi*k*x/L))*dx; // plot(x,B(k)*sin(2*k*%pi*x/L),'k-','thickness',1.2); fFS = fFS + A(k+1)*cos(k*%pi*x/L) + 0*B(k+1)*sin(k*%pi*x/L); Z1 = norm(f-fFS); Z2 = norm(f); ERR(k+1) = Z1/Z2; // disp(\"ERR(\",k,\")=\",ERR(k+1)) /troubleshooting // plot(fFS) /troubleshooting plotting // pause end thresh = median(ERR)*sqrt(kmax)*4/sqrt(3); r = max(find(ERR>thresh)); r = 7; subplot(2,1,1) semilogy(0:1:kmax,A,'k','thickness',1.5) semilogy(r,A(r+1),'bo','thickness',1.5) ylabel(\"a_k\") xgrid //xlim([0 kmax]) //ylim([10^(-7) 1]) set(gca(),'data_bounds',[0.1,kmax,1e-07,1]) subplot(2,1,2) semilogy(0:1:kmax,ERR,'k','thickness',1.5) semilogy(r,ERR(r+1),'bo','thickness',1.5) xlabel(\"mode number, k\") ylabel(\"norm(f-fBS)/norm(f)\") xgrid //xlim([0 kmax]) //ylim([3*10^(-4) 20]) set(gca(),'data_bounds',[0.1,kmax,1e-04,20]) //set(gcf(),'Position',[100 100 500 300]) //set(gcf(),'PaperPositionMode','auto') // print('-depsc2', '-loose', '../figures/FourierTransformSinesERROR');         submitted by     /u/mrhoa31103     to     r/scilab       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/scilab/comments/1wmc830/datadriven_science_and_engineering_series/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:04:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T13:04:23.043Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab12b57660c60840398e21e"
+    },
+    "message_id": "reddit_t3_1wmc82m",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "london_entrepreneurs",
+    "username": "Straight_Map4706",
+    "title": "Started a marketing agency this summer and still can't land a client. London-based. What am I missing?",
+    "text": "Started a marketing agency this summer and still can't land a client. London-based. What am I missing?\n\nI started a marketing agency at the beginning of summer and, despite putting a lot of time into it, I still haven't managed to sign a client.   Before starting the agency, I worked with two founders in the rent-to-rent/service accommodation space, helping them grow a mentorship offer through social media.   Over that time I got hands-on experience with:     Filming and editing   Long-form and short-form content   Content ideation based on performance data   Building content systems   Social media strategy   Marketing and positioning an offer   Using content to help scale an existing offer     I feel like I've developed a genuinely useful skillset and can actually deliver for a client. The frustrating part is that I can't seem to get anyone to give me the opportunity in the first place.   I've tried cold outreach, DMs, calls, and looking for businesses actively hiring for marketing/content help, but nothing has converted into a proper client yet.   For anyone who's built an agency or freelanced before, what was the biggest thing that helped you land your first few clients?   And if anyone else here is based in London and is building something, I'd be happy to connect.       submitted by     /u/Straight_Map4706     to     r/london_entrepreneurs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/london_entrepreneurs/comments/1wmc82m/started_a_marketing_agency_this_summer_and_still/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:04:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T13:04:23.250Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab12b57660c60840398e21f"
+    },
+    "message_id": "reddit_t3_1wmc828",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "honeymoonplanning",
+    "username": "SamTheMan377",
+    "title": "Recs for European destinations",
+    "text": "Recs for European destinations\n\nLooking for some advice on potential destinations for a honeymoon in Europe next  April/May .    Some background/TLDR to help with recs:  - we are travelling from Canada (preferably flying from Ottawa, but Montreal and Toronto are also options) and looking at 7-10 days, including travel days  - our budget is about $9000 (USD $6400/€5600), but there’s some flexibility if justified  - we are relatively experienced travellers, so additional travel after landing isn’t an issue  - we’d like to spend most of our time in one or two places, ideally spending our time walking, drinking good coffee, and eating good food  - while not the main goal, we are both very interested in history so old city centres/districts and museums are a plus   In the past, we’ve mostly travelled with the goal of experiencing as much of a destination as possible, but for this trip, we’d like to take things a bit slower. This is a honeymoon, not a whirlwind tour, ya know? We’ve pictured spending our days drinking coffee, wandering older parts of town, admiring the architecture and maybe checking out a cultural experience, before settling in for a romantic dinner. We are also both avid walkers and would happily spend all day on our feet.   A few ideas we’ve had include Vienna (with a trip to Graz/Salzburg), Lisbon, and Rome (with a trip to Naples), so we aren’t opposed to more touristy destinations, but we are MORE than open to lesser known places, even if it involves a bit more travel at the beginning. What we want to avoid is jet setting between locations, sleeping at different hotels every night, and never really settling in anywhere. Really open to any and all suggestions! Thanks so much in advance!        submitted by     /u/SamTheMan377     to     r/honeymoonplanning       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/honeymoonplanning/comments/1wmc828/recs_for_european_destinations/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:04:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T13:04:23.455Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab12b57660c60840398e220"
+    },
+    "message_id": "reddit_t3_1wmc827",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "logace444444444",
+    "title": "[Sticker Giveaway] Enter to win a 5 Stars Apricot Tree Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 5 Stars Apricot Tree Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/logace444444444     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wmc827/sticker_giveaway_enter_to_win_a_5_stars_apricot/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:04:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T13:04:23.658Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab12b57660c60840398e221"
+    },
+    "message_id": "reddit_t3_1wmc810",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "MentalHealthUK",
+    "username": "Sea-Departure-3082",
+    "title": "How can I get Better",
+    "text": "How can I get Better\n\nHi I am 23F and I have ADHD and struggle immensely with depression, suicidal ideation and anxiety. I also have OCD and PTSD.    I just graduated from a five year university course and graduated with honours. But those five years were possibly the worst of my life. I have been struggling with depression and suicide since I was 17 and it has not gotten better. My parents did not want me to transfer university and therefore I had to put up with bullying, torment from countless crazy flatmates and isolation.    I am in the worst possible place I have ever been in. I recently moved away from my uni city, but moved in with someone who I thought was my friend. I would have moved back home but we are currently selling my childhood home. This situation is tearing my family apart. I recently realised that my new flatmate is once again crazy and entitled and cannot show me any compassion or understanding, and makes living with her a constant challenge. I moved in order to put a lot of anxiety behind me, and attempt to get better mentally. She has made that impossible.   However, I feel like the only people in my life ( my parents ) are too overwhelmed and busy to really prioritise me over selling our house. I also cannot come home for very long due to this situation.    Everyday, I feel myself getting worse and worse. I don’t know what to do. How do get admitted to a psychiatric hospital? One in London, that isn’t going to make my mental situation worse.    I cannot afford therapy and I have no one to talk to about this. I feel alone, misunderstood and scared. I just want to get better and feel real again. I don’t feel anything but a sense of overwhelming doom 24/7.    I have tried antidepressants and CBT, I have been on meds my whole life, but I just don’t feel like I am ever really taken seriously, which I assume is normal for the NHS.    I just need help and to know it will get better. Seeing my family struggle so hard and knowing I can’t do anything makes me incredibly unwell too. I wish things could go back to normal.        submitted by     /u/Sea-Departure-3082     to     r/MentalHealthUK       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MentalHealthUK/comments/1wmc810/how_can_i_get_better/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:03:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T13:04:23.869Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab12b58660c60840398e222"
+    },
+    "message_id": "reddit_t3_1wmc80p",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "Nightshift",
+    "username": "Right_Reputation_945",
+    "title": "Shift patterns",
+    "text": "Shift patterns\n\nI work nightshirt and took a week off due to personal issues and burnout.    I returned to shifts again 2 shifts in then one singlen   Day off then 3 days in and a single day off then 4 days in having to work longer after the duty manager calling in sick and absolutely nobody to cover and no response from the hotel managerand now I'm in off two days and then back in for in shifts in a row.    This kid a joke really in my opinion with little rest am. I just being dramatic?        submitted by     /u/Right_Reputation_945     to     r/Nightshift       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Nightshift/comments/1wmc80p/shift_patterns/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:03:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T13:04:24.080Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab12b58660c60840398e223"
+    },
+    "message_id": "reddit_t3_1wmc80l",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Pixelary",
+    "username": "oguzayyidiz_06",
+    "title": "What did u/oguzayyidiz_06 draw?",
+    "text": "What did u/oguzayyidiz_06 draw?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/oguzayyidiz_06     to     r/Pixelary       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Pixelary/comments/1wmc80l/what_did_uoguzayyidiz_06_draw/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:03:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T13:04:24.281Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab12b58660c60840398e224"
+    },
+    "message_id": "reddit_t3_1wmc7yv",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "WPBL",
+    "username": "AutoModerator",
+    "title": "Weekly Free Talk Thread - Talk about the WPBL, women's baseball generally, or whatever!",
+    "text": "Weekly Free Talk Thread - Talk about the WPBL, women's baseball generally, or whatever!\n\nWelcome to Free Talk thread!   Feel free to chat about anything under the sun, just remember to keep it civil! 😄👍   This discussion thread is set up to go live every Monday morning (PST) and will be at the top of the sub throughout the week.       submitted by     /u/AutoModerator     to     r/WPBL       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WPBL/comments/1wmc7yv/weekly_free_talk_thread_talk_about_the_wpbl/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:03:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T13:04:24.491Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab12b8f660c60840398e225"
+    },
+    "message_id": "reddit_t3_1wmc911",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "frailknees",
+    "title": "[Sticker Giveaway] Enter to win a 4 Stars Daisy Sticker!",
+    "text": "[Sticker Giveaway] Enter to win a 4 Stars Daisy Sticker!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/frailknees     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wmc911/sticker_giveaway_enter_to_win_a_4_stars_daisy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:05:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T13:05:19.925Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab12b90660c60840398e226"
+    },
+    "message_id": "reddit_t3_1wmc90h",
+    "topic_key": "what people are talking about on reddit about product design",
+    "search_keyword": "UI/UX",
+    "platform": "reddit",
+    "subreddit": "AgencyGrowthHacks",
+    "username": "One-Neighborhood211",
+    "title": "Design studio at $500K to $700K annual revenue within 3 years. How do I go to the next tier?",
+    "text": "Design studio at $500K to $700K annual revenue within 3 years. How do I go to the next tier?\n\nSo, I run a design studio, specialising in Branding and UI/UX Design. It’s been around 3 years now.   Team of around 12 members.   Avg project size - $10K - $15K   Clients are mostly in the US, UK, and UAE, with the occasional Indian projects. The work itself has held up well. Some of the platforms we have designed and shipped are now handling 200 to 400 million requests a month in production. We have also done one off projects for a couple of Fortune 500 names, but those came through inbound and we have not figured out how to turn that into a repeatable channel.   Most of our engagements are MVPs for early stage/pre-seed startups, meaning lower budgets and difficult to get long terms monthly retainers.   The thing is we mostly publish our work on Dribbble and Behance, and that’s it. No Twitter presence, no LinkedIn content, no Instagram, no SEO play, no outbound engine.  Currently, we are starting to publish blogs and grow through SEO.   We tried LinkedIn reach outs, cold emailing but none of it worked.    One thing we tried and it worked was offering a paid pilot for a week to experience our work quality, turnaround time, etc.  After 3 days, most of them signed up for the entire project.    Question:  How do I reach out to funded startups and have them try our week pilot?    How can I scale our company to cross $1M mark?   Also, if you have any tips or suggestions, they are more than welcome :)       submitted by     /u/One-Neighborhood211     to     r/AgencyGrowthHacks       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AgencyGrowthHacks/comments/1wmc90h/design_studio_at_500k_to_700k_annual_revenue/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:05:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T13:05:20.130Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab12b90660c60840398e227"
+    },
+    "message_id": "reddit_t3_1wmc90e",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "allwearcom",
+    "username": "allwearcom",
+    "title": "Allwear Organic Sleeveless Hoodie: Lightweight Comfort for Every Layer",
+    "text": "Allwear Organic Sleeveless Hoodie: Lightweight Comfort for Every Layer\n\nDiscover the Allwear Organic Sleeveless Hoodie — soft, breathable, non-toxic, and designed for effortless layering, movement, and everyday comfort.    A good hoodie should feel easy. It should give you comfort when you need it, layer well with the rest of your wardrobe, and move with your day without feeling bulky. The Allwear Organic Sleeveless Hoodie takes that familiar hoodie comfort and makes it lighter, cleaner, and more versatile.   Designed with a capped sleeve silhouette, side zippers, and a breathable organic cotton fleece blend, this piece gives you the cozy feel of a hoodie with the freedom of a sleeveless layer. It is the kind of wardrobe essential that works across seasons, routines, and outfits.   Whether you are dressing for travel, movement, errands, lounging, or transitional weather, the Allwear Organic Sleeveless Hoodie gives you comfort without overcomplicating your look.   A Fresh Take on the Everyday Hoodie   Traditional hoodies are comfortable, but they can sometimes feel too warm, too heavy, or too bulky for layering. The sleeveless hoodie solves that problem by giving you the structure and ease of a hoodie in a more breathable, flexible design.   The capped sleeve style gives the piece a clean, modern look while allowing more freedom through the arms. This makes it ideal for layering over tees, tanks, bra tops, long sleeves, or lightweight base layers.   It is especially useful for days when you want some warmth and coverage but do not need a full-sleeve sweatshirt. Think cool mornings, breezy evenings, airport outfits, post-workout layering, outdoor walks, and relaxed weekends.   Made with Organic Cotton Fleece Comfort   The Allwear Organic Sleeveless Hoodie is crafted with a non-toxic organic cotton fleece blend. That means it gives you the softness and comfort people love in fleece, but with Allwear’s cleaner material approach.   Because the piece is lightweight and breathable, it works well beyond cold-weather dressing. You can wear it during spring, summer evenings, fall transitions, or layered winter outfits.   A lot of conventional hoodies rely heavily on synthetic fabrics like polyester or nylon. Allwear takes a different direction by focusing on organic cotton and verified non-toxic standards. This gives customers a cleaner option for one of the most-worn categories in any wardrobe: comfortable everyday layers.   Side Zippers for Movement and Styling   One of the most practical design features of the Allwear Organic Sleeveless Hoodie is the side zipper detail. This makes the piece easier to move in and more flexible to style.   The side zippers can help create a more relaxed fit through the waist and hips, especially when sitting, walking, stretching, or layering over other pieces. They also add a subtle design detail that makes the hoodie feel more elevated than a basic pullover.   This is the kind of small feature that can make a big difference in daily wear. It gives the garment more function without making it feel complicated.   Perfect for Layering   The sleeveless design makes this hoodie one of the easiest Allwear pieces to layer. Wear it over the TENCEL™ High Neck Tank Top for a light, sporty look. Pair it with the TENCEL™ Long Sleeve Tee when you want extra coverage without adding bulk. Style it over a Bamboo Bra Top or Bamboo Bodysuit for comfortable movement.        For bottoms, it pairs easily with Organic Joggers, Bamboo Leggings, Organic Sweat Shorts, Organic Cargos, or Organic Trousers. It can feel casual, active, polished, or cozy depending on how you style it.   That versatility makes it a smart piece for capsule wardrobes. Instead of buying multiple trendy tops, you can choose one clean layer that works with many outfits.   A Strong Travel Essential   Travel clothing needs to be comfortable, practical, and easy to rewear. The Allwear Organic Sleeveless Hoodie fits beautifully into a travel capsule because it gives you warmth without taking up too much space.   Wear it over a tee on the plane, layer it with joggers for a road trip, or pack it for cool nights during a warm-weather getaway. The sleeveless structure makes it less bulky than a traditional hoodie, while the hood still gives you that cozy, relaxed feel.   It is also helpful for active travel days when temperatures change between indoor and outdoor spaces. You get a layer that feels comfortable without overheating.   Clean Materials You Can Feel Good About   Allwear’s Clean Standard™ gives this hoodie an important point of difference. The brand focuses on non-toxic materials, organic cotton, no polyester or nylon, PFAS-free standards, toxic dye-free production, BPA-free materials, and OEKO-TEX and GOTS certification.   For customers who are careful about what touches their skin, those details matter. A hoodie may seem like a simple outer layer, but it is often worn close to the body and for long hours. Choosing cleaner materials helps make everyday comfort feel more intentional.   Why It’s Worth Adding to Your Wardrobe   The Allwear Organic Sleeveless Hoodie is not just another hoodie. It is a lighter, more flexible version of a wardrobe staple. It gives you comfort, breathability, movement, and clean style in one easy piece.   It works for layering, travel, lounging, movement, and everyday outfits. It offers the softness of organic cotton fleece while avoiding the synthetic-heavy feel of many conventional hoodies.   For customers building a cleaner wardrobe, this is exactly the kind of piece that earns its place: practical, comfortable, versatile, and made with better standards.   Clean Comfort, Made Lighter   If you love the comfort of a hoodie but want something more breathable and flexible, the Allwear Organic Sleeveless Hoodie is a natural choice.   It gives you warmth without bulk, style without effort, and movement without restriction.   For everyday layering made cleaner, lighter, and more comfortable, this is a piece worth reaching for again and again.       submitted by     /u/allwearcom     to     r/allwearcom       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/allwearcom/comments/1wmc90e/allwear_organic_sleeveless_hoodie_lightweight/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:05:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T13:05:20.331Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab12b90660c60840398e22a"
+    },
+    "message_id": "reddit_t3_1wmc8zr",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Apples_Never_Fall",
+    "username": "Lisa_Martineza",
+    "title": "Best Mobile Casino Sites Australia Reddit: My Hands-On Testing Notes",
+    "text": "Best Mobile Casino Sites Australia Reddit: My Hands-On Testing Notes\n\nI spent several weeks comparing the best mobile casino sites for Australian players, focusing on how practical each platform felt from a phone. I looked at navigation, game access, payments, account controls, support and responsible gambling features.   Best Mobile Casino Sites Australia - What I Tested     Mobile lobby navigation   Game loading and bet controls   Account and cashier access   Deposit and withdrawal information   Bonus terms and wagering rules   KYC and verification details   Support and responsible gambling tools     The first thing I checked was whether the mobile layout felt designed for a smaller screen. A site can look fine on desktop but become frustrating on a phone if menus are difficult to find or important information is hidden behind several layers.   I tested the route between the game lobby, cashier and account area. Players should be able to check balances, review payment information and access support without repeatedly returning to the homepage.   Game browsing was another important part of the comparison. I looked at slots, table games, roulette, blackjack and live casino categories where available. I paid more attention to search tools, filters and game information than to the total number of titles displayed.   The better mobile layouts made it easy to change categories and return to the lobby. I also checked whether bet controls, paytable information and balance details remained visible during play.   Payments And Account Access   I reviewed the cashier from a mobile screen to see whether payment instructions, minimum amounts and transaction limits were easy to understand.   I also looked at how the account displayed cash balances, bonus funds and pending transactions. Clear separation is important because the balance available for play may not always be the same as the amount available for withdrawal.   Withdrawals were reviewed separately from deposits. I checked whether the account explained available cashout methods, possible account checks, minimum amounts and processing stages.   I did not assume that the same payment method would be available for both deposits and withdrawals. Australian players should confirm the current cashier directly, as payment availability can change.   Bonuses And Verification   I compared the headline promotion with the full bonus terms. The main points included wagering requirements, eligible games, maximum bet rules, expiry dates and withdrawal restrictions.   A mobile user should be able to open and read the complete terms without needing a desktop browser. If the conditions are difficult to locate, it becomes harder to judge whether an offer is suitable.   I also checked registration and KYC information. A short sign-up process does not necessarily mean that additional verification will never be required. The account should explain when further information may be requested.   Mini-Testing Notes   I treated the main options as different comparison angles rather than assuming one platform would suit every player.   One option may be more useful for general mobile navigation, while another may suit players who prioritise pokies, payment information or detailed bonus terms. The right choice depends on the games, payment preferences and account controls that matter most.   What stood out across the comparison was the importance of simple navigation. A platform does not need to make every feature visible at once, but the important areas should be easy to reach.   What did not stand out as strongly was any single feature that would automatically make one site suitable for every Australian player. Current availability, payment limits, KYC rules and withdrawal conditions still need to be checked directly.   What To Check Before Depositing   Before using a mobile casino, I would review:     Current availability in your state or territory   Account and operator information   KYC requirements   Deposit and withdrawal limits   Available payment methods   Bonus wagering conditions   Game rules and bet ranges   Support access   Deposit limits and self-exclusion tools     I would also open the cashier and account settings before depositing. This helps confirm that the controls are easy to find on a phone.   Final Takeaway   The best mobile casino sites should be judged by the complete phone experience. Game access matters, but so do navigation, readable payment information, verification details, bonus terms and account controls.   My hands-on comparison showed that a useful mobile casino is one where the important sections remain accessible without unnecessary searching. Australian players should confirm current availability and terms before depositing.   Key Takeaways     Test the lobby on your phone   Check the cashier before depositing   Review withdrawal and KYC information   Read bonus terms in full   Confirm game and bet information   Check responsible gambling tools   Use a fixed entertainment budget     Happy To Answer Questions About:     best mobile casino sites in Australia   Mobile casino navigation   Games and bet controls   Deposits and withdrawals   KYC and verification   Bonus wagering conditions   Responsible gambling tools     Please only use money set aside for entertainment and use deposit limits or time-out tools when needed.       submitted by     /u/Lisa_Martineza     to     r/Apples_Never_Fall       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Apples_Never_Fall/comments/1wmc8zr/best_mobile_casino_sites_australia_reddit_my/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:05:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T13:05:20.955Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab12b91660c60840398e22b"
+    },
+    "message_id": "reddit_t3_1wmc8zf",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "ScottGalloway",
+    "username": "aspiring-govemployee",
+    "title": "A bad opinion from Scott and Kara?",
+    "text": "A bad opinion from Scott and Kara?\n\nI watch the first two episodes of the new 60 Minutes season.    So far it seems the reporting is completely accurate and same as it was with Scott Pelly and the other journalists who had to leave last season.    Thoughts?    I don’t think Scott and Karas take will age well. The 2 new episodes seemed on par for normal. Maybe a little twist from the department of war regarding last week’s episode of the downed pilot.    Thoughts?        submitted by     /u/aspiring-govemployee     to     r/ScottGalloway       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ScottGalloway/comments/1wmc8zf/a_bad_opinion_from_scott_and_kara/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:05:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T13:05:21.160Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab12b91660c60840398e22c"
+    },
+    "message_id": "reddit_t3_1wmc8z8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "pressurewashers",
+    "username": "your_momgeyAF",
+    "title": "Accessory upgrades for Bosch Aquatek 125 Pressure washer.",
+    "text": "Accessory upgrades for Bosch Aquatek 125 Pressure washer.\n\nWe have bee using a Bosch Aquatek 125 Pressure washer with the stock set of fitments/attachments for almost 1.5years.   Please let me know which all accessory/attachment upgrades should I look into, for enhancing the overall experience and utility of using this pressure washer. I've seen a few discussions around a quick release gun and a better pressure nozzle than the stock setup.   Would also like to know which is a really good foam canon to go for. Thank you for your time🙏       submitted by     /u/your_momgeyAF     to     r/pressurewashers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/pressurewashers/comments/1wmc8z8/accessory_upgrades_for_bosch_aquatek_125_pressure/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:05:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T13:05:21.371Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab12b91660c60840398e22d"
+    },
+    "message_id": "reddit_t3_1wmc8yi",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Yara International ASA - 21 sep 2026 @ 14:47 -> Kr.454.80",
+    "text": "Buy Signal Yara International ASA - 21 sep 2026 @ 14:47 -> Kr.454.80\n\nTicker:  YAR.OL    ![Logo]( https://www.getagraph.com/logos/YAR.OL.png )   Exchange:  OSL    Time:  21 sep 2026 @ 14:47    Price:  Kr.454.80    Link:  https://getagraph.com/AAA/trading/OSL/YAR.OL/analysis/signals        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wmc8yi/buy_signal_yara_international_asa_21_sep_2026/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:05:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T13:05:21.575Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab12b91660c60840398e22e"
+    },
+    "message_id": "reddit_t3_1wmc8yc",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "chelseafc",
+    "username": "subredditsummarybot",
+    "title": "Your weekly /r/ChelseaFC roundup for the week of September 14 - September 20, 2026",
+    "text": "Your weekly /r/ChelseaFC roundup for the week of September 14 - September 20, 2026\n\nMonday, September 14 - Sunday, September 20, 2026    Top Highlights        score   comments   title & link          262    15 comments     [Highlights]   Man United 0–[4] Chelsea (0–5) — Ellie Carpenter, 65'             Images/Memes        score   comments   title & link          2,288    117 comments     [Social Media & Photos]   Palmer banned by Twitch for streaming FC27 early 💀💀💀        957    41 comments     [Social Media & Photos]  Chelsea Football Club has completed the renovation of a community pitch in Guayaquil, Ecuador.       871    168 comments     [Social Media & Photos]   Liam Rosenior celebrating Paris FC's win vs Strasbourg today, which leads to a scuffle on the pitch.        785    52 comments     [Social Media & Photos]   Cole Palmer on his EAFC 27 Rating: \"I need a word with EA. They took 2 ratings off me. I had one leg for 10 months. F*****g hell, what do you want me to do?\"        772    89 comments     [Social Media & Photos]   Jordan Henderson pictured in team training             Analysis        score   comments   title & link          698    46 comments     [Analysis & Stats]   [ Opta Analyst ] With his assist for Joao Pedro's goal vs Hull, Cole Palmer registered his 71st Premier League goal involvement for Chelsea in his 100th game. Only Jimmy Floyd Hasselbaink has more in his first 100 PL appearances for Chelsea.        667    163 comments     [Analysis & Stats]   [Sofascore] Barco on his first start in the league: 3/3 tackles won, 2 interceptions, 4 recoveries, 5/7 ground duels won, 100% aerial duel win rate, drew 2 fouls, 92% pass accuracy, 64 touches.        318    26 comments     [Analysis & Stats]   [ Kieran Gill ] The average age of Chelsea's XI tonight is 27 years and 349 days. It's their oldest fielded in the Premier League since May 2023 against Arsenal. The Henderson/Welbeck effect        224    6 comments     [Analysis & Stats]   [Premier League] On Friday, Mahdi Nicoll-Jazuli became The Blues' youngest-ever Premier League player, aged 16 years and 225 days. A record which was previously held by Jody Morris. Also became the first player born in 2010 to play in the Premier League        80    10 comments     [Analysis & Stats]   [TheEsk] The Analysis Series: Chelsea FC: Clearlake’s acquisition of the Boehly and Walter stakes; transaction terms, valuation, source of funds, settlement mechanics and a return model for the selling shareholders             Top Remaining Posts        score   comments   title & link          1,499    35 comments     [Legends & Former Players]  Former blues César Azpilicueta and Kiernan Dewsbury-Hall graduated from the PFA Business School       1,442    366 comments     [News]   No Premier League side has conceded more goals than Chelsea this season (11).        1,029    62 comments     [Meme]   Self-inflicted problems every season for a while now        804    95 comments     [Tier 2]   [Nizaar Kinsella] Romeo Lavia says he is finally reaping the rewards of his hard work, feeling \"free\" again and determined to \"change the narrative\" around him. If he completes 60 minutes vs Brentford, he will surpass his previous best run of 518 minutes without injury - including pre-season matches        689    163 comments     [News]   ESPNBrasil: João Pedro has edema in his knee, caused by a sprain of the anterior cruciate and medial collateral ligaments. He will be out for 3.5 weeks.             Top 5 Comments        score   comment          1,141    /u/C0lePalmer  said  It might be difficult to break the 15 goals conceded record unless the team locks in. Have to concede less than 3 goals in 33 games.        807    /u/MarinaGranovskaia  said  Just the exact length of the international break lmao, I would say im injured too if I was JP, been disrespected by brazil so much this summer.        748    /u/SolutionLong2791  said  Anti Chelsea agenda. It's never ending.         716    /u/TheRedPillMonk  said  I respect it, probably happy to be free of BlueCo.         706    /u/austons_muzz  said  You lot need to calm down calling for Xabi to get sacked. If you thought we’d actually win the prem in year 1 you’re delusional. Comparing us to Arsenals past, it took them 6 years sticking with Artet...             Last week's roundup        score   comments   title & link          21    1 comments     [Highlights]  Your weekly  /r/ChelseaFC  roundup for the week of September 07 - September 13, 2026                submitted by     /u/subredditsummarybot     to     r/chelseafc       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/chelseafc/comments/1wmc8yc/your_weekly_rchelseafc_roundup_for_the_week_of/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:05:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T13:05:21.780Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab12b92660c60840398e230"
+    },
+    "message_id": "reddit_t3_1wmc8y9",
+    "topic_key": "can you find me top posts on reddit which has over 10k views per month from ai tech industry",
+    "search_keyword": "machine learning",
+    "platform": "reddit",
+    "subreddit": "certifications",
+    "username": "chico_dice_2023",
+    "title": "Passed my Databricks Associate ML Exam",
+    "text": "Passed my Databricks Associate ML Exam\n\nPassed with an average of 88% per section   My lowest score was Databricks Machine Learning section.    How I prepared    I took a bunch of data sources and put them in Google's Notebook LLM.   I used Notebook LLM to create quizzes for me and explain when I got things wrong. It also did a study plan.   I found it very useful since the questions where hard but not like the case study questions you get in the exam. But you can prompt it to do a case study style questions.     I recommend doing case study style questions    I did one quiz a day around 15 questions, then reviewed what I got wrong.    I asked the Notebook LLM to write me a breakdown of why I got it wrong then ask it to create flash cards to help me study for those sections.    I did not take the exam until i was getting 90% consistently.   Roughly I studied for 3 weeks.    Data I used:    Here are the  12 sources  currently in my notebook:    PDF Documents      databricks-certified-machine-learning-associate-exam-guide-1-mar-2025.pdf   ai-prep-guide-any-databricks-certification.pdf   Databricks Data Intelligence Platform: A Comprehensive Analysis of Machine Learning Capabilities and Data Management Features - Authorea      Web Articles & Documentation      Deploy models using Model Serving | Databricks on AWS   Distributed training | Databricks on AWS   Get started: Build your first machine learning model on Databricks   Getting Started with Mosaic AI in Databricks: Fine-Tuning, Serving and AI Governance   Lakehouse Monitoring: A Unified Solution for Quality of Data and AI - Databricks   MLflow 3 for GenAI | Databricks on AWS   Machine Learning with Unity Catalog on Databricks: Best Practices   Machine learning on Databricks         submitted by     /u/chico_dice_2023     to     r/certifications       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/certifications/comments/1wmc8y9/passed_my_databricks_associate_ml_exam/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:05:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-21T13:05:22.184Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ab12b92660c60840398e231"
+    },
+    "message_id": "reddit_t3_1wmc8y8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Financial_Library418",
+    "title": "What is a word that means exactly like it sounds like ?",
+    "text": "What is a word that means exactly like it sounds like ?\n\nsubmitted by     /u/Financial_Library418     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wmc8y8/what_is_a_word_that_means_exactly_like_it_sounds/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-21T13:05:02Z"
+    },
+    "fetched_at": {

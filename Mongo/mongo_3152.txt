@@ -1,0 +1,416 @@
+    "fetched_at": {
+      "$date": "2026-09-11T17:26:21.477Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa439bd6508d45f3d2babcd"
+    },
+    "message_id": "reddit_t3_1wdmppu",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "SFlist",
+    "username": "minor_one",
+    "title": "[For Sale] AI agent team that fixes bugs & ships features end-to-end, with real proof it works — not another code generator",
+    "text": "[For Sale] AI agent team that fixes bugs & ships features end-to-end, with real proof it works — not another code generator\n\nMost AI coding tools just generate a patch and hope it's right. You still have to read the code, run it yourself, and figure out if it actually fixed the bug.   I built something different. It's a small team of AI agents that handles a bug or feature request the way a real engineering team would: plan it, build it, test it, prove it works, then ship it. And it produces real proof along the way, not just code.   This isn't a totally new idea. Stripe has an internal system called Minions that merges over 1,000 PRs a week this way. Google has Jules, which does something similar in the cloud. There's also an open-source project called OpenHands that does this too, and it's free.   So what makes mine different? Those systems mostly trust their existing test suite to check if a fix worked. Mine doesn't assume you have a big test suite. Instead, it actually opens a real browser, reproduces the bug to prove it's real, applies the fix, then reproduces the same test again to prove the bug is gone. It takes before/after screenshots as evidence. That means it works on any codebase, even ones without much test coverage already.   To be fair to OpenHands: if you just want a general AI agent that writes code, that's free and open source, you don't need to buy anything. What I built is more specific. It's a ready-made workflow for proving a fix is real, with built-in retry logic (it gives up and asks a human instead of looping forever if it's stuck), and it packages all the evidence into the pull request automatically. That specific, working system is what's for sale, not the general idea of \"AI writes code.\"    How it works, in plain terms:      A planning agent reads the bug report, looks at the actual code, and writes down exactly what needs to change and why.   A developer agent writes the fix based on that plan.   A QA agent tests it like a real person would. It confirms the bug is real first, applies the fix, then checks again that it's actually gone. It saves before/after screenshots as proof.   If the fix doesn't work, it automatically sends specific feedback back to the developer agent and tries again, up to a limited number of times, so it doesn't waste time spinning in circles.   A final agent packages the code, the plan, and the proof into a pull request ready for a human to review and approve.      Where this stands right now, being honest about it:      It's a working system, fully functional end to end, and you run it yourself, so you control everything   It's been tested a lot against real GitHub repos while building it   No paying customers yet, this is a product and idea sale, not a company with revenue   Comes with full source code, setup docs, and a security write-up      Not built yet, but easy to add:  Slack integration. Several similar tools use Slack to trigger and manage runs, so it's a proven pattern. This system already has a GitHub webhook and command system (approve a run, set credentials, trigger a fix), so adding Slack would mostly mean connecting those same commands to a new channel, not building new architecture.    What's included if you buy it:      Full codebase and git history   Setup and architecture docs   A short call to walk you through everything     If you're interested, DM me and I'll send a short demo video and walk you through the codebase before anything changes hands.       submitted by     /u/minor_one     to     r/SFlist       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SFlist/comments/1wdmppu/for_sale_ai_agent_team_that_fixes_bugs_ships/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T17:26:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T17:26:21.686Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa439f86508d45f3d2babd8"
+    },
+    "message_id": "reddit_t3_1wdmqqq",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Progress Software - 11 Sep 2026 @ 13:24 -> $40.03",
+    "text": "Buy Signal Progress Software - 11 Sep 2026 @ 13:24 -> $40.03\n\nTicker:  PRGS    Exchange:  NASDAQ    Time:  11 Sep 2026 @ 13:24    Price:  $40.03    Link:  https://getagraph.com/AAA/trading/NASDAQ/PRGS/analysis/signals        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wdmqqq/buy_signal_progress_software_11_sep_2026_1324_4003/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T17:27:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T17:27:20.769Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa439f86508d45f3d2babd9"
+    },
+    "message_id": "reddit_t3_1wdmqqa",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Soundbars",
+    "username": "mokshaearthfairy",
+    "title": "Samsung b650f or Jbl sb550 or hisense 3100",
+    "text": "Samsung b650f or Jbl sb550 or hisense 3100\n\nI’m looking to buy a soundbar, which do you recommend? It will be primarily used for watching movies and sometimes shows.  unfortunately I don’t have a lot of money to spend so this is pretty much all I have found that seem good and are within my budget       submitted by     /u/mokshaearthfairy     to     r/Soundbars       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Soundbars/comments/1wdmqqa/samsung_b650f_or_jbl_sb550_or_hisense_3100/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T17:27:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T17:27:20.968Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa43a356508d45f3d2babda"
+    },
+    "message_id": "reddit_t3_1wdmrud",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Zomedica",
+    "username": "Cool_Duck1907",
+    "title": "buyout",
+    "text": "buyout\n\nany chance of a buyout? if so what would/could be the share price agreement for said buyout?       submitted by     /u/Cool_Duck1907     to     r/Zomedica       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Zomedica/comments/1wdmrud/buyout/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T17:28:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T17:28:21.063Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa43a356508d45f3d2babdb"
+    },
+    "message_id": "reddit_t3_1wdmrtu",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "RVLiving",
+    "username": "Aggravating-Win562",
+    "title": "What 90s Motorhome should my family buy?",
+    "text": "What 90s Motorhome should my family buy?\n\nMy wife and I are very new to Motorhomes and know very little so we need help. We are in the market for buying a used motorhome which we will live out of for the next few summers. We would like to buy a 90s motorhome and remodel the interior.    Things to know: We will have a 4 year old, 2 year old, and newborn so there is 5 of us total.   We will be living out of it full time for about 6 months while moving locations a good bit for my job.   We need at least 1 slider for extra living space   Diesel for sure since we will be pulling my wife's Sequoia on a trailer (so heavy hauling).   Our budget for purchase is around 20,000 after remodel and fixing it all up.   What specific motorhomes should we be looking for? Do any stick out to be an obvious answer? Are there any we should avoid?    Thanks for any help or advice. it is greatly appreciated. If I left out key information that I am not thinking of please let me know.       submitted by     /u/Aggravating-Win562     to     r/RVLiving       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RVLiving/comments/1wdmrtu/what_90s_motorhome_should_my_family_buy/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T17:28:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T17:28:21.265Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa43a356508d45f3d2babdc"
+    },
+    "message_id": "reddit_t3_1wdmrtk",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Xennials",
+    "username": "RightWheelDrive",
+    "title": "For those of you who had to buy your first car: what was it and how much did you pay?",
+    "text": "For those of you who had to buy your first car: what was it and how much did you pay?\n\n​   Some people inherited a family car for their first vehicle. Others (not anyone I knew, but I've heard) had their first car bought for them. This question is not for you.   My first car was a 1969 VW Beetle. Managed to talk the guy down from $1000 to $800, which was good because I was earning $4.25/hour at my very first job. Even in 1997 $800 did not buy a decent, much less reliable, car. In the back seat you could see through nickel sized rust spots the asphalt of the road underneath. After spending a bunch on mechanics for problems ranging from a fuel guage that didn't work (I discovered this by running out of gas while the gauge still read a quarter tank) to electronics (when I tried to add a new stereo from Circuit City and suddenly nothing had power) to just not starting (multiple occasions) in the next 6-8 months. Finally, I took out an ad in Auto Trader and sold the Beetle for about the same amount.   Despite all these issues, I developed a loyalty to Volkswagens that still continues to this day (Currently drive a 2020 GTI). For my second car, I spent a bit more cash ($3500) and upgraded to a 20 year newer 1989 VW Jetta. The Jetta had some problems of its own, but only stranded me once when the clutch burned out. It went on multiple road trips from Canada to Mexico (things the Beetle could never be trusted to do) and I still have fond memories of it.   What was the first car you bought?       submitted by     /u/RightWheelDrive     to     r/Xennials       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Xennials/comments/1wdmrtk/for_those_of_you_who_had_to_buy_your_first_car/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T17:28:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T17:28:21.466Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa43a356508d45f3d2babdd"
+    },
+    "message_id": "reddit_t3_1wdmrro",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Braze Inc - 11 Sep 2026 @ 13:26 -> $23.68",
+    "text": "Buy Signal Braze Inc - 11 Sep 2026 @ 13:26 -> $23.68\n\nTicker:  BRZE    Exchange:  NASDAQ    Time:  11 Sep 2026 @ 13:26    Price:  $23.68    Link:  https://getagraph.com/AAA/trading/NASDAQ/BRZE/analysis/signals        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wdmrro/buy_signal_braze_inc_11_sep_2026_1326_2368/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T17:28:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T17:28:21.675Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa43a356508d45f3d2babde"
+    },
+    "message_id": "reddit_t3_1wdmrrj",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "AskMarketing",
+    "username": "Abenson17",
+    "title": "What marketing strategy had the biggest impact on growing your business when you were first starting out?",
+    "text": "What marketing strategy had the biggest impact on growing your business when you were first starting out?\n\nI’m building a startup and trying to learn as much as I can about marketing and customer acquisition.   For those of you who have successfully grown a startup or small business from basically zero customers, what marketing strategy actually worked best for you in the beginning?   I’m especially interested in strategies that don’t require a massive ad budget—cold outreach, partnerships, social media, SEO, local outreach, referral programs, etc. We currently have optimized SEO and are working on some social media stuff that we can do with minimal people.   If you had to start over today with a good product but very little brand recognition,  what would you focus on first to get your first 100–1,000 customers?        submitted by     /u/Abenson17     to     r/AskMarketing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskMarketing/comments/1wdmrrj/what_marketing_strategy_had_the_biggest_impact_on/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T17:28:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T17:28:21.877Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa43a366508d45f3d2babe0"
+    },
+    "message_id": "reddit_t3_1wdmrqx",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "AlertVegas",
+    "username": "MugShots",
+    "title": "NV Energy Alert",
+    "text": "NV Energy Alert\n\nNVEnergy Alert Planned Shutdown for Service Improvement in 89460 Probable customers affected ORT: Probable ETR: Probable       submitted by     /u/MugShots     to     r/AlertVegas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlertVegas/comments/1wdmrqx/nv_energy_alert/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T17:28:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T17:28:22.281Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa43a366508d45f3d2babe1"
+    },
+    "message_id": "reddit_t3_1wdmrq7",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "StealTheBrainrot",
+    "username": "Del-Marr",
+    "title": "Vouch Excellent-Goose-4647",
+    "text": "Vouch Excellent-Goose-4647\n\nTruly the goat 🐐 ! Excellent communication and really patient with first time buyers, not to mention great prices! Buy from this man right NOW!       submitted by     /u/Del-Marr     to     r/StealTheBrainrot       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/StealTheBrainrot/comments/1wdmrq7/vouch_excellentgoose4647/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T17:28:00Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T17:28:22.484Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa43a716508d45f3d2babe2"
+    },
+    "message_id": "reddit_t3_1wdmsur",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "GrizzlyGangPolitics",
+    "username": "Warm-Buy-817",
+    "title": "5 THINGS THAT WERE COMPLETELY DIFFERENT BEFORE 9:11",
+    "text": "5 THINGS THAT WERE COMPLETELY DIFFERENT BEFORE 9:11\n\n5 THINGS THAT WERE COMPLETELY DIFFERENT BEFORE 9/11   VIDEO:  https://youtu.be/Es_q7VQDbQg     #September11 #NeverForget #September11th #911Anniversary #LifeBefore911 #Post911America #AmericanHistory #USHistory #TSA #AirportSecurity #HomelandSecurity #DHS #ICE #PatriotAct #GovernmentSurveillance #CivilLiberties #WarOnTerror #AfghanistanWar #IraqWar #BarbaraLee #MuslimAmericans #SikhAmericans #BalbirSinghSodhi #AskRaphaela #ContextNotChaos       submitted by     /u/Warm-Buy-817     to     r/GrizzlyGangPolitics       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GrizzlyGangPolitics/comments/1wdmsur/5_things_that_were_completely_different_before_911/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T17:29:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T17:29:21.452Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa43a716508d45f3d2babe3"
+    },
+    "message_id": "reddit_t3_1wdmstf",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "mangalore",
+    "username": "Front-Custard6733",
+    "title": "Tulu AI - Providing digital voice to a local language",
+    "text": "Tulu AI - Providing digital voice to a local language\n\nI am Prathwi Co founder of ROAVAI.   We are working on AI-based technologies for regional Indian languages, with our current technology supporting Tulu, Kannada and Malayalam.   Our work has recently been  featured in the Times of India and Udayavani , and we have also been  recognized by the Tulu Research Foundation  for our work in Tulu language technology. We have already deployed our technology with a  private hospital as a customer , with several additional industry discussions currently in progress.   We are now looking to collaborate with people in the Mangaluru region to create a Local  Language AI Innovation Program  where people can work on:   Track 1 - Engineering– Internship and Research: people can take up internships or work on research projects related to speech and language AI, including speech-to-text, text-to-speech and language models.   Track 2 – Engineering- Real-World Application Development: Interested one can build practical applications that solve real-world problems in areas such as education, healthcare, advertising, tourism and other local-language use cases.   Track 3 – Engineering & Management - Innovation and Entrepreneurship: people can work on content creation, field implementation and marketing, and explore opportunities to develop successful projects.   If anyone is interested to contribute please dm me.        submitted by     /u/Front-Custard6733     to     r/mangalore       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/mangalore/comments/1wdmstf/tulu_ai_providing_digital_voice_to_a_local/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T17:29:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T17:29:21.654Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa43a716508d45f3d2babe4"
+    },
+    "message_id": "reddit_t3_1wdmssr",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "thesopranos",
+    "username": "Elegant_Struggle_281",
+    "title": "Looking for Sopranos themed inscriptions and design elements for my gravestone or tomb.",
+    "text": "Looking for Sopranos themed inscriptions and design elements for my gravestone or tomb.\n\nHey gang, I’m prepping my will and buying a cemetery plot—just getting ahead of the game (I hope). Could use your advice…       submitted by     /u/Elegant_Struggle_281     to     r/thesopranos       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/thesopranos/comments/1wdmssr/looking_for_sopranos_themed_inscriptions_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T17:29:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T17:29:21.856Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa43a726508d45f3d2babe5"
+    },
+    "message_id": "reddit_t3_1wdmsrk",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Direxion Daily AMZN Bear - 11 Sep 2026 @ 13:26 -> $8.54",
+    "text": "Buy Signal Direxion Daily AMZN Bear - 11 Sep 2026 @ 13:26 -> $8.54\n\nTicker:  AMZD    Exchange:  NASDAQ    Time:  11 Sep 2026 @ 13:26    Price:  $8.54    Link:  https://getagraph.com/AAA/trading/NASDAQ/AMZD/analysis/signals        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wdmsrk/buy_signal_direxion_daily_amzn_bear_11_sep_2026/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T17:29:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T17:29:22.056Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa43a726508d45f3d2babe6"
+    },
+    "message_id": "reddit_t3_1wdmsrg",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Beekeeping",
+    "username": "RealSuperChamp",
+    "title": "Queen Rear Grafting / Royal Jelly",
+    "text": "Queen Rear Grafting / Royal Jelly\n\nIt’s my 4th year as a hobby beekeeper. I have been doing queen rear grafting to attempting to expand numbers of beehives. I failed miserably after multiple attempts. I tried to do everything right. In every attempts, I tried to do something different and trying to success. What’s your secrets for your successes with queen rear grafting? Do I need to buy real royal jelly to put a small amount inside the plastic cups before inserting the larvae in it?       submitted by     /u/RealSuperChamp     to     r/Beekeeping       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Beekeeping/comments/1wdmsrg/queen_rear_grafting_royal_jelly/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T17:29:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T17:29:22.257Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa43a726508d45f3d2babe7"
+    },
+    "message_id": "reddit_t3_1wdmsq8",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "TombRaider",
+    "username": "Fasterjake",
+    "title": "Pc collectors preorder, question.",
+    "text": "Pc collectors preorder, question.\n\nHey just curious to hear thoughts. So I just read that US isn’t doing a collectors edition for pc. I guess just learned about rarewaves and can preorder it there. Curious if anyone’s ever ordered through them and if it’s a good place to do it if i wanna not buy the game twice. Hah.        submitted by     /u/Fasterjake     to     r/TombRaider       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TombRaider/comments/1wdmsq8/pc_collectors_preorder_question/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T17:29:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T17:29:22.461Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa43aaa35b55a1469d497dc"
+    },
+    "message_id": "reddit_serp_1p5cp41",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/Jobayti/comments/1p5cp41/vitolos_essentials_ecommerce_coordinator_remote/",
+    "text": "Vitolos Essentials: E-Commerce Coordinator (Remote — Shopify)\n\nsubmitted by     /u/Muttadrij       [link]       [comments]",
+    "username": "Muttadrij",
+    "subreddit_or_channel": "Jobayti",
+    "posted_at": "2025-11-24T09:31:25+00:00",
+    "fetched_at": {
+      "$date": "2026-09-11T17:30:18.652Z"
+    },
+    "google_rank": 5,
+    "search_keyword": "remote Shopify",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-11T17:30:18.652Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa43aae6508d45f3d2babe8"
+    },
+    "message_id": "reddit_t3_1wdmtrj",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "AI_Governance",
+    "username": "No-Conclusion3720",
+    "title": "AI agents exploited PaperCut flaws to breach 395 organizations",
+    "text": "AI agents exploited PaperCut flaws to breach 395 organizations\n\n395 organizations were breached through PaperCut vulnerabilities — and the attack vector was AI agents acting autonomously, not human operators. The agents were not the target. They were the method.   What made this particularly hard to contain is that once an agent is in motion, each subsequent tool call lands fast. By the time a human analyst flags anomalous behavior, the agent has already made its second, third, and fourth moves. Traditional perimeter security and patch management assume a human on the other end slowing things down. Autonomous agents remove that natural friction.   The 395 number is not a one-off. It reflects how quickly blast radius scales when the compromised entity can act without waiting for human confirmation.   For those running agentic workloads in production: what does your current approach look like for catching a compromised or misbehaving agent mid-execution, before it completes a second action? Are you relying on post-hoc log review, human-in-the-loop checkpoints, rate limiting, something else? Curious what's actually working at scale versus what's still mostly theoretical.       submitted by     /u/No-Conclusion3720     to     r/AI_Governance       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AI_Governance/comments/1wdmtrj/ai_agents_exploited_papercut_flaws_to_breach_395/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T17:30:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-11T17:30:22.159Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa43ab06508d45f3d2babf2"
+    },
+    "message_id": "reddit_t3_1wdmtp0",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Tractor Supply Company - 11 Sep 2026 @ 13:28 -> $33.39",
+    "text": "Buy Signal Tractor Supply Company - 11 Sep 2026 @ 13:28 -> $33.39\n\nTicker:  TSCO    Exchange:  NASDAQ    Time:  11 Sep 2026 @ 13:28    Price:  $33.39    Link:  https://getagraph.com/AAA/trading/NASDAQ/TSCO/analysis/signals        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wdmtp0/buy_signal_tractor_supply_company_11_sep_2026/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T17:30:03Z"

@@ -1,0 +1,416 @@
+    "text": "Patch Notes 9/11/26\n\nPatch Notes 9/11 — Fixes, Heavy Armor Builds, and New Prestige Abilities   Direct Steam Link:  https://store.steampowered.com/news/app/3944440/view/681887024995631853    Performance   A significant pass on the two spawner systems that drive resource nodes and regional creature spawns. Both were doing an entire region's work in a single frame — on a busy region that meant a 35–44ms spike every second, and occasional 62ms spikes, against a 250ms tick.   Mounted Combat   We brought mounted combat back in Eternal, but weapon abilities and prestige abilities still threw you off your horse. That's fixed.      Weapon abilities no longer dismount you.  Neither do Martial Prowess or Sorcery abilities. Your mount survives instant abilities, queued hits, and target-selected abilities alike.    Poison no longer dazes or dismounts riders.  Poison ticks were being treated like any other big hit — they'd daze you, and daze you off your horse if you were already dazed. Poison still hurts, it just doesn't knock you off any more.   Abilities that dismount  your enemy  still work exactly as before, and ordinary forced dismounts are unchanged.     Archery   Balance pass on bows and a stack of bugs.    The bow's basic Shoot action is gone.      Shot stamina costs are now consistent, mounted or on foot:      Shortbow / Longbow / Warbow shots — 10 / 15 / 20   Wound / Stun Shot / Explosive Shot — 20 / 25 / 30      Bug fixes:       Centershot works at zero stamina again.  Its free shots were being rejected by the stamina check before the free-shot logic ever ran.    Auto-fire stops when you swap or lose your bow.  Previously the old bow's stamina cost and firing rate would carry over to whatever you picked up next.   Successful instant abilities now correctly report back to auto-fire.   Invalid targets or a mid-fight weapon change no longer leave you stuck firing, and no longer break weapon lookup.   Fire Arrow checks your target, weapon, and casting state before working out firing speed, and line of sight is only enforced where it actually should be.     Prestige — More Fighter Builds, and Armor Has Weaknesses   Heavy armor builds were too narrow. This opens them up, gives bashing a real job, and makes armor choice an actual trade-off instead of a straight upgrade.    Hamstring and Adrenaline Rush no longer require Light Armor.  Skill requirements stay, and Hamstring still won't work with a ranged weapon. A heavy-armored dagger build can now run Hamstring, Charge, and Adrenaline Rush together.    Two new Fighter abilities:      Parry  (Rank 1) — Longsword, 40 Slashing, full Light  or  Heavy armor. A one-second stance that blocks parryable attacks from the front 180° arc and returns 50% of the blocked damage. 25-second cooldown. While parrying you move at half speed and can't attack, cast, use items, or use other abilities. Facing is checked when the damage lands, so exact side and rear hits get through — as do self-inflicted damage, certain hazards, and ongoing poison and burn ticks. Reflected damage can't bounce back and forth.     Shattering Impact  (Rank 3) — Qualifying bashing weapon, 80 Bashing, full Light or Heavy armor. Primes for ten seconds, then the next qualifying hit  reduces the target's armor by 20% for eight seconds.  Refreshes rather than stacking, and respects minimum defense. 45-second cooldown.   Both come with rank-correct books in the loot pool, their own icons, and activation visuals.    Armor now has explicit weaknesses:      Every  Heavy  head, chest, or leg piece adds  +10% Bashing vulnerability .   Every  Light  head, chest, or leg piece adds  +10% Slashing vulnerability .   Cloth adds neither. Mixed sets accumulate each weakness independently, so a mixed build takes a bit of both.   Vulnerability applies after mitigation and doesn't affect reflected damage. Your totals are shown in equipment tooltips.      Boss mechanics ignore Parry.  Telegraphed boss hazards bypass both the block and the reflection, so you still have to move out of them. This covers DragonFire's breath, Vazguhn's gas, fire eruptions and landing shockwave, Barkas's creeping roots, closing crown and phase blast, Azura's failed-challenge shockwave and Frozen Judgment, and Wendigo's frost ring and ground blast. Damage, radii, and telegraphs are all unchanged.   Skill Gains — Weapons Train Faster   Weapon progression between 80 and 100 was badly out of step with magic, which can be trained on repeatable casts while weapons need valid combat checks against suitable opponents.   Against an equal-difficulty opponent, roughly:        Skill   80–90   Above 90          Piercing / Slashing / Lancing / Bashing   ~92% faster   ~188% faster       Vigor   ~54% faster   ~131% faster       Brawling   ~33% faster   ~100% faster       Archery   ~25% faster   ~88% faster         The difficulty curve itself hasn't changed.  We deliberately didn't widen it — that would have made easy and trivial targets better training than they should be. Appropriate targets simply pay out more. Content you succeed against 100% of the time still gives nothing.   Power Hour, Combat Mastery, and the skill gain buff all multiply on top as before. A fully buffed melee character above 90 is now training at roughly 11.5x the old unbuffed baseline.   New Characters      Rogues and Craftsmen starting templates can finally use bandages.  Neither had any Healing, which meant a Rogue healed 11.5 HP per bandage where a Swordsman healed 33.3 — and a Craftsman had no healing option at all: no Healing skill, no spellbook, but still a dagger and the expectation they'd survive with it. Both now start with a small amount of Healing that doesn't cost them any of their build points or show up in the creation screen. A Rogue and Craftsman now starts with  50 bandages .    Fireball added to the starter spellbook , alongside Heal, Cure, Mana Missile, and Ruin. This only applies to newly created books.    Your free starter gear can no longer be sold to merchants.  It's worthless by design, and selling it was never intended. Coin purses are unaffected and still spend normally.   Entering the world for the first time no longer overwrites your login outfit or hands out duplicate starter items.     Merchants and Economy      You can now sell from bags inside your pack.  The merchant Sell window looks through your backpack's containers, up to five levels deep. Locked and locked-down bags are skipped, and bags with anything in them are excluded so you can't accidentally sell a container full of your own gear.    Merchants restock every 15 minutes , down from 30. The amount restored per cycle is unchanged.    Reagents and arrows now stock up to 500.  Moss, ginseng, mushrooms, and lemon grass all move from a target of 100 to 500, and arrows match. Merchants also buy up to that same 500 before refusing more, and the shop's Maximum column and sell cart now show the real remaining capacity instead of an inflated number.    Inscription vendors sell basic staffs  — 20 in stock at 100 gold.    Land deeds now cost 5,000 gold , up from 2,000 gold.     Crafting      The crafting window reopens after a failed craft.  Previously, failing a single craft — or the last attempt in a batch — closed the window and left you clicking your way back in. Batches still continue on failure as before.     Bosses      Shrine Guardian, Ruins Wraith, and Enraged Lich Servant can cast Meteor again.  They were configured for it but capped at 52 maximum mana against a 60 mana cost, so it never fired. Their Intelligence has been raised to give them the mana they need.    Twelve dynamic bosses have their configured abilities back.  Self-buffs and target effects weren't being dispatched at all in the shared boss combat phase. Their movement, spells, and weapon abilities are unchanged — they just do the rest of what they were always meant to do now.     Quests      [Mage I] You're a Wizard is completable again.  It asked you to take and finish a mission from the combat Mission Dispatcher, an NPC that no longer exists in the world — so the entire mage profession chain dead-ended at tier one. Step 5 is now \"gain 10 magic skill points in any magic skill,\" matching how the Fighter chain works. If you're currently stuck on either broken step, you'll clear automatically shortly after logging in — no need to abandon and restart.   The tier-one hunting step now correctly requires the 20 kills its instructions ask for, rather than 15. If you're partway through that step, your count restarts from zero.PerformanceA significant pass on the two spawner systems that drive resource nodes and regional creature spawns. Both were doing an entire region's work in a single frame — on a busy region that meant a 35–44ms spike every second, and occasional 62ms spikes, against a 250ms tick.Mounted CombatWe brought mounted combat back in Eternal, but weapon abilities and prestige abilities still threw you off your horse. That's fixed.Weapon abilities no longer dismount you. Neither do Martial Prowess or Sorcery abilities. Your mount survives instant abilities, queued hits, and target-selected abilities alike. Poison no longer dazes or dismounts riders. Poison ticks were being treated like any other big hit — they'd daze you, and daze you off your horse if you were already dazed. Poison still hurts, it just doesn't knock you off any more. Abilities that dismount your enemy still work exactly as before, and ordinary forced dismounts are unchanged.ArcheryBalance pass on bows and a stack of bugs. The bow's basic Shoot action is gone. Shot stamina costs are now consistent, mounted or on foot:Shortbow / Longbow / Warbow shots — 10 / 15 / 20 Wound / Stun Shot / Explosive Shot — 20 / 25 / 30Bug fixes:Centershot works at zero stamina again. Its free shots were being rejected by the stamina check before the free-shot logic ever ran. Auto-fire stops when you swap or lose your bow. Previously the old bow's stamina cost and firing rate would carry over to whatever you picked up next. Successful instant abilities now correctly report back to auto-fire. Invalid targets or a mid-fight weapon change no longer leave you stuck firing, and no longer break weapon lookup. Fire Arrow checks your target, weapon, and casting state before working out firing speed, and line of sight is only enforced where it actually should be.Prestige — More Fighter Builds, and Armor Has WeaknessesHeavy armor builds were too narrow. This opens them up, gives bashing a real job, and makes armor choice an actual trade-off instead of a straight upgrade.Hamstring and Adrenaline Rush no longer require Light Armor. Skill requirements stay, and Hamstring still won't work with a ranged weapon. A heavy-armored dagger build can now run Hamstring, Charge, and Adrenaline Rush together.Two new Fighter abilities: Parry (Rank 1) — Longsword, 40 Slashing, full Light or Heavy armor. A one-second stance that blocks parryable attacks from the front 180° arc and returns 50% of the blocked damage. 25-second cooldown. While parrying you move at half speed and can't attack, cast, use items, or use other abilities. Facing is checked when the damage lands, so exact side and rear hits get through — as do self-inflicted damage, certain hazards, and ongoing poison and burn ticks. Reflected damage can't bounce back and forth. Shattering Impact (Rank 3) — Qualifying bashing weapon, 80 Bashing, full Light or Heavy armor. Primes for ten seconds, then the next qualifying hit reduces the target's armor by 20% for eight seconds. Refreshes rather than stacking, and respects minimum defense. 45-second cooldown.Both come with rank-correct books in the loot pool, their own icons, and activation visuals.Armor now has explicit weaknesses:Every Heavy head, chest, or leg piece adds +10% Bashing vulnerability. Every Light head, chest, or leg piece adds +10% Slashing vulnerability. Cloth adds neither. Mixed sets accumulate each weakness independently, so a mixed build takes a bit of both. Vulnerability applies after mitigation and doesn't affect reflected damage. Your totals are shown in equipment tooltips.Boss mechanics ignore Parry. Telegraphed boss hazards bypass both the block and the reflection, so you still have to move out of them. This covers DragonFire's breath, Vazguhn's gas, fire eruptions and landing shockwave, Barkas's creeping roots, closing crown and phase blast, Azura's failed-challenge shockwave and Frozen Judgment, and Wendigo's frost ring and ground blast. Damage, radii, and telegraphs are all unchanged.Skill Gains — Weapons Train FasterWeapon progression between 80 and 100 was badly out of step with magic, which can be trained on repeatable casts while weapons need valid combat checks against suitable opponents.Against an equal-difficulty opponent, roughly:Skill 80–90 Above 90 Piercing / Slashing / Lancing / Bashing ~92% faster ~188% faster Vigor ~54% faster ~131% faster Brawling ~33% faster ~100% faster Archery ~25% faster ~88% fasterThe difficulty curve itself hasn't changed. We deliberately didn't widen it — that would have made easy and trivial targets better training than they should be. Appropriate targets simply pay out more. Content you succeed against 100% of the time still gives nothing.Power Hour, Combat Mastery, and the skill gain buff all multiply on top as before. A fully buffed melee character above 90 is now training at roughly 11.5x the old unbuffed  baseline.New  CharactersRogues and Craftsmen starting templates can finally use bandages. Neither had any Healing, which meant a Rogue healed 11.5 HP per bandage where a Swordsman healed 33.3 — and a Craftsman had no healing option at all: no Healing skill, no spellbook, but still a dagger and the expectation they'd survive with it. Both now start with a small amount of Healing that doesn't cost them any of their build points or show up in the creation screen. A Rogue and Craftsman now starts with 50 bandages. Fireball added to the starter spellbook, alongside Heal, Cure, Mana Missile, and Ruin. This only applies to newly created books. Your free starter gear can no longer be sold to merchants. It's worthless by design, and selling it was never intended. Coin purses are unaffected and still spend normally. Entering the world for the first time no longer overwrites your login outfit or hands out duplicate starter items.Merchants and EconomyYou can now sell from bags inside your pack. The merchant Sell window looks through your backpack's containers, up to five levels deep. Locked and locked-down bags are skipped, and bags with anything in them are excluded so you can't accidentally sell a container full of your own gear. Merchants restock every 15 minutes, down from 30. The amount restored per cycle is unchanged. Reagents and arrows now stock up to 500. Moss, ginseng, mushrooms, and lemon grass all move from a target of 100 to 500, and arrows match. Merchants also buy up to that same 500 before refusing more, and the shop's Maximum column and sell cart now show the real remaining capacity instead of an inflated number. Inscription vendors sell basic staffs — 20 in stock at 100 gold. Land deeds now cost 5,000 gold, up from 2,000 gold.CraftingThe crafting window reopens after a failed craft. Previously, failing a single craft — or the last attempt in a batch — closed the window and left you clicking your way back in. Batches still continue on failure as before.BossesShrine Guardian, Ruins Wraith, and Enraged Lich Servant can cast Meteor again. They were configured for it but capped at 52 maximum mana against a 60 mana cost, so it never fired. Their Intelligence has been raised to give them the mana they need. Twelve dynamic bosses have their configured abilities back. Self-buffs and target effects weren't being dispatched at all in the shared boss combat phase. Their movement, spells, and weapon abilities are unchanged — they just do the rest of what they were always meant to do now.Quests[Mage I] You're a Wizard is completable again. It asked you to take and finish a mission from the combat Mission Dispatcher, an NPC that no longer exists in the world — so the entire mage profession chain dead-ended at tier one. Step 5 is now \"gain 10 magic skill points in any magic skill,\" matching how the Fighter chain works. If you're currently stuck on either broken step, you'll clear automatically shortly after logging in — no need to abandon and restart. The tier-one hunting step now correctly requires the 20 kills its instructions ask for, rather than 15. If you're partway through that step, your count restarts from zero.         submitted by     /u/Shibby523     to     r/LegendsofAriaEternal       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/LegendsofAriaEternal/comments/1wea7yj/patch_notes_91126/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T11:32:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T11:33:12.449Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa538796508d45f3d2bc522"
+    },
+    "message_id": "reddit_t3_1wea7y0",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "Hilary_Duff",
+    "username": "GermanyUSA921",
+    "title": "Free Manchester Ticket 12.09.26",
+    "text": "Free Manchester Ticket 12.09.26\n\nHi all,   This might seem like a silly post but I was dumb and bought two tickets to the Hilary Duff concert in Manchester for my birthday because I thought the first website I bought from was a scam (because it was before tickets were on sale - so I did pay a tad bit for it) but it wasn’t…so I have two different tickets for two different seats in my AXO account.   I tried selling the one but I just couldn’t and rather than just let it go to waste, I would like to give it away to someone - I figured it would maybe make someone’s day. Selling it just doesn’t make sense anymore due to the concert being tonight. The seat is 208 H 22.    Feel free to message me and we can transfer the ticket. I don’t know if this is even allowed but I’m just doing this as a kind gesture. There’s only a few hours left so it might be a long shot. Dibs go to the first person who contacts me and responds. :)       submitted by     /u/GermanyUSA921     to     r/Hilary_Duff       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Hilary_Duff/comments/1wea7y0/free_manchester_ticket_120926/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T11:32:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T11:33:13.246Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa538796508d45f3d2bc523"
+    },
+    "message_id": "reddit_t3_1wea7wq",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "Teachers",
+    "username": "Alert_Elk283",
+    "title": "Got fired two days ago and honestly… I’m still not over it.",
+    "text": "Got fired two days ago and honestly… I’m still not over it.\n\nI’d been working with a startup for 2 months on a 2-year contract with a 7-day notice period, so I really didn’t expect to be let go on the spot. I genuinely loved this job it was honestly my dream job. I went through multiple interviews, project submissions, and 2 weeks of training to get there, and I had great student reviews + a reference letter.   They said they simply don’t need more tutors right now while they continue developing the platform, which I understand, but it was still a huge shock.   I have around 4 years of English tutoring experience, a TEFL certificate, and a BS background in Education/English. I’ve worked with international, US-based, and Chinese companies and taught SAT, IELTS, TOEFL, DET, GCSE/IGCSE, General/Business English, as well as kids, young learners, and adults from beginner to advanced levels.   I’ve been applying everywhere LinkedIn, Indeed, ESL job boards, TEFL.com, TeacherWay, etc. but barely getting responses.   I’m specifically looking for companies that hire tutors directly at a fixed hourly rate (ideally $25–30/hour) and provide students/bookings. I’m not really looking for marketplaces like Preply/Cambly where I have to find students and set my own rates.   If anyone knows of legitimate companies currently hiring online ESL tutors, please let me know or hook me up with a referral. I’d genuinely appreciate it.   I really loved my previous job and this has been rough, but I’m trying to find something new. :(       submitted by     /u/Alert_Elk283     to     r/Teachers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Teachers/comments/1wea7wq/got_fired_two_days_ago_and_honestly_im_still_not/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T11:32:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T11:33:13.455Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa538796508d45f3d2bc524"
+    },
+    "message_id": "reddit_t3_1wea7wc",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "UniversityChallenge",
+    "username": "CryptographerNo3667",
+    "title": "Ideas for displaying name card in the house as a keepsake",
+    "text": "Ideas for displaying name card in the house as a keepsake\n\nWhen clearing out the loft, I finally found my nameplate/card that production lets you keep from when I was on years ago (it went missing after leaving one of my uni accoms). Does anyone have any ideas on how to find a way to display it as a cute keepsake? I have no idea where to start looking for lightboxes and frames, and the lettering is partially scratched from my poor storage choices, so I'd like something that keeps the print relatively safe.    I'm down to DIY a setup that looks like the light boxes on set if it's easier than buying something.       submitted by     /u/CryptographerNo3667     to     r/UniversityChallenge       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UniversityChallenge/comments/1wea7wc/ideas_for_displaying_name_card_in_the_house_as_a/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T11:32:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T11:33:13.656Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa538796508d45f3d2bc525"
+    },
+    "message_id": "reddit_t3_1wea7wb",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Buyingforbaby",
+    "username": "Crazy-Aside-435",
+    "title": "Crate and Barrel Nursery Furniture Worth It?",
+    "text": "Crate and Barrel Nursery Furniture Worth It?\n\nHas anyone purchased a nursery set from Crate and Barrel and have any recommendations as far as whether it's worth the cost? For a dresser and crib from C&B I'd be looking at around $1800 including delivery vs Babyletto I could get a crib, small changing table dresser, and chair for that price. I am a bigger fan of high quality furniture but since this is my first child I just don't know if high quality furniture for a baby that might chew or color all over the furniture makes sense. I like the look of the C&B Finn but the Babyletto Lolly is a very similar look (smaller dresser though) for less than half the price.    Additionally, if you did purchase C&B furniture. How long did it actually take to get to you as I'm a procrastinator who is currently 35 weeks (almost 36) pregnant 🫣🫠       submitted by     /u/Crazy-Aside-435     to     r/Buyingforbaby       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Buyingforbaby/comments/1wea7wb/crate_and_barrel_nursery_furniture_worth_it/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T11:32:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T11:33:13.860Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa5387a6508d45f3d2bc526"
+    },
+    "message_id": "reddit_t3_1wea7vd",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "techIndia",
+    "username": "Traditional-Music981",
+    "title": "Should I buy a laptop in 2026, or wait until I actually need one?",
+    "text": "Should I buy a laptop in 2026, or wait until I actually need one?\n\nI’m currently working a non-IT job for a seller and earn around ₹20k/month. I’m thinking of buying an ASUS Vivobook 16 (Snapdragon X) for around ₹67k, with ₹30k down payment.   I already have a ~2-year-old PC (Ryzen 3 3200G, 16GB RAM, 256GB SSD), which I mainly keep for work. I occasionally use it for coding, but my work setup is intentionally isolated from my personal use, so I’d like a separate laptop for coding, personal work, and general use.   The thing is, I don’t really need a laptop right now. I’m mostly getting FOMO because laptop/RAM prices have gone up quite a bit recently, and I’m worried they’ll keep increasing. My PC has also been running on a generic PSU for the past 2 years, so I’m not sure how long I should trust it.   Would buying the laptop now be a reasonable investment, or should I just keep saving and buy one when I actually need it or my PC dies?       submitted by     /u/Traditional-Music981     to     r/techIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/techIndia/comments/1wea7vd/should_i_buy_a_laptop_in_2026_or_wait_until_i/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T11:32:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T11:33:14.063Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa5387a6508d45f3d2bc527"
+    },
+    "message_id": "reddit_t3_1wea7uu",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "EA_NHL",
+    "username": "StonedSoldier1",
+    "title": "Stop Buying It",
+    "text": "Stop Buying It\n\nIf youre over 16 years old, buying NHL games and complaining. Youre the problem. To remove the defective products from off the shelves, you gotta consult the manufacturer from within yourself.   The fact people are so addicted they buy this shit every year is on you. EA proved they can throw AI slop at you, and you'll all eat it up. Congrats. Whole community should give their head a shake. This is your new future NHL games. EA knows you've already accepted it. Enjoy complaining next year, and the year after.       submitted by     /u/StonedSoldier1     to     r/EA_NHL       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/EA_NHL/comments/1wea7uu/stop_buying_it/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T11:32:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T11:33:14.263Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa5387a6508d45f3d2bc528"
+    },
+    "message_id": "reddit_t3_1wea7tz",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ArcRaiders",
+    "username": "kaempferGGWP",
+    "title": "Inventory Management Tips",
+    "text": "Inventory Management Tips\n\nI've always struggled with inventory management and am looking for any tips on tackling this problem.   Currently, I have ~292 inventory slots (I bought all of the expansions for coins and one of the expansions from Ermal). I still haven't come up with a system for sorting all of my stuff, so that no matter how many slots I buy, they all get filled up very quickly. So I'm in dire need of some advice. Anything would help.   One idea that I've thought of so far was limiting the number of slots taken up by a given item type (it must be adequate enough to allow for spur-of-the-moment crafting expenses and whatnot). However, the dilemma I'm having here is deciding what to keep and how much of it I'll need on average. Any tips on that, as well?   I'd be glad to hear how you're dealing with this nuisance!       submitted by     /u/kaempferGGWP     to     r/ArcRaiders       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ArcRaiders/comments/1wea7tz/inventory_management_tips/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T11:32:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T11:33:14.464Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa538b46508d45f3d2bc529"
+    },
+    "message_id": "reddit_t3_1wea8mo",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "EASportsFCMobile",
+    "username": "BiscottiCandid7175",
+    "title": "Where Do You Usually Buy Your Players ?",
+    "text": "Where Do You Usually Buy Your Players ?\n\nWhen you're looking to sign a player for your squad, which option is your go-to ?    View Poll        submitted by     /u/BiscottiCandid7175     to     r/EASportsFCMobile       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/EASportsFCMobile/comments/1wea8mo/where_do_you_usually_buy_your_players/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T11:33:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T11:34:12.475Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa538b46508d45f3d2bc52a"
+    },
+    "message_id": "reddit_t3_1wea8ma",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "php",
+    "platform": "reddit",
+    "subreddit": "BeeGees",
+    "username": "Few_Comparison_1671",
+    "title": "Re-Thinking Bee Gees Material With Alternative Sequences",
+    "text": "Re-Thinking Bee Gees Material With Alternative Sequences\n\nSo, I’m having fun at the moment just playing around with the order that album tracks have been or could be placed in and I’ve made a Facebook page for it all:    https://www.facebook.com/profile.php?id=61594055338455    But mostly this week it has been about diving into the unreleased solo albums from 1970. The whole thing has been in conversation with AI - and it is very much a conversation as I use it as a sounding board for my thoughts and to help with BPM etc. I also get it to help with the write-ups afterwards because the whole process would feel like a chore and not a hobby otherwise :)   Still though, I’m interested in seeing what other Bee Gees fans might think about these orders and whether anyone wants to give those sequences a listen.    The page isn’t meant to be exclusively Bee Gees but I have always loved them since the early 90s and me and a couple of friends would natter on about this kind of stuff everyday. It’s been nice to use technology to help recapture some of the spirit of when we made mix tapes of it all.    Obviously I know that this is just playing really - these are probably not close to what they intended (well, apart from Maurice’s The Loner where his sequencing was really strong already). Please be kind :)       submitted by     /u/Few_Comparison_1671     to     r/BeeGees       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BeeGees/comments/1wea8ma/rethinking_bee_gees_material_with_alternative/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T11:33:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T11:34:12.677Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa538b46508d45f3d2bc52b"
+    },
+    "message_id": "reddit_t3_1wea8ky",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "androidwatchfaces",
+    "username": "minooos",
+    "title": "New Watch Face seeking for testers!!! Join the group and download it for FREE!",
+    "text": "New Watch Face seeking for testers!!! Join the group and download it for FREE!\n\nJoin the Group    Testing   .  If you enter the testing group, the watch face is free with a license testing card. If you press to buy it, a pop-up from Google will come up, which will say \"This is a test order; you will not be charged.\" IT'S FREE FOR TESTING RIGHT NOW   Find the link here ->  Tactical        submitted by     /u/minooos     to     r/androidwatchfaces       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/androidwatchfaces/comments/1wea8ky/new_watch_face_seeking_for_testers_join_the_group/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T11:33:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T11:34:12.880Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa538b56508d45f3d2bc52c"
+    },
+    "message_id": "reddit_t3_1wea8ks",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "HyderabadUsedItems",
+    "username": "anotherclickbait",
+    "title": "Selling this work table 4*2ft - 2.7k - Madhapur",
+    "text": "Selling this work table 4*2ft - 2.7k - Madhapur\n\nsubmitted by     /u/anotherclickbait     to     r/HyderabadUsedItems       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HyderabadUsedItems/comments/1wea8ks/selling_this_work_table_42ft_27k_madhapur/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T11:33:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T11:34:13.089Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa538b56508d45f3d2bc52d"
+    },
+    "message_id": "reddit_t3_1wea8jr",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BangaloreMarketplace",
+    "username": "droopy403",
+    "title": "MacBook Air 13” M4 (2025) – Mint Condition, 16GB/256GB, Bangalore",
+    "text": "MacBook Air 13” M4 (2025) – Mint Condition, 16GB/256GB, Bangalore\n\n✨ Condition   Excellent / mint condition  No scratches, dents, or visible damage  Screen, keyboard, and body are clean  Everything works perfectly   📦  Included   MacBook Air M4 13”  Original Apple charger & cable  Original box and packaging   💰  Price   ₹92,000 — slightly negotiable   📍  Location & Deal   Location: JP Nagar, Bangalore  Payment: UPI  Preferred: Face-to-face transaction so the buyer can inspect and verify the MacBook  Shipping can be arranged at the buyer’s risk and cost via insured courier   🔄 Reason for Sale  Selling because my company is providing me with an Apple M5 laptop.  Feel free to DM me if interested. Serious buyers only.       submitted by     /u/droopy403     to     r/BangaloreMarketplace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BangaloreMarketplace/comments/1wea8jr/macbook_air_13_m4_2025_mint_condition_16gb256gb/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T11:33:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T11:34:13.295Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa538b56508d45f3d2bc52f"
+    },
+    "message_id": "reddit_t3_1wea8iy",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "makeupmadnessindia",
+    "username": "Background_Artist345",
+    "title": "please help a broke girlie declutter💖",
+    "text": "please help a broke girlie declutter💖\n\nSelling new and unused items🫶🏻   ✨1. Victoria’s Secret Pure Seduction Perfume Mist- MRP 2699, SP 890, Batch no 6126B2A1   ✨2. Schwarzkopf Repair Rescue Shampoo (forgot to take pics)- MRP 1000, SP 790, Expiry 9/28, Batch no IN5025   ✨3. Guess Earrings Set (originally a set of 3 from Canada, I kept one so selling the other 2 pairs)- MRP around 2000-4000 per pair, SP 900 per pair or 1650 for both, can also be sold with an original Guess drawstring pouch   ✨4. Nykaa Stardust Chrome Eye Pencil in the shade Post- MRP 449, SP 250, Expiry 12/28, Batch no B008   ✨5. Nykaa EYEm Bold Kajal- MRP 499, SP 290, Expiry 11/28, Batch no B003   ✨6. Re’equil Cleanse and Protect Travel Minis Set- MRP 245, SP 150, Expiry + Batch no mentioned on individual packs inside but its new so should be good for a while   ✨7. L’Oréal Professionnel Vitamino Colour Mini Shampoo- MRP 245, SP 150, Expiry 1/27, Batch no B51507622C   ✨8. Miniso Vitamin E Repairing Hair Mask- MRP 170, SP 65, Expiry 8/27, Batch no HR250022   ✨9. Miniso Superfood Berry Facial Mask- freebie with any purchase above 1000 🥰   Please feel free to dm me for more info, pics or past selling proof 🫶🏻       submitted by     /u/Background_Artist345     to     r/makeupmadnessindia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/makeupmadnessindia/comments/1wea8iy/please_help_a_broke_girlie_declutter/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T11:33:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T11:34:13.694Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa538b56508d45f3d2bc530"
+    },
+    "message_id": "reddit_t3_1wea8hc",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "PakStartups",
+    "username": "ClaimApprehensive851",
+    "title": "Looking to start a business",
+    "text": "Looking to start a business\n\nI (14F) am looking to start a business, something that will actually take off. The problem is, I have limited funds and I'm scared it won't work out, my idea is to introduce gothic style jewellery and designs not common in Pakistan. My mother is willing to fund 1-1.5 lacs, is it realistic or not? And will 1-1.5 lacs be enough to launch for now? Is the idea okay? I'd appreciate all the advice you can give, I do want to start the business and go forward with it.       submitted by     /u/ClaimApprehensive851     to     r/PakStartups       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PakStartups/comments/1wea8hc/looking_to_start_a_business/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T11:33:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T11:34:13.900Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa538b66508d45f3d2bc531"
+    },
+    "message_id": "reddit_t3_1wea8h1",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "Pakistani_Art",
+    "username": "DarakhtMeaningless",
+    "title": "Lasso tool on da beatt",
+    "text": "Lasso tool on da beatt\n\nsubmitted by     /u/DarakhtMeaningless     to     r/Pakistani_Art       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Pakistani_Art/comments/1wea8h1/lasso_tool_on_da_beatt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T11:33:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T11:34:14.099Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa538f06508d45f3d2bc532"
+    },
+    "message_id": "reddit_t3_1wea99j",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "MinecraftServers",
+    "username": "No_Challenge_8632",
+    "title": "🍃 DripleafMC | We got tired of pay-to-win servers, so we built one where money can't buy power [Java + Bedrock]",
+    "text": "🍃 DripleafMC | We got tired of pay-to-win servers, so we built one where money can't buy power [Java + Bedrock]\n\nEvery server I checked had the same problem, either it's dead in a month, or the shop sells straight power and grinding feels pointless. DripleafMC is our attempt at neither.   No purchase gives combat power, economy advantage, or a shortcut past the grind. Everything worth having — playtime ranks, Rebirth prestige tiers, the server shop itself is earned through actually playing. The server shop is even locked until Rebirth 2, so the whole economy runs on player-run chest shops, quests and jobs before that, not a menu you buy your way past.    What's actually in it:   - Playtime ranks (Scout → Elite → Legend) that unlock real QoL, not cosmetics dressed up as progression  - A Rebirth system — reset your economy progress for permanent sell multipliers, exclusive pets, and so much more, so there's always a next goal  - mcMMO skill grinding stacked on top of both  - Jobs, quests, voting rewards, and a player-driven chest shop economy  - Server Shop works like a market, weekly items go on sale but some items crash in value!   Java and Bedrock both welcome!    IP:  [  play.dripleafmc.net  ]   Bedrock:  same address, port [ 2236 ]   Discord:   https://discord.gg/ySHfpUTu3v        submitted by     /u/No_Challenge_8632     to     r/MinecraftServers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MinecraftServers/comments/1wea99j/dripleafmc_we_got_tired_of_paytowin_servers_so_we/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T11:34:55Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T11:35:12.549Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa538f06508d45f3d2bc533"
+    },
+    "message_id": "reddit_t3_1wea98x",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "WyattFlores",
+    "username": "PixelEmpire7",
+    "title": "UK record collectors - Half Life vinyl £15",
+    "text": "UK record collectors - Half Life vinyl £15\n\nIf anyone is looking for half life to complete their collection I’m selling one on Vinted for just £15 🙂 check the link        submitted by     /u/PixelEmpire7     to     r/WyattFlores       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WyattFlores/comments/1wea98x/uk_record_collectors_half_life_vinyl_15/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T11:34:53Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T11:35:12.758Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa538f06508d45f3d2bc534"
+    },
+    "message_id": "reddit_t3_1wea95r",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "fashionreps2",
+    "username": "Living-Alarm319",
+    "title": "Buying reps to Spain beginner questions",
+    "text": "Buying reps to Spain beginner questions\n\nHey everyone, I’m pretty new to buying reps from China and I’m looking to make my first order shipped to Spain.   I’ve been doing some research, but there’s so much information out there that I’m still a bit confused about the whole process.   A few things I’m wondering:      Which agent is currently the best/recommended?  I was thinking about using  Kakobuy , but I’m not sure if it’s a good option for a first order or if there are better alternatives for shipping to Spain.    How do you check if a product is actually good before ordering it?  Are there specific things you look for in the seller, photos, reviews, QC pics, etc.?    Can you request QC photos before the item gets shipped to the warehouse , or do you only get proper QC once it arrives at the warehouse?   Once the item is at the warehouse,  what exactly should I check in the QC photos?  Are there common flaws I should be looking for?   How does  shipping from China to Spain  usually work? Which shipping lines/services are generally recommended?   What should I know about  customs/VAT/import fees  when shipping to Spain?   Are there any  common mistakes beginners make  that I should avoid?   Finally, how do you generally  find reliable sellers/products  rather than just trusting random links or reviews?     I’m not asking for specific sellers necessarily. I’m mainly trying to understand the process and avoid making an expensive beginner mistake.   Any advice, guides, or personal experiences would be really appreciated. Thanks!       submitted by     /u/Living-Alarm319     to     r/fashionreps2       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/fashionreps2/comments/1wea95r/buying_reps_to_spain_beginner_questions/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-12T11:34:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-12T11:35:12.978Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa5392c6508d45f3d2bc535"
+    },
+    "message_id": "reddit_t3_1wea9z7",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "adidas",

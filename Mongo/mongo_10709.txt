@@ -1,0 +1,416 @@
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "VietNam",
+    "username": "Dylang123456",
+    "title": "How much would this lifestyle cost in Hanoi?",
+    "text": "How much would this lifestyle cost in Hanoi?\n\nI’m thinking about moving to Hanoi and trying to figure out roughly how much I’d need per month to live a decent lifestyle.   I’d probably want:     1 bed apartment in an expat area, ideally somewhere with a shared pool and gym   Eat out for lunch and dinner pretty much every day   Go out/party about once every 2 weeks   Uber/Grab to and from work Monday-Friday   2 trips a year to nearby countries   Join a football team   Generally pretty active     Obviously there’d also be stuff like phone, internet, utilities, clothes, random expenses etc.   I’m not trying to live super cheaply, but also not looking to live some crazy luxury lifestyle.   For people living in Hanoi, how much do you think I’d realistically spend per month doing this?   Also, what am I forgetting?   Would be interested to hear what people actually spend rather than the absolute cheapest way of doing everything.       submitted by     /u/Dylang123456     to     r/VietNam       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/VietNam/comments/1wk043u/how_much_would_this_lifestyle_cost_in_hanoi/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T19:37:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T19:37:30.589Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad92fa660c60840397b0e7"
+    },
+    "message_id": "reddit_t3_1wk043o",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "KansasCityChiefs",
+    "username": "TheBoyisBackinTown",
+    "title": "[Derrick] Friday marks one month since a back issue caused Josh Simmons to miss his first practice, and it's been two weeks since he received a second opinion. Andy Reid said today there is no timeline for his return, and the medical staff will \"go back and reevaluate it.\"",
+    "text": "[Derrick] Friday marks one month since a back issue caused Josh Simmons to miss his first practice, and it's been two weeks since he received a second opinion. Andy Reid said today there is no timeline for his return, and the medical staff will \"go back and reevaluate it.\"\n\nsubmitted by     /u/TheBoyisBackinTown     to     r/KansasCityChiefs       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/KansasCityChiefs/comments/1wk043o/derrick_friday_marks_one_month_since_a_back_issue/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T19:37:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T19:37:30.789Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad92fa660c60840397b0e8"
+    },
+    "message_id": "reddit_t3_1wk043b",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Meowi",
+    "username": "glitchtechsisthebest",
+    "title": "[Question] I just want to know if anyone else knows about certain music bands.",
+    "text": "[Question] I just want to know if anyone else knows about certain music bands.\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/glitchtechsisthebest     to     r/Meowi       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Meowi/comments/1wk043b/question_i_just_want_to_know_if_anyone_else_knows/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T19:37:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T19:37:30.989Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad92fb660c60840397b0e9"
+    },
+    "message_id": "reddit_t3_1wk042x",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "ClaudeCode",
+    "username": "microlatency",
+    "title": "UUIDs are storage keys, not an interface for LLMs",
+    "text": "UUIDs are storage keys, not an interface for LLMs\n\nProblem   Models can select the correct entity and still corrupt its UUID while copying it into a tool call.   We evaluated, the same UUID fragment was corrupted 3 times in one task. In another case, a model retried an incompatible reference 6 consecutive times.   Our solution   In our tool parameters, we prefer entity names when they are unique. Otherwise, we use a scoped 8-characters id prefix.   A single deterministic resolver validates each reference within the correct tenant and entity type, rejects ambiguous or invalid values, and converts valid references back to canonical UUIDs. Full UUIDs remain in storage, APIs, resource URIs, and other machine boundaries.   This brought identifier errors to zero across all our evaluation tasks. A full UUID uses roughly 20–25 tokens in our measured path. Replacing it with an 8-character reference saves around 12–20 tokens per occurrence    The rule we now follow:  identifiers that models read should be designed as interface elements, not exposed storage keys.   Worth reading:  Frontier Language Models Struggle to Copy        submitted by     /u/microlatency     to     r/ClaudeCode       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeCode/comments/1wk042x/uuids_are_storage_keys_not_an_interface_for_llms/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T19:37:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T19:37:31.192Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad92fb660c60840397b0ea"
+    },
+    "message_id": "reddit_t3_1wk042l",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "redditparliamentsim",
+    "username": "FunctionOk9186",
+    "title": "Official statement from the anti-fascist paramilitary deterrence",
+    "text": "Official statement from the anti-fascist paramilitary deterrence\n\nWe're disbanding        submitted by     /u/FunctionOk9186     to     r/redditparliamentsim       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/redditparliamentsim/comments/1wk042l/official_statement_from_the_antifascist/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T19:37:07Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T19:37:31.393Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad9334660c60840397b0eb"
+    },
+    "message_id": "reddit_t3_1wk0577",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "PhoneGearGuide",
+    "username": "Otismods",
+    "title": "Ailun glass Screen protector 3 pack on the work iphone 17 Pro Max, day fifteen",
+    "text": "Ailun glass Screen protector 3 pack on the work iphone 17 Pro Max, day fifteen\n\nIT handed over the work phone naked and told me the screen was my problem, so the iPhone 17 Pro Max has worn one of the Ailun screen protector 3 pack, the 6.9 inch tempered glass ones with the install frame, for fifteen days now. Ailun sits at the cheap end of the tempered glass screen protector market, under a Spigen pack and miles under a single Belkin or Zagg from the phone shop, and since I am the person in this house who reads the fine print on everything from the boiler to the toaster, it got the same going over before I paid.   Installing it took four minutes, and the frame is why.   Wipe, dust sticker, drop the plastic tray over the phone, peel, press the centre, and the glass setled itself with one bubble near the front camera that walked out under a thumb in about ten seconds. The cutout clears the Dynamic Island and the sensor strip has its own patch, so Face ID has legit not missed once, and the edges stop a hair short of the curve, which is what case friendly means in practice: the work issue case from Spigen goes on over it without lifting a corner.   At 99.99 percent clarity on the box I cannot see it in daylight, the screen looks like the screen. Touch is normal, no extra press needed, swipe typing has not changed. The anti fingerprint coating is real for about a week and then it is a normal glossy sheet of glass that shows every thumb, which is the trade I expected at this price. Three sheets weigh 91.9 g together in the box, so each is thin, and thin is why the edge picked up a small chip on day nine from being set down on a gravel car park wall, the phone underneath fine.   Over a million reviews sit behind that 4.6, and it is not a rating for this exact screen protector, it is every iPhone size Ailun has ever sold sharing one listing, and 10,000 a month says the pipline is still moving. Compared with the Zagg my old work phone came with, this one installs easier and, yeah, chips easier, and against the Spigen on my own iPhone 15 the Ailun feels the same in the hand and comes three to a box instead of two, and in a house where phones hit the tile weekly a spare in the drawer matters more than a fancier coating.   How many of you got through all three sheets in a year, and is the edge chipping the usual way these go or did I just get unlucky with the car park wall?       submitted by     /u/Otismods     to     r/PhoneGearGuide       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PhoneGearGuide/comments/1wk0577/ailun_glass_screen_protector_3_pack_on_the_work/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T19:38:17Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T19:38:28.429Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad9334660c60840397b0ec"
+    },
+    "message_id": "reddit_t3_1wk056v",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PathOfBaa",
+    "username": "Ok-Door8314",
+    "title": "A growing flower meadow",
+    "text": "A growing flower meadow\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Ok-Door8314     to     r/PathOfBaa       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PathOfBaa/comments/1wk056v/a_growing_flower_meadow/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T19:38:16Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T19:38:28.629Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad9334660c60840397b0ed"
+    },
+    "message_id": "reddit_t3_1wk056u",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "TravelInIndia",
+    "username": "VariousActuary2012",
+    "title": "Planning a trip for skiing in Gulmarg",
+    "text": "Planning a trip for skiing in Gulmarg\n\nHey guys I'm planning a trip around the end of December to the start of January ( depending on snowfall) . I'm a beginner and have never done it before , if anyone is interested in joining do hit me up we can work out the details together.       submitted by     /u/VariousActuary2012     to     r/TravelInIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TravelInIndia/comments/1wk056u/planning_a_trip_for_skiing_in_gulmarg/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T19:38:16Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T19:38:28.825Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad9335660c60840397b0ee"
+    },
+    "message_id": "reddit_t3_1wk0555",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "lookismcomic",
+    "username": "busted_knee_cap",
+    "title": "Kitae & Jake and PB Daniel",
+    "text": "Kitae & Jake and PB Daniel\n\nWe know kitae is a mix of yamazaki and Kim genes. But he doesn't have black bones or ui. However he has despair and black blood or some shit. Now we heard jinyoung talking to kitae in a way that suggested that gapryong was present in kitaes life for years and so was his mom and everyone. However as kitae grew up he had the same mentality as yamazakis. Like his father is the pinnacle. His mother is an yamazaki and due to the fact that he didn't have UI or black bone maybe he just felt hatred towards himself doubting him as he was growing up and slowly when gapryong shifted towards politics he started hating him too because kitae wanted to sort of be the successor of gapyrongs underworld gang life etc etc. and I think due to his hatred for himself and his father someone most likely gilbok or whatever his name was took advantage of him and kitae didn't really show any signs of intelligence in terms of strategy so he was fooled easily like after gapryong dies he's be successor and he can start the war and be king of all etc etc. and as he was manipulated into this after gapryong died he came into realisation that he just killed his father despite the differences he never truly hated his father so his DESPAIR isn't actually anything else but his hatred and despair towards himself and his guilt and regrets. And kitae also can get the despair part from his mother as we saw she was kinda forced into Yamazaki traditions stuff so there's that and Jake on the other hand was the true son of gapryong and one of the reasons why gapryong actually wanted to leave gang stuff was because of Jake but he never really told anyone that. So Jake carrying the will of conviction is just that.    And about the PB DANIEL    This is a bit stretched but considering ptj everything is possible. If there's any time travel elements in lookism it's very likely that PB Daniel IS the OG Daniel from future who not only lost people closer to him like his friends or even gun but also he was killed and failed to protect everyone which probably made him do things that can be seen as evil so basically becoming villain to defeat villain and James or kitae or both were at the top causing chaos across nations. So due to his guilt or sense of regrets he sort of time traveled to where? THE HOUSE WHERE THE TEN GENIUSES ACTUALLY WERE. so he was just traveled there but instead of him travelling or gaining consciousness in his og fat body, his BODY was there but his consciousness wasn't. So now both bodies from past and future shared the same mind and soul. Which is why maybe when he was in half ui mode he came excited because his future self became slightly conscious and was impressed with the new things his past body learned. It all seems very messy but I think yea this can happen. Because they both share same techniques UI, copy, they look the same.        submitted by     /u/busted_knee_cap     to     r/lookismcomic       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/lookismcomic/comments/1wk0555/kitae_jake_and_pb_daniel/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T19:38:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T19:38:29.037Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad9335660c60840397b0ef"
+    },
+    "message_id": "reddit_t3_1wk054v",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "SpinningTheGlobe",
+    "username": "community-draw",
+    "title": "Let's draw Superman!",
+    "text": "Let's draw Superman!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/community-draw     to     r/SpinningTheGlobe       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SpinningTheGlobe/comments/1wk054v/lets_draw_superman/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T19:38:13Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T19:38:29.235Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad9335660c60840397b0f0"
+    },
+    "message_id": "reddit_t3_1wk054h",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "IntrovertsChat",
+    "username": "terribly-magnificent",
+    "title": "M23 for the real ones",
+    "text": "M23 for the real ones\n\nHey there im just looking for some new friends to vibe with since looking for them Ir isn’t really working for me yet 😭.People from everywhere are welcome to chat. Tell me what do u do in life and what are your hobbies and things u enjoy to do, As for me I like to watch movies and tv shows i also watch anime sometimes. I like to travel and i love poetry, im always collecting quotes from anywhere i can. Im also into working out but i definitely hate running and i love noodles, i love taking pictures of the sky and idk im bored and and extremely sarcastic and fun to talk to if youre not absolutely dry and im always cracking jokes here and there so hopefully it would be fun to chat around so hmu and introduce yourselves if u think u get my vibe!!       submitted by     /u/terribly-magnificent     to     r/IntrovertsChat       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/IntrovertsChat/comments/1wk054h/m23_for_the_real_ones/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T19:38:12Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T19:38:29.434Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad9335660c60840397b0f1"
+    },
+    "message_id": "reddit_t3_1wk053s",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "Tickets",
+    "username": "melholt79",
+    "title": "Harry Styles Dallas 4/10. 4 tickets and parking.",
+    "text": "Harry Styles Dallas 4/10. 4 tickets and parking.\n\n2 tickets section 218 row 5 seats 1 & 2  $450 each   2 tickets section C113 row 9 seats 12 & 13. $650 each   Parking lot 4. $125   Was able to get pit tickets for my daughter for different date is why we are selling these.        submitted by     /u/melholt79     to     r/Tickets       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Tickets/comments/1wk053s/harry_styles_dallas_410_4_tickets_and_parking/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T19:38:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T19:38:29.634Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad9335660c60840397b0f2"
+    },
+    "message_id": "reddit_t3_1wk053r",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "Frugal_Ind",
+    "username": "dnara358",
+    "title": "Budget-friendly international honeymoon destinations from India in December?",
+    "text": "Budget-friendly international honeymoon destinations from India in December?\n\nHi everyone!    My partner and I are planning our honeymoon in December ( 1st–10th ) and are looking for an affordable and safe international destination that we can travel to from Hyderabad (or nearby airports).   Our total budget is around  ₹1.5–1.75 lakh for 2 people , including flights, accommodation, food, sightseeing, and other major expenses.   A few destinations we’re considering are  Sri Lanka, Vietnam, and Thailand . We’re mainly looking for somewhere that’s safe, and not too expensive.   Is it realistic to do any of these within our budget in the  first half of December ? Or would you suggest looking at other international destinations, or just sticking to India at this budget?   Also, would it be better to  plan everything ourselves  or go with a travel company/package for a honeymoon? If you’ve used any affordable travel companies, I’d love to hear about your experience. I’ve come across  WanderOn  as well — has anyone used them for international trips, and how was your experience?   Would love to hear suggestions from people who have travelled to these places around December, especially from Hyderabad.   Thanks! 😊       submitted by     /u/dnara358     to     r/Frugal_Ind       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Frugal_Ind/comments/1wk053r/budgetfriendly_international_honeymoon/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T19:38:11Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T19:38:29.836Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad9336660c60840397b0f3"
+    },
+    "message_id": "reddit_t3_1wk0535",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "OCPoetry",
+    "username": "IamToofan",
+    "title": "Goodbye to the Pink",
+    "text": "Goodbye to the Pink\n\nThe sky is painted pink,    leaves fall like whispers.    Birds take flight,    as we linger beneath blossoms.   ​Words stick in my throat,    emotions burning, unspoken.    Parting in the twilight,    we will go our separate ways.    Yet those final words remain unspoken.   If things were different,    I would have asked you to stay.   ​The pink melts from the sky;    even our paths disappear,    as if the world itself wishes this parting.   ​The park is empty,    the sky feels soothing.    Sadness and peace blend—    perhaps when we meet again,    we will understand this feeling.   ​If the world is truly round,    our paths will surely collide again.   ​So—    goodbye to the pink,    and farewell to what remains.   ( https://www.reddit.com/r/OCPoetry/s/xavHSL2nvI )    ( https://www.reddit.com/r/OCPoetry/s/LLHyoIvc6O )        submitted by     /u/IamToofan     to     r/OCPoetry       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OCPoetry/comments/1wk0535/goodbye_to_the_pink/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T19:38:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T19:38:30.036Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad9336660c60840397b0f4"
+    },
+    "message_id": "reddit_t3_1wk052n",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AmIOverreacting",
+    "username": "jelly_G52",
+    "title": "AIO for the way I responded to his question?",
+    "text": "AIO for the way I responded to his question?\n\nSo some background: I met him on Reddit about a year ago. We talked for a few months, stopped, and then started talking again recently. He's always made slightly weird jokes that made me uncomfortable, but I usually let it slide because I didn't want to cause a problem.    I was used to his jokes so that’s not the point, but this question came out of literally nowhere and kinda just freaked me out because of past experiences that I won’t get into rn.   I know I probably could’ve handed this a bit better, and I think I might’ve been too rude or too harsh in some instances, but I don’t really know where the line is anymore. Am I overreacting?    (Also I marked this NSFW cuz I think it is but if I’m wrong sorry)        submitted by     /u/jelly_G52     to     r/AmIOverreacting       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AmIOverreacting/comments/1wk052n/aio_for_the_way_i_responded_to_his_question/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T19:38:09Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T19:38:30.237Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad9336660c60840397b0f5"
+    },
+    "message_id": "reddit_t3_1wk0527",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "WritingPrompts",
+    "username": "Top_Divide_1659",
+    "title": "[WP] A depressed man travels back in time to kill those who hurt him in the past. The past-version of himself grows up alone because of it, just as depressed",
+    "text": "[WP] A depressed man travels back in time to kill those who hurt him in the past. The past-version of himself grows up alone because of it, just as depressed\n\nThe past-version of the man is the protagonist, seeing a mysterious figure kill those around him. He doesn't understand why. He doesn't know the killer is himself       submitted by     /u/Top_Divide_1659     to     r/WritingPrompts       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WritingPrompts/comments/1wk0527/wp_a_depressed_man_travels_back_in_time_to_kill/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T19:38:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T19:38:30.447Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad9336660c60840397b0f6"
+    },
+    "message_id": "reddit_t3_1wk0517",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Novel-Ad4663",
+    "title": "How do you make long car rides or road trips funner or more memorable?",
+    "text": "How do you make long car rides or road trips funner or more memorable?\n\nsubmitted by     /u/Novel-Ad4663     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wk0517/how_do_you_make_long_car_rides_or_road_trips/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T19:38:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T19:38:30.650Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad9337660c60840397b0f8"
+    },
+    "message_id": "reddit_t3_1wk050v",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "koreatravel",
+    "username": "melekdegil",
+    "title": "Airbnb near Mangwon market?",
+    "text": "Airbnb near Mangwon market?\n\nA good area to stay? Mangwon station exit 2 is a 7min walk from the airbnb. Generally ok would you think?       submitted by     /u/melekdegil     to     r/koreatravel       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/koreatravel/comments/1wk050v/airbnb_near_mangwon_market/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T19:38:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T19:38:31.043Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad934daeeb96c1c63b9811"
+    },
+    "message_id": "reddit_t3_1wk05ki",
+    "topic_key": "video editor",
+    "search_keyword": "video editor",
+    "platform": "reddit",

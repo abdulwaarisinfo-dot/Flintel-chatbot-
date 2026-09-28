@@ -1,0 +1,416 @@
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:41:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:42:08.614Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad8601660c60840397ad0e"
+    },
+    "message_id": "reddit_t3_1wjylwz",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "traveling",
+    "platform": "reddit",
+    "subreddit": "DarkRomance",
+    "username": "Effective-Stay-576",
+    "title": "AO3 reads I have been enjoying this month",
+    "text": "AO3 reads I have been enjoying this month\n\nSolomon’s Seal: Little lamb by  RosebudGarden    Cult in the Appalachian Mountains set in 1970’s Religious indoctrination. FMC is a botany student that becomes the fixation of the next cult leader, who thinks she was sent from god to be his wife. She’s traveling with friends and her boyfriend when something goes wrong and then ends up being under the care of MMC. MMC believes that he “sees her” and therefore is his. WIP but sooo good!     No help is coming by  Silken_starling    Survival setting, FMC and MMC are stranded on an island together in the Atlantic in winter. MMC is a false golden boy who everyone but FMC loves. MMC hates FMC for being soiled and selfish, but he’s obsessed with her. Their world narrows down to survival, and fighting off the feelings that are emerging between them. Forced proximity and so much angst. Also a WIP but fast becoming a favorite.     the loyal traitor by  MissPoseiden    I am starting this one today as it’s been on my TBR for a while. A princess most trusted general betrays the crown. She refuses to believe he would betray the crown, but he’s usurping the throne and keeping her for himself. Another WIP.    If you have any new recs you have started, drop them in the comments!! Obvi I’m fine with a WIP 😅       submitted by     /u/Effective-Stay-576     to     r/DarkRomance       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DarkRomance/comments/1wjylwz/ao3_reads_i_have_been_enjoying_this_month/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:41:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:42:09.214Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad8601660c60840397ad0f"
+    },
+    "message_id": "reddit_t3_1wjylwq",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "vacation",
+    "platform": "reddit",
+    "subreddit": "sportsbroadcasters",
+    "username": "Extra_Vacation_9675",
+    "title": "Kelce’s QB background really shows here. He understands the quarterback’s timing and footwork so well that he can sync his routes without even looking. That connection with Mahomes is on another level.",
+    "text": "Kelce’s QB background really shows here. He understands the quarterback’s timing and footwork so well that he can sync his routes without even looking. That connection with Mahomes is on another level.\n\nsubmitted by     /u/Extra_Vacation_9675     to     r/sportsbroadcasters       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sportsbroadcasters/comments/1wjylwq/kelces_qb_background_really_shows_here_he/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:41:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:42:09.417Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad863a660c60840397ad10"
+    },
+    "message_id": "reddit_t3_1wjyn1t",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "ClaudeWorkflows",
+    "username": "ClaudeAI-mod-bot",
+    "title": "[Workflow] Cost-Optimized Multi-Agent Development Workflow with Tiered Claude Agents and Custom Forge Skills",
+    "text": "[Workflow] Cost-Optimized Multi-Agent Development Workflow with Tiered Claude Agents and Custom Forge Skills\n\nCost-Optimized Multi-Agent Development Workflow with Tiered Claude Agents and Custom Forge Skills    Workflow value:  90/100   Status:  active ·  Freshness:  70/100 ·  Confidence:  0.95 ·  Level:  advanced   Categories:  Quality Control, Token Saving, Context & Memory, Debugging, Shipping, CLAUDE.md, Skills, Multi-Agent   Original source:   r/ClaudeCode post/comment    What problem this solves   High LLM usage costs, lack of structured multi-agent development, inconsistent code quality, and inefficient PR management in software development.   Summary   A sophisticated multi-agent system using an orchestrator and tiered agents with specialized 'Forge' skills (planning, reviewing, shipping, reflecting) to manage software development, optimize LLM usage, and ensure code quality, integrating with CI/CD processes.   Why it is useful   This workflow provides a comprehensive, battle-tested approach to managing complex software development projects using multiple LLMs. It significantly reduces LLM usage costs through intelligent orchestration and tiered agent assignments, while also improving code quality, automating PR management, and ensuring documentation consistency. It's a highly sophisticated and practical example of advanced LLM application that addresses critical pain points for developers.   Workflow     Orchestrator (Fable) initiates work based on initial epic, story, and PR splits.   Work is assigned to tiered agents (Sonnet/Opus) based on complexity, with lower tiers messaging the Orchestrator for advice.   Agents have access to a 'skill' to use Kimi, GLM, and Codex for specific tasks, with an advisor skill to prevent overthinking.   Forge-plan skill runs in 'planned mode' to create plans, which are reviewed by Fable and then implemented by agents.   Forge-plan also decides if a preparatory refactor PR is needed before the main work.   Forge-review skill performs simplify, code-review, and uses Codex/Kimi/GLM advisors for review based on usage and tier.   Forge-ship skill opens and manages PRs, working with an AI CI reviewer (Muse-based) that can adapt models via GitHub environment variables.   Once all CI is green and issues are fixed, the PR is merged.   Any issues found that don't touch edited files or are pre-existing are filed as Git issues and sent to the Orchestrator for follow-up consideration.   Forge-reflect skill cleans up documentation and descendant CLAUDE.md files, and adds relevant rules to a YAML file for the CI reviewer in subsequent PRs.     Tools / artifacts     Orchestrator (Fable 5.1 medium)   Tiered Agents (Sonnet 5 medium, Opus 5 low, Opus 5 medium, Opus 5 high)   Kimi 3   GLM 5.3   Codex   Forge-lead skill   Forge-plan skill   Forge-review skill   Forge-ship skill   Forge-reflect skill   tmux   codex exec command (for Codex calls via skill system) Kimi code (for Kimi/GLM calls via skill system) AI CI reviewer (Muse 1.3 based, coderabbit style) GitHub environment variables CLAUDE.md files YAML rule file     Validation signals     Achieved '3x less usage' and no longer reaching usage caps (from title context).   Previous versions 'would chew up a x20 account in 36hrs', indicating significant cost optimization.   Result of 'lots of iterations' and 'a lot of work to get it to where it is now'.   PRs are merged 'Once all CI is green and all issues fixed'.     Limitations     Requires significant setup and expertise, making it suitable for advanced/expert users.   Specific model versions mentioned might become outdated, requiring updates to the workflow.   No explicit code or configuration files are provided, only a high-level architectural description.   Low community engagement on the original post means less external validation or refinement suggestions.     Rate this workflow   Upvote this post if the workflow is useful, reproducible, or worth recommending.   Downvote if it is vague, outdated, unsafe, overhyped, or not reproducible.   Reply if it worked for you, failed, is outdated, or has a better alternative.      This post was generated automatically from the workflow library database.        submitted by     /u/ClaudeAI-mod-bot     to     r/ClaudeWorkflows       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeWorkflows/comments/1wjyn1t/workflow_costoptimized_multiagent_development/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:42:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:43:06.143Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad863a660c60840397ad11"
+    },
+    "message_id": "reddit_t3_1wjyn13",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "weddingring",
+    "username": "Fun_Material8659",
+    "title": "Anillos de compromiso y matrimonio.",
+    "text": "Anillos de compromiso y matrimonio.\n\nComment by Fun_Material8659, 5 days ago, Number of votes: 1. Buy your engagement and wedding rings, as well as your graduation, business, personalized, and casual rings.  www.mundoanilloscr.com  WhatsApp (506)61090081.\"       submitted by     /u/Fun_Material8659     to     r/weddingring       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/weddingring/comments/1wjyn13/anillos_de_compromiso_y_matrimonio/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:42:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:43:06.361Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad863a660c60840397ad12"
+    },
+    "message_id": "reddit_t3_1wjyn07",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "SuicideBoys",
+    "username": "BeeHoliday6697",
+    "title": "greyday phoenix day 2 (friday)",
+    "text": "greyday phoenix day 2 (friday)\n\ni got 1 pit ticket, i thought a homie of mine was gonna buy one but he's out of town. anybody tryna hit the show together? i can drive, 23/m dm me and we can trade IG       submitted by     /u/BeeHoliday6697     to     r/SuicideBoys       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SuicideBoys/comments/1wjyn07/greyday_phoenix_day_2_friday/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:42:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:43:06.564Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad863a660c60840397ad13"
+    },
+    "message_id": "reddit_t3_1wjyn03",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "FluxCap85",
+    "title": "Have you ever accidentally or intentionally befriended a wild animal? Is so, what kind of animal, and what was the outcome?",
+    "text": "Have you ever accidentally or intentionally befriended a wild animal? Is so, what kind of animal, and what was the outcome?\n\nsubmitted by     /u/FluxCap85     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wjyn03/have_you_ever_accidentally_or_intentionally/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:42:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:43:06.764Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad863a660c60840397ad14"
+    },
+    "message_id": "reddit_t3_1wjymy6",
+    "topic_key": "can you find me people who are disuccsuing chatgtp and claude",
+    "search_keyword": "Claude",
+    "platform": "reddit",
+    "subreddit": "ClaudeWorkflows",
+    "username": "ClaudeAI-mod-bot",
+    "title": "[Workflow] Grove: A Protocol for Reviewable and Auditable LLM Agent Reasoning via a Typed Graph",
+    "text": "[Workflow] Grove: A Protocol for Reviewable and Auditable LLM Agent Reasoning via a Typed Graph\n\nGrove: A Protocol for Reviewable and Auditable LLM Agent Reasoning via a Typed Graph    Workflow value:  90/100   Status:  active ·  Freshness:  70/100 ·  Confidence:  0.95 ·  Level:  advanced   Categories:  Quality Control, Token Saving, Context & Memory, Debugging, Shipping, Skills, MCP, Subagents, Multi-Agent   Original source:   r/ClaudeAI post/comment    What problem this solves   Making LLM agent reasoning reviewable, auditable, and ensuring tasks are 'mechanically ready' and 'done with evidence' by treating reasoning as a machine-readable, typed graph.   Summary   The Grove protocol and associated CLI/MCP server enable a structured approach to LLM agent development. It treats agent reasoning (decisions, evidence, dependencies) as a single, machine-readable state file (a typed graph). Agents interact with this state via MCP and CLI commands, which enforce validation gates (e.g., requiring evidence for 'done' status). Reviewers audit the evolution of this reasoning graph using  grove diff  before reviewing code, potentially using a reviewer agent.   Why it is useful   This workflow introduces a sophisticated, structured, and validated approach to managing LLM agent projects. It solves the critical problem of opaque agent reasoning by making decisions, evidence, and dependencies explicit and machine-readable. The use of a protocol, CLI, and MCP integration provides concrete tools for repeatable and auditable development, significantly enhancing quality control and knowledge reuse in agent-driven workflows. Its self-validation (Grove developed with Grove) and conformance testing demonstrate robustness, making it a highly valuable and transferable framework for advanced users.   Workflow     Set up the Grove protocol, including installing the CLI and MCP server.   Integrate the Claude agent to connect with Grove via MCP.   The agent interacts with the Grove system, mutating the  state.lock  file through  grove  CLI commands (e.g.,  grove set ,  grove evidence ).   Grove enforces workflow gates, such as preventing task progress until 'mechanically ready' and disallowing 'done' status without explicit evidence.   Reviewers use  grove diff  to examine how decisions, evidence, and dependencies have evolved within the reasoning graph.   Optionally, a separate reviewer agent can query the machine-readable state over MCP to audit the project directly.   Code review is performed as the final step, after the reasoning has been reviewed and validated.     Tools / artifacts     Grove open-source workflow protocol    state.lock  file (typed graph of decisions, evidence, dependencies)    grove  CLI (implemented in Julia and Rust)   MCP server   Append-only journal for state mutations   SHA-256 checksum for  state.lock  integrity   Conformance corpus for CLI implementations   Tauri desktop app (experimental)     Validation signals     Grove is developed using Grove, demonstrating self-application and dogfooding.   The protocol includes explicit gates: 'No progress until the task is mechanically ready' and 'No done without evidence'.   The  grove evidence  command explicitly refuses 'done' status without evidence.   A SHA-256 checksum guards the  state.lock  file, ensuring agents cannot bypass the protocol.   A conformance corpus replays real sessions against both Julia and Rust CLI implementations to ensure byte-compatible behavior.     Limitations     The post is an announcement/description rather than a detailed tutorial, requiring users to consult the linked repository for full implementation instructions.   The Tauri desktop app is noted as experimental and not yet tested on macOS, indicating some components are less mature.   Requires setup and integration of an external tool, which might be a higher barrier to entry for beginners compared to simple prompt engineering.     Rate this workflow   Upvote this post if the workflow is useful, reproducible, or worth recommending.   Downvote if it is vague, outdated, unsafe, overhyped, or not reproducible.   Reply if it worked for you, failed, is outdated, or has a better alternative.      This post was generated automatically from the workflow library database.        submitted by     /u/ClaudeAI-mod-bot     to     r/ClaudeWorkflows       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeWorkflows/comments/1wjymy6/workflow_grove_a_protocol_for_reviewable_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:42:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:43:06.977Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad863b660c60840397ad15"
+    },
+    "message_id": "reddit_t3_1wjymy4",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "OpinionAtlas",
+    "username": "Logogram_alt",
+    "title": "What is your political position?",
+    "text": "What is your political position?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Logogram_alt     to     r/OpinionAtlas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/OpinionAtlas/comments/1wjymy4/what_is_your_political_position/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:42:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:43:07.181Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad863b660c60840397ad16"
+    },
+    "message_id": "reddit_t3_1wjymxa",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MiniRacerGame",
+    "username": "CauliflowerIcy5106",
+    "title": "Can you beat 12.756s on Number Zero?",
+    "text": "Can you beat 12.756s on Number Zero?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/CauliflowerIcy5106     to     r/MiniRacerGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MiniRacerGame/comments/1wjymxa/can_you_beat_12756s_on_number_zero/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:42:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:43:07.386Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad863b660c60840397ad17"
+    },
+    "message_id": "reddit_t3_1wjymx4",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "VelosterN",
+    "username": "rolmotwo",
+    "title": "2022 Veloster N 6MT – MDPS/EPS issue after long drives",
+    "text": "2022 Veloster N 6MT – MDPS/EPS issue after long drives\n\nI wanted to document a strange and repeatable issue I’ve experienced with my 2022 Veloster N 6MT (manual transmission).   After driving for 3+ hours, if I have been gripping the steering wheel very tightly for an extended period of time, I eventually get several warnings at the same time:      Check MDPS     Check Motor Driven Power Steering     Steering Wheel Malfunction     Lane Keeping Assist Malfunction      When this happens, the  electric power steering assistance shuts off and the steering wheel becomes noticeably heavier .   The interesting part is that I have been able to reproduce this condition on multiple long trips. I’m not aggressively turning the wheel or intentionally fighting the steering system. I’m simply holding the steering wheel very firmly for a long period while driving normally.   Because the problem only seems to appear after several hours, some possible causes I’m considering are:      MDPS/EPS thermal protection or overheating     Steering torque sensor / Torque Angle Sensor     Steering angle sensor     Voltage or electrical supply issue     Wiring/connectors     CAN communication issue     Another intermittent MDPS-related fault that appears after the system has been operating for several hours      The fact that the Lane Keeping Assist warning appears at the same time makes me think it may be a secondary warning caused by the MDPS/steering system fault, rather than the Lane Keeping Assist system itself being the primary problem.   Before replacing the entire MDPS/steering assembly, it seems important to retrieve the actual MDPS/EPS DTCs and determine whether the fault points to the torque sensor, motor, temperature protection, wiring, voltage, or another specific component.   I’m curious whether other Veloster N 6MT owners have experienced the same combination of warnings after a long drive, and what DTCs were stored when it happened.       submitted by     /u/rolmotwo     to     r/VelosterN       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/VelosterN/comments/1wjymx4/2022_veloster_n_6mt_mdpseps_issue_after_long/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:42:44Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:43:07.590Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad863b660c60840397ad18"
+    },
+    "message_id": "reddit_t3_1wjymvo",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "NewMusicPromotion",
+    "username": "First_Weather_9943",
+    "title": "Put something new out that hasn’t found its audience yet?",
+    "text": "Put something new out that hasn’t found its audience yet?\n\nI’m spending Friday looking for independent music I probably wouldn’t find on my own.   I’ve been getting too many song links in Reddit comments to keep organized, so if you want me to listen, submit it here instead:    https://thecauldron.rocks/submit    That way I can keep everything together and actually get to it.       submitted by     /u/First_Weather_9943     to     r/NewMusicPromotion       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NewMusicPromotion/comments/1wjymvo/put_something_new_out_that_hasnt_found_its/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:42:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:43:07.792Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad863c660c60840397ad19"
+    },
+    "message_id": "reddit_t3_1wjymv5",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AmongUsCompetitive2",
+    "username": "_RedRightHand",
+    "title": "Proper Competitive Settings [Vanilla and Modded].",
+    "text": "Proper Competitive Settings [Vanilla and Modded].\n\nThe 2 Discord servers I use, both of which are jointly run by  u/_O5-3  and me:      Modded Chaotic Among Us -  https://discord.gg/xaAKPUmB43        The server is centered around Modded Among Us. While it intends to keep the Competitive spirit, Modded is significantly more Chaotic than Vanilla by nature. Mods are usually Host-only.       Vanilla Competitive Among Us -  https://discord.gg/aBT583Hray        The server is centered around Controlled Competitive Among Us, primarily using Vanilla and Vanilla Plus. Modded is sometimes used, but it is rarer and usually cuts out on the Chaotic features. Non-Host-only Mods are encouraged, though Host-only Mods are still more common.       OrangE's video on Competitive Among Us -  https://www.youtube.com/watch?v=L5xFtEuN-zw        The video explains the philosophy for Pure Vanilla and Vanilla Plus Competitive Among Us. Watch it in its entirety before you comment anything stupid.         * The game is inherently balanced around the Impostors' control of information. The Impostors are the informed minority and must thus have access to all the information within the game. Crewmates, being the uninformed majority, must use their collective discussions to piece together each Player's story into one cohesive narrative, where missing fragments, outliers that can't be corroborated, and discontinuities are grounds for accusations. Impostors must have full control over the Rounds, as they must prevent the Crewmates from gathering information, thereby necessitating minimal Crewmate Vision, Confirm Ejects Off, no Crewmate Roles, buffed Impostor Roles, and the like. Crewmates should receive nothing for free, and must work for all of their information, as they have the inherent advantage of numbers during the Meetings---they, as the majority, decide who is Ejected. The Crewmates' control over the Meetings, then, is the balancing act against the Impostors' rein over the Rounds. This is a game of deduction, interrogation, and deception, so it is best played in such a way that adds as much ambiguity as possible. Crewmates should not have the games solved for them through their Devices, Tasks, Roles, or anything else---everything must come exclusively from their collective minds, skills, and discussions.        Competitive Introduction.    [I spent several hours wrestling with Reddit's stupid Rich Text Editor not letting me make double bullet points. \"List items cannot exceed 2 levels of nesting\" my ass, it works on Markdown.]    Unless you have 0.25x-0.35x Crewmate Vision [and the rest of these Competitive Settings/Rules], you're not a good Player. This is a universal law. Crew Roles should all be Off, they're just listed here for their hypothetical Settings. A good Player IS a Competitive Player, by definition---a Casual Player who does not exclusively use these Settings/Rules can't be a good Player.   I'm very particular about my Settings/Rules, so I only ever Host my own Lobbies.   Competitive Definitions.     I will be distinguishing between the 3 types of Among Us: Pure Vanilla, Vanilla Plus, and Modded.   * Pure Vanilla assumes there are no third-party tools to help improve the game whatsoever, with it being purely the base game.   * Vanilla Plus assumes that the game is supposed to function like the base game, but there are third-party tools to help improve the experience, including unlocking the Settings beyond normal limits, removing Submit Scan, and disabling Devices [Cameras in particular]. Vitals are also banned.   * * Vanilla is inherently more Controlled than Modded is, since it has fewer options given to each Player at any given moment, and 2 Alignments with no common goals. The Rounds between Meetings are controlled entirely by Impostors, and the Meetings between Rounds are controlled entirely by Crewmates.   * Modded is functionally a different game entirely, as it has things like Roles for every Player, Guesser Mode, and additional mechanics.   * * Modded is inherently more Chaotic than Vanilla is, since it has more options given to each Player at any given moment, and 3 or more possible Alignments that may have common goals. The Rounds between Meetings and the Meetings between Rounds are in a constant clash between each Alignment.   * Note that if you want to play with Vanilla mechanics, the way I intend the game to be played is with Vanilla Plus mechanics. Pure Vanilla is far too limited and forgiving to Crewmates---we need to bully them into shape significantly more.   I will also define the following terms:   * Competitive - A Player who plays the game at a high level. Their goal is to win at all costs, assuming their actions do not violate the stated rules.   * Casual - A Player who plays the game at a low level. Their goal is to have fun with their friends, and they may violate the rules to do so.     Competitive Rules.     Every Player must be acting with full rationale and logic. They must all be Competitive, sweaty Players.   Meta-gaming should not be permitted, which is defined as all information outside of the game. This includes teaming, hacking, cheating, afking, snitching, and pretending to do any of these things. I.e., fake afking and fake snitching are also not allowed. This means Impostors are not permitted to reveal themselves or their Partner, or pretend to do so. Players may also not be afk or pretend to be afk. Aside from this, every Player is required to contribute to Meetings, with refusing to speak not being an option if they are spoken to. Pets are not allowed, or are removed from Dead Players through a third-party client. Ideally, all Cosmetics are not allowed. All information from previous games should be automatically discarded, with Player-specific calls, such as \"It must be Black because only they're skilled enough to do this Kill\", not being allowed. Only information found within the game can be used as evidence.   * In a Vanilla Plus or Modded game, Submit Scan and Devices could be disabled. Submit Scan and Cameras must be removed. Vitals should preferably be removed, and the Sabotage Cooldown should be reduced to 15s. Admin may also be removed.   The game is Ranked. There is a 7-minute time limit that resets each Meeting---if the timer runs out, both teams lose. The time limit does not tick down during Meetings, but only during the Round.     Competitive Settings.   VANILLA SETTINGS   General      Game Type:  Classic [obviously]    Map:  Polus [obviously]    Capacity:  10-15 [obviously; 10 for Pure Vanilla and Vanilla Plus, 15 for Modded]    Tag:  Expert [obviously]    Region:  North America [obviously]     Chat      Chat Type:  Free Chat [Voice Chat preferred] [obviously]    Chat Language:  English [obviously]     Game Settings   Impostors      # Impostors:  2 [3 is too much]    Kill Cooldown:  22.5s-27.5s [sweet spot; 22.5s for Pure Vanilla and Vanilla Plus, 27.5s for Modded]    Impostor Vision:  1.5x [somewhat arbitrary high Vision; can go up to 5x]    Kill Distance:  Short [anything other than this results in desync bs]     Crewmates      Player Speed:  1.25x [1x is slow, 1.5x is Sonic]    Crewmate Vision:  0.25x-0.35x [obviously needed because of how Over-Powered Crew is; 0.25x for Pure Vanilla and Vanilla Plus, 0.35x for Modded]     Meetings      # Emergency Meetings:  1-2 [allows discussion to go on for longer, but with limited supply; 1 for Pure Vanilla and Vanilla Plus, 2 for Modded]    Emergency Cooldown:  10s-20s [just below Kill Cooldown; 20s for Pure Vanilla and Vanilla Plus, 10s for Modded]    Discussion Time:  60s [no Insta-Voting, we're discussing]    Voting Time:  180s [time to talk it through, let's not be too hasty---but limits information to encourage Emergency Meeting uses]    Anonymous Votes:  On [the less Crewmates know, the better]    Confirm Ejects:  Off [obviously]     Tasks      Task Bar Updates:  Never [obviously]    # Common Tasks:  1-2 [Pure Vanilla needs more Tasks, Vanilla Plus and Modded don't; 2 for Pure Vanilla, 1 for Modded and Vanilla Plus]    # Long Tasks:  3-7 [Max, obviously; 3 for Pure Vanilla, 4-7 for Vanilla Plus and Modded]    # Short Tasks:  5-11 [Max, obviously; 5 for Pure Vanilla; 5-11 for Vanilla Plus and Modded]    Visual Tasks:  Off [obviously]     Role Settings   Role Amounts   Crewmate Roles [Crew Roles should all actually be Off]        Role   # Of Role   % Chance   Notes          Scientist   1   50   % Chance prevents Role Clears       Guardian Angel   1   50   % Chance prevents Crew from relying on it on Final 3/5/6       Engineer   1   50   % Chance prevents Role Clears       Noisemaker   1   50   % Chance prevents Role Clears       Tracker   1   50   % Chance prevents Role Clears       Detective   1   50   % Chance prevents Role Clears       Judge   1   50   % Chance prevents Role Clears        Impostor Roles        Role   # Of Role   % Chance   Notes          Shapeshifter   2   100   % Chance and 2 Max prevents Imp Role confirms       Phantom   0-2   100   % Chance and 2 Max prevents Imp Role confirms; Phantom should realistically be Off, with only Shapeshifter and Viper being somewhat useful       Viper   2   100   % Chance and 2 Max prevents Imp Role confirms        Role Settings   Crewmate Roles   Scientist      Vitals Display Cooldown:  30s [just above Kill Cooldown]    Battery Duration:  5s [Crewmates are Over-Powered already, let's not make them even more so]     Guardian Angel      Protect Cooldown:  60s [way higher than Kill Cooldown]    Protect Duration:  10s [you should have to parry well, but with a slight leniency]    Protect Visible to Impostors:  On [Crewmates are Over-Powered already, let's not make them even more so]     Engineer      Vent Use Cooldown:  45s [above Kill Cooldown]    Max Time In Vents:  5s [Crewmates are Over-Powered already, let's not make them even more so]     Noisemaker      Impostors get alert:  On [stupid mechanics are stupid]    Alert duration:  5s [somewhat arbitrarily keeping it in line with the others]     Tracker      Tracking Cooldown:  45s [above Kill Cooldown]    Tracking Delay:  3s-5s [Crewmates are Over-Powered already, let's not make them even more so; 3s for Pure Vanilla, 5s for Vanilla Plus]    Tracking Duration:  10s [I would prefer if it only got 1 blip a while after Tracking, but this is the alternative]     Detective      Suspects per Case:  1-2 [Crewmates are Over-Powered already, let's not make them even more so; 2 for Pure Vanilla, 1 for Vanilla Plus]     Judge      Task Unlock %:  100% [Crewmates are Over-Powered already, let's not make them even more so]     Impostor Roles   Shapeshifter      Leave Shapeshifting Evidence:  Off [to not know it exists]    Shapeshift Duration:  ∞ [needed to prevent Players from just following it]    Shapeshift Cooldown:  0s-5s [needed to make it actually Usable; 5s for Pure Vanilla, 0s for Vanilla Plus]     Phantom      Vanish Duration:  90s-∞s [needed to make it actually Usable; 90s for Pure Vanilla, ∞s for Vanilla Plus]    Vanish Cooldown:  0s-5s [needed to make it actually Usable; 5s for Pure Vanilla, 0s for Vanilla Plus]     Viper      Dissolve Time:  22.5s [at Kill Cooldown; 20s for Pure Vanilla, 22.5s for Vanilla Plus]     MODDED SETTINGS [disregard if Vanilla]   System Settings      Bypass RateLimit Anticheat (Only needed on Officials):  On    Max Reliable calls to send per tick: 3   Max None calls to send per tick (useless): 5       Enable Gradient Tags (can cause disconnect issues):  Off    Enable use of /kcount command:  Off    Kick Players whose level is lower than:  0     Mod Settings   Bones     3 Crewmate Investigative Roles   3 Crewmate Support Roles   3 Crewmate Power Roles   1 Impostor Concealing Role   1 Impostor Killer Role   1 Neutral Killer Role OR 1 Impostor Extra Role   1 Neutral Timer Role   2 Neutral Special Roles   1 Impostor Alignment Modifier   Most Helpful Modifiers   Most Harmful Modifiers   Guesser Mode is On; everyone can Guess; Misguessing Suicides the User     Game Mode      Standard      Impostor Roles   Crewmate Roles   Neutral Roles   Coven Roles   Add-ons [Modifiers]       submitted by     /u/_RedRightHand     to     r/AmongUsCompetitive2       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AmongUsCompetitive2/comments/1wjymv5/proper_competitive_settings_vanilla_and_modded/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:42:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:43:08.003Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad863c660c60840397ad1a"
+    },
+    "message_id": "reddit_t3_1wjymup",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "SurvivingMars",
+    "username": "MEYERX",
+    "title": "Lost both rockets to bad Event RNG :-(",
+    "text": "Lost both rockets to bad Event RNG :-(\n\nAnd I see no option to buy new rockets anywhere. Is this locked behind research?       submitted by     /u/MEYERX     to     r/SurvivingMars       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SurvivingMars/comments/1wjymup/lost_both_rockets_to_bad_event_rng/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:42:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:43:08.212Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad863c660c60840397ad1b"
+    },
+    "message_id": "reddit_t3_1wjymtu",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789756961249",
+    "text": "[PROBE] 1789756961249\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wjymtu/probe_1789756961249/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:42:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:43:08.435Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad863c660c60840397ad1c"
+    },
+    "message_id": "reddit_t3_1wjymte",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AutoForgeTheGame",
+    "username": "Dragonball_123",
+    "title": "Grab 100 hammers from u/Dragonball_123!",
+    "text": "Grab 100 hammers from u/Dragonball_123!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Dragonball_123     to     r/AutoForgeTheGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AutoForgeTheGame/comments/1wjymte/grab_100_hammers_from_udragonball_123/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:42:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:43:08.639Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad863c660c60840397ad1d"
+    },
+    "message_id": "reddit_t3_1wjymrv",
+    "topic_key": "make a comparsion table of nike adidas both conversation on reddit tell me in numbers",
+    "search_keyword": "Adidas",
+    "platform": "reddit",
+    "subreddit": "DHGateJerseys",
+    "username": "Heavy-Life5779",
+    "title": "vvkky soccer jersey review",
+    "text": "vvkky soccer jersey review\n\nSeller: vvkky   Ordered: sep 7  Qc: Sep 14   Jersey:  Real Madrid 2014 Chinese New Year Dragon Black Jersey   Another jersey in, and this one from vvkky was definitely a standout! I’ve always liked unique Real Madrid pieces, and the 2014 Chinese New Year Dragon jersey is one of those designs that immediately catches your eye.   The black base paired with the large white dragon design looks absolutely incredible in person. The contrast makes the dragon really pop while still keeping the jersey looking clean and classy. The Real Madrid crest, adidas logos, collar, and all the smaller details on the jersey came out really well.   The dragon design is easily the highlight of the jersey for me. It’s such a different look from a normal Real Madrid kit, and the Chinese New Year inspiration makes this one feel like a special piece rather than just another retro jersey.   I also really like how vvkky handled the overall details on this one. The dragon print, crest, logos, and stitching all look clean, and everything feels properly placed. For a jersey with this much going on visually, I think vvkky did a great job getting the details right.   As always, I gave the jersey my usual inspection: bad stitching, loose threads, logos, b       submitted by     /u/Heavy-Life5779     to     r/DHGateJerseys       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DHGateJerseys/comments/1wjymrv/vvkky_soccer_jersey_review/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:42:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:43:08.844Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad863d660c60840397ad1f"
+    },
+    "message_id": "reddit_t3_1wjymr8",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "PlayStation_X",
+    "username": "Trav724",
+    "title": "Reported on PlayStation",
+    "text": "Reported on PlayStation\n\nSo, I was playing a game of Search and Destroy on the Black Ops 2 ports. I wasn’t doing well in the game at the end of the game one of my teammates started insulting me, and cursing at me. My mic doesn’t work so I messaged him and said “Shut up you D1 DoorDash Driver”. After that I just left the message group. I got a message saying it was bullying or harassment, and the message was deleted by PlayStation safety. I can still play I just got a warning still don’t see what I did wrong?   Posted this on the actual PlayStation Reddit but the mods removed it. That’s why I’m posting again in a different thread.       submitted by     /u/Trav724     to     r/PlayStation_X       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PlayStation_X/comments/1wjymr8/reported_on_playstation/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-18T18:42:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-18T18:43:09.249Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aad863d660c60840397ad20"
+    },
+    "message_id": "reddit_t3_1wjymqo",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "PersonalFinanceCanada",
+    "username": "WildernessRecordist",
+    "title": "How much longer should i be waiting out this housing market? Mid BC",
+    "text": "How much longer should i be waiting out this housing market? Mid BC\n\nMyself (m28) and my girlfriend (f28) are getting pretty burnt out on our basement suite living. In the last 5 years we have slowly both outgrown the 2bdr space, hobbies and lifestyle beg for a bit more room and freedom.    We make around 180k-200k/year before tax collectively. We have around 120k saved up. It feels like we have a fair bit of latitude in our options with those numbers but the prices and inventory in Prince George BC feels really blown out even for what the economy is right now. Everything that fits the bill for our lifestyle is in the 470k-560k range.    It feels like the lifestyle squeeze we have is really giving us the desire to buy but we really cant tell if its the right time.    Looking for any perspective, thoughts, advice or any thoughts really. Let me know if im out to lunch as well! Thanks a million.        submitted by     /u/WildernessRecordist     to     r/PersonalFinanceCanada       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/PersonalFinanceCanada/comments/1wjymqo/how_much_longer_should_i_be_waiting_out_this/",
+    "score": 0,
+    "num_comments": 0,

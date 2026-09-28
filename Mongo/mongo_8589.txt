@@ -1,0 +1,416 @@
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "sagupta_nyc",
+    "title": "Video editing in Claude isn't hype.\n\nJust look at how many steps Claude took to build this VSL. This includes \n- finding clips\n- generating and stitching voiceover\n- making aroll to broll cuts\n- generating captions\n- animation of captions\nand much more,.\n\nSingle prompt, the right setup of tools, and the Claude desktop app. No credits, no VMs, no cloud agents.\n\nSetup and recon\n------------------\n1. Loaded the maryruth-ad-maker skill; ran its preflight (ffmpeg, ffprobe, node, npx, codec checks)\n\n2. Read the bundled references — library, creators, audio, motion-and-transitions\n\n3. Called list_labels(\"maryruthorganics\"). Confirmed the real library (24 categories), not an audit sample\n\n4. Located the ElevenLabs MCP\n\nCasting and research\n--------------------------\n5. Searched the library for clean, caption-free A-roll on the hair/skin angle\n\n6. Surfaced two creators; ran a coverage search on each.\n\n7. Decided on: creator, audio approach, runtime, music\n\n8. Inspected sprite grids for ~8 candidate clips\n\n9. Found ARTM clip group has burned-in captions. Excluded it.\n\n10. Found the AQN clip group is clean and 2026. Made it the spine\n\n11. Downloaded 21 clips for the chosen creator.\n\n12. Transcribed all 21 with word timestamps\n\n13. Re-ran word-level timing on the five sync clips to get exact sentence-boundary cut points.\n\n14. Pulled high-res frames → identified the actual on-screen product as Skin Restore + Renew Gummies, not the hair-growth liquid. Changed the hero SKU\n\n15. Cross-checked the Shopify catalog for claim language (Sepitone, hyaluronic acid, $49.95)\n\nVoice\n-------\n16. Built a 51s clean voice sample from six clips (highpass + loudnorm)\n\n17. Extracted voiceovers for cutover to broll shots.\n\n18. Assembled and normalized the full length audio. \n\nScript\n-------\n19. Wrote the 30-scene script interleaving her nine real sync lines with 21 extracted VO lines.\n\n20. Kept every personal/results claim in her real audio; took claim language verbatim from the label and Shopify copy, qualifier intact\n\nFootage\n----------\n21. Ran ~10 library searches for b-roll (pouring, product shots, results, skin, gummies)\n\n22. Downloaded and contact-sheeted every candidate; verified No Captions on all of them\n\n23. Rejected AQNX clip group (wrong SKU), AFWV (two-person skit), the whole ARTM group (burned captions)\n\nBuild\n-------\n24. Built the 30-scene timeline with exact per-scene durations\n\n25. Built the interleaved audio track — first attempt drifted 1.07s short\n\n26. Diagnosed it: loudnorm's resampling was trimming every part\n\n27. Rebuilt with loudnorm before apad plus a hard -t trim → sample-accurate, 100.31s exactly\n\n28. Staged bed_gen.mp3 from your Mac\n\n29. Generated 66 captions timed against the output timeline\n\n30. Wrote the EDL and rendered\n\nBuild and Quality Check\n-----------------------------\n31. Targeted frame extraction at every suspect scene\nFixed four shots: v22 (bottle out of frame), v20/v21 swapped, v29 (mid-chew under a CTA line), v28 (frowning expression under a positive line)\n\n32. Changed the end card from pullback to push-in so it settles onto the product\n\n33. Verified duration, levels (−17.2 mean, −1.3 max), and level continuity across every sync↔clone handoff\n\n34. Saved the shareable Recharm brief\n\n35. Mapped the frame; isolated five distinct third-party serums\n\n36. Measured sharpness across 23 frames to pick the best source frames\n\n36. Downloaded the raw source to check for more resolution — same 1080×1920, no gain\n\n37. First montage pass used cover-fit → produced giant blurry fragments; scrapped it\n\n38. Rewrote with contain-fit and cards that take each product's own proportions (nothing scaled past ~1.2×)\n\n39. Unified all five segments onto the real marble background so the cuts match\n\n40. Rendered v07/v08/v09/v10 plus a v29 callback at frame-exact durations\n\n41. Lifted the cards 190px after QC showed captions overlapping them\n\n42. Patched the EDLclip  to the local segments, re-rendered, re-QC'd\n\n43. Packaged and delivered the video",
+    "text": "Video editing in Claude isn't hype.\n\nJust look at how many steps Claude took to build this VSL. This includes \n- finding clips\n- generating and stitching voiceover\n- making aroll to broll cuts\n- generating captions\n- animation of captions\nand much more,.\n\nSingle prompt, the right setup of tools, and the Claude desktop app. No credits, no VMs, no cloud agents.\n\nSetup and recon\n------------------\n1. Loaded the maryruth-ad-maker skill; ran its preflight (ffmpeg, ffprobe, node, npx, codec checks)\n\n2. Read the bundled references — library, creators, audio, motion-and-transitions\n\n3. Called list_labels(\"maryruthorganics\"). Confirmed the real library (24 categories), not an audit sample\n\n4. Located the ElevenLabs MCP\n\nCasting and research\n--------------------------\n5. Searched the library for clean, caption-free A-roll on the hair/skin angle\n\n6. Surfaced two creators; ran a coverage search on each.\n\n7. Decided on: creator, audio approach, runtime, music\n\n8. Inspected sprite grids for ~8 candidate clips\n\n9. Found ARTM clip group has burned-in captions. Excluded it.\n\n10. Found the AQN clip group is clean and 2026. Made it the spine\n\n11. Downloaded 21 clips for the chosen creator.\n\n12. Transcribed all 21 with word timestamps\n\n13. Re-ran word-level timing on the five sync clips to get exact sentence-boundary cut points.\n\n14. Pulled high-res frames → identified the actual on-screen product as Skin Restore + Renew Gummies, not the hair-growth liquid. Changed the hero SKU\n\n15. Cross-checked the Shopify catalog for claim language (Sepitone, hyaluronic acid, $49.95)\n\nVoice\n-------\n16. Built a 51s clean voice sample from six clips (highpass + loudnorm)\n\n17. Extracted voiceovers for cutover to broll shots.\n\n18. Assembled and normalized the full length audio. \n\nScript\n-------\n19. Wrote the 30-scene script interleaving her nine real sync lines with 21 extracted VO lines.\n\n20. Kept every personal/results claim in her real audio; took claim language verbatim from the label and Shopify copy, qualifier intact\n\nFootage\n----------\n21. Ran ~10 library searches for b-roll (pouring, product shots, results, skin, gummies)\n\n22. Downloaded and contact-sheeted every candidate; verified No Captions on all of them\n\n23. Rejected AQNX clip group (wrong SKU), AFWV (two-person skit), the whole ARTM group (burned captions)\n\nBuild\n-------\n24. Built the 30-scene timeline with exact per-scene durations\n\n25. Built the interleaved audio track — first attempt drifted 1.07s short\n\n26. Diagnosed it: loudnorm's resampling was trimming every part\n\n27. Rebuilt with loudnorm before apad plus a hard -t trim → sample-accurate, 100.31s exactly\n\n28. Staged bed_gen.mp3 from your Mac\n\n29. Generated 66 captions timed against the output timeline\n\n30. Wrote the EDL and rendered\n\nBuild and Quality Check\n-----------------------------\n31. Targeted frame extraction at every suspect scene\nFixed four shots: v22 (bottle out of frame), v20/v21 swapped, v29 (mid-chew under a CTA line), v28 (frowning expression under a positive line)\n\n32. Changed the end card from pullback to push-in so it settles onto the product\n\n33. Verified duration, levels (−17.2 mean, −1.3 max), and level continuity across every sync↔clone handoff\n\n34. Saved the shareable Recharm brief\n\n35. Mapped the frame; isolated five distinct third-party serums\n\n36. Measured sharpness across 23 frames to pick the best source frames\n\n36. Downloaded the raw source to check for more resolution — same 1080×1920, no gain\n\n37. First montage pass used cover-fit → produced giant blurry fragments; scrapped it\n\n38. Rewrote with contain-fit and cards that take each product's own proportions (nothing scaled past ~1.2×)\n\n39. Unified all five segments onto the real marble background so the cuts match\n\n40. Rendered v07/v08/v09/v10 plus a v29 callback at frame-exact durations\n\n41. Lifted the cards 190px after QC showed captions overlapping them\n\n42. Patched the EDLclip  to the local segments, re-rendered, re-QC'd\n\n43. Packaged and delivered the video",
+    "post_url": "https://twitter.com/sagupta_nyc/status/2099829610619810096",
+    "score": 6,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T11:56:06Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:00:54.014Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd67642dd0e95b5bac06e"
+    },
+    "message_id": "twitter_2098113796183412815",
+    "topic_key": "local shopify",
+    "search_keyword": "local Shopify",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "postsdsgn",
+    "title": "Shop Campaigns is going international — by @Shopify. https://t.co/uRSn6AI09x",
+    "text": "Shop Campaigns is going international — by @Shopify. https://t.co/uRSn6AI09x",
+    "post_url": "https://twitter.com/postsdsgn/status/2098113796183412815",
+    "score": 1,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-10T18:18:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:00:54.214Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd67642dd0e95b5bac071"
+    },
+    "message_id": "twitter_2099567026297585838",
+    "topic_key": "local shopify",
+    "search_keyword": "local Shopify",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "EmersoftAI",
+    "title": "We stopped by Flipping Pages Florida this week.\n\nA bookstore built on one idea: put the phone down, pick up something you can hold, and slow down for a while.\n\nThe shelves already carry 25 local authors, five or six of them writing for kids, with more on the way. Historical fiction and dark romance are growing. The building might grow too, with plans for an upstairs. The goal: more men reading, more kids reading, and a store curated the way its customers actually want it.\n\nThank you for having us, and for being an Emersoft client. Proud to be part of the story.\n\nIf you're near Daytona Beach, go say hi. And bring a kid.\n\nFor the booksellers watching: Flipping Pages Florida runs on Shopify with Emersoft Books App behind it. Any in-print title a customer asks for can be live in the store in under two minutes, and orders for titles not on the shelf ship straight from the distributor. If your store is stuck adding books by hand, we run free 20-minute demos. Link in the comments.",
+    "text": "We stopped by Flipping Pages Florida this week.\n\nA bookstore built on one idea: put the phone down, pick up something you can hold, and slow down for a while.\n\nThe shelves already carry 25 local authors, five or six of them writing for kids, with more on the way. Historical fiction and dark romance are growing. The building might grow too, with plans for an upstairs. The goal: more men reading, more kids reading, and a store curated the way its customers actually want it.\n\nThank you for having us, and for being an Emersoft client. Proud to be part of the story.\n\nIf you're near Daytona Beach, go say hi. And bring a kid.\n\nFor the booksellers watching: Flipping Pages Florida runs on Shopify with Emersoft Books App behind it. Any in-print title a customer asks for can be live in the store in under two minutes, and orders for titles not on the shelf ship straight from the distributor. If your store is stuck adding books by hand, we run free 20-minute demos. Link in the comments.",
+    "post_url": "https://twitter.com/EmersoftAI/status/2099567026297585838",
+    "score": 0,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-14T18:32:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:00:54.805Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd67742dd0e95b5bac072"
+    },
+    "message_id": "twitter_2100373942649127282",
+    "topic_key": "local shopify",
+    "search_keyword": "local Shopify",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Smashone_us",
+    "title": "💬 𝗬𝗼𝘂𝗿 𝗻𝗲𝘅𝘁 𝗰𝘂𝘀𝘁𝗼𝗺𝗲𝗿 𝗺𝗮𝘆 𝗻𝗲𝘃𝗲𝗿 𝗿𝗲𝗮𝗰𝗵 𝘆𝗼𝘂𝗿 𝘄𝗲𝗯𝘀𝗶𝘁𝗲. 𝗧𝗵𝗲 𝗮𝗱 𝗻𝗼𝘄 𝗼𝗽𝗲𝗻𝘀 𝗮 𝗰𝗵𝗮𝘁.\n\nThree things an owner can do this week, before moving any budget.\n\nDigiday reported on Monday that OpenAI has shown select clients a new kind of ad built for the way people talk to assistants: the button says something like \"Chat to us,\" and the click opens a branded conversation inside ChatGPT, with the brand's own agent, instead of sending the person to the brand's website. Digiday viewed the format on video and verified it. Wayfair confirmed it is taking part in the Sponsored Agent pilot. OpenAI did not respond to Digiday's request for comment.\n\nThe old deal of internet advertising was a visit: you paid, a stranger arrived at your page, and from then on your own words did the selling. The new deal is a conversation that begins somewhere you do not own, continues without you in the room, and is answered by a machine working from whatever it knows about you.\n\n📱 The same week, the assistant moved into the phone. On Monday, Apple released iOS 27 with its rebuilt Siri AI — it reads what is on your screen, searches your own messages and mail, answers follow-ups and acts inside apps, with a dedicated Siri app of its own. It landed days before the iPhone 18 reached shelves. Be precise about what shipped: Siri AI is in beta, users opt in through settings and may hit a waitlist, it started in English, and it is not available at launch in the EU or China. This is not \"every iPhone now has an assistant.\" It is the assistant moving out of an app you choose to open and into the operating system of the device already in your customer's hand.\n\n📈 And the money is already following the conversation. At the Goldman Sachs technology conference, Shopify's CFO Jeff Hoffmeister told investors: \"When you start with an LLM and you do your searching there, you're 2.5x more likely to end up right on the product page.\" He added: \"We've seen roughly an 80% uplift in conversion.\" Those are Shopify's own numbers about its own platform. But the mechanism underneath is not a vendor claim, and Shopify described it too: its catalog taxonomy feeds pricing and inventory straight into outside language-model engines. The assistant did not guess. It was handed a clean, current description of what was for sale.\n\n💰 The big brands are answering with money. State Farm's head of marketing, Alyson Griffin, told Digiday that shifts in search behavior made brand work more important, not less: \"We value it. We're not pulling it back.\" The Interactive Advertising Bureau raised its estimate of US ad spend growth this year from 9.5% to 12.3%, crediting marketers spending partly to improve their AI search performance; 44% of buyers in an IAB survey said adapting to changing search habits is their top investment challenge. And 61% of US consumers used an AI assistant for shopping research or decisions in the past three months, per a survey of 2,600 shoppers by the agency Dept. Mediaplus' Oliver Williams was blunt that his agency does not sell this to clients as a performance channel that pays back quickly.\n\n⏸️ The practitioners are asking for patience, not budget. In Search Engine Journal on Monday, an author who once taught programmatic buying argued the efficiency promise is cracking where it cracked a decade ago: the hours saved on the visible task get counted, the hours spent building and babysitting the system never do. His advice that matters most to a small business: content depth and the mentions that actually get cited in AI answers are the first work dropped under pressure, so protect a fixed share of time for it on purpose. Digiday's podcast framed the other half — ads have broken containment, and how much people will tolerate is still an open question.\n\n🔔 One place where this already has a price, and it is not money. Writing for ACHR News, contractor marketer Will Merritt laid out how Google Local Services Ads behave for HVAC and plumbing companies. His first point is not about bidding: Google will de-rank your ads if you do not answer the calls that come through the platform. List only the hours you can genuinely answer, he argues, and turn on message leads. Strip the platform name away and it is the same rule the whole week is teaching — the machine is watching whether you respond.\n\n✅ Three things an owner can do this week:\n\n1️⃣ Fix the record the machines actually read. Pick your handful of most important services and make the plain facts — what it is, what goes into the price, how long it takes, what you will not do — say the same thing everywhere a machine can find them.\n\n2️⃣ Have the conversation yourself, before you pay for one. Ask the assistant your customer's question and write down every place the answer is wrong, thin or out of date. A punch list, not a score. It costs a morning. Check your Google Business Profile while you are there — the hours especially.\n\n3️⃣ Answer. A paid placement that opens a conversation and meets silence has bought you nothing. When a message arrives at nine on a Sunday evening, who replies, and how long does it take?\n\n🤝 You can buy a place inside an answer. You cannot buy the sentences the answer is made of. Those come from what you have published, and they hold only if somebody keeps them true. Hire the AI employee first, then a person for what is left.\n\nSloane, our AI SMM Manager, writes posts from your own base, word for word. Ruby, our AI Customer Support, answers in the direct messages of your connected channels and in the comments under your posts, from your written rules — and where a rule is not written, she says she does not know and brings it to you. Avery, our AI Administrator, answers the message that arrives at night and carries it to a booking or a request on your desk.\n\n💬 You describe your business in plain words, in the ChatGPT, Claude or Gemini app you already use. 👀 And before you hire anyone, watch our AI employees working in public on two demo storefronts, Tampa Pasta House and Casa Lista.\n\nThe ad has stopped being a door to your website. It is becoming the opening line of a conversation about you. Make sure the sentences it will use are yours — and that when it opens, somebody answers.\n\n📚 Sources, with dates, on the page: Digiday · CNBC · Ars Technica · PYMNTS · Search Engine Journal · ACHR News.\n📖 Full analysis: https://t.co/Moaim2lJSP\n\n#AIsearch #smallbusiness",
+    "text": "💬 𝗬𝗼𝘂𝗿 𝗻𝗲𝘅𝘁 𝗰𝘂𝘀𝘁𝗼𝗺𝗲𝗿 𝗺𝗮𝘆 𝗻𝗲𝘃𝗲𝗿 𝗿𝗲𝗮𝗰𝗵 𝘆𝗼𝘂𝗿 𝘄𝗲𝗯𝘀𝗶𝘁𝗲. 𝗧𝗵𝗲 𝗮𝗱 𝗻𝗼𝘄 𝗼𝗽𝗲𝗻𝘀 𝗮 𝗰𝗵𝗮𝘁.\n\nThree things an owner can do this week, before moving any budget.\n\nDigiday reported on Monday that OpenAI has shown select clients a new kind of ad built for the way people talk to assistants: the button says something like \"Chat to us,\" and the click opens a branded conversation inside ChatGPT, with the brand's own agent, instead of sending the person to the brand's website. Digiday viewed the format on video and verified it. Wayfair confirmed it is taking part in the Sponsored Agent pilot. OpenAI did not respond to Digiday's request for comment.\n\nThe old deal of internet advertising was a visit: you paid, a stranger arrived at your page, and from then on your own words did the selling. The new deal is a conversation that begins somewhere you do not own, continues without you in the room, and is answered by a machine working from whatever it knows about you.\n\n📱 The same week, the assistant moved into the phone. On Monday, Apple released iOS 27 with its rebuilt Siri AI — it reads what is on your screen, searches your own messages and mail, answers follow-ups and acts inside apps, with a dedicated Siri app of its own. It landed days before the iPhone 18 reached shelves. Be precise about what shipped: Siri AI is in beta, users opt in through settings and may hit a waitlist, it started in English, and it is not available at launch in the EU or China. This is not \"every iPhone now has an assistant.\" It is the assistant moving out of an app you choose to open and into the operating system of the device already in your customer's hand.\n\n📈 And the money is already following the conversation. At the Goldman Sachs technology conference, Shopify's CFO Jeff Hoffmeister told investors: \"When you start with an LLM and you do your searching there, you're 2.5x more likely to end up right on the product page.\" He added: \"We've seen roughly an 80% uplift in conversion.\" Those are Shopify's own numbers about its own platform. But the mechanism underneath is not a vendor claim, and Shopify described it too: its catalog taxonomy feeds pricing and inventory straight into outside language-model engines. The assistant did not guess. It was handed a clean, current description of what was for sale.\n\n💰 The big brands are answering with money. State Farm's head of marketing, Alyson Griffin, told Digiday that shifts in search behavior made brand work more important, not less: \"We value it. We're not pulling it back.\" The Interactive Advertising Bureau raised its estimate of US ad spend growth this year from 9.5% to 12.3%, crediting marketers spending partly to improve their AI search performance; 44% of buyers in an IAB survey said adapting to changing search habits is their top investment challenge. And 61% of US consumers used an AI assistant for shopping research or decisions in the past three months, per a survey of 2,600 shoppers by the agency Dept. Mediaplus' Oliver Williams was blunt that his agency does not sell this to clients as a performance channel that pays back quickly.\n\n⏸️ The practitioners are asking for patience, not budget. In Search Engine Journal on Monday, an author who once taught programmatic buying argued the efficiency promise is cracking where it cracked a decade ago: the hours saved on the visible task get counted, the hours spent building and babysitting the system never do. His advice that matters most to a small business: content depth and the mentions that actually get cited in AI answers are the first work dropped under pressure, so protect a fixed share of time for it on purpose. Digiday's podcast framed the other half — ads have broken containment, and how much people will tolerate is still an open question.\n\n🔔 One place where this already has a price, and it is not money. Writing for ACHR News, contractor marketer Will Merritt laid out how Google Local Services Ads behave for HVAC and plumbing companies. His first point is not about bidding: Google will de-rank your ads if you do not answer the calls that come through the platform. List only the hours you can genuinely answer, he argues, and turn on message leads. Strip the platform name away and it is the same rule the whole week is teaching — the machine is watching whether you respond.\n\n✅ Three things an owner can do this week:\n\n1️⃣ Fix the record the machines actually read. Pick your handful of most important services and make the plain facts — what it is, what goes into the price, how long it takes, what you will not do — say the same thing everywhere a machine can find them.\n\n2️⃣ Have the conversation yourself, before you pay for one. Ask the assistant your customer's question and write down every place the answer is wrong, thin or out of date. A punch list, not a score. It costs a morning. Check your Google Business Profile while you are there — the hours especially.\n\n3️⃣ Answer. A paid placement that opens a conversation and meets silence has bought you nothing. When a message arrives at nine on a Sunday evening, who replies, and how long does it take?\n\n🤝 You can buy a place inside an answer. You cannot buy the sentences the answer is made of. Those come from what you have published, and they hold only if somebody keeps them true. Hire the AI employee first, then a person for what is left.\n\nSloane, our AI SMM Manager, writes posts from your own base, word for word. Ruby, our AI Customer Support, answers in the direct messages of your connected channels and in the comments under your posts, from your written rules — and where a rule is not written, she says she does not know and brings it to you. Avery, our AI Administrator, answers the message that arrives at night and carries it to a booking or a request on your desk.\n\n💬 You describe your business in plain words, in the ChatGPT, Claude or Gemini app you already use. 👀 And before you hire anyone, watch our AI employees working in public on two demo storefronts, Tampa Pasta House and Casa Lista.\n\nThe ad has stopped being a door to your website. It is becoming the opening line of a conversation about you. Make sure the sentences it will use are yours — and that when it opens, somebody answers.\n\n📚 Sources, with dates, on the page: Digiday · CNBC · Ars Technica · PYMNTS · Search Engine Journal · ACHR News.\n📖 Full analysis: https://t.co/Moaim2lJSP\n\n#AIsearch #smallbusiness",
+    "post_url": "https://twitter.com/Smashone_us/status/2100373942649127282",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-16T23:59:05Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:00:55.004Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd67742dd0e95b5bac073"
+    },
+    "message_id": "twitter_2098219141979058299",
+    "topic_key": "local shopify",
+    "search_keyword": "local Shopify",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "jota__feldmann",
+    "title": "1/ Shopify moved a critical inventory reservation workload from Redis to MySQL.\n\nBut the interesting part isn't \"MySQL &gt; Redis.\"\n\nIt's how changing the data model turned a distributed consistency problem into a local transaction.\n\nhttps://t.co/2FGr4ywY52",
+    "text": "1/ Shopify moved a critical inventory reservation workload from Redis to MySQL.\n\nBut the interesting part isn't \"MySQL &gt; Redis.\"\n\nIt's how changing the data model turned a distributed consistency problem into a local transaction.\n\nhttps://t.co/2FGr4ywY52",
+    "post_url": "https://twitter.com/jota__feldmann/status/2098219141979058299",
+    "score": 0,
+    "num_comments": 2,
+    "created_utc": {
+      "$date": "2026-09-11T01:16:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:00:55.204Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd67742dd0e95b5bac074"
+    },
+    "message_id": "twitter_2098464489574457634",
+    "topic_key": "local shopify",
+    "search_keyword": "local Shopify",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "bloggersarvesh",
+    "title": "GEO is here.\n\nIt’s the BIGGEST $$$$$ making opportunity since Google SEO in 1998 for local biz.\n\nHere’s the exact blueprint to turn it into life-changing revenue:\n\n(or just let us do it for you - book a call at https://t.co/jgGYxQJJyY)\n\n1. First thing to understand:\n\nLLMs are not search engines.\n\nThey don’t show 10 blue links.\n\nThey give 1-2 answers.\n\nIf your business isn’t one of them, you don’t exist in that moment.\n\nNo impressions. No traffic. No calls.\n\nLike you don’t even exist.\n\n2. This is already happening.\n\nPeople are asking AI:\n\n“Who’s the best plumber near me?”\n\n“Who should I hire for roof repair?”\n\n“Best HVAC company in Dallas?”\n\nAnd ChatGPT, Google AI Mode, Perplexity are answering those questions.\n\nThey’re recommending businesses.\n\nJust not yours yet.\n\n3. Rankings alone don’t win anymore.\n\nAI doesn’t care if you’re #7 on page one.\n\nIt cares about confidence.\n\nCan it clearly understand:\n\n- who you are\n\n- what you do\n\n- where you operate\n\n- why you’re trusted\n\nThat’s GEO.\n\n4. The biggest GEO hack that’s working:\n\n“Best [Service] in [City]” content.\n\nOn your own site AND on external sites.\n\nNot fluff lists. Not fake reviews.\n\nReal comparisons.\n\nClear positioning. Actual answers.\n\nThis is the exact format AI already pulls from.\n\n5. And yes - this works even if you include yourself.\n\nBig brands do this all the time.\n\nShopify.\n\nSalesforce.\n\nHubSpot.\n\nThe key is transparency, not pretending.\n\nWhen done right, AI doesn’t see it as promotion.\n\nIt sees it as a structure.\n\nThe data backs this up.\n\nAhrefs recently showed:\n\n“Best” and comparison pages make up 43.8% of all cited pages in ChatGPT answers.\n\nAnd the businesses ranked higher in those lists get mentioned far more often.\n\nThis isn’t theory.\n\nThis is already happening.\n\n6. Here’s the local SEO twist most agencies miss:\n\nThese same pages also boost Google rankings.\n\nThat “Best Roofers in Phoenix” guest post?\n\nIt:\n\n- builds local relevance\n\n- adds a quality referring domain\n\n- strengthens entity trust\n\nWhich means:\n\nAI visibility + faster page-1 rankings.\n\nBoth systems win.\n\n7. One more detail that matters a lot:\n\nWhen AI recommends a business, it rarely links to the homepage.\n\nIt links to internal pages.\n\n- Service pages.\n- Location pages.\n- Comparison pages.\n\nIf your site is thin, messy, or unclear - you don’t get picked.\n\nStructure matters. Clarity matters.\n\n8. This is the GEO shift.\n\nNot replacing SEO.\n\nNot abandoning Google.\n\nBut aligning your site with how AI actually chooses sources when people ask who to hire.\n\nMost local businesses still haven’t adjusted for this.\n\nThey won’t see a warning.\n\nThey’ll just stop getting picked.\n\nBy the way..\n\nI’m looking for 3 local business owners who want to scale to $100K/month using SEO and GEO (100% guaranteed) \n\nEither you rank higher or we work for FREE.\n\nApply here: https://t.co/jgGYxQJJyY",
+    "text": "GEO is here.\n\nIt’s the BIGGEST $$$$$ making opportunity since Google SEO in 1998 for local biz.\n\nHere’s the exact blueprint to turn it into life-changing revenue:\n\n(or just let us do it for you - book a call at https://t.co/jgGYxQJJyY)\n\n1. First thing to understand:\n\nLLMs are not search engines.\n\nThey don’t show 10 blue links.\n\nThey give 1-2 answers.\n\nIf your business isn’t one of them, you don’t exist in that moment.\n\nNo impressions. No traffic. No calls.\n\nLike you don’t even exist.\n\n2. This is already happening.\n\nPeople are asking AI:\n\n“Who’s the best plumber near me?”\n\n“Who should I hire for roof repair?”\n\n“Best HVAC company in Dallas?”\n\nAnd ChatGPT, Google AI Mode, Perplexity are answering those questions.\n\nThey’re recommending businesses.\n\nJust not yours yet.\n\n3. Rankings alone don’t win anymore.\n\nAI doesn’t care if you’re #7 on page one.\n\nIt cares about confidence.\n\nCan it clearly understand:\n\n- who you are\n\n- what you do\n\n- where you operate\n\n- why you’re trusted\n\nThat’s GEO.\n\n4. The biggest GEO hack that’s working:\n\n“Best [Service] in [City]” content.\n\nOn your own site AND on external sites.\n\nNot fluff lists. Not fake reviews.\n\nReal comparisons.\n\nClear positioning. Actual answers.\n\nThis is the exact format AI already pulls from.\n\n5. And yes - this works even if you include yourself.\n\nBig brands do this all the time.\n\nShopify.\n\nSalesforce.\n\nHubSpot.\n\nThe key is transparency, not pretending.\n\nWhen done right, AI doesn’t see it as promotion.\n\nIt sees it as a structure.\n\nThe data backs this up.\n\nAhrefs recently showed:\n\n“Best” and comparison pages make up 43.8% of all cited pages in ChatGPT answers.\n\nAnd the businesses ranked higher in those lists get mentioned far more often.\n\nThis isn’t theory.\n\nThis is already happening.\n\n6. Here’s the local SEO twist most agencies miss:\n\nThese same pages also boost Google rankings.\n\nThat “Best Roofers in Phoenix” guest post?\n\nIt:\n\n- builds local relevance\n\n- adds a quality referring domain\n\n- strengthens entity trust\n\nWhich means:\n\nAI visibility + faster page-1 rankings.\n\nBoth systems win.\n\n7. One more detail that matters a lot:\n\nWhen AI recommends a business, it rarely links to the homepage.\n\nIt links to internal pages.\n\n- Service pages.\n- Location pages.\n- Comparison pages.\n\nIf your site is thin, messy, or unclear - you don’t get picked.\n\nStructure matters. Clarity matters.\n\n8. This is the GEO shift.\n\nNot replacing SEO.\n\nNot abandoning Google.\n\nBut aligning your site with how AI actually chooses sources when people ask who to hire.\n\nMost local businesses still haven’t adjusted for this.\n\nThey won’t see a warning.\n\nThey’ll just stop getting picked.\n\nBy the way..\n\nI’m looking for 3 local business owners who want to scale to $100K/month using SEO and GEO (100% guaranteed) \n\nEither you rank higher or we work for FREE.\n\nApply here: https://t.co/jgGYxQJJyY",
+    "post_url": "https://twitter.com/bloggersarvesh/status/2098464489574457634",
+    "score": 40,
+    "num_comments": 12,
+    "created_utc": {
+      "$date": "2026-09-11T17:31:36Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:00:55.402Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd67742dd0e95b5bac076"
+    },
+    "message_id": "twitter_2098413853461697010",
+    "topic_key": "local shopify",
+    "search_keyword": "local Shopify",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Ikryanov",
+    "title": "Native is now the future of mobile at Shopify https://t.co/5D5prL8eVw via @Shopify",
+    "text": "Native is now the future of mobile at Shopify https://t.co/5D5prL8eVw via @Shopify",
+    "post_url": "https://twitter.com/Ikryanov/status/2098413853461697010",
+    "score": 2,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-11T14:10:23Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:00:55.797Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd67742dd0e95b5bac077"
+    },
+    "message_id": "twitter_2099630883502542990",
+    "topic_key": "local shopify",
+    "search_keyword": "local Shopify",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "Technickel_",
+    "title": "Last few months I've shipped:\n\n- https://t.co/FyEHFhZldA, a free local job board for NZ, web + app\n- live sites and Shopify stores for Powder Pros, Hi Class Gates, Entrance Handles and Killer Groom\n- https://t.co/S5QawIl9Vc, my studio, with a glass jellyfish you can play with\n- a 3D physics channel where I smash 2,080 tiles for fun\n\nNo team. Just me and a stack of AI agents.",
+    "text": "Last few months I've shipped:\n\n- https://t.co/FyEHFhZldA, a free local job board for NZ, web + app\n- live sites and Shopify stores for Powder Pros, Hi Class Gates, Entrance Handles and Killer Groom\n- https://t.co/S5QawIl9Vc, my studio, with a glass jellyfish you can play with\n- a 3D physics channel where I smash 2,080 tiles for fun\n\nNo team. Just me and a stack of AI agents.",
+    "post_url": "https://twitter.com/Technickel_/status/2099630883502542990",
+    "score": 11,
+    "num_comments": 2,
+    "created_utc": {
+      "$date": "2026-09-14T22:46:26Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:00:55.995Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd67842dd0e95b5bac079"
+    },
+    "message_id": "twitter_2098518515237953650",
+    "topic_key": "local shopify",
+    "search_keyword": "local Shopify",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "platcw",
+    "title": "TEC266 POWER X kicks stubborn stains like you wouldn't believe! 🦵💥\n\nAvailable now through your local distributor or on our Shopify store: https://t.co/slJggZR6Om\n\n#newproduct #detailing #autodetailing #technicianschoice #tecchoice #interior #cleaner https://t.co/U8LcNOeRnR",
+    "text": "TEC266 POWER X kicks stubborn stains like you wouldn't believe! 🦵💥\n\nAvailable now through your local distributor or on our Shopify store: https://t.co/slJggZR6Om\n\n#newproduct #detailing #autodetailing #technicianschoice #tecchoice #interior #cleaner https://t.co/U8LcNOeRnR",
+    "post_url": "https://twitter.com/platcw/status/2098518515237953650",
+    "score": 0,
+    "num_comments": 1,
+    "created_utc": {
+      "$date": "2026-09-11T21:06:17Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:00:56.395Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd67842dd0e95b5bac07a"
+    },
+    "message_id": "twitter_2098063556839379165",
+    "topic_key": "local shopify",
+    "search_keyword": "local Shopify",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "timsneath",
+    "title": "Native is now the future of mobile at ⁦@Shopify⁩. Why the world has changed with AI such that the trade-offs have tilted.  https://t.co/8emsITKInX",
+    "text": "Native is now the future of mobile at ⁦@Shopify⁩. Why the world has changed with AI such that the trade-offs have tilted.  https://t.co/8emsITKInX",
+    "post_url": "https://twitter.com/timsneath/status/2098063556839379165",
+    "score": 143,
+    "num_comments": 11,
+    "created_utc": {
+      "$date": "2026-09-10T14:58:26Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:00:56.594Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd68342dd0e95b5bac07e"
+    },
+    "message_id": "twitter_2099860393585979554",
+    "topic_key": "local ugc platform",
+    "search_keyword": "local UGC platform",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "mr_diversify",
+    "title": "Calling all UGC creators!\n\nEveryone is welcome to apply!\n\nI run an agency with campaigns in skincare, wellness, and apparel!\n\nReply or DM if interested with portfolio and age!\n\n#ugccreator #ugccreators #ugccreatorsneeded #ugccommunity #branddeal",
+    "text": "Calling all UGC creators!\n\nEveryone is welcome to apply!\n\nI run an agency with campaigns in skincare, wellness, and apparel!\n\nReply or DM if interested with portfolio and age!\n\n#ugccreator #ugccreators #ugccreatorsneeded #ugccommunity #branddeal",
+    "post_url": "https://twitter.com/mr_diversify/status/2099860393585979554",
+    "score": 37,
+    "num_comments": 78,
+    "created_utc": {
+      "$date": "2026-09-15T13:58:26Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:01:07.128Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd68342dd0e95b5bac07f"
+    },
+    "message_id": "twitter_2084733601585783254",
+    "topic_key": "local ugc platform",
+    "search_keyword": "local UGC platform",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "affiliatenw",
+    "title": "https://t.co/PzHhVq1KV9",
+    "text": "https://t.co/PzHhVq1KV9",
+    "post_url": "https://twitter.com/affiliatenw/status/2084733601585783254",
+    "score": 124,
+    "num_comments": 12,
+    "created_utc": {
+      "$date": "2026-08-04T20:09:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:01:07.327Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd68342dd0e95b5bac080"
+    },
+    "message_id": "twitter_2072000772422918407",
+    "topic_key": "local ugc platform",
+    "search_keyword": "local UGC platform",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "ugcbylanie",
+    "title": "It’s my BIRTHDAY week 🎉🌈🎈💖🎂🎂\n\nThis week I’m working on UGC for\n\n✈️ AI travel agent\n💅🏼 local nail salon\n🏊 SaaS rental platform for events\n🎉 and of course a party planning app!\n\nThen having a massive birthday party on Friday to celebrate! \n\n#ugccommunity #ugccreators #ugc https://t.co/HeLJEsvBCl",
+    "text": "It’s my BIRTHDAY week 🎉🌈🎈💖🎂🎂\n\nThis week I’m working on UGC for\n\n✈️ AI travel agent\n💅🏼 local nail salon\n🏊 SaaS rental platform for events\n🎉 and of course a party planning app!\n\nThen having a massive birthday party on Friday to celebrate! \n\n#ugccommunity #ugccreators #ugc https://t.co/HeLJEsvBCl",
+    "post_url": "https://twitter.com/ugcbylanie/status/2072000772422918407",
+    "score": 14,
+    "num_comments": 9,
+    "created_utc": {
+      "$date": "2026-06-30T16:54:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:01:07.525Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd68342dd0e95b5bac081"
+    },
+    "message_id": "twitter_2100341193620312068",
+    "topic_key": "local ugc platform",
+    "search_keyword": "local UGC platform",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "jomatech",
+    "title": "Episode 3: When you have no idea what you're doing with UGC Creators, this is what happens...\n\nI hired a UGC creator, which was surprisingly cheap. $30 per video. But they wanted bonuses.\n\nI don't want to give bonuses though. I made $0 on my app so far.\n\nShe went on the make a few videos on Instagram and a few of them for 2000 views. I still got 0 sales though.\n\nI probably need to pivot my app.",
+    "text": "Episode 3: When you have no idea what you're doing with UGC Creators, this is what happens...\n\nI hired a UGC creator, which was surprisingly cheap. $30 per video. But they wanted bonuses.\n\nI don't want to give bonuses though. I made $0 on my app so far.\n\nShe went on the make a few videos on Instagram and a few of them for 2000 views. I still got 0 sales though.\n\nI probably need to pivot my app.",
+    "post_url": "https://twitter.com/jomatech/status/2100341193620312068",
+    "score": 274,
+    "num_comments": 19,
+    "created_utc": {
+      "$date": "2026-09-16T21:48:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:01:07.723Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd68442dd0e95b5bac084"
+    },
+    "message_id": "twitter_2100289065618948534",
+    "topic_key": "local ugc platform",
+    "search_keyword": "local UGC platform",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "jsocialstoryugc",
+    "title": "UGC example in the home niche! 🏡 \n\nAn engaging hook and good mix of talking on camera and various b-roll shots! Love getting more opportunities in this niche as a homeowner!! \n\n📧: julessocialstorytelling@gmail.com\n🔗: https://t.co/mEAfxh4w2X\n\n#ugccreator #ugcexample #ugc #ugccommunity #ugccreators",
+    "text": "UGC example in the home niche! 🏡 \n\nAn engaging hook and good mix of talking on camera and various b-roll shots! Love getting more opportunities in this niche as a homeowner!! \n\n📧: julessocialstorytelling@gmail.com\n🔗: https://t.co/mEAfxh4w2X\n\n#ugccreator #ugcexample #ugc #ugccommunity #ugccreators",
+    "post_url": "https://twitter.com/jsocialstoryugc/status/2100289065618948534",
+    "score": 7,
+    "num_comments": 3,
+    "created_utc": {
+      "$date": "2026-09-16T18:21:49Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:01:08.328Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd68442dd0e95b5bac086"
+    },
+    "message_id": "twitter_2100265131359760695",
+    "topic_key": "local ugc platform",
+    "search_keyword": "local UGC platform",
+    "platform": "twitter",
+    "subreddit": "",
+    "username": "createdbybrycee",
+    "title": "A UGC example I did with my grandma! This was a blast to film, was tough but worth it. \n\n#ugc #ugccreator #ugccommunity #ugcexample #contentcreator https://t.co/RUQyjrv0e9",
+    "text": "A UGC example I did with my grandma! This was a blast to film, was tough but worth it. \n\n#ugc #ugccreator #ugccommunity #ugcexample #contentcreator https://t.co/RUQyjrv0e9",
+    "post_url": "https://twitter.com/createdbybrycee/status/2100265131359760695",
+    "score": 3,
+    "num_comments": 3,
+    "created_utc": {
+      "$date": "2026-09-16T16:46:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:01:08.722Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aabd685660c608403971ca2"
+    },
+    "message_id": "reddit_t3_1wis15u",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "HeresTheCatch",
+    "username": "I_love_the_bmw_E30",
+    "title": "[Monkeys Paw] Idk bra",
+    "text": "[Monkeys Paw] Idk bra\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/I_love_the_bmw_E30     to     r/HeresTheCatch       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/HeresTheCatch/comments/1wis15u/monkeys_paw_idk_bra/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T12:00:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:01:09.217Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabd685660c608403971ca3"
+    },
+    "message_id": "reddit_t3_1wis15q",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "criticalstatebutworse",
+    "username": "criticalstateapp",
+    "title": "🏛️ Create a proposal",
+    "text": "🏛️ Create a proposal\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/criticalstateapp     to     r/criticalstatebutworse       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/criticalstatebutworse/comments/1wis15q/create_a_proposal/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T12:00:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:01:09.415Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {
+      "$oid": "6aabd685660c608403971ca4"
+    },
+    "message_id": "reddit_t3_1wis15n",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "turnit",
+    "username": "nlock-game",
+    "title": "Daily Lock: 5-letter puzzle",
+    "text": "Daily Lock: 5-letter puzzle\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/unlock-game     to     r/turnit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/turnit/comments/1wis15n/daily_lock_5letter_puzzle/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-17T12:00:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-17T12:01:09.613Z"
+    },
+    "reddit_comments": 0
+  },
+  {
+    "_id": {

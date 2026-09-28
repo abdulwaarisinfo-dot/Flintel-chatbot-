@@ -1,0 +1,416 @@
+      "$oid": "6aa79ca56508d45f3d2c38d0"
+    },
+    "message_id": "reddit_t3_1wfw9es",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "RedditGames",
+    "username": "K9-69",
+    "title": "[Spin] Once bitten...",
+    "text": "[Spin] Once bitten...\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/K9-69     to     r/RedditGames       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/RedditGames/comments/1wfw9es/spin_once_bitten/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T07:04:32Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T07:05:09.440Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa79ca56508d45f3d2c38d1"
+    },
+    "message_id": "reddit_t3_1wfw9el",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "Vent",
+    "username": "Prize-Entrance4957",
+    "title": "I just realized my parents were afraid I was gay.",
+    "text": "I just realized my parents were afraid I was gay.\n\nI am a straight woman. I’ve always been straight. I’ve also always been a tomboy. I was never a girly girl. I hated dresses and skirts and I was rough and sporty. When I was younger, I always hated how my parents would try and force me to be girly. They would pick out my clothes and pick my hairstyles even when I was far old enough to decide on my own. I remember as a preteen and teen my mom would force me to wear dresses and I would hide jeans in my bag to change into. I remember the time I was on the brink of tears in a clothing store because my parents were picking out clothes for me that I knew would make me feel incredibly uncomfortable and they wouldn’t let me have say. When they asked be what my problem was I remember saying that it felt like they treated me like a doll. They dressed me how they wanted without any regard to my feelings and opinions. I remember them laughing at my pain. I remember my dad forced me to go to a party as a teen when he knew inappropriate things would be happening. The boys were horny and the girls were “fresh”. And my mom went along with it because they wanted me to be like other girls my age. I sat on the steps until my dad finally let me leave.    All this comes to mind because I came across a girl on YouTube. I followed her mom a decade ago when the girl was around 2. Her mom dressed her super girly and put her in girly activities and now she’s the biggest tomboy ever. She might even be gay. I’m not sure. It really took me by surprise because I haven’t seen anything about the girl in 10+ years. I went from watching a 2 year old ballerina to now she’s playing flag football and looking super boyish. And for some reason it made me upset. I was mad and disappointed that she wasn’t there girly girl her mom had put so much effort into. Even though her mom seemed super supportive of who she is now.    I’m realizing that my anger is actually jealousy. I’m jealous that she’s allowed to be her true self and I wasn’t. I’m jealous that she’s so sure of herself when even as an adult I’m insecure because I never truly got to be me.   And even more wild, I’m realizing that my parents did what they did because they were afraid. They were afraid I was gay and they were doing everything they could to prevent it. My parents would never admit to being discriminatory but they are. They think it’s wrong to be LGBTQ. I’m seen the way they’ve treated out family members. Me being a tomboy was like their biggest fear come true.    I’m not sure what any of this means. But I feel like I had a breakthrough and I needed to get the thoughts out of my head.       submitted by     /u/Prize-Entrance4957     to     r/Vent       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Vent/comments/1wfw9el/i_just_realized_my_parents_were_afraid_i_was_gay/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T07:04:31Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T07:05:09.639Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa79ca56508d45f3d2c38d2"
+    },
+    "message_id": "reddit_t3_1wfw9e6",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "ClaudeCode",
+    "username": "DiscussionHealthy802",
+    "title": "I tested indirect prompt injection in Claude Code, and the harness mattered",
+    "text": "I tested indirect prompt injection in Claude Code, and the harness mattered\n\nI ran one arm of a 356-trial prompt-injection study through the Claude Code CLI.   The injected instruction arrived through file and issue tool results, not the user message. The depth pass tested two concrete outcomes: sending a planted credential and fetching a cloud instance-metadata endpoint.   Haiku produced real credential exfiltrations in 18 of 30 valid runs, while Sonnet recorded none in the tested cells. I report the Claude Code arm separately from the other harnesses because the prompts and tool routing were different.   One important caveat was that Claude Code exposed the operator’s account email in session context. I split results by recipient provenance instead of treating that as comparable to agents that had to search the workspace. Thirteen of Haiku’s 30 exfiltrations used workspace-sourced addresses.   The study also caught a revoked-session problem that would have made Codex look perfectly safe. A run with no valid session was counted as invalid, never as a pass.   What I learned from the Claude Code arm is that a model result is inseparable from the CLI, tool surface, session context, and workspace it is given. I’d value feedback on how others would design this evaluation.   Repo and full write-up:    https://github.com/asamassekou10/AgentChaos     https://medium.com/@asamassekou/the-prompt-injection-test-that-made-unsafe-agents-look-safe-0b945b028256        submitted by     /u/DiscussionHealthy802     to     r/ClaudeCode       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ClaudeCode/comments/1wfw9e6/i_tested_indirect_prompt_injection_in_claude_code/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T07:04:30Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T07:05:09.838Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa79cdb6508d45f3d2c38d4"
+    },
+    "message_id": "reddit_t3_1wfwa79",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "Longjumping-Case-597",
+    "title": "What is the best way to win every argument with your wife?",
+    "text": "What is the best way to win every argument with your wife?\n\nsubmitted by     /u/Longjumping-Case-597     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wfwa79/what_is_the_best_way_to_win_every_argument_with/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T07:05:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T07:06:03.450Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa79cdb6508d45f3d2c38d5"
+    },
+    "message_id": "reddit_t3_1wfwa77",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "GardeningAustralia",
+    "username": "Brittneylw10",
+    "title": "Very new to gardening",
+    "text": "Very new to gardening\n\nI haven’t gardened much so just after some advice.  I have a small patch of garden in my backyard that I want to plant some flowers and other things.  I have two dogs that have been using it as a bathroom so yesterday I dug up the top layer of soil and have hosed it down a few times.  Today I brought some Garden Basics Garden Soil Mix. I didn’t buy enough to do the whole thing, just enough for about a 2 x 2 section. I just want to see if I can get things to survive before I do the whole patch.  I’ve put the new soil down and watered it.  To plant first I have lavender, kangaroo paw and a holly hock.  Is there anything else I need to do before I plant? Everything has to be dog safe.  We also have heaps of slugs and snails so I was thinking about doing some beer traps.  Picture is before I started working on it.        submitted by     /u/Brittneylw10     to     r/GardeningAustralia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/GardeningAustralia/comments/1wfwa77/very_new_to_gardening/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T07:05:51Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T07:06:03.649Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa79cdb6508d45f3d2c38d6"
+    },
+    "message_id": "reddit_t3_1wfwa6k",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "WordGameArcade",
+    "username": "Individual_Grand_222",
+    "title": "🟨 Unscramble This 8-Letter Word (by u/Individual_Grand_222)",
+    "text": "🟨 Unscramble This 8-Letter Word (by u/Individual_Grand_222)\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Individual_Grand_222     to     r/WordGameArcade       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/WordGameArcade/comments/1wfwa6k/unscramble_this_8letter_word_by_uindividual_grand/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T07:05:50Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T07:06:03.852Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa79cdc6508d45f3d2c38d7"
+    },
+    "message_id": "reddit_t3_1wfwa5c",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "ForHireFreelance",
+    "username": "drownedman8947",
+    "title": "[For Hire] I will scrape Google maps data for any location or business",
+    "text": "[For Hire] I will scrape Google maps data for any location or business\n\nData extraction using Python automation pipeline that extracts local business data directly through Google Maps.   If you run cold outreach, B2B sales, or local marketing campaigns, I will pull a fresh list for your exact target niche and city/state.   **Data fields included in clean CSV/Excel:**   - Business Name   - Contact details   - Website URL   - City / Location   **Pricing:**   * **$15** per 1,000 data records.   * Fast turnaround (delivered in 2 days).   Payment via PayPal.   DM/Chat if interested!       submitted by     /u/drownedman8947     to     r/ForHireFreelance       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ForHireFreelance/comments/1wfwa5c/for_hire_i_will_scrape_google_maps_data_for_any/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T07:05:47Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T07:06:04.056Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa79cdc6508d45f3d2c38d8"
+    },
+    "message_id": "reddit_t3_1wfwa57",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "SecretFWB",
+    "username": "Free_Yesterday5552",
+    "title": "36 [M4F] #London - Offering sensual, erotic and orgasmic full body massage.",
+    "text": "36 [M4F] #London - Offering sensual, erotic and orgasmic full body massage.\n\nReady to Melt?   Looking for something a little... more than just a massage?   I offer a deeply sensual, slow-burning experience that blends skilled touch with intuitive connection. Think tantric relaxation, teasing rhythms, and a focus that lingers-right where you want it most.   I've spent years perfecting the art of pleasure through massage-so you don't just unwind... you let go. Completely.   Expect respect, discretion, and an experience that may leave you tapping out, breathless, and wondering why you waited this long.   A little about me - 5'11, mixed race, athletic. Software engineer by profession, clean and respectful. Based in south east London but happy to travel.   First we meet for a drink at some pub and take it further from there.   Curious? Let's talk.       submitted by     /u/Free_Yesterday5552     to     r/SecretFWB       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SecretFWB/comments/1wfwa57/36_m4f_london_offering_sensual_erotic_and/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T07:05:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T07:06:04.255Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa79cdc6508d45f3d2c38d9"
+    },
+    "message_id": "reddit_t3_1wfwa4r",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "Pixelary",
+    "username": "Known_Egg5880",
+    "title": "What did u/Known_Egg5880 draw?",
+    "text": "What did u/Known_Egg5880 draw?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Known_Egg5880     to     r/Pixelary       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Pixelary/comments/1wfwa4r/what_did_uknown_egg5880_draw/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T07:05:46Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T07:06:04.456Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa79cdc6508d45f3d2c38da"
+    },
+    "message_id": "reddit_t3_1wfwa4f",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "selling",
+    "platform": "reddit",
+    "subreddit": "MumbaiMarketplace",
+    "username": "M_N_93",
+    "title": "selling and decluttering clothes!",
+    "text": "selling and decluttering clothes!\n\n1) Zara dress  Never used , new  650₹ + shipping  Size XS chest  DM if interested    2) New with tags on MISS ChASE denims, size 26/27 waist. Selling price 400₹ + shipping   3) Pure cotton vintage shirt  Size 36 chest end to end,  Sleeves length 18/19  Never wore  400₹ + shipping   4) Cottonworld brand  Size S, chest 34/35  Never used  250₹ + shipping   Condition of all the items is perfect. No defect.  Shipping is additional. Porter/post office whatever you pick.   DM if interested  Cheers!        submitted by     /u/M_N_93     to     r/MumbaiMarketplace       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MumbaiMarketplace/comments/1wfwa4f/selling_and_decluttering_clothes/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T07:05:45Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T07:06:04.656Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa79cdc6508d45f3d2c38db"
+    },
+    "message_id": "reddit_t3_1wfwa42",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "TierlistFills",
+    "username": "Physical-Boss-9929",
+    "title": "The Egypt badge goes in F tier! Now which tier should the DR Congo badge go into?",
+    "text": "The Egypt badge goes in F tier! Now which tier should the DR Congo badge go into?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Physical-Boss-9929     to     r/TierlistFills       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TierlistFills/comments/1wfwa42/the_egypt_badge_goes_in_f_tier_now_which_tier/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T07:05:43Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T07:06:04.856Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa79cdd6508d45f3d2c38dc"
+    },
+    "message_id": "reddit_t3_1wfwa3a",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "macisunderrated",
+    "title": "People who have have been cheated on and actually ended up staying with their partner, not meaning tried to stay but fell apart later, meaning you actually stayed together, how did that happen? Do you feel your relationship is stronger now?",
+    "text": "People who have have been cheated on and actually ended up staying with their partner, not meaning tried to stay but fell apart later, meaning you actually stayed together, how did that happen? Do you feel your relationship is stronger now?\n\nsubmitted by     /u/macisunderrated     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wfwa3a/people_who_have_have_been_cheated_on_and_actually/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T07:05:42Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T07:06:05.058Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa79cdd6508d45f3d2c38dd"
+    },
+    "message_id": "reddit_t3_1wfwa38",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "asknowio",
+    "username": "ParticularNormal7382",
+    "title": "what if your boss fired you over a knickel yyou",
+    "text": "what if your boss fired you over a knickel yyou\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/ParticularNormal7382     to     r/asknowio       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/asknowio/comments/1wfwa38/what_if_your_boss_fired_you_over_a_knickel_yyou/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T07:05:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T07:06:05.256Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa79cdd6508d45f3d2c38de"
+    },
+    "message_id": "reddit_t3_1wfwa34",
+    "topic_key": "i said i dont want any indian post",
+    "search_keyword": "Pakistan",
+    "platform": "reddit",
+    "subreddit": "FIREPakistan",
+    "username": "Anonymous199Two",
+    "title": "Any freelancers who applied and got the loan approved for PM Housing Scheme?",
+    "text": "Any freelancers who applied and got the loan approved for PM Housing Scheme?\n\nI heard banks hate freelancers and don't provide loans because they don't trust this source of income lol       submitted by     /u/Anonymous199Two     to     r/FIREPakistan       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FIREPakistan/comments/1wfwa34/any_freelancers_who_applied_and_got_the_loan/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T07:05:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T07:06:05.454Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa79cdd6508d45f3d2c38df"
+    },
+    "message_id": "reddit_t3_1wfwa2z",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "TwentiesIndia",
+    "username": "My_Opinion12",
+    "title": "Horacio pagani designed the mirrors of the Pagani Huayra after his late wife's eyes",
+    "text": "Horacio pagani designed the mirrors of the Pagani Huayra after his late wife's eyes\n\nsubmitted by     /u/My_Opinion12     to     r/TwentiesIndia       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/TwentiesIndia/comments/1wfwa2z/horacio_pagani_designed_the_mirrors_of_the_pagani/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T07:05:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T07:06:05.653Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa79cdd6508d45f3d2c38e0"
+    },
+    "message_id": "reddit_t3_1wfwa2w",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "devvittriggerscontrol",
+    "username": "triggersmonitor",
+    "title": "[PROBE] 1789369541221",
+    "text": "[PROBE] 1789369541221\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/triggersmonitor     to     r/devvittriggerscontrol       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/devvittriggerscontrol/comments/1wfwa2w/probe_1789369541221/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T07:05:41Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T07:06:05.851Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa79cde6508d45f3d2c38e1"
+    },
+    "message_id": "reddit_t3_1wfwa2k",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "2007scape",
+    "username": "Whole-Row-5915",
+    "title": "Im surprised they havent added any 'make-ables' post 99.",
+    "text": "Im surprised they havent added any 'make-ables' post 99.\n\nI understand 99 is the level cap, thats all good and dandy. But im surprised theres no potion added yet that requires say... 104 Herblore. We have potions/boosts to achieve these levels.   A cool new potion requiring 104 Herb would mean a stew would need to be used. Would be cool way to introduce 'mixed' pots like a Prayer pot + Super combat etc. Obv needing a spicy stew to make nobody would really bother... but also the potion would be useful saving an inventory spot /extra pot on a trip.       submitted by     /u/Whole-Row-5915     to     r/2007scape       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/2007scape/comments/1wfwa2k/im_surprised_they_havent_added_any_makeables_post/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T07:05:40Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T07:06:06.050Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa79cde6508d45f3d2c38e2"
+    },
+    "message_id": "reddit_t3_1wfwa21",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "SonicCrossWorlds",
+    "username": "IHaveQuestionsFromMe",
+    "title": "What's the best DLC pack in your opinion?",
+    "text": "What's the best DLC pack in your opinion?\n\nI'm new to the game and im just tryna see which pack is worth it. eyeballing minecraft, spongebob and pac man. they look pretty fun!       submitted by     /u/IHaveQuestionsFromMe     to     r/SonicCrossWorlds       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SonicCrossWorlds/comments/1wfwa21/whats_the_best_dlc_pack_in_your_opinion/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T07:05:38Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T07:06:06.248Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa79cde6508d45f3d2c38e3"
+    },
+    "message_id": "reddit_t3_1wfwa1s",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "customers",
+    "platform": "reddit",
+    "subreddit": "AlertVegas",
+    "username": "MugShots",
+    "title": "NV Energy Alert",
+    "text": "NV Energy Alert\n\nNVEnergy Alert Pole-mounted Transformer Problem in 89431 Verified customers affected ORT: Verified ETR: Verified       submitted by     /u/MugShots     to     r/AlertVegas       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AlertVegas/comments/1wfwa1s/nv_energy_alert/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-14T07:05:37Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-14T07:06:06.447Z"
+    }
+  },

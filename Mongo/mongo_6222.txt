@@ -1,0 +1,416 @@
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:37:18Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:37:29.846Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa93c0a6508d45f3d2cbdc1"
+    },
+    "message_id": "reddit_t3_1wgz7au",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "AI agent",
+    "platform": "reddit",
+    "subreddit": "SinceAI",
+    "username": "bulutarkan",
+    "title": "A pattern that made local AI agents more useful for me: keep reasoning remote, keep execution local",
+    "text": "A pattern that made local AI agents more useful for me: keep reasoning remote, keep execution local\n\nOne architecture decision has made local AI automation much simpler for me: I stopped trying to make the local layer own the model, chat UI, auth and execution all at once.   Instead, the AI client keeps its native model/auth/session experience and a local MCP layer only owns execution on the Mac. That boundary gives the agent browser, file, terminal and UI actions without forcing another agent framework into the middle.   The practical lesson was that reliability matters more than the size of the tool list. I reduced the exposed surface, added background browser tab ownership, permission modes, readiness checks before UI actions, and verification that an action actually changed state. Session recovery/reconnection is another area I have been hardening.   I maintain the project as Mac MCP. It is free/open-source:  https://github.com/bulutarkan/mac-mcp    For people building local or hybrid agents: do you prefer this thin execution-layer model, or do you think the local runtime should also own orchestration/model routing?       submitted by     /u/bulutarkan     to     r/SinceAI       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/SinceAI/comments/1wgz7au/a_pattern_that_made_local_ai_agents_more_useful/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:37:18Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:37:30.045Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa93c0c6508d45f3d2cbdcc"
+    },
+    "message_id": "reddit_t3_1wgz7a8",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "ChatGPT",
+    "username": "Illustrious-Media240",
+    "title": "How do G2G sellers set up cheap ChatGPT Plus accounts? Looking to learn the method.",
+    "text": "How do G2G sellers set up cheap ChatGPT Plus accounts? Looking to learn the method.\n\nI recently bought a 1-month ChatGPT Plus account from a seller on G2G. When I logged in, I noticed the account was registered with a   googlemail.com   address, Vietnamese billing info, and listed the subscription status as a free trial.   I'm a student on a really tight budget and just can't afford the standard $20/month. I suspect these sellers are using temporary emails, regional VPNs, and virtual credit cards (VCCs) to farm these trials over and over.   Since I can't keep buying these accounts, I’d like to figure out how they do it. Does anyone know the exact method to get this free trial every time? If anyone has a step-by-step guide or knows exactly which tools/VCCs actually work for this, please share it or send me a DM!       submitted by     /u/Illustrious-Media240     to     r/ChatGPT       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ChatGPT/comments/1wgz7a8/how_do_g2g_sellers_set_up_cheap_chatgpt_plus/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:37:17Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:37:32.199Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa93c0c6508d45f3d2cbdd0"
+    },
+    "message_id": "reddit_t3_1wgz7a6",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "MapBasedPolls",
+    "username": "Organic_Contract_172",
+    "title": "Should the downvote feature be removed from reddit?",
+    "text": "Should the downvote feature be removed from reddit?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Organic_Contract_172     to     r/MapBasedPolls       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MapBasedPolls/comments/1wgz7a6/should_the_downvote_feature_be_removed_from_reddit/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:37:17Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:37:32.986Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa93c0d6508d45f3d2cbdd1"
+    },
+    "message_id": "reddit_t3_1wgz79g",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "discussion",
+    "platform": "reddit",
+    "subreddit": "bookclub",
+    "username": "fixtheblue",
+    "title": "[Discussion 4/4] Read the World | Trinidad and Tobago | Hungry Ghosts by Kevin Jared Hosein | Ch25: A Snake in the Grass through End",
+    "text": "[Discussion 4/4] Read the World | Trinidad and Tobago | Hungry Ghosts by Kevin Jared Hosein | Ch25: A Snake in the Grass through End\n\n.       submitted by     /u/fixtheblue     to     r/bookclub       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/bookclub/comments/1wgz79g/discussion_44_read_the_world_trinidad_and_tobago/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:37:15Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:37:33.189Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa93c0d6508d45f3d2cbdd2"
+    },
+    "message_id": "reddit_t3_1wgz79a",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "cagayandeoro",
+    "username": "shaaanini",
+    "title": "Where to buy calachuchi stem ug madre de cacao?",
+    "text": "Where to buy calachuchi stem ug madre de cacao?\n\nHello! Asa ta makapalit diris cagayan ug calachuchi stem and madre de cacao? No judgment please para nis among laboratory activity. Salamat!       submitted by     /u/shaaanini     to     r/cagayandeoro       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/cagayandeoro/comments/1wgz79a/where_to_buy_calachuchi_stem_ug_madre_de_cacao/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:37:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:37:33.387Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa93c0d6508d45f3d2cbdd3"
+    },
+    "message_id": "reddit_t3_1wgz791",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "NuzzleThePuzzle",
+    "username": "carteblanc71",
+    "title": "Can you solve my nuzzle?",
+    "text": "Can you solve my nuzzle?\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/carteblanc71     to     r/NuzzleThePuzzle       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/NuzzleThePuzzle/comments/1wgz791/can_you_solve_my_nuzzle/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:37:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:37:33.589Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa93c0d6508d45f3d2cbdd4"
+    },
+    "message_id": "reddit_t3_1wgz790",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "trip",
+    "platform": "reddit",
+    "subreddit": "Inito",
+    "username": "OrganizationWide1484",
+    "title": "A “fun” experiment",
+    "text": "A “fun” experiment\n\nDisclaimer about this is that I am sick, and have been since 9/12.   I started Inito this month, and already use an oura ring w/ natural cycles. Last two months I used Proov but it was getting expensive on a monthly basis ($99/mo) so I switched to Inito. Also I like that I don’t have to take a picture!   I still have about 15 left over LH only Proov strips, so I thought it would be fun to see how they compare.   Today, Inito confirmed ovulation. My Proov strip is still waiting for a peak, and my NC thinks it will happen the 17th! I usually have a 28-31 day cycle and in the past my ovulation has been around CD 17-20 so I’m so confused by this. Next month I’ll probably use normal LH strips and Inito to see what the results are.    Thought I would just share these insights!        submitted by     /u/OrganizationWide1484     to     r/Inito       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Inito/comments/1wgz790/a_fun_experiment/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:37:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:37:33.788Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa93c0d6508d45f3d2cbdd5"
+    },
+    "message_id": "reddit_t3_1wgz78t",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "bloxfruits",
+    "username": "wyrmpine",
+    "title": "Robux management",
+    "text": "Robux management\n\nSo I am gonna get 3,150 robux tomorrow!   I'm so happy,I got Roblox plus so everything should be less expensive by ten percent!   Ok so I'm gonna change my username, that makes 3150-900= 2250!   Now what perm should I buy? I want a clean M1 smooth combining fruit..planning to get trex!       submitted by     /u/wyrmpine     to     r/bloxfruits       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/bloxfruits/comments/1wgz78t/robux_management/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:37:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:37:33.987Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa93c0e6508d45f3d2cbdd6"
+    },
+    "message_id": "reddit_t3_1wgz78s",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "ChatGPT",
+    "platform": "reddit",
+    "subreddit": "batonrouge",
+    "username": "mazzypink",
+    "title": "lsu bar designs a shirt with a slur on it, chatgpt apology to follow",
+    "text": "lsu bar designs a shirt with a slur on it, chatgpt apology to follow\n\nthe shirt says \"tigers whoop the F out of the aggies until they sttd\" giving them plausible deniability when they inevitably got called out, the layout was clearly intentional...       submitted by     /u/mazzypink     to     r/batonrouge       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/batonrouge/comments/1wgz78s/lsu_bar_designs_a_shirt_with_a_slur_on_it_chatgpt/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:37:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:37:34.186Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa93c0e6508d45f3d2cbdd9"
+    },
+    "message_id": "reddit_t3_1wgz78g",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "reddithelp",
+    "username": "Inked_Barbie444",
+    "title": "How do I increase my Reddit Karma?",
+    "text": "How do I increase my Reddit Karma?\n\nHello, can someone please explain to me how does Reddit Karma works, or what it does? Is there minimum Karma requirement to be able to post something in the different groups? 🍀       submitted by     /u/Inked_Barbie444     to     r/reddithelp       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/reddithelp/comments/1wgz78g/how_do_i_increase_my_reddit_karma/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:37:14Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:37:34.775Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa93c0e6508d45f3d2cbdda"
+    },
+    "message_id": "reddit_t3_1wgz77u",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FarmMergeValley",
+    "username": "Most-Wolverine-6164",
+    "title": "Visit Most-Wolverine-6164's farm!",
+    "text": "Visit Most-Wolverine-6164's farm!\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Most-Wolverine-6164     to     r/FarmMergeValley       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FarmMergeValley/comments/1wgz77u/visit_mostwolverine6164s_farm/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:37:12Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:37:34.976Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa93c0f6508d45f3d2cbddb"
+    },
+    "message_id": "reddit_t3_1wgz77r",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "ja",
+    "username": "Electrical-Base-3345",
+    "title": "他の人のレスで気づいたんだけど登録してから3年たってるらしい",
+    "text": "他の人のレスで気づいたんだけど登録してから3年たってるらしい\n\n自分はつい最近登録したつもりなんだけど、アカウントは3年前から登録してたみたいで自分のことながら困惑してます   redditのアプリを入れたのが1週間くらい前で、今日初めて書き込みをしました。   自分が認識してないだけで、以前からアカウントを使ってて、ROM専で見てたってこと…？       submitted by     /u/Electrical-Base-3345     to     r/ja       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/ja/comments/1wgz77r/他の人のレスで気づいたんだけど登録してから3年たってるらしい/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:37:12Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:37:35.174Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa93c0f6508d45f3d2cbddc"
+    },
+    "message_id": "reddit_t3_1wgz76i",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "AskReddit",
+    "username": "No-Hawk-2488",
+    "title": "There's no denying women have it harder than men in some ways, but what are some advantages women have over men?",
+    "text": "There's no denying women have it harder than men in some ways, but what are some advantages women have over men?\n\nsubmitted by     /u/No-Hawk-2488     to     r/AskReddit       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/AskReddit/comments/1wgz76i/theres_no_denying_women_have_it_harder_than_men/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:37:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:37:35.377Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa93c0f6508d45f3d2cbddd"
+    },
+    "message_id": "reddit_t3_1wgz76e",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "BambuP1S",
+    "username": "Nanto-Rei",
+    "title": "Cutter Jammed / Error 0700-4500-0002-0001 & AMS Won't Power On After Teardown",
+    "text": "Cutter Jammed / Error 0700-4500-0002-0001 & AMS Won't Power On After Teardown\n\nHello everyone,   I recently had to clear a  bad filament jam , but after reassembling the extruder and AMS, I’ve hit two separate issues that I could use some advice on.   Issue 1: Cutter Spring Misalignment / Lever Error     Error Code: 0700-4500-0002-0001 (Cutter lever stuck / cutter sensor state)    What happened: While reassembling the extruder, I think I pushed the cutter too far back. I now see a small metal piece sitting in front of the cutter blade that looks like part of the cutter return spring.   Question: Does anyone have a clear reference photo of how the cutter mechanism and spring should be seated inside the toolhead with the front cover removed?     Issue 2: AMS Has No Power     Symptom: The AMS completely fails to power on after pulling it apart to clear stuck filament.   Troubleshooting done: I know the Bambu Wiki recommends testing cable voltage with a multimeter.   Question: Before I break out the multimeter, are there any common culprit connectors or easy-to-miss seating issues that cause the AMS to stay completely unpowered after a teardown?     Bonus Question: I have a Geek Squad total protection plan through Best Buy has anyone had experience with them replacing or servicing just the AMS unit for an issue like this?   Thanks in advance! Appreciate any help or photos to get this machine back up and running.       submitted by     /u/Nanto-Rei     to     r/BambuP1S       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/BambuP1S/comments/1wgz76e/cutter_jammed_error_0700450000020001_ams_wont/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:37:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:37:35.574Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa93c0f6508d45f3d2cbdde"
+    },
+    "message_id": "reddit_t3_1wgz767",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "Reddit",
+    "platform": "reddit",
+    "subreddit": "FactOrCap",
+    "username": "Theorycrafter2671",
+    "title": "Tom and Jerry | FactOrCap",
+    "text": "Tom and Jerry | FactOrCap\n\nThis post contains content not supported on old Reddit.  Click here to view the full post        submitted by     /u/Theorycrafter2671     to     r/FactOrCap       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/FactOrCap/comments/1wgz767/tom_and_jerry_factorcap/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:37:10Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:37:35.775Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa93c0f6508d45f3d2cbddf"
+    },
+    "message_id": "reddit_t3_1wgz75e",
+    "topic_key": "can you find me people who are talking about traveling",
+    "search_keyword": "travel",
+    "platform": "reddit",
+    "subreddit": "sugarlifestyleforum",
+    "username": "Successful-Front-389",
+    "title": "How much time in a week do you dedicate for meet ups?",
+    "text": "How much time in a week do you dedicate for meet ups?\n\nHey! Fairly new to sugaring. I've had conversations with POT SDs about weekly meet-ups and due to me having other responsibilities in life, I could only offer 2 meet-ups in a week. 4 hours per meet up, plus my time for travel and preparation.    This is what I'm comfortable enough to dedicated to the arrangement without compromising my studies and other responsibilities, but I know that they want at least 3 meet up in a week.   We'll be discussing more soon before we finalize the arrangement, but it did make me wonder what's your average hours spent together in a day, per meet up, and how many hours in a week?   Thank you for your responses!       submitted by     /u/Successful-Front-389     to     r/sugarlifestyleforum       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/sugarlifestyleforum/comments/1wgz75e/how_much_time_in_a_week_do_you_dedicate_for_meet/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:37:08Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:37:35.980Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa93c106508d45f3d2cbde0"
+    },
+    "message_id": "reddit_t3_1wgz73i",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "DigitalMarketing",
+    "username": "GrowthPhantom",
+    "title": "Why does marketing feel like it’s not working?",
+    "text": "Why does marketing feel like it’s not working?\n\nStill in 2026 Most of the time, that’s not the real problem   If the budget feels like buying a cycle the plan is half-baked, and expectations are Mustang    fast results will always feel missing.   Then comes the question why is growth slow?   Because marketing isn’t just ads If positioning isn’t clear, the product isn’t strong, execution isn’t consistent, and the market isn’t understood… results will lag   And one simple truth marketing can bring customers, but it can’t make them stay   That depends on the product   Marketing can drive the first purchase. But if the experience doesn’t match the promise, customers don’t come back   So it feels like marketing isn’t working… when it’s actually showing where things are breaking   Get those right, and marketing starts working       submitted by     /u/GrowthPhantom     to     r/DigitalMarketing       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DigitalMarketing/comments/1wgz73i/why_does_marketing_feel_like_its_not_working/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:37:04Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:37:36.185Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa93c466508d45f3d2cbde3"
+    },
+    "message_id": "reddit_t3_1wgz82n",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "wildrift",
+    "username": "Dazzling-Resort8024",
+    "title": "Any prestige etc skin worth buying atm?",
+    "text": "Any prestige etc skin worth buying atm?\n\nthe Title says it all. Is any of the current skins for 1000 Gems actually worth buying? Kinda feels like they just keep getting worse….   Hoping to get a senna one but sups mains are rarely served over there😭       submitted by     /u/Dazzling-Resort8024     to     r/wildrift       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/wildrift/comments/1wgz82n/any_prestige_etc_skin_worth_buying_atm/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-15T12:38:19Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-15T12:38:30.141Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa93c466508d45f3d2cbde4"
+    },
+    "message_id": "reddit_t3_1wgz81q",
+    "topic_key": "chatgpt sentiment on reddit today",
+    "search_keyword": "opinion",
+    "platform": "reddit",
+    "subreddit": "AskArgentina",
+    "username": "already_taken69421",
+    "title": "Duchas calientes o frías?",

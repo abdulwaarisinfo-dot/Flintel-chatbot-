@@ -1,0 +1,416 @@
+    "created_at": {
+      "$date": "2026-09-08T17:34:00.371Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa04715035b0f36efcc5cfa"
+    },
+    "message_id": "reddit_t3_1wav4cn",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "chapelhill",
+    "username": "Double-Ad5691",
+    "title": "Is YoPo any good?",
+    "text": "Is YoPo any good?\n\nHi! I'm wondering if anyone has ever been to the yopo on Franklin street. I've heard good things but it seems kinda pricey compared to cold stone or just buying a pint.       submitted by     /u/Double-Ad5691     to     r/chapelhill       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/chapelhill/comments/1wav4cn/is_yopo_any_good/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T17:34:02Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T17:34:13.985Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa04716035b0f36efcc5cfb"
+    },
+    "message_id": "reddit_t3_1wav4bc",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "india_cycling",
+    "username": "msdkaushik7",
+    "title": "Need suggestions for buying a cycle",
+    "text": "Need suggestions for buying a cycle\n\nI want to buy a hybrid cycle to ride around 16-20km daily for Office round trip. I am 30 yrs old. Main purpose is weight loss. Height 162cm. Currently at 63kg want to reduce it. So main purpose is comfort and exercise while doing regular up and down from office. Kindly suggest a good one for me. Budget 10k to 20k.        submitted by     /u/msdkaushik7     to     r/india_cycling       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/india_cycling/comments/1wav4bc/need_suggestions_for_buying_a_cycle/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T17:33:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T17:34:14.206Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa04716035b0f36efcc5cfc"
+    },
+    "message_id": "reddit_t3_1wav4al",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "laptops",
+    "username": "Only-Sheepherder5207",
+    "title": "Where and how to find genuine batteries or quality replacement that dont throttle my performance",
+    "text": "Where and how to find genuine batteries or quality replacement that dont throttle my performance\n\nMy laptop is a 2020 pavilion gaming laptop, i plan to buy a new gaming laptop but at the same time find the old one a good battery, i heard some replacement batteries you buy online at amazon or ebay or through repair shops cause the motherboard to throttle performance cause it doesnt have certain technologies in it /cant communicate thats why they say dont cheap out, but still i dont know how to differentiate or how to know if this replacement battery Im buying is good quality enough to give off watts in hybrid power mode ( during heavy gaming a bit of wattage is taken from the battery along with power adapter but only actually happens if battery is genuine or actual oem quality) so can someone explain or give me an example of highly possible genuine or third party oem quality battery online? The model is 15-dk0xxx and battery model number is PG03XL (or PG03052XL), the spare parts number is L48495-005.  I would have gone to hp service center to pay/make ticket for genuine spare part replacement but they would probably tell me they don't have spare parts for this laptop since the laptop is 6 years old which is past HP's 5 years period where they keep spare parts for a specific laptop model.        submitted by     /u/Only-Sheepherder5207     to     r/laptops       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/laptops/comments/1wav4al/where_and_how_to_find_genuine_batteries_or/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T17:33:58Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T17:34:14.425Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0474d22b782f756976a0d"
+    },
+    "message_id": "reddit_serp_1uryrcg",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/Odoo/comments/1uryrcg/going_live_with_odoo_19_enterprise_for/",
+    "text": "Going live with Odoo 19 Enterprise for multi-marketplace e-commerce (~15K SKUs, Turkey) — what would you watch out for before cutover?\n\nHey all — we're about a week from taking a mid-size pet e-commerce operation live on  Odoo 19.0 Enterprise (on-prem, PostgreSQL, Turkish localization l10n_tr) . Orders currently flow through a separate system; after a physical inventory count we're switching so  everything runs through Odoo . Before cutover I'd love a sanity check from people who've done similar go-lives.    What we built (mostly custom modules):       Marketplace connector  pulling orders from Trendyol / HepsiBurada / N11 / Amazon + our own webshops through a Turkish middleware (Entegra). ~15K SKUs, rolling 60-min fetch cron + full historical backfill.    Stock sync  back to marketplaces (qty + price), with warehouse-location filtering so only sellable stock is published (damaged/return/blocked locations excluded).    Single large warehouse , multi-level location hierarchy (aisle/rack/shelf), barcode operations (stock_barcode), pick → pack → ship flow.    Cargo/shipping module  (label + tracking, tracking pushed back to marketplaces).    e-Invoice / e-Archive  integration with the Turkish tax system (SOAP), auto-triggered on shipment.    Returns flow  via Helpdesk tickets → real stock return pickings + QC.    Packaging-consumables module  (box/wrap consumption tracking).   Order  status sync : pulled from the marketplace side pre-go-live; pushed Odoo→marketplace post-go-live.      A few things we've already been bitten by  (so you know our maturity level): timezone handling on imported order dates (local vs UTC), a per-page transaction that aborts a whole batch when one order has bad data, and one channel sending corrupt timestamps.    My questions:      For a cutover like this, what are the  most commonly overlooked things  that bite people in the first week?   Any  Odoo 19.0-specific  gotchas (on-prem, frozen feature set) we should know — especially around inventory valuation, the new UoM/packaging changes, or accounting locks?    Performance  at ~15K SKUs with continuous order + stock/price sync crons — anything to tune (cron threads, DB indexes, batch sizes) before load hits?   Best practice for the  opening inventory  cutover (count → opening stock) so on-hand, valuation, and reorder rules line up cleanly?   Anything about  heavy custom connectors  on an Enterprise base you wish you'd known before go-live (upgrade path, testing, rollback)?     Any war stories or checklists appreciated. Thanks! 🙏       submitted by     /u/sukas53       [link]       [comments]",
+    "username": "sukas53",
+    "subreddit_or_channel": "Odoo",
+    "posted_at": "2026-07-09T18:29:59+00:00",
+    "fetched_at": {
+      "$date": "2026-09-08T17:35:09.441Z"
+    },
+    "google_rank": 4,
+    "search_keyword": "enterprise marketplace integration",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-08T17:35:09.441Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa04752035b0f36efcc5cfd"
+    },
+    "message_id": "reddit_t3_1wav58i",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "UmamusumeGame",
+    "username": "Accesscode_Talker",
+    "title": "Pull plan as Late Surger mains up to Victoire Pisa (and Red Desire), do I miss some crucial cards/umas?",
+    "text": "Pull plan as Late Surger mains up to Victoire Pisa (and Red Desire), do I miss some crucial cards/umas?\n\nI am mostly late surger mains, my secondary mains will be TBD depends on how much carat I can spare once this pull plan finalized, I do feel I already entered most of crucial umas and cards that I needed but in case I am still missing something crucial   Also atm low spender, will also buy the $21 pack of uma/card selector (last pic but only up to beginning Lar'c selector for now I havent planned selector beyond that)    Note: Some non-lates uma in the pull plans are the meta umas/oshis but it is still going to be temporary as I am still thinking whether I will have ends or pace as secondary mains with slightly weaker cards than my late cores and/or using selector for those umas except semi lim like orfe     https://preview.redd.it/pbosv86c0coh1.png?width=1516&format=png&auto=webp&s=e2b04f3c329482e4540097cef042ad1a1dafbfc4     https://preview.redd.it/r8v4vi4e0coh1.png?width=1516&format=png&auto=webp&s=563e2ad7205f26096b69c78fc204284c114ab516     https://preview.redd.it/6ihnkb0h0coh1.png?width=1503&format=png&auto=webp&s=ad995463ea88052e017cde7366b9f8b263e92dc3     https://preview.redd.it/xz5rr34i0coh1.png?width=1508&format=png&auto=webp&s=e4621c78c5f4b941b9104d86a7bc3d08b8499774     https://preview.redd.it/sxd3w3tl0coh1.png?width=583&format=png&auto=webp&s=76bc75d26fc19f07dc9dcb263d51fadf83e13806        submitted by     /u/Accesscode_Talker     to     r/UmamusumeGame       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/UmamusumeGame/comments/1wav58i/pull_plan_as_late_surger_mains_up_to_victoire/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T17:34:56Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T17:35:14.005Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa04752035b0f36efcc5cfe"
+    },
+    "message_id": "reddit_t3_1wav57g",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "macbookpro",
+    "username": "UnderstandingFun1169",
+    "title": "MacBook Pro 14” vs 16” — is the extra €600 worth it?",
+    "text": "MacBook Pro 14” vs 16” — is the extra €600 worth it?\n\nHi everyone,  I was planning to buy a MacBook Pro M5 Pro with 48 GB of RAM, but I’m really struggling to decide between the 14-inch and 16-inch models.   The  14-inch costs €3,200 , while the  16-inch costs €3,800 , so there’s a €600 difference.   I know I’ll be going to university, so I’ll be moving around quite a lot — going from home to university, and also between my place and my parents’ house. Because of that, I’m wondering if the 16-inch might be annoying to carry around.   At the same time, I feel like having a bigger screen would be really nice, especially for studying and working on projects.   But then I also think that instead of spending the extra €600 on the 16-inch, I could buy a really good external monitor for that money. I could use it as a second screen, or even connect my PS5 to it. And if I eventually build a desktop PC, I’d already have a good monitor for it.   So I’m really torn between the portability of the 14-inch and the bigger screen of the 16-inch.  For people who have owned either one, what would you recommend?   Is the 16-inch screen worth the extra €600, or would you go for the 14-inch and put the money toward a good external monitor?       submitted by     /u/UnderstandingFun1169     to     r/macbookpro       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/macbookpro/comments/1wav57g/macbook_pro_14_vs_16_is_the_extra_600_worth_it/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T17:34:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T17:35:14.211Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa04752035b0f36efcc5cff"
+    },
+    "message_id": "reddit_t3_1wav575",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "writers",
+    "username": "ComplexAce",
+    "title": "Is it a lack of skill? Or wrong target audience?",
+    "text": "Is it a lack of skill? Or wrong target audience?\n\nThis is a second draft, needs some grammar and redundancy fixes but is mostly there (I'm focused on finishing the novel).    And I've improved my style a lot, but still not getting any interest other than people offering nice feedback. But they also don't seem to be my target audience?    I need to find out if it's a  skill issue  or a  marketing issue . These two have very different solutions and I need to know what to be prioritize next.    I'm getting crickets, and it makes sense since I have no community nor friends in the medium. I'm also getting back to reading recently, and grew up with poorly translated books as my baseline.   Basically I have no real reference for what is \"enjoyable\" or \"good\" for the average reader (if that exists).     Genres :   - Psychological   - Dystobian   - Cyberpunk   - Tragedy   - Post-apocalyptic   - Dark humour   - Slow burn   So, is it more of a missing skill or simply a lack of reach?       submitted by     /u/ComplexAce     to     r/writers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/writers/comments/1wav575/is_it_a_lack_of_skill_or_wrong_target_audience/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T17:34:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T17:35:14.415Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa04752035b0f36efcc5d00"
+    },
+    "message_id": "reddit_t3_1wav571",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "MobileDetailers",
+    "username": "Quirky-Lime-6360",
+    "title": "BOOKING FOR CAR DETAILING",
+    "text": "BOOKING FOR CAR DETAILING\n\nsubmitted by     /u/Quirky-Lime-6360     to     r/MobileDetailers       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/MobileDetailers/comments/1wav571/booking_for_car_detailing/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T17:34:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T17:35:14.617Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa04752035b0f36efcc5d01"
+    },
+    "message_id": "reddit_t3_1wav56d",
+    "topic_key": "find me top conversation on reddit about ai agents for marketing",
+    "search_keyword": "marketing",
+    "platform": "reddit",
+    "subreddit": "privacy",
+    "username": "AllergicToBullshit24",
+    "title": "Let's discuss all of the specific laws Flock has broken and get litigation going",
+    "text": "Let's discuss all of the specific laws Flock has broken and get litigation going\n\nI'm sure many of you have seen Wired's excellent expose article \"Flock Has a Powerful New AI Tool for Police. We Got Its Code\" by now.   This investigation should have prompted a five alarm fire for anyone who cares about civil liberties, government accountability or corporate abuse.   Flock is on the legal record making sweeping public and contractual claims about what its technology supposedly cannot do while actively developing tools that are capable of doing those exact things.   There need to be readily enforceable draconian consequences for companies that misrepresent surveillance capabilities to governments and the public whose tax dollars pay for them. Real enforcement should include fines proportional to revenue or company valuation, c-suite compensation garnishment, contract rescission, disbarment from government procurement and hard prison time for executives.   I've been appalled by how little legal action has been taken against Flock since I first raised concerns more than two years ago in this same community and felt compelled to spark a serious discussion to communally identify each of the specific laws whether local, state or federal that Flock is currently in criminal violation of in an effort to identify who is responsible for enforcement in order to ultimately compel immediate action for cases to be brought en masse against Flock and to set hard case precedent against surveillance companies more broadly.   So here are at least eight laws Flock appears to be in active clear cut & dry violation of:    1. Illinois Vehicle Code §2-130  State found that Flock allowed federal immigration authorities access to Illinois automated-license-plate-reader data in violation of, which restricts ALPR sharing for immigration enforcement and certain other investigations.   That finding is particularly egregious because Flock has repeatedly publicly represented and contractually stated that customers control data sharing and that Flock does not independently share customer data.    2. Federal Trade Commission Act - Section 5    Section 5 of the FTC Act prohibits unfair or deceptive acts or practices in commerce. The FTC has often applied this authority whenever companies materially misrepresent how they collect, use, protect, or disclose personal information.   Flock has and continues to both publicly and contractually make claims such as:    \"Flock cannot recognize, identify, or track individuals.\" \"Not used for watching people.\" \"Tracking of individuals\" is prohibited. \"It's for cases. Not for watching people.\" Its ALPRs \"do not and cannot track vehicles, much less individual people.\"     And yet Flock-developed tools are unquestionably capable of reconstructing journeys, identifying repeated associations between vehicles, searching broad geographic and behavioral patterns and connecting license plates with identities and addresses.   These demonstrably fraudulent claims warrant immediate FTC and state AG prosecution.    3. Fourth Amendment - Chatrie v. United States    In the recent case from June 2026, the Supreme Court outright rejected the idea that short duration digital location surveillance automatically falls outside Fourth Amendment protection.   This ruling established that there's a major difference between checking whether a plate passed one camera versus using a networked database to reconstruct a person's movements, associations, destinations, and routines.   This implies that each and every search of Flock's database should now legally require a warrant meaning every use since end of June, 2026 is an ongoing violation of constitutional Fourth Amendment rights.    4. Fraud and breach claims by Flock's own government customers    Some of the strongest legal cases belong to the cities, counties, local PDs and any other agencies that signed contracts with Flock.   If the procurement documents, marketing materials, contracts, compliance certifications and customer communications falsely represented that the system:    cannot track individuals; only permits case-specific searches; prevents unauthorized data sharing; gives customers exclusive control over dissemination; complies with applicable privacy laws;     Then Flock customers can immediately pursue:    fraudulent inducement; breach of contract or warranty; rescission; restitution or damages; termination for cause; suspension or debarment from future contracts.     The more activists and journalists who FOIA request Flock contracts, RFP responses, privacy assessments, security questionnaires, data-sharing agreements, and procurement correspondence, the longer the noose gets to publicly hang Flock in court. Determining exactly what Flock told customers in legally binding writing while receiving public money is going to legally bury them with their own words.    5. False Claims Act    The federal False Claims Act can impose criminal liability when a company knowingly makes a materially false statement connected to obtaining government payment.   A potential case could exist if, for example:    Federal grant money paid for Flock systems. Flock certified compliance with specific privacy, data-sharing, or legal requirements. Those certifications were materially false and Flock knew or recklessly disregarded that fact. Government payment was sought or received.     If any local/state government used federal funds to pay for Flock contracts they can be sued.    6. Driver's Privacy Protection Act 18 U.S.C. §§2721–2725    This federal law restricts obtaining, disclosing, or using personal information originating from state motor-vehicle records for impermissible purposes.   A camera merely photographing a license plate is not automatically a DPPA violation. But once the system turns: plate → registered owner → name → address → other personal information, then the source of that information and the purpose for which it was accessed become critically legally relevant.   Improper use of DMV-derived records creates a private federal cause of action.    7. State privacy and local ALPR laws    Depending on the jurisdiction, Flock deployments implicate:    state ALPR statutes; state privacy laws; state constitutional privacy protections; data-broker laws; government-record restrictions; procurement laws; contractual privacy requirements     Some states provide private rights of action and statutory damages. Others give enforcement authority primarily to regulators or attorneys general.    8. Deception, fraud, procurement misconduct & other regulatory violations    Flock's claim that searches are case-specific deserves particular scrutiny. Flock's own Trust Center at time of writing says:    \"Searches must relate to a specific investigation.\"     Yet Flock-authored workflows allow searches where:    no license plate is supplied; no person is supplied; no specific crime is supplied; only a location, a broad time period, or nebulous behavioral pattern is provided     This is fundamentally different from querying a known suspect in a defined investigation with a case number.   If evidence ultimately shows that:    Flock engineers deliberately designed broad exploratory searches; legal or privacy personnel knew those capabilities existed; Flock continued telling customers and public that searches were narrowly case-specific and that individuals could not be tracked     Then the case moves beyond misleading rhetoric towards actionable deception, fraud, procurement misconduct and regulatory violations.   It's been repeatedly demonstrated that these surveillance companies are incapable of being trusted to police themselves.   It is therefore imperative for regulators, courts, legislators, journalists and the public take immediate, unrelenting action to impose well deserved draconian consequences against these ALPR dragnet surveillance companies before this tyrannical infrastructure becomes entrenched, codified and normalized any further.   All of these avenues should be immediately and aggressively pursued in parallel:    FTC and state-AG investigations Public release of government contracts and data-sharing agreements Legislative hearings Procurement reviews Stringent requirement for search warrant Enforce penalties for materially false representations Suspension or debarment for misleading public agencies about capabilities     Now which relevant laws did I miss?   I'm honestly hellbent on seeing this CEO in federal prison for his crimes. Garrett Langley unquestionably had direct and prior knowledge of these crimes.   So how about we collectively prove it? Any current or former Flock employees interested in testifying to put this guy away? Anyone have contracts from their localities with any of these false claims in writing? Any government officials with written communications from company that can be FOIA requested as evidence?   It's about time that we the people took back our constitutional fourth amendment rights.       submitted by     /u/AllergicToBullshit24     to     r/privacy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/privacy/comments/1wav56d/lets_discuss_all_of_the_specific_laws_flock_has/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T17:34:52Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T17:35:14.823Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0478522b782f756976a0e"
+    },
+    "message_id": "reddit_serp_tq5bpa",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/ERP/comments/tq5bpa/erp_that_can_integrate_with_ecommerce_marketplaces/",
+    "text": "ERP that can integrate with E-commerce Marketplaces.\n\nSeeking advice for an ERP software that can integrate with Marketplaces like amazon, Ebay etc.       submitted by     /u/NoobCondition       [link]       [comments]",
+    "username": "NoobCondition",
+    "subreddit_or_channel": "ERP",
+    "posted_at": "2022-03-28T09:19:56+00:00",
+    "fetched_at": {
+      "$date": "2026-09-08T17:36:05.364Z"
+    },
+    "google_rank": 9,
+    "search_keyword": "enterprise marketplace integration",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-08T17:36:05.364Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0478e035b0f36efcc5d03"
+    },
+    "message_id": "reddit_t3_1wav6bo",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "getagraph",
+    "username": "getagraph_signals",
+    "title": "Buy Signal Churchill Downs - 8 Sep 2026 @ 13:33 -> $86.32",
+    "text": "Buy Signal Churchill Downs - 8 Sep 2026 @ 13:33 -> $86.32\n\nTicker:  CHDN    Exchange:  NASDAQ    Time:  8 Sep 2026 @ 13:33    Price:  $86.32    Link:  https://getagraph.com/AAA/trading/NASDAQ/CHDN/analysis/signals        submitted by     /u/getagraph_signals     to     r/getagraph       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/getagraph/comments/1wav6bo/buy_signal_churchill_downs_8_sep_2026_1333_8632/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T17:36:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T17:36:14.482Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa0478e035b0f36efcc5d04"
+    },
+    "message_id": "reddit_t3_1wav665",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "princetonnj",
+    "username": "Glad_Relation_7171",
+    "title": "Looking for feedback: Meridian Walk at Princeton (Toll Brothers)",
+    "text": "Looking for feedback: Meridian Walk at Princeton (Toll Brothers)\n\n​   My husband and I are house-hunting in the Princeton / West Windsor / Plainsboro area. Our top priority is a strong school district — we have one young child.   We're considering Meridian Walk at Princeton (the Toll Brothers townhome community on Vivaldi Road). If you currently live there, previously lived there, or looked into buying and passed, we'd love to hear your honest take:   How responsive is the HOA, and what are the current monthly fees?   How's the build quality holding up (any issues with construction, noise, insulation)?   What's the community actually like day-to-day — upkeep, neighbors, noise?   Anything you wish you'd known before buying?   Any insight — good or bad — is appreciated.    Thanks in advance!       submitted by     /u/Glad_Relation_7171     to     r/princetonnj       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/princetonnj/comments/1wav665/looking_for_feedback_meridian_walk_at_princeton/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T17:35:54Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T17:36:14.699Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa047bd22b782f756976a0f"
+    },
+    "message_id": "reddit_serp_1vsn9mm",
+    "platform": "reddit",
+    "post_url": "https://www.reddit.com/r/Packaging/comments/1vsn9mm/hetu_enterprise_and_packaging/",
+    "text": "HETU ENTERPRISE AND PACKAGING\n\nI’ve been working around e-commerce packaging for a while, and one thing I’ve noticed is that packaging can make a big difference in the delivery experience.   Courier bags, bubble mailers, tapes and shipping labels may look like small things, but when you’re handling a lot of orders, the quality really matters. A bag tearing during shipping or getting damaged because of rain can become a headache.   At Hetu Enterprise & Packaging, we work with different packaging materials for online sellers, so I’ve been seeing a lot of different requirements from businesses.   Just curious — what packaging do you guys normally use for your e-commerce orders, and what has worked best for you?   Would be great to hear some real experiences.       submitted by     /u/StrawberryKey6320       [link]       [comments]",
+    "username": "StrawberryKey6320",
+    "subreddit_or_channel": "Packaging",
+    "posted_at": "2026-08-19T14:00:11+00:00",
+    "fetched_at": {
+      "$date": "2026-09-08T17:37:01.798Z"
+    },
+    "google_rank": 4,
+    "search_keyword": "enterprise packaging supplier",
+    "client_id": "Flintel",
+    "created_at": {
+      "$date": "2026-09-08T17:37:01.798Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa047ca035b0f36efcc5d05"
+    },
+    "message_id": "reddit_t3_1wav7c5",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "oopbuy",
+    "username": "Additional_Sir_8154",
+    "title": "12.6 Kg Haul TO USA",
+    "text": "12.6 Kg Haul TO USA\n\nI used gtbuy to ship to the UK, it was about 110$ for almost 12 kg, the dragon's zip ups actually were from their website   My Stats 1,80cm (5'11) 75kg. Usually go for Size L and wear pants waist 32/34       submitted by     /u/Additional_Sir_8154     to     r/oopbuy       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/oopbuy/comments/1wav7c5/126_kg_haul_to_usa/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T17:37:03Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T17:37:14.787Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa047ca035b0f36efcc5d06"
+    },
+    "message_id": "reddit_t3_1wav7as",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "Cheapskateliving",
+    "username": "Beautiful-Raisin-743",
+    "title": "👋 Welcome to r/Cheapskateliving - Introduce Yourself and Read First!",
+    "text": "👋 Welcome to r/Cheapskateliving - Introduce Yourself and Read First!\n\nHey everyone! I'm  u/Beautiful-Raisin-743 , a founding moderator of  r/Cheapskateliving .    This is our new home for all things related to Cheapskate Living . We're excited to have you join us!     What to Post   Example: My family and I are going on an expensive camping trip during this greed trap in america. So, let's help us out. I will be going to  Costco  (knowing their return policies) and buying all the fun for our trip and yes, I will be renting them and returning after respectful enjoying them.     *COSTCO has a very forgiving return process.     Community Vibe   We're all about being friendly, constructive, and inclusive. Let's build a space where everyone feels comfortable sharing and connecting.    Thanks for being part of the very first wave. Together, let's make  r/Cheapskateliving  amazing.       submitted by     /u/Beautiful-Raisin-743     to     r/Cheapskateliving       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/Cheapskateliving/comments/1wav7as/welcome_to_rcheapskateliving_introduce_yourself/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T17:37:01Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T17:37:14.988Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa047cb035b0f36efcc5d07"
+    },
+    "message_id": "reddit_t3_1wav79k",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "fromatoarbitration",
+    "username": "Cangeltibon",
+    "title": "Just got a step increase…I hate it.",
+    "text": "Just got a step increase…I hate it.\n\nTo top off a crappy day after the holiday I get a cute little letter saying that I’m now Step J!!!🥳    Step J on the Table 2 is still less that Step B On Table 1 and on table one I would have gotten to Step B in the same time it took to get to F on Table 2. It’s gonna take me another 5 PLUS YEARS to make top pay and at the rate of inflation the buying power I’m gonna have will be LESS than what I have right now. I’m so **** ng frustrated 🤬. Yes technically I could have is worst   their   are millions on people making less but this 🤬ed up I hate it so much.         submitted by     /u/Cangeltibon     to     r/fromatoarbitration       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/fromatoarbitration/comments/1wav79k/just_got_a_step_increasei_hate_it/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T17:36:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T17:37:15.190Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa047cb035b0f36efcc5d08"
+    },
+    "message_id": "reddit_t3_1wav79e",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "macbookpro",
+    "username": "No-John09",
+    "title": "Macbook pro m1 pro 16/512 vs m4 air almost new 16/256",
+    "text": "Macbook pro m1 pro 16/512 vs m4 air almost new 16/256\n\nHi im looking for buy a new macbook but i don't know what could be the better option im a programmer and this mac is for build my own product, travel and if is necessary work in real companies, both cost the same money       submitted by     /u/No-John09     to     r/macbookpro       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/macbookpro/comments/1wav79e/macbook_pro_m1_pro_16512_vs_m4_air_almost_new/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T17:36:59Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T17:37:15.388Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa047cb035b0f36efcc5d09"
+    },
+    "message_id": "reddit_t3_1wav78e",
+    "topic_key": "check this website and find me customers for this",
+    "search_keyword": "booking",
+    "platform": "reddit",
+    "subreddit": "scrapbooking",
+    "username": "MasterMabel",
+    "title": "Which of these paper cutters would be a better beginner choice?",
+    "text": "Which of these paper cutters would be a better beginner choice?\n\nI’m a very casual scrapbooker looking to get a nice paper trimmer/cutter. I did some research and chose to get a Fiskars but can’t figure out which one is a better choice. I got both from Amazon and am having a really hard time to decide which one to keep.   My bottom line is: is the black one a better paper cutter in general or should I get the one with more “functions”? Does anyone here have either of them and could share your thoughts or experiences? I couldn’t find detailed reviews/comparisons so I thought this would be a good place to ask.    Here are some of my considerations:  - the one with the score board was about 10% cheaper. Not a crazy difference, but could be a tie breaker. (White one was  $22.34  and the black one  $25.85 )  - both take roughly the same storage space  - the black one has two sliding blades vs. one on the white one. Is there a reason I would need/use this?  - I’m not sure how often I would use a score board (if ever). Would it be worth having it regardless?   Thanks in advance!        submitted by     /u/MasterMabel     to     r/scrapbooking       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/scrapbooking/comments/1wav78e/which_of_these_paper_cutters_would_be_a_better/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T17:36:57Z"
+    },
+    "fetched_at": {
+      "$date": "2026-09-08T17:37:15.596Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa047cb035b0f36efcc5d0a"
+    },
+    "message_id": "reddit_t3_1wav77c",
+    "topic_key": "find me who are willing to buy ai agent today on reddit",
+    "search_keyword": "buy",
+    "platform": "reddit",
+    "subreddit": "DolphinEmulator",
+    "username": "Sorry_Company3019",
+    "title": "which sensor bar should i get?",
+    "text": "which sensor bar should i get?\n\ni hear good things about the mayflash sensor bar but theres lots of cheaper alternatives on amazon. does it really matter which one i get? should i buy one of these cheaper ones or spend a little more for the mayflash?       submitted by     /u/Sorry_Company3019     to     r/DolphinEmulator       [link]       [comments]",
+    "post_url": "https://www.reddit.com/r/DolphinEmulator/comments/1wav77c/which_sensor_bar_should_i_get/",
+    "score": 0,
+    "num_comments": 0,
+    "created_utc": {
+      "$date": "2026-09-08T17:36:55Z"
+    },
+    "fetched_at": {
