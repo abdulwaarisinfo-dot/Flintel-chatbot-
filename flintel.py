@@ -209,7 +209,7 @@ def _default_platform_matches(doc: dict, targeting_platform: str) -> bool:
 def get_unfiltered_matched_signals(signals_collection, since_days, targeting_platform="all",
                                     limit=None, max_per_platform=None,
                                     max_time_window_days=None, platform_matcher_fn=None,
-                                    signals_collection_2=None) -> list:
+                                    signals_collection_2=None, signals_collection_4=None) -> list:
     """Mirrors the EXACT return shape of index.py's get_matched_signals():
         [{"title":..., "post_text":..., "post_url":..., "platform":...}, ...]
 
@@ -251,7 +251,14 @@ def get_unfiltered_matched_signals(signals_collection, since_days, targeting_pla
     analyzable posts rather than title-only stubs.
 
     Accepts the already-connected `signals_collection` object as a
-    parameter — never creates its own Mongo connection."""
+    parameter — never creates its own Mongo connection.
+
+    (QUATERNARY MONGO + GITHUB SIGNALS) signals_collection_4 (database.py's
+    optional read-only mirror, built from config.py's MONGODB4) and the
+    file-backed docs from github_signals.py's Mongo/Mongo1/Mongo2/Mongo3
+    folders are also folded into the same candidate pool this function
+    already builds from signals_collection/signals_collection_2 — no
+    separate matching path, no separate limit/cap logic."""
     effective_limit = limit if isinstance(limit, int) and limit > 0 else UNFILTERED_DEFAULT_LIMIT
     effective_max_per_platform = (
         max_per_platform if isinstance(max_per_platform, int) and max_per_platform > 0
@@ -302,6 +309,55 @@ def get_unfiltered_matched_signals(signals_collection, since_days, targeting_pla
             )
         except Exception:
             pass
+
+    # (QUATERNARY SIGNALS-ONLY MONGO — READ-ONLY MIRROR) Same pattern as
+    # signals_collection_2 above: an independent, optional source folded
+    # into the same raw_docs pool. Wrapped in its own try/except so any
+    # failure here (bad connection, timeout, etc.) never affects the
+    # primary fetch or the secondary-mirror fetch above it.
+    if signals_collection_4 is not None:
+        try:
+            raw_docs += list(
+                signals_collection_4.find(mongo_query, {"_id": 0})
+                .sort("created_utc", -1)
+                .limit(effective_limit * 10)
+            )
+        except Exception:
+            pass
+
+    # (GITHUB SIGNALS — FILE-BACKED SOURCE) Lazy, local import only (never
+    # top-level — see module docstring: this file must not gain a
+    # top-level dependency on github_signals.py). Same independent
+    # try/except pattern as the two Mongo mirrors above: a failure here
+    # (missing module, bad folder contents, etc.) never affects any other
+    # source already folded into raw_docs. Note: github_signals.py's own
+    # loader already filters out any record with a missing/invalid
+    # embedding before it's ever returned here.
+    try:
+        from github_signals import get_github_signal_docs
+        raw_docs += get_github_signal_docs(cutoff=cutoff, limit=effective_limit * 10)
+    except Exception:
+        pass
+
+    # Re-sort the combined pool (Mongo + secondary/quaternary mirrors +
+    # GitHub docs) newest-first before the matching loop below, since each
+    # source above was only sorted within itself. A doc missing a usable
+    # created_utc is pushed to the end rather than raising, so one
+    # malformed doc from any source can never crash this function. Also
+    # normalizes any naive datetime (Mongo docs are typically returned
+    # naive-UTC) to tz-aware UTC here, purely for this comparison — the
+    # matching loop below still does its own normalization independently,
+    # unchanged — so a mix of naive (Mongo) and aware (github_signals)
+    # datetimes can never raise a "can't compare naive and aware" error.
+    def _sort_key(d):
+        value = d.get("created_utc")
+        if not isinstance(value, datetime):
+            return datetime.min.replace(tzinfo=timezone.utc)
+        if value.tzinfo is None:
+            return value.replace(tzinfo=timezone.utc)
+        return value
+
+    raw_docs.sort(key=_sort_key, reverse=True)
 
     matched = []
     seen_urls = set()
