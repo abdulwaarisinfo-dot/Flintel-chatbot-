@@ -77,6 +77,25 @@ if MONGODB2:
         log.warning(f"Could not connect secondary MongoDB (MONGODB2): {exc}")
         signals_collection_2 = None
 
+# (QUATERNARY SIGNALS-ONLY MONGO, READ-ONLY MIRROR) A second, completely
+# independent MongoClient, built only from MONGODB4 (config.py). This is
+# NOT a fallback and NOT used for writes/indexes anywhere — it only ever
+# gives a read handle onto that fourth cluster's flintel_signals
+# collection, under the exact same MONGODB_DB name the primary client
+# uses. If MONGODB4 isn't set, or the connection fails for any reason,
+# signals_collection_4 stays None and the app keeps starting normally —
+# this must never be able to crash startup.
+from config import MONGODB4
+
+signals_collection_4 = None
+if MONGODB4:
+    try:
+        client_4 = MongoClient(MONGODB4)
+        signals_collection_4 = client_4[MONGODB_DB].flintel_signals
+    except Exception as exc:
+        log.warning(f"Could not connect quaternary MongoDB (MONGODB4): {exc}")
+        signals_collection_4 = None
+
 # User accounts (Google OAuth + email/password). — now on MONGODB3
 users_collection = db3.flintel_users
 users_collection.create_index("email", unique=True, sparse=True)
