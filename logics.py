@@ -142,7 +142,7 @@ import website_intelligence
 import google as google_search   # the new google.py module
 
 from database import (
-    jobs_collection, signals_collection, signals_collection_2, google_posts_collection, topic_evidence_cache_collection,
+    jobs_collection, signals_collection, signals_collection_2, signals_collection_4, google_posts_collection, topic_evidence_cache_collection,
     website_evidence_cache_collection,
 )
 
@@ -738,7 +738,8 @@ def _compute_query_signature(keywords: list, match_phrases: list) -> str:
 def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str = "all",
                          limit: int = None, since_days: int = None, unfiltered: bool = False,
                          match_phrases: list = None, loose: bool = False,
-                         signals_collection_2=None, chat_id: str = None) -> list:
+                         signals_collection_2=None, chat_id: str = None,
+                         signals_collection_4=None) -> list:
     """Reads `flintel_signals` and keeps only the signals that are
     genuinely relevant to this job's topic. topic_key match is
     intentionally NOT required: Background Service #1 may store its own
@@ -940,7 +941,20 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     and the primary `raw_docs` fetch) for exactly how. Every matching
     rule downstream (embedding-similarity match, platform filter,
     text-required check, dedup, per-platform cap, limit) is completely
-    unchanged and applies identically to docs from either collection."""
+    unchanged and applies identically to docs from either collection.
+
+    (QUATERNARY MONGO + GITHUB SIGNALS MERGE) `signals_collection_4`
+    (default None) is folded into the same raw_docs pool exactly like
+    `signals_collection_2` above, and the file-backed docs from
+    github_signals.py's Mongo/Mongo1/Mongo2/Mongo3 folders are folded in
+    right alongside it — same candidate pool, same downstream matching
+    (embedding-similarity, platform filter, text-required check, dedup,
+    per-platform cap, limit). No separate ignore/filter logic is needed
+    for either: a missing/invalid embedding already scores 0.0 via
+    _cosine_similarity() and gets dropped by the threshold check, the
+    Mongo query itself already requires a saved embedding field, and
+    github_signals.py's own loader already filters out any record with a
+    missing/invalid embedding before it's ever returned here."""
     if unfiltered:
         return flintel.get_unfiltered_matched_signals(
             signals_collection,
@@ -949,6 +963,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             limit=limit or MAX_MATCHED_RESULTS,
             max_per_platform=MAX_POSTS_PER_PLATFORM,
             signals_collection_2=signals_collection_2,
+            signals_collection_4=signals_collection_4,
         )
 
     limit = limit or MAX_MATCHED_RESULTS
@@ -1016,6 +1031,38 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             raw_docs.extend(raw_docs_2)
         except Exception as exc:
             log.warning(f"signals_collection_2 fetch failed (skipping second collection): {exc}")
+
+    # (QUATERNARY MONGO MERGE) Same combine-pattern as signals_collection_2
+    # directly above: when a fourth signals collection is provided (database.py's
+    # signals_collection_4, built from config.py's MONGODB4), fetch matches
+    # from it too (using the exact same mongo_query) and append them into
+    # the same raw_docs pool the Python loop below scans — best-effort,
+    # non-fatal: any failure here is logged and silently skipped so a
+    # problem with this fourth collection can never break the primary
+    # matching path.
+    if signals_collection_4 is not None:
+        try:
+            raw_docs_4 = list(
+                signals_collection_4.find(mongo_query, {"_id": 0})
+                .sort("created_utc", -1)
+                .limit(SIGNAL_EMBEDDING_CANDIDATE_POOL)
+            )
+            raw_docs.extend(raw_docs_4)
+        except Exception as exc:
+            log.warning(f"signals_collection_4 fetch failed (skipping fourth collection): {exc}")
+
+    # (GITHUB SIGNALS MERGE) Lazy, local import only (never top-level —
+    # keeps this module's existing dependency direction unchanged: nothing
+    # here previously imported github_signals.py, and this addition still
+    # doesn't at module-load time). Same best-effort, non-fatal pattern as
+    # the Mongo merges above: any failure (missing module, bad folder
+    # contents, etc.) is logged and silently skipped so it can never break
+    # the primary matching path.
+    try:
+        from github_signals import get_github_signal_docs
+        raw_docs.extend(get_github_signal_docs(cutoff=cutoff))
+    except Exception as exc:
+        log.warning(f"github_signals fetch failed (skipping GitHub signals): {exc}")
 
     # (PER-PHRASE EMBEDDING MATCHING FIX) Build the query ITEMS list for
     # this call: every keyword AND every match_phrase, kept as SEPARATE
@@ -1330,6 +1377,7 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
         since_days=since_days, unfiltered=unfiltered,
         match_phrases=match_phrases, limit=fetch_limit,
         signals_collection_2=signals_collection_2, chat_id=chat_id,
+        signals_collection_4=signals_collection_4,
     )
 
     # De-dup: old cached posts + new posts, keyed on post_url.
