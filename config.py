@@ -44,6 +44,11 @@ CANDIDATE_POOL and SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD are new, web-
 service-only constants for this service's own matching step (the
 background service has no equivalent step, so no mirrored constant is
 needed for these two).
+
+(MONGODB4 NOTE) MONGODB4 is a second signals-only read mirror, same
+role as MONGODB2 (flintel_signals only). MONGODB3 stays the tertiary
+connection for every OTHER collection — jobs, users, chats, etc. —
+untouched by this addition.
 """
 
 import os
@@ -120,6 +125,8 @@ __all__ = [
     "MONGODB2",
     # Tertiary MongoDB (everything except flintel_signals)
     "MONGODB3",
+    # Quaternary MongoDB (signals mirror)
+    "MONGODB4",
 ]
 
 # ── Keyword / matching limits ────────────────────────────────────────────
@@ -285,3 +292,7 @@ MONGODB2 = os.getenv("MONGODB2", "")
 #    flintel_signals — jobs, users, chats, busy-owners, google_posts,
 #    topic_evidence_cache, website_evidence_cache) ─────────────────
 MONGODB3 = os.getenv("MONGODB3", "")
+
+# ── Quaternary signals-only MongoDB (READ-ONLY mirror of flintel_signals) ──
+# flintel_bot database ka flintel_signals read karta hai, bilkul MONGODB2 ki tarah.
+MONGODB4 = os.getenv("MONGODB4", "")
