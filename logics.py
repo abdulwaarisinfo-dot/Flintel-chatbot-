@@ -165,10 +165,31 @@ from config import (
     # own embedding config, name-for-name — see config.py's own docstring.
     EMBEDDING_MODEL, OPENAI_API_KEY, EMBEDDING_TIMEOUT, EMBEDDING_MAX_CHARS,
     SIGNAL_EMBEDDING_CANDIDATE_POOL, SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD,
+    SIGNAL_EMBEDDING_RECENCY_POOL, ROUTER_MAX_MATCH_PHRASES,
 )
 
 import logging
 log = logging.getLogger("flintel-web")
+
+# (RETRIEVAL RECALL FIX) Bounds on the lexical candidate tier's generated
+# Mongo query — see _build_lexical_or_clause(). LEXICAL_MAX_TERMS caps how
+# many distinct terms the alternation regex may contain (most selective
+# first), and _LEXICAL_SEARCH_FIELDS lists the document fields it is
+# applied to — the same title/text field names the rest of this module
+# already reads via _TITLE_FIELD_CANDIDATES/_TEXT_FIELD_CANDIDATES.
+LEXICAL_MAX_TERMS = 40
+_LEXICAL_SEARCH_FIELDS = ("title", "post_text", "text", "body", "content", "selftext")
+
+# (INTENT TAXONOMY) The only intent_types values accepted from the
+# router — anything else is dropped rather than trusted. Mirrors the
+# five categories defined in CLAUDE_ROUTER_SYSTEM_PROMPT below.
+_VALID_INTENT_TYPES = (
+    "active_opportunity",
+    "solution_evaluation",
+    "problem_signal",
+    "provider_seller",
+    "general_discussion",
+)
 
 
 def normalize_topic_key(query: str) -> str:
@@ -705,6 +726,152 @@ def _cosine_similarity(vec_a, vec_b) -> float:
         return 0.0
 
 
+def _normalize_query_embeddings(query_embeddings):
+    """(RETRIEVAL RECALL FIX — performance enabler) Pre-normalize this
+    call's query embeddings ONCE, so the per-document scoring loop below
+    only has to do dot products.
+
+    The original code called _cosine_similarity(doc_embedding, qe) once
+    per (document x query embedding) pair, and that function recomputed
+    BOTH magnitudes every single time — so the query vector's magnitude
+    (identical for every document in the pool) was recomputed tens of
+    thousands of times per search, and the document's magnitude was
+    recomputed once per query item instead of once per document. With ~10
+    query items that is roughly an order of magnitude of pure waste.
+
+    Removing it is what makes a RELEVANCE-selected candidate pool
+    affordable at the same latency the old recency-only pool cost — see
+    _max_similarity_against() and the hybrid pool build in
+    get_matched_signals() below.
+
+    Returns a list of (normalized_vector, length) tuples, skipping any
+    unusable/zero-magnitude query vector. Never raises."""
+    normalized = []
+    for qe in (query_embeddings or []):
+        try:
+            if not qe:
+                continue
+            mag = math.sqrt(sum(v * v for v in qe))
+            if mag == 0.0:
+                continue
+            normalized.append(([v / mag for v in qe], len(qe)))
+        except (TypeError, ValueError):
+            continue
+    return normalized
+
+
+def _max_similarity_against(doc_embedding, normalized_queries) -> float:
+    """(RETRIEVAL RECALL FIX) Maximum cosine similarity between one
+    document embedding and ANY of this call's pre-normalized query
+    embeddings — mathematically identical to the previous
+    max(_cosine_similarity(doc_embedding, qe) for qe in query_embeddings),
+    just without the repeated magnitude recomputation.
+
+    The MAX (rather than mean) semantics are deliberately unchanged from
+    the PER-PHRASE EMBEDDING MATCHING FIX: a document only has to match
+    ONE keyword/phrase/intent-expression strongly to be picked up.
+
+    Returns 0.0 (never raises) for a missing/corrupt/length-mismatched
+    document embedding, exactly like _cosine_similarity() did — so such a
+    document is simply dropped by the threshold check rather than
+    crashing the search."""
+    if not doc_embedding or not normalized_queries:
+        return 0.0
+    try:
+        doc_mag = math.sqrt(sum(v * v for v in doc_embedding))
+        if doc_mag == 0.0:
+            return 0.0
+        doc_len = len(doc_embedding)
+        # `best` starts as None, not 0.0, so an all-negative similarity
+        # set returns the true (negative) maximum exactly as the previous
+        # max(_cosine_similarity(...)) did, rather than being silently
+        # floored at 0.0. A length-mismatched query contributes 0.0 for
+        # the same reason: that is precisely what _cosine_similarity()
+        # returned for a mismatch, and it participated in the max.
+        best = None
+        for unit_q, q_len in normalized_queries:
+            if q_len != doc_len:
+                score = 0.0
+            else:
+                score = sum(a * b for a, b in zip(doc_embedding, unit_q)) / doc_mag
+            if best is None or score > best:
+                best = score
+        return 0.0 if best is None else best
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _build_lexical_or_clause(keyword_list: list, phrase_list: list) -> list:
+    """(RETRIEVAL RECALL FIX — hybrid retrieval, lexical half) Builds the
+    Mongo $or conditions that let the candidate pool be selected by
+    RELEVANCE instead of purely by recency.
+
+    WHY THIS EXISTS: the previous candidate pool was
+    `find({"embedding": {...}}).sort("created_utc", -1).limit(POOL)` —
+    i.e. the newest N documents, with NO relevance condition whatsoever.
+    Every document older than the Nth-newest was structurally unreachable
+    by every query, however perfect a match it was. That is a retrieval
+    failure that the product then reported to the user as "no posts
+    found", i.e. as an absence of data.
+
+    Each term becomes a case-insensitive, word-boundary-anchored regex on
+    the title/text fields. Word boundaries matter: a bare substring match
+    would let a short term like "AI" hit inside "said", "maintain", etc.
+    Terms shorter than 3 characters are dropped for the same reason.
+
+    Multi-word phrases are also split into their content words, so a
+    phrase like "need someone to build an AI agent" can still pull in a
+    post that expresses the same idea with different connecting words —
+    the embedding stage afterwards is what decides genuine relevance;
+    this stage only has to RECALL plausible candidates.
+
+    Returns [] when nothing usable survives, which the caller treats as
+    "no lexical tier for this query" and falls back to the recency tier
+    alone — never an error."""
+    terms = set()
+    for term in list(keyword_list or []) + list(phrase_list or []):
+        if not isinstance(term, str):
+            continue
+        cleaned = term.strip().lower()
+        # A whole match_phrase is now a full sentence, which would almost
+        # never appear verbatim — so only short-enough terms are used
+        # whole; longer ones contribute their content words instead.
+        if 3 <= len(cleaned) <= 40:
+            terms.add(cleaned)
+        # Content words out of multi-word terms (stopwords dropped so a
+        # phrase doesn't contribute near-useless terms like "the"/"for").
+        for word in re.findall(r"[a-z0-9']+", cleaned):
+            if len(word) >= 4 and word not in _PHRASE_MATCH_STOPWORDS:
+                terms.add(word)
+
+    if not terms:
+        return []
+
+    # Keep the MOST SELECTIVE terms first (longer/multi-word terms match
+    # fewer documents than single common words) and bound the total, so
+    # the generated pattern can never grow without limit as the router
+    # returns more keywords/phrases.
+    ordered = sorted(terms, key=lambda t: (-len(t), t))[:LEXICAL_MAX_TERMS]
+
+    # ONE alternation regex per field — not one condition per term.
+    # Emitting a separate {field: {$regex: term}} for every term x field
+    # combination produced hundreds of conditions in a single $or (438 for
+    # a realistic 10-keyword + 12-phrase query), which MongoDB would have
+    # to evaluate individually against every scanned document. A single
+    # \b(?:a|b|c)\b alternation per field collapses that to one pass per
+    # field while matching exactly the same documents.
+    try:
+        alternation = r"\b(?:" + "|".join(re.escape(t) for t in ordered) + r")\b"
+        re.compile(alternation)
+    except re.error:
+        return []
+
+    return [
+        {field: {"$regex": alternation, "$options": "i"}}
+        for field in _LEXICAL_SEARCH_FIELDS
+    ]
+
+
 def _compute_query_signature(keywords: list, match_phrases: list) -> str:
     """(QUERY-EMBEDDING CACHING) Deterministic, order-independent
     fingerprint of a given keywords + match_phrases combination — used
@@ -999,55 +1166,108 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
         cutoff = datetime.now(timezone.utc) - timedelta(days=clamped_days)
         mongo_query = {"$and": [mongo_query, {"created_utc": {"$gte": cutoff}}]}
 
-    # (EMBEDDING-BASED MATCHING CHANGE) Candidate pool size is now
-    # SIGNAL_EMBEDDING_CANDIDATE_POOL instead of `limit * 10` — still
-    # sorted by created_utc descending, so recent docs are preferred when
-    # the pool size itself has to be capped.
-    raw_docs = list(
-        signals_collection.find(mongo_query, {"_id": 0, "embedding": 1, **{
-            f: 1 for f in (
-                _TITLE_FIELD_CANDIDATES + _TEXT_FIELD_CANDIDATES +
-                _URL_FIELD_CANDIDATES + _PLATFORM_FIELD_CANDIDATES + ["created_utc"]
+    # ── (RETRIEVAL RECALL FIX) HYBRID CANDIDATE POOL ────────────────────
+    # THE BUG THIS REPLACES: the candidate pool used to be, for every
+    # collection, simply
+    #     find({"embedding": {...}}).sort("created_utc", -1).limit(POOL)
+    # — the NEWEST `POOL` documents, with no relevance condition in the
+    # query at all. Cosine similarity was then computed only over that
+    # recency window. The practical consequence: every document older
+    # than the POOL-th newest one was UNREACHABLE by every query ever
+    # run, no matter how perfect a semantic match it was. On a corpus of
+    # tens of thousands of signals that meant only the most recent ~1%
+    # was ever searched, and the product reported the resulting misses to
+    # the user as "no posts found" — i.e. it reported a RETRIEVAL failure
+    # as an ABSENCE OF DATA.
+    #
+    # THE FIX: hybrid retrieval — a lexical tier plus the original
+    # recency tier, unioned, then ranked by exactly the same embedding
+    # cosine similarity as before.
+    #   TIER 1 (lexical, NEW): the same query AND-ed with a keyword/phrase
+    #     $or (see _build_lexical_or_clause()). This reaches relevant
+    #     documents ANYWHERE in the collection regardless of age, which is
+    #     what actually fixes the missing-recall problem.
+    #   TIER 2 (recency, UNCHANGED): the original newest-N query, kept
+    #     verbatim so that a genuinely semantic match which shares no
+    #     literal vocabulary with the query can still be found in recent
+    #     data exactly as it is today. Nothing that matches now stops
+    #     matching.
+    # Ranking/threshold/caps downstream are untouched: the embedding
+    # similarity stage is still the only thing that decides relevance.
+    # The lexical tier only decides which documents get CONSIDERED.
+    _pool_projection = {"_id": 0, "embedding": 1, **{
+        f: 1 for f in (
+            _TITLE_FIELD_CANDIDATES + _TEXT_FIELD_CANDIDATES +
+            _URL_FIELD_CANDIDATES + _PLATFORM_FIELD_CANDIDATES + ["created_utc"]
+        )
+    }}
+    lexical_or = _build_lexical_or_clause(keyword_list, phrase_list)
+
+    def _fetch_candidate_pool(collection, label):
+        """Both tiers for one collection, de-duplicated by post_url.
+        Never raises — a failure on any tier of any collection is logged
+        and that tier contributes nothing, exactly like the previous
+        per-collection try/except behavior."""
+        docs, seen = [], set()
+
+        def _absorb(cursor_docs):
+            for doc in cursor_docs:
+                key = doc.get("post_url") or doc.get("url") or doc.get("link") or id(doc)
+                if key in seen:
+                    continue
+                seen.add(key)
+                docs.append(doc)
+
+        # TIER 1 — lexical/relevance-selected, any age.
+        if lexical_or:
+            try:
+                _absorb(
+                    collection.find(
+                        {"$and": [mongo_query, {"$or": lexical_or}]}, _pool_projection
+                    )
+                    .sort("created_utc", -1)
+                    .limit(SIGNAL_EMBEDDING_CANDIDATE_POOL)
+                )
+            except Exception as exc:
+                log.warning(f"{label}: lexical candidate tier failed (falling back to recency tier only): {exc}")
+
+        # TIER 2 — the original recency window, unchanged.
+        try:
+            _absorb(
+                collection.find(mongo_query, _pool_projection)
+                .sort("created_utc", -1)
+                .limit(SIGNAL_EMBEDDING_RECENCY_POOL)
             )
-        }})
-        .sort("created_utc", -1)
-        .limit(SIGNAL_EMBEDDING_CANDIDATE_POOL)
-    )
+        except Exception as exc:
+            log.warning(f"{label}: recency candidate tier failed: {exc}")
+
+        return docs
+
+    raw_docs = _fetch_candidate_pool(signals_collection, "signals_collection")
 
     # (SECOND-COLLECTION MERGE) Same combine-pattern already used in
     # flintel.py: when a second signals collection is provided, fetch
-    # matches from it too (using the exact same mongo_query) and append
-    # them into the same raw_docs pool the Python loop below scans —
-    # best-effort, non-fatal: any failure here is logged and silently
-    # skipped so a problem with the second collection can never break
-    # the primary matching path.
+    # candidates from it too (using the exact same two-tier logic) and
+    # append them into the same raw_docs pool the Python loop below
+    # scans — best-effort, non-fatal: any failure here is logged and
+    # silently skipped so a problem with the second collection can never
+    # break the primary matching path.
     if signals_collection_2 is not None:
         try:
-            raw_docs_2 = list(
-                signals_collection_2.find(mongo_query, {"_id": 0})
-                .sort("created_utc", -1)
-                .limit(SIGNAL_EMBEDDING_CANDIDATE_POOL)
-            )
-            raw_docs.extend(raw_docs_2)
+            raw_docs.extend(_fetch_candidate_pool(signals_collection_2, "signals_collection_2"))
         except Exception as exc:
             log.warning(f"signals_collection_2 fetch failed (skipping second collection): {exc}")
 
     # (QUATERNARY MONGO MERGE) Same combine-pattern as signals_collection_2
     # directly above: when a fourth signals collection is provided (database.py's
-    # signals_collection_4, built from config.py's MONGODB4), fetch matches
-    # from it too (using the exact same mongo_query) and append them into
-    # the same raw_docs pool the Python loop below scans — best-effort,
-    # non-fatal: any failure here is logged and silently skipped so a
-    # problem with this fourth collection can never break the primary
-    # matching path.
+    # signals_collection_4, built from config.py's MONGODB4), fetch
+    # candidates from it too and append them into the same raw_docs pool —
+    # best-effort, non-fatal: any failure here is logged and silently
+    # skipped so a problem with this fourth collection can never break the
+    # primary matching path.
     if signals_collection_4 is not None:
         try:
-            raw_docs_4 = list(
-                signals_collection_4.find(mongo_query, {"_id": 0})
-                .sort("created_utc", -1)
-                .limit(SIGNAL_EMBEDDING_CANDIDATE_POOL)
-            )
-            raw_docs.extend(raw_docs_4)
+            raw_docs.extend(_fetch_candidate_pool(signals_collection_4, "signals_collection_4"))
         except Exception as exc:
             log.warning(f"signals_collection_4 fetch failed (skipping fourth collection): {exc}")
 
@@ -1144,6 +1364,15 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     if not query_embeddings:
         return []
 
+    # (RETRIEVAL RECALL FIX) Normalize the query vectors ONCE for this
+    # call — see _normalize_query_embeddings(). If none survive (all
+    # empty/zero-magnitude), behave exactly like the previous "no usable
+    # query embeddings" case and return [] rather than scoring everything
+    # as 0.0.
+    _normalized_queries = _normalize_query_embeddings(query_embeddings)
+    if not _normalized_queries:
+        return []
+
     # (EMBEDDING-BASED MATCHING CHANGE, MAX-SIMILARITY BY THE PER-PHRASE
     # EMBEDDING MATCHING FIX) Score every candidate doc against EVERY
     # query embedding and keep the MAX similarity — a document only has
@@ -1168,10 +1397,13 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                 continue
 
         doc_embedding = doc.get("embedding")
-        similarity = max(
-            (_cosine_similarity(doc_embedding, qe) for qe in query_embeddings),
-            default=0.0,
-        )
+        # (RETRIEVAL RECALL FIX) Mathematically identical to the previous
+        # max(_cosine_similarity(doc_embedding, qe) for qe in
+        # query_embeddings) — same MAX semantics, same threshold, same
+        # result — but using the query vectors normalized once above
+        # instead of recomputing every magnitude for every document. That
+        # saving is what pays for the larger, relevance-selected pool.
+        similarity = _max_similarity_against(doc_embedding, _normalized_queries)
         if similarity < SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD:
             continue
 
@@ -1193,10 +1425,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
         try:
             all_scores = sorted(
                 (
-                    max(
-                        (_cosine_similarity(doc.get("embedding"), qe) for qe in query_embeddings),
-                        default=0.0,
-                    )
+                    _max_similarity_against(doc.get("embedding"), _normalized_queries)
                     for doc in raw_docs
                 ),
                 reverse=True,
@@ -1212,6 +1441,27 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     matched = []
     seen_urls = set()
     platform_counts = {}  # (v7) per-platform running count for this call
+
+    # ── (EVIDENCE-BUDGET THROTTLE FIX) ──────────────────────────────────
+    # MAX_POSTS_PER_PLATFORM (default 3) is a DISPLAY-balance rule: it
+    # exists so one platform can't fill every post card. But this same
+    # function's output is ALSO the analysis evidence handed to Claude,
+    # sized by the router's own evidence_required planner (15-100, see
+    # MIN/MAX_ANALYSIS_EVIDENCE). Applying a flat cap of 3 per platform to
+    # that path meant a carefully-planned budget of, say, 60 posts
+    # silently returned 3 for a Reddit-dominant corpus — starving the
+    # analysis and pushing Claude toward "no_results"/weak findings even
+    # when plenty of relevant posts had been matched.
+    #
+    # Display capping already happens downstream and is untouched
+    # (MAX_CHAT_EVIDENCE_POSTS = 7 in the analysis prompt, and
+    # flintel.merge_matched_and_google_results()'s own cap), so the
+    # balance intent is preserved without throttling retrieval: the cap
+    # now SCALES with the requested limit instead of being flat. Small
+    # limits keep the original behavior exactly (limit<=6 -> 3 per
+    # platform, unchanged), larger evidence budgets get proportionally
+    # more headroom.
+    effective_max_per_platform = max(MAX_POSTS_PER_PLATFORM, limit // 2)
 
     for _similarity, doc in scored_docs:
         title     = _first_present(doc, _TITLE_FIELD_CANDIDATES)
@@ -1248,7 +1498,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
         # matches from that same platform (but keep scanning raw_docs —
         # a different platform may still have room).
         platform_key = (platform or "unknown").strip().lower()
-        if platform_counts.get(platform_key, 0) >= MAX_POSTS_PER_PLATFORM:
+        if platform_counts.get(platform_key, 0) >= effective_max_per_platform:
             continue
 
         if post_url:
@@ -1897,6 +2147,33 @@ form rejection):
 - Never point the user toward a different platform, tool, or channel as
   the place to actually find this.
 
+"NOT RETRIEVED" IS NOT "DOES NOT EXIST" (absolute rule):
+You are shown only the posts this ONE search surfaced — never the whole
+corpus. You are therefore never in a position to know whether relevant
+conversations exist. Report on THIS SEARCH, never on reality:
+- Correct: "this search didn't surface anyone actively looking for X."
+- FORBIDDEN: "there are no people looking for X", "nobody is discussing
+  X", "that demand doesn't exist", or any phrasing that converts an
+  empty result set into a claim about the world.
+- "likely_reason" must explain why THIS search came up short, and must
+  never assert that the underlying demand or conversation is absent.
+
+PREFER RELATED SIGNALS OVER "no_results" (absolute rule):
+"no_results" is a last resort, NOT the default whenever nothing matches
+the request word-for-word. Before choosing it, re-read every post for
+RELATED signal — someone describing the underlying problem without ever
+naming the solution, someone evaluating alternatives, someone OFFERING
+the thing when the user wanted buyers (or vice versa). If any post
+carries genuine related signal, use "source_list" instead and label
+those entries explicitly as related/indirect signals rather than
+confirmed matches, saying plainly which are direct and which are
+inferred. Honestly-labelled related signal is far more useful than
+"no_results", and a user must never be told nothing was found while
+genuinely related evidence sits in the post list you were handed.
+Never inflate in the other direction either: a related signal is never
+described as a confirmed buyer, a confirmed lead, or an active
+opportunity unless that post's own words support that reading.
+
 ──────────────────────────────────────────────────────────────────────────
 FORMAT 5 — "not_available"
 For capabilities Flintel doesn't support yet (e.g. job listings, anything
@@ -2472,9 +2749,31 @@ You are the routing brain inside Flintel, a social-listening platform.
 Every message a user types goes through you FIRST, before anything else
 happens in the product.
 Your job: classify this message into exactly one of FOUR types, and for
-"search" messages, ALSO generate the keyword list Flintel's own
-(unchanged, plain-Python) matching code will use afterward, plus an
-optional time window.
+"search" messages, ALSO generate the search representation Flintel's
+retrieval layer will use afterward, plus an optional time window.
+
+HOW FLINTEL ACTUALLY SEARCHES (this determines what you must produce —
+read it before generating anything):
+Flintel does NOT do literal keyword matching on post text. It runs
+EMBEDDING-BASED SEMANTIC retrieval: your "match_phrases" are each turned
+into a vector and compared, by meaning, against the vector of every
+candidate post. A post matches when it MEANS the same thing as one of
+your phrases — the words do not have to overlap at all. Your "keywords"
+are used separately, for lexical candidate recall and for an external
+Google/Reddit discovery search.
+
+This has one overriding consequence for you:
+
+  THE USER'S LITERAL WORDS ARE NOT THE SEARCH. THE USER'S INTENT IS.
+
+A person Flintel should find almost never phrases things the way the
+person searching does. Someone worth surfacing for "find businesses that
+want WhatsApp AI agents" will realistically have written "we get way too
+many customer enquiries on WhatsApp and can't keep up", or "anyone know
+how to connect ChatGPT to WhatsApp?", or "looking to hire someone to
+build a chatbot for our store" — and not one of those contains the
+phrase the user typed. Your job is to write the phrases THOSE people
+would actually write.
 
 1. "search" — the message is asking Flintel to research/monitor/pull
    social-media data about a brand, product, company, person, industry,
@@ -2482,17 +2781,53 @@ optional time window.
    itself (or from the conversation history below). For "search"
    messages, ALSO return:
 
-   - "keywords": an array of search terms.
-     - Read the user's own words and figure out what they are actually
-       asking about. A short, narrow prompt ("reddit posts about AI")
-       needs only the ONE (or two) keyword(s) that actually capture the
-       real topic — e.g. just "AI" — do NOT pad it out with unrelated
-       angles ("AI review", "AI pricing", "AI complaints", etc.) the user
-       never asked about.
-     - A broader or more detailed prompt can warrant more keyword
-       variations (genuine synonyms or short related phrases actually
-       likely to appear in real posts) — up to 10 keywords maximum,
-       never more.
+   - "target_entity": a short plain-language description of WHO Flintel
+     is being asked to find — not what the topic is. This is the single
+     most important field for getting the right people back, because the
+     same topic word can mean opposite searches:
+       "find people who SELL AI agents"        -> providers/agencies/
+                                                  builders OFFERING it
+       "find businesses LOOKING FOR AI agents" -> buyers with demand or
+                                                  an unsolved problem
+     Both are "about AI agents"; they are completely different people.
+     Write this as e.g. "agencies and freelancers who build and sell AI
+     agent solutions" or "business owners who need customer-support
+     automation but haven't bought it yet". Null for non-search intents.
+
+   - "intent_types": an array naming which kinds of signal genuinely
+     answer this request, chosen from EXACTLY these five values:
+       "active_opportunity"  — explicitly looking to hire, buy, outsource,
+                               or commission a solution.
+       "solution_evaluation" — actively comparing, evaluating, researching,
+                               or asking for recommendations.
+       "problem_signal"      — clearly has the problem the solution solves,
+                               but is not explicitly shopping yet.
+       "provider_seller"     — offering, selling, building, or promoting
+                               the solution.
+       "general_discussion"  — on-topic but with no commercial intent.
+     Pick the ones that actually answer the question, usually 1-3. A
+     "find me people who sell X" request is ["provider_seller"]. A "find
+     businesses that need X" request is typically
+     ["active_opportunity", "solution_evaluation", "problem_signal"].
+     Never include all five just to be safe. Null for non-search intents.
+
+   - "keywords": an array of literal search terms.
+     These are used for LEXICAL candidate recall and for an external
+     Google/Reddit discovery search — so unlike match_phrases these SHOULD
+     be short, concrete, literal terms that plausibly appear as real words
+     in real posts.
+     - Cover the topic itself AND its common real-world vocabulary:
+       genuine synonyms, the abbreviation and the expansion, adjacent
+       product names for the same job, and the words people use for the
+       underlying problem rather than the solution. For "WhatsApp AI
+       agents" that legitimately includes things like "whatsapp chatbot",
+       "whatsapp automation", "customer support automation" — these are
+       not padding, they are how the same need is actually written.
+     - Do NOT invent unrelated angles the user never implied (e.g. adding
+       "pricing" or "review" variants to a request that had nothing to do
+       with pricing or reviews). Breadth of VOCABULARY for the user's
+       actual intent: yes. Breadth of TOPIC beyond their intent: no.
+     - Up to 10 keywords maximum, never more.
      - PAIN-POINT / PROSPECT PATTERN: if the user describes selling or
        promoting something and wants to find people who might need it
        (e.g. "I run an AI agent company, find people whose website is
@@ -2537,9 +2872,8 @@ optional time window.
        (e.g. "so annoyed with", "wish there was a tool for", "sick of dealing
        with", "biggest pain point in"), the same way the PAIN-POINT / PROSPECT
        PATTERN above does.
-     - Every keyword must be something that could plausibly appear
-       verbatim, or as a close natural substring, inside a real post's
-       title or text. Keep each keyword short and natural.
+     - Keep each keyword short and natural — a phrase a real person would
+       actually type, not a formal category label.
      - Never include meta wording that describes the user's REQUEST to
        you rather than the topic itself — words like "reddit", "twitter",
        "x", "linkedin", "facebook", "posts", "posts about", "show me",
@@ -2562,18 +2896,47 @@ optional time window.
      ALONGSIDE a real ask (e.g. "find me leads from this site") — in
      that case treat it as a normal "search" with website_only: false.
 
-   - "match_phrases": an array of 4 to 10 short, natural phrases/
-     sentences (each phrase itself should be roughly 4-10 words long),
-     up to 7 phrases maximum. Each phrase should read like something a
-     real person might actually write in a post about this topic (e.g.
-     for "AI agents": "using an AI agent to handle customer support",
-     "built an AI agent for my business", "AI agents doing repetitive
-     tasks automatically") — NOT a single word, NOT meta wording
-     ("reddit", "posts", "show me"). These phrases exist purely to
-     confirm a post is genuinely ABOUT the topic, not just that a
-     generic word appears somewhere in it — this is what stops a single
-     bare keyword like "agents" from ever matching a post that has nothing
-     to do with the actual topic.
+   - "match_phrases": THE MOST IMPORTANT FIELD. An array of 8 to 12
+     complete, natural sentences — each one written as if it were an
+     actual excerpt from a real post by one of the people described in
+     "target_entity".
+
+     These are what get embedded and semantically compared against real
+     posts, so write them the way the TARGET writes, not the way the
+     searcher asked. Rules:
+
+     - Write FULL first-person sentences (roughly 6-16 words), not
+       keyword fragments. "we're drowning in customer messages on
+       WhatsApp and need to automate replies" retrieves well;
+       "whatsapp automation" does not — a short fragment embeds poorly
+       against a real multi-sentence post and is the single most common
+       cause of relevant posts being missed.
+     - COVER EVERY intent_type you listed, with at least 2 distinct
+       phrases each. If you listed "provider_seller", some phrases must
+       be written in a SELLER's voice ("we build custom AI agents for
+       ecommerce brands", "my agency automates customer support with
+       AI", "just launched my AI agent platform for small businesses").
+       If you listed "problem_signal", some must be written in a
+       SUFFERER's voice, describing the problem with NO mention of the
+       solution at all ("spending hours every day replying to the same
+       customer questions").
+     - VARY THE VOCABULARY DELIBERATELY. Several phrases must express the
+       same intent while avoiding the user's own words entirely, because
+       the strongest matches are usually posts that never use the
+       searcher's terminology. For a HubSpot-alternative request that
+       means phrases about outgrowing the current CRM, its cost, or
+       migrating away — not repetitions of "HubSpot alternative".
+     - Include the problem/symptom level, not just the solution level.
+       People with budget very often describe a frustration, never the
+       product category.
+     - Respect stated constraints (seniority, budget, industry, region,
+       recency) by weaving them into some phrases naturally — never as a
+       bolted-on label.
+     - Never meta wording ("reddit", "posts", "show me", "find me").
+     - Reason freshly from THIS request every time. Never reuse phrasing
+       from these instructions' own examples: they illustrate the SHAPE
+       required, they are not a template or a fixed vocabulary, and they
+       are not limited to any industry.
 
    - "time_window_days": an integer, or null.
      - If the user's message itself implies a time range, convert it to
@@ -2747,7 +3110,7 @@ reply conversational and plain — don't mention you're an AI or that this
 is a "mock", and don't narrate your own reasoning.
 Respond with STRICT JSON ONLY — no markdown code fences, no preamble, no
 text outside the JSON object — in EXACTLY one of these four shapes:
-{"intent": "search", "reply": null, "keywords": ["<keyword1>", "<keyword2>"], "time_window_days": null, "match_phrases": ["<phrase1>", "<phrase2>"], "evidence_required": <int|null>, "website_only": false, "url_ask_type": "generic_own_business"|"specific_topic"|"none"|null}
+{"intent": "search", "reply": null, "keywords": ["<keyword1>", "<keyword2>"], "time_window_days": null, "match_phrases": ["<full sentence 1>", "<full sentence 2>"], "evidence_required": <int|null>, "website_only": false, "url_ask_type": "generic_own_business"|"specific_topic"|"none"|null, "target_entity": "<who to find>"|null, "intent_types": ["<one or more of: active_opportunity, solution_evaluation, problem_signal, provider_seller, general_discussion>"]|null}
 {"intent": "chat", "reply": "<your natural reply text here>", "keywords": null, "time_window_days": null, "match_phrases": null, "evidence_required": null}
 {"intent": "blocked", "reply": "<short, polite decline text>", "keywords": null, "time_window_days": null, "match_phrases": null, "evidence_required": null}
 {"intent": "clarify", "reply": "<short, natural clarifying question>", "keywords": null, "time_window_days": null, "match_phrases": null, "evidence_required": null}
@@ -2929,6 +3292,8 @@ def _parse_router_json(raw: str):
     use_website_context = False
     website_topic_relation = None
     url_ask_type = None
+    target_entity = None
+    intent_types = None
     if intent == "search":
         raw_keywords = data.get("keywords")
         if isinstance(raw_keywords, list):
@@ -2964,9 +3329,36 @@ def _parse_router_json(raw: str):
                     continue
                 seen_phrases.add(key)
                 cleaned_phrases.append(phrase_clean)
-                if len(cleaned_phrases) >= 7:
+                # (SEMANTIC QUERY REPRESENTATION FIX) Raised from a hard 7
+                # to ROUTER_MAX_MATCH_PHRASES. match_phrases are now the
+                # primary semantic search representation (the router is
+                # asked for 8-12 full intent-expressing sentences covering
+                # every relevant intent_type), so truncating at 7 would
+                # silently discard whole intent angles — e.g. dropping
+                # every seller-voice phrase and leaving only buyer-voice
+                # ones — which is exactly the recall loss this change set
+                # exists to fix.
+                if len(cleaned_phrases) >= ROUTER_MAX_MATCH_PHRASES:
                     break
             match_phrases = cleaned_phrases or None
+
+        # (INTENT TAXONOMY) Two new, optional, purely additive fields.
+        # Both default to None, and every existing caller that ignores
+        # them behaves exactly as before.
+        raw_target_entity = data.get("target_entity")
+        if isinstance(raw_target_entity, str) and raw_target_entity.strip():
+            target_entity = raw_target_entity.strip()
+
+        raw_intent_types = data.get("intent_types")
+        if isinstance(raw_intent_types, list):
+            cleaned_intent_types = []
+            for it in raw_intent_types:
+                if not isinstance(it, str):
+                    continue
+                it_clean = it.strip().lower()
+                if it_clean in _VALID_INTENT_TYPES and it_clean not in cleaned_intent_types:
+                    cleaned_intent_types.append(it_clean)
+            intent_types = cleaned_intent_types or None
 
         raw_window = data.get("time_window_days")
         parsed_window = None
@@ -3006,7 +3398,8 @@ def _parse_router_json(raw: str):
     return {"intent": intent, "reply": reply, "keywords": keywords, "time_window_days": time_window_days,
             "unfiltered": unfiltered, "match_phrases": match_phrases, "evidence_required": evidence_required,
             "website_only": website_only, "use_website_context": use_website_context,
-            "website_topic_relation": website_topic_relation, "url_ask_type": url_ask_type}
+            "website_topic_relation": website_topic_relation, "url_ask_type": url_ask_type,
+            "target_entity": target_entity, "intent_types": intent_types}
 
 
 def classify_and_maybe_chat(query: str, chat_summary: str, website_context_summary: str = None,
