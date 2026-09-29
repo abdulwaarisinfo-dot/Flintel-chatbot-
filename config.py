@@ -119,7 +119,9 @@ __all__ = [
     "EMBEDDING_TIMEOUT",
     "EMBEDDING_MAX_CHARS",
     # Signal-matching embedding config (web-service only)
+    "ROUTER_MAX_MATCH_PHRASES",
     "SIGNAL_EMBEDDING_CANDIDATE_POOL",
+    "SIGNAL_EMBEDDING_RECENCY_POOL",
     "SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD",
     # Secondary MongoDB (signals mirror)
     "MONGODB2",
@@ -278,7 +280,28 @@ EMBEDDING_MAX_CHARS = int(os.getenv("EMBEDDING_MAX_CHARS", "8000"))
 # karke unka embedding compare karna hai — cosine similarity calculation
 # ye size tak hi chalegi, is se bara pool kabhi nahi banega (cost/latency
 # safety ceiling, MAX_MATCHED_RESULTS jaisa hi concept).
+# (SEMANTIC QUERY REPRESENTATION FIX) How many match_phrases the router
+# is allowed to contribute. match_phrases are the primary SEMANTIC search
+# representation — each one is embedded and compared by MEANING against
+# candidate posts — so this has to be large enough to cover every intent
+# angle a request genuinely spans (buyer voice AND seller voice AND
+# problem-signal voice, etc.). This was previously a bare literal 7
+# inside logics.py's _parse_router_json(), which silently truncated whole
+# intent angles off the end of the list.
+ROUTER_MAX_MATCH_PHRASES = int(os.getenv("ROUTER_MAX_MATCH_PHRASES", "12"))
+
 SIGNAL_EMBEDDING_CANDIDATE_POOL = int(os.getenv("SIGNAL_EMBEDDING_CANDIDATE_POOL", "500"))
+
+# (RETRIEVAL RECALL FIX) The candidate pool is now built in TWO tiers —
+# see logics.py's get_matched_signals(). SIGNAL_EMBEDDING_CANDIDATE_POOL
+# above now sizes the LEXICAL/relevance-selected tier (keyword-matching
+# documents of ANY age, which is what makes older relevant posts
+# reachable at all). This second constant sizes the ORIGINAL recency
+# tier — the newest-N documents regardless of keywords — which is kept so
+# a purely semantic match sharing no literal vocabulary with the query is
+# still found in recent data exactly as before. Both are unioned and
+# de-duplicated, then ranked by the same cosine similarity as always.
+SIGNAL_EMBEDDING_RECENCY_POOL = int(os.getenv("SIGNAL_EMBEDDING_RECENCY_POOL", "500"))
 
 # Minimum cosine similarity score jispar ek candidate document "match"
 # count hota hai. Is se neeche wale docs discard honge, chahe wo pool
