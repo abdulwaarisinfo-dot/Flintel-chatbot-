@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 FLINTEL — EMBEDDING / SEMANTIC-INTENT DIAGNOSTIC HARNESS
 ============================================================================
@@ -46,9 +47,8 @@ THREE STAGES
     python embedding_diagnostic.py measure --outdir ./diag
 
   sample  — pulls a RANDOM (not newest-N) read-only sample of real
-            signals with their stored embeddings, from all four sources
-            Flintel actually uses: MONGODB_URI, MONGODB2, MONGODB4, and
-            the github_signals JSON folders.
+            signals with their stored embeddings, from the three Mongo
+            sources Flintel uses: MONGODB_URI, MONGODB2, MONGODB4.
   label   — batch-labels each sampled post with {topic, intent} using
             Claude, so a usable labeled set exists in minutes instead of
             a week of hand-labeling. Writes labels to a separate file;
@@ -60,7 +60,6 @@ ENV VARS USED (same names as the app; all read-only)
     MONGODB_URI, MONGODB2, MONGODB4, MONGODB_DB
     OPENAI_API_KEY, EMBEDDING_MODEL   (default text-embedding-3-small)
     ANTHROPIC_API_KEY, CLAUDE_MODEL   (label stage only)
-    GITHUB_SIGNALS_BASE_DIR, GITHUB_SIGNALS_DIRS
 
 DEPENDENCIES: pymongo, numpy. (openai is optional — the embed call falls
 back to plain urllib so the harness runs with nothing extra installed.)
@@ -96,13 +95,6 @@ EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
 
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-haiku-4-5-20251001")
-
-GITHUB_SIGNALS_BASE_DIR = os.getenv("GITHUB_SIGNALS_BASE_DIR", ".")
-GITHUB_SIGNALS_DIRS = [
-    d.strip()
-    for d in os.getenv("GITHUB_SIGNALS_DIRS", "Mongo,Mongo1,Mongo2,Mongo3").split(",")
-    if d.strip()
-]
 
 TITLE_FIELDS = ("title", "post_title", "headline")
 TEXT_FIELDS = ("post_text", "text", "body", "content", "selftext")
@@ -397,71 +389,6 @@ def _mongo_sample(uri, label, n, seed_terms):
     return docs
 
 
-def _github_sample(n, seed_terms):
-    """Sample the file-backed source. Reads every JSON/JSONL under the
-    configured folders, then samples randomly — again NOT newest-N."""
-    paths = []
-    for sub in GITHUB_SIGNALS_DIRS:
-        root = os.path.join(GITHUB_SIGNALS_BASE_DIR, sub)
-        if not os.path.isdir(root):
-            continue
-        for dirpath, _dirs, files in os.walk(root):
-            for name in files:
-                if name.lower().endswith((".json", ".jsonl")):
-                    paths.append(os.path.join(dirpath, name))
-    if not paths:
-        _log(f"  github_signals: no JSON files under {GITHUB_SIGNALS_DIRS} — skipped")
-        return []
-
-    records = []
-    for p in paths:
-        try:
-            if p.lower().endswith(".jsonl"):
-                with open(p, "r", encoding="utf-8") as f:
-                    for line in f:
-                        line = line.strip()
-                        if not line:
-                            continue
-                        try:
-                            obj = json.loads(line)
-                        except ValueError:
-                            continue
-                        records.extend(_unwrap(obj))
-            else:
-                with open(p, "r", encoding="utf-8") as f:
-                    records.extend(_unwrap(json.load(f)))
-        except Exception as exc:
-            _log(f"  github_signals: skipping {p}: {exc}")
-
-    records = [r for r in records if _valid_embedding(r.get("embedding"))]
-    _log(f"  github_signals: {len(records):,} embedded records in {len(paths)} file(s)")
-    if not records:
-        return []
-
-    rng = random.Random(RANDOM_SEED)
-    if seed_terms:
-        pat = re.compile(r"\b(?:" + "|".join(re.escape(t) for t in seed_terms) + r")\b", re.I)
-        hits = [r for r in records if pat.search(
-            f"{_first_present(r, TITLE_FIELDS) or ''} {_first_present(r, TEXT_FIELDS) or ''}")]
-        rest = [r for r in records if r not in hits] if len(hits) < len(records) else []
-        picked = rng.sample(hits, min(len(hits), n // 2))
-        picked += rng.sample(rest, min(len(rest), n - len(picked)))
-        return picked
-    return rng.sample(records, min(len(records), n))
-
-
-def _unwrap(payload):
-    if isinstance(payload, list):
-        return [x for x in payload if isinstance(x, dict)]
-    if isinstance(payload, dict):
-        for key in ("data", "signals", "posts", "items", "results"):
-            inner = payload.get(key)
-            if isinstance(inner, list):
-                return [x for x in inner if isinstance(x, dict)]
-        return [payload]
-    return []
-
-
 def _normalize_doc(raw, source):
     emb = raw.get("embedding")
     if not _valid_embedding(emb):
@@ -516,14 +443,9 @@ def cmd_sample(args):
             if d:
                 out.append(d)
 
-    for raw in _github_sample(per_source, seed_terms):
-        d = _normalize_doc(raw, "github_files")
-        if d:
-            out.append(d)
-
     if not out:
         _die("No documents sampled from ANY source. Check MONGODB_URI / "
-             "MONGODB2 / MONGODB4 and GITHUB_SIGNALS_BASE_DIR, then retry.")
+             "MONGODB2 / MONGODB4 env vars, then retry.")
 
     # de-dup by url/text
     seen, deduped = set(), []
