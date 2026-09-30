@@ -1110,18 +1110,14 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     text-required check, dedup, per-platform cap, limit) is completely
     unchanged and applies identically to docs from either collection.
 
-    (QUATERNARY MONGO + GITHUB SIGNALS MERGE) `signals_collection_4`
-    (default None) is folded into the same raw_docs pool exactly like
-    `signals_collection_2` above, and the file-backed docs from
-    github_signals.py's Mongo/Mongo1/Mongo2/Mongo3 folders are folded in
-    right alongside it — same candidate pool, same downstream matching
+    (QUATERNARY MONGO) `signals_collection_4` (default None) is folded
+    into the same raw_docs pool exactly like `signals_collection_2`
+    above — same candidate pool, same downstream matching
     (embedding-similarity, platform filter, text-required check, dedup,
-    per-platform cap, limit). No separate ignore/filter logic is needed
-    for either: a missing/invalid embedding already scores 0.0 via
-    _cosine_similarity() and gets dropped by the threshold check, the
-    Mongo query itself already requires a saved embedding field, and
-    github_signals.py's own loader already filters out any record with a
-    missing/invalid embedding before it's ever returned here."""
+    per-platform cap, limit). No separate ignore/filter logic is needed:
+    a missing/invalid embedding already scores 0.0 via
+    _cosine_similarity() and gets dropped by the threshold check, and
+    the Mongo query itself already requires a saved embedding field."""
     if unfiltered:
         return flintel.get_unfiltered_matched_signals(
             signals_collection,
@@ -1270,19 +1266,6 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             raw_docs.extend(_fetch_candidate_pool(signals_collection_4, "signals_collection_4"))
         except Exception as exc:
             log.warning(f"signals_collection_4 fetch failed (skipping fourth collection): {exc}")
-
-    # (GITHUB SIGNALS MERGE) Lazy, local import only (never top-level —
-    # keeps this module's existing dependency direction unchanged: nothing
-    # here previously imported github_signals.py, and this addition still
-    # doesn't at module-load time). Same best-effort, non-fatal pattern as
-    # the Mongo merges above: any failure (missing module, bad folder
-    # contents, etc.) is logged and silently skipped so it can never break
-    # the primary matching path.
-    try:
-        from github_signals import get_github_signal_docs
-        raw_docs.extend(get_github_signal_docs(cutoff=cutoff))
-    except Exception as exc:
-        log.warning(f"github_signals fetch failed (skipping GitHub signals): {exc}")
 
     # (PER-PHRASE EMBEDDING MATCHING FIX) Build the query ITEMS list for
     # this call: every keyword AND every match_phrase, kept as SEPARATE
