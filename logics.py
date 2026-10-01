@@ -1421,10 +1421,6 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
         except Exception as exc:
             log.debug(f"Embedding-match debug logging failed for topic_key={topic_key}: {exc}")
 
-    matched = []
-    seen_urls = set()
-    platform_counts = {}  # (v7) per-platform running count for this call
-
     # ── (EVIDENCE-BUDGET THROTTLE FIX) ──────────────────────────────────
     # MAX_POSTS_PER_PLATFORM (default 3) is a DISPLAY-balance rule: it
     # exists so one platform can't fill every post card. But this same
@@ -1446,69 +1442,180 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     # more headroom.
     effective_max_per_platform = max(MAX_POSTS_PER_PLATFORM, limit // 2)
 
-    for _similarity, doc in scored_docs:
-        title     = _first_present(doc, _TITLE_FIELD_CANDIDATES)
-        post_text = _first_present(doc, _TEXT_FIELD_CANDIDATES)
+    def _apply_cap_and_limit(candidates, cap, n):
+        """Apply per-platform cap and overall limit to an ordered candidate list.
 
-        if not _signal_platform_matches(doc, targeting_platform):
-            continue
-
-        # (TEXT-REQUIRED AT PICK-TIME) post_text is mandatory — a doc
-        # with no post_text is never counted as a match, even if it
-        # cleared the embedding-similarity threshold. This check has to
-        # live HERE, inside the matching loop, rather than later in
-        # build_claude_post_context() (logics.py's own Claude-context
-        # builder): doing it here means an evidence_required budget
-        # (e.g. 50) is always sized against text-guaranteed posts, and
-        # the timeout/Google-fallback "did we actually find anything"
-        # check (which looks at whether this function's own result is
-        # empty) is always judged against real, analyzable posts rather
-        # than title-only stubs that would silently get dropped
-        # downstream anyway.
-        if not post_text:
-            continue
-
-        post_url  = _first_present(doc, _URL_FIELD_CANDIDATES)
-        platform  = _first_present(doc, _PLATFORM_FIELD_CANDIDATES) or _infer_platform_from_url(post_url)
-
-        if not title and not post_text and not post_url:
-            continue
-        if post_url and post_url in seen_urls:
-            continue
-
-        # (v7) Per-platform cap: once a platform has already contributed
-        # MAX_POSTS_PER_PLATFORM matches to this call, skip any further
-        # matches from that same platform (but keep scanning raw_docs —
-        # a different platform may still have room).
-        platform_key = (platform or "unknown").strip().lower()
-        if platform_counts.get(platform_key, 0) >= effective_max_per_platform:
-            continue
-
-        if post_url:
-            seen_urls.add(post_url)
-
-        matched.append({"title": title, "post_text": post_text, "post_url": post_url, "platform": platform})
-        platform_counts[platform_key] = platform_counts.get(platform_key, 0) + 1
-
-        if len(matched) >= limit:
-            break
+        Extracted so both the narrow path (flag off) and the bridge path
+        (flag on, applied to bridge-reranked output) share identical logic.
+        Returns a new list; never mutates the input.
+        """
+        out = []
+        pc = {}
+        seen = set()
+        for item in candidates:
+            pkey = (item.get("platform") or "unknown").strip().lower()
+            url  = item.get("post_url")
+            if url and url in seen:
+                continue
+            if pc.get(pkey, 0) >= cap:
+                continue
+            if url:
+                seen.add(url)
+            out.append(item)
+            pc[pkey] = pc.get(pkey, 0) + 1
+            if len(out) >= n:
+                break
+        return out
 
     # ── (INTENT BRIDGE HOOK) ─────────────────────────────────────────────────
-    # When INTENT_BRIDGE_ENABLED=true and a user_query was supplied, re-rank
-    # `matched` by buyer-intent classification before returning.  The bridge is
-    # purely additive — any failure returns the original `matched` list
-    # unchanged.  This hook runs AFTER the per-platform cap and limit loop
-    # (so the pool is already deduplicated and size-capped) and BEFORE the
-    # final return (so the caller always gets the best-intent posts first).
+    # When INTENT_BRIDGE_ENABLED=true and a user_query is present, collect a
+    # WIDE pool first (pool_n candidates, no per-platform cap during
+    # collection), pass it to the intent bridge for re-ranking, then apply the
+    # per-platform cap and limit to the bridge-ordered result.
+    #
+    # When the flag is off (or user_query is empty), the narrow path runs:
+    # it is structurally identical to the previous implementation — same loop,
+    # same cap, same limit, same dedup — so flag-off output is line-for-line
+    # unchanged.
+    #
+    # Fail-safe: any exception at any step returns the narrow-path result
+    # (similarity-ranked, cap+limit already applied). The bridge NEVER crashes
+    # the production request path and NEVER returns fewer posts.
     try:
-        from config import INTENT_BRIDGE_ENABLED          # noqa: PLC0415
-        if INTENT_BRIDGE_ENABLED and user_query and user_query.strip():
-            from intent_bridge import rerank_with_intent  # noqa: PLC0415
-            matched = rerank_with_intent(
-                user_query, matched, limit or len(matched)
+        from config import (  # noqa: PLC0415
+            INTENT_BRIDGE_ENABLED,
+            INTENT_CANDIDATE_MULTIPLIER,
+            INTENT_CANDIDATE_MIN,
+            INTENT_CANDIDATE_MAX,
+        )
+        _bridge_active = bool(
+            INTENT_BRIDGE_ENABLED and user_query and user_query.strip()
+        )
+    except Exception:
+        _bridge_active = False
+
+    if _bridge_active:
+        # ── Wide-collection path (flag on) ───────────────────────────────
+        # Step 1: collect up to pool_n candidates without per-platform cap.
+        pool_n = max(
+            INTENT_CANDIDATE_MIN,
+            min(limit * INTENT_CANDIDATE_MULTIPLIER, INTENT_CANDIDATE_MAX),
+        )
+
+        wide_matched = []
+        wide_sims    = []
+        wide_seen    = set()
+
+        for _similarity, doc in scored_docs:
+            title     = _first_present(doc, _TITLE_FIELD_CANDIDATES)
+            post_text = _first_present(doc, _TEXT_FIELD_CANDIDATES)
+
+            if not _signal_platform_matches(doc, targeting_platform):
+                continue
+            # (TEXT-REQUIRED AT PICK-TIME) post_text is mandatory — a doc
+            # with no post_text is never counted as a match, even if it
+            # cleared the embedding-similarity threshold. This check has to
+            # live HERE, inside the matching loop, rather than later in
+            # build_claude_post_context() (logics.py's own Claude-context
+            # builder): doing it here means an evidence_required budget
+            # (e.g. 50) is always sized against text-guaranteed posts, and
+            # the timeout/Google-fallback "did we actually find anything"
+            # check (which looks at whether this function's own result is
+            # empty) is always judged against real, analyzable posts rather
+            # than title-only stubs that would silently get dropped
+            # downstream anyway.
+            if not post_text:
+                continue
+
+            post_url = _first_present(doc, _URL_FIELD_CANDIDATES)
+            platform = (
+                _first_present(doc, _PLATFORM_FIELD_CANDIDATES)
+                or _infer_platform_from_url(post_url)
             )
-    except Exception as _bridge_exc:
-        log.debug(f"intent_bridge hook failed (non-fatal): {_bridge_exc}")
+
+            if not title and not post_text and not post_url:
+                continue
+            if post_url and post_url in wide_seen:
+                continue
+
+            # No per-platform cap here — bridge needs the full diversity.
+            if post_url:
+                wide_seen.add(post_url)
+
+            wide_matched.append(
+                {"title": title, "post_text": post_text, "post_url": post_url, "platform": platform}
+            )
+            wide_sims.append(_similarity)
+
+            if len(wide_matched) >= pool_n:
+                break
+
+        # Step 2: call intent bridge; fall back to wide_matched on error.
+        try:
+            from intent_bridge import rerank_with_intent  # noqa: PLC0415
+            bridge_ordered = rerank_with_intent(
+                user_query, wide_matched, limit,
+                topic_sims=wide_sims,
+            )
+        except Exception as _bridge_exc:
+            log.warning(f"intent_bridge hook failed (non-fatal): {_bridge_exc}")
+            bridge_ordered = wide_matched
+
+        # Step 3: apply per-platform cap + overall limit to bridge output.
+        matched = _apply_cap_and_limit(bridge_ordered, effective_max_per_platform, limit)
+
+    else:
+        # ── Narrow path (flag off / no query) — identical to pre-bridge code ──
+        matched = []
+        seen_urls = set()
+        platform_counts = {}  # (v7) per-platform running count for this call
+
+        for _similarity, doc in scored_docs:
+            title     = _first_present(doc, _TITLE_FIELD_CANDIDATES)
+            post_text = _first_present(doc, _TEXT_FIELD_CANDIDATES)
+
+            if not _signal_platform_matches(doc, targeting_platform):
+                continue
+
+            # (TEXT-REQUIRED AT PICK-TIME) post_text is mandatory — a doc
+            # with no post_text is never counted as a match, even if it
+            # cleared the embedding-similarity threshold. This check has to
+            # live HERE, inside the matching loop, rather than later in
+            # build_claude_post_context() (logics.py's own Claude-context
+            # builder): doing it here means an evidence_required budget
+            # (e.g. 50) is always sized against text-guaranteed posts, and
+            # the timeout/Google-fallback "did we actually find anything"
+            # check (which looks at whether this function's own result is
+            # empty) is always judged against real, analyzable posts rather
+            # than title-only stubs that would silently get dropped
+            # downstream anyway.
+            if not post_text:
+                continue
+
+            post_url  = _first_present(doc, _URL_FIELD_CANDIDATES)
+            platform  = _first_present(doc, _PLATFORM_FIELD_CANDIDATES) or _infer_platform_from_url(post_url)
+
+            if not title and not post_text and not post_url:
+                continue
+            if post_url and post_url in seen_urls:
+                continue
+
+            # (v7) Per-platform cap: once a platform has already contributed
+            # MAX_POSTS_PER_PLATFORM matches to this call, skip any further
+            # matches from that same platform (but keep scanning raw_docs —
+            # a different platform may still have room).
+            platform_key = (platform or "unknown").strip().lower()
+            if platform_counts.get(platform_key, 0) >= effective_max_per_platform:
+                continue
+
+            if post_url:
+                seen_urls.add(post_url)
+
+            matched.append({"title": title, "post_text": post_text, "post_url": post_url, "platform": platform})
+            platform_counts[platform_key] = platform_counts.get(platform_key, 0) + 1
+
+            if len(matched) >= limit:
+                break
 
     return matched
 
