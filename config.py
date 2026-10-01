@@ -49,6 +49,13 @@ needed for these two).
 role as MONGODB2 (flintel_signals only). MONGODB3 stays the tertiary
 connection for every OTHER collection — jobs, users, chats, etc. —
 untouched by this addition.
+
+(INTENT BRIDGE NOTE) The INTENT_* constants at the bottom configure the
+intent-classification bridge: after embedding retrieval, a wider candidate
+pool is classified for intent by the LLM, with a short-circuit once enough
+candidates pass, a total-time budget, and a per-post classification cache.
+The master switch INTENT_BRIDGE_ENABLED defaults to False, so nothing
+changes until it is explicitly turned on.
 """
 
 import os
@@ -123,6 +130,19 @@ __all__ = [
     "SIGNAL_EMBEDDING_CANDIDATE_POOL",
     "SIGNAL_EMBEDDING_RECENCY_POOL",
     "SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD",
+    # Intent bridge config
+    "INTENT_BRIDGE_ENABLED",
+    "INTENT_CANDIDATE_MULTIPLIER",
+    "INTENT_CANDIDATE_MIN",
+    "INTENT_CANDIDATE_MAX",
+    "INTENT_SHORTCIRCUIT_HEAD",
+    "INTENT_SHORTCIRCUIT_MIN_PASSING",
+    "INTENT_SHORTCIRCUIT_MIN_CONFIDENCE",
+    "INTENT_CLASSIFY_PARALLEL_BATCHES",
+    "INTENT_BRIDGE_TIMEOUT_SECONDS",
+    "INTENT_CACHE_ENABLED",
+    "INTENT_CACHE_TTL_DAYS",
+    "INTENT_CACHE_COLLECTION",
     # Secondary MongoDB (signals mirror)
     "MONGODB2",
     # Tertiary MongoDB (everything except flintel_signals)
@@ -307,6 +327,38 @@ SIGNAL_EMBEDDING_RECENCY_POOL = int(os.getenv("SIGNAL_EMBEDDING_RECENCY_POOL", "
 # count hota hai. Is se neeche wale docs discard honge, chahe wo pool
 # mein aaye hi kyun na hon.
 SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD = float(os.getenv("SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD", "0.35"))
+
+# ── Intent bridge config ─────────────────────────────────────────────────
+# Embedding retrieval ke baad candidates ko LLM se intent-classify karna.
+# Master switch band ho to purana flow bilkul waisa hi chalta hai.
+INTENT_BRIDGE_ENABLED = os.getenv("INTENT_BRIDGE_ENABLED", "false").strip().lower() in ("1", "true", "yes", "on")
+
+# Candidate pool size = evidence_required * INTENT_CANDIDATE_MULTIPLIER,
+# phir [INTENT_CANDIDATE_MIN, INTENT_CANDIDATE_MAX] ke andar clamp.
+INTENT_CANDIDATE_MULTIPLIER = int(os.getenv("INTENT_CANDIDATE_MULTIPLIER", "4"))
+INTENT_CANDIDATE_MIN = int(os.getenv("INTENT_CANDIDATE_MIN", "100"))
+INTENT_CANDIDATE_MAX = int(os.getenv("INTENT_CANDIDATE_MAX", "200"))
+
+# Short-circuit: pehle INTENT_SHORTCIRCUIT_HEAD candidates classify karo;
+# agar INTENT_SHORTCIRCUIT_MIN_CONFIDENCE ya usse upar confidence ke saath
+# INTENT_SHORTCIRCUIT_MIN_PASSING se zyada pass hon to baaki classify
+# karne ki zaroorat nahi. Defaults prototype ke schemas.py ke
+# SHORTCIRCUIT_* constants se match karte hain.
+INTENT_SHORTCIRCUIT_HEAD = int(os.getenv("INTENT_SHORTCIRCUIT_HEAD", "50"))
+INTENT_SHORTCIRCUIT_MIN_PASSING = int(os.getenv("INTENT_SHORTCIRCUIT_MIN_PASSING", "15"))
+INTENT_SHORTCIRCUIT_MIN_CONFIDENCE = float(os.getenv("INTENT_SHORTCIRCUIT_MIN_CONFIDENCE", "0.70"))
+
+# Kitni classification batches ek saath (parallel) chalein.
+INTENT_CLASSIFY_PARALLEL_BATCHES = int(os.getenv("INTENT_CLASSIFY_PARALLEL_BATCHES", "3"))
+
+# Poore bridge ka total time budget (seconds). Is se zyada lage to bridge
+# chhod kar purana (embedding-only) result use hota hai.
+INTENT_BRIDGE_TIMEOUT_SECONDS = int(os.getenv("INTENT_BRIDGE_TIMEOUT_SECONDS", "25"))
+
+# Intent classification cache (per-post classification dobara na karni pade).
+INTENT_CACHE_ENABLED = os.getenv("INTENT_CACHE_ENABLED", "true").strip().lower() in ("1", "true", "yes", "on")
+INTENT_CACHE_TTL_DAYS = int(os.getenv("INTENT_CACHE_TTL_DAYS", "30"))
+INTENT_CACHE_COLLECTION = os.getenv("INTENT_CACHE_COLLECTION", "intent_classification_cache")
 
 # ── Secondary signals-only MongoDB (READ-ONLY mirror of flintel_signals) ──
 MONGODB2 = os.getenv("MONGODB2", "")
