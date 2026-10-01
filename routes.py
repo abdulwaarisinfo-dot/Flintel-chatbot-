@@ -1705,7 +1705,9 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             targeting_platform=msg.get("targeting_platform", "all"),
             since_days=msg.get("time_window_days"),
             unfiltered=msg.get("unfiltered", False),
+            user_query=msg.get("query"),  # asal user prompt (message mein saved), router/keywords ka nahi
         )
+        
     except Exception as exc:
         log.warning(f"Signal matching failed for streaming topic_key={topic_key}: {exc}")
         matched = []
@@ -1960,7 +1962,9 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                             targeting_platform=msg.get("targeting_platform", "all"),
                             since_days=msg.get("time_window_days"),
                             unfiltered=msg.get("unfiltered", False),
+                            user_query=msg.get("query"),  # asal user prompt
                         )
+                        
                     except Exception as exc:
                         log.warning(f"Signal matching failed while polling for streaming topic_key={topic_key}: {exc}")
                         # matched ko touch mat karo, pehle mili hui posts na khoyein
