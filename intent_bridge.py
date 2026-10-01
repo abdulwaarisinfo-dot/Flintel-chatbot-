@@ -46,7 +46,6 @@ log = logging.getLogger("flintel.intent_bridge")
 # ── Sentinel returned by any failing internal step ───────────────────────────
 _FAIL = object()
 
-
 # ═════════════════════════════════════════════════════════════════════════════
 # PUBLIC API
 # ═════════════════════════════════════════════════════════════════════════════
@@ -56,6 +55,7 @@ def rerank_with_intent(
     candidates: List[dict],
     evidence_required: int,
     *,
+    topic_sims: Optional[List[float]] = None,
     config_overrides: Optional[Dict[str, Any]] = None,
 ) -> List[dict]:
     """Re-rank `candidates` by intent classification for `user_query`.
@@ -67,6 +67,10 @@ def rerank_with_intent(
                         {"title", "post_text", "post_url", "platform"} dicts.
     evidence_required : Minimum number of posts the caller expects back.
                         The fill-to-N step ensures we never return fewer.
+    topic_sims        : Optional list of embedding cosine-similarity scores,
+                        parallel to `candidates`.  Passed to the ranker so
+                        topic relevance contributes to the ranking score.
+                        If None or length-mismatched, defaults to 0.0 per doc.
     config_overrides  : Optional dict of INTENT_* config values to override
                         the defaults from config.py (useful in tests).
 
@@ -87,13 +91,21 @@ def rerank_with_intent(
         log.debug("intent_bridge: empty user_query — skipping bridge")
         return candidates
 
+    # Validate topic_sims length; warn and default to zeros on mismatch.
+    if topic_sims is not None and len(topic_sims) != len(candidates):
+        log.warning(
+            f"intent_bridge: topic_sims length {len(topic_sims)} != "
+            f"candidates length {len(candidates)} — defaulting to 0.0"
+        )
+        topic_sims = None
+
     t_start = time.perf_counter()
     timeout  = cfg.get("INTENT_BRIDGE_TIMEOUT_SECONDS", 25)
 
     executor = ThreadPoolExecutor(max_workers=1)
     try:
         future = executor.submit(
-            _run_bridge, user_query, candidates, evidence_required, cfg
+            _run_bridge, user_query, candidates, evidence_required, cfg, topic_sims
         )
         try:
             result = future.result(timeout=timeout)
@@ -125,20 +137,14 @@ def rerank_with_intent(
     )
     return result
 
-
 def get_query_intent_summary(user_query: str) -> Optional[dict]:
-    """Return the QueryIntent dict for user_query, or None on any error.
-
-    This is a diagnostic helper; it has no effect on the production pipeline.
-    One Claude call (the interpreter) is made if ANTHROPIC_API_KEY is set.
-    """
+    """Return the QueryIntent dict for user_query, or None on any error."""
     try:
         from intent_prototype import query_interpreter  # noqa: PLC0415
         return query_interpreter.interpret(user_query)
     except Exception as exc:
         log.warning(f"get_query_intent_summary failed: {exc}")
         return None
-
 
 # ═════════════════════════════════════════════════════════════════════════════
 # INTERNAL IMPLEMENTATION
@@ -149,80 +155,86 @@ def _run_bridge(
     candidates: List[dict],
     evidence_required: int,
     cfg: dict,
+    topic_sims: Optional[List[float]] = None,
 ) -> List[dict]:
-    """The full bridge computation, intended to run inside a ThreadPoolExecutor.
-
-    Steps
-    -----
-    1. Interpret query → QueryIntent (or reuse cached summary).
-    2. Check classification cache for as many posts as possible.
-    3. Classify uncached posts in parallel batches (short-circuit eligible).
-    4. Save newly classified posts to cache.
-    5. Intent-filter + rank by opportunity/ranking_score.
-    6. Fill-to-N: if ranked < evidence_required, append remaining
-       similarity-ordered candidates (no double-counting).
-    7. Return final list (same dict shape as input).
-    """
     try:
         # ── 1. Interpret query ─────────────────────────────────────────────
         qi = _interpret(user_query)
         if qi is _FAIL:
-            return _FAIL  # type: ignore[return-value]
+            return _FAIL
 
         # ── 2. Check classification cache ──────────────────────────────────
         urls = [c.get("post_url", "") for c in candidates]
-        cache_hits = _cache_get(urls, cfg)  # dict: post_url → cache doc
+        cache_hits = _cache_get(urls, cfg)
 
-        # ── 3. Classify uncached posts in parallel batches ─────────────────
-        uncached_posts  = [c for c in candidates if c.get("post_url") not in cache_hits]
-        new_results     = _classify_parallel(uncached_posts, qi, cfg)
+        # ── 3. Classify uncached posts ─────────────────────────────────────
+        uncached_posts = [c for c in candidates if c.get("post_url") not in cache_hits]
+        new_results    = _classify_parallel(uncached_posts, qi, cfg)
         if new_results is _FAIL:
-            return _FAIL  # type: ignore[return-value]
+            return _FAIL
 
         # ── 4. Save newly classified posts to cache ────────────────────────
         _cache_save(new_results, cfg)
 
         # ── 5. Merge all classifications, intent-filter, rank ──────────────
-        # Build a unified classification map: post_url → classification dict
+        # Build index of topic_sims by post_url for O(1) lookup.
+        sim_by_url: Dict[str, float] = {}
+        if topic_sims is not None:
+            for cand, sim in zip(candidates, topic_sims):
+                url = cand.get("post_url", "")
+                if url:
+                    sim_by_url[url] = float(sim)
+
+        # Build unified classification map.
+        # Cache hits from get_many: {post_url, intents, confidence, schema_ver, cached_at}
+        # New results from _merge_cls_with_posts: full field set including commercial_signal etc.
         cls_map: Dict[str, dict] = {}
         for hit_url, hit_doc in cache_hits.items():
+            intents = hit_doc.get("intents") or []
+            # Cache stores intents list; derive primary intent from first element.
+            primary_intent = intents[0] if intents else ""
             cls_map[hit_url] = {
-                "intents":    hit_doc.get("intents", []),
-                "confidence": hit_doc.get("confidence", 0.0),
-                "from_cache": True,
+                "intents":           intents,
+                "confidence":        float(hit_doc.get("confidence") or 0.0),
+                "from_cache":        True,
+                "intent":            primary_intent,
+                "commercial_signal": 0.0,
+                "urgency":           0.0,
+                "pain_intensity":    0.0,
             }
         for item in new_results:
             url = item.get("post_url", "")
             if url:
                 cls_map[url] = {
-                    "intents":    item.get("intents", []),
-                    "confidence": item.get("confidence", 0.0),
-                    "from_cache": False,
+                    "intents":           item.get("intents", []),
+                    "confidence":        item.get("confidence", 0.0),
+                    "from_cache":        False,
+                    "intent":            item.get("intent", ""),
+                    "commercial_signal": float(item.get("commercial_signal") or 0.0),
+                    "urgency":           float(item.get("urgency") or 0.0),
+                    "pain_intensity":    float(item.get("pain_intensity") or 0.0),
                 }
 
         intent_include = qi.get("intent_include") or []
         intent_logic   = qi.get("intent_logic", "OR")
 
-        passing    = []  # (candidate_dict, confidence) — intent-matched
-        non_passing = [] # candidate_dicts that did not match intent filter
+        passing     = []  # (candidate_dict, topic_sim, cls_dict) — intent-matched
+        non_passing = []  # candidate_dicts that did not match intent filter
 
         for cand in candidates:
             url = cand.get("post_url", "")
             cls = cls_map.get(url)
             if cls is None:
-                # No classification available — treat as non-passing
                 non_passing.append(cand)
                 continue
-
             matched = _intent_matches(cls.get("intents", []), intent_include, intent_logic)
             if matched:
-                passing.append((cand, float(cls.get("confidence", 0.0))))
+                sim = sim_by_url.get(url, 0.0)
+                passing.append((cand, sim, cls))
             else:
                 non_passing.append(cand)
 
-        # Sort passing by confidence descending (higher confidence first)
-        passing.sort(key=lambda x: x[1], reverse=True)
-        ranked = [cand for cand, _ in passing]
+        ranked = _rank_passing(passing, qi)
 
         # ── 6. Fill-to-N ───────────────────────────────────────────────────
         ranked = _fill_to_n(ranked, candidates, non_passing, evidence_required)
@@ -231,11 +243,82 @@ def _run_bridge(
 
     except Exception as exc:
         log.warning(f"intent_bridge._run_bridge: unhandled error — {exc}")
-        return _FAIL  # type: ignore[return-value]
+        return _FAIL
 
+def _rank_passing(passing: list, qi: dict) -> List[dict]:
+    """Sort intent-matching posts via ranker.rank() using opportunity.load_weights()."""
+    if not passing:
+        return []
+
+    try:
+        from intent_prototype import ranker, opportunity, schemas  # noqa: PLC0415
+        weights = opportunity.load_weights()
+
+        triples = []
+        for cand, sim, cls in passing:
+            url = cand.get("post_url", "")
+            # ranker.flatten() de-duplicates by doc["id"]; set it to post_url.
+            doc = {
+                "id":        url,
+                "title":     cand.get("title", ""),
+                "post_text": cand.get("post_text", ""),
+                "post_url":  url,
+                "platform":  cand.get("platform", ""),
+            }
+            classification = schemas.normalize_classification({
+                "i":                    1,
+                "intent":               cls.get("intent", ""),
+                "intent_confidence":    cls.get("confidence", 0.0),
+                "secondary_intent":     None,
+                "secondary_confidence": None,
+                "actor_type":           None,
+                "actor_role":           None,
+                "commercial_signal":    cls.get("commercial_signal", 0.0),
+                "pain_intensity":       cls.get("pain_intensity", 0.0),
+                "urgency":              cls.get("urgency", 0.0),
+                "specificity":          0.0,
+                "geography":            None,
+                "industry_hint":        None,
+                "ambiguous":            False,
+                "noise":                False,
+            })
+            triples.append((doc, sim, classification))
+
+        result = ranker.rank(triples, qi, weights, top_n=len(passing))
+
+        # sections[*]["results"] — each row has {"doc", "ranking_score", ...}
+        ordered_docs = []
+        for section in result.get("sections", []):
+            for row in section.get("results", []):
+                ordered_docs.append(row.get("doc") or row)
+
+        url_to_cand = {cand.get("post_url", ""): cand for cand, _, _ in passing}
+        ranked = []
+        seen_urls = set()
+        for doc in ordered_docs:
+            url = doc.get("post_url", "") or doc.get("id", "")
+            if url and url not in seen_urls and url in url_to_cand:
+                ranked.append(url_to_cand[url])
+                seen_urls.add(url)
+
+        # Append any passing candidates the ranker dropped (shouldn't happen).
+        for cand, _, _ in passing:
+            url = cand.get("post_url", "")
+            if url not in seen_urls:
+                ranked.append(cand)
+                seen_urls.add(url)
+
+        return ranked
+
+    except Exception as exc:
+        log.warning(
+            f"intent_bridge._rank_passing: ranker unavailable ({exc}) "
+            f"— falling back to confidence sort"
+        )
+        passing_sorted = sorted(passing, key=lambda x: float(x[2].get("confidence", 0.0)), reverse=True)
+        return [cand for cand, _, _ in passing_sorted]
 
 def _interpret(user_query: str):
-    """Call query_interpreter.interpret(); return QueryIntent dict or _FAIL."""
     try:
         from intent_prototype import query_interpreter  # noqa: PLC0415
         return query_interpreter.interpret(user_query)
@@ -243,64 +326,31 @@ def _interpret(user_query: str):
         log.warning(f"intent_bridge._interpret failed: {exc}")
         return _FAIL
 
-
 def _cache_get(post_urls: List[str], cfg: dict) -> dict:
-    """Return cache hits dict from classification_cache.get_many().
-
-    Always returns a dict (possibly empty) — never raises.
-    """
     if not cfg.get("INTENT_CACHE_ENABLED", True):
         return {}
     try:
         from intent_prototype.classification_cache import get_many  # noqa: PLC0415
         return get_many(post_urls)
     except Exception as exc:
-        log.debug(f"intent_bridge._cache_get failed (non-fatal): {exc}")
+        log.warning(f"intent_bridge._cache_get failed (non-fatal): {exc}")
         return {}
 
-
 def _cache_save(new_results: list, cfg: dict) -> None:
-    """Persist newly classified items via classification_cache.save_many().
-
-    Only saves items that were successfully classified (no _error field).
-    Never raises.
-    """
     if not cfg.get("INTENT_CACHE_ENABLED", True) or not new_results:
         return
-    # Filter out error/unclassified placeholders — they must not pollute
-    # the cache with low-confidence ambiguous data that would block future
-    # real classifications from being fetched and stored.
-    # _unclassified() always produces intent_confidence=0.0; real LLM
-    # classifications always return a positive (possibly small) confidence,
-    # so this is a safe proxy for "was actually classified".
+    # Only cache items that were actually classified (confidence > 0).
     good_results = [r for r in new_results if r.get("confidence", 0.0) > 0.0]
     if not good_results:
         return
     try:
         from intent_prototype.classification_cache import save_many  # noqa: PLC0415
+        # save_many(List[dict]) — each dict needs post_url, intents, confidence at minimum.
         save_many(good_results)
     except Exception as exc:
-        log.debug(f"intent_bridge._cache_save failed (non-fatal): {exc}")
+        log.warning(f"intent_bridge._cache_save failed (non-fatal): {exc}")
 
-
-def _classify_parallel(
-    posts: List[dict],
-    qi: dict,
-    cfg: dict,
-) -> list:
-    """Classify `posts` using doc_classifier, potentially in parallel batches.
-
-    Returns a list of classification result dicts, each containing at minimum:
-        { "post_url": str, "intents": [str], "confidence": float }
-
-    Returns _FAIL only when the classifier import itself fails.
-    Any partial failure is absorbed: failed posts simply won't appear in the
-    result — they'll fall back to non-passing in the merge step.
-
-    SHORT-CIRCUIT: if the short-circuit conditions are met (see schemas.py),
-    classify only the top SHORTCIRCUIT_HEAD posts first; if enough pass,
-    skip the tail.
-    """
+def _classify_parallel(posts: List[dict], qi: dict, cfg: dict) -> list:
     if not posts:
         return []
 
@@ -308,9 +358,9 @@ def _classify_parallel(
         from intent_prototype import doc_classifier, schemas  # noqa: PLC0415
     except Exception as exc:
         log.warning(f"intent_bridge._classify_parallel: import error — {exc}")
-        return _FAIL  # type: ignore[return-value]
+        return _FAIL
 
-    head_n = cfg.get("INTENT_SHORTCIRCUIT_HEAD", 50)
+    head_n      = cfg.get("INTENT_SHORTCIRCUIT_HEAD", 50)
     min_passing = cfg.get("INTENT_SHORTCIRCUIT_MIN_PASSING", 15)
     min_conf    = cfg.get("INTENT_SHORTCIRCUIT_MIN_CONFIDENCE", 0.70)
     n_batches   = cfg.get("INTENT_CLASSIFY_PARALLEL_BATCHES", 3)
@@ -318,7 +368,6 @@ def _classify_parallel(
     intent_logic   = qi.get("intent_logic", "OR")
 
     try:
-        # ── Short-circuit check ────────────────────────────────────────────
         if len(posts) > head_n:
             head_docs = [_post_to_doc(p) for p in posts[:head_n]]
             head_cls  = _classify_batch(head_docs, doc_classifier)
@@ -332,38 +381,32 @@ def _classify_parallel(
             )
 
             if strong >= min_passing:
-                log.debug(
-                    f"intent_bridge: short-circuit triggered "
-                    f"({strong}/{head_n} strong) — skipping tail"
-                )
+                log.debug(f"intent_bridge: short-circuit triggered ({strong}/{head_n} strong) — skipping tail")
                 return _merge_cls_with_posts(posts[:head_n], head_cls)
 
-            # Classify tail in parallel batches
             tail_posts = posts[head_n:]
         else:
-            head_docs = None
-            head_cls  = None
+            head_docs  = None
+            head_cls   = None
             tail_posts = posts
 
-        # ── Classify in N parallel batches ────────────────────────────────
         all_results = []
 
         if head_docs is not None and head_cls is not None:
-            # Already have head results
             all_results.extend(_merge_cls_with_posts(posts[:head_n], head_cls))
 
         if tail_posts:
-            batch_size = max(1, (len(tail_posts) + n_batches - 1) // n_batches)
-            batches    = [
-                tail_posts[i : i + batch_size]
-                for i in range(0, len(tail_posts), batch_size)
-            ]
-
-            if len(batches) == 1:
-                docs = [_post_to_doc(p) for p in batches[0]]
+            single_batch_limit = getattr(schemas, "CLASSIFIER_BATCH_SIZE", 17)
+            if len(tail_posts) <= single_batch_limit:
+                docs = [_post_to_doc(p) for p in tail_posts]
                 cls  = _classify_batch(docs, doc_classifier)
-                all_results.extend(_merge_cls_with_posts(batches[0], cls))
+                all_results.extend(_merge_cls_with_posts(tail_posts, cls))
             else:
+                batch_size = max(1, (len(tail_posts) + n_batches - 1) // n_batches)
+                batches    = [
+                    tail_posts[i : i + batch_size]
+                    for i in range(0, len(tail_posts), batch_size)
+                ]
                 with ThreadPoolExecutor(max_workers=n_batches) as pool:
                     futures_map = {}
                     for batch in batches:
@@ -376,7 +419,7 @@ def _classify_parallel(
                             cls = f.result()
                             all_results.extend(_merge_cls_with_posts(batch, cls))
                         except Exception as exc:
-                            log.debug(
+                            log.warning(
                                 f"intent_bridge: batch classify failed: {exc} "
                                 f"— {len(batch)} posts treated as non-passing"
                             )
@@ -387,32 +430,21 @@ def _classify_parallel(
         log.warning(f"intent_bridge._classify_parallel error: {exc}")
         return []
 
-
 def _classify_batch(docs: list, doc_classifier) -> list:
-    """Call doc_classifier.classify(docs) and return the classification list."""
     return doc_classifier.classify(docs)
 
-
 def _post_to_doc(post: dict) -> dict:
-    """Convert a production candidate dict to the shape doc_classifier expects."""
     return {
         "post_title": post.get("title", ""),
         "post_text":  post.get("post_text", ""),
         "post_url":   post.get("post_url", ""),
         "platform":   post.get("platform", ""),
-        # doc_classifier also reads these aliases if post_title is absent
         "title":      post.get("title", ""),
         "text":       post.get("post_text", ""),
         "url":        post.get("post_url", ""),
     }
 
-
 def _merge_cls_with_posts(posts: List[dict], classifications: list) -> list:
-    """Zip post dicts with their classification results into a flat result list.
-
-    Returns list of dicts:
-        { "post_url": str, "intents": [str], "confidence": float, "intent": str }
-    """
     results = []
     for post, cls in zip(posts, classifications):
         if cls is None:
@@ -423,54 +455,33 @@ def _merge_cls_with_posts(posts: List[dict], classifications: list) -> list:
             intents.append(cls["secondary_intent"])
         confidence = float(cls.get("intent_confidence") or 0.0)
         results.append({
-            "post_url":   post.get("post_url", ""),
-            "intents":    intents,
-            "confidence": confidence,
-            # preserve extra fields for ranking
-            "intent":           intent,
+            "post_url":          post.get("post_url", ""),
+            "intents":           intents,
+            "confidence":        confidence,
+            "intent":            intent,
             "intent_confidence": confidence,
-            "secondary_intent": cls.get("secondary_intent"),
+            "secondary_intent":  cls.get("secondary_intent"),
             "commercial_signal": float(cls.get("commercial_signal") or 0.0),
             "urgency":           float(cls.get("urgency") or 0.0),
             "pain_intensity":    float(cls.get("pain_intensity") or 0.0),
         })
     return results
 
-
 def _intent_matches(intents: List[str], intent_include: List[str], logic: str) -> bool:
-    """Return True if `intents` satisfies the intent filter.
-
-    When intent_include is empty, every post passes (no filter).
-    Logic "OR" → at least one intent from intents is in intent_include.
-    Logic "AND" → ALL items in intent_include appear in intents.
-    """
     if not intent_include:
         return True
     if not intents:
         return False
     if logic == "AND":
         return all(inc in intents for inc in intent_include)
-    # OR (default)
     return any(inc in intents for inc in intent_include)
 
-
-def _fill_to_n(
-    ranked:      List[dict],
-    original:    List[dict],
-    non_passing: List[dict],
-    n:           int,
-) -> List[dict]:
-    """Guarantee the returned list has at least min(len(original), n) posts.
-
-    If intent-ranked results < n, append non-passing candidates in their
-    original similarity order — no duplicates (checked by post_url).
-    """
+def _fill_to_n(ranked: List[dict], original: List[dict], non_passing: List[dict], n: int) -> List[dict]:
     if len(ranked) >= n:
         return ranked
 
     seen_urls = {c.get("post_url", "") for c in ranked}
 
-    # Fill from non-passing first (already in original similarity order)
     for cand in non_passing:
         if len(ranked) >= n:
             break
@@ -479,7 +490,6 @@ def _fill_to_n(
             ranked.append(cand)
             seen_urls.add(url)
 
-    # If still short, fill from remaining originals (belt-and-suspenders)
     if len(ranked) < n:
         for cand in original:
             if len(ranked) >= n:
@@ -491,27 +501,20 @@ def _fill_to_n(
 
     return ranked
 
-
 def _load_config(overrides: Optional[dict]) -> dict:
-    """Load all INTENT_BRIDGE_* settings from config.py, apply overrides.
-
-    Returns a plain dict so the rest of the bridge never imports config
-    directly — only this function does, and any import failure defaults
-    gracefully to INTENT_BRIDGE_ENABLED=False.
-    """
     defaults = {
-        "INTENT_BRIDGE_ENABLED":             False,
-        "INTENT_CANDIDATE_MULTIPLIER":       4,
-        "INTENT_CANDIDATE_MIN":              100,
-        "INTENT_CANDIDATE_MAX":              200,
-        "INTENT_SHORTCIRCUIT_HEAD":          50,
-        "INTENT_SHORTCIRCUIT_MIN_PASSING":   15,
+        "INTENT_BRIDGE_ENABLED":              False,
+        "INTENT_CANDIDATE_MULTIPLIER":        4,
+        "INTENT_CANDIDATE_MIN":               100,
+        "INTENT_CANDIDATE_MAX":               200,
+        "INTENT_SHORTCIRCUIT_HEAD":           50,
+        "INTENT_SHORTCIRCUIT_MIN_PASSING":    15,
         "INTENT_SHORTCIRCUIT_MIN_CONFIDENCE": 0.70,
-        "INTENT_CLASSIFY_PARALLEL_BATCHES":  3,
-        "INTENT_BRIDGE_TIMEOUT_SECONDS":     25,
-        "INTENT_CACHE_ENABLED":              True,
-        "INTENT_CACHE_TTL_DAYS":             30,
-        "INTENT_CACHE_COLLECTION":           "intent_classification_cache",
+        "INTENT_CLASSIFY_PARALLEL_BATCHES":   3,
+        "INTENT_BRIDGE_TIMEOUT_SECONDS":      25,
+        "INTENT_CACHE_ENABLED":               True,
+        "INTENT_CACHE_TTL_DAYS":              30,
+        "INTENT_CACHE_COLLECTION":            "intent_classification_cache",
     }
     try:
         import config  # noqa: PLC0415
