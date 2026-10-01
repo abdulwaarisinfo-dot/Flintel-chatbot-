@@ -345,8 +345,8 @@ def _cache_save(new_results: list, cfg: dict) -> None:
         return
     try:
         from intent_prototype.classification_cache import save_many  # noqa: PLC0415
-        # save_many(List[dict]) — each dict needs post_url, intents, confidence at minimum.
-        save_many(good_results)
+        # save_many([(post_url, classification_dict), ...]) — asal signature.
+        save_many([(r["post_url"], r) for r in good_results])
     except Exception as exc:
         log.warning(f"intent_bridge._cache_save failed (non-fatal): {exc}")
 
