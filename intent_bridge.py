@@ -4,7 +4,8 @@ INTENT BRIDGE
 Prototype (intent_prototype/) aur production (logics.py / routes.py) ke
 beech ka jor.
 
-    rerank_with_intent(user_query, candidates, evidence_required, *, config_overrides=None) -> list
+    rerank_with_intent(user_query, candidates, evidence_required, *,
+                       topic_sims=None, config_overrides=None) -> list
     get_query_intent_summary(user_query) -> dict | None
 
 FAIL-SAFE CONTRACT: koi exception bahar nahi aati. Flag band ho, interpreter
@@ -12,32 +13,33 @@ fail ho, timeout ho, ya kuch bhi ghalat ho — candidates waisi hi wapas
 (log.warning mein wajah ke saath). Return value hamesha candidates ke apne
 dicts hain, unchanged (jab tak attach_intent override on na ho).
 
-PROTOTYPE ADAPTERS: intent_prototype ki files mere saamne nahi thin, is liye
-unke function names/signatures ke andaze _call_* adapters mein ek hi jagah
-band hain. Naam alag hon to sirf wahi adapters (aur _NAMES tables) badlo.
-Ranker/filter na mil sake to built-in fallback (confidence + similarity)
-chalta hai aur warning log hoti hai.
+ASAL PROTOTYPE API (intent_prototype/ ki files parh kar):
+    query_interpreter.interpret(query, model=None) -> QueryIntent dict
+        (malformed reply par "_interpreter_fallback": True; khali query par
+        ValueError)
+    doc_classifier.classify(docs, batch_size=None, model=None, progress=None)
+        -> list of dicts, docs ke index-aligned. docs mein "title"/"post_text".
+        Key "intent_confidence". Fail batch => placeholder jis mein "_error".
+    opportunity.load_weights(path=None) -> weights (weights.json)
+    ranker.rank(candidates, qi, weights, top_n) / ranker.flatten(result)
+        candidates = [(doc, topic_sim, classification)]
+        flatten() doc["id"] se de-duplicate karta hai => "id" lazmi.
+    classification_cache.get_many(urls) / save_many([(url, cls)])
+
+Hard filter + intent gate + ranking ab poori tarah ranker.py ke andar hai;
+bridge sirf adapter hai (koi apni filter/rank logic nahi).
 """
 
 import logging
 import threading
 import time
-from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeout, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from functools import lru_cache
 
 import config as _cfg
 
 log = logging.getLogger(__name__)
 
-# ── Prototype function-name tables (adapter points) ──────────────────────
-_NAMES = {
-    "interpret": ("interpret_query", "interpret", "parse_query", "extract_intent", "analyze_query"),
-    "classify":  ("classify_batch", "classify_documents", "classify_docs", "classify_posts", "classify"),
-    "passes":    ("passes_intent_filter", "passes_filter", "apply_intent_filter", "matches_intent", "is_opportunity"),
-    "rank":      ("rank_documents", "rank_docs", "rank_posts", "rank", "rerank"),
-}
-_PASS_KEYS = ("passes_filter", "passes", "matches_intent", "is_match", "match", "is_opportunity")
-_DEFAULT_BATCH_SIZE = 10
 _SUMMARY_STR_LIMIT = 300
 
 _warned_once = set()
@@ -59,7 +61,7 @@ def _settings(overrides):
         "parallel":       max(1, int(getattr(_cfg, "INTENT_CLASSIFY_PARALLEL_BATCHES", 3))),
         "timeout":        float(getattr(_cfg, "INTENT_BRIDGE_TIMEOUT_SECONDS", 25)),
         "cache_enabled":  bool(getattr(_cfg, "INTENT_CACHE_ENABLED", True)),
-        "batch_size":     None,    # None => prototype ka apna / default
+        "batch_size":     None,    # None => schemas.CLASSIFIER_BATCH_SIZE
         "attach_intent":  False,   # True => candidate ki copy par "_intent" key
     }
     if overrides:
@@ -73,112 +75,124 @@ def _load(module_name):
     return importlib.import_module(f"intent_prototype.{module_name}")
 
 
-def _find(mod, kind):
-    for n in _NAMES[kind]:
-        fn = getattr(mod, n, None)
-        if callable(fn):
-            return fn
-    return None
-
-
-# ── Adapters ─────────────────────────────────────────────────────────────
+# ── Adapters (asal prototype API) ────────────────────────────────────────
 @lru_cache(maxsize=128)
 def _interpret(user_query):
-    fn = _find(_load("query_interpreter"), "interpret")
-    if fn is None:
-        raise RuntimeError("query_interpreter mein interpret function nahi mila")
-    intent = fn(user_query)
-    if intent is None:
-        raise RuntimeError("interpreter ne None diya")
+    """query_interpreter.interpret(query) -> QueryIntent dict."""
+    intent = _load("query_interpreter").interpret(user_query)
+    if not isinstance(intent, dict):
+        raise RuntimeError("interpreter ne dict nahi diya")
     return intent
-
-
-def _classify_batch(intent, docs):
-    """docs ki classification: list (aligned) ya {post_url: cls} -> {post_url: cls}."""
-    mod = _load("doc_classifier")
-    fn = _find(mod, "classify")
-    if fn is None:
-        raise RuntimeError("doc_classifier mein classify function nahi mila")
-    res = fn(intent, docs)
-    out = {}
-    if isinstance(res, dict):
-        out = {u: c for u, c in res.items() if isinstance(c, dict)}
-    elif isinstance(res, (list, tuple)):
-        for doc, cls in zip(docs, res):
-            if isinstance(cls, dict) and doc.get("post_url"):
-                out[doc["post_url"]] = cls
-    return out
 
 
 def _batch_size(s):
     if s["batch_size"]:
         return max(1, int(s["batch_size"]))
     try:
-        v = getattr(_load("doc_classifier"), "BATCH_SIZE", None)
-        if v:
-            return max(1, int(v))
+        return max(1, int(_load("schemas").CLASSIFIER_BATCH_SIZE))
     except Exception:
-        pass
-    return _DEFAULT_BATCH_SIZE
+        return 17     # schemas.CLASSIFIER_BATCH_SIZE ka asal default
 
 
-def _confidence(cls):
-    try:
-        return float(cls.get("confidence", 0.0))
-    except Exception:
-        return 0.0
-
-
-def _passes(intent, cls):
-    """Intent filter: (passes: bool, confidence: float)."""
-    try:
-        fn = _find(_load("opportunity"), "passes")
-    except Exception:
-        fn = None
-    if fn is not None:
-        r = fn(intent, cls)
-        return (bool(r[0]), float(r[1])) if isinstance(r, tuple) else (bool(r), _confidence(cls))
-    for k in _PASS_KEYS:
-        if k in cls:
-            return bool(cls[k]), _confidence(cls)
-    _warn_once("no_pass_filter",
-               "intent bridge: opportunity filter/pass key nahi mila — koi post 'pass' nahi maani jayegi")
-    return False, _confidence(cls)
-
-
-def _rank(intent, entries):
+def _is_failed(cls):
     """
-    entries: [{"doc", "cls", "conf", "idx"}] (sirf passing). Order mein wapas.
-    Prototype ranker chale to wahi; warna confidence desc, phir similarity order.
+    Placeholder / fallback classification? doc_classifier._unclassified() "_error"
+    set karta hai, lekin schemas.normalize_classification() naya dict banata hai
+    jis mein "_error" key BACHTI NAHI — asal file mein sirf intent_confidence 0.0
+    (aur ambiguous True) reh jata hai. Is liye dono signal dekhte hain:
+    "_error" ya intent_confidence <= 0.0 (normalize unrecognised label par bhi
+    0.0 deta hai — wo bhi "classification" nahi, fallback hai).
     """
+    if not isinstance(cls, dict) or cls.get("_error"):
+        return True
     try:
-        fn = _find(_load("ranker"), "rank")
-        if fn is not None:
-            ranked = fn(intent, [(e["doc"], e["cls"]) for e in entries])
-            urls = []
-            for r in ranked:
-                d = r[0] if isinstance(r, (tuple, list)) else r
-                urls.append(d.get("post_url") if isinstance(d, dict) else d)
-            by_url = {e["doc"].get("post_url"): e for e in entries}
-            ordered = [by_url[u] for u in urls if u in by_url]
-            if ordered:
-                return ordered
-    except Exception as e:
-        log.warning("intent bridge: prototype ranker fail (%s) — built-in ranking", e)
-    return sorted(entries, key=lambda e: (-e["conf"], e["idx"]))
+        return float(cls.get("intent_confidence") or 0.0) <= 0.0
+    except (TypeError, ValueError):
+        return True
+
+
+def _classify_batch(batch, bs):
+    """
+    doc_classifier.classify(docs, batch_size=...) -> {post_url: cls} sirf THEEK
+    classifications ke liye. Failed placeholders (_is_failed) wapas nahi aatin.
+    Returns (good: dict, n_failed: int).
+    """
+    res = _load("doc_classifier").classify(batch, batch_size=bs)
+    good, failed = {}, 0
+    if not isinstance(res, (list, tuple)):
+        return good, len(batch)
+    for doc, cls in zip(batch, res):
+        if not _is_failed(cls):
+            good[doc["post_url"]] = cls
+        else:
+            failed += 1
+    failed += max(0, len(batch) - len(res))
+    return good, failed
+
+
+def _rank_rows(qi, weights, entries):
+    """
+    entries: [(doc_for_rank, topic_sim, cls)]. ranker.rank + flatten ->
+    ordered rows. top_n = len(entries) taake koi row truncate na ho.
+    """
+    if not entries:
+        return []
+    ranker = _load("ranker")
+    result = ranker.rank(entries, qi, weights, top_n=len(entries))
+    return ranker.flatten(result)
+
+
+def _rank_doc(candidate, url):
+    """Ranker ko doc ki shallow copy: "id" = post_url (flatten() de-dup ke liye).
+    created_utc/source (hard_filter/opportunity.score ko chahiye) copy mein
+    rehte hain agar candidate mein hon."""
+    d = dict(candidate)
+    d["id"] = url
+    return d
 
 
 # ── Core ─────────────────────────────────────────────────────────────────
-def _run(user_query, candidates, evidence_required, s, deadline):
-    from intent_prototype import classification_cache as cache  # fail-safe module
+def _run(user_query, candidates, evidence_required, topic_sims, s, deadline):
+    cache = _load("classification_cache")
+    opportunity = _load("opportunity")
 
-    intent = _interpret(user_query)
+    qi = _interpret(user_query)
+    if qi.get("_interpreter_fallback"):
+        log.warning("intent bridge: interpreter fallback (koi intent nahi mila) — "
+                    "classify skip, purana result")
+        return list(candidates)
+
+    # topic_sims: candidates ke barabar floats; None / mismatch => 0.0
+    sims = [0.0] * len(candidates)
+    if topic_sims is not None:
+        try:
+            vals = [float(x) for x in topic_sims]
+            if len(vals) == len(candidates):
+                sims = vals
+            else:
+                log.warning("intent bridge: topic_sims length %d != candidates %d — 0.0 maana",
+                            len(vals), len(candidates))
+        except Exception as e:
+            log.warning("intent bridge: topic_sims invalid (%s) — 0.0 maana", e)
+
+    weights = opportunity.load_weights()
+    if not weights.get("calibrated"):
+        _warn_once("uncalibrated", "weights uncalibrated: starting values")
 
     urls = [c.get("post_url") for c in candidates]
     cls_map = cache.get_many([u for u in urls if u]) if s["cache_enabled"] else {}
+    cls_map = dict(cls_map or {})
 
-    def classify_missing(docs):
-        todo = [d for d in docs if d.get("post_url") and d["post_url"] not in cls_map]
+    stats = {"classified": 0, "failed": 0}
+    lock = threading.Lock()
+
+    def classify_missing(idxs):
+        seen, todo = set(), []
+        for i in idxs:
+            u = urls[i]
+            if u and u not in cls_map and u not in seen:
+                seen.add(u)
+                todo.append(candidates[i])
         if not todo:
             return
         bs = _batch_size(s)
@@ -186,66 +200,93 @@ def _run(user_query, candidates, evidence_required, s, deadline):
 
         def work(batch):
             if time.monotonic() >= deadline:
-                return {}
-            res = _classify_batch(intent, batch)
-            if res and s["cache_enabled"]:
-                cache.save_many(list(res.items()))   # turant save, timeout par bhi kaam zaya na ho
-            return res
+                return {}, 0
+            good, failed = _classify_batch(batch, bs)
+            if good and s["cache_enabled"]:
+                cache.save_many(list(good.items()))   # sirf theek wali; turant save
+            return good, failed
 
         with ThreadPoolExecutor(max_workers=s["parallel"]) as ex:
             futs = [ex.submit(work, b) for b in batches]
             for f in as_completed(futs):
                 try:
-                    cls_map.update(f.result())
+                    good, failed = f.result()
                 except Exception as e:
                     log.warning("intent bridge: ek classify batch fail (%s) — skip", e)
+                    continue
+                with lock:
+                    cls_map.update(good)
+                    stats["classified"] += len(good)
+                    stats["failed"] += failed
+        if stats["failed"]:
+            log.warning("intent bridge: %d posts classify nahi ho sakin (_error) — "
+                        "cache mein save nahi", stats["failed"])
 
-    def passing_count(docs):
-        n = 0
-        for d in docs:
-            c = cls_map.get(d.get("post_url"))
-            if c:
-                ok, conf = _passes(intent, c)
-                if ok and conf >= s["min_confidence"]:
-                    n += 1
-        return n
+    def entries_for(idxs):
+        out, seen = [], set()
+        for i in idxs:
+            u = urls[i]
+            if not u or u in seen or u not in cls_map:
+                continue
+            seen.add(u)
+            out.append((_rank_doc(candidates[i], u), sims[i], cls_map[u]))
+        return out
 
-    head = candidates[:s["head"]]
-    classify_missing(head)
-    if len(candidates) > len(head) and passing_count(head) < s["min_passing"]:
-        classify_missing(candidates[len(head):])
+    # ── short-circuit: pehle HEAD classify + rank ─────────────────────────
+    all_idx = list(range(len(candidates)))
+    head_idx = all_idx[:s["head"]]
+    classify_missing(head_idx)
 
-    entries = []
-    for i, d in enumerate(candidates):
-        c = cls_map.get(d.get("post_url"))
-        if not c:
-            continue
-        ok, conf = _passes(intent, c)
-        if ok:
-            entries.append({"doc": d, "cls": c, "conf": conf, "idx": i})
+    if len(candidates) > len(head_idx):
+        head_rows = _rank_rows(qi, weights, entries_for(head_idx))
+        strong = sum(1 for r in head_rows
+                     if float(r.get("effective_confidence") or 0.0) >= s["min_confidence"])
+        if strong <= s["min_passing"]:
+            classify_missing(all_idx[len(head_idx):])
 
-    ranked = _rank(intent, entries)
+    # ── final rank (sab classified posts) ────────────────────────────────
+    rows = _rank_rows(qi, weights, entries_for(all_idx))
+
+    # ranked row -> ASAL candidate dict (post_url se)
+    first_by_url = {}
+    for i, u in enumerate(urls):
+        if u and u not in first_by_url:
+            first_by_url[u] = i
 
     n = max(0, int(evidence_required))
-    result, seen = [], set()
-    for e in ranked:
+    result, used = [], set()
+    for r in rows:
         if len(result) >= n:
             break
-        d = e["doc"]
+        u = (r.get("doc") or {}).get("post_url")
+        i = first_by_url.get(u)
+        if i is None or i in used:
+            continue
+        d = candidates[i]
         if s["attach_intent"]:
             d = dict(d)
-            d["_intent"] = {"confidence": e["conf"], "classification": e["cls"]}
+            d["_intent"] = {
+                "confidence": r.get("effective_confidence"),
+                "ranking_score": r.get("ranking_score"),
+                "classification": r.get("classification"),
+            }
         result.append(d)
-        seen.add(id(e["doc"]))
-    for d in candidates:                      # FILL TO N — similarity order
+        used.add(i)
+
+    if not rows:
+        log.warning("intent bridge: koi post intent filter se pass nahi hui — similarity order")
+
+    # ── FILL TO N: bachi hui candidates similarity order mein ─────────────
+    rest = sorted((i for i in all_idx if i not in used), key=lambda i: -sims[i])
+    for i in rest:
         if len(result) >= n:
             break
-        if id(d) not in seen:
-            result.append(d)
+        result.append(candidates[i])
     return result
 
 
-def rerank_with_intent(user_query, candidates, evidence_required, *, config_overrides=None):
+def rerank_with_intent(user_query, candidates, evidence_required, *,
+                       topic_sims=None, config_overrides=None):
     """Intent ke hisab se rerank; kisi bhi masle par candidates waisi hi wapas."""
     try:
         s = _settings(config_overrides)
@@ -260,7 +301,8 @@ def rerank_with_intent(user_query, candidates, evidence_required, *, config_over
 
         def target():
             try:
-                box["res"] = _run(user_query, candidates, evidence_required, s, deadline)
+                box["res"] = _run(user_query, candidates, evidence_required,
+                                  topic_sims, s, deadline)
             except Exception as e:
                 box["err"] = e
 
