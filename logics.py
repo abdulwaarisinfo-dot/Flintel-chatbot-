@@ -5039,7 +5039,7 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str
                     # pattern as the post_url patch above: never invents
                     # a value, only fills one in once a confident title
                     # match already exists.
-                    if match.get("google_rank") is not None:
+                    if match.get("google_rank") is not None: 
                         post["google_rank"] = match["google_rank"]
                     if match.get("subreddit") and not post.get("source"):
                         post["source"] = match["subreddit"]
