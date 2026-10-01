@@ -92,30 +92,25 @@ def _classifier_json(docs, intent="buyer_demand", confidence=0.85):
     return json.dumps(items)
 
 # ─── FakeCache — matches real classification_cache.save_many / get_many sig ──
-# save_many(List[dict]) — each dict has post_url, intents, confidence at minimum
+# save_many([(post_url, classification_dict), ...]) — asal signature (tuples)
 # get_many(List[str]) → Dict[str, dict] keyed by post_url
 
 class FakeCache:
     def __init__(self):
-        # store: post_url → {post_url, intents, confidence}
+        # store: post_url → classification_dict
         self.store = {}
-        # saved: list of dicts passed to save_many (for assertion)
+        # saved: list of (post_url, classification_dict) tuples passed to save_many
         self.saved = []
 
     def get_many(self, urls):
         return {u: self.store[u] for u in urls if u in self.store}
 
     def save_many(self, items):
-        # items is List[dict] — same signature as real save_many
+        # items = [(post_url, classification_dict), ...] — same as real save_many
         self.saved.extend(items)
-        for item in items:
-            url = item.get("post_url")
-            if url:
-                self.store[url] = {
-                    "post_url":   url,
-                    "intents":    item.get("intents", []),
-                    "confidence": float(item.get("confidence", 0.0)),
-                }
+        for post_url, classification in items:
+            if post_url:
+                self.store[post_url] = classification
 
 def _cache_module(cache: FakeCache):
     m = types.ModuleType("intent_prototype.classification_cache")
@@ -822,9 +817,9 @@ def test_ranker_fallback_warning_logged_on_ranker_failure(ctx, caplog):
 
 def test_save_many_called_with_list_of_dicts(ctx, monkeypatch):
     """
-    classification_cache.save_many(List[dict]) — each dict has post_url,
-    intents, confidence.  Verifies the bridge passes dicts (not tuples) and
-    that each saved item has the required fields.
+    classification_cache.save_many([(post_url, classification_dict), ...]) —
+    asal signature: tuples, not dicts.  Verifies bridge passes tuples and
+    that each tuple has (str, dict) shape with post_url, intents, confidence.
     """
     import intent_bridge
 
@@ -855,16 +850,18 @@ def test_save_many_called_with_list_of_dicts(ctx, monkeypatch):
     assert len(save_many_calls) > 0, "save_many must have been called with classified items"
 
     for item in save_many_calls:
-        # Each item must be a dict, NOT a tuple
-        assert isinstance(item, dict), (
-            f"save_many received {type(item).__name__}, expected dict"
+        # Each item must be a (post_url, classification_dict) tuple
+        assert isinstance(item, tuple), (
+            f"save_many received {type(item).__name__}, expected tuple (post_url, cls_dict)"
         )
-        # Must have the three fields real save_many requires
-        assert "post_url"   in item, f"save_many item missing 'post_url': {item}"
-        assert "intents"    in item, f"save_many item missing 'intents': {item}"
-        assert "confidence" in item, f"save_many item missing 'confidence': {item}"
-        assert isinstance(item["intents"], list), "intents must be a list"
-        assert isinstance(item["confidence"], float), "confidence must be a float"
+        assert len(item) == 2, f"tuple must have 2 elements, got {len(item)}"
+        post_url, cls_dict = item
+        assert isinstance(post_url, str) and post_url, "first element must be non-empty post_url str"
+        assert isinstance(cls_dict, dict), "second element must be a classification dict"
+        assert "intents"    in cls_dict, f"cls_dict missing 'intents': {cls_dict}"
+        assert "confidence" in cls_dict, f"cls_dict missing 'confidence': {cls_dict}"
+        assert isinstance(cls_dict["intents"], list), "intents must be a list"
+        assert isinstance(cls_dict["confidence"], float), "confidence must be a float"
 
 # ══════════════════════════════════════════════════════════════════════════════
 # 20. topic_sims affect ranking_score: high-sim doc outranks low-sim doc
@@ -917,3 +914,90 @@ def test_topic_sims_affect_ranking_order(ctx, caplog):
         f"High-sim doc must rank first. Got: {[r['post_url'] for r in result]}"
     )
     assert result[1]["post_url"] == low_sim_url
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 21. Real save_many: collection.bulk_write called with UpdateOne ops
+#     _id = post_url — uses ACTUAL classification_cache.save_many (no FakeCache)
+#     This test FAILS on old intent_bridge (dicts) because save_many expects
+#     tuples: `for post_url, classification in items` raises ValueError on dicts,
+#     which save_many catches and swallows → bulk_write never called.
+# ══════════════════════════════════════════════════════════════════════════════
+
+def test_save_many_bulk_write_called_with_update_one_ops(monkeypatch):
+    """
+    Patches _get_collection (Mongo boundary) and verifies that after a
+    successful bridge run, the real save_many fires collection.bulk_write
+    with UpdateOne ops whose filter is {"_id": post_url}.
+
+    Fails on old intent_bridge.py because it passes List[dict] to save_many,
+    which unpacks as `for post_url, classification in items` → iterates over
+    dict keys → TypeError/ValueError → save_many catches it → bulk_write
+    is never reached.
+    """
+    import importlib
+    import types
+    import intent_bridge
+    import intent_prototype.classification_cache as cc
+
+    # ── Reset module-level cache state so _get_collection runs fresh ──────
+    cc._collection  = None
+    cc._index_ready = False
+
+    # ── Mock collection ────────────────────────────────────────────────────
+    mock_coll = MagicMock()
+    mock_coll.bulk_write = MagicMock()
+    mock_coll.find = MagicMock(return_value=[])   # get_many returns nothing
+
+    monkeypatch.setattr(cc, "_collection", None)
+    monkeypatch.setattr(cc, "_index_ready", True)  # skip TTL index
+
+    original_get_collection = cc._get_collection
+
+    def fake_get_collection():
+        cc._collection = mock_coll
+        return mock_coll
+
+    monkeypatch.setattr(cc, "_get_collection", fake_get_collection)
+
+    # ── Wire real save_many / get_many into sys.modules (bypass FakeCache) ─
+    real_cache_mod = types.ModuleType("intent_prototype.classification_cache")
+    real_cache_mod.get_many  = cc.get_many
+    real_cache_mod.save_many = cc.save_many
+    monkeypatch.setitem(sys.modules, "intent_prototype.classification_cache", real_cache_mod)
+
+    # ── Config ─────────────────────────────────────────────────────────────
+    import config
+    monkeypatch.setattr(config, "INTENT_BRIDGE_ENABLED", True)
+    monkeypatch.setattr(config, "INTENT_CACHE_ENABLED",  True)
+
+    candidates = make_candidates(3)
+    call_count = [0]
+
+    def llm_side_effect(system, user, **kwargs):
+        call_count[0] += 1
+        if call_count[0] == 1:
+            return _interpreter_json(["buyer_demand"])
+        import re
+        n = len(re.findall(r"^\[\d+\]", user, re.MULTILINE))
+        return _classifier_json([None] * n, intent="buyer_demand", confidence=0.85)
+
+    with patch_llm(side_effect=llm_side_effect):
+        intent_bridge.rerank_with_intent("find AI buyers", candidates, len(candidates))
+
+    # ── Assertions ─────────────────────────────────────────────────────────
+    assert mock_coll.bulk_write.called, (
+        "collection.bulk_write must be called — save_many did not reach Mongo. "
+        "Likely cause: intent_bridge passed dicts instead of (post_url, cls_dict) tuples."
+    )
+
+    # Inspect the ops passed to bulk_write
+    bulk_args = mock_coll.bulk_write.call_args[0][0]   # first positional arg = list of ops
+    assert len(bulk_args) > 0, "bulk_write must receive at least one UpdateOne op"
+
+    candidate_urls = {c["post_url"] for c in candidates}
+    for op in bulk_args:
+        filter_doc = op._filter   # pymongo UpdateOne stores filter in ._filter
+        assert "_id" in filter_doc, f"UpdateOne filter must use _id, got: {filter_doc}"
+        assert filter_doc["_id"] in candidate_urls, (
+            f"UpdateOne _id {filter_doc['_id']!r} not in expected URLs"
+        )
