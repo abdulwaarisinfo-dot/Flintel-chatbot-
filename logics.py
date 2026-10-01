@@ -906,7 +906,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                          limit: int = None, since_days: int = None, unfiltered: bool = False,
                          match_phrases: list = None, loose: bool = False,
                          signals_collection_2=None, chat_id: str = None,
-                         signals_collection_4=None) -> list:
+                         signals_collection_4=None, user_query: str = None) -> list:
     """Reads `flintel_signals` and keeps only the signals that are
     genuinely relevant to this job's topic. topic_key match is
     intentionally NOT required: Background Service #1 may store its own
@@ -1493,6 +1493,23 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
         if len(matched) >= limit:
             break
 
+    # ── (INTENT BRIDGE HOOK) ─────────────────────────────────────────────────
+    # When INTENT_BRIDGE_ENABLED=true and a user_query was supplied, re-rank
+    # `matched` by buyer-intent classification before returning.  The bridge is
+    # purely additive — any failure returns the original `matched` list
+    # unchanged.  This hook runs AFTER the per-platform cap and limit loop
+    # (so the pool is already deduplicated and size-capped) and BEFORE the
+    # final return (so the caller always gets the best-intent posts first).
+    try:
+        from config import INTENT_BRIDGE_ENABLED          # noqa: PLC0415
+        if INTENT_BRIDGE_ENABLED and user_query and user_query.strip():
+            from intent_bridge import rerank_with_intent  # noqa: PLC0415
+            matched = rerank_with_intent(
+                user_query, matched, limit or len(matched)
+            )
+    except Exception as _bridge_exc:
+        log.debug(f"intent_bridge hook failed (non-fatal): {_bridge_exc}")
+
     return matched
 
 
@@ -1565,7 +1582,8 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
                               keywords: list, evidence_required: int,
                               matcher_fn, match_phrases: list = None,
                               targeting_platform: str = "all",
-                              since_days: int = None, unfiltered: bool = False) -> list:
+                              since_days: int = None, unfiltered: bool = False,
+                              user_query: str = None) -> list:
     """CORE FUNCTION — instead of running a fully-fresh query every time
     the same topic is asked about again:
       1. Check the cache first.
@@ -1611,6 +1629,7 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
         match_phrases=match_phrases, limit=fetch_limit,
         signals_collection_2=signals_collection_2, chat_id=chat_id,
         signals_collection_4=signals_collection_4,
+        user_query=user_query,
     )
 
     # De-dup: old cached posts + new posts, keyed on post_url.
