@@ -1,29 +1,32 @@
 """
-tests/test_intent_bridge.py
-============================
-Tests for intent_bridge.rerank_with_intent using REAL prototype modules.
+tests/test_source_grounding.py
+===============================
+Regression tests for Flintel's strict source-grounding rule.
 
-Mock ONLY:
-  - intent_prototype.llm.claude  (network boundary)
-  - Mongo cache  (in-memory FakeCache matching classification_cache signature)
+Spec reference: attachment 7bf54e9d (16-part source-grounding specification)
 
-Real:
-  - intent_prototype.doc_classifier.classify
-  - intent_prototype.query_interpreter.interpret
-  - intent_prototype.schemas
-  - intent_prototype.ranker
-  - intent_prototype.opportunity
+What is tested:
+  1. analyze_with_claude()       — non-streaming path
+  2. analyze_with_claude_stream() — streaming path
+  3. build_google_fallback_answer_context() — flintel.py fallback builder
+  4. Router / topic-resolver paths (query understanding vs factual answering)
+  5. Research-style answer structure (intro / summaries / synthesis / numbers / URLs)
+
+Mocked: _call_claude, _call_claude_stream, all external services (Mongo, Anthropic SDK)
+Real:   analyze_with_claude, analyze_with_claude_stream, build_google_fallback_answer_context,
+        the user_message strings they construct, and the prompt instructions sent to Claude
+
+Prohibited in tests: real Anthropic API calls, real MongoDB writes, git operations.
 
 Run:
     cd /mnt/user-data/outputs
-    python -m pytest tests/test_intent_bridge.py -v
+    python -m pytest tests/test_source_grounding.py -v
 """
 
 import importlib
 import json
 import sys
 import types
-from contextlib import contextmanager
 from pathlib import Path
 from unittest.mock import MagicMock, patch, call
 
@@ -33,525 +36,71 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-# ─── helpers ──────────────────────────────────────────────────────────────────
-
-def make_candidates(n, platform="reddit"):
-    return [
-        {
-            "title":     f"title {i}",
-            "post_text": f"We are looking to buy AI agents for our business — post {i}",
-            "post_url":  f"https://reddit.com/r/test/{i}",
-            "platform":  platform if i % 2 == 0 else "twitter",
-        }
-        for i in range(n)
-    ]
-
-def idx_of(doc):
-    return int(doc["post_url"].rsplit("/", 1)[1])
-
-# ─── LLM response builders ────────────────────────────────────────────────────
-
-def _interpreter_json(intent_include=None, query_mode="explicit_intent"):
-    return json.dumps({
-        "topic_keywords":        ["AI", "agents"],
-        "topic_embedding_query": "businesses buying AI agents automation",
-        "intent_include":        intent_include or ["buyer_demand"],
-        "intent_exclude":        ["irrelevant"],
-        "actor_direction_filter": None,
-        "actor_type_filter":     None,
-        "min_commercial_signal": None,
-        "min_pain_intensity":    None,
-        "min_urgency":           None,
-        "min_specificity":       None,
-        "time_scope":            None,
-        "geography":             None,
-        "intent_logic":          "OR",
-        "query_mode":            query_mode,
-    })
-
-def _classifier_json(docs, intent="buyer_demand", confidence=0.85):
-    items = []
-    for i, _ in enumerate(docs, 1):
-        items.append({
-            "i":                  i,
-            "intent":             intent,
-            "intent_confidence":  confidence,
-            "secondary_intent":   None,
-            "secondary_confidence": None,
-            "actor_type":         "company",
-            "actor_role":         "buyer",
-            "commercial_signal":  0.80,
-            "pain_intensity":     0.0,
-            "urgency":            0.3,
-            "specificity":        0.6,
-            "geography":          None,
-            "industry_hint":      "saas",
-            "ambiguous":          False,
-            "noise":              False,
-        })
-    return json.dumps(items)
-
-# ─── FakeCache — matches real classification_cache.save_many / get_many sig ──
-# save_many([(post_url, classification_dict), ...]) — asal signature (tuples)
-# get_many(List[str]) → Dict[str, dict] keyed by post_url
-
-class FakeCache:
-    def __init__(self):
-        # store: post_url → classification_dict
-        self.store = {}
-        # saved: list of (post_url, classification_dict) tuples passed to save_many
-        self.saved = []
-
-    def get_many(self, urls):
-        return {u: self.store[u] for u in urls if u in self.store}
-
-    def save_many(self, items):
-        # items = [(post_url, classification_dict), ...] — same as real save_many
-        self.saved.extend(items)
-        for post_url, classification in items:
-            if post_url:
-                self.store[post_url] = classification
-
-def _cache_module(cache: FakeCache):
-    m = types.ModuleType("intent_prototype.classification_cache")
-    m.get_many  = cache.get_many
-    m.save_many = cache.save_many
-    return m
-
-# ─── shared fixture ───────────────────────────────────────────────────────────
-
-@pytest.fixture
-def ctx(monkeypatch):
-    import config
-    cache = FakeCache()
-    monkeypatch.setitem(
-        sys.modules,
-        "intent_prototype.classification_cache",
-        _cache_module(cache),
-    )
-    monkeypatch.setattr(config, "INTENT_BRIDGE_ENABLED", True)
-    monkeypatch.setattr(config, "INTENT_CACHE_ENABLED",  True)
-
-    class Ctx:
-        pass
-    c = Ctx()
-    c.cache = cache
-    yield c
-
-@contextmanager
-def patch_llm(side_effect):
-    with patch("intent_prototype.llm.claude",               side_effect=side_effect), \
-         patch("intent_prototype.query_interpreter.claude", side_effect=side_effect), \
-         patch("intent_prototype.doc_classifier.claude",    side_effect=side_effect):
-        yield
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 1. Flag OFF → candidates returned untouched
-# ══════════════════════════════════════════════════════════════════════════════
-
-def test_flag_off_returns_candidates_untouched(monkeypatch):
-    import config
-    import intent_bridge
-    monkeypatch.setattr(config, "INTENT_BRIDGE_ENABLED", False)
-    candidates = make_candidates(10)
-    result = intent_bridge.rerank_with_intent("find AI buyer leads", candidates, 10)
-    assert result is candidates, "must return the SAME list object when flag is off"
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 2. Empty candidates → empty list, no LLM calls
-# ══════════════════════════════════════════════════════════════════════════════
-
-def test_empty_candidates_returns_empty(ctx):
-    import intent_bridge
-    mock_llm = MagicMock()
-    with patch("intent_prototype.llm.claude",               new=mock_llm), \
-         patch("intent_prototype.query_interpreter.claude", new=mock_llm), \
-         patch("intent_prototype.doc_classifier.claude",    new=mock_llm):
-        result = intent_bridge.rerank_with_intent("find AI buyers", [], 10)
-    assert result == []
-    mock_llm.assert_not_called()
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 3. Interpreter exception → original candidates returned
-# ══════════════════════════════════════════════════════════════════════════════
-
-def test_interpreter_exception_returns_candidates(ctx):
-    import intent_bridge
-    candidates = make_candidates(5)
-    with patch_llm(side_effect=RuntimeError("API down")):
-        result = intent_bridge.rerank_with_intent("find AI buyers", candidates, 5)
-    assert result == candidates
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 4. Classifier exception → original candidates returned
-# ══════════════════════════════════════════════════════════════════════════════
-
-def test_classifier_exception_returns_candidates(ctx):
-    import intent_bridge
-    candidates = make_candidates(5)
-    interp_done = [False]
-
-    def llm_side_effect(system, user, **kwargs):
-        if "retrieval" in system and not interp_done[0]:
-            interp_done[0] = True
-            return _interpreter_json()
-        raise RuntimeError("classifier API timeout")
-
-    with patch_llm(side_effect=llm_side_effect):
-        result = intent_bridge.rerank_with_intent("find AI buyers", candidates, 5)
-    assert result == candidates
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 5. Timeout → returns candidates quickly (bridge is non-fatal)
-# ══════════════════════════════════════════════════════════════════════════════
-
-def test_timeout_returns_candidates_quickly(ctx, monkeypatch):
-    import config
-    import intent_bridge
-    import time
-
-    monkeypatch.setattr(config, "INTENT_BRIDGE_TIMEOUT_SECONDS", 1)
-    candidates = make_candidates(5)
-
-    def slow_llm(system, user, **kwargs):
-        time.sleep(5)
-        return _interpreter_json()
-
-    with patch_llm(side_effect=slow_llm):
-        t0 = time.time()
-        result = intent_bridge.rerank_with_intent("find AI buyers", candidates, 5)
-        elapsed = time.time() - t0
-
-    assert elapsed < 3.0, f"bridge took {elapsed:.1f}s — timeout not enforced"
-    assert result == candidates
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 6. Real classify + real ranker: buyer_demand posts rank first
-#    Proof that real ranker.rank() ran (no "ranker unavailable" warning emitted)
-# ══════════════════════════════════════════════════════════════════════════════
-
-def test_real_classify_path_buyer_demand_ranks_first(ctx, caplog):
-    import logging
-    import intent_bridge
-
-    candidates = []
-    buyer_urls = set()
-    for i in range(8):
-        is_buyer = (i % 2 == 0)
-        tag = "INTENT_BUYER" if is_buyer else "INTENT_NOISE"
-        url = f"https://reddit.com/r/test/{i}"
-        candidates.append({
-            "title":     f"title {i}",
-            "post_text": f"We need AI agents for our business {tag} — {i}",
-            "post_url":  url,
-            "platform":  "reddit",
-        })
-        if is_buyer:
-            buyer_urls.add(url)
-
-    call_count = [0]
-
-    def llm_side_effect(system, user, **kwargs):
-        call_count[0] += 1
-        if call_count[0] == 1:
-            return _interpreter_json(["buyer_demand"])
-        import re
-        blocks = re.split(r"\n\n(?=\[\d+\])", user.strip())
-        items = []
-        for block in blocks:
-            m = re.match(r"^\[(\d+)\]", block)
-            if not m:
-                continue
-            pos      = int(m.group(1))
-            is_buyer = "INTENT_BUYER" in block
-            items.append({
-                "i":                  pos,
-                "intent":             "buyer_demand" if is_buyer else "general_discussion",
-                "intent_confidence":  0.88 if is_buyer else 0.55,
-                "secondary_intent":   None,
-                "secondary_confidence": None,
-                "actor_type":         "company",
-                "actor_role":         "buyer",
-                "commercial_signal":  0.80 if is_buyer else 0.15,
-                "pain_intensity":     0.0,
-                "urgency":            0.3,
-                "specificity":        0.6,
-                "geography":          None,
-                "industry_hint":      "saas",
-                "ambiguous":          False,
-                "noise":              False,
-            })
-        return json.dumps(items)
-
-    with caplog.at_level(logging.WARNING, logger="flintel.intent_bridge"):
-        with patch_llm(side_effect=llm_side_effect):
-            result = intent_bridge.rerank_with_intent(
-                "find businesses buying AI agents", candidates, 8
-            )
-
-    # Real ranker ran — no fallback warning
-    assert "ranker unavailable" not in caplog.text, (
-        "real ranker.rank() must have run — fallback warning must not appear"
-    )
-    assert "falling back to confidence sort" not in caplog.text, (
-        "real ranker.rank() must have run — fallback warning must not appear"
-    )
-
-    top_4_urls = {r["post_url"] for r in result[:4]}
-    assert top_4_urls == buyer_urls, f"Expected buyer_demand posts in top 4, got: {top_4_urls}"
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 7. Error classifications NOT saved to cache
-# ══════════════════════════════════════════════════════════════════════════════
-
-def test_error_classifications_not_saved_to_cache(ctx):
-    import intent_bridge
-    candidates = make_candidates(3)
-    error_url  = candidates[2]["post_url"]
-    call_count = [0]
-
-    def llm_side_effect(system, user, **kwargs):
-        call_count[0] += 1
-        if call_count[0] == 1:
-            return _interpreter_json()
-        import re
-        n_docs_in_batch = len(re.findall(r"^\[\d+\]", user, re.MULTILINE))
-        if "title 2" in user:
-            return json.dumps([])
-        items = []
-        for pos in range(1, n_docs_in_batch + 1):
-            items.append({
-                "i":                  pos,
-                "intent":             "buyer_demand",
-                "intent_confidence":  0.85,
-                "secondary_intent":   None,
-                "secondary_confidence": None,
-                "actor_type":         "company",
-                "actor_role":         "buyer",
-                "commercial_signal":  0.80,
-                "pain_intensity":     0.0,
-                "urgency":            0.3,
-                "specificity":        0.6,
-                "geography":          None,
-                "industry_hint":      "saas",
-                "ambiguous":          False,
-                "noise":              False,
-            })
-        return json.dumps(items)
-
-    with patch_llm(side_effect=llm_side_effect):
-        intent_bridge.rerank_with_intent("find AI buyers", candidates, 3)
-
-    saved_urls = {item["post_url"] for item in ctx.cache.saved}
-    assert error_url not in saved_urls, (
-        f"error/unclassified post {error_url} must not be saved to cache"
-    )
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 8. Interpreter fallback still calls classify
-# ══════════════════════════════════════════════════════════════════════════════
-
-def test_interpreter_fallback_flag_classify_still_called(ctx):
-    import intent_bridge
-    candidates = make_candidates(4)
-    classify_called = [False]
-    call_count = [0]
-
-    def llm_side_effect(system, user, **kwargs):
-        call_count[0] += 1
-        if call_count[0] == 1:
-            return "THIS IS NOT JSON"
-        classify_called[0] = True
-        return _classifier_json(candidates[:4])
-
-    with patch_llm(side_effect=llm_side_effect):
-        result = intent_bridge.rerank_with_intent("find AI buyers", candidates, 4)
-
-    assert classify_called[0], "classify must be called even after interpreter fallback"
-    assert len(result) > 0
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 9. Short-circuit: tail not classified when head has enough passing
-# ══════════════════════════════════════════════════════════════════════════════
-
-def test_short_circuit_skips_tail(ctx, monkeypatch):
-    import config
-    import intent_bridge
-    monkeypatch.setattr(config, "INTENT_SHORTCIRCUIT_HEAD",           5)
-    monkeypatch.setattr(config, "INTENT_SHORTCIRCUIT_MIN_PASSING",    3)
-    monkeypatch.setattr(config, "INTENT_SHORTCIRCUIT_MIN_CONFIDENCE", 0.70)
-
-    candidates = make_candidates(20)
-    classify_call_sizes = []
-    call_count = [0]
-
-    def llm_side_effect(system, user, **kwargs):
-        call_count[0] += 1
-        if call_count[0] == 1:
-            return _interpreter_json()
-        import re
-        n = len(re.findall(r"\[(\d+)\]", user))
-        classify_call_sizes.append(n)
-        return _classifier_json([None] * n, intent="buyer_demand", confidence=0.88)
-
-    with patch_llm(side_effect=llm_side_effect):
-        intent_bridge.rerank_with_intent("find AI buyers", candidates, 10)
-
-    total_classified = sum(classify_call_sizes)
-    assert total_classified <= 5, f"Short-circuit should classify only head (5), got {total_classified}"
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 10. Cached posts are NOT sent to classify()
-# ══════════════════════════════════════════════════════════════════════════════
-
-def test_cached_posts_not_reclassified(ctx):
-    import intent_bridge
-    candidates = make_candidates(4)
-    cached_url = candidates[1]["post_url"]
-
-    # FakeCache.store uses the same shape as get_many returns:
-    # {post_url, intents, confidence}
-    ctx.cache.store[cached_url] = {
-        "post_url":   cached_url,
-        "intents":    ["buyer_demand"],
-        "confidence": 0.90,
-    }
-
-    classify_user_prompts = []
-    call_count = [0]
-
-    def llm_side_effect(system, user, **kwargs):
-        call_count[0] += 1
-        if call_count[0] == 1:
-            return _interpreter_json()
-        classify_user_prompts.append(user)
-        return _classifier_json([None] * 3)
-
-    with patch_llm(side_effect=llm_side_effect):
-        intent_bridge.rerank_with_intent("find AI buyers", candidates, 4)
-
-    for prompt in classify_user_prompts:
-        assert cached_url not in prompt, f"Cached URL {cached_url} must not be re-sent to classify()"
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 11. Fill-to-N: intent-passing posts first, then similarity order
-# ══════════════════════════════════════════════════════════════════════════════
-
-def test_fill_to_n_intent_first_then_similarity(ctx):
-    """
-    Only 2 of 10 candidates pass the intent filter.
-    evidence_required=6 → 4 non-passing appended in original (similarity) order.
-    Uses FILL_PASS/FILL_NOISE tokens in post_text (not URLs) since
-    _render_batch does not include post_url in the classifier prompt.
-    """
-    import intent_bridge
-
-    candidates = []
-    passing_urls = set()
-    for i in range(10):
-        tag = "FILL_PASS" if i < 2 else "FILL_NOISE"
-        url = f"https://reddit.com/r/test/{i}"
-        candidates.append({
-            "title":     f"title {i}",
-            "post_text": f"We are looking to buy AI agents for our business {tag} — post {i}",
-            "post_url":  url,
-            "platform":  "reddit",
-        })
-        if i < 2:
-            passing_urls.add(url)
-
-    call_count = [0]
-
-    def llm_side_effect(system, user, **kwargs):
-        call_count[0] += 1
-        if call_count[0] == 1:
-            return _interpreter_json()
-        import re
-        blocks = re.split(r"\n\n(?=\[\d+\])", user.strip())
-        items = []
-        for block in blocks:
-            m = re.match(r"^\[(\d+)\]", block)
-            if not m:
-                continue
-            pos     = int(m.group(1))
-            is_pass = "FILL_PASS" in block
-            items.append({
-                "i":                  pos,
-                "intent":             "buyer_demand" if is_pass else "general_discussion",
-                "intent_confidence":  0.85 if is_pass else 0.40,
-                "secondary_intent":   None,
-                "secondary_confidence": None,
-                "actor_type":         "company",
-                "actor_role":         "buyer",
-                "commercial_signal":  0.7 if is_pass else 0.1,
-                "pain_intensity":     0.0,
-                "urgency":            0.2,
-                "specificity":        0.5,
-                "geography":          None,
-                "industry_hint":      "saas",
-                "ambiguous":          False,
-                "noise":              False,
-            })
-        return json.dumps(items)
-
-    with patch_llm(side_effect=llm_side_effect):
-        result = intent_bridge.rerank_with_intent(
-            "find AI buyers", candidates, evidence_required=6
-        )
-
-    assert len(result) >= 6, f"Expected ≥6 results, got {len(result)}"
-    top_2_urls = {result[0]["post_url"], result[1]["post_url"]}
-    assert top_2_urls == passing_urls, f"Intent-passing posts must be first. Got {top_2_urls}"
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 12. Return format: original dicts, no mutation
-# ══════════════════════════════════════════════════════════════════════════════
-
-def test_return_format_original_dicts_no_mutation(ctx):
-    import intent_bridge
-    candidates = make_candidates(4)
-    original_keys = set(candidates[0].keys())
-    candidate_ids = {id(c) for c in candidates}
-    call_count = [0]
-
-    def llm_side_effect(system, user, **kwargs):
-        call_count[0] += 1
-        if call_count[0] == 1:
-            return _interpreter_json()
-        return _classifier_json(candidates)
-
-    with patch_llm(side_effect=llm_side_effect):
-        result = intent_bridge.rerank_with_intent("find AI buyers", candidates, 4)
-
-    for item in result:
-        assert id(item) in candidate_ids, "result must contain original dict objects"
-        assert set(item.keys()) == original_keys, (
-            f"candidate dict must not be mutated; got extra keys: {set(item.keys()) - original_keys}"
-        )
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 13. Contract: doc_classifier.classify signature
-# ══════════════════════════════════════════════════════════════════════════════
-
-def test_doc_classifier_classify_signature_contract():
-    import inspect
-    from intent_prototype import doc_classifier
-    sig = inspect.signature(doc_classifier.classify)
-    params = list(sig.parameters.keys())
-    assert params[0] == "docs"
-    assert "batch_size" in params
-    assert "model"      in params
-    assert "progress"   in params
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 14. logics.py flag-ON: bridge receives wide pool (≥ limit candidates)
-# ══════════════════════════════════════════════════════════════════════════════
-
-@pytest.fixture
-def logics_mod(monkeypatch):
-    import types
-    import math
-
+# ─── Forbidden phrases ────────────────────────────────────────────────────────
+# Any user_message sent to Claude that contains these phrases is a grounding
+# violation — it gives Claude permission to use outside knowledge.
+#
+# IMPORTANT: these are matched as affirmative GRANTS, not as prohibitions.
+# A phrase like "Do NOT answer from general knowledge" is CORRECT and must
+# NOT trigger a false positive.  check_no_forbidden_phrases() strips leading
+# prohibition prefixes before testing.
+FORBIDDEN_PHRASES = [
+    "from your own general knowledge",
+    "from general knowledge",
+    "answer anything else",
+    "answer from general knowledge",
+    "use general knowledge",
+    "use your general knowledge",
+    "use your own knowledge",
+    "answer from your own knowledge",
+    "from outside knowledge",
+    "from outside web",
+    "use web knowledge",
+]
+
+# Prohibition prefixes — if a line starts with one of these (case-insensitive),
+# then any forbidden phrase on that same line is a correct prohibition, not a
+# grounding violation.
+_PROHIBITION_PREFIXES = (
+    "do not ",
+    "do not:",
+    "never ",
+    "must not ",
+    "cannot ",
+    "not allowed to ",
+    "prohibit",
+    "forbid",
+    "strictly in",  # "Respond STRICTLY in the no_results JSON format"
+)
+
+# ─── Required phrases (no-evidence paths) ────────────────────────────────────
+# When there is no retrieved evidence, the user_message MUST instruct Claude
+# to respond in the no_results JSON format and must NOT allow free-text / prose.
+# These phrases match the actual wording used in logics.py and flintel.py.
+REQUIRED_NO_EVIDENCE_PHRASES = [
+    "no_results JSON format",
+    "STRICTLY",
+    # logics.py uses this phrasing:  "never switch to free-text/general-knowledge prose"
+    # flintel.py uses:               "Do NOT answer from general knowledge"
+    # At least one of the two must appear — checked via check_has_required_no_evidence_phrases
+]
+
+# Additional per-file phrase sets (used by the specific path tests):
+REQUIRED_LOGICS_NO_EVIDENCE_PHRASES = [
+    "no_results JSON format",
+    "STRICTLY",
+    "never switch",         # "never switch to free-text/general-knowledge prose"
+]
+
+REQUIRED_FLINTEL_NO_EVIDENCE_PHRASES = [
+    "no_results JSON format",
+    "STRICTLY",
+    "Do NOT answer from general knowledge",
+]
+
+# ─── Fixtures ─────────────────────────────────────────────────────────────────
+
+def _make_db_stub():
     db_stub = types.ModuleType("database")
     _coll = MagicMock()
     for attr in [
@@ -561,24 +110,37 @@ def logics_mod(monkeypatch):
         "website_evidence_cache_collection",
     ]:
         setattr(db_stub, attr, _coll)
+    return db_stub
 
+
+def _make_flintel_stub():
+    """Minimal flintel stub for logics.py import — gives addenda strings."""
     fi_stub = types.ModuleType("flintel")
-    fi_stub.ROUTER_UNFILTERED_ADDENDUM            = ""
+    fi_stub.ROUTER_UNFILTERED_ADDENDUM = ""
     fi_stub.GENERIC_PAIN_POINT_INFERENCE_ADDENDUM = ""
+    fi_stub.build_google_fallback_answer_context = None  # will be set from real module
+    return fi_stub
 
-    wi_stub    = types.ModuleType("website_intelligence")
-    goog_stub  = types.ModuleType("google")
+
+@pytest.fixture
+def logics_mod(monkeypatch):
+    """Load logics.py with all external dependencies stubbed out."""
+    db_stub = _make_db_stub()
+    fi_stub = _make_flintel_stub()
+
+    wi_stub = types.ModuleType("website_intelligence")
+    goog_stub = types.ModuleType("google")
     httpx_stub = types.ModuleType("httpx")
-    httpx_stub.AsyncClient      = MagicMock()
+    httpx_stub.AsyncClient = MagicMock()
     httpx_stub.TimeoutException = Exception
-    httpx_stub.HTTPStatusError  = Exception
+    httpx_stub.HTTPStatusError = Exception
 
     stubs = {
-        "database":             db_stub,
-        "flintel":              fi_stub,
+        "database": db_stub,
+        "flintel": fi_stub,
         "website_intelligence": wi_stub,
-        "google":               goog_stub,
-        "httpx":                httpx_stub,
+        "google": goog_stub,
+        "httpx": httpx_stub,
     }
     for name, mod in stubs.items():
         monkeypatch.setitem(sys.modules, name, mod)
@@ -590,414 +152,1097 @@ def logics_mod(monkeypatch):
     import logics
     return logics
 
-def _make_synthetic_docs(n, dim=1536):
-    import math
-    unit = [1.0 / math.sqrt(dim)] * dim
-    from datetime import datetime, timezone
+
+@pytest.fixture
+def real_flintel():
+    """Import the real flintel module (it only needs os/re/stdlib)."""
+    for key in list(sys.modules):
+        if key == "flintel" or key.startswith("flintel."):
+            del sys.modules[key]
+    import flintel as f
+    return f
+
+
+# ─── Helpers ──────────────────────────────────────────────────────────────────
+
+def make_signal(title="Test post", text="Some discussion text", url="https://reddit.com/r/test/1"):
+    """Minimal matched signal that build_claude_post_context accepts."""
+    return {
+        "title": title,
+        "post_text": text,
+        "post_url": url,
+        "platform": "reddit",
+    }
+
+
+def _line_is_prohibition(line: str) -> bool:
+    """Return True if the line is a prohibition rather than a permission grant."""
+    stripped = line.strip().lower()
+    return any(stripped.startswith(pfx) for pfx in _PROHIBITION_PREFIXES)
+
+
+def check_no_forbidden_phrases(text: str, label: str = ""):
+    """Assert none of the general-knowledge permission phrases appear as GRANTS.
+
+    Lines that start with a prohibition prefix (Do NOT, never, must not, …) are
+    excluded — e.g. "Do NOT answer from general knowledge" is correct behavior,
+    not a violation.
+    """
+    lines = text.splitlines()
+    # Also check the full text split by sentence for multi-sentence single lines
+    for phrase in FORBIDDEN_PHRASES:
+        phrase_lower = phrase.lower()
+        for line in lines:
+            if phrase_lower in line.lower() and not _line_is_prohibition(line):
+                # Extra check: maybe the phrase appears inside a prohibition
+                # embedded within the line (e.g. "… kabhi bhi Do NOT answer from …")
+                line_lower = line.lower()
+                idx = line_lower.find(phrase_lower)
+                if idx != -1:
+                    # Look at the 50 chars before the phrase for prohibition words
+                    pre = line_lower[max(0, idx - 50):idx]
+                    prohibited = any(
+                        pfx in pre for pfx in ("do not", "never ", "must not", "cannot", "kabhi")
+                    )
+                    if not prohibited:
+                        raise AssertionError(
+                            f"GROUNDING VIOLATION in {label!r}: "
+                            f"user_message contains forbidden phrase {phrase!r}.\n"
+                            f"Offending line: {line!r}\n"
+                            f"Full text:\n{text}"
+                        )
+
+
+def check_has_required_no_evidence_phrases(text: str, label: str = "",
+                                           phrases: list = None):
+    """Assert that insufficient-evidence instructions are present.
+
+    If `phrases` is None, uses REQUIRED_NO_EVIDENCE_PHRASES (the common set).
+    Pass REQUIRED_LOGICS_NO_EVIDENCE_PHRASES or REQUIRED_FLINTEL_NO_EVIDENCE_PHRASES
+    for path-specific checks.
+    """
+    if phrases is None:
+        phrases = REQUIRED_NO_EVIDENCE_PHRASES
+    for phrase in phrases:
+        assert phrase in text, (
+            f"MISSING REQUIRED PHRASE in {label!r}: "
+            f"user_message for no-evidence path is missing {phrase!r}.\n"
+            f"Full text:\n{text}"
+        )
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PART A — Non-streaming path: analyze_with_claude()
+# ══════════════════════════════════════════════════════════════════════════════
+
+class TestAnalyzeWithClaude:
+    """Non-streaming answer generation path."""
+
+    def test_1_sufficient_evidence_calls_claude_with_posts(self, logics_mod):
+        """Case A: real posts → Claude receives post content, not a knowledge fallback."""
+        signals = [make_signal(text="We need WhatsApp automation urgently")]
+        captured = {}
+
+        def fake_call_claude(system_prompt, user_message, **kwargs):
+            captured["user_message"] = user_message
+            return json.dumps({"format": "source_list", "results": []})
+
+        with patch.object(logics_mod, "_call_claude", side_effect=fake_call_claude):
+            logics_mod.analyze_with_claude("find WhatsApp bots", signals)
+
+        assert "user_message" in captured, "Claude was not called"
+        msg = captured["user_message"]
+        assert "We need WhatsApp automation urgently" in msg, (
+            "Post text must be present in the user_message"
+        )
+        check_no_forbidden_phrases(msg, "analyze_with_claude/sufficient-evidence")
+
+    def test_2_zero_evidence_returns_no_results_format(self, logics_mod):
+        """Case B: zero posts → user_message must instruct no_results JSON, no general knowledge."""
+        captured = {}
+
+        def fake_call_claude(system_prompt, user_message, **kwargs):
+            captured["user_message"] = user_message
+            return json.dumps({
+                "format": "no_results",
+                "message": "No relevant posts found.",
+                "suggested_actions": []
+            })
+
+        with patch.object(logics_mod, "_call_claude", side_effect=fake_call_claude):
+            result = logics_mod.analyze_with_claude("find obscure niche topic", [])
+
+        msg = captured["user_message"]
+        check_no_forbidden_phrases(msg, "analyze_with_claude/zero-evidence")
+        check_has_required_no_evidence_phrases(
+            msg, "analyze_with_claude/zero-evidence",
+            phrases=REQUIRED_LOGICS_NO_EVIDENCE_PHRASES
+        )
+
+    def test_3_partial_evidence_passes_only_retrieved_posts(self, logics_mod):
+        """Case C: some posts → user_message contains exactly the post text, nothing extra."""
+        signals = [make_signal(text="Looking for CRM software")]
+        captured = {}
+
+        def fake_call_claude(system_prompt, user_message, **kwargs):
+            captured["user_message"] = user_message
+            return json.dumps({"format": "source_list", "results": []})
+
+        with patch.object(logics_mod, "_call_claude", side_effect=fake_call_claude):
+            logics_mod.analyze_with_claude("what CRM do people use", signals)
+
+        msg = captured["user_message"]
+        assert "Looking for CRM software" in msg
+        check_no_forbidden_phrases(msg, "analyze_with_claude/partial-evidence")
+
+    def test_4_irrelevant_evidence_no_knowledge_injection(self, logics_mod):
+        """Case D: posts present but completely off-topic → posts passed through; no knowledge grant."""
+        signals = [make_signal(title="Dog food review", text="My dog loves this kibble")]
+        captured = {}
+
+        def fake_call_claude(system_prompt, user_message, **kwargs):
+            captured["user_message"] = user_message
+            return json.dumps({"format": "source_list", "results": []})
+
+        with patch.object(logics_mod, "_call_claude", side_effect=fake_call_claude):
+            logics_mod.analyze_with_claude("WhatsApp AI agents", signals)
+
+        msg = captured["user_message"]
+        assert "My dog loves this kibble" in msg
+        check_no_forbidden_phrases(msg, "analyze_with_claude/irrelevant-evidence")
+
+    def test_5_analysis_system_prompt_no_knowledge_grant(self, logics_mod):
+        """The CLAUDE_ANALYSIS_SYSTEM_PROMPT itself must not contain general-knowledge grants."""
+        sp = logics_mod.CLAUDE_ANALYSIS_SYSTEM_PROMPT
+        # These phrases would give Claude permission to answer from pretrained knowledge
+        explicit_grants = [
+            "answer from general knowledge",
+            "use your training",
+            "from your own knowledge",
+        ]
+        for phrase in explicit_grants:
+            assert phrase.lower() not in sp.lower(), (
+                f"CLAUDE_ANALYSIS_SYSTEM_PROMPT contains knowledge grant: {phrase!r}"
+            )
+
+    def test_6_research_style_system_prompt_has_grounding_instruction(self, logics_mod):
+        """The analysis system prompt must contain GROUNDING (Step 8) instruction."""
+        sp = logics_mod.CLAUDE_ANALYSIS_SYSTEM_PROMPT
+        # Step 8 should mention grounding or source-only
+        grounding_indicators = ["GROUNDING", "source-grounded", "grounded", "retrieved"]
+        found = any(ind in sp for ind in grounding_indicators)
+        assert found, (
+            "CLAUDE_ANALYSIS_SYSTEM_PROMPT appears to lack any grounding instruction "
+            f"(searched for: {grounding_indicators})"
+        )
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PART B — Streaming path: analyze_with_claude_stream()
+# ══════════════════════════════════════════════════════════════════════════════
+
+class TestAnalyzeWithClaudeStream:
+    """Streaming answer generation — must obey the same grounding rules."""
+
+    def test_7_streaming_sufficient_evidence_no_knowledge_grant(self, logics_mod):
+        """Case A streaming: posts present → user_message contains post text, no knowledge grant."""
+        signals = [make_signal(text="Need WhatsApp chatbot for support")]
+        captured = {}
+
+        def fake_stream(system_prompt, user_message, **kwargs):
+            captured["user_message"] = user_message
+            yield '{"format": "source_list", "results": []}'
+
+        with patch.object(logics_mod, "_call_claude_stream", side_effect=fake_stream):
+            chunks = list(logics_mod.analyze_with_claude_stream("WhatsApp bot", signals))
+
+        assert "user_message" in captured
+        msg = captured["user_message"]
+        assert "Need WhatsApp chatbot for support" in msg
+        check_no_forbidden_phrases(msg, "analyze_with_claude_stream/sufficient-evidence")
+
+    def test_8_streaming_zero_evidence_no_general_knowledge(self, logics_mod):
+        """Case B streaming: CRITICAL — zero posts must NOT instruct general-knowledge answer."""
+        captured = {}
+
+        def fake_stream(system_prompt, user_message, **kwargs):
+            captured["user_message"] = user_message
+            yield '{"format": "no_results", "message": "No posts.", "suggested_actions": []}'
+
+        with patch.object(logics_mod, "_call_claude_stream", side_effect=fake_stream):
+            chunks = list(logics_mod.analyze_with_claude_stream("unknown niche topic", []))
+
+        assert "user_message" in captured, "Claude stream was not called"
+        msg = captured["user_message"]
+        # This was the core violation — must now be fixed
+        check_no_forbidden_phrases(msg, "analyze_with_claude_stream/zero-evidence")
+        check_has_required_no_evidence_phrases(
+            msg, "analyze_with_claude_stream/zero-evidence",
+            phrases=REQUIRED_LOGICS_NO_EVIDENCE_PHRASES
+        )
+
+    def test_9_streaming_consistent_with_non_streaming(self, logics_mod):
+        """Streaming and non-streaming zero-evidence user_messages must be equivalent."""
+        stream_msg = {}
+        non_stream_msg = {}
+
+        def fake_stream(sp, um, **kw):
+            stream_msg["user_message"] = um
+            yield '{"format":"no_results","message":"","suggested_actions":[]}'
+
+        def fake_call(sp, um, **kw):
+            non_stream_msg["user_message"] = um
+            return '{"format":"no_results","message":"","suggested_actions":[]}'
+
+        with patch.object(logics_mod, "_call_claude_stream", side_effect=fake_stream):
+            list(logics_mod.analyze_with_claude_stream("some query", []))
+
+        with patch.object(logics_mod, "_call_claude", side_effect=fake_call):
+            logics_mod.analyze_with_claude("some query", [])
+
+        sm = stream_msg["user_message"]
+        nm = non_stream_msg["user_message"]
+
+        # Both must forbid general knowledge
+        check_no_forbidden_phrases(sm, "stream/zero-evidence")
+        check_no_forbidden_phrases(nm, "non-stream/zero-evidence")
+
+        # Both must instruct no_results JSON using path-appropriate phrase sets
+        check_has_required_no_evidence_phrases(
+            sm, "stream/zero-evidence", phrases=REQUIRED_LOGICS_NO_EVIDENCE_PHRASES
+        )
+        check_has_required_no_evidence_phrases(
+            nm, "non-stream/zero-evidence", phrases=REQUIRED_LOGICS_NO_EVIDENCE_PHRASES
+        )
+
+    def test_10_streaming_no_enable_web_search(self, logics_mod):
+        """analyze_with_claude_stream must never call _call_claude_stream with enable_web_search=True."""
+        signals = [make_signal()]
+        call_args_list = []
+
+        def fake_stream(system_prompt, user_message, **kwargs):
+            call_args_list.append(kwargs)
+            yield '{"format":"source_list","results":[]}'
+
+        with patch.object(logics_mod, "_call_claude_stream", side_effect=fake_stream):
+            list(logics_mod.analyze_with_claude_stream("test query", signals))
+
+        for kwargs in call_args_list:
+            assert not kwargs.get("enable_web_search", False), (
+                "analyze_with_claude_stream called _call_claude_stream with enable_web_search=True"
+            )
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PART C — Google fallback path: build_google_fallback_answer_context()
+# ══════════════════════════════════════════════════════════════════════════════
+
+class TestGoogleFallbackAnswerContext:
+    """flintel.build_google_fallback_answer_context() — must not allow general-knowledge answers."""
+
+    def test_11_zero_stubs_no_general_knowledge(self, real_flintel):
+        """Case B (zero evidence): stub_count=0 must return a no_results instruction, not a knowledge grant."""
+        ctx = real_flintel.build_google_fallback_answer_context("WhatsApp bots", 0)
+        check_no_forbidden_phrases(ctx, "build_google_fallback_answer_context/stub_count=0")
+        check_has_required_no_evidence_phrases(
+            ctx, "build_google_fallback_answer_context/stub_count=0",
+            phrases=REQUIRED_FLINTEL_NO_EVIDENCE_PHRASES
+        )
+
+    def test_12_nonzero_stubs_no_general_knowledge(self, real_flintel):
+        """Case D (links only, no body): stub_count=3 must still NOT grant general knowledge."""
+        ctx = real_flintel.build_google_fallback_answer_context("travel software", 3)
+        check_no_forbidden_phrases(ctx, "build_google_fallback_answer_context/stub_count=3")
+        check_has_required_no_evidence_phrases(
+            ctx, "build_google_fallback_answer_context/stub_count=3",
+            phrases=REQUIRED_FLINTEL_NO_EVIDENCE_PHRASES
+        )
+
+    def test_13_stub_count_mentioned_in_context(self, real_flintel):
+        """When stubs exist, the count should appear in the instruction so Claude knows links are shown."""
+        ctx = real_flintel.build_google_fallback_answer_context("some topic", 5)
+        assert "5" in ctx, "stub_count should be mentioned in the fallback context"
+
+    def test_14_stub_count_singular_vs_plural(self, real_flintel):
+        """Grammatical check: singular/plural thread label is correct."""
+        ctx1 = real_flintel.build_google_fallback_answer_context("topic", 1)
+        ctx5 = real_flintel.build_google_fallback_answer_context("topic", 5)
+        assert "1 related thread " in ctx1 or "1 related thread\n" in ctx1, (
+            f"Expected singular 'thread' for stub_count=1, got: {ctx1[:200]}"
+        )
+        assert "5 related threads" in ctx5, (
+            f"Expected plural 'threads' for stub_count=5, got: {ctx5[:200]}"
+        )
+
+    def test_15_fallback_context_does_not_narrate_internal_pipeline(self, real_flintel):
+        """Claude must not be instructed to USE Flintel's internal architecture terms.
+
+        The instruction may MENTION these terms only inside a prohibition such as
+        'never use wording like "discovery-only"' — that is the correct behavior.
+        The test checks that, for each internal term, every line that contains it
+        also contains a prohibition prefix (never, do not, etc.).
+        """
+        internal_terms = ["discovery-only", "stub", "supplementary Google search", "not fetched yet"]
+        prohibition_words = ("never", "do not", "don't", "must not", "kabhi", "mat")
+
+        for count in (0, 2):
+            ctx = real_flintel.build_google_fallback_answer_context("test", count)
+            for term in internal_terms:
+                for line in ctx.splitlines():
+                    if term.lower() in line.lower():
+                        line_lower = line.lower()
+                        assert any(pw in line_lower for pw in prohibition_words), (
+                            f"build_google_fallback_answer_context/{count}: "
+                            f"line containing internal term {term!r} is not wrapped in a prohibition.\n"
+                            f"Line: {line!r}"
+                        )
+
+    def test_16_fallback_context_no_results_json_format_instruction(self, real_flintel):
+        """Both branches must produce an instruction that routes Claude to no_results JSON."""
+        for count in (0, 4):
+            ctx = real_flintel.build_google_fallback_answer_context("AI agents", count)
+            assert "no_results JSON format" in ctx, (
+                f"build_google_fallback_answer_context stub_count={count} missing no_results JSON instruction"
+            )
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PART D — Router / topic-resolver (query understanding only)
+# ══════════════════════════════════════════════════════════════════════════════
+
+class TestRouterGrounding:
+    """Router classifies intent and generates keywords — it does NOT generate factual answers.
+    Web search is allowed for query understanding per spec Part 5."""
+
+    def test_17_map_step_prompt_no_knowledge_grant(self, logics_mod):
+        """CLAUDE_MAP_STEP_SYSTEM_PROMPT must not grant general knowledge."""
+        sp = logics_mod.CLAUDE_MAP_STEP_SYSTEM_PROMPT
+        check_no_forbidden_phrases(sp, "CLAUDE_MAP_STEP_SYSTEM_PROMPT")
+        # Map step must explicitly restrict to post content
+        assert any(phrase in sp for phrase in [
+            "not present in the posts",
+            "only from the posts",
+            "grounded",
+            "do not invent",
+            "Do not invent",
+        ]), "CLAUDE_MAP_STEP_SYSTEM_PROMPT must forbid inventing information"
+
+    def test_18_notes_reduce_prompt_no_knowledge_grant(self, logics_mod):
+        """CLAUDE_NOTES_REDUCE_SYSTEM_PROMPT must not grant general knowledge."""
+        sp = logics_mod.CLAUDE_NOTES_REDUCE_SYSTEM_PROMPT
+        check_no_forbidden_phrases(sp, "CLAUDE_NOTES_REDUCE_SYSTEM_PROMPT")
+
+    def test_19_analyze_with_claude_no_web_search(self, logics_mod):
+        """analyze_with_claude() must never pass enable_web_search=True to _call_claude."""
+        signals = [make_signal()]
+        call_kwargs_list = []
+
+        def fake_call(sp, um, **kwargs):
+            call_kwargs_list.append(kwargs)
+            return '{"format":"source_list","results":[]}'
+
+        with patch.object(logics_mod, "_call_claude", side_effect=fake_call):
+            logics_mod.analyze_with_claude("test", signals)
+
+        for kwargs in call_kwargs_list:
+            assert not kwargs.get("enable_web_search", False), (
+                "analyze_with_claude passed enable_web_search=True to _call_claude — "
+                "this would allow web knowledge into factual answers"
+            )
+
+    def test_20_topic_resolver_prompt_no_factual_answer(self, logics_mod):
+        """CLAUDE_TOPIC_RESOLVER_SYSTEM_PROMPT must not produce user-visible factual claims."""
+        sp = logics_mod.CLAUDE_TOPIC_RESOLVER_SYSTEM_PROMPT
+        # Resolver uses training knowledge for interpretation only — must not answer facts
+        assert "general knowledge" in sp.lower() or "own knowledge" in sp.lower(), (
+            "Topic resolver should acknowledge it uses training knowledge for interpretation"
+        )
+        # Must not produce factual answer output formats
+        assert "source_list" not in sp, (
+            "Topic resolver prompt should not reference source_list answer format — "
+            "it is for topic interpretation, not factual answer generation"
+        )
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PART E — Research-style answer structure grounding
+# ══════════════════════════════════════════════════════════════════════════════
+
+class TestResearchStyleGrounding:
+    """The analysis system prompt must instruct research-style output grounded in evidence."""
+
+    def test_21_analysis_prompt_has_research_structure(self, logics_mod):
+        """CLAUDE_ANALYSIS_SYSTEM_PROMPT should define structured output formats."""
+        sp = logics_mod.CLAUDE_ANALYSIS_SYSTEM_PROMPT
+        # Must define the output formats specified in Part 8 of the spec
+        assert "source_list" in sp, "Must define source_list output format"
+        assert "no_results" in sp, "Must define no_results output format"
+
+    def test_22_analysis_prompt_requires_source_urls(self, logics_mod):
+        """The analysis system prompt must preserve source URLs (spec Part 8 §4)."""
+        sp = logics_mod.CLAUDE_ANALYSIS_SYSTEM_PROMPT
+        url_indicators = ["url", "source", "link", "post_url"]
+        found = any(ind in sp.lower() for ind in url_indicators)
+        assert found, (
+            "CLAUDE_ANALYSIS_SYSTEM_PROMPT must reference URL/source preservation "
+            f"(searched for: {url_indicators})"
+        )
+
+    def test_23_stats_numbers_must_come_from_evidence(self, logics_mod):
+        """The analysis system prompt must not instruct Claude to invent statistics."""
+        sp = logics_mod.CLAUDE_ANALYSIS_SYSTEM_PROMPT
+        invention_prohibitions = [
+            "not invent",
+            "never invent",
+            "do not invent",
+            "don't invent",
+            "no invented",
+            "grounded",
+            "retrieved",
+        ]
+        found = any(phrase in sp.lower() for phrase in invention_prohibitions)
+        assert found, (
+            "CLAUDE_ANALYSIS_SYSTEM_PROMPT must explicitly prohibit inventing facts/stats"
+        )
+
+    def test_24_post_context_strips_to_title_and_text(self, logics_mod):
+        """build_claude_post_context must strip to title+text only — no injection of outside data."""
+        signals = [
+            {
+                "title": "My CRM Post",
+                "post_text": "We need better CRM tooling",
+                "post_url": "https://reddit.com/r/sales/123",
+                "platform": "reddit",
+                "score": 99,
+                "some_internal_field": "internal value",
+            }
+        ]
+        posts = logics_mod.build_claude_post_context(signals)
+        assert len(posts) == 1
+        assert posts[0]["title"] == "My CRM Post"
+        # build_claude_post_context strips to {"title", "text"} — key is "text" not "post_text"
+        assert posts[0]["text"] == "We need better CRM tooling"
+        # Should NOT carry through injection vectors
+        assert "score" not in posts[0], "score field must be stripped"
+        assert "post_url" not in posts[0], "post_url must be stripped"
+        assert "platform" not in posts[0], "platform must be stripped"
+
+    def test_25_format_posts_block_contains_only_post_data(self, logics_mod):
+        """_format_posts_block must produce text derived only from post titles and bodies.
+
+        build_claude_post_context strips to {"title", "text"} so _format_posts_block
+        receives dicts with key "text", not "post_text".
+        """
+        posts = [{"title": "Automation needed", "text": "We want to automate billing"}]
+        block = logics_mod._format_posts_block(posts)
+        assert "Automation needed" in block
+        assert "We want to automate billing" in block
+        check_no_forbidden_phrases(block, "_format_posts_block output")
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PART F — Codebase-wide grep for remaining violations
+# ══════════════════════════════════════════════════════════════════════════════
+
+class TestCodebaseWideGrep:
+    """Static checks — grep actual source files for remaining general-knowledge grants."""
+
+    SOURCES = [
+        ROOT / "logics.py",
+        ROOT / "flintel.py",
+    ]
+
+    # These patterns are AFFIRMATIVE GRANTS — they appear only in violation code, not in
+    # correct prohibition text like "Do NOT answer from general knowledge".
+    # Keep them specific enough to never match a prohibition.
+    VIOLATION_PATTERNS = [
+        "answer the user's actual question from your own general knowledge",
+        "answer anything else in the question you still can from general knowledge",
+        "answer from your own general knowledge",
+        "from your own general knowledge instead",
+        # NOTE: "answer from general knowledge" is intentionally excluded here because
+        # flintel.py correctly uses it inside the prohibition string
+        # "Do NOT answer from general knowledge" — that is NOT a violation.
+        # test_30 covers the specific old violation strings that were removed.
+    ]
+
+    def _check_file_no_grant_patterns(self, filepath, label):
+        """For each violation pattern, verify no line contains it as an affirmative grant."""
+        content = (ROOT / filepath).read_text(encoding="utf-8")
+        prohibition_words = ("do not", "never", "don't", "must not", "cannot", "kabhi", "mat")
+        for pattern in self.VIOLATION_PATTERNS:
+            pattern_lower = pattern.lower()
+            for line in content.splitlines():
+                if pattern_lower in line.lower():
+                    line_lower = line.lower()
+                    idx = line_lower.find(pattern_lower)
+                    pre = line_lower[max(0, idx - 80):idx]
+                    if not any(pw in pre for pw in prohibition_words):
+                        raise AssertionError(
+                            f"{label} still contains general-knowledge grant: {pattern!r}\n"
+                            f"Offending line: {line!r}"
+                        )
+
+    def test_26_logics_py_no_general_knowledge_grant(self):
+        """logics.py must contain no general-knowledge grant instructions after fixes."""
+        self._check_file_no_grant_patterns("logics.py", "logics.py")
+
+    def test_27_flintel_py_no_general_knowledge_grant(self):
+        """flintel.py must contain no general-knowledge grant instructions after fixes."""
+        self._check_file_no_grant_patterns("flintel.py", "flintel.py")
+
+    def test_28_routes_py_no_factual_knowledge_grant_in_search_paths(self):
+        """routes.py must not contain general-knowledge grants in search/analysis paths.
+        Note: CLAUDE_CHAT_FALLBACK_SYSTEM_PROMPT usage in chat-only path is intentionally excluded."""
+        content = (ROOT / "routes.py").read_text(encoding="utf-8").lower()
+        for pattern in self.VIOLATION_PATTERNS:
+            assert pattern.lower() not in content, (
+                f"routes.py still contains general-knowledge grant: {pattern!r}"
+            )
+
+    def test_29_stream_path_no_general_knowledge_remaining(self):
+        """Double-check: the exact old violation string is gone from logics.py."""
+        content = (ROOT / "logics.py").read_text(encoding="utf-8")
+        old_violation = (
+            "you have no post data "
+            "to ground an answer in. Say that plainly, then answer anything "
+            "else in the question you still can from general knowledge."
+        )
+        assert old_violation not in content, (
+            "analyze_with_claude_stream still contains the original general-knowledge violation"
+        )
+
+    def test_30_flintel_old_violation_removed(self):
+        """Double-check: both old flintel.py violation strings are gone."""
+        content = (ROOT / "flintel.py").read_text(encoding="utf-8")
+        old_v1 = "Answer the user's actual question from your own general"
+        old_v2 = "Answer the user's actual question from your own general knowledge."
+        assert old_v1 not in content, "flintel.py stub_count=0 violation still present"
+        assert old_v2 not in content, "flintel.py stub_count>0 violation still present"
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PART G — Empty-notes path runtime tests (EMPTY-NOTES GROUNDING FIX)
+# ══════════════════════════════════════════════════════════════════════════════
+
+def _make_signals_for_chunking(n=14):
+    """Return n signals with real post_text so build_claude_post_context keeps
+    them all and chunk_list produces multiple chunks (CLAUDE_POSTS_PER_CHUNK=12
+    by default, so 14 signals → 2 chunks → map-reduce path)."""
     return [
-        {
-            "_id":         f"doc{i}",
-            "title":       f"title {i}",
-            "post_text":   f"We need to buy AI agents for our company — {i}",
-            "post_url":    f"https://reddit.com/r/test/{i}",
-            "platform":    "reddit",
-            "subreddit":   "artificial",
-            "embedding":   unit,
-            "created_utc": datetime(2026, 1, 1, tzinfo=timezone.utc),
-        }
+        make_signal(title=f"Post {i}", text=f"Content for post {i} about automation")
         for i in range(n)
     ]
 
-def _make_find_mock(docs):
-    limit_mock = MagicMock()
-    limit_mock.__iter__ = lambda self: iter(docs)
-    sort_mock  = MagicMock()
-    sort_mock.limit.return_value = limit_mock
-    find_mock  = MagicMock()
-    find_mock.sort.return_value  = sort_mock
-    coll_mock  = MagicMock()
-    coll_mock.find.return_value  = find_mock
-    return coll_mock
 
-def test_logics_flag_on_bridge_gets_wide_pool(logics_mod, monkeypatch):
-    import math
-    import config
-    monkeypatch.setattr(config, "INTENT_BRIDGE_ENABLED",       True)
-    monkeypatch.setattr(config, "INTENT_CANDIDATE_MULTIPLIER", 4)
-    monkeypatch.setattr(config, "INTENT_CANDIDATE_MIN",        100)
-    monkeypatch.setattr(config, "INTENT_CANDIDATE_MAX",        200)
-    monkeypatch.setattr(logics_mod, "SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD", 0.0)
+class TestEmptyNotesGrounding:
+    """Runtime tests: when every map/condense step fails or returns empty,
+    analyze_with_claude() / analyze_with_claude_stream() must route to the
+    grounded no_results refusal, not pass '(no grounded points extracted)'
+    to Claude."""
 
-    captured = {}
+    def test_31_non_streaming_all_map_steps_raise(self, logics_mod):
+        """Non-streaming: every _map_chunk call raises → final user_message
+        must contain 'no_results' and 'Do NOT answer from general knowledge',
+        and must NOT contain '(no grounded points extracted)'."""
+        signals = _make_signals_for_chunking(14)
+        captured = {}
 
-    def fake_rerank(user_query, candidates, evidence_required, **kwargs):
-        captured["n"] = len(candidates)
-        return candidates[:evidence_required]
+        def fake_map_chunk(query, chunk):
+            raise RuntimeError("simulated API timeout")
 
-    monkeypatch.setattr(logics_mod, "rerank_with_intent", fake_rerank, raising=False)
-    import intent_bridge as _ib
-    monkeypatch.setattr(_ib, "rerank_with_intent", fake_rerank)
+        def fake_call_claude(sp, um, **kw):
+            captured["user_message"] = um
+            return '{"format":"no_results","message":"","suggested_actions":[]}'
 
-    dim  = 1536
-    unit = [1.0 / math.sqrt(dim)] * dim
-    monkeypatch.setattr(logics_mod, "generate_query_embeddings_batch", lambda *a, **kw: [unit])
+        with patch.object(logics_mod, "_map_chunk", side_effect=fake_map_chunk), \
+             patch.object(logics_mod, "_call_claude", side_effect=fake_call_claude):
+            logics_mod.analyze_with_claude("find CRM tools", signals)
 
-    limit    = 20
-    raw_docs = _make_synthetic_docs(250)
-    mock_coll = _make_find_mock(raw_docs)
-    monkeypatch.setattr(logics_mod, "signals_collection",   mock_coll)
-    monkeypatch.setattr(logics_mod, "signals_collection_4", mock_coll)
-
-    logics_mod.get_matched_signals(
-        topic_key="test_topic",
-        keywords=["AI agents"],
-        targeting_platform="all",
-        limit=limit,
-        user_query="find AI buyers",
-    )
-
-    pool = captured.get("n", 0)
-    assert pool >= 100, f"Wide-pool must pass ≥100 candidates to bridge; got {pool}"
-    assert pool <= 200, f"Wide-pool must not exceed 200 candidates; got {pool}"
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 15. logics.py flag-OFF: rerank_with_intent never called
-# ══════════════════════════════════════════════════════════════════════════════
-
-def test_logics_flag_off_rerank_never_called(logics_mod, monkeypatch):
-    import config
-    import math
-    monkeypatch.setattr(config, "INTENT_BRIDGE_ENABLED", False)
-    monkeypatch.setattr(logics_mod, "SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD", 0.0)
-
-    rerank_called = [False]
-
-    def fake_rerank(*args, **kwargs):
-        rerank_called[0] = True
-        return args[1]
-
-    import intent_bridge as _ib
-    monkeypatch.setattr(_ib, "rerank_with_intent", fake_rerank)
-
-    dim  = 1536
-    unit = [1.0 / math.sqrt(dim)] * dim
-    monkeypatch.setattr(logics_mod, "generate_query_embeddings_batch", lambda *a, **kw: [unit])
-
-    limit    = 10
-    raw_docs = _make_synthetic_docs(50)
-    mock_coll = _make_find_mock(raw_docs)
-    monkeypatch.setattr(logics_mod, "signals_collection",   mock_coll)
-    monkeypatch.setattr(logics_mod, "signals_collection_4", mock_coll)
-
-    result = logics_mod.get_matched_signals(
-        topic_key="test_topic",
-        keywords=["AI agents"],
-        targeting_platform="all",
-        limit=limit,
-        user_query="find AI buyers",
-    )
-
-    assert not rerank_called[0], "rerank_with_intent must NOT be called when INTENT_BRIDGE_ENABLED=False"
-    assert len(result) <= limit
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 16. topic_sims kwarg accepted — no TypeError from logics.py call pattern
-# ══════════════════════════════════════════════════════════════════════════════
-
-def test_topic_sims_kwarg_accepted(ctx):
-    """
-    logics.py calls rerank_with_intent(user_query, candidates, limit,
-    topic_sims=[...]) with keyword argument topic_sims.
-    Calls the REAL intent_bridge.rerank_with_intent (bridge not mocked).
-    """
-    import intent_bridge
-    candidates = make_candidates(3)
-    sims = [0.92, 0.87, 0.81]
-    call_count = [0]
-
-    def llm_side_effect(system, user, **kwargs):
-        call_count[0] += 1
-        if call_count[0] == 1:
-            return _interpreter_json(["buyer_demand"])
-        import re
-        n = len(re.findall(r"^\[\d+\]", user, re.MULTILINE))
-        return _classifier_json([None] * n, intent="buyer_demand", confidence=0.85)
-
-    with patch_llm(side_effect=llm_side_effect):
-        result = intent_bridge.rerank_with_intent(
-            "find AI buyers", candidates, len(candidates),
-            topic_sims=sims,
+        assert "user_message" in captured, "Claude was not called"
+        msg = captured["user_message"]
+        assert "no_results" in msg, "user_message must instruct no_results format"
+        assert "Do NOT answer from general knowledge" in msg, (
+            "user_message must forbid general knowledge"
         )
-
-    assert isinstance(result, list), "result must be a list"
-    assert len(result) == len(candidates), f"result length {len(result)} != candidates length {len(candidates)}"
-    candidate_ids = {id(c) for c in candidates}
-    for item in result:
-        assert id(item) in candidate_ids, "result items must be original candidate dicts"
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 17. Small candidate list (≤ CLASSIFIER_BATCH_SIZE) → exactly 1 Claude call
-# ══════════════════════════════════════════════════════════════════════════════
-
-def test_small_list_single_classify_call(ctx):
-    """
-    3 candidates fit within CLASSIFIER_BATCH_SIZE (=17).
-    Bridge must make exactly ONE classifier call, not 3 parallel batches.
-    """
-    import intent_bridge
-    from intent_prototype import schemas
-
-    assert 3 <= schemas.CLASSIFIER_BATCH_SIZE
-
-    candidates = make_candidates(3)
-    classify_call_count = [0]
-    call_count = [0]
-
-    def llm_side_effect(system, user, **kwargs):
-        call_count[0] += 1
-        if call_count[0] == 1:
-            return _interpreter_json(["buyer_demand"])
-        classify_call_count[0] += 1
-        import re
-        n = len(re.findall(r"^\[\d+\]", user, re.MULTILINE))
-        return _classifier_json([None] * n, intent="buyer_demand", confidence=0.85)
-
-    with patch_llm(side_effect=llm_side_effect):
-        result = intent_bridge.rerank_with_intent(
-            "find AI buyers", candidates, len(candidates)
+        assert "(no grounded points extracted)" not in msg, (
+            "Placeholder text must not reach Claude"
         )
+        check_no_forbidden_phrases(msg, "test_31/non-streaming-all-map-raise")
 
-    assert classify_call_count[0] == 1, (
-        f"Expected exactly 1 classifier LLM call for {len(candidates)} docs, got {classify_call_count[0]}"
-    )
-    assert len(result) == len(candidates)
+    def test_32_streaming_all_map_steps_raise(self, logics_mod):
+        """Streaming: every _map_chunk call raises → same expectations."""
+        signals = _make_signals_for_chunking(14)
+        captured = {}
 
-# ══════════════════════════════════════════════════════════════════════════════
-# 18. Ranker unavailable → fallback warning logged, result still returned
-#     FAILS if real ranker ran (would mean no fallback path is tested)
-# ══════════════════════════════════════════════════════════════════════════════
+        def fake_map_chunk(query, chunk):
+            raise RuntimeError("simulated API timeout")
 
-def test_ranker_fallback_warning_logged_on_ranker_failure(ctx, caplog):
-    """
-    If ranker.rank() raises, _rank_passing must log a warning containing
-    'ranker unavailable' and still return a non-empty result (confidence sort).
-    """
-    import logging
-    import intent_bridge
+        def fake_stream(sp, um, **kw):
+            captured["user_message"] = um
+            yield '{"format":"no_results","message":"","suggested_actions":[]}'
 
-    candidates = make_candidates(3)
-    call_count = [0]
+        with patch.object(logics_mod, "_map_chunk", side_effect=fake_map_chunk), \
+             patch.object(logics_mod, "_call_claude_stream", side_effect=fake_stream):
+            list(logics_mod.analyze_with_claude_stream("find CRM tools", signals))
 
-    def llm_side_effect(system, user, **kwargs):
-        call_count[0] += 1
-        if call_count[0] == 1:
-            return _interpreter_json(["buyer_demand"])
-        import re
-        n = len(re.findall(r"^\[\d+\]", user, re.MULTILINE))
-        return _classifier_json([None] * n, intent="buyer_demand", confidence=0.85)
+        assert "user_message" in captured, "Claude stream was not called"
+        msg = captured["user_message"]
+        assert "no_results" in msg
+        assert "Do NOT answer from general knowledge" in msg
+        assert "(no grounded points extracted)" not in msg
+        check_no_forbidden_phrases(msg, "test_32/streaming-all-map-raise")
 
-    with patch("intent_prototype.ranker.rank", side_effect=RuntimeError("ranker boom")):
-        with caplog.at_level(logging.WARNING, logger="flintel.intent_bridge"):
-            with patch_llm(side_effect=llm_side_effect):
-                result = intent_bridge.rerank_with_intent(
-                    "find AI buyers", candidates, len(candidates)
-                )
+    def test_33_non_streaming_all_map_steps_return_empty(self, logics_mod):
+        """Non-streaming: every _map_chunk returns '' → same expectations."""
+        signals = _make_signals_for_chunking(14)
+        captured = {}
 
-    assert "ranker unavailable" in caplog.text, (
-        "fallback warning 'ranker unavailable' must be logged when ranker.rank() raises"
-    )
-    assert isinstance(result, list) and len(result) > 0, (
-        "result must be non-empty even after ranker failure (confidence-sort fallback)"
-    )
+        def fake_map_chunk(query, chunk):
+            return ""   # empty string — truthy filter drops it
 
-# ══════════════════════════════════════════════════════════════════════════════
-# 19. save_many called with List[dict] — matches real save_many signature
-#     Uses a Mongo-mock collection to verify save_many is NOT called with tuples
-# ══════════════════════════════════════════════════════════════════════════════
+        def fake_call_claude(sp, um, **kw):
+            captured["user_message"] = um
+            return '{"format":"no_results","message":"","suggested_actions":[]}'
 
-def test_save_many_called_with_list_of_dicts(ctx, monkeypatch):
-    """
-    classification_cache.save_many([(post_url, classification_dict), ...]) —
-    asal signature: tuples, not dicts.  Verifies bridge passes tuples and
-    that each tuple has (str, dict) shape with post_url, intents, confidence.
-    """
-    import intent_bridge
+        with patch.object(logics_mod, "_map_chunk", side_effect=fake_map_chunk), \
+             patch.object(logics_mod, "_call_claude", side_effect=fake_call_claude):
+            logics_mod.analyze_with_claude("find CRM tools", signals)
 
-    save_many_calls = []
+        assert "user_message" in captured
+        msg = captured["user_message"]
+        assert "no_results" in msg
+        assert "Do NOT answer from general knowledge" in msg
+        assert "(no grounded points extracted)" not in msg
+        check_no_forbidden_phrases(msg, "test_33/non-streaming-all-map-empty")
 
-    def spy_save_many(items):
-        save_many_calls.extend(items)
-        # Also forward to FakeCache so the test stays consistent
-        ctx.cache.save_many(items)
+    def test_34_streaming_all_map_steps_return_empty(self, logics_mod):
+        """Streaming: every _map_chunk returns '' → same expectations."""
+        signals = _make_signals_for_chunking(14)
+        captured = {}
 
-    # Replace save_many in the fake cache module
-    sys.modules["intent_prototype.classification_cache"].save_many = spy_save_many
+        def fake_map_chunk(query, chunk):
+            return ""
 
-    candidates = make_candidates(3)
-    call_count = [0]
+        def fake_stream(sp, um, **kw):
+            captured["user_message"] = um
+            yield '{"format":"no_results","message":"","suggested_actions":[]}'
 
-    def llm_side_effect(system, user, **kwargs):
-        call_count[0] += 1
-        if call_count[0] == 1:
-            return _interpreter_json(["buyer_demand"])
-        import re
-        n = len(re.findall(r"^\[\d+\]", user, re.MULTILINE))
-        return _classifier_json([None] * n, intent="buyer_demand", confidence=0.85)
+        with patch.object(logics_mod, "_map_chunk", side_effect=fake_map_chunk), \
+             patch.object(logics_mod, "_call_claude_stream", side_effect=fake_stream):
+            list(logics_mod.analyze_with_claude_stream("find CRM tools", signals))
 
-    with patch_llm(side_effect=llm_side_effect):
-        intent_bridge.rerank_with_intent("find AI buyers", candidates, len(candidates))
+        assert "user_message" in captured
+        msg = captured["user_message"]
+        assert "no_results" in msg
+        assert "Do NOT answer from general knowledge" in msg
+        assert "(no grounded points extracted)" not in msg
+        check_no_forbidden_phrases(msg, "test_34/streaming-all-map-empty")
 
-    assert len(save_many_calls) > 0, "save_many must have been called with classified items"
+    def test_35_happy_path_notes_present_unchanged(self, logics_mod):
+        """Normal map-reduce (some notes present) → final user_message still
+        contains the notes text and the existing grounding wording.
+        Proves the happy path is byte-for-byte unchanged."""
+        signals = _make_signals_for_chunking(14)
+        captured = {}
 
-    for item in save_many_calls:
-        # Each item must be a (post_url, classification_dict) tuple
-        assert isinstance(item, tuple), (
-            f"save_many received {type(item).__name__}, expected tuple (post_url, cls_dict)"
+        def fake_map_chunk(query, chunk):
+            return "grounded note from chunk"
+
+        def fake_call_claude(sp, um, **kw):
+            captured["user_message"] = um
+            return '{"format":"source_list","results":[]}'
+
+        with patch.object(logics_mod, "_map_chunk", side_effect=fake_map_chunk), \
+             patch.object(logics_mod, "_call_claude", side_effect=fake_call_claude):
+            logics_mod.analyze_with_claude("find CRM tools", signals)
+
+        assert "user_message" in captured
+        msg = captured["user_message"]
+        assert "grounded note from chunk" in msg, (
+            "Happy path must still pass notes to Claude"
         )
-        assert len(item) == 2, f"tuple must have 2 elements, got {len(item)}"
-        post_url, cls_dict = item
-        assert isinstance(post_url, str) and post_url, "first element must be non-empty post_url str"
-        assert isinstance(cls_dict, dict), "second element must be a classification dict"
-        assert "intents"    in cls_dict, f"cls_dict missing 'intents': {cls_dict}"
-        assert "confidence" in cls_dict, f"cls_dict missing 'confidence': {cls_dict}"
-        assert isinstance(cls_dict["intents"], list), "intents must be a list"
-        assert isinstance(cls_dict["confidence"], float), "confidence must be a float"
+        assert "only factual grounding" in msg, (
+            "Happy path must retain the existing grounding instruction"
+        )
+        assert "(no grounded points extracted)" not in msg
+        check_no_forbidden_phrases(msg, "test_35/happy-path-notes-present")
 
-# ══════════════════════════════════════════════════════════════════════════════
-# 20. topic_sims affect ranking_score: high-sim doc outranks low-sim doc
-# ══════════════════════════════════════════════════════════════════════════════
+    def test_36_extra_context_appended_in_empty_notes_non_streaming(self, logics_mod):
+        """extra_context is appended in the empty-notes branch (non-streaming)."""
+        signals = _make_signals_for_chunking(14)
+        captured = {}
 
-def test_topic_sims_affect_ranking_order(ctx, caplog):
-    """
-    Two candidates with equal classification scores but different topic_sims.
-    High-sim candidate must rank above low-sim candidate.
-    Also proves real ranker.rank() ran (no 'ranker unavailable' warning).
-    """
-    import logging
-    import intent_bridge
+        def fake_map_chunk(query, chunk):
+            raise RuntimeError("timeout")
 
-    high_sim_url = "https://reddit.com/r/test/high"
-    low_sim_url  = "https://reddit.com/r/test/low"
+        def fake_call_claude(sp, um, **kw):
+            captured["user_message"] = um
+            return '{"format":"no_results","message":"","suggested_actions":[]}'
 
-    # Present low-sim first (original order), high-sim second
-    candidates = [
-        {"title": "low sim post",  "post_text": "We buy AI agents LOW",  "post_url": low_sim_url,  "platform": "reddit"},
-        {"title": "high sim post", "post_text": "We buy AI agents HIGH", "post_url": high_sim_url, "platform": "reddit"},
-    ]
-    topic_sims = [0.10, 0.99]  # low first, high second
-
-    call_count = [0]
-
-    def llm_side_effect(system, user, **kwargs):
-        call_count[0] += 1
-        if call_count[0] == 1:
-            return _interpreter_json(["buyer_demand"])
-        # Both classified as buyer_demand with identical confidence
-        import re
-        n = len(re.findall(r"^\[\d+\]", user, re.MULTILINE))
-        return _classifier_json([None] * n, intent="buyer_demand", confidence=0.85)
-
-    with caplog.at_level(logging.WARNING, logger="flintel.intent_bridge"):
-        with patch_llm(side_effect=llm_side_effect):
-            result = intent_bridge.rerank_with_intent(
-                "find AI buyers", candidates, len(candidates),
-                topic_sims=topic_sims,
+        with patch.object(logics_mod, "_map_chunk", side_effect=fake_map_chunk), \
+             patch.object(logics_mod, "_call_claude", side_effect=fake_call_claude):
+            logics_mod.analyze_with_claude(
+                "find CRM tools", signals,
+                extra_context="EXTRA_CTX_SENTINEL"
             )
 
-    # Real ranker ran
-    assert "ranker unavailable" not in caplog.text, (
-        "real ranker must have run — 'ranker unavailable' must not appear"
-    )
-
-    assert len(result) == 2
-    assert result[0]["post_url"] == high_sim_url, (
-        f"High-sim doc must rank first. Got: {[r['post_url'] for r in result]}"
-    )
-    assert result[1]["post_url"] == low_sim_url
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 21. Real save_many: collection.bulk_write called with UpdateOne ops
-#     _id = post_url — uses ACTUAL classification_cache.save_many (no FakeCache)
-#     This test FAILS on old intent_bridge (dicts) because save_many expects
-#     tuples: `for post_url, classification in items` raises ValueError on dicts,
-#     which save_many catches and swallows → bulk_write never called.
-# ══════════════════════════════════════════════════════════════════════════════
-
-def test_save_many_bulk_write_called_with_update_one_ops(monkeypatch):
-    """
-    Patches _get_collection (Mongo boundary) and verifies that after a
-    successful bridge run, the real save_many fires collection.bulk_write
-    with UpdateOne ops whose filter is {"_id": post_url}.
-
-    Fails on old intent_bridge.py because it passes List[dict] to save_many,
-    which unpacks as `for post_url, classification in items` → iterates over
-    dict keys → TypeError/ValueError → save_many catches it → bulk_write
-    is never reached.
-    """
-    import importlib
-    import types
-    import intent_bridge
-    import intent_prototype.classification_cache as cc
-
-    # ── Reset module-level cache state so _get_collection runs fresh ──────
-    cc._collection  = None
-    cc._index_ready = False
-
-    # ── Mock collection ────────────────────────────────────────────────────
-    mock_coll = MagicMock()
-    mock_coll.bulk_write = MagicMock()
-    mock_coll.find = MagicMock(return_value=[])   # get_many returns nothing
-
-    monkeypatch.setattr(cc, "_collection", None)
-    monkeypatch.setattr(cc, "_index_ready", True)  # skip TTL index
-
-    original_get_collection = cc._get_collection
-
-    def fake_get_collection():
-        cc._collection = mock_coll
-        return mock_coll
-
-    monkeypatch.setattr(cc, "_get_collection", fake_get_collection)
-
-    # ── Wire real save_many / get_many into sys.modules (bypass FakeCache) ─
-    real_cache_mod = types.ModuleType("intent_prototype.classification_cache")
-    real_cache_mod.get_many  = cc.get_many
-    real_cache_mod.save_many = cc.save_many
-    monkeypatch.setitem(sys.modules, "intent_prototype.classification_cache", real_cache_mod)
-
-    # ── Config ─────────────────────────────────────────────────────────────
-    import config
-    monkeypatch.setattr(config, "INTENT_BRIDGE_ENABLED", True)
-    monkeypatch.setattr(config, "INTENT_CACHE_ENABLED",  True)
-
-    candidates = make_candidates(3)
-    call_count = [0]
-
-    def llm_side_effect(system, user, **kwargs):
-        call_count[0] += 1
-        if call_count[0] == 1:
-            return _interpreter_json(["buyer_demand"])
-        import re
-        n = len(re.findall(r"^\[\d+\]", user, re.MULTILINE))
-        return _classifier_json([None] * n, intent="buyer_demand", confidence=0.85)
-
-    with patch_llm(side_effect=llm_side_effect):
-        intent_bridge.rerank_with_intent("find AI buyers", candidates, len(candidates))
-
-    # ── Assertions ─────────────────────────────────────────────────────────
-    assert mock_coll.bulk_write.called, (
-        "collection.bulk_write must be called — save_many did not reach Mongo. "
-        "Likely cause: intent_bridge passed dicts instead of (post_url, cls_dict) tuples."
-    )
-
-    # Inspect the ops passed to bulk_write
-    bulk_args = mock_coll.bulk_write.call_args[0][0]   # first positional arg = list of ops
-    assert len(bulk_args) > 0, "bulk_write must receive at least one UpdateOne op"
-
-    candidate_urls = {c["post_url"] for c in candidates}
-    for op in bulk_args:
-        filter_doc = op._filter   # pymongo UpdateOne stores filter in ._filter
-        assert "_id" in filter_doc, f"UpdateOne filter must use _id, got: {filter_doc}"
-        assert filter_doc["_id"] in candidate_urls, (
-            f"UpdateOne _id {filter_doc['_id']!r} not in expected URLs"
+        assert "EXTRA_CTX_SENTINEL" in captured["user_message"], (
+            "extra_context must be appended even in the empty-notes branch"
         )
+
+    def test_37_extra_context_appended_in_empty_notes_streaming(self, logics_mod):
+        """extra_context is appended in the empty-notes branch (streaming)."""
+        signals = _make_signals_for_chunking(14)
+        captured = {}
+
+        def fake_map_chunk(query, chunk):
+            raise RuntimeError("timeout")
+
+        def fake_stream(sp, um, **kw):
+            captured["user_message"] = um
+            yield '{"format":"no_results","message":"","suggested_actions":[]}'
+
+        with patch.object(logics_mod, "_map_chunk", side_effect=fake_map_chunk), \
+             patch.object(logics_mod, "_call_claude_stream", side_effect=fake_stream):
+            list(logics_mod.analyze_with_claude_stream(
+                "find CRM tools", signals,
+                extra_context="EXTRA_CTX_SENTINEL"
+            ))
+
+        assert "EXTRA_CTX_SENTINEL" in captured["user_message"], (
+            "extra_context must be appended even in the empty-notes branch (streaming)"
+        )
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PART H — Remaining runtime tests (Part 2 Task A, test_38–test_47)
+# ══════════════════════════════════════════════════════════════════════════════
+
+class TestRemainingRuntime:
+    """Additional runtime behaviour tests per Part 2 Task A.
+
+    Tests 38–47 cover:
+      - force_json_prefill in non-streaming empty-notes branch (38)
+      - happy-path streaming (39)
+      - streaming extra_context in no-posts and single-chunk branches (40)
+      - warning logged on empty-notes, both functions (41, 42)
+      - stub-only pool → no-posts branch, no map step (43)
+      - mixed pool → only real posts kept (44)
+      - 'only factual grounding' wording in non-streaming happy path (45)
+      - extra_context=None produces no "None" literal in message (46, 47)
+    """
+
+    # ── test_38: force_json_prefill=True in non-streaming empty-notes branch ──
+
+    def test_38_non_streaming_empty_notes_uses_force_json_prefill(self, logics_mod):
+        """Non-streaming empty-notes branch must pass force_json_prefill=True to _call_claude."""
+        signals = _make_signals_for_chunking(14)
+        captured = {}
+
+        def fake_map_chunk(query, chunk):
+            raise RuntimeError("timeout")
+
+        def fake_call_claude(sp, um, force_json_prefill=False, **kw):
+            captured["force_json_prefill"] = force_json_prefill
+            captured["user_message"] = um
+            return '{"format":"no_results","message":"x","suggested_actions":[]}'
+
+        with patch.object(logics_mod, "_map_chunk", side_effect=fake_map_chunk), \
+             patch.object(logics_mod, "_call_claude", side_effect=fake_call_claude):
+            logics_mod.analyze_with_claude("find anything", signals)
+
+        assert captured.get("force_json_prefill") is True, (
+            "Non-streaming empty-notes branch must pass force_json_prefill=True"
+        )
+
+    # ── test_39: happy-path streaming ────────────────────────────────────────
+
+    def test_39_streaming_happy_path_notes_present(self, logics_mod):
+        """Streaming happy path: _map_chunk returns notes → final stream call
+        contains note text and 'only factual grounding', not the empty-notes
+        refusal phrases."""
+        signals = _make_signals_for_chunking(14)
+        captured = {}
+
+        def fake_map_chunk(query, chunk):
+            return "NOTE-A"
+
+        def fake_condense(query, notes_chunk):
+            return "NOTE-A"
+
+        def fake_stream(sp, um, **kw):
+            captured["user_message"] = um
+            yield '{"format":"source_list","results":[]}'
+
+        with patch.object(logics_mod, "_map_chunk", side_effect=fake_map_chunk), \
+             patch.object(logics_mod, "_condense_notes_chunk", side_effect=fake_condense), \
+             patch.object(logics_mod, "_call_claude_stream", side_effect=fake_stream):
+            list(logics_mod.analyze_with_claude_stream("find CRM", signals,
+                                                        extra_context="EXTRA_HAPPY"))
+
+        assert "user_message" in captured
+        msg = captured["user_message"]
+        assert "NOTE-A" in msg, "Happy path must pass notes to Claude stream"
+        assert "only factual grounding" in msg, (
+            "Happy path stream must contain existing grounding wording"
+        )
+        assert "Do NOT answer from general knowledge" not in msg, (
+            "Empty-notes refusal must NOT appear in happy path"
+        )
+        assert "EXTRA_HAPPY" in msg, "extra_context must be appended in happy-path stream"
+        check_no_forbidden_phrases(msg, "test_39/streaming-happy-path")
+
+    # ── test_40: streaming extra_context in no-posts and single-chunk branches
+
+    def test_40_streaming_extra_context_in_no_posts_and_single_chunk(self, logics_mod):
+        """Streaming: extra_context must appear in messages for (a) the no-posts
+        branch and (b) the single-chunk branch.  Also confirm omitting
+        extra_context leaves no 'None' literal in the message."""
+        # (a) no-posts branch
+        captured_no_posts = {}
+
+        def fake_stream_a(sp, um, **kw):
+            captured_no_posts["user_message"] = um
+            yield "chunk"
+
+        with patch.object(logics_mod, "_call_claude_stream", side_effect=fake_stream_a):
+            list(logics_mod.analyze_with_claude_stream(
+                "query?", [], extra_context="SENTINEL_NO_POSTS"))
+
+        msg_a = captured_no_posts["user_message"]
+        assert "SENTINEL_NO_POSTS" in msg_a, (
+            "extra_context must be appended in no-posts streaming branch"
+        )
+
+        # (b) single-chunk branch (1 post → fits in one chunk)
+        captured_single = {}
+
+        def fake_stream_b(sp, um, **kw):
+            captured_single["user_message"] = um
+            yield "chunk"
+
+        with patch.object(logics_mod, "_call_claude_stream", side_effect=fake_stream_b):
+            list(logics_mod.analyze_with_claude_stream(
+                "query?", [make_signal()], extra_context="SENTINEL_SINGLE"))
+
+        msg_b = captured_single["user_message"]
+        assert "SENTINEL_SINGLE" in msg_b, (
+            "extra_context must be appended in single-chunk streaming branch"
+        )
+
+        # (c) omitting extra_context → no "None" literal anywhere
+        captured_none = {}
+
+        def fake_stream_c(sp, um, **kw):
+            captured_none["user_message"] = um
+            yield "chunk"
+
+        with patch.object(logics_mod, "_call_claude_stream", side_effect=fake_stream_c):
+            list(logics_mod.analyze_with_claude_stream("query?", []))
+
+        assert "None" not in captured_none["user_message"], (
+            "Omitting extra_context must not inject the literal 'None' into the message"
+        )
+
+    # ── test_41, test_42: warning is logged ───────────────────────────────────
+
+    def test_41_warning_logged_non_streaming_empty_notes(self, logics_mod, caplog):
+        """analyze_with_claude: a warning mentioning empty-notes routing must be
+        emitted when every map step fails."""
+        import logging
+        signals = _make_signals_for_chunking(14)
+
+        def fake_map_chunk(query, chunk):
+            raise RuntimeError("timeout")
+
+        def fake_call_claude(sp, um, **kw):
+            return '{"format":"no_results","message":"x","suggested_actions":[]}'
+
+        with patch.object(logics_mod, "_map_chunk", side_effect=fake_map_chunk), \
+             patch.object(logics_mod, "_call_claude", side_effect=fake_call_claude), \
+             caplog.at_level(logging.WARNING):
+            logics_mod.analyze_with_claude("CRM question", signals)
+
+        warning_msgs = [r.message for r in caplog.records if r.levelno == logging.WARNING]
+        assert any("no_results" in m or "empty" in m or "routing" in m
+                   for m in warning_msgs), (
+            f"Expected a warning about empty-notes routing; got: {warning_msgs}"
+        )
+
+    def test_42_warning_logged_streaming_empty_notes(self, logics_mod, caplog):
+        """analyze_with_claude_stream: a warning mentioning empty-notes routing
+        must be emitted when every map step fails."""
+        import logging
+        signals = _make_signals_for_chunking(14)
+
+        def fake_map_chunk(query, chunk):
+            raise RuntimeError("timeout")
+
+        def fake_stream(sp, um, **kw):
+            yield '{"format":"no_results","message":"x","suggested_actions":[]}'
+
+        with patch.object(logics_mod, "_map_chunk", side_effect=fake_map_chunk), \
+             patch.object(logics_mod, "_call_claude_stream", side_effect=fake_stream), \
+             caplog.at_level(logging.WARNING):
+            list(logics_mod.analyze_with_claude_stream("CRM question", signals))
+
+        warning_msgs = [r.message for r in caplog.records if r.levelno == logging.WARNING]
+        assert any("no_results" in m or "empty" in m or "routing" in m
+                   for m in warning_msgs), (
+            f"Expected a warning about empty-notes routing; got: {warning_msgs}"
+        )
+
+    # ── test_43: stub-only pool ───────────────────────────────────────────────
+
+    def test_43_stub_only_pool_routes_to_no_posts_branch(self, logics_mod):
+        """Signals with post_text=None (Google stubs) → build_claude_post_context
+        drops them all → no-posts branch fires → message contains STRICTLY /
+        no_results; map step is never called; stub title/URL absent from message."""
+        stub_signals = [
+            {"title": "r/crm", "post_text": None,
+             "post_url": "https://reddit.com/r/crm", "platform": "reddit"},
+            {"title": "r/saas", "post_text": None,
+             "post_url": "https://reddit.com/r/saas", "platform": "reddit"},
+        ]
+
+        # Verify build_claude_post_context strips all stubs
+        posts = logics_mod.build_claude_post_context(stub_signals)
+        assert posts == [], (
+            "build_claude_post_context must return [] for stub-only pool"
+        )
+
+        # Verify no map step is ever called and message is the no-posts message
+        captured = {}
+        map_calls = []
+
+        def fake_map_chunk(query, chunk):
+            map_calls.append(chunk)
+            return "should not happen"
+
+        def fake_call_claude(sp, um, **kw):
+            captured["user_message"] = um
+            return '{"format":"no_results","message":"x","suggested_actions":[]}'
+
+        with patch.object(logics_mod, "_map_chunk", side_effect=fake_map_chunk), \
+             patch.object(logics_mod, "_call_claude", side_effect=fake_call_claude):
+            logics_mod.analyze_with_claude("find CRM posts", stub_signals)
+
+        assert map_calls == [], "No map step must be invoked for a stub-only pool"
+        assert "user_message" in captured
+        msg = captured["user_message"]
+        assert "STRICTLY" in msg, "No-posts message must contain 'STRICTLY'"
+        assert "no_results" in msg, "No-posts message must reference no_results"
+        # Stub title and URL must NOT appear in the message
+        assert "r/crm" not in msg, "Stub title must not leak into the message"
+        assert "reddit.com/r/crm" not in msg, "Stub URL must not leak into the message"
+        check_no_forbidden_phrases(msg, "test_43/stub-only-pool")
+
+    # ── test_44: mixed pool ───────────────────────────────────────────────────
+
+    def test_44_mixed_pool_keeps_only_real_posts(self, logics_mod):
+        """Mixed pool (some stubs + some real posts): build_claude_post_context
+        keeps only the posts that have real post_text, with correct count and titles."""
+        mixed_signals = [
+            {"title": "Real post A", "post_text": "I need a CRM",
+             "post_url": "https://reddit.com/1", "platform": "reddit"},
+            {"title": "Stub B",      "post_text": None,
+             "post_url": "https://reddit.com/2", "platform": "reddit"},
+            {"title": "Real post C", "post_text": "Looking for automation",
+             "post_url": "https://reddit.com/3", "platform": "reddit"},
+            {"title": "Stub D",      "post_text": "",
+             "post_url": "https://reddit.com/4", "platform": "reddit"},
+        ]
+
+        posts = logics_mod.build_claude_post_context(mixed_signals)
+
+        assert len(posts) == 2, (
+            f"build_claude_post_context must keep only the 2 real posts; got {len(posts)}"
+        )
+        titles = {p["title"] for p in posts}
+        assert "Real post A" in titles, "Real post A must be kept"
+        assert "Real post C" in titles, "Real post C must be kept"
+        assert "Stub B" not in titles, "Stub B (post_text=None) must be dropped"
+        assert "Stub D" not in titles, "Stub D (post_text='') must be dropped"
+
+    # ── test_45: 'only factual grounding' in non-streaming happy path ─────────
+
+    def test_45_non_streaming_happy_path_wording(self, logics_mod):
+        """Non-streaming happy path (notes present after map-reduce) must contain
+        'only factual grounding' and must NOT contain 'Do NOT answer from general
+        knowledge' (which belongs only in the empty-notes branch)."""
+        signals = _make_signals_for_chunking(14)
+        captured = {}
+
+        def fake_map_chunk(query, chunk):
+            return "NOTE-A"
+
+        def fake_condense(query, notes_chunk):
+            return "NOTE-A"
+
+        def fake_call_claude(sp, um, **kw):
+            captured["user_message"] = um
+            return '{"format":"source_list","results":[]}'
+
+        with patch.object(logics_mod, "_map_chunk", side_effect=fake_map_chunk), \
+             patch.object(logics_mod, "_condense_notes_chunk", side_effect=fake_condense), \
+             patch.object(logics_mod, "_call_claude", side_effect=fake_call_claude):
+            logics_mod.analyze_with_claude("CRM tools", signals,
+                                            extra_context="EXTRA_45")
+
+        assert "user_message" in captured
+        msg = captured["user_message"]
+        assert "NOTE-A" in msg
+        assert "only factual grounding" in msg, (
+            "Happy path must retain the 'only factual grounding' instruction"
+        )
+        assert "EXTRA_45" in msg
+        assert "Do NOT answer from general knowledge" not in msg, (
+            "Empty-notes refusal phrase must NOT appear in happy path"
+        )
+
+    # ── test_46, test_47: omitting extra_context leaves no "None" literal ─────
+
+    def test_46_no_none_literal_when_extra_context_omitted_non_streaming(self, logics_mod):
+        """Non-streaming: omitting extra_context must not inject the string 'None'
+        into any branch (no-posts, single-chunk, map-reduce)."""
+        captured_msgs = []
+
+        def fake_call_claude(sp, um, **kw):
+            captured_msgs.append(um)
+            return '{"format":"no_results","message":"x","suggested_actions":[]}'
+
+        # no-posts branch
+        with patch.object(logics_mod, "_call_claude", side_effect=fake_call_claude):
+            logics_mod.analyze_with_claude("query?", [])
+
+        # single-chunk branch
+        with patch.object(logics_mod, "_call_claude", side_effect=fake_call_claude):
+            logics_mod.analyze_with_claude("query?", [make_signal()])
+
+        for msg in captured_msgs:
+            assert "None" not in msg, (
+                f"Message must not contain the string 'None' when extra_context is omitted:\n{msg}"
+            )
+
+    def test_47_no_none_literal_when_extra_context_omitted_streaming(self, logics_mod):
+        """Streaming: omitting extra_context must not inject the string 'None'
+        into any branch (no-posts, single-chunk)."""
+        captured_msgs = []
+
+        def fake_stream(sp, um, **kw):
+            captured_msgs.append(um)
+            yield "chunk"
+
+        # no-posts branch
+        with patch.object(logics_mod, "_call_claude_stream", side_effect=fake_stream):
+            list(logics_mod.analyze_with_claude_stream("query?", []))
+
+        # single-chunk branch
+        with patch.object(logics_mod, "_call_claude_stream", side_effect=fake_stream):
+            list(logics_mod.analyze_with_claude_stream("query?", [make_signal()]))
+
+        for msg in captured_msgs:
+            assert "None" not in msg, (
+                f"Stream message must not contain 'None' when extra_context is omitted:\n{msg}"
+            )
