@@ -13,10 +13,12 @@ vars — no Mongo connection, no HTTP call, nothing that can fail or block
 at import time. Exactly the same spirit as the top of index.py's own
 former config block.
 
-(MODEL) ANTHROPIC_API_KEY / CLAUDE_MODEL / CLAUDE_API_URL /
-CLAUDE_API_VERSION configure the LLM this product calls out to (Claude
-Haiku, via Anthropic's Messages API — see logics.py for the actual
-call).
+(MODEL) LLM_MODEL / LLM_REASONING_EFFORT / LLM_REASONING_HEADROOM /
+LLM_VERBOSITY / OPENAI_RESPONSES_URL configure the LLM this product
+calls out to (GPT-5 mini, via OpenAI Responses API — see logics.py for
+the actual call). ANTHROPIC_API_KEY / CLAUDE_MODEL / CLAUDE_API_URL /
+CLAUDE_API_VERSION are kept as deprecated/unused constants for
+backward-compatibility with existing .env files.
 
 (TIMEOUT-SIMPLIFICATION CHANGE) No "loose match" / "near match
 confidence" / threshold constant lives here — that entire mechanism is
@@ -40,27 +42,41 @@ EMBEDDING_TIMEOUT / EMBEDDING_MAX_CHARS mirror the embedding config already
 used by the background-service files (index.py and both flintel.py's own
 embedding config block) name-for-name and default-for-default, so both
 sides of the system embed with the same model/settings. SIGNAL_EMBEDDING_
-CANDIDATE_POOL and SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD are new, web-
-service-only constants for this service's own matching step (the
-background service has no equivalent step, so no mirrored constant is
-needed for these two).
+CANDIDATE_POOL, SIGNAL_EMBEDDING_RECENCY_POOL, SIGNAL_EMBEDDING_SIMILARITY_
+THRESHOLD, and SIGNAL_EMBEDDING_MAX_SCAN are web-service-only constants for
+the retrieval/scoring step.
+
+CANDIDATE_POOL and RECENCY_POOL now default to 0 (unlimited mode):
+  0 or negative  → unlimited: skip lexical Tier 1, open cursor with no
+                   .limit(), score in batched numpy (2000 docs/batch).
+  positive N     → legacy hybrid mode (Tier 1 lexical up to N docs +
+                   Tier 2 recency up to RECENCY_POOL). Rollback: set
+                   both to 500 in .env.
+SIGNAL_EMBEDDING_MAX_SCAN (default 0 = no cap): optional hard upper
+limit on docs scanned in unlimited mode; a warning is logged if hit.
 
 (MONGODB4 NOTE) MONGODB4 is a second signals-only read mirror, same
 role as MONGODB2 (flintel_signals only). MONGODB3 stays the tertiary
 connection for every OTHER collection — jobs, users, chats, etc. —
 untouched by this addition.
-
-(INTENT BRIDGE NOTE) The INTENT_* constants at the bottom configure the
-intent-classification bridge: after embedding retrieval, a wider candidate
-pool is classified for intent by the LLM, with a short-circuit once enough
-candidates pass, a total-time budget, and a per-post classification cache.
-The master switch INTENT_BRIDGE_ENABLED defaults to False, so nothing
-changes until it is explicitly turned on.
 """
 
 import os
 
 __all__ = [
+    # Intent Bridge config (prototype ↔ production)
+    "INTENT_BRIDGE_ENABLED",
+    "INTENT_CANDIDATE_MULTIPLIER",
+    "INTENT_CANDIDATE_MIN",
+    "INTENT_CANDIDATE_MAX",
+    "INTENT_SHORTCIRCUIT_HEAD",
+    "INTENT_SHORTCIRCUIT_MIN_PASSING",
+    "INTENT_SHORTCIRCUIT_MIN_CONFIDENCE",
+    "INTENT_CLASSIFY_PARALLEL_BATCHES",
+    "INTENT_BRIDGE_TIMEOUT_SECONDS",
+    "INTENT_CACHE_ENABLED",
+    "INTENT_CACHE_TTL_DAYS",
+    "INTENT_CACHE_COLLECTION",
     # Keyword / matching limits
     "MAX_KEYWORDS",
     "CLAUDE_MAX_KEYWORDS",
@@ -114,11 +130,17 @@ __all__ = [
     "URL_PROMPT_MAX_KEYWORDS",
     "URL_PROMPT_MAX_PHRASES",
     "URL_MERGED_MAX_PHRASES",
-    # Model config (ANTHROPIC — Claude Haiku)
+    # Model config (ANTHROPIC — deprecated/unused; kept for .env compatibility)
     "ANTHROPIC_API_KEY",
     "CLAUDE_MODEL",
     "CLAUDE_API_URL",
     "CLAUDE_API_VERSION",
+    # Model config (OpenAI Responses API — active LLM backend)
+    "LLM_MODEL",
+    "LLM_REASONING_EFFORT",
+    "LLM_REASONING_HEADROOM",
+    "LLM_VERBOSITY",
+    "OPENAI_RESPONSES_URL",
     # Embedding config (mirrors background-service embedding config)
     "EMBEDDING_PROVIDER",
     "EMBEDDING_MODEL",
@@ -130,25 +152,18 @@ __all__ = [
     "SIGNAL_EMBEDDING_CANDIDATE_POOL",
     "SIGNAL_EMBEDDING_RECENCY_POOL",
     "SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD",
-    # Intent bridge config
-    "INTENT_BRIDGE_ENABLED",
-    "INTENT_CANDIDATE_MULTIPLIER",
-    "INTENT_CANDIDATE_MIN",
-    "INTENT_CANDIDATE_MAX",
-    "INTENT_SHORTCIRCUIT_HEAD",
-    "INTENT_SHORTCIRCUIT_MIN_PASSING",
-    "INTENT_SHORTCIRCUIT_MIN_CONFIDENCE",
-    "INTENT_CLASSIFY_PARALLEL_BATCHES",
-    "INTENT_BRIDGE_TIMEOUT_SECONDS",
-    "INTENT_CACHE_ENABLED",
-    "INTENT_CACHE_TTL_DAYS",
-    "INTENT_CACHE_COLLECTION",
+    "SIGNAL_EMBEDDING_MAX_SCAN",
     # Secondary MongoDB (signals mirror)
     "MONGODB2",
     # Tertiary MongoDB (everything except flintel_signals)
     "MONGODB3",
     # Quaternary MongoDB (signals mirror)
     "MONGODB4",
+    # Lazy embedding backfill config
+    "LAZY_EMBED_ENABLED",
+    "LAZY_EMBED_MAX_DOCS_PER_QUERY",
+    "LAZY_EMBED_BATCH_SIZE",
+    "LAZY_EMBED_MIN_TEXT_CHARS",
 ]
 
 # ── Keyword / matching limits ────────────────────────────────────────────
@@ -277,7 +292,10 @@ URL_PROMPT_MAX_PHRASES = int(os.getenv("URL_PROMPT_MAX_PHRASES", "7"))
 # Merge ke baad match_phrases ki total limit (website 7 + prompt 3 = 10).
 URL_MERGED_MAX_PHRASES = int(os.getenv("URL_MERGED_MAX_PHRASES", "15"))
 
-# ── Model config (ANTHROPIC — Claude Haiku) ──────────────────────────────
+# ── Model config (ANTHROPIC — DEPRECATED / UNUSED) ───────────────────────
+# These constants are kept so existing .env files with ANTHROPIC_API_KEY or
+# CLAUDE_MODEL set do not cause import errors. They are NOT used by any
+# active code path — the LLM backend is now OpenAI (see block below).
 ANTHROPIC_API_KEY   = os.getenv("ANTHROPIC_API_KEY")
 CLAUDE_MODEL        = os.getenv("CLAUDE_MODEL", "claude-haiku-4-5-20251001")
 CLAUDE_API_URL      = "https://api.anthropic.com/v1/messages"
@@ -310,55 +328,30 @@ EMBEDDING_MAX_CHARS = int(os.getenv("EMBEDDING_MAX_CHARS", "8000"))
 # intent angles off the end of the list.
 ROUTER_MAX_MATCH_PHRASES = int(os.getenv("ROUTER_MAX_MATCH_PHRASES", "12"))
 
-SIGNAL_EMBEDDING_CANDIDATE_POOL = int(os.getenv("SIGNAL_EMBEDDING_CANDIDATE_POOL", "500"))
+# (UNLIMITED CANDIDATE POOL) Default 0 = unlimited mode.
+#   0 or negative  → unlimited: lexical Tier 1 is skipped, ALL docs in
+#                     the time window with a valid embedding are scored via
+#                     batched numpy (no .limit() on the cursor).
+#   positive N     → legacy hybrid: Tier 1 lexical capped at N docs.
+# Rollback: set SIGNAL_EMBEDDING_CANDIDATE_POOL=500 in .env.
+SIGNAL_EMBEDDING_CANDIDATE_POOL = int(os.getenv("SIGNAL_EMBEDDING_CANDIDATE_POOL", "0"))
 
-# (RETRIEVAL RECALL FIX) The candidate pool is now built in TWO tiers —
-# see logics.py's get_matched_signals(). SIGNAL_EMBEDDING_CANDIDATE_POOL
-# above now sizes the LEXICAL/relevance-selected tier (keyword-matching
-# documents of ANY age, which is what makes older relevant posts
-# reachable at all). This second constant sizes the ORIGINAL recency
-# tier — the newest-N documents regardless of keywords — which is kept so
-# a purely semantic match sharing no literal vocabulary with the query is
-# still found in recent data exactly as before. Both are unioned and
-# de-duplicated, then ranked by the same cosine similarity as always.
-SIGNAL_EMBEDDING_RECENCY_POOL = int(os.getenv("SIGNAL_EMBEDDING_RECENCY_POOL", "500"))
+# (UNLIMITED CANDIDATE POOL) Default 0 = unlimited mode.
+#   0 or negative  → unlimited: this constant is ignored; the single
+#                     unlimited cursor already covers recency.
+#   positive N     → legacy hybrid: Tier 2 recency pool capped at N docs.
+# Rollback: set SIGNAL_EMBEDDING_RECENCY_POOL=500 in .env.
+SIGNAL_EMBEDDING_RECENCY_POOL = int(os.getenv("SIGNAL_EMBEDDING_RECENCY_POOL", "0"))
 
 # Minimum cosine similarity score jispar ek candidate document "match"
 # count hota hai. Is se neeche wale docs discard honge, chahe wo pool
 # mein aaye hi kyun na hon.
 SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD = float(os.getenv("SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD", "0.35"))
 
-# ── Intent bridge config ─────────────────────────────────────────────────
-# Embedding retrieval ke baad candidates ko LLM se intent-classify karna.
-# Master switch band ho to purana flow bilkul waisa hi chalta hai.
-INTENT_BRIDGE_ENABLED = os.getenv("INTENT_BRIDGE_ENABLED", "false").strip().lower() in ("1", "true", "yes", "on")
-
-# Candidate pool size = evidence_required * INTENT_CANDIDATE_MULTIPLIER,
-# phir [INTENT_CANDIDATE_MIN, INTENT_CANDIDATE_MAX] ke andar clamp.
-INTENT_CANDIDATE_MULTIPLIER = int(os.getenv("INTENT_CANDIDATE_MULTIPLIER", "4"))
-INTENT_CANDIDATE_MIN = int(os.getenv("INTENT_CANDIDATE_MIN", "100"))
-INTENT_CANDIDATE_MAX = int(os.getenv("INTENT_CANDIDATE_MAX", "200"))
-
-# Short-circuit: pehle INTENT_SHORTCIRCUIT_HEAD candidates classify karo;
-# agar INTENT_SHORTCIRCUIT_MIN_CONFIDENCE ya usse upar confidence ke saath
-# INTENT_SHORTCIRCUIT_MIN_PASSING se zyada pass hon to baaki classify
-# karne ki zaroorat nahi. Defaults prototype ke schemas.py ke
-# SHORTCIRCUIT_* constants se match karte hain.
-INTENT_SHORTCIRCUIT_HEAD = int(os.getenv("INTENT_SHORTCIRCUIT_HEAD", "50"))
-INTENT_SHORTCIRCUIT_MIN_PASSING = int(os.getenv("INTENT_SHORTCIRCUIT_MIN_PASSING", "15"))
-INTENT_SHORTCIRCUIT_MIN_CONFIDENCE = float(os.getenv("INTENT_SHORTCIRCUIT_MIN_CONFIDENCE", "0.70"))
-
-# Kitni classification batches ek saath (parallel) chalein.
-INTENT_CLASSIFY_PARALLEL_BATCHES = int(os.getenv("INTENT_CLASSIFY_PARALLEL_BATCHES", "3"))
-
-# Poore bridge ka total time budget (seconds). Is se zyada lage to bridge
-# chhod kar purana (embedding-only) result use hota hai.
-INTENT_BRIDGE_TIMEOUT_SECONDS = int(os.getenv("INTENT_BRIDGE_TIMEOUT_SECONDS", "25"))
-
-# Intent classification cache (per-post classification dobara na karni pade).
-INTENT_CACHE_ENABLED = os.getenv("INTENT_CACHE_ENABLED", "true").strip().lower() in ("1", "true", "yes", "on")
-INTENT_CACHE_TTL_DAYS = int(os.getenv("INTENT_CACHE_TTL_DAYS", "30"))
-INTENT_CACHE_COLLECTION = os.getenv("INTENT_CACHE_COLLECTION", "intent_classification_cache")
+# (UNLIMITED POOL SAFETY CAP) Hard upper limit on docs scanned in
+# unlimited mode. 0 or negative = no cap. Positive N = stop after N docs
+# and log a warning. Ignored in legacy mode (CANDIDATE_POOL > 0).
+SIGNAL_EMBEDDING_MAX_SCAN = int(os.getenv("SIGNAL_EMBEDDING_MAX_SCAN", "0"))
 
 # ── Secondary signals-only MongoDB (READ-ONLY mirror of flintel_signals) ──
 MONGODB2 = os.getenv("MONGODB2", "")
@@ -371,3 +364,70 @@ MONGODB3 = os.getenv("MONGODB3", "")
 # ── Quaternary signals-only MongoDB (READ-ONLY mirror of flintel_signals) ──
 # flintel_bot database ka flintel_signals read karta hai, bilkul MONGODB2 ki tarah.
 MONGODB4 = os.getenv("MONGODB4", "")
+
+# ── LLM config (OpenAI Responses API — active backend) ───────────────────
+# Primary model for all LLM calls (_call_claude / _call_claude_stream in
+# logics.py, claude() in intent_prototype/llm.py). Use a separate env var
+# (LLM_MODEL) rather than reusing CLAUDE_MODEL — deployments may still have
+# CLAUDE_MODEL=claude-haiku-... set, and sending that to OpenAI would 404.
+_LLM_REASONING_EFFORT_ALLOWED = {"minimal", "low", "medium", "high"}
+_llm_reasoning_effort_raw = os.getenv("LLM_REASONING_EFFORT", "low")
+if _llm_reasoning_effort_raw not in _LLM_REASONING_EFFORT_ALLOWED:
+    import warnings as _warnings
+    _warnings.warn(
+        f"LLM_REASONING_EFFORT={_llm_reasoning_effort_raw!r} is not one of "
+        f"{sorted(_LLM_REASONING_EFFORT_ALLOWED)}; falling back to 'low'.",
+        RuntimeWarning,
+        stacklevel=2,
+    )
+    _llm_reasoning_effort_raw = "low"
+
+LLM_MODEL              = os.getenv("LLM_MODEL", "gpt-5-mini")
+LLM_REASONING_EFFORT   = _llm_reasoning_effort_raw
+LLM_REASONING_HEADROOM = int(os.getenv("LLM_REASONING_HEADROOM", "2048"))
+LLM_VERBOSITY          = os.getenv("LLM_VERBOSITY", "")
+OPENAI_RESPONSES_URL   = os.getenv("OPENAI_RESPONSES_URL", "https://api.openai.com/v1/responses")
+
+# ── Lazy embedding backfill config ────────────────────────────────────────
+# When enabled, get_matched_signals() silently embeds any candidate docs
+# that are missing their embedding vector, saves the vector to the primary
+# collection, and includes those docs in the scoring pass — so they're not
+# silently skipped.
+LAZY_EMBED_ENABLED            = os.getenv("LAZY_EMBED_ENABLED", "1") in ("1", "true", "yes")
+LAZY_EMBED_MAX_DOCS_PER_QUERY = int(os.getenv("LAZY_EMBED_MAX_DOCS_PER_QUERY", "100"))
+LAZY_EMBED_BATCH_SIZE         = int(os.getenv("LAZY_EMBED_BATCH_SIZE", "50"))
+LAZY_EMBED_MIN_TEXT_CHARS     = int(os.getenv("LAZY_EMBED_MIN_TEXT_CHARS", "20"))
+
+# ── Intent Bridge config (intent_prototype ↔ production pipeline) ────────
+# Master switch — False = production behaviour completely unchanged.
+# Flag on = prototype intent-classification pipeline runs as an overlay on
+# top of the existing keyword-matched candidates. Any failure inside the
+# bridge falls back to original candidates — never crashes, never returns
+# fewer posts than production would.
+INTENT_BRIDGE_ENABLED           = os.getenv("INTENT_BRIDGE_ENABLED", "").lower() in ("1", "true", "yes")
+
+# Candidate pool sizing: evidence_required * multiplier, clamped to [MIN, MAX].
+# The bridge fetches a larger-than-needed pool so intent classification has
+# enough material to select the best evidence_required posts from.
+INTENT_CANDIDATE_MULTIPLIER     = int(os.getenv("INTENT_CANDIDATE_MULTIPLIER", "4"))
+INTENT_CANDIDATE_MIN            = int(os.getenv("INTENT_CANDIDATE_MIN", "100"))
+INTENT_CANDIDATE_MAX            = int(os.getenv("INTENT_CANDIDATE_MAX", "200"))
+
+# Short-circuit: classify the top HEAD candidates first; if at least
+# MIN_PASSING of them pass at confidence >= MIN_CONFIDENCE, skip classifying
+# the rest (saves LLM calls when the top results are already high-quality).
+INTENT_SHORTCIRCUIT_HEAD        = int(os.getenv("INTENT_SHORTCIRCUIT_HEAD", "50"))
+INTENT_SHORTCIRCUIT_MIN_PASSING = int(os.getenv("INTENT_SHORTCIRCUIT_MIN_PASSING", "15"))
+INTENT_SHORTCIRCUIT_MIN_CONFIDENCE = float(os.getenv("INTENT_SHORTCIRCUIT_MIN_CONFIDENCE", "0.70"))
+
+# Number of parallel batches for concurrent classification (ThreadPoolExecutor).
+INTENT_CLASSIFY_PARALLEL_BATCHES = int(os.getenv("INTENT_CLASSIFY_PARALLEL_BATCHES", "3"))
+
+# Total bridge timeout in seconds — if exceeded, return original candidates.
+INTENT_BRIDGE_TIMEOUT_SECONDS   = int(os.getenv("INTENT_BRIDGE_TIMEOUT_SECONDS", "25"))
+
+# Per-post classification cache (stored in MongoDB intent_classification_cache
+# collection). Avoids re-classifying the same post on repeated queries.
+INTENT_CACHE_ENABLED            = os.getenv("INTENT_CACHE_ENABLED", "true").lower() in ("1", "true", "yes")
+INTENT_CACHE_TTL_DAYS           = int(os.getenv("INTENT_CACHE_TTL_DAYS", "30"))
+INTENT_CACHE_COLLECTION         = os.getenv("INTENT_CACHE_COLLECTION", "intent_classification_cache")
