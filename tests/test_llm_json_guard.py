@@ -212,3 +212,4 @@ class TestJsonObjectGuard:
         logics_mod._call_claude("System.", "No json here.", force_json_prefill=False)
 
         assert "text" not in captured["json"]
+ 
