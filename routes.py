@@ -446,9 +446,9 @@ def home(request: Request):
         log.warning(f"Chat lookup failed on home page: {exc}")
 
     return templates.TemplateResponse(
+        request,
         "index.html",
         {
-            "request": request,
             "user": get_current_user(request),
             "chats": chats,
             "chat_id": None,
@@ -487,9 +487,9 @@ def search(
             log.warning(f"Chat lookup failed while rendering busy-decline: {exc}")
 
         return templates.TemplateResponse(
+            request,
             "index.html",
             {
-                "request": request,
                 "error": "Please wait for your current request to finish first.",
                 "query": query,
                 "user": get_current_user(request),
@@ -517,9 +517,9 @@ def search(
                 log.warning(f"Chat lookup failed while rendering empty-query error: {exc}")
 
             return templates.TemplateResponse(
+                request,
                 "index.html",
                 {
-                    "request": request,
                     "error": "Please enter a search term.",
                     "query": query,
                     "user": get_current_user(request),
@@ -1408,9 +1408,9 @@ def view_chat(request: Request, chat_id: str, background_tasks: BackgroundTasks)
                                   background_tasks=background_tasks)
 
     return templates.TemplateResponse(
+        request,
         "chat.html",
         {
-            "request": request,
             "user": get_current_user(request),
             "chat": chat,
             "chats": get_user_chats(owner_key),
@@ -1705,9 +1705,8 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             targeting_platform=msg.get("targeting_platform", "all"),
             since_days=msg.get("time_window_days"),
             unfiltered=msg.get("unfiltered", False),
-            user_query=msg.get("query"),  # asal user prompt (message mein saved), router/keywords ka nahi
+            user_query=msg.get("query"),
         )
-        
     except Exception as exc:
         log.warning(f"Signal matching failed for streaming topic_key={topic_key}: {exc}")
         matched = []
@@ -1962,9 +1961,8 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                             targeting_platform=msg.get("targeting_platform", "all"),
                             since_days=msg.get("time_window_days"),
                             unfiltered=msg.get("unfiltered", False),
-                            user_query=msg.get("query"),  # asal user prompt
+                            user_query=msg.get("query"),
                         )
-                        
                     except Exception as exc:
                         log.warning(f"Signal matching failed while polling for streaming topic_key={topic_key}: {exc}")
                         # matched ko touch mat karo, pehle mili hui posts na khoyein
@@ -2123,8 +2121,9 @@ async def google_callback(request: Request):
     except Exception as exc:
         log.warning(f"Google OAuth callback failed: {exc}")
         return templates.TemplateResponse(
+            request,
             "index.html",
-            {"request": request, "error": "Google sign-in failed. Please try again.", "user": None},
+            {"error": "Google sign-in failed. Please try again.", "user": None},
         )
 
     userinfo = token.get("userinfo")
@@ -2167,20 +2166,23 @@ def signup(
 
     if password != confirm_password:
         return templates.TemplateResponse(
+            request,
             "index.html",
-            {"request": request, "error": "Passwords do not match.", "user": None},
+            {"error": "Passwords do not match.", "user": None},
         )
 
     if len(password) < 8:
         return templates.TemplateResponse(
+            request,
             "index.html",
-            {"request": request, "error": "Password must be at least 8 characters.", "user": None},
+            {"error": "Password must be at least 8 characters.", "user": None},
         )
 
     if users_collection.find_one({"email": email_norm}):
         return templates.TemplateResponse(
+            request,
             "index.html",
-            {"request": request, "error": "An account with that email already exists.", "user": None},
+            {"error": "An account with that email already exists.", "user": None},
         )
 
     anon_id = request.session.get("anon_id")
@@ -2204,8 +2206,9 @@ def login(request: Request, email: str = Form(...), password: str = Form(...)):
 
     if not user or not user.get("password_hash") or not pwd_context.verify(password, user["password_hash"]):
         return templates.TemplateResponse(
+            request,
             "index.html",
-            {"request": request, "error": "Invalid email or password.", "query": None, "user": None},
+            {"error": "Invalid email or password.", "query": None, "user": None},
         )
 
     anon_id = request.session.get("anon_id")
