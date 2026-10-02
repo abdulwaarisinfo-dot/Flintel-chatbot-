@@ -5090,7 +5090,7 @@ def _inject_website_context_into_answer(answer_text: str, website_context: dict)
         return answer_text
     cleaned = answer_text.strip()
     if cleaned.startswith("```"):
-        cleaned = cleaned.strip("`").strip()
+        cleaned = cleaned.strip("`").strip() 
         cleaned = re.sub(r"^json\s*", "", cleaned, flags=re.IGNORECASE).strip()
     try:
         data = json.loads(cleaned)
