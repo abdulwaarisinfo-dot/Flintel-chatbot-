@@ -50,9 +50,9 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import numpy as np                                                    # noqa: E402
 
-from intent_prototype import (doc_classifier, metrics, opportunity,    # noqa: E402
-                              pipeline, probe_queries, query_interpreter,
-                              ranker, retriever, schemas)
+from intent_prototype import (corpus, doc_classifier, metrics,          # noqa: E402
+                              opportunity, pipeline, probe_queries,
+                              query_interpreter, ranker, retriever, schemas)
 from intent_prototype.llm import check_keys, embed_texts              # noqa: E402
 
 GATES = {
@@ -111,15 +111,41 @@ def _verdict(value, gate, higher_is_better=True):
 # SHARED LOADING
 # ═══════════════════════════════════════════════════════════════════════
 
-def _load_corpus(diag_dir):
-    path = os.path.join(diag_dir, "sample.jsonl")
-    if not os.path.exists(path):
-        _die(f"{path} not found — run `python embedding_diagnostic.py sample` first.")
-    docs = retriever.load_corpus(path)
-    return docs, {d["id"]: d for d in docs}
+def _load_corpus(diag_dir, require_all=True, quiet=False):
+    """Read the corpus live from MongoDB. No JSONL is involved.
+
+    The manifest supplies the document IDS; the documents themselves are
+    re-read from MONGODB_URI / MONGODB2 / MONGODB4 on every call. An
+    unreachable cluster raises rather than degrading to a local file.
+    """
+    try:
+        docs, meta = corpus.load_corpus(
+            diag_dir, require_all=require_all,
+            log=(lambda m: None) if quiet else _log)
+    except corpus.CorpusError as exc:
+        _die(str(exc))
+    if not docs:
+        _die("MongoDB returned no usable documents for the pinned manifest.")
+    return docs, {d["id"]: d for d in docs}, meta
 
 
-def _load_model_labels(diag_dir, by_id):
+def _load_reference_annotations(diag_dir, by_id):
+    """OPTIONAL Tier 2 annotations, read from labels.jsonl if present.
+
+    THIS IS NOT A CORPUS SOURCE. It carries no document text, no title and
+    no embedding — only {id -> intent} produced by an earlier
+    embedding_diagnostic.py labelling pass. Every document it refers to is
+    read from MongoDB; rows whose id is not in the live corpus are dropped.
+
+    Why it is kept at all: Experiment 2's grid search needs a label set
+    INDEPENDENT of the prototype's own classifier. Tuning the ranking
+    against the classifier's own output would be circular and would score
+    well by construction. Tier 1 human labels are the ground truth; this is
+    the noisy, independent tuning set that keeps the grid search honest.
+
+    Run with --no-reference-annotations to exclude it entirely; Experiment 2
+    then tunes on Tier 1 alone, which is cleaner but much smaller.
+    """
     path = os.path.join(diag_dir, "labels.jsonl")
     if not os.path.exists(path):
         return {}
@@ -131,6 +157,10 @@ def _load_model_labels(diag_dir, by_id):
                             "topic": r.get("topic") or "other",
                             "ambiguous": bool(r.get("ambiguous"))}
     return out
+
+
+# Kept so older call sites keep working; the name now says what it is.
+_load_model_labels = _load_reference_annotations
 
 
 def _load_tier1(diag_dir):
@@ -164,12 +194,13 @@ def cmd_plan(args):
     _log("=" * 78)
 
     keys = check_keys()
-    _log(f"  ANTHROPIC_API_KEY : {keys['ANTHROPIC_API_KEY']}")
+    _log(f"  OPENAI_API_KEY (LLM) : {keys['OPENAI_API_KEY']}")
     _log(f"  OPENAI_API_KEY    : {keys['OPENAI_API_KEY']}")
     _log("")
 
-    docs, by_id = _load_corpus(args.diag_dir)
-    model_labels = _load_model_labels(args.diag_dir, by_id)
+    docs, by_id, cmeta = _load_corpus(
+        args.diag_dir, require_all=not args.allow_partial_sources)
+    model_labels = _load_reference_annotations(args.diag_dir, by_id)
     tier1 = _load_tier1(args.diag_dir)
     tier3 = _load_tier3(args.diag_dir)
     cached = _load_classifications(args.outdir)
@@ -178,8 +209,14 @@ def cmd_plan(args):
     calls = doc_classifier.estimate_calls(len(todo))
 
     _log("INPUTS")
-    _log(f"  corpus (sample.jsonl)      : {len(docs):,} docs")
-    _log(f"  model labels (labels.jsonl): {len(model_labels):,}  [Tier 2 — NOT ground truth]")
+    _log(f"  corpus (live from MongoDB) : {len(docs):,} docs")
+    _log(f"    database   : {cmeta['database']}")
+    _log(f"    collection : {cmeta['collection']}")
+    _log(f"    pinned by  : {os.path.join(args.diag_dir, corpus.MANIFEST_FILENAME)}")
+    if cmeta.get("missing"):
+        _log(f"    ** {len(cmeta['missing'])} pinned doc(s) no longer retrievable **")
+    _log(f"  reference annotations      : {len(model_labels):,}  "
+         f"[labels.jsonl — annotations only, NOT a corpus source, NOT ground truth]")
     _log(f"  Tier 1 human labels        : {len(tier1):,}" +
          ("" if tier1 else "   <-- MISSING: Experiments 1, 2, 4 cannot run"))
     _log(f"  Tier 3 judged queries      : {len(tier3):,}" +
@@ -200,10 +237,8 @@ def cmd_plan(args):
     _log("")
 
     blockers = []
-    if keys["ANTHROPIC_API_KEY"] == "MISSING":
-        blockers.append("ANTHROPIC_API_KEY not set (needed by `classify`)")
     if keys["OPENAI_API_KEY"] == "MISSING":
-        blockers.append("OPENAI_API_KEY not set (needed to embed probe queries)")
+        blockers.append("OPENAI_API_KEY not set (needed by `classify` and to embed probe queries)")
     if not tier1:
         blockers.append("tier1_verified.jsonl missing — build it with make_tier1_sample.py")
     if not tier3:
@@ -261,11 +296,80 @@ def cmd_selftest(args):
         check(f"{fname} imports no production module", not bad, f"found: {bad}")
 
     _log("")
-    _log("READ-ONLY GUARANTEE")
+    _log("READ-ONLY GUARANTEE — AST inspection of every code path")
+    # Parses each module and walks every call node rather than grepping
+    # text. A grep can be fooled by a comment or a docstring; this cannot,
+    # and it reports the exact line a violation lives on.
+    import ast as _ast
     for fname in py_files:
         src = open(os.path.join(here, fname), encoding="utf-8").read()
-        found = [c for c in WRITE_CALLS if re.search(rf"\.{c}\s*\(", src)]
-        check(f"{fname} makes no Mongo write call", not found, f"found: {found}")
+        try:
+            tree = _ast.parse(src)
+        except SyntaxError as exc:
+            check(f"{fname} parses", False, str(exc))
+            continue
+        violations = []
+        for node in _ast.walk(tree):
+            if not isinstance(node, _ast.Call):
+                continue
+            fn = node.func
+            name = fn.attr if isinstance(fn, _ast.Attribute) else (
+                fn.id if isinstance(fn, _ast.Name) else None)
+            if name in WRITE_CALLS:
+                violations.append(f"{name}() line {node.lineno}")
+            # aggregate() is the one READ call that can mutate, via $out or
+            # $merge. Inspect the literal pipeline wherever one is passed.
+            if name == "aggregate" and node.args:
+                for st in _ast.walk(node.args[0]):
+                    if isinstance(st, _ast.Constant) and st.value in ("$out", "$merge"):
+                        violations.append(f"aggregate {st.value} line {node.lineno}")
+        check(f"{fname} contains no Mongo write call", not violations,
+              f"found: {violations}")
+
+    # corpus.py is the ONLY module that reads documents from MongoDB, so it
+    # gets named checks rather than sharing the loop above.
+    corpus_src = open(os.path.join(here, "corpus.py"), encoding="utf-8").read()
+    ctree = _ast.parse(corpus_src)
+    driver_calls = {n.func.attr for n in _ast.walk(ctree)
+                    if isinstance(n, _ast.Call) and isinstance(n.func, _ast.Attribute)}
+    check("corpus.py uses no write-capable driver call",
+          not (driver_calls & set(WRITE_CALLS)),
+          f"found: {driver_calls & set(WRITE_CALLS)}")
+    check("corpus.py guards aggregations against $out / $merge",
+          "_assert_read_only_pipeline" in corpus_src)
+    check("corpus.py refuses to substitute a local file for a dead cluster",
+          "CorpusError" in corpus_src and "require_all" in corpus_src)
+    check("the manifest stores pointers, never document content",
+          "CONTENT_KEYS" in corpus_src
+          and "refusing to write document content" in corpus_src)
+
+    _log("")
+    _log("MONGODB IS THE ONLY CORPUS SOURCE")
+    # A JSONL reader reappearing on a corpus path is the exact regression
+    # this block exists to catch.
+    for fname in py_files:
+        if fname in ("corpus.py", "verify_corpus.py", "validate.py"):
+            continue   # verify_corpus compares against the old export by design
+        src = open(os.path.join(here, fname), encoding="utf-8").read()
+        code = "\n".join(l for l in src.splitlines()
+                         if not l.strip().startswith("#"))
+        hits = [m for m in ("sample.jsonl",) if m in code]
+        check(f"{fname} names no JSONL corpus file", not hits, f"found: {hits}")
+
+    from intent_prototype import retriever as _ret
+    try:
+        _ret.load_corpus("anything")
+        removed = False
+    except RuntimeError:
+        removed = True
+    except Exception:                                          # noqa: BLE001
+        removed = False
+    check("retriever.load_corpus() is removed and fails loudly", removed)
+    check("corpus.load_corpus() is the corpus entry point",
+          callable(getattr(corpus, "load_corpus", None)))
+    check("all three clusters are declared",
+          [v for _, v in corpus.SOURCE_SPECS] == ["MONGODB_URI", "MONGODB2", "MONGODB4"],
+          str([v for _, v in corpus.SOURCE_SPECS]))
 
     _log("")
     _log("TAXONOMY")
@@ -488,7 +592,8 @@ def cmd_selftest(args):
 # ═══════════════════════════════════════════════════════════════════════
 
 def cmd_classify(args):
-    docs, by_id = _load_corpus(args.diag_dir)
+    docs, by_id, cmeta = _load_corpus(
+        args.diag_dir, require_all=not args.allow_partial_sources)
     os.makedirs(args.outdir, exist_ok=True)
     cached = _load_classifications(args.outdir)
 
@@ -692,7 +797,7 @@ def _build_probe_pools(docs, by_id, classifications, model_labels, live_interpre
 
     pools = []
     for probe, (q, qi), vec in zip(probe_queries.PROBES, plans, vecs):
-        cands, meta = retriever.retrieve_from_corpus(
+        cands, meta = retriever.score_documents(
             qi, docs, matrix=matrix, query_vec=vec, pool=pool_size, sim_floor=sim_floor)
         rows = [(d, s, classifications[d["id"]]) for d, s in cands
                 if d["id"] in classifications]
@@ -976,7 +1081,7 @@ def experiment_5(tier3, docs, by_id, classifications, weights, model_labels,
     rows = []
     for rec, qi, vec in zip(tier3, plans, vecs):
         judged = rec["judgements"]
-        cands, _ = retriever.retrieve_from_corpus(
+        cands, _ = retriever.score_documents(
             qi, docs, matrix=matrix, query_vec=vec, pool=pool_size, sim_floor=sim_floor)
 
         # baseline = today's behaviour: cosine similarity order, no
@@ -1369,8 +1474,10 @@ def cmd_run(args):
     from datetime import datetime, timezone
 
     os.makedirs(args.outdir, exist_ok=True)
-    docs, by_id = _load_corpus(args.diag_dir)
-    model_labels = _load_model_labels(args.diag_dir, by_id)
+    docs, by_id, cmeta = _load_corpus(
+        args.diag_dir, require_all=not args.allow_partial_sources)
+    model_labels = ({} if getattr(args, 'no_reference_annotations', False)
+                    else _load_reference_annotations(args.diag_dir, by_id))
     tier1 = _load_tier1(args.diag_dir)
     tier3 = _load_tier3(args.diag_dir)
     classifications = _load_classifications(args.outdir)
@@ -1477,6 +1584,10 @@ def main():
     def common(p):
         p.add_argument("--diag-dir", default="./diag")
         p.add_argument("--outdir", default="./diag/prototype_results")
+        p.add_argument("--allow-partial-sources", action="store_true",
+                       help="proceed when a MongoDB cluster is unreachable. "
+                            "Off by default: the prototype fails rather than "
+                            "silently measuring fewer clusters than intended.")
 
     p = sub.add_parser("plan", help="show inputs and cost; spends nothing")
     common(p)
@@ -1484,7 +1595,7 @@ def main():
     p.set_defaults(func=cmd_plan)
 
     p = sub.add_parser("selftest", help="isolation and unit checks; spends nothing")
-    p.set_defaults(func=cmd_selftest)
+    p.set_defaults(func=cmd_selftest, allow_partial_sources=False)
 
     p = sub.add_parser("classify", help="classify the corpus once and cache it (COSTS MONEY)")
     common(p)
@@ -1501,6 +1612,10 @@ def main():
     p.add_argument("--no-grid", action="store_true")
     p.add_argument("--live-interpreter", action="store_true",
                    help="use the real interpreter instead of the frozen offline plans")
+    p.add_argument("--no-reference-annotations", action="store_true",
+                   help="ignore labels.jsonl entirely; Experiment 2 then tunes on "
+                        "Tier 1 human labels alone — cleaner, but a much smaller "
+                        "tuning set")
     p.set_defaults(func=cmd_run)
 
     args = ap.parse_args()
