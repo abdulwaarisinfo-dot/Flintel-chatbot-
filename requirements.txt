@@ -1,8 +1,14 @@
 # ── Web framework ──────────────────────────────────────────────────────────
-fastapi>=0.110.0
+# PINNED (upper bound added): routes.py still uses the OLD signature
+#   templates.TemplateResponse("index.html", {"request": request, ...})
+# Newer Starlette expects TemplateResponse(request, "index.html", {...}) and
+# crashes with "cannot use 'tuple' as a dict key (unhashable type: 'dict')".
+# Remove these upper bounds only AFTER all 9 TemplateResponse calls in
+# routes.py are migrated to the new signature.
+fastapi>=0.115.0,<0.116.0
 uvicorn[standard]>=0.29.0
-starlette>=0.37.0
-jinja2>=3.1.0                  # required for Jinja2Templates
+starlette>=0.38.0,<0.39.0
+jinja2>=3.1.0,<4.0.0           # required for Jinja2Templates
 python-multipart>=0.0.9        # for Form() in FastAPI
 
 # ── HTTP client ──────────────────────────────────────────────────────────────
