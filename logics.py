@@ -2754,11 +2754,27 @@ def analyze_with_claude_stream(query: str, matched_signals: list):
     posts = build_claude_post_context(matched_signals)
 
     if not posts:
+        # SOURCE-GROUNDING: no retrieved evidence — must NOT fall back to
+        # general knowledge.  Mirror the non-streaming branch exactly: send
+        # the no_results JSON instruction so Claude returns a structured
+        # "insufficient evidence" response rather than answering from its
+        # own knowledge.  force_json_prefill is not available on the
+        # streaming path, but the system prompt's no_results format
+        # instruction is strong enough on its own — the instruction below
+        # explicitly forbids free-text / general-knowledge prose.
         user_message = (
             f"User's question: {query}\n\n"
-            "No posts were found for this topic yet — you have no post data "
-            "to ground an answer in. Say that plainly, then answer anything "
-            "else in the question you still can from general knowledge."
+            "Note: no posts were matched for this topic yet — flintel_signals "
+            "mein abhi is exact topic ka data collect nahi hua. Respond "
+            "STRICTLY in the no_results JSON format defined above — never "
+            "switch to free-text/general-knowledge prose for this case. "
+            "message field mein: (a) plainly batao kya search kiya gaya, "
+            "(b) ek honest, non-apologetic reason do (e.g. 'ye topic abhi "
+            "tak zyada discuss nahi hua ho sakta hai, ya niche/new brand "
+            "hai'), (c) suggested_actions mein sirf Flintel ke apne "
+            "next-steps do (broaden time/platform/term) — kabhi bhi kisi "
+            "bahar ke tool/platform ka naam mat lo. Tone: confident analyst "
+            "jo status report de raha hai, na ke koi form-based rejection."
         )
         yield from _call_claude_stream(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message)
         return
@@ -5039,7 +5055,7 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str
                     # pattern as the post_url patch above: never invents
                     # a value, only fills one in once a confident title
                     # match already exists.
-                    if match.get("google_rank") is not None: 
+                    if match.get("google_rank") is not None:
                         post["google_rank"] = match["google_rank"]
                     if match.get("subreddit") and not post.get("source"):
                         post["source"] = match["subreddit"]
