@@ -2547,6 +2547,29 @@ def _condense_notes_chunk(query: str, notes_chunk: list) -> str:
     return _call_claude(CLAUDE_NOTES_REDUCE_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_MAP_MAX_TOKENS)
 
 
+def _notes_unavailable_user_message(query: str) -> str:
+    """(EMPTY-NOTES GROUNDING FIX) Shared user-message text for the case
+    where posts were retrieved but every map/condense step failed or
+    returned empty — used by both analyze_with_claude() (non-streaming)
+    and analyze_with_claude_stream() (streaming) so the two functions
+    cannot drift apart.  Mirrors the wording style of the no-posts branch
+    in the same functions: STRICTLY no_results JSON, Do NOT answer from
+    general knowledge."""
+    return (
+        f"User's question: {query}\n\n"
+        "Note: posts were retrieved for this topic but could not be "
+        "analysed right now (map step returned no grounded notes — "
+        "possible API timeout or transient error). Respond STRICTLY in "
+        "the no_results JSON format defined above. Do NOT answer from "
+        "general knowledge or outside web knowledge. In the message "
+        "field: plainly state that evidence was found but could not be "
+        "processed at this time. In suggested_actions: only Flintel-"
+        "internal next-steps (retry the search, broaden time window / "
+        "platform / terms) — kabhi bhi kisi bahar ke tool ka naam mat "
+        "lo. Tone: confident analyst giving a status report."
+    )
+
+
 def analyze_with_claude(query: str, matched_signals: list, extra_context: str = None) -> str:
     """Turns (user question + matched signals) into the actual answer the
     user sees, using CLAUDE_ANALYSIS_SYSTEM_PROMPT. Handles three cases:
@@ -2652,7 +2675,23 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
         if condensed_notes:
             notes = condensed_notes
 
-    combined_notes = "\n\n---\n\n".join(notes) if notes else "(no grounded points extracted)"
+    # (EMPTY-NOTES GROUNDING FIX) If every map/condense step failed or
+    # returned empty, do NOT call Claude with "(no grounded points
+    # extracted)" — that text would slip past the no-results branch and
+    # reach Claude without a "do not answer from general knowledge"
+    # instruction.  Route to the same grounded refusal used above.
+    if not notes:
+        log.warning(
+            f"analyze_with_claude: all map/condense steps returned empty "
+            f"({len(chunks)} chunk(s) attempted) — routing to no_results branch. "
+            f"query={query!r}"
+        )
+        user_message = _notes_unavailable_user_message(query)
+        if extra_context:
+            user_message += "\n\n" + extra_context
+        return _extract_json_object_from_text(_call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message, force_json_prefill=True))
+
+    combined_notes = "\n\n---\n\n".join(notes)
     user_message = (
         f"User's question: {query}\n\n"
         f"Below are grounded notes already condensed from {len(posts)} posts "
@@ -2731,7 +2770,7 @@ def _call_claude_stream(system_prompt: str, user_message: str, max_tokens: int =
                         yield text
 
 
-def analyze_with_claude_stream(query: str, matched_signals: list):
+def analyze_with_claude_stream(query: str, matched_signals: list, extra_context: str = None):
     """(STREAMING ADD-ON) Mirrors analyze_with_claude()'s exact branches
     (no posts / single call / map-reduce, including the BUGFIX PACK #3
     second-level note chunking) byte-for-byte — the ONLY difference is
@@ -2750,7 +2789,11 @@ def analyze_with_claude_stream(query: str, matched_signals: list):
     called by GET /chat/{chat_id}/stream (see that route + the module
     docstring), but still here, still correct, still usable by any future
     caller that genuinely wants raw live token-by-token output rather
-    than the patched-then-paced text the stream route now sends."""
+    than the patched-then-paced text the stream route now sends.
+
+    (EMPTY-NOTES GROUNDING FIX) `extra_context` added — mirrors
+    analyze_with_claude()'s own parameter so the new empty-notes branch
+    can append it exactly as the other branches do."""
     posts = build_claude_post_context(matched_signals)
 
     if not posts:
@@ -2776,6 +2819,8 @@ def analyze_with_claude_stream(query: str, matched_signals: list):
             "bahar ke tool/platform ka naam mat lo. Tone: confident analyst "
             "jo status report de raha hai, na ke koi form-based rejection."
         )
+        if extra_context:
+            user_message += "\n\n" + extra_context
         yield from _call_claude_stream(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message)
         return
 
@@ -2784,6 +2829,8 @@ def analyze_with_claude_stream(query: str, matched_signals: list):
     if len(chunks) <= 1:
         posts_block = _format_posts_block(posts)
         user_message = f"User's question: {query}\n\nPosts (title + text only):\n{posts_block}"
+        if extra_context:
+            user_message += "\n\n" + extra_context
         yield from _call_claude_stream(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message)
         return
 
@@ -2814,7 +2861,22 @@ def analyze_with_claude_stream(query: str, matched_signals: list):
         if condensed_notes:
             notes = condensed_notes
 
-    combined_notes = "\n\n---\n\n".join(notes) if notes else "(no grounded points extracted)"
+    # (EMPTY-NOTES GROUNDING FIX) Mirror the non-streaming branch: if
+    # every map/condense step failed or returned empty, route to the
+    # grounded refusal instead of passing the placeholder text.
+    if not notes:
+        log.warning(
+            f"analyze_with_claude_stream: all map/condense steps returned "
+            f"empty ({len(chunks)} chunk(s) attempted) — routing to "
+            f"no_results branch. query={query!r}"
+        )
+        user_message = _notes_unavailable_user_message(query)
+        if extra_context:
+            user_message += "\n\n" + extra_context
+        yield from _call_claude_stream(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message)
+        return
+
+    combined_notes = "\n\n---\n\n".join(notes)
     user_message = (
         f"User's question: {query}\n\n"
         f"Below are grounded notes already condensed from {len(posts)} posts "
@@ -2822,6 +2884,8 @@ def analyze_with_claude_stream(query: str, matched_signals: list):
         f"only factual grounding about the posts, and answer the user's "
         f"actual question naturally.\n\nNotes:\n{combined_notes}"
     )
+    if extra_context:
+        user_message += "\n\n" + extra_context
     yield from _call_claude_stream(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message)
 
 
@@ -5090,7 +5154,7 @@ def _inject_website_context_into_answer(answer_text: str, website_context: dict)
         return answer_text
     cleaned = answer_text.strip()
     if cleaned.startswith("```"):
-        cleaned = cleaned.strip("`").strip() 
+        cleaned = cleaned.strip("`").strip()
         cleaned = re.sub(r"^json\s*", "", cleaned, flags=re.IGNORECASE).strip()
     try:
         data = json.loads(cleaned)
