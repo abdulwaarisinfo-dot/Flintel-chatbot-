@@ -2,6 +2,7 @@
 fastapi>=0.110.0
 uvicorn[standard]>=0.29.0
 starlette>=0.37.0
+jinja2>=3.1.0                  # required for Jinja2Templates
 python-multipart>=0.0.9        # for Form() in FastAPI
 
 # ── HTTP client ──────────────────────────────────────────────────────────────
@@ -13,6 +14,7 @@ pymongo>=4.7.0
 # ── Auth / session ────────────────────────────────────────────────────────────
 authlib>=1.3.0
 passlib[bcrypt]>=1.7.4
+bcrypt==4.0.1                  # pinned: newer bcrypt breaks passlib
 itsdangerous>=2.1.0            # for starlette SessionMiddleware
 
 # ── Env vars ─────────────────────────────────────────────────────────────────
