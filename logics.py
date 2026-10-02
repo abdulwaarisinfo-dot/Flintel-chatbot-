@@ -132,9 +132,11 @@ import json
 import time
 import math
 import hashlib
+import heapq
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
+import numpy as np
 import httpx
 
 import flintel
@@ -166,6 +168,7 @@ from config import (
     EMBEDDING_MODEL, OPENAI_API_KEY, EMBEDDING_TIMEOUT, EMBEDDING_MAX_CHARS,
     SIGNAL_EMBEDDING_CANDIDATE_POOL, SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD,
     SIGNAL_EMBEDDING_RECENCY_POOL, ROUTER_MAX_MATCH_PHRASES,
+    SIGNAL_EMBEDDING_MAX_SCAN,
 )
 
 import logging
@@ -1200,10 +1203,61 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     lexical_or = _build_lexical_or_clause(keyword_list, phrase_list)
 
     def _fetch_candidate_pool(collection, label):
-        """Both tiers for one collection, de-duplicated by post_url.
-        Never raises — a failure on any tier of any collection is logged
-        and that tier contributes nothing, exactly like the previous
-        per-collection try/except behavior."""
+        """Fetch raw candidate docs for one collection.
+
+        UNLIMITED MODE (SIGNAL_EMBEDDING_CANDIDATE_POOL <= 0, the new default):
+          Skips the lexical Tier 1 entirely. Opens a cursor over ALL docs in
+          the time window that have a valid embedding — no .limit(). Uses
+          batch_size for efficient network transfer. Scoring (numpy vectorized
+          cosine) happens in the caller's existing scoring loop so query
+          embeddings are available. An optional SIGNAL_EMBEDDING_MAX_SCAN cap
+          stops iteration early and logs a warning if hit.
+          Returns: list of raw docs (same shape as legacy mode).
+
+        LEGACY MODE (SIGNAL_EMBEDDING_CANDIDATE_POOL > 0):
+          Original hybrid Tier1 (lexical, capped) + Tier2 (recency, capped).
+          Returns: list of raw docs (unchanged behaviour).
+
+        Never raises — failures are logged; that tier contributes nothing.
+        """
+        _BATCH_SIZE = 2000
+
+        # ── UNLIMITED MODE ────────────────────────────────────────────────
+        if SIGNAL_EMBEDDING_CANDIDATE_POOL <= 0 and SIGNAL_EMBEDDING_RECENCY_POOL <= 0:
+            # mongo_query already carries the time-window filter (created_utc
+            # >= cutoff). Add embedding-exists so every returned doc is
+            # guaranteed to have an embedding, saving a None-check per doc.
+            unlimited_query = dict(mongo_query)
+            unlimited_query["embedding"] = {"$exists": True, "$ne": None}
+
+            docs = []
+            scanned = 0
+            try:
+                cursor = (
+                    collection.find(unlimited_query, _pool_projection)
+                    .sort("created_utc", -1)
+                    .batch_size(_BATCH_SIZE)
+                )
+                for doc in cursor:
+                    scanned += 1
+                    if SIGNAL_EMBEDDING_MAX_SCAN > 0 and scanned > SIGNAL_EMBEDDING_MAX_SCAN:
+                        log.warning(
+                            f"{label}: SIGNAL_EMBEDDING_MAX_SCAN={SIGNAL_EMBEDDING_MAX_SCAN} "
+                            f"reached after scanning {scanned - 1} docs; retrieval is intentionally "
+                            f"bounded — some time-window docs were not scored."
+                        )
+                        break
+                    docs.append(doc)
+            except Exception as exc:
+                log.warning(f"{label}: unlimited-mode cursor failed: {exc}")
+
+            log.info(
+                f"{label} unlimited retrieval | fetched={len(docs)} "
+                f"(scanned={scanned})"
+            )
+            return docs
+
+        # ── LEGACY HYBRID MODE (CANDIDATE_POOL > 0) ───────────────────────
         docs, seen = [], set()
 
         def _absorb(cursor_docs):
@@ -1356,45 +1410,133 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     if not _normalized_queries:
         return []
 
-    # (EMBEDDING-BASED MATCHING CHANGE, MAX-SIMILARITY BY THE PER-PHRASE
-    # EMBEDDING MATCHING FIX) Score every candidate doc against EVERY
-    # query embedding and keep the MAX similarity — a document only has
-    # to strongly match ONE keyword/phrase to be picked up. Anything
-    # below the threshold is not a match at all and is dropped here,
-    # before any of the existing downstream checks run.
+    # (UNLIMITED POOL / EMBEDDING-BASED MATCHING) Score every candidate doc
+    # against EVERY query embedding and keep the MAX similarity — a document
+    # only has to strongly match ONE keyword/phrase to be picked up. Anything
+    # below the threshold is not a match at all and is dropped here.
+    #
+    # UNLIMITED MODE: uses batched numpy vectorized scoring (D @ Q.T) for
+    # efficiency — 2000 docs per batch, query matrix built once.
+    # LEGACY MODE: keeps the existing per-doc _max_similarity_against() loop
+    # unchanged so nothing regresses when positive pool constants are set.
     scored_docs = []
-    for doc in raw_docs:
-        # (TIME-WINDOW FEATURE) Defensive second check: if a cutoff is
-        # active, make sure this doc's own created_utc actually satisfies
-        # it too (guards against a doc with a missing/odd created_utc
-        # slipping through the Mongo-level filter in some edge case) — a
-        # doc with no usable created_utc is excluded rather than assumed
-        # to pass, since we can't confirm it's within the window.
-        if cutoff is not None:
-            doc_created = doc.get("created_utc")
-            if not isinstance(doc_created, datetime):
+
+    if SIGNAL_EMBEDDING_CANDIDATE_POOL <= 0 and SIGNAL_EMBEDDING_RECENCY_POOL <= 0:
+        # ── Unlimited mode: batched numpy ────────────────────────────────
+        _NP_BATCH = 2000
+        t_score = time.time()
+
+        # Build normalized query matrix Q (n_q × dim) once.
+        try:
+            _raw_q = [q for q in query_embeddings if q and len(q) > 0]
+            _Q = np.array(_raw_q, dtype=np.float32)
+            _q_norms = np.linalg.norm(_Q, axis=1, keepdims=True)
+            _q_norms = np.where(_q_norms == 0, 1.0, _q_norms)
+            _Q = _Q / _q_norms
+            _expected_dim = _Q.shape[1]
+        except Exception as exc:
+            log.warning(f"numpy query matrix build failed, falling back to per-doc scoring: {exc}")
+            _Q = None
+            _expected_dim = None
+
+        if _Q is not None:
+            _batch_emb  = []
+            _batch_docs = []
+
+            def _flush_np_batch():
+                if not _batch_emb:
+                    return
+                D = np.array(_batch_emb, dtype=np.float32)
+                d_norms = np.linalg.norm(D, axis=1, keepdims=True)
+                d_norms = np.where(d_norms == 0, 1.0, d_norms)
+                D = D / d_norms
+                scores = (D @ _Q.T).max(axis=1)          # (batch,)
+                for s, d in zip(scores, _batch_docs):
+                    if float(s) >= SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD:
+                        scored_docs.append((float(s), d))
+                _batch_emb.clear()
+                _batch_docs.clear()
+
+            for doc in raw_docs:
+                # Defensive time-window check (same as legacy path below).
+                if cutoff is not None:
+                    doc_created = doc.get("created_utc")
+                    if not isinstance(doc_created, datetime):
+                        continue
+                    if doc_created.tzinfo is None:
+                        doc_created = doc_created.replace(tzinfo=timezone.utc)
+                    if doc_created < cutoff:
+                        continue
+
+                emb = doc.get("embedding")
+                if not emb or not isinstance(emb, (list, tuple)):
+                    continue
+                if len(emb) != _expected_dim:
+                    log.warning(
+                        f"embedding dim mismatch (expected {_expected_dim}, "
+                        f"got {len(emb)}) for {doc.get('post_url', '?')} — skipping"
+                    )
+                    continue
+
+                _batch_emb.append(emb)
+                _batch_docs.append(doc)
+                if len(_batch_emb) >= _NP_BATCH:
+                    _flush_np_batch()
+
+            _flush_np_batch()  # final partial batch
+
+            log.info(
+                f"unlimited scoring | pool={len(raw_docs)} "
+                f"passed_threshold={len(scored_docs)} "
+                f"score_elapsed={time.time() - t_score:.2f}s"
+            )
+        else:
+            # numpy build failed — fall back to per-doc path
+            for doc in raw_docs:
+                if cutoff is not None:
+                    doc_created = doc.get("created_utc")
+                    if not isinstance(doc_created, datetime):
+                        continue
+                    if doc_created.tzinfo is None:
+                        doc_created = doc_created.replace(tzinfo=timezone.utc)
+                    if doc_created < cutoff:
+                        continue
+                similarity = _max_similarity_against(doc.get("embedding"), _normalized_queries)
+                if similarity >= SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD:
+                    scored_docs.append((similarity, doc))
+
+    else:
+        # ── Legacy mode: per-doc _max_similarity_against() ───────────────
+        for doc in raw_docs:
+            # (TIME-WINDOW FEATURE) Defensive second check: if a cutoff is
+            # active, make sure this doc's own created_utc actually satisfies
+            # it too (guards against a doc with a missing/odd created_utc
+            # slipping through the Mongo-level filter in some edge case) — a
+            # doc with no usable created_utc is excluded rather than assumed
+            # to pass, since we can't confirm it's within the window.
+            if cutoff is not None:
+                doc_created = doc.get("created_utc")
+                if not isinstance(doc_created, datetime):
+                    continue
+                if doc_created.tzinfo is None:
+                    doc_created = doc_created.replace(tzinfo=timezone.utc)
+                if doc_created < cutoff:
+                    continue
+
+            doc_embedding = doc.get("embedding")
+            # (RETRIEVAL RECALL FIX) Mathematically identical to the previous
+            # max(_cosine_similarity(doc_embedding, qe) for qe in
+            # query_embeddings) — same MAX semantics, same threshold, same
+            # result — but using the query vectors normalized once above
+            # instead of recomputing every magnitude for every document.
+            similarity = _max_similarity_against(doc_embedding, _normalized_queries)
+            if similarity < SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD:
                 continue
-            if doc_created.tzinfo is None:
-                doc_created = doc_created.replace(tzinfo=timezone.utc)
-            if doc_created < cutoff:
-                continue
 
-        doc_embedding = doc.get("embedding")
-        # (RETRIEVAL RECALL FIX) Mathematically identical to the previous
-        # max(_cosine_similarity(doc_embedding, qe) for qe in
-        # query_embeddings) — same MAX semantics, same threshold, same
-        # result — but using the query vectors normalized once above
-        # instead of recomputing every magnitude for every document. That
-        # saving is what pays for the larger, relevance-selected pool.
-        similarity = _max_similarity_against(doc_embedding, _normalized_queries)
-        if similarity < SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD:
-            continue
+            scored_docs.append((similarity, doc))
 
-        scored_docs.append((similarity, doc))
-
-    # (EMBEDDING-BASED MATCHING CHANGE) Sort by similarity, highest
-    # first, BEFORE per-platform cap / overall limit are applied — so the
-    # best-matching posts are always kept when a cap trims the list.
+    # Sort by similarity, highest first, BEFORE per-platform cap / overall
+    # limit are applied — so the best-matching posts are always kept.
     scored_docs.sort(key=lambda pair: pair[0], reverse=True)
 
     # (EMBEDDING-MATCH QUERY/LOGGING CLEANUP) Purely additive, observability-
