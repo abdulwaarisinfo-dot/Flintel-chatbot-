@@ -171,6 +171,7 @@ from config import (
     SIGNAL_EMBEDDING_CANDIDATE_POOL, SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD,
     SIGNAL_EMBEDDING_RECENCY_POOL, ROUTER_MAX_MATCH_PHRASES,
     SIGNAL_EMBEDDING_MAX_SCAN,
+    SIGNAL_EMBEDDING_FETCH_BATCH,
     LAZY_EMBED_ENABLED, LAZY_EMBED_MAX_DOCS_PER_QUERY,
     LAZY_EMBED_BATCH_SIZE, LAZY_EMBED_MIN_TEXT_CHARS,
 )
@@ -1224,8 +1225,6 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 
         Never raises — failures are logged; that tier contributes nothing.
         """
-        _BATCH_SIZE = 2000
-
         # ── UNLIMITED MODE ────────────────────────────────────────────────
         if SIGNAL_EMBEDDING_CANDIDATE_POOL <= 0 and SIGNAL_EMBEDDING_RECENCY_POOL <= 0:
             # mongo_query already carries the time-window filter (created_utc
@@ -1236,11 +1235,12 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 
             docs = []
             scanned = 0
+            _t0 = time.monotonic()
             try:
                 cursor = (
                     collection.find(unlimited_query, _pool_projection)
                     .sort("created_utc", -1)
-                    .batch_size(_BATCH_SIZE)
+                    .batch_size(SIGNAL_EMBEDDING_FETCH_BATCH)
                 )
                 for doc in cursor:
                     scanned += 1
@@ -1255,8 +1255,14 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             except Exception as exc:
                 log.warning(f"{label}: unlimited-mode cursor failed: {exc}")
 
+            _elapsed = time.monotonic() - _t0
+            if len(docs) > 100000:
+                log.warning(
+                    f"{label}: fetched={len(docs)} docs — very large result set; "
+                    f"consider setting SIGNAL_EMBEDDING_MAX_SCAN to bound fetch cost."
+                )
             log.info(
-                f"{label} unlimited retrieval | fetched={len(docs)} "
+                f"{label} fetched={len(docs)} elapsed={_elapsed:.2f}s "
                 f"(scanned={scanned})"
             )
             return docs
@@ -1297,33 +1303,42 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 
         return docs
 
-    raw_docs = _fetch_candidate_pool(signals_collection, "signals_collection")
-
-    # (SECOND-COLLECTION MERGE) Same combine-pattern already used in
-    # flintel.py: when a second signals collection is provided, fetch
-    # candidates from it too (using the exact same two-tier logic) and
-    # append them into the same raw_docs pool the Python loop below
-    # scans — best-effort, non-fatal: any failure here is logged and
-    # silently skipped so a problem with the second collection can never
-    # break the primary matching path.
+    # (PARALLEL FETCH) In unlimited mode, the three collections are fetched
+    # concurrently via ThreadPoolExecutor(max_workers=3). pymongo cursors are
+    # thread-safe when each thread uses its own cursor (which they do here —
+    # each future calls _fetch_candidate_pool on a different collection object).
+    # Each fetch wraps its own try/except inside _fetch_candidate_pool, so a
+    # single failing collection never drops the others. Result order is
+    # preserved: primary first, then _2, then _4 (same as the old sequential
+    # order) — futures are submitted in that order and results collected in
+    # submission order.
+    # In legacy mode (CANDIDATE_POOL > 0), the fetches remain sequential
+    # because the ThreadPoolExecutor is still used but the behaviour inside
+    # _fetch_candidate_pool is unchanged (no timing difference at typical
+    # legacy pool sizes of 500-1000 docs).
+    _collections_to_fetch = [
+        (signals_collection, "signals_collection"),
+    ]
     if signals_collection_2 is not None:
-        try:
-            raw_docs.extend(_fetch_candidate_pool(signals_collection_2, "signals_collection_2"))
-        except Exception as exc:
-            log.warning(f"signals_collection_2 fetch failed (skipping second collection): {exc}")
-
-    # (QUATERNARY MONGO MERGE) Same combine-pattern as signals_collection_2
-    # directly above: when a fourth signals collection is provided (database.py's
-    # signals_collection_4, built from config.py's MONGODB4), fetch
-    # candidates from it too and append them into the same raw_docs pool —
-    # best-effort, non-fatal: any failure here is logged and silently
-    # skipped so a problem with this fourth collection can never break the
-    # primary matching path.
+        _collections_to_fetch.append((signals_collection_2, "signals_collection_2"))
     if signals_collection_4 is not None:
-        try:
-            raw_docs.extend(_fetch_candidate_pool(signals_collection_4, "signals_collection_4"))
-        except Exception as exc:
-            log.warning(f"signals_collection_4 fetch failed (skipping fourth collection): {exc}")
+        _collections_to_fetch.append((signals_collection_4, "signals_collection_4"))
+
+    if len(_collections_to_fetch) == 1:
+        # Single collection — no thread overhead needed.
+        raw_docs = _fetch_candidate_pool(*_collections_to_fetch[0])
+    else:
+        import concurrent.futures as _cf
+        raw_docs = []
+        _fetch_futures = []
+        with _cf.ThreadPoolExecutor(max_workers=3) as _pool:
+            for _coll, _label in _collections_to_fetch:
+                _fetch_futures.append(_pool.submit(_fetch_candidate_pool, _coll, _label))
+        for (_coll, _label), _fut in zip(_collections_to_fetch, _fetch_futures):
+            try:
+                raw_docs.extend(_fut.result())
+            except Exception as exc:
+                log.warning(f"{_label} fetch failed (skipping): {exc}")
 
     # (PER-PHRASE EMBEDDING MATCHING FIX) Build the query ITEMS list for
     # this call: every keyword AND every match_phrase, kept as SEPARATE
@@ -2629,6 +2644,23 @@ def _lazy_backfill_missing_embeddings(
     pymongo bulk_write uses ordered=False; each UpdateOne filter includes the
     missing-embedding guard so concurrent background writers cannot have their
     vectors overwritten.
+
+    IMPORTANT SCOPE LIMITATION
+    --------------------------
+    This function only operates on the `raw_docs` list that was assembled
+    immediately before it is called.  Those docs were fetched from Mongo
+    using a query that already filters for ``embedding: {$exists: True,
+    $ne: None}``, so in practice `raw_docs` will only contain docs whose
+    stored embedding field is ``[]`` (empty list) — the one falsy value
+    that slips through that filter.  Documents that have never been
+    embedded and are therefore absent from Mongo entirely are *not* seen
+    here at all.
+
+    To do a full historical backfill across all three collections, use the
+    standalone ``backfill_embeddings.py`` CLI script instead:
+
+        python backfill_embeddings.py --report
+        python backfill_embeddings.py --apply --collection all
     """
     if not LAZY_EMBED_ENABLED:
         return []
@@ -2746,6 +2778,13 @@ def _call_claude(system_prompt: str, user_message: str, max_tokens: int = None, 
         payload["verbosity"] = LLM_VERBOSITY
     if force_json_prefill:
         payload["text"] = {"format": {"type": "json_object"}}
+        # OpenAI Responses API requires the word "json" to appear in `input`
+        # (not just in `instructions`) when text.format.type == "json_object".
+        # Guard: if the caller's user_message already contains "json"
+        # (case-insensitive) we leave it untouched; otherwise we append a
+        # one-line hint so the API doesn't return 400.
+        if "json" not in (user_message or "").lower():
+            payload["input"] = (user_message or "") + "\n\nReturn your answer as a single valid JSON object only."
     if enable_web_search:
         payload["tools"] = [{"type": "web_search"}]
     headers = {
