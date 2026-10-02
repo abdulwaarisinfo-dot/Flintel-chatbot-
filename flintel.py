@@ -254,10 +254,10 @@ def get_unfiltered_matched_signals(signals_collection, since_days, targeting_pla
     parameter — never creates its own Mongo connection.
 
     (QUATERNARY MONGO) signals_collection_4 (database.py's optional
-    read-only mirror, built from config.py's MONGODB4) is also folded into
-    the same candidate pool this function already builds from
-    signals_collection/signals_collection_2 — no separate matching path,
-    no separate limit/cap logic."""
+    read-only mirror, built from config.py's MONGODB4) is also folded
+    into the same candidate pool this function already builds from
+    signals_collection/signals_collection_2 — no separate matching
+    path, no separate limit/cap logic."""
     effective_limit = limit if isinstance(limit, int) and limit > 0 else UNFILTERED_DEFAULT_LIMIT
     effective_max_per_platform = (
         max_per_platform if isinstance(max_per_platform, int) and max_per_platform > 0
@@ -330,7 +330,8 @@ def get_unfiltered_matched_signals(signals_collection, since_days, targeting_pla
     # pushed to the end rather than raising, so one malformed doc from any
     # source can never crash this function. Also normalizes any naive
     # datetime (Mongo docs are typically returned naive-UTC) to tz-aware
-    # UTC here, purely for this comparison.
+    # UTC here, purely for this comparison — the matching loop below still
+    # does its own normalization independently, unchanged.
     def _sort_key(d):
         value = d.get("created_utc")
         if not isinstance(value, datetime):
@@ -735,40 +736,50 @@ def build_google_fallback_answer_context(query: str, stub_count: int) -> str:
     grounded post TEXT is available to answer from — but `stub_count`
     related Reddit threads (if any) were found via a Google-search
     fallback and will be shown to the user separately, as links only.
-    Tells Claude to (a) answer the user's actual question from its own
-    general knowledge, (b) NEVER invent or guess what those threads
-    actually say, since only their URLs were found, not their content,
-    and (c) if stub_count > 0, briefly and honestly mention that some
-    related discussions were found and are shown below, without
-    describing their content."""
+
+    SOURCE-GROUNDING RULE: Both branches must return the no_results JSON
+    format — never a general-knowledge answer.  The connected platforms
+    are the knowledge source; Claude is the reasoning/presentation layer
+    only.  Without retrieved post text there is no evidence to reason
+    over, so the only correct response is an explicit insufficient-evidence
+    message (no_results format).  When stub_count > 0 the stub URLs are
+    real signals but carry no body text — Claude has NOT seen their
+    content, so it cannot make factual claims from them either."""
     if not stub_count:
         return (
-            "Note: no posts matching this topic were available to analyze. "
-            "Answer the user's actual question from your own general "
-            "knowledge instead, and be honest that this particular search "
-            "did not surface specific posts rather than inventing any. "
-            "State plainly that nothing was surfaced for THIS search — "
-            "never assert or imply that no such conversations exist "
-            "anywhere, which is a claim you cannot support. Do not "
-            "describe Flintel's internal retrieval process, index, or "
-            "pipeline to the user."
+            "Note: no posts matching this topic were available to analyze — "
+            "Flintel's connected sources did not return grounded evidence for "
+            "this query. Respond STRICTLY in the no_results JSON format "
+            "defined above. Do NOT answer from general knowledge or outside "
+            "web knowledge — there is no retrieved evidence to ground a "
+            "factual answer. message field mein: (a) plainly state that the "
+            "connected sources did not surface relevant discussions for this "
+            "topic, (b) give an honest, non-apologetic reason (e.g. the topic "
+            "may not be widely discussed yet, or be too niche/new), "
+            "(c) suggested_actions: suggest only Flintel-internal next steps "
+            "(broaden time window, try different keywords, check back later) "
+            "— never name outside tools or platforms. Do not describe "
+            "Flintel's internal retrieval process, index, or pipeline."
         )
 
     plural = "s" if stub_count != 1 else ""
     return (
-        f"Note: no posts with full text were available to analyze for this "
-        f"topic, but {stub_count} related thread{plural} are shown to the "
-        f"user below as links, with no body text available. Answer the "
-        f"user's actual question from your own general knowledge. You may "
-        f"briefly mention that some related discussions were surfaced and "
-        f"are shown below, but NEVER invent, guess, or describe what those "
-        f"threads actually say — you have not seen their content.\n\n"
-        f"Do NOT narrate Flintel's internal retrieval process: never use "
-        f"wording like \"discovery-only\", \"stub\", \"supplementary "
-        f"Google search\", \"not fetched yet\", or any other explanation "
-        f"of HOW these were obtained or WHY their text is missing. Also "
-        f"never assert that no relevant conversations exist — only that "
-        f"this search did not surface them."
+        f"Note: no posts with full body text were available to analyze for "
+        f"this topic — {stub_count} related thread{plural} are shown to the "
+        f"user below as links only, with no body text retrieved. Respond "
+        f"STRICTLY in the no_results JSON format defined above. Do NOT answer "
+        f"from general knowledge or outside web knowledge — the thread URLs "
+        f"alone are not evidence; you have not seen their content and cannot "
+        f"make factual claims from them. In the message field: (a) plainly "
+        f"state that relevant discussions were found but their content is not "
+        f"yet available for analysis, (b) note that {stub_count} related "
+        f"thread{plural} are shown below as reference links, (c) "
+        f"suggested_actions: suggest only Flintel-internal next steps. "
+        f"NEVER invent, guess, or describe what those threads say. Do NOT "
+        f"narrate Flintel's internal retrieval process: never use wording "
+        f"like \"discovery-only\", \"stub\", \"supplementary Google search\", "
+        f"\"not fetched yet\", or any explanation of HOW these were obtained "
+        f"or WHY their text is missing."
     )
 
 
