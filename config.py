@@ -153,6 +153,7 @@ __all__ = [
     "SIGNAL_EMBEDDING_RECENCY_POOL",
     "SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD",
     "SIGNAL_EMBEDDING_MAX_SCAN",
+    "SIGNAL_EMBEDDING_FETCH_BATCH",
     # Secondary MongoDB (signals mirror)
     "MONGODB2",
     # Tertiary MongoDB (everything except flintel_signals)
@@ -353,6 +354,11 @@ SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD = float(os.getenv("SIGNAL_EMBEDDING_SIMILA
 # and log a warning. Ignored in legacy mode (CANDIDATE_POOL > 0).
 SIGNAL_EMBEDDING_MAX_SCAN = int(os.getenv("SIGNAL_EMBEDDING_MAX_SCAN", "0"))
 
+# (PARALLEL FETCH) pymongo cursor batch_size for the unlimited-mode fetch.
+# Larger values reduce round-trips at the cost of more memory per batch.
+# Applies per-collection cursor. Default 5000 (raised from hard-coded 2000).
+SIGNAL_EMBEDDING_FETCH_BATCH = int(os.getenv("SIGNAL_EMBEDDING_FETCH_BATCH", "5000"))
+
 # ── Secondary signals-only MongoDB (READ-ONLY mirror of flintel_signals) ──
 MONGODB2 = os.getenv("MONGODB2", "")
 
@@ -417,7 +423,7 @@ INTENT_CANDIDATE_MAX            = int(os.getenv("INTENT_CANDIDATE_MAX", "200"))
 # MIN_PASSING of them pass at confidence >= MIN_CONFIDENCE, skip classifying
 # the rest (saves LLM calls when the top results are already high-quality).
 INTENT_SHORTCIRCUIT_HEAD        = int(os.getenv("INTENT_SHORTCIRCUIT_HEAD", "50"))
-INTENT_SHORTCIRCUIT_MIN_PASSING = int(os.getenv("INTENT_SHORTCIRCUIT_MIN_PASSING", "15")) 
+INTENT_SHORTCIRCUIT_MIN_PASSING = int(os.getenv("INTENT_SHORTCIRCUIT_MIN_PASSING", "15"))
 INTENT_SHORTCIRCUIT_MIN_CONFIDENCE = float(os.getenv("INTENT_SHORTCIRCUIT_MIN_CONFIDENCE", "0.70"))
 
 # Number of parallel batches for concurrent classification (ThreadPoolExecutor).
