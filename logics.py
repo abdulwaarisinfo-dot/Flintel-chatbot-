@@ -16,8 +16,8 @@ analysis layer (map-reduce, prompts), the router, the topic-resolver, the
 website-keyword-extraction wrapper, and the post-processing helpers
 (format extraction, answer-finalization, URL/website-context patching).
 
-_call_claude() / _call_claude_stream() talk to Anthropic's Messages API
-(Claude Haiku) — see each function's own docstring.
+_call_claude() / _call_claude_stream() talk to OpenAI's Responses API
+(GPT-5 mini) — see each function's own docstring.
 
 (TIMEOUT-SIMPLIFICATION CHANGE) _timeout_fallback_answer()'s old tier-3
 "loose_candidates / near_match_confidence / near_match_offer" branch has
@@ -154,6 +154,8 @@ from config import (
     MAX_CHAT_EVIDENCE_POSTS, MAX_ANALYSIS_EVIDENCE,
     MIN_ANALYSIS_EVIDENCE, ANTHROPIC_API_KEY, CLAUDE_MODEL,
     CLAUDE_API_URL, CLAUDE_API_VERSION,
+    LLM_MODEL, LLM_REASONING_EFFORT, LLM_REASONING_HEADROOM, LLM_VERBOSITY,
+    OPENAI_RESPONSES_URL,
     CLAUDE_MAX_TOKENS, CLAUDE_MAP_MAX_TOKENS,
     CLAUDE_POSTS_PER_CHUNK, CLAUDE_NOTES_PER_CHUNK, CLAUDE_TIMEOUT_SECONDS,
     CLAUDE_ROUTER_MAX_TOKENS, CLAUDE_TOPIC_RESOLVER_MAX_TOKENS,
@@ -169,6 +171,8 @@ from config import (
     SIGNAL_EMBEDDING_CANDIDATE_POOL, SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD,
     SIGNAL_EMBEDDING_RECENCY_POOL, ROUTER_MAX_MATCH_PHRASES,
     SIGNAL_EMBEDDING_MAX_SCAN,
+    LAZY_EMBED_ENABLED, LAZY_EMBED_MAX_DOCS_PER_QUERY,
+    LAZY_EMBED_BATCH_SIZE, LAZY_EMBED_MIN_TEXT_CHARS,
 )
 
 import logging
@@ -1401,6 +1405,19 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     if not query_embeddings:
         return []
 
+    # (LAZY EMBEDDING BACKFILL) Find any docs in raw_docs that are missing
+    # their embedding vector, embed them now, save to the primary collection,
+    # and append to raw_docs so they participate in the scoring pass below.
+    # Best-effort: any failure inside is caught and logged — never raises.
+    try:
+        _backfilled = _lazy_backfill_missing_embeddings(
+            raw_docs, signals_collection, generate_query_embeddings_batch
+        )
+        if _backfilled:
+            raw_docs.extend(_backfilled)
+    except Exception as _lbe:  # noqa: BLE001
+        log.warning(f"lazy_backfill outer guard: {_lbe}")
+
     # (RETRIEVAL RECALL FIX) Normalize the query vectors ONCE for this
     # call — see _normalize_query_embeddings(). If none survive (all
     # empty/zero-magnitude), behave exactly like the previous "no usable
@@ -2590,85 +2607,177 @@ def _format_posts_block(posts: list) -> str:
     return "\n\n".join(lines)
 
 
+def _lazy_backfill_missing_embeddings(
+    raw_docs: list,
+    signals_collection,
+    embed_fn,
+) -> list:
+    """Find docs in `raw_docs` with missing/null/empty embedding vectors,
+    embed their `post_text` in batches via `embed_fn` (a function that
+    accepts list[str] and returns list[list[float]] or None — same contract
+    as generate_query_embeddings_batch()), save the vectors to
+    `signals_collection` (primary only — never mirror collections), attach
+    the vectors back to the in-memory doc dicts, and return the newly-
+    vectorized docs so the caller can append them for immediate scoring.
+
+    MUST NEVER RAISE — any failure is logged and silently skipped.
+
+    Only called when LAZY_EMBED_ENABLED is True (config default "1").
+    At most LAZY_EMBED_MAX_DOCS_PER_QUERY docs are backfilled per query call.
+    Only docs whose post_text has at least LAZY_EMBED_MIN_TEXT_CHARS chars.
+
+    pymongo bulk_write uses ordered=False; each UpdateOne filter includes the
+    missing-embedding guard so concurrent background writers cannot have their
+    vectors overwritten.
+    """
+    if not LAZY_EMBED_ENABLED:
+        return []
+
+    try:
+        missing_clause = {"$or": [
+            {"embedding": {"$exists": False}},
+            {"embedding": None},
+            {"embedding": []},
+        ]}
+
+        # Collect docs that are missing vectors.
+        candidates = []
+        for doc in raw_docs:
+            emb = doc.get("embedding")
+            if not emb:  # covers None, [], 0, ""
+                candidates.append(doc)
+
+        if not candidates:
+            return []
+
+        # Filter by minimum text length and cap total.
+        to_embed = [
+            d for d in candidates
+            if len(d.get("post_text") or "") >= LAZY_EMBED_MIN_TEXT_CHARS
+        ][:LAZY_EMBED_MAX_DOCS_PER_QUERY]
+
+        if not to_embed:
+            return []
+
+        log.info(f"lazy_backfill: embedding {len(to_embed)} docs with missing vectors")
+
+        newly_vectorized = []
+
+        for batch_start in range(0, len(to_embed), LAZY_EMBED_BATCH_SIZE):
+            batch = to_embed[batch_start: batch_start + LAZY_EMBED_BATCH_SIZE]
+            texts = [d.get("post_text", "") for d in batch]
+
+            try:
+                vectors = embed_fn(texts)
+            except Exception as exc:
+                log.warning(f"lazy_backfill: embed batch failed: {exc}")
+                continue
+
+            if not vectors or len(vectors) != len(batch):
+                log.warning("lazy_backfill: embed batch returned unexpected vector count, skipping")
+                continue
+
+            # Bulk-write vectors back to primary collection only.
+            try:
+                from pymongo import UpdateOne
+                ops = []
+                for doc, vec in zip(batch, vectors):
+                    doc_id = doc.get("_id")
+                    if doc_id is None or not vec:
+                        continue
+                    ops.append(UpdateOne(
+                        {"_id": doc_id, **missing_clause},
+                        {"$set": {"embedding": vec}},
+                    ))
+                if ops:
+                    signals_collection.bulk_write(ops, ordered=False)
+            except Exception as exc:
+                log.warning(f"lazy_backfill: bulk_write failed: {exc}")
+                # Fall through — still attach vectors in-memory for this query.
+
+            # Attach vectors to in-memory docs so they score immediately.
+            for doc, vec in zip(batch, vectors):
+                if vec:
+                    doc["embedding"] = vec
+                    newly_vectorized.append(doc)
+
+        if newly_vectorized:
+            log.info(f"lazy_backfill: {len(newly_vectorized)} docs vectorized and added to scoring pool")
+        return newly_vectorized
+
+    except Exception as exc:  # noqa: BLE001
+        log.warning(f"lazy_backfill: unexpected error (skipping): {exc}")
+        return []
+
+
 def _call_claude(system_prompt: str, user_message: str, max_tokens: int = None, enable_web_search: bool = False, force_json_prefill: bool = False) -> str:
-    """Single call to the Anthropic Messages API (Claude Haiku). Raises
+    """Single call to the OpenAI Responses API (GPT-5 mini). Raises
     on any failure — callers decide how to degrade gracefully (never let
     this block the search job or the post cards, which don't depend on
     this call at all).
 
     (CHAT WEB-SEARCH FEATURE) `enable_web_search` (default False — every
     existing caller that doesn't pass it behaves exactly as before this
-    feature): when True, adds the Anthropic web_search tool to the
-    request payload so Claude can look up current/recent information
-    instead of relying purely on its own training knowledge. Nothing
-    else about this function changed — the existing text-extraction
-    logic below already handles the response correctly when a
-    web_search tool result comes back, since it just picks out "text"
-    type blocks from `data.get("content", [])` regardless of what tool
-    calls happened in between.
+    feature): when True, adds the OpenAI web_search tool to the
+    request payload so the model can look up current/recent information
+    instead of relying purely on its own training knowledge.
 
     (STRUCTURAL JSON-ONLY FIX) `force_json_prefill` (default False — every
     existing caller that doesn't pass it behaves exactly as before this
-    fix): when True, appends a trailing assistant turn whose content is
-    the single character "{" to the request's `messages` array. This is
-    the standard Anthropic-documented technique for forcing JSON-only
-    output — the API continues generation FROM that exact point, so it
-    is structurally impossible for the model to prepend any "thinking
-    out loud" prose (e.g. "I need to work through this carefully...
-    UNDERSTAND the request:...") before the JSON object, the way
-    _extract_json_object_from_text()'s docstring describes happening
-    occasionally with CLAUDE_ANALYSIS_SYSTEM_PROMPT. This replaces
-    "instruct the model and hope" with "make the alternative
-    impossible". Since the API's response never repeats the prefilled
-    text, the leading "{" is prepended back onto the returned string
-    below so callers still get the complete JSON. Only pass this for a
-    system prompt that ALWAYS returns a JSON object as its entire
-    response (never for CLAUDE_MAP_STEP_SYSTEM_PROMPT /
-    CLAUDE_NOTES_REDUCE_SYSTEM_PROMPT, which return plain grounded
-    notes text, not JSON)."""
-    if not ANTHROPIC_API_KEY:
-        raise RuntimeError("ANTHROPIC_API_KEY is not set")
+    fix): when True, sets `text={"format":{"type":"json_object"}}` in the
+    request payload, instructing the OpenAI Responses API to emit a valid
+    JSON object. This replaces the Anthropic assistant-prefill technique
+    ({" leading character) — the semantics are identical from the caller's
+    perspective: pass True for system prompts that ALWAYS return a JSON
+    object (never for map/notes-reduce prompts, which return plain text)."""
+    if not OPENAI_API_KEY:
+        raise RuntimeError("OPENAI_API_KEY is not set")
 
-    messages = [{"role": "user", "content": user_message}]
-    if force_json_prefill:
-        messages.append({"role": "assistant", "content": "{"})
-
-    payload = {
-        "model": CLAUDE_MODEL,
-        "max_tokens": max_tokens or CLAUDE_MAX_TOKENS,
-        "system": system_prompt,
-        "messages": messages,
+    effective_max_tokens = max_tokens or CLAUDE_MAX_TOKENS
+    payload: dict = {
+        "model": LLM_MODEL,
+        "max_output_tokens": effective_max_tokens + LLM_REASONING_HEADROOM,
+        "instructions": system_prompt,
+        "input": user_message,
+        "reasoning": {"effort": LLM_REASONING_EFFORT},
+        "store": False,
     }
+    if LLM_VERBOSITY:
+        payload["verbosity"] = LLM_VERBOSITY
+    if force_json_prefill:
+        payload["text"] = {"format": {"type": "json_object"}}
     if enable_web_search:
-        payload["tools"] = [{"type": "web_search_20250305", "name": "web_search"}]
+        payload["tools"] = [{"type": "web_search"}]
     headers = {
-        "x-api-key": ANTHROPIC_API_KEY,
-        "anthropic-version": CLAUDE_API_VERSION,
+        "Authorization": f"Bearer {OPENAI_API_KEY}",
         "content-type": "application/json",
     }
 
     with httpx.Client(timeout=CLAUDE_TIMEOUT_SECONDS) as http_client:
-        response = http_client.post(CLAUDE_API_URL, headers=headers, json=payload)
+        response = http_client.post(OPENAI_RESPONSES_URL, headers=headers, json=payload)
         if response.status_code >= 400:
             log.warning(
-                f"Claude API error {response.status_code} | model={CLAUDE_MODEL} | "
-                f"max_tokens={payload['max_tokens']} | "
+                f"LLM API error {response.status_code} | model={LLM_MODEL} | "
+                f"max_output_tokens={payload['max_output_tokens']} | "
                 f"system_chars={len(system_prompt or '')} | "
                 f"user_message_chars={len(user_message or '')} | "
                 f"body={response.text[:2000]}"
             )
         response.raise_for_status()
         data = response.json()
-        if data.get("stop_reason") == "max_tokens":
-            log.warning(f"Claude hit max_tokens={payload['max_tokens']} — output likely truncated")
+        if data.get("status") == "incomplete":
+            log.warning(f"LLM response incomplete | model={LLM_MODEL} | reason={data.get('incomplete_details')}")
 
-    text_blocks = [
-        block.get("text", "") for block in data.get("content", [])
-        if block.get("type") == "text"
-    ]
-    result = "\n".join(t for t in text_blocks if t).strip()
-    if force_json_prefill and result and not result.startswith("{"):
-        result = "{" + result
+    # Extract text from output items
+    result_parts = []
+    for item in data.get("output", []):
+        if item.get("type") == "message":
+            for part in item.get("content", []):
+                if part.get("type") == "output_text":
+                    text = part.get("text", "")
+                    if text:
+                        result_parts.append(text)
+    result = "\n".join(result_parts).strip()
     return result
 
 
@@ -2860,10 +2969,10 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _call_claude_stream(system_prompt: str, user_message: str, max_tokens: int = None):
-    """(STREAMING ADD-ON) Same Anthropic Messages API call as
+    """(STREAMING ADD-ON) Same OpenAI Responses API call as
     _call_claude(), except with "stream": true — instead of blocking
     until the whole response is ready, this yields each text delta AS
-    Anthropic streams it back (word-by-word / token-by-token), so a
+    the API streams it back (word-by-word / token-by-token), so a
     caller can forward pieces to the browser live instead of waiting for
     the entire answer.
 
@@ -2874,24 +2983,28 @@ def _call_claude_stream(system_prompt: str, user_message: str, max_tokens: int =
 
     Yields plain text chunks (str). Raises on any failure — same
     degrade-gracefully convention as _call_claude()."""
-    if not ANTHROPIC_API_KEY:
-        raise RuntimeError("ANTHROPIC_API_KEY is not set")
+    if not OPENAI_API_KEY:
+        raise RuntimeError("OPENAI_API_KEY is not set")
 
+    effective_max_tokens = max_tokens or CLAUDE_MAX_TOKENS
     payload = {
-        "model": CLAUDE_MODEL,
-        "max_tokens": max_tokens or CLAUDE_MAX_TOKENS,
-        "system": system_prompt,
-        "messages": [{"role": "user", "content": user_message}],
+        "model": LLM_MODEL,
+        "max_output_tokens": effective_max_tokens + LLM_REASONING_HEADROOM,
+        "instructions": system_prompt,
+        "input": user_message,
+        "reasoning": {"effort": LLM_REASONING_EFFORT},
+        "store": False,
         "stream": True,
     }
+    if LLM_VERBOSITY:
+        payload["verbosity"] = LLM_VERBOSITY
     headers = {
-        "x-api-key": ANTHROPIC_API_KEY,
-        "anthropic-version": CLAUDE_API_VERSION,
+        "Authorization": f"Bearer {OPENAI_API_KEY}",
         "content-type": "application/json",
     }
 
     with httpx.Client(timeout=CLAUDE_TIMEOUT_SECONDS) as http_client:
-        with http_client.stream("POST", CLAUDE_API_URL, headers=headers, json=payload) as response:
+        with http_client.stream("POST", OPENAI_RESPONSES_URL, headers=headers, json=payload) as response:
             response.raise_for_status()
             for line in response.iter_lines():
                 if not line:
@@ -2905,11 +3018,14 @@ def _call_claude_stream(system_prompt: str, user_message: str, max_tokens: int =
                     event = json.loads(data_str)
                 except (ValueError, TypeError):
                     continue
-                if event.get("type") == "content_block_delta":
-                    delta = event.get("delta", {}) or {}
-                    text = delta.get("text")
+                event_type = event.get("type", "")
+                if event_type == "response.output_text.delta":
+                    text = event.get("delta", "")
                     if text:
                         yield text
+                elif event_type in ("response.failed", "response.incomplete"):
+                    log.warning(f"LLM stream ended early | type={event_type} | model={LLM_MODEL}")
+                    return
 
 
 def analyze_with_claude_stream(query: str, matched_signals: list, extra_context: str = None):
