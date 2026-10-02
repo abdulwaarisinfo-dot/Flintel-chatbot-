@@ -1,0 +1,137 @@
+# Part 3 patch — Haiku→GPT-5 mini + lazy embedding backfill
+# Generated: 2026-10-03
+#
+# Files with full unified diff below (originals from intent_prototype.tar.gz):
+#   intent_prototype/llm.py
+#   intent_prototype/validate.py
+#
+# Files changed but no diff baseline available (full files in flintel_updated_files_part3/):
+#   config.py         — added LLM_MODEL, LLM_REASONING_EFFORT, LLM_REASONING_HEADROOM,
+#                       LLM_VERBOSITY, OPENAI_RESPONSES_URL, LAZY_EMBED_* constants
+#   logics.py         — _call_claude/_call_claude_stream → OpenAI Responses API;
+#                       new _lazy_backfill_missing_embeddings(); call in get_matched_signals()
+#   requirements.txt  — updated openai comment
+#   tests/test_source_grounding.py — +20 tests (TestLLMBackendSwitch, TestLazyEmbeddingBackfill)
+#
+--- a/intent_prototype/llm.py
++++ b/intent_prototype/llm.py
+@@ -17,10 +17,14 @@
+ import urllib.error
+ import urllib.request
+ 
+-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
++ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")  # deprecated/unused
+ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+ 
+-CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-haiku-4-5-20251001")
++LLM_MODEL = os.getenv("LLM_MODEL", "gpt-5-mini")
++LLM_REASONING_EFFORT = os.getenv("LLM_REASONING_EFFORT", "low")
++LLM_REASONING_HEADROOM = int(os.getenv("LLM_REASONING_HEADROOM", "2048"))
++OPENAI_RESPONSES_URL = os.getenv("OPENAI_RESPONSES_URL", "https://api.openai.com/v1/responses")
++CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-haiku-4-5-20251001")  # deprecated/unused
+ EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
+ 
+ _RETRY_CODES = (429, 500, 502, 503, 529)
+@@ -33,49 +37,62 @@
+ def check_keys():
+     """Presence only. Never returns or logs a key value."""
+     return {
+-        "ANTHROPIC_API_KEY": "SET" if ANTHROPIC_API_KEY else "MISSING",
+         "OPENAI_API_KEY": "SET" if OPENAI_API_KEY else "MISSING",
++        "ANTHROPIC_API_KEY": "SET" if ANTHROPIC_API_KEY else "MISSING",  # deprecated/unused
+     }
+ 
+ 
+ def claude(system, user, max_tokens=4000, model=None, timeout=120):
+-    if not ANTHROPIC_API_KEY:
+-        raise LLMError("ANTHROPIC_API_KEY not set")
+-    body = json.dumps({
+-        "model": model or CLAUDE_MODEL,
+-        "max_tokens": max_tokens,
+-        "system": system,
+-        "messages": [{"role": "user", "content": user}],
+-    }).encode()
++    """Call the OpenAI Responses API (GPT-5 mini). Name and signature
++    unchanged for backward compatibility with all callers."""
++    if not OPENAI_API_KEY:
++        raise LLMError("OPENAI_API_KEY not set")
++    effective_model = model or LLM_MODEL
++    payload: dict = {
++        "model": effective_model,
++        "max_output_tokens": max_tokens + LLM_REASONING_HEADROOM,
++        "instructions": system,
++        "input": user,
++        "reasoning": {"effort": LLM_REASONING_EFFORT},
++        "store": False,
++    }
++    body = json.dumps(payload).encode()
+     req = urllib.request.Request(
+-        "https://api.anthropic.com/v1/messages",
++        OPENAI_RESPONSES_URL,
+         data=body,
+         headers={
+             "content-type": "application/json",
+-            "x-api-key": ANTHROPIC_API_KEY,
+-            "anthropic-version": "2023-06-01",
++            "Authorization": f"Bearer {OPENAI_API_KEY}",
+         },
+     )
+     last = None
+     for attempt in range(4):
+         try:
+             with urllib.request.urlopen(req, timeout=timeout) as r:
+-                payload = json.loads(r.read())
+-            return "".join(b.get("text", "") for b in payload.get("content", []))
++                data = json.loads(r.read())
++            parts = []
++            for item in data.get("output", []):
++                if item.get("type") == "message":
++                    for part in item.get("content", []):
++                        if part.get("type") == "output_text":
++                            text = part.get("text", "")
++                            if text:
++                                parts.append(text)
++            return "\n".join(parts)
+         except urllib.error.HTTPError as e:
+             detail = e.read()[:300].decode(errors="replace")
+             last = f"HTTP {e.code}: {detail}"
+             if e.code in _RETRY_CODES and attempt < 3:
+                 time.sleep(2 ** attempt * 2)
+                 continue
+-            raise LLMError(f"Claude API error — {last}")
++            raise LLMError(f"LLM API error — {last}")
+         except Exception as exc:                      # noqa: BLE001
+             last = type(exc).__name__
+             if attempt < 3:
+                 time.sleep(2 ** attempt * 2)
+                 continue
+-            raise LLMError(f"Claude call failed ({last})")
+-    raise LLMError(f"Claude call failed ({last})")
++            raise LLMError(f"LLM call failed ({last})")
++    raise LLMError(f"LLM call failed ({last})")
+ 
+ 
+ def embed_texts(texts, model=None):
+--- a/intent_prototype/validate.py
++++ b/intent_prototype/validate.py
+@@ -194,7 +194,7 @@
+     _log("=" * 78)
+ 
+     keys = check_keys()
+-    _log(f"  ANTHROPIC_API_KEY : {keys['ANTHROPIC_API_KEY']}")
++    _log(f"  OPENAI_API_KEY (LLM) : {keys['OPENAI_API_KEY']}")
+     _log(f"  OPENAI_API_KEY    : {keys['OPENAI_API_KEY']}")
+     _log("")
+ 
+@@ -237,10 +237,8 @@
+     _log("")
+ 
+     blockers = []
+-    if keys["ANTHROPIC_API_KEY"] == "MISSING":
+-        blockers.append("ANTHROPIC_API_KEY not set (needed by `classify`)")
+     if keys["OPENAI_API_KEY"] == "MISSING":
+-        blockers.append("OPENAI_API_KEY not set (needed to embed probe queries)")
++        blockers.append("OPENAI_API_KEY not set (needed by `classify` and to embed probe queries)")
+     if not tier1:
+         blockers.append("tier1_verified.jsonl missing — build it with make_tier1_sample.py")
+     if not tier3:
