@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 LLM AND EMBEDDING TRANSPORT
-===========================================================================
+=========================================================================== 
 Thin transport shared by query_interpreter.py and doc_classifier.py.
 Deliberately identical in behaviour to embedding_diagnostic.py's calls, so
 prototype numbers stay comparable with the diagnostic's numbers.
