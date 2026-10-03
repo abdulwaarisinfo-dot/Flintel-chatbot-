@@ -64,6 +64,15 @@ untouched by this addition.
 import os
 
 __all__ = [
+    # Strict intent mode + incremental rescan (accuracy over quantity)
+    "STRICT_INTENT_MODE",
+    "STRICT_WAIT_SECONDS",
+    "STRICT_SUMMARY_MIN_OVERLAP",
+    "STRICT_TITLE_MATCH_MIN_JACCARD",
+    "INCREMENTAL_RESCAN_ENABLED",
+    "INCREMENTAL_WATERMARK_FIELD",
+    "INCREMENTAL_OVERLAP_SECONDS",
+    "INCREMENTAL_FULL_SCAN_EVERY_N_POLLS",
     # Intent Bridge config (prototype ↔ production)
     "INTENT_BRIDGE_ENABLED",
     "INTENT_CANDIDATE_MULTIPLIER",
@@ -437,3 +446,45 @@ INTENT_BRIDGE_TIMEOUT_SECONDS   = int(os.getenv("INTENT_BRIDGE_TIMEOUT_SECONDS",
 INTENT_CACHE_ENABLED            = os.getenv("INTENT_CACHE_ENABLED", "true").lower() in ("1", "true", "yes")
 INTENT_CACHE_TTL_DAYS           = int(os.getenv("INTENT_CACHE_TTL_DAYS", "30"))
 INTENT_CACHE_COLLECTION         = os.getenv("INTENT_CACHE_COLLECTION", "intent_classification_cache")
+
+
+# ── STRICT INTENT MODE (accuracy over quantity) ──────────────────────────
+# OFF by default: with the flag off every code path behaves exactly as it
+# did before this block existed (prompt text included).
+#
+# ON: (1) the intent bridge is forced on for any query that has text;
+# (2) the bridge never pads with posts that FAILED the intent filter, and a
+# bridge timeout/failure never hands raw unfiltered candidates onward;
+# (3) seller/provider/hiring/chatter intents are HARD-excluded for buyer
+# queries; (4) Google stubs never pad the count; (5) the answer prompt's
+# "PREFER RELATED SIGNALS" rule is replaced by a no-padding rule;
+# (6) summaries are verified against post text and cards are built from one
+# DB doc; (7) polling stops when the scan is complete or STRICT_WAIT_SECONDS
+# passes, instead of waiting out RESPONSE_TIMEOUT for a target count.
+STRICT_INTENT_MODE = os.getenv("STRICT_INTENT_MODE", "false").lower() in ("1", "true", "yes")
+# Hard cap on how long strict mode waits for the target count while a scan
+# is still running (the full RESPONSE_TIMEOUT only applies to the non-strict
+# path).
+STRICT_WAIT_SECONDS = int(os.getenv("STRICT_WAIT_SECONDS", "75"))
+# Minimum share of a summary's content tokens that must appear in the post
+# text (title + body). Below it the summary is dropped.
+STRICT_SUMMARY_MIN_OVERLAP = float(os.getenv("STRICT_SUMMARY_MIN_OVERLAP", "0.5"))
+# Minimum Jaccard token overlap between an answer title and a post title for
+# the two to be treated as the same post (strict matching only).
+STRICT_TITLE_MATCH_MIN_JACCARD = float(os.getenv("STRICT_TITLE_MATCH_MIN_JACCARD", "0.6"))
+
+
+# ── INCREMENTAL RESCAN ───────────────────────────────────────────────────
+# Default ON, but it only changes anything for the top-up path of
+# get_evidence_with_topup(); off = the old full scan on every poll.
+INCREMENTAL_RESCAN_ENABLED = os.getenv("INCREMENTAL_RESCAN_ENABLED", "true").lower() in ("1", "true", "yes")
+# Which document field is the "a new document arrived" watermark. Empty =
+# auto: "_id" (ObjectId insert time) else "created_utc". Set to an ingestion
+# timestamp field (e.g. "ingested_at") once watermark_probe.py shows one.
+INCREMENTAL_WATERMARK_FIELD = os.getenv("INCREMENTAL_WATERMARK_FIELD", "").strip()
+# The delta query starts this many seconds BEFORE the stored watermark, and
+# results are de-duplicated by post_url.
+INCREMENTAL_OVERLAP_SECONDS = int(os.getenv("INCREMENTAL_OVERLAP_SECONDS", "90"))
+# With a created_utc watermark (late-ingested old posts are invisible to it)
+# a complete scan is forced on every N-th poll / cache refresh. 0 = never.
+INCREMENTAL_FULL_SCAN_EVERY_N_POLLS = int(os.getenv("INCREMENTAL_FULL_SCAN_EVERY_N_POLLS", "10"))
