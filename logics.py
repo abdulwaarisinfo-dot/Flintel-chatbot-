@@ -133,6 +133,8 @@ import time
 import math
 import hashlib
 import heapq
+import inspect
+import threading
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
@@ -185,6 +187,153 @@ log = logging.getLogger("flintel-web")
 # first), and _LEXICAL_SEARCH_FIELDS lists the document fields it is
 # applied to — the same title/text field names the rest of this module
 # already reads via _TITLE_FIELD_CANDIDATES/_TEXT_FIELD_CANDIDATES.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STRICT INTENT MODE + INCREMENTAL RESCAN — shared helpers
+# (config.STRICT_INTENT_MODE / config.INCREMENTAL_RESCAN_ENABLED)
+#
+# Every helper reads config LIVE (not at import) so a flag flip — and a test's
+# monkeypatch — takes effect immediately. With STRICT_INTENT_MODE off, none of
+# the strict branches added across this module run.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _cfg_value(name: str, default=None):
+    try:
+        import config as _config_module  # noqa: PLC0415
+        return getattr(_config_module, name, default)
+    except Exception:
+        return default
+
+
+def strict_intent_mode() -> bool:
+    """True when STRICT_INTENT_MODE is on (accuracy over quantity)."""
+    return bool(_cfg_value("STRICT_INTENT_MODE", False))
+
+
+# (scan status) (chat_id, topic_key) -> {"complete": bool, "at": monotonic}.
+# Written by get_matched_signals() at the end of each scan; read by the
+# strict wait logic. "complete" == every collection fetch succeeded.
+_SCAN_STATUS: dict = {}
+_SCAN_STATUS_LOCK = threading.Lock()
+_SCAN_STATUS_MAX = 2000
+
+
+def _register_scan_status(chat_id, topic_key, complete: bool) -> None:
+    if not chat_id or not topic_key:
+        return
+    with _SCAN_STATUS_LOCK:
+        if len(_SCAN_STATUS) >= _SCAN_STATUS_MAX:
+            for k in list(_SCAN_STATUS)[: _SCAN_STATUS_MAX // 2]:
+                _SCAN_STATUS.pop(k, None)
+        _SCAN_STATUS[(chat_id, topic_key)] = {"complete": bool(complete), "at": time.monotonic()}
+
+
+def get_scan_status(chat_id, topic_key) -> Optional[dict]:
+    with _SCAN_STATUS_LOCK:
+        entry = _SCAN_STATUS.get((chat_id, topic_key))
+        return dict(entry) if entry else None
+
+
+def strict_wait_done(matched_count: int, target: int, waited_seconds: float,
+                     scan_complete: bool, response_timeout: float = None) -> bool:
+    """STRICT wait/target rule (W2 + W3). True => stop waiting and answer now.
+
+    * target reached                                  -> done (target is an
+      upper bound, never a requirement);
+    * W2: the scan is complete (every cluster read OK) AND at least one
+      qualifying post exists                          -> done, even below the
+      target ("8 qualify -> give 8");
+    * W3: STRICT_WAIT_SECONDS elapsed                 -> done (hard cap);
+    * RESPONSE_TIMEOUT remains the ultimate ceiling.
+
+    With zero qualifying posts the loop keeps waiting (up to W3) because a
+    brand-new topic may still be ingested by the background service."""
+    if matched_count >= (target or 0) and matched_count > 0:
+        return True
+    if scan_complete and matched_count > 0:
+        return True
+    cap = float(_cfg_value("STRICT_WAIT_SECONDS", 75))
+    if response_timeout:
+        cap = min(cap, float(response_timeout))
+    return waited_seconds >= cap
+
+
+_KNOWN_PLATFORM_WORDS = ("reddit", "twitter", "linkedin", "facebook")
+
+
+def _single_platform_query(user_query, targeting_platform) -> bool:
+    """True when the request is clearly about ONE platform: the dropdown picked
+    a specific platform, or the query text names exactly one platform."""
+    if (targeting_platform or "all").strip().lower() not in ("", "all"):
+        return True
+    q = (user_query or "").lower()
+    named = [w for w in _KNOWN_PLATFORM_WORDS if re.search(rf"\b{w}\b", q)]
+    return len(named) == 1
+
+
+def _accepts_kw(fn, name: str) -> bool:
+    try:
+        params = inspect.signature(fn).parameters
+    except (TypeError, ValueError):
+        return False
+    return name in params or any(p.kind is inspect.Parameter.VAR_KEYWORD for p in params.values())
+
+
+# ── incremental rescan: watermark helpers ───────────────────────────────────
+
+def _watermark_field() -> str:
+    """The configured watermark field, or "_id" when left on auto."""
+    return (_cfg_value("INCREMENTAL_WATERMARK_FIELD", "") or "").strip() or "_id"
+
+
+def _aware_utc(dt):
+    if not isinstance(dt, datetime):
+        return None
+    return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+
+
+def _doc_watermark(doc: dict, field: str):
+    """The watermark datetime of one raw doc for `field`, or None."""
+    try:
+        if field == "_id":
+            oid = doc.get("_id")
+            gen = getattr(oid, "generation_time", None)
+            return _aware_utc(gen)
+        return _aware_utc(doc.get(field))
+    except Exception:
+        return None
+
+
+def _watermark_clause(field: str, value: datetime, overlap_seconds: int) -> dict:
+    """Mongo clause selecting docs newer than `value` minus the overlap."""
+    start = value - timedelta(seconds=max(0, int(overlap_seconds or 0)))
+    if field == "_id":
+        from bson import ObjectId  # noqa: PLC0415
+        return {"_id": {"$gt": ObjectId.from_datetime(start)}}
+    return {field: {"$gte": start}}
+
+
+def _scan_signature(keywords, match_phrases, targeting_platform, since_days,
+                    user_query, strict: bool, field: str) -> str:
+    """A delta is only valid for the exact query it was recorded for."""
+    base = _compute_query_signature(keywords, match_phrases)
+    raw = f"{base}|{targeting_platform}|{since_days}|{(user_query or '').strip().lower()}|{int(bool(strict))}|{field}"
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
+_INC_POLLS: dict = {}
+_INC_POLLS_LOCK = threading.Lock()
+
+
+def _next_poll_number(chat_id, topic_key) -> int:
+    with _INC_POLLS_LOCK:
+        if len(_INC_POLLS) > 4000:
+            _INC_POLLS.clear()
+        n = _INC_POLLS.get((chat_id, topic_key), 0) + 1
+        _INC_POLLS[(chat_id, topic_key)] = n
+        return n
+
+
 LEXICAL_MAX_TERMS = 40
 _LEXICAL_SEARCH_FIELDS = ("title", "post_text", "text", "body", "content", "selftext")
 
@@ -979,7 +1128,8 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                          limit: int = None, since_days: int = None, unfiltered: bool = False,
                          match_phrases: list = None, loose: bool = False,
                          signals_collection_2=None, chat_id: str = None,
-                         signals_collection_4=None, user_query: str = None) -> list:
+                         signals_collection_4=None, user_query: str = None,
+                         scan_state: dict = None) -> list:
     """Reads `flintel_signals` and keeps only the signals that are
     genuinely relevant to this job's topic. topic_key match is
     intentionally NOT required: Background Service #1 may store its own
@@ -1192,7 +1342,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     _cosine_similarity() and gets dropped by the threshold check, and
     the Mongo query itself already requires a saved embedding field."""
     if unfiltered:
-        return flintel.get_unfiltered_matched_signals(
+        _unf = flintel.get_unfiltered_matched_signals(
             signals_collection,
             since_days=since_days,
             targeting_platform=targeting_platform,
@@ -1201,6 +1351,8 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             signals_collection_2=signals_collection_2,
             signals_collection_4=signals_collection_4,
         )
+        _register_scan_status(chat_id, topic_key, True)
+        return _unf
 
     limit = limit or MAX_MATCHED_RESULTS
     keyword_list = [k for k in (keywords or []) if k]
@@ -1234,6 +1386,27 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
         clamped_days = min(since_days, MAX_TIME_WINDOW_DAYS)
         cutoff = datetime.now(timezone.utc) - timedelta(days=clamped_days)
         mongo_query = {"$and": [mongo_query, {"created_utc": {"$gte": cutoff}}]}
+
+    # (INCREMENTAL RESCAN) `scan_state` is an optional in/out dict supplied by
+    # get_evidence_with_topup(); None (the default, and every other caller)
+    # means a plain full scan exactly as before. When it carries a
+    # "watermarks" mapping (collection label -> datetime) this call reads
+    # ONLY docs newer than that watermark (minus a small overlap), scores
+    # just those, and merges them with the previously selected posts in
+    # scan_state["carry"] ((url, similarity, post) triples) so the result is
+    # the same as a full rescan. Outputs written back into scan_state:
+    #   delta_mode, fetched, new_wm, new_wm_created, bad_id, complete,
+    #   unchanged, sims.
+    _wm_field = ((scan_state.get("field") or _watermark_field()) if scan_state is not None else None)
+    _delta_wm = (scan_state or {}).get("watermarks") if scan_state is not None else None
+    if scan_state is not None:
+        scan_state["delta_mode"] = bool(_delta_wm)
+        scan_state["field"] = _wm_field
+        scan_state.setdefault("fetched", {})
+        scan_state.setdefault("new_wm", {})
+        scan_state.setdefault("new_wm_created", {})
+    _overlap_s = int(_cfg_value("INCREMENTAL_OVERLAP_SECONDS", 90) or 0)
+    _fetch_failures = []
 
     # ── (RETRIEVAL RECALL FIX) HYBRID CANDIDATE POOL ────────────────────
     # THE BUG THIS REPLACES: the candidate pool used to be, for every
@@ -1298,17 +1471,48 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             unlimited_query = dict(mongo_query)
             unlimited_query["embedding"] = {"$exists": True, "$ne": None}
 
+            fetch_query = unlimited_query
+            fetch_projection = _pool_projection
+            _max_wm = None
+            _max_created = None
+            _bad_id = False
+            if scan_state is not None:
+                fetch_projection = dict(_pool_projection)
+                if _wm_field == "_id":
+                    fetch_projection.pop("_id", None)   # delta needs _id
+                else:
+                    fetch_projection[_wm_field] = 1
+                _prev_wm = (_delta_wm or {}).get(label)
+                if _prev_wm is not None:
+                    try:
+                        fetch_query = {"$and": [
+                            unlimited_query,
+                            _watermark_clause(_wm_field, _prev_wm, _overlap_s),
+                        ]}
+                    except Exception as exc:
+                        log.warning(f"{label}: watermark clause failed, full scan: {exc}")
+                        fetch_query = unlimited_query
+
             docs = []
             scanned = 0
             _t0 = time.monotonic()
             try:
                 cursor = (
-                    collection.find(unlimited_query, _pool_projection)
+                    collection.find(fetch_query, fetch_projection)
                     .sort("created_utc", -1)
                     .batch_size(SIGNAL_EMBEDDING_FETCH_BATCH)
                 )
                 for doc in cursor:
                     scanned += 1
+                    if scan_state is not None:
+                        _w = _doc_watermark(doc, _wm_field)
+                        if _w is None and _wm_field == "_id":
+                            _bad_id = True
+                        if _w is not None and (_max_wm is None or _w > _max_wm):
+                            _max_wm = _w
+                        _c = _aware_utc(doc.get("created_utc"))
+                        if _c is not None and (_max_created is None or _c > _max_created):
+                            _max_created = _c
                     if SIGNAL_EMBEDDING_MAX_SCAN > 0 and scanned > SIGNAL_EMBEDDING_MAX_SCAN:
                         log.warning(
                             f"{label}: SIGNAL_EMBEDDING_MAX_SCAN={SIGNAL_EMBEDDING_MAX_SCAN} "
@@ -1319,6 +1523,16 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                     docs.append(doc)
             except Exception as exc:
                 log.warning(f"{label}: unlimited-mode cursor failed: {exc}")
+                _fetch_failures.append(label)
+
+            if scan_state is not None:
+                scan_state["fetched"][label] = len(docs)
+                if _max_wm is not None:
+                    scan_state["new_wm"][label] = _max_wm
+                if _max_created is not None:
+                    scan_state["new_wm_created"][label] = _max_created
+                if _bad_id:
+                    scan_state["bad_id"] = True
 
             _elapsed = time.monotonic() - _t0
             if len(docs) > 100000:
@@ -1404,6 +1618,31 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                 raw_docs.extend(_fut.result())
             except Exception as exc:
                 log.warning(f"{_label} fetch failed (skipping): {exc}")
+                _fetch_failures.append(_label)
+
+    # (SCAN STATUS) Recorded for the strict wait logic: "complete" means every
+    # collection was read without error.
+    _register_scan_status(chat_id, topic_key, not _fetch_failures)
+    if scan_state is not None:
+        scan_state["complete"] = not _fetch_failures
+        scan_state["fetched_total"] = len(raw_docs)
+        if scan_state.get("delta_mode") and raw_docs:
+            # Overlap re-reads of posts we already hold are dropped (dedupe by
+            # post_url) — only genuinely new URLs count as a delta.
+            _known = {c[0] for c in (scan_state.get("carry") or []) if c and c[0]}
+            if _known:
+                raw_docs = [d for d in raw_docs
+                            if _first_present(d, _URL_FIELD_CANDIDATES) not in _known]
+            scan_state["new_after_dedupe"] = len(raw_docs)
+        if scan_state.get("delta_mode") and not raw_docs and not _fetch_failures:
+            # EMPTY DELTA: nothing new anywhere -> skip query embedding,
+            # scoring, the interpreter and the bridge entirely.
+            scan_state["unchanged"] = True
+            log.info(
+                f"incremental scan: topic_key={topic_key} new_docs=0 -> unchanged "
+                f"(matcher scoring/bridge/interpreter skipped)"
+            )
+            return []
 
     # (PER-PHRASE EMBEDDING MATCHING FIX) Build the query ITEMS list for
     # this call: every keyword AND every match_phrase, kept as SEPARATE
@@ -1632,6 +1871,28 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 
             scored_docs.append((similarity, doc))
 
+    # (INCREMENTAL RESCAN) Delta mode: if none of the NEW docs clears the
+    # similarity threshold the final selection cannot change — return
+    # without running the bridge/interpreter. Otherwise merge the previously
+    # selected posts back in (with their remembered similarities) so the
+    # downstream sort/bridge/cap/limit sees exactly what a full rescan sees.
+    if scan_state is not None and scan_state.get("delta_mode"):
+        if not scored_docs:
+            scan_state["unchanged"] = True
+            log.info(
+                f"incremental scan: topic_key={topic_key} new_docs={len(raw_docs)} "
+                f"none above threshold -> unchanged"
+            )
+            return []
+        _have = set()
+        for _sim_c, _doc_c in scored_docs:
+            _u = _first_present(_doc_c, _URL_FIELD_CANDIDATES)
+            if _u:
+                _have.add(_u)
+        for _u, _sim_c, _post in (scan_state.get("carry") or []):
+            if _u and _u not in _have:
+                scored_docs.append((float(_sim_c), _post))
+
     # Sort by similarity, highest first, BEFORE per-platform cap / overall
     # limit are applied — so the best-matching posts are always kept.
     scored_docs.sort(key=lambda pair: pair[0], reverse=True)
@@ -1680,6 +1941,13 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     # platform, unchanged), larger evidence budgets get proportionally
     # more headroom.
     effective_max_per_platform = max(MAX_POSTS_PER_PLATFORM, limit // 2)
+    _trunc_hit = []   # appended to whenever a cap/limit/pool bound excluded a candidate
+    # (STRICT) A request that is about ONE platform (dropdown or named in the
+    # query) is not subject to the display-balance cap: "25 Reddit posts"
+    # must be able to return 25 Reddit posts. Flag off: line above stands.
+    _strict = strict_intent_mode()
+    if _strict and _single_platform_query(user_query, targeting_platform):
+        effective_max_per_platform = max(effective_max_per_platform, limit)
 
     def _apply_cap_and_limit(candidates, cap, n):
         """Apply per-platform cap and overall limit to an ordered candidate list.
@@ -1697,6 +1965,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             if url and url in seen:
                 continue
             if pc.get(pkey, 0) >= cap:
+                _trunc_hit.append(1)
                 continue
             if url:
                 seen.add(url)
@@ -1727,11 +1996,14 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             INTENT_CANDIDATE_MIN,
             INTENT_CANDIDATE_MAX,
         )
+        # STRICT forces the bridge on: without it there is no intent filter.
         _bridge_active = bool(
-            INTENT_BRIDGE_ENABLED and user_query and user_query.strip()
+            (INTENT_BRIDGE_ENABLED or _strict) and user_query and user_query.strip()
         )
     except Exception:
         _bridge_active = False
+
+    _sim_by_url = {}   # post_url -> similarity (remembered for incremental rescan)
 
     if _bridge_active:
         # ── Wide-collection path (flag on) ───────────────────────────────
@@ -1786,16 +2058,24 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                  "subreddit": _signal_subreddit(doc, post_url)}
             )
             wide_sims.append(_similarity)
+            if post_url:
+                _sim_by_url[post_url] = _similarity
 
             if len(wide_matched) >= pool_n:
+                _trunc_hit.append(1)
                 break
 
         # Step 2: call intent bridge; fall back to wide_matched on error.
         try:
             from intent_bridge import rerank_with_intent  # noqa: PLC0415
+            _bridge_kwargs = {"topic_sims": wide_sims}
+            if chat_id and topic_key and _accepts_kw(rerank_with_intent, "plan_key"):
+                # interpreter plan cached per (chat_id, topic_key) — no extra
+                # LLM call on every poll.
+                _bridge_kwargs["plan_key"] = (chat_id, topic_key)
             bridge_ordered = rerank_with_intent(
                 user_query, wide_matched, limit,
-                topic_sims=wide_sims,
+                **_bridge_kwargs,
             )
         except Exception as _bridge_exc:
             log.warning(f"intent_bridge hook failed (non-fatal): {_bridge_exc}")
@@ -1846,6 +2126,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             # a different platform may still have room).
             platform_key = (platform or "unknown").strip().lower()
             if platform_counts.get(platform_key, 0) >= effective_max_per_platform:
+                _trunc_hit.append(1)
                 continue
 
             if post_url:
@@ -1853,11 +2134,19 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 
             matched.append({"title": title, "post_text": post_text, "post_url": post_url, "platform": platform,
                             "subreddit": _signal_subreddit(doc, post_url)})
+            if post_url:
+                _sim_by_url[post_url] = _similarity
             platform_counts[platform_key] = platform_counts.get(platform_key, 0) + 1
 
             if len(matched) >= limit:
                 break
 
+    if scan_state is not None:
+        scan_state["sims"] = {
+            m["post_url"]: _sim_by_url[m["post_url"]]
+            for m in matched if m.get("post_url") in _sim_by_url
+        }
+        scan_state["truncated"] = bool(_trunc_hit) or len(matched) >= limit
     return matched
 
 
@@ -1892,7 +2181,8 @@ def get_cached_topic_evidence(chat_id: str, topic_key: str) -> Optional[dict]:
 
 
 def save_topic_evidence_cache(chat_id: str, owner_key: str, topic_key: str,
-                                posts: list, keywords: list, match_phrases: list = None):
+                                posts: list, keywords: list, match_phrases: list = None,
+                                extra_fields: dict = None):
     """Upserts the cache — the FULL posts list is overwritten each time
     (the caller has already merged old + new posts before calling this).
 
@@ -1901,29 +2191,209 @@ def save_topic_evidence_cache(chat_id: str, owner_key: str, topic_key: str,
     so when the list needs to be capped, keeping the FIRST N would keep
     the OLDEST posts and silently drop the newest, most-recently-
     discovered ones once a topic's evidence count reaches the cap. Slicing
-    from the end instead keeps the LAST N (i.e. the newest) posts."""
+    from the end instead keeps the LAST N (i.e. the newest) posts.
+
+    `extra_fields` (default None => document identical to before) lets the
+    caller add small fields to the same $set, e.g. {"strict_mode": True}."""
     if not chat_id or not topic_key:
         return
     capped_posts = (posts or [])[-TOPIC_CACHE_MAX_EVIDENCE:]
     now = datetime.now(timezone.utc)
+    set_doc = {
+        "chat_id": chat_id,
+        "topic_key": topic_key,
+        "owner_key": owner_key,
+        "posts": capped_posts,
+        "post_urls_seen": [p.get("post_url") for p in capped_posts if p.get("post_url")],
+        "evidence_count": len(capped_posts),
+        "keywords": keywords or [],
+        "match_phrases": match_phrases,
+        "updated_at": now,
+    }
+    if extra_fields:
+        set_doc.update(extra_fields)
     try:
         topic_evidence_cache_collection.update_one(
             {"chat_id": chat_id, "topic_key": topic_key},
-            {"$set": {
-                "chat_id": chat_id,
-                "topic_key": topic_key,
-                "owner_key": owner_key,
-                "posts": capped_posts,
-                "post_urls_seen": [p.get("post_url") for p in capped_posts if p.get("post_url")],
-                "evidence_count": len(capped_posts),
-                "keywords": keywords or [],
-                "match_phrases": match_phrases,
-                "updated_at": now,
-            }, "$setOnInsert": {"created_at": now}},
+            {"$set": set_doc, "$setOnInsert": {"created_at": now}},
             upsert=True,
         )
     except Exception as exc:
         log.warning(f"Topic-evidence cache save failed for topic_key={topic_key}: {exc}")
+
+
+def _prepare_scan_state(cached, chat_id, topic_key, keywords, match_phrases,
+                        targeting_platform, since_days, user_query, strict,
+                        matcher_fn, unfiltered, fetch_limit=None):
+    """Builds the in/out dict for get_matched_signals(scan_state=...), or None
+    for a plain full scan. Never raises.
+
+    A delta (watermarks + carried posts) is built only when ALL hold:
+      - INCREMENTAL_RESCAN_ENABLED, not an `unfiltered` query, a chat_id, and
+        a matcher that accepts `scan_state`;
+      - the cache doc holds a watermark recorded for this exact query
+        signature + watermark field, plus a remembered similarity for EVERY
+        cached post;
+      - it is not the periodic forced full scan (every Nth poll, N =
+        INCREMENTAL_FULL_SCAN_EVERY_N_POLLS) — late-ingested/late-embedded
+        docs are invisible to an _id/created_utc watermark, so a complete
+        scan is repeated now and then. An explicitly configured ingestion
+        field is trusted the same way; set N=0 to disable the periodic scan.
+    Otherwise the state is empty (still returned, so the first full scan
+    RECORDS watermarks for the next poll)."""
+    try:
+        if not _cfg_value("INCREMENTAL_RESCAN_ENABLED", True):
+            return None
+        if unfiltered or not chat_id or not topic_key:
+            return None
+        if not _accepts_kw(matcher_fn, "scan_state"):
+            return None
+
+        field = _watermark_field()
+        sig = _scan_signature(keywords, match_phrases, targeting_platform, since_days,
+                              user_query, strict, field)
+        state = {"sig": sig, "field": field}
+
+        poll_no = _next_poll_number(chat_id, topic_key)
+        every_n = int(_cfg_value("INCREMENTAL_FULL_SCAN_EVERY_N_POLLS", 10) or 0)
+        if every_n > 0 and poll_no % every_n == 0:
+            state["why_full"] = "periodic_full_scan"
+            return state
+
+        stored_wm = (cached or {}).get("scan_watermark")
+        stored_sims = (cached or {}).get("scan_sims")
+        stored_field = (cached or {}).get("scan_field")
+        if (
+            not isinstance(stored_wm, dict) or not stored_wm
+            or (cached or {}).get("scan_sig") != sig
+            or stored_field not in (field, "created_utc")   # created_utc = _id fallback
+            or not isinstance(stored_sims, list)
+        ):
+            state["why_full"] = "no_valid_watermark"
+            return state
+        # A previous result that was cut by a limit/cap/pool bound can only be
+        # extended by a full scan when the new limit is larger: posts excluded
+        # then are neither carried nor in the delta.
+        prev_limit = (cached or {}).get("scan_limit")
+        if (
+            (cached or {}).get("scan_truncated", True)
+            and fetch_limit is not None
+            and not (isinstance(prev_limit, int) and fetch_limit <= prev_limit)
+        ):
+            state["why_full"] = "limit_grew_after_truncation"
+            return state
+        state["field"] = stored_field
+
+        sim_by_url = {}
+        for pair in stored_sims:
+            try:
+                sim_by_url[pair[0]] = float(pair[1])
+            except Exception:
+                continue
+        carry = []
+        for post in (cached or {}).get("posts") or []:
+            url = post.get("post_url")
+            if not url or url not in sim_by_url:
+                state["why_full"] = "missing_sim_for_cached_post"
+                return state
+            carry.append((url, sim_by_url[url], post))
+
+        wms = {}
+        for label, value in stored_wm.items():
+            aware = _aware_utc(value)
+            if aware is not None:
+                wms[label] = aware
+        if not wms:
+            state["why_full"] = "unreadable_watermark"
+            return state
+        state["watermarks"] = wms
+        state["carry"] = carry
+        return state
+    except Exception as exc:
+        log.warning(f"incremental scan: state preparation failed, using full scan: {exc}")
+        return None
+
+
+def _persist_scan_state(chat_id, topic_key, scan_state, merged, cached, elapsed):
+    """Stores the new watermark + remembered similarities on the existing
+    topic-evidence cache doc. ONE small update, and only when something is
+    new (first scan, newly fetched docs, or an advanced watermark). Any
+    failure is logged and ignored: the next poll then simply does a full scan."""
+    try:
+        field = scan_state.get("field") or "_id"
+        new_wm = scan_state.get("new_wm") or {}
+        if scan_state.get("bad_id"):
+            # _id is not an ObjectId in this data -> created_utc is the only
+            # usable clock (late-ingested old posts are then caught by the
+            # periodic full scan).
+            new_wm = scan_state.get("new_wm_created") or {}
+            field = "created_utc"
+        fetched = scan_state.get("fetched") or {}
+        total_new = sum(int(v or 0) for v in fetched.values())
+        if scan_state.get("new_after_dedupe") is not None:
+            total_new = int(scan_state["new_after_dedupe"])   # overlap re-reads aren't "new"
+        log.info(
+            "incremental scan: " + " ".join(
+                f"collection={lbl} new_docs={cnt}" for lbl, cnt in fetched.items()
+            ) + f" elapsed={elapsed:.2f}s "
+            f"(watermark={ {k: v.isoformat() for k, v in (new_wm or {}).items()} }, "
+            f"mode={'delta' if scan_state.get('delta_mode') else 'full:' + str(scan_state.get('why_full', 'first_scan'))})"
+        )
+        if not scan_state.get("complete", False):
+            return                      # a collection failed: never advance
+        if not new_wm and (cached or {}).get("scan_watermark"):
+            return                      # nothing new, nothing to advance
+
+        old_wm = (cached or {}).get("scan_watermark") or {}
+        merged_wm = {}
+        for label in set(list(old_wm) + list(new_wm)):
+            old_v = _aware_utc(old_wm.get(label))
+            new_v = _aware_utc(new_wm.get(label))
+            candidates = [v for v in (old_v, new_v) if v is not None]
+            if candidates:
+                merged_wm[label] = max(candidates)
+        advanced = (not old_wm) or any(
+            _aware_utc(old_wm.get(k)) != v for k, v in merged_wm.items()
+        )
+        if not advanced and total_new == 0:
+            return
+
+        sims = dict(scan_state.get("sims") or {})
+        old_sims = {}
+        for pair in (cached or {}).get("scan_sims") or []:
+            try:
+                old_sims[pair[0]] = float(pair[1])
+            except Exception:
+                continue
+        pairs = []
+        for post in (merged or [])[-TOPIC_CACHE_MAX_EVIDENCE:]:
+            url = post.get("post_url")
+            if not url:
+                continue
+            sim = sims.get(url, old_sims.get(url))
+            if sim is not None:
+                pairs.append([url, float(sim)])
+
+        set_doc = {
+            "chat_id": chat_id,
+            "topic_key": topic_key,
+            "scan_watermark": merged_wm,
+            "scan_field": field,
+            "scan_sig": scan_state.get("sig"),
+            "scan_sims": pairs,
+            "scanned_at": datetime.now(timezone.utc),
+            "updated_at": datetime.now(timezone.utc),
+        }
+        if not scan_state.get("unchanged"):
+            set_doc["scan_limit"] = scan_state.get("_fetch_limit")
+            set_doc["scan_truncated"] = bool(scan_state.get("truncated", True))
+        topic_evidence_cache_collection.update_one(
+            {"chat_id": chat_id, "topic_key": topic_key},
+            {"$set": set_doc},
+            upsert=True,
+        )
+    except Exception as exc:
+        log.warning(f"incremental scan: persisting watermark failed (next poll = full scan): {exc}")
 
 
 def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
@@ -1957,7 +2427,12 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
     evidence_cache()) already reads/writes — the two caches can never end
     up on two different Mongo documents for the same (chat, topic) pair.
     Nothing else about this function changed."""
+    strict = strict_intent_mode()
     cached = get_cached_topic_evidence(chat_id, topic_key)
+    if strict and cached is not None and not cached.get("strict_mode"):
+        # Evidence cached before strict mode was switched on was never
+        # intent-filtered; it must not be served as "qualified" posts.
+        cached = None
     cached_posts = (cached or {}).get("posts") or []
     cached_count = len(cached_posts)
 
@@ -1971,14 +2446,27 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
         evidence_required or MIN_ANALYSIS_EVIDENCE,
         cached_count + TOPIC_CACHE_MIN_TOPUP,
     )
-    fresh_posts = matcher_fn(
-        topic_key, keywords, targeting_platform=targeting_platform,
+
+    # (INCREMENTAL RESCAN) After the first full scan, later polls read only
+    # docs newer than the stored per-collection watermark. None => a plain
+    # full scan (flag off, unfiltered query, matcher without support, no
+    # usable stored state, or a forced periodic full scan).
+    scan_state = _prepare_scan_state(
+        cached, chat_id, topic_key, keywords, match_phrases, targeting_platform,
+        since_days, user_query, strict, matcher_fn, unfiltered, fetch_limit,
+    )
+    _call_kwargs = dict(
+        targeting_platform=targeting_platform,
         since_days=since_days, unfiltered=unfiltered,
         match_phrases=match_phrases, limit=fetch_limit,
         signals_collection_2=signals_collection_2, chat_id=chat_id,
         signals_collection_4=signals_collection_4,
         user_query=user_query,
     )
+    if scan_state is not None:
+        _call_kwargs["scan_state"] = scan_state
+    _t_scan = time.monotonic()
+    fresh_posts = matcher_fn(topic_key, keywords, **_call_kwargs)
 
     # De-dup: old cached posts + new posts, keyed on post_url.
     seen_urls = {p.get("post_url") for p in cached_posts if p.get("post_url")}
@@ -2000,7 +2488,15 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
     # keeps returning nothing new — this skips that write while still
     # always returning the correct, up-to-date merged list.
     if len(merged) > cached_count:
-        save_topic_evidence_cache(chat_id, owner_key, topic_key, merged, keywords, match_phrases)
+        save_topic_evidence_cache(
+            chat_id, owner_key, topic_key, merged, keywords, match_phrases,
+            extra_fields=({"strict_mode": True} if strict else None),
+        )
+    if scan_state is not None:
+        scan_state["_fetch_limit"] = fetch_limit
+        _persist_scan_state(
+            chat_id, topic_key, scan_state, merged, cached, time.monotonic() - _t_scan,
+        )
     return merged
 
 
@@ -2606,6 +3102,64 @@ CLAUDE_ANALYSIS_SYSTEM_PROMPT = (
     .replace("up to 7 by genuine relevance", f"up to {MAX_CHAT_EVIDENCE_POSTS} by genuine relevance")
 )
 
+# (STRICT INTENT MODE) The prompt used when config.STRICT_INTENT_MODE is on.
+# CLAUDE_ANALYSIS_SYSTEM_PROMPT above is NOT modified — flag off returns that
+# very object, so the default prompt is byte-for-byte unchanged.
+_STRICT_NO_PADDING_RULE = """STRICT INTENT MODE — NO RELATED-SIGNAL PADDING (absolute rule):
+Every post you were handed already passed an intent filter, but read each one
+anyway. For any request about buyers, people looking, or leads:
+- A post whose author is SELLING, building, promoting, hiring for, or offering
+  the thing is NEVER a buyer, a lead or an opportunity. Never list it as one,
+  and never label it "related" or "indirect" to fill the list. Omit it.
+- A post that merely MENTIONS the topic (opinion, news, "anyone tried X?")
+  without the author stating their OWN need is not a lead. Omit it.
+- Do not use "source_list" entries to stretch a thin result set. If fewer
+  posts qualify than were requested, list exactly the ones that qualify and
+  state the number plainly (for example "8 qualified results") — never pad
+  toward the requested count.
+- If nothing qualifies, use "no_results" and say that THIS search surfaced no
+  qualifying posts."""
+
+_STRICT_POST_COUNT_RULE = """POST-COUNT LIMIT (strict mode): list every qualifying post you were given,
+once each, and never more than you were given. Do not cut a qualifying post
+to reach a fixed number, and never pad with a low-quality post to reach one.
+The "platforms" list and the post cards shown to the user are the same set.
+A discovery-only post's "summary" must say its content hasn't been fetched
+yet, never a fabricated one."""
+
+
+def _build_strict_analysis_prompt(base: str) -> str:
+    out = re.sub(
+        r'PREFER RELATED SIGNALS OVER "no_results".*?(?=\n\n──)',
+        lambda _m: _STRICT_NO_PADDING_RULE, base, count=1, flags=re.S,
+    )
+    out = re.sub(
+        r'POST-COUNT LIMIT: never include more than.*?(?=\n\n──)',
+        lambda _m: _STRICT_POST_COUNT_RULE, out, count=1, flags=re.S,
+    )
+    return out
+
+
+CLAUDE_ANALYSIS_SYSTEM_PROMPT_STRICT = _build_strict_analysis_prompt(CLAUDE_ANALYSIS_SYSTEM_PROMPT)
+
+
+def _analysis_system_prompt() -> str:
+    """The analysis system prompt for this request: the original constant
+    (same object) when strict mode is off."""
+    return CLAUDE_ANALYSIS_SYSTEM_PROMPT_STRICT if strict_intent_mode() else CLAUDE_ANALYSIS_SYSTEM_PROMPT
+
+
+def _strict_count_note(n: int) -> str:
+    """Appended to the user message in strict mode only ("" otherwise)."""
+    if not strict_intent_mode():
+        return ""
+    return (
+        f"\n\nSTRICT MODE: {n} post(s) are supplied above and each already passed "
+        f"the intent filter. In your opening message state the number of results "
+        f"you actually list (e.g. \"N qualified results\") — do not claim or imply "
+        f"more, and do not pad."
+    )
+
 # Cheap "map" step used only when a topic has enough matched posts that
 # sending them all in one shot would be wasteful/risky context-wise. Each
 # chunk gets condensed down to only the points relevant to the user's
@@ -3018,7 +3572,7 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
         )
         if extra_context:
             user_message += "\n\n" + extra_context
-        return _extract_json_object_from_text(_call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message, force_json_prefill=True))
+        return _extract_json_object_from_text(_call_claude(_analysis_system_prompt(), user_message, force_json_prefill=True))
 
     # (POST ENRICHMENT) Global post numbers survive chunking: chunk 2's
     # first post is "[Post 13]", not "[Post 1]".
@@ -3026,10 +3580,10 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
 
     if len(chunks) <= 1:
         posts_block = _format_posts_block(posts)
-        user_message = f"User's question: {query}\n\nPosts (title + text only):\n{posts_block}"
+        user_message = f"User's question: {query}\n\nPosts (title + text only):\n{posts_block}" + _strict_count_note(len(posts))
         if extra_context:
             user_message += "\n\n" + extra_context
-        return _extract_json_object_from_text(_call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message, force_json_prefill=True))
+        return _extract_json_object_from_text(_call_claude(_analysis_system_prompt(), user_message, force_json_prefill=True))
 
     # Multiple chunks -> map-reduce so no single call has to swallow every
     # matched post at once.
@@ -3079,7 +3633,7 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
         user_message = _notes_unavailable_user_message(query)
         if extra_context:
             user_message += "\n\n" + extra_context
-        return _extract_json_object_from_text(_call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message, force_json_prefill=True))
+        return _extract_json_object_from_text(_call_claude(_analysis_system_prompt(), user_message, force_json_prefill=True))
 
     combined_notes = "\n\n---\n\n".join(notes)
     user_message = (
@@ -3093,7 +3647,7 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
     )
     if extra_context:
         user_message += "\n\n" + extra_context
-    return _extract_json_object_from_text(_call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message, force_json_prefill=True))
+    return _extract_json_object_from_text(_call_claude(_analysis_system_prompt(), user_message, force_json_prefill=True))
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -3220,7 +3774,7 @@ def analyze_with_claude_stream(query: str, matched_signals: list, extra_context:
         )
         if extra_context:
             user_message += "\n\n" + extra_context
-        yield from _call_claude_stream(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message)
+        yield from _call_claude_stream(_analysis_system_prompt(), user_message)
         return
 
     # (POST ENRICHMENT) Global post numbers survive chunking: chunk 2's
@@ -3229,10 +3783,10 @@ def analyze_with_claude_stream(query: str, matched_signals: list, extra_context:
 
     if len(chunks) <= 1:
         posts_block = _format_posts_block(posts)
-        user_message = f"User's question: {query}\n\nPosts (title + text only):\n{posts_block}"
+        user_message = f"User's question: {query}\n\nPosts (title + text only):\n{posts_block}" + _strict_count_note(len(posts))
         if extra_context:
             user_message += "\n\n" + extra_context
-        yield from _call_claude_stream(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message)
+        yield from _call_claude_stream(_analysis_system_prompt(), user_message)
         return
 
     # Map step + optional 2nd-level note chunking: identical logic to
@@ -3274,7 +3828,7 @@ def analyze_with_claude_stream(query: str, matched_signals: list, extra_context:
         user_message = _notes_unavailable_user_message(query)
         if extra_context:
             user_message += "\n\n" + extra_context
-        yield from _call_claude_stream(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message)
+        yield from _call_claude_stream(_analysis_system_prompt(), user_message)
         return
 
     combined_notes = "\n\n---\n\n".join(notes)
@@ -3289,7 +3843,7 @@ def analyze_with_claude_stream(query: str, matched_signals: list, extra_context:
     )
     if extra_context:
         user_message += "\n\n" + extra_context
-    yield from _call_claude_stream(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message)
+    yield from _call_claude_stream(_analysis_system_prompt(), user_message)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -5064,24 +5618,29 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
         # matcher_fn) otherwise — same wiring as _fill_in_message_
         # outputs()'s own call site in index.py.
         try:
+            _strict_fb = strict_intent_mode()
+            _fb_kwargs = {"user_query": query} if _strict_fb else {}
             matched = get_evidence_with_topup(
                 chat_id=chat_id, owner_key=owner_key, topic_key=topic_key,
                 keywords=keywords or [], evidence_required=evidence_required,
                 matcher_fn=get_matched_signals, match_phrases=match_phrases,
-                targeting_platform="all",
+                targeting_platform="all", **_fb_kwargs,
             )
         except Exception as exc:
             log.warning(f"Signal matching failed for topic_key={topic_key}: {exc}")
             matched = []
         try:
-            stub_docs = google_search.get_stub_results_for_keywords(
-                google_posts_collection, keywords or [])
+            # STRICT: Google stubs never pad the count, so don't even fetch.
+            stub_docs = ([] if strict_intent_mode() else
+                         google_search.get_stub_results_for_keywords(
+                             google_posts_collection, keywords or []))
         except Exception as exc:
             log.warning(f"Fetching Google-fallback stubs failed for topic_key={topic_key}: {exc}")
             stub_docs = []
         google_results = flintel.format_google_stub_results(stub_docs)
         merged_pool = flintel.merge_matched_and_google_results(
-            matched, google_results, max_total=effective_evidence_limit)
+            matched, google_results, max_total=effective_evidence_limit,
+            **({"fill_with_stubs": False} if strict_intent_mode() else {}))
 
         # (CLOSEST-MATCHES TIER-3 REMOVED) No tier-3 branch anymore.
         # Whatever merged_pool has — even a handful of posts, even zero —
@@ -5397,6 +5956,9 @@ def _finalize_answer_and_results(answer_text: str, matched: list, seed: str = ""
     claude_format = _extract_claude_format(answer_text)
     if claude_format in _NO_DATA_CLAUDE_FORMATS:
         return answer_text, []
+    if strict_intent_mode():
+        # Strict: cards and answer text are ONE list.
+        return answer_text, _strict_cards_for_answer(answer_text, matched)
     return answer_text, matched
 
 
@@ -5521,6 +6083,270 @@ def _resolve_answer_post(post: dict, matched_signals: list, aligned: list):
     return _match_by_summary(post.get("summary"), aligned)
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# STRICT MODE — result-quality verification (only reached when
+# config.STRICT_INTENT_MODE is on). Principle: the card a user sees (URL,
+# title, subreddit, summary) must come from ONE database document, and a
+# post whose identity cannot be established confidently is not shown at all.
+# ─────────────────────────────────────────────────────────────────────────────
+
+_SUMMARY_UNAVAILABLE = "Summary unavailable"
+_SUMMARY_EXEMPT_CAPS = {
+    "reddit", "twitter", "linkedin", "facebook", "google", "the", "this", "that",
+    "post", "poster", "author", "user", "someone", "asks", "seeking",
+}
+
+
+def _norm_title_tokens(title) -> list:
+    if not isinstance(title, str):
+        return []
+    return re.findall(r"[a-z0-9]+", title.lower())
+
+
+def _title_jaccard(a, b) -> float:
+    ta, tb = set(_norm_title_tokens(a)), set(_norm_title_tokens(b))
+    if not ta or not tb:
+        return 0.0
+    return len(ta & tb) / len(ta | tb)
+
+
+def _stem(token: str) -> str:
+    for suf in ("ings", "ing", "ers", "er", "ed", "es", "ly", "s"):
+        if len(token) > len(suf) + 3 and token.endswith(suf):
+            return token[: -len(suf)]
+    return token
+
+
+def _invented_specifics(summary: str, haystack: str) -> list:
+    """Numbers and mid-sentence Capitalised names in `summary` that do not
+    appear in `haystack` (the post's title + text)."""
+    low = haystack.lower()
+    missing = []
+    words = summary.split()
+    for i, raw in enumerate(words):
+        w = raw.strip(".,;:!?()[]{}\"'`*")
+        if not w:
+            continue
+        if any(ch.isdigit() for ch in w):
+            digits = re.sub(r"[^0-9a-z.]", "", w.lower())
+            if digits and digits not in low:
+                missing.append(w)
+            continue
+        sentence_start = i == 0 or words[i - 1].endswith((".", "!", "?", ":"))
+        if (not sentence_start and len(w) >= 3 and w[0].isupper()
+                and w.lower() not in _SUMMARY_EXEMPT_CAPS):
+            if w.lower() not in low:
+                missing.append(w)
+    return missing
+
+
+def _summary_supported(summary, title, text) -> bool:
+    """True when the summary is grounded in THIS post: enough of its content
+    words occur in the post and it names nothing (number / proper noun) the
+    post does not contain."""
+    if not isinstance(summary, str) or not summary.strip():
+        return False
+    tokens = _content_tokens(summary)
+    if not tokens:
+        return False
+    haystack = f"{title or ''}\n{text or ''}"
+    post_stems = {_stem(t) for t in _content_tokens(haystack)}
+    hit = sum(1 for t in tokens if _stem(t) in post_stems)
+    min_overlap = float(_cfg_value("STRICT_SUMMARY_MIN_OVERLAP", 0.5))
+    if hit / len(tokens) < min_overlap:
+        return False
+    return not _invented_specifics(summary, haystack)
+
+
+def _resolve_answer_post_strict(post: dict, aligned: list):
+    """Strict identity resolution of one answer post -> (signal, 1-based index)
+    or (None, None). Requires agreement between the signals the model could
+    have meant; a conflict or weak match resolves to NOTHING (post dropped).
+    Never uses a URL the model supplied."""
+    min_j = float(_cfg_value("STRICT_TITLE_MATCH_MIN_JACCARD", 0.6))
+    title = post.get("title")
+    has_title = isinstance(title, str) and title.strip() and not _is_placeholder_title(title)
+    summary = post.get("summary")
+    s_tokens = _content_tokens(summary)
+
+    def summary_ok(sig):
+        return _summary_supported(summary, sig.get("title"), sig.get("post_text"))
+
+    idx = _parse_post_index(post.get("index"))
+    idx_sig = aligned[idx - 1] if (idx is not None and 1 <= idx <= len(aligned)) else None
+
+    title_sig = None
+    if has_title:
+        scored = []
+        for i, sig in enumerate(aligned):
+            st = sig.get("title") or ""
+            exact = bool(st.strip()) and st.strip().lower() == title.strip().lower()
+            j = 1.0 if exact else _title_jaccard(title, st)
+            if j >= min_j:
+                scored.append((j, i))
+        scored.sort(reverse=True)
+        if scored and (len(scored) == 1 or scored[0][0] - scored[1][0] > 0.0):
+            title_sig = aligned[scored[0][1]]
+            title_pos = scored[0][1] + 1
+
+    def pos_of(sig):
+        for i, a in enumerate(aligned):
+            if a is sig or (a.get("post_url") and a.get("post_url") == sig.get("post_url")):
+                return i + 1
+        return None
+
+    if idx_sig is not None:
+        if title_sig is None:
+            if not has_title:
+                return idx_sig, idx
+            # The title matched no post: trust the index only if the
+            # summary corroborates it.
+            if len(s_tokens) >= _SUMMARY_MATCH_MIN_TOKENS and summary_ok(idx_sig):
+                return idx_sig, idx
+            return None, None
+        if title_sig is idx_sig or (title_sig.get("post_url") and title_sig.get("post_url") == idx_sig.get("post_url")):
+            return idx_sig, idx
+        # Index and title disagree: keep the one the summary supports, and
+        # only if exactly one does.
+        supported = [sg for sg in (idx_sig, title_sig) if summary_ok(sg)]
+        if len(supported) == 1:
+            chosen = supported[0]
+            return chosen, pos_of(chosen)
+        return None, None
+
+    if title_sig is not None:
+        return title_sig, pos_of(title_sig)
+
+    # No usable index, no usable title: summary similarity with margin AND
+    # the strict overlap/specifics check.
+    match = _match_by_summary(summary, aligned)
+    if match is not None and summary_ok(match):
+        return match, pos_of(match)
+    return None, None
+
+
+def _strict_patch_answer(data: dict, matched_signals: list, answer_text: str) -> str:
+    """Strict replacement for the permissive link/source/title patching."""
+    fmt = data.get("format")
+    if fmt not in ("source_list", "comparison"):
+        return answer_text
+    try:
+        aligned = [sig for _post, sig in _aligned_post_context(matched_signals)]
+    except Exception:
+        aligned = []
+    state = {"kept": 0, "dropped": 0, "seen": 0}
+
+    def _patch_platform_list(platforms):
+        if not isinstance(platforms, list):
+            return platforms
+        out = []
+        for entry in platforms:
+            if not isinstance(entry, dict) or not isinstance(entry.get("posts"), list):
+                out.append(entry)
+                continue
+            new_posts, used = [], set()
+            for post in entry["posts"]:
+                if not isinstance(post, dict):
+                    continue
+                state["seen"] += 1
+                try:
+                    sig, pos = _resolve_answer_post_strict(post, aligned)
+                except Exception:
+                    sig, pos = None, None
+                key = (sig.get("post_url") or id(sig)) if sig else None
+                if sig is None or key in used:
+                    state["dropped"] += 1
+                    continue
+                used.add(key)
+                new = dict(post)
+                url = sig.get("post_url")
+                if url:
+                    new["link"] = url
+                else:
+                    new.pop("link", None)
+                if "url" in new:
+                    new["url"] = url or ""
+                if pos is not None:
+                    new["index"] = pos
+                platform = (sig.get("platform") or _infer_platform_from_url(url) or "")
+                if str(platform).strip().lower() == "reddit":
+                    sub = _normalize_subreddit(sig.get("subreddit")) or _subreddit_from_url(url)
+                    if sub:
+                        new["source"] = sub
+                    else:
+                        new.pop("source", None)
+                db_title = _derive_post_title(sig.get("title"), sig.get("post_text"))
+                if db_title:
+                    new["title"] = db_title
+                if not (isinstance(new.get("summary"), str)
+                        and new["summary"].startswith("Content not yet available")):
+                    if not _summary_supported(new.get("summary"), sig.get("title"), sig.get("post_text")):
+                        new["summary"] = _SUMMARY_UNAVAILABLE
+                new_posts.append(new)
+                state["kept"] += 1
+            if new_posts:
+                entry = dict(entry, posts=new_posts)
+                if "shown_count" in entry:
+                    entry["shown_count"] = len(new_posts)
+                if "total_analyzed" in entry:
+                    entry["total_analyzed"] = len(new_posts)
+                out.append(entry)
+        return out
+
+    if fmt == "source_list":
+        data["platforms"] = _patch_platform_list(data.get("platforms"))
+    else:
+        for subject in data.get("subjects") or []:
+            if isinstance(subject, dict):
+                subject["platforms"] = _patch_platform_list(subject.get("platforms"))
+
+    if state["seen"] and state["kept"] == 0:
+        # Every listed post failed identity verification: say so honestly
+        # instead of showing unverifiable cards.
+        data = {
+            "format": "no_results",
+            "searched": {"query": "", "platforms": [], "time_window": ""},
+            "message": ("This search surfaced posts, but none of them could be verified "
+                        "against their source text, so none are shown as qualified results."),
+            "likely_reason": "The listed posts could not be matched back to their original posts with confidence.",
+            "suggested_actions": [],
+        }
+    return json.dumps(data, ensure_ascii=False)
+
+
+def _strict_cards_for_answer(answer_text: str, matched: list) -> list:
+    """Cards shown under the answer == the posts the (already strictly
+    patched) answer lists, in the answer's order. Formats without a posts
+    list keep `matched` unchanged."""
+    if not answer_text or not matched:
+        return matched
+    cleaned = answer_text.strip()
+    if cleaned.startswith("```"):
+        cleaned = cleaned.strip("`").strip()
+        cleaned = re.sub(r"^json\s*", "", cleaned, flags=re.IGNORECASE).strip()
+    try:
+        data = json.loads(cleaned)
+    except (ValueError, TypeError):
+        return matched
+    if not isinstance(data, dict) or data.get("format") not in ("source_list", "comparison"):
+        return matched
+    if data.get("format") == "source_list":
+        groups = [data.get("platforms")]
+    else:
+        groups = [sub.get("platforms") for sub in (data.get("subjects") or []) if isinstance(sub, dict)]
+    by_url = {m.get("post_url"): m for m in matched if m.get("post_url")}
+    cards, seen, listed = [], set(), 0
+    for platforms in groups:
+        for entry in platforms or []:
+            for post in (entry.get("posts") if isinstance(entry, dict) else None) or []:
+                listed += 1
+                link = post.get("link") if isinstance(post, dict) else None
+                if link in by_url and link not in seen:
+                    seen.add(link)
+                    cards.append(by_url[link])
+    return cards if listed else matched
+
+
 def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str:
     """(POST_URL FIX) CLAUDE_ANALYSIS_SYSTEM_PROMPT asks for a "link"
     field with "the real post URL if available" on every post it lists —
@@ -5590,6 +6416,9 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str
         return answer_text
 
     fmt = data.get("format")
+    if strict_intent_mode():
+        # Strict: identity must be confirmed; unconfirmed posts are removed.
+        return _strict_patch_answer(data, matched_signals, answer_text)
     changed = False
 
     # (POST ENRICHMENT) Index i (1-based) in Claude's answer == i-th entry
