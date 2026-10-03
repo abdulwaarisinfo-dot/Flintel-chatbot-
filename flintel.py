@@ -167,6 +167,23 @@ def _first_present(doc: dict, candidates: list):
     return None
 
 
+def _signal_subreddit(doc: dict, post_url):
+    """Mirrors logics._signal_subreddit() (duplicated, not imported, to keep
+    the logics.py -> flintel.py dependency direction): the doc's own
+    "subreddit" field without any "r/" prefix, else the name parsed from a
+    reddit.com/r/NAME/... URL, else None."""
+    value = (doc or {}).get("subreddit")
+    if isinstance(value, str):
+        value = re.sub(r"^/?r/", "", value.strip(), flags=re.IGNORECASE).strip().strip("/")
+        if value:
+            return value
+    if isinstance(post_url, str):
+        m = re.search(r"reddit\.com/r/([A-Za-z0-9_]+)", post_url, re.IGNORECASE)
+        if m:
+            return m.group(1)
+    return None
+
+
 def _infer_platform_from_url(url: str):
     """Same behavior as index.py's own helper of the same purpose —
     duplicated here (not imported) to keep this file's only dependency
@@ -389,7 +406,8 @@ def get_unfiltered_matched_signals(signals_collection, since_days, targeting_pla
         if post_url:
             seen_urls.add(post_url)
 
-        matched.append({"title": title, "post_text": post_text, "post_url": post_url, "platform": platform})
+        matched.append({"title": title, "post_text": post_text, "post_url": post_url, "platform": platform,
+                        "subreddit": _signal_subreddit(doc, post_url)})
         platform_counts[platform_key] = platform_counts.get(platform_key, 0) + 1
 
         if len(matched) >= effective_limit:
@@ -618,8 +636,9 @@ def merge_matched_and_google_results(matched_signals: list, google_stub_results:
     first (fully grounded), Google stubs fill any remaining room up to
     the cap, ordered by google_rank ascending (best Google rank first).
     Returns the same {"title", "post_text", "post_url", "platform"}
-    shape get_matched_signals() already returns, with "google_rank"/
-    "subreddit" additionally present on Google-sourced entries only.
+    shape get_matched_signals() already returns (which now also carries
+    "subreddit", possibly None), with "google_rank" additionally present
+    on Google-sourced entries only.
 
     `max_total` can also be passed in dynamically by the caller (e.g.
     index.py's own evidence planner) rather than relying on the
