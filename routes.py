@@ -56,6 +56,9 @@ from index import (
     _patch_post_urls_into_answer,
     _inject_website_context_into_answer,
     _finalize_answer_and_results,       # <-- Bug 2b helper from index.py
+    strict_intent_mode,                 # <-- STRICT INTENT MODE (config.STRICT_INTENT_MODE)
+    strict_wait_done,                   # <-- STRICT wait/target rule (W2 + W3)
+    get_scan_status,
     _elapsed_seconds,                   # <-- GOOGLE-FALLBACK POLLING FIX: needed in stream_answer()
     mark_google_fallback_triggered,     # <-- GOOGLE-FALLBACK POLLING FIX: needed in stream_answer()
     _trigger_google_fallback_search,    # <-- GOOGLE-FALLBACK POLLING FIX: needed in stream_answer()
@@ -1902,7 +1905,22 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # get_matched_signals() every ~2s until either something
             # appears or RESPONSE_TIMEOUT is reached.
             tier3_triggered = False
-            if len(matched) < effective_evidence_limit:
+            # (STRICT WAIT/TARGET RULE — W2 + W3) The target is an UPPER bound,
+            # not a requirement. When the scan that produced `matched` is
+            # complete and found qualifying posts, answer now; otherwise wait
+            # at most STRICT_WAIT_SECONDS (never the full RESPONSE_TIMEOUT).
+            _strict_wait = strict_intent_mode()
+            _wait_started = time.time()
+
+            def _strict_done():
+                _st = get_scan_status(chat_id, topic_key) or {}
+                return strict_wait_done(
+                    len(matched), effective_evidence_limit,
+                    time.time() - _wait_started, bool(_st.get("complete")),
+                    RESPONSE_TIMEOUT,
+                )
+
+            if len(matched) < effective_evidence_limit and not (_strict_wait and _strict_done()):
                 while True:
                     elapsed = _elapsed_seconds(msg.get("requested_at"))
 
@@ -1947,6 +1965,9 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                         tier3_triggered = True
                         break
 
+                    if _strict_wait and _strict_done():
+                        break
+
                     time.sleep(2)
 
                     try:
@@ -1969,6 +1990,8 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
 
                     if len(matched) >= effective_evidence_limit:
                         break
+                    if _strict_wait and _strict_done():
+                        break
 
             # (MERGE BEFORE ANSWERING) Pulls in whatever Google-search
             # stub results exist right now — combined with `matched` via
@@ -1977,14 +2000,17 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # ever being a last-resort replacement used when signals
             # were empty.
             try:
-                stub_docs = google_search.get_stub_results_for_keywords(
-                    google_posts_collection, msg.get("keywords", []))
+                # STRICT: Google stubs never pad the count — don't fetch them.
+                stub_docs = ([] if _strict_wait else
+                             google_search.get_stub_results_for_keywords(
+                                 google_posts_collection, msg.get("keywords", [])))
             except Exception as exc:
                 log.warning(f"Fetching Google-fallback stubs failed for topic_key={topic_key}: {exc}")
                 stub_docs = []
             google_results = flintel.format_google_stub_results(stub_docs)
             merged_pool = flintel.merge_matched_and_google_results(
-                matched, google_results, max_total=effective_evidence_limit
+                matched, google_results, max_total=effective_evidence_limit,
+                **({"fill_with_stubs": False} if _strict_wait else {})
             )
 
             # (SIMULATED-STREAM FIX) Step 1: get the COMPLETE answer first,
