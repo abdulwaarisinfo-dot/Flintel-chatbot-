@@ -133,6 +133,15 @@ from database import (
 )
 
 from config import *          # every constant, unchanged names
+def _cfg_strict_wait() -> float:
+    """STRICT_WAIT_SECONDS read live from config (default 75)."""
+    try:
+        import config as _c
+        return float(getattr(_c, "STRICT_WAIT_SECONDS", 75))
+    except Exception:
+        return 75.0
+
+
 from logics import (
     normalize_topic_key, normalize_platform, generate_fuzzy_keywords,
     enqueue_search_job, get_matched_signals, analyze_with_claude,
@@ -143,6 +152,7 @@ from logics import (
     _patch_post_urls_into_answer, _inject_website_context_into_answer,
     _finalize_answer_and_results, _timeout_fallback_answer,
     get_evidence_with_topup,
+    strict_intent_mode, strict_wait_done, get_scan_status,
     CLAUDE_BLOCKED_FALLBACK_REPLY, CLAUDE_CLARIFY_FALLBACK_REPLY,
     CLAUDE_CHAT_FALLBACK_SYSTEM_PROMPT,
 )
@@ -1210,8 +1220,10 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
             # single call, instead of Google only ever being a
             # last-resort replacement used when signals were empty.
             try:
-                stub_docs = google_search.get_stub_results_for_keywords(
-                    google_posts_collection, msg.get("keywords", []))
+                # STRICT: Google stubs never pad the count — don't fetch them.
+                stub_docs = ([] if strict_intent_mode() else
+                             google_search.get_stub_results_for_keywords(
+                                 google_posts_collection, msg.get("keywords", [])))
             except Exception as exc:
                 log.warning(f"Fetching Google-fallback stubs failed for topic_key={msg.get('topic_key')}: {exc}")
                 stub_docs = []
@@ -1227,7 +1239,8 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
                 MAX_ANALYSIS_EVIDENCE,
             )
             merged_pool = flintel.merge_matched_and_google_results(
-                matched, google_results, max_total=effective_evidence_limit
+                matched, google_results, max_total=effective_evidence_limit,
+                **({"fill_with_stubs": False} if strict_intent_mode() else {})
             )
 
             extra_ctx_parts = []
@@ -1488,6 +1501,9 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                 targeting_platform=msg.get("targeting_platform", "all"),
                 since_days=msg.get("time_window_days"),
                 unfiltered=msg.get("unfiltered", False),
+                # STRICT: the intent bridge needs the query text; without it
+                # this path would return un-filtered posts. Flag off: unchanged.
+                **({"user_query": msg.get("query")} if strict_intent_mode() else {}),
             )
         except Exception as exc:
             log.warning(f"Signal matching failed for topic_key={msg.get('topic_key')}: {exc}")
@@ -1554,7 +1570,15 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
         # answer generate mat karo, agli poll/reload par dobara check hoga.
         # Timeout ke baad jo posts hon (chahe 3, chahe 45) unse answer banega.
         target_evidence = effective_evidence_limit or MIN_ANALYSIS_EVIDENCE
-        if len(matched) < target_evidence and elapsed < RESPONSE_TIMEOUT:
+        if strict_intent_mode():
+            # STRICT W2 + W3: the target is an upper bound. Answer as soon as
+            # the scan is complete and something qualifies, or after
+            # STRICT_WAIT_SECONDS; RESPONSE_TIMEOUT stays the ceiling.
+            _st = get_scan_status(chat_id, msg.get("topic_key")) or {}
+            if not strict_wait_done(len(matched), target_evidence, elapsed,
+                                    bool(_st.get("complete")), RESPONSE_TIMEOUT):
+                continue
+        elif len(matched) < target_evidence and elapsed < RESPONSE_TIMEOUT:
             continue
 
         # (MERGE BEFORE ANSWERING) Pulls in whatever Google-search stub
@@ -1568,13 +1592,16 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
         # so this pool can never go stale between this check and the
         # real answer generation.
         try:
-            stub_docs = google_search.get_stub_results_for_keywords(
-                google_posts_collection, msg.get("keywords", []))
+            stub_docs = ([] if strict_intent_mode() else
+                         google_search.get_stub_results_for_keywords(
+                             google_posts_collection, msg.get("keywords", [])))
         except Exception as exc:
             log.warning(f"Fetching Google-fallback stubs failed for topic_key={msg.get('topic_key')}: {exc}")
             stub_docs = []
         google_results = flintel.format_google_stub_results(stub_docs)
-        merged_pool = flintel.merge_matched_and_google_results(matched, google_results)
+        merged_pool = flintel.merge_matched_and_google_results(
+            matched, google_results,
+            **({"fill_with_stubs": False} if strict_intent_mode() else {}))
 
         if not merged_pool:
             # (RESPONSE_TIMEOUT'S NEW ROLE) No longer the primary "wait
@@ -1586,7 +1613,13 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
             # empty does the tier-3 closest-matches flow trigger, via
             # _timeout_fallback_answer() (which does its own tier-3
             # refinement internally — see that function's docstring).
-            if needs_answer and elapsed >= RESPONSE_TIMEOUT:
+            # STRICT: an empty pool is reported honestly after the strict
+            # wait cap instead of idling until the full RESPONSE_TIMEOUT.
+            _empty_deadline = (
+                min(RESPONSE_TIMEOUT, _cfg_strict_wait())
+                if strict_intent_mode() else RESPONSE_TIMEOUT
+            )
+            if needs_answer and elapsed >= _empty_deadline:
                 # (DUPLICATE-REFRESH FIX) A refresh/poll hitting this exact
                 # timeout branch again — very plausible here specifically,
                 # since the message is ALREADY past RESPONSE_TIMEOUT, so
