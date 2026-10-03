@@ -17,6 +17,23 @@ RESPONSIBILITIES
       Thin wrapper around query_interpreter.interpret().  Returns the raw
       QueryIntent dict or None on error.  Used for diagnostics.
 
+STRICT MODE (config.STRICT_INTENT_MODE, default off)
+----------------------------------------------------
+With the flag off none of the strict code below runs and behaviour is exactly
+the pre-strict behaviour described in the rest of this docstring. With it on
+(accuracy over quantity):
+  - the bridge runs for any query that has text, even if INTENT_BRIDGE_ENABLED
+    is off;
+  - there is NO fill-to-N: 8 passing posts means 8 posts back;
+  - a timeout / interpreter failure / unhandled error NEVER returns raw
+    candidates. It returns only posts that were already classified AND passed
+    before the failure (cache hits + batches that finished), else [];
+  - buyer queries hard-exclude provider_supply/hiring/irrelevant/
+    general_discussion/trend_signal/question_info/competitor_research and any
+    seller/provider actor, plus a deterministic seller-marker veto;
+  - the ranker receives the classifier's REAL actor/specificity/commercial
+    fields and its hard drops are final (no "append the dropped ones back").
+
 DESIGN CONSTRAINTS
 ------------------
   - FAIL-SAFE: every code path is wrapped in try/except.  Any failure
@@ -37,6 +54,7 @@ DESIGN CONSTRAINTS
 """
 
 import logging
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeout
 from typing import List, Optional, Dict, Any
@@ -57,6 +75,7 @@ def rerank_with_intent(
     *,
     topic_sims: Optional[List[float]] = None,
     config_overrides: Optional[Dict[str, Any]] = None,
+    plan_key: Optional[tuple] = None,
 ) -> List[dict]:
     """Re-rank `candidates` by intent classification for `user_query`.
 
@@ -73,6 +92,10 @@ def rerank_with_intent(
                         If None or length-mismatched, defaults to 0.0 per doc.
     config_overrides  : Optional dict of INTENT_* config values to override
                         the defaults from config.py (useful in tests).
+    plan_key          : Optional hashable, normally (chat_id, topic_key). When
+                        given, the interpreter's QueryIntent plan for this
+                        (plan_key, query) is cached in-process so repeated
+                        polls do not pay an LLM call each time.
 
     Returns
     -------
@@ -84,7 +107,10 @@ def rerank_with_intent(
         return candidates
 
     cfg = _load_config(config_overrides)
-    if not cfg.get("INTENT_BRIDGE_ENABLED"):
+    if plan_key is not None:
+        cfg["_plan_key"] = plan_key
+    strict = bool(cfg.get("STRICT_INTENT_MODE"))
+    if not cfg.get("INTENT_BRIDGE_ENABLED") and not strict:
         return candidates
 
     if not user_query or not user_query.strip():
@@ -102,24 +128,44 @@ def rerank_with_intent(
     t_start = time.perf_counter()
     timeout  = cfg.get("INTENT_BRIDGE_TIMEOUT_SECONDS", 25)
 
+    # STRICT: shared progress record, so a timeout can still return the posts
+    # that were classified-and-passing before it fired (never raw candidates).
+    state = _new_state() if strict else None
+
     executor = ThreadPoolExecutor(max_workers=1)
     try:
-        future = executor.submit(
-            _run_bridge, user_query, candidates, evidence_required, cfg, topic_sims
-        )
+        if strict:
+            future = executor.submit(
+                _run_bridge_strict, user_query, candidates, evidence_required,
+                cfg, topic_sims, state,
+            )
+        else:
+            future = executor.submit(
+                _run_bridge, user_query, candidates, evidence_required, cfg, topic_sims
+            )
         try:
             result = future.result(timeout=timeout)
         except FuturesTimeout:
+            future.cancel()
+            executor.shutdown(wait=False, cancel_futures=True)
+            if strict:
+                partial = _strict_partial(candidates, state)
+                log.warning(
+                    f"intent_bridge[strict]: timed out after {timeout}s — returning "
+                    f"{len(partial)} already-classified passing posts (no raw candidates)"
+                )
+                return partial
             log.warning(
                 f"intent_bridge: timed out after {timeout}s "
                 f"— returning original {len(candidates)} candidates"
             )
-            future.cancel()
-            executor.shutdown(wait=False, cancel_futures=True)
             return candidates
     except Exception as exc:
-        log.warning(f"intent_bridge: executor error — {exc} — returning originals")
         executor.shutdown(wait=False, cancel_futures=True)
+        if strict:
+            log.warning(f"intent_bridge[strict]: executor error — {exc} — returning classified-passing only")
+            return _strict_partial(candidates, state)
+        log.warning(f"intent_bridge: executor error — {exc} — returning originals")
         return candidates
     finally:
         # Shutdown without blocking on the worker thread — it may still be
@@ -128,6 +174,13 @@ def rerank_with_intent(
 
     elapsed = (time.perf_counter() - t_start) * 1000
     if result is _FAIL or result is None:
+        if strict:
+            partial = _strict_partial(candidates, state)
+            log.info(
+                f"intent_bridge[strict]: bridge failed ({elapsed:.0f}ms) — returning "
+                f"{len(partial)} already-classified passing posts"
+            )
+            return partial
         log.info(f"intent_bridge: bridge failed ({elapsed:.0f}ms) — returning originals")
         return candidates
 
@@ -157,9 +210,11 @@ def _run_bridge(
     cfg: dict,
     topic_sims: Optional[List[float]] = None,
 ) -> List[dict]:
+    if cfg.get("STRICT_INTENT_MODE"):
+        return _run_bridge_strict(user_query, candidates, evidence_required, cfg, topic_sims)
     try:
         # ── 1. Interpret query ─────────────────────────────────────────────
-        qi = _interpret(user_query)
+        qi = _interpret(user_query) if cfg.get("_plan_key") is None else _interpret(user_query, cfg.get("_plan_key"))
         if qi is _FAIL:
             return _FAIL
 
@@ -245,8 +300,14 @@ def _run_bridge(
         log.warning(f"intent_bridge._run_bridge: unhandled error — {exc}")
         return _FAIL
 
-def _rank_passing(passing: list, qi: dict) -> List[dict]:
-    """Sort intent-matching posts via ranker.rank() using opportunity.load_weights()."""
+def _rank_passing(passing: list, qi: dict, strict: bool = False) -> List[dict]:
+    """Sort intent-matching posts via ranker.rank() using opportunity.load_weights().
+
+    strict=False (default): historical behaviour, unchanged (actor/specificity
+    placeholders, ranker drops appended back in original order).
+    strict=True: the classifier's REAL actor_type/actor_role/specificity/
+    commercial fields reach the ranker, and whatever its hard filters drop
+    stays dropped."""
     if not passing:
         return []
 
@@ -265,23 +326,42 @@ def _rank_passing(passing: list, qi: dict) -> List[dict]:
                 "post_url":  url,
                 "platform":  cand.get("platform", ""),
             }
-            classification = schemas.normalize_classification({
-                "i":                    1,
-                "intent":               cls.get("intent", ""),
-                "intent_confidence":    cls.get("confidence", 0.0),
-                "secondary_intent":     None,
-                "secondary_confidence": None,
-                "actor_type":           None,
-                "actor_role":           None,
-                "commercial_signal":    cls.get("commercial_signal", 0.0),
-                "pain_intensity":       cls.get("pain_intensity", 0.0),
-                "urgency":              cls.get("urgency", 0.0),
-                "specificity":          0.0,
-                "geography":            None,
-                "industry_hint":        None,
-                "ambiguous":            False,
-                "noise":                False,
-            })
+            if strict:
+                classification = schemas.normalize_classification({
+                    "i":                    1,
+                    "intent":               cls.get("intent", ""),
+                    "intent_confidence":    cls.get("confidence", 0.0),
+                    "secondary_intent":     cls.get("secondary_intent"),
+                    "secondary_confidence": cls.get("secondary_confidence"),
+                    "actor_type":           cls.get("actor_type"),
+                    "actor_role":           cls.get("actor_role"),
+                    "commercial_signal":    cls.get("commercial_signal", 0.0),
+                    "pain_intensity":       cls.get("pain_intensity", 0.0),
+                    "urgency":              cls.get("urgency", 0.0),
+                    "specificity":          cls.get("specificity", 0.0),
+                    "geography":            None,
+                    "industry_hint":        None,
+                    "ambiguous":            bool(cls.get("ambiguous")),
+                    "noise":                bool(cls.get("noise")),
+                })
+            else:
+                classification = schemas.normalize_classification({
+                    "i":                    1,
+                    "intent":               cls.get("intent", ""),
+                    "intent_confidence":    cls.get("confidence", 0.0),
+                    "secondary_intent":     None,
+                    "secondary_confidence": None,
+                    "actor_type":           None,
+                    "actor_role":           None,
+                    "commercial_signal":    cls.get("commercial_signal", 0.0),
+                    "pain_intensity":       cls.get("pain_intensity", 0.0),
+                    "urgency":              cls.get("urgency", 0.0),
+                    "specificity":          0.0,
+                    "geography":            None,
+                    "industry_hint":        None,
+                    "ambiguous":            False,
+                    "noise":                False,
+                })
             triples.append((doc, sim, classification))
 
         result = ranker.rank(triples, qi, weights, top_n=len(passing))
@@ -302,11 +382,13 @@ def _rank_passing(passing: list, qi: dict) -> List[dict]:
                 seen_urls.add(url)
 
         # Append any passing candidates the ranker dropped (shouldn't happen).
-        for cand, _, _ in passing:
-            url = cand.get("post_url", "")
-            if url not in seen_urls:
-                ranked.append(cand)
-                seen_urls.add(url)
+        # STRICT: a ranker hard-filter drop is final — never undone.
+        if not strict:
+            for cand, _, _ in passing:
+                url = cand.get("post_url", "")
+                if url not in seen_urls:
+                    ranked.append(cand)
+                    seen_urls.add(url)
 
         return ranked
 
@@ -318,13 +400,35 @@ def _rank_passing(passing: list, qi: dict) -> List[dict]:
         passing_sorted = sorted(passing, key=lambda x: float(x[2].get("confidence", 0.0)), reverse=True)
         return [cand for cand, _, _ in passing_sorted]
 
-def _interpret(user_query: str):
+_PLAN_CACHE: Dict[tuple, tuple] = {}
+_PLAN_CACHE_LOCK = threading.Lock()
+_PLAN_CACHE_TTL_SECONDS = 3600
+_PLAN_CACHE_MAX = 256
+
+
+def _interpret(user_query: str, plan_key: Optional[tuple] = None):
+    """Interpret the query. With a plan_key the plan is cached in-process for
+    an hour, so a polling loop pays for ONE interpreter LLM call."""
+    cache_key = None
+    if plan_key is not None:
+        cache_key = (plan_key, (user_query or "").strip().lower())
+        with _PLAN_CACHE_LOCK:
+            hit = _PLAN_CACHE.get(cache_key)
+        if hit and time.monotonic() - hit[0] < _PLAN_CACHE_TTL_SECONDS:
+            return hit[1]
     try:
         from intent_prototype import query_interpreter  # noqa: PLC0415
-        return query_interpreter.interpret(user_query)
+        qi = query_interpreter.interpret(user_query)
     except Exception as exc:
         log.warning(f"intent_bridge._interpret failed: {exc}")
         return _FAIL
+    if cache_key is not None and qi is not None:
+        with _PLAN_CACHE_LOCK:
+            if len(_PLAN_CACHE) >= _PLAN_CACHE_MAX:
+                for k in list(_PLAN_CACHE)[: _PLAN_CACHE_MAX // 2]:
+                    _PLAN_CACHE.pop(k, None)
+            _PLAN_CACHE[cache_key] = (time.monotonic(), qi)
+    return qi
 
 def _cache_get(post_urls: List[str], cfg: dict) -> dict:
     if not cfg.get("INTENT_CACHE_ENABLED", True):
@@ -360,6 +464,7 @@ def _classify_parallel(posts: List[dict], qi: dict, cfg: dict) -> list:
         log.warning(f"intent_bridge._classify_parallel: import error — {exc}")
         return _FAIL
 
+    strict_cls  = bool(cfg.get("STRICT_INTENT_MODE"))
     head_n      = cfg.get("INTENT_SHORTCIRCUIT_HEAD", 50)
     min_passing = cfg.get("INTENT_SHORTCIRCUIT_MIN_PASSING", 15)
     min_conf    = cfg.get("INTENT_SHORTCIRCUIT_MIN_CONFIDENCE", 0.70)
@@ -370,7 +475,7 @@ def _classify_parallel(posts: List[dict], qi: dict, cfg: dict) -> list:
     try:
         if len(posts) > head_n:
             head_docs = [_post_to_doc(p) for p in posts[:head_n]]
-            head_cls  = _classify_batch(head_docs, doc_classifier)
+            head_cls  = _classify_batch(head_docs, doc_classifier, strict_cls)
 
             strong = sum(
                 1 for cls in head_cls
@@ -382,7 +487,9 @@ def _classify_parallel(posts: List[dict], qi: dict, cfg: dict) -> list:
 
             if strong >= min_passing:
                 log.debug(f"intent_bridge: short-circuit triggered ({strong}/{head_n} strong) — skipping tail")
-                return _merge_cls_with_posts(posts[:head_n], head_cls)
+                merged_head = _merge_cls_with_posts(posts[:head_n], head_cls, strict_cls)
+                _report_progress(cfg, merged_head)
+                return merged_head
 
             tail_posts = posts[head_n:]
         else:
@@ -393,14 +500,18 @@ def _classify_parallel(posts: List[dict], qi: dict, cfg: dict) -> list:
         all_results = []
 
         if head_docs is not None and head_cls is not None:
-            all_results.extend(_merge_cls_with_posts(posts[:head_n], head_cls))
+            merged_head = _merge_cls_with_posts(posts[:head_n], head_cls, strict_cls)
+            all_results.extend(merged_head)
+            _report_progress(cfg, merged_head)
 
         if tail_posts:
             single_batch_limit = getattr(schemas, "CLASSIFIER_BATCH_SIZE", 17)
             if len(tail_posts) <= single_batch_limit:
                 docs = [_post_to_doc(p) for p in tail_posts]
-                cls  = _classify_batch(docs, doc_classifier)
-                all_results.extend(_merge_cls_with_posts(tail_posts, cls))
+                cls  = _classify_batch(docs, doc_classifier, strict_cls)
+                merged_tail = _merge_cls_with_posts(tail_posts, cls, strict_cls)
+                all_results.extend(merged_tail)
+                _report_progress(cfg, merged_tail)
             else:
                 batch_size = max(1, (len(tail_posts) + n_batches - 1) // n_batches)
                 batches    = [
@@ -411,13 +522,18 @@ def _classify_parallel(posts: List[dict], qi: dict, cfg: dict) -> list:
                     futures_map = {}
                     for batch in batches:
                         docs_batch = [_post_to_doc(p) for p in batch]
-                        f = pool.submit(_classify_batch, docs_batch, doc_classifier)
+                        if strict_cls:
+                            f = pool.submit(_classify_batch, docs_batch, doc_classifier, True)
+                        else:
+                            f = pool.submit(_classify_batch, docs_batch, doc_classifier)
                         futures_map[f] = batch
 
                     for f, batch in futures_map.items():
                         try:
                             cls = f.result()
-                            all_results.extend(_merge_cls_with_posts(batch, cls))
+                            merged_batch = _merge_cls_with_posts(batch, cls, strict_cls)
+                            all_results.extend(merged_batch)
+                            _report_progress(cfg, merged_batch)
                         except Exception as exc:
                             log.warning(
                                 f"intent_bridge: batch classify failed: {exc} "
@@ -430,7 +546,9 @@ def _classify_parallel(posts: List[dict], qi: dict, cfg: dict) -> list:
         log.warning(f"intent_bridge._classify_parallel error: {exc}")
         return []
 
-def _classify_batch(docs: list, doc_classifier) -> list:
+def _classify_batch(docs: list, doc_classifier, strict: bool = False) -> list:
+    if strict:
+        return doc_classifier.classify(docs, strict=True)
     return doc_classifier.classify(docs)
 
 def _post_to_doc(post: dict) -> dict:
@@ -444,7 +562,9 @@ def _post_to_doc(post: dict) -> dict:
         "url":        post.get("post_url", ""),
     }
 
-def _merge_cls_with_posts(posts: List[dict], classifications: list) -> list:
+def _merge_cls_with_posts(posts: List[dict], classifications: list, extended: bool = False) -> list:
+    """extended=True (strict mode) additionally keeps the actor/specificity/flag
+    fields so they survive into the classification cache and the ranker."""
     results = []
     for post, cls in zip(posts, classifications):
         if cls is None:
@@ -454,7 +574,7 @@ def _merge_cls_with_posts(posts: List[dict], classifications: list) -> list:
         if cls.get("secondary_intent"):
             intents.append(cls["secondary_intent"])
         confidence = float(cls.get("intent_confidence") or 0.0)
-        results.append({
+        item = {
             "post_url":          post.get("post_url", ""),
             "intents":           intents,
             "confidence":        confidence,
@@ -464,7 +584,17 @@ def _merge_cls_with_posts(posts: List[dict], classifications: list) -> list:
             "commercial_signal": float(cls.get("commercial_signal") or 0.0),
             "urgency":           float(cls.get("urgency") or 0.0),
             "pain_intensity":    float(cls.get("pain_intensity") or 0.0),
-        })
+        }
+        if extended:
+            item.update({
+                "secondary_confidence": cls.get("secondary_confidence"),
+                "actor_type":           cls.get("actor_type") or "unknown",
+                "actor_role":           cls.get("actor_role") or "unknown",
+                "specificity":          float(cls.get("specificity") or 0.0),
+                "ambiguous":            bool(cls.get("ambiguous")),
+                "noise":                bool(cls.get("noise")),
+            })
+        results.append(item)
     return results
 
 def _intent_matches(intents: List[str], intent_include: List[str], logic: str) -> bool:
@@ -475,6 +605,174 @@ def _intent_matches(intents: List[str], intent_include: List[str], logic: str) -
     if logic == "AND":
         return all(inc in intents for inc in intent_include)
     return any(inc in intents for inc in intent_include)
+
+# ═════════════════════════════════════════════════════════════════════════════
+# STRICT MODE IMPLEMENTATION (only reached when STRICT_INTENT_MODE is on)
+# ═════════════════════════════════════════════════════════════════════════════
+
+def _new_state() -> dict:
+    """Progress record shared between the worker thread and the timeout path."""
+    return {"lock": threading.Lock(), "qi": None, "cls_map": {}, "sims": {}}
+
+
+def _report_progress(cfg: dict, items: list) -> None:
+    cb = cfg.get("_progress")
+    if callable(cb) and items:
+        try:
+            cb(items)
+        except Exception as exc:  # noqa: BLE001
+            log.debug(f"intent_bridge: progress callback failed (ignored): {exc}")
+
+
+def _strict_cls(item: dict, from_cache: bool) -> dict:
+    """Uniform strict classification record from a merged result OR a cache hit."""
+    intents = item.get("intents") or []
+    intent = item.get("intent") or (intents[0] if intents else "")
+    return {
+        "intents":              intents,
+        "confidence":           float(item.get("confidence") or 0.0),
+        "from_cache":           from_cache,
+        "intent":               intent,
+        "secondary_intent":     item.get("secondary_intent"),
+        "secondary_confidence": item.get("secondary_confidence"),
+        "actor_type":           item.get("actor_type") or "unknown",
+        "actor_role":           item.get("actor_role") or "unknown",
+        "commercial_signal":    float(item.get("commercial_signal") or 0.0),
+        "urgency":              float(item.get("urgency") or 0.0),
+        "pain_intensity":       float(item.get("pain_intensity") or 0.0),
+        "specificity":          float(item.get("specificity") or 0.0),
+        "ambiguous":            bool(item.get("ambiguous")),
+        "noise":                bool(item.get("noise")),
+    }
+
+
+def _cache_entry_usable_strict(hit: dict) -> bool:
+    """A cached classification made before strict mode lacks the actor and
+    specificity fields the hard gates need. Such an entry is treated as a
+    miss (re-classified once, then cached with the full field set)."""
+    return isinstance(hit, dict) and "actor_role" in hit and "specificity" in hit
+
+
+def _record_strict(state: dict, items: list, from_cache: bool = False) -> None:
+    with state["lock"]:
+        for item in items or []:
+            url = item.get("post_url", "")
+            if url:
+                state["cls_map"][url] = _strict_cls(item, from_cache)
+
+
+def _strict_passes(cand: dict, cls: dict, qi: dict) -> bool:
+    """The strict gate. True only for posts that genuinely fit the query."""
+    from intent_prototype import schemas  # noqa: PLC0415
+
+    if cls.get("noise"):
+        return False
+    include = qi.get("intent_include") or []
+    logic = qi.get("intent_logic", "OR")
+    intents = cls.get("intents") or []
+    if not _intent_matches(intents, include, logic):
+        return False
+
+    primary = cls.get("intent") or (intents[0] if intents else "")
+    # A "buyer query" asks for buyer-type intents and does NOT itself ask for
+    # any of the excluded ones (e.g. a query that wants providers is not one).
+    buyer_query = (
+        any(i in schemas.STRICT_BUYER_INTENTS for i in include)
+        and not any(i in schemas.STRICT_BUYER_EXCLUDE_INTENTS for i in include)
+    )
+    if not buyer_query:
+        return True
+
+    if primary in schemas.STRICT_BUYER_EXCLUDE_INTENTS:
+        return False
+    direction = schemas.derive_actor_direction(
+        primary, cls.get("actor_type"), cls.get("actor_role"))
+    if direction in schemas.STRICT_SELLER_DIRECTIONS:
+        return False
+    if cls.get("actor_role") in schemas.STRICT_SELLER_ROLES:
+        return False
+    if "buyer_demand" in intents and schemas.seller_marker_veto(
+            cand.get("title", ""), cand.get("post_text", "")):
+        return False
+    return True
+
+
+def _strict_assemble(candidates: List[dict], state: dict) -> List[dict]:
+    """Passing posts only, ranked. Candidates never classified are NOT shown."""
+    qi = state.get("qi")
+    if not qi:
+        return []
+    with state["lock"]:
+        cls_map = dict(state["cls_map"])
+        sims = dict(state["sims"])
+    passing, seen = [], set()
+    for cand in candidates:
+        url = cand.get("post_url", "")
+        if not url or url in seen:
+            continue
+        cls = cls_map.get(url)
+        if cls is None:
+            continue
+        if _strict_passes(cand, cls, qi):
+            seen.add(url)
+            passing.append((cand, sims.get(url, 0.0), cls))
+    return _rank_passing(passing, qi, strict=True)
+
+
+def _strict_partial(candidates: List[dict], state: Optional[dict]) -> List[dict]:
+    """Result for timeout/failure: only already-classified passing posts."""
+    if not state:
+        return []
+    try:
+        return _strict_assemble(candidates, state)
+    except Exception as exc:  # noqa: BLE001
+        log.warning(f"intent_bridge[strict]: partial assembly failed: {exc}")
+        return []
+
+
+def _run_bridge_strict(
+    user_query: str,
+    candidates: List[dict],
+    evidence_required: int,
+    cfg: dict,
+    topic_sims: Optional[List[float]] = None,
+    state: Optional[dict] = None,
+) -> List[dict]:
+    """Strict pipeline: interpret -> cache -> classify -> hard gate -> rank.
+    No fill-to-N. Returns _FAIL on error (caller then uses _strict_partial)."""
+    state = state if state is not None else _new_state()
+    try:
+        qi = _interpret(user_query) if cfg.get("_plan_key") is None else _interpret(user_query, cfg.get("_plan_key"))
+        if qi is _FAIL:
+            return _FAIL
+        state["qi"] = qi
+
+        if topic_sims is not None:
+            with state["lock"]:
+                for cand, sim in zip(candidates, topic_sims):
+                    url = cand.get("post_url", "")
+                    if url:
+                        state["sims"][url] = float(sim)
+
+        urls = [c.get("post_url", "") for c in candidates]
+        hits = _cache_get(urls, cfg) or {}
+        usable = {u: h for u, h in hits.items() if _cache_entry_usable_strict(h)}
+        _record_strict(state, [dict(h, post_url=u) for u, h in usable.items()], from_cache=True)
+
+        uncached = [c for c in candidates if c.get("post_url") not in usable]
+        cfg_run = dict(cfg)
+        cfg_run["_progress"] = lambda items: _record_strict(state, items)
+        new_results = _classify_parallel(uncached, qi, cfg_run)
+        if new_results is _FAIL:
+            return _FAIL
+        _record_strict(state, new_results)
+        _cache_save(new_results, cfg)
+
+        return _strict_assemble(candidates, state)
+    except Exception as exc:  # noqa: BLE001
+        log.warning(f"intent_bridge._run_bridge_strict: unhandled error — {exc}")
+        return _FAIL
+
 
 def _fill_to_n(ranked: List[dict], original: List[dict], non_passing: List[dict], n: int) -> List[dict]:
     if len(ranked) >= n:
@@ -504,6 +802,7 @@ def _fill_to_n(ranked: List[dict], original: List[dict], non_passing: List[dict]
 def _load_config(overrides: Optional[dict]) -> dict:
     defaults = {
         "INTENT_BRIDGE_ENABLED":              False,
+        "STRICT_INTENT_MODE":                 False,
         "INTENT_CANDIDATE_MULTIPLIER":        4,
         "INTENT_CANDIDATE_MIN":               100,
         "INTENT_CANDIDATE_MAX":               200,
