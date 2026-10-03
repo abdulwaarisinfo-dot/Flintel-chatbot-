@@ -626,7 +626,8 @@ MAX_COMBINED_POSTS_FOR_CLAUDE = int(os.getenv("MAX_COMBINED_POSTS_FOR_CLAUDE", "
 MAX_ANALYSIS_EVIDENCE = int(os.getenv("MAX_ANALYSIS_EVIDENCE", "100"))
 
 
-def merge_matched_and_google_results(matched_signals: list, google_stub_results: list, max_total: int = None) -> list:
+def merge_matched_and_google_results(matched_signals: list, google_stub_results: list, max_total: int = None,
+                                     fill_with_stubs: bool = True) -> list:
     """Combines matched_signals (grounded, real content) with
     google_stub_results (discovery-only, no content yet — see
     format_google_stub_results()) into one list, de-duplicated by
@@ -644,6 +645,10 @@ def merge_matched_and_google_results(matched_signals: list, google_stub_results:
     index.py's own evidence planner) rather than relying on the
     MAX_COMBINED_POSTS_FOR_CLAUDE default — 7 remains only the fallback
     value used when no explicit max_total is supplied.
+
+    `fill_with_stubs` (default True = the behaviour above). STRICT INTENT
+    MODE passes False: Google stubs are discovery-only posts that carry no
+    intent judgement, so they must never be used to pad the count.
 
     Never raises: bad/empty input on either side just means that side
     contributes nothing."""
@@ -663,6 +668,9 @@ def merge_matched_and_google_results(matched_signals: list, google_stub_results:
             continue
         seen_urls.add(url)
         combined.append(signal)
+
+    if not fill_with_stubs:
+        return combined
 
     remaining_stubs = [s for s in clean_stubs if s["post_url"] not in seen_urls]
     remaining_stubs.sort(key=lambda s: s.get("google_rank") if isinstance(s.get("google_rank"), int) else float("inf"))
