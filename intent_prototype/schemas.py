@@ -216,6 +216,73 @@ def derive_actor_direction(intent, actor_type, actor_role):
     return _DIRECTION_RULES.get((intent, actor_type, actor_role))
 
 
+# ── STRICT MODE vocabulary (opt-in; nothing here changes default behaviour) ──
+# Used only when intent_bridge runs with STRICT_INTENT_MODE. A "buyer query"
+# is one whose intent_include contains a buyer-type intent. For such a query
+# a post whose PRIMARY intent is one of STRICT_BUYER_EXCLUDE_INTENTS is
+# dropped outright, and so is any post whose actor is a seller/provider.
+STRICT_BUYER_INTENTS = ("buyer_demand", "solution_evaluation", "alternative_switching")
+STRICT_BUYER_EXCLUDE_INTENTS = (
+    "provider_supply", "hiring", "irrelevant", "general_discussion",
+    "trend_signal", "question_info", "competitor_research",
+)
+STRICT_SELLER_DIRECTIONS = ("company_selling", "individual_selling")
+STRICT_SELLER_ROLES = ("seller", "provider")
+
+# Appended to the classifier prompt ONLY in strict mode, so the default
+# prompt (and every cached classification made with it) is untouched.
+STRICT_DEFINITION_ADDENDUM = """
+
+STRICT RULES (these override any softer reading above):
+  * A post by someone who BUILDS, SELLS or PROMOTES a service is provider_supply
+    with actor_role seller/provider — never buyer_demand. Examples that are ALWAYS
+    provider_supply: "we build AI agents for SMBs", "DM me for AI automation",
+    "looking for clients", "I help businesses with X", "our agency offers ...",
+    "book a free call".
+  * Merely MENTIONING a topic is not demand. "Anyone tried AI agents? Thoughts?"
+    or "AI agents are the future" is general_discussion, not buyer_demand.
+  * buyer_demand needs the author to state their OWN need (a requirement,
+    budget, timeline, or a decision they must make). "We need an agency to
+    build X" IS buyer_demand: the author is the one buying.
+"""
+
+# Deterministic seller-marker veto (strict mode, applied to buyer_demand only).
+# A buyer phrase WINS over a seller marker, so "we need an agency, DM me
+# recommendations" stays a buyer while "we offer AI agents, DM me" is vetoed.
+import re as _re
+
+_SELLER_MARKER_PATTERNS = [_re.compile(p, _re.I) for p in (
+    r"\bwe\s+(?:build|offer|provide|specialize|specialise|develop|deliver|create|design)\b",
+    r"\b(?:i|we)\s+help\s+(?:businesses|companies|brands|founders|startups|clients|smbs?)\b",
+    r"\bdm\s+me\b",
+    r"\b(?:our|my)\s+(?:agency|services|studio|company)\s+(?:offers?|provides?|builds?|can|helps?|specializes?)\b",
+    r"\blooking\s+for\s+(?:new\s+)?(?:clients|customers)\b",
+    r"\b(?:hire|contact)\s+(?:us|me)\b",
+    r"\bbook\s+a\s+(?:free\s+)?(?:call|demo|consultation)\b",
+    r"\bcheck\s+out\s+(?:our|my)\b",
+    r"\b(?:free\s+)?(?:consultation|audit)\s+(?:available|for\s+first)\b",
+)]
+_BUYER_PHRASE_PATTERN = _re.compile(
+    r"\b(?:need|needs|want|wants|looking\s+for|searching\s+for|seeking|hire|hiring|recommend)\s+"
+    r"(?:an?\s+|the\s+|some\s+)?(?:good\s+|reliable\s+|experienced\s+|affordable\s+)?"
+    r"(?:ai\s+)?(?:agency|developer|freelancer|vendor|consultant|provider|partner|firm|company|tool|platform|software)\b",
+    _re.I,
+)
+
+
+def seller_marker_veto(title, text):
+    """True when the post reads as a seller pitch and carries no buyer phrase.
+
+    Pure and deterministic. Deliberately narrow: it only fires on explicit
+    self-promotion wording, and ANY buyer phrase ("need an agency",
+    "looking for a developer") disables it.
+    """
+    blob = f"{title or ''}\n{text or ''}"
+    if _BUYER_PHRASE_PATTERN.search(blob):
+        return False
+    return any(p.search(blob) for p in _SELLER_MARKER_PATTERNS)
+
+
 # ── query modes ───────────────────────────────────────────────────────
 QUERY_MODES = ["explicit_intent", "exploratory", "opportunity_scan"]
 INTENT_LOGIC = ["OR", "AND"]
