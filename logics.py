@@ -597,6 +597,71 @@ def _infer_platform_from_url(url: str):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# POST ENRICHMENT HELPERS — subreddit / title derivation for answer posts.
+# ─────────────────────────────────────────────────────────────────────────────
+
+_SUBREDDIT_URL_RE = re.compile(r"reddit\.com/r/([A-Za-z0-9_]+)", re.IGNORECASE)
+
+# Values Claude (or a data source) uses when it doesn't actually know the
+# title / source. Compared lower-cased and stripped.
+_PLACEHOLDER_TITLES = {"", "(no title)", "no title", "untitled", "(untitled)", "n/a", "none", "null"}
+_PLACEHOLDER_SOURCES = {"", "unknown", "(unknown)", "n/a", "na", "none", "null", "-",
+                        "reddit", "r/", "x", "twitter", "linkedin", "facebook"}
+
+
+def _subreddit_from_url(url):
+    """Extract the subreddit name (without "r/") from a Reddit URL, e.g.
+    https://www.reddit.com/r/AI_Agents/comments/abc/... -> "AI_Agents".
+    Returns None for non-Reddit URLs, Reddit URLs without /r/, or bad input."""
+    if not url or not isinstance(url, str):
+        return None
+    m = _SUBREDDIT_URL_RE.search(url)
+    return m.group(1) if m else None
+
+
+def _normalize_subreddit(value):
+    """"r/AI_Agents" / "/r/AI_Agents" / "AI_Agents" -> "AI_Agents"; else None."""
+    if not value or not isinstance(value, str):
+        return None
+    v = value.strip()
+    v = re.sub(r"^/?r/", "", v, flags=re.IGNORECASE).strip().strip("/")
+    return v or None
+
+
+def _signal_subreddit(doc: dict, post_url):
+    """Subreddit for a matched signal: the doc's own "subreddit" field if
+    present, otherwise derived from a Reddit post_url. None otherwise."""
+    return _normalize_subreddit((doc or {}).get("subreddit")) or _subreddit_from_url(post_url)
+
+
+def _is_placeholder_title(title) -> bool:
+    if title is None:
+        return True
+    if not isinstance(title, str):
+        return True
+    return title.strip().lower() in _PLACEHOLDER_TITLES
+
+
+def _derive_post_title(title, post_text, max_chars: int = 80) -> str:
+    """Return the real title when there is one; otherwise build a short
+    label from post_text (first sentence, or the first ~max_chars cut at a
+    word boundary with "..."). Returns "" only when both are empty."""
+    if not _is_placeholder_title(title):
+        return title.strip()
+    text = " ".join((post_text or "").split()) if isinstance(post_text, str) else ""
+    if not text:
+        return ""
+    m = re.match(r"(.+?[.!?])(\s|$)", text)
+    first = m.group(1).strip() if m else text
+    if len(first) <= max_chars:
+        return first
+    cut = first[:max_chars]
+    if " " in cut:
+        cut = cut[:cut.rfind(" ")]
+    return cut.rstrip(" ,;:-") + "..."
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # EMBEDDING-BASED MATCHING — helpers used by get_matched_signals()'s own
 # non-unfiltered matching decision (see that function below). Mirrors the
 # background service's own embedding config/client/generation logic
@@ -1202,7 +1267,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     _pool_projection = {"_id": 0, "embedding": 1, **{
         f: 1 for f in (
             _TITLE_FIELD_CANDIDATES + _TEXT_FIELD_CANDIDATES +
-            _URL_FIELD_CANDIDATES + _PLATFORM_FIELD_CANDIDATES + ["created_utc"]
+            _URL_FIELD_CANDIDATES + _PLATFORM_FIELD_CANDIDATES + ["created_utc", "subreddit"]
         )
     }}
     lexical_or = _build_lexical_or_clause(keyword_list, phrase_list)
@@ -1717,7 +1782,8 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                 wide_seen.add(post_url)
 
             wide_matched.append(
-                {"title": title, "post_text": post_text, "post_url": post_url, "platform": platform}
+                {"title": title, "post_text": post_text, "post_url": post_url, "platform": platform,
+                 "subreddit": _signal_subreddit(doc, post_url)}
             )
             wide_sims.append(_similarity)
 
@@ -1785,7 +1851,8 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             if post_url:
                 seen_urls.add(post_url)
 
-            matched.append({"title": title, "post_text": post_text, "post_url": post_url, "platform": platform})
+            matched.append({"title": title, "post_text": post_text, "post_url": post_url, "platform": platform,
+                            "subreddit": _signal_subreddit(doc, post_url)})
             platform_counts[platform_key] = platform_counts.get(platform_key, 0) + 1
 
             if len(matched) >= limit:
@@ -2556,6 +2623,8 @@ the user's question yet — just list the relevant grounded points as short
 bullets. If nothing in these posts is relevant to the question, say exactly:
 "No relevant points in this batch." Never include, guess, or reference a
 post URL — you were not given any.
+End every bullet with the number(s) of the post(s) it came from, exactly as
+given, e.g. "(Post 14)" or "(Post 3, Post 17)".
 """
 
 # (BUGFIX PACK #3) Second-level "notes-of-notes" condensing step — only
@@ -2573,6 +2642,8 @@ never invent anything not already present in the notes. Do not answer the
 user's question yet — just output the consolidated grounded bullets. If
 none of the notes contain anything relevant to the question, say exactly:
 "No relevant points in this batch."
+Keep the "(Post N)" tags on every bullet you keep; when you merge bullets,
+keep all of their tags. Never add a post number that was not in the notes.
 """
 
 
@@ -2591,15 +2662,28 @@ def build_claude_post_context(matched_signals: list) -> list:
     never adds or alters anything else. Everything downstream of this
     function (matching, evidence-budget sizing, merge_matched_and_
     google_results(), the post-card `results` a user actually sees) is
-    untouched — only Claude's own analysis input is narrowed here."""
-    posts = []
+    untouched — only Claude's own analysis input is narrowed here.
+
+    (POST ENRICHMENT) Output is unchanged; the filtering now lives in
+    _aligned_post_context() so the answer post-processor can map Claude's
+    1-based "[Post N]" index back to the exact signal that produced it."""
+    return [post for post, _sig in _aligned_post_context(matched_signals)]
+
+
+def _aligned_post_context(matched_signals: list) -> list:
+    """Same filter/order as build_claude_post_context(), but returns
+    (post, source_signal) pairs. Position i (0-based) here is "[Post i+1]"
+    in every prompt built from that list — single-call and map-reduce."""
+    pairs = []
     for m in matched_signals or []:
+        if not isinstance(m, dict):
+            continue
         title = (m.get("title") or "").strip()
         text  = (m.get("post_text") or "").strip()
         if not text:
             continue
-        posts.append({"title": title, "text": text})
-    return posts
+        pairs.append(({"title": title, "text": text}, m))
+    return pairs
 
 
 def chunk_list(items: list, chunk_size: int) -> list:
@@ -2613,13 +2697,27 @@ def chunk_list(items: list, chunk_size: int) -> list:
     return [items[i:i + chunk_size] for i in range(0, len(items), chunk_size)]
 
 
-def _format_posts_block(posts: list) -> str:
+def _format_posts_block(posts: list, start_index: int = 1) -> str:
+    """Numbered posts block for Claude. A post carrying "_n" (set by the
+    map-reduce path, see _number_posts()) keeps that GLOBAL number so chunk
+    2 starts at e.g. [Post 13], not [Post 1]. An empty title is omitted
+    rather than sent as a "(no title)" placeholder Claude would copy."""
     lines = []
-    for i, p in enumerate(posts, 1):
-        title = p.get("title") or "(no title)"
+    for offset, p in enumerate(posts):
+        n = p.get("_n") or (start_index + offset)
+        title = (p.get("title") or "").strip()
         text = p.get("text") or "(no text)"
-        lines.append(f"[Post {i}]\nTitle: {title}\nText: {text}")
+        if title and not _is_placeholder_title(title):
+            lines.append(f"[Post {n}]\nTitle: {title}\nText: {text}")
+        else:
+            lines.append(f"[Post {n}]\nText: {text}")
     return "\n\n".join(lines)
+
+
+def _number_posts(posts: list) -> list:
+    """Copies of `posts` tagged with their global 1-based number ("_n"),
+    used before map-reduce chunking so every chunk keeps global indices."""
+    return [dict(p, _n=i) for i, p in enumerate(posts, 1)]
 
 
 def _lazy_backfill_missing_embeddings(
@@ -2922,7 +3020,9 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
             user_message += "\n\n" + extra_context
         return _extract_json_object_from_text(_call_claude(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message, force_json_prefill=True))
 
-    chunks = chunk_list(posts, CLAUDE_POSTS_PER_CHUNK)
+    # (POST ENRICHMENT) Global post numbers survive chunking: chunk 2's
+    # first post is "[Post 13]", not "[Post 1]".
+    chunks = chunk_list(_number_posts(posts), CLAUDE_POSTS_PER_CHUNK)
 
     if len(chunks) <= 1:
         posts_block = _format_posts_block(posts)
@@ -2987,7 +3087,9 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
         f"Below are grounded notes already condensed from {len(posts)} posts "
         f"(title + text only), split into batches. Treat these notes as your "
         f"only factual grounding about the posts, and answer the user's "
-        f"actual question naturally.\n\nNotes:\n{combined_notes}"
+        f"actual question naturally. Each note ends with \"(Post N)\" tags — "
+        f"use only those N values for a post's \"index\" and for "
+        f"\"supporting_post_indices\".\n\nNotes:\n{combined_notes}"
     )
     if extra_context:
         user_message += "\n\n" + extra_context
@@ -3121,7 +3223,9 @@ def analyze_with_claude_stream(query: str, matched_signals: list, extra_context:
         yield from _call_claude_stream(CLAUDE_ANALYSIS_SYSTEM_PROMPT, user_message)
         return
 
-    chunks = chunk_list(posts, CLAUDE_POSTS_PER_CHUNK)
+    # (POST ENRICHMENT) Global post numbers survive chunking: chunk 2's
+    # first post is "[Post 13]", not "[Post 1]".
+    chunks = chunk_list(_number_posts(posts), CLAUDE_POSTS_PER_CHUNK)
 
     if len(chunks) <= 1:
         posts_block = _format_posts_block(posts)
@@ -3179,7 +3283,9 @@ def analyze_with_claude_stream(query: str, matched_signals: list, extra_context:
         f"Below are grounded notes already condensed from {len(posts)} posts "
         f"(title + text only), split into batches. Treat these notes as your "
         f"only factual grounding about the posts, and answer the user's "
-        f"actual question naturally.\n\nNotes:\n{combined_notes}"
+        f"actual question naturally. Each note ends with \"(Post N)\" tags — "
+        f"use only those N values for a post's \"index\" and for "
+        f"\"supporting_post_indices\".\n\nNotes:\n{combined_notes}"
     )
     if extra_context:
         user_message += "\n\n" + extra_context
@@ -5329,6 +5435,92 @@ def _best_matching_post(title: str, matched_signals: list):
     return None
 
 
+_ENRICH_STOPWORDS = {
+    "the", "and", "for", "are", "but", "not", "you", "your", "with", "this",
+    "that", "from", "they", "them", "their", "have", "has", "had", "was",
+    "were", "will", "would", "can", "could", "should", "about", "into",
+    "what", "which", "who", "how", "why", "when", "where", "there", "here",
+    "any", "all", "some", "more", "most", "very", "just", "also", "than",
+    "then", "its", "it's", "our", "out", "one", "use", "using", "used",
+    "asks", "ask", "asking", "says", "said", "user", "users", "post", "poster",
+    "looking", "wants", "want", "need", "needs", "like", "get", "gets",
+}
+
+# Summary-similarity match: fraction of the summary's content words that
+# appear in the post text. Must clear the threshold AND beat the runner-up
+# by a clear margin — a near-tie is treated as "no match".
+_SUMMARY_MATCH_MIN_SCORE = 0.5
+_SUMMARY_MATCH_MIN_MARGIN = 0.15
+_SUMMARY_MATCH_MIN_TOKENS = 3
+
+
+def _content_tokens(text) -> set:
+    if not isinstance(text, str) or not text:
+        return set()
+    words = re.findall(r"[a-z0-9][a-z0-9_'+-]*", text.lower())
+    return {w for w in words if len(w) >= 3 and w not in _ENRICH_STOPWORDS}
+
+
+def _summary_overlap(summary_tokens: set, post_text) -> float:
+    if not summary_tokens:
+        return 0.0
+    return len(summary_tokens & _content_tokens(post_text)) / len(summary_tokens)
+
+
+def _match_by_summary(summary, candidates: list):
+    """Confident summary->signal match, or None (low score / near-tie)."""
+    s_tokens = _content_tokens(summary)
+    if len(s_tokens) < _SUMMARY_MATCH_MIN_TOKENS or not candidates:
+        return None
+    scored = sorted(
+        ((_summary_overlap(s_tokens, c.get("post_text")), i) for i, c in enumerate(candidates)),
+        reverse=True,
+    )
+    best_score, best_i = scored[0]
+    runner_up = scored[1][0] if len(scored) > 1 else 0.0
+    if best_score < _SUMMARY_MATCH_MIN_SCORE:
+        return None
+    if best_score - runner_up < _SUMMARY_MATCH_MIN_MARGIN:
+        return None
+    return candidates[best_i]
+
+
+def _parse_post_index(value):
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value
+    if isinstance(value, str) and value.strip().isdigit():
+        return int(value.strip())
+    return None
+
+
+def _resolve_answer_post(post: dict, matched_signals: list, aligned: list):
+    """Map one post object from Claude's answer back to a real matched
+    signal. Tries, in order: (1) its "index" against the aligned prompt
+    order, (2) its title (only when not a placeholder), (3) summary/text
+    similarity. Returns the signal dict, or None when nothing is confident."""
+    summary_tokens = _content_tokens(post.get("summary"))
+
+    # 1. Index — sanity-checked: if the summary is substantive but shares
+    #    no content word with the indexed post, the index is not trusted.
+    idx = _parse_post_index(post.get("index"))
+    if idx is not None and 1 <= idx <= len(aligned):
+        cand = aligned[idx - 1]
+        if len(summary_tokens) < _SUMMARY_MATCH_MIN_TOKENS or _summary_overlap(summary_tokens, cand.get("post_text")) > 0:
+            return cand
+
+    # 2. Title — never with a placeholder like "(no title)".
+    title = post.get("title")
+    if not _is_placeholder_title(title):
+        match = _best_matching_post(title, matched_signals)
+        if match:
+            return match
+
+    # 3. Summary similarity against posts Claude actually saw.
+    return _match_by_summary(post.get("summary"), aligned)
+
+
 def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str:
     """(POST_URL FIX) CLAUDE_ANALYSIS_SYSTEM_PROMPT asks for a "link"
     field with "the real post URL if available" on every post it lists —
@@ -5373,7 +5565,15 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str
     "subreddit" only as a fallback "source" if Claude didn't already
     set one. Same best-effort, non-destructive rule as the link patch:
     never invented, only filled in when a confident match already
-    exists."""
+    exists.
+
+    (POST ENRICHMENT) Matching now goes index -> title -> summary
+    similarity (_resolve_answer_post()). On a confident match the SYSTEM
+    sets "link" (real post_url), "source" (subreddit for Reddit posts) and
+    "title" (real title, or one derived from post_text) — overriding
+    Claude's values such as "unknown" / "(no title)". "summary" and
+    "sentiment" are never touched. No confident match -> no link/source
+    is ever added."""
     if not answer_text or not matched_signals:
         return answer_text
 
@@ -5392,8 +5592,22 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str
     fmt = data.get("format")
     changed = False
 
-    def _patch_platform_list(platforms):
+    # (POST ENRICHMENT) Index i (1-based) in Claude's answer == i-th entry
+    # of this aligned list — same filter/order build_claude_post_context()
+    # used to build "[Post i]" in the prompt (all callers pass the same
+    # merged_pool to analyze_with_claude() and to this function).
+    try:
+        aligned = [sig for _post, sig in _aligned_post_context(matched_signals)]
+    except Exception:
+        aligned = []
+
+    def _set(post, key, value):
         nonlocal changed
+        if post.get(key) != value:
+            post[key] = value
+            changed = True
+
+    def _patch_platform_list(platforms):
         if not isinstance(platforms, list):
             return
         for platform_entry in platforms:
@@ -5405,21 +5619,40 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str
             for post in posts:
                 if not isinstance(post, dict):
                     continue
-                match = _best_matching_post(post.get("title"), matched_signals)
-                if match and match.get("post_url"):
-                    post["link"] = match["post_url"]
-                    changed = True
-                    # (google_rank / subreddit PATCHING) Only present on
-                    # signals that came from the Google-search side of a
-                    # merged pool (see flintel.merge_matched_and_google_
-                    # results()) — same best-effort, non-destructive
-                    # pattern as the post_url patch above: never invents
-                    # a value, only fills one in once a confident title
-                    # match already exists.
-                    if match.get("google_rank") is not None:
-                        post["google_rank"] = match["google_rank"]
-                    if match.get("subreddit") and not post.get("source"):
-                        post["source"] = match["subreddit"]
+                try:
+                    match = _resolve_answer_post(post, matched_signals, aligned)
+                except Exception:
+                    match = None
+                if not match:
+                    # No confident match: never invent a link/source. Only
+                    # replace a placeholder title with a label from Claude's
+                    # OWN summary for that same post (display text only).
+                    if _is_placeholder_title(post.get("title")) and isinstance(post.get("summary"), str):
+                        label = _derive_post_title(None, post["summary"])
+                        if label:
+                            _set(post, "title", label)
+                    continue
+
+                post_url = match.get("post_url")
+                if post_url:
+                    _set(post, "link", post_url)
+
+                platform = (match.get("platform") or _infer_platform_from_url(post_url) or "")
+                if str(platform).strip().lower() == "reddit":
+                    sub = _normalize_subreddit(match.get("subreddit")) or _subreddit_from_url(post_url)
+                    if sub:
+                        _set(post, "source", sub)
+
+                new_title = _derive_post_title(match.get("title"), match.get("post_text"))
+                if not new_title and _is_placeholder_title(post.get("title")) and isinstance(post.get("summary"), str):
+                    new_title = _derive_post_title(None, post["summary"])
+                if new_title:
+                    _set(post, "title", new_title)
+
+                # google_rank: only present on Google-side signals of a
+                # merged pool (flintel.merge_matched_and_google_results()).
+                if match.get("google_rank") is not None:
+                    _set(post, "google_rank", match["google_rank"])
 
     if fmt == "source_list":
         _patch_platform_list(data.get("platforms"))
