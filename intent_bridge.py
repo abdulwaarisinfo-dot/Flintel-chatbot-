@@ -3,7 +3,7 @@ intent_bridge.py — Intent Prototype ↔ Production Pipeline Bridge
 =================================================================
 This module is the ONLY place that calls into intent_prototype from the
 production pipeline.  It is activated only when INTENT_BRIDGE_ENABLED=true
-(off by default). 
+(off by default).
 
 RESPONSIBILITIES
 ----------------
