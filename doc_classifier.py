@@ -185,3 +185,4 @@ def estimate_calls(n_docs, batch_size=None):
     cost preview in validate.py --plan so nothing expensive starts blind."""
     batch_size = batch_size or schemas.CLASSIFIER_BATCH_SIZE
     return max(1, math.ceil(n_docs / batch_size))
+
