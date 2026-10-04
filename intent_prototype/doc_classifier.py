@@ -126,7 +126,12 @@ def _unclassified(reason):
     })
 
 
-def classify(docs, batch_size=None, model=None, progress=None):
+def system_prompt(strict=False):
+    """The classifier prompt. strict=False returns SYSTEM byte-for-byte."""
+    return SYSTEM + schemas.STRICT_DEFINITION_ADDENDUM if strict else SYSTEM
+
+
+def classify(docs, batch_size=None, model=None, progress=None, strict=False):
     """Classify a list of normalized docs.
 
     Returns a list of DocClassification dicts, index-aligned with `docs`.
@@ -143,7 +148,7 @@ def classify(docs, batch_size=None, model=None, progress=None):
         if not chunk:
             continue
         try:
-            raw = claude(SYSTEM, _render_batch(chunk), max_tokens=4000, model=model)
+            raw = claude(system_prompt(strict), _render_batch(chunk), max_tokens=4000, model=model)
             parsed = parse_json_block(raw, expect="array")
         except Exception as exc:                       # noqa: BLE001
             parsed = None
