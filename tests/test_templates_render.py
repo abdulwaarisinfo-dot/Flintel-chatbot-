@@ -92,3 +92,106 @@ class TestTemplateResponseMigration:
             f"Expected all 9 to use new signature, "
             f"only {len(new_calls)} do."
         )
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Turn status chip: running timer (templates/chat.html)
+# ─────────────────────────────────────────────────────────────────────────────
+import json
+import shutil
+import subprocess
+from datetime import datetime
+
+CHAT_HTML = Path(__file__).resolve().parent.parent / "templates" / "chat.html"
+
+
+def _chat_src():
+    if not CHAT_HTML.exists():
+        pytest.skip("templates/chat.html not found — skip")
+    return CHAT_HTML.read_text(encoding="utf-8")
+
+
+def _render_chip_block(msg):
+    """Render ONLY the status-chip fragment of chat.html with real Jinja."""
+    jinja2 = pytest.importorskip("jinja2")
+    src = _chat_src()
+    start = src.index("{% if msg.claude_answer is none %}")
+    end = src.index("{% endif %}", src.index("status-completed\"><span class=\"status-dot\">", start)) + len("{% endif %}")
+    return jinja2.Template(src[start:end]).render(msg=msg)
+
+
+class _Msg:
+    def __init__(self, claude_answer, requested_at):
+        self.claude_answer = claude_answer
+        self.requested_at = requested_at
+
+
+class TestTurnTimerChipJinja:
+    def test_pending_chip_has_timer_and_requested_at(self):
+        html = _render_chip_block(_Msg(None, datetime(2026, 10, 4, 10, 15, 0)))
+        assert "turn-timer" in html
+        assert 'data-requested-at="2026-10-04T10:15:00"' in html
+        assert "status-pending" in html and "Searching…" in html   # server-rendered, no blank flash
+        assert 'aria-live="off"' in html
+
+    def test_pending_chip_without_requested_at_still_renders_searching(self):
+        html = _render_chip_block(_Msg(None, None))
+        assert 'data-requested-at=""' in html and "Searching…" in html
+
+    def test_answered_chip_is_plain_completed(self):
+        html = _render_chip_block(_Msg("{}", datetime(2026, 10, 4, 10, 15, 0)))
+        assert "status-completed" in html and "Completed" in html
+        assert "turn-timer" not in html and "data-requested-at" not in html
+
+    def test_chat_wiring_present_and_index_untouched(self):
+        src = _chat_src()
+        assert "finishTurnTimer(pendingTurn, 'completed'" in src
+        assert src.count("finishTurnTimer(pendingTurn, 'failed'") == 2    # payload.error + onerror
+        index = CHAT_HTML.parent / "index.html"
+        if index.exists():
+            assert "turn-timer" not in index.read_text(encoding="utf-8")
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="node not installed")
+class TestTurnTimerHelpersJs:
+    """Runs the real helper block extracted from chat.html in node."""
+
+    def _run(self, expr):
+        src = _chat_src()
+        a = src.index("// TURN-TIMER-HELPERS-BEGIN")
+        b = src.index("// TURN-TIMER-HELPERS-END")
+        code = src[a:b] + f"\nconsole.log(JSON.stringify({expr}));"
+        out = subprocess.run(["node", "-e", code], capture_output=True, text=True, timeout=20)
+        assert out.returncode == 0, out.stderr
+        return json.loads(out.stdout)
+
+    def test_format_ago(self):
+        got = self._run("[0,1,2,12,59,60,61,72,125,120].map(formatTurnAgo)")
+        assert got == ["0 seconds ago", "1 second ago", "2 seconds ago", "12 seconds ago",
+                       "59 seconds ago", "1m 0s ago", "1m 1s ago", "1m 12s ago", "2m 5s ago", "2m 0s ago"]
+        assert self._run("formatTurnAgo(-5)") == "0 seconds ago"          # clamped
+
+    def test_format_total(self):
+        assert self._run("[14,59,60,72].map(formatTurnDuration)") == ["14s", "59s", "1m 0s", "1m 12s"]
+
+    def test_naive_iso_is_treated_as_utc(self):
+        # naive string must equal the explicit-Z one, regardless of the machine's timezone
+        for tz in ("Asia/Karachi", "America/Los_Angeles", "UTC"):
+            src = _chat_src()
+            a = src.index("// TURN-TIMER-HELPERS-BEGIN"); b = src.index("// TURN-TIMER-HELPERS-END")
+            code = src[a:b] + ("\nconsole.log(JSON.stringify([parseRequestedAt('2026-10-04T10:15:00')===Date.UTC(2026,9,4,10,15,0),"
+                               "parseRequestedAt('2026-10-04T10:15:00.123456')===Date.UTC(2026,9,4,10,15,0,123),"
+                               "parseRequestedAt('2026-10-04T10:15:00Z')===Date.UTC(2026,9,4,10,15,0),"
+                               "parseRequestedAt('2026-10-04T15:15:00+05:00')===Date.UTC(2026,9,4,10,15,0),"
+                               "parseRequestedAt('2026-10-04 10:15:00')===Date.UTC(2026,9,4,10,15,0)]));")
+            import os
+            out = subprocess.run(["node", "-e", code], capture_output=True, text=True, timeout=20,
+                                 env={**os.environ, "TZ": tz})
+            assert out.returncode == 0, out.stderr
+            assert json.loads(out.stdout) == [True] * 5, tz
+
+    def test_bad_input_is_nan_and_elapsed_never_negative(self):
+        assert self._run("[parseRequestedAt(''), parseRequestedAt(null), parseRequestedAt('garbage')].map(Number.isNaN)") == [True, True, True]
+        assert self._run("turnElapsedSeconds(NaN, 1000)") is None           # NaN -> null in JSON
+        assert self._run("turnElapsedSeconds(5000, 1000)") == 0             # future start clamps to 0
+        assert self._run("turnElapsedSeconds(0, 61500)") == 61
