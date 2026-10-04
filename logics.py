@@ -2069,7 +2069,8 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
         try:
             from intent_bridge import rerank_with_intent  # noqa: PLC0415
             _bridge_kwargs = {"topic_sims": wide_sims}
-            if chat_id and topic_key and _accepts_kw(rerank_with_intent, "plan_key"):
+            if (chat_id and topic_key and _cfg_value("INCREMENTAL_RESCAN_ENABLED", True)
+                    and _accepts_kw(rerank_with_intent, "plan_key")):
                 # interpreter plan cached per (chat_id, topic_key) — no extra
                 # LLM call on every poll.
                 _bridge_kwargs["plan_key"] = (chat_id, topic_key)
