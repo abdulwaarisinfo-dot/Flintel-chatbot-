@@ -856,3 +856,42 @@ def test_strict_ignores_cache_written_before_strict_mode(lg, monkeypatch):
     _set_cfg(monkeypatch, STRICT_INTENT_MODE=False)
     out2 = lg.get_evidence_with_topup("chat1", "o", "topic1", ["k"], 25, matcher)
     assert len(out2) == 60                                              # flag off: legacy cache reuse unchanged
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# signature guard: the bridge's classify() call must fit the REAL classifier
+# (a mismatch is otherwise swallowed by _classify_parallel's try/except)
+# ═════════════════════════════════════════════════════════════════════════
+def test_bridge_classify_calls_fit_real_doc_classifier_signature():
+    import inspect
+    from intent_prototype import doc_classifier as real
+    sig = inspect.signature(real.classify)
+    assert "strict" in sig.parameters, "intent_prototype/doc_classifier.py lacks strict= (wrong file deployed?)"
+    sig.bind([], strict=True)           # strict path
+    sig.bind([])                        # flag-off path: no kwarg at all
+    assert "strict" in inspect.signature(real.system_prompt).parameters
+
+
+def test_classify_batch_uses_real_classify_without_typeerror(monkeypatch):
+    from intent_prototype import doc_classifier as real
+    seen = []
+    monkeypatch.setattr(real, "claude", lambda system, user, *a, **k: (seen.append(system) or "[]"), raising=False)
+    # call through the bridge helper against the REAL module; a bad signature raises TypeError here
+    for strict in (False, True):
+        try:
+            ib._classify_batch([{"title": "t", "post_text": "x", "post_url": "u"}], real, strict)
+        except TypeError as e:
+            pytest.fail(f"signature mismatch: {e}")
+        except Exception:
+            pass                        # LLM/network-level failures are irrelevant to this check
+
+
+def test_flag_off_classify_called_without_strict_kwarg():
+    calls = []
+    class Fake:
+        @staticmethod
+        def classify(docs, **kw):
+            calls.append(kw); return []
+    ib._classify_batch([], Fake, False)
+    ib._classify_batch([], Fake, True)
+    assert calls == [{}, {"strict": True}]
