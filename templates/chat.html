@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -424,6 +423,10 @@
   .turn-chip.status-completed { color: #a3e635; }
   .turn-chip.status-failed { color: #E2645A; }
   .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+  /* Live elapsed-time label inside the pending chip: tabular digits + a fixed
+     minimum width so the chip never jiggles as the text changes each second. */
+  .turn-chip .turn-timer { font-variant-numeric: tabular-nums; }
+  .turn-chip.status-pending .turn-timer { display: inline-block; min-width: 13ch; }
 
   /* Pending states — no live polling exists; this simply reflects whichever
      branch the template lands on for this message. */
@@ -1072,7 +1075,7 @@
                 {%- endif -%}
               </span>
               {% if msg.claude_answer is none %}
-              <span class="turn-chip status-pending"><span class="status-dot"></span>Searching…</span>
+              <span class="turn-chip status-pending" data-turn-timer data-requested-at="{{ msg.requested_at.isoformat() if msg.requested_at else '' }}"><span class="status-dot"></span><span class="turn-timer" aria-live="off">Searching…</span></span>
               {% else %}
               <span class="turn-chip status-completed"><span class="status-dot"></span>Completed</span>
               {% endif %}
@@ -1564,6 +1567,85 @@
     }
   });
 
+  // ---- Turn status chip: running elapsed-time timer ----
+  // TURN-TIMER-HELPERS-BEGIN
+  const TURN_TZ_RE = /(Z|[+-]\d{2}:?\d{2})$/i;
+  // requested_at is a NAIVE UTC datetime from Mongo: isoformat() has no
+  // "Z"/offset, and new Date("2026-10-04T10:15:00") would be read as LOCAL
+  // time (hours off outside UTC). Treat a designator-less string as UTC.
+  function parseRequestedAt(raw) {
+    if (raw === null || raw === undefined) return NaN;
+    let s = String(raw).trim();
+    if (!s) return NaN;
+    s = s.replace(' ', 'T');
+    s = s.replace(/(\.\d{3})\d+/, '$1');      // keep ms precision only (Safari-safe)
+    if (!TURN_TZ_RE.test(s)) s += 'Z';
+    return new Date(s).getTime();
+  }
+  function turnElapsedSeconds(requestedAtMs, nowMs) {
+    if (!isFinite(requestedAtMs)) return NaN;
+    return Math.max(0, Math.floor(((nowMs === undefined ? Date.now() : nowMs) - requestedAtMs) / 1000));
+  }
+  function formatTurnDuration(totalSeconds) {
+    const t = Math.max(0, Math.floor(totalSeconds));
+    if (t < 60) return t + 's';
+    return Math.floor(t / 60) + 'm ' + (t % 60) + 's';
+  }
+  function formatTurnAgo(totalSeconds) {
+    const t = Math.max(0, Math.floor(totalSeconds));
+    if (t === 1) return '1 second ago';
+    if (t < 60) return t + ' seconds ago';
+    return formatTurnDuration(t) + ' ago';
+  }
+  // TURN-TIMER-HELPERS-END
+
+  let turnTimerInterval = null;
+  function runningTurnChips() {
+    return document.querySelectorAll('.turn-chip[data-turn-timer]:not([data-timer-state])');
+  }
+  function turnTimerTick() {
+    runningTurnChips().forEach((chip) => {
+      if (!document.body.contains(chip)) return;
+      const label = chip.querySelector('.turn-timer');
+      const secs = turnElapsedSeconds(parseRequestedAt(chip.dataset.requestedAt));
+      if (!label || isNaN(secs)) return;          // no usable start time: keep "Searching…"
+      const text = formatTurnAgo(secs);
+      if (label.textContent !== text) label.textContent = text;
+    });
+    if (!runningTurnChips().length && turnTimerInterval) {
+      clearInterval(turnTimerInterval);
+      turnTimerInterval = null;
+    }
+  }
+  // Idempotent: at most ONE interval for the whole page, (re)started after
+  // page load / soft navigation / soft submit, stopped once no chip runs.
+  function initTurnTimers() {
+    if (!runningTurnChips().length) return;
+    turnTimerTick();
+    if (!turnTimerInterval) turnTimerInterval = setInterval(turnTimerTick, 1000);
+  }
+  // Freeze the chip of `scope` (a .turn-block) as completed / failed.
+  function finishTurnTimer(scope, state, fallbackRequestedAt) {
+    if (!scope) return;
+    const chip = scope.querySelector('.turn-chip[data-turn-timer]');
+    if (!chip || chip.dataset.timerState) return;   // missing or already frozen
+    let ms = parseRequestedAt(chip.dataset.requestedAt);
+    if (isNaN(ms)) ms = parseRequestedAt(fallbackRequestedAt);
+    const secs = turnElapsedSeconds(ms);
+    const label = chip.querySelector('.turn-timer');
+    chip.dataset.timerState = state;
+    chip.classList.remove('status-pending', 'status-completed', 'status-failed');
+    chip.classList.add(state === 'failed' ? 'status-failed' : 'status-completed');
+    if (label) {
+      if (state === 'failed') label.textContent = 'Failed';
+      else label.textContent = isNaN(secs) ? 'Completed' : 'Completed · ' + formatTurnDuration(secs);
+    }
+    if (!runningTurnChips().length && turnTimerInterval) {
+      clearInterval(turnTimerInterval);
+      turnTimerInterval = null;
+    }
+  }
+
   function initMainPageInteractions() {
     const attachBtn = document.getElementById('attach-btn');
     const attachInput = document.getElementById('attach-input');
@@ -1651,6 +1733,8 @@
     // guard as the two calls above, for the same reason (second <script>
     // block not loaded yet on the very first call).
     if (typeof initSearchProgressBlocks === 'function') initSearchProgressBlocks();
+    // Live elapsed-time on every still-pending status chip.
+    initTurnTimers();
   }
 
   initMainPageInteractions();
@@ -2900,6 +2984,8 @@
         }
         // (LOADING STATE) The answer is ready — unlock the submit box.
         setSubmitLoading(false);
+        // Freeze the status chip: "Completed · <total time>".
+        finishTurnTimer(pendingTurn, 'completed', payload.requested_at);
         // No page reload — the accumulated text is now complete, valid
         // JSON. Render it in-place, right where the loading-row was,
         // reusing the exact same structured-render logic every other
@@ -2964,6 +3050,7 @@
         // so a stale/superseded stream's error doesn't touch a submit box
         // that now belongs to a different chat.
         if (myGen === softNavGeneration) setSubmitLoading(false);
+        finishTurnTimer(pendingTurn, 'failed', payload.requested_at);
         // Leave the original "Still gathering results…" text exactly as-is
         // — no error message shown here, no DOM changes. A later normal
         // page load/refresh picks up the answer via the backend's own
@@ -2984,6 +3071,7 @@
       // search box stuck disabled forever, so this always fires as a
       // last resort regardless of the myGen check.
       setSubmitLoading(false);
+      finishTurnTimer(pendingTurn, 'failed');
       // Same as the explicit {"error": ...} case above — leave the existing
       // loading text untouched, no visible change.
     };
@@ -3245,6 +3333,7 @@
         optimisticTurn.remove();
         liveThreadInner.appendChild(latestTurn);
         latestTurn.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        initTurnTimers();
 
         // If this new turn is mid-stream, wire it up immediately — same
         // logic as a normal page load, just triggered right now instead.
