@@ -143,13 +143,19 @@ class TestTurnTimerChipJinja:
         assert "status-completed" in html and "Completed" in html
         assert "turn-timer" not in html and "data-requested-at" not in html
 
-    def test_chat_wiring_present_and_index_untouched(self):
+    def test_chat_and_index_wiring_present(self):
+        # (UI BUGS FIX) index.html used to be asserted "untouched" here. That
+        # was the bug: chat.html's script never runs after a soft-nav swap
+        # from the home page, so index.html now carries the same timer JS.
         src = _chat_src()
         assert "finishTurnTimer(pendingTurn, 'completed'" in src
         assert src.count("finishTurnTimer(pendingTurn, 'failed'") == 2    # payload.error + onerror
         index = CHAT_HTML.parent / "index.html"
         if index.exists():
-            assert "turn-timer" not in index.read_text(encoding="utf-8")
+            isrc = index.read_text(encoding="utf-8")
+            assert "finishTurnTimer(pendingTurn, 'completed'" in isrc
+            assert isrc.count("finishTurnTimer(pendingTurn, 'failed'") == 2
+            assert "function initTurnTimers" in isrc
 
 
 @pytest.mark.skipif(shutil.which("node") is None, reason="node not installed")
