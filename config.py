@@ -73,6 +73,17 @@ __all__ = [
     "INCREMENTAL_WATERMARK_FIELD",
     "INCREMENTAL_OVERLAP_SECONDS",
     "INCREMENTAL_FULL_SCAN_EVERY_N_POLLS",
+    # Scan resilience (scan deadline, non-blocking stream, single-flight,
+    # streaming score, Mongo timeouts)
+    "SCAN_DEADLINE_SECONDS",
+    "NONBLOCKING_STREAM_ENABLED",
+    "SINGLE_FLIGHT_SCAN_ENABLED",
+    "SINGLE_FLIGHT_STALE_SECONDS",
+    "STREAMING_SCORE_ENABLED",
+    "MONGO_SERVER_SELECTION_TIMEOUT_MS",
+    "MONGO_CONNECT_TIMEOUT_MS",
+    "MONGO_SOCKET_TIMEOUT_MS",
+    "MONGO_FIND_MAX_TIME_MS",
     # Intent Bridge config (prototype ↔ production)
     "INTENT_BRIDGE_ENABLED",
     "INTENT_CANDIDATE_MULTIPLIER",
@@ -488,3 +499,50 @@ INCREMENTAL_OVERLAP_SECONDS = int(os.getenv("INCREMENTAL_OVERLAP_SECONDS", "90")
 # With a created_utc watermark (late-ingested old posts are invisible to it)
 # a complete scan is forced on every N-th poll / cache refresh. 0 = never.
 INCREMENTAL_FULL_SCAN_EVERY_N_POLLS = int(os.getenv("INCREMENTAL_FULL_SCAN_EVERY_N_POLLS", "10"))
+
+
+# ── SCAN RESILIENCE ──────────────────────────────────────────────────────
+# Fix for searches that hang for minutes with no progress bar and no
+# Google call (primary collection scan never finishing, /stream blocked on
+# a synchronous scan, repeated refreshes each starting a fresh full scan,
+# unlimited-mode docs piling up in RAM). Every flag below, when switched
+# off (or set to 0 where noted), restores the previous behaviour of the
+# part it controls. STRICT_INTENT_MODE and INCREMENTAL_RESCAN_ENABLED keep
+# their meaning unchanged.
+
+# Upper bound (seconds) on how long get_matched_signals() waits for all
+# three signal collections to finish. When it passes, the scan stops and
+# returns what it has. 0 = no limit (old behaviour: wait forever).
+SCAN_DEADLINE_SECONDS = int(os.getenv("SCAN_DEADLINE_SECONDS", "90"))
+
+# Make the /stream endpoint non-blocking: the StreamingResponse is returned
+# immediately and the scan runs while the generator streams progress.
+# false = old synchronous path (scan finishes before any byte is sent).
+NONBLOCKING_STREAM_ENABLED = os.getenv("NONBLOCKING_STREAM_ENABLED", "true").lower() in ("1", "true", "yes")
+
+# Single-flight scans: only one scan runs per (chat_id, topic_key); other
+# requests (refresh, reconnect) attach to it instead of starting their own.
+# false = every request runs its own scan (old behaviour).
+SINGLE_FLIGHT_SCAN_ENABLED = os.getenv("SINGLE_FLIGHT_SCAN_ENABLED", "true").lower() in ("1", "true", "yes")
+
+# Seconds after which a stuck single-flight registry entry expires on its
+# own, so a hung scan can never block that (chat_id, topic_key) forever.
+# 0 = never expire (not recommended).
+SINGLE_FLIGHT_STALE_SECONDS = int(os.getenv("SINGLE_FLIGHT_STALE_SECONDS", "600"))
+
+# Score documents while streaming them from the cursor, so docs below the
+# similarity threshold are dropped immediately instead of all being held in
+# RAM first. false = old behaviour (collect all docs, then score).
+STREAMING_SCORE_ENABLED = os.getenv("STREAMING_SCORE_ENABLED", "true").lower() in ("1", "true", "yes")
+
+# MongoClient timeouts in milliseconds (used by database.py). A query that
+# hangs now fails instead of waiting forever. 0 = not set (pymongo default).
+# serverSelectionTimeoutMS: how long to wait to find a usable server.
+MONGO_SERVER_SELECTION_TIMEOUT_MS = int(os.getenv("MONGO_SERVER_SELECTION_TIMEOUT_MS", "15000"))
+# connectTimeoutMS: how long to wait when opening a new connection.
+MONGO_CONNECT_TIMEOUT_MS = int(os.getenv("MONGO_CONNECT_TIMEOUT_MS", "15000"))
+# socketTimeoutMS: how long a single socket read/write may block.
+MONGO_SOCKET_TIMEOUT_MS = int(os.getenv("MONGO_SOCKET_TIMEOUT_MS", "120000"))
+# max_time_ms applied to signals find() queries (server-side limit).
+# 0 = off (no max_time_ms).
+MONGO_FIND_MAX_TIME_MS = int(os.getenv("MONGO_FIND_MAX_TIME_MS", "120000"))
