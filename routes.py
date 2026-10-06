@@ -23,7 +23,7 @@ import google as google_search   # the new google.py module — needed here
     # for the Google-fallback stub-results read-back at RESPONSE_TIMEOUT
     # (mirrors index.py's own `import google as google_search` alias)
 import website_intelligence
-from logics import get_or_fetch_website_evidence, generate_keywords_for_website_request, acquire_scan
+from logics import get_or_fetch_website_evidence, generate_keywords_for_website_request, acquire_scan, get_cached_topic_evidence
 
 from index import (
     app,
@@ -2040,6 +2040,17 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                             handle.release()
                         except Exception as exc:
                             log.warning(f"handle.release() failed for topic_key={topic_key}: {exc}")
+                    # Honest "less evidence" path: carry on with whatever
+                    # evidence this chat/topic already has cached from earlier
+                    # polls (strict mode: only evidence that was cached under
+                    # strict mode). Nothing cached => `matched` stays empty,
+                    # exactly what the old code did at timeout with no posts.
+                    try:
+                        _cached_ev = get_cached_topic_evidence(chat_id, topic_key)
+                        if _cached_ev and (not _strict_wait or _cached_ev.get("strict_mode")):
+                            matched = list(_cached_ev.get("posts") or [])[:effective_evidence_limit]
+                    except Exception as exc:
+                        log.warning(f"Cached-evidence fallback after scan deadline failed for topic_key={topic_key}: {exc}")
                 else:
                     try:
                         matched = handle.future.result() or []
