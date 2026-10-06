@@ -7,6 +7,12 @@ that used to live inline in index.py. Zero behavior change from before —
 same URI/DB env vars, same collection names, same indexes, same log 
 messages on startup. 
 
+(SCAN RESILIENCE) The only addition is build_mongo_client_kwargs(): every
+MongoClient below now gets connection/selection (and, for the signals
+clients, socket) timeouts from config.py, so a hung query or unreachable
+server fails instead of blocking forever. Setting a MONGO_*_TIMEOUT_MS
+flag to 0 omits that kwarg (= the old, no-timeout behaviour).
+
 This file has ZERO dependency on index.py, flintel.py, or
 website_intelligence.py — they import FROM this module, never the
 reverse.
@@ -17,6 +23,8 @@ import logging
 
 from dotenv import load_dotenv
 from pymongo import MongoClient
+
+import config as _config
 
 # ─────────────────────────────────────────────────────────────────────────────
 # LOGGING
@@ -42,7 +50,38 @@ load_dotenv()
 MONGODB_URI = os.getenv("MONGODB_URI")
 MONGODB_DB  = os.getenv("MONGODB_DB", "flintel_bot")
 
-client = MongoClient(MONGODB_URI)
+
+# (SCAN RESILIENCE — MONGO TIMEOUTS) Builds the timeout kwargs for a
+# MongoClient from config.py's flags. The flags are read live (at call
+# time, via the config module), not copied at import. A flag whose value
+# is 0, negative, None or not a number is simply left out of the dict, so
+# pymongo's own default (the old behaviour) applies for that setting.
+#   MONGO_SERVER_SELECTION_TIMEOUT_MS -> serverSelectionTimeoutMS
+#   MONGO_CONNECT_TIMEOUT_MS          -> connectTimeoutMS
+#   MONGO_SOCKET_TIMEOUT_MS           -> socketTimeoutMS
+# include_socket_timeout=False never adds socketTimeoutMS (used for the
+# jobs/users/chats cluster, where a long-but-legitimate operation must not
+# be cut off by a socket read timeout).
+def build_mongo_client_kwargs(include_socket_timeout: bool = True) -> dict:
+    mapping = [
+        ("serverSelectionTimeoutMS", "MONGO_SERVER_SELECTION_TIMEOUT_MS"),
+        ("connectTimeoutMS", "MONGO_CONNECT_TIMEOUT_MS"),
+    ]
+    if include_socket_timeout:
+        mapping.append(("socketTimeoutMS", "MONGO_SOCKET_TIMEOUT_MS"))
+
+    kwargs = {}
+    for kwarg_name, flag_name in mapping:
+        try:
+            value = int(getattr(_config, flag_name, 0) or 0)
+        except (TypeError, ValueError):
+            value = 0
+        if value > 0:
+            kwargs[kwarg_name] = value
+    return kwargs
+
+
+client = MongoClient(MONGODB_URI, **build_mongo_client_kwargs(include_socket_timeout=True))
 db = client[MONGODB_DB]
 
 # (MONGODB3 — new primary home for every collection EXCEPT
@@ -52,7 +91,9 @@ db = client[MONGODB_DB]
 # signals_collection now lives here.
 from config import MONGODB3
 
-client_3 = MongoClient(MONGODB3)
+# No socketTimeoutMS here: jobs/users/chats/cache operations must not be
+# cut off by a socket read timeout — only server selection + connect.
+client_3 = MongoClient(MONGODB3, **build_mongo_client_kwargs(include_socket_timeout=False))
 db3 = client_3[MONGODB_DB]
 
 jobs_collection    = db3.flintel_search_jobs
@@ -71,7 +112,7 @@ from config import MONGODB2
 signals_collection_2 = None
 if MONGODB2:
     try:
-        client_2 = MongoClient(MONGODB2)
+        client_2 = MongoClient(MONGODB2, **build_mongo_client_kwargs(include_socket_timeout=True))
         signals_collection_2 = client_2[MONGODB_DB].flintel_signals
     except Exception as exc:
         log.warning(f"Could not connect secondary MongoDB (MONGODB2): {exc}")
@@ -90,7 +131,7 @@ from config import MONGODB4
 signals_collection_4 = None
 if MONGODB4:
     try:
-        client_4 = MongoClient(MONGODB4)
+        client_4 = MongoClient(MONGODB4, **build_mongo_client_kwargs(include_socket_timeout=True))
         signals_collection_4 = client_4[MONGODB_DB].flintel_signals
     except Exception as exc:
         log.warning(f"Could not connect quaternary MongoDB (MONGODB4): {exc}")
