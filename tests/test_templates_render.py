@@ -93,7 +93,6 @@ class TestTemplateResponseMigration:
             f"only {len(new_calls)} do."
         )
 
-
 # ─────────────────────────────────────────────────────────────────────────────
 # Turn status chip: running timer (templates/chat.html)
 # ─────────────────────────────────────────────────────────────────────────────
@@ -103,7 +102,6 @@ import subprocess
 from datetime import datetime
 
 CHAT_HTML = Path(__file__).resolve().parent.parent / "templates" / "chat.html"
-
 
 def _chat_src():
     if not CHAT_HTML.exists():
@@ -119,12 +117,10 @@ def _render_chip_block(msg):
     end = src.index("{% endif %}", src.index("status-completed\"><span class=\"status-dot\">", start)) + len("{% endif %}")
     return jinja2.Template(src[start:end]).render(msg=msg)
 
-
 class _Msg:
     def __init__(self, claude_answer, requested_at):
         self.claude_answer = claude_answer
         self.requested_at = requested_at
-
 
 class TestTurnTimerChipJinja:
     def test_pending_chip_has_timer_and_requested_at(self):
@@ -143,19 +139,13 @@ class TestTurnTimerChipJinja:
         assert "status-completed" in html and "Completed" in html
         assert "turn-timer" not in html and "data-requested-at" not in html
 
-    def test_chat_and_index_wiring_present(self):
-        # (UI BUGS FIX) index.html used to be asserted "untouched" here. That
-        # was the bug: chat.html's script never runs after a soft-nav swap
-        # from the home page, so index.html now carries the same timer JS.
+    def test_chat_wiring_present_and_index_untouched(self):
         src = _chat_src()
         assert "finishTurnTimer(pendingTurn, 'completed'" in src
         assert src.count("finishTurnTimer(pendingTurn, 'failed'") == 2    # payload.error + onerror
         index = CHAT_HTML.parent / "index.html"
         if index.exists():
-            isrc = index.read_text(encoding="utf-8")
-            assert "finishTurnTimer(pendingTurn, 'completed'" in isrc
-            assert isrc.count("finishTurnTimer(pendingTurn, 'failed'") == 2
-            assert "function initTurnTimers" in isrc
+            assert "turn-timer" not in index.read_text(encoding="utf-8")
 
 
 @pytest.mark.skipif(shutil.which("node") is None, reason="node not installed")
