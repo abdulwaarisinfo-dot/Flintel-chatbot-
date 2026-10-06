@@ -12,15 +12,18 @@ import time
 import threading
 import logging
 
+from concurrent.futures import wait as _futures_wait   # <-- SCAN FIX step 4: non-blocking scan wait
+
 from fastapi import Request, Form, BackgroundTasks
 from fastapi.responses import RedirectResponse, StreamingResponse
 
+import config                                          # <-- SCAN FIX step 4: live flag reads
 import flintel
 import google as google_search   # the new google.py module — needed here
     # for the Google-fallback stub-results read-back at RESPONSE_TIMEOUT
     # (mirrors index.py's own `import google as google_search` alias)
 import website_intelligence
-from logics import get_or_fetch_website_evidence, generate_keywords_for_website_request
+from logics import get_or_fetch_website_evidence, generate_keywords_for_website_request, acquire_scan
 
 from index import (
     app,
@@ -1525,7 +1528,22 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
     if the in-flight call never finishes within that window does this
     fall through to running its own call, so a genuine stall can never
     hang the page forever. See event_generator()'s own comment below for
-    the full rationale."""
+    the full rationale.
+
+    (SCAN FIX, STEP 4 — NON-BLOCKING STREAM) When
+    config.NONBLOCKING_STREAM_ENABLED is on (default), the
+    get_evidence_with_topup() scan no longer runs synchronously BEFORE
+    the StreamingResponse is returned. It is started in the background
+    from inside event_generator() via logics.acquire_scan() (single-flight
+    per (chat_id, topic_key) when config.SINGLE_FLIGHT_SCAN_ENABLED is
+    on), so the browser gets its first bytes (retry + progress 0%)
+    immediately, the Google fallback trigger and search-progress thread
+    start alongside the scan instead of after it, and the RESPONSE_TIMEOUT
+    (strict: min(RESPONSE_TIMEOUT, STRICT_WAIT_SECONDS)) deadline is
+    actually enforced while the scan is still running. handle.release()
+    runs in the generator's finally, so a client disconnect cancels the
+    scan unless another request is still waiting on it. With the flag
+    off, the old synchronous call is used, exactly as before."""
     owner_key, _owner_type = get_owner(request)
     chat = get_chat_session(chat_id, owner_key)
 
@@ -1696,8 +1714,17 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
 
         return StreamingResponse(_website_only_generator(), media_type="text/event-stream")
 
-    try:
-        matched = get_evidence_with_topup(
+    # (SCAN FIX, STEP 4) Flag is read live on every request, so flipping the
+    # env var + restarting is enough to roll back.
+    nonblocking = bool(getattr(config, "NONBLOCKING_STREAM_ENABLED", True))
+
+    def _topup(cancel_event=None):
+        """The one place get_evidence_with_topup() is called for this
+        message — used by the sync (flag-off) path, the background scan
+        (scan_fn for acquire_scan) and the polling loop, so all three
+        always use identical arguments. cancel_event is only passed when
+        one exists, so the flag-off path calls it exactly like before."""
+        kwargs = dict(
             chat_id=chat_id,
             owner_key=owner_key,
             topic_key=topic_key,
@@ -1710,9 +1737,18 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             unfiltered=msg.get("unfiltered", False),
             user_query=msg.get("query"),
         )
-    except Exception as exc:
-        log.warning(f"Signal matching failed for streaming topic_key={topic_key}: {exc}")
-        matched = []
+        if cancel_event is not None:
+            kwargs["cancel_event"] = cancel_event
+        return get_evidence_with_topup(**kwargs)
+
+    matched = []
+    if not nonblocking:
+        # Flag off: old synchronous path, exactly as before.
+        try:
+            matched = _topup()
+        except Exception as exc:
+            log.warning(f"Signal matching failed for streaming topic_key={topic_key}: {exc}")
+            matched = []
 
     def event_generator():
         # (GOOGLE-FALLBACK POLLING FIX) This generator reassigns `matched`
@@ -1791,6 +1827,14 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # this only happens if the original in-flight call never
             # actually completed/saved anything within the wait window.
 
+        # (SCAN FIX, STEP 4) Scan handle state — declared BEFORE the busy
+        # flag/try below so the finally can always release it, whichever
+        # way this generator ends (normal finish, error, or client
+        # disconnect closing the generator).
+        handle = None
+        handle_released = False
+        scan_timed_out = False
+
         # (PER-USER BUSY LOCK) Set right at the start of the whole
         # generator, cleared in the finally below — covers every exit
         # path (the early error-return, and the normal completion path
@@ -1803,6 +1847,22 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # full rationale. Sent once, immediately, before any other
             # SSE payload in this stream.
             yield "retry: 86400000\n\n"
+
+            # (SCAN FIX, STEP 4 — NON-BLOCKING) Show 0% right away, then start
+            # the evidence scan in the BACKGROUND via acquire_scan() instead of
+            # blocking the whole response on it. The Google fallback trigger and
+            # the search-progress thread below start right after this, without
+            # waiting for the scan's result.
+            if nonblocking:
+                yield f"data: {json.dumps({'progress_percent': 0})}\n\n"
+                try:
+                    handle = acquire_scan(
+                        chat_id, topic_key,
+                        lambda cancel_event: _topup(cancel_event),
+                    )
+                except Exception as exc:
+                    log.warning(f"acquire_scan failed for topic_key={topic_key}: {exc}")
+                    handle = None  # polling loop below still does its own top-up
 
             # (IMMEDIATE PARALLEL TRIGGERING) Both the Google search and
             # the search-progress UI generation now fire in PARALLEL with
@@ -1861,7 +1921,10 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # poll tick. Skipped when `matched` already has something,
             # since the `if not matched:` polling loop right below never
             # runs in that case — there is nothing to show progress for.
-            if len(matched) < effective_evidence_limit:
+            # (SCAN FIX, STEP 4) In non-blocking mode the 0% was already
+            # sent above, before the scan started — only the old sync path
+            # still emits it here.
+            if not nonblocking and len(matched) < effective_evidence_limit:
                 yield f"data: {json.dumps({'progress_percent': 0})}\n\n"
 
             # (SEARCH-PROGRESS UI FIX) Runs UNCONDITIONALLY — whether or
@@ -1920,7 +1983,77 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     RESPONSE_TIMEOUT,
                 )
 
-            if len(matched) < effective_evidence_limit and not (_strict_wait and _strict_done()):
+            # (SCAN FIX, STEP 4 — NON-BLOCKING SCAN WAIT) The scan is running
+            # in the background. Until it finishes or the deadline passes,
+            # keep the browser fed with progress / search-progress events.
+            # Deadline: non-strict = RESPONSE_TIMEOUT (measured from the
+            # message's requested_at); strict = min(RESPONSE_TIMEOUT,
+            # STRICT_WAIT_SECONDS) (measured from the start of this wait),
+            # matching strict_wait_done()'s own clock. If the deadline hits
+            # first, the scan is released (cancelled unless another request
+            # still waits on it) and this answers via the existing honest
+            # "less evidence" path below — `matched` simply stays as it is
+            # (empty), which is exactly what the old code did for an empty
+            # `matched` at timeout.
+            if handle is not None:
+                scan_deadline = RESPONSE_TIMEOUT
+                if _strict_wait:
+                    scan_deadline = min(
+                        RESPONSE_TIMEOUT,
+                        getattr(config, "STRICT_WAIT_SECONDS", RESPONSE_TIMEOUT),
+                    )
+                while not handle.future.done():
+                    waited = (
+                        time.time() - _wait_started if _strict_wait
+                        else _elapsed_seconds(msg.get("requested_at"))
+                    )
+                    if waited >= scan_deadline:
+                        scan_timed_out = True
+                        tier3_triggered = True
+                        break
+
+                    progress_percent = flintel.calculate_search_progress_percent(
+                        _elapsed_seconds(msg.get("requested_at")),
+                        trigger_seconds=0,
+                        timeout_seconds=RESPONSE_TIMEOUT,
+                    )
+                    yield f"data: {json.dumps({'progress_percent': progress_percent})}\n\n"
+
+                    if not search_progress_sent and search_progress_holder.get("content"):
+                        try:
+                            save_search_progress_to_chat(chat_id, owner_key, topic_key, search_progress_holder["content"])
+                        except Exception as exc:
+                            log.warning(f"Saving search_progress failed for topic_key={topic_key}: {exc}")
+                        yield f"data: {json.dumps({'search_progress': search_progress_holder['content']})}\n\n"
+                        search_progress_sent = True
+
+                    _futures_wait([handle.future], timeout=1.5)
+
+                if scan_timed_out:
+                    log.warning(
+                        f"Scan still running at deadline for topic_key={topic_key}; "
+                        f"answering with less evidence"
+                    )
+                    if not handle_released:
+                        handle_released = True
+                        try:
+                            handle.release()
+                        except Exception as exc:
+                            log.warning(f"handle.release() failed for topic_key={topic_key}: {exc}")
+                else:
+                    try:
+                        matched = handle.future.result() or []
+                    except Exception as exc:
+                        log.warning(f"Background scan failed for topic_key={topic_key}: {exc}")
+                        # `matched` stays empty — the polling loop / honest
+                        # empty-evidence flow below takes over, as before.
+
+            # (SCAN FIX, STEP 4) Skipped entirely when the scan already hit the
+            # deadline. When it does run in non-blocking mode, the scan has
+            # already finished (or acquire_scan failed), so these top-up
+            # calls refill rather than start a competing scan; they pass the
+            # handle's cancel_event so a disconnect still stops them.
+            if (not scan_timed_out) and len(matched) < effective_evidence_limit and not (_strict_wait and _strict_done()):
                 while True:
                     elapsed = _elapsed_seconds(msg.get("requested_at"))
 
@@ -1971,19 +2104,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     time.sleep(2)
 
                     try:
-                        matched = get_evidence_with_topup(
-                            chat_id=chat_id,
-                            owner_key=owner_key,
-                            topic_key=topic_key,
-                            keywords=msg.get("keywords", []),
-                            evidence_required=effective_evidence_limit,
-                            matcher_fn=get_matched_signals,
-                            match_phrases=msg.get("match_phrases"),
-                            targeting_platform=msg.get("targeting_platform", "all"),
-                            since_days=msg.get("time_window_days"),
-                            unfiltered=msg.get("unfiltered", False),
-                            user_query=msg.get("query"),
-                        )
+                        matched = _topup(handle.cancel_event if handle is not None else None)
                     except Exception as exc:
                         log.warning(f"Signal matching failed while polling for streaming topic_key={topic_key}: {exc}")
                         # matched ko touch mat karo, pehle mili hui posts na khoyein
@@ -2111,6 +2232,17 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
 
             yield f"data: {json.dumps({'done': True, 'results': results_to_save})}\n\n"
         finally:
+            # (SCAN FIX, STEP 4) Release the scan handle on EVERY exit path
+            # (normal finish, error, client disconnect closing the generator).
+            # release() cancels the scan only if no other waiter remains;
+            # `handle_released` guards against a double release after the
+            # deadline branch above already released it.
+            if handle is not None and not handle_released:
+                handle_released = True
+                try:
+                    handle.release()
+                except Exception as exc:
+                    log.warning(f"handle.release() failed for topic_key={topic_key}: {exc}")
             _clear_owner_busy(owner_key)
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
