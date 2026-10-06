@@ -135,6 +135,7 @@ import hashlib
 import heapq
 import inspect
 import threading
+import concurrent.futures
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
@@ -232,6 +233,151 @@ def get_scan_status(chat_id, topic_key) -> Optional[dict]:
     with _SCAN_STATUS_LOCK:
         entry = _SCAN_STATUS.get((chat_id, topic_key))
         return dict(entry) if entry else None
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SCAN RESILIENCE (SCAN FIX, step 3): single-flight registry + cancel helpers
+#
+#   SCAN_DEADLINE_SECONDS         wait limit for the 3 collection scans (0 = none)
+#   SINGLE_FLIGHT_SCAN_ENABLED    one scan per (chat_id, topic_key)
+#   SINGLE_FLIGHT_STALE_SECONDS   a registry entry older than this is ignored
+#   STREAMING_SCORE_ENABLED       score batches while fetching (see get_matched_signals)
+#   MONGO_FIND_MAX_TIME_MS        server-side time limit on every signals find
+#
+# Every flag is read LIVE through _cfg_value(); a flag that is off (or 0)
+# leaves that section's behaviour exactly as it was before this step.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _apply_find_max_time(cursor, max_ms) -> None:
+    """Applies `.max_time_ms()` to a pymongo cursor when max_ms > 0. pymongo's
+    cursor methods mutate and return the same cursor, so the return value is
+    deliberately ignored (works with any cursor-like object)."""
+    try:
+        if max_ms and max_ms > 0:
+            fn = getattr(cursor, "max_time_ms", None)
+            if callable(fn):
+                fn(int(max_ms))
+    except Exception as exc:  # never let a cosmetic limit break a scan
+        log.warning(f"max_time_ms not applied: {exc}")
+
+
+def _is_exec_timeout(exc: BaseException) -> bool:
+    return type(exc).__name__ in ("ExecutionTimeout", "NetworkTimeout")
+
+
+class _ScanCancelled(Exception):
+    """Internal: a scan worker noticed its cancel event."""
+
+
+class ScanHandle:
+    """One request's handle on a (possibly shared) scan.
+
+    future        concurrent.futures.Future that resolves to the scan's list
+    cancel_event  threading.Event; set => the scan stops as soon as it safely can
+    release()     call when this request finishes or disconnects. The scan is
+                  cancelled only when NO waiter is left. Idempotent.
+    """
+
+    def __init__(self, key, entry, started_here: bool, registry_enabled: bool):
+        self._key = key
+        self._entry = entry
+        self._registry_enabled = registry_enabled
+        self._released = False
+        self.started_here = started_here
+        self.future = entry["future"]
+        self.cancel_event = entry["cancel_event"]
+
+    def release(self) -> None:
+        with _SCAN_REGISTRY_LOCK:
+            if self._released:
+                return
+            self._released = True
+            entry = self._entry
+            entry["waiters"] = max(0, entry["waiters"] - 1)
+            if entry["waiters"] == 0 and not entry["future"].done():
+                entry["cancel_event"].set()
+                # Nobody wants this scan any more: a later request must start a
+                # fresh one rather than join a cancelled scan.
+                if self._registry_enabled and _SCAN_REGISTRY.get(self._key) is entry:
+                    _SCAN_REGISTRY.pop(self._key, None)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        self.release()
+        return False
+
+
+_SCAN_REGISTRY: dict = {}
+_SCAN_REGISTRY_LOCK = threading.Lock()
+
+
+def _start_scan_thread(key, entry, scan_fn, registry_enabled: bool) -> None:
+    def _runner():
+        fut = entry["future"]
+        try:
+            if not fut.set_running_or_notify_cancel():
+                return
+            try:
+                fut.set_result(scan_fn(entry["cancel_event"]))
+            except BaseException as exc:  # noqa: BLE001 - delivered through the future
+                fut.set_exception(exc)
+        finally:
+            if registry_enabled:
+                with _SCAN_REGISTRY_LOCK:
+                    if _SCAN_REGISTRY.get(key) is entry:
+                        _SCAN_REGISTRY.pop(key, None)
+
+    threading.Thread(target=_runner, name="flintel-scan", daemon=True).start()
+
+
+def acquire_scan(chat_id, topic_key, scan_fn) -> "ScanHandle":
+    """Starts - or joins - the scan for (chat_id, topic_key).
+
+    `scan_fn(cancel_event)` performs the scan and returns a list. If a scan for
+    the same key is already running (and younger than SINGLE_FLIGHT_STALE_SECONDS
+    and not cancelled) NO second scan is started: the returned handle points at
+    the running scan's future/cancel_event and the waiter count goes up. The
+    scan is cancelled only when the last waiter calls handle.release(). The
+    registry entry is removed in a `finally` when the scan ends (result or error).
+
+    SINGLE_FLIGHT_SCAN_ENABLED=false (or a missing chat_id/topic_key): the
+    registry is not used; every call runs its own scan with its own cancel_event.
+
+    LIMITATION: the registry is process-local (a dict + a lock). Under a
+    multi-worker / multi-process uvicorn deployment each worker has its own
+    registry, so two requests landing on different workers can still run two
+    scans. Nothing is written to MongoDB (MONGODB3 included) for this registry."""
+    use_registry = bool(_cfg_value("SINGLE_FLIGHT_SCAN_ENABLED", True)) and bool(chat_id) and bool(topic_key)
+    key = (chat_id, topic_key)
+
+    if not use_registry:
+        entry = {"future": concurrent.futures.Future(), "cancel_event": threading.Event(),
+                 "waiters": 1, "started": time.monotonic()}
+        handle = ScanHandle(key, entry, True, False)
+        _start_scan_thread(key, entry, scan_fn, False)
+        return handle
+
+    try:
+        stale_s = float(_cfg_value("SINGLE_FLIGHT_STALE_SECONDS", 600) or 0)
+    except (TypeError, ValueError):
+        stale_s = 600.0
+
+    with _SCAN_REGISTRY_LOCK:
+        existing = _SCAN_REGISTRY.get(key)
+        if existing is not None:
+            fresh = (stale_s <= 0 or (time.monotonic() - existing["started"]) < stale_s)
+            if (not existing["future"].done()) and (not existing["cancel_event"].is_set()) and fresh:
+                existing["waiters"] += 1
+                return ScanHandle(key, existing, False, True)
+            _SCAN_REGISTRY.pop(key, None)      # finished / cancelled / stale -> replace
+        entry = {"future": concurrent.futures.Future(), "cancel_event": threading.Event(),
+                 "waiters": 1, "started": time.monotonic()}
+        _SCAN_REGISTRY[key] = entry
+        handle = ScanHandle(key, entry, True, True)
+    _start_scan_thread(key, entry, scan_fn, True)
+    return handle
 
 
 def strict_wait_done(matched_count: int, target: int, waited_seconds: float,
@@ -1129,7 +1275,8 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                          match_phrases: list = None, loose: bool = False,
                          signals_collection_2=None, chat_id: str = None,
                          signals_collection_4=None, user_query: str = None,
-                         scan_state: dict = None) -> list:
+                         scan_state: dict = None,
+                         cancel_event: "threading.Event" = None) -> list:
     """Reads `flintel_signals` and keeps only the signals that are
     genuinely relevant to this job's topic. topic_key match is
     intentionally NOT required: Background Service #1 may store its own
@@ -1408,6 +1555,24 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     _overlap_s = int(_cfg_value("INCREMENTAL_OVERLAP_SECONDS", 90) or 0)
     _fetch_failures = []
 
+    # (SCAN RESILIENCE) Cancellation + deadline plumbing.
+    #   cancel_event      caller's threading.Event (e.g. all waiters gone)
+    #   _deadline_cancel  set by THIS call when SCAN_DEADLINE_SECONDS is hit
+    # Workers poll both about every 1000 docs and stop early. A worker that
+    # was cancelled returns nothing and writes NOTHING into scan_state, and the
+    # collection counts as failed, so its watermark can never advance past docs
+    # that were not actually read. _scan_lock orders worker writes against the
+    # deadline decision (a worker either finishes before it, or is ignored).
+    _deadline_cancel = threading.Event()
+    _scan_lock = threading.Lock()
+    _find_max_ms = int(_cfg_value("MONGO_FIND_MAX_TIME_MS", 0) or 0)
+
+    def _cancelled() -> bool:
+        return _deadline_cancel.is_set() or (cancel_event is not None and cancel_event.is_set())
+
+    _stream_ctx = None      # set below when streaming score is active
+    _stream_out = {}        # label -> per-collection streamed-score result
+
     # ── (RETRIEVAL RECALL FIX) HYBRID CANDIDATE POOL ────────────────────
     # THE BUG THIS REPLACES: the candidate pool used to be, for every
     # collection, simply
@@ -1496,14 +1661,54 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             docs = []
             scanned = 0
             _t0 = time.monotonic()
+            _failed_here = False
+            _was_cancelled = False
+
+            # (STREAMING SCORE) When active, docs are scored in NumPy batches
+            # as they arrive and below-threshold docs are dropped at once, so
+            # the whole corpus is never held in RAM. Only docs with no
+            # embedding are kept raw (the lazy backfill needs them).
+            _st = _stream_ctx
+            _s_pairs = []
+            _s_batch_emb = []
+            _s_batch_docs = []
+            _s_consumed = 0
+            _s_new = 0
+            _s_known = set()
+            if _st is not None and scan_state is not None and scan_state.get("delta_mode"):
+                _s_known = {c[0] for c in (scan_state.get("carry") or []) if c and c[0]}
+
+            def _s_flush():
+                if not _s_batch_emb:
+                    return
+                D = np.array(_s_batch_emb, dtype=np.float32)
+                d_norms = np.linalg.norm(D, axis=1, keepdims=True)
+                d_norms = np.where(d_norms == 0, 1.0, d_norms)
+                D = D / d_norms
+                scores = (D @ _st["Q"].T).max(axis=1)
+                for sc, dd in zip(scores, _s_batch_docs):
+                    if float(sc) >= SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD:
+                        # embedding is not used after scoring (downstream only
+                        # reads title/text/url/platform/subreddit); dropping it
+                        # frees ~1536 floats per kept doc.
+                        dd.pop("embedding", None)
+                        _s_pairs.append((float(sc), dd))
+                _s_batch_emb.clear()
+                _s_batch_docs.clear()
+
             try:
+                if _cancelled():
+                    raise _ScanCancelled()
                 cursor = (
                     collection.find(fetch_query, fetch_projection)
                     .sort("created_utc", -1)
                     .batch_size(SIGNAL_EMBEDDING_FETCH_BATCH)
                 )
+                _apply_find_max_time(cursor, _find_max_ms)
                 for doc in cursor:
                     scanned += 1
+                    if scanned % 1000 == 0 and _cancelled():
+                        raise _ScanCancelled()
                     if scan_state is not None:
                         _w = _doc_watermark(doc, _wm_field)
                         if _w is None and _wm_field == "_id":
@@ -1520,21 +1725,97 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                             f"bounded — some time-window docs were not scored."
                         )
                         break
-                    docs.append(doc)
-            except Exception as exc:
-                log.warning(f"{label}: unlimited-mode cursor failed: {exc}")
-                _fetch_failures.append(label)
+                    if _st is None:
+                        docs.append(doc)
+                        continue
 
-            if scan_state is not None:
-                scan_state["fetched"][label] = len(docs)
-                if _max_wm is not None:
-                    scan_state["new_wm"][label] = _max_wm
-                if _max_created is not None:
-                    scan_state["new_wm_created"][label] = _max_created
-                if _bad_id:
-                    scan_state["bad_id"] = True
+                    # ---- streamed path: same per-doc rules as the scoring loop
+                    # that runs over raw_docs when streaming is off ----
+                    _s_consumed += 1
+                    if _s_known and _first_present(doc, _URL_FIELD_CANDIDATES) in _s_known:
+                        continue                       # overlap re-read (delta dedupe)
+                    _s_new += 1
+                    emb = doc.get("embedding")
+                    if not emb:
+                        docs.append(doc)               # lazy-backfill candidate
+                        continue
+                    if cutoff is not None:
+                        doc_created = doc.get("created_utc")
+                        if not isinstance(doc_created, datetime):
+                            continue
+                        if doc_created.tzinfo is None:
+                            doc_created = doc_created.replace(tzinfo=timezone.utc)
+                        if doc_created < cutoff:
+                            continue
+                    if not isinstance(emb, (list, tuple)):
+                        continue
+                    if len(emb) != _st["dim"]:
+                        log.warning(
+                            f"embedding dim mismatch (expected {_st['dim']}, "
+                            f"got {len(emb)}) for {doc.get('post_url', '?')} — skipping"
+                        )
+                        continue
+                    _s_batch_emb.append(emb)
+                    _s_batch_docs.append(doc)
+                    if len(_s_batch_emb) >= _st["batch"]:
+                        _s_flush()
+                if _st is not None:
+                    _s_flush()
+            except _ScanCancelled:
+                _was_cancelled = True
+                _failed_here = True
+                log.warning(f"{label}: scan cancelled after {scanned} docs (collection treated as incomplete)")
+            except Exception as exc:
+                _failed_here = True
+                if _is_exec_timeout(exc):
+                    log.warning(f"{label}: Mongo find hit MONGO_FIND_MAX_TIME_MS / network timeout "
+                                f"after {scanned} docs: {exc}")
+                else:
+                    log.warning(f"{label}: unlimited-mode cursor failed: {exc}")
+                if _st is not None:
+                    try:
+                        _s_flush()      # score what was already read, as before
+                    except Exception as flush_exc:
+                        log.warning(f"{label}: final batch score failed: {flush_exc}")
 
             _elapsed = time.monotonic() - _t0
+            if _was_cancelled:
+                # Cancelled/deadline: what was collected is NOT a complete scan
+                # of this collection — discard it and record nothing.
+                _fetch_failures.append(label)
+                return []
+
+            with _scan_lock:
+                if _cancelled():
+                    # The deadline / a cancel fired while this worker was
+                    # finishing: nothing is recorded and the collection is
+                    # failed (never a silent partial "complete" scan).
+                    _fetch_failures.append(label)
+                    return []
+                if _failed_here:
+                    _fetch_failures.append(label)
+                if scan_state is not None:
+                    scan_state["fetched"][label] = _s_consumed if _st is not None else len(docs)
+                    # A failed/partial collection must NOT advance its watermark.
+                    if not _failed_here:
+                        if _max_wm is not None:
+                            scan_state["new_wm"][label] = _max_wm
+                        if _max_created is not None:
+                            scan_state["new_wm_created"][label] = _max_created
+                    if _bad_id:
+                        scan_state["bad_id"] = True
+                if _st is not None:
+                    _stream_out[label] = {
+                        "pairs": _s_pairs, "consumed": _s_consumed, "new": _s_new,
+                    }
+
+            if _st is not None:
+                log.info(
+                    f"{label} streamed-score: scanned={_s_consumed} kept={len(_s_pairs)} "
+                    f"batch={_st['batch']} elapsed={_elapsed:.2f}s"
+                )
+                log.info(f"{label} fetched={_s_consumed} elapsed={_elapsed:.2f}s (scanned={scanned})")
+                return docs
             if len(docs) > 100000:
                 log.warning(
                     f"{label}: fetched={len(docs)} docs — very large result set; "
@@ -1560,27 +1841,125 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
         # TIER 1 — lexical/relevance-selected, any age.
         if lexical_or:
             try:
-                _absorb(
+                _lex_cursor = (
                     collection.find(
                         {"$and": [mongo_query, {"$or": lexical_or}]}, _pool_projection
                     )
                     .sort("created_utc", -1)
                     .limit(SIGNAL_EMBEDDING_CANDIDATE_POOL)
                 )
+                _apply_find_max_time(_lex_cursor, _find_max_ms)
+                _absorb(_lex_cursor)
             except Exception as exc:
+                if _is_exec_timeout(exc):
+                    _fetch_failures.append(label)
                 log.warning(f"{label}: lexical candidate tier failed (falling back to recency tier only): {exc}")
 
         # TIER 2 — the original recency window, unchanged.
         try:
-            _absorb(
+            _rec_cursor = (
                 collection.find(mongo_query, _pool_projection)
                 .sort("created_utc", -1)
                 .limit(SIGNAL_EMBEDDING_RECENCY_POOL)
             )
+            _apply_find_max_time(_rec_cursor, _find_max_ms)
+            _absorb(_rec_cursor)
         except Exception as exc:
+            if _is_exec_timeout(exc):
+                _fetch_failures.append(label)
             log.warning(f"{label}: recency candidate tier failed: {exc}")
 
         return docs
+
+    # (PER-PHRASE EMBEDDING MATCHING FIX / SCAN RESILIENCE) The query-embedding
+    # preparation below is the ORIGINAL block, unchanged in what it does (same
+    # cache read, same single batched generate call, same cache write); it was
+    # only wrapped in a memoized function so it can run BEFORE the collection
+    # scan (needed to score while streaming) yet still run once, at its old
+    # place, when streaming is off.
+    _qe_memo = {}
+
+    def _prep_query_embeddings():
+        if "v" in _qe_memo:
+            return _qe_memo["v"]
+        # (PER-PHRASE EMBEDDING MATCHING FIX) Build the query ITEMS list for
+        # this call: every keyword AND every match_phrase, kept as SEPARATE
+        # items — never joined into one combined string. Each item gets its
+        # own embedding below (via generate_query_embeddings_batch(), one
+        # batched OpenAI call), so a document only has to strongly match ONE
+        # of these items to be picked up, instead of being scored against a
+        # single diluted/averaged embedding of everything combined.
+        query_items = list(keyword_list) + list(phrase_list)
+
+        # (QUERY-EMBEDDING CACHING) Reuse a previously-generated, saved list
+        # of query embeddings for this (chat_id, topic_key) pair when it was
+        # built from this exact same set of keywords + match_phrases —
+        # avoids hitting the OpenAI embeddings API on every repeated call for
+        # the same topic (e.g. a ~2s polling loop). Entirely best-effort and
+        # fail-safe — any Mongo hiccup here just falls through to the
+        # original, uncached generate_query_embeddings_batch() call below,
+        # exactly as if this caching layer didn't exist.
+        #
+        # (KEYING-MISMATCH FIX) Keyed on {"chat_id": chat_id, "topic_key":
+        # topic_key} — the SAME document get_cached_topic_evidence() /
+        # save_topic_evidence_cache() already read/write for this topic, so
+        # the embedding cache and the evidence-posts cache can never end up
+        # on two different documents. When no chat_id is given at all, this
+        # entire caching layer is skipped (no Mongo read/write) and a fresh,
+        # uncached set of embeddings is generated instead — never writes an
+        # ambiguous, chat-less document.
+        #
+        # (PER-PHRASE EMBEDDING MATCHING FIX) The cached/stored
+        # "query_embedding" field now holds a LIST of vectors (one per
+        # query_items entry, in the same order) instead of a single vector.
+        query_signature = _compute_query_signature(keyword_list, phrase_list)
+        query_embeddings = None
+
+        if chat_id:
+            cached_embedding_doc = None
+            try:
+                cached_embedding_doc = topic_evidence_cache_collection.find_one(
+                    {"chat_id": chat_id, "topic_key": topic_key},
+                    {"_id": 0, "query_embedding": 1, "query_embedding_signature": 1},
+                )
+            except Exception as exc:
+                log.warning(f"Query-embedding cache read failed for chat_id={chat_id} topic_key={topic_key}: {exc}")
+                cached_embedding_doc = None
+
+            if (
+                cached_embedding_doc
+                and cached_embedding_doc.get("query_embedding")
+                and cached_embedding_doc.get("query_embedding_signature") == query_signature
+            ):
+                # Already a list-of-lists (per-keyword/per-phrase vectors),
+                # saved this same shape by the cache-write branch below.
+                query_embeddings = cached_embedding_doc["query_embedding"]
+
+            if not query_embeddings:
+                query_embeddings = generate_query_embeddings_batch(query_items)
+                if query_embeddings:
+                    try:
+                        topic_evidence_cache_collection.update_one(
+                            {"chat_id": chat_id, "topic_key": topic_key},
+                            {"$set": {
+                                "chat_id": chat_id,
+                                "topic_key": topic_key,
+                                "query_embedding": query_embeddings,
+                                "query_embedding_signature": query_signature,
+                            }},
+                            upsert=True,
+                        )
+                    except Exception as exc:
+                        log.warning(f"Query-embedding cache save failed for chat_id={chat_id} topic_key={topic_key}: {exc}")
+        else:
+            # (KEYING-MISMATCH FIX) No chat_id given at all — skip the
+            # embedding cache entirely (no Mongo read, no Mongo write) rather
+            # than ever writing a chat-less, ambiguous document. Falls back
+            # to generating fresh, uncached, exactly as if this caching
+            # feature didn't exist.
+            query_embeddings = generate_query_embeddings_batch(query_items)
+        _qe_memo["v"] = query_embeddings
+        return query_embeddings
 
     # (PARALLEL FETCH) In unlimited mode, the three collections are fetched
     # concurrently via ThreadPoolExecutor(max_workers=3). pymongo cursors are
@@ -1603,30 +1982,139 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     if signals_collection_4 is not None:
         _collections_to_fetch.append((signals_collection_4, "signals_collection_4"))
 
-    if len(_collections_to_fetch) == 1:
-        # Single collection — no thread overhead needed.
+    # (STREAMING SCORE) Active only in UNLIMITED mode with STREAMING_SCORE_ENABLED.
+    # Query embeddings must exist BEFORE the scan so each batch can be scored as
+    # it arrives; no usable query embeddings => [] without scanning anything.
+    # Legacy mode (CANDIDATE_POOL > 0) and the flag-off path are untouched.
+    if (
+        SIGNAL_EMBEDDING_CANDIDATE_POOL <= 0 and SIGNAL_EMBEDDING_RECENCY_POOL <= 0
+        and _cfg_value("STREAMING_SCORE_ENABLED", True)
+    ):
+        _qe_early = _prep_query_embeddings()
+        if not _qe_early or not _normalize_query_embeddings(_qe_early):
+            _register_scan_status(chat_id, topic_key, True)
+            return []
+        try:
+            _raw_q_s = [q for q in _qe_early if q and len(q) > 0]
+            _Qs = np.array(_raw_q_s, dtype=np.float32)
+            _qn_s = np.linalg.norm(_Qs, axis=1, keepdims=True)
+            _qn_s = np.where(_qn_s == 0, 1.0, _qn_s)
+            _Qs = _Qs / _qn_s
+            _stream_ctx = {
+                "Q": _Qs, "dim": _Qs.shape[1],
+                # same 2000-doc NumPy batch as the non-streaming scorer (capped
+                # by SIGNAL_EMBEDDING_FETCH_BATCH if that is set lower)
+                "batch": max(1, min(int(SIGNAL_EMBEDDING_FETCH_BATCH or 2000), 2000)),
+            }
+        except Exception as exc:
+            log.warning(f"streaming score unavailable (numpy query matrix failed), using fetch-then-score: {exc}")
+            _stream_ctx = None
+
+    try:
+        _deadline_s = float(_cfg_value("SCAN_DEADLINE_SECONDS", 90) or 0)
+    except (TypeError, ValueError):
+        _deadline_s = 0.0
+
+    if len(_collections_to_fetch) == 1 and _deadline_s <= 0:
+        # Single collection, no deadline — no thread overhead needed.
         raw_docs = _fetch_candidate_pool(*_collections_to_fetch[0])
     else:
-        import concurrent.futures as _cf
+        # (SCAN DEADLINE) The executor is managed by hand: a `with` block would
+        # call shutdown(wait=True) on exit and sit through every slow worker,
+        # defeating the deadline. Futures are waited on with a deadline; the
+        # ones that did not finish are recorded as failed, their workers are
+        # told to stop (cancel event), and the pool is shut down WITHOUT waiting.
+        # A Python thread cannot be killed — the worker itself polls the event.
         raw_docs = []
+        _pool = concurrent.futures.ThreadPoolExecutor(max_workers=3)
         _fetch_futures = []
-        with _cf.ThreadPoolExecutor(max_workers=3) as _pool:
+        _unfinished = set()
+        _stop_reason = None
+        try:
             for _coll, _label in _collections_to_fetch:
                 _fetch_futures.append(_pool.submit(_fetch_candidate_pool, _coll, _label))
+            _pending = set(_fetch_futures)
+            _t_wait = time.monotonic()
+            while _pending:
+                if _deadline_s > 0:
+                    _left = _deadline_s - (time.monotonic() - _t_wait)
+                    if _left <= 0:
+                        _stop_reason = "deadline"
+                        break
+                    _slice = min(0.5, _left)
+                else:
+                    _slice = 0.5
+                _done_now, _pending = concurrent.futures.wait(_pending, timeout=_slice)
+                if _pending and cancel_event is not None and cancel_event.is_set():
+                    _stop_reason = "cancelled"
+                    break
+            _unfinished = set(_pending)
+            if _unfinished:
+                with _scan_lock:
+                    _deadline_cancel.set()          # workers stop reading
+                    for (_coll, _label), _fut in zip(_collections_to_fetch, _fetch_futures):
+                        if _fut in _unfinished:
+                            _fetch_failures.append(_label)
+                            if scan_state is not None:
+                                # never advance the watermark of an unfinished collection
+                                scan_state.get("new_wm", {}).pop(_label, None)
+                                scan_state.get("new_wm_created", {}).pop(_label, None)
+                            _stream_out.pop(_label, None)
+                            log.warning(f"{_label} scan deadline hit, skipping"
+                                        if _stop_reason == "deadline"
+                                        else f"{_label} scan cancelled, skipping")
+        finally:
+            _pool.shutdown(wait=False, cancel_futures=True)
+
         for (_coll, _label), _fut in zip(_collections_to_fetch, _fetch_futures):
+            if _fut in _unfinished:
+                continue
             try:
                 raw_docs.extend(_fut.result())
             except Exception as exc:
                 log.warning(f"{_label} fetch failed (skipping): {exc}")
                 _fetch_failures.append(_label)
+                _stream_out.pop(_label, None)
+
+        if _stop_reason == "cancelled":
+            # Every waiter is gone: nothing useful can be done with a partial
+            # scan. Report it as incomplete and stop.
+            _fetch_failures[:] = list(dict.fromkeys(_fetch_failures))
+            _register_scan_status(chat_id, topic_key, False)
+            if scan_state is not None:
+                scan_state["complete"] = False
+            return []
+
+    _fetch_failures[:] = list(dict.fromkeys(_fetch_failures))
+    if scan_state is not None:
+        scan_state["failed_labels"] = list(_fetch_failures)
 
     # (SCAN STATUS) Recorded for the strict wait logic: "complete" means every
     # collection was read without error.
     _register_scan_status(chat_id, topic_key, not _fetch_failures)
+    # Streamed results of the collections that finished (labels in submission
+    # order, i.e. primary, _2, _4 — the same order raw_docs would have had).
+    _stream_pairs = []
+    _stream_consumed = 0
+    _stream_new = 0
+    if _stream_ctx is not None:
+        for _coll, _label in _collections_to_fetch:
+            _o = _stream_out.get(_label)
+            if _o is None:
+                continue
+            _stream_pairs.extend(_o["pairs"])
+            _stream_consumed += _o["consumed"]
+            _stream_new += _o["new"]
     if scan_state is not None:
         scan_state["complete"] = not _fetch_failures
-        scan_state["fetched_total"] = len(raw_docs)
-        if scan_state.get("delta_mode") and raw_docs:
+        # fetched_total / new_after_dedupe keep their meaning: docs SCANNED
+        # (not docs kept after the similarity threshold).
+        scan_state["fetched_total"] = (_stream_consumed if _stream_ctx is not None else len(raw_docs))
+        if _stream_ctx is not None:
+            # overlap re-reads were already dropped inside the workers
+            if scan_state.get("delta_mode"):
+                scan_state["new_after_dedupe"] = _stream_new
+        elif scan_state.get("delta_mode") and raw_docs:
             # Overlap re-reads of posts we already hold are dropped (dedupe by
             # post_url) — only genuinely new URLs count as a delta.
             _known = {c[0] for c in (scan_state.get("carry") or []) if c and c[0]}
@@ -1634,7 +2122,8 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                 raw_docs = [d for d in raw_docs
                             if _first_present(d, _URL_FIELD_CANDIDATES) not in _known]
             scan_state["new_after_dedupe"] = len(raw_docs)
-        if scan_state.get("delta_mode") and not raw_docs and not _fetch_failures:
+        if (scan_state.get("delta_mode") and not _fetch_failures
+                and (_stream_new == 0 if _stream_ctx is not None else not raw_docs)):
             # EMPTY DELTA: nothing new anywhere -> skip query embedding,
             # scoring, the interpreter and the bridge entirely.
             scan_state["unchanged"] = True
@@ -1644,83 +2133,11 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             )
             return []
 
-    # (PER-PHRASE EMBEDDING MATCHING FIX) Build the query ITEMS list for
-    # this call: every keyword AND every match_phrase, kept as SEPARATE
-    # items — never joined into one combined string. Each item gets its
-    # own embedding below (via generate_query_embeddings_batch(), one
-    # batched OpenAI call), so a document only has to strongly match ONE
-    # of these items to be picked up, instead of being scored against a
-    # single diluted/averaged embedding of everything combined.
-    query_items = list(keyword_list) + list(phrase_list)
-
-    # (QUERY-EMBEDDING CACHING) Reuse a previously-generated, saved list
-    # of query embeddings for this (chat_id, topic_key) pair when it was
-    # built from this exact same set of keywords + match_phrases —
-    # avoids hitting the OpenAI embeddings API on every repeated call for
-    # the same topic (e.g. a ~2s polling loop). Entirely best-effort and
-    # fail-safe — any Mongo hiccup here just falls through to the
-    # original, uncached generate_query_embeddings_batch() call below,
-    # exactly as if this caching layer didn't exist.
-    #
-    # (KEYING-MISMATCH FIX) Keyed on {"chat_id": chat_id, "topic_key":
-    # topic_key} — the SAME document get_cached_topic_evidence() /
-    # save_topic_evidence_cache() already read/write for this topic, so
-    # the embedding cache and the evidence-posts cache can never end up
-    # on two different documents. When no chat_id is given at all, this
-    # entire caching layer is skipped (no Mongo read/write) and a fresh,
-    # uncached set of embeddings is generated instead — never writes an
-    # ambiguous, chat-less document.
-    #
-    # (PER-PHRASE EMBEDDING MATCHING FIX) The cached/stored
-    # "query_embedding" field now holds a LIST of vectors (one per
-    # query_items entry, in the same order) instead of a single vector.
-    query_signature = _compute_query_signature(keyword_list, phrase_list)
-    query_embeddings = None
-
-    if chat_id:
-        cached_embedding_doc = None
-        try:
-            cached_embedding_doc = topic_evidence_cache_collection.find_one(
-                {"chat_id": chat_id, "topic_key": topic_key},
-                {"_id": 0, "query_embedding": 1, "query_embedding_signature": 1},
-            )
-        except Exception as exc:
-            log.warning(f"Query-embedding cache read failed for chat_id={chat_id} topic_key={topic_key}: {exc}")
-            cached_embedding_doc = None
-
-        if (
-            cached_embedding_doc
-            and cached_embedding_doc.get("query_embedding")
-            and cached_embedding_doc.get("query_embedding_signature") == query_signature
-        ):
-            # Already a list-of-lists (per-keyword/per-phrase vectors),
-            # saved this same shape by the cache-write branch below.
-            query_embeddings = cached_embedding_doc["query_embedding"]
-
-        if not query_embeddings:
-            query_embeddings = generate_query_embeddings_batch(query_items)
-            if query_embeddings:
-                try:
-                    topic_evidence_cache_collection.update_one(
-                        {"chat_id": chat_id, "topic_key": topic_key},
-                        {"$set": {
-                            "chat_id": chat_id,
-                            "topic_key": topic_key,
-                            "query_embedding": query_embeddings,
-                            "query_embedding_signature": query_signature,
-                        }},
-                        upsert=True,
-                    )
-                except Exception as exc:
-                    log.warning(f"Query-embedding cache save failed for chat_id={chat_id} topic_key={topic_key}: {exc}")
-    else:
-        # (KEYING-MISMATCH FIX) No chat_id given at all — skip the
-        # embedding cache entirely (no Mongo read, no Mongo write) rather
-        # than ever writing a chat-less, ambiguous document. Falls back
-        # to generating fresh, uncached, exactly as if this caching
-        # feature didn't exist.
-        query_embeddings = generate_query_embeddings_batch(query_items)
-
+    # (SCAN RESILIENCE) Query embeddings: prepared by _prep_query_embeddings()
+    # (defined above the fetch). Already done up-front when streaming score is
+    # active; otherwise this is its original place in the flow. Memoized, so
+    # the embeddings/cache are never generated or read twice.
+    query_embeddings = _prep_query_embeddings()
     if not query_embeddings:
         return []
 
@@ -1755,7 +2172,10 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     # efficiency — 2000 docs per batch, query matrix built once.
     # LEGACY MODE: keeps the existing per-doc _max_similarity_against() loop
     # unchanged so nothing regresses when positive pool constants are set.
-    scored_docs = []
+    # (STREAMING SCORE) pairs already scored while fetching come first, then
+    # whatever is left in raw_docs (lazy-backfilled docs) is scored below —
+    # the same (similarity, doc) pairs, in the same order, as fetch-then-score.
+    scored_docs = list(_stream_pairs)
 
     if SIGNAL_EMBEDDING_CANDIDATE_POOL <= 0 and SIGNAL_EMBEDDING_RECENCY_POOL <= 0:
         # ── Unlimited mode: batched numpy ────────────────────────────────
@@ -1906,13 +2326,17 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     # or any return value — silent, side-effect-free otherwise.
     if log.isEnabledFor(logging.DEBUG):
         try:
-            all_scores = sorted(
-                (
-                    _max_similarity_against(doc.get("embedding"), _normalized_queries)
-                    for doc in raw_docs
-                ),
-                reverse=True,
-            )
+            if _stream_ctx is not None:
+                # the raw pool was streamed away; below-threshold scores are gone
+                all_scores = [sc for sc, _d in scored_docs[:5]]
+            else:
+                all_scores = sorted(
+                    (
+                        _max_similarity_against(doc.get("embedding"), _normalized_queries)
+                        for doc in raw_docs
+                    ),
+                    reverse=True,
+                )
             log.debug(
                 f"Embedding-match debug | topic_key={topic_key} | pool_size={len(raw_docs)} "
                 f"| similarity_threshold={SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD} "
@@ -2340,8 +2764,8 @@ def _persist_scan_state(chat_id, topic_key, scan_state, merged, cached, elapsed)
             f"(watermark={ {k: v.isoformat() for k, v in (new_wm or {}).items()} }, "
             f"mode={'delta' if scan_state.get('delta_mode') else 'full:' + str(scan_state.get('why_full', 'first_scan'))})"
         )
-        if not scan_state.get("complete", False):
-            return                      # a collection failed: never advance
+        if not scan_state.get("complete", False) or scan_state.get("failed_labels"):
+            return                      # a collection failed/was cancelled: never advance
         if not new_wm and (cached or {}).get("scan_watermark"):
             return                      # nothing new, nothing to advance
 
@@ -2402,7 +2826,8 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
                               matcher_fn, match_phrases: list = None,
                               targeting_platform: str = "all",
                               since_days: int = None, unfiltered: bool = False,
-                              user_query: str = None) -> list:
+                              user_query: str = None,
+                              cancel_event: "threading.Event" = None) -> list:
     """CORE FUNCTION — instead of running a fully-fresh query every time
     the same topic is asked about again:
       1. Check the cache first.
@@ -2466,6 +2891,10 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
     )
     if scan_state is not None:
         _call_kwargs["scan_state"] = scan_state
+    # (SCAN RESILIENCE) Passed only to a matcher that accepts it, and only when
+    # a cancel event was actually given — every other call is unchanged.
+    if cancel_event is not None and _accepts_kw(matcher_fn, "cancel_event"):
+        _call_kwargs["cancel_event"] = cancel_event
     _t_scan = time.monotonic()
     fresh_posts = matcher_fn(topic_key, keywords, **_call_kwargs)
 
