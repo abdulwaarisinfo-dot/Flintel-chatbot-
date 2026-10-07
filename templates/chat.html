@@ -2533,6 +2533,19 @@
     outro: 'You’ll see results here as soon as matching posts are found.',
     checklist: [],
   };
+  // (NEUTRAL WAIT) Shown while POST /search is in flight. The server decides search-vs-chat
+  // INSIDE that request (greetings/small talk are answered right in the response), so until it
+  // replies we must not claim "Searching Reddit" or show a progress bar. The progress block only
+  // appears once the server confirms a search (pending turn rendered / wireUpStream).
+  function showNeutralWaitRow(rowEl) {
+    rowEl.classList.add('neutral-wait-row');
+    rowEl.setAttribute('role', 'status');
+    rowEl.setAttribute('aria-label', 'Thinking');
+    const dots = document.createElement('div');
+    dots.className = 'loading-dots';
+    for (let i = 0; i < 3; i++) dots.appendChild(document.createElement('span'));
+    rowEl.replaceChildren(dots);
+  }
   function showSearchProgressPlaceholder(rowEl, requestedAtIso) {
     renderSearchProgressBlock(rowEl, SEARCH_PROGRESS_PLACEHOLDER, requestedAtIso || new Date().toISOString());
     // the row may not be attached yet (optimistic turns) — start the bar once it is
@@ -3327,7 +3340,7 @@
       optimisticTurn.appendChild(optimisticTurnRow);
       const optimisticLoadingRow = document.createElement('div');
       optimisticLoadingRow.className = 'loading-row';
-      showSearchProgressPlaceholder(optimisticLoadingRow, new Date().toISOString()); // (PROGRESS-FIRST UI)
+      showNeutralWaitRow(optimisticLoadingRow); // (NEUTRAL WAIT: intent unknown until /search answers)
       optimisticTurn.appendChild(optimisticLoadingRow);
       liveThreadInnerForOptimistic.appendChild(optimisticTurn);
       optimisticTurn.scrollIntoView({ behavior: 'smooth', block: 'start' });
