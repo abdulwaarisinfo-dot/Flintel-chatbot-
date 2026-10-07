@@ -94,3 +94,29 @@ console.log(JSON.stringify(out));
     assert o == {"running": True, "btnDisabledWhileRunning": True, "inputDisabledWhileRunning": False,
                  "btnStillDisabledAfterTyping": True, "wd": 380000, "runningAfter": False,
                  "btnEnabledAfterFinish": True, "btnDisabledWhenEmpty": True}
+
+
+# ---- HERO DOCK FIX: search box visible (typing ok, send disabled) while the first prompt runs ----
+def test_hero_optimistic_turn_shows_disabled_docked_box():
+    s = FILES["index"]
+    i = s.index("function showHeroOptimisticTurn(query)")
+    body = s[i:s.index("function clearHeroOptimisticTurn")]
+    assert "getElementById('docked-input-wrap')" in body and "cloneNode(true)" in body
+    assert "removeAttribute('hidden')" in body and "dock.style.display = 'block'" in body
+    assert "hero-optimistic-dock-input" in body
+    assert "dockBtn.disabled = true" in body
+    assert body.index("holder.appendChild(dock)") < body.index("convArea.appendChild(holder)")
+
+
+def test_dock_draft_carried_into_real_input_and_back_on_decline():
+    s = FILES["index"]
+    nav = s[s.index("async function navigateTo"):s.index("window.addEventListener('popstate'")]
+    assert nav.index("const heroDockDraft") < nav.index("currentMain.innerHTML = newMain.innerHTML") < nav.index("freshSearchInput.value = heroDockDraft")
+    clr = s[s.index("function clearHeroOptimisticTurn"):s.index("function wireUpStream")]
+    assert "#hero-optimistic-dock-input" in clr and "heroInput.value = draftEl.value" in clr
+
+
+def test_static_dock_markup_still_hidden_and_unchanged():
+    s = FILES["index"]
+    assert '<div class="docked-input-wrap" id="docked-input-wrap" hidden>' in s
+    assert 'id="followup-input"' in s and 'id="followup-submit-btn"' in s
