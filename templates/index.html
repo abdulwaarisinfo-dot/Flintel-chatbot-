@@ -2065,12 +2065,12 @@
 
   // (SEARCH-PROGRESS UI) Mirrors flintel.py's should_trigger_immediately()
   // (fires right away, at 0s — Google-fallback/search-progress no longer
-  // wait for any gated mark) and config.py's RESPONSE_TIMEOUT (now 180s)
+  // wait for any gated mark) and config.py's RESPONSE_TIMEOUT (now 360s)
   // — kept here as plain constants (not fetched from the backend) since
   // they're stable config values; if either one is ever changed via its
   // own env var, update these two to match.
   const SEARCH_PROGRESS_TRIGGER_SECONDS = 0;
-  const SEARCH_PROGRESS_TIMEOUT_SECONDS = 180;
+  const SEARCH_PROGRESS_TIMEOUT_SECONDS = 360;
 
   // (PROGRESS-BAR FIX) The bar used to have TWO independent writers —
   // this client-side elapsed-time guess, and the server-computed
@@ -3260,7 +3260,7 @@
   // (SEND-LOCK) true from the moment a search is submitted until its stream finishes/fails.
   // Typing is always allowed; SENDING (button, Enter, submit event) is blocked while true.
   let searchRunning = false;
-  const SUBMIT_LOADING_TIMEOUT_MS = 200000; // (SEND-LOCK) just above the server's 180s RESPONSE_TIMEOUT: the lock must outlive any legitimate scan, but a dead stream can never lock sending forever
+  const SUBMIT_LOADING_TIMEOUT_MS = 380000; // (SEND-LOCK) just above the server's 360s RESPONSE_TIMEOUT: the lock must outlive any legitimate scan, but a dead stream can never lock sending forever
   function setSubmitLoading(isLoading) {
     searchRunning = !!isLoading;
     const submitBtn = document.getElementById('submit-btn');
