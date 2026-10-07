@@ -117,3 +117,24 @@ console.log(JSON.stringify(out));
     assert o["clientPct"] in ("33%", "34%", "32%")
     assert o["afterStaleClient"] != "0%" and int(o["afterStaleClient"][:-1]) >= 32
     assert o["keepsBarValue"] and o["hasChecklist"] and o["hasLabel"] and o["oneTrack"] == 1
+
+
+# ---- NEUTRAL WAIT: no "Searching Reddit"/progress bar until the server confirms a search ----
+# Intent (search vs chat/greeting) is decided inside POST /search; greetings are answered in that
+# response, so the optimistic row must not claim a search.
+@pytest.mark.parametrize("name", ["index", "chat"])
+def test_optimistic_wait_is_neutral_not_progress(name):
+    s = open(f"templates/{name}.html", encoding="utf-8").read()
+    assert "function showNeutralWaitRow(" in s
+    body = s[s.index("function showNeutralWaitRow("):]
+    body = body[:body.index("function showSearchProgressPlaceholder(")]
+    assert "loading-dots" in body
+    assert "Searching" not in body and "search-progress" not in body
+    # the optimistic turn builders use the neutral row and never the progress placeholder
+    anchor = "function createOptimisticTurn(" if name == "index" else "const optimisticLoadingRow = document.createElement('div');"
+    i = s.index(anchor)
+    region = s[i:i + 1500]
+    assert "showNeutralWaitRow(" in region
+    assert "showSearchProgressPlaceholder(" not in region
+    # progress placeholder is still used for confirmed pending (search) turns
+    assert s.count("showSearchProgressPlaceholder(") >= 2
