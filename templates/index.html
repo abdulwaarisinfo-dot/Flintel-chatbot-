@@ -2655,6 +2655,9 @@
       if (newStyleTag && currentStyleTag) {
         currentStyleTag.textContent = newStyleTag.textContent;
       }
+      // (HERO DOCK FIX) capture what was typed into the temporary dock before the swap wipes it
+      const heroDockEl = document.getElementById('hero-optimistic-dock-input');
+      const heroDockDraft = heroDockEl ? heroDockEl.value : '';
       currentMain.innerHTML = newMain.innerHTML;
       if (newSessionsList && currentSessionsList) {
         currentSessionsList.innerHTML = newSessionsList.innerHTML;
@@ -2709,6 +2712,10 @@
       console.log('[soft-nav] swap complete, no page reload happened. New URL:', response.url || url);
       const freshSearchInput = document.getElementById('search-input');
       const freshSubmitBtn = document.getElementById('submit-btn');
+      if (freshSearchInput && heroDockDraft.trim() && freshSearchInput.value.trim() === '') {
+        freshSearchInput.value = heroDockDraft; // (HERO DOCK FIX) typed-ahead prompt moves into the real box
+        autoGrowSearchInput(freshSearchInput);
+      }
       if (freshSearchInput && freshSubmitBtn) {
         // (LOADING STATE) wireUpInitialPendingStream() above may have just
         // synchronously set loading (via wireUpStream()) if the freshly
@@ -3462,6 +3469,27 @@
       heroWasHidden: !!(heroWrap && heroWrap.classList.contains('hidden')),
       convWasHidden: convArea.classList.contains('hidden'),
     };
+    // (HERO DOCK FIX) The hero (and its search box) is hidden while the first
+    // prompt is processed, and the real chat page — with its docked box — only
+    // arrives when POST /search returns (for greetings/instant answers that is
+    // AFTER the answer). Show a docked copy of the box right away: typing allowed,
+    // send button disabled (same look as the SEND-LOCK). Its text is carried into
+    // the real #search-input when navigateTo() swaps the chat in (see there).
+    const srcDock = document.getElementById('docked-input-wrap');
+    if (srcDock) {
+      const dock = srcDock.cloneNode(true);
+      dock.removeAttribute('id');
+      dock.removeAttribute('hidden');
+      dock.classList.add('optimistic-dock');
+      dock.style.display = 'block';
+      const dockInput = dock.querySelector('#followup-input');
+      if (dockInput) { dockInput.id = 'hero-optimistic-dock-input'; dockInput.setAttribute('aria-label', 'Ask a follow-up'); }
+      const dockLabel = dock.querySelector('label[for="followup-input"]');
+      if (dockLabel) dockLabel.setAttribute('for', 'hero-optimistic-dock-input');
+      const dockBtn = dock.querySelector('#followup-submit-btn');
+      if (dockBtn) { dockBtn.removeAttribute('id'); dockBtn.disabled = true; }
+      holder.appendChild(dock);
+    }
     convArea.appendChild(holder);
     convArea.classList.remove('hidden');
     if (heroWrap) heroWrap.classList.add('hidden');
@@ -3469,6 +3497,13 @@
   }
   function clearHeroOptimisticTurn(state) {
     if (!state) return;
+    // (HERO DOCK FIX) keep anything typed into the temporary dock
+    const draftEl = state.holder && state.holder.querySelector('#hero-optimistic-dock-input');
+    const heroInput = document.getElementById('search-input');
+    if (draftEl && draftEl.value.trim() && heroInput && heroInput.value.trim() === '') {
+      heroInput.value = draftEl.value;
+      autoGrowSearchInput(heroInput);
+    }
     if (state.holder && state.holder.parentNode) state.holder.parentNode.removeChild(state.holder);
     if (state.heroWrap && !state.heroWasHidden) state.heroWrap.classList.remove('hidden');
     if (state.convArea && state.convWasHidden) state.convArea.classList.add('hidden');
