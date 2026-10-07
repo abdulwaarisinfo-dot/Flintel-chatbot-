@@ -644,12 +644,8 @@
 
   /* ---------- Submit-button loading spinner (additive only) ---------- */
   .spinner-icon { display: none; }
-  .submit-btn.loading svg { display: none; }
-  .submit-btn.loading .spinner-icon {
-    display: flex; width: 15px; height: 15px; border-radius: 50%;
-    border: 2px solid rgba(163,230,53,0.25); border-top-color: #a3e635;
-    animation: submitSpinnerRotate 0.7s linear infinite;
-  }
+  /* (SEND-LOCK) While a search runs the button is simply disabled/greyed (same look as
+     :disabled above) — arrow stays visible, no spinner; the turn's own loading row shows progress. */
   @keyframes submitSpinnerRotate {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
@@ -1409,7 +1405,11 @@
       const freshSearchInput = document.getElementById('search-input');
       const freshSubmitBtn = document.getElementById('submit-btn');
       if (freshSearchInput && freshSubmitBtn) {
-        freshSubmitBtn.disabled = freshSearchInput.value.trim().length === 0;
+        if (!freshSubmitBtn.classList.contains('loading')) {
+          // (SEND-LOCK) swapped content has no running stream -> nothing is running any more
+          if (searchRunning) setSubmitLoading(false);
+          freshSubmitBtn.disabled = freshSearchInput.value.trim().length === 0;
+        }
       }
     } catch (err) {
       console.warn('Soft navigation failed, falling back to a real page load:', err);
@@ -1559,6 +1559,7 @@
   document.addEventListener('keydown', (e) => {
     if (e.target && e.target.id === 'search-input' && e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
+      if (searchRunning) return; // (SEND-LOCK) Enter must not send while a search is running
       const form = document.getElementById('search-form');
       if (form) {
         if (form.requestSubmit) form.requestSubmit();
@@ -3115,8 +3116,12 @@
   // (BUG 2 FIX) Tracks the pending watchdog timeout below, so any call to
   // setSubmitLoading(false) — from ANY code path — always cancels it.
   let submitLoadingWatchdogId = null;
-  const SUBMIT_LOADING_TIMEOUT_MS = 35000; // 35s — comfortably above a normal slow Claude call, short enough that "stuck forever" never actually happens
+  // (SEND-LOCK) true from the moment a search is submitted until its stream finishes/fails.
+  // Typing is always allowed; SENDING (button, Enter, submit event) is blocked while true.
+  let searchRunning = false;
+  const SUBMIT_LOADING_TIMEOUT_MS = 200000; // (SEND-LOCK) just above the server's 180s RESPONSE_TIMEOUT: the lock must outlive any legitimate scan, but a dead stream can never lock sending forever
   function setSubmitLoading(isLoading) {
+    searchRunning = !!isLoading;
     const submitBtn = document.getElementById('submit-btn');
     const searchInput = document.getElementById('search-input');
     if (submitBtn) {
@@ -3129,7 +3134,9 @@
       // place that needs to account for the loading state at all.
       submitBtn.disabled = isLoading ? true : (searchInput ? searchInput.value.trim().length === 0 : false);
     }
-    if (searchInput) searchInput.disabled = isLoading;
+    // (SEND-LOCK) The input is never disabled any more: the user may type the NEXT prompt
+    // while this one runs. Only sending is locked (button disabled above + guards below).
+    if (searchInput) searchInput.disabled = false;
 
     // (BUG 2 FIX) A client-side safety net, independent of whichever
     // specific code path set isLoading=true — covers a dropped SSE
@@ -3155,8 +3162,13 @@
   function showSearchInlineError(message, restoreQuery) {
     const searchInput = document.getElementById('search-input');
     if (searchInput && restoreQuery !== undefined) {
-      searchInput.value = restoreQuery;
-      autoGrowSearchInput(searchInput);
+      // (SEND-LOCK) Only restore into an EMPTY box — never overwrite the next prompt the user is already typing.
+      if (searchInput.value.trim() === '') {
+        searchInput.value = restoreQuery;
+        autoGrowSearchInput(searchInput);
+      } else if (restoreQuery) {
+        message = message + ' (Not sent: "' + String(restoreQuery).slice(0, 80) + '")';
+      }
     }
     const searchBox = document.querySelector('.search-box');
     if (!searchBox) return;
@@ -3182,6 +3194,7 @@
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (searchRunning) return; // (SEND-LOCK) a search is still running — do not send, keep the typed text
       const query = searchInput ? searchInput.value.trim() : '';
       if (!query) return;
 
@@ -3205,6 +3218,9 @@
       // required Form(...) validation fail with 422.
       const formData = new FormData(form);
       setSubmitLoading(true);
+      // (SEND-LOCK) Prompt leaves the box immediately (FormData already captured above);
+      // the user can type the next prompt while this one runs.
+      if (searchInput) { searchInput.value = ''; autoGrowSearchInput(searchInput); }
       let handedOffToStream = false;
 
       // (BUG 4 FIX) Instant feedback — the docked follow-up box no longer
@@ -3252,6 +3268,7 @@
         });
         if (!response.ok) throw new Error(`Request failed: ${response.status}`);
       } catch (fetchErr) {
+        if (searchInput) searchInput.value = query; // (SEND-LOCK) native submit reads the live field — put the prompt back first
         console.warn('[hard-reload-fallback][search-submit][network] Genuine fetch/network failure — falling back to a real page submit. If this is happening more often than a real offline/network issue would explain, capture this exact log + the failing request in DevTools Network tab (status, timing, response) — that is the actual signal needed to diagnose it further; it cannot be root-caused from static code alone.', fetchErr);
         form.submit();
         return;
@@ -3320,7 +3337,7 @@
         const latestTurn = allNewTurns[allNewTurns.length - 1];
         if (!latestTurn) throw new Error('No turn-block found in response');
 
-        if (searchInput) { searchInput.value = ''; autoGrowSearchInput(searchInput); }
+        // (SEND-LOCK) input was already cleared at submit time; clearing again here would wipe a prompt typed meanwhile.
 
         // Animate the new question bubble + loading state in, gently.
         latestTurn.classList.add('stream-reveal');
