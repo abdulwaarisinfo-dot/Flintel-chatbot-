@@ -92,5 +92,5 @@ console.log(JSON.stringify(out));
     assert r.returncode == 0, r.stderr
     o = json.loads(r.stdout.strip().splitlines()[-1])
     assert o == {"running": True, "btnDisabledWhileRunning": True, "inputDisabledWhileRunning": False,
-                 "btnStillDisabledAfterTyping": True, "wd": 200000, "runningAfter": False,
+                 "btnStillDisabledAfterTyping": True, "wd": 380000, "runningAfter": False,
                  "btnEnabledAfterFinish": True, "btnDisabledWhenEmpty": True}
