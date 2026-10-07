@@ -258,10 +258,10 @@ CHAT_SUMMARY_MAX_TURNS         = int(os.getenv("CHAT_SUMMARY_MAX_TURNS", "8"))
 CHAT_SUMMARY_TURN_CHAR_LIMIT   = int(os.getenv("CHAT_SUMMARY_TURN_CHAR_LIMIT", "400"))
 
 # ── Response-timeout config (v6) ──────────────────────────────────────────
-RESPONSE_TIMEOUT = int(os.getenv("RESPONSE_TIMEOUT", "180"))
+RESPONSE_TIMEOUT = int(os.getenv("RESPONSE_TIMEOUT", "360"))
 
 # ── Busy-lock config ──────────────────────────────────────────────────────
-BUSY_FLAG_TIMEOUT_SECONDS = int(os.getenv("BUSY_FLAG_TIMEOUT_SECONDS", "90"))
+BUSY_FLAG_TIMEOUT_SECONDS = int(os.getenv("BUSY_FLAG_TIMEOUT_SECONDS", "400"))
 
 # ── Simulated-stream config ──────────────────────────────────────────────
 STREAM_CHUNK_CHARS         = int(os.getenv("STREAM_CHUNK_CHARS", "3"))
