@@ -290,12 +290,8 @@
 
   /* ---------- Submit-button loading spinner (additive only, same as chat.html) ---------- */
   .spinner-icon { display: none; }
-  .submit-btn.loading svg { display: none; }
-  .submit-btn.loading .spinner-icon {
-    display: flex; width: 15px; height: 15px; border-radius: 50%;
-    border: 2px solid rgba(163,230,53,0.25); border-top-color: #a3e635;
-    animation: submitSpinnerRotate 0.7s linear infinite;
-  }
+  /* (SEND-LOCK) While a search runs the button is simply disabled/greyed (same look as
+     :disabled above) — arrow stays visible, no spinner; the turn's own loading row shows progress. */
   @keyframes submitSpinnerRotate {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
@@ -2581,7 +2577,7 @@
     }
   }
 
-  async function navigateTo(url, { method = 'GET', pushState = true, body = undefined, fallbackForm = undefined, onBusyDecline = undefined } = {}) {
+  async function navigateTo(url, { method = 'GET', pushState = true, body = undefined, fallbackForm = undefined, fallbackQuery = undefined, onBusyDecline = undefined } = {}) {
     // (RACE-CONDITION FIX) Snapshot the generation counter for THIS
     // navigation right away — anything that happens after any subsequent
     // await in this function checks against this snapshot before touching
@@ -2707,6 +2703,8 @@
       // just soft-swapped into the page (see initSearchProgressBlocks()
       // definition further down this same script).
       initSearchProgressBlocks();
+      // (UI BUGS FIX) live elapsed-time on the status chip of a just-swapped-in chat
+      initTurnTimers();
       closeAllSessionMenus(null);
       console.log('[soft-nav] swap complete, no page reload happened. New URL:', response.url || url);
       const freshSearchInput = document.getElementById('search-input');
@@ -2718,6 +2716,9 @@
         // override that back to a simple "is the input empty" check; only
         // apply the normal check when nothing set loading a moment ago.
         if (!freshSubmitBtn.classList.contains('loading')) {
+          // (SEND-LOCK) swapped content has no running stream -> nothing is running any more
+          // (also ends the lock a hero submit set before the swap).
+          if (searchRunning) setSubmitLoading(false);
           freshSubmitBtn.disabled = freshSearchInput.value.trim().length === 0;
         }
       }
@@ -2732,6 +2733,10 @@
         // data — needed for any POST that carries form data (like a
         // search query), so a genuine network failure doesn't silently
         // lose what the user typed.
+        if (fallbackQuery !== undefined) {
+          const si = document.getElementById('search-input');
+          if (si) si.value = fallbackQuery; // (SEND-LOCK) input was cleared at submit time
+        }
         fallbackForm.submit();
       } else {
         const form = document.createElement('form');
@@ -3100,6 +3105,7 @@
   document.addEventListener('keydown', (e) => {
     if (e.target && e.target.id === 'search-input' && e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
+      if (searchRunning) return; // (SEND-LOCK) Enter must not send while a search is running
       const form = document.getElementById('search-form');
       if (form) {
         if (form.requestSubmit) form.requestSubmit();
@@ -3143,11 +3149,14 @@
     if (!conversationArea || threadInner) return;
 
     e.preventDefault();
+    if (searchRunning) return; // (SEND-LOCK) a search is still running — do not send
     const searchInput = document.getElementById('search-input');
     const query = searchInput ? searchInput.value.trim() : '';
     if (!query) return;
 
-    // (NO-VISIBLE-WAIT-STATE FIX) The homepage must show ZERO visible
+    // (UI BUGS FIX: superseded below by the optimistic turn — the homepage now
+    // shows the user's message + loading row right away instead of nothing.)
+    // (NO-VISIBLE-WAIT-STATE FIX, original note) The homepage must show ZERO visible
     // change while the backend does its own routing work — no disabled/
     // grayed search box, no spinner, no hidden headline/explore panel.
     // The user should submit and then land directly on the real chat
@@ -3171,15 +3180,28 @@
 
     const formData = new FormData(form);
 
+    // (SEND-LOCK) Lock sending and empty the box right away (FormData is already captured).
+    setSubmitLoading(true);
+    if (searchInput) { searchInput.value = ''; autoGrowSearchInput(searchInput); }
+
+    // (UI BUGS FIX) Instant feedback: FormData is already captured above, so
+    // hiding the hero + showing the user's message and the loading row now
+    // cannot drop the query field. Removed again on busy-decline below; on
+    // success navigateTo()'s <main> swap replaces it.
+    const heroOptimistic = showHeroOptimisticTurn(query);
+
     navigateTo(form.action, {
       method: 'POST',
       body: formData,
       fallbackForm: form,
+      fallbackQuery: query,
       // (BUSY-LOCK) Runs instead of the normal swap if the backend
       // declined this request — restore what the user typed and clear
       // the in-flight flag so they can try again right away once their
       // other request finishes.
       onBusyDecline: (errorText) => {
+        clearHeroOptimisticTurn(heroOptimistic);
+        setSubmitLoading(false);
         showSearchInlineError(errorText, query);
         form.dataset.heroSubmitInFlight = 'false';
       },
@@ -3202,7 +3224,7 @@
       const submitBtn = document.getElementById('submit-btn');
       if (searchInput) {
         searchInput.value = row.dataset.query;
-        if (submitBtn) submitBtn.disabled = searchInput.value.trim().length === 0;
+        if (submitBtn) submitBtn.disabled = searchRunning || searchInput.value.trim().length === 0;
         autoGrowSearchInput(searchInput);
         searchInput.focus();
       }
@@ -3235,15 +3257,21 @@
   // (BUG 2 FIX) Tracks the pending watchdog timeout below, so any call to
   // setSubmitLoading(false) — from ANY code path — always cancels it.
   let submitLoadingWatchdogId = null;
-  const SUBMIT_LOADING_TIMEOUT_MS = 35000; // 35s — comfortably above a normal slow Claude call, short enough that "stuck forever" never actually happens
+  // (SEND-LOCK) true from the moment a search is submitted until its stream finishes/fails.
+  // Typing is always allowed; SENDING (button, Enter, submit event) is blocked while true.
+  let searchRunning = false;
+  const SUBMIT_LOADING_TIMEOUT_MS = 200000; // (SEND-LOCK) just above the server's 180s RESPONSE_TIMEOUT: the lock must outlive any legitimate scan, but a dead stream can never lock sending forever
   function setSubmitLoading(isLoading) {
+    searchRunning = !!isLoading;
     const submitBtn = document.getElementById('submit-btn');
     const searchInput = document.getElementById('search-input');
     if (submitBtn) {
       submitBtn.classList.toggle('loading', isLoading);
       submitBtn.disabled = isLoading ? true : (searchInput ? searchInput.value.trim().length === 0 : false);
     }
-    if (searchInput) searchInput.disabled = isLoading;
+    // (SEND-LOCK) The input is never disabled any more: the user may type the NEXT prompt
+    // while this one runs. Only sending is locked (button disabled above + guards below).
+    if (searchInput) searchInput.disabled = false;
 
     // (BUG 2 FIX) A client-side safety net, independent of whichever
     // specific code path set isLoading=true — covers a dropped SSE
@@ -3274,8 +3302,13 @@
   function showSearchInlineError(message, restoreQuery) {
     const searchInput = document.getElementById('search-input');
     if (searchInput && restoreQuery !== undefined) {
-      searchInput.value = restoreQuery;
-      autoGrowSearchInput(searchInput);
+      // (SEND-LOCK) Only restore into an EMPTY box — never overwrite the next prompt the user is already typing.
+      if (searchInput.value.trim() === '') {
+        searchInput.value = restoreQuery;
+        autoGrowSearchInput(searchInput);
+      } else if (restoreQuery) {
+        message = message + ' (Not sent: "' + String(restoreQuery).slice(0, 80) + '")';
+      }
     }
     const searchBox = document.querySelector('.search-box');
     if (!searchBox) return;
@@ -3290,6 +3323,157 @@
     clearTimeout(errorRow._hideTimer);
     errorRow._hideTimer = setTimeout(() => { errorRow.style.display = 'none'; }, 6000);
   }
+
+  // ---- (UI BUGS FIX) Turn status chip timer — copied unchanged from chat.html ----
+  // chat.html's own <script> never runs when a chat's markup arrives here
+  // via navigateTo()'s innerHTML swap (home -> first message), so the chip
+  // timer JS must live in index.html too. Same names, same logic.
+  // ---- Turn status chip: running elapsed-time timer ----
+  // TURN-TIMER-HELPERS-BEGIN
+  const TURN_TZ_RE = /(Z|[+-]\d{2}:?\d{2})$/i;
+  // requested_at is a NAIVE UTC datetime from Mongo: isoformat() has no
+  // "Z"/offset, and new Date("2026-10-04T10:15:00") would be read as LOCAL
+  // time (hours off outside UTC). Treat a designator-less string as UTC.
+  function parseRequestedAt(raw) {
+    if (raw === null || raw === undefined) return NaN;
+    let s = String(raw).trim();
+    if (!s) return NaN;
+    s = s.replace(' ', 'T');
+    s = s.replace(/(\.\d{3})\d+/, '$1');      // keep ms precision only (Safari-safe)
+    if (!TURN_TZ_RE.test(s)) s += 'Z';
+    return new Date(s).getTime();
+  }
+  function turnElapsedSeconds(requestedAtMs, nowMs) {
+    if (!isFinite(requestedAtMs)) return NaN;
+    return Math.max(0, Math.floor(((nowMs === undefined ? Date.now() : nowMs) - requestedAtMs) / 1000));
+  }
+  function formatTurnDuration(totalSeconds) {
+    const t = Math.max(0, Math.floor(totalSeconds));
+    if (t < 60) return t + 's';
+    return Math.floor(t / 60) + 'm ' + (t % 60) + 's';
+  }
+  function formatTurnAgo(totalSeconds) {
+    const t = Math.max(0, Math.floor(totalSeconds));
+    if (t === 1) return '1 second ago';
+    if (t < 60) return t + ' seconds ago';
+    return formatTurnDuration(t) + ' ago';
+  }
+  // TURN-TIMER-HELPERS-END
+
+  let turnTimerInterval = null;
+  function runningTurnChips() {
+    return document.querySelectorAll('.turn-chip[data-turn-timer]:not([data-timer-state])');
+  }
+  function turnTimerTick() {
+    runningTurnChips().forEach((chip) => {
+      if (!document.body.contains(chip)) return;
+      const label = chip.querySelector('.turn-timer');
+      const secs = turnElapsedSeconds(parseRequestedAt(chip.dataset.requestedAt));
+      if (!label || isNaN(secs)) return;          // no usable start time: keep "Searching…"
+      const text = formatTurnAgo(secs);
+      if (label.textContent !== text) label.textContent = text;
+    });
+    if (!runningTurnChips().length && turnTimerInterval) {
+      clearInterval(turnTimerInterval);
+      turnTimerInterval = null;
+    }
+  }
+  // Idempotent: at most ONE interval for the whole page, (re)started after
+  // page load / soft navigation / soft submit, stopped once no chip runs.
+  function initTurnTimers() {
+    if (!runningTurnChips().length) return;
+    turnTimerTick();
+    if (!turnTimerInterval) turnTimerInterval = setInterval(turnTimerTick, 1000);
+  }
+  // Freeze the chip of `scope` (a .turn-block) as completed / failed.
+  function finishTurnTimer(scope, state, fallbackRequestedAt) {
+    if (!scope) return;
+    const chip = scope.querySelector('.turn-chip[data-turn-timer]');
+    if (!chip || chip.dataset.timerState) return;   // missing or already frozen
+    let ms = parseRequestedAt(chip.dataset.requestedAt);
+    if (isNaN(ms)) ms = parseRequestedAt(fallbackRequestedAt);
+    const secs = turnElapsedSeconds(ms);
+    const label = chip.querySelector('.turn-timer');
+    chip.dataset.timerState = state;
+    chip.classList.remove('status-pending', 'status-completed', 'status-failed');
+    chip.classList.add(state === 'failed' ? 'status-failed' : 'status-completed');
+    if (label) {
+      if (state === 'failed') label.textContent = 'Failed';
+      else label.textContent = isNaN(secs) ? 'Completed' : 'Completed · ' + formatTurnDuration(secs);
+    }
+    if (!runningTurnChips().length && turnTimerInterval) {
+      clearInterval(turnTimerInterval);
+      turnTimerInterval = null;
+    }
+  }
+
+  // ---- (UI BUGS FIX) Optimistic turn: instant feedback before /search answers ----
+  // Same markup as chat.html's BUG 4 FIX optimistic turn (user's own query +
+  // the standard loading row). The query goes in via textContent (no XSS).
+  // Nothing here changes what the backend does or how long it takes; it only
+  // removes the dead wait on screen.
+  const OPTIMISTIC_LOGO_SRC = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4CAIAAAC2BqGFAAAHlUlEQVR42u2cX2hUVx7Hf79z5k+aP8SAGLTZ7kNkXmTSKlj0JRUDKmwRpAUFIV3QrQ+CIOlmu7KKgo9riwHFBx+ah1YfaiXUvrQYdBob3e6TTSHYpqHZpGuCM05WornnnnN++3Dm/5/4JzEz6fw+hMvce+femfud3/2d359zA8AwDMMwDMMwDMMwDMMwDMMwDMMwDMMwDMMwDMMwDMMwDMMwTPWB1fidEBGX8osRERHxj51FCBEIBF7SmaWUbNEAAFJKY4x7sXbt2vr6ekBAQAICyvmyBICAAJTe6N6D6Wtx73arRGTJPown4omEk9taW7tCO0dBRBs2bDh48OCOHTtee+2P4XBoSRwIWUokEre+u3X27NlYLFZBravFI586derJkydUgCWyC65S/pbijTl7T5486e6YWlRZSikQ+z/pJyJjjFJKa22MMcZYY4021lhjTYa8lQU35uL7vu/7RNTT01OLWrsLPnHiBBHNP5k3xthcTNGyYFfxqinalUZrrbV+/Pjx+vXtzl8v65VWNsaw1kYikc8+/QwBZUAWOmVML4sGw9RGhMwYmH1zelf2KEp9nNamri6cfPjwxo0bUsrldNaiskIDwHvv/TlcF7ZkC1Wm9DKjLJRQMBWRZDZC4W9DRO5wS1YKQURbtm4FgGUeEisptAvmtr31FhEhIhCUNmcsUhCLfo9ce4c8086c2Vk/Iq5atcoFOVgLQiMiEQUCgTWtaxAx5QPKpW+Us8QiNZ8avqZ+HnQRSDweBwAhkGpBaGfFxpjZ5OzTw/qSzvoZE4PsIURAiHj79jAAIIpacR1SSiL6YeQHl789qzkXOw0of2COn7HWSinn5ub6+/try0e7Qs+lS5eyVSQqJVZm0KP0UZR3hqymBX9px0JERhs3/Pb+rffXXyeWOeSoiioSIn799TdE5Pt+Jub1fV8ppX1tFo012dTwww//XqOZobvmaDQ6Pz+f1UYbWlISicTAwEBnZ+fy5ylVVFQKSKmNuXjx4oEDB3zlB0NBAIjFYteuffXjjyPJ5ENrcxxHUdzy1PP7vj81NTU9PZ1bIKxFpJSI+HpHh+d5Wutkcnbv3r0vw0fVoscoWSb9/vt/E9H27dud+qFQqC4cfrE+gBQiFAoFAgEppBRCYBXcuFVi1FrrsbGxiYmJwcHBcDhstFZKub0NDfVCPJ8xPnr0yCiV9hVVEV0Eqseux8Z+Hro1JKV04Uc0Gt23b9+2bdva2tpy7Dqd5KVivtwSSKrIRETT09PXr18/f/78+Ph4TfvlkrFHT09Pe3s7ANS/8spHH33sed7ig41333kXAKQULHLWR5/555nm5uampqbYzRgRWWOVp1wR2WhjtMm8SL02ha9TbzBGa62Ucp2EjNNnlRER21599bvhYUT84soXROTC6rwqvilf9S+D03p0dLSurm7JpzCsPJz/PXLkyNzc3LFjx1IpYrGUC3dYyvRltNZEtGvXLhew17Q5SyEaGxp++ulnIsp2CxdQ8HlQnrLWnj59GgCCwUqO/BUeJYQQxtq/9vauX9/u+74rTJe9x5//1ncBSnNzM2TmgdSg0EIIY0wkEvmg5wNrrEsRn7UQSkWrlL+dXHsFAGBycrLi1YbK9wz3799f31CvjcZyUlApZTFfUyjdHHAfEbt5EwBsRU268vXoSCSS6hliGV+Ru8wVN1dTLOFhfO1LKQcHB2/fuePunhrNDJ0vnvzPZLYzS9lSfWETtthpUFn3QpaMNaFQKJlMHj58uOYTQiEA4I3X33ARgud5rt7vKz+3Wv/CjI+Pb9myBSpXg17cQL7UWhtrDx06dO7cuYLkbX5+3miTPwshW+hwbqdgBikQEJE2emJiYmBgoK+v78GDB+4jSvr2GhIa0vOVNm/e3N3d3db2h6mpyX/duTM6OhpPJMhabYzNk8mVjfKcSH4HAH1fzcxME2VPzkWOvPBjie+VQKCqcu5AVSne2dm5Z8+ejo6OcDiciMe/HRq6cuXzX34ZdxMTUsHJswUzRmu24BLmvHr16suXLxcPaLOzs729vZDul7NcL64yIra2tt69e9eVk5RSfhrlKTeJ68KFC8ClzsWb87Uvr5WeH22tMcZ1AN7/y/us9YuOV1ICQFdXFxH5yi9XgXMlvfv377e0rFq5ZeVKRvJOsO7u7oWeAyRAFGRta2vr9q4uIlqhRl3R+dHWCsRoNIqIQohyiQSiS0Tozc1vrmAnWcFCBxEFgsGmxqZM3aNETQMBAKwFRGxpaWGhnxsXFCulZv83C24SLZZJWglczj0zMwPV+VB1lbsO522Hh4ezxYoCc6bUEyguCozFYlDpsvIKjjo2btzoIugSsZ01bgqvtfbevXvczF6s1n19fUTkeV6x1pkHMd/+09scRy9qSBRCBIPBq1evuiBPKV+lcRIT0dGjR1nlJdDayX38H8fj8XhBrWNkZGT37t2/A5Wr5b8buIRl3bp1O3fu3LRpU2Nj42///W3o26HBweuep5ZtomKl2gLLqnU5m/19eIzqGsEFopAyE2UTkbWW/0sPwzAMwzAMx48MwzAMwzAMwzAMwzAMwzAMwzAMwzAMwzAMwzAM87L4P+DscEbiQF4aAAAAAElFTkSuQmCC";
+  function createOptimisticTurn(query) {
+    const turn = document.createElement('div');
+    turn.className = 'turn-block';
+    turn.dataset.optimisticTurn = 'true';
+    const row = document.createElement('div');
+    row.className = 'turn-row';
+    const question = document.createElement('div');
+    question.className = 'turn-question';
+    question.textContent = query;
+    row.appendChild(question);
+    turn.appendChild(row);
+    const loadingRow = document.createElement('div');
+    loadingRow.className = 'loading-row';
+    const logoWrap = document.createElement('span');
+    logoWrap.className = 'loading-logo';
+    const logoImg = document.createElement('img');
+    logoImg.src = OPTIMISTIC_LOGO_SRC;
+    logoImg.alt = '';
+    logoWrap.appendChild(logoImg);
+    const dots = document.createElement('div');
+    dots.className = 'loading-dots';
+    dots.innerHTML = '<span></span><span></span><span></span>';
+    const text = document.createElement('span');
+    text.className = 'loading-text';
+    text.textContent = 'Still gathering results for this search\u2026';
+    loadingRow.appendChild(logoWrap);
+    loadingRow.appendChild(dots);
+    loadingRow.appendChild(text);
+    turn.appendChild(loadingRow);
+    return turn;
+  }
+
+  // Home (hero) page: hide the hero content and show the optimistic turn
+  // inside #conversation-area. A plain wrapper (NOT .thread-inner) is used on
+  // purpose: .thread-inner's presence switches the submit handlers over to
+  // the docked-follow-up path, which would break the double-submit guard.
+  // When navigateTo()'s swap replaces <main>, all of this disappears by itself.
+  function showHeroOptimisticTurn(query) {
+    const heroWrap = document.getElementById('hero-wrap');
+    const convArea = document.getElementById('conversation-area');
+    if (!convArea) return null;
+    const holder = document.createElement('div');
+    holder.className = 'optimistic-hero-thread';
+    holder.appendChild(createOptimisticTurn(query));
+    const state = {
+      holder, heroWrap, convArea,
+      heroWasHidden: !!(heroWrap && heroWrap.classList.contains('hidden')),
+      convWasHidden: convArea.classList.contains('hidden'),
+    };
+    convArea.appendChild(holder);
+    convArea.classList.remove('hidden');
+    if (heroWrap) heroWrap.classList.add('hidden');
+    return state;
+  }
+  function clearHeroOptimisticTurn(state) {
+    if (!state) return;
+    if (state.holder && state.holder.parentNode) state.holder.parentNode.removeChild(state.holder);
+    if (state.heroWrap && !state.heroWasHidden) state.heroWrap.classList.remove('hidden');
+    if (state.convArea && state.convWasHidden) state.convArea.classList.add('hidden');
+  }
+
 
   function wireUpStream(pendingTurn, chatId) {
     const topicKey = pendingTurn.dataset.topicKey || '';
@@ -3389,6 +3573,8 @@
         }
         // (LOADING STATE) The answer is ready — unlock the submit box.
         setSubmitLoading(false);
+        // Freeze the status chip: "Completed · <total time>".
+        finishTurnTimer(pendingTurn, 'completed', payload.requested_at);
         const loadingRow = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)}`);
         if (loadingRow) {
           const wrap = document.createElement('div');
@@ -3440,6 +3626,7 @@
         if (phraseTimer) clearInterval(phraseTimer);
         // (LOADING STATE) Never leave the user locked out forever.
         if (myGen === softNavGeneration) setSubmitLoading(false);
+        finishTurnTimer(pendingTurn, 'failed', payload.requested_at);
       }
     };
 
@@ -3455,6 +3642,7 @@
       // search box stuck disabled forever, so this always fires as a
       // last resort regardless of the myGen check.
       setSubmitLoading(false);
+      finishTurnTimer(pendingTurn, 'failed');
     };
   }
 
@@ -3483,6 +3671,7 @@
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (searchRunning) return; // (SEND-LOCK) a search is still running — do not send, keep the typed text
       const query = searchInput ? searchInput.value.trim() : '';
       if (!query) return;
 
@@ -3506,7 +3695,19 @@
       // required Form(...) validation fail with 422.
       const formData = new FormData(form);
       setSubmitLoading(true);
+      // (SEND-LOCK) Prompt leaves the box immediately (FormData already captured above);
+      // the user can type the next prompt while this one runs.
+      if (searchInput) { searchInput.value = ''; autoGrowSearchInput(searchInput); }
       let handedOffToStream = false;
+
+      // (UI BUGS FIX — parity with chat.html's BUG 4 FIX) Instant feedback:
+      // show the user's own query + the loading row BEFORE the fetch
+      // resolves. Removed when the real turn arrives, on busy-decline, or
+      // when a navigation made this response stale.
+      const liveThreadInnerForOptimistic = document.querySelector('.thread-inner') || threadInner;
+      const optimisticTurn = createOptimisticTurn(query);
+      liveThreadInnerForOptimistic.appendChild(optimisticTurn);
+      optimisticTurn.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
       let response;
       try {
@@ -3518,6 +3719,7 @@
         });
         if (!response.ok) throw new Error(`Request failed: ${response.status}`);
       } catch (fetchErr) {
+        if (searchInput) searchInput.value = query; // (SEND-LOCK) native submit reads the live field — put the prompt back first
         console.warn('[hard-reload-fallback][search-submit][network] Genuine fetch/network failure — falling back to a real page submit. If this is happening more often than a real offline/network issue would explain, capture this exact log + the failing request in DevTools Network tab (status, timing, response) — that is the actual signal needed to diagnose it further; it cannot be root-caused from static code alone.', fetchErr);
         form.submit();
         return;
@@ -3532,6 +3734,7 @@
         // never touch the DOM.
         if (myGen !== softNavGeneration) {
           console.warn('[stale-response] Discarding search result — navigation occurred mid-request.');
+          optimisticTurn.remove();
           return;
         }
 
@@ -3545,6 +3748,7 @@
         const errorCard = doc.querySelector('.state-card .state-body') || doc.querySelector('.state-card');
         if (errorCard) {
           const errorText = errorCard.textContent.trim() || 'Please wait for your current request to finish first.';
+          optimisticTurn.remove();
           showSearchInlineError(errorText, query);
           return;
         }
@@ -3568,12 +3772,16 @@
         const latestTurn = allNewTurns[allNewTurns.length - 1];
         if (!latestTurn) throw new Error('No turn-block found in response');
 
-        if (searchInput) { searchInput.value = ''; autoGrowSearchInput(searchInput); }
+        // (SEND-LOCK) input was already cleared at submit time; clearing again here would wipe a prompt typed meanwhile.
 
         latestTurn.classList.add('stream-reveal');
         const liveThreadInner = document.querySelector('.thread-inner') || threadInner;
+        // (UI BUGS FIX) Replace the optimistic placeholder with the real,
+        // server-rendered turn now that it has arrived.
+        optimisticTurn.remove();
         liveThreadInner.appendChild(latestTurn);
         latestTurn.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        initTurnTimers();
 
         if (latestTurn.dataset.pendingStream === 'true') {
           const chatIdInput = document.querySelector('#search-form input[name="chat_id"]');
@@ -3594,6 +3802,7 @@
           setSubmitLoading(false);
         }
       } catch (domErr) {
+        optimisticTurn.remove();   // no-op if the real turn already replaced it
         console.warn('[dom-update-failed][search-submit] Search succeeded server-side; only the in-place DOM update failed (not a network issue, so no hard reload was triggered):', domErr);
       } finally {
         if (myGen === softNavGeneration && !handedOffToStream) {
@@ -3641,6 +3850,8 @@
   // (PROGRESS-BAR FIX) Real initial-page-load trigger for any
   // server-rendered .search-progress-block already on the page.
   initSearchProgressBlocks();
+  // (UI BUGS FIX) live elapsed-time on every still-pending status chip
+  initTurnTimers();
   autoGrowSearchInput(document.getElementById('search-input'));
 
   // ---- Animated cycling placeholder (typewriter effect) on the hero
