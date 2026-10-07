@@ -2096,9 +2096,13 @@
     let p = Math.max(0, Math.min(100, Math.round(percent)));
     if (source === 'server') {
       blockEl.dataset.serverProgressSeen = 'true';
-      if (blockEl._progressTimer) { clearTimeout(blockEl._progressTimer); blockEl._progressTimer = null; }
+      blockEl.dataset.lastServerAt = String(Date.now());
+      // (STUCK-AT-0% FIX) the client timer is NOT cancelled any more: if the stream stalls after a
+      // first server value (e.g. 0%) the bar must keep moving instead of freezing forever.
     } else {
-      if (blockEl.dataset.serverProgressSeen === 'true') return; // server is the source of truth
+      // server stays the source of truth while it is actually talking; if it has been silent
+      // for 8s+ the client guess (capped at 90%, monotonic) takes over again.
+      if (blockEl.dataset.serverProgressSeen === 'true' && (Date.now() - Number(blockEl.dataset.lastServerAt || 0)) < 8000) return;
       p = Math.min(p, 90); // client guess must never look "finished"
     }
     const shown = parseInt(blockEl.dataset.progressShown || '0', 10);
@@ -2116,7 +2120,6 @@
     // defers entirely to the server the moment a real
     // payload.progress_percent value has been seen.
     if (blockEl._progressTimer) return; // single loop per block — never stack a second one
-    if (blockEl.dataset.serverProgressSeen === 'true') return; // server already speaking for this block
     if (!document.body.contains(blockEl)) return;
 
     const requestedAtRaw = blockEl.dataset.requestedAt;
@@ -2124,7 +2127,7 @@
     if (isNaN(requestedAtMs)) return; // no real request time to guess from — wait for server values only
 
     function tick() {
-      if (!document.body.contains(blockEl) || blockEl.dataset.serverProgressSeen === 'true') {
+      if (!document.body.contains(blockEl)) {
         blockEl._progressTimer = null;
         return;
       }
@@ -2155,7 +2158,58 @@
     });
   }
 
+  // (PROGRESS-FIRST UI) The progress block (intro + bar) is the ONLY waiting state: the old plain
+  // "Still gathering results for this search…" row is gone. Until the backend's query-aware copy
+  // (SSE search_progress) arrives, a generic intro + the live bar is shown; the real copy then
+  // replaces only the text, in place (the bar keeps its value, it never resets).
+  const SEARCH_PROGRESS_PLACEHOLDER = {
+    intro: 'Searching Reddit for posts that match your request.',
+    outro: 'You’ll see results here as soon as matching posts are found.',
+    checklist: [],
+  };
+  function showSearchProgressPlaceholder(rowEl, requestedAtIso) {
+    renderSearchProgressBlock(rowEl, SEARCH_PROGRESS_PLACEHOLDER, requestedAtIso || new Date().toISOString());
+    // the row may not be attached yet (optimistic turns) — start the bar once it is
+    setTimeout(() => startSearchProgressPercentTimer(rowEl), 0);
+  }
+  function buildProgressTextNodes(progressContent) {
+    const nodes = [];
+    const textP = document.createElement('p');
+    textP.className = 'search-progress-text';
+    textP.append(
+      document.createTextNode((progressContent.intro || '') + ' '),
+      Object.assign(document.createElement('strong'), { textContent: 'This may take a moment.' }),
+      document.createTextNode(' ' + (progressContent.outro || ''))
+    );
+    nodes.push(textP);
+    const items = progressContent.checklist || [];
+    if (items.length) {
+      const checkingLabel = document.createElement('p');
+      checkingLabel.className = 'search-progress-checking-label';
+      checkingLabel.textContent = 'I’m checking for:';
+      const list = document.createElement('ul');
+      list.className = 'search-progress-checklist';
+      items.forEach((item) => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        list.appendChild(li);
+      });
+      nodes.push(checkingLabel, list);
+    }
+    return nodes;
+  }
+
   function renderSearchProgressBlock(loadingRowEl, progressContent, requestedAtIso) {
+    // (PROGRESS-FIRST UI) Already a progress block (placeholder shown earlier): swap only the text,
+    // keep the bar + its value + its timer.
+    const existingTrack = loadingRowEl.classList.contains('search-progress-block') && loadingRowEl.querySelector('.search-progress-bar-track');
+    if (existingTrack) {
+      loadingRowEl.querySelectorAll('.search-progress-text, .search-progress-checking-label, .search-progress-checklist').forEach((n) => n.remove());
+      buildProgressTextNodes(progressContent).forEach((n) => loadingRowEl.insertBefore(n, existingTrack));
+      if (requestedAtIso) loadingRowEl.dataset.requestedAt = requestedAtIso;
+      startSearchProgressPercentTimer(loadingRowEl);
+      return;
+    }
     // (SEARCH-PROGRESS UI) Builds the exact same markup/classes as the
     // Jinja-rendered msg.search_progress branch above, for the
     // live-streaming case (the SSE "search_progress" event arriving
@@ -2174,25 +2228,7 @@
     delete loadingRowEl.dataset.serverProgressSeen;
     if (loadingRowEl._progressTimer) { clearTimeout(loadingRowEl._progressTimer); loadingRowEl._progressTimer = null; }
 
-    const textP = document.createElement('p');
-    textP.className = 'search-progress-text';
-    textP.append(
-      document.createTextNode(progressContent.intro + ' '),
-      Object.assign(document.createElement('strong'), { textContent: 'This may take a moment.' }),
-      document.createTextNode(' ' + progressContent.outro)
-    );
-
-    const checkingLabel = document.createElement('p');
-    checkingLabel.className = 'search-progress-checking-label';
-    checkingLabel.textContent = 'I’m checking for:';
-
-    const list = document.createElement('ul');
-    list.className = 'search-progress-checklist';
-    (progressContent.checklist || []).forEach((item) => {
-      const li = document.createElement('li');
-      li.textContent = item;
-      list.appendChild(li);
-    });
+    const textNodes = buildProgressTextNodes(progressContent);
 
     const track = document.createElement('div');
     track.className = 'search-progress-bar-track';
@@ -2210,7 +2246,7 @@
     track.append(label, fillWrap, percentEl);
 
     loadingRowEl.innerHTML = '';
-    loadingRowEl.append(textP, checkingLabel, list, track);
+    loadingRowEl.append(...textNodes, track);
 
     startSearchProgressPercentTimer(loadingRowEl);
   }
@@ -3433,21 +3469,7 @@
     turn.appendChild(row);
     const loadingRow = document.createElement('div');
     loadingRow.className = 'loading-row';
-    const logoWrap = document.createElement('span');
-    logoWrap.className = 'loading-logo';
-    const logoImg = document.createElement('img');
-    logoImg.src = OPTIMISTIC_LOGO_SRC;
-    logoImg.alt = '';
-    logoWrap.appendChild(logoImg);
-    const dots = document.createElement('div');
-    dots.className = 'loading-dots';
-    dots.innerHTML = '<span></span><span></span><span></span>';
-    const text = document.createElement('span');
-    text.className = 'loading-text';
-    text.textContent = 'Still gathering results for this search\u2026';
-    loadingRow.appendChild(logoWrap);
-    loadingRow.appendChild(dots);
-    loadingRow.appendChild(text);
+    showSearchProgressPlaceholder(loadingRow, new Date().toISOString()); // (PROGRESS-FIRST UI)
     turn.appendChild(loadingRow);
     return turn;
   }
@@ -3521,6 +3543,17 @@
     // from can't inject its result into whatever chat is now on screen.
     const myGen = softNavGeneration;
 
+    // (PROGRESS-FIRST UI) A freshly rendered pending turn still carries the plain "Still gathering…"
+    // row — turn it into the progress block right away (no wait for the SSE search_progress event).
+    {
+      const plainRow = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)}`);
+      const plainText = plainRow && plainRow.querySelector('.loading-text');
+      if (plainRow && plainRow.classList.contains('loading-row') && plainText && /^Still gathering/.test(plainText.textContent.trim())) {
+        const chipEl = pendingTurn.querySelector('.turn-chip[data-requested-at]');
+        showSearchProgressPlaceholder(plainRow, chipEl ? chipEl.dataset.requestedAt : '');
+      }
+    }
+
     const loadingTextEl = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)} .loading-text`);
 
     const rotatingPhrases = ['Reading matched posts…', 'Writing up the answer…'];
@@ -3540,7 +3573,31 @@
     // generated for this chat — lock the submit box for the duration.
     setSubmitLoading(true);
 
+    // (STUCK-AT-0% FIX) The server sends a progress_percent about every 1.5s while it works. If
+    // NOTHING arrives for STREAM_STALL_MS the connection is considered dead (this is the case that
+    // used to need a manual refresh). Reconnect up to 2 times: stream_answer() replays an answer
+    // that is already saved, and its owner-busy wait prevents a second paid analysis.
+    const STREAM_STALL_MS = 45000;
+    let lastEventAt = Date.now();
+    const stallTimer = setInterval(() => {
+      if (source.readyState === 2 || activeEventSource !== source || !document.body.contains(pendingTurn)) {
+        clearInterval(stallTimer);
+        return;
+      }
+      if (Date.now() - lastEventAt < STREAM_STALL_MS) return;
+      clearInterval(stallTimer);
+      const tries = pendingTurn._streamReconnects || 0;
+      if (tries >= 2) return;
+      pendingTurn._streamReconnects = tries + 1;
+      console.warn('[stream-stall] no data for ' + (STREAM_STALL_MS / 1000) + 's — reconnecting (' + (tries + 1) + '/2)');
+      source.close();
+      activeEventSource = null;
+      if (phraseTimer) clearInterval(phraseTimer);
+      wireUpStream(pendingTurn, chatId);
+    }, 5000);
+
     source.onmessage = (event) => {
+      lastEventAt = Date.now();
       let payload;
       try {
         payload = JSON.parse(event.data);
