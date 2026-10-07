@@ -66,7 +66,7 @@ NODE = shutil.which("node")
 @pytest.mark.parametrize("name", FILES)
 def test_setSubmitLoading_behaviour(name):
     s = FILES[name]
-    a = s.index("let submitLoadingWatchdogId = null;")
+    a = s.index("function setSubmitLoading(")
     b = s.index("// ---- Small inline warning row")
     code = s[a:b]
     js = r"""
@@ -76,6 +76,7 @@ const btn=mk(), input=mk();
 const document={getElementById:id=>id==='submit-btn'?btn:id==='search-input'?input:null};
 const timers=[]; const setTimeout=(f,ms)=>{timers.push(ms);return timers.length}; const clearTimeout=()=>{};
 function showSearchInlineError(){}
+let submitLoadingWatchdogId=null; let searchRunning=false; const SUBMIT_LOADING_TIMEOUT_MS=380000;
 %s
 const out={};
 setSubmitLoading(true);
