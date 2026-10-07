@@ -1536,6 +1536,22 @@
   // now belongs to a different chat.
   let softNavGeneration = 0;
 
+  // (TDZ FIX) Page-level state/constants that functions use while the page is still loading
+  // (initMainPageInteractions() -> initSearchProgressBlocks(), and wireUpInitialPendingStream() ->
+  // wireUpStream() -> setSubmitLoading() when this page is loaded/refreshed DURING an active search).
+  // `let`/`const` are not hoisted like functions: declared further down (they used to be, in this
+  // script and in the next <script>) they threw "Cannot access ... before initialization" /
+  // "... is not defined" and aborted the rest of the script. They live here, before any caller,
+  // and are shared with the later <script> block (same global lexical scope).
+  const SEARCH_PROGRESS_TRIGGER_SECONDS = 0;
+  const SEARCH_PROGRESS_TIMEOUT_SECONDS = 360; // matches backend RESPONSE_TIMEOUT (360s)
+  // Tracks the pending watchdog timeout in setSubmitLoading(), so any setSubmitLoading(false) cancels it.
+  let submitLoadingWatchdogId = null;
+  // (SEND-LOCK) true from the moment a search is submitted until its stream finishes/fails.
+  // Typing is always allowed; SENDING (button, Enter, submit event) is blocked while true.
+  let searchRunning = false;
+  const SUBMIT_LOADING_TIMEOUT_MS = 380000; // just above the server's 360s RESPONSE_TIMEOUT
+
   // (AUTO-EXPANDING TEXTAREA) #search-input is a <textarea rows="1"> so
   // typed text wraps vertically instead of scrolling horizontally; this
   // resets the height to 'auto' first (so it can shrink back down after a
@@ -2422,8 +2438,6 @@
   // plain constants (not fetched from the backend) since they're stable
   // config values; if either one is ever changed via its own env var,
   // update these two to match.
-  const SEARCH_PROGRESS_TRIGGER_SECONDS = 0;
-  const SEARCH_PROGRESS_TIMEOUT_SECONDS = 360;
 
   // (PROGRESS-BAR FIX) The bar used to have TWO independent writers —
   // this client-side elapsed-time guess, and the server-computed
@@ -2449,9 +2463,13 @@
     let p = Math.max(0, Math.min(100, Math.round(percent)));
     if (source === 'server') {
       blockEl.dataset.serverProgressSeen = 'true';
-      if (blockEl._progressTimer) { clearTimeout(blockEl._progressTimer); blockEl._progressTimer = null; }
+      blockEl.dataset.lastServerAt = String(Date.now());
+      // (STUCK-AT-0% FIX) the client timer is NOT cancelled any more: if the stream stalls after a
+      // first server value (e.g. 0%) the bar must keep moving instead of freezing forever.
     } else {
-      if (blockEl.dataset.serverProgressSeen === 'true') return; // server is the source of truth
+      // server stays the source of truth while it is actually talking; if it has been silent
+      // for 8s+ the client guess (capped at 90%, monotonic) takes over again.
+      if (blockEl.dataset.serverProgressSeen === 'true' && (Date.now() - Number(blockEl.dataset.lastServerAt || 0)) < 8000) return;
       p = Math.min(p, 90); // client guess must never look "finished"
     }
     const shown = parseInt(blockEl.dataset.progressShown || '0', 10);
@@ -2469,7 +2487,6 @@
     // defers entirely to the server the moment a real
     // payload.progress_percent value has been seen.
     if (blockEl._progressTimer) return; // single loop per block — never stack a second one
-    if (blockEl.dataset.serverProgressSeen === 'true') return; // server already speaking for this block
     if (!document.body.contains(blockEl)) return;
 
     const requestedAtRaw = blockEl.dataset.requestedAt;
@@ -2477,7 +2494,7 @@
     if (isNaN(requestedAtMs)) return; // no real request time to guess from — wait for server values only
 
     function tick() {
-      if (!document.body.contains(blockEl) || blockEl.dataset.serverProgressSeen === 'true') {
+      if (!document.body.contains(blockEl)) {
         blockEl._progressTimer = null;
         return;
       }
@@ -2507,7 +2524,58 @@
     });
   }
 
+  // (PROGRESS-FIRST UI) The progress block (intro + bar) is the ONLY waiting state: the old plain
+  // "Still gathering results for this search…" row is gone. Until the backend's query-aware copy
+  // (SSE search_progress) arrives, a generic intro + the live bar is shown; the real copy then
+  // replaces only the text, in place (the bar keeps its value, it never resets).
+  const SEARCH_PROGRESS_PLACEHOLDER = {
+    intro: 'Searching Reddit for posts that match your request.',
+    outro: 'You’ll see results here as soon as matching posts are found.',
+    checklist: [],
+  };
+  function showSearchProgressPlaceholder(rowEl, requestedAtIso) {
+    renderSearchProgressBlock(rowEl, SEARCH_PROGRESS_PLACEHOLDER, requestedAtIso || new Date().toISOString());
+    // the row may not be attached yet (optimistic turns) — start the bar once it is
+    setTimeout(() => startSearchProgressPercentTimer(rowEl), 0);
+  }
+  function buildProgressTextNodes(progressContent) {
+    const nodes = [];
+    const textP = document.createElement('p');
+    textP.className = 'search-progress-text';
+    textP.append(
+      document.createTextNode((progressContent.intro || '') + ' '),
+      Object.assign(document.createElement('strong'), { textContent: 'This may take a moment.' }),
+      document.createTextNode(' ' + (progressContent.outro || ''))
+    );
+    nodes.push(textP);
+    const items = progressContent.checklist || [];
+    if (items.length) {
+      const checkingLabel = document.createElement('p');
+      checkingLabel.className = 'search-progress-checking-label';
+      checkingLabel.textContent = 'I’m checking for:';
+      const list = document.createElement('ul');
+      list.className = 'search-progress-checklist';
+      items.forEach((item) => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        list.appendChild(li);
+      });
+      nodes.push(checkingLabel, list);
+    }
+    return nodes;
+  }
+
   function renderSearchProgressBlock(loadingRowEl, progressContent, requestedAtIso) {
+    // (PROGRESS-FIRST UI) Already a progress block (placeholder shown earlier): swap only the text,
+    // keep the bar + its value + its timer.
+    const existingTrack = loadingRowEl.classList.contains('search-progress-block') && loadingRowEl.querySelector('.search-progress-bar-track');
+    if (existingTrack) {
+      loadingRowEl.querySelectorAll('.search-progress-text, .search-progress-checking-label, .search-progress-checklist').forEach((n) => n.remove());
+      buildProgressTextNodes(progressContent).forEach((n) => loadingRowEl.insertBefore(n, existingTrack));
+      if (requestedAtIso) loadingRowEl.dataset.requestedAt = requestedAtIso;
+      startSearchProgressPercentTimer(loadingRowEl);
+      return;
+    }
     // (SEARCH-PROGRESS UI) Builds the exact same markup/classes as the
     // Jinja-rendered msg.search_progress branch above, for the
     // live-streaming case (the SSE "search_progress" event arriving
@@ -2526,25 +2594,7 @@
     delete loadingRowEl.dataset.serverProgressSeen;
     if (loadingRowEl._progressTimer) { clearTimeout(loadingRowEl._progressTimer); loadingRowEl._progressTimer = null; }
 
-    const textP = document.createElement('p');
-    textP.className = 'search-progress-text';
-    textP.append(
-      document.createTextNode(progressContent.intro + ' '),
-      Object.assign(document.createElement('strong'), { textContent: 'This may take a moment.' }),
-      document.createTextNode(' ' + progressContent.outro)
-    );
-
-    const checkingLabel = document.createElement('p');
-    checkingLabel.className = 'search-progress-checking-label';
-    checkingLabel.textContent = 'I’m checking for:';
-
-    const list = document.createElement('ul');
-    list.className = 'search-progress-checklist';
-    (progressContent.checklist || []).forEach((item) => {
-      const li = document.createElement('li');
-      li.textContent = item;
-      list.appendChild(li);
-    });
+    const textNodes = buildProgressTextNodes(progressContent);
 
     const track = document.createElement('div');
     track.className = 'search-progress-bar-track';
@@ -2562,7 +2612,7 @@
     track.append(label, fillWrap, percentEl);
 
     loadingRowEl.innerHTML = '';
-    loadingRowEl.append(textP, checkingLabel, list, track);
+    loadingRowEl.append(...textNodes, track);
 
     startSearchProgressPercentTimer(loadingRowEl);
   }
@@ -2891,6 +2941,17 @@
     // chat is now on screen.
     const myGen = softNavGeneration;
 
+    // (PROGRESS-FIRST UI) A freshly rendered pending turn still carries the plain "Still gathering…"
+    // row — turn it into the progress block right away (no wait for the SSE search_progress event).
+    {
+      const plainRow = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)}`);
+      const plainText = plainRow && plainRow.querySelector('.loading-text');
+      if (plainRow && plainRow.classList.contains('loading-row') && plainText && /^Still gathering/.test(plainText.textContent.trim())) {
+        const chipEl = pendingTurn.querySelector('.turn-chip[data-requested-at]');
+        showSearchProgressPlaceholder(plainRow, chipEl ? chipEl.dataset.requestedAt : '');
+      }
+    }
+
     const loadingTextEl = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)} .loading-text`);
 
     // Optional, additive-only: rotate the existing .loading-text element
@@ -2914,7 +2975,31 @@
     // same as the moment the search was first submitted.
     setSubmitLoading(true);
 
+    // (STUCK-AT-0% FIX) The server sends a progress_percent about every 1.5s while it works. If
+    // NOTHING arrives for STREAM_STALL_MS the connection is considered dead (this is the case that
+    // used to need a manual refresh). Reconnect up to 2 times: stream_answer() replays an answer
+    // that is already saved, and its owner-busy wait prevents a second paid analysis.
+    const STREAM_STALL_MS = 45000;
+    let lastEventAt = Date.now();
+    const stallTimer = setInterval(() => {
+      if (source.readyState === 2 || activeEventSource !== source || !document.body.contains(pendingTurn)) {
+        clearInterval(stallTimer);
+        return;
+      }
+      if (Date.now() - lastEventAt < STREAM_STALL_MS) return;
+      clearInterval(stallTimer);
+      const tries = pendingTurn._streamReconnects || 0;
+      if (tries >= 2) return;
+      pendingTurn._streamReconnects = tries + 1;
+      console.warn('[stream-stall] no data for ' + (STREAM_STALL_MS / 1000) + 's — reconnecting (' + (tries + 1) + '/2)');
+      source.close();
+      activeEventSource = null;
+      if (phraseTimer) clearInterval(phraseTimer);
+      wireUpStream(pendingTurn, chatId);
+    }, 5000);
+
     source.onmessage = (event) => {
+      lastEventAt = Date.now();
       let payload;
       try {
         payload = JSON.parse(event.data);
@@ -3115,11 +3200,6 @@
   // ---- Submit-button loading state (shared by search-submit + stream wiring) ----
   // (BUG 2 FIX) Tracks the pending watchdog timeout below, so any call to
   // setSubmitLoading(false) — from ANY code path — always cancels it.
-  let submitLoadingWatchdogId = null;
-  // (SEND-LOCK) true from the moment a search is submitted until its stream finishes/fails.
-  // Typing is always allowed; SENDING (button, Enter, submit event) is blocked while true.
-  let searchRunning = false;
-  const SUBMIT_LOADING_TIMEOUT_MS = 380000; // (SEND-LOCK) just above the server's 360s RESPONSE_TIMEOUT: the lock must outlive any legitimate scan, but a dead stream can never lock sending forever
   function setSubmitLoading(isLoading) {
     searchRunning = !!isLoading;
     const submitBtn = document.getElementById('submit-btn');
@@ -3247,10 +3327,7 @@
       optimisticTurn.appendChild(optimisticTurnRow);
       const optimisticLoadingRow = document.createElement('div');
       optimisticLoadingRow.className = 'loading-row';
-      optimisticLoadingRow.innerHTML =
-        '<span class="loading-logo"><img src="data:image/png;base64,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" alt="" /></span>' +
-        '<div class="loading-dots"><span></span><span></span><span></span></div>' +
-        '<span class="loading-text">Still gathering results for this search…</span>';
+      showSearchProgressPlaceholder(optimisticLoadingRow, new Date().toISOString()); // (PROGRESS-FIRST UI)
       optimisticTurn.appendChild(optimisticLoadingRow);
       liveThreadInnerForOptimistic.appendChild(optimisticTurn);
       optimisticTurn.scrollIntoView({ behavior: 'smooth', block: 'start' });
