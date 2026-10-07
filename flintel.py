@@ -545,7 +545,7 @@ implausible use-cases.
 GOOGLE_FALLBACK_TRIGGER_SECONDS = int(os.getenv("GOOGLE_FALLBACK_TRIGGER_SECONDS", "40"))
 # Elapsed seconds since a search message's requested_at before the
 # Google-search fallback is triggered, IF flintel_signals still has no
-# match. Must be strictly less than RESPONSE_TIMEOUT (60) — index.py
+# match. Must be strictly less than RESPONSE_TIMEOUT (360) — index.py
 # enforces this ordering, this module just holds the constant.
 
 
