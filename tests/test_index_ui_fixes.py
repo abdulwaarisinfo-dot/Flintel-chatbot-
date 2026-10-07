@@ -129,7 +129,7 @@ def test_optimistic_turn_helpers_exist(index_src):
         assert len(re.findall(rf"function\s+{name}\s*\(", index_src)) == 1, name
     body = _between(index_src, "function createOptimisticTurn(", "function showHeroOptimisticTurn(")
     assert "question.textContent = query" in body          # user text never goes through innerHTML
-    assert "turn-question" in body and "loading-row" in body and "showSearchProgressPlaceholder(" in body
+    assert "turn-question" in body and "loading-row" in body and "showNeutralWaitRow(" in body and "showSearchProgressPlaceholder(" not in body
     assert "Still gathering" not in body and "loading-dots" not in body   # PROGRESS-FIRST UI: no plain waiting row
 
 
