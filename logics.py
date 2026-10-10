@@ -269,6 +269,53 @@ class _ScanCancelled(Exception):
     """Internal: a scan worker noticed its cancel event."""
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# (MYSQL READ) Extra signal sources read from MySQL (see mysql_signals.py).
+# Only used when config.MYSQL_READ_ENABLED is on; mysql_signals (and pymysql)
+# are imported lazily, so with the flag off nothing here runs or is imported.
+# ─────────────────────────────────────────────────────────────────────────────
+def _np_max_scores(D, Q):
+    """Max cosine of each row of D against the normalized query matrix Q —
+    the same NumPy math as the Mongo streamed scorer (_s_flush)."""
+    D = np.asarray(D, dtype=np.float32)
+    d_norms = np.linalg.norm(D, axis=1, keepdims=True)
+    d_norms = np.where(d_norms == 0, 1.0, d_norms)
+    D = D / d_norms
+    return (D @ Q.T).max(axis=1)
+
+
+def _mysql_sources_for_scan(stream_ctx) -> list:
+    """MySQL sources to add to this scan ([] when the flag is off).
+
+    Two different outcomes, on purpose (MYSQL SOURCE FAILURE FIX):
+      * UNSUPPORTED MODE -> intentional skip (one warning, scan NOT failed):
+        MySQL rows are scored while streaming, so they need unlimited mode +
+        STREAMING_SCORE_ENABLED. In legacy pool mode or with streaming off
+        MySQL is not part of the search at all — a configuration choice.
+      * SOURCE CANNOT BE READ -> failure: missing pymysql, an invalid
+        database name, missing required columns / table / permission, a
+        time-window query on a table without a date column, connect or query
+        errors. Every configured source is returned here; the read raises and
+        _fetch_mysql_pool() adds the label to _fetch_failures, so the scan is
+        incomplete and no watermark advances."""
+    if not _cfg_value("MYSQL_READ_ENABLED", False):
+        return []
+    try:
+        import mysql_signals  # noqa: PLC0415
+    except Exception as exc:
+        log.warning(f"MYSQL_READ_ENABLED is on but mysql_signals failed to import: {type(exc).__name__}")
+        return []
+    if stream_ctx is None:
+        mysql_signals._warn_once(
+            "needs_streaming",
+            "MYSQL_READ_ENABLED is on but MySQL sources need unlimited mode "
+            "(SIGNAL_EMBEDDING_CANDIDATE_POOL/RECENCY_POOL <= 0) with STREAMING_SCORE_ENABLED=true; "
+            "MySQL sources skipped for this configuration.",
+        )
+        return []
+    return mysql_signals.configured_sources()
+
+
 class ScanHandle:
     """One request's handle on a (possibly shared) scan.
 
@@ -464,7 +511,23 @@ def _scan_signature(keywords, match_phrases, targeting_platform, since_days,
     """A delta is only valid for the exact query it was recorded for."""
     base = _compute_query_signature(keywords, match_phrases)
     raw = f"{base}|{targeting_platform}|{since_days}|{(user_query or '').strip().lower()}|{int(bool(strict))}|{field}"
+    # (MYSQL CARRY FIX) Only when MySQL is enabled: the configured database
+    # set is part of the signature, so enabling MySQL or changing
+    # MYSQL_READ_DATABASES invalidates a carry recorded without those sources
+    # (it forces one full scan whose carry holds the highest similarity across
+    # Mongo + every MySQL source). Flag off: `raw` is unchanged, so the
+    # Mongo-only signature (and watermark reuse) stays exactly as before.
+    if _cfg_value("MYSQL_READ_ENABLED", False):
+        raw += "|mysql:" + _mysql_signature_part()
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
+def _mysql_signature_part() -> str:
+    """Order-independent, de-duplicated MYSQL_READ_DATABASES for the scan
+    signature (list order and spacing do not force a rescan)."""
+    raw = _cfg_value("MYSQL_READ_DATABASES", "") or ""
+    names = sorted({p.strip() for p in str(raw).split(",") if p.strip()})
+    return ",".join(names)
 
 
 _INC_POLLS: dict = {}
@@ -1610,6 +1673,84 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     }}
     lexical_or = _build_lexical_or_clause(keyword_list, phrase_list)
 
+    def _fetch_mysql_pool(source, label):
+        """(MYSQL READ) Stream one MySQL source and score it with the same
+        query matrix / cosine / threshold as the Mongo streamed path. Rows
+        come as (docs, float32 matrix) batches; NULL/invalid embeddings are
+        already skipped (no lazy backfill for MySQL). Results go into
+        _stream_out[label] in the Mongo format; always returns [] raw docs.
+        No watermark: a MySQL source is fully scanned every time, and in
+        delta mode posts already carried over are skipped (url dedupe), so
+        the merged result equals a full rescan."""
+        import mysql_signals  # noqa: PLC0415  (only reached when the flag is on)
+        _st = _stream_ctx
+        pairs = []
+        consumed = 0
+        new = 0
+        failed = False
+        was_cancelled = False
+        known = set()
+        if scan_state is not None and scan_state.get("delta_mode"):
+            known = {c[0] for c in (scan_state.get("carry") or []) if c and c[0]}
+        t0 = time.monotonic()
+        gen = None
+        try:
+            if _cancelled():
+                raise _ScanCancelled()
+            gen = mysql_signals.iter_signal_batches(
+                source, cutoff=cutoff, batch_size=SIGNAL_EMBEDDING_FETCH_BATCH,
+                dim=_st["dim"], cancelled=_cancelled,
+            )
+            for docs, M in gen:
+                consumed += len(docs)
+                if cutoff is not None:
+                    # same defensive time-window rule as the Mongo path
+                    keep = [k for k, d in enumerate(docs)
+                            if isinstance(d.get("created_utc"), datetime) and d["created_utc"] >= cutoff]
+                    if len(keep) != len(docs):
+                        docs = [docs[k] for k in keep]
+                        M = M[keep]
+                if docs:
+                    scores = _np_max_scores(M, _st["Q"])
+                    for sc, dd in zip(scores, docs):
+                        if float(sc) >= SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD:
+                            if known and dd.get("post_url") in known:
+                                continue               # already carried (delta dedupe)
+                            pairs.append((float(sc), dd))
+                            new += 1
+                if _cancelled():
+                    raise _ScanCancelled()
+        except (_ScanCancelled, mysql_signals.ScanCancelled):
+            was_cancelled = True
+            log.warning(f"{label}: scan cancelled after {consumed} rows (source treated as incomplete)")
+        except Exception as exc:
+            failed = True
+            log.warning(f"{label}: MySQL read failed after {consumed} rows: {mysql_signals.safe_error(exc)}")
+        finally:
+            if gen is not None:
+                try:
+                    gen.close()
+                except Exception:
+                    pass
+        elapsed = time.monotonic() - t0
+        if was_cancelled:
+            _fetch_failures.append(label)
+            return []
+        with _scan_lock:
+            if _cancelled():
+                _fetch_failures.append(label)
+                return []
+            if failed:
+                _fetch_failures.append(label)
+            if scan_state is not None:
+                scan_state["fetched"][label] = consumed
+            _stream_out[label] = {"pairs": pairs, "consumed": consumed, "new": new}
+        log.info(
+            f"{label} streamed-score: scanned={consumed} kept={len(pairs)} "
+            f"batch={SIGNAL_EMBEDDING_FETCH_BATCH} elapsed={elapsed:.2f}s"
+        )
+        return []
+
     def _fetch_candidate_pool(collection, label):
         """Fetch raw candidate docs for one collection.
 
@@ -1628,6 +1769,8 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
 
         Never raises — failures are logged; that tier contributes nothing.
         """
+        if getattr(collection, "is_mysql_source", False) is True:     # (MYSQL READ)
+            return _fetch_mysql_pool(collection, label)
         # ── UNLIMITED MODE ────────────────────────────────────────────────
         if SIGNAL_EMBEDDING_CANDIDATE_POOL <= 0 and SIGNAL_EMBEDDING_RECENCY_POOL <= 0:
             # mongo_query already carries the time-window filter (created_utc
@@ -2010,6 +2153,12 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             log.warning(f"streaming score unavailable (numpy query matrix failed), using fetch-then-score: {exc}")
             _stream_ctx = None
 
+    # (MYSQL READ) MySQL databases as additional sources (labels mysql_<db>).
+    # Flag off -> nothing added, nothing imported.
+    if _cfg_value("MYSQL_READ_ENABLED", False):
+        for _msrc in _mysql_sources_for_scan(_stream_ctx):
+            _collections_to_fetch.append((_msrc, _msrc.label))
+
     try:
         _deadline_s = float(_cfg_value("SCAN_DEADLINE_SECONDS", 90) or 0)
     except (TypeError, ValueError):
@@ -2026,7 +2175,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
         # told to stop (cancel event), and the pool is shut down WITHOUT waiting.
         # A Python thread cannot be killed — the worker itself polls the event.
         raw_docs = []
-        _pool = concurrent.futures.ThreadPoolExecutor(max_workers=3)
+        _pool = concurrent.futures.ThreadPoolExecutor(max_workers=max(3, len(_collections_to_fetch)))
         _fetch_futures = []
         _unfinished = set()
         _stop_reason = None
