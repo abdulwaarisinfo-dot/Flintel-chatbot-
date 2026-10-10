@@ -301,3 +301,11 @@ try:
         )
 except Exception as exc:
     log.warning(f"Could not create TTL index on website_evidence_cache_collection.updated_at: {exc}")
+
+# (TRENDING SCHEDULE STATE) Persisted schedule of scheduler.py's 12-hourly
+# trending-keywords cycle, so a restart/deploy does not reset the timer and
+# several workers coordinate through one atomic claim. Holds a single small
+# document, _id "trending_keywords" (next_due_at, last_started_at,
+# last_finished_at, last_status, last_*_count, last_job_queued) — never the
+# keyword list. No extra index: the fixed _id is the only lookup key.
+auto_keywords_collection = db3.flintel_auto_keywords
