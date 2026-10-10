@@ -4182,6 +4182,9 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
     this function is UNCHANGED — none of them pass enable_web_search=True.
     This function only ever analyzes ALREADY-MATCHED, grounded posts, and
     has no reason to reach out to the live web."""
+    _pd_note = _post_display_note(query)          # (POST DISPLAY PREFERENCE) None = unchanged
+    if _pd_note:
+        extra_context = (extra_context + "\n\n" + _pd_note) if extra_context else _pd_note
     posts = build_claude_post_context(matched_signals)
 
     if not posts:
@@ -4376,6 +4379,9 @@ def analyze_with_claude_stream(query: str, matched_signals: list, extra_context:
     (EMPTY-NOTES GROUNDING FIX) `extra_context` added — mirrors
     analyze_with_claude()'s own parameter so the new empty-notes branch
     can append it exactly as the other branches do."""
+    _pd_note = _post_display_note(query)          # (POST DISPLAY PREFERENCE) None = unchanged
+    if _pd_note:
+        extra_context = (extra_context + "\n\n" + _pd_note) if extra_context else _pd_note
     posts = build_claude_post_context(matched_signals)
 
     if not posts:
@@ -6557,6 +6563,153 @@ def _append_closest_matches_note(answer_text: str, seed: str = "") -> str:
     return json.dumps(data, ensure_ascii=False)
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# (POST DISPLAY PREFERENCE) Showing real posts stays the default. Only when the
+# CURRENT request explicitly says not to show posts ("don't give me posts",
+# "no posts", "just summarize", "posts mat dikhao") is the answer returned
+# without its post list — the retrieved posts are still given to the model as
+# evidence and the saved `results` are unchanged. An explicit request for posts
+# ("show me posts", "3 example posts") wins over / combines with that.
+# ─────────────────────────────────────────────────────────────────────────────
+_POST_WORDS = r"(?:posts?|links?|examples?|threads?)"
+# words that refer to the displayed post list when the user turns it OFF
+# ("sources" = the source table); not used on the want-posts side
+_HIDE_WORDS = r"(?:posts?|links?|examples?|threads?|sources?)"
+# "posts from X / older than / about Y ..." is a FILTER on which posts to
+# find, not a request to hide all posts -> never treated as no-posts
+_NOT_A_FILTER = (r"(?!\s+(?:from|on|about|older|newer|before|after|by|in|that|which|where|under|over|"
+                 r"with|without|mentioning|containing|than)\b)")
+# a "no posts"/"hide posts" instruction ends its clause here
+_CLAUSE_END = r"(?=\s*(?:[,.;:!?)\-\u2014]|$|\b(?:and|just|only|please|pls|plz)\b))"
+_NO_POSTS_PATTERNS = [
+    re.compile(r"\b(?:don'?t|do\s+not|dont|no\s+need\s+to|never|stop)\s+(?:show|give|list|send|display|include|share|add|paste|want|need)(?:ing)?\s+"
+               r"(?:me\s+|us\s+)?(?:any\s+|the\s+)?(?:individual\s+|actual\s+|raw\s+|specific\s+|reddit\s+|social\s+media\s+)?"
+               + _HIDE_WORDS + r"\b" + _NOT_A_FILTER, re.I),
+    # "without posts" -- but not "find posts without links" (posts named
+    # earlier in the same sentence = a search filter)
+    re.compile(r"(?:^|[.?!]\s*)(?:(?!\b(?:posts?|threads?|comments?)\b)[^.?!])*?"
+               r"\bwithout\s+(?:any\s+|the\s+)?(?:individual\s+|actual\s+|raw\s+)?(?:posts?|links?|examples?|sources?)\b"
+               + _NOT_A_FILTER, re.I),
+    # "no posts, ..." only at the START of a clause (or right after "but") --
+    # not "I got no posts" / "there were no posts"
+    re.compile(r"(?:^|(?<=[.?!,;:(\-\u2014])|(?<=\bbut))\s*no\s+(?:individual\s+|actual\s+|raw\s+)?(?:posts?|links?|sources?)\s*"
+               r"(?:please|pls|plz|needed|necessary|required)?\s*"
+               r"(?:[,.;:!)\-\u2014]|$|\b(?:just|only)\b)", re.I),
+    re.compile(r"\b(?:just|only)\s+(?:summari[sz]e|(?:give|tell|send)\s+(?:me\s+)?(?:a\s+|the\s+)?(?:summary|overview|gist))\b"
+               r"|(?:^|[,.;:!?]\s*)(?:(?!\b(?:posts?|threads?|comments?)\b)[^,.;:!?])*?"
+               r"\b(?:summary|overview)\s+only\b(?=\s*(?:[,.;:!?)]|$|please|pls|plz))"
+               r"|\b(?:just|only)\s+(?:a|the)\s+(?:summary|overview)\b", re.I),
+    # "give me the overall sentiment instead of showing sources" -- a
+    # synthesized answer named earlier in the same sentence
+    re.compile(r"\b(?:summary|summari[sz]e|overview|sentiment|consensus|gist|takeaways?|analysis|insights?|explanation|"
+               r"explain|conclusion|breakdown|answer)\b[^.?!]{0,200}?\binstead\s+of\s+"
+               r"(?:showing\s+|listing\s+|giving\s+|displaying\s+|sharing\s+)?(?:me\s+)?(?:the\s+|any\s+)?"
+               r"(?:individual\s+|actual\s+|raw\s+)?(?:posts?|sources?)\b", re.I),
+    # "hide the posts." / "omit the sources, just ..."
+    re.compile(r"\b(?:hide|omit|skip|exclude|remove|leave\s+out)\s+(?:the\s+|all\s+|any\s+)?(?:individual\s+)?"
+               r"(?:posts?|links?|sources?)\b" + _CLAUSE_END, re.I),
+    re.compile(r"\bposts?\s+(?:mat|na|nahi|nahin|mt)\s+(?:dikha\w*|do|dena|bhej\w*|chahiy\w*|chaiy\w*|lagao|daal\w*)\b", re.I),
+    re.compile(r"\bposts?\s+ki\s+(?:zar(?:u|oo)rat|zrurat)\s+nahi\w*", re.I),
+    re.compile(r"\b(?:sirf|bas)\s+(?:summary|khulasa|summari[sz]e)\b", re.I),
+]
+_WANT_POSTS_PATTERNS = [
+    re.compile(r"\b(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|a\s+few|few|some|a\s+couple\s+of|couple\s+of)\s+"
+               r"(?:example\s+|sample\s+|relevant\s+|top\s+|reddit\s+)?" + _POST_WORDS + r"\b", re.I),
+    # display verbs only -- "find/search for/look for posts" is retrieval
+    # wording, not a request to be SHOWN posts (see _RETRIEVAL_VERB_BEFORE)
+    re.compile(r"\b(?:show|give|list|send|include|share|add|paste)\s+"
+               r"(?:me\s+|us\s+)?(?:the\s+|some\s+|a\s+few\s+|few\s+|any\s+)?"
+               r"(?:example\s+|sample\s+|relevant\s+|top\s+|actual\s+|reddit\s+)?" + _POST_WORDS + r"\b", re.I),
+    re.compile(r"\bwith\s+(?:some\s+|a\s+few\s+|few\s+)?(?:example\s+|sample\s+)?(?:posts?|examples?|links?)\b", re.I),
+    re.compile(r"\bposts?\s+(?:bhi\s+)?(?:dikhao|dikha\s+do|do|dena|bhejo)\b", re.I),
+    # elliptical count with a DISPLAY verb: "show me 5, but no individual
+    # posts" -> a display request too, so together with the hide wording it
+    # is a MIXED request (show only that many), like "don't show posts but
+    # give me 2 examples". Retrieval verbs ("find 5") never count.
+    re.compile(r"\b(?:show|give|list|send)\s+(?:me\s+|us\s+)?"
+               r"(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten)\b(?=\s*(?:[,.;:!?]|$|\bbut\b))", re.I),
+]
+# "find 10 posts" / "search for 5 reddit posts": the count belongs to the
+# search, so it is not a display request either
+_RETRIEVAL_VERB_BEFORE = re.compile(
+    r"\b(?:find|search(?:\s+for)?|look\s+(?:for|up)|fetch|pull|get|scan|scrape|collect|retrieve)\s+"
+    r"(?:me\s+|us\s+)?$", re.I)
+# a negation word earlier in the same clause ("don't give me posts"); a
+# "but/however/instead/and" after it starts a new, un-negated clause
+_NEGATED_BEFORE = re.compile(
+    r"\b(?:don'?t|do\s+not|dont|no\s+need\s+to|never|without|stop|skip)\b"
+    r"(?:(?!\b(?:but|however|though|instead|except|and)\b)[^,.;!?])*$", re.I)
+
+
+# typographic apostrophes (’ ‘ ʼ ′ `) -> "'" before matching, so "don’t"
+# reads like "don't". One char -> one char: match offsets are unchanged.
+_APOSTROPHES = str.maketrans({"\u2019": "'", "\u2018": "'", "\u02bc": "'", "\u2032": "'", "`": "'"})
+
+
+def _explicit_no_posts_request(query: str) -> bool:
+    q = (query or "").translate(_APOSTROPHES)
+    return any(p.search(q) for p in _NO_POSTS_PATTERNS)
+
+
+def _explicit_posts_request(query: str) -> bool:
+    """True when the query asks FOR posts (not when that phrase is negated,
+    e.g. the "give me posts" inside "don't give me posts")."""
+    q = (query or "").translate(_APOSTROPHES)
+    for pat in _WANT_POSTS_PATTERNS:
+        for m in pat.finditer(q):
+            before = q[max(0, m.start() - 40):m.start()]
+            if _NEGATED_BEFORE.search(before) or _RETRIEVAL_VERB_BEFORE.search(before):
+                continue
+            return True
+    return False
+
+
+def _post_display_note(query: str):
+    """Extra analysis context for THIS request only; None (no change at all)
+    unless the user explicitly asked not to see posts."""
+    if not _explicit_no_posts_request(query):
+        return None
+    if _explicit_posts_request(query):
+        return ("Note (this request only): the user asked for a synthesized answer AND explicitly "
+                "asked to see example posts. Write the summary/findings as usual, and in "
+                "\"platforms\" list only as many posts as they asked for (if they named a number), "
+                "choosing the most representative ones.")
+    return ("Note (this request only): the user explicitly asked NOT to be shown individual posts. "
+            "Still read and use every post you were given as evidence for the summary, but return "
+            "\"platforms\" as an empty list [] — no post entries, no post titles or links in the text. "
+            "Keep every claim grounded in those posts.")
+
+
+def _strip_displayed_posts(answer_text: str) -> str:
+    """Empty the displayed post lists (source_list "platforms" / comparison
+    subjects' "platforms"); everything else in the answer is kept as is."""
+    if not answer_text:
+        return answer_text
+    cleaned = answer_text.strip()
+    if cleaned.startswith("```"):
+        cleaned = cleaned.strip("`").strip()
+        cleaned = re.sub(r"^json\s*", "", cleaned, flags=re.IGNORECASE).strip()
+    try:
+        data = json.loads(cleaned)
+    except (ValueError, TypeError):
+        return answer_text
+    if not isinstance(data, dict):
+        return answer_text
+    if data.get("format") == "source_list" and data.get("platforms"):
+        data["platforms"] = []
+    elif data.get("format") == "comparison":
+        changed = False
+        for subject in data.get("subjects") or []:
+            if isinstance(subject, dict) and subject.get("platforms"):
+                subject["platforms"] = []
+                changed = True
+        if not changed:
+            return answer_text
+    else:
+        return answer_text
+    return json.dumps(data, ensure_ascii=False)
+
+
 def _finalize_answer_and_results(answer_text: str, matched: list, seed: str = ""):
     """(CHANGE 3 — STOP OVERRIDING CLAUDE'S OWN "NO DATA" VERDICT) Shared
     decision point for both the non-streaming path
@@ -6581,10 +6734,17 @@ def _finalize_answer_and_results(answer_text: str, matched: list, seed: str = ""
     Genuinely empty results (no data, or Claude picked a "no_data"
     format) are saved as an empty list, exactly as before.
 
+    (POST DISPLAY PREFERENCE) Every caller passes this message's own query
+    as `seed`: when it explicitly excludes posts (and does not also ask for
+    them), the answer's displayed post list is emptied here. `results` (and
+    the evidence the answer was written from) are not touched.
+
     Returns (final_answer_text, results_to_save)."""
     claude_format = _extract_claude_format(answer_text)
     if claude_format in _NO_DATA_CLAUDE_FORMATS:
         return answer_text, []
+    if seed and _explicit_no_posts_request(seed) and not _explicit_posts_request(seed):
+        answer_text = _strip_displayed_posts(answer_text)
     if strict_intent_mode():
         # Strict: cards and answer text are ONE list.
         return answer_text, _strict_cards_for_answer(answer_text, matched)
