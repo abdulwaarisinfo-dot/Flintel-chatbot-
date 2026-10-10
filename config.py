@@ -84,6 +84,17 @@ __all__ = [
     "MONGO_CONNECT_TIMEOUT_MS",
     "MONGO_SOCKET_TIMEOUT_MS",
     "MONGO_FIND_MAX_TIME_MS",
+    # MySQL read (signals written by the background services into MySQL)
+    "MYSQL_READ_ENABLED",
+    "MYSQL_HOST",
+    "MYSQL_PORT",
+    "MYSQL_USER",
+    "MYSQL_PASSWORD",
+    "MYSQL_SSL",
+    "MYSQL_SSL_CA",
+    "MYSQL_CONNECT_TIMEOUT",
+    "MYSQL_READ_TIMEOUT",
+    "MYSQL_READ_DATABASES",
     # Intent Bridge config (prototype ↔ production)
     "INTENT_BRIDGE_ENABLED",
     "INTENT_CANDIDATE_MULTIPLIER",
@@ -547,3 +558,24 @@ MONGO_SOCKET_TIMEOUT_MS = int(os.getenv("MONGO_SOCKET_TIMEOUT_MS", "120000"))
 # 0 = off (no max_time_ms).
 MONGO_FIND_MAX_TIME_MS = int(os.getenv("MONGO_FIND_MAX_TIME_MS", "120000"))
  
+
+# ── MySQL read (MYSQL READ) ──────────────────────────────────────────────────
+# The background services also write signals into MySQL (`<db>.flintel_signals`
+# in each database below). When MYSQL_READ_ENABLED is on, get_matched_signals()
+# (logics.py) reads those rows as extra sources next to the Mongo collections
+# and scores them exactly like Mongo docs (mysql_signals.py). SELECT-only.
+# false (default) = MySQL is never touched or imported; behaviour is unchanged.
+# Booleans accept 1 / true / yes / on (any case).
+MYSQL_READ_ENABLED = os.getenv("MYSQL_READ_ENABLED", "false").strip().lower() in ("1", "true", "yes", "on")
+MYSQL_HOST = os.getenv("MYSQL_HOST", "")
+MYSQL_PORT = int(os.getenv("MYSQL_PORT", "3306"))
+MYSQL_USER = os.getenv("MYSQL_USER", "")
+MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", "")   # secret: never log or print it
+MYSQL_SSL = os.getenv("MYSQL_SSL", "false").strip().lower() in ("1", "true", "yes", "on")
+MYSQL_SSL_CA = os.getenv("MYSQL_SSL_CA", "")         # optional CA file path
+MYSQL_CONNECT_TIMEOUT = int(os.getenv("MYSQL_CONNECT_TIMEOUT", "10"))
+MYSQL_READ_TIMEOUT = int(os.getenv("MYSQL_READ_TIMEOUT", "60"))
+# Comma list of database names; each one is read as `<db>`.flintel_signals.
+# Only [A-Za-z0-9_] names are valid; an invalid name makes that source fail
+# (scan marked incomplete), it is never put into SQL.
+MYSQL_READ_DATABASES = os.getenv("MYSQL_READ_DATABASES", "flintel,flintel_static,flintel_google")
