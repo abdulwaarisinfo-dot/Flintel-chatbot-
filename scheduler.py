@@ -21,6 +21,16 @@ WHAT THIS FILE DOES NOT DO: no new keyword-generation logic, no new
 storage pattern, no new Mongo fields, no changes to google.py or
 logics.py. Purely scheduling + the two calls above, in order.
 
+(TRENDING SEARCH JOB) Before the Google step, the same keywords — trimmed,
+de-duplicated case-insensitively and capped at config.SEARCH_WEBSITE_KEYWORDS
+(default 200; 0/negative/invalid = off) — are also written as ONE
+flintel_search_jobs job via the existing logics.enqueue_search_job()
+(topic_key "auto_trending", upserted every cycle, targeting_platform
+TRENDING_JOB_TARGETING_PLATFORM). That write has its own try/except: a
+failure there is only logged and the Google step still runs. The Google
+step receives the generated list exactly as before (the cap only applies
+to the job).
+
 FIRE-AND-FORGET: start_trending_keywords_scheduler() schedules an asyncio
 background task and returns immediately — it never blocks FastAPI
 startup, and the recurring cycle never blocks any incoming request's
@@ -39,9 +49,10 @@ in this file can bring down the app or stop future cycles from running.
 import asyncio
 import logging
 
+import config
 from database import google_posts_collection
 from google import search_google_for_reddit_posts
-from logics import generate_trending_keywords_via_web_search
+from logics import enqueue_search_job, generate_trending_keywords_via_web_search
 
 log = logging.getLogger(__name__)
 
@@ -53,6 +64,68 @@ TRENDING_KEYWORDS_INTERVAL_SECONDS = 43200
 # apart from "came from an actual user search", per google_posts_collection's
 # existing search_keyword field. Never changes.
 TRENDING_KEYWORDS_SEARCH_TAG = "auto_trending"
+
+# targeting_platform of the trending flintel_search_jobs job. "reddit" so
+# Background Service #1 does not spend X/Twitter (RapidAPI) calls on ~200
+# keywords every cycle. Change this one value to widen it (e.g. "all").
+TRENDING_JOB_TARGETING_PLATFORM = "reddit"
+
+
+def _search_website_keywords_limit() -> int:
+    """config.SEARCH_WEBSITE_KEYWORDS read live; 0 when <= 0 or not a number."""
+    try:
+        limit = int(getattr(config, "SEARCH_WEBSITE_KEYWORDS", 0))
+    except (TypeError, ValueError):
+        return 0
+    return limit if limit > 0 else 0
+
+
+def _trending_job_keywords(keywords, limit: int) -> list:
+    """Strip, drop empties, de-duplicate case-insensitively (first spelling
+    and order kept), then cap at `limit`."""
+    out, seen = [], set()
+    for kw in keywords or []:
+        if not isinstance(kw, str):
+            continue
+        kw = kw.strip()
+        if not kw:
+            continue
+        key = kw.casefold()
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(kw)
+        if len(out) >= limit:
+            break
+    return out
+
+
+async def _queue_trending_search_job(keywords) -> None:
+    """Write this cycle's keywords as the "auto_trending" search job.
+    Never raises: a failure is logged and the caller carries on."""
+    try:
+        limit = _search_website_keywords_limit()
+        if limit <= 0:
+            return                                   # kill-switch: job writing off
+        job_keywords = _trending_job_keywords(keywords, limit)
+        if not job_keywords:
+            return
+        await asyncio.to_thread(
+            enqueue_search_job,
+            TRENDING_KEYWORDS_SEARCH_TAG,
+            job_keywords,
+            TRENDING_JOB_TARGETING_PLATFORM,
+        )
+        log.info(
+            f"Trending-keywords scheduler: job queued | "
+            f"topic_key={TRENDING_KEYWORDS_SEARCH_TAG} | keywords={len(job_keywords)}"
+        )
+    except Exception as exc:
+        # type only: the message could echo document content (keywords)
+        log.warning(
+            f"Trending-keywords scheduler: queuing the search job failed "
+            f"({type(exc).__name__}); Google search continues."
+        )
 
 
 async def _run_trending_keywords_cycle():
@@ -73,6 +146,9 @@ async def _run_trending_keywords_cycle():
         if not keywords:
             log.warning("Trending-keywords scheduler: no keywords generated this cycle — skipping.")
             return
+
+        # (TRENDING SEARCH JOB) own try/except inside; never raises
+        await _queue_trending_search_job(keywords)
 
         stubs = await asyncio.to_thread(
             search_google_for_reddit_posts,
