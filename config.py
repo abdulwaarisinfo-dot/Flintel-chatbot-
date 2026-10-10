@@ -111,6 +111,7 @@ __all__ = [
     # Keyword / matching limits
     "MAX_KEYWORDS",
     "CLAUDE_MAX_KEYWORDS",
+    "SEARCH_WEBSITE_KEYWORDS",
     "MAX_MATCHED_RESULTS",
     "MAX_POSTS_PER_PLATFORM",
     "MAX_TIME_WINDOW_DAYS",
@@ -201,6 +202,15 @@ __all__ = [
 # ── Keyword / matching limits ────────────────────────────────────────────
 MAX_KEYWORDS = int(os.getenv("MAX_KEYWORDS", "20"))
 CLAUDE_MAX_KEYWORDS = int(os.getenv("CLAUDE_MAX_KEYWORDS", "10"))
+# Max keywords the 12-hourly trending-keywords cycle (scheduler.py) writes into
+# its own flintel_search_jobs job (topic_key "auto_trending"). Independent of
+# MAX_KEYWORDS / CLAUDE_MAX_KEYWORDS (user-search limits) — never derived from
+# them. 0, negative or not a number = that job is not written (kill-switch);
+# the cycle's Google search is unaffected either way.
+try:
+    SEARCH_WEBSITE_KEYWORDS = int(os.getenv("SEARCH_WEBSITE_KEYWORDS", "200"))
+except (TypeError, ValueError):
+    SEARCH_WEBSITE_KEYWORDS = 0
 MAX_MATCHED_RESULTS = int(os.getenv("MAX_MATCHED_RESULTS", "25"))
 MAX_POSTS_PER_PLATFORM = int(os.getenv("MAX_POSTS_PER_PLATFORM", "3"))
 MAX_TIME_WINDOW_DAYS = int(os.getenv("MAX_TIME_WINDOW_DAYS", "3650"))
@@ -557,25 +567,23 @@ MONGO_SOCKET_TIMEOUT_MS = int(os.getenv("MONGO_SOCKET_TIMEOUT_MS", "120000"))
 # max_time_ms applied to signals find() queries (server-side limit).
 # 0 = off (no max_time_ms).
 MONGO_FIND_MAX_TIME_MS = int(os.getenv("MONGO_FIND_MAX_TIME_MS", "120000"))
- 
 
 # ── MySQL read (MYSQL READ) ──────────────────────────────────────────────────
 # The background services also write signals into MySQL (`<db>.flintel_signals`
 # in each database below). When MYSQL_READ_ENABLED is on, get_matched_signals()
-# (logics.py) reads those rows as extra sources next to the Mongo collections
-# and scores them exactly like Mongo docs (mysql_signals.py). SELECT-only.
+# reads those rows as extra sources next to the Mongo collections and scores
+# them exactly like Mongo docs (same query embeddings, same cosine, same
+# SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD). SELECT-only; nothing is written.
 # false (default) = MySQL is never touched or imported; behaviour is unchanged.
-# Booleans accept 1 / true / yes / on (any case).
-MYSQL_READ_ENABLED = os.getenv("MYSQL_READ_ENABLED", "false").strip().lower() in ("1", "true", "yes", "on")
+MYSQL_READ_ENABLED = os.getenv("MYSQL_READ_ENABLED", "false").lower() in ("1", "true", "yes")
 MYSQL_HOST = os.getenv("MYSQL_HOST", "")
 MYSQL_PORT = int(os.getenv("MYSQL_PORT", "3306"))
 MYSQL_USER = os.getenv("MYSQL_USER", "")
-MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", "")   # secret: never log or print it
-MYSQL_SSL = os.getenv("MYSQL_SSL", "false").strip().lower() in ("1", "true", "yes", "on")
+MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", "")   # never logged
+MYSQL_SSL = os.getenv("MYSQL_SSL", "false").lower() in ("1", "true", "yes")
 MYSQL_SSL_CA = os.getenv("MYSQL_SSL_CA", "")         # optional CA file path
 MYSQL_CONNECT_TIMEOUT = int(os.getenv("MYSQL_CONNECT_TIMEOUT", "10"))
 MYSQL_READ_TIMEOUT = int(os.getenv("MYSQL_READ_TIMEOUT", "60"))
 # Comma list of database names; each one is read as `<db>`.flintel_signals.
-# Only [A-Za-z0-9_] names are valid; an invalid name makes that source fail
-# (scan marked incomplete), it is never put into SQL.
+# Only [A-Za-z0-9_] names are accepted (anything else is skipped + warned).
 MYSQL_READ_DATABASES = os.getenv("MYSQL_READ_DATABASES", "flintel,flintel_static,flintel_google")
