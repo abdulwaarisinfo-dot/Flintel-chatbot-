@@ -1568,6 +1568,7 @@
   }
 
   function renderFollowupChips(followups, container) {
+    return; // automatic follow-up suggestion chips removed from every answer
     if (!followups || !followups.length) return;
     const row = document.createElement('div');
     row.style.cssText = 'display:flex; flex-wrap:wrap; gap:10px; margin-top:20px;';
