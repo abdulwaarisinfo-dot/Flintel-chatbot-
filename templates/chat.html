@@ -484,6 +484,17 @@
   .answer-rendered th, .answer-rendered td { border: 1px solid #343434; padding: 8px 12px; text-align: left; }
   .answer-rendered th { color: #fff; background: #1e1d1c; font-weight: 700; }
   .answer-rendered td { color: #d1d0cf; }
+  /* (ANSWER PRESENTATION) headline, tables and source list for source_list / comparison answers */
+  .answer-rendered .ap-headline { font-size: 20px; line-height: 28px; margin: 0 0 16px 0; }
+  .answer-rendered .ap-heading:not(.ap-headline):not(.ap-subheading) { margin-top: 32px; }
+  .answer-rendered .ap-subheading { font-size: 16px; line-height: 24px; margin: 20px 0 8px 0; }
+  .answer-rendered .ap-table-wrap { width: 100%; max-width: 100%; overflow-x: auto; margin: 0 0 20px 0; }
+  .answer-rendered .ap-table { margin: 0; }
+  .answer-rendered .ap-table th, .answer-rendered .ap-table td { vertical-align: top; }
+  .answer-rendered .ap-table th { white-space: nowrap; word-break: normal; overflow-wrap: normal; }
+  .answer-rendered .ap-sources-table { min-width: 640px; }
+  .answer-rendered .ap-sources-table td:first-child, .answer-rendered .ap-sources-table th:first-child { width: 36px; }
+  .answer-rendered .ap-source-counts { color: rgba(255,255,255,0.55); font-size: 14px; line-height: 20px; margin-bottom: 12px; }
   /* (LINK-STYLE FIX) A detected website URL/link inside a rendered answer
      should read as normal body text with a subtle underline, not a blue
      hyperlink — color: inherit picks up whatever color the surrounding
@@ -1992,55 +2003,6 @@
     container.appendChild(row);
   }
 
-  // ---- (BUG FIX) Shared helper: render an array of key_findings the exact
-  //      same way for source_list's top-level data.key_findings AND
-  //      comparison's per-subject subj.key_findings. Uses only existing
-  //      classes: .metrics-section-title for the finding name, and the
-  //      existing .post-field / .field-dot / .field-text row markup (via
-  //      fieldRow) for evidence_type / signal_strength / impact. Any
-  //      missing sub-field is simply skipped — never an empty row. ----
-  function renderKeyFindings(findings, container) {
-    (findings || []).forEach((f) => {
-      if (!f) return;
-      if (f.finding) {
-        const heading = document.createElement('p');
-        heading.className = 'metrics-section-title';
-        heading.textContent = f.finding;
-        container.appendChild(heading);
-      }
-      if (f.evidence_type) fieldRow(container, 'Evidence type', f.evidence_type);
-      if (f.signal_strength) fieldRow(container, 'Signal strength', f.signal_strength);
-      if (f.impact) fieldRow(container, 'Impact', f.impact);
-    });
-  }
-
-  // ---- (BUG FIX) Shared helper: render source_list's data.detailed_findings
-  //      array using only existing classes — .block-title for each item's
-  //      title, .block-text for what_evidence_shows / why_it_matters. ----
-  function renderDetailedFindings(items, container) {
-    (items || []).forEach((d) => {
-      if (!d) return;
-      if (d.title) {
-        const title = document.createElement('p');
-        title.className = 'block-title';
-        title.textContent = d.title;
-        container.appendChild(title);
-      }
-      if (d.what_evidence_shows) {
-        const p = document.createElement('p');
-        p.className = 'block-text';
-        p.textContent = d.what_evidence_shows;
-        container.appendChild(p);
-      }
-      if (d.why_it_matters) {
-        const p = document.createElement('p');
-        p.className = 'block-text';
-        p.textContent = d.why_it_matters;
-        container.appendChild(p);
-      }
-    });
-  }
-
   // ---- (BUG FIX) Shared helper: a .block-title + .block-text pair for a
   //      single named string field (market_pattern / conclusion /
   //      business_insight). Renders nothing at all when text is missing. ----
@@ -2066,112 +2028,196 @@
     renderFollowupChips(followups, container);
   }
 
-  function renderRankedPostsList(platforms, container) {
-    // (BUG 3 FIX) "ranked": true — one flat, sequentially-numbered list
-    // across every platform, in the exact order the backend already
-    // provided them, instead of the grouped per-platform sections with
-    // "shown_count of total_analyzed" headers. Every existing per-post
-    // field (via buildPostBlock, unchanged) stays exactly the same —
-    // only the grouping/numbering changes. buildPostBlock()'s own "Post N"
-    // label already does the numbering; a continuous index across the
-    // whole flattened list is what makes it "1.", "2.", "3." … instead
-    // of resetting per platform. Mirrors index.html's identical fix.
-    let i = 0;
-    (platforms || []).forEach((p) => {
+  // ---- (ANSWER PRESENTATION) source_list / comparison layout ----
+  // Presentation only: reads the SAME JSON fields as before (plus a few
+  // optional heading fields) and never alters, reorders, filters or
+  // re-counts posts. Layout: headline -> the answer (lead paragraphs) ->
+  // findings table -> numbered detail sections -> optional next steps ->
+  // source-posts table (title/subreddit/URL/summary/sentiment exactly as
+  // given). No "Evidence type / Signal strength / Impact / Conclusion /
+  // Business Insight" label rows. research_objective is internal and not
+  // shown. All text goes in via textContent; **bold** is the only inline
+  // markup honoured (turned into <strong> nodes, never innerHTML).
+  function apInline(el, text) {
+    String(text).split(/(\*\*[^*\n]+\*\*)/g).forEach((part) => {
+      if (!part) return;
+      if (/^\*\*[^*\n]+\*\*$/.test(part)) {
+        const b = document.createElement('strong');
+        b.textContent = part.slice(2, -2);
+        el.appendChild(b);
+      } else {
+        el.appendChild(document.createTextNode(part));
+      }
+    });
+    return el;
+  }
+  function apParagraphs(container, text, cls) {
+    if (!text || typeof text !== 'string') return;
+    text.split(/\n\s*\n/).map((t) => t.trim()).filter(Boolean).forEach((t) => {
+      const p = document.createElement('p');
+      p.className = cls || 'block-text';
+      container.appendChild(apInline(p, t));
+    });
+  }
+  function apHeading(container, text, tag, extraClass) {
+    if (!text) return;
+    const h = document.createElement(tag || 'h3');
+    h.className = 'ap-heading' + (extraClass ? ' ' + extraClass : '');
+    h.textContent = text;
+    container.appendChild(h);
+  }
+  function apTable(headers, rows, extraClass) {
+    const wrap = document.createElement('div');
+    wrap.className = 'ap-table-wrap';
+    const table = document.createElement('table');
+    table.className = 'ap-table' + (extraClass ? ' ' + extraClass : '');
+    const thead = document.createElement('thead');
+    const hr = document.createElement('tr');
+    headers.forEach((h) => { const th = document.createElement('th'); th.textContent = h; hr.appendChild(th); });
+    thead.appendChild(hr);
+    table.appendChild(thead);
+    const tbody = document.createElement('tbody');
+    rows.forEach((cells) => {
+      const tr = document.createElement('tr');
+      cells.forEach((cell) => {
+        const td = document.createElement('td');
+        if (cell instanceof Node) td.appendChild(cell);
+        else if (cell != null) apInline(td, cell);
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    return wrap;
+  }
+  function apFindingsTable(findings, container, heading) {
+    const items = (findings || []).filter((f) => f && (f.finding || f.impact));
+    if (!items.length) return;
+    apHeading(container, heading);
+    const withStrength = items.some((f) => f.signal_strength);
+    const headers = withStrength ? ['Signal', 'Strength', 'Why it matters'] : ['Signal', 'Why it matters'];
+    const rows = items.map((f) => withStrength
+      ? [f.finding || '', f.signal_strength || '', f.impact || '']
+      : [f.finding || '', f.impact || '']);
+    container.appendChild(apTable(headers, rows, 'ap-findings-table'));
+  }
+  function apDetails(items, container, heading) {
+    const list = (items || []).filter((d) => d && (d.title || d.what_evidence_shows || d.why_it_matters));
+    if (!list.length) return;
+    apHeading(container, heading);
+    list.forEach((d, i) => {
+      apHeading(container, d.title ? `${i + 1}. ${d.title}` : '', 'h4', 'ap-subheading');
+      apParagraphs(container, d.what_evidence_shows);
+      apParagraphs(container, d.why_it_matters);
+    });
+  }
+  function apInsight(data, container) {
+    const points = Array.isArray(data.business_insight_points)
+      ? data.business_insight_points.filter((x) => typeof x === 'string' && x.trim()) : [];
+    if (!data.business_insight && !points.length) return;
+    apHeading(container, data.business_insight_heading || 'What you can do with this');
+    apParagraphs(container, data.business_insight);
+    if (points.length) {
+      const ul = document.createElement('ul');
+      ul.className = 'ap-list';
+      points.forEach((t) => { const li = document.createElement('li'); ul.appendChild(apInline(li, t.trim())); });
+      container.appendChild(ul);
+    }
+  }
+  function apSourceLabel(post, key) {
+    const src = (post.source || '').trim();
+    if (!src) return '';
+    if (key === 'reddit') return /^\/?r\//i.test(src) ? src.replace(/^\//, '') : 'r/' + src;
+    return src;
+  }
+  function apSourcesTable(platforms, container, heading) {
+    const groups = (platforms || []).filter((p) => p && (p.posts || []).length);
+    if (!groups.length) return;
+    apHeading(container, heading);
+    // Per-platform counts exactly as given ("shown_count of total_analyzed").
+    const counts = document.createElement('p');
+    counts.className = 'ap-source-counts';
+    counts.textContent = groups.map((p) => {
+      const name = platformDisplayName(normalizePlatform(p.platform));
+      return (p.shown_count != null && p.total_analyzed != null) ? `${name} · ${p.shown_count} of ${p.total_analyzed}` : name;
+    }).join(' | ');
+    container.appendChild(counts);
+    const multi = groups.length > 1;
+    const anySentiment = groups.some((p) => p.posts.some((x) => x && x.sentiment));
+    const headers = ['#', multi ? 'Source' : (normalizePlatform(groups[0].platform) === 'reddit' ? 'Subreddit' : 'Source'), 'Post', 'Summary'];
+    if (anySentiment) headers.push('Sentiment');
+    const rows = [];
+    let n = 0;
+    groups.forEach((p) => {
       const key = normalizePlatform(p.platform);
-      (p.posts || []).forEach((post) => {
-        container.appendChild(buildPostBlock(post, i, key));
-        i++;
+      p.posts.forEach((post) => {
+        if (!post) return;
+        n += 1;
+        const label = apSourceLabel(post, key);
+        const source = (label && multi) ? `${label} (${platformDisplayName(key)})` : label;
+        let postCell;
+        const titleText = post.title || '';
+        if (post.link) {
+          const a = document.createElement('a');
+          a.href = post.link; a.target = '_blank'; a.rel = 'noopener noreferrer';
+          a.textContent = titleText || 'View post';
+          postCell = a;
+        } else {
+          postCell = document.createTextNode(titleText);
+        }
+        let summary = post.summary || '';
+        if (post.google_rank) summary = (summary ? summary + ' · ' : '') + `Google rank #${post.google_rank}`;
+        const row = [String(n), source, postCell, summary];
+        if (anySentiment) row.push(post.sentiment ? sentimentTag(post.sentiment) : '');
+        rows.push(row);
       });
     });
+    container.appendChild(apTable(headers, rows, 'ap-sources-table'));
+  }
+  function apFollowup(data, container) {
+    if (data.followup_question) renderFollowupChips([data.followup_question], container);
+    else if (data.followups) renderFollowupChips(data.followups, container);
   }
 
   function renderSourceList(data, container) {
-    // (BUG 1 FIX) The analysis prompt's "source_list" format now sends
-    // research_objective / executive_summary / key_findings /
-    // detailed_findings / market_pattern / conclusion / business_insight /
-    // followup_question instead of the old flat summary/followups shape.
-    // Everything below reuses only existing classes; a field that's
-    // missing simply doesn't render (no empty headings/paragraphs).
-    // data.summary / data.followups are still honored as a fallback for
-    // backward compatibility with any older cached answers.
-    if (data.research_objective) {
-      const objective = document.createElement('p');
-      objective.className = 'block-text';
-      objective.textContent = data.research_objective;
-      container.appendChild(objective);
-    }
-
-    const summaryText = data.executive_summary || data.summary;
-    if (summaryText) {
-      const summary = document.createElement('p');
-      summary.className = 'overview-summary';
-      summary.textContent = summaryText;
-      container.appendChild(summary);
-    }
-
-    renderKeyFindings(data.key_findings, container);
-    renderDetailedFindings(data.detailed_findings, container);
-    renderTitledTextBlock(container, 'Market Pattern', data.market_pattern);
-    renderTitledTextBlock(container, 'Conclusion', data.conclusion);
-    renderTitledTextBlock(container, 'Business Insight', data.business_insight);
-
+    apHeading(container, data.headline, 'h2', 'ap-headline');
+    apParagraphs(container, data.executive_summary || data.summary, 'block-text ap-lead');
+    apFindingsTable(data.key_findings, container, data.findings_heading || 'What we found');
+    apDetails(data.detailed_findings, container, data.details_heading || 'The main patterns');
+    apParagraphs(container, data.market_pattern);
+    apInsight(data, container);
+    apParagraphs(container, data.conclusion);
     const divider = document.createElement('div');
-    divider.className = 'section-divider no-top-margin';
+    divider.className = 'section-divider';
     container.appendChild(divider);
-    if (data.ranked === true) {
-      renderRankedPostsList(data.platforms, container);
-    } else {
-      renderPlatformsList(data.platforms, container);
-    }
-    renderFollowupQuestionChip(data, container);
+    apSourcesTable(data.platforms, container, 'Source posts');
+    apFollowup(data, container);
   }
 
   function renderComparison(data, container) {
-    // (BUG 2 FIX) Same executive_summary/research_objective/key_findings/
-    // market_pattern/conclusion/followup_question shape as source_list,
-    // just with key_findings nested per-subject. Backward compatible with
-    // the old data.summary / data.followups.
-    if (data.research_objective) {
-      const objective = document.createElement('p');
-      objective.className = 'block-text';
-      objective.textContent = data.research_objective;
-      container.appendChild(objective);
-    }
-
-    const summaryText = data.executive_summary || data.summary;
-    if (summaryText) {
-      const summary = document.createElement('p');
-      summary.className = 'overview-summary';
-      summary.textContent = summaryText;
-      container.appendChild(summary);
-    }
-
+    apHeading(container, data.headline, 'h2', 'ap-headline');
+    apParagraphs(container, data.executive_summary || data.summary, 'block-text ap-lead');
     (data.subjects || []).forEach((subj, si) => {
-      const heading = document.createElement('p');
-      heading.className = 'metrics-section-title';
-      heading.textContent = subj.name;
-      container.appendChild(heading);
+      apHeading(container, subj.name, 'h3');
       if (subj.sentiment) {
         const s = subj.sentiment;
         const line = document.createElement('p');
         line.className = 'block-text';
-        line.style.marginBottom = '20px';
         line.textContent = `Positive ${s.positive || '0%'} · Neutral ${s.neutral || '0%'} · Negative ${s.negative || '0%'}`;
         container.appendChild(line);
       }
-      renderKeyFindings(subj.key_findings, container);
-      renderPlatformsList(subj.platforms, container);
+      apFindingsTable(subj.key_findings, container, null);
+      apSourcesTable(subj.platforms, container, null);
       if (si < (data.subjects || []).length - 1) {
         const div = document.createElement('div');
         div.className = 'section-divider';
         container.appendChild(div);
       }
     });
-
-    renderTitledTextBlock(container, 'Market Pattern', data.market_pattern);
-    renderTitledTextBlock(container, 'Conclusion', data.conclusion);
-    renderFollowupQuestionChip(data, container);
+    apParagraphs(container, data.market_pattern);
+    apParagraphs(container, data.conclusion);
+    apFollowup(data, container);
   }
 
   function renderTrendReport(data, container) {
