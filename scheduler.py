@@ -39,6 +39,17 @@ response time, since both calls happen in a worker thread
 _trigger_google_fallback_search()'s own "kick off work on a background
 thread/task and don't make the caller wait for it" shape.
 
+PERSISTED SCHEDULE (TRENDING SCHEDULE STATE): the next due time lives in
+Mongo (database.auto_keywords_collection = flintel_auto_keywords, one
+document _id "trending_keywords"), so a restart/deploy does not reset the
+12-hour timer. A worker runs a cycle only after winning ONE atomic
+find_one_and_update claim (next_due_at <= now -> next_due_at = now + 12h), so
+several workers do not each run it. No saved state yet -> the first cycle is
+due immediately. If Mongo cannot be read/claimed, the loop falls back to the
+old in-memory behaviour for one cycle (sleep 12h, run, no claim) and then
+tries Mongo again; during such an outage several workers CAN each run a
+cycle (no coordination without Mongo).
+
 NEVER CRASHES: every failure path (Claude call fails, empty/None
 keywords, the Google/RapidAPI call fails, an unexpected exception
 anywhere in one cycle) is caught, logged as a warning, and skipped — the
@@ -48,8 +59,13 @@ in this file can bring down the app or stop future cycles from running.
 
 import asyncio
 import logging
+from datetime import datetime, timedelta, timezone
+
+from pymongo import ReturnDocument
+from pymongo.errors import DuplicateKeyError
 
 import config
+import database
 from database import google_posts_collection
 from google import search_google_for_reddit_posts
 from logics import enqueue_search_job, generate_trending_keywords_via_web_search
@@ -69,6 +85,17 @@ TRENDING_KEYWORDS_SEARCH_TAG = "auto_trending"
 # Background Service #1 does not spend X/Twitter (RapidAPI) calls on ~200
 # keywords every cycle. Change this one value to widen it (e.g. "all").
 TRENDING_JOB_TARGETING_PLATFORM = "reddit"
+
+# (TRENDING SCHEDULE STATE) persisted-schedule settings
+SCHEDULE_STATE_ID = "trending_keywords"        # the one state document's _id
+SCHEDULE_MAX_SLEEP_SECONDS = 3600              # re-read the due time at least hourly
+SCHEDULE_CLAIM_LOST_RECHECK_SECONDS = 60       # after losing a claim to another worker
+
+# Outcome of the most recent _run_trending_keywords_cycle() call, filled in by
+# the cycle itself (status / keywords_count / stubs_count / job_queued) so the
+# loop can record it in the state document. Side channel only: the cycle's
+# signature, return value and logging are unchanged. Never holds keywords.
+_cycle_outcome: dict = {}
 
 
 def _search_website_keywords_limit() -> int:
@@ -103,6 +130,7 @@ def _trending_job_keywords(keywords, limit: int) -> list:
 async def _queue_trending_search_job(keywords) -> None:
     """Write this cycle's keywords as the "auto_trending" search job.
     Never raises: a failure is logged and the caller carries on."""
+    _cycle_outcome["job_queued"] = False
     try:
         limit = _search_website_keywords_limit()
         if limit <= 0:
@@ -116,6 +144,7 @@ async def _queue_trending_search_job(keywords) -> None:
             job_keywords,
             TRENDING_JOB_TARGETING_PLATFORM,
         )
+        _cycle_outcome["job_queued"] = True
         log.info(
             f"Trending-keywords scheduler: job queued | "
             f"topic_key={TRENDING_KEYWORDS_SEARCH_TAG} | keywords={len(job_keywords)}"
@@ -141,11 +170,14 @@ async def _run_trending_keywords_cycle():
     search_google_for_reddit_posts() with nothing to search for. Any
     other unexpected exception anywhere in this function is caught here
     too, so a single bad cycle can never kill the scheduler loop below."""
+    _cycle_outcome.clear()
     try:
         keywords = await asyncio.to_thread(generate_trending_keywords_via_web_search)
         if not keywords:
+            _cycle_outcome.update(status="skipped_no_keywords", keywords_count=0)
             log.warning("Trending-keywords scheduler: no keywords generated this cycle — skipping.")
             return
+        _cycle_outcome["keywords_count"] = len(keywords)
 
         # (TRENDING SEARCH JOB) own try/except inside; never raises
         await _queue_trending_search_job(keywords)
@@ -156,26 +188,193 @@ async def _run_trending_keywords_cycle():
             google_posts_collection,
             TRENDING_KEYWORDS_SEARCH_TAG,
         )
+        _cycle_outcome.update(status="ok", stubs_count=len(stubs) if stubs else 0)
         log.info(
             f"Trending-keywords scheduler: cycle complete | "
             f"keywords={len(keywords)} | stubs={len(stubs) if stubs else 0}"
         )
     except Exception as exc:
+        _cycle_outcome["status"] = "failed"
         log.warning(f"Trending-keywords scheduler: cycle failed, will retry next cycle: {exc}")
 
 
+# ── (TRENDING SCHEDULE STATE) persisted schedule + atomic claim ─────────────
+# The sync helpers below talk to Mongo and run via asyncio.to_thread().
+
+def _utcnow() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+def _aware_utc(value):
+    """Mongo may hand back naive datetimes: they are UTC. None if not a datetime."""
+    if not isinstance(value, datetime):
+        return None
+    if value.tzinfo is None:
+        return value.replace(tzinfo=timezone.utc)
+    return value.astimezone(timezone.utc)
+
+
+def _state_collection():
+    coll = getattr(database, "auto_keywords_collection", None)
+    if coll is None:
+        raise RuntimeError("auto_keywords_collection is not available")
+    return coll
+
+
+def _read_schedule_state():
+    return _state_collection().find_one({"_id": SCHEDULE_STATE_ID})
+
+
+def _init_schedule_state(now: datetime) -> None:
+    """Create the state document, due immediately. Several workers may race
+    here: exactly one insert wins, the others get DuplicateKeyError, which is
+    fine — who RUNS the cycle is still decided by the atomic claim."""
+    try:
+        _state_collection().insert_one({"_id": SCHEDULE_STATE_ID, "next_due_at": now})
+    except DuplicateKeyError:
+        pass
+
+
+def _claim_due_cycle(now: datetime):
+    """ONE atomic find_one_and_update: matches only while next_due_at <= now
+    (or is missing/null) and, in the same operation, moves next_due_at to
+    now + interval and marks the cycle running. Returns the updated document
+    for the winner, None for everyone else."""
+    return _state_collection().find_one_and_update(
+        {"_id": SCHEDULE_STATE_ID,
+         "$or": [{"next_due_at": {"$lte": now}}, {"next_due_at": None}]},
+        {"$set": {
+            "next_due_at": now + timedelta(seconds=TRENDING_KEYWORDS_INTERVAL_SECONDS),
+            "last_started_at": now,
+            "last_status": "running",
+        }},
+        return_document=ReturnDocument.AFTER,
+    )
+
+
+def _outcome_update(finished_at: datetime) -> dict:
+    """$set/$unset for the finished cycle's result (never next_due_at)."""
+    out = dict(_cycle_outcome)
+    status = out.get("status")
+    if status not in ("ok", "skipped_no_keywords", "failed"):
+        status = "failed"
+    sets = {"last_finished_at": finished_at, "last_status": status}
+    unsets = {}
+    for key, field in (("keywords_count", "last_keywords_count"),
+                       ("stubs_count", "last_stubs_count"),
+                       ("job_queued", "last_job_queued")):
+        if key in out:
+            sets[field] = out[key]
+        else:
+            unsets[field] = ""
+    update = {"$set": sets}
+    if unsets:
+        update["$unset"] = unsets
+    return update
+
+
+def _finish_claimed_cycle(started_at_raw) -> None:
+    """Record the outcome on the document THIS claim started (matched by
+    last_started_at, so a slow cycle never overwrites a newer claim)."""
+    _state_collection().update_one(
+        {"_id": SCHEDULE_STATE_ID, "last_started_at": started_at_raw},
+        _outcome_update(_utcnow()),
+    )
+
+
+def _record_fallback_cycle(started_at: datetime) -> None:
+    """After an in-memory fallback cycle: if Mongo works again, push
+    next_due_at to started_at + interval (only forward, never back) and
+    record the outcome, so the recovered schedule does not immediately run
+    the cycle a second time."""
+    push = started_at + timedelta(seconds=TRENDING_KEYWORDS_INTERVAL_SECONDS)
+    update = _outcome_update(_utcnow())
+    update["$set"].update({"next_due_at": push, "last_started_at": started_at})
+    try:
+        _state_collection().update_one(
+            {"_id": SCHEDULE_STATE_ID,
+             "$or": [{"next_due_at": {"$lt": push}}, {"next_due_at": None}]},
+            update,
+            upsert=True,
+        )
+    except DuplicateKeyError:
+        pass                     # a newer due time is already stored — keep it
+
+
+async def _run_claimed_cycle(started_at_raw) -> None:
+    await _run_trending_keywords_cycle()
+    try:
+        await asyncio.to_thread(_finish_claimed_cycle, started_at_raw)
+    except Exception as exc:
+        log.warning(f"Trending-keywords scheduler: could not record the cycle result "
+                    f"({type(exc).__name__}); schedule is unaffected.")
+
+
+async def _persisted_schedule_step(first_check: bool) -> float:
+    """One check of the persisted schedule; returns seconds to wait before
+    the next check. Raises on a Mongo read/init/claim error (the loop then
+    falls back to the in-memory timer)."""
+    now = _utcnow()
+    state = await asyncio.to_thread(_read_schedule_state)
+    if state is None:
+        if first_check:
+            log.info("Trending-keywords scheduler started — next cycle due now (no saved state)")
+        await asyncio.to_thread(_init_schedule_state, now)
+        due = now
+    else:
+        due = _aware_utc(state.get("next_due_at")) or now
+        if first_check:
+            log.info(f"Trending-keywords scheduler started — next cycle due at "
+                     f"{due.isoformat()} (from flintel_auto_keywords)")
+    if due > now:
+        return min((due - now).total_seconds(), SCHEDULE_MAX_SLEEP_SECONDS)
+    claimed = await asyncio.to_thread(_claim_due_cycle, now)
+    if not claimed:
+        log.info("Trending-keywords scheduler: cycle already claimed by another worker — "
+                 "not running it here, will recheck.")
+        return SCHEDULE_CLAIM_LOST_RECHECK_SECONDS
+    await _run_claimed_cycle(claimed.get("last_started_at", now))
+    return 0
+
+
 async def _trending_keywords_loop():
-    """Runs _run_trending_keywords_cycle() every
-    TRENDING_KEYWORDS_INTERVAL_SECONDS, forever, for the lifetime of the
-    app process. Sleeps first, then runs — the first real cycle fires
-    12 hours after the app starts, matching "har 12 ghante baad ye chain
-    call kare" literally as a recurring 12-hour cadence from startup,
-    not an immediate run-once-at-startup. (If an immediate first cycle
-    on startup is wanted instead, swap the order of the two lines in this
-    loop — nothing else needs to change.)"""
+    """Runs the trending cycle every TRENDING_KEYWORDS_INTERVAL_SECONDS for
+    the lifetime of the app process, on the PERSISTED schedule (see
+    _persisted_schedule_step): the due time survives restarts/deploys, a
+    cycle runs only in the worker that wins the atomic claim, and the
+    loop re-reads the due time at least every SCHEDULE_MAX_SLEEP_SECONDS.
+    No saved state yet -> the first cycle runs right away.
+
+    Mongo unavailable (read/claim error): log the exception TYPE only, then
+    the old in-memory behaviour for ONE cycle — sleep the full interval, run
+    the cycle without a claim — record it in Mongo if possible, and go back
+    to the persisted schedule. Bounded: at most one Mongo attempt per
+    interval while the outage lasts, never a tight retry loop. During an
+    outage several workers may each run a cycle."""
+    first_check = True
     while True:
-        await asyncio.sleep(TRENDING_KEYWORDS_INTERVAL_SECONDS)
-        await _run_trending_keywords_cycle()
+        try:
+            wait = await _persisted_schedule_step(first_check)
+        except Exception as exc:
+            first_check = False
+            log.warning(
+                f"Trending-keywords scheduler: Mongo schedule unavailable "
+                f"({type(exc).__name__}) — falling back to the in-memory "
+                f"{TRENDING_KEYWORDS_INTERVAL_SECONDS}s timer for one cycle; "
+                f"Mongo scheduling is retried after it."
+            )
+            await asyncio.sleep(TRENDING_KEYWORDS_INTERVAL_SECONDS)
+            fallback_started = _utcnow()
+            await _run_trending_keywords_cycle()
+            try:
+                await asyncio.to_thread(_record_fallback_cycle, fallback_started)
+            except Exception as rec_exc:
+                log.warning(f"Trending-keywords scheduler: could not record the fallback cycle "
+                            f"({type(rec_exc).__name__}).")
+            continue
+        first_check = False
+        if wait > 0:
+            await asyncio.sleep(wait)
 
 
 def start_trending_keywords_scheduler():
