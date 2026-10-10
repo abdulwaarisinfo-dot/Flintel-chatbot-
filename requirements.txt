@@ -17,6 +17,10 @@ httpx>=0.27.0
 # ── MongoDB ──────────────────────────────────────────────────────────────────
 pymongo>=4.7.0
 
+# ── MySQL (read-only signals source; used only when MYSQL_READ_ENABLED=true) ──
+PyMySQL>=1.1.0
+cryptography>=42.0.0           # MySQL 8 caching_sha2_password login
+
 # ── Auth / session ────────────────────────────────────────────────────────────
 authlib>=1.3.0
 passlib[bcrypt]>=1.7.4
