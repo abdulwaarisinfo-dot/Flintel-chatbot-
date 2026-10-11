@@ -151,7 +151,7 @@ from logics import (
     _extract_near_match_confidence, _NO_DATA_CLAUDE_FORMATS,
     _patch_post_urls_into_answer, _inject_website_context_into_answer,
     _finalize_answer_and_results, _timeout_fallback_answer,
-    get_evidence_with_topup,
+    get_evidence_with_topup, _resolved_request_note,
     strict_intent_mode, strict_wait_done, get_scan_status,
     CLAUDE_BLOCKED_FALLBACK_REPLY, CLAUDE_CLARIFY_FALLBACK_REPLY,
     CLAUDE_CHAT_FALLBACK_SYSTEM_PROMPT,
@@ -322,7 +322,8 @@ def _extract_summary_text_from_claude_answer(answer: str) -> str:
     return " | ".join(parts)
 
 
-def append_to_chat_summary(chat_id: str, owner_key: str, query: str, answer: str, keywords: list = None):
+def append_to_chat_summary(chat_id: str, owner_key: str, query: str, answer: str, keywords: list = None,
+                           resolved_query: str = None):
     """(v5) Keeps a short, PLAIN-PYTHON (no extra Claude call) running
     summary on the chat doc itself — one condensed line per turn. This is
     what classify_and_maybe_chat() reads for continuity, so passing
@@ -344,17 +345,27 @@ def append_to_chat_summary(chat_id: str, owner_key: str, query: str, answer: str
     appends a short "[searched: ...]" note (up to the first 4 keywords)
     to the summary line for a search-type turn, so later continuity/
     router reads can tell what was actually searched for, not just what
-    was asked."""
+    was asked.
+
+    (MULTI-TURN CONTEXT) `resolved_query` (optional, default None => line
+    identical to before) is the router's standalone restatement of a
+    follow-up ("Now in USA" -> "Find users looking for AI jobs in the
+    USA"). When it differs from the literal message it is kept on the same
+    line, so every line stays self-contained and the subject of a long
+    chain of short follow-ups never rolls off with the oldest line."""
     if not chat_id or not owner_key:
         return
     digest = _extract_summary_text_from_claude_answer(answer)
+    user_part = _trim(query, CHAT_SUMMARY_TURN_CHAR_LIMIT)
+    if _resolved_request_note(query, resolved_query):
+        user_part += f" [meaning: {_trim(' '.join(resolved_query.split()), CHAT_SUMMARY_TURN_CHAR_LIMIT)}]"
     kw_note = ""
     if keywords:
         kw_list = [k for k in keywords[:4] if isinstance(k, str)]
         if kw_list:
             kw_note = f" [searched: {', '.join(kw_list)}]"
     line = (
-        f"User: {_trim(query, CHAT_SUMMARY_TURN_CHAR_LIMIT)} | "
+        f"User: {user_part} | "
         f"Assistant: {_trim(digest, CHAT_SUMMARY_TURN_CHAR_LIMIT)}{kw_note}"
     )
 
@@ -617,7 +628,7 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
                         unfiltered: bool = False, website_context: dict = None, match_phrases: list = None,
                         evidence_required: int = None,
                         website_only: bool = False, website_evidence: dict = None,
-                        website_note: str = None):
+                        website_note: str = None, resolved_query: str = None):
     """Appends a search as a new message in the chat, and auto-titles the
     chat from the very first query if it hasn't been named yet.
 
@@ -724,6 +735,8 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
         "website_note":       website_note,      # (WEBSITE INTELLIGENCE) str|None — classification note folded
                                                   # into analyze_with_claude()'s extra_context for this message.
         "website_context":    website_context,
+        "resolved_query":     resolved_query,    # (MULTI-TURN CONTEXT) str|None — router's standalone
+                                                  # restatement of a follow-up message (see logics.py).
         "google_fallback_triggered": False,
         "search_progress": None,               # (SEARCH-PROGRESS UI) None until generated
         "search_progress_generated": False,    # (SEARCH-PROGRESS UI) fire-once guard, mirrors google_fallback_triggered
@@ -1291,6 +1304,9 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
             # account for how the shared website relates to the query.
             if msg.get("website_note"):
                 extra_ctx_parts.append(msg["website_note"])
+            _rq_note = _resolved_request_note(msg.get("query"), msg.get("resolved_query"))   # (MULTI-TURN CONTEXT)
+            if _rq_note:
+                extra_ctx_parts.append(_rq_note)
             extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
             answer = analyze_with_claude(msg["query"], merged_pool, extra_context=extra_ctx)
             answer = _patch_post_urls_into_answer(answer, merged_pool)
@@ -1300,7 +1316,8 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
             save_claude_answer_to_chat(chat_id, owner_key, msg["topic_key"], answer)
             answer_for_format_check = answer
             try:
-                append_to_chat_summary(chat_id, owner_key, msg["query"], answer, keywords=msg.get("keywords"))
+                append_to_chat_summary(chat_id, owner_key, msg["query"], answer, keywords=msg.get("keywords"),
+                                       resolved_query=msg.get("resolved_query"))
             except Exception as exc:
                 log.warning(f"Updating chat summary failed for topic_key={msg.get('topic_key')}: {exc}")
         except Exception as exc:
@@ -1641,13 +1658,13 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                         background_tasks.add_task(
                             _timeout_fallback_answer, chat_id, owner_key, msg["topic_key"], msg["query"],
                             msg.get("keywords", []), msg.get("match_phrases"), msg.get("evidence_required"),
-                            msg.get("website_note"),
+                            msg.get("website_note"), msg.get("resolved_query"),
                         )
                     else:
                         _timeout_fallback_answer(
                             chat_id, owner_key, msg["topic_key"], msg["query"],
                             msg.get("keywords", []), msg.get("match_phrases"), msg.get("evidence_required"),
-                            msg.get("website_note"),
+                            msg.get("website_note"), msg.get("resolved_query"),
                         )
             continue
 
