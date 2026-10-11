@@ -59,6 +59,7 @@ from index import (
     _patch_post_urls_into_answer,
     _inject_website_context_into_answer,
     _finalize_answer_and_results,       # <-- Bug 2b helper from index.py
+    _resolved_request_note,             # <-- MULTI-TURN CONTEXT: needed in stream_answer()
     strict_intent_mode,                 # <-- STRICT INTENT MODE (config.STRICT_INTENT_MODE)
     strict_wait_done,                   # <-- STRICT wait/target rule (W2 + W3)
     get_scan_status,
@@ -666,7 +667,9 @@ def search(
         if not _extract_first_url(query):
             try:
                 ctx = saved_website_ctx
-                if ctx and ctx.get("keywords") and intent != "blocked":
+                # (MULTI-TURN CONTEXT) a router that failed twice made no
+                # decision at all — never reuse saved website keywords for it.
+                if ctx and ctx.get("keywords") and intent != "blocked" and not routed.get("router_failed"):
                     should_reuse = bool(routed.get("use_website_context"))
                     if not should_reuse and intent in ("clarify", "chat"):
                         # (LOOSENED BACKUP, FIX 3) Default to reuse now —
@@ -1278,6 +1281,7 @@ def search(
                 match_phrases=routed_match_phrases,
                 evidence_required=routed.get("evidence_required"),
                 website_note=website_note,
+                resolved_query=routed.get("resolved_query") if intent == "search" else None,   # (MULTI-TURN CONTEXT)
             )
             # (WEBSITE INTELLIGENCE) Whenever this message's keywords came
             # from the website (BEHAVIOR 2, or a BEHAVIOR 3 confirmed
@@ -2189,6 +2193,9 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     extra_ctx_parts.append(msg["website_note"])
                 if continuity_ctx:
                     extra_ctx_parts.append(continuity_ctx)
+                _rq_note = _resolved_request_note(msg.get("query"), msg.get("resolved_query"))   # (MULTI-TURN CONTEXT)
+                if isinstance(_rq_note, str) and _rq_note:
+                    extra_ctx_parts.append(_rq_note)
                 # (MERGE BEFORE ANSWERING) Tells Claude it has a mix
                 # of grounded signals and discovery-only Google posts
                 # in the same batch.
@@ -2227,7 +2234,8 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             if full_answer:
                 try:
                     save_claude_answer_to_chat(chat_id, owner_key, topic_key, full_answer)
-                    append_to_chat_summary(chat_id, owner_key, msg["query"], full_answer, keywords=msg.get("keywords"))
+                    append_to_chat_summary(chat_id, owner_key, msg["query"], full_answer, keywords=msg.get("keywords"),
+                                           resolved_query=msg.get("resolved_query"))
                 except Exception as exc:
                     log.warning(f"Caching streamed answer failed for topic_key={topic_key}: {exc}")
 
