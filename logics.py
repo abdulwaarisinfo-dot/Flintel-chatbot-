@@ -3008,6 +3008,17 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
         # Evidence cached before strict mode was switched on was never
         # intent-filtered; it must not be served as "qualified" posts.
         cached = None
+    if (cached is not None and cached.get("posts") and "keywords" in cached
+            and _compute_query_signature(cached.get("keywords"), cached.get("match_phrases"))
+            != _compute_query_signature(keywords, match_phrases)):
+        # (MULTI-TURN CONTEXT) topic_key is the raw message text, so a short
+        # follow-up ("now in USA") repeated later in the same chat for a
+        # DIFFERENT search shares the key. Posts cached for other
+        # keywords/phrases are another search's evidence — never reuse them
+        # (same rule the query-embedding cache on this document already
+        # applies via query_embedding_signature). A legacy doc that never
+        # recorded its keywords is left to the old behaviour.
+        cached = None
     cached_posts = (cached or {}).get("posts") or []
     cached_count = len(cached_posts)
 
@@ -4880,6 +4891,50 @@ would actually write.
    shared website link automatically and pull the right keywords from it.
    Keep it to 1-2 natural sentences, never robotic or repetitive-sounding.
 
+FOLLOW-UP MESSAGES — ONE CHAT, MANY TURNS (read the conversation history
+below before classifying ANY message):
+Users refine a search over many messages. For every message, first decide
+from the history whether it REFINES the current search or STARTS A NEW one.
+- REFINES the most recent search: the message changes, adds, or removes a
+  criterion WITHOUT naming a different subject — e.g. a location ("now in
+  USA", "only in Pakistan"), a result count ("at least 20 posts", "10
+  more", "show more"), a time range, or a filter (seniority, budget,
+  remote, "only buyers", "exclude agencies"), or "same but ...". Such a
+  message is "search" (never "clarify" or "chat" when the history has a
+  search to refine). Keep the current subject, target, and every
+  constraint still in force, then apply the change:
+    * A new location REPLACES the previous location(s), unless the user
+      combines them ("together", "both", "all three", "also", "as well",
+      "and", "aur", "bhi") — then use exactly the union of the locations
+      named. "Only in X" means exactly X.
+    * A stated count stays in force for later refinements of the same
+      search until the user changes it or starts a new search. "More" / "N
+      more" asks for additional results on the same search.
+    * Adding a filter keeps the existing ones; removing one ("without X",
+      "drop the X filter") removes only that one.
+    * Never keep a constraint the user has since replaced or removed.
+- STARTS A NEW SEARCH: the message names a different subject or target
+  (e.g. "now find users looking to buy a car" after a jobs search). Start
+  fresh: do NOT carry over earlier locations, counts, filters, or time
+  ranges unless the user restates them or explicitly refers back to them
+  ("same countries", "in those places").
+- Earlier ANSWERS and the posts already shown are context, not
+  requirements — the current request is what the user has asked for.
+- Do not ask a question the history already answers.
+- A "[meaning: ...]" tag in the history is an EARLIER interpretation of
+  that turn, not a confirmed fact — it may be wrong. Use it as context,
+  but the user's own words (the literal text on each line, and above all
+  their NEW message) take priority whenever they conflict with it.
+For "search", also return "resolved_query": ONE standalone sentence that
+restates the FULL current request after applying the rules above — who to
+find, the subject, and every location, count, time range, and filter
+still in force — understandable with no history at all, in the user's
+language. If the message is already standalone, restate it as-is. All
+other search fields ("keywords", "match_phrases", "target_entity",
+"time_window_days", "evidence_required") must describe this resolved
+request, not just the literal new message — and when it asks for at least
+N posts, "evidence_required" must be at least N.
+
 A short, auto-summarized conversation history (may be empty) is given
 below for continuity when classifying and when writing a "chat",
 "blocked", or "clarify" reply, or when a "search" follow-up implicitly
@@ -4891,7 +4946,7 @@ reply conversational and plain — don't mention you're an AI or that this
 is a "mock", and don't narrate your own reasoning.
 Respond with STRICT JSON ONLY — no markdown code fences, no preamble, no
 text outside the JSON object — in EXACTLY one of these four shapes:
-{"intent": "search", "reply": null, "keywords": ["<keyword1>", "<keyword2>"], "time_window_days": null, "match_phrases": ["<full sentence 1>", "<full sentence 2>"], "evidence_required": <int|null>, "website_only": false, "url_ask_type": "generic_own_business"|"specific_topic"|"none"|null, "target_entity": "<who to find>"|null, "intent_types": ["<one or more of: active_opportunity, solution_evaluation, problem_signal, provider_seller, general_discussion>"]|null}
+{"intent": "search", "reply": null, "keywords": ["<keyword1>", "<keyword2>"], "time_window_days": null, "match_phrases": ["<full sentence 1>", "<full sentence 2>"], "evidence_required": <int|null>, "website_only": false, "url_ask_type": "generic_own_business"|"specific_topic"|"none"|null, "target_entity": "<who to find>"|null, "intent_types": ["<one or more of: active_opportunity, solution_evaluation, problem_signal, provider_seller, general_discussion>"]|null, "resolved_query": "<the full current request as one standalone sentence>"}
 {"intent": "chat", "reply": "<your natural reply text here>", "keywords": null, "time_window_days": null, "match_phrases": null, "evidence_required": null}
 {"intent": "blocked", "reply": "<short, polite decline text>", "keywords": null, "time_window_days": null, "match_phrases": null, "evidence_required": null}
 {"intent": "clarify", "reply": "<short, natural clarifying question>", "keywords": null, "time_window_days": null, "match_phrases": null, "evidence_required": null}
@@ -4977,6 +5032,15 @@ CLAUDE_BLOCKED_FALLBACK_REPLY = (
 # website-link shortcut (handled automatically by the existing,
 # UNCHANGED WEBSITE-URL KEYWORD EXTRACTION FEATURE on the user's next
 # message).
+# (MULTI-TURN CONTEXT) Shown only when the router failed twice in a chat
+# that already has history (see classify_and_maybe_chat): no search is run,
+# because the message may depend on that history.
+ROUTER_UNAVAILABLE_REPLY = (
+    "Sorry — I couldn't process that message just now, so I didn't run a "
+    "search (I'd rather not guess and show you unrelated posts). Please send "
+    "it again, or write out the full request."
+)
+
 CLAUDE_CLARIFY_FALLBACK_REPLY = (
     "Bilkul — bas yeh batayein aap kis brand, product, ya industry ke "
     "baare mein Reddit aur baaki platforms se data dekhna chahte hain. "
@@ -5075,6 +5139,7 @@ def _parse_router_json(raw: str):
     url_ask_type = None
     target_entity = None
     intent_types = None
+    resolved_query = None
     if intent == "search":
         raw_keywords = data.get("keywords")
         if isinstance(raw_keywords, list):
@@ -5130,6 +5195,12 @@ def _parse_router_json(raw: str):
         if isinstance(raw_target_entity, str) and raw_target_entity.strip():
             target_entity = raw_target_entity.strip()
 
+        # (MULTI-TURN CONTEXT) The router's standalone restatement of the
+        # current request, resolved against the conversation history.
+        raw_resolved = data.get("resolved_query")
+        if isinstance(raw_resolved, str) and raw_resolved.strip():
+            resolved_query = " ".join(raw_resolved.split())[:500]
+
         raw_intent_types = data.get("intent_types")
         if isinstance(raw_intent_types, list):
             cleaned_intent_types = []
@@ -5180,7 +5251,8 @@ def _parse_router_json(raw: str):
             "unfiltered": unfiltered, "match_phrases": match_phrases, "evidence_required": evidence_required,
             "website_only": website_only, "use_website_context": use_website_context,
             "website_topic_relation": website_topic_relation, "url_ask_type": url_ask_type,
-            "target_entity": target_entity, "intent_types": intent_types}
+            "target_entity": target_entity, "intent_types": intent_types,
+            "resolved_query": resolved_query}
 
 
 def classify_and_maybe_chat(query: str, chat_summary: str, website_context_summary: str = None,
@@ -5243,17 +5315,34 @@ def classify_and_maybe_chat(query: str, chat_summary: str, website_context_summa
         f"{referenced_post_block}"
         f"User's new message: {query}"
     )
-    try:
-        raw = _call_claude(CLAUDE_ROUTER_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_ROUTER_MAX_TOKENS, enable_web_search=True)
-    except Exception as exc:
-        log.warning(f"Router Claude call failed (defaulting to 'search'): {exc}")
-        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None, "evidence_required": None, "website_only": False, "use_website_context": False, "website_topic_relation": None, "url_ask_type": None}
+    # (MULTI-TURN CONTEXT) One retry on failure (API error/timeout or
+    # unparseable output); a first-attempt success is exactly as before.
+    for attempt in (1, 2):
+        try:
+            raw = _call_claude(CLAUDE_ROUTER_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_ROUTER_MAX_TOKENS, enable_web_search=True)
+        except Exception as exc:
+            log.warning(f"Router Claude call failed (attempt {attempt}/2): {exc}")
+            continue
+        parsed = _parse_router_json(raw)
+        if parsed:
+            return parsed
+        log.warning(f"Router returned unparseable output (attempt {attempt}/2): {raw[:200]!r}")
 
-    parsed = _parse_router_json(raw)
-    if not parsed:
-        log.warning(f"Router returned unparseable output (defaulting to 'search'): {raw[:200]!r}")
-        return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None, "evidence_required": None, "website_only": False, "use_website_context": False, "website_topic_relation": None, "url_ask_type": None}
-    return parsed
+    if (chat_summary or "").strip() and not _extract_first_url(query):
+        # Both attempts failed in a chat that already has history: the
+        # message may only make sense with that history ("Now in USA"), and
+        # a keyword search on its literal words would show unrelated posts,
+        # while guessing the earlier topic could be wrong. Run no search;
+        # tell the user and let them resend.
+        log.warning("Router failed twice in a chat with history — not searching on the literal text")
+        return {"intent": "chat", "reply": ROUTER_UNAVAILABLE_REPLY, "keywords": None, "time_window_days": None,
+                "unfiltered": None, "match_phrases": None, "evidence_required": None, "website_only": False,
+                "use_website_context": False, "website_topic_relation": None, "url_ask_type": None,
+                "router_failed": True}
+    # First message of a chat (its literal text IS the whole request) or a
+    # message with a URL (handled by the website flows): unchanged fallback.
+    log.warning("Router failed twice (defaulting to 'search')")
+    return {"intent": "search", "reply": None, "keywords": None, "time_window_days": None, "unfiltered": None, "match_phrases": None, "evidence_required": None, "website_only": False, "use_website_context": False, "website_topic_relation": None, "url_ask_type": None}
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -6147,8 +6236,24 @@ def generate_keywords_for_website_request(query: str, url: str, structured_evide
     return {"keywords": keywords, "match_phrases": match_phrases}
 
 
+def _resolved_request_note(query: str, resolved_query: str):
+    """(MULTI-TURN CONTEXT) Extra analysis context naming the FULL current
+    request when the user's literal message was a follow-up ("Now in USA")
+    that the router resolved against the conversation. None (no change at
+    all) when there is no resolution or it just repeats the message."""
+    resolved = " ".join((resolved_query or "").split())
+    if not resolved:
+        return None
+    if normalize_topic_key(resolved) == normalize_topic_key(query or ""):
+        return None
+    return ("Current request (the user's message was a follow-up in this chat; it is resolved "
+            "against the earlier conversation here — answer THIS request, including every "
+            "location, count, and filter it names, and nothing it has dropped): " + resolved)
+
+
 def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query: str, keywords: list = None,
-                              match_phrases: list = None, evidence_required: int = None, website_note: str = None):
+                              match_phrases: list = None, evidence_required: int = None, website_note: str = None,
+                              resolved_query: str = None):
     """(PERFORMANCE FIX) Extracted, UNCHANGED logic from the RESPONSE_TIMEOUT
     fallback branch that used to run inline inside _fill_in_message_outputs()
     — same calls, same order, same caching. Pulled out so it can be
@@ -6291,6 +6396,9 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
             extra_ctx_parts.append(flintel.build_combined_source_context(len(matched), len(google_results)))
         if website_note:
             extra_ctx_parts.append(website_note)
+        _rq_note = _resolved_request_note(query, resolved_query)   # (MULTI-TURN CONTEXT)
+        if _rq_note:
+            extra_ctx_parts.append(_rq_note)
         extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
 
         answer = analyze_with_claude(query, merged_pool, extra_context=extra_ctx)
@@ -6303,7 +6411,8 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
         except Exception as exc:
             log.warning(f"Saving google-fallback results failed for topic_key={topic_key}: {exc}")
         try:
-            append_to_chat_summary(chat_id, owner_key, query, final_answer, keywords=keywords)
+            append_to_chat_summary(chat_id, owner_key, query, final_answer, keywords=keywords,
+                                   resolved_query=resolved_query)
         except Exception as exc:
             log.warning(f"Updating chat summary failed for topic_key={topic_key}: {exc}")
     except Exception as exc:
