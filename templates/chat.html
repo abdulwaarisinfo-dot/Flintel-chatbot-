@@ -2978,6 +2978,280 @@
   scrollToLatestTurn();
 </script>
 <script>
+  // ---- Progressive answer reveal (visual only) ----
+  // ANSWER-REVEAL-HELPERS-BEGIN
+  // After the existing renderer has FULLY rendered a freshly streamed answer,
+  // its existing DOM is revealed in place: blocks fade in one by one, their
+  // text nodes are typed, table body rows appear row by row. Nothing is
+  // re-rendered or re-parsed. Every touched text node and every touched
+  // style/aria-busy attribute is snapshotted first and restored EXACTLY on
+  // completion, skip, cancel or any error. Saved answers (page load, refresh,
+  // soft navigation) never call this — only the stream's "done" handler does,
+  // after its completion/unlock calls have already run.
+  const ANSWER_REVEAL_ENABLED = true;
+  const REVEAL_MAX_MS = 5000;
+  const REVEAL_BASE_CPS = 120;          // typing speed for short answers (chars/s)
+  const REVEAL_MIN_CPS = 40;            // never slower than this
+  const REVEAL_BLOCK_MS = 140;          // pause given to each block's fade-in
+  const REVEAL_ROW_MS = 70;             // per table body row
+  const REVEAL_FADE = 'opacity 220ms ease-out, transform 220ms ease-out';
+  let activeAnswerReveal = null;
+
+  function revealMotionAllowed(win, doc) {
+    try {
+      if (!ANSWER_REVEAL_ENABLED) return false;
+      if (!doc || doc.hidden) return false;
+      if (win && typeof win.matchMedia === 'function' &&
+          win.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // Whole animation <= REVEAL_MAX_MS whatever the length: block/row pauses
+  // get at most 40% of it, text the rest; typing is REVEAL_BASE_CPS for short
+  // answers and speeds up (never below REVEAL_MIN_CPS) for long ones.
+  function computeRevealPlan(totalChars, rowCount, blockCount) {
+    const n = (v) => { v = Math.floor(Number(v)); return isFinite(v) && v > 0 ? v : 0; };
+    const chars = n(totalChars), rows = n(rowCount), blocks = n(blockCount);
+    let blockMs = REVEAL_BLOCK_MS, rowMs = REVEAL_ROW_MS;
+    const overheadCap = REVEAL_MAX_MS * 0.4;
+    const overhead = blocks * blockMs + rows * rowMs;
+    if (overhead > overheadCap) {
+      const k = overheadCap / overhead;
+      blockMs *= k;
+      rowMs *= k;
+    }
+    const used = blocks * blockMs + rows * rowMs;
+    const cps = Math.max(REVEAL_BASE_CPS, REVEAL_MIN_CPS, (chars * 1000) / (REVEAL_MAX_MS - used));
+    const textMs = chars ? (chars * 1000) / cps : 0;
+    return { cps, blockMs, rowMs, totalMs: Math.min(REVEAL_MAX_MS, used + textMs) };
+  }
+
+  // Skip keys: Escape always; Space/End only when not typing in a field.
+  function isRevealSkipKey(key, target) {
+    if (key === 'Escape') return true;
+    if (key !== ' ' && key !== 'Spacebar' && key !== 'End') return false;
+    const t = target || {};
+    const tag = (t.tagName || '').toUpperCase();
+    return !(tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || t.isContentEditable);
+  }
+
+  function snapshotRevealAttr(el, name) {
+    return { el, name, had: el.hasAttribute(name), value: el.getAttribute(name) };
+  }
+  function restoreRevealAttr(s) {
+    try {
+      // Read first: Chromium serialises CSSOM style edits lazily, and a
+      // later read would otherwise re-create style="" after removeAttribute().
+      s.el.getAttribute(s.name);
+      if (s.had) s.el.setAttribute(s.name, s.value);
+      else s.el.removeAttribute(s.name);
+    } catch (e) { /* keep restoring the rest */ }
+  }
+
+  // Text nodes to type, in document order. Table text is never typed (rows
+  // are revealed whole); whitespace-only nodes are left alone.
+  function collectRevealTextNodes(root) {
+    const out = [];
+    const walker = root.ownerDocument.createTreeWalker(root, 4 /* SHOW_TEXT */, {
+      acceptNode(node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) return 2;   // FILTER_REJECT
+        for (let p = node.parentNode; p && p !== root; p = p.parentNode) {
+          const tag = (p.nodeName || '').toUpperCase();
+          if (tag === 'TABLE' || tag === 'SVG' || tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEXTAREA') return 2;
+        }
+        return 1;                                                    // FILTER_ACCEPT
+      },
+    });
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) out.push({ node, text: node.nodeValue });
+    return out;
+  }
+
+  function revealScrollParent(el, doc) {
+    for (let p = el.parentElement; p && p !== doc.body && p !== doc.documentElement; p = p.parentElement) {
+      const oy = (doc.defaultView.getComputedStyle(p).overflowY || '');
+      if ((oy === 'auto' || oy === 'scroll') && p.scrollHeight > p.clientHeight) return p;
+    }
+    return doc.scrollingElement || doc.documentElement;
+  }
+
+  // Returns { animated, skip() }. Never throws; when it cannot animate safely
+  // it changes nothing and the answer simply stays fully visible.
+  function startAnswerReveal(wrap, opts) {
+    opts = opts || {};
+    const win = opts.win || window;
+    const doc = opts.doc || document;
+    const none = { animated: false, skip() {} };
+    if (activeAnswerReveal) activeAnswerReveal.skip();
+    let renderedEl;
+    try {
+      if (!wrap || !revealMotionAllowed(win, doc)) return none;
+      if (typeof opts.isCurrent === 'function' && !opts.isCurrent()) return none;
+      const rawEl = wrap.querySelector('.answer-raw');
+      renderedEl = wrap.querySelector('.answer-rendered');
+      if (!rawEl || !renderedEl || !doc.contains(wrap)) return none;
+      // Only a genuine, finished render: the live-answer MutationObserver
+      // re-renders any wrap NOT marked this way, which would wipe the DOM
+      // mid-animation.
+      if (wrap.dataset.lastRenderedRaw !== rawEl.textContent) return none;
+      if (renderedEl.style.display !== 'block') return none;
+      if (!(renderedEl.textContent || '').trim()) return none;
+    } catch (e) {
+      return none;
+    }
+
+    const attrSnaps = [];
+    const textSnaps = [];
+    const listeners = [];
+    let finished = false, rafId = 0, safetyId = 0, follow = false, lastTop = 0;
+    const scroller = { el: null };
+
+    function on(target, type, fn, o) {
+      target.addEventListener(type, fn, o);
+      listeners.push([target, type, fn, o]);
+    }
+    function finish() {
+      if (finished) return;
+      finished = true;
+      try { if (rafId) win.cancelAnimationFrame(rafId); } catch (e) { /* ignore */ }
+      try { if (safetyId) win.clearTimeout(safetyId); } catch (e) { /* ignore */ }
+      for (const s of textSnaps) { try { s.node.nodeValue = s.text; } catch (e) { /* next */ } }
+      for (let i = attrSnaps.length - 1; i >= 0; i--) restoreRevealAttr(attrSnaps[i]);
+      for (const [t, type, fn, o] of listeners) { try { t.removeEventListener(type, fn, o); } catch (e) { /* next */ } }
+      listeners.length = 0;
+      if (activeAnswerReveal === handle) activeAnswerReveal = null;
+    }
+    const handle = { animated: true, skip: finish };
+
+    try {
+      const blocks = Array.prototype.filter.call(renderedEl.children, (el) => el.nodeType === 1);
+      const perBlock = blocks.map((block) => ({
+        block,
+        texts: collectRevealTextNodes(block),
+        rows: Array.prototype.slice.call(block.querySelectorAll('tbody > tr')),
+      }));
+      let totalChars = 0, totalRows = 0;
+      for (const b of perBlock) {
+        for (const t of b.texts) totalChars += t.text.length;
+        totalRows += b.rows.length;
+      }
+      const plan = computeRevealPlan(totalChars, totalRows, blocks.length);
+
+      // Timeline: block fade-in, then its text typed, then its rows.
+      const steps = [];
+      let t = 0;
+      for (const b of perBlock) {
+        steps.push({ kind: 'block', el: b.block, start: t, end: t });
+        t += plan.blockMs;
+        for (const tx of b.texts) {
+          const dur = (tx.text.length * 1000) / plan.cps;
+          steps.push({ kind: 'text', node: tx.node, text: tx.text, start: t, end: t + dur });
+          t += dur;
+        }
+        for (const row of b.rows) {
+          steps.push({ kind: 'row', el: row, start: t, end: t });
+          t += plan.rowMs;
+        }
+      }
+      const totalMs = Math.min(t, REVEAL_MAX_MS);
+
+      // Hidden start state — snapshot every attribute before touching it.
+      attrSnaps.push(snapshotRevealAttr(wrap, 'aria-busy'));
+      wrap.setAttribute('aria-busy', 'true');
+      for (const s of steps) {
+        if (s.kind === 'text') {
+          textSnaps.push({ node: s.node, text: s.text });
+          s.node.nodeValue = '';
+        } else {
+          attrSnaps.push(snapshotRevealAttr(s.el, 'style'));
+          if (s.kind === 'block') {
+            s.el.style.opacity = '0';
+            s.el.style.transform = 'translateY(6px)';
+            s.el.style.transition = REVEAL_FADE;
+          } else {
+            // visibility (not display:none) keeps the table's column layout
+            s.el.style.visibility = 'hidden';
+          }
+        }
+      }
+
+      // Bottom-following only if the reader was at the bottom BEFORE this
+      // answer appeared: today's distance minus the new answer's own height.
+      scroller.el = revealScrollParent(wrap, doc);
+      const isDocScroller = scroller.el === doc.scrollingElement || scroller.el === doc.documentElement;
+      const viewH = () => (isDocScroller ? win.innerHeight : scroller.el.clientHeight);
+      const top = () => (isDocScroller ? (win.pageYOffset || scroller.el.scrollTop || 0) : scroller.el.scrollTop);
+      const distance = scroller.el.scrollHeight - (top() + viewH());
+      follow = (distance - wrap.getBoundingClientRect().height) < 160;
+      lastTop = top();
+      const stopFollow = () => { follow = false; };
+      on(win, 'wheel', (e) => { if (e.deltaY < 0) stopFollow(); }, { passive: true });
+      on(win, 'touchmove', stopFollow, { passive: true });
+
+      // Skip controls — never preventDefault, so links/selection still work.
+      on(wrap, 'click', finish);
+      on(doc, 'keydown', (e) => {
+        if (['PageUp', 'ArrowUp', 'Home'].includes(e.key)) stopFollow();
+        if (isRevealSkipKey(e.key, e.target)) finish();
+      });
+      on(doc, 'visibilitychange', () => { if (doc.hidden) finish(); });
+      safetyId = win.setTimeout(finish, REVEAL_MAX_MS + 1500);
+
+      const t0 = (win.performance || Date).now();
+      let cursor = 0;
+      const frame = (now) => {
+        if (finished) return;
+        try {
+          if (!doc.contains(wrap) || (typeof opts.isCurrent === 'function' && !opts.isCurrent())) { finish(); return; }
+          const elapsed = now - t0;
+          let frontier = null;
+          while (cursor < steps.length && steps[cursor].start <= elapsed) {
+            const s = steps[cursor];
+            if (s.kind === 'text') {
+              frontier = s.node.parentElement || frontier;
+              if (elapsed >= s.end) { s.node.nodeValue = s.text; cursor++; continue; }
+              const shown = Math.max(1, Math.ceil(s.text.length * (elapsed - s.start) / (s.end - s.start)));
+              s.node.nodeValue = s.text.slice(0, shown);
+              break;
+            }
+            if (s.kind === 'block') { s.el.style.opacity = '1'; s.el.style.transform = 'none'; }
+            else { s.el.style.visibility = 'visible'; }
+            frontier = s.el;
+            cursor++;
+          }
+          if (follow) {
+            const cur = top();
+            if (cur < lastTop - 2) follow = false;          // the reader scrolled up
+            else if (frontier) {
+              const r = frontier.getBoundingClientRect();
+              const limit = isDocScroller ? win.innerHeight : scroller.el.getBoundingClientRect().bottom;
+              const over = r.bottom + 24 - limit;
+              if (over > 0) {
+                if (isDocScroller) win.scrollBy(0, over); else scroller.el.scrollTop += over;
+              }
+              lastTop = top();
+            }
+          }
+          if (cursor >= steps.length || elapsed >= totalMs) { finish(); return; }
+          rafId = win.requestAnimationFrame(frame);
+        } catch (e) {
+          console.warn('[answer-reveal] animation error — showing the full answer:', e);
+          finish();
+        }
+      };
+      rafId = win.requestAnimationFrame(frame);
+      activeAnswerReveal = handle;
+      return handle;
+    } catch (e) {
+      console.warn('[answer-reveal] could not start — showing the full answer:', e);
+      finish();
+      return none;
+    }
+  }
+  // ANSWER-REVEAL-HELPERS-END
+
   // ---- Live streaming for the one pending answer, if any ----
   // Wires up the existing GET /chat/{chat_id}/stream SSE endpoint. Only
   // runs at all if a message on this page is actually mid-stream (marked
@@ -3178,6 +3452,10 @@
               renderStructuredAnswer(wrap);
             });
           }
+          // (PROGRESSIVE ANSWER REVEAL) Visual only, after the render above;
+          // the completion/unlock calls have already run. Shows the answer
+          // in full instantly whenever it can't animate safely.
+          startAnswerReveal(wrap, { isCurrent: () => myGen === softNavGeneration });
         } else {
           // Fallback safety net: if the loading-row somehow isn't there
           // anymore for any reason, fall back to the original, always-
