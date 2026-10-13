@@ -41,6 +41,7 @@ from index import (
     # business logic
     normalize_topic_key,
     normalize_platform,
+    normalize_platforms,
     generate_fuzzy_keywords,
     enqueue_search_job,
     get_matched_signals,
@@ -510,7 +511,7 @@ def search(
 
     try:
         topic_key = normalize_topic_key(query)
-        targeting_platform = normalize_platform(platform)
+        targeting_platform = normalize_platforms(platform)   # (PLATFORM MULTI-SELECT) one, several or all
 
         if not topic_key:
             # Best-effort context for the error re-render only — never let a
