@@ -3,7 +3,7 @@ tests/test_platform_multiselect.py — Platforms dropdown with logos and
 multi-select (one, several, or all platforms), and the removed "All Platforms"
 and "Completed" pills under each question.
 
-  * backend: normalize_platforms / matchers / job platform (stub modules, no
+  * backend: normalize_platforms / matchers / job platform (stub modules, no 
     real Mongo / LLM / network);
   * real Chromium (Playwright) when available: the Jinja-rendered templates.
 """
