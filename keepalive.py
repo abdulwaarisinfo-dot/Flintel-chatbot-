@@ -54,7 +54,7 @@ async def start_keepalive():
     global _started, _task
     try:
         if _started:
-            return None
+            return  
         if not getattr(config, "KEEPALIVE_ENABLED", True):
             log.info("keepalive disabled: KEEPALIVE_ENABLED is off")
             return None
