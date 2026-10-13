@@ -4320,7 +4320,7 @@
   // re-runs the exact same structured-JSON render pass on it immediately.
   // renderMarkdownAnswers() already no-ops on unchanged text (see the
   // dataset.lastRenderedRaw check above), so calling it repeatedly here is
-  // safe and won't loop on its own DOM writes or redo work needlessly.
+  // safe and won't loop on its own DOM writes or redo work needlessly. 
   (function watchForLiveAnswerUpdates() {
     let pending = false;
     const observer = new MutationObserver(() => {
