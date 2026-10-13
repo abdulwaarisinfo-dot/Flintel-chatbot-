@@ -599,26 +599,14 @@
      other override needed on top of the app-wide `a { text-decoration:
      none; }` reset. Font/size/spacing untouched. */
   .answer-rendered a { color: var(--link-color); text-decoration: underline; }
-  /* (LINK COLOUR) One blue for every inline hyperlink and suggested-keyword chip
+  /* (LINK COLOUR) One blue for every inline hyperlink
      (#009dff is the blue the post/website links already used). Green stays for
      buttons, status chips, focus borders and other non-link accents. */
   :root {
     --link-color: #009dff; --link-color-hover: #4db8ff;
-    --chip-bg: rgba(0, 157, 255, 0.12); --chip-bg-hover: rgba(0, 157, 255, 0.22);
-    --chip-bg-active: rgba(0, 157, 255, 0.30); --chip-border: rgba(0, 157, 255, 0.45);
   }
   .answer-rendered a:hover, .post-field .field-text a:hover, .leadgen-field .text a:hover { color: var(--link-color-hover); }
-  .answer-rendered a:focus-visible, .post-field .field-text a:focus-visible, .leadgen-field .text a:focus-visible,
-  .keyword-chip:focus-visible { outline: 2px solid var(--link-color); outline-offset: 2px; }
-  .keyword-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-  .keyword-chip {
-    display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 999px;
-    border: 1px solid var(--chip-border); background: var(--chip-bg); color: var(--link-color);
-    font-family: inherit; font-size: 15px; font-weight: 500; line-height: 22px; text-align: left;
-    cursor: pointer; transition: background .15s ease, color .15s ease;
-  }
-  .keyword-chip:hover { background: var(--chip-bg-hover); color: var(--link-color-hover); }
-  .keyword-chip:active { background: var(--chip-bg-active); }
+  .answer-rendered a:focus-visible, .post-field .field-text a:focus-visible, .leadgen-field .text a:focus-visible { outline: 2px solid var(--link-color); outline-offset: 2px; }
   .answer-rendered code { background: #1e1d1c; padding: 1px 6px; border-radius: 4px; font-size: 14.5px; overflow-wrap: anywhere; word-break: break-word; }
   /* (HORIZONTAL-OVERFLOW HARDENING) Same fix as chat.html — no rule
      existed for a markdown code FENCE (<pre><code>), whose default
@@ -932,10 +920,43 @@
   .platforms-label-logos { display: inline-flex; align-items: center; }
   .platforms-label-logos .platform-opt-logo { width: 18px; height: 18px; box-shadow: 0 0 0 2px #1e1d1c; }
   .platforms-label-logos .platform-opt-logo + .platform-opt-logo { margin-left: -5px; }
-  /* (PILLS REMOVED) The "Completed" status pill under a question is hidden.
-     The live "Searching…" timer and any failure / "Answer unavailable"
-     state still show. */
-  .turn-chip.status-completed { display: none; }
+  /* (RESEARCH STATUS) The only waiting state under a question: a shimmering
+     "Researching 12s" that freezes to "Researched 14s" once the answer is in.
+     Replaces the status pill, the dots row and the progress block (those
+     elements stay in the DOM for the streaming logic, just never shown).
+     "Answer unavailable" / "Partial answer" / "Failed" still show, in red. */
+  .turn-meta { justify-content: flex-start; }
+  .turn-meta:has(.turn-chip) { margin: 22px 0 22px; }
+  .turn-chip {
+    background: none; border: 0; border-radius: 0; padding: 0; gap: 6px;
+    color: #a0a09d; font-size: 15px; font-weight: 500; line-height: 22px; letter-spacing: 0;
+  }
+  .turn-chip:not(.status-failed) .status-dot { display: none; }
+  .turn-chip .turn-timer { color: #6f6e6c; font-variant-numeric: tabular-nums; }
+  .turn-chip.status-pending .turn-timer { display: inline; min-width: 0; }
+  .turn-chip.status-pending { color: #a0a09d; animation: researchIn .35s ease-out both; }
+  .turn-chip.status-pending .turn-status-label {
+    background: linear-gradient(100deg, #8a8986 0%, #8a8986 38%, #f4f3f0 50%, #8a8986 62%, #8a8986 100%);
+    background-size: 250% 100%;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    animation: researchShimmer 2.2s linear infinite;
+  }
+  .turn-chip.status-completed { color: #8a8986; }
+  .turn-chip.status-completed .turn-status-label,
+  .turn-chip.status-completed .turn-timer { animation: researchDone .45s ease-out; }
+  .turn-chip.status-failed { color: #E2645A; }
+  @keyframes researchShimmer { from { background-position: 100% 0; } to { background-position: 0% 0; } }
+  @keyframes researchIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  @keyframes researchDone { from { opacity: 0.35; } to { opacity: 1; } }
+  .turn-block .loading-row, .turn-block .search-progress-block { display: none !important; }
+  @media (prefers-reduced-motion: reduce) {
+    .turn-chip.status-pending, .turn-chip.status-completed .turn-status-label,
+    .turn-chip.status-completed .turn-timer { animation: none; }
+    .turn-chip.status-pending .turn-status-label {
+      animation: none; background: none; -webkit-text-fill-color: currentColor; color: #c9c8c5;
+    }
+  }
 </style>
 </head>
 <body>
@@ -1961,84 +1982,21 @@
   }
 
   // ---- No-results answer format ----
-  // Matches the Figma "no results" psychology exactly: a plain left-aligned
-  // explanation (not the centered .state-card treatment used elsewhere),
-  // then a "Try one of these next steps" list where each action is a bold
-  // emoji-labeled item with its own description underneath, then an
-  // optional "Ask a related question" block with example follow-ups
-  // nested one level deeper, then a closing clarifying question. Font
-  // sizes/spacing use the app's established 17px/26px/20px/40px system
-  // rather than Figma's literal 18px/28px, per the standing rule; colors
-  // and structure match Figma exactly.
-  const NO_RESULTS_ACTION_EMOJI = {
-    broaden_time: '🔁',
-    broaden_platforms: '🌐',
-    broaden_term: '🔍',
-    try_nearest_alternative: '📍',
-  };
-
-  function noResultsItem(container, emoji, label, descriptionNode) {
-    const wrap = document.createElement('div');
-    wrap.style.marginBottom = '20px';
-    const labelRow = document.createElement('div');
-    labelRow.className = 'post-field';
-    labelRow.innerHTML = `<span class="field-dot"></span><span class="field-text"></span>`;
-    const strong = document.createElement('strong');
-    strong.textContent = `${emoji} ${label}`;
-    labelRow.querySelector('.field-text').appendChild(strong);
-    wrap.appendChild(labelRow);
-    if (descriptionNode) {
-      const descWrap = document.createElement('div');
-      descWrap.style.cssText = 'padding-left: 19px; color: #d1d0cf; font-size: 17px; font-weight: 500; line-height: 26px;';
-      descWrap.appendChild(descriptionNode);
-      wrap.appendChild(descWrap);
-    }
-    container.appendChild(wrap);
-  }
-
-  // (KEYWORD CHIPS) One blue chip per suggested search term. Clicking puts ONLY
-  // that term into the search box — no auto-submit, exactly as before.
-  function clickableTerm(text) {
-    const chip = document.createElement('button');
-    chip.type = 'button';
-    chip.className = 'keyword-chip';
-    chip.textContent = text;
-    chip.addEventListener('click', (e) => {
-      e.preventDefault();
-      const input = document.getElementById('search-input');
-      if (input) { input.value = text; input.dispatchEvent(new Event('input')); input.focus(); }
-    });
-    return chip;
-  }
-  // The individual search terms of a suggested action. A structured
-  // "suggestions" array wins; an older single "suggestion" string is used as
-  // one term, unless it is a sentence that quotes its terms ("look for
-  // 'Notion help', 'Notion issues' threads") — then only the quoted terms are
-  // used, never the sentence itself.
-  const QUOTED_TERM_RE = /(^|[\s(\[,:;])["\u201C'\u2018]([^"\u201C\u201D'\u2018\u2019\n]{1,80}?)["\u201D'\u2019](?=$|[\s.,;:!?)\]])/g;
-  function suggestedSearchTerms(action) {
-    const raw = action && Array.isArray(action.suggestions) ? action.suggestions
-      : (action && typeof action.suggestion === 'string' ? [action.suggestion] : []);
-    const out = [];
-    const seen = new Set();
-    raw.forEach((item) => {
-      if (typeof item !== 'string') return;
-      const quoted = [];
-      let m;
-      QUOTED_TERM_RE.lastIndex = 0;
-      while ((m = QUOTED_TERM_RE.exec(item)) !== null) quoted.push(m[2]);
-      (quoted.length ? quoted : [item]).forEach((t) => {
-        const term = t.replace(/\s+/g, ' ').trim();
-        if (term && !seen.has(term.toLowerCase())) { seen.add(term.toLowerCase()); out.push(term); }
-      });
-    });
-    return out;
-  }
+  // A plain left-aligned explanation (not the centered .state-card treatment
+  // used elsewhere), then an optional closing clarifying question.
+  // (NEXT-STEPS REMOVED) The "Try one of these next steps" list (suggested
+  // actions, keyword chips, "Ask a related question") is no longer shown.
+  // Saved answers may still carry suggested_actions / related_questions;
+  // they are ignored here.
+  // Shown only when a no_results answer carries no explanation of its own.
+  const NO_RESULTS_FALLBACK_MESSAGE = "This search didn't surface enough relevant evidence to answer it. That doesn't necessarily mean those discussions don't exist — the current search just didn't find enough verifiable posts.";
 
   function renderNoResults(data, container, matchedResults) {
     const message = document.createElement('p');
     message.className = 'block-text';
-    message.textContent = data.message || '';
+    const hasOwnText = [data.message, data.likely_reason, data.clarifying_question, data.near_match_offer]
+      .some((v) => typeof v === 'string' && v.trim());
+    message.textContent = data.message || (hasOwnText ? '' : NO_RESULTS_FALLBACK_MESSAGE);
     container.appendChild(message);
 
     if (data.likely_reason) {
@@ -2047,58 +2005,6 @@
       p.style.marginTop = '20px';
       p.textContent = data.likely_reason;
       container.appendChild(p);
-    }
-
-    if (data.suggested_actions && data.suggested_actions.length) {
-      const heading = document.createElement('p');
-      heading.className = 'metrics-section-title';
-      heading.textContent = 'Try one of these next steps';
-      container.appendChild(heading);
-
-      data.suggested_actions.forEach(a => {
-        const emoji = NO_RESULTS_ACTION_EMOJI[a.type] || '➡️';
-        if (a.type === 'broaden_term' || a.type === 'try_nearest_alternative') {
-          // (KEYWORD CHIPS) Each suggested term is its own chip — see
-          // suggestedSearchTerms(); "suggestions" array and the older single
-          // "suggestion" string are both supported.
-          const terms = suggestedSearchTerms(a);
-          const desc = document.createElement('div');
-          if (terms.length) {
-            if (terms.length > 1) desc.appendChild(document.createTextNode('Try these related searches:'));
-            const chips = document.createElement('div');
-            chips.className = 'keyword-chips';
-            terms.forEach((t) => chips.appendChild(clickableTerm(t)));
-            desc.appendChild(chips);
-          } else {
-            desc.textContent = a.type === 'broaden_term'
-              ? 'Try a broader or more general version of your search term.'
-              : 'No close alternative found.';
-          }
-          noResultsItem(container, emoji, a.label, desc);
-        } else {
-          const desc = document.createElement('span');
-          desc.textContent = a.description || 'See if there’s more conversation with this adjustment.';
-          noResultsItem(container, emoji, a.label, desc);
-        }
-      });
-
-      if (data.related_questions && data.related_questions.length) {
-        const desc = document.createElement('div');
-        data.related_questions.forEach(q => {
-          const row = document.createElement('div');
-          row.className = 'post-field';
-          row.style.marginLeft = '30px';
-          row.innerHTML = `<span class="field-dot"></span><span class="field-text"></span>`;
-          row.querySelector('.field-text').textContent = `“${q}”`;
-          row.style.cursor = 'pointer';
-          row.addEventListener('click', () => {
-            const input = document.getElementById('search-input');
-            if (input) { input.value = q; input.dispatchEvent(new Event('input')); input.focus(); }
-          });
-          desc.appendChild(row);
-        });
-        noResultsItem(container, '💬', 'Ask a related question', desc);
-      }
     }
 
     if (data.clarifying_question) {
@@ -2512,8 +2418,7 @@
   // once right after that HTML is dropped into the DOM so every one of
   // those links opens in a new tab too, same as the ones fieldRow()
   // already builds. Only touches real http(s) links — never an in-page
-  // "#" link (e.g. clickableTerm()'s search-suggestion chips), and those
-  // aren't part of this sanitized HTML anyway.
+  // "#" link.
   function hardenExternalLinks(container) {
     container.querySelectorAll('a[href^="http"]').forEach((a) => {
       a.target = '_blank';
@@ -3609,13 +3514,14 @@
   function runningTurnChips() {
     return document.querySelectorAll('.turn-chip[data-turn-timer]:not([data-timer-state])');
   }
+  // (RESEARCH STATUS) "Researching 12s" while the request runs.
   function turnTimerTick() {
     runningTurnChips().forEach((chip) => {
       if (!document.body.contains(chip)) return;
       const label = chip.querySelector('.turn-timer');
       const secs = turnElapsedSeconds(parseRequestedAt(chip.dataset.requestedAt));
-      if (!label || isNaN(secs)) return;          // no usable start time: keep "Searching…"
-      const text = formatTurnAgo(secs);
+      if (!label || isNaN(secs)) return;          // no usable start time: just "Researching"
+      const text = formatTurnDuration(secs);
       if (label.textContent !== text) label.textContent = text;
     });
     if (!runningTurnChips().length && turnTimerInterval) {
@@ -3623,14 +3529,45 @@
       turnTimerInterval = null;
     }
   }
+  // (RESEARCH STATUS) A reopened answer shows "Researched 14s" from its saved
+  // requested_at / answered_at; older answers without answered_at: "Researched".
+  function fillResearchedDurations() {
+    document.querySelectorAll('.turn-chip.status-completed[data-answered-at]:not([data-duration-set])').forEach((chip) => {
+      chip.dataset.durationSet = '1';
+      const t = chip.querySelector('.turn-timer');
+      const ms = parseRequestedAt(chip.dataset.answeredAt) - parseRequestedAt(chip.dataset.requestedAt);
+      if (t && isFinite(ms) && ms >= 0) t.textContent = formatTurnDuration(ms / 1000);
+    });
+  }
+  // A fresh "Researching" status line, for an optimistic turn shown before
+  // POST /search answers (starts counting from the moment of sending).
+  function createResearchingMeta() {
+    const meta = document.createElement('div');
+    meta.className = 'turn-meta';
+    const chip = document.createElement('span');
+    chip.className = 'turn-chip status-pending';
+    chip.dataset.turnTimer = '';
+    chip.dataset.requestedAt = new Date().toISOString();
+    const label = document.createElement('span');
+    label.className = 'turn-status-label';
+    label.textContent = 'Researching';
+    const timer = document.createElement('span');
+    timer.className = 'turn-timer';
+    timer.setAttribute('aria-live', 'off');
+    timer.textContent = '0s';
+    chip.append(label, ' ', timer);
+    meta.appendChild(chip);
+    return meta;
+  }
   // Idempotent: at most ONE interval for the whole page, (re)started after
   // page load / soft navigation / soft submit, stopped once no chip runs.
   function initTurnTimers() {
+    fillResearchedDurations();
     if (!runningTurnChips().length) return;
     turnTimerTick();
     if (!turnTimerInterval) turnTimerInterval = setInterval(turnTimerTick, 1000);
   }
-  // Freeze the chip of `scope` (a .turn-block) as completed / failed.
+  // Freeze the chip of `scope` (a .turn-block): "Researched 14s" / "Failed".
   function finishTurnTimer(scope, state, fallbackRequestedAt) {
     if (!scope) return;
     const chip = scope.querySelector('.turn-chip[data-turn-timer]');
@@ -3639,13 +3576,12 @@
     if (isNaN(ms)) ms = parseRequestedAt(fallbackRequestedAt);
     const secs = turnElapsedSeconds(ms);
     const label = chip.querySelector('.turn-timer');
+    const statusLabel = chip.querySelector('.turn-status-label');
     chip.dataset.timerState = state;
     chip.classList.remove('status-pending', 'status-completed', 'status-failed');
     chip.classList.add(state === 'failed' ? 'status-failed' : 'status-completed');
-    if (label) {
-      if (state === 'failed') label.textContent = 'Failed';
-      else label.textContent = isNaN(secs) ? 'Completed' : 'Completed · ' + formatTurnDuration(secs);
-    }
+    if (statusLabel) statusLabel.textContent = state === 'failed' ? 'Failed' : 'Researched';
+    if (label) label.textContent = (state === 'failed' || isNaN(secs)) ? '' : formatTurnDuration(secs);
     if (!runningTurnChips().length && turnTimerInterval) {
       clearInterval(turnTimerInterval);
       turnTimerInterval = null;
@@ -3669,10 +3605,12 @@
     question.textContent = query;
     row.appendChild(question);
     turn.appendChild(row);
+    turn.appendChild(createResearchingMeta()); // (RESEARCH STATUS)
     const loadingRow = document.createElement('div');
     loadingRow.className = 'loading-row';
     showNeutralWaitRow(loadingRow); // (NEUTRAL WAIT: intent unknown until /search answers)
     turn.appendChild(loadingRow);
+    setTimeout(initTurnTimers, 0); // starts counting once the caller has attached the turn
     return turn;
   }
 
