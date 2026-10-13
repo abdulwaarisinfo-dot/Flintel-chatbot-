@@ -197,6 +197,10 @@ __all__ = [
     "LAZY_EMBED_MAX_DOCS_PER_QUERY",
     "LAZY_EMBED_BATCH_SIZE",
     "LAZY_EMBED_MIN_TEXT_CHARS",
+    # Keep-alive self-ping (keepalive.py)
+    "KEEPALIVE_ENABLED",
+    "KEEPALIVE_URL",
+    "KEEPALIVE_INTERVAL_SECONDS",
 ]
 
 # ── Keyword / matching limits ────────────────────────────────────────────
@@ -587,3 +591,15 @@ MYSQL_READ_TIMEOUT = int(os.getenv("MYSQL_READ_TIMEOUT", "60"))
 # Comma list of database names; each one is read as `<db>`.flintel_signals.
 # Only [A-Za-z0-9_] names are accepted (anything else is skipped + warned).
 MYSQL_READ_DATABASES = os.getenv("MYSQL_READ_DATABASES", "flintel,flintel_static,flintel_google")
+
+# ── Keep-alive self-ping (keepalive.py) ──────────────────────────────────────
+# Pings this app's own GET /ping every KEEPALIVE_INTERVAL_SECONDS so the host
+# never idles it into sleep. Touches no database, session or LLM.
+# KEEPALIVE_URL: the app's PUBLIC base URL (falls back to Render's
+# RENDER_EXTERNAL_URL); empty = keep-alive stays off.
+KEEPALIVE_ENABLED = os.getenv("KEEPALIVE_ENABLED", "true").strip().lower() in ("1", "true", "yes", "on")
+KEEPALIVE_URL = (os.getenv("KEEPALIVE_URL") or os.getenv("RENDER_EXTERNAL_URL") or "").strip()
+try:
+    KEEPALIVE_INTERVAL_SECONDS = max(5, int(os.getenv("KEEPALIVE_INTERVAL_SECONDS", "30")))
+except ValueError:
+    KEEPALIVE_INTERVAL_SECONDS = 30
