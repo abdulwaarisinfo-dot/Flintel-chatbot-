@@ -6427,6 +6427,40 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
 _NO_DATA_CLAUDE_FORMATS = {"no_results", "not_available", "disallowed"}
 
 
+# (MISSING-ANSWER FIX) Keys that carry no answer text of their own: an object
+# made only of these renders as an EMPTY answer on the page.
+_ANSWER_META_KEYS = {"format", "searched", "near_match_confidence", "answer_status", "website_context"}
+
+
+def _answer_has_content(data) -> bool:
+    """True when a format-bearing answer object has at least one non-empty
+    piece of text the page can actually show (anywhere outside the meta keys)."""
+    def has_text(v):
+        if isinstance(v, str):
+            return bool(v.strip())
+        if isinstance(v, dict):
+            return any(has_text(x) for x in v.values())
+        if isinstance(v, list):
+            return any(has_text(x) for x in v)
+        return False
+    return isinstance(data, dict) and any(has_text(v) for k, v in data.items() if k not in _ANSWER_META_KEYS)
+
+
+def _incomplete_answer_envelope() -> str:
+    """(MISSING-ANSWER FIX) Saved instead of an answer with nothing to show
+    (e.g. output cut off before any text). A KNOWN format ("no_results") so
+    every frontend renders it, plus "answer_status": "incomplete" so the page
+    can show an honest "answer unavailable" state instead of "Completed"."""
+    return json.dumps({
+        "format": "no_results",
+        "answer_status": "incomplete",
+        "searched": {"query": None, "platforms": [], "time_window": None},
+        "message": "The answer for this search was cut off before it finished, so there is nothing to show.",
+        "likely_reason": "The answer generation step stopped early. Running the search again usually works.",
+        "suggested_actions": [],
+    }, ensure_ascii=False)
+
+
 def _extract_json_object_from_text(text: str) -> str:
     """(DEFENSIVE JSON-EXTRACTION) A small, complex system prompt can
     occasionally cause even a well-instructed model to prepend a short
@@ -6477,6 +6511,9 @@ def _extract_json_object_from_text(text: str) -> str:
             # text (which itself has no "format" key) could get returned
             # instead of the real top-level answer object.
             if isinstance(parsed, dict) and "format" in parsed:
+                if not _answer_has_content(parsed):          # (MISSING-ANSWER FIX)
+                    log.warning("Claude answer had a format but no displayable content — saving an incomplete-answer envelope")
+                    return _incomplete_answer_envelope()
                 return json.dumps(parsed, ensure_ascii=False)
         except (ValueError, TypeError):
             pass
@@ -6486,6 +6523,9 @@ def _extract_json_object_from_text(text: str) -> str:
         try:
             parsed, _end_index = json.JSONDecoder().raw_decode(stripped, brace_index)
             if isinstance(parsed, dict) and "format" in parsed:
+                if not _answer_has_content(parsed):          # (MISSING-ANSWER FIX)
+                    log.warning("Claude answer had a format but no displayable content — saving an incomplete-answer envelope")
+                    return _incomplete_answer_envelope()
                 return json.dumps(parsed, ensure_ascii=False)
         except (ValueError, TypeError):
             pass
@@ -6496,7 +6536,15 @@ def _extract_json_object_from_text(text: str) -> str:
     # truncated JSON (e.g. cut off by max_tokens) before giving up.
     repaired = _repair_truncated_json(stripped)
     if isinstance(repaired, dict) and repaired.get("format"):
-        log.warning("Claude answer was truncated JSON — repaired before saving")
+        # (MISSING-ANSWER FIX) A cut-off answer is never "complete": keep
+        # whatever real text survived, marked "partial"; if nothing
+        # displayable survived (e.g. only {"format": ...}), save the
+        # explicit incomplete-answer envelope instead of an empty answer.
+        if not _answer_has_content(repaired):
+            log.warning("Claude answer was truncated before any content — saving an incomplete-answer envelope")
+            return _incomplete_answer_envelope()
+        log.warning("Claude answer was truncated JSON — repaired (marked partial) before saving")
+        repaired["answer_status"] = "partial"
         return json.dumps(repaired, ensure_ascii=False)
 
     # (FINAL SAFETY NET — NEVER PERSIST BARE PROSE) Every caller of this
