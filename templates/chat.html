@@ -502,7 +502,27 @@
      out of sync with it), and text-decoration: underline is the only
      other override needed on top of the app-wide `a { text-decoration:
      none; }` reset. Font/size/spacing untouched. */
-  .answer-rendered a { color: inherit; text-decoration: underline; }
+  .answer-rendered a { color: var(--link-color); text-decoration: underline; }
+  /* (LINK COLOUR) One blue for every inline hyperlink and suggested-keyword chip
+     (#009dff is the blue the post/website links already used). Green stays for
+     buttons, status chips, focus borders and other non-link accents. */
+  :root {
+    --link-color: #009dff; --link-color-hover: #4db8ff;
+    --chip-bg: rgba(0, 157, 255, 0.12); --chip-bg-hover: rgba(0, 157, 255, 0.22);
+    --chip-bg-active: rgba(0, 157, 255, 0.30); --chip-border: rgba(0, 157, 255, 0.45);
+  }
+  .answer-rendered a:hover, .post-field .field-text a:hover, .leadgen-field .text a:hover { color: var(--link-color-hover); }
+  .answer-rendered a:focus-visible, .post-field .field-text a:focus-visible, .leadgen-field .text a:focus-visible,
+  .keyword-chip:focus-visible { outline: 2px solid var(--link-color); outline-offset: 2px; }
+  .keyword-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .keyword-chip {
+    display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 999px;
+    border: 1px solid var(--chip-border); background: var(--chip-bg); color: var(--link-color);
+    font-family: inherit; font-size: 15px; font-weight: 500; line-height: 22px; text-align: left;
+    cursor: pointer; transition: background .15s ease, color .15s ease;
+  }
+  .keyword-chip:hover { background: var(--chip-bg-hover); color: var(--link-color-hover); }
+  .keyword-chip:active { background: var(--chip-bg-active); }
   .answer-rendered code { background: #1e1d1c; padding: 1px 6px; border-radius: 4px; font-size: 14.5px; overflow-wrap: anywhere; word-break: break-word; }
   /* (HORIZONTAL-OVERFLOW HARDENING) No rule existed for a markdown code
      FENCE (marked.js renders ```...``` as <pre><code>...</code></pre>) —
@@ -563,7 +583,7 @@
   }
   .see-more-toggle.hidden { display: none; }
   .post-field .field-text strong { color: #fff; font-weight: 700; }
-  .post-field .field-text a { color: #009dff; text-decoration: none; word-break: break-all; }
+  .post-field .field-text a { color: var(--link-color); text-decoration: none; word-break: break-all; }
   .section-divider { height: 1px; background: #343434; margin: 32px 0; }
   .section-divider.no-top-margin { margin-top: 0; }
 
@@ -706,7 +726,7 @@
   .leadgen-field .dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.35); flex-shrink: 0; margin-top: 8px; }
   .leadgen-field .text { color: rgba(255,255,255,0.7); font-size: 17px; font-weight: 500; line-height: 26px; }
   .leadgen-field .text strong { color: #fff; font-weight: 700; }
-  .leadgen-field .text a { color: #009dff; text-decoration: none; word-break: break-all; }
+  .leadgen-field .text a { color: var(--link-color); text-decoration: none; word-break: break-all; }
   .leadgen-field.no-dot { padding-left: 19px; }
   .leadgen-prospect { margin-bottom: 40px; }
   .leadgen-prospect-head { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
@@ -2366,17 +2386,43 @@
     container.appendChild(wrap);
   }
 
+  // (KEYWORD CHIPS) One blue chip per suggested search term. Clicking puts ONLY
+  // that term into the search box — no auto-submit, exactly as before.
   function clickableTerm(text) {
-    const a = document.createElement('a');
-    a.href = '#';
-    a.textContent = text;
-    a.style.cssText = 'color: #a3e635; text-decoration: underline;';
-    a.addEventListener('click', (e) => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'keyword-chip';
+    chip.textContent = text;
+    chip.addEventListener('click', (e) => {
       e.preventDefault();
       const input = document.getElementById('search-input');
       if (input) { input.value = text; input.dispatchEvent(new Event('input')); input.focus(); }
     });
-    return a;
+    return chip;
+  }
+  // The individual search terms of a suggested action. A structured
+  // "suggestions" array wins; an older single "suggestion" string is used as
+  // one term, unless it is a sentence that quotes its terms ("look for
+  // 'Notion help', 'Notion issues' threads") — then only the quoted terms are
+  // used, never the sentence itself.
+  const QUOTED_TERM_RE = /(^|[\s(\[,:;])["\u201C'\u2018]([^"\u201C\u201D'\u2018\u2019\n]{1,80}?)["\u201D'\u2019](?=$|[\s.,;:!?)\]])/g;
+  function suggestedSearchTerms(action) {
+    const raw = action && Array.isArray(action.suggestions) ? action.suggestions
+      : (action && typeof action.suggestion === 'string' ? [action.suggestion] : []);
+    const out = [];
+    const seen = new Set();
+    raw.forEach((item) => {
+      if (typeof item !== 'string') return;
+      const quoted = [];
+      let m;
+      QUOTED_TERM_RE.lastIndex = 0;
+      while ((m = QUOTED_TERM_RE.exec(item)) !== null) quoted.push(m[2]);
+      (quoted.length ? quoted : [item]).forEach((t) => {
+        const term = t.replace(/\s+/g, ' ').trim();
+        if (term && !seen.has(term.toLowerCase())) { seen.add(term.toLowerCase()); out.push(term); }
+      });
+    });
+    return out;
   }
 
   function renderNoResults(data, container, matchedResults) {
@@ -2401,30 +2447,22 @@
 
       data.suggested_actions.forEach(a => {
         const emoji = NO_RESULTS_ACTION_EMOJI[a.type] || '➡️';
-        if (a.type === 'broaden_term') {
-          // Figma shows several genuinely-grounded alternative terms inline,
-          // each individually clickable — not just one suggestion slot.
-          // Supports both the newer "suggestions" array and the older
-          // single "suggestion" field for backward compatibility.
-          const terms = a.suggestions || (a.suggestion ? [a.suggestion] : []);
-          const desc = document.createElement('span');
+        if (a.type === 'broaden_term' || a.type === 'try_nearest_alternative') {
+          // (KEYWORD CHIPS) Each suggested term is its own chip — see
+          // suggestedSearchTerms(); "suggestions" array and the older single
+          // "suggestion" string are both supported.
+          const terms = suggestedSearchTerms(a);
+          const desc = document.createElement('div');
           if (terms.length) {
-            desc.appendChild(document.createTextNode('For example: '));
-            terms.forEach((t, i) => {
-              desc.appendChild(document.createTextNode('“'));
-              desc.appendChild(clickableTerm(t));
-              desc.appendChild(document.createTextNode(i < terms.length - 1 ? '”, ' : '”.'));
-            });
+            if (terms.length > 1) desc.appendChild(document.createTextNode('Try these related searches:'));
+            const chips = document.createElement('div');
+            chips.className = 'keyword-chips';
+            terms.forEach((t) => chips.appendChild(clickableTerm(t)));
+            desc.appendChild(chips);
           } else {
-            desc.textContent = 'Try a broader or more general version of your search term.';
-          }
-          noResultsItem(container, emoji, a.label, desc);
-        } else if (a.type === 'try_nearest_alternative') {
-          const desc = document.createElement('span');
-          if (a.suggestion) {
-            desc.appendChild(clickableTerm(a.suggestion));
-          } else {
-            desc.textContent = 'No close alternative found.';
+            desc.textContent = a.type === 'broaden_term'
+              ? 'Try a broader or more general version of your search term.'
+              : 'No close alternative found.';
           }
           noResultsItem(container, emoji, a.label, desc);
         } else {
