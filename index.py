@@ -117,7 +117,6 @@ from authlib.integrations.starlette_client import OAuth
 
 import flintel
 import scheduler as trending_keywords_scheduler   # 12-hourly trending-keywords background job
-import keepalive                    # self-ping so the host never idles the server to sleep
 import google as google_search   # the new google.py module
     # (renamed on import to `google_search` to avoid any ambiguity
     # with the unrelated third-party `google` package some
@@ -216,21 +215,6 @@ async def add_no_cache_headers(request: Request, call_next):
 @app.on_event("startup")
 async def _start_trending_keywords_scheduler():
     trending_keywords_scheduler.start_trending_keywords_scheduler()
-
-# (KEEP-ALIVE) Liveness endpoint for the self-ping below and any uptime
-# monitor: no database, no session, no templates — just {"status": "ok"}.
-@app.api_route("/ping", methods=["GET", "HEAD"], include_in_schema=False)
-async def ping():
-    return {"status": "ok"}
-
-# (KEEP-ALIVE) Starts keepalive.py's self-ping loop (one asyncio task, fire-
-# and-forget). Off when KEEPALIVE_ENABLED is false or no URL is configured.
-@app.on_event("startup")
-async def _start_keepalive():
-    try:
-        await keepalive.start_keepalive()
-    except Exception as exc:
-        log.warning(f"keepalive startup failed: {exc}")
 
 # Password hashing context — bcrypt, industry-standard for this use case.
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
