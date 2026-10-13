@@ -1,4 +1,4 @@
-﻿# Flintel-chatbot-
+# Flintel-chatbot-
 
 
 # Flintel Intent Prototype
@@ -118,3 +118,23 @@ examples. At 200 with the floor-then-round-robin allocator, the three gated clas
 ~31 each and every other class clears 5, except `alternative_switching`, which the
 866-doc corpus only contains twice. `select` prints the full coverage table so the
 trade-off is visible before anyone starts labeling.
+
+## Keep-alive
+
+`keepalive.py` stops free/hobby hosts (e.g. Render) from idling the web server to sleep.
+On startup it starts one background task that sends `GET {KEEPALIVE_URL}/ping` every
+`KEEPALIVE_INTERVAL_SECONDS` (10 s timeout, one reused `httpx.AsyncClient`).
+`/ping` (GET and HEAD) just returns `{"status": "ok"}`.
+
+| Env var | Default | Meaning |
+|---|---|---|
+| `KEEPALIVE_ENABLED` | `true` | `false`/`0`/`no` turns it off; nothing is started. |
+| `KEEPALIVE_URL` | `RENDER_EXTERNAL_URL` | Public base URL of this app. If neither is set, keep-alive logs one line, `keepalive disabled: no URL configured`, and stays off. |
+| `KEEPALIVE_INTERVAL_SECONDS` | `30` | Seconds between pings (minimum 5). |
+
+The ping and `/ping` never touch MongoDB, chats, sessions, guest owners or any LLM code.
+They create no session cookie and do not affect the busy lock or the trending-keywords
+scheduler. Failures and timeouts are caught and logged at DEBUG only.
+
+A self-ping only keeps an awake process awake. It cannot wake an instance that is already
+asleep. Each worker process runs its own loop. Check your host's terms on keep-alive traffic.
