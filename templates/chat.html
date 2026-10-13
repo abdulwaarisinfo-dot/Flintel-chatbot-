@@ -905,6 +905,45 @@
     .welcome-overlay.visible { display: flex; }
     .welcome-card { position: relative; right: auto; bottom: auto; max-width: 100%; }
   }
+
+  /* (PLATFORM MULTI-SELECT) Platforms dropdown with logos — pick one,
+     several, or all platforms. */
+  .platforms-menu { box-shadow: 0 14px 34px rgba(0,0,0,0.45); }
+  .platforms-menu-head {
+    padding: 8px 10px 6px; color: #757473; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase; cursor: default;
+  }
+  .platforms-menu-sep { height: 1px; background: #2f2e2c; margin: 4px 6px; }
+  .platform-opt {
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px;
+    color: #e8e6e3; font-size: 14px; cursor: pointer; user-select: none;
+    transition: background .12s ease;
+  }
+  .platform-opt:hover, .platform-opt:focus-visible { background: #2a2927; outline: none; }
+  .platform-opt-name { flex: 1; white-space: nowrap; }
+  .platform-opt-logo {
+    width: 20px; height: 20px; flex-shrink: 0; display: inline-flex;
+    align-items: center; justify-content: center; border-radius: 5px; overflow: hidden;
+  }
+  .platform-opt-logo svg { display: block; }
+  .platform-opt-logo:not(.all) svg { width: 100%; height: 100%; }
+  .platform-opt-logo.x { box-shadow: inset 0 0 0 1px #3d3d3b; }
+  .platform-opt-logo.all { background: #2a2927; color: #a0a09d; }
+  .platform-opt-check {
+    width: 16px; height: 16px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+    border: 1.5px solid #4a4a47; border-radius: 5px; transition: background .12s ease, border-color .12s ease;
+  }
+  .platform-opt-check svg { opacity: 0; transition: opacity .12s ease; }
+  .platform-opt[aria-selected="true"] .platform-opt-check { background: #a3e635; border-color: #a3e635; }
+  .platform-opt[aria-selected="true"] .platform-opt-check svg { opacity: 1; }
+  #platforms-label { display: inline-flex; align-items: center; gap: 8px; }
+  .platforms-label-logos { display: inline-flex; align-items: center; }
+  .platforms-label-logos .platform-opt-logo { width: 18px; height: 18px; box-shadow: 0 0 0 2px #1e1d1c; }
+  .platforms-label-logos .platform-opt-logo + .platform-opt-logo { margin-left: -5px; }
+  /* (PILLS REMOVED) The "Completed" status pill under a question is hidden.
+     The live "Searching…" timer and any failure / "Answer unavailable"
+     state still show. */
+  .turn-chip.status-completed { display: none; }
 </style>
 </head>
 <body>
@@ -1090,16 +1129,6 @@
             <div class="turn-row"><div class="turn-question">{{ msg.query }}</div></div>
             <div class="turn-meta">
               {% if msg.message_type != 'chat' %}
-              {% set _plat = (msg.targeting_platform or 'all')|lower|trim %}
-              <span class="turn-chip">
-                {%- if _plat in ['all', 'all platforms'] -%}All Platforms
-                {%- elif _plat in ['x_twitter', 'x / twitter', 'x', 'twitter'] -%}X / Twitter
-                {%- elif _plat == 'reddit' -%}Reddit
-                {%- elif _plat == 'linkedin' -%}LinkedIn
-                {%- elif _plat == 'facebook' -%}Facebook
-                {%- else -%}{{ msg.targeting_platform }}
-                {%- endif -%}
-              </span>
               {% if msg.claude_answer is none %}
               <span class="turn-chip status-pending" data-turn-timer data-requested-at="{{ msg.requested_at.isoformat() if msg.requested_at else '' }}"><span class="status-dot"></span><span class="turn-timer" aria-live="off">Searching…</span></span>
               {% else %}
@@ -1229,13 +1258,15 @@
                     <span id="platforms-label">All Platforms</span>
                     <svg id="platforms-chevron" style="transform: rotate(0deg); transition: transform .15s ease" width="12" height="7" viewBox="0 0 12 7" fill="none"><path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
                   </button>
-                  <ul id="platforms-menu" role="listbox"
-                    style="display:none; position:absolute; bottom:calc(100% + 10px); right:0; background:#1e1d1b; border:1px solid #3d3d3b; border-radius:12px; padding:6px; min-width:160px; list-style:none; z-index:20;">
-                    <li role="option" data-value="All Platforms" style="padding:8px 10px; border-radius:8px; color:#e8e6e3; font-size:14px; cursor:pointer;">All Platforms</li>
-                    <li role="option" data-value="X / Twitter" style="padding:8px 10px; border-radius:8px; color:#e8e6e3; font-size:14px; cursor:pointer;">X / Twitter</li>
-                    <li role="option" data-value="Reddit" style="padding:8px 10px; border-radius:8px; color:#e8e6e3; font-size:14px; cursor:pointer;">Reddit</li>
-                    <li role="option" data-value="LinkedIn" style="padding:8px 10px; border-radius:8px; color:#e8e6e3; font-size:14px; cursor:pointer;">LinkedIn</li>
-                    <li role="option" data-value="Facebook" style="padding:8px 10px; border-radius:8px; color:#e8e6e3; font-size:14px; cursor:pointer;">Facebook</li>
+                  <ul id="platforms-menu" role="listbox" aria-multiselectable="true" aria-label="Platforms" class="platforms-menu"
+                    style="display:none; position:absolute; bottom:calc(100% + 10px); right:0; background:#1e1d1b; border:1px solid #3d3d3b; border-radius:12px; padding:6px; min-width:236px; list-style:none; z-index:20;">
+                    <li class="platforms-menu-head" role="presentation">Search on</li>
+                    <li role="option" tabindex="0" class="platform-opt all-opt" data-value="All Platforms" aria-selected="true"><span class="platform-opt-logo all"><svg aria-hidden="true" focusable="false" width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="0.5" y="0.5" width="4.5" height="4.5" rx="1.2" fill="currentColor"/><rect x="7" y="0.5" width="4.5" height="4.5" rx="1.2" fill="currentColor"/><rect x="0.5" y="7" width="4.5" height="4.5" rx="1.2" fill="currentColor"/><rect x="7" y="7" width="4.5" height="4.5" rx="1.2" fill="currentColor"/></svg></span><span class="platform-opt-name">All Platforms</span><span class="platform-opt-check" aria-hidden="true"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 6.8L9 1.2" stroke="#171615" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></li>
+                    <li class="platforms-menu-sep" role="presentation"></li>
+                    <li role="option" tabindex="0" class="platform-opt" data-value="X / Twitter" aria-selected="false"><span class="platform-opt-logo x"><svg aria-hidden="true" focusable="false" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 6C0 2.68629 2.68629 0 6 0H54C57.3137 0 60 2.68629 60 6V54C60 57.3137 57.3137 60 54 60H6C2.68629 60 0 57.3137 0 54V6Z" fill="black"/><path d="M34 27.09L47.8419 11H44.5617L32.5431 24.9711L22.9435 11H11.8711L26.3871 32.1265L11.8711 49H15.1513L27.8433 34.2454L37.9817 49H49.0541L33.9985 27.09H34ZM29.5069 32.3127L28.0363 30.209L16.3331 13.4692H21.3719L30.8164 26.9782L32.287 29.0819L44.5633 46.6425H39.5245L29.5069 32.3127Z" fill="white"/></svg></span><span class="platform-opt-name">X / Twitter</span><span class="platform-opt-check" aria-hidden="true"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 6.8L9 1.2" stroke="#171615" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></li>
+                    <li role="option" tabindex="0" class="platform-opt" data-value="Reddit" aria-selected="false"><span class="platform-opt-logo reddit"><svg aria-hidden="true" focusable="false" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M51 0H9C4.02944 0 0 4.02944 0 9V51C0 55.9706 4.02944 60 9 60H51C55.9706 60 60 55.9706 60 51V9C60 4.02944 55.9706 0 51 0Z" fill="#FF4500"/><path d="M30 50.1562C41.4556 50.1562 50.7422 43.7029 50.7422 35.7422C50.7422 27.7815 41.4556 21.3281 30 21.3281C18.5444 21.3281 9.25781 27.7815 9.25781 35.7422C9.25781 43.7029 18.5444 50.1562 30 50.1562Z" fill="white"/><path d="M23.3203 40.6641C27.4219 44.0625 32.5781 44.0625 36.6797 40.6641L38.0859 41.9531C33.1641 46.0547 26.8359 46.0547 21.9141 41.9531L23.3203 40.6641Z" fill="#FF4500"/><path d="M36.9141 36.6797C38.7262 36.6797 40.1953 35.2106 40.1953 33.3984C40.1953 31.5863 38.7262 30.1172 36.9141 30.1172C35.1019 30.1172 33.6328 31.5863 33.6328 33.3984C33.6328 35.2106 35.1019 36.6797 36.9141 36.6797Z" fill="#FF4500"/><path d="M23.0859 36.6797C24.8981 36.6797 26.3672 35.2106 26.3672 33.3984C26.3672 31.5863 24.8981 30.1172 23.0859 30.1172C21.2738 30.1172 19.8047 31.5863 19.8047 33.3984C19.8047 35.2106 21.2738 36.6797 23.0859 36.6797Z" fill="#FF4500"/><path d="M45.7031 17.9297C47.5153 17.9297 48.9844 16.4606 48.9844 14.6484C48.9844 12.8363 47.5153 11.3672 45.7031 11.3672C43.8909 11.3672 42.4219 12.8363 42.4219 14.6484C42.4219 16.4606 43.8909 17.9297 45.7031 17.9297Z" stroke="white" stroke-width="2.92969"/><path d="M10.1956 33.0469C4.9222 30.4688 9.6097 22.2656 14.8831 27.1875M49.805 33.0469C55.0784 30.4688 50.3909 22.2656 45.1175 27.1875M30.2347 21.9141L33.0472 12.1875L42.4222 14.0625" stroke="white" stroke-width="2.57812"/></svg></span><span class="platform-opt-name">Reddit</span><span class="platform-opt-check" aria-hidden="true"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 6.8L9 1.2" stroke="#171615" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></li>
+                    <li role="option" tabindex="0" class="platform-opt" data-value="LinkedIn" aria-selected="false"><span class="platform-opt-logo linkedin"><svg aria-hidden="true" focusable="false" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M55.5562 0.00195312H4.42875C1.9875 0.00195312 0 1.93883 0 4.32383V55.6688C0 58.0595 1.9875 60.0001 4.42875 60.0001H55.56C58.0069 60.0001 60 58.0595 60 55.6688V4.32383C60 1.93883 58.0069 0.00195312 55.5562 0.00195312Z" fill="#0177B5"/><path d="M8.89666 22.4944H17.8123V51.1256H8.89666V22.4944ZM13.3479 8.24439C16.1923 8.24439 18.5042 10.5563 18.5042 13.4006C18.5042 16.245 16.1923 18.5625 13.3498 18.5625C11.9815 18.5595 10.6701 18.0148 9.70241 17.0475C8.73471 16.0801 8.1895 14.7689 8.18604 13.4006C8.18603 12.723 8.31959 12.0521 8.57907 11.4261C8.83855 10.8002 9.21886 10.2315 9.69825 9.75263C10.1777 9.27375 10.7467 8.89406 11.373 8.63527C11.9992 8.37647 12.6703 8.24365 13.3479 8.24439ZM23.3792 22.4944H31.9142V26.4075H32.0323C33.221 24.1575 36.1235 21.7838 40.4698 21.7838C49.481 21.7838 51.1442 27.7144 51.1442 35.4225V51.1275H42.251V37.2C42.251 33.8813 42.191 29.6063 37.6273 29.6063C32.996 29.6063 32.2835 33.225 32.2835 36.9563V51.12H23.3923V22.4888L23.3792 22.4944Z" fill="white"/></svg></span><span class="platform-opt-name">LinkedIn</span><span class="platform-opt-check" aria-hidden="true"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 6.8L9 1.2" stroke="#171615" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></li>
+                    <li role="option" tabindex="0" class="platform-opt" data-value="Facebook" aria-selected="false"><span class="platform-opt-logo facebook"><svg aria-hidden="true" focusable="false" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M56.6883 0H3.31172C2.4334 0 1.59105 0.348912 0.96998 0.96998C0.348912 1.59105 0 2.4334 0 3.31172L0 56.6883C0 57.5666 0.348912 58.409 0.96998 59.03C1.59105 59.6511 2.4334 60 3.31172 60H32.0508V36.7969H24.2578V27.7148H32.0508V21.0352C32.0508 13.2855 36.784 9.06563 43.6992 9.06563C47.0098 9.06563 49.8563 9.31172 50.6836 9.41719V17.516H45.9141C42.1523 17.516 41.4234 19.3031 41.4234 21.927V27.7148H50.4164L49.2445 36.7969H41.4234V60H56.6859C57.121 60.0003 57.5519 59.9149 57.954 59.7486C58.3561 59.5823 58.7214 59.3384 59.0292 59.0308C59.337 58.7233 59.5811 58.3581 59.7477 57.9562C59.9143 57.5542 60 57.1234 60 56.6883V3.31172C60 2.4334 59.6511 1.59105 59.03 0.96998C58.409 0.348912 57.5666 0 56.6883 0Z" fill="#4267B2"/><path d="M41.4258 60.0001V36.797H49.248L50.4199 27.7149H41.4258V21.9306C41.4258 19.3067 42.1523 17.5196 45.9164 17.5196H50.6836V9.41846C49.8539 9.3083 47.0074 9.06689 43.6992 9.06689C36.7852 9.06689 32.0508 13.2856 32.0508 21.0364V27.7161H24.2578V36.797H32.0508V60.0001H41.4258Z" fill="white"/></svg></span><span class="platform-opt-name">Facebook</span><span class="platform-opt-check" aria-hidden="true"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 6.8L9 1.2" stroke="#171615" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></li>
                   </ul>
                 </div>
 
@@ -1646,6 +1677,46 @@
   }
   // TURN-TIMER-HELPERS-END
 
+  // PLATFORM-MULTI-HELPERS-BEGIN
+  // (PLATFORM MULTI-SELECT) The dropdown can pick one platform, several, or
+  // all of them. #platform-input carries the pick to /search as
+  // "All Platforms" or a comma list such as "X / Twitter, LinkedIn".
+  const PLATFORM_ALL = 'All Platforms';
+  function platformOptions(menu) {
+    return Array.from(menu.querySelectorAll('li[data-value]')).filter((li) => li.dataset.value !== PLATFORM_ALL);
+  }
+  function setPlatformSelection(menu, label, input, picked) {
+    const opts = platformOptions(menu);
+    let chosen = opts.filter((li) => picked.indexOf(li.dataset.value) !== -1);
+    if (chosen.length === opts.length) chosen = [];          // every platform = All Platforms
+    opts.forEach((li) => li.setAttribute('aria-selected', String(chosen.indexOf(li) !== -1)));
+    const allLi = menu.querySelector('li[data-value="' + PLATFORM_ALL + '"]');
+    if (allLi) allLi.setAttribute('aria-selected', String(chosen.length === 0));
+    input.value = chosen.length ? chosen.map((li) => li.dataset.value).join(', ') : PLATFORM_ALL;
+    label.textContent = '';
+    if (!chosen.length) { label.textContent = PLATFORM_ALL; return; }
+    const logos = document.createElement('span');
+    logos.className = 'platforms-label-logos';
+    chosen.forEach((li) => {
+      const logo = li.querySelector('.platform-opt-logo');
+      if (logo) logos.appendChild(logo.cloneNode(true));
+    });
+    const text = document.createElement('span');
+    text.textContent = chosen.length === 1 ? chosen[0].dataset.value : chosen.length + ' Platforms';
+    label.appendChild(logos);
+    label.appendChild(text);
+  }
+  // All Platforms resets to all. A platform click while "All" is active picks
+  // just that one; later clicks add / remove platforms.
+  function togglePlatformOption(menu, label, input, li) {
+    if (li.dataset.value === PLATFORM_ALL) { setPlatformSelection(menu, label, input, []); return; }
+    const current = platformOptions(menu).filter((o) => o.getAttribute('aria-selected') === 'true').map((o) => o.dataset.value);
+    const i = current.indexOf(li.dataset.value);
+    if (i === -1) current.push(li.dataset.value); else current.splice(i, 1);
+    setPlatformSelection(menu, label, input, current);
+  }
+  // PLATFORM-MULTI-HELPERS-END
+
   let turnTimerInterval = null;
   function runningTurnChips() {
     return document.querySelectorAll('.turn-chip[data-turn-timer]:not([data-timer-state])');
@@ -1728,11 +1799,15 @@
         }
       });
       platformsMenu.addEventListener('click', (e) => {
-        const li = e.target.closest('li');
+        const li = e.target.closest('li[data-value]');
         if (!li) return;
-        platformsLabel.textContent = li.dataset.value;
-        platformInput.value = li.dataset.value;
-        closePlatformsMenu();
+        togglePlatformOption(platformsMenu, platformsLabel, platformInput, li);   // (PLATFORM MULTI-SELECT)
+        if (li.dataset.value === PLATFORM_ALL) closePlatformsMenu();               // platforms: menu stays open
+      });
+      platformsMenu.addEventListener('keydown', (e) => {
+        const li = e.target.closest('li[data-value]');
+        if (li && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); li.click(); }
+        else if (e.key === 'Escape') { closePlatformsMenu(); platformsBtn.focus(); }
       });
     }
 
