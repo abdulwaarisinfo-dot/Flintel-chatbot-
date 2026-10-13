@@ -457,7 +457,8 @@ _KNOWN_PLATFORM_WORDS = ("reddit", "twitter", "linkedin", "facebook")
 def _single_platform_query(user_query, targeting_platform) -> bool:
     """True when the request is clearly about ONE platform: the dropdown picked
     a specific platform, or the query text names exactly one platform."""
-    if (targeting_platform or "all").strip().lower() not in ("", "all"):
+    _tp = (targeting_platform or "all").strip().lower()
+    if _tp not in ("", "all") and "," not in _tp:   # (PLATFORM MULTI-SELECT) several platforms != one
         return True
     q = (user_query or "").lower()
     named = [w for w in _KNOWN_PLATFORM_WORDS if re.search(rf"\b{w}\b", q)]
@@ -599,6 +600,27 @@ def normalize_platform(raw: str) -> str:
     return PLATFORM_KEY_MAP.get(key, "all")
 
 
+# (PLATFORM MULTI-SELECT) The dropdown can send several platforms at once,
+# e.g. "X / Twitter, LinkedIn". One platform -> its usual single key (same as
+# normalize_platform); several -> a comma list in fixed order, e.g.
+# "x_twitter,linkedin"; every platform, nothing usable, or "all" -> "all".
+_PLATFORM_ORDER = ("x_twitter", "reddit", "linkedin", "facebook")
+
+
+def normalize_platforms(raw: str) -> str:
+    picked = set()
+    for part in (raw or "").split(","):
+        key = PLATFORM_KEY_MAP.get(part.strip().lower())
+        if key == "all":
+            return "all"
+        if key:
+            picked.add(key)
+    ordered = [p for p in _PLATFORM_ORDER if p in picked]
+    if not ordered or len(ordered) == len(_PLATFORM_ORDER):
+        return "all"
+    return ",".join(ordered)
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # FUZZY KEYWORD GENERATION — plain Python, template-based, no Claude call
 #
@@ -690,7 +712,9 @@ def enqueue_search_job(topic_key: str, keywords: list, targeting_platform: str):
         {"$set": {
             "topic_key":          topic_key,
             "keywords":           keywords,
-            "targeting_platform": targeting_platform,  # "all" | "reddit" | "x_twitter" | "linkedin" | "facebook"
+            # "all" | "reddit" | "x_twitter" | "linkedin" | "facebook". (PLATFORM MULTI-SELECT) a
+            # multi-platform pick is fetched as "all"; matching narrows it to the chosen platforms.
+            "targeting_platform": "all" if "," in (targeting_platform or "") else targeting_platform,
             "status":             "pending",
             "requested_at":       datetime.now(timezone.utc),
             "started_at":         None,
@@ -784,6 +808,8 @@ def _signal_platform_matches(doc: dict, targeting_platform: str) -> bool:
     from that one platform."""
     if not targeting_platform or targeting_platform == "all":
         return True
+    if "," in targeting_platform:   # (PLATFORM MULTI-SELECT) e.g. "x_twitter,linkedin"
+        return any(_signal_platform_matches(doc, p) for p in targeting_platform.split(",") if p)
 
     allowed = _PLATFORM_DOC_VALUES.get(targeting_platform)
     if not allowed:
