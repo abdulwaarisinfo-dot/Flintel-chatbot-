@@ -919,6 +919,25 @@ def save_claude_answer_to_chat(chat_id: str, owner_key: str, topic_key: str, ans
     if not answer:
         return
     _set_on_latest_message(chat_id, owner_key, topic_key, {"claude_answer": answer})
+    _mark_answered_at(chat_id, owner_key, topic_key)
+
+
+def _mark_answered_at(chat_id: str, owner_key: str, topic_key: str):
+    """(RESEARCH STATUS) Stamps when this message's answer was FIRST saved, so a
+    reopened chat can show "Researched 14s" (answered_at - requested_at). Only
+    ever set once — a later re-save of the same answer never moves it.
+    Best-effort, never raises: the answer itself is already saved above."""
+    try:
+        chat = chats_collection.find_one({"chat_id": chat_id, "owner_key": owner_key},
+                                         {"messages.topic_key": 1, "messages.answered_at": 1})
+        msgs = (chat or {}).get("messages") or []
+        idx = next((i for i in range(len(msgs) - 1, -1, -1) if msgs[i].get("topic_key") == topic_key), None)
+        if idx is None or msgs[idx].get("answered_at"):
+            return
+        chats_collection.update_one({"chat_id": chat_id, "owner_key": owner_key},
+                                    {"$set": {f"messages.{idx}.answered_at": datetime.now(timezone.utc)}})
+    except Exception as exc:
+        log.warning(f"Saving answered_at failed for topic_key={topic_key}: {exc}")
 
 
 def mark_google_fallback_triggered(chat_id: str, owner_key: str, topic_key: str):
