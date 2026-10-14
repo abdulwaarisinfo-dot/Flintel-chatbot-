@@ -4,11 +4,6 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>{{ chat.title or 'Chat' }} — Flintel</title>
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
-<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
-<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style id="app-styles">
@@ -1841,24 +1836,37 @@
       if (t && isFinite(ms) && ms >= 0) t.textContent = formatTurnDuration(ms / 1000);
     });
   }
-  // A fresh "Researching" status line, for an optimistic turn shown before
-  // POST /search answers (starts counting from the moment of sending).
+  // (CAPABILITY QUESTIONS) The status line of an optimistic turn shown before
+  // POST /search answers. The server decides research-vs-conversation inside
+  // that request; greetings and questions about Flintel itself are answered
+  // there in milliseconds (no router, no research). So the line starts as a
+  // neutral "Thinking" and only becomes "Researching Ns" — counted from the
+  // moment of sending — if no answer has arrived after RESEARCH_LABEL_DELAY_MS.
+  // A fast direct answer replaces the turn before that and never claims research.
+  const RESEARCH_LABEL_DELAY_MS = 1000;
   function createResearchingMeta() {
     const meta = document.createElement('div');
     meta.className = 'turn-meta';
     const chip = document.createElement('span');
     chip.className = 'turn-chip status-pending';
-    chip.dataset.turnTimer = '';
-    chip.dataset.requestedAt = new Date().toISOString();
+    const sentAt = new Date().toISOString();
     const label = document.createElement('span');
     label.className = 'turn-status-label';
-    label.textContent = 'Researching';
+    label.textContent = 'Thinking';
     const timer = document.createElement('span');
     timer.className = 'turn-timer';
     timer.setAttribute('aria-live', 'off');
-    timer.textContent = '0s';
+    timer.textContent = '';
     chip.append(label, ' ', timer);
     meta.appendChild(chip);
+    setTimeout(() => {
+      if (!chip.isConnected) return;                   // already replaced by the server's answer
+      label.textContent = 'Researching';
+      chip.dataset.requestedAt = sentAt;
+      chip.dataset.turnTimer = '';
+      timer.textContent = formatTurnDuration(turnElapsedSeconds(parseRequestedAt(sentAt)));
+      initTurnTimers();
+    }, RESEARCH_LABEL_DELAY_MS);
     return meta;
   }
   // Idempotent: at most ONE interval for the whole page, (re)started after
@@ -2148,6 +2156,14 @@
       sentRow.querySelector('.field-text').appendChild(sentimentTag(post.sentiment));
     }
     if (post.link) fieldRow(block, 'Link', post.link, true);
+    // (GROUNDED ANSWERS) original publication date — set by the server only from
+    // the matched stored post; absent when unknown (nothing is guessed).
+    if (post.published_at) {
+      const posted = new Date(post.published_at);
+      if (!isNaN(posted.getTime())) {
+        fieldRow(block, 'Posted', posted.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }));
+      }
+    }
     // (GOOGLE-RANK DISPLAY FIX) Only present on Google-fallback stub
     // posts (see format_google_stub_results() in flintel.py) — a real
     // matched signal from flintel_signals never has this field, so this
@@ -2367,7 +2383,15 @@
     container.appendChild(counts);
     const multi = groups.length > 1;
     const anySentiment = groups.some((p) => p.posts.some((x) => x && x.sentiment));
+    // (GROUNDED ANSWERS) original publication date — set by the server only from
+    // the matched stored post; the column appears only when at least one is known.
+    const postedText = (post) => {
+      const d = post && post.published_at ? new Date(post.published_at) : null;
+      return d && !isNaN(d.getTime()) ? d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+    };
+    const anyPosted = groups.some((p) => p.posts.some((x) => postedText(x)));
     const headers = ['#', multi ? 'Source' : (normalizePlatform(groups[0].platform) === 'reddit' ? 'Subreddit' : 'Source'), 'Post', 'Summary'];
+    if (anyPosted) headers.push('Posted');
     if (anySentiment) headers.push('Sentiment');
     const rows = [];
     let n = 0;
@@ -2391,6 +2415,7 @@
         let summary = post.summary || '';
         if (post.google_rank) summary = (summary ? summary + ' · ' : '') + `Google rank #${post.google_rank}`;
         const row = [String(n), source, postCell, summary];
+        if (anyPosted) row.push(postedText(post) || '—');
         if (anySentiment) row.push(post.sentiment ? sentimentTag(post.sentiment) : '');
         rows.push(row);
       });
