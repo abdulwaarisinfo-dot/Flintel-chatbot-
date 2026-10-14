@@ -143,6 +143,7 @@ import numpy as np
 import httpx
 
 import flintel
+import timerange   # (DATE/TIME) natural-language search ranges
 import website_intelligence
 import google as google_search   # the new google.py module
 
@@ -621,6 +622,22 @@ def normalize_platforms(raw: str) -> str:
     return ",".join(ordered)
 
 
+# (PLATFORM PERSISTENCE) The platform dropdown's display value for a stored
+# selection — only ever built from known labels (never echoes user input).
+_PLATFORM_LABELS = {"x_twitter": "X / Twitter", "reddit": "Reddit", "linkedin": "LinkedIn", "facebook": "Facebook"}
+
+
+def platform_display_value(key_or_raw) -> str:
+    """"Reddit" / "X / Twitter, LinkedIn" / "All Platforms" for a stored key
+    ("reddit", "x_twitter,linkedin", "all") or a raw dropdown value."""
+    raw = key_or_raw if isinstance(key_or_raw, str) else ""
+    keys = [k for k in (raw.split(",") if raw else []) if k.strip() in _PLATFORM_LABELS]
+    key = ",".join(k.strip() for k in keys) if keys and len(keys) == len(raw.split(",")) else normalize_platforms(raw)
+    if not key or key == "all":
+        return "All Platforms"
+    return ", ".join(_PLATFORM_LABELS[k] for k in key.split(",") if k in _PLATFORM_LABELS) or "All Platforms"
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # FUZZY KEYWORD GENERATION — plain Python, template-based, no Claude call
 #
@@ -721,6 +738,7 @@ def enqueue_search_job(topic_key: str, keywords: list, targeting_platform: str):
             "completed_at":       None,
             "matched_count":      0,
             "error":              None,
+            "time_range":         None,   # (DATE/TIME) see record_job_time_range()
         }},
         upsert=True,
     )
@@ -729,6 +747,45 @@ def enqueue_search_job(topic_key: str, keywords: list, targeting_platform: str):
         f"| targeting_platform={targeting_platform}"
     )
 
+
+
+def record_job_time_range(topic_key: str, time_range) -> None:
+    """(DATE/TIME) Best-effort: puts the requested publication range on the
+    search job so the collecting service CAN fetch for that window. The
+    collector is a separate service (not in this repository); whether it
+    honours the field cannot be verified here. Matching never depends on it:
+    results are always filtered by their own publication time."""
+    tr = time_range if isinstance(time_range, timerange.TimeRange) else timerange.range_from_doc(time_range)
+    if tr is None:
+        return
+    try:
+        jobs_collection.update_one({"topic_key": topic_key},
+                                   {"$set": {"time_range": {"start": tr.start, "end": tr.end, "tz": tr.tz_name}}})
+    except Exception as exc:
+        log.warning(f"Saving the job time range failed for topic_key={topic_key}: {exc}")
+
+
+def build_time_range_note(time_range) -> str:
+    """(DATE/TIME) Analysis instructions for a message with an explicit range."""
+    tr = time_range if isinstance(time_range, timerange.TimeRange) else timerange.range_from_doc(time_range)
+    if tr is None:
+        return ""
+    lines = [
+        "REQUESTED TIME RANGE (from the user's own words):",
+        f"- Interpreted as: {tr.describe()}.",
+    ]
+    if tr.note:
+        lines.append(f"- {tr.note}")
+    lines += [
+        "- Every post given to you was published inside this range (checked against each post's own "
+        "publication time). Posts with no known publication time were left out.",
+        "- State this interpreted range near the start of your answer, in the user's timezone.",
+        "- If there are no posts or very few, say so plainly for this range. Do not imply a wider period was "
+        "searched and do not add posts from outside it. You may OFFER a wider range as a separate option.",
+        "- Flintel searches posts its collector has already stored; very recent posts (the last few minutes) may "
+        "not be collected yet, so an empty very-recent range is not proof that nothing was posted.",
+    ]
+    return "\n".join(lines)
 
 def get_job(topic_key: str):
     return jobs_collection.find_one({"topic_key": topic_key}, {"_id": 0})
@@ -1364,7 +1421,7 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                          match_phrases: list = None, loose: bool = False,
                          signals_collection_2=None, chat_id: str = None,
                          signals_collection_4=None, user_query: str = None,
-                         scan_state: dict = None,
+                         scan_state: dict = None, time_range=None,
                          cancel_event: "threading.Event" = None) -> list:
     """Reads `flintel_signals` and keeps only the signals that are
     genuinely relevant to this job's topic. topic_key match is
@@ -1577,6 +1634,13 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
     a missing/invalid embedding already scores 0.0 via
     _cosine_similarity() and gets dropped by the threshold check, and
     the Mongo query itself already requires a saved embedding field."""
+    # (DATE/TIME) An explicit [start, end) publication range from the user's own
+    # words. It replaces since_days; the lower bound reuses every existing
+    # `cutoff` check below and the upper bound is checked at the same places.
+    _tr = time_range if isinstance(time_range, timerange.TimeRange) else timerange.range_from_doc(time_range)
+    if _tr is not None:
+        since_days = (max(1, math.ceil((datetime.now(timezone.utc) - _tr.start).total_seconds() / 86400))
+                      if unfiltered else None)
     if unfiltered:
         _unf = flintel.get_unfiltered_matched_signals(
             signals_collection,
@@ -1588,6 +1652,8 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             signals_collection_4=signals_collection_4,
         )
         _register_scan_status(chat_id, topic_key, True)
+        if _tr is not None:
+            _unf, _ = timerange.filter_posts(_unf, _tr)
         return _unf
 
     limit = limit or MAX_MATCHED_RESULTS
@@ -1622,6 +1688,10 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
         clamped_days = min(since_days, MAX_TIME_WINDOW_DAYS)
         cutoff = datetime.now(timezone.utc) - timedelta(days=clamped_days)
         mongo_query = {"$and": [mongo_query, {"created_utc": {"$gte": cutoff}}]}
+    cutoff_end = None
+    if _tr is not None:
+        cutoff, cutoff_end = _tr.start, _tr.end
+        mongo_query = {"$and": [mongo_query, {"created_utc": {"$gte": cutoff, "$lt": cutoff_end}}]}
 
     # (INCREMENTAL RESCAN) `scan_state` is an optional in/out dict supplied by
     # get_evidence_with_topup(); None (the default, and every other caller)
@@ -1732,7 +1802,8 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                 if cutoff is not None:
                     # same defensive time-window rule as the Mongo path
                     keep = [k for k, d in enumerate(docs)
-                            if isinstance(d.get("created_utc"), datetime) and d["created_utc"] >= cutoff]
+                            if isinstance(d.get("created_utc"), datetime) and d["created_utc"] >= cutoff
+                            and (cutoff_end is None or d["created_utc"] < cutoff_end)]
                     if len(keep) != len(docs):
                         docs = [docs[k] for k in keep]
                         M = M[keep]
@@ -1915,6 +1986,8 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                         if doc_created.tzinfo is None:
                             doc_created = doc_created.replace(tzinfo=timezone.utc)
                         if doc_created < cutoff:
+                            continue
+                        if cutoff_end is not None and doc_created >= cutoff_end:
                             continue
                     if not isinstance(emb, (list, tuple)):
                         continue
@@ -2398,6 +2471,8 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                         doc_created = doc_created.replace(tzinfo=timezone.utc)
                     if doc_created < cutoff:
                         continue
+                    if cutoff_end is not None and doc_created >= cutoff_end:
+                        continue
 
                 emb = doc.get("embedding")
                 if not emb or not isinstance(emb, (list, tuple)):
@@ -2432,6 +2507,8 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                         doc_created = doc_created.replace(tzinfo=timezone.utc)
                     if doc_created < cutoff:
                         continue
+                    if cutoff_end is not None and doc_created >= cutoff_end:
+                        continue
                 similarity = _max_similarity_against(doc.get("embedding"), _normalized_queries)
                 if similarity >= SIGNAL_EMBEDDING_SIMILARITY_THRESHOLD:
                     scored_docs.append((similarity, doc))
@@ -2452,6 +2529,8 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
                 if doc_created.tzinfo is None:
                     doc_created = doc_created.replace(tzinfo=timezone.utc)
                 if doc_created < cutoff:
+                    continue
+                if cutoff_end is not None and doc_created >= cutoff_end:
                     continue
 
             doc_embedding = doc.get("embedding")
@@ -2652,9 +2731,9 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             if post_url:
                 wide_seen.add(post_url)
 
-            wide_matched.append(
+            wide_matched.append(timerange.with_published_at(   # (DATE/TIME) original publication time
                 {"title": title, "post_text": post_text, "post_url": post_url, "platform": platform,
-                 "subreddit": _signal_subreddit(doc, post_url)}
+                 "subreddit": _signal_subreddit(doc, post_url)}, doc)
             )
             wide_sims.append(_similarity)
             if post_url:
@@ -2732,8 +2811,9 @@ def get_matched_signals(topic_key: str, keywords: list, targeting_platform: str 
             if post_url:
                 seen_urls.add(post_url)
 
-            matched.append({"title": title, "post_text": post_text, "post_url": post_url, "platform": platform,
-                            "subreddit": _signal_subreddit(doc, post_url)})
+            matched.append(timerange.with_published_at(   # (DATE/TIME) original publication time
+                {"title": title, "post_text": post_text, "post_url": post_url, "platform": platform,
+                 "subreddit": _signal_subreddit(doc, post_url)}, doc))
             if post_url:
                 _sim_by_url[post_url] = _similarity
             platform_counts[platform_key] = platform_counts.get(platform_key, 0) + 1
@@ -3002,7 +3082,8 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
                               targeting_platform: str = "all",
                               since_days: int = None, unfiltered: bool = False,
                               user_query: str = None,
-                              cancel_event: "threading.Event" = None) -> list:
+                              cancel_event: "threading.Event" = None,
+                              time_range=None) -> list:
     """CORE FUNCTION — instead of running a fully-fresh query every time
     the same topic is asked about again:
       1. Check the cache first.
@@ -3029,6 +3110,27 @@ def get_evidence_with_topup(chat_id: str, owner_key: str, topic_key: str,
     up on two different Mongo documents for the same (chat, topic) pair.
     Nothing else about this function changed."""
     strict = strict_intent_mode()
+    # (DATE/TIME) A message with an explicit publication range never reuses or
+    # writes the topic cache / incremental-scan state: those are shared by every
+    # message with the same text in this chat and know nothing about ranges
+    # ("today" asked again tomorrow must not be served yesterday's posts).
+    _tr = time_range if isinstance(time_range, timerange.TimeRange) else timerange.range_from_doc(time_range)
+    if _tr is not None:
+        _call_kwargs = dict(
+            targeting_platform=targeting_platform, since_days=None, unfiltered=unfiltered,
+            match_phrases=match_phrases, limit=max(evidence_required or MIN_ANALYSIS_EVIDENCE, TOPIC_CACHE_MIN_TOPUP),
+            signals_collection_2=signals_collection_2, chat_id=chat_id,
+            signals_collection_4=signals_collection_4, user_query=user_query,
+        )
+        if _accepts_kw(matcher_fn, "time_range"):
+            _call_kwargs["time_range"] = _tr
+        if cancel_event is not None and _accepts_kw(matcher_fn, "cancel_event"):
+            _call_kwargs["cancel_event"] = cancel_event
+        posts, stats = timerange.filter_posts(matcher_fn(topic_key, keywords, **_call_kwargs), _tr)
+        if stats["outside"] or stats["no_timestamp"]:
+            log.info(f"Time-range filter | topic_key={topic_key} | kept={stats['kept']} "
+                     f"outside={stats['outside']} no_timestamp={stats['no_timestamp']}")
+        return posts
     cached = get_cached_topic_evidence(chat_id, topic_key)
     if strict and cached is not None and not cached.get("strict_mode"):
         # Evidence cached before strict mode was switched on was never
@@ -3902,7 +4004,11 @@ def _aligned_post_context(matched_signals: list) -> list:
         text  = (m.get("post_text") or "").strip()
         if not text:
             continue
-        pairs.append(({"title": title, "text": text}, m))
+        post = {"title": title, "text": text}
+        posted = timerange.post_published_at(m)        # (DATE/TIME) original publication time, if known
+        if posted is not None:
+            post["posted_utc"] = posted.strftime("%Y-%m-%d %H:%M UTC")
+        pairs.append((post, m))
     return pairs
 
 
@@ -3927,10 +4033,11 @@ def _format_posts_block(posts: list, start_index: int = 1) -> str:
         n = p.get("_n") or (start_index + offset)
         title = (p.get("title") or "").strip()
         text = p.get("text") or "(no text)"
+        posted = f"Posted: {p['posted_utc']}\n" if p.get("posted_utc") else ""   # (DATE/TIME)
         if title and not _is_placeholder_title(title):
-            lines.append(f"[Post {n}]\nTitle: {title}\nText: {text}")
+            lines.append(f"[Post {n}]\nTitle: {title}\n{posted}Text: {text}")
         else:
-            lines.append(f"[Post {n}]\nText: {text}")
+            lines.append(f"[Post {n}]\n{posted}Text: {text}")
     return "\n\n".join(lines)
 
 
@@ -5491,7 +5598,18 @@ def build_guidance_note(question: str) -> str:
         "and why. Never present a strategy as \"the best\" — at most say what this set of posts suggests.\n"
         "- If the posts are too few, off-topic, or show no buying intent, say plainly that the monitored data "
         "is not enough for a reliable recommendation, and do not fill the gap with general business advice.\n"
-        "- These posts carry no dates here: do not invent or estimate when anything was posted."
+        "- Sort the evidence into: buyers (asking to buy, switch or hire now), potential buyers (the problem, "
+        "no stated plan to buy), general discussion, competitors / vendors / service providers, and product "
+        "announcements. Self-promotion by a provider is never counted as buyer demand.\n"
+        "- Say how many relevant posts each point rests on. With fewer than five relevant posts, call it a small "
+        "sample and keep conclusions tentative.\n"
+        "- Keep three things apart: what the posts show (observations, with their [Post N] references), what "
+        "might explain it (hypotheses, labelled as such), and suggested next steps.\n"
+        "- Product fit: suggest offering the user's product to someone only when that person's stated problem "
+        "is one the user has said their product solves; otherwise say the fit is not verified. Never invent "
+        "product capabilities, integrations or prices.\n"
+        "- A post's \"Posted\" line is its original publication time. Mention dates only from those lines; never "
+        "invent or estimate a date for a post without one, and flag old posts as possibly no longer current."
     )
 
 
@@ -5755,9 +5873,26 @@ For EACH post, in this order of thinking:
    - "ambiguous": the post could be read several ways, or the text is too
      thin to tell.
    - "irrelevant": not a fit (e.g. a seller, an unrelated topic).
-4. A truthful point of connection, taken from the post. Never invent one.
-5. A conversational approach that helps the author first — usually answer or
+4. Product fit — compare the author's stated problem with what the user has
+   told Flintel about their offer ("What the user has told Flintel"):
+   "fits" (the offer, as described, solves the stated problem), "partial"
+   (solves part of it, or a key requirement — integration, platform,
+   region, budget — is not confirmed), "unsupported" (it does not solve it;
+   e.g. a broad booking engine for a host who needs a channel manager is not
+   a fit just because both are "travel"), "unknown" (the user has not said
+   what they offer, or the post does not say enough). Never assume a
+   capability, integration or compatibility the user has not stated.
+5. A truthful point of connection, taken from the post. Never invent one.
+6. A conversational approach that helps the author first — usually answer or
    ask, not pitch. Never start with a generic opener or praise.
+7. A draft — ONLY for "qualified" or "interested" posts whose fit is not
+   "unsupported": a complete, ready-to-edit reply the user could adapt,
+   written to THIS author about THIS post (3-6 short sentences): acknowledge
+   their actual situation, give one genuinely useful point or question, and
+   mention the user's offer only with facts the user gave — when fit is
+   "unknown" or "partial", do not claim it solves their problem; ask instead.
+   No links, usernames, contact details, prices, or invented experience. For
+   every other post "draft" is null and "do_not_contact_reason" says why.
 
 Truthfulness (absolute):
 - Never invent the user's experiences, identity, expertise, results,
@@ -5770,11 +5905,11 @@ Truthfulness (absolute):
 - No storytelling unless the given context supports it.
 - No URLs, usernames, or contact details in your text.
 
-Platform rules: Flintel cannot see each community's rules. Do NOT write a
-ready-to-post reply. Give writing guidance the user turns into their own
-words: the key point to acknowledge, one useful question, and a short
-outline. Note anything that could break typical rules (self-promotion,
-unsolicited DMs, AI-written content).
+Platform rules: Flintel cannot see each community's rules. A draft is for
+the user to edit, never something Flintel posts or sends. Also give the key
+point to acknowledge, one useful question, and a short outline. Note
+anything that could break typical rules (self-promotion, unsolicited DMs,
+AI-written content).
 
 Style: plain, specific, concise. No corporate jargon, hype, or exaggerated
 praise. Never repeat the same sentence pattern for every post.
@@ -5799,7 +5934,11 @@ Output JSON:
       "acknowledge": "<the key point to acknowledge; null for irrelevant>",
       "question": "<one useful question to ask the author; null for irrelevant>",
       "outline": ["<2-4 short steps for the user's own reply>"],
-      "platform_caution": "<rule risk to check for this post, or null>"
+      "platform_caution": "<rule risk to check for this post, or null>",
+      "product_fit": "fits" | "partial" | "unsupported" | "unknown",
+      "fit_reason": "<one sentence: which stated need the offer does or does not meet, and what is unverified>",
+      "draft": "<complete ready-to-edit message, or null>",
+      "do_not_contact_reason": "<why no outreach is suggested, or null>"
     }
   ],
   "missing_info": ["<information Flintel needs from the user to personalise further, e.g. what they sell>"]
@@ -5808,12 +5947,20 @@ Output JSON:
 
 _OUTREACH_CATEGORIES = ("qualified", "interested", "weak", "ambiguous", "irrelevant")
 _OUTREACH_HEADINGS = {
-    "qualified": "Qualified prospects",
-    "interested": "Interested — buying intent, but the need isn't spelled out",
-    "weak": "Weak signals — intent not confirmed",
+    "qualified": "Qualified prospects (qualified leads)",
+    "interested": "Interested — potential leads: buying intent, but the need isn't spelled out",
+    "weak": "Weak signals — market intelligence only, intent not confirmed",
     "ambiguous": "Ambiguous — read the post before reaching out",
-    "irrelevant": "Not a fit — no outreach suggested",
+    "irrelevant": "Not a fit — competitors / providers and unrelated posts, no outreach suggested",
 }
+_OUTREACH_FITS = {"fits": "Fits — the offer, as you described it, meets the stated need",
+                  "partial": "Partial — part of the need, or a key requirement is unconfirmed",
+                  "unsupported": "Doesn't fit the stated need",
+                  "unknown": "Not verified — tell me what you offer, or the post doesn't say enough"}
+_DO_NOT_CONTACT = {"weak": "no stated intent to buy or switch — useful as market intelligence only.",
+                   "ambiguous": "intent is unclear — read the post before deciding to reach out.",
+                   "irrelevant": "a seller, competitor or unrelated post — not a prospect."}
+OUTREACH_STALE_DAYS = 90
 _OUTREACH_AUTHOR = {"prospect": "Has the need themselves", "researcher": "Researching / comparing",
                     "seller": "Seller or service provider", "on_behalf": "Asking for someone else",
                     "unclear": "Unclear"}
@@ -5861,9 +6008,11 @@ def _clean_stored_post(post, index: int) -> dict:
         number = index + 1
     link = post.get("link")
     link = link.strip() if isinstance(link, str) and link.strip().startswith(("http://", "https://")) else None
+    published = timerange.post_published_at(post)          # (DATE/TIME) original publication time or None
     return {"number": number, "title": _plain_str(post.get("title")), "source": _plain_str(post.get("source")),
             "platform": _plain_str(post.get("platform")), "link": link, "summary": _plain_str(post.get("summary")),
-            "post_text": _plain_str(post.get("post_text"))}
+            "post_text": _plain_str(post.get("post_text")),
+            "published_at": published.isoformat() if published is not None else None}
 
 
 def _norm_words(text: str) -> str:
@@ -6008,6 +6157,47 @@ def _honest_category(category: str, item: dict, post: dict):
     return category, None
 
 
+def _honest_fit(category: str, item: dict, business_context):
+    """(category, fit_or_None, note). Product fit is only enforced when the model
+    stated one ("product_fit"); an absent field means "not assessed" and changes
+    nothing. "fits"/"partial" cannot be verified when the user has not said what
+    they offer -> "unknown". Unsupported fit -> no outreach. A qualified lead
+    needs a fit Flintel could check; otherwise it stays a potential lead."""
+    fit = item.get("product_fit")
+    if fit not in _OUTREACH_FITS:
+        return category, None, None
+    note = None
+    if fit in ("fits", "partial") and not _plain_str(business_context):
+        fit, note = "unknown", "you haven't told Flintel what you offer, so product fit can't be checked."
+    if fit == "unsupported" and category != "irrelevant":
+        return "irrelevant", fit, "the offer, as described, doesn't meet this person's stated need — do not contact."
+    if category == "qualified" and fit in ("unknown", "partial"):
+        return "interested", fit, (note or "product fit isn't confirmed, so this is a potential lead, not a "
+                                          "qualified one.")
+    return category, fit, note
+
+
+def _outreach_posted(post) -> str:
+    """The stored post's original publication date, with a staleness flag."""
+    t = timerange.to_utc(post.get("published_at"))
+    if t is None:
+        return "date not available"
+    text = f"{t.strftime('%b')} {t.day}, {t.year} (UTC)"
+    if (datetime.now(timezone.utc) - t).days > OUTREACH_STALE_DAYS:
+        text += f" — over {OUTREACH_STALE_DAYS} days old, the need may no longer be current"
+    return text
+
+
+def _outreach_draft(value) -> str:
+    """A model draft -> safe multi-paragraph text: no links, e-mails, handles or
+    markup; at most 6 paragraphs / 1200 characters. Empty when unusable."""
+    if not isinstance(value, str):
+        return ""
+    paras = [_outreach_text(par, 700) for par in re.split(r"\n\s*\n|\n", value)]
+    text = "\n".join(par for par in paras if par)[:1200]
+    return text if len(text) >= 20 else ""
+
+
 def build_outreach_report(selection_query: str, original_query: str, posts: list,
                           business_context: str = None, chat_summary: str = None) -> str:
     """(OPTION A) Outreach notes for the STORED posts of the previous result.
@@ -6025,6 +6215,7 @@ def build_outreach_report(selection_query: str, original_query: str, posts: list
         "title": p["title"] or None,
         "post_text": p["post_text"][:OUTREACH_EVIDENCE_CHARS] or None,
         "flintel_summary": p["summary"] or None,
+        "posted": p["published_at"][:10] if p.get("published_at") else None,   # (DATE/TIME) original date
     } for p in posts]
     user_message = (
         f"The user's original request: {original_query or '(unknown)'}\n"
@@ -6068,20 +6259,22 @@ def build_outreach_report(selection_query: str, original_query: str, posts: list
             continue
         cat = item.get("category") if item.get("category") in _OUTREACH_CATEGORIES else "ambiguous"
         cat, downgrade_note = _honest_category(cat, item, p)
-        item = dict(item, _downgrade_note=downgrade_note,
+        cat, fit, fit_note = _honest_fit(cat, item, business_context)
+        item = dict(item, _downgrade_note=downgrade_note, _fit=fit, _fit_note=fit_note,
                     _quote_ok=_evidence_matches_post(item.get("evidence"), p))
         groups[cat].append((p, item))
 
     out = [f"**Outreach notes for the {len(posts)} posts from your previous result** — the same posts, "
            "not a new search.",
-           "These are notes for writing your own reply, not ready-to-post messages: check each community's "
-           "rules on self-promotion, DMs and AI-written content before you post."]
+           "Drafts are starting points for you to edit, not ready-to-post messages, and Flintel has not sent "
+           "anything: check each community's rules on self-promotion, DMs and AI-written content before you post."]
     for cat in _OUTREACH_CATEGORIES:
         if not groups[cat]:
             continue
         out.append(f"### {_OUTREACH_HEADINGS[cat]}")
         for p, item in groups[cat]:
             block = [f"{p['number']}. {_outreach_post_heading(p)}"]
+            block.append(f"- **Posted:** {_outreach_posted(p)}")
             author = _OUTREACH_AUTHOR.get(item.get("author_type"), "Unclear")
             block.append(f"- **Who:** {author}")
             need = _outreach_text(item.get("need"))
@@ -6101,7 +6294,17 @@ def build_outreach_report(selection_query: str, original_query: str, posts: list
                 block.append(f"- **Caution:** {warning}")
             if item.get("_downgrade_note"):
                 block.append(f"- **Flintel check:** {item['_downgrade_note']}")
-            if cat != "irrelevant":
+            if item.get("_fit"):
+                fit_reason = _outreach_text(item.get("fit_reason"), 300)
+                block.append(f"- **Product fit:** {_OUTREACH_FITS[item['_fit']]}"
+                             + (f" — {fit_reason}" if fit_reason else ""))
+            if item.get("_fit_note"):
+                block.append(f"- **Flintel check:** {item['_fit_note']}")
+            if cat in ("weak", "ambiguous", "irrelevant"):
+                reason = _outreach_text(item.get("do_not_contact_reason"), 300) or _DO_NOT_CONTACT[cat]
+                block.append(f"- **Outreach:** {'Do not contact yet' if cat == 'ambiguous' else 'Do not contact'}"
+                             f" — {reason}")
+            if cat in ("qualified", "interested", "ambiguous"):
                 for label, key in (("How to approach", "approach"), ("Acknowledge", "acknowledge"),
                                    ("Ask", "question")):
                     text = _outreach_text(item.get(key))
@@ -6114,6 +6317,13 @@ def build_outreach_report(selection_query: str, original_query: str, posts: list
                 caution = _outreach_text(item.get("platform_caution"))
                 if caution:
                     block.append(f"- **Community rules:** {caution}")
+            draft = _outreach_draft(item.get("draft")) if (cat in ("qualified", "interested")
+                                                            and item.get("_fit") != "unsupported") else ""
+            if draft:
+                block.append("- **Draft to edit (not sent):**\n" + "\n".join(f"  > {line}" if line else "  >"
+                                                                             for line in draft.split("\n")))
+                if p.get("link"):
+                    block.append(f"- **Source:** {p['link']}")
             out.append("\n".join(block))
     if not_assessed:
         out.append("### Not assessed")
@@ -7126,7 +7336,7 @@ def _resolved_request_note(query: str, resolved_query: str):
 
 def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query: str, keywords: list = None,
                               match_phrases: list = None, evidence_required: int = None, website_note: str = None,
-                              resolved_query: str = None):
+                              resolved_query: str = None, time_range=None):
     """(PERFORMANCE FIX) Extracted, UNCHANGED logic from the RESPONSE_TIMEOUT
     fallback branch that used to run inline inside _fill_in_message_outputs()
     — same calls, same order, same caching. Pulled out so it can be
@@ -7238,6 +7448,7 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
                 keywords=keywords or [], evidence_required=evidence_required,
                 matcher_fn=get_matched_signals, match_phrases=match_phrases,
                 targeting_platform="all", **_fb_kwargs,
+                **({"time_range": time_range} if time_range else {}),   # (DATE/TIME)
             )
         except Exception as exc:
             log.warning(f"Signal matching failed for topic_key={topic_key}: {exc}")
