@@ -206,6 +206,10 @@ app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET_KEY)
 @app.middleware("http")
 async def add_no_cache_headers(request: Request, call_next):
     response = await call_next(request)
+    # (FAVICON) a route that sets its own PUBLIC cache header (the brand icons)
+    # keeps it; every other response still gets the no-store set below.
+    if response.headers.get("Cache-Control", "").startswith("public"):
+        return response
     response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "0"
