@@ -4917,6 +4917,32 @@ would actually write.
    shared website link automatically and pull the right keywords from it.
    Keep it to 1-2 natural sentences, never robotic or repetitive-sounding.
 
+BUSINESS GUIDANCE QUESTIONS (strategy and next steps for the user's OWN
+customers or market) — e.g. "what's the best way to get customers?", "which
+customer acquisition strategy should I use?", "what opportunities are
+emerging in my market?", "what are customers struggling with right now?",
+"which customer segment should I target?", "what should I do next to find
+potential customers?", in ANY language. Flintel answers these ONLY from the
+real conversations it monitors, never from general knowledge, so such a
+message is NEVER "chat":
+- If the user's business, product, market, or industry is known — from this
+  message, the conversation history, or a saved website context — return
+  "search" with "guidance": true. Build "keywords" and "match_phrases" to
+  retrieve evidence for the question in THAT market: people looking to buy,
+  asking for recommendations, comparing or switching options, describing
+  problems or unmet needs (buyer-intent and pain-point phrasing — never
+  phrasing about marketing tactics). "resolved_query" restates the question
+  with the market named. With a saved website context and no other market
+  named, follow the own-business rule there (use_website_context) and also
+  set "guidance": true.
+- If no business, product, market, or industry is known anywhere, return
+  "clarify" with "guidance": true: ask in one or two sentences what they
+  sell and to whom (or for their website link), and say plainly that
+  Flintel answers this from real conversations it monitors rather than
+  generic advice. Give no tips.
+General factual questions that are not about the user's own customers or
+market (e.g. "what is a CRM?") are not covered by this rule.
+
 FOLLOW-UP MESSAGES — ONE CHAT, MANY TURNS (read the conversation history
 below before classifying ANY message):
 Users refine a search over many messages. For every message, first decide
@@ -5285,12 +5311,14 @@ def _parse_router_json(raw: str, allow_previous_results: bool = False):
         _uat = data.get("url_ask_type")
         url_ask_type = _uat if _uat in ("generic_own_business", "specific_topic", "none") else None
 
+    # (DATA-BACKED GUIDANCE) a business-guidance question (see the router prompt)
+    guidance = bool(data.get("guidance") is True and intent in ("search", "clarify"))
     return {"intent": intent, "reply": reply, "keywords": keywords, "time_window_days": time_window_days,
             "unfiltered": unfiltered, "match_phrases": match_phrases, "evidence_required": evidence_required,
             "website_only": website_only, "use_website_context": use_website_context,
             "website_topic_relation": website_topic_relation, "url_ask_type": url_ask_type,
             "target_entity": target_entity, "intent_types": intent_types,
-            "resolved_query": resolved_query}
+            "resolved_query": resolved_query, "guidance": guidance}
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -5303,7 +5331,8 @@ def _parse_router_json(raw: str, allow_previous_results: bool = False):
 # router exactly as before. Anything unsure returns None = router as before.
 # Deliberately NOT covered: yes / no / ok (they can answer a question asked
 # earlier in the chat), anything with a URL or a digit, non-English small
-# talk (the router replies in the user's own language).
+# talk (the router replies in the user's own language) — except a bare name
+# introduction ("mera naam Hamza hai"), handled by _introduced_name() below.
 # ─────────────────────────────────────────────────────────────────────────────
 _SMALLTALK_MAX_WORDS = 8
 _SMALLTALK_LEAD = re.compile(
@@ -5364,7 +5393,43 @@ def smalltalk_reply(query: str):
     for category in ("how_are_you", "thanks", "goodbye", "capabilities"):
         if rest in _SMALLTALK_PHRASES[category]:
             return SMALLTALK_REPLIES[category]
+    name = _introduced_name(rest)
+    if name:
+        return SMALLTALK_INTRO_REPLY.format(name=name)
     return None
+
+
+# (SMALL-TALK FAST PATH — INTRODUCTIONS) "I am Hamza" / "my name is Hamza" /
+# "mera naam Hamza hai" — ONLY a name, nothing else ("I am Hamza from Lahore",
+# "I am looking for…" go to the router). Words that describe a state or are
+# common English ("I am fine", "I am confused", "I am new") are never names.
+_INTRO_RE = re.compile(
+    r"^(?:i am|i m|im|my name is|my name s|myself|this is|it s|its|mera naam|mera name|main|mai)\s+"
+    r"([a-z]{2,15}(?: [a-z]{2,15})?)$")
+_INTRO_TAIL_RE = re.compile(r"\s+(?:here|hoon|hun|hu|hai|he)$")
+_NOT_A_NAME = set("""
+a an the not so very just also still really from at in with on for to and or but your you here there back new
+fine good great ok okay well ready done sure busy happy sad glad sorry tired bored lost stuck free available
+alone home late early curious hungry sick ill alright cool awesome amazing nice right wrong good bad better
+best fan user customer founder owner developer student manager marketer seller buyer freelancer agency startup
+business company team admin human bot ai robot guest new old young back again today now online here also only
+just about trying looking building working interested confused excited worried thinking wondering asking going
+coming selling buying planning hoping searching struggling running doing what who why how where when which
+""".split())
+_NOT_A_NAME_SUFFIX = ("ed", "ing", "ly", "ful", "less", "ous", "ive", "able", "ible")
+SMALLTALK_INTRO_REPLY = ("Nice to meet you, {name}! I'm Flintel. Tell me a brand, product, or topic and I'll find "
+                         "what people are saying about it on Reddit — or the people actively looking for it.")
+
+
+def _introduced_name(text: str):
+    """"Hamza" (title-cased) when `text` is only a name introduction, else None."""
+    m = _INTRO_RE.match(_INTRO_TAIL_RE.sub("", text or ""))
+    if not m:
+        return None
+    words = m.group(1).split()
+    if any(w in _NOT_A_NAME or w.endswith(_NOT_A_NAME_SUFFIX) for w in words):
+        return None
+    return " ".join(w.capitalize() for w in words)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -5404,6 +5469,29 @@ def build_previous_results_router_block(original_query: str, offered_next_step: 
         "numbers only when the user limits it to specific posts. Any choice or request that needs new "
         "research (more posts, broader or continuous monitoring, another location, time range, or filter) "
         "is NOT previous_results — classify it with the normal rules. When unsure, use the normal rules."
+    )
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# (DATA-BACKED GUIDANCE) A business-guidance question ("what's the best way to
+# get customers?") that the router turned into a search over the user's market
+# carries this note into the analysis step (via the message's existing note →
+# extra_context), so the answer is built from the matched posts only.
+# ─────────────────────────────────────────────────────────────────────────────
+def build_guidance_note(question: str) -> str:
+    q = " ".join((question or "").split())[:300]
+    return (
+        f"BUSINESS GUIDANCE REQUEST — the user asked: \"{q}\". Answer it ONLY from the posts above:\n"
+        "- Report the patterns the posts actually show. Keep people actively looking to buy or switch "
+        "separate from general discussion, from sellers or providers promoting their own offer, and from "
+        "unrelated posts.\n"
+        "- Name customer problems, unmet needs, or opportunities only where the posts show them, and point to "
+        "the supporting posts.\n"
+        "- Recommend only what follows from these posts; for each recommendation say which posts support it "
+        "and why. Never present a strategy as \"the best\" — at most say what this set of posts suggests.\n"
+        "- If the posts are too few, off-topic, or show no buying intent, say plainly that the monitored data "
+        "is not enough for a reliable recommendation, and do not fill the gap with general business advice.\n"
+        "- These posts carry no dates here: do not invent or estimate when anything was posted."
     )
 
 
