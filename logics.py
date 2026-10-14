@@ -2,7 +2,7 @@
 FLINTEL — LOGICS (the "brain") 
 ============================================================================
 Pulls the heavy "brain" logic out of index.py — signal matching, keyword
-generation/fallback, the router, the analysis layer, the website-keyword
+generation/fallback, the router, the analysis layer, the website-keyword 
 extraction wrapper, and the single LLM call function. This is what
 actually shrinks index.py's size/load; index.py keeps only FastAPI app 
 wiring plus chat/session/Mongo orchestration (flintel_users /
