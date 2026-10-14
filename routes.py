@@ -2,7 +2,7 @@
 routes.py — all FastAPI route handlers for the Flintel web service,
 extracted from index.py to keep that module to shared infrastructure
 and business logic. Imports `app` from index.py and registers every
-route on it; index.py imports this module once, at the bottom, purely  
+route on it; index.py imports this module once, at the bottom, purely 
 for its side effect of registering these routes.   
 """
 
@@ -2715,3 +2715,35 @@ def logout(request: Request):
     # they're right where they were, same as Claude/ChatGPT.
     request.session.clear()
     return RedirectResponse(url="/")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# (FAVICON) Public brand-icon routes. No auth, no session, no DB, no credits.
+# Absolute paths from __file__ so they resolve in production whatever the CWD.
+# Responses carry their own "public" Cache-Control, which index.py's global
+# no-store middleware leaves untouched.
+# ─────────────────────────────────────────────────────────────────────────────
+from pathlib import Path as _IconPath
+from fastapi.responses import FileResponse as _IconFileResponse
+
+_LOGO_DIR = _IconPath(__file__).resolve().parent / "logo"
+_ICON_CACHE = {"Cache-Control": "public, max-age=86400"}
+_ICON_ROUTES = {
+    "/favicon.ico":          ("flintel.ico",     "image/x-icon"),
+    "/favicon-48x48.png":    ("flintel-48.png",  "image/png"),
+    "/favicon-96x96.png":    ("flintel-96.png",  "image/png"),
+    "/favicon-192x192.png":  ("flintel-192.png", "image/png"),
+    "/apple-touch-icon.png": ("flintel-180.png", "image/png"),
+}
+
+
+def _register_icon_route(path, filename, media_type):
+    @app.api_route(path, methods=["GET", "HEAD"], include_in_schema=False)
+    def _icon():
+        return _IconFileResponse(_LOGO_DIR / filename, media_type=media_type, headers=_ICON_CACHE)
+    _icon.__name__ = "icon_" + filename.replace(".", "_").replace("-", "_")
+    return _icon
+
+
+for _p, (_f, _m) in _ICON_ROUTES.items():
+    _register_icon_route(_p, _f, _m)
