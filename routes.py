@@ -25,6 +25,9 @@ import google as google_search   # the new google.py module — needed here
 import website_intelligence
 from logics import get_or_fetch_website_evidence, generate_keywords_for_website_request, acquire_scan, get_cached_topic_evidence
 from logics import smalltalk_reply   # (SMALL-TALK FAST PATH)
+from logics import build_outreach_report, build_previous_results_router_block   # (OPTION A)
+from logics import detect_offer_selection, parse_option_pick, offer_clarification_reply, _clean_stored_post   # (OPTION A GUARD)
+from logics import find_offer_in_answer, mentions_previous_results, requests_new_research, previous_or_new_clarification   # (OPTION A GUARD)
 
 from index import (
     app,
@@ -273,6 +276,51 @@ def _get_last_search_message_posts(chat: dict):
         # keep looking further back rather than stopping here.
 
     return None
+
+
+def _get_latest_search_result(chat: dict):
+    """(OPTION A — REUSE PREVIOUS RESULTS) The NEWEST search-type message in
+    this chat that has a saved answer, with the posts that answer showed —
+    numbered, titled and linked exactly as stored, plus each post's stored
+    text from msg["results"] (matched by URL) as evidence. Returns None when
+    the chat has no answered search. Never looks further back than the newest
+    answered search: Option A is about the result the user just saw."""
+    for msg in reversed((chat or {}).get("messages") or []):
+        if msg.get("message_type") == "chat":
+            continue
+        if not msg.get("claude_answer"):
+            return None
+        posts = _get_last_search_message_posts({"messages": [msg]}) or []
+        texts = {}
+        for r in msg.get("results") if isinstance(msg.get("results"), list) else []:
+            if isinstance(r, dict) and isinstance(r.get("post_url"), str) and isinstance(r.get("post_text"), str):
+                texts[r["post_url"]] = r["post_text"]
+        # identity fields only from the stored record, every field a safe type
+        posts = [_clean_stored_post(dict(post, post_text=texts.get(post.get("link"), "")
+                                         if isinstance(post.get("link"), str) else ""), i)
+                 for i, post in enumerate(posts)]
+        # the offer is looked for in every field the answer displays
+        # (followup_question, business_insight, executive_summary, conclusion, …)
+        offered, offer = find_offer_in_answer(msg["claude_answer"])
+        return {"message": msg, "posts": posts, "offered": offered, "offer": offer,
+                "original_query": msg.get("resolved_query") or msg.get("query") or ""}
+    return None
+
+
+def _save_plain_reply_and_redirect(chat_id: str, owner_key: str, query: str, answer: str):
+    """(OPTION A) Saves a plain (non-search) reply in the chat and redirects to
+    it — no search message, no search job. Best-effort, like the chat branch."""
+    redirect_chat_id = None
+    try:
+        add_chat_message_to_chat(chat_id, owner_key, query, answer)
+        try:
+            append_to_chat_summary(chat_id, owner_key, query, answer)
+        except Exception as exc:
+            log.warning(f"Updating chat summary failed for chat_id={chat_id}: {exc}")
+        redirect_chat_id = chat_id
+    except Exception as exc:
+        log.warning(f"Saving reply failed for query={query!r}: {exc}")
+    return RedirectResponse(url=f"/chat/{redirect_chat_id}" if redirect_chat_id else "/", status_code=303)
 
 
 def _build_referenced_post_context(flat_posts: list, query: str):
@@ -596,6 +644,10 @@ def search(
         # completely safe default, identical to how classify_and_maybe_chat()
         # already treats an empty/missing summary.
         chat_summary_for_resolve = ""
+        # (OPTION A) The latest stored result handed to the router, if any.
+        latest_result = None
+        website_ctx_summary = None
+        routing_failed = False
 
         try:
             owner_key, owner_type = get_owner(request)
@@ -635,7 +687,22 @@ def search(
             if fast_reply:
                 routed = {"intent": "chat", "reply": fast_reply, "smalltalk_fast_path": True}
             else:
-                routed = classify_and_maybe_chat(query, chat_summary, website_ctx_summary, referenced_post_context)
+                # (OPTION A) Show the router the latest stored result so a reply
+                # like "Option A is better" can reuse those exact posts.
+                previous_results_context = None
+                if not _extract_first_url(query):
+                    try:
+                        latest_result = _get_latest_search_result(existing_chat)
+                        # Only when the last answer offered options, or the message is
+                        # about the posts already shown — plain refinements never get it.
+                        if latest_result and (latest_result["offer"]["options"] or mentions_previous_results(query)):
+                            previous_results_context = build_previous_results_router_block(
+                                latest_result["original_query"], latest_result["offered"], latest_result["posts"])
+                    except Exception as exc:
+                        log.warning(f"Previous-result lookup failed for query={query!r}: {exc}")
+                        latest_result = None
+                routed = classify_and_maybe_chat(query, chat_summary, website_ctx_summary, referenced_post_context,
+                                                 previous_results_context=previous_results_context)
             intent = routed.get("intent", "search")
             chat_reply = routed.get("reply")
             routed_keywords = routed.get("keywords")
@@ -645,6 +712,83 @@ def search(
         except Exception as exc:
             log.warning(f"v5 routing step failed for query={query!r} (defaulting to normal search pipeline): {exc}")
             intent = "search"
+            routing_failed = True
+
+        # ─────────────────────────────────────────────────────────────────────
+        # (OPTION A GUARD) Only for a reply that is NOTHING BUT a pick from the
+        # options the latest stored answer offered ("Option A is better", "go
+        # with B", "both"). Picking the "work with these posts" option never
+        # starts a search — even if routing failed or the router said "search";
+        # an unclear pick is asked about instead of searched. Every other
+        # message (and every chat without such an offer) is untouched.
+        # ─────────────────────────────────────────────────────────────────────
+        offer_note = None
+        if routing_failed and latest_result is None:
+            chat_readable = False
+            try:
+                if not owner_key:
+                    owner_key, owner_type = get_owner(request)
+                if not active_chat_id:
+                    active_chat_id = chat_id or request.session.get("active_chat_id")
+                reloaded_chat = get_chat_session(active_chat_id, owner_key) if active_chat_id else None
+                chat_readable = True
+                latest_result = _get_latest_search_result(reloaded_chat)
+            except Exception as exc:
+                log.warning(f"Option-A guard could not reload the chat for query={query!r}: {exc}")
+            if not chat_readable and parse_option_pick(query):
+                # The chat (and any offer in it) can't be read: never turn a bare
+                # option pick into a literal keyword search.
+                return _save_plain_reply_and_redirect(
+                    active_chat_id, owner_key, query,
+                    "I couldn't load the previous result just now, so I haven't started anything — "
+                    "please send your choice again in a moment.")
+        offer_choice = None
+        if intent != "blocked" and not _extract_first_url(query):
+            try:
+                offer_choice = detect_offer_selection(query, (latest_result or {}).get("offered"))
+            except Exception as exc:
+                log.warning(f"Option-A guard: offer detection failed for query={query!r}: {exc}")
+        if offer_choice:
+            kind = offer_choice["kind"]
+            if kind in ("previous_results", "both"):
+                if intent != "previous_results":
+                    log.info(f"Option-A guard: {intent!r} -> 'previous_results' for an option pick | query={query!r}")
+                intent = "previous_results"
+                routed = {"intent": "previous_results", "previous_results_numbers": None}
+                if kind == "both":
+                    offer_note = ("You also picked an option that needs a new search — I haven't started it. "
+                                  "Say “run the new search” when you want it.")
+            elif (kind == "new_search" and (routing_failed or intent == "previous_results")) or \
+                    (kind == "unclear" and (routing_failed or intent == "search")):
+                return _save_plain_reply_and_redirect(
+                    active_chat_id, owner_key, query,
+                    offer_clarification_reply(offer_choice["options"], routing_failed=routing_failed,
+                                              numbered=offer_choice.get("numbered", False)))
+        elif intent == "previous_results" and requests_new_research(query):
+            # The router wants to reuse the shown posts, but the message also asks
+            # for new / more / different research ("Option A, but find five more
+            # buyers"): never silently turn that into a report — ask.
+            return _save_plain_reply_and_redirect(
+                active_chat_id, owner_key, query,
+                previous_or_new_clarification(len((latest_result or {}).get("posts") or [])))
+
+        # ─────────────────────────────────────────────────────────────────────
+        # (OPTION A — REUSE PREVIOUS RESULTS) The user wants to work WITH the
+        # posts already shown (e.g. outreach notes for them). Builds the report
+        # from the STORED posts only: no new search, no search job, no new
+        # search message. Missing posts are said plainly, never substituted.
+        # ─────────────────────────────────────────────────────────────────────
+        if intent == "previous_results":
+            prev_posts = (latest_result or {}).get("posts") or []
+            numbers = routed.get("previous_results_numbers")
+            if numbers and prev_posts:
+                prev_posts = [p for p in prev_posts if p["number"] in numbers] or prev_posts
+            answer = build_outreach_report(query, (latest_result or {}).get("original_query"), prev_posts,
+                                           business_context=website_ctx_summary,
+                                           chat_summary=chat_summary_for_resolve)
+            if offer_note:
+                answer += "\n\n" + offer_note
+            return _save_plain_reply_and_redirect(active_chat_id, owner_key, query, answer)
 
         # ─────────────────────────────────────────────────────────────────────
         # VAGUE WEBSITE FOLLOW-UP REUSE (WEBSITE INTELLIGENCE, Point 3) — a
