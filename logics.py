@@ -1,8 +1,8 @@
 """
-FLINTEL — LOGICS (the "brain") 
+FLINTEL — LOGICS (the "brain")
 ============================================================================
 Pulls the heavy "brain" logic out of index.py — signal matching, keyword
-generation/fallback, the router, the analysis layer, the website-keyword 
+generation/fallback, the router, the analysis layer, the website-keyword
 extraction wrapper, and the single LLM call function. This is what
 actually shrinks index.py's size/load; index.py keeps only FastAPI app 
 wiring plus chat/session/Mongo orchestration (flintel_users /
@@ -4901,18 +4901,34 @@ would actually write.
 
 2. "chat" — a normal conversational message that doesn't need any new
    data pulled at all: greetings ("hi", "hello", "what's up", "kia chal
-   raha hai aj kal"), small talk, thanks, general knowledge questions, a
-   follow-up question about something already discussed in this
-   conversation, or a request to just talk. Answer the user's message
-   yourself, directly and naturally, the way Claude/ChatGPT would in any
-   normal conversation. You also have access to a live web_search tool
-   for these "chat" replies — use it whenever the user's question is
-   about something current, recent, or beyond your own training
-   knowledge (news, prices, scores, who currently holds some role,
-   "what happened with X today", etc.), instead of saying you don't
-   have real-time access or citing a knowledge cutoff. Search first,
-   then answer plainly and naturally from what you find. "keywords" and
-   "time_window_days" must be null for this type.
+   raha hai aj kal"), small talk, thanks, a follow-up question about
+   something already discussed in this conversation (answered ONLY from
+   the posts, results or website evidence given to you below), or a
+   question about Flintel itself. Reply briefly and naturally.
+   "keywords" and "time_window_days" must be null for this type.
+
+   GROUNDING (absolute — Flintel is an evidence product, not a general
+   chatbot): a "chat" reply must never contain business or market advice,
+   example customer pain points, trends, opportunities, competitor
+   weaknesses, statistics, post counts, dates, quotes or links that are not
+   in the evidence given to you below, and never general-knowledge answers
+   presented as Flintel's findings. For a general-knowledge question
+   unrelated to anything Flintel monitors, say plainly that Flintel answers
+   from the real conversations it collects, and offer to search what
+   people are saying about that topic. For a business or market question
+   with no evidence given below, do not advise — say nothing has been
+   searched yet and offer to run the search.
+
+   QUESTIONS ABOUT FLINTEL ITSELF are always "chat", never "search": what
+   Flintel/you can do, how it works, how to use it, what it can find,
+   which platforms it covers, how it can help — as long as the message
+   names no topic, brand, product, market or audience to look into ("What
+   can you do for me?", "How does Flintel work?", "What can you find?",
+   "How do I use this?"). Answer from what Flintel does; never start a
+   search for them. The moment a research target is named ("What can you
+   find about my competitor Acme?", "How can you help me find buyers for
+   my CRM?") it is a normal research request and the rules above/below
+   apply.
 
    ALSO classify as "chat" (not "search", not "clarify") when the message
    asks a broad, platform-wide "what's trending / what's happening / what
@@ -4921,16 +4937,13 @@ would actually write.
    complaint framing either — e.g. "reddit par kya chal raha hai", "abhi
    reddit par top problem kya hai", "what's trending on twitter today"
    with truly nothing else to go on. For these, do NOT generate search
-   keywords and do NOT trigger a database search — instead, write the
-   "reply" yourself using your own general knowledge of what's commonly
-   discussed on that platform, in a natural, confident, professional tone
-   (not hedgy, not "as an AI I don't have real-time access" — just answer
-   plainly from what you know, using the web_search tool above if it
-   would help ground the answer in something current). At the end of
-   that reply, naturally invite them to share their business, product, or
-   website link so Flintel can pull real, current, related data for them
-   specifically. "keywords" and "time_window_days" stay null for this
-   case, exactly like any other "chat" message.
+   keywords and do NOT trigger a database search — and do NOT describe
+   what is trending from your own knowledge (that would be an unverified
+   claim). Instead, in one or two sentences, say Flintel can only report
+   what people are saying once it searches a topic, and ask which brand,
+   product, industry or audience to look at — or invite them to share
+   their business or website link. "keywords" and "time_window_days" stay
+   null for this case, exactly like any other "chat" message.
 
    This "chat" case is DIFFERENT from the GENERAL PAIN-POINT / COMPLAINT
    PATTERN described under "search" above: if the user names ANY angle at
@@ -5460,8 +5473,8 @@ _SMALLTALK_PHRASES = {
     "goodbye": {"bye", "goodbye", "good bye", "bye bye", "see you", "see you later", "see ya",
                 "good night", "take care"},
     "capabilities": {"what can you do", "what do you do", "what can flintel do", "what does flintel do",
-                     "what are you", "who are you", "what is flintel", "how does this work",
-                     "how does flintel work", "how do you work", "what can i ask you",
+                     "what are you", "who are you", "what is flintel",
+                     "what can i ask you",
                      "what can i ask", "help", "what are your capabilities", "what can you help with",
                      "what can you help me with"},
 }
@@ -5478,11 +5491,248 @@ SMALLTALK_REPLIES = {
                      "- **Spot pain points and trends** in a market or topic\n"
                      "- **Share your website link** and I'll find conversations relevant to your business\n\n"
                      "Just type what you're looking for."),
+    # (CAPABILITY QUESTIONS)
+    "how_it_works": ("Here's how Flintel works:\n\n"
+                     "1. **You ask in plain words** — a brand, a product, a market, or the kind of people you want to find.\n"
+                     "2. **I search real public conversations** Flintel has collected (Reddit today; X / Twitter, LinkedIn "
+                     "and Facebook are coming soon) and match posts by meaning, not just keywords.\n"
+                     "3. **I read the matching posts and answer** with what they actually show — buyers kept apart from "
+                     "sellers and general discussion — and link every original post so you can check it.\n\n"
+                     "You can narrow a search by platform or by time (\"from the last 3 hours\", \"October 9 to 12\"). "
+                     "What would you like to look into?"),
+    "how_to_use": ("Using Flintel is simple:\n\n"
+                   "1. **Type what you're looking for**, e.g. \"Find people looking for a CRM for a small team\" or "
+                   "\"What do people complain about with Notion?\"\n"
+                   "2. **Optionally pick a platform** with the selector next to the send button, or add a time range "
+                   "(\"from yesterday\", \"last 24 hours\").\n"
+                   "3. **Read the answer** — each point links to the original posts.\n"
+                   "4. **Follow up** in the same chat: ask for outreach ideas for those posts, narrow the search, "
+                   "or share your website link so I can look for conversations relevant to your business.\n\n"
+                   "What would you like to start with?"),
+    "platforms": ("Right now I search **Reddit**. X / Twitter, LinkedIn and Facebook are coming soon — you'll see "
+                  "them in the platform selector next to the send button. Tell me what you'd like to look into."),
 }
+
+
+# (CAPABILITY QUESTIONS) A question whose SUBJECT is Flintel itself and that
+# names NO research target: what it can do / find, how it works, how to use
+# it, which platforms it covers. Parsed as a whole sentence — question word,
+# auxiliary, Flintel as the subject, a capability verb, then at most a
+# "for me / for my business" beneficiary and filler. Any other word left over
+# (a brand, a topic, "find buyers for my CRM") means it is not this intent and
+# the message goes to the router as before.
+_CAP_SELF = r"(?:you|u|flintel|this|it|this (?:app|tool|platform|thing|site|product|bot|service)|the (?:app|tool|platform|bot|service))"
+_CAP_AUX = r"(?:can|could|will|would|do|does|should|might|are|is)"
+_CAP_BENEF = (r"(?: (?:for|to) (?:me|us|you|people like me|someone like me|my (?:(?:small|own|new|online|local) )?(?:business|company|team|startup|brand|agency|"
+              r"shop|store|product|work|clients)|our (?:(?:small|own|new|online|local) )?(?:business|company|team|startup|brand|agency|shop|store|product)))?")
+_CAP_FILLER = r"(?: (?:exactly|here|actually|really|in general|anyway|again|then|now|right now|today|please|best|well|"\
+              r"properly|effectively|in short|basically|in practice))*"
+_CAP_KIND = r"(?:exactly )?(?:(?:all|else|kinds? of things|sorts? of things|types? of (?:things|data|posts|results|stuff|leads|info|information)|stuff) )?"
+_CAP_VERB = (r"(?:do|find|search|search for|track|monitor|offer|show(?: me| us)?|tell(?: me| us)?|look for|discover|analy[sz]e|"
+             r"dig up|get(?: me| us)?|help(?: me| us)?(?: with)?|provide|give(?: me| us)?|cover|support|research)")
+_CAP_PATTERNS = [
+    ("capabilities", rf"what {_CAP_KIND}{_CAP_AUX} {_CAP_SELF} {_CAP_VERB}{_CAP_BENEF}{_CAP_FILLER}"),
+    ("capabilities", rf"what {_CAP_KIND}{_CAP_SELF} {_CAP_AUX} {_CAP_VERB}{_CAP_BENEF}{_CAP_FILLER}"),   # "tell me what you can do"
+    ("capabilities", rf"(?:how )?{_CAP_AUX} {_CAP_SELF} help(?: me| us)?{_CAP_BENEF}{_CAP_FILLER}"),
+    ("capabilities", rf"how {_CAP_AUX} {_CAP_SELF} (?:help|assist)(?: me| us| my (?:business|company|team|startup|brand|agency|shop|store))?"
+                     rf"{_CAP_BENEF}{_CAP_FILLER}"),
+    ("capabilities", rf"how {_CAP_AUX} {_CAP_SELF} be (?:useful|helpful|of use){_CAP_BENEF}{_CAP_FILLER}"),
+    ("capabilities", rf"what {_CAP_AUX} {_CAP_SELF} (?:good for|useful for|for|capable of|able to do){_CAP_FILLER}"),
+    ("capabilities", r"what (?:are|is) (?:your|flintel s|flintels|its|the) (?:capabilities|features|skills|abilities|use cases?)"
+                     + _CAP_FILLER),
+    ("capabilities", r"(?:who|what) (?:are|is) (?:you|flintel|this)" + _CAP_FILLER),
+    ("capabilities", r"what can (?:i|we) (?:ask|do|search|find|look for|use (?:you|flintel|it|this) for)"
+                     r"(?: (?:you|with you|here|with flintel|on flintel|with this|with it))?" + _CAP_FILLER),
+    ("capabilities", r"what should (?:i|we) ask(?: you| flintel)?" + _CAP_FILLER),
+    ("how_it_works", rf"how {_CAP_AUX} {_CAP_SELF} (?:work|works|find (?:things|posts|stuff|results|leads)|search|get (?:its|your) data)"
+                     rf"{_CAP_FILLER}"),
+    ("how_it_works", r"how (?:does|do) (?:flintel|this|it|this (?:app|tool|platform|thing)) work" + _CAP_FILLER),
+    ("how_it_works", r"where (?:do|does) (?:you|flintel|this|it) (?:get|find) (?:your|its|the) (?:data|posts|results|information)"
+                     + _CAP_FILLER),
+    ("how_to_use", rf"how (?:do|can|should|would) (?:i|we) (?:use|start using|get started with|work with|make the most of|get the most out of) "
+                   rf"{_CAP_SELF}{_CAP_BENEF}{_CAP_FILLER}"),
+    ("how_to_use", rf"how to (?:use|get started with|start using) {_CAP_SELF}{_CAP_BENEF}{_CAP_FILLER}"),
+    ("how_to_use", r"(?:how|where) (?:do|should|can) (?:i|we) (?:get started|start|begin)(?: with (?:you|flintel|this|it))?"
+                   + _CAP_FILLER),
+    ("platforms", r"(?:what|which) (?:platforms|sites|websites|sources|networks|social networks|channels) "
+                  rf"(?:do|can|does) {_CAP_SELF} (?:search|cover|support|use|check|monitor|track|look at|work with)" + _CAP_FILLER),
+]
+_CAP_RES = [(cat, re.compile(rf"^{pat}$")) for cat, pat in _CAP_PATTERNS]
+_CAP_TAIL = re.compile(r"(?:\s+(?:there|team|all|everyone|friend|buddy|mate|again|man))+$")
+_CAP_LEAD = re.compile(r"^(?:(?:so|ok|okay|um+|uh+|well|and|but|please|just curious|quick question|"
+                       r"tell me|can you tell me|could you tell me|i want to know|i d like to know|i would like to know|"
+                       r"i m curious|i am curious|i wonder|i was wondering)\s+)+")
+
+
+def capability_question(query: str):
+    """The capability sub-intent ("capabilities" | "how_it_works" | "how_to_use"
+    | "platforms") when `query` is a question about Flintel itself with no
+    research target, else None."""
+    text = (query or "").strip().lower()
+    if not text or len(text) > 120 or "://" in text or "www." in text or re.search(r"\d", text):
+        return None
+    text = text.replace("’", "'")
+    text = re.sub(r"[^a-z' ]+", " ", text)
+    text = re.sub(r"\s+", " ", text.replace("'", " ")).strip()
+    text = _CAP_TAIL.sub("", _SMALLTALK_LEAD.sub("", text + " ").strip()).strip()   # keeps "flintel" (a subject here)
+    text = _CAP_LEAD.sub("", text + " ").strip()
+    if not text or len(text.split()) > 14:
+        return None
+    for cat, rx in _CAP_RES:
+        if rx.match(text):
+            return cat
+    return None
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# (GROUNDED ANSWERS) Exploratory questions about what Flintel could do for a
+# named goal ("How can you help me find leads for my CRM?") are answered from
+# Flintel's VERIFIED product behaviour only — never with market advice,
+# example pain points or opportunities Flintel has not found — and end with an
+# offer to run the real search. Nothing has been searched at that point, and
+# the reply says so. A bare "yes" to that offer starts exactly that search.
+#
+# Every capability named below is implemented in this codebase:
+#   * search over posts Flintel has collected, matched by meaning
+#     (embedding retrieval in get_matched_signals);
+#   * Reddit now; X / Twitter, LinkedIn, Facebook shown as "Coming soon" in
+#     the platform selector (templates);
+#   * each post shown with its original link and, when stored, its original
+#     publication time (results / published_at);
+#   * buyers kept apart from sellers and general discussion (analysis and
+#     outreach rules); time ranges (timerange.py); outreach notes on the posts
+#     already shown (Option A).
+# ─────────────────────────────────────────────────────────────────────────────
+_EXPLORE_VERBS = (r"find|get|reach|discover|identify|spot|research|track|monitor|understand|analy[sz]e|grow|generate|"
+                  r"land|win|attract|source|validate|learn about|see|look for|search for|connect with|sell to|market to")
+_EXPLORE_PATTERNS = [
+    rf"^how (?:can|could|would|will|do|does|might) (?:you|flintel|this|it) (?:help (?:me|us) |help )?(?:to )?"
+    rf"(?P<verb>{_EXPLORE_VERBS}) (?P<rest>.+)$",
+    r"^how (?:can|could|would|will|might) (?:you|flintel|this|it) help(?: me| us)? (?:with|for|on) (?P<rest>.+)$",
+    rf"^how (?:can|could|do|should|would) (?:i|we) use (?:you|flintel|this|it) (?:to|for) (?:(?P<verb>{_EXPLORE_VERBS}) )?(?P<rest>.+)$",
+    r"^what (?:can|could|would) (?:you|flintel|this|it) (?:do|find) for (?P<rest>(?:my|our|a|an|the) .+)$",
+    r"^(?:is|would|could) (?:flintel|this|it|you) (?:be )?(?:useful|helpful|good|any good) (?:for|to) (?P<rest>.+)$",
+    r"^(?:can|could) (?:you|flintel|this|it) help(?: me| us)? with (?P<rest>.+)$",
+]
+_EXPLORE_RES = [re.compile(p, re.IGNORECASE) for p in _EXPLORE_PATTERNS]
+_LEAD_WORDS_RE = re.compile(
+    r"^(?:more |new |some |potential |paying |the right )?(?:leads|customers|clients|buyers|prospects|users|people|"
+    r"subscribers)(?: (?:for|interested in|who need|who want|looking for|to buy|that need|that want))? "
+    r"(?:(?:my|our|a|an|the) )?(?P<what>.+)$", re.IGNORECASE)
+
+
+def _clean_question(query: str) -> str:
+    text = (query or "").replace("’", "'").strip()
+    text = re.sub(r"[?!.]+\s*$", "", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    text = re.sub(r"^(?:(?:hi|hello|hey|so|ok|okay|well|please)[, ]+)+", "", text, flags=re.IGNORECASE)
+    return text
+
+
+def exploratory_target(query: str):
+    """{"verb", "target", "offer"} for an exploratory "how could Flintel help
+    me with X" question, else None. `offer` is the research request a "yes"
+    will run. Questions about Flintel alone (no X) are capability questions."""
+    if not query or len(query) > 220 or "://" in query or "www." in query.lower():
+        return None
+    if capability_question(query):
+        return None
+    text = _clean_question(query)
+    for rx in _EXPLORE_RES:
+        m = rx.match(text)
+        if not m:
+            continue
+        rest = m.group("rest").strip(" ,")
+        verb = (m.groupdict().get("verb") or "").lower()
+        if len(rest.split()) < 1 or len(rest) < 2:
+            return None
+        lead = _LEAD_WORDS_RE.match(rest)
+        if lead and lead.group("what"):
+            what = lead.group("what").strip()
+            article = "" if re.match(r"(?i)^(?:a|an|the|my|our)\b", what) else ("an " if what[:1].lower() in "aeiou" else "a ")
+            offer = f"Find people looking for {article}{what}"
+        elif verb in ("understand", "track", "monitor", "analyse", "analyze", "research", "learn about", "see"):
+            offer = f"Find Reddit conversations about {rest}"
+        elif verb:
+            offer = f"Find Reddit posts that help me {verb} {rest}"
+        else:
+            offer = f"Find Reddit conversations about {rest}"
+        target = f"{verb} {rest}".strip() if verb else f"with {rest}"
+        return {"verb": verb, "target": target, "offer": offer[:200]}
+    return None
+
+
+VERIFIED_CAPABILITIES_TEXT = (
+    "- **Search the posts Flintel has collected** — Reddit today; X / Twitter, LinkedIn and Facebook are coming "
+    "soon — matched by meaning, not just exact keywords.\n"
+    "- **Show every matching post with its original link** and, where it's stored, when it was posted.\n"
+    "- **Keep people asking to buy separate** from sellers, competitors and general discussion.\n"
+    "- **Narrow by platform or time** (\"from the last 24 hours\", \"October 9 to 12\").\n"
+    "- **Turn the posts you get into outreach notes** for the ones that look like real prospects."
+)
+
+
+def exploratory_reply(info: dict) -> str:
+    """Deterministic reply for exploratory_target(): verified capabilities, an
+    explicit "nothing searched yet", and the exact search a "yes" will run."""
+    return (
+        f"I haven't searched anything for this yet, so I don't have leads, findings or numbers to show you. "
+        f"Here's what I can actually do to help you {info['target']}:\n\n"
+        f"{VERIFIED_CAPABILITIES_TEXT}\n\n"
+        "What I can't do is promise results before searching — it depends on what people have actually posted and "
+        "what Flintel has collected.\n\n"
+        f"Want me to search now? Reply **yes** and I'll run: \"{info['offer']}\"."
+    )
+
+
+def scope_reply(offer: str) -> str:
+    """(GROUNDED ANSWERS) Used instead of a model-written chat reply to a
+    business / market question: no advice from general knowledge, just what
+    Flintel can do and an offer to run the real search."""
+    return (
+        "I don't answer business or market questions from general knowledge — I answer from real conversations "
+        "Flintel has collected, and I haven't searched for this yet, so I have no findings to share.\n\n"
+        f"{VERIFIED_CAPABILITIES_TEXT}\n\n"
+        f"Want me to search now? Reply **yes** and I'll run: \"{offer}\"."
+    )
+
+
+CHAT_UNAVAILABLE_REPLY = ("I couldn't put a reply together for that just now. I answer from the conversations "
+                          "Flintel has collected — tell me a brand, product, topic, or the kind of people you want "
+                          "to find, and I'll search.")
+
+_CONFIRM_RE = re.compile(
+    r"^(?:yes|yeah|yep|yup|sure|ok|okay|alright|go ahead|do it|please do|yes please|sure thing|sounds good|"
+    r"let s do it|lets do it|let s go|go for it|search|search now|run it|haan|han|ha|ji|ji haan|jee|theek hai|"
+    r"thik hai|kar do|karo|chalo)(?: (?:please|pls|now|go ahead|do it|search|kar do|karo))*$")
+
+
+def is_confirmation(query: str) -> bool:
+    """A bare yes / go ahead (English or Roman Urdu), nothing else."""
+    text = re.sub(r"[^a-z' ]+", " ", (query or "").lower().replace("’", "'")).replace("'", " ")
+    text = re.sub(r"\s+", " ", text).strip()
+    return bool(text) and len(text.split()) <= 5 and bool(_CONFIRM_RE.match(text))
+
+
+_BUSINESS_Q_RE = re.compile(
+    r"\b(?:customers?|clients?|leads?|buyers?|prospects?|market(?:s|ing)?|sales|sell(?:ing|s)?|revenue|growth|grow|"
+    r"competitors?|competition|pricing|prices?|demand|trends?|trending|niche|audience|startups?|business(?:es)?|"
+    r"brands?|products?|saas|campaigns?|strategy|strategies|acquisition|acquire|monetiz\w*|profit\w*|"
+    r"conversion|churn|retention|outreach|opportunit\w*|pain points?|users?|subscribers?)\b"
+    r"|\b(?:gahak|grahak|customer|kaarobar|karobar|bechna|bech)\b", re.IGNORECASE)
+
+
+def is_business_question(query: str) -> bool:
+    """True when a message is about customers, markets, competitors, demand,
+    selling or growth — topics Flintel may only answer from collected data."""
+    return bool(_BUSINESS_Q_RE.search(query or ""))
 
 
 def smalltalk_reply(query: str):
     """Ready reply for a message that is ONLY small talk, else None (see above)."""
+    cap = capability_question(query)          # (CAPABILITY QUESTIONS) questions about Flintel itself
+    if cap:
+        return SMALLTALK_REPLIES[cap]
     text = (query or "").strip().lower()
     if not text or len(text) > 80 or "://" in text or "www." in text or re.search(r"\d", text):
         return None
@@ -6362,10 +6612,9 @@ def classify_and_maybe_chat(query: str, chat_summary: str, website_context_summa
     (ROUTER INTENT REFINEMENT) This function's logic is completely
     UNCHANGED — only the text of CLAUDE_ROUTER_SYSTEM_PROMPT changed.
 
-    (CHAT WEB-SEARCH FEATURE) The ONLY change in this function: the
-    router's own _call_claude(...) call now passes
-    enable_web_search=True, so Claude may use the live web_search tool
-    while producing a "chat"-classified reply. No other line of this
+    (CHAT WEB-SEARCH FEATURE — WITHDRAWN by GROUNDED ANSWERS) The router
+    call no longer enables web search: a "chat" reply may not answer from
+    outside knowledge; anything factual must come from Flintel's evidence. No other line of this
     function changed — the same try/except safety net, the same
     _parse_router_json() validation, and the same "any failure ->
     default to intent='search'" fallback all apply exactly as before.
@@ -6402,7 +6651,8 @@ def classify_and_maybe_chat(query: str, chat_summary: str, website_context_summa
     # unparseable output); a first-attempt success is exactly as before.
     for attempt in (1, 2):
         try:
-            raw = _call_claude(CLAUDE_ROUTER_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_ROUTER_MAX_TOKENS, enable_web_search=True)
+            # (GROUNDED ANSWERS) no web search: chat replies may not answer from outside knowledge
+            raw = _call_claude(CLAUDE_ROUTER_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_ROUTER_MAX_TOKENS, enable_web_search=False)
         except Exception as exc:
             log.warning(f"Router Claude call failed (attempt {attempt}/2): {exc}")
             continue
@@ -8512,6 +8762,10 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str
                 # merged pool (flintel.merge_matched_and_google_results()).
                 if match.get("google_rank") is not None:
                     _set(post, "google_rank", match["google_rank"])
+                # (GROUNDED ANSWERS) the post's original publication time — only
+                # from the matched stored signal, never from the model.
+                if timerange.post_published_at(match) is not None:
+                    _set(post, "published_at", timerange.post_published_at(match).isoformat())
 
     if fmt == "source_list":
         _patch_platform_list(data.get("platforms"))
