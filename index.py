@@ -206,10 +206,6 @@ app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET_KEY)
 @app.middleware("http")
 async def add_no_cache_headers(request: Request, call_next):
     response = await call_next(request)
-    # (FAVICON) a route that sets its own PUBLIC cache header (the brand icons)
-    # keeps it; every other response still gets the no-store set below.
-    if response.headers.get("Cache-Control", "").startswith("public"):
-        return response
     response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "0"
@@ -651,6 +647,18 @@ def set_chat_platform(chat_id: str, owner_key: str, display_value: str):
                                         {"$set": {"selected_platform": display_value}})
     except Exception as exc:
         log.warning(f"Saving the platform selection failed for chat_id={chat_id}: {exc}")
+
+
+def set_chat_research_offer(chat_id: str, owner_key: str, offer: dict):
+    """(GROUNDED ANSWERS) Remembers the search Flintel just offered to run in
+    this chat ({"query", "answer"}), so a bare "yes" right after it runs that
+    search. Owner-scoped; best-effort."""
+    try:
+        if chat_id and isinstance(offer, dict):
+            chats_collection.update_one({"chat_id": chat_id, "owner_key": owner_key},
+                                        {"$set": {"research_offer": offer}})
+    except Exception as exc:
+        log.warning(f"Saving the research offer failed for chat_id={chat_id}: {exc}")
 
 
 def chat_exists(chat_id: str, owner_key: str) -> bool:
