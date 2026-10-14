@@ -112,6 +112,8 @@ from bson.errors import InvalidId
 from fastapi import FastAPI, Request, BackgroundTasks
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
+from starlette.responses import Response as _StarletteResponse   # (FAST NAVIGATION) gzip_html_pages
+import gzip as _gzip                                             # (FAST NAVIGATION) gzip_html_pages
 from passlib.context import CryptContext
 from authlib.integrations.starlette_client import OAuth
 
@@ -208,6 +210,33 @@ async def add_no_cache_headers(request: Request, call_next):
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "0"
     return response
+
+
+# (FAST NAVIGATION) Compress HTML pages only. A chat page is mostly repetitive
+# markup (hundreds of KB for a long chat); gzip makes it a small fraction of
+# that. Deliberately NOT Starlette's GZipMiddleware: the pinned Starlette
+# version would also compress the text/event-stream answers and could hold
+# streamed chunks back. Everything that is not text/html passes untouched.
+@app.middleware("http")
+async def gzip_html_pages(request: Request, call_next):
+    response = await call_next(request)
+    if (not response.headers.get("content-type", "").startswith("text/html")
+            or "gzip" not in request.headers.get("accept-encoding", "").lower()
+            or "content-encoding" in response.headers):
+        return response
+    if hasattr(response, "body_iterator"):
+        body = b"".join([chunk async for chunk in response.body_iterator])
+    else:
+        body = response.body
+    raw = [(k, v) for k, v in response.headers.raw if k.lower() not in (b"content-length", b"content-encoding")]
+    if len(body) >= 1024:
+        body = _gzip.compress(body, compresslevel=5)
+        raw.append((b"content-encoding", b"gzip"))
+        if not any(k.lower() == b"vary" for k, _ in raw):
+            raw.append((b"vary", b"Accept-Encoding"))
+    new = _StarletteResponse(content=body, status_code=response.status_code)
+    new.raw_headers = raw + [(b"content-length", str(len(body)).encode())]   # keeps every Set-Cookie
+    return new
 
 # Starts the 12-hourly trending-keywords → Google-search background job
 # (scheduler.py). Fire-and-forget: schedules an asyncio task and returns
@@ -598,6 +627,36 @@ def get_user_chats(owner_key: str):
     )
 
 
+def get_user_chat_list(owner_key: str):
+    """(FAST NAVIGATION) The sidebar list WITHOUT the chats' contents — only
+    what the templates render (chat_id, title). get_user_chats() returns every
+    full chat document (all messages, answers and matched posts), which made
+    every page render pull megabytes from MongoDB for a long history."""
+    return list(
+        chats_collection.find({"owner_key": owner_key}, {"_id": 0, "chat_id": 1, "title": 1, "updated_at": 1})
+        .sort("updated_at", -1)
+    )
+
+
+def set_chat_platform(chat_id: str, owner_key: str, display_value: str):
+    """(PLATFORM PERSISTENCE) Remembers the platform choice this chat was last
+    used with, so its page reopens with the same selection. Best-effort."""
+    try:
+        if chat_id and display_value:
+            chats_collection.update_one({"chat_id": chat_id, "owner_key": owner_key},
+                                        {"$set": {"selected_platform": display_value}})
+    except Exception as exc:
+        log.warning(f"Saving the platform selection failed for chat_id={chat_id}: {exc}")
+
+
+def chat_exists(chat_id: str, owner_key: str) -> bool:
+    """(FAST PATH) Same ownership rule as get_chat_session(), without reading
+    the chat's contents."""
+    if not chat_id:
+        return False
+    return chats_collection.find_one({"chat_id": chat_id, "owner_key": owner_key}, {"_id": 1}) is not None
+
+
 def delete_chat_session(chat_id: str, owner_key: str) -> bool:
     """(v4.3) Deletes exactly ONE chat — the one identified by chat_id —
     and only if it belongs to owner_key. Uses the same
@@ -628,7 +687,7 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
                         unfiltered: bool = False, website_context: dict = None, match_phrases: list = None,
                         evidence_required: int = None,
                         website_only: bool = False, website_evidence: dict = None,
-                        website_note: str = None, resolved_query: str = None):
+                        website_note: str = None, resolved_query: str = None, time_range: dict = None):
     """Appends a search as a new message in the chat, and auto-titles the
     chat from the very first query if it hasn't been named yet.
 
@@ -726,6 +785,7 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
         "match_phrases":      match_phrases,  # (PHRASE-MATCHING FEATURE) list or None
         "targeting_platform": targeting_platform,
         "time_window_days":   time_window_days,  # (NEW) int or None — see get_matched_signals()
+        "time_range":         time_range,        # (DATE/TIME) {start, end (UTC, end exclusive), tz, display, ...} or None
         "evidence_required":  evidence_required,  # (EVIDENCE-BUDGET FEATURE) int or None
         "unfiltered":         unfiltered,
         "website_only":       website_only,      # (WEBSITE INTELLIGENCE) bool — True routes answer-generation
@@ -790,7 +850,9 @@ def add_chat_message_to_chat(chat_id: str, owner_key: str, query: str, answer: s
         "message_type":       "chat",
     }
 
-    chat = chats_collection.find_one({"chat_id": chat_id, "owner_key": owner_key})
+    # (FAST PATH) only needs to know whether the chat has messages yet
+    chat = chats_collection.find_one({"chat_id": chat_id, "owner_key": owner_key},
+                                     {"_id": 1, "messages": {"$slice": 1}})
     update = {"$push": {"messages": message}, "$set": {"updated_at": now}}
     if chat and not chat.get("messages"):
         update["$set"]["title"] = generate_chat_title(query)
@@ -1537,6 +1599,7 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                 targeting_platform=msg.get("targeting_platform", "all"),
                 since_days=msg.get("time_window_days"),
                 unfiltered=msg.get("unfiltered", False),
+                **({"time_range": msg["time_range"]} if msg.get("time_range") else {}),   # (DATE/TIME)
                 # STRICT: the intent bridge needs the query text; without it
                 # this path would return un-filtered posts. Flag off: unchanged.
                 **({"user_query": msg.get("query")} if strict_intent_mode() else {}),
@@ -1678,12 +1741,14 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                             _timeout_fallback_answer, chat_id, owner_key, msg["topic_key"], msg["query"],
                             msg.get("keywords", []), msg.get("match_phrases"), msg.get("evidence_required"),
                             msg.get("website_note"), msg.get("resolved_query"),
+                            **({"time_range": msg["time_range"]} if msg.get("time_range") else {}),   # (DATE/TIME)
                         )
                     else:
                         _timeout_fallback_answer(
                             chat_id, owner_key, msg["topic_key"], msg["query"],
                             msg.get("keywords", []), msg.get("match_phrases"), msg.get("evidence_required"),
                             msg.get("website_note"), msg.get("resolved_query"),
+                            **({"time_range": msg["time_range"]} if msg.get("time_range") else {}),   # (DATE/TIME)
                         )
             continue
 
