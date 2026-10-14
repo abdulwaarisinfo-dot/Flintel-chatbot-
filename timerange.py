@@ -1,7 +1,7 @@
 """
 C — natural-language date/time ranges for post searches.
 
-    parse_time_range(text, reference_utc, tz_name) -> TimeRange | Clarification | None
+    parse_time_range(text, reference_utc, tz_name) -> TimeRange | Clarification | None 
 
 * Pure and deterministic: the caller captures ONE reference instant (aware UTC)
   per request and passes it in; nothing here reads the clock.
