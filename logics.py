@@ -1,5 +1,5 @@
 """
-FLINTEL — LOGICS (the "brain")
+FLINTEL — LOGICS (the "brain") 
 ============================================================================
 Pulls the heavy "brain" logic out of index.py — signal matching, keyword
 generation/fallback, the router, the analysis layer, the website-keyword
