@@ -137,6 +137,8 @@
     text-decoration: none;
     position: relative;
   }
+  /* (FAST NAVIGATION) current page dims at once while a sidebar destination loads */
+  main.main.is-navigating { opacity: .6; transition: opacity .12s ease .05s; }
   .session-item:hover, .session-item.active { background: #252421; }
   .session-item.active { color: #fff; }
   #sessions-list:has(.session-item:hover) .session-item.active:not(:hover) {
@@ -408,6 +410,9 @@
   .turn-block { margin-bottom: 40px; }
   .turn-block:last-child { margin-bottom: 0; }
   .turn-row { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+  /* (DATE/TIME) the publication range Flintel understood for this message */
+  .turn-time-range { display: flex; justify-content: flex-end; margin: -4px 0 12px 0; }
+  .turn-time-range span { color: #a0a09d; font-size: 13px; line-height: 18px; text-align: right; max-width: 80%; }
   .turn-question {
     background: #1e1d1b; border-radius: 16px; padding: 17px 24px;
     color: #fff; font-size: 16px; font-weight: 500; line-height: 22px; letter-spacing: 0px;
@@ -1153,6 +1158,7 @@
           {% for msg in chat.messages %}
           <div class="turn-block" data-topic-key="{{ msg.topic_key or '' }}"{% if pending_stream_topic_key and msg.topic_key == pending_stream_topic_key %} data-pending-stream="true"{% endif %}>
             <div class="turn-row"><div class="turn-question">{{ msg.query }}</div></div>
+            {% if msg.time_range and msg.time_range.display %}<div class="turn-time-range"><span>Time range: {{ msg.time_range.display }}{% if msg.time_range.note %}<br>{{ msg.time_range.note }}{% endif %}</span></div>{% endif %}
             <div class="turn-meta">
               {% if msg.message_type != 'chat' %}
               {% if msg.claude_answer is none %}
@@ -1205,7 +1211,9 @@
             </div>
 
             {% elif msg.claude_answer %}
-            <div class="answer-wrap" data-matched-results="{{ (msg.results or []) | tojson | e }}">
+            {# (MATCHED-RESULTS ENCODING) tojson output is already "safe" Markup, so | e was a no-op and its raw " ended the
+               attribute early (truncated data; post text could inject attributes). forceescape turns " into &#34;. #}
+            <div class="answer-wrap" data-matched-results="{{ (msg.results or []) | tojson | forceescape }}">
               <div class="answer-raw">{{ msg.claude_answer }}</div>
               <div class="answer-rendered"></div>
             </div>
@@ -1269,7 +1277,8 @@
               autocapitalize="off"
               spellcheck="false"
             ></textarea>
-            <input type="hidden" name="platform" id="platform-input" value="All Platforms" />
+            <input type="hidden" name="platform" id="platform-input" value="{{ selected_platform or 'All Platforms' }}" />
+            <input type="hidden" name="tz" class="tz-input" value="" />
             <input type="hidden" name="chat_id" value="{{ chat.chat_id }}" />
 
             <div class="search-controls">
@@ -1408,6 +1417,30 @@
   //      its equivalent is renderStructuredAnswer(wrap), which operates on
   //      a single .answer-wrap at a time, so it's applied via
   //      querySelectorAll(...).forEach(...) instead of a single call) ----
+  // NAV-FEEDBACK-BEGIN
+  // (FAST NAVIGATION) Immediate visual response to a sidebar click: the
+  // clicked chat is highlighted and the current page dims at once while the
+  // destination loads (navigateTo() clears it when ITS navigation is the
+  // current one). A repeated click on a link that is still loading is
+  // ignored, so it never fires a duplicate request (or a second New chat).
+  let navInFlightUrl = null;
+  function beginNavFeedback(link, url) {
+    if (link) {
+      document.querySelectorAll('#sessions-list .session-item.active').forEach((el) => el.classList.remove('active'));
+      const item = link.closest('.session-item');
+      if (item) item.classList.add('active');
+    }
+    const main = document.querySelector('main.main');
+    if (main) main.classList.add('is-navigating');
+    navInFlightUrl = url || null;
+  }
+  function endNavFeedback() {
+    const main = document.querySelector('main.main');
+    if (main) main.classList.remove('is-navigating');
+    navInFlightUrl = null;
+  }
+  // NAV-FEEDBACK-END
+
   async function navigateTo(url, { method = 'GET', pushState = true } = {}) {
     // (Race-condition fix) Snapshot the generation counter for THIS
     // navigation right away — anything that happens after any subsequent
@@ -1510,10 +1543,13 @@
         document.body.appendChild(form);
         form.submit();
       }
+    } finally {
+      if (myNav === softNavGeneration) endNavFeedback();   // (FAST NAVIGATION)
     }
   }
 
   window.addEventListener('popstate', () => {
+    beginNavFeedback(null, location.href);   // (FAST NAVIGATION) back/forward: dim until the swap
     navigateTo(location.href, { pushState: false });
   });
 
@@ -1523,6 +1559,8 @@
     if (link) {
       console.log('[soft-nav] intercepted session link click ->', link.href);
       e.preventDefault();
+      if (navInFlightUrl === link.href) return;   // (FAST NAVIGATION) already loading — no duplicate request
+      beginNavFeedback(link, link.href);
       navigateTo(link.href, { method: 'GET' });
     }
   });
@@ -1535,6 +1573,8 @@
     if (action === '/chats/new' || action.endsWith('/chats/new')) {
       console.log('[soft-nav] intercepted "New chat" form submit ->', action);
       e.preventDefault();
+      if (navInFlightUrl === form.action) return;   // (FAST NAVIGATION) never create two chats from a double click
+      beginNavFeedback(null, form.action);
       navigateTo(form.action, { method: 'POST' });
     }
   });
@@ -1703,6 +1743,18 @@
   }
   // TURN-TIMER-HELPERS-END
 
+  // (DATE/TIME) The browser's IANA timezone travels with every search so
+  // "today" / "this morning" mean the user's local day, not the server's.
+  // Filled at submit time (capture phase: before any handler builds FormData).
+  function fillTimezoneInputs(root) {
+    let tz = '';
+    try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) { tz = ''; }
+    if (!tz) return;
+    (root && root.querySelectorAll ? root : document).querySelectorAll('input.tz-input').forEach((i) => { i.value = tz; });
+  }
+  document.addEventListener('submit', (e) => fillTimezoneInputs(e.target), true);
+  fillTimezoneInputs(document);
+
   // PLATFORM-MULTI-HELPERS-BEGIN
   // (PLATFORM MULTI-SELECT) The dropdown can pick one platform, several, or
   // all of them. #platform-input carries the pick to /search as
@@ -1740,6 +1792,18 @@
     const i = current.indexOf(li.dataset.value);
     if (i === -1) current.push(li.dataset.value); else current.splice(i, 1);
     setPlatformSelection(menu, label, input, current);
+  }
+  // (PLATFORM PERSISTENCE) Rebuild the dropdown (checks + label) from the
+  // value the server rendered into #platform-input — the chat's saved
+  // platform — so a chat page never falls back to the static "All Platforms".
+  function syncPlatformSelectionFromInput() {
+    const menu = document.getElementById('platforms-menu');
+    const label = document.getElementById('platforms-label');
+    const input = document.getElementById('platform-input');
+    if (!menu || !label || !input) return;
+    const raw = (input.value || '').trim();
+    const picked = raw && raw !== PLATFORM_ALL ? raw.split(',').map((v) => v.trim()).filter(Boolean) : [];
+    setPlatformSelection(menu, label, input, picked);
   }
   // PLATFORM-MULTI-HELPERS-END
 
@@ -1840,6 +1904,7 @@
     const platformInput = document.getElementById('platform-input');
 
     if (platformsBtn && platformsMenu && platformsChevron && platformsLabel && platformInput) {
+      syncPlatformSelectionFromInput();   // (PLATFORM PERSISTENCE) show this chat's saved platform
       function closePlatformsMenu() {
         platformsMenu.style.display = 'none';
         platformsBtn.setAttribute('aria-expanded', 'false');
@@ -3945,6 +4010,21 @@
      nothing breaks, it just isn't prettified. -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+<script>
+  // (MARKDOWN AFTER LOAD) Answers are first rendered above, before these two
+  // libraries have loaded, so a plain-text (markdown) answer stayed raw on a
+  // full page load. Render only those once more; answers that already
+  // rendered are left untouched.
+  if (window.marked && window.DOMPurify && typeof renderStructuredAnswer === 'function') {
+    document.querySelectorAll('.answer-wrap').forEach((wrap) => {
+      const rendered = wrap.querySelector('.answer-rendered');
+      if (rendered && rendered.style.display !== 'block') {
+        delete wrap.dataset.lastRenderedRaw;
+        renderStructuredAnswer(wrap);
+      }
+    });
+  }
+</script>
 
 </body>
 </html>
