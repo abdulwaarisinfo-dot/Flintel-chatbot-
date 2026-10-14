@@ -2,7 +2,7 @@
 routes.py — all FastAPI route handlers for the Flintel web service,
 extracted from index.py to keep that module to shared infrastructure
 and business logic. Imports `app` from index.py and registers every
-route on it; index.py imports this module once, at the bottom, purely  
+route on it; index.py imports this module once, at the bottom, purely 
 for its side effect of registering these routes.   
 """
 
@@ -25,6 +25,7 @@ import google as google_search   # the new google.py module — needed here
 import website_intelligence
 from logics import get_or_fetch_website_evidence, generate_keywords_for_website_request, acquire_scan, get_cached_topic_evidence
 from logics import smalltalk_reply   # (SMALL-TALK FAST PATH)
+from logics import build_guidance_note   # (DATA-BACKED GUIDANCE)
 from logics import build_outreach_report, build_previous_results_router_block   # (OPTION A)
 from logics import detect_offer_selection, parse_option_pick, offer_clarification_reply, _clean_stored_post   # (OPTION A GUARD)
 from logics import find_offer_in_answer, mentions_previous_results, requests_new_research, previous_or_new_clarification   # (OPTION A GUARD)
@@ -878,7 +879,9 @@ def search(
         # "clarify" and the EXISTING clarify-question flow immediately below
         # runs completely unchanged.
         # ─────────────────────────────────────────────────────────────────────
-        if intent == "clarify":
+        # (DATA-BACKED GUIDANCE) A guidance question with no known market is asked
+        # about, never resolved to a guessed topic and searched.
+        if intent == "clarify" and not routed.get("guidance"):
             resolved = None
             try:
                 resolved = resolve_unclear_topic(query, chat_summary_for_resolve)
@@ -1434,7 +1437,10 @@ def search(
                 website_context=website_answer_context,
                 match_phrases=routed_match_phrases,
                 evidence_required=routed.get("evidence_required"),
-                website_note=website_note,
+                # (DATA-BACKED GUIDANCE) a guidance question adds its instructions to the
+                # note the analysis step already receives (extra_context).
+                website_note="\n\n".join(n for n in (website_note, build_guidance_note(query)
+                                                        if routed.get("guidance") else None) if n) or None,
                 resolved_query=routed.get("resolved_query") if intent == "search" else None,   # (MULTI-TURN CONTEXT)
             )
             # (WEBSITE INTELLIGENCE) Whenever this message's keywords came
