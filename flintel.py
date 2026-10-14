@@ -34,6 +34,8 @@ import re
 import json
 from datetime import datetime, timedelta, timezone
 
+import timerange   # (DATE/TIME) publication time on result posts
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # CONSTANTS
@@ -209,6 +211,8 @@ def _default_platform_matches(doc: dict, targeting_platform: str) -> bool:
     means no filtering."""
     if not targeting_platform or targeting_platform == "all":
         return True
+    if "," in targeting_platform:   # (PLATFORM MULTI-SELECT) e.g. "x_twitter,linkedin"
+        return any(_default_platform_matches(doc, p) for p in targeting_platform.split(",") if p)
 
     allowed = _PLATFORM_DOC_VALUES.get(targeting_platform)
     if not allowed:
@@ -406,8 +410,9 @@ def get_unfiltered_matched_signals(signals_collection, since_days, targeting_pla
         if post_url:
             seen_urls.add(post_url)
 
-        matched.append({"title": title, "post_text": post_text, "post_url": post_url, "platform": platform,
-                        "subreddit": _signal_subreddit(doc, post_url)})
+        matched.append(timerange.with_published_at(   # (DATE/TIME) original publication time, when known
+            {"title": title, "post_text": post_text, "post_url": post_url, "platform": platform,
+             "subreddit": _signal_subreddit(doc, post_url)}, doc))
         platform_counts[platform_key] = platform_counts.get(platform_key, 0) + 1
 
         if len(matched) >= effective_limit:
@@ -927,7 +932,7 @@ def generate_search_progress_content(query: str, keywords: list, targeting_platf
     return {"intro": intro, "outro": outro, "checklist": checklist}
 
 
-def calculate_search_progress_percent(elapsed_seconds: float, trigger_seconds: float, timeout_seconds: float) -> int: 
+def calculate_search_progress_percent(elapsed_seconds: float, trigger_seconds: float, timeout_seconds: float) -> int:
     """Pure calculation, no side effects: maps elapsed time within the
     [trigger_seconds, timeout_seconds] window onto a 0-100 display
     percentage for the search-progress bar, so the bar visibly advances
