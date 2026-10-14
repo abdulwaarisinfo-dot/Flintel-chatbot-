@@ -23,7 +23,7 @@ POSITIVE = [
     ("Thanks", "thanks"), ("thank you so much!", "thanks"), ("Thanks a lot", "thanks"), ("ok thanks", "thanks"),
     ("appreciate it", "thanks"), ("Bye", "goodbye"), ("see you later", "goodbye"),
     ("What can you do?", "capabilities"), ("Hi, what can you do?", "capabilities"), ("who are you", "capabilities"),
-    ("How does this work?", "capabilities"), ("help", "capabilities"),
+    ("How does this work?", "how_it_works"), ("help", "capabilities"),   # (CAPABILITY QUESTIONS) own how-it-works answer
 ]
 NEGATIVE = [
     "Hello, find people looking for a CRM for small teams",
@@ -112,7 +112,8 @@ def test_research_request_still_uses_router_unchanged(route):
     chat_id = send(q)
     assert len(calls) == 1
     c = calls[0]
-    assert c["system"] == lg.CLAUDE_ROUTER_SYSTEM_PROMPT and c["web"] is True     # same router call as before
+    # same router call as before, minus web search (GROUNDED ANSWERS: chat replies may not use outside knowledge)
+    assert c["system"] == lg.CLAUDE_ROUTER_SYSTEM_PROMPT and c["web"] is False
     assert c["max_tokens"] == lg.CLAUDE_ROUTER_MAX_TOKENS and q in c["user"]
     assert len(jobs) == 1 and jobs[0][1] == ["crm small teams"]          # research pipeline ran
     msg = chats.find_one({"chat_id": chat_id, "owner_key": "o1"})["messages"][-1]
