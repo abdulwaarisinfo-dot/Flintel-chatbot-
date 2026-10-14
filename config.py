@@ -1,7 +1,7 @@
 """
 FLINTEL — CONFIGURATION
 ============================================================================ 
-Single place for every constant that used to live directly inside
+Single place for every constant that used to live directly inside 
 index.py's own config block. flintel.py, google.py, and website_
 intelligence.py stay fully self-contained exactly as they already are — 
 each owns its own small config block, per their own module docstrings — 
