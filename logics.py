@@ -5075,7 +5075,7 @@ CLAUDE_CLARIFY_FALLBACK_REPLY = (
 )
 
 
-def _parse_router_json(raw: str):
+def _parse_router_json(raw: str, allow_previous_results: bool = False):
     """Best-effort JSON parse of the router's output — strips ```json
     fences if Claude added them anyway, and validates the shape. Returns
     None on anything unexpected so the caller falls back to the safe
@@ -5148,6 +5148,18 @@ def _parse_router_json(raw: str):
     if not isinstance(data, dict):
         return None
     intent = data.get("intent")
+    # (OPTION A — REUSE PREVIOUS RESULTS) a 5th intent, accepted ONLY when the
+    # caller showed the router the previous results (allow_previous_results).
+    if intent == "previous_results" and allow_previous_results:
+        numbers = []
+        for n in data.get("previous_results_numbers") or []:
+            if isinstance(n, int) and not isinstance(n, bool) and n > 0 and n not in numbers:
+                numbers.append(n)
+        return {"intent": "previous_results", "reply": None, "keywords": None, "time_window_days": None,
+                "unfiltered": False, "match_phrases": None, "evidence_required": None,
+                "website_only": False, "use_website_context": False, "website_topic_relation": None,
+                "url_ask_type": None, "target_entity": None, "intent_types": None, "resolved_query": None,
+                "previous_results_numbers": numbers or None}
     if intent not in ("search", "chat", "blocked", "clarify"):
         return None
     reply = data.get("reply")
@@ -5355,8 +5367,680 @@ def smalltalk_reply(query: str):
     return None
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# (OPTION A — REUSE PREVIOUS RESULTS) When the latest research answer in a chat
+# offered next steps such as "(A) the five posts formatted as outreach targets
+# … (B) broader monitoring …", a reply choosing to work WITH those posts must
+# reuse the exact stored posts, never start a new search. The router is shown
+# the stored results (below) and may then answer intent "previous_results";
+# routes.py builds the outreach report from the stored posts with
+# build_outreach_report(). Choices that ask for new / more / broader / refined
+# results stay "search" exactly as before (that is Option B).
+# ─────────────────────────────────────────────────────────────────────────────
+PREVIOUS_RESULTS_MAX_POSTS = 10
+
+
+def build_previous_results_router_block(original_query: str, offered_next_step: str, posts: list) -> str:
+    """Text appended to the router's user message (never to its system prompt)
+    describing the latest research result in this chat and the one extra intent
+    it may use for this message."""
+    lines = []
+    for i, raw in enumerate((posts if isinstance(posts, list) else [])[:PREVIOUS_RESULTS_MAX_POSTS]):
+        p = _clean_stored_post(raw, i)
+        sub = f"r/{p['source']}" if p["source"] else p["platform"]
+        lines.append(f"{p['number']}. {sub} — {p['title'][:140] or 'Untitled post'}")
+    shown = "\n".join(lines) if lines else "(that answer showed no posts)"
+    offer = " ".join((offered_next_step or "").split())[:600] or "(none)"
+    return (
+        "Latest research result in this chat (stored, already shown to the user):\n"
+        f"Request: {' '.join((original_query or '').split())[:300]}\n"
+        f"Posts shown:\n{shown}\n"
+        f"Next step the assistant offered: {offer}\n\n"
+        "EXTRA INTENT FOR THIS MESSAGE ONLY — \"previous_results\": use it when the user's new message "
+        "asks to do something WITH the posts already shown above — e.g. turn them into outreach targets, "
+        "suggested messaging or reply ideas, qualify or rank them, or picks an offered option that means "
+        "exactly that — WITHOUT asking for new, more, different, broader, or refined results. Return "
+        "{\"intent\": \"previous_results\", \"previous_results_numbers\": [<post numbers>] or null}, using "
+        "numbers only when the user limits it to specific posts. Any choice or request that needs new "
+        "research (more posts, broader or continuous monitoring, another location, time range, or filter) "
+        "is NOT previous_results — classify it with the normal rules. When unsure, use the normal rules."
+    )
+
+
+# (OPTION A GUARD) Deterministic safety net for a reply that is NOTHING BUT a
+# pick from the options the assistant itself offered ("(A) … or (B) …",
+# "(1) … (2) …"). Anything longer than a bare pick goes to the router exactly as
+# before. Used by routes.py so that picking the "work with these posts" option
+# never starts a search (even if the router fails or mislabels it), and an
+# unclear pick is asked about instead of searched.
+import difflib as _difflib
+import unicodedata as _unicodedata
+
+_OFFER_MARKER_RE = re.compile(
+    r"\(\s*([A-Da-d1-4])\s*\)"                 # (A)  (b)  (1)
+    r"|(?<![\w(/])([A-D1-4])\)"                # A)   1)
+    r"|\boption\s+([A-Da-d1-4])\b\s*[:\-—]?",  # option A / option 2
+    re.IGNORECASE)
+# The text around the markers must read as an offer, not as a numbered list.
+_OFFER_CUE_RE = re.compile(
+    r"\?|\b(?:prefer|would\s+you\s+like|do\s+you\s+want|want\s+me\s+to|which\s+(?:one|option|would)|"
+    r"choose|pick|shall\s+i|should\s+i|i\s+can\s+(?:also\s+)?do|happy\s+to)\b", re.IGNORECASE)
+_NUM_LETTER = {"1": "a", "2": "b", "3": "c", "4": "d"}
+_OFFER_TRANSFORM_RE = re.compile(
+    r"\b(?:outreach|messag\w*|repl(?:y|ies)|respond\w*|draft\w*|format\w*|template\w*|qualif\w*|rank\w*|"
+    r"prioriti\w*|dm|dms|pitch\w*|these|those|above|listed|shown|existing)\b"
+    r"|\bthe\s+(?:[\w\-]+\s+){0,2}(?:posts|results|leads|threads)\b", re.IGNORECASE)
+_OFFER_NEW_SEARCH_RE = re.compile(
+    r"\b(?:more|monitor\w*|broader|broaden\w*|expand\w*|additional|continuous\w*|ongoing|alerts?|track\w*|"
+    r"new\s+search|another\s+search|search\s+again|wider|fresh|other\s+platforms|further\s+research)\b",
+    re.IGNORECASE)
+
+
+def _offer_fields(answer):
+    """Every text field the stored answer DISPLAYS that could carry an offer,
+    in priority order. chat.html shows followup_question as a chip in the
+    committed template (the working copy hides it), so it is checked first;
+    business_insight / executive_summary / conclusion etc. are rendered as text
+    by renderSourceList()/renderComparison()/renderNoResults()."""
+    if isinstance(answer, dict):
+        data = answer
+    else:
+        text = answer if isinstance(answer, str) else ""
+        try:
+            data = json.loads(text.strip())
+        except (ValueError, TypeError):
+            return [text] if text.strip() else []
+        if not isinstance(data, dict):
+            return [text] if text.strip() else []
+    out = []
+    for key in ("followup_question", "followups", "conclusion", "business_insight", "business_insight_points",
+                "executive_summary", "summary", "market_pattern", "message", "clarifying_question",
+                "near_match_offer"):
+        value = data.get(key)
+        values = value if isinstance(value, list) else [value]
+        joined = " ".join(v for v in values if isinstance(v, str) and v.strip())
+        if joined.strip():
+            out.append(joined)
+    return out
+
+
+def parse_offer(text: str) -> dict:
+    """{"options": {"a": "<text>", "b": …}, "numbered": bool} for text that offers
+    at least two lettered or numbered options, else {"options": {}}."""
+    text = text if isinstance(text, str) else ""
+    marks = list(_OFFER_MARKER_RE.finditer(text))
+    options, numbered = {}, False
+    for i, m in enumerate(marks):
+        raw = (m.group(1) or m.group(2) or m.group(3)).lower()
+        numbered = numbered or raw.isdigit()
+        letter = _NUM_LETTER.get(raw, raw)
+        end = marks[i + 1].start() if i + 1 < len(marks) else len(text)
+        chunk = re.split(r"[?!]|\.\s", text[m.end():end])[0]          # this option's own sentence only
+        chunk = re.sub(r"^[\s:,\-—]+|[\s,;]+(?:or|and)?[\s,;]*$", "", chunk).strip()
+        if chunk and letter not in options:
+            options[letter] = chunk
+    if len(options) < 2 or not _OFFER_CUE_RE.search(text):
+        return {"options": {}, "numbered": False}
+    return {"options": options, "numbered": numbered}
+
+
+def parse_offer_options(offered: str) -> dict:
+    """{"a": "<option text>", …} or {} (see parse_offer)."""
+    return parse_offer(offered)["options"]
+
+
+def find_offer_in_answer(answer):
+    """(offer_text, offer) from the first displayed field of a stored answer that
+    offers options; ("", {"options": {}}) when none does."""
+    for text in _offer_fields(answer):
+        offer = parse_offer(text)
+        if offer["options"]:
+            return text, offer
+    return "", {"options": {}, "numbered": False}
+
+
+def offer_option_kind(option_text: str) -> str:
+    """"previous_results" (work with the posts already shown), "new_search"
+    (needs new research), or "unclear"."""
+    transform = bool(_OFFER_TRANSFORM_RE.search(option_text or ""))
+    new = bool(_OFFER_NEW_SEARCH_RE.search(option_text or ""))
+    if transform and not new:
+        return "previous_results"
+    if new and not transform:
+        return "new_search"
+    return "unclear"
+
+
+# Words that may surround a pick without changing it (English + Roman Urdu).
+_PICK_FILLER = set("""
+ok okay yes yeah yep sure great cool alright hmm haan han ji jee theek thik acha achha accha chalo i i'd id i'll
+ill i'm im think guess probably definitely def would d ll will let lets s us go with prefer choose pick want like
+take do mujhe mere liye humein hamein hum main lunga lungi karo kar kardo kar do please pls plz thanks thank you
+is sounds looks seems be better best good great fine perfect right works one wala wali walay waala waali hai he
+hain chahiye chahie behtar sahi bilkul zabardast for me then it ahead that sir bro the my choice
+""".split())
+_ORDINAL_PICK = {"first": "a", "1st": "a", "second": "b", "2nd": "b", "third": "c", "3rd": "c", "fourth": "d",
+                 "4th": "d", "pehla": "a", "pehli": "a", "pehle": "a", "doosra": "b", "dusra": "b", "doosri": "b",
+                 "dusri": "b", "doosre": "b", "dusre": "b", "teesra": "c", "tisra": "c", "teesri": "c"}
+_BOTH_PICK = {"both", "dono", "donon"}
+
+
+def parse_option_pick(message: str):
+    """Letters picked by a message that is ONLY an option pick, else None.
+    "Option A is better", "go with B", "1", "2nd one", "pehla wala",
+    "mujhe A chahiye", "dono" -> picks. "I want a" / "do a" (the article "a"),
+    "number 1" (a post reference) and anything asking for more are not."""
+    raw = _unicodedata.normalize("NFKC", message or "").replace("’", "'").strip()
+    if not raw or "://" in raw or len(raw) > 80:
+        return None
+    raw = re.sub(r"'(?:d|ll|m|s|re|ve)\b", "", raw, flags=re.IGNORECASE)   # "I'd" -> I, "let's" -> let
+    tokens = re.findall(r"\(\s*[A-Za-z1-4]\s*\)|[A-Za-z0-9]+", raw)
+    if not tokens or len(tokens) > 10:
+        return None
+    picks, both = [], False
+    for i, tok in enumerate(tokens):
+        low = tok.lower().strip("'")
+        prev = tokens[i - 1].lower() if i else ""
+        if tok.startswith("("):                                   # "(A)" / "(1)"
+            inner = tok.strip("() ").lower()
+            picks.append(_NUM_LETTER.get(inner, inner))
+        elif low in ("option", "choice", "opt"):
+            continue
+        elif low in _BOTH_PICK:
+            both = True
+        elif low in ("a", "b", "c", "d"):
+            # "a" is also the English article: only a pick when written "A",
+            # after option/choice, or as the very first word ("a please").
+            if low == "a" and tok == "a" and prev not in ("option", "choice", "opt") and i != 0:
+                return None
+            picks.append(low)
+        elif low in ("1", "2", "3", "4"):
+            if prev in ("number", "no", "post", "#"):
+                return None                                       # a post reference, not a pick
+            picks.append(_NUM_LETTER[low])
+        elif low in _ORDINAL_PICK:
+            picks.append(_ORDINAL_PICK[low])
+        elif low in ("and", "aur"):
+            continue
+        elif low in _PICK_FILLER:
+            continue
+        else:
+            return None                                           # anything else: not a bare pick
+    picks = list(dict.fromkeys(picks))
+    if both:
+        return sorted(picks) if len(picks) >= 2 else ["a", "b"]
+    return picks if picks else None
+
+
+def detect_offer_selection(message: str, offered: str):
+    """None, or {"letters", "options", "numbered", "kind"} when `message` is only a
+    pick from the options in `offered`. kind: "previous_results", "new_search",
+    "both" (picked a "these posts" option and another one) or "unclear"."""
+    letters = parse_option_pick(message)
+    offer = parse_offer(offered)
+    options = offer["options"]
+    if not letters or not options:
+        return None
+    if any(letter not in options for letter in letters):
+        return {"letters": letters, "options": options, "numbered": offer["numbered"], "kind": "unclear"}
+    kinds = [offer_option_kind(options[letter]) for letter in letters]
+    if len(kinds) == 1:
+        kind = kinds[0]
+    elif "previous_results" in kinds and "unclear" not in kinds:
+        kind = "both"
+    else:
+        kind = "unclear"
+    return {"letters": letters, "options": options, "numbered": offer["numbered"], "kind": kind}
+
+
+def offer_clarification_reply(options: dict, routing_failed: bool = False, numbered: bool = False) -> str:
+    """Asks which option the user meant, instead of guessing or searching."""
+    labels = []
+    for letter, text in sorted((options or {}).items()):
+        kind = offer_option_kind(text)
+        hint = (" — uses the posts I already showed you" if kind == "previous_results"
+                else " — runs a new search" if kind == "new_search" else "")
+        label = str("abcd".index(letter) + 1) if numbered and letter in "abcd" else letter.upper()
+        labels.append(f"- **({label})** {_outreach_text(text, 240)}{hint}")
+    lead = ("I couldn't process that reply just now, so I haven't started anything. "
+            if routing_failed else "Just to check before I start anything — ")
+    if not labels:
+        return lead + "which option did you mean? Reply with the option, or tell me what you'd like me to do."
+    return lead + "which one do you want?\n\n" + "\n".join(labels)
+
+
+# A follow-up that talks about the posts already shown (so the router may need
+# them) — the previous-results block is only sent then, or when the last answer
+# offered options. Plain refinements ("now in USA") never get it.
+_MENTIONS_PREVIOUS_RE = re.compile(
+    r"\b(?:outreach|messag\w*|repl(?:y|ies)|respond\w*|draft\w*|dms?|pitch\w*|qualif\w*|rank\w*|prioriti\w*|"
+    r"reach\s+out|contact\s+them|these|those|above|same\s+posts|inko|inhe|inhein|unko|unhe|unhein|yeh\s+posts?|"
+    r"in\s+posts?|un\s+posts?)\b", re.IGNORECASE)
+# A follow-up that asks for new / more / different research.
+_NEW_RESEARCH_RE = re.compile(
+    r"\b(?:more|additional|another|new|fresh|other|different|broader|wider|expand\w*|monitor\w*|track\w*|"
+    r"search\w*|find|look\s+for|scan\w*|again|latest|recent|last\s+\w+\s+(?:days?|weeks?|months?|years?)|"
+    r"past\s+\w+\s+(?:days?|weeks?|months?|years?)|this\s+(?:week|month|year)|mazeed|naye|nayi|naya|"
+    r"dhoond\w*|dhund\w*|talash\w*)\b", re.IGNORECASE)
+
+
+def mentions_previous_results(message: str) -> bool:
+    return bool(_MENTIONS_PREVIOUS_RE.search(message or ""))
+
+
+def requests_new_research(message: str) -> bool:
+    return bool(_NEW_RESEARCH_RE.search(message or ""))
+
+
+def previous_or_new_clarification(post_count: int) -> str:
+    """Asked when the router wants to reuse the shown posts but the message also
+    asks for new research — never silently turns a search into a report."""
+    return ("Just to check before I start anything — do you want outreach notes for the "
+            f"{post_count} posts I already showed you, or a new search for more posts? "
+            "Tell me which, and I'll do just that.")
+
+
+OUTREACH_REPORT_SYSTEM_PROMPT = """
+You prepare outreach notes for a Flintel user from public social-media posts
+that Flintel ALREADY found and showed them. Work only from the posts and the
+context given. Return STRICT JSON only.
+
+For EACH post, in this order of thinking:
+1. Read the post text and title. What is the author's actual question,
+   problem, goal, or experience? Copy the post's title exactly into
+   "post_title", and quote the post exactly in "evidence" when a short quote
+   supports your reading (Flintel checks titles and quotes against the stored
+   post and drops notes it cannot match to it).
+2. Who is the author? One of: "prospect" (has the need themselves),
+   "researcher" (comparing or learning, no stated plan to buy), "seller"
+   (offers a product/service, or looks for clients, users, testers or
+   partners), "on_behalf" (asks for someone else), "unclear". A business
+   owner describing their own business ("I run a bakery") is NOT a seller
+   when they are looking for something to buy.
+3. Category — be strict, never upgrade weak intent:
+   - "qualified": the post itself states a current need the user's offer
+     could plausibly meet (e.g. actively looking for / evaluating a tool).
+   - "interested": the post shows genuine buying intent (asking for
+     recommendations, comparing options to buy) but the specific need,
+     constraints or timing are not stated.
+   - "weak": related pain or interest, but no stated intent to buy or switch.
+   - "ambiguous": the post could be read several ways, or the text is too
+     thin to tell.
+   - "irrelevant": not a fit (e.g. a seller, an unrelated topic).
+4. A truthful point of connection, taken from the post. Never invent one.
+5. A conversational approach that helps the author first — usually answer or
+   ask, not pitch. Never start with a generic opener or praise.
+
+Truthfulness (absolute):
+- Never invent the user's experiences, identity, expertise, results,
+  customers, or any relationship with the author.
+- Never invent product features, prices or outcomes. Only mention the user's
+  offer using facts given under "What the user has told Flintel"; if that is
+  empty or thin, refer to it neutrally ("your product") and list what is
+  missing in "missing_info".
+- Never treat weak or ambiguous intent as confirmed.
+- No storytelling unless the given context supports it.
+- No URLs, usernames, or contact details in your text.
+
+Platform rules: Flintel cannot see each community's rules. Do NOT write a
+ready-to-post reply. Give writing guidance the user turns into their own
+words: the key point to acknowledge, one useful question, and a short
+outline. Note anything that could break typical rules (self-promotion,
+unsolicited DMs, AI-written content).
+
+Style: plain, specific, concise. No corporate jargon, hype, or exaggerated
+praise. Never repeat the same sentence pattern for every post.
+
+Quality check before answering: every field is tied to THIS post, every
+claim is supported by the post or the given context, nothing promotional
+the author did not invite.
+
+Output JSON:
+{
+  "posts": [
+    {
+      "number": <int, as given>,
+      "post_title": "<this post's title, copied exactly>",
+      "category": "qualified" | "interested" | "weak" | "ambiguous" | "irrelevant",
+      "author_type": "prospect" | "researcher" | "seller" | "on_behalf" | "unclear",
+      "need": "<the author's actual need/problem, in one sentence, or null if not stated>",
+      "evidence": "<an EXACT short quote copied word for word from this post's title or text, or null>",
+      "reasoning": "<one or two sentences: why this category>",
+      "intent_warning": "<what is weak, ambiguous or unconfirmed — null only for clear cases>",
+      "approach": "<how to engage helpfully, one or two sentences; null for irrelevant>",
+      "acknowledge": "<the key point to acknowledge; null for irrelevant>",
+      "question": "<one useful question to ask the author; null for irrelevant>",
+      "outline": ["<2-4 short steps for the user's own reply>"],
+      "platform_caution": "<rule risk to check for this post, or null>"
+    }
+  ],
+  "missing_info": ["<information Flintel needs from the user to personalise further, e.g. what they sell>"]
+}
+"""
+
+_OUTREACH_CATEGORIES = ("qualified", "interested", "weak", "ambiguous", "irrelevant")
+_OUTREACH_HEADINGS = {
+    "qualified": "Qualified prospects",
+    "interested": "Interested — buying intent, but the need isn't spelled out",
+    "weak": "Weak signals — intent not confirmed",
+    "ambiguous": "Ambiguous — read the post before reaching out",
+    "irrelevant": "Not a fit — no outreach suggested",
+}
+_OUTREACH_AUTHOR = {"prospect": "Has the need themselves", "researcher": "Researching / comparing",
+                    "seller": "Seller or service provider", "on_behalf": "Asking for someone else",
+                    "unclear": "Unclear"}
+_URL_IN_TEXT_RE = re.compile(
+    r"\b[a-z][a-z0-9+.\-]*://\S+"                                   # any scheme://…
+    r"|\bmailto:\S+|\bwww\.\S+"
+    r"|\b[\w.+\-]+@[\w\-]+(?:\.[\w\-]+)+\b"                       # e-mail addresses
+    r"|\b(?:[a-z0-9\-]+\.)+(?:com|net|org|io|co|ai|app|dev|me|us|uk|pk|in|biz|info|xyz|gg|so|ly)\b(?:/\S*)?",
+    re.IGNORECASE)
+OUTREACH_EVIDENCE_CHARS = 1500
+
+
+def _outreach_text(value, limit=600):
+    """LLM text field -> safe single-line markdown text (no links it made up)."""
+    if not isinstance(value, str):
+        return ""
+    text = " ".join(_URL_IN_TEXT_RE.sub("(link removed)", " ".join(value.split())).split())
+    text = text[:limit].replace("[", "(").replace("]", ")").replace("<", "‹").replace(">", "›")
+    return text.replace("@", "＠")      # never lets the markdown renderer auto-link an e-mail
+
+
+def _outreach_post_heading(post) -> str:
+    title = ((post.get("title") or "Untitled post").strip().replace("[", "(").replace("]", ")"))[:200]
+    where = f"r/{post['source']}" if post.get("source") else (post.get("platform") or "")
+    link = post.get("link")
+    head = f"[{title}]({link})" if isinstance(link, str) and link.startswith(("http://", "https://")) else title
+    return f"**{head}**" + (f" — {where}" if where else "")
+
+
+def outreach_posts_list(posts: list) -> str:
+    """Plain list of the stored posts (title, community, original link)."""
+    return "\n".join(f"{p['number']}. {_outreach_post_heading(p)}" for p in posts)
+
+
+def _plain_str(value) -> str:
+    return " ".join(value.split()) if isinstance(value, str) else ""
+
+
+def _clean_stored_post(post, index: int) -> dict:
+    """A stored post with every field coerced to a safe type (malformed records
+    never raise). Identity fields come only from the stored record."""
+    post = post if isinstance(post, dict) else {}
+    number = post.get("number")
+    if not isinstance(number, int) or isinstance(number, bool) or number < 1:
+        number = index + 1
+    link = post.get("link")
+    link = link.strip() if isinstance(link, str) and link.strip().startswith(("http://", "https://")) else None
+    return {"number": number, "title": _plain_str(post.get("title")), "source": _plain_str(post.get("source")),
+            "platform": _plain_str(post.get("platform")), "link": link, "summary": _plain_str(post.get("summary")),
+            "post_text": _plain_str(post.get("post_text"))}
+
+
+def _norm_words(text: str) -> str:
+    """Lower-cased words in ANY script (Urdu, Arabic, Hindi, …): NFKC, combining
+    marks dropped (so vowel marks never split a word), everything that is not a
+    letter or digit becomes a space."""
+    text = _unicodedata.normalize("NFKC", text or "").casefold()
+    out = []
+    for ch in text:
+        cat = _unicodedata.category(ch)
+        if cat.startswith("M"):
+            continue
+        out.append(ch if (ch.isalnum() and not cat.startswith("N") or ch.isdigit()) else " ")
+    return " ".join("".join(out).split())
+
+
+def _word_matches(word: str, hay_words: set) -> bool:
+    if word in hay_words:
+        return True
+    if len(word) < 5:
+        return False
+    for h in hay_words:                       # spelling variants: "trialed" / "trialled"
+        if len(h) >= 5 and (h[:5] == word[:5]) and _difflib.SequenceMatcher(None, word, h).ratio() >= 0.85:
+            return True
+    return False
+
+
+def _post_text_for_matching(post) -> str:
+    return " ".join([post["title"], post["post_text"] or post["summary"]])
+
+
+def _evidence_matches_post(evidence, post) -> bool:
+    """True when the model's quote verifiably comes from THIS stored post (title
+    or text; Flintel's stored summary only when no post text was stored) — an
+    exact match, or the same words allowing small spelling variants. A
+    paraphrase is not verifiable and does not match."""
+    ev = _norm_words(evidence if isinstance(evidence, str) else "")
+    non_ascii = any(ord(c) > 127 for c in ev)
+    if len(ev) < (4 if non_ascii else 8):
+        return False
+    hay = _norm_words(_post_text_for_matching(post))
+    if ev in hay:
+        return True
+    ev_words = [w for w in ev.split() if len(w) >= (2 if non_ascii else 3)]
+    hay_words = set(hay.split())
+    if len(ev_words) < 3:
+        return False
+    return sum(_word_matches(w, hay_words) for w in ev_words) / len(ev_words) >= 0.85
+
+
+def _title_matches_post(echo, post) -> bool:
+    """True when the model's copy of the title is this stored post's title."""
+    a, b = _norm_words(echo if isinstance(echo, str) else ""), _norm_words(post["title"])
+    if not a or not b:
+        return False
+    if a == b or (len(a) >= 8 and (a in b or b in a)):
+        return True
+    words = a.split()
+    return len(words) >= 3 and sum(_word_matches(w, set(b.split())) for w in words) / len(words) >= 0.85
+
+
+def _attach_item(item, post, posts):
+    """(ok, note): may these model notes be shown under `post`? The notes are
+    tied to a post by its copied title and/or a verified quote; anything that
+    points at another post, or could belong to several, is rejected."""
+    others = [q for q in posts if q is not post]
+    echo = item.get("post_title")
+    title_here = _title_matches_post(echo, post)
+    title_elsewhere = [q for q in others if _title_matches_post(echo, q)]
+    quote_here = _evidence_matches_post(item.get("evidence"), post)
+    quote_elsewhere = [q for q in others if _evidence_matches_post(item.get("evidence"), q)]
+    if echo and not title_here and title_elsewhere:
+        return False, f"these notes name post {title_elsewhere[0]['number']}, so they were left out here"
+    if title_here and not title_elsewhere:
+        if quote_elsewhere and not quote_here:
+            return False, (f"these notes name this post but quote post {quote_elsewhere[0]['number']}, "
+                           "so they were left out")
+        return True, None
+    if quote_here and not quote_elsewhere:
+        return True, None
+    if quote_here and quote_elsewhere:
+        return False, (f"the quote also appears in post {quote_elsewhere[0]['number']}, so I couldn't tell "
+                       "which post these notes are about")
+    return False, "the notes could not be matched to this post's title or text, so they were left out"
+
+
+_BUYER_SIGNAL_RE = re.compile(
+    r"\b(?:looking\s+(?:for|to\s+(?:buy|switch|move|replace|get|find|try|use))"
+    r"(?!\s+(?:\w+\s+){0,3}?(?:clients|customers|users|beta|testers|partners|partnerships|developers|"
+    r"agencies|freelancers|co-?founders?|feedback|investors|sponsors|affiliates|resellers))"
+    r"|need(?:s|ed)?\s+(?:a|an|some|help|to\s+find|recommendations?|something)|recommend\w*|suggestions?|"
+    r"which\s+(?:\w+\s+){0,3}(?:should|do|would)|best\s+(?:\w+\s+){0,3}for|alternatives?\s+to|"
+    r"switch\w*\s+(?:from|to|crms?|tools?|providers?)|moving\s+(?:off|away\s+from)|replace\s+(?:our|my)|"
+    r"\w+\s+(?:vs\.?|versus)\s+\w+|\w+\s+or\s+\w+\s+for\s+(?:a|an|my|our)|evaluat\w*|trial\w*|budget|"
+    r"willing\s+to\s+pay|want\s+to\s+(?:buy|switch|find|use|try|get)|shopping\s+for|in\s+the\s+market\s+for|"
+    r"any\s+(?:good\s+)?(?:options|tools|apps|software|crms?)|worth\s+(?:it|paying|buying)|"
+    r"chahiye|chahie|kaun\s*sa|kon\s*sa|konsa|kaunsa|suggest\s+kar\w*|recommend\s+kar\w*|batao|bataen|"
+    r"lena\s+hai|leni\s+hai|khareed\w*|kharid\w*)\b"
+    r"|چاہیے|کونسا|کون سا|تجویز|خرید|चाहिए|कौन सा|सुझाव|खरीद", re.IGNORECASE)
+# Narrow on purpose: someone OFFERING a product/service or seeking users,
+# testers, clients or partners — never "I run a bakery" / "my agency needs".
+_SELLER_SIGNAL_RE = re.compile(
+    r"\b(?:i|we)\s+(?:just\s+)?(?:built|launched|developed|shipped)\s+(?:a|an|my|our|this)\s+(?:[\w\-]+\s+){0,2}?"
+    r"(?:app|tool|product|platform|saas|startup|extension|plugin|service|crm|website|site|bot)\b"
+    r"|\b(?:i\s*'?m|i\s+am|we\s*'?re|we\s+are)\s+building\b|\bcheck\s+out\s+(?:my|our)\b"
+    r"|\blooking\s+for\s+(?:\w+\s+){0,2}?(?:beta\s+testers|testers|early\s+users|first\s+users|"
+    r"clients|customers|partners|partnerships|affiliates|resellers|investors)\b"
+    r"|\bfeedback\s+on\s+(?:my|our)\b|\b(?:referral|affiliate)\s+(?:fees?|partners?|program)\b"
+    r"|\bhire\s+me\b|\bdm\s+me\s+(?:for|if)\b|\b(?:we|i)\s+offer\s+(?:a|an|our|my)?\s*(?:services?|"
+    r"solutions?|discounts?)\b", re.IGNORECASE)
+
+
+def _honest_category(category: str, item: dict, post: dict):
+    """(category, note). "qualified"/"interested" are only kept when the STORED
+    post itself shows buying intent, the author is the buyer (or asks for one),
+    and the post is not someone selling or seeking users. "qualified" also
+    needs a stated need; without one, genuine buying intent becomes
+    "interested". No formal quote is required — the stored post is checked.
+    Downgrades carry a visible note; nothing is ever upgraded."""
+    if category not in ("qualified", "interested"):
+        return category, None
+    text = _post_text_for_matching(post)
+    author = item.get("author_type")
+    buyer = bool(_BUYER_SIGNAL_RE.search(text))
+    seller = bool(_SELLER_SIGNAL_RE.search(text))
+    selling_note = "the post reads as someone selling, promoting, or looking for users — not treated as a prospect."
+    if seller and not buyer:
+        return "irrelevant", selling_note
+    if author == "seller":
+        if buyer and not seller:
+            return "ambiguous", ("labelled a seller, but the post itself asks to buy something — "
+                                 "read it before reaching out.")
+        return "irrelevant", selling_note
+    if seller:
+        return "ambiguous", "the post mixes buying language with selling or looking for users — read it first."
+    if author not in ("prospect", "on_behalf"):
+        return "weak", "the author is not shown to be buying, so this stays a weak signal."
+    if not buyer:
+        return "weak", "the post itself does not state an intent to buy or switch, so this stays a weak signal."
+    if category == "qualified" and not _plain_str(item.get("need")):
+        return "interested", "the post shows buying intent, but the specific need isn't stated."
+    return category, None
+
+
+def build_outreach_report(selection_query: str, original_query: str, posts: list,
+                          business_context: str = None, chat_summary: str = None) -> str:
+    """(OPTION A) Outreach notes for the STORED posts of the previous result.
+    `posts`: [{"number", "title", "source", "platform", "link", "summary", "post_text"}]
+    exactly as stored. Titles, communities and links in the report always come
+    from `posts`, never from the model. Never raises: on any failure it returns
+    an honest message listing the stored posts."""
+    if not posts or not isinstance(posts, list):
+        return ("I don't have the posts from the previous result anymore, so I can't turn them into "
+                "outreach notes. I won't swap in different posts — say the word and I'll run a fresh search.")
+    posts = [_clean_stored_post(p, i) for i, p in enumerate(posts)]
+    payload_posts = [{
+        "number": p["number"],
+        "community": f"r/{p['source']}" if p["source"] else (p["platform"] or None),
+        "title": p["title"] or None,
+        "post_text": p["post_text"][:OUTREACH_EVIDENCE_CHARS] or None,
+        "flintel_summary": p["summary"] or None,
+    } for p in posts]
+    user_message = (
+        f"The user's original request: {original_query or '(unknown)'}\n"
+        f"The user's new message: {selection_query}\n\n"
+        f"What the user has told Flintel about themselves / their offer:\n"
+        f"{business_context or '(nothing yet)'}\n\n"
+        f"Conversation so far (auto-summarized):\n{chat_summary or '(none)'}\n\n"
+        f"Posts (JSON):\n{json.dumps(payload_posts, ensure_ascii=False)}"
+    )
+    try:
+        raw = _call_claude(OUTREACH_REPORT_SYSTEM_PROMPT, user_message, max_tokens=CLAUDE_MAX_TOKENS,
+                           force_json_prefill=True)
+        cleaned = (raw or "").strip()
+        if cleaned.startswith("```"):
+            cleaned = re.sub(r"^json\s*", "", cleaned.strip("`").strip(), flags=re.IGNORECASE).strip()
+        data = json.loads(cleaned)
+        items = data.get("posts") if isinstance(data, dict) else None
+        if not isinstance(items, list):
+            raise ValueError("no posts list in outreach JSON")
+    except Exception as exc:
+        log.warning(f"Outreach report generation failed: {exc}")
+        return ("I couldn't prepare the outreach notes just now — please ask again. These are the "
+                f"{len(posts)} posts from your previous result:\n\n{outreach_posts_list(posts)}")
+
+    by_number = {}
+    for item in items:
+        n = item.get("number") if isinstance(item, dict) else None
+        if isinstance(n, int) and not isinstance(n, bool) and n not in by_number:   # True is not post 1
+            by_number[n] = item
+
+    groups = {c: [] for c in _OUTREACH_CATEGORIES}
+    not_assessed = []          # (post, reason)
+    for p in posts:
+        item = by_number.get(p["number"])
+        if not item:
+            not_assessed.append((p, None))
+            continue
+        ok, why = _attach_item(item, p, posts)
+        if not ok:
+            not_assessed.append((p, why))
+            continue
+        cat = item.get("category") if item.get("category") in _OUTREACH_CATEGORIES else "ambiguous"
+        cat, downgrade_note = _honest_category(cat, item, p)
+        item = dict(item, _downgrade_note=downgrade_note,
+                    _quote_ok=_evidence_matches_post(item.get("evidence"), p))
+        groups[cat].append((p, item))
+
+    out = [f"**Outreach notes for the {len(posts)} posts from your previous result** — the same posts, "
+           "not a new search.",
+           "These are notes for writing your own reply, not ready-to-post messages: check each community's "
+           "rules on self-promotion, DMs and AI-written content before you post."]
+    for cat in _OUTREACH_CATEGORIES:
+        if not groups[cat]:
+            continue
+        out.append(f"### {_OUTREACH_HEADINGS[cat]}")
+        for p, item in groups[cat]:
+            block = [f"{p['number']}. {_outreach_post_heading(p)}"]
+            author = _OUTREACH_AUTHOR.get(item.get("author_type"), "Unclear")
+            block.append(f"- **Who:** {author}")
+            need = _outreach_text(item.get("need"))
+            if need:
+                block.append(f"- **What they need:** {need}")
+            quote = _outreach_text(item.get("evidence"))
+            if quote and item["_quote_ok"]:
+                block.append(f"- **From the post:** “{quote}”")
+            elif quote:
+                block.append("- **From the post:** (the quote given couldn't be verified against this post, "
+                             "so it isn't shown)")
+            reasoning = _outreach_text(item.get("reasoning"))
+            if reasoning:
+                block.append(f"- **Why this category:** {reasoning}")
+            warning = _outreach_text(item.get("intent_warning"))
+            if warning:
+                block.append(f"- **Caution:** {warning}")
+            if item.get("_downgrade_note"):
+                block.append(f"- **Flintel check:** {item['_downgrade_note']}")
+            if cat != "irrelevant":
+                for label, key in (("How to approach", "approach"), ("Acknowledge", "acknowledge"),
+                                   ("Ask", "question")):
+                    text = _outreach_text(item.get(key))
+                    if text:
+                        block.append(f"- **{label}:** {text}")
+                steps = [_outreach_text(s, 200) for s in (item.get("outline") or []) if isinstance(s, str)]
+                steps = [s for s in steps if s][:4]
+                if steps:
+                    block.append("- **Outline for your reply:** " + " → ".join(steps))
+                caution = _outreach_text(item.get("platform_caution"))
+                if caution:
+                    block.append(f"- **Community rules:** {caution}")
+            out.append("\n".join(block))
+    if not_assessed:
+        out.append("### Not assessed")
+        out.append("\n".join(f"{p['number']}. {_outreach_post_heading(p)}" + (f" — {why}" if why else "")
+                             for p, why in not_assessed)
+                   + "\n\nI couldn't assess these this time — ask again if you want notes for them.")
+    missing = [_outreach_text(m, 200) for m in (data.get("missing_info") or []) if isinstance(m, str)]
+    missing = [m for m in missing if m][:5]
+    if missing:
+        out.append("**To personalise this further, tell me:**\n" + "\n".join(f"- {m}" for m in missing))
+    return "\n\n".join(out)
+
+
 def classify_and_maybe_chat(query: str, chat_summary: str, website_context_summary: str = None,
-                             referenced_post_context: str = None) -> dict:
+                             referenced_post_context: str = None, previous_results_context: str = None) -> dict:
     """(v5, extended in v6 with abuse-blocking, again with keyword
     generation, again with time-window parsing + a "clarify" intent,
     again with the ROUTER INTENT REFINEMENT prompt wording described in
@@ -5413,6 +6097,7 @@ def classify_and_maybe_chat(query: str, chat_summary: str, website_context_summa
         f"{chat_summary or '(no earlier messages in this chat)'}\n\n"
         f"{website_context_block}"
         f"{referenced_post_block}"
+        f"{previous_results_context + chr(10) + chr(10) if previous_results_context else ''}"
         f"User's new message: {query}"
     )
     # (MULTI-TURN CONTEXT) One retry on failure (API error/timeout or
@@ -5423,7 +6108,7 @@ def classify_and_maybe_chat(query: str, chat_summary: str, website_context_summa
         except Exception as exc:
             log.warning(f"Router Claude call failed (attempt {attempt}/2): {exc}")
             continue
-        parsed = _parse_router_json(raw)
+        parsed = _parse_router_json(raw, allow_previous_results=bool(previous_results_context))
         if parsed:
             return parsed
         log.warning(f"Router returned unparseable output (attempt {attempt}/2): {raw[:200]!r}")
