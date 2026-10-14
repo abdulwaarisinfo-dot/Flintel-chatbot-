@@ -5281,6 +5281,80 @@ def _parse_router_json(raw: str):
             "resolved_query": resolved_query}
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# (SMALL-TALK FAST PATH) A message that is ONLY a greeting / "how are you" /
+# thanks / goodbye / "what can you do" gets a ready reply here, so it never
+# pays for the router LLM call (a ~30k-character prompt with web search on).
+# The WHOLE message must be one of these phrases (after removing punctuation,
+# an optional leading greeting and an optional "there / Flintel / team"):
+# "hello, find people looking for a CRM" is not small talk and goes to the
+# router exactly as before. Anything unsure returns None = router as before.
+# Deliberately NOT covered: yes / no / ok (they can answer a question asked
+# earlier in the chat), anything with a URL or a digit, non-English small
+# talk (the router replies in the user's own language).
+# ─────────────────────────────────────────────────────────────────────────────
+_SMALLTALK_MAX_WORDS = 8
+_SMALLTALK_LEAD = re.compile(
+    r"^(?:(?:hi+|hello+|hey+|hiya|howdy|yo|greetings|good\s+(?:morning|afternoon|evening|day))"
+    r"(?:\s+(?:there|flintel|team|all|everyone|friend|buddy))?\s+)+"
+)
+_SMALLTALK_TAIL = re.compile(r"(?:\s+(?:there|flintel|team|all|everyone|friend|buddy|mate|today|again|so\s+much|a\s+lot|man))+$")
+_SMALLTALK_PHRASES = {
+    "greeting": {"hi", "hii", "hello", "hey", "heya", "hiya", "howdy", "yo", "greetings",
+                 "good morning", "good afternoon", "good evening", "good day"},
+    "how_are_you": {"how are you", "how are you doing", "how r u", "how are u", "how r you",
+                    "how is it going", "hows it going", "how s it going", "how are things",
+                    "how is your day", "how s your day", "hows your day", "how have you been",
+                    "how do you do", "whats up", "what s up", "wassup", "sup"},
+    "thanks": {"thanks", "thank you", "thank u", "thx", "ty", "many thanks", "thanks a lot",
+               "appreciate it", "much appreciated", "cheers", "great thanks", "ok thanks",
+               "okay thanks", "ok thank you", "okay thank you", "perfect thanks", "awesome thanks"},
+    "goodbye": {"bye", "goodbye", "good bye", "bye bye", "see you", "see you later", "see ya",
+                "good night", "take care"},
+    "capabilities": {"what can you do", "what do you do", "what can flintel do", "what does flintel do",
+                     "what are you", "who are you", "what is flintel", "how does this work",
+                     "how does flintel work", "how do you work", "what can i ask you",
+                     "what can i ask", "help", "what are your capabilities", "what can you help with",
+                     "what can you help me with"},
+}
+SMALLTALK_REPLIES = {
+    "greeting": ("Hi! I'm Flintel. Tell me a brand, product, or topic and I'll find what people are "
+                 "saying about it on Reddit — or the people actively looking for it."),
+    "how_are_you": ("Doing well, thanks for asking! What would you like to look into today — a brand, "
+                    "a product, or the people looking for something like yours?"),
+    "thanks": "You're welcome! Let me know whenever you want to dig into something else.",
+    "goodbye": "Bye for now! Come back anytime you want to see what people are saying about something.",
+    "capabilities": ("I search real Reddit conversations for you. A few things you can ask:\n\n"
+                     "- **Find buyers and leads** — \"Find people looking for a CRM for small teams\"\n"
+                     "- **See what people say about a brand or product** — \"What do people complain about with Notion?\"\n"
+                     "- **Spot pain points and trends** in a market or topic\n"
+                     "- **Share your website link** and I'll find conversations relevant to your business\n\n"
+                     "Just type what you're looking for."),
+}
+
+
+def smalltalk_reply(query: str):
+    """Ready reply for a message that is ONLY small talk, else None (see above)."""
+    text = (query or "").strip().lower()
+    if not text or len(text) > 80 or "://" in text or "www." in text or re.search(r"\d", text):
+        return None
+    text = text.replace("’", "'")
+    text = re.sub(r"[^a-z' ]+", " ", text)          # punctuation / emoji -> space
+    text = re.sub(r"\s+", " ", text.replace("'", " ")).strip()
+    if not text or len(text.split()) > _SMALLTALK_MAX_WORDS:
+        return None
+    for category in ("greeting",):
+        if text in _SMALLTALK_PHRASES[category]:
+            return SMALLTALK_REPLIES[category]
+    rest = _SMALLTALK_TAIL.sub("", _SMALLTALK_LEAD.sub("", text + " ").strip()).strip()
+    if not rest:                                   # only greeting words ("hey there", "hello flintel")
+        return SMALLTALK_REPLIES["greeting"]
+    for category in ("how_are_you", "thanks", "goodbye", "capabilities"):
+        if rest in _SMALLTALK_PHRASES[category]:
+            return SMALLTALK_REPLIES[category]
+    return None
+
+
 def classify_and_maybe_chat(query: str, chat_summary: str, website_context_summary: str = None,
                              referenced_post_context: str = None) -> dict:
     """(v5, extended in v6 with abuse-blocking, again with keyword
