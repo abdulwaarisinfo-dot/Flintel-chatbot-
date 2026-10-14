@@ -2,7 +2,7 @@
 routes.py — all FastAPI route handlers for the Flintel web service,
 extracted from index.py to keep that module to shared infrastructure
 and business logic. Imports `app` from index.py and registers every
-route on it; index.py imports this module once, at the bottom, purely  
+route on it; index.py imports this module once, at the bottom, purely 
 for its side effect of registering these routes.   
 """
 
@@ -26,6 +26,11 @@ import website_intelligence
 from logics import get_or_fetch_website_evidence, generate_keywords_for_website_request, acquire_scan, get_cached_topic_evidence
 from logics import smalltalk_reply   # (SMALL-TALK FAST PATH)
 from logics import build_guidance_note   # (DATA-BACKED GUIDANCE)
+from logics import platform_display_value   # (PLATFORM PERSISTENCE)
+from logics import record_job_time_range, build_time_range_note   # (DATE/TIME)
+import os   # (DATE/TIME) DEFAULT_USER_TIMEZONE env var
+import timerange   # (DATE/TIME)
+from index import get_user_chat_list, chat_exists, set_chat_platform   # (FAST NAVIGATION / FAST PATH)
 from logics import build_outreach_report, build_previous_results_router_block   # (OPTION A)
 from logics import detect_offer_selection, parse_option_pick, offer_clarification_reply, _clean_stored_post   # (OPTION A GUARD)
 from logics import find_offer_in_answer, mentions_previous_results, requests_new_research, previous_or_new_clarification   # (OPTION A GUARD)
@@ -292,13 +297,17 @@ def _get_latest_search_result(chat: dict):
         if not msg.get("claude_answer"):
             return None
         posts = _get_last_search_message_posts({"messages": [msg]}) or []
-        texts = {}
+        texts, dates = {}, {}
         for r in msg.get("results") if isinstance(msg.get("results"), list) else []:
             if isinstance(r, dict) and isinstance(r.get("post_url"), str) and isinstance(r.get("post_text"), str):
                 texts[r["post_url"]] = r["post_text"]
+            if isinstance(r, dict) and isinstance(r.get("post_url"), str) and r.get("published_at"):
+                dates[r["post_url"]] = r["published_at"]     # (DATE/TIME) original publication time
         # identity fields only from the stored record, every field a safe type
         posts = [_clean_stored_post(dict(post, post_text=texts.get(post.get("link"), "")
-                                         if isinstance(post.get("link"), str) else ""), i)
+                                         if isinstance(post.get("link"), str) else "",
+                                         published_at=dates.get(post.get("link"))
+                                         if isinstance(post.get("link"), str) else None), i)
                  for i, post in enumerate(posts)]
         # the offer is looked for in every field the answer displays
         # (followup_question, business_insight, executive_summary, conclusion, …)
@@ -307,6 +316,34 @@ def _get_latest_search_result(chat: dict):
                 "original_query": msg.get("resolved_query") or msg.get("query") or ""}
     return None
 
+
+
+def _request_timezone(request, form_tz=None) -> str:
+    """(DATE/TIME) The user's IANA timezone: the browser's (sent with the form,
+    validated, remembered in the session), else the session's, else
+    config.DEFAULT_USER_TIMEZONE (Asia/Karachi). Never the server's own zone."""
+    try:
+        if isinstance(form_tz, str) and timerange.is_valid_tz(form_tz.strip()):
+            request.session["tz"] = form_tz.strip()
+            return form_tz.strip()
+        saved = request.session.get("tz")
+        if isinstance(saved, str) and timerange.is_valid_tz(saved):
+            return saved
+    except Exception:
+        pass
+    configured = getattr(config, "DEFAULT_USER_TIMEZONE", None) or os.getenv("DEFAULT_USER_TIMEZONE")
+    return configured if timerange.is_valid_tz(configured) else timerange.DEFAULT_TZ
+
+
+def _chat_platform_display(chat: dict) -> str:
+    """(PLATFORM PERSISTENCE) The dropdown value this chat's page opens with."""
+    saved = (chat or {}).get("selected_platform")
+    if isinstance(saved, str) and saved:
+        return platform_display_value(saved)
+    for msg in reversed((chat or {}).get("messages") or []):
+        if msg.get("message_type") != "chat" and msg.get("targeting_platform"):
+            return platform_display_value(msg["targeting_platform"])
+    return "All Platforms"
 
 def _save_plain_reply_and_redirect(chat_id: str, owner_key: str, query: str, answer: str):
     """(OPTION A) Saves a plain (non-search) reply in the chat and redirects to
@@ -499,7 +536,7 @@ def home(request: Request):
     chats = []
     try:
         owner_key, _owner_type = get_owner(request)
-        chats = get_user_chats(owner_key)
+        chats = get_user_chat_list(owner_key)
     except Exception as exc:
         log.warning(f"Chat lookup failed on home page: {exc}")
 
@@ -522,7 +559,11 @@ def search(
     query: str = Form(...),
     platform: str = Form("All Platforms"),
     chat_id: str = Form(None),
+    tz: str = Form(None),
 ):
+    # (DATE/TIME) ONE reference instant for this whole request: every relative
+    # phrase ("last 3 hours", "today") is resolved against it.
+    reference_utc = datetime.now(timezone.utc)
     # (PER-USER BUSY LOCK) Additive check at the very start, before any
     # existing logic below runs — declines a new request from THIS SAME
     # owner_key while their previous one is still being processed by
@@ -539,7 +580,7 @@ def search(
     if busy_owner_key and _is_owner_busy(busy_owner_key):
         chats_safe, chat_id_safe = [], None
         try:
-            chats_safe = get_user_chats(busy_owner_key)
+            chats_safe = get_user_chat_list(busy_owner_key)
             chat_id_safe = request.session.get("active_chat_id")
         except Exception as exc:
             log.warning(f"Chat lookup failed while rendering busy-decline: {exc}")
@@ -569,7 +610,7 @@ def search(
             chats_safe, chat_id_safe = [], None
             try:
                 owner_key, _owner_type = get_owner(request)
-                chats_safe = get_user_chats(owner_key)
+                chats_safe = get_user_chat_list(owner_key)
                 chat_id_safe = request.session.get("active_chat_id")
             except Exception as exc:
                 log.warning(f"Chat lookup failed while rendering empty-query error: {exc}")
@@ -604,6 +645,26 @@ def search(
         # to generate_fuzzy_keywords() for the keyword list — so a routing
         # failure can NEVER block, skip, or under-supply a real search job.
         # ─────────────────────────────────────────────────────────────────────
+        # ─────────────────────────────────────────────────────────────────────
+        # (SMALL-TALK FAST PATH — EARLY) "hello" / "thanks" / "I am Hamza" are
+        # answered here, before the router step reads the whole chat (its
+        # messages, answers and matched posts) several times: one light
+        # ownership check, then the same chat-message save as before. Anything
+        # that is not clearly small talk continues below exactly as before.
+        # ─────────────────────────────────────────────────────────────────────
+        early_reply = smalltalk_reply(query)
+        if early_reply:
+            try:
+                fast_owner, fast_owner_type = get_owner(request)
+                fast_chat_id = chat_id or request.session.get("active_chat_id")
+                if not chat_exists(fast_chat_id, fast_owner):
+                    fast_chat_id = create_chat_session(fast_owner, fast_owner_type, title=generate_chat_title(query))
+                request.session["active_chat_id"] = fast_chat_id
+                set_chat_platform(fast_chat_id, fast_owner, platform_display_value(platform))   # (PLATFORM PERSISTENCE)
+                return _save_plain_reply_and_redirect(fast_chat_id, fast_owner, query, early_reply)
+            except Exception as exc:
+                log.warning(f"Early small-talk path failed for query={query!r} (continuing normally): {exc}")
+
         owner_key = owner_type = None
         active_chat_id = None
         intent = "search"
@@ -656,6 +717,7 @@ def search(
             if not active_chat_id or not get_chat_session(active_chat_id, owner_key):
                 active_chat_id = create_chat_session(owner_key, owner_type, title=generate_chat_title(query))
             request.session["active_chat_id"] = active_chat_id
+            set_chat_platform(active_chat_id, owner_key, platform_display_value(platform))   # (PLATFORM PERSISTENCE)
 
             existing_chat = get_chat_session(active_chat_id, owner_key)
             chat_summary = (existing_chat or {}).get("summary") or ""
@@ -1406,6 +1468,28 @@ def search(
         # doesn't change based on it); it's only carried along onto the chat
         # message below so re-matching this same message later stays scoped
         # to the same window the user actually asked for.
+        # (DATE/TIME) Explicit publication range from the user's own words. It
+        # replaces the router's coarse time_window_days for this message; a
+        # materially ambiguous phrase gets one short question instead of a guess.
+        time_range_obj = None
+        try:
+            _parsed_range = timerange.parse_time_range(query, reference_utc, _request_timezone(request, tz))
+        except Exception as exc:
+            log.warning(f"Time-range parsing failed for query={query!r} (searching without a range): {exc}")
+            _parsed_range = None
+        if isinstance(_parsed_range, timerange.Clarification):
+            if not owner_key:
+                owner_key, owner_type = get_owner(request)
+            clarify_chat_id = active_chat_id or chat_id or request.session.get("active_chat_id")
+            if not chat_exists(clarify_chat_id, owner_key):
+                clarify_chat_id = create_chat_session(owner_key, owner_type, title=generate_chat_title(query))
+            request.session["active_chat_id"] = clarify_chat_id
+            set_chat_platform(clarify_chat_id, owner_key, platform_display_value(platform))
+            return _save_plain_reply_and_redirect(clarify_chat_id, owner_key, query, _parsed_range.question)
+        if isinstance(_parsed_range, timerange.TimeRange):
+            time_range_obj = _parsed_range
+            routed_time_window_days = None
+
         time_window_days = routed_time_window_days
 
         # (VAGUE WEBSITE FOLLOW-UP REUSE) When this message's keywords were
@@ -1417,6 +1501,8 @@ def search(
         # before this feature.
         if not reuse_website_keywords:
             enqueue_search_job(topic_key, keywords, targeting_platform)
+            if time_range_obj is not None:
+                record_job_time_range(topic_key, time_range_obj)   # (DATE/TIME) hint for the collector
 
         # Chat/session bookkeeping is best-effort on top of the above: if
         # anything here fails — a stale/corrupt session cookie, a hiccup on the
@@ -1440,8 +1526,10 @@ def search(
                 # (DATA-BACKED GUIDANCE) a guidance question adds its instructions to the
                 # note the analysis step already receives (extra_context).
                 website_note="\n\n".join(n for n in (website_note, build_guidance_note(query)
-                                                        if routed.get("guidance") else None) if n) or None,
+                                                        if routed.get("guidance") else None,
+                                                        build_time_range_note(time_range_obj)) if n) or None,
                 resolved_query=routed.get("resolved_query") if intent == "search" else None,   # (MULTI-TURN CONTEXT)
+                **({"time_range": time_range_obj.to_doc(reference_utc)} if time_range_obj is not None else {}),
             )
             # (WEBSITE INTELLIGENCE) Whenever this message's keywords came
             # from the website (BEHAVIOR 2, or a BEHAVIOR 3 confirmed
@@ -1583,8 +1671,11 @@ def view_chat(request: Request, chat_id: str, background_tasks: BackgroundTasks)
         {
             "user": get_current_user(request),
             "chat": chat,
-            "chats": get_user_chats(owner_key),
+            "chats": get_user_chat_list(owner_key),
             "pending_stream_topic_key": pending_stream_topic_key,
+            # (PLATFORM PERSISTENCE) the chat reopens with its own platform choice;
+            # older chats fall back to their latest search's platform.
+            "selected_platform": _chat_platform_display(chat),
         },
     )
 
@@ -1901,6 +1992,8 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             unfiltered=msg.get("unfiltered", False),
             user_query=msg.get("query"),
         )
+        if msg.get("time_range"):
+            kwargs["time_range"] = msg["time_range"]   # (DATE/TIME) the message's own publication range
         if cancel_event is not None:
             kwargs["cancel_event"] = cancel_event
         return get_evidence_with_topup(**kwargs)
