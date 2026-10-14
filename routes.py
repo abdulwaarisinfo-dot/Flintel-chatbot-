@@ -1,7 +1,7 @@
 """
 routes.py — all FastAPI route handlers for the Flintel web service,
 extracted from index.py to keep that module to shared infrastructure
-and business logic. Imports `app` from index.py and registers every 
+and business logic. Imports `app` from index.py and registers every
 route on it; index.py imports this module once, at the bottom, purely 
 for its side effect of registering these routes.   
 """
@@ -24,6 +24,7 @@ import google as google_search   # the new google.py module — needed here
     # (mirrors index.py's own `import google as google_search` alias)
 import website_intelligence
 from logics import get_or_fetch_website_evidence, generate_keywords_for_website_request, acquire_scan, get_cached_topic_evidence
+from logics import smalltalk_reply   # (SMALL-TALK FAST PATH)
 
 from index import (
     app,
@@ -627,7 +628,14 @@ def search(
                 except Exception as exc:
                     log.warning(f"Referenced-post lookup failed for query={query!r}: {exc}")
 
-            routed = classify_and_maybe_chat(query, chat_summary, website_ctx_summary, referenced_post_context)
+            # (SMALL-TALK FAST PATH) A message that is ONLY "hi" / "how are you" /
+            # "thanks" / "what can you do" gets its ready reply without the router
+            # LLM call; everything else is routed exactly as before.
+            fast_reply = smalltalk_reply(query)
+            if fast_reply:
+                routed = {"intent": "chat", "reply": fast_reply, "smalltalk_fast_path": True}
+            else:
+                routed = classify_and_maybe_chat(query, chat_summary, website_ctx_summary, referenced_post_context)
             intent = routed.get("intent", "search")
             chat_reply = routed.get("reply")
             routed_keywords = routed.get("keywords")
@@ -670,7 +678,8 @@ def search(
                 ctx = saved_website_ctx
                 # (MULTI-TURN CONTEXT) a router that failed twice made no
                 # decision at all — never reuse saved website keywords for it.
-                if ctx and ctx.get("keywords") and intent != "blocked" and not routed.get("router_failed"):
+                if ctx and ctx.get("keywords") and intent != "blocked" and not routed.get("router_failed") \
+                        and not routed.get("smalltalk_fast_path"):   # small talk never starts a website search
                     should_reuse = bool(routed.get("use_website_context"))
                     if not should_reuse and intent in ("clarify", "chat"):
                         # (LOOSENED BACKUP, FIX 3) Default to reuse now —
