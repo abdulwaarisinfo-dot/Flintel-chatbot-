@@ -1,8 +1,8 @@
 """
 routes.py — all FastAPI route handlers for the Flintel web service,
 extracted from index.py to keep that module to shared infrastructure
-and business logic. Imports `app` from index.py and registers every 
-route on it; index.py imports this module once, at the bottom, purely  
+and business logic. Imports `app` from index.py and registers every
+route on it; index.py imports this module once, at the bottom, purely 
 for its side effect of registering these routes.   
 """
 
@@ -25,12 +25,14 @@ import google as google_search   # the new google.py module — needed here
 import website_intelligence
 from logics import get_or_fetch_website_evidence, generate_keywords_for_website_request, acquire_scan, get_cached_topic_evidence
 from logics import smalltalk_reply   # (SMALL-TALK FAST PATH)
+from logics import exploratory_target, exploratory_reply, scope_reply, is_confirmation, is_business_question, CHAT_UNAVAILABLE_REPLY   # (GROUNDED ANSWERS)
 from logics import build_guidance_note   # (DATA-BACKED GUIDANCE)
 from logics import platform_display_value   # (PLATFORM PERSISTENCE)
 from logics import record_job_time_range, build_time_range_note   # (DATE/TIME)
 import os   # (DATE/TIME) DEFAULT_USER_TIMEZONE env var
 import timerange   # (DATE/TIME)
 from index import get_user_chat_list, chat_exists, set_chat_platform   # (FAST NAVIGATION / FAST PATH)
+from index import set_chat_research_offer   # (GROUNDED ANSWERS)
 from logics import build_outreach_report, build_previous_results_router_block   # (OPTION A)
 from logics import detect_offer_selection, parse_option_pick, offer_clarification_reply, _clean_stored_post   # (OPTION A GUARD)
 from logics import find_offer_in_answer, mentions_previous_results, requests_new_research, previous_or_new_clarification   # (OPTION A GUARD)
@@ -665,6 +667,42 @@ def search(
             except Exception as exc:
                 log.warning(f"Early small-talk path failed for query={query!r} (continuing normally): {exc}")
 
+        # ─────────────────────────────────────────────────────────────────────
+        # (GROUNDED ANSWERS) "How can you help me find leads for my CRM?" —
+        # answered from Flintel's verified capabilities only (no model-written
+        # advice, nothing searched or claimed), ending with the exact search a
+        # "yes" will run. A bare "yes" right after that reply runs it.
+        # ─────────────────────────────────────────────────────────────────────
+        explore = None if early_reply else exploratory_target(query)
+        if explore:
+            try:
+                ex_owner, ex_owner_type = get_owner(request)
+                ex_chat_id = chat_id or request.session.get("active_chat_id")
+                if not chat_exists(ex_chat_id, ex_owner):
+                    ex_chat_id = create_chat_session(ex_owner, ex_owner_type, title=generate_chat_title(query))
+                request.session["active_chat_id"] = ex_chat_id
+                set_chat_platform(ex_chat_id, ex_owner, platform_display_value(platform))
+                ex_answer = exploratory_reply(explore)
+                set_chat_research_offer(ex_chat_id, ex_owner, {"query": explore["offer"], "answer": ex_answer})
+                return _save_plain_reply_and_redirect(ex_chat_id, ex_owner, query, ex_answer)
+            except Exception as exc:
+                log.warning(f"Exploratory-question path failed for query={query!r} (continuing normally): {exc}")
+        offer_accepted = False
+        if is_confirmation(query):
+            try:
+                cf_owner, _cf_type = get_owner(request)
+                cf_chat = get_chat_session(chat_id or request.session.get("active_chat_id"), cf_owner)
+                offer = (cf_chat or {}).get("research_offer") or {}
+                last = ((cf_chat or {}).get("messages") or [{}])[-1]
+                # only an offer that is the very last thing Flintel said in this chat
+                if offer.get("query") and last.get("claude_answer") == offer.get("answer"):
+                    query = f"{query.strip()} — {offer['query']}"
+                    topic_key = normalize_topic_key(query)
+                    offer_accepted = True
+                    log.info(f"Research offer accepted | chat_id={cf_chat.get('chat_id')} | query={offer['query']!r}")
+            except Exception as exc:
+                log.warning(f"Research-offer lookup failed for query={query!r} (continuing normally): {exc}")
+
         owner_key = owner_type = None
         active_chat_id = None
         intent = "search"
@@ -710,6 +748,7 @@ def search(
         latest_result = None
         website_ctx_summary = None
         routing_failed = False
+        router_had_evidence = False   # (GROUNDED ANSWERS) stored posts / website evidence given to the router
 
         try:
             owner_key, owner_type = get_owner(request)
@@ -766,6 +805,7 @@ def search(
                         latest_result = None
                 routed = classify_and_maybe_chat(query, chat_summary, website_ctx_summary, referenced_post_context,
                                                  previous_results_context=previous_results_context)
+                router_had_evidence = bool(referenced_post_context or previous_results_context or website_ctx_summary)
             intent = routed.get("intent", "search")
             chat_reply = routed.get("reply")
             routed_keywords = routed.get("keywords")
@@ -776,6 +816,9 @@ def search(
             log.warning(f"v5 routing step failed for query={query!r} (defaulting to normal search pipeline): {exc}")
             intent = "search"
             routing_failed = True
+        if offer_accepted and intent in ("chat", "clarify"):
+            # (GROUNDED ANSWERS) "yes" to the search Flintel itself offered: run it.
+            intent = "search"
 
         # ─────────────────────────────────────────────────────────────────────
         # (OPTION A GUARD) Only for a reply that is NOTHING BUT a pick from the
@@ -1102,6 +1145,7 @@ def search(
         # ── (if a URL was present) BEHAVIOR 1 above couldn't produce a       ──
         # ── summary reply.)                                                  ──
         if intent in ("chat", "blocked", "clarify"):
+            research_offer = None
             if intent == "blocked":
                 # Never re-sent to Claude for a fallback — a canned decline is
                 # enough, and there's no reason to hand harmful content to
@@ -1116,15 +1160,19 @@ def search(
             else:
                 answer = (chat_reply or "").strip()
                 if not answer:
-                    # Router classified this as chat but didn't return usable
-                    # reply text (e.g. truncated/odd output) — fall back to a
-                    # second, plain conversational call rather than showing
-                    # nothing.
-                    try:
-                        answer = _call_claude(CLAUDE_CHAT_FALLBACK_SYSTEM_PROMPT, query, enable_web_search=True)
-                    except Exception as exc:
-                        log.warning(f"Chat fallback Claude call failed for query={query!r}: {exc}")
-                        answer = "Sorry, I couldn't come up with a reply just now — please try again."
+                    # (GROUNDED ANSWERS) No second, general-purpose LLM call: a
+                    # missing router reply gets an honest, fixed message.
+                    answer = CHAT_UNAVAILABLE_REPLY
+                if (not routed.get("smalltalk_fast_path") and not router_had_evidence
+                        and is_business_question(query)):
+                    # (GROUNDED ANSWERS) A business / market question the router
+                    # answered as conversation, with no collected evidence in
+                    # hand: never show model-written advice as Flintel's answer.
+                    # Verified capabilities + an offer to run the real search.
+                    info = exploratory_target(query)
+                    research_offer_query = info["offer"] if info else " ".join(query.split())[:200]
+                    answer = exploratory_reply(info) if info else scope_reply(research_offer_query)
+                    research_offer = {"query": research_offer_query, "answer": answer}
 
             redirect_chat_id = None
             try:
@@ -1135,6 +1183,8 @@ def search(
                 request.session["active_chat_id"] = active_chat_id
 
                 add_chat_message_to_chat(active_chat_id, owner_key, query, answer)
+                if research_offer:
+                    set_chat_research_offer(active_chat_id, owner_key, research_offer)   # (GROUNDED ANSWERS)
                 try:
                     append_to_chat_summary(active_chat_id, owner_key, query, answer)
                 except Exception as exc:
@@ -2665,35 +2715,3 @@ def logout(request: Request):
     # they're right where they were, same as Claude/ChatGPT.
     request.session.clear()
     return RedirectResponse(url="/")
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# (FAVICON) Public brand-icon routes. No auth, no session, no DB, no credits.
-# Absolute paths from __file__ so they resolve in production whatever the CWD.
-# Responses carry their own "public" Cache-Control, which index.py's global
-# no-store middleware leaves untouched.
-# ─────────────────────────────────────────────────────────────────────────────
-from pathlib import Path as _IconPath
-from fastapi.responses import FileResponse as _IconFileResponse
-
-_LOGO_DIR = _IconPath(__file__).resolve().parent / "logo"
-_ICON_CACHE = {"Cache-Control": "public, max-age=86400"}
-_ICON_ROUTES = {
-    "/favicon.ico":          ("flintel.ico",     "image/x-icon"),
-    "/favicon-48x48.png":    ("flintel-48.png",  "image/png"),
-    "/favicon-96x96.png":    ("flintel-96.png",  "image/png"),
-    "/favicon-192x192.png":  ("flintel-192.png", "image/png"),
-    "/apple-touch-icon.png": ("flintel-180.png", "image/png"),
-}
-
-
-def _register_icon_route(path, filename, media_type):
-    @app.api_route(path, methods=["GET", "HEAD"], include_in_schema=False)
-    def _icon():
-        return _IconFileResponse(_LOGO_DIR / filename, media_type=media_type, headers=_ICON_CACHE)
-    _icon.__name__ = "icon_" + filename.replace(".", "_").replace("-", "_")
-    return _icon
-
-
-for _p, (_f, _m) in _ICON_ROUTES.items():
-    _register_icon_route(_p, _f, _m)
