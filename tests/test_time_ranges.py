@@ -1,5 +1,5 @@
 """
-tests/test_time_ranges.py — natural-language date/time ranges for searches.
+tests/test_time_ranges.py — natural-language date/time ranges for searches. 
  
 Every parser test injects its own reference instant and timezone (no test
 reads the machine clock for parsing). Ranges are half-open [start, end) in
