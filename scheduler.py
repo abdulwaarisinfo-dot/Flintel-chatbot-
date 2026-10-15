@@ -59,6 +59,7 @@ in this file can bring down the app or stop future cycles from running.
 
 import asyncio
 import logging
+import os
 from datetime import datetime, timedelta, timezone
 
 from pymongo import ReturnDocument
@@ -134,9 +135,17 @@ async def _queue_trending_search_job(keywords) -> None:
     try:
         limit = _search_website_keywords_limit()
         if limit <= 0:
-            return                                   # kill-switch: job writing off
+            # kill-switch: job writing off. Logged (was silent) so a blank/0/invalid
+            # SEARCH_WEBSITE_KEYWORDS on the server is visible in the logs.
+            log.warning(
+                "Trending-keywords scheduler: search job NOT written — "
+                f"SEARCH_WEBSITE_KEYWORDS is off/invalid "
+                f"(env={os.getenv('SEARCH_WEBSITE_KEYWORDS')!r}); Google search continues."
+            )
+            return
         job_keywords = _trending_job_keywords(keywords, limit)
         if not job_keywords:
+            log.warning("Trending-keywords scheduler: search job NOT written — no usable keywords after cleanup.")
             return
         await asyncio.to_thread(
             enqueue_search_job,
