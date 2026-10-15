@@ -1,6 +1,6 @@
 """
 tests/test_nonblocking_chat_page.py — opening a chat (or the redirect after
-sending "Hello") must not wait for a posts scan of an older unfinished
+sending "Hello") must not wait for a posts scan of an older unfinished 
 research turn; that turn must still be finished, exactly once, by the
 durable turn-finisher (turn_finisher.py + index._finish_turn_job).
 
