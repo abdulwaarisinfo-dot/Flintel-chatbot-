@@ -2,7 +2,7 @@
 FLINTEL — DURABLE FINISHING OF UNFINISHED RESEARCH TURNS
 ============================================================================
 Why this exists: GET /chat/{id} used to run a full posts scan
-(get_evidence_with_topup) SYNCHRONOUSLY for every older search turn that
+(get_evidence_with_topup) SYNCHRONOUSLY for every older search turn that 
 was still missing `results` or `claude_answer`, before the page could be
 rendered. A chat with one such turn — typically a research turn the user
 left running when they typed "Hello" — made every page load wait for the
