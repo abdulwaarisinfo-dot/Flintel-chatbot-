@@ -3,7 +3,7 @@ FLINTEL — WEB SERVICE (app wiring + chat/session/Mongo orchestration)
 ============================================================================
 This module owns: the FastAPI app itself (middleware, no-cache headers,
 session setup, Google OAuth registration), password hashing, and every
-`flintel_users` / `flintel_users_chat` Mongo-backed function (user 
+`flintel_users` / `flintel_users_chat` Mongo-backed function (user
 accounts, chat sessions, message bookkeeping, the busy-lock, the  
 background-trigger orchestration for Google-fallback/search-progress,
 and the two functions that decide when a message's answer is ready to  
@@ -149,7 +149,8 @@ from logics import (
     normalize_topic_key, normalize_platform, normalize_platforms, generate_fuzzy_keywords,
     enrich_no_results_answer,   # (NO-RESULTS UI)
     enqueue_search_job, get_matched_signals, analyze_with_claude,
-    analyze_with_claude_stream, _call_claude, classify_and_maybe_chat,
+    analyze_with_claude_stream, _extract_json_object_from_text,   # (REAL-TIME STREAMING) re-exported for routes.py's stream_answer()
+    _call_claude, classify_and_maybe_chat,
     resolve_unclear_topic, _extract_first_url, fetch_website_text,
     extract_keywords_from_website, _extract_claude_format,
     _extract_near_match_confidence, _NO_DATA_CLAUDE_FORMATS,
