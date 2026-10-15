@@ -496,6 +496,15 @@
   .answer-rendered td { color: #d1d0cf; }
   /* (ANSWER PRESENTATION) headline, tables and source list for source_list / comparison answers */
   .answer-rendered .ap-headline { font-size: 20px; line-height: 28px; margin: 0 0 16px 0; }
+  /* (NO-RESULTS UI) structured "nothing qualifying found" answer */
+  .answer-rendered .nr-searched { color: #a0a09d; font-size: 14px; line-height: 20px; margin: 0 0 14px 0; }
+  .answer-rendered .nr-note { color: #c9c8c5; }
+  .answer-rendered .nr-steps { margin: 0 0 18px 0; padding-left: 22px; color: #e8e7e4; font-size: 16px; line-height: 26px; }
+  .answer-rendered .nr-steps li { margin: 6px 0; }
+  .answer-rendered .nr-suggested { margin-top: 8px; }
+  .answer-rendered .nr-suggested-btn { background: none; border: none; padding: 0; color: inherit; font: inherit; text-align: left;
+    cursor: pointer; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.3); text-underline-offset: 3px; }
+  .answer-rendered .nr-suggested-btn:hover { text-decoration-color: #a3e635; }
   .answer-rendered .ap-heading:not(.ap-headline):not(.ap-subheading) { margin-top: 32px; }
   .answer-rendered .ap-subheading { font-size: 16px; line-height: 24px; margin: 20px 0 8px 0; }
   .answer-rendered .ap-table-wrap { width: 100%; max-width: 100%; overflow-x: auto; margin: 0 0 20px 0; }
@@ -505,6 +514,65 @@
   .answer-rendered .ap-sources-table { min-width: 640px; }
   .answer-rendered .ap-sources-table td:first-child, .answer-rendered .ap-sources-table th:first-child { width: 36px; }
   .answer-rendered .ap-source-counts { color: rgba(255,255,255,0.55); font-size: 14px; line-height: 20px; margin-bottom: 12px; }
+  /* (OUTREACH UI) outreach review layout — presentation of the outreach-notes answer only */
+  .answer-rendered .or-headline { margin-bottom: 10px; }
+  .answer-rendered .or-intro { color: #c9c8c5; margin: 0 0 12px 0; }
+  .answer-rendered .or-summary-wrap { margin-top: 18px; }
+  .answer-rendered .or-summary th:nth-child(2), .answer-rendered .or-summary td:nth-child(2) { width: 72px; text-align: left; }
+  .answer-rendered .or-divider { border: 0; border-top: 1px solid #2c2b2a; margin: 28px 0 24px 0; }
+  .answer-rendered .or-card-divider { border: 0; border-top: 1px dashed #2c2b2a; margin: 24px 0; }
+  .answer-rendered .or-section-title { margin: 0 0 6px 0; font-size: 18px; line-height: 26px; }
+  .answer-rendered .or-section-desc { color: #a0a09d; font-size: 14px; line-height: 20px; margin: 0 0 16px 0; }
+  .answer-rendered .or-card { margin: 0; }
+  .answer-rendered .or-title { display: inline-block; font-size: 17px; line-height: 25px; font-weight: 600; margin-bottom: 2px;
+    color: var(--link-color); text-decoration: none; }
+  .answer-rendered .or-title:hover, .answer-rendered .or-title-sm:hover { text-decoration: underline; color: var(--link-color-hover); }
+  .answer-rendered .or-title-sm { color: var(--link-color); text-decoration: none; font-weight: 600; }
+  .answer-rendered span.or-title, .answer-rendered span.or-title-sm { color: #fff; }
+  .answer-rendered .or-meta { color: #a0a09d; font-size: 14px; line-height: 20px; margin: 0 0 14px 0; }
+  .answer-rendered .or-table .or-meta { margin: 2px 0 0 0; font-size: 13px; }
+  .answer-rendered .or-fact { margin: 0 0 8px 0; }
+  .answer-rendered .or-field { margin: 16px 0 0 0; }
+  .answer-rendered .or-label { color: #fff; font-weight: 700; margin-bottom: 4px; }
+  .answer-rendered .or-value { margin: 0; }
+  .answer-rendered .or-muted { color: #a0a09d; }
+  .answer-rendered .or-quote { margin: 14px 0 0 0; padding: 2px 0 2px 16px; border-left: 3px solid #3a3937; }
+  .answer-rendered .or-field .or-quote { margin-top: 6px; }
+  .answer-rendered .or-quote p { margin: 0; color: #f2f1ef; white-space: pre-wrap; }
+  .answer-rendered .or-draft-text p { color: #e8e7e4; }
+  .answer-rendered .or-copy { display: inline-flex; align-items: center; vertical-align: -2px; margin-left: 8px;
+    color: #757473; position: relative; padding: 2px; border-radius: 4px; transition: color .15s ease; }
+  .answer-rendered .or-copy:hover { color: #fff; }
+  .answer-rendered .or-copy:focus-visible { outline: 2px solid var(--link-color); outline-offset: 2px; color: #fff; }
+  .answer-rendered .or-copy .or-copied { position: absolute; left: calc(100% + 6px); top: 50%; transform: translateY(-50%);
+    font-size: 13px; font-weight: 600; color: #a3e635; white-space: nowrap; opacity: 0; transition: opacity .15s ease;
+    pointer-events: none; }
+  .answer-rendered .or-copy.copied .or-copied { opacity: 1; }
+  .answer-rendered .or-fit-badge { display: inline-block; font-size: 13px; line-height: 18px; font-weight: 700;
+    padding: 1px 8px; border-radius: 999px; margin-right: 4px; border: 1px solid #3a3937; color: #e8e7e4; }
+  .answer-rendered .or-fit-fits { color: #a3e635; border-color: rgba(163,230,53,0.45); }
+  .answer-rendered .or-fit-partial { color: #e8c15a; border-color: rgba(232,193,90,0.45); }
+  .answer-rendered .or-fit-unsupported { color: #f08a7e; border-color: rgba(240,138,126,0.45); }
+  .answer-rendered .or-fit-unknown { color: #c9c8c5; }
+  .answer-rendered .or-arrow { color: #a0a09d; }
+  .answer-rendered .or-source { margin: 16px 0 0 0; font-size: 14px; line-height: 20px; overflow-wrap: anywhere; }
+  .answer-rendered .or-table { min-width: 760px; font-size: 14.5px; line-height: 21px; }
+  .answer-rendered .or-table td { vertical-align: top; }
+  .answer-rendered .or-table th, .answer-rendered .or-table td { word-break: normal; overflow-wrap: break-word; }
+  .answer-rendered .or-table th:nth-child(1) { width: 22%; }
+  .answer-rendered .or-table th:nth-child(2) { width: 13%; }
+  .answer-rendered .or-table th:nth-child(3) { width: 25%; }
+  .answer-rendered .or-table th:nth-child(4) { width: 25%; }
+  .answer-rendered .or-table th:nth-child(5) { width: 15%; }
+  .answer-rendered .or-cell-quote { margin-top: 6px; color: #f2f1ef; }
+  .answer-rendered .or-cell-note { margin-top: 6px; color: #a0a09d; font-size: 13.5px; line-height: 19px; }
+  .answer-rendered .or-action { color: #fff; font-weight: 700; }
+  .answer-rendered .or-plain-list, .answer-rendered .or-missing-list { margin: 0 0 6px 22px; }
+  .answer-rendered .or-missing-list li { margin-bottom: 8px; }
+  @media (max-width: 640px) {
+    .answer-rendered .or-title { font-size: 16px; }
+    .answer-rendered .or-divider { margin: 22px 0 18px 0; }
+  }
   /* (LINK-STYLE FIX) A detected website URL/link inside a rendered answer
      should read as normal body text with a subtle underline, not a blue
      hyperlink — color: inherit picks up whatever color the surrounding
@@ -1161,7 +1229,7 @@
 
         {% if chat.messages %}
           {% for msg in chat.messages %}
-          <div class="turn-block" data-topic-key="{{ msg.topic_key or '' }}"{% if pending_stream_topic_key and msg.topic_key == pending_stream_topic_key %} data-pending-stream="true"{% endif %}>
+          <div class="turn-block" data-topic-key="{{ msg.topic_key or '' }}" data-message-type="{{ 'chat' if msg.message_type == 'chat' else 'search' }}"{% if pending_stream_topic_key and msg.topic_key == pending_stream_topic_key %} data-pending-stream="true"{% endif %}>
             <div class="turn-row"><div class="turn-question">{{ msg.query }}</div></div>
             {% if msg.time_range and msg.time_range.display %}<div class="turn-time-range"><span>Time range: {{ msg.time_range.display }}{% if msg.time_range.note %}<br>{{ msg.time_range.note }}{% endif %}</span></div>{% endif %}
             <div class="turn-meta">
@@ -2592,47 +2660,90 @@
   // Shown only when a no_results answer carries no explanation of its own.
   const NO_RESULTS_FALLBACK_MESSAGE = "This search didn't surface enough relevant evidence to answer it. That doesn't necessarily mean those discussions don't exist — the current search just didn't find enough verifiable posts.";
 
+  // (NO-RESULTS UI) Structured "nothing qualifying found" answer: heading,
+  // what happened, what was searched (platforms / time window recorded by
+  // Flintel itself), why an empty search is not proof of no demand, next
+  // steps the app can actually do, and a suggested search the user can drop
+  // into the box. An answer-generation error and a "found but unverifiable"
+  // result are worded as such — never as "no demand". Older saved answers
+  // (without the server-filled fields) still render, without next steps.
   function renderNoResults(data, container, matchedResults) {
-    const message = document.createElement('p');
-    message.className = 'block-text';
-    const hasOwnText = [data.message, data.likely_reason, data.clarifying_question, data.near_match_offer]
-      .some((v) => typeof v === 'string' && v.trim());
-    message.textContent = data.message || (hasOwnText ? '' : NO_RESULTS_FALLBACK_MESSAGE);
-    container.appendChild(message);
+    const reason = ['empty', 'unverified', 'error'].includes(data.no_results_reason) ? data.no_results_reason : 'empty';
+    const searched = (data.searched && typeof data.searched === 'object') ? data.searched : {};
+    const str = (v) => typeof v === 'string' && v.trim();
+    const fallbackHeadline = reason === 'error' ? "The answer couldn't be completed"
+      : (reason === 'unverified' ? 'No verifiable posts to show' : 'No qualifying posts found');
+    apHeading(container, str(data.headline) ? data.headline : fallbackHeadline, 'h2', 'ap-headline');
 
-    if (data.likely_reason) {
+    const hasOwnText = [data.message, data.likely_reason, data.clarifying_question, data.near_match_offer].some(str);
+    apParagraphs(container, str(data.message) ? data.message : (hasOwnText ? '' : NO_RESULTS_FALLBACK_MESSAGE), 'block-text ap-lead');
+
+    const facts = [];
+    const platforms = Array.isArray(searched.platforms) ? searched.platforms.filter(str) : [];
+    if (platforms.length) facts.push('Searched: ' + platforms.join(', '));
+    if (str(searched.time_window)) facts.push('Time window: ' + searched.time_window);
+    if (facts.length) {
       const p = document.createElement('p');
-      p.className = 'block-text';
-      p.style.marginTop = '20px';
-      p.textContent = data.likely_reason;
+      p.className = 'nr-searched';
+      p.textContent = facts.join(' · ');
+      container.appendChild(p);
+    }
+    const notCollected = Array.isArray(searched.not_collected) ? searched.not_collected.filter(str) : [];
+    if (notCollected.length) {
+      const p = document.createElement('p');
+      p.className = 'nr-searched';
+      p.textContent = 'Not searched: ' + notCollected.join(', ') + ' — not collected yet (coming soon).';
       container.appendChild(p);
     }
 
-    if (data.clarifying_question) {
+    apParagraphs(container, data.likely_reason, 'block-text');
+    if (reason === 'empty') {
       const p = document.createElement('p');
-      p.className = 'block-text';
-      p.style.marginTop = '40px';
-      p.textContent = data.clarifying_question;
+      p.className = 'block-text nr-note';
+      p.textContent = "This means this search found no qualifying posts — not that the demand doesn't exist.";
       container.appendChild(p);
     }
+    apParagraphs(container, data.clarifying_question, 'block-text');
+    // (CLOSEST-MATCHES TIER-3 REFINEMENT) only when the backend's own
+    // near_match_confidence was "low": an offer to share looser posts.
+    apParagraphs(container, data.near_match_offer, 'block-text');
 
-    if (data.near_match_offer) {
-      // (CLOSEST-MATCHES TIER-3 REFINEMENT) Only present when the
-      // backend's own near_match_confidence was "low" — genuinely close
-      // candidates exist but Claude wasn't confident enough to show
-      // them outright, so this natural offer sentence is shown instead,
-      // and matchedResults stays empty until the user confirms in a
-      // follow-up turn (existing conversation-continuity mechanism —
-      // no new plumbing needed here, just displaying this one field).
+    // Only Flintel's own next_steps (server-filled, limited to what the app can
+    // do). The model's "suggested_actions" stay hidden, as before: they could
+    // name things Flintel doesn't do ("include news sections").
+    const steps = Array.isArray(data.next_steps) ? data.next_steps.filter(str) : [];
+    if (steps.length) {
+      apHeading(container, 'Next steps', 'h3');
+      const ul = document.createElement('ul');
+      ul.className = 'nr-steps';
+      steps.forEach((s) => { const li = document.createElement('li'); li.textContent = s; ul.appendChild(li); });
+      container.appendChild(ul);
+    }
+
+    if (str(data.suggested_search)) {
       const p = document.createElement('p');
-      p.className = 'block-text';
-      p.style.marginTop = '20px';
-      p.textContent = data.near_match_offer;
+      p.className = 'block-text nr-suggested';
+      const label = document.createElement('strong');
+      label.textContent = 'Suggested search: ';
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'nr-suggested-btn';
+      btn.title = 'Put this search in the box';
+      btn.textContent = `“${data.suggested_search}”`;
+      btn.addEventListener('click', () => {
+        const input = document.getElementById('search-input');
+        if (!input) return;
+        input.value = data.suggested_search;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.focus();
+      });
+      p.append(label, btn);
       container.appendChild(p);
     }
 
     renderClosestMatchesFromResults(matchedResults, container);
   }
+
 
   // (SEARCH-PROGRESS UI) Matches backend's current RESPONSE_TIMEOUT (360s)
   // and its 0-second search-progress/Google-fallback trigger — kept here as
@@ -2950,6 +3061,441 @@
     });
   }
 
+  // OUTREACH-UI-BEGIN
+  // (OUTREACH UI) Presentation only. An outreach answer is plain markdown built
+  // by logics.build_outreach_report() with a fixed structure: an intro, "###"
+  // category headings, numbered post blocks of "- **Label:** value" lines, a
+  // ">" draft, "Not assessed" and "To personalise this further" blocks. This
+  // reads that same text and lays it out as a review: a summary table, one card
+  // per lead, a compact table for posts not to contact. Every label and value
+  // is shown; nothing is generated, dropped or re-worded beyond headings. If the
+  // text does not have exactly that structure, null is returned and the answer
+  // is rendered as markdown, exactly as before. All text is set with
+  // textContent; links are only ever the report's own http(s) post links.
+  const OUTREACH_SECTIONS = [
+    { key: 'qualified',    prefix: 'Qualified prospects', one: 'Qualified lead', many: 'Qualified leads',
+      action: 'Review and reply carefully', why: 'Why it’s a lead', table: false },
+    { key: 'interested',   prefix: 'Interested', one: 'Potential lead', many: 'Potential leads',
+      action: 'Review and reply carefully', why: 'Why it’s a lead', table: false },
+    { key: 'weak',         prefix: 'Weak signals', one: 'Weak signal', many: 'Weak signals',
+      action: 'Do not contact', why: 'Why it’s a weak signal', table: true },
+    { key: 'ambiguous',    prefix: 'Ambiguous', one: 'Ambiguous', many: 'Ambiguous',
+      action: 'Do not contact yet', why: 'Why it’s ambiguous', table: false },
+    { key: 'irrelevant',   prefix: 'Not a fit', one: 'Not a fit', many: 'Not a fit',
+      action: 'Do not contact', why: 'Why not a fit', table: true },
+    { key: 'not_assessed', prefix: 'Not assessed', one: 'Not assessed', many: 'Not assessed',
+      action: 'Ask again for notes', list: true },
+  ];
+  const OUTREACH_INTRO_RE = /^\*\*Outreach notes for the (\d+) posts? from your previous result\*\*\s*(.*)$/;
+  const OUTREACH_MISSING_HEAD = '**To personalise this further, tell me:**';
+
+  function outreachSectionFor(heading) {
+    for (const s of OUTREACH_SECTIONS) {
+      if (heading === s.prefix || heading.indexOf(s.prefix + ' ') === 0 || heading.indexOf(s.prefix + '—') === 0) {
+        const dash = heading.indexOf(' — ');
+        return { def: s, desc: dash >= 0 ? heading.slice(dash + 3).trim() : '' };
+      }
+    }
+    return null;
+  }
+
+  // "N. **[Title](https://…)** — r/sub" | "N. **Title** — r/sub" (+ " — why" for Not assessed)
+  function parseOutreachPostHead(line) {
+    const m = /^(\d+)\.\s+(.*)$/.exec(line);
+    if (!m) return null;
+    let title = '', link = null, rest = '';
+    const withLink = /^\*\*\[(.+?)\]\((https?:\/\/[^\s)]+)\)\*\*(.*)$/.exec(m[2]);
+    const plain = withLink ? null : /^\*\*(.+?)\*\*(.*)$/.exec(m[2]);
+    if (withLink) { title = withLink[1]; link = withLink[2]; rest = withLink[3]; }
+    else if (plain) { title = plain[1]; rest = plain[2]; }
+    else return null;
+    rest = rest.replace(/^\s*—\s*/, '');
+    const dash = rest.indexOf(' — ');
+    return { number: Number(m[1]), title: title, link: link,
+             where: dash >= 0 ? rest.slice(0, dash) : rest, tail: dash >= 0 ? rest.slice(dash + 3) : '' };
+  }
+
+  function parseOutreachReport(raw) {
+    if (typeof raw !== 'string') return null;
+    const text = raw.replace(/\r\n?/g, '\n').trim();
+    const blocks = text.split(/\n{2,}/);
+    const intro = OUTREACH_INTRO_RE.exec(blocks[0] || '');
+    if (!intro) return null;
+    const report = { total: Number(intro[1]), introBold: (blocks[0].match(/^\*\*(.+?)\*\*/) || ['', ''])[1],
+                     introTail: intro[2], notes: [], sections: [], missing: [] };
+    let section = null;
+    for (let b = 1; b < blocks.length; b++) {
+      const block = blocks[b];
+      const lines = block.split('\n');
+      if (/^###\s+/.test(lines[0])) {
+        if (lines.length > 1) return null;
+        const heading = lines[0].replace(/^###\s+/, '').trim();
+        const found = outreachSectionFor(heading);
+        if (!found) return null;
+        section = { def: found.def, desc: found.desc, heading: heading, posts: [], notes: [] };
+        report.sections.push(section);
+        continue;
+      }
+      if (lines[0] === OUTREACH_MISSING_HEAD) {
+        for (const l of lines.slice(1)) {
+          const item = /^-\s+(.*)$/.exec(l);
+          if (!item) return null;
+          report.missing.push(item[1]);
+        }
+        continue;
+      }
+      const head = parseOutreachPostHead(lines[0]);
+      if (!head) {
+        if (/^(\d+\.|-\s|>|###)/.test(block)) return null;     // structured, but not a shape we know
+        (section ? section.notes : report.notes).push(block);
+        continue;
+      }
+      if (!section) return null;
+      if (section.def.list) {                                    // Not assessed: one numbered line per post
+        for (const l of lines) {
+          const h = parseOutreachPostHead(l);
+          if (!h) return null;
+          section.posts.push({ head: h, fields: [] });
+        }
+        continue;
+      }
+      const post = { head: head, fields: [] };
+      for (const l of lines.slice(1)) {
+        const field = /^-\s+\*\*(.+?):\*\*\s?(.*)$/.exec(l);
+        const quoteLine = /^\s*>\s?(.*)$/.exec(l);
+        if (field) post.fields.push({ label: field[1], value: field[2] });
+        else if (quoteLine && post.fields.length) {
+          const last = post.fields[post.fields.length - 1];
+          last.lines = (last.lines || []).concat([quoteLine[1]]);
+        } else return null;
+      }
+      section.posts.push(post);
+    }
+    if (!report.sections.length) return null;
+    return report;
+  }
+
+  const OUTREACH_COPY_ICON = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+    '<rect x="8" y="8" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/>' +
+    '<path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" stroke="currentColor" stroke-width="1.8"/></svg>';
+
+  function orEl(tag, cls, text) {
+    const el = document.createElement(tag);
+    if (cls) el.className = cls;
+    if (text !== undefined && text !== null) el.textContent = text;
+    return el;
+  }
+
+  function orCopyButton(textToCopy, label) {
+    const btn = orEl('button', 'or-copy');
+    btn.type = 'button';
+    btn.setAttribute('aria-label', label || 'Copy');
+    btn.title = label || 'Copy';
+    btn.dataset.copyText = textToCopy;
+    btn.innerHTML = OUTREACH_COPY_ICON;
+    btn.appendChild(orEl('span', 'or-copied', 'Copied'));
+    return btn;
+  }
+
+  function orCopyText(text) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+    return new Promise((resolve, reject) => {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        ok ? resolve() : reject(new Error('copy failed'));
+      } catch (e) { reject(e); }
+    });
+  }
+
+  if (!window.__outreachCopyBound) {
+    window.__outreachCopyBound = true;
+    document.addEventListener('click', (e) => {
+      const btn = e.target && e.target.closest ? e.target.closest('.or-copy') : null;
+      if (!btn) return;
+      e.preventDefault();
+      orCopyText(btn.dataset.copyText || '').then(() => {
+        btn.classList.add('copied');
+        clearTimeout(btn._copiedTimer);
+        btn._copiedTimer = setTimeout(() => btn.classList.remove('copied'), 1600);
+      }).catch(() => {});
+    });
+  }
+
+  function orPostLink(head, cls) {
+    if (head.link) {
+      const a = orEl('a', cls, head.title);
+      a.href = head.link;
+      return a;
+    }
+    return orEl('span', cls, head.title);
+  }
+
+  function orQuote(text, copyLabel, extraCls) {
+    const q = orEl('blockquote', 'or-quote' + (extraCls ? ' ' + extraCls : ''));
+    const p = orEl('p', null, text);
+    p.appendChild(orCopyButton(text.replace(/^“|”$/g, ''), copyLabel));
+    q.appendChild(p);
+    return q;
+  }
+
+  function orFieldBlock(label, valueNode) {
+    const wrap = orEl('div', 'or-field');
+    wrap.appendChild(orEl('div', 'or-label', label + ':'));
+    if (typeof valueNode === 'string') wrap.appendChild(orEl('p', 'or-value', valueNode));
+    else wrap.appendChild(valueNode);
+    return wrap;
+  }
+
+  function orInlineFact(label, value) {
+    const p = orEl('p', 'or-fact');
+    p.appendChild(orEl('strong', null, label + ': '));
+    p.appendChild(document.createTextNode(value));
+    return p;
+  }
+
+  // "Partial — part of the need … — phptravels provides …" -> badge + the rest, word for word
+  function orFitNode(value) {
+    const wrap = orEl('p', 'or-value or-fit');
+    const dash = value.indexOf(' — ');
+    const badge = dash >= 0 ? value.slice(0, dash) : value;
+    const kind = /^fits/i.test(badge) ? 'fits' : /^partial/i.test(badge) ? 'partial'
+      : /^doesn/i.test(badge) ? 'unsupported' : 'unknown';
+    wrap.appendChild(orEl('span', 'or-fit-badge or-fit-' + kind, badge));
+    if (dash >= 0) wrap.appendChild(document.createTextNode(' ' + value.slice(dash + 3)));
+    return wrap;
+  }
+
+  function orFieldMap(post) {
+    const map = {}, rest = [];
+    const known = ['Posted', 'Who', 'What they need', 'From the post', 'Why this category', 'Caution',
+                   'Product fit', 'Outreach', 'How to approach', 'Acknowledge', 'Ask', 'Outline for your reply',
+                   'Community rules', 'Draft to edit (not sent)', 'Source'];
+    const checks = [];
+    for (const f of post.fields) {
+      if (f.label === 'Flintel check') checks.push(f.value);
+      else if (known.indexOf(f.label) >= 0 && !(f.label in map)) map[f.label] = f;
+      else rest.push(f);
+    }
+    return { map, rest, checks };
+  }
+
+  function orQuoteText(value) {
+    // a verified quote is “…”; anything else is Flintel's own note about it
+    return /^“[\s\S]*”$/.test(value) ? { quote: value } : { note: value };
+  }
+
+  function orVerdict(def, desc, map) {
+    if (map['Outreach']) return map['Outreach'].value;
+    const tail = desc.indexOf(':') >= 0 ? desc.slice(desc.indexOf(':') + 1).trim() : desc;
+    return def.one + (tail ? ' — ' + tail : '');
+  }
+
+  function orMeta(head, map) {
+    const meta = orEl('div', 'or-meta');
+    const parts = [];
+    if (head.where) parts.push(head.where);
+    if (map['Posted']) parts.push('Posted: ' + map['Posted'].value);
+    meta.textContent = parts.join(' · ');
+    return meta;
+  }
+
+  function renderOutreachCard(def, desc, post) {
+    const { map, rest, checks } = orFieldMap(post);
+    const card = orEl('article', 'or-card');
+    card.appendChild(orPostLink(post.head, 'or-title'));
+    card.appendChild(orMeta(post.head, map));
+    if (map['Who']) card.appendChild(orInlineFact('Who', map['Who'].value));
+    card.appendChild(orInlineFact('Verdict', orVerdict(def, desc, map)));
+    if (map['What they need']) card.appendChild(orInlineFact('Need', map['What they need'].value));
+    if (map['From the post']) {
+      const q = orQuoteText(map['From the post'].value);
+      card.appendChild(q.quote ? orQuote(q.quote, 'Copy quote') : orEl('p', 'or-muted', q.note));
+    }
+    if (map['Why this category']) card.appendChild(orFieldBlock(def.why, map['Why this category'].value));
+    if (map['Caution']) card.appendChild(orFieldBlock('What’s unclear', map['Caution'].value));
+    if (map['Product fit']) card.appendChild(orFieldBlock('Product fit', orFitNode(map['Product fit'].value)));
+    for (const c of checks) card.appendChild(orFieldBlock('Flintel check', c));
+    if (map['How to approach']) card.appendChild(orFieldBlock('Next step', map['How to approach'].value));
+    if (map['Acknowledge']) card.appendChild(orFieldBlock('Acknowledge', map['Acknowledge'].value));
+    if (map['Ask']) card.appendChild(orFieldBlock('Ask', orQuote(map['Ask'].value, 'Copy question', 'or-ask')));
+    if (map['Outline for your reply']) {
+      const steps = map['Outline for your reply'].value.split(' → ');
+      const flow = orEl('p', 'or-value or-flow');
+      steps.forEach((s, i) => {
+        if (i) flow.appendChild(orEl('span', 'or-arrow', ' → '));
+        flow.appendChild(document.createTextNode(s));
+      });
+      card.appendChild(orFieldBlock('Reply guide', flow));
+    }
+    if (map['Community rules']) card.appendChild(orFieldBlock('Community rule', map['Community rules'].value));
+    for (const f of rest) card.appendChild(orFieldBlock(f.label, f.value));
+    const draft = map['Draft to edit (not sent)'];
+    if (draft) {
+      const lines = (draft.lines || []).concat(draft.value ? [draft.value] : []);
+      const text = lines.join('\n').trim();
+      if (text) {
+        const block = orEl('div', 'or-field or-draft');
+        block.appendChild(orEl('div', 'or-label', 'Draft to edit — not sent:'));
+        const q = orEl('blockquote', 'or-quote or-draft-text');
+        const p = orEl('p', null, text);
+        p.appendChild(orCopyButton(text, 'Copy draft'));
+        q.appendChild(p);
+        block.appendChild(q);
+        card.appendChild(block);
+      }
+    }
+    if (map['Source']) {
+      const src = orEl('p', 'or-source');
+      src.appendChild(orEl('span', 'or-muted', 'Source: '));
+      const url = map['Source'].value;
+      if (/^https?:\/\//.test(url)) {
+        const a = orEl('a', null, url);
+        a.href = url;
+        src.appendChild(a);
+      } else src.appendChild(document.createTextNode(url));
+      card.appendChild(src);
+    }
+    return card;
+  }
+
+  function renderOutreachTable(def, post_list) {
+    const wrap = orEl('div', 'ap-table-wrap or-table-wrap');
+    const table = orEl('table', 'ap-table or-table');
+    const thead = orEl('thead');
+    const hr = orEl('tr');
+    ['Post', 'Who', 'Need / quote', def.why, 'Action'].forEach((h) => hr.appendChild(orEl('th', null, h)));
+    thead.appendChild(hr);
+    table.appendChild(thead);
+    const tbody = orEl('tbody');
+    for (const post of post_list) {
+      const { map, rest, checks } = orFieldMap(post);
+      const tr = orEl('tr');
+      const c1 = orEl('td');
+      c1.appendChild(orPostLink(post.head, 'or-title-sm'));
+      c1.appendChild(orMeta(post.head, map));
+      tr.appendChild(c1);
+      tr.appendChild(orEl('td', null, map['Who'] ? map['Who'].value : ''));
+      const c3 = orEl('td');
+      if (map['What they need']) c3.appendChild(orEl('div', null, map['What they need'].value));
+      if (map['From the post']) {
+        const q = orQuoteText(map['From the post'].value);
+        c3.appendChild(orEl('div', q.quote ? 'or-cell-quote' : 'or-muted', q.quote || q.note));
+      }
+      tr.appendChild(c3);
+      const c4 = orEl('td');
+      if (map['Why this category']) c4.appendChild(orEl('div', null, map['Why this category'].value));
+      if (map['Caution']) c4.appendChild(orEl('div', 'or-cell-note', map['Caution'].value));
+      if (map['Product fit']) c4.appendChild(orEl('div', 'or-cell-note', 'Product fit: ' + map['Product fit'].value));
+      for (const c of checks) c4.appendChild(orEl('div', 'or-cell-note', 'Flintel check: ' + c));
+      for (const f of rest) c4.appendChild(orEl('div', 'or-cell-note', f.label + ': ' + f.value));
+      tr.appendChild(c4);
+      const c5 = orEl('td');
+      const action = map['Outreach'] ? map['Outreach'].value : def.action;
+      const dash = action.indexOf(' — ');
+      c5.appendChild(orEl('div', 'or-action', dash >= 0 ? action.slice(0, dash) : action));
+      if (dash >= 0) c5.appendChild(orEl('div', 'or-cell-note', action.slice(dash + 3)));
+      tr.appendChild(c5);
+      tbody.appendChild(tr);
+    }
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    return wrap;
+  }
+
+  function renderOutreachReport(raw, container) {
+    const report = parseOutreachReport(raw);
+    if (!report) return false;
+    const root = orEl('div', 'or-report');
+    root.appendChild(orEl('h3', 'ap-heading ap-headline or-headline',
+      'Outreach review — ' + report.total + (report.total === 1 ? ' post' : ' posts')));
+    const lead = orEl('p', 'or-intro');          // the report's own opening sentence, word for word
+    lead.appendChild(orEl('strong', null, report.introBold));
+    if (report.introTail) lead.appendChild(document.createTextNode(' ' + report.introTail));
+    root.appendChild(lead);
+    for (const note of report.notes) {
+      const p = orEl('p', 'or-intro');
+      const key = 'Flintel has not sent anything';
+      const at = note.indexOf(key);
+      if (at >= 0) {
+        p.appendChild(document.createTextNode(note.slice(0, at)));
+        p.appendChild(orEl('strong', null, key));
+        p.appendChild(document.createTextNode(note.slice(at + key.length)));
+      } else p.textContent = note;
+      root.appendChild(p);
+    }
+    // summary: one row per category present
+    const sumWrap = orEl('div', 'ap-table-wrap or-summary-wrap');
+    const sum = orEl('table', 'ap-table or-summary');
+    const sh = orEl('thead');
+    const shr = orEl('tr');
+    ['Category', 'Posts', 'Action'].forEach((h) => shr.appendChild(orEl('th', null, h)));
+    sh.appendChild(shr);
+    sum.appendChild(sh);
+    const sb = orEl('tbody');
+    for (const s of report.sections) {
+      const tr = orEl('tr');
+      tr.appendChild(orEl('td', null, s.def.many));
+      tr.appendChild(orEl('td', null, String(s.posts.length)));
+      tr.appendChild(orEl('td', null, s.def.action));
+      sb.appendChild(tr);
+    }
+    sum.appendChild(sb);
+    sumWrap.appendChild(sum);
+    root.appendChild(sumWrap);
+
+    for (const s of report.sections) {
+      root.appendChild(orEl('hr', 'or-divider'));
+      const sec = orEl('section', 'or-section or-section-' + s.def.key);
+      sec.appendChild(orEl('h3', 'ap-heading or-section-title',
+        (s.posts.length === 1 ? s.def.one : s.def.many) + ' — ' + s.posts.length));
+      sec.appendChild(orEl('p', 'or-section-desc', s.heading));      // the report's own heading, word for word
+      if (s.def.list) {
+        const ul = orEl('ul', 'or-plain-list');
+        for (const p of s.posts) {
+          const li = orEl('li');
+          li.appendChild(orPostLink(p.head, 'or-title-sm'));
+          if (p.head.where) li.appendChild(orEl('span', 'or-muted', ' — ' + p.head.where));
+          if (p.head.tail) li.appendChild(orEl('div', 'or-cell-note', p.head.tail));
+          ul.appendChild(li);
+        }
+        sec.appendChild(ul);
+      } else if (s.def.table) {
+        sec.appendChild(renderOutreachTable(s.def, s.posts));
+      } else {
+        s.posts.forEach((p, i) => {
+          if (i) sec.appendChild(orEl('hr', 'or-card-divider'));
+          sec.appendChild(renderOutreachCard(s.def, s.desc, p));
+        });
+      }
+      for (const n of s.notes) sec.appendChild(orEl('p', 'or-muted', n));
+      root.appendChild(sec);
+    }
+    if (report.missing.length) {
+      root.appendChild(orEl('hr', 'or-divider'));
+      const sec = orEl('section', 'or-section or-missing');
+      sec.appendChild(orEl('h3', 'ap-heading or-section-title', 'To personalize future outreach'));
+      sec.appendChild(orEl('p', 'or-intro',
+        'Tell Flintel these details so it can qualify leads more accurately and write better replies:'));
+      const ul = orEl('ul', 'or-missing-list');
+      for (const m of report.missing) ul.appendChild(orEl('li', null, m));
+      sec.appendChild(ul);
+      root.appendChild(sec);
+    }
+    container.innerHTML = '';
+    container.appendChild(root);
+    hardenExternalLinks(container);
+    return true;
+  }
+  // OUTREACH-UI-END
+
   // ANSWER-STATE-HELPERS-BEGIN
   // (MISSING-ANSWER FIX) A saved answer can render to NOTHING visible (an
   // answer cut off before any text was saved). Instead of an empty gap under
@@ -3115,6 +3661,19 @@
         // eligible for a retry.
         return;
       }
+    }
+
+    // (OUTREACH UI) The outreach-notes reply gets its review layout; any other
+    // text, or a report whose structure isn't recognised, is markdown as before.
+    try {
+      if (renderOutreachReport(raw, renderedEl)) {
+        renderedEl.style.display = 'block';
+        rawEl.style.display = 'none';
+        wrap.dataset.lastRenderedRaw = raw;
+        return;
+      }
+    } catch (e) {
+      console.warn('Outreach layout failed, rendering it as markdown:', e);
     }
 
     // Not JSON (or rendering failed) — plain "chat"/"blocked" reply, use markdown.
@@ -4009,6 +4568,12 @@
           // re-render, like a manual refresh).
           const newAnswerWrap = latestTurn.querySelector('.answer-wrap');
           if (newAnswerWrap) renderStructuredAnswer(newAnswerWrap);
+          // (FAST CONVERSATION) A conversational reply arrives complete in this
+          // response; it is revealed progressively in place (same visual
+          // streaming as research answers). Full text is already in the DOM.
+          if (newAnswerWrap && latestTurn.dataset.messageType === 'chat') {
+            startAnswerReveal(newAnswerWrap, { isCurrent: () => myGen === softNavGeneration });
+          }
           // No stream needed — the response already came back with a
           // complete claude_answer, so loading ends right here.
           setSubmitLoading(false);
