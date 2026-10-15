@@ -15,7 +15,53 @@ import logging
 from concurrent.futures import wait as _futures_wait   # <-- SCAN FIX step 4: non-blocking scan wait
 
 from fastapi import Request, Form, BackgroundTasks
-from fastapi.responses import RedirectResponse, StreamingResponse
+from fastapi.responses import RedirectResponse
+from fastapi.responses import StreamingResponse as _StarletteStreamingResponse   # (STREAM DISCONNECT FIX)
+import inspect   # (STREAM DISCONNECT FIX)
+
+
+def _close_stream_generator_when_idle(gen):
+    """(STREAM DISCONNECT FIX) Closes a streaming route's sync generator once
+    no thread is executing it, so its `finally` runs (clear the busy flag,
+    release/cancel the scan, release the turn lease). Runs in a short-lived
+    thread because the generator may still be inside one step (e.g. a 2 s
+    poll sleep) when the response ends; closing it then would raise
+    "generator already executing". Nothing resumes it after the response
+    has ended, so closing it once it is idle cannot race with the stream."""
+    if not inspect.isgenerator(gen) or gen.gi_frame is None:
+        return   # not a generator, or already finished (normal completion)
+
+    def _closer():
+        deadline = time.time() + 600
+        while gen.gi_running and time.time() < deadline:
+            time.sleep(0.05)
+        try:
+            gen.close()
+        except Exception as exc:
+            logging.getLogger("flintel-web").warning(f"Closing an abandoned answer stream failed: {exc}")
+    threading.Thread(target=_closer, name="stream-closer", daemon=True).start()
+
+
+class StreamingResponse(_StarletteStreamingResponse):
+    """(STREAM DISCONNECT FIX) Starlette's StreamingResponse, plus: when the
+    response ends — finished, failed, or cancelled because the browser
+    disconnected — the route's sync generator is closed explicitly. Without
+    this, after a disconnect Starlette left the generator suspended inside a
+    reference cycle, so its `finally` only ran whenever Python's cyclic
+    garbage collector happened to run: the owner's busy flag stayed set
+    (blocking their next message with "Please wait…"), the scan was not
+    cancelled, and the dropped research turn could not be picked up."""
+
+    def __init__(self, content, *args, **kwargs):
+        self._source_generator = content if inspect.isgenerator(content) else None
+        super().__init__(content, *args, **kwargs)
+
+    async def __call__(self, scope, receive, send):
+        try:
+            await super().__call__(scope, receive, send)
+        finally:
+            if self._source_generator is not None:
+                _close_stream_generator_when_idle(self._source_generator)
 
 import config                                          # <-- SCAN FIX step 4: live flag reads
 import flintel
@@ -29,8 +75,10 @@ from logics import exploratory_target, exploratory_reply, scope_reply, is_confir
 from logics import build_guidance_note   # (DATA-BACKED GUIDANCE)
 from logics import platform_display_value   # (PLATFORM PERSISTENCE)
 from logics import record_job_time_range, build_time_range_note   # (DATE/TIME)
+from logics import enrich_no_results_answer   # (NO-RESULTS UI)
 import os   # (DATE/TIME) DEFAULT_USER_TIMEZONE env var
 import timerange   # (DATE/TIME)
+import turn_finisher   # (STREAM LEASE) the stream holds its turn's lease while it runs
 from index import get_user_chat_list, chat_exists, set_chat_platform   # (FAST NAVIGATION / FAST PATH)
 from index import set_chat_research_offer   # (GROUNDED ANSWERS)
 from logics import build_outreach_report, build_previous_results_router_block   # (OPTION A)
@@ -101,6 +149,7 @@ from index import (
     _set_owner_busy,                    # <-- FIX: was missing, used in stream_answer()
     _clear_owner_busy,                  # <-- FIX: was missing, used in stream_answer()
     _fill_in_message_outputs,
+    schedule_unfinished_turns,          # (NON-BLOCKING CHAT PAGE)
     CLAUDE_BLOCKED_FALLBACK_REPLY,
     CLAUDE_CLARIFY_FALLBACK_REPLY,
     CLAUDE_CHAT_FALLBACK_SYSTEM_PROMPT,
@@ -1709,11 +1758,14 @@ def view_chat(request: Request, chat_id: str, background_tasks: BackgroundTasks)
         if latest_msg.get("topic_key") and latest_msg.get("claude_answer") is None:
             pending_stream_topic_key = latest_msg["topic_key"]
 
-    # Same best-effort fill-in as home(): compute post cards + Claude's
-    # answer for any SEARCH-type message that doesn't have them yet.
+    # (NON-BLOCKING CHAT PAGE) Older SEARCH-type messages still missing their
+    # post cards / answer are no longer filled in here (that ran a full posts
+    # scan before the page could render). They are recorded in the durable
+    # queue and finished by the turn-finisher worker with the same
+    # _fill_in_message_outputs() logic; they render as "Researching" until
+    # then, exactly as before while their answer was being generated.
     if messages:
-        _fill_in_message_outputs(chat_id, owner_key, messages, skip_topic_key=pending_stream_topic_key,
-                                  background_tasks=background_tasks)
+        schedule_unfinished_turns(chat_id, owner_key, messages, skip_topic_key=pending_stream_topic_key)
 
     return templates.TemplateResponse(
         request,
@@ -1916,6 +1968,23 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
     # generator. Placed right after the cached-answer replay above and
     # BEFORE the normal get_evidence_with_topup()/`matched` computation
     # below, so this branch never triggers any of that normal-path work.
+
+    # (STREAM LEASE) While this stream works on the turn it holds the turn's
+    # lease in the turn-finisher queue, so the background worker never
+    # processes the same turn at the same time. token: held; None: a worker
+    # is on this turn right now (wait for its answer, below); False: queue
+    # unavailable (proceed exactly as before). Released in finally — normal
+    # end, error or client disconnect — which hands a dropped turn straight
+    # to the worker.
+    turn_lease = {"token": False}
+
+    def _with_turn_lease(gen):
+        turn_lease["token"] = turn_finisher.hold_for_stream(chat_id, owner_key, topic_key)
+        try:
+            yield from gen
+        finally:
+            turn_finisher.release_stream(chat_id, owner_key, topic_key, turn_lease["token"])
+
     if msg.get("website_only"):
         def _website_only_generator():
             # (SSE RECONNECT-LOOP FIX) Same safety net as the _cached()
@@ -1929,7 +1998,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # independent build_website_insight_answer() call — wait
             # (bounded by RESPONSE_TIMEOUT) for the in-flight call to
             # finish and cache the answer, then replay it.
-            if _is_owner_busy(owner_key):
+            if _is_owner_busy(owner_key) or turn_lease["token"] is None:   # (STREAM LEASE) or a worker is on it
                 wait_deadline = time.time() + RESPONSE_TIMEOUT
                 resolved_answer = None
                 resolved_results = None
@@ -1947,7 +2016,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                         resolved_answer = fresh_msg["claude_answer"]
                         resolved_results = fresh_msg.get("results") or []
                         break
-                    if not _is_owner_busy(owner_key):
+                    if not _is_owner_busy(owner_key) and not turn_finisher.worker_holds(chat_id, owner_key, topic_key):
                         # Owner no longer busy but still no answer saved —
                         # the in-flight call likely failed/cleared without
                         # saving; stop waiting and fall through to running
@@ -1960,6 +2029,8 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     yield f"data: {json.dumps({'done': True, 'results': resolved_results})}\n\n"
                     return
                 # else: fall through to the normal path below.
+                if turn_lease["token"] is None:   # (STREAM LEASE) the worker let go (or stalled): take the turn
+                    turn_lease["token"] = turn_finisher.hold_for_stream(chat_id, owner_key, topic_key, force=True)
 
             _set_owner_busy(owner_key)
             try:
@@ -2017,7 +2088,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             finally:
                 _clear_owner_busy(owner_key)
 
-        return StreamingResponse(_website_only_generator(), media_type="text/event-stream")
+        return StreamingResponse(_with_turn_lease(_website_only_generator()), media_type="text/event-stream")
 
     # (SCAN FIX, STEP 4) Flag is read live on every request, so flipping the
     # env var + restarting is enough to roll back.
@@ -2097,7 +2168,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
         # the busy flag itself is also self-healing via
         # BUSY_FLAG_TIMEOUT_SECONDS in _is_owner_busy(), so a truly
         # abandoned flag clears on its own regardless.
-        if _is_owner_busy(owner_key):
+        if _is_owner_busy(owner_key) or turn_lease["token"] is None:   # (STREAM LEASE) or a worker is on it
             wait_deadline = time.time() + RESPONSE_TIMEOUT
             resolved_answer = None
             resolved_results = None
@@ -2115,7 +2186,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     resolved_answer = fresh_msg["claude_answer"]
                     resolved_results = fresh_msg.get("results") or []
                     break
-                if not _is_owner_busy(owner_key):
+                if not _is_owner_busy(owner_key) and not turn_finisher.worker_holds(chat_id, owner_key, topic_key):
                     # Owner is no longer busy but still no answer saved —
                     # the in-flight call likely failed/cleared without
                     # saving; stop waiting and fall through to running
@@ -2129,6 +2200,8 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 yield f"data: {json.dumps({'delta': resolved_answer})}\n\n"
                 yield f"data: {json.dumps({'done': True, 'results': resolved_results})}\n\n"
                 return
+            if turn_lease["token"] is None:   # (STREAM LEASE) the worker let go (or stalled): take the turn
+                turn_lease["token"] = turn_finisher.hold_for_stream(chat_id, owner_key, topic_key, force=True)
             # else: fall through to the normal path below, which will
             # itself set the busy flag and run its own Claude call —
             # this only happens if the original in-flight call never
@@ -2511,6 +2584,10 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 full_answer = _patch_post_urls_into_answer((full_answer or "").strip(), merged_pool) if full_answer else full_answer
                 if full_answer and msg.get("website_context"):
                     full_answer = _inject_website_context_into_answer(full_answer, msg["website_context"])
+                if full_answer:
+                    full_answer = enrich_no_results_answer(   # (NO-RESULTS UI) verified search facts + next steps
+                        full_answer, msg.get("query"), msg.get("targeting_platform"), msg.get("time_range"),
+                        msg.get("time_window_days"), msg.get("keywords"))
                 full_answer, results_to_save = (
                     _finalize_answer_and_results(full_answer, merged_pool, seed=msg.get("query", ""))
                     if full_answer else (full_answer, merged_pool)
@@ -2567,7 +2644,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     log.warning(f"handle.release() failed for topic_key={topic_key}: {exc}")
             _clear_owner_busy(owner_key)
 
-    return StreamingResponse(event_generator(), media_type="text/event-stream")
+    return StreamingResponse(_with_turn_lease(event_generator()), media_type="text/event-stream")
 
 
 @app.post("/chat/{chat_id}/delete")
