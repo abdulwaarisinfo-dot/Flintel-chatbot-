@@ -639,6 +639,98 @@ def platform_display_value(key_or_raw) -> str:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# (NO-RESULTS UI) Facts for the structured "nothing qualifying found" answer,
+# filled in by Flintel — never by the model: what was searched (the message's
+# own query, platforms and time window), next steps limited to what the app
+# can actually do, and a suggested search built from the user's own request
+# or the terms this search really used. Platforms that are only "Coming soon"
+# in the selector are reported as not collected yet, never as searched.
+# ─────────────────────────────────────────────────────────────────────────────
+LIVE_PLATFORM_KEYS = ("reddit",)
+_BUYER_QUERY_RE = re.compile(r"\b(?:buy|buying|buyers?|purchas\w*|leads?|customers?|clients?|prospects?|looking for|"
+                             r"need(?:s|ing)?|pay(?:ing)? for|hire|hiring|license|upgrade|demand)\b", re.IGNORECASE)
+
+
+def enrich_no_results_answer(answer_text, query, targeting_platform=None, time_range=None,
+                             time_window_days=None, keywords=None):
+    """Adds Flintel-verified fields to a "no_results" answer (see above).
+    Any other answer, unparseable text or a cut-off ("incomplete") answer is
+    returned unchanged. Never raises."""
+    try:
+        data = json.loads((answer_text or "").strip())
+    except (ValueError, TypeError):
+        return answer_text
+    if not isinstance(data, dict) or data.get("format") != "no_results" or data.get("answer_status") == "incomplete":
+        return answer_text
+    try:
+        reason = data.get("no_results_reason") if data.get("no_results_reason") in ("empty", "unverified", "error") else "empty"
+        key = normalize_platforms(targeting_platform or "all")
+        keys = list(LIVE_PLATFORM_KEYS) if key == "all" else [k for k in key.split(",") if k]
+        searched = [_PLATFORM_LABELS[k] for k in keys if k in LIVE_PLATFORM_KEYS and k in _PLATFORM_LABELS]
+        not_collected = [_PLATFORM_LABELS[k] for k in keys if k not in LIVE_PLATFORM_KEYS and k in _PLATFORM_LABELS]
+        tr = time_range if isinstance(time_range, timerange.TimeRange) else timerange.range_from_doc(time_range)
+        days = time_window_days if isinstance(time_window_days, int) and time_window_days > 0 else None
+        if tr is not None:
+            window = tr.describe()
+        elif days:
+            window = f"the last {days} day{'s' if days != 1 else ''}"
+        else:
+            window = "all posts Flintel has collected so far (no time limit)"
+        data["searched"] = {"query": query or "", "platforms": searched, "time_window": window,
+                            "not_collected": not_collected}
+        data["no_results_reason"] = reason
+        if reason == "error":
+            data["headline"] = "The answer couldn't be completed"
+        elif reason == "unverified":
+            data["headline"] = "No verifiable posts to show"
+        elif data.get("near_match_confidence") == "high":
+            data["headline"] = "No exact match — closest posts below"
+        else:
+            data["headline"] = ("No verified purchase intent found" if _BUYER_QUERY_RE.search(query or "")
+                                else "No qualifying posts found")
+        alternative = None
+        for action in data.get("suggested_actions") or []:
+            if (isinstance(action, dict) and action.get("type") == "try_nearest_alternative"
+                    and isinstance(action.get("suggestion"), str) and action["suggestion"].strip()):
+                alternative = " ".join(action["suggestion"].split())[:80]
+                break
+        steps = []
+        if reason == "error":
+            steps.append("Run the same search again — the search ran, but writing the answer failed.")
+        else:
+            if not_collected:
+                verb = "is" if len(not_collected) == 1 else "are"
+                steps.append(f"Search Reddit instead — {', '.join(not_collected)} {verb} not collected yet (coming soon).")
+            if tr is not None or days:
+                steps.append("Search a wider time window, for example the last 30 days.")
+            steps.append("Try broader or different wording for the same need.")
+            if alternative:
+                steps.append(f"Try a close alternative: {alternative}.")
+        data["next_steps"] = steps
+        suggested = None
+        if reason != "error":
+            base = " ".join((query or "").split())
+            if tr is not None and tr.phrase:
+                base = re.sub(re.escape(tr.phrase), " ", base, flags=re.IGNORECASE)
+                base = " ".join(re.sub(r"\b(?:from|in|during|for|over|within)\s*$", "", base.strip(" ,.?!")).split())
+            kw = [k.strip() for k in (keywords or []) if isinstance(k, str) and k.strip()][:3]
+            if alternative:
+                suggested = f"Find Reddit posts about {alternative}"
+            elif (tr is not None or days) and base:
+                suggested = f"{base} from the last 30 days"
+            elif len(kw) >= 2:
+                suggested = "Find Reddit posts about " + ", ".join(kw[:-1]) + f" or {kw[-1]}"
+        if suggested and suggested.strip().lower() != (query or "").strip().lower():
+            data["suggested_search"] = suggested[:200]
+        else:
+            data.pop("suggested_search", None)
+        return json.dumps(data, ensure_ascii=False)
+    except Exception as exc:
+        log.warning(f"No-results enrichment failed (answer left unchanged): {exc}")
+        return answer_text
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # FUZZY KEYWORD GENERATION — plain Python, template-based, no Claude call
 #
 # (KEYWORD-GENERATION SWAP) This function and KEYWORD_TEMPLATES are KEPT
@@ -5735,12 +5827,12 @@ def smalltalk_reply(query: str):
         return SMALLTALK_REPLIES[cap]
     text = (query or "").strip().lower()
     if not text or len(text) > 80 or "://" in text or "www." in text or re.search(r"\d", text):
-        return None
+        return conversational_reply(query)
     text = text.replace("’", "'")
     text = re.sub(r"[^a-z' ]+", " ", text)          # punctuation / emoji -> space
     text = re.sub(r"\s+", " ", text.replace("'", " ")).strip()
     if not text or len(text.split()) > _SMALLTALK_MAX_WORDS:
-        return None
+        return conversational_reply(query)
     for category in ("greeting",):
         if text in _SMALLTALK_PHRASES[category]:
             return SMALLTALK_REPLIES[category]
@@ -5753,7 +5845,100 @@ def smalltalk_reply(query: str):
     name = _introduced_name(rest)
     if name:
         return SMALLTALK_INTRO_REPLY.format(name=name)
-    return None
+    return conversational_reply(query)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# (FAST CONVERSATION) Pure social messages — greetings, "how are you",
+# thanks, "that was helpful", "I'm good, you?", goodbyes, in English or Roman
+# Urdu, alone or combined ("Salam, kya haal hai?", "thank you so much, that
+# was helpful") — are answered without the router LLM. The message is split
+# into clauses and EVERY clause must be one of these social acts; a single
+# clause with anything else in it ("hi, find CRM buyers", "thanks, now the
+# USA") sends the whole message to the router as before. The reply is
+# composed from the acts found (not one canned text per message), says
+# nothing factual, and points back to research. Bare "ok" / "yes" / "no" are
+# never treated as small talk: they may answer a question asked earlier.
+# ─────────────────────────────────────────────────────────────────────────────
+_CONV_FILLER = r"(?: (?:there|flintel|team|all|everyone|friend|buddy|mate|today|again|so much|a lot|man|bro|yaar|ji|sir))*"
+_CONV_ACTS = {
+    "greeting": (r"(?:hi+|hello+|hey+|hiya|howdy|yo|greetings|good (?:morning|afternoon|evening|day)|hey there)"
+                 r"|(?P<ru_greet>salam|salaam|slam|aoa|as+alam\w*(?: o| u)?(?: alaikum| alikum| alaykum| aleikum)?|"
+                 r"as+alamu?alaikum|adaab|namaste)"),
+    "how_are_you": (r"(?:how are (?:you|u)(?: doing)?|how r (?:you|u)|how (?:is|s) it going|hows it going|"
+                    r"how are things|how (?:is|s) your day(?: going| been)?|hows your day(?: going| been)?|"
+                    r"how have you been|how do you do|what s up|whats up|wassup|sup|how about you|and you|"
+                    r"what about you|hope you re (?:doing )?(?:well|good|fine)|hope you are (?:doing )?(?:well|good|fine)|"
+                    r"hope all is well|hope you re having a good day)"
+                    r"|(?P<ru_how>(?:aap |ap |tum )?(?:kya|kia|kiya) (?:haal|hal) (?:hai|hain|he|ha)|"
+                    r"(?:aap |ap |tum )?(?:kaise|kese|kaisay|kesay|kaisy) (?:ho|hain|hen|he|hai)|"
+                    r"(?:kya|kia) (?:chal raha|scene) (?:hai|he)|sab (?:theek|thik|khair) (?:hai|he))"),
+    "wellbeing": (r"(?:i m|im|i am) (?:good|fine|great|well|ok|okay|alright|doing (?:well|good|great|fine|ok|okay))"
+                  r"(?: too| as well)?|all good|doing (?:well|good|great|fine)|not bad|pretty good"
+                  r"|(?P<ru_well>(?:main |mai |mein )?(?:theek|thik|thek) (?:hoon|hun|hu|hon)|alhamdulillah|alhamdolillah)"),
+    "thanks": (r"(?:(?:ok|okay|haha+|lol|great|awesome|perfect|nice|cool|wow) )?(?:thanks|thank you|thank u|thx|ty|many thanks|thanks a (?:lot|ton|bunch)|"
+               r"thank you (?:so|very) much|thanks so much|much appreciated|appreciate it|cheers)"
+               r"|(?P<ru_thanks>(?:bohat |bahut |boht )?(?:shukriya|shukria|shukrya|meherbani|mehrbani)|jazak ?allah(?: khair)?)"),
+    "appreciation": (r"(?:ok |okay )?(?:that (?:was|is|s) (?:very |really |so |super )?(?:helpful|great|useful|awesome|amazing|perfect|nice|cool)|"
+                     r"(?:very |really |super )?(?:helpful|great|awesome|nice|cool|perfect|amazing|excellent|wonderful)|"
+                     r"lol|haha+|hehe+|love it|good job|well done|nice one)"
+                     r"|(?P<ru_appr>(?:bohat |bahut |boht )?(?:acha|achha|zabardast|kamaal|wah|shabash))"),
+    "goodbye": (r"(?:bye|goodbye|good bye|bye bye|see you(?: later| soon)?|see ya|good night|take care|talk later|ttyl|"
+                r"bye for now)"
+                r"|(?P<ru_bye>(?:khuda|allah) hafiz)"),
+}
+_CONV_RES = {act: re.compile(rf"^(?:{pat}){_CONV_FILLER}$") for act, pat in _CONV_ACTS.items()}
+_CONV_REPLY = {
+    "en": {"greeting": "Hi!", "how_are_you": "Doing well, thanks for asking!", "wellbeing": "Glad to hear it!",
+           "thanks": "You're welcome!", "appreciation": "Glad that helped!",
+           "goodbye": "Bye for now — come back anytime you want to look into something.",
+           "next": ("What would you like to look into — a brand, a product, or the people looking for something "
+                    "like yours?")},
+    "ru": {"greeting": "Wa alaikum assalam!", "how_are_you": "Main theek hoon, shukriya!",
+           "wellbeing": "Sun kar acha laga!", "thanks": "Koi baat nahi!", "appreciation": "Khushi hui ke kaam aaya!",
+           "goodbye": "Allah hafiz! Jab chahein wapas aaiye.",
+           "next": "Batayein, kis brand, product ya topic par logon ki baatein dekhni hain?"},
+}
+
+
+def conversational_reply(query: str):
+    """Reply for a message made ONLY of social acts (see above), else None."""
+    raw = (query or "").strip().lower().replace("’", "'")
+    if not raw or len(raw) > 160 or "://" in raw or "www." in raw or re.search(r"\d", raw):
+        return None
+    clauses = [re.sub(r"\s+", " ", re.sub(r"[^a-z' ]+", " ", c).replace("'", " ")).strip()
+               for c in re.split(r"[,.!?;:\n]+|\s+(?:and|&)\s+", raw)]
+    clauses = [c for c in clauses if c]
+    if not clauses or sum(len(c.split()) for c in clauses) > 25:
+        return None
+    acts, roman_urdu, salam = [], False, False
+    for clause in clauses:
+        for act, rx in _CONV_RES.items():
+            m = rx.match(clause)
+            if m:
+                acts.append(act)
+                groups = m.groupdict()
+                roman_urdu = roman_urdu or any(v for k, v in groups.items() if k.startswith("ru_"))
+                salam = salam or bool(groups.get("ru_greet"))
+                break
+        else:
+            return None                      # something that is not small talk
+    if set(acts) == {"wellbeing"}:
+        return None                          # "I'm fine" alone may answer a question asked earlier
+    lang = _CONV_REPLY["ru" if roman_urdu else "en"]
+    parts = []
+    if "greeting" in acts:
+        parts.append(_CONV_REPLY["ru"]["greeting"] if salam else _CONV_REPLY["en"]["greeting"])
+    if "wellbeing" in acts:
+        parts.append(lang["wellbeing"])
+    if "how_are_you" in acts:
+        parts.append(lang["how_are_you"])
+    if "thanks" in acts and "wellbeing" not in acts:          # "I'm good, thanks" thanks for asking
+        parts.append(lang["thanks"])
+    elif "appreciation" in acts and "thanks" not in acts:
+        parts.append(lang["appreciation"])
+    parts.append(lang["goodbye"] if "goodbye" in acts else lang["next"])
+    return " ".join(parts)
 
 
 # (SMALL-TALK FAST PATH — INTRODUCTIONS) "I am Hamza" / "my name is Hamza" /
@@ -7737,6 +7922,7 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
 
         answer = analyze_with_claude(query, merged_pool, extra_context=extra_ctx)
         answer = _patch_post_urls_into_answer(answer, merged_pool)
+        answer = enrich_no_results_answer(answer, query, "all", time_range=time_range, keywords=keywords)   # (NO-RESULTS UI)
         final_answer, results_to_save = _finalize_answer_and_results(answer, merged_pool, seed=query)
 
         save_claude_answer_to_chat(chat_id, owner_key, topic_key, final_answer)
@@ -7917,6 +8103,7 @@ def _extract_json_object_from_text(text: str) -> str:
         fallback_message = fallback_message[:400].rsplit(" ", 1)[0] + "…"
     safe_envelope = {
         "format": "no_results",
+        "no_results_reason": "error",   # (NO-RESULTS UI) an answer-generation failure, not an empty search
         "searched": {"query": None, "platforms": [], "time_window": None},
         "message": fallback_message,
         "likely_reason": "The answer generation step hit an unexpected formatting issue.",
@@ -8585,6 +8772,7 @@ def _strict_patch_answer(data: dict, matched_signals: list, answer_text: str) ->
         # instead of showing unverifiable cards.
         data = {
             "format": "no_results",
+            "no_results_reason": "unverified",   # (NO-RESULTS UI) posts found, none verifiable
             "searched": {"query": "", "platforms": [], "time_window": ""},
             "message": ("This search surfaced posts, but none of them could be verified "
                         "against their source text, so none are shown as qualified results."),
