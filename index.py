@@ -119,6 +119,7 @@ from authlib.integrations.starlette_client import OAuth
 
 import flintel
 import scheduler as trending_keywords_scheduler   # 12-hourly trending-keywords background job
+import turn_finisher   # (NON-BLOCKING CHAT PAGE) durable finishing of older unfinished research turns
 import google as google_search   # the new google.py module
     # (renamed on import to `google_search` to avoid any ambiguity
     # with the unrelated third-party `google` package some
@@ -146,6 +147,7 @@ def _cfg_strict_wait() -> float:
 
 from logics import (
     normalize_topic_key, normalize_platform, normalize_platforms, generate_fuzzy_keywords,
+    enrich_no_results_answer,   # (NO-RESULTS UI)
     enqueue_search_job, get_matched_signals, analyze_with_claude,
     analyze_with_claude_stream, _call_claude, classify_and_maybe_chat,
     resolve_unclear_topic, _extract_first_url, fetch_website_text,
@@ -834,6 +836,11 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
         update["$set"]["title"] = generate_chat_title(query)
 
     chats_collection.update_one({"chat_id": chat_id, "owner_key": owner_key}, update)
+    # (NON-BLOCKING CHAT PAGE) Durable record that this turn must be finished
+    # even if the browser never streams it and the chat is never reopened.
+    # Its stream normally takes the lease long before this delay; best-effort,
+    # never raises.
+    turn_finisher.enqueue(chat_id, owner_key, topic_key, due_in_seconds=turn_finisher.NEW_TURN_DELAY_SECONDS)
 
 
 def add_chat_message_to_chat(chat_id: str, owner_key: str, query: str, answer: str):
@@ -1409,6 +1416,8 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
             answer = _patch_post_urls_into_answer(answer, merged_pool)
             if msg.get("website_context"):
                 answer = _inject_website_context_into_answer(answer, msg["website_context"])
+            answer = enrich_no_results_answer(answer, msg.get("query"), msg.get("targeting_platform"),   # (NO-RESULTS UI)
+                                              msg.get("time_range"), msg.get("time_window_days"), msg.get("keywords"))
             msg["claude_answer"] = answer
             save_claude_answer_to_chat(chat_id, owner_key, msg["topic_key"], answer)
             answer_for_format_check = answer
@@ -1807,6 +1816,93 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                 background_tasks.add_task(_complete_message_answer_and_results, chat_id, owner_key, msg, matched)
             else:
                 _complete_message_answer_and_results(chat_id, owner_key, msg, matched)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# (NON-BLOCKING CHAT PAGE) Finishing older unfinished research turns
+# ─────────────────────────────────────────────────────────────────────────────
+# view_chat() used to call _fill_in_message_outputs() for every older
+# unfinished search turn before rendering, so the page waited for a full
+# posts scan. It now only records those turns in the durable queue
+# (turn_finisher.py) and wakes the worker; the worker calls the SAME
+# _fill_in_message_outputs() for one turn at a time, behind a per-turn lease.
+
+def _finish_turn_job(chat_id: str, owner_key: str, topic_key: str):
+    """Processes ONE queued turn (called by turn_finisher under its lease).
+    Returns (status, delay_seconds) — see turn_finisher.process_one().
+
+    Never marks a turn completed or failed by itself: the only work done is
+    the existing _fill_in_message_outputs() pass for that message, run
+    inline (background_tasks=None), exactly what a chat page view used to
+    trigger. The turn leaves the queue only once the chat shows both
+    `results` and `claude_answer` set."""
+    chat = get_chat_session(chat_id, owner_key)
+    if not chat:
+        return "done", None                      # chat deleted / not this owner's
+    messages = chat.get("messages") or []
+    pos = next((i for i in range(len(messages) - 1, -1, -1) if messages[i].get("topic_key") == topic_key), None)
+    if pos is None:
+        return "done", None
+    msg = messages[pos]
+    if msg.get("results") is not None and msg.get("claude_answer") is not None:
+        return "done", None
+
+    # A turn being streamed is never claimed here: the stream holds this
+    # turn's lease while it runs (turn_finisher.hold_for_stream) and hands
+    # it back when it ends or the browser drops it.
+    # Another answer call (or a stream) for this owner is in flight — the
+    # same rule _fill_in_message_outputs() applies before calling the LLM.
+    # Checked first so the scan is not repeated while it runs.
+    if _is_owner_busy(owner_key):
+        return "busy", None
+
+    _fill_in_message_outputs(chat_id, owner_key, [msg], background_tasks=None)
+
+    fresh = get_chat_session(chat_id, owner_key) or {}
+    fresh_msgs = fresh.get("messages") or []
+    fresh_msg = next((m for m in reversed(fresh_msgs) if m.get("topic_key") == topic_key), None)
+    if fresh_msg is None or (fresh_msg.get("results") is not None and fresh_msg.get("claude_answer") is not None):
+        return "done", None
+    # Still waiting for evidence before the answer deadline: check again
+    # soon (not an attempt). Past the deadline something should have
+    # produced an answer (e.g. the answer call failed): back off.
+    deadline = min(RESPONSE_TIMEOUT, _cfg_strict_wait()) if strict_intent_mode() else RESPONSE_TIMEOUT
+    elapsed = _elapsed_seconds(fresh_msg.get("requested_at"))
+    if elapsed < deadline:
+        return "retry", min(turn_finisher.PENDING_RETRY_SECONDS, max(1.0, deadline - elapsed + 1))
+    return "retry", None
+
+
+def schedule_unfinished_turns(chat_id: str, owner_key: str, messages: list, skip_topic_key: str = None) -> list:
+    """Called by view_chat() instead of the old synchronous fill-in: records
+    every unfinished search turn of this chat (except the one reserved for
+    the stream) in the durable queue, due now, and wakes the worker. Only
+    cheap queue writes happen in the request. Never raises."""
+    ids = []
+    try:
+        for key in turn_finisher.unfinished_topic_keys(messages):
+            if skip_topic_key and key == skip_topic_key:
+                continue
+            if turn_finisher.enqueue(chat_id, owner_key, key, due_in_seconds=0, pull_forward=True):
+                ids.append(turn_finisher.job_id(chat_id, owner_key, key))
+        if ids:
+            turn_finisher.wake(ids)
+    except Exception as exc:
+        log.warning(f"Scheduling unfinished turns failed for chat_id={chat_id}: {exc}")
+    return ids
+
+
+turn_finisher.configure(_finish_turn_job)
+
+
+@app.on_event("startup")
+async def _start_turn_finisher():
+    turn_finisher.start()
+
+
+@app.on_event("shutdown")
+async def _stop_turn_finisher():
+    await turn_finisher.stop()
 
 
 import routes  # noqa: F401  (registers every route on `app`)
