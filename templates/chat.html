@@ -240,6 +240,42 @@
   .topbar-btn.signup { background: #fff; color: #000; }
   .topbar-btn.logout { border: 1px solid #323130; color: #d1d0cf; }
 
+  /* ---------- Upgrade entry points (sidebar button / top-bar pill / chat pill) ---------- */
+  .upgrade-wrap { padding: 12px 16px; flex-shrink: 0; }
+  .upgrade-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; height: 36px; padding: 0 14px; border-radius: 10px;
+    border: 1px solid #343434; color: #d1d0cf; background: transparent;
+    font-size: 14px; font-weight: 500; letter-spacing: 0.1px; white-space: nowrap;
+    transition: background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .upgrade-btn svg { flex-shrink: 0; color: #C1FB3B; }
+  .upgrade-btn:hover { background: rgba(193,251,59,0.06); border-color: rgba(193,251,59,0.45); color: #fff; }
+  .plan-pill {
+    display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
+    height: 30px; padding: 0 12px; border-radius: 999px; border: 1px solid #2b2a28;
+    background: #1e1d1b; color: #a8a7a5; font-size: 13px; font-weight: 500; white-space: nowrap;
+  }
+  .plan-pill .plan-sep { color: #5d5c5a; }
+  .plan-pill a.plan-upgrade { color: #C1FB3B; font-weight: 600; }
+  .plan-pill a.plan-upgrade:hover { text-decoration: underline; }
+  .plan-pill-top { margin-right: auto; }
+  .topbar-left { display: flex; align-items: center; gap: 12px; min-width: 0; margin-right: auto; }
+  .chat-plan-pill-row { display: flex; justify-content: center; margin: 0 0 20px 0; }
+  .chat-plan-pill-row .plan-pill { height: 28px; padding: 0 8px 0 12px; }
+  .plan-pill-close {
+    width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center;
+    justify-content: center; color: #7a7a77; cursor: pointer; padding: 0;
+    background: transparent; border: 0; transition: background .15s ease, color .15s ease;
+  }
+  .plan-pill-close:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  .upg-pill-dismissed .chat-plan-pill-row { display: none; }
+  @media (max-width: 900px) {
+    .plan-pill { font-size: 12px; padding: 0 10px; }
+    .topbar-left .topbar-title { max-width: 30vw; }
+  }
+  @media (max-width: 380px) { .upgrade-wrap { padding: 10px 12px; } }
+
   /* ---------- Auth modal CSS (chat.html itself never renders this modal —
      it uses a plain "/" sign-in link instead, see the sidebar markup below).
      This block exists here PURELY so the modal stays correctly styled when
@@ -1051,6 +1087,13 @@
 </style>
 </head>
 <body>
+{# (UPGRADE ENTRY POINTS) One shared target + plan label for all upgrade UI.
+     /billing/upgrade is the existing placeholder route already used by the
+     "Not enough credits" card; no pricing page/route is implemented yet.
+     Plan label reads user.plan_name / user.plan if the user record ever has
+     one; otherwise falls back to "Free" (no plan field exists today). #}
+{% set upgrade_url = '/billing/upgrade' %}
+{% set plan_label = ((user.plan_name or user.plan or 'Free') if user else 'Free') %}
 
 <div class="layout">
 
@@ -1114,6 +1157,13 @@
     </div>
 
     <div class="divider"></div>
+
+    <div class="upgrade-wrap">
+      <a class="upgrade-btn" id="sidebar-upgrade-btn" href="{{ upgrade_url }}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Upgrade plan</span>
+      </a>
+    </div>
 
     {% if user %}
     <div class="signin-btn signed-in-row">
@@ -1191,7 +1241,10 @@
   <!-- Main -->
   <main class="main">
     <div class="topbar" id="topbar">
-      <span class="topbar-title">{{ chat.title or 'Chat' }}</span>
+      <div class="topbar-left">
+        <span class="plan-pill" id="topbar-plan-pill"><span class="plan-name">{{ plan_label }} plan</span><span class="plan-sep">·</span><a class="plan-upgrade" href="{{ upgrade_url }}">Upgrade</a></span>
+        <span class="topbar-title">{{ chat.title or 'Chat' }}</span>
+      </div>
       {% if user %}
       <a class="topbar-btn logout" href="/logout">Log out</a>
       {% else %}
@@ -1201,6 +1254,12 @@
 
     <div class="thread-wrap">
       <div class="thread-inner">
+
+        {# (UPGRADE ENTRY POINTS) dismissible plan pill — chat page only. #}
+        <div class="chat-plan-pill-row" id="chat-plan-pill-row">
+          <span class="plan-pill" id="chat-plan-pill"><span class="plan-name">{{ plan_label }} plan</span><span class="plan-sep">·</span><a class="plan-upgrade" href="{{ upgrade_url }}">Upgrade</a><button type="button" class="plan-pill-close" id="chat-plan-pill-close" aria-label="Dismiss plan notice"><svg width="9" height="9" viewBox="0 0 11 11" fill="none"><path d="M1 1L10 10M10 1L1 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button></span>
+        </div>
+        <script>try{if(sessionStorage.getItem('flintel_chat_plan_pill_dismissed')==='1')document.documentElement.classList.add('upg-pill-dismissed');}catch(e){}</script>
 
         {% macro platform_label(r) -%}
           {%- set plat = (r.platform or '')|lower -%}
@@ -4626,5 +4685,17 @@
   }
 </script>
  
+<script>
+// (UPGRADE ENTRY POINTS) Dismiss only the chat-page plan pill. Delegated so it
+// keeps working after soft-navigation swaps <main>. Does not touch the
+// sidebar button or top-bar pill; the close button is not inside the Upgrade link.
+document.addEventListener('click', function (e) {
+  var btn = e.target.closest && e.target.closest('#chat-plan-pill-close');
+  if (!btn) return;
+  e.preventDefault(); e.stopPropagation();
+  document.documentElement.classList.add('upg-pill-dismissed');
+  try { sessionStorage.setItem('flintel_chat_plan_pill_dismissed', '1'); } catch (err) {}
+});
+</script>
 </body>
 </html>
