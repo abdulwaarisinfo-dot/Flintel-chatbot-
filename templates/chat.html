@@ -418,6 +418,77 @@
      script block. */
   .welcome-btn-continue.active { background: #fff; color: #191817; }
 
+  /* ---- Sidebar bottom (hidden while welcome overlay is open for non-users) ---- */
+  .sidebar-bottom-hidden { display: none !important; }
+
+  /* ---- View-plans pill (sidebar, non-users, after welcome dismissed) ---- */
+  .view-plans-wrap { display: none; padding: 0 16px 12px 16px; flex-shrink: 0; }
+  .view-plans-wrap.visible { display: block; }
+  .view-plans-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 30px; padding: 0 12px; border-radius: 999px;
+    border: 1px solid #2b2a28; background: #1e1d1b;
+    color: #a8a7a5; font-size: 13px; font-weight: 500;
+    white-space: nowrap; width: 100%; justify-content: center;
+    text-decoration: none; transition: background .15s ease, color .15s ease;
+  }
+  .view-plans-pill:hover { background: #252422; color: #d1d0cf; }
+  .view-plans-pill svg { flex-shrink: 0; color: #a8a7a5; }
+
+  /* ---- Email verification overlay ---- */
+  .verify-overlay {
+    display: none; position: fixed; inset: 0; z-index: 40;
+    align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.75); padding: 20px;
+  }
+  .verify-overlay.visible { display: flex; }
+  .verify-card {
+    background: #1e1d1c; border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 13px; box-shadow: 0 6px 53px rgba(0,0,0,0.25);
+    width: 339px; max-width: calc(100% - 40px);
+    padding: 42px 33.5px 44px 33.5px; position: relative;
+  }
+  .verify-back {
+    position: absolute; top: 20px; left: 23px; color: #757473;
+    background: transparent; border: 0; cursor: pointer;
+    font-size: 13px; display: flex; align-items: center; gap: 4px;
+    transition: color .15s ease;
+  }
+  .verify-back:hover { color: #fff; }
+  .verify-icon-circle {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #2b2a29; display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px;
+  }
+  .verify-title {
+    color: rgba(255,255,255,0.85); font-size: 18px; font-weight: 700;
+    text-align: center; margin-bottom: 8px;
+  }
+  .verify-sub {
+    color: #a8a7a5; font-size: 14px; text-align: center;
+    margin-bottom: 24px; line-height: 1.5;
+  }
+  .verify-sub span { color: #fff; }
+  .verify-otp-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
+  .verify-otp-digit {
+    width: 44px; height: 52px; border-radius: 10px;
+    border: 1px solid #383736; background: transparent;
+    color: #fff; font-size: 22px; font-weight: 700;
+    text-align: center; outline: none; caret-color: #a3e635;
+    font-family: inherit; transition: border-color .15s ease;
+  }
+  .verify-otp-digit:focus { border-color: #a3e635; }
+  .verify-otp-digit.filled { border-color: rgba(163,230,53,0.4); }
+  .verify-confirm-btn {
+    background: #2b2a29; color: rgba(255,255,255,0.4); border: none; cursor: pointer;
+    transition: background .15s ease, color .15s ease; width: 100%;
+  }
+  .verify-confirm-btn.active { background: #fff; color: #191817; }
+  .verify-error {
+    color: #f87171; font-size: 13px; text-align: center;
+    margin-top: 12px; min-height: 18px;
+  }
+
   /* =========================================================================
      Chat thread — same visual language as index.html's conversation area,
      driven by the same real fields:
@@ -1156,6 +1227,7 @@
       </div>
     </div>
 
+    <div id="sidebar-bottom">
     <div class="divider"></div>
 
     <div class="upgrade-wrap">
@@ -1187,6 +1259,16 @@
       </span>
       <svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1L6 6L1 11" stroke="#a3e635" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
+    {% endif %}
+    </div>
+
+    {% if not user %}
+    <div class="view-plans-wrap" id="view-plans-wrap">
+      <a class="view-plans-pill" href="{{ upgrade_url }}">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M2 10h20" stroke="currentColor" stroke-width="1.6"/><path d="M6 15h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        View plans
+      </a>
+    </div>
     {% endif %}
   </aside>
 
@@ -1223,6 +1305,30 @@
     <button class="welcome-btn welcome-btn-continue" id="welcome-continue-btn" type="button">Continue</button>
   </div>
 </div>
+
+<div class="verify-overlay" id="verify-overlay">
+  <div class="verify-card">
+    <button class="verify-back" id="verify-back-btn" type="button" aria-label="Back">
+      <svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M6 1L1 6l5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back
+    </button>
+    <div class="verify-icon-circle">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" stroke="#a8a7a5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <p class="verify-title">Check your email</p>
+    <p class="verify-sub">We sent a 6-digit code to<br><span id="verify-email-display"></span></p>
+    <div class="verify-otp-row">
+      <input class="verify-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" type="text" autocomplete="one-time-code" aria-label="Digit 1" />
+      <input class="verify-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" type="text" aria-label="Digit 2" />
+      <input class="verify-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" type="text" aria-label="Digit 3" />
+      <input class="verify-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" type="text" aria-label="Digit 4" />
+      <input class="verify-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" type="text" aria-label="Digit 5" />
+      <input class="verify-otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" type="text" aria-label="Digit 6" />
+    </div>
+    <button class="welcome-btn verify-confirm-btn" id="verify-confirm-btn" type="button">Confirm</button>
+    <p class="verify-error" id="verify-error"></p>
+  </div>
+</div>
 {% endif %}
 
   <!-- Mobile top bar -->
@@ -1247,8 +1353,6 @@
       </div>
       {% if user %}
       <a class="topbar-btn logout" href="/logout">Log out</a>
-      {% else %}
-      <a class="topbar-btn signup" href="/">Sign up</a>
       {% endif %}
     </div>
 
@@ -1475,24 +1579,36 @@
     const overlay = document.getElementById('welcome-overlay');
     if (!overlay) return;
     const DISMISS_KEY = 'flintel_welcome_dismissed';
-    try {
-      if (!sessionStorage.getItem(DISMISS_KEY)) {
-        overlay.classList.add('visible');
-      }
-    } catch (e) {}
+    const sidebarBottom = document.getElementById('sidebar-bottom');
+    const viewPlansWrap = document.getElementById('view-plans-wrap');
+
+    function setSidebarState(welcomeVisible) {
+      if (sidebarBottom) sidebarBottom.classList.toggle('sidebar-bottom-hidden', welcomeVisible);
+      if (viewPlansWrap) viewPlansWrap.classList.toggle('visible', !welcomeVisible);
+    }
+
+    let alreadyDismissed = false;
+    try { alreadyDismissed = !!sessionStorage.getItem(DISMISS_KEY); } catch (e) {}
+
+    if (!alreadyDismissed) {
+      overlay.classList.add('visible');
+      setSidebarState(true);
+    } else {
+      setSidebarState(false);
+    }
 
     function dismissWelcome() {
       overlay.classList.remove('visible');
+      setSidebarState(false);
       try { sessionStorage.setItem(DISMISS_KEY, '1'); } catch (e) {}
     }
+
     const closeBtn = document.getElementById('welcome-close-btn');
     if (closeBtn) closeBtn.addEventListener('click', dismissWelcome);
 
     const appleBtn = document.getElementById('welcome-apple-btn');
     if (appleBtn) appleBtn.addEventListener('click', () => { window.location.href = '/'; });
 
-    // Same visual active-state as index.html's copy of this card: lights
-    // up (full white) once something is typed into the email field.
     const continueBtn = document.getElementById('welcome-continue-btn');
     const emailInput = document.getElementById('welcome-email-input');
     if (emailInput && continueBtn) {
@@ -1500,7 +1616,79 @@
         continueBtn.classList.toggle('active', emailInput.value.trim().length > 0);
       });
     }
-    if (continueBtn) continueBtn.addEventListener('click', () => { window.location.href = '/'; });
+    if (continueBtn) continueBtn.addEventListener('click', () => {
+      const email = emailInput ? emailInput.value.trim() : '';
+      if (!email || !continueBtn.classList.contains('active')) return;
+      const emailDisplay = document.getElementById('verify-email-display');
+      if (emailDisplay) emailDisplay.textContent = email;
+      const verifyOverlay = document.getElementById('verify-overlay');
+      if (verifyOverlay) {
+        verifyOverlay.classList.add('visible');
+        const firstDigit = verifyOverlay.querySelector('.verify-otp-digit');
+        if (firstDigit) setTimeout(() => firstDigit.focus(), 50);
+      }
+      // Backend integration point: POST /auth/email/send-code { email }
+      // Expected response: { ok: true } | { error: "..." }
+    });
+  })();
+
+  (function initVerifyOverlay() {
+    const overlay = document.getElementById('verify-overlay');
+    if (!overlay) return;
+    const digits = Array.from(overlay.querySelectorAll('.verify-otp-digit'));
+    const confirmBtn = document.getElementById('verify-confirm-btn');
+    const errorEl = document.getElementById('verify-error');
+    const backBtn = document.getElementById('verify-back-btn');
+
+    function updateConfirmState() {
+      const allFilled = digits.every(d => /^\d$/.test(d.value));
+      if (confirmBtn) confirmBtn.classList.toggle('active', allFilled);
+    }
+
+    if (backBtn) backBtn.addEventListener('click', () => {
+      overlay.classList.remove('visible');
+      digits.forEach(d => { d.value = ''; d.classList.remove('filled'); });
+      if (errorEl) errorEl.textContent = '';
+      updateConfirmState();
+    });
+
+    digits.forEach((digit, i) => {
+      digit.addEventListener('input', () => {
+        const val = digit.value.replace(/\D/g, '').slice(-1);
+        digit.value = val;
+        digit.classList.toggle('filled', val.length > 0);
+        if (val && i < digits.length - 1) digits[i + 1].focus();
+        updateConfirmState();
+      });
+      digit.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !digit.value && i > 0) {
+          digits[i - 1].value = '';
+          digits[i - 1].classList.remove('filled');
+          digits[i - 1].focus();
+          updateConfirmState();
+        }
+      });
+      digit.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+        digits.forEach((d, j) => {
+          d.value = paste[j] || '';
+          d.classList.toggle('filled', !!paste[j]);
+        });
+        const nextEmpty = digits.findIndex(d => !d.value);
+        (nextEmpty >= 0 ? digits[nextEmpty] : digits[5]).focus();
+        updateConfirmState();
+      });
+    });
+
+    if (confirmBtn) confirmBtn.addEventListener('click', () => {
+      if (!confirmBtn.classList.contains('active')) return;
+      const code = digits.map(d => d.value).join('');
+      // Backend integration point: POST /auth/verify { email, code }
+      // Expected response: { ok: true } | { error: "..." }
+      // On success: redirect to the intended page or reload authenticated.
+      if (errorEl) errorEl.textContent = 'Email verification backend not yet configured.';
+    });
   })();
 
   // (MOBILE FIX 4) .docked-input-wrap is `position: fixed; bottom: 0`,
