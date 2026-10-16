@@ -2690,6 +2690,7 @@ async def google_callback(request: Request):
     google_id = userinfo["sub"]
     email = userinfo["email"]
     name = userinfo.get("name") or email
+    picture = userinfo.get("picture")
 
     # Capture the guest UUID (if any) BEFORE login overwrites how get_owner()
     # resolves this request, so we can migrate any guest chats onto the
@@ -2697,7 +2698,7 @@ async def google_callback(request: Request):
     # just extended to chat history too.
     anon_id = request.session.get("anon_id")
 
-    user_doc = upsert_google_user(google_id=google_id, email=email, name=name)
+    user_doc = upsert_google_user(google_id=google_id, email=email, name=name, picture=picture)
     _log_user_in(request, user_doc)
     try:
         migrate_anon_chats_to_owner(anon_id, email)
