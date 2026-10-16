@@ -199,7 +199,7 @@
   .signed-in-row { cursor: default; }
   .signed-in-row:hover { background: transparent !important; }
   .user-profile-row { display: flex; align-items: center; gap: 12px; padding: 4px 20px 16px; }
-  .user-avatar-gradient { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 700; }
+  .user-avatar-gradient { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 700; overflow: hidden; }
   .user-profile-info { display: flex; flex-direction: column; min-width: 0; }
   .user-profile-name { color: #e8e7e5; font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .user-profile-plan { color: #7a7a77; font-size: 12px; }
@@ -1241,7 +1241,7 @@
       </a>
     </div>
     <div class="user-profile-row">
-      <span class="user-avatar-gradient">{{ (user.name or user.email)[0]|upper }}</span>
+      <span class="user-avatar-gradient">{% if user.picture %}<img src="{{ user.picture }}" alt="" referrerpolicy="no-referrer" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';"><span style="display:none;color:#fff;font-size:13px;font-weight:600;">{{ (user.name or user.email)[0]|upper }}</span>{% else %}<span style="color:#fff;font-size:13px;font-weight:600;">{{ (user.name or user.email)[0]|upper }}</span>{% endif %}</span>
       <span class="user-profile-info">
         <span class="user-profile-name">{{ user.name or user.email }}</span>
         <span class="user-profile-plan">{{ plan_label }}</span>
