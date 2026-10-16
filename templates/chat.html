@@ -244,13 +244,13 @@
   .upgrade-wrap { padding: 12px 16px; flex-shrink: 0; }
   .upgrade-btn {
     display: flex; align-items: center; justify-content: center; gap: 8px;
-    width: 100%; height: 36px; padding: 0 14px; border-radius: 10px;
-    border: 1px solid #343434; color: #d1d0cf; background: transparent;
+    width: 100%; height: 36px; padding: 0 14px; border-radius: 999px;
+    border: 1px solid #2b2a28; color: #d1d0cf; background: #252422;
     font-size: 14px; font-weight: 500; letter-spacing: 0.1px; white-space: nowrap;
     transition: background .15s ease, border-color .15s ease, color .15s ease;
   }
-  .upgrade-btn svg { flex-shrink: 0; color: #C1FB3B; }
-  .upgrade-btn:hover { background: rgba(193,251,59,0.06); border-color: rgba(193,251,59,0.45); color: #fff; }
+  .upgrade-btn svg { flex-shrink: 0; color: #d1d0cf; }
+  .upgrade-btn:hover { background: #2e2d2b; border-color: #3a3937; color: #fff; }
   .plan-pill {
     display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
     height: 30px; padding: 0 12px; border-radius: 999px; border: 1px solid #2b2a28;
@@ -261,7 +261,7 @@
   .plan-pill a.plan-upgrade:hover { text-decoration: underline; }
   .plan-pill-top { margin-right: auto; }
   .topbar-left { display: flex; align-items: center; gap: 12px; min-width: 0; margin-right: auto; }
-  .chat-plan-pill-row { display: flex; justify-content: center; margin: 0 0 20px 0; position: sticky; top: 62px; z-index: 5; background: #171615; padding: 8px 0; }
+  .chat-plan-pill-row { display: flex; justify-content: center; padding: 8px 0 4px; flex-shrink: 0; }
   .chat-plan-pill-row .plan-pill { height: 28px; padding: 0 8px 0 12px; }
   .plan-pill-close {
     width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center;
@@ -1232,10 +1232,12 @@
 
     <div class="upgrade-wrap">
       <a class="upgrade-btn" id="sidebar-upgrade-btn" href="{{ upgrade_url }}">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/><path d="M12 16V8M8 12l4-4 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span>Upgrade plan</span>
       </a>
     </div>
+
+    <div class="divider" style="margin: 4px 16px 0;"></div>
 
     {% if user %}
     <div class="signin-btn signed-in-row">
@@ -1355,14 +1357,14 @@
       {% endif %}
     </div>
 
+    {# (UPGRADE ENTRY POINTS) dismissible plan pill — outside scroll container so it never moves. #}
+    <div class="chat-plan-pill-row" id="chat-plan-pill-row">
+      <span class="plan-pill" id="chat-plan-pill"><span class="plan-name">{{ plan_label }} plan</span><span class="plan-sep">·</span><a class="plan-upgrade" href="{{ upgrade_url }}">Upgrade</a><button type="button" class="plan-pill-close" id="chat-plan-pill-close" aria-label="Dismiss plan notice"><svg width="9" height="9" viewBox="0 0 11 11" fill="none"><path d="M1 1L10 10M10 1L1 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button></span>
+    </div>
+    <script>try{if(sessionStorage.getItem('flintel_chat_plan_pill_dismissed')==='1')document.documentElement.classList.add('upg-pill-dismissed');}catch(e){}</script>
+
     <div class="thread-wrap">
       <div class="thread-inner">
-
-        {# (UPGRADE ENTRY POINTS) dismissible plan pill — chat page only. #}
-        <div class="chat-plan-pill-row" id="chat-plan-pill-row">
-          <span class="plan-pill" id="chat-plan-pill"><span class="plan-name">{{ plan_label }} plan</span><span class="plan-sep">·</span><a class="plan-upgrade" href="{{ upgrade_url }}">Upgrade</a><button type="button" class="plan-pill-close" id="chat-plan-pill-close" aria-label="Dismiss plan notice"><svg width="9" height="9" viewBox="0 0 11 11" fill="none"><path d="M1 1L10 10M10 1L1 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button></span>
-        </div>
-        <script>try{if(sessionStorage.getItem('flintel_chat_plan_pill_dismissed')==='1')document.documentElement.classList.add('upg-pill-dismissed');}catch(e){}</script>
 
         {% macro platform_label(r) -%}
           {%- set plat = (r.platform or '')|lower -%}
