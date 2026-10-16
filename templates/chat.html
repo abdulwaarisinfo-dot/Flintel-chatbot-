@@ -204,6 +204,107 @@
   .user-profile-name { color: #e8e7e5; font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .user-profile-plan { color: #7a7a77; font-size: 12px; }
 
+  /* ---- Account menu ---- */
+  .user-profile-row { position: relative; cursor: pointer; transition: background .15s ease; border-radius: 8px; }
+  .user-profile-row:hover { background: rgba(255,255,255,0.04); }
+  .account-menu-chevron { margin-left: auto; color: #7a7a77; flex-shrink: 0; transition: transform .15s ease; pointer-events: none; }
+  .user-profile-row.menu-open .account-menu-chevron { transform: rotate(180deg); }
+  .account-menu {
+    display: none; position: fixed; z-index: 200;
+    background: #1e1d1b; border: 1px solid #3d3d3b; border-radius: 13px;
+    padding: 6px; box-shadow: 0 6px 28px rgba(0,0,0,0.5); min-width: 200px;
+  }
+  .account-menu.open { display: block; }
+  .account-menu-email {
+    padding: 8px 12px 6px; color: #7a7a77; font-size: 12px; font-weight: 500;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .account-menu-sep { height: 1px; background: #2b2a28; margin: 4px 2px; }
+  .acct-item {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    padding: 9px 12px; border-radius: 8px; text-align: left;
+    color: #e8e6e3; font-size: 14px; font-weight: 500;
+    transition: background .15s ease; background: none; border: none;
+    cursor: pointer; text-decoration: none;
+  }
+  .acct-item:hover { background: #252421; }
+  .acct-item.danger { color: #E2645A; }
+  .acct-item.danger:hover { background: rgba(226,100,90,0.1); }
+  .acct-item svg { flex-shrink: 0; }
+
+  /* ---- Settings overlay ---- */
+  .settings-overlay {
+    display: none; position: fixed; inset: 0; z-index: 150;
+    background: rgba(0,0,0,0.65);
+    align-items: flex-start; justify-content: center;
+    padding: 48px 20px 20px;
+  }
+  .settings-overlay.open { display: flex; }
+  .settings-modal {
+    background: #1e1d1b; border: 1px solid #2b2a28; border-radius: 16px;
+    width: 720px; max-width: 100%; max-height: calc(100vh - 68px);
+    display: flex; overflow: hidden; position: relative;
+    box-shadow: 0 16px 64px rgba(0,0,0,0.55);
+  }
+  .settings-close-btn {
+    position: absolute; top: 14px; right: 14px; z-index: 2;
+    width: 30px; height: 30px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #757473; background: none; border: none; cursor: pointer;
+    transition: color .15s ease, background .15s ease;
+  }
+  .settings-close-btn:hover { color: #fff; background: rgba(255,255,255,0.07); }
+  .settings-nav {
+    width: 190px; flex-shrink: 0; border-right: 1px solid #2b2a28;
+    padding: 22px 10px; display: flex; flex-direction: column; gap: 2px;
+  }
+  .settings-nav-label {
+    color: #7a7a77; font-size: 11px; font-weight: 600; letter-spacing: 0.55px;
+    text-transform: uppercase; padding: 0 10px 10px 10px;
+  }
+  .settings-tab-btn {
+    display: flex; align-items: center; gap: 9px;
+    padding: 9px 10px; border-radius: 9px; width: 100%; text-align: left;
+    color: #b0afad; font-size: 14px; font-weight: 500;
+    background: none; border: none; cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+  }
+  .settings-tab-btn:hover { background: #252421; color: #fff; }
+  .settings-tab-btn.active { background: #252421; color: #fff; }
+  .settings-tab-btn svg { flex-shrink: 0; }
+  .settings-body { flex: 1; overflow-y: auto; padding: 26px 28px 28px; min-width: 0; }
+  .settings-panel { display: none; }
+  .settings-panel.active { display: block; }
+  .settings-panel-heading { color: #fff; font-size: 17px; font-weight: 700; margin-bottom: 20px; }
+  .settings-field-row {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    padding: 14px 0; border-bottom: 1px solid #252421; gap: 20px;
+  }
+  .settings-field-row:last-child { border-bottom: none; }
+  .settings-field-label { color: #e8e6e3; font-size: 14px; font-weight: 500; }
+  .settings-field-sub { color: #7a7a77; font-size: 13px; margin-top: 4px; line-height: 1.5; }
+  .settings-field-val { color: #7a7a77; font-size: 14px; text-align: right; flex-shrink: 0; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .settings-info-card { background: #252421; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+  .settings-info-card-label { color: #7a7a77; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
+  .settings-info-card-val { color: #e8e6e3; font-size: 14px; font-weight: 500; }
+  .settings-danger-zone { margin-top: 28px; padding-top: 18px; border-top: 1px solid #2b2a28; }
+  .settings-danger-title { color: #7a7a77; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 14px; }
+  .settings-logout-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 16px; border-radius: 9px; background: none;
+    border: 1px solid rgba(226,100,90,0.35); color: #E2645A;
+    font-size: 14px; font-weight: 500; cursor: pointer;
+    text-decoration: none; transition: background .15s ease, border-color .15s ease;
+  }
+  .settings-logout-btn:hover { background: rgba(226,100,90,0.1); border-color: rgba(226,100,90,0.6); }
+  .settings-upgrade-cta {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 9px 18px; border-radius: 10px; background: #a3e635;
+    color: #171615; font-size: 14px; font-weight: 600;
+    text-decoration: none; transition: background .15s ease;
+  }
+  .settings-upgrade-cta:hover { background: #b6f04a; }
+
   /* ---------- Mobile top bar ---------- */
   .mobile-topbar {
     display: none;
@@ -212,6 +313,15 @@
     background: #1e1d1b; border-bottom: 1px solid #2b2a28;
     padding: 16px 20px;
   }
+  .mobile-topbar-right { display: flex; align-items: center; gap: 8px; }
+  .mobile-acct-btn {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, #5c3d8f, #7c5cbf);
+    border: none; cursor: pointer; color: #fff; font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0; flex-shrink: 0; line-height: 1;
+  }
+  .mobile-acct-btn:hover { background: linear-gradient(135deg, #6d4aa8, #8d6fd0); }
   .mobile-overlay {
     display: none;
     position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 15;
@@ -1240,12 +1350,13 @@
         <span>Upgrade plan</span>
       </a>
     </div>
-    <div class="user-profile-row">
+    <div class="user-profile-row" id="acct-profile-row" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false">
       <span class="user-avatar-gradient">{% if user.picture %}<img src="{{ user.picture }}" alt="" referrerpolicy="no-referrer" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';"><span style="display:none;color:#fff;font-size:13px;font-weight:600;">{{ (user.name or user.email)[0]|upper }}</span>{% else %}<span style="color:#fff;font-size:13px;font-weight:600;">{{ (user.name or user.email)[0]|upper }}</span>{% endif %}</span>
       <span class="user-profile-info">
         <span class="user-profile-name">{{ user.name or user.email }}</span>
         <span class="user-profile-plan">{{ plan_label }}</span>
       </span>
+      <svg class="account-menu-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     {% else %}
     <div class="upgrade-wrap">
@@ -1334,9 +1445,12 @@
       </div>
       <span class="logo-text">Flintel</span>
     </div>
-    <button class="icon-btn" id="mobile-sidebar-toggle" aria-label="Toggle sidebar" aria-pressed="false">
-      <svg width="22" height="22" viewBox="0 0 15 15" fill="none"><rect x="0.5" y="0.5" width="14" height="14" rx="2.5" stroke="currentColor"/><line x1="5.5" y1="1" x2="5.5" y2="14" stroke="currentColor"/></svg>
-    </button>
+    <div class="mobile-topbar-right">
+      {% if user %}<button class="mobile-acct-btn" id="mobile-acct-btn" type="button" aria-label="Account menu" aria-haspopup="true">{{ ((user.name or user.email or 'U')[0]) | upper }}</button>{% endif %}
+      <button class="icon-btn" id="mobile-sidebar-toggle" aria-label="Toggle sidebar" aria-pressed="false">
+        <svg width="22" height="22" viewBox="0 0 15 15" fill="none"><rect x="0.5" y="0.5" width="14" height="14" rx="2.5" stroke="currentColor"/><line x1="5.5" y1="1" x2="5.5" y2="14" stroke="currentColor"/></svg>
+      </button>
+    </div>
   </div>
 
   <!-- Main -->
@@ -4886,5 +5000,226 @@ document.addEventListener('click', function (e) {
   try { sessionStorage.setItem('flintel_chat_plan_pill_dismissed', '1'); } catch (err) {}
 });
 </script>
+
+<!-- ===== ACCOUNT SETTINGS OVERLAY ===== -->
+<div id="acct-settings-overlay" class="settings-overlay" role="dialog" aria-modal="true" aria-label="Settings">
+  <div class="settings-modal">
+    <button class="settings-close-btn" id="acct-settings-close" type="button" aria-label="Close settings">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+    <nav class="settings-nav" aria-label="Settings navigation">
+      <div class="settings-nav-label">Settings</div>
+      <button class="settings-tab-btn active" type="button" data-panel="general">
+        <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="3" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="11" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="11" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg>
+        General
+      </button>
+      <button class="settings-tab-btn" type="button" data-panel="account">
+        <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 17c0-3.31 3.13-6 7-6s7 2.69 7 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Account
+      </button>
+      <button class="settings-tab-btn" type="button" data-panel="usage">
+        <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><rect x="2" y="11" width="4" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="8" y="7" width="4" height="11" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="14" y="3" width="4" height="15" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+        Usage &amp; Plan
+      </button>
+      <button class="settings-tab-btn" type="button" data-panel="privacy">
+        <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M10 2l7 3v5c0 4-3.1 7.4-7 8.5C6.1 17.4 3 14 3 10V5l7-3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        Privacy
+      </button>
+    </nav>
+    <div class="settings-body">
+      <div class="settings-panel active" data-panel="general">
+        <h2 class="settings-panel-heading">General</h2>
+        <p style="color:#7a7a77;font-size:14px;">No general settings available yet.</p>
+      </div>
+      <div class="settings-panel" data-panel="account">
+        <h2 class="settings-panel-heading">Account</h2>
+        <div class="settings-field-row">
+          <div><span class="settings-field-label">Name</span></div>
+          <span class="settings-field-val">{{ user.name or '—' }}</span>
+        </div>
+        <div class="settings-field-row">
+          <div><span class="settings-field-label">Email</span></div>
+          <span class="settings-field-val">{{ user.email }}</span>
+        </div>
+        <div class="settings-field-row">
+          <div><span class="settings-field-label">Sign-in method</span></div>
+          <span class="settings-field-val">{% if user.google_id %}Google{% else %}Email &amp; password{% endif %}</span>
+        </div>
+      </div>
+      <div class="settings-panel" data-panel="usage">
+        <h2 class="settings-panel-heading">Usage &amp; Plan</h2>
+        <div class="settings-info-card">
+          <div class="settings-info-card-label">Current Plan</div>
+          <div class="settings-info-card-val">{{ plan_label }}</div>
+        </div>
+        <div class="settings-info-card">
+          <div class="settings-info-card-label">Messages sent (all time)</div>
+          <div class="settings-info-card-val" id="acct-usage-count">—</div>
+        </div>
+        <a class="settings-upgrade-cta" href="{{ upgrade_url }}">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 3v14M4 9l6-6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Upgrade plan
+        </a>
+      </div>
+      <div class="settings-panel" data-panel="privacy">
+        <h2 class="settings-panel-heading">Privacy</h2>
+        <p style="color:#9b9997;font-size:14px;line-height:1.6;margin-bottom:12px;">Flintel stores your email, name, and chat history to provide the service. Your data is not shared with third parties.</p>
+        <p style="color:#9b9997;font-size:14px;line-height:1.6;">To delete your account and all associated data, email <a href="mailto:hello.flintel@gmail.com?subject=Delete%20my%20account" style="color:#a78bfa;text-decoration:none;">hello.flintel@gmail.com</a> with "Delete my account" in the subject line.</p>
+      </div>
+      <div class="settings-panel" data-panel="help">
+        <h2 class="settings-panel-heading">Get help</h2>
+        <p style="color:#7a7a77;font-size:14px;">For support, email <a href="mailto:hello.flintel@gmail.com" style="color:#a78bfa;text-decoration:none;">hello.flintel@gmail.com</a>.</p>
+      </div>
+      <div class="settings-panel" data-panel="learn">
+        <h2 class="settings-panel-heading">Learn more</h2>
+        <p style="color:#7a7a77;font-size:14px;">Flintel is an AI-powered assistant. More resources coming soon.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var overlay  = document.getElementById('acct-settings-overlay');
+  var closeBtn = document.getElementById('acct-settings-close');
+  var acctRow  = null;
+
+  function getRow()  { if (!acctRow) acctRow = document.getElementById('acct-profile-row'); return acctRow; }
+  function getMenu() { return document.getElementById('acct-menu'); }
+
+  function positionMenu(anchor) {
+    var el = anchor || getRow(); var menu = getMenu();
+    if (!el || !menu) return;
+    var rect = el.getBoundingClientRect();
+    var menuW = Math.max(rect.width, 220);
+    var leftPos = Math.min(rect.left, window.innerWidth - menuW - 4);
+    leftPos = Math.max(leftPos, 4);
+    menu.style.left  = leftPos + 'px';
+    menu.style.width = menuW + 'px';
+    if (rect.top > window.innerHeight / 2) {
+      menu.style.bottom = (window.innerHeight - rect.top + 6) + 'px';
+      menu.style.top    = '';
+    } else {
+      menu.style.top    = (rect.bottom + 6) + 'px';
+      menu.style.bottom = '';
+    }
+  }
+
+  function openMenu(anchor) {
+    positionMenu(anchor);
+    var row = getRow(); var menu = getMenu();
+    if (menu) menu.classList.add('open');
+    if (row)  { row.classList.add('menu-open'); row.setAttribute('aria-expanded', 'true'); }
+  }
+
+  function closeMenu() {
+    var row = getRow(); var menu = getMenu();
+    if (menu) menu.classList.remove('open');
+    if (row)  { row.classList.remove('menu-open'); row.setAttribute('aria-expanded', 'false'); }
+  }
+
+  function loadUsageData() {
+    var el = document.getElementById('acct-usage-count');
+    if (!el || el.dataset.loaded) return;
+    fetch('/api/me/usage')
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(d) { if (d && el) { el.textContent = d.message_count; el.dataset.loaded = '1'; } })
+      .catch(function() {});
+  }
+
+  function openSettings(panel) {
+    closeMenu();
+    overlay.querySelectorAll('.settings-tab-btn').forEach(function (b) { b.classList.toggle('active', b.dataset.panel === panel); });
+    overlay.querySelectorAll('.settings-panel').forEach(function (p) { p.classList.toggle('active', p.dataset.panel === panel); });
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (panel === 'usage') loadUsageData();
+  }
+
+  function closeSettings() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('click', function (e) {
+    var mobileBtn = e.target.closest && e.target.closest('#mobile-acct-btn');
+    if (mobileBtn) {
+      e.stopPropagation();
+      var menu = getMenu();
+      if (menu && menu.classList.contains('open')) { closeMenu(); } else { openMenu(mobileBtn); }
+      return;
+    }
+    var row = getRow();
+    if (!row) return;
+    if (row.contains(e.target) && !e.target.closest('#acct-menu')) {
+      e.stopPropagation();
+      var menu = getMenu();
+      if (menu && menu.classList.contains('open')) { closeMenu(); } else { openMenu(); }
+      return;
+    }
+    var menu = getMenu();
+    if (menu && menu.classList.contains('open') && !menu.contains(e.target)) { closeMenu(); }
+  });
+
+  document.addEventListener('click', function (e) {
+    var item = e.target.closest && e.target.closest('[data-acct-action]');
+    if (!item) return;
+    e.preventDefault();
+    var a = item.dataset.acctAction;
+    if (a === 'settings') openSettings('general');
+    else if (a === 'usage')  openSettings('usage');
+    else if (a === 'help')   openSettings('help');
+    else if (a === 'learn')  openSettings('learn');
+  });
+
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('.settings-tab-btn');
+    if (!btn || !overlay.classList.contains('open')) return;
+    openSettings(btn.dataset.panel);
+  });
+
+  if (closeBtn) closeBtn.addEventListener('click', closeSettings);
+  if (overlay) overlay.addEventListener('click', function (e) { if (e.target === overlay) closeSettings(); });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    var menu = getMenu();
+    if (menu && menu.classList.contains('open')) { closeMenu(); return; }
+    if (overlay && overlay.classList.contains('open')) closeSettings();
+  });
+})();
+</script>
+
+<div class="account-menu" id="acct-menu" role="menu">
+  <div class="account-menu-email">{{ user.email if user else '' }}</div>
+  <div class="account-menu-sep"></div>
+  <button class="acct-item" type="button" data-acct-action="settings" role="menuitem">
+    <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 2v1.5M10 16.5V18M2 10h1.5M16.5 10H18M4.22 4.22l1.06 1.06M14.72 14.72l1.06 1.06M15.78 4.22l-1.06 1.06M5.28 14.72l-1.06 1.06" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    Settings
+  </button>
+  <button class="acct-item" type="button" data-acct-action="usage" role="menuitem">
+    <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="2" y="11" width="4" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="8" y="7" width="4" height="11" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="14" y="3" width="4" height="15" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+    Usage
+  </button>
+  <button class="acct-item" type="button" data-acct-action="help" role="menuitem">
+    <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M7.5 7.5a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="14.5" r=".75" fill="currentColor"/></svg>
+    Get help
+  </button>
+  <div class="account-menu-sep"></div>
+  <a class="acct-item" href="{{ upgrade_url }}" role="menuitem">
+    <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 3v14M4 9l6-6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Upgrade plan
+  </a>
+  <button class="acct-item" type="button" data-acct-action="learn" role="menuitem">
+    <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2L2 7l8 5 8-5-8-5zM2 13l8 5 8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Learn more
+  </button>
+  <div class="account-menu-sep"></div>
+  <a class="acct-item danger" href="/logout" role="menuitem">
+    <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M13 3h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2M9 14l4-4-4-4M13 10H3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Log out
+  </a>
+</div>
 </body>
 </html>
