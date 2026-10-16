@@ -198,6 +198,11 @@
   .signin-label { font-size: 15px; font-weight: 500; letter-spacing: 0.15px; }
   .signed-in-row { cursor: default; }
   .signed-in-row:hover { background: transparent !important; }
+  .user-profile-row { display: flex; align-items: center; gap: 12px; padding: 4px 20px 16px; }
+  .user-avatar-gradient { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 700; }
+  .user-profile-info { display: flex; flex-direction: column; min-width: 0; }
+  .user-profile-name { color: #e8e7e5; font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .user-profile-plan { color: #7a7a77; font-size: 12px; }
 
   /* ---------- Mobile top bar ---------- */
   .mobile-topbar {
@@ -1228,30 +1233,27 @@
     </div>
 
     <div id="sidebar-bottom">
-    <div class="divider"></div>
-
+    {% if user %}
     <div class="upgrade-wrap">
       <a class="upgrade-btn" id="sidebar-upgrade-btn" href="{{ upgrade_url }}">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/><path d="M12 16V8M8 12l4-4 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span>Upgrade plan</span>
       </a>
     </div>
-
-    <div class="divider" style="margin: 4px 16px 0;"></div>
-
-    {% if user %}
-    <div class="signin-btn signed-in-row">
-      <span class="signin-left">
-        <span class="signin-avatar">
-          <span style="color:#fff; font-size:13px; font-weight:600;">{{ (user.name or user.email)[0]|upper }}</span>
-        </span>
-        <span class="signin-label">{{ user.name or user.email }}</span>
+    <div class="user-profile-row">
+      <span class="user-avatar-gradient">{{ (user.name or user.email)[0]|upper }}</span>
+      <span class="user-profile-info">
+        <span class="user-profile-name">{{ user.name or user.email }}</span>
+        <span class="user-profile-plan">{{ plan_label }}</span>
       </span>
-      <a href="/logout" class="icon-btn" title="Log out" aria-label="Log out">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M15 17l5-5-5-5M20 12H9M13 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7" stroke="#a3e635" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
     </div>
     {% else %}
+    <div class="upgrade-wrap">
+      <a class="upgrade-btn" id="sidebar-upgrade-btn" href="{{ upgrade_url }}">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M2 10h20" stroke="currentColor" stroke-width="1.6"/><path d="M6 15h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <span>View plans</span>
+      </a>
+    </div>
     <a class="signin-btn" href="/">
       <span class="signin-left">
         <span class="signin-avatar">
@@ -1259,19 +1261,10 @@
         </span>
         <span class="signin-label">Sign In</span>
       </span>
-      <svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1L6 6L1 11" stroke="#a3e635" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1L6 6L1 11" stroke="#7a7a77" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
     {% endif %}
     </div>
-
-    {% if not user %}
-    <div class="view-plans-wrap" id="view-plans-wrap">
-      <a class="view-plans-pill" href="{{ upgrade_url }}">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M2 10h20" stroke="currentColor" stroke-width="1.6"/><path d="M6 15h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-        View plans
-      </a>
-    </div>
-    {% endif %}
   </aside>
 
   <div class="mobile-overlay" id="mobile-overlay"></div>
@@ -1581,11 +1574,9 @@
     if (!overlay) return;
     const DISMISS_KEY = 'flintel_welcome_dismissed';
     const sidebarBottom = document.getElementById('sidebar-bottom');
-    const viewPlansWrap = document.getElementById('view-plans-wrap');
 
     function setSidebarState(welcomeVisible) {
       if (sidebarBottom) sidebarBottom.classList.toggle('sidebar-bottom-hidden', welcomeVisible);
-      if (viewPlansWrap) viewPlansWrap.classList.toggle('visible', !welcomeVisible);
     }
 
     let alreadyDismissed = false;
