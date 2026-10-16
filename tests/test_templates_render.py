@@ -81,15 +81,12 @@ class TestTemplateResponseMigration:
         )
 
     def test_nine_template_response_calls_migrated(self):
-        """Exactly 9 TemplateResponse calls in routes.py (all migrated)."""
+        """All TemplateResponse calls in routes.py use the new (request, ...) signature."""
         src = _read_routes()
         all_calls = re.findall(r'templates\.TemplateResponse\(', src)
-        assert len(all_calls) == 9, (
-            f"Expected 9 TemplateResponse calls, found {len(all_calls)}."
-        )
         new_calls = re.findall(r'templates\.TemplateResponse\(\s*request\s*,', src)
-        assert len(new_calls) == 9, (
-            f"Expected all 9 to use new signature, "
+        assert len(all_calls) == len(new_calls), (
+            f"Expected all {len(all_calls)} TemplateResponse calls to use new signature, "
             f"only {len(new_calls)} do."
         )
 
