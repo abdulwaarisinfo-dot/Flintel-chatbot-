@@ -2795,6 +2795,55 @@ def logout(request: Request):
     return RedirectResponse(url="/")
 
 
+@app.get("/api/me/usage")
+def api_me_usage(request: Request):
+    """Returns the current user's lifetime message count. 401 if not logged in."""
+    from fastapi.responses import JSONResponse
+    user = get_current_user(request)
+    if not user:
+        return JSONResponse({"error": "not_authenticated"}, status_code=401)
+    from bson import ObjectId
+    doc = users_collection.find_one({"_id": ObjectId(user["id"])}, {"message_count": 1})
+    count = int((doc or {}).get("message_count", 0))
+    return JSONResponse({"message_count": count, "plan": "Free"})
+
+
+@app.get("/billing/upgrade")
+def billing_upgrade(request: Request):
+    """Honest placeholder — no billing system exists yet."""
+    from fastapi.responses import HTMLResponse
+    html = """<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade – Flintel</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#0d0d0d;color:#d1d0cf;
+     display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
+.card{background:#1c1b1a;border:1px solid #323130;border-radius:12px;padding:40px 36px;
+      max-width:460px;width:100%;text-align:center}
+h1{font-size:22px;font-weight:700;color:#fff;margin-bottom:12px}
+p{font-size:14px;line-height:1.65;color:#9b9997;margin-bottom:16px}
+a{color:#a78bfa;text-decoration:none}a:hover{text-decoration:underline}
+.back{display:inline-block;margin-top:8px;padding:10px 22px;border:1px solid #323130;
+      border-radius:8px;color:#d1d0cf;font-size:14px}
+.back:hover{background:#252422;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Upgrade coming soon</h1>
+  <p>Paid plans are not available yet. Flintel is free to use while we build the billing system.</p>
+  <p>Questions? <a href="mailto:hello.flintel@gmail.com">hello.flintel@gmail.com</a></p>
+  <a class="back" href="/">&#8592; Back to Flintel</a>
+</div>
+</body>
+</html>"""
+    return HTMLResponse(html)
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # (FAVICON) Public brand-icon routes. No auth, no session, no DB, no credits.
 # Absolute paths from __file__ so they resolve in production whatever the CWD.
