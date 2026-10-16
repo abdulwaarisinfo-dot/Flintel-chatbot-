@@ -1812,6 +1812,11 @@
       const newStyleTag = doc.querySelector('style#app-styles') || doc.querySelector('style');
       const currentStyleTag = document.querySelector('style#app-styles') || document.querySelector('style');
       if (newStyleTag && currentStyleTag) {
+        // Hide overlays before CSS swap so they don't render unstyled
+        const _vo = document.getElementById('verify-overlay');
+        const _wo = document.getElementById('welcome-overlay');
+        if (_vo) _vo.classList.remove('visible');
+        if (_wo) _wo.classList.remove('visible');
         currentStyleTag.textContent = newStyleTag.textContent;
       }
       currentMain.innerHTML = newMain.innerHTML;
