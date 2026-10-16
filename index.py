@@ -600,6 +600,17 @@ def get_owner(request: Request):
     return get_anon_id(request), "anon"
 
 
+def increment_message_count(owner_key: str):
+    """Atomically increments message_count on the user document for email-keyed (logged-in) owners.
+    No-ops silently for anonymous UUID owner_keys and if the user document is not found."""
+    if not owner_key or '@' not in owner_key:
+        return
+    try:
+        users_collection.update_one({"email": owner_key}, {"$inc": {"message_count": 1}})
+    except Exception:
+        pass
+
+
 def generate_chat_title(query: str) -> str:
     """Auto-names a chat from its first query, the same way Claude/ChatGPT
     title a new conversation from your first message."""
@@ -850,6 +861,7 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
     # Its stream normally takes the lease long before this delay; best-effort,
     # never raises.
     turn_finisher.enqueue(chat_id, owner_key, topic_key, due_in_seconds=turn_finisher.NEW_TURN_DELAY_SECONDS)
+    increment_message_count(owner_key)
 
 
 def add_chat_message_to_chat(chat_id: str, owner_key: str, query: str, answer: str):
@@ -890,6 +902,7 @@ def add_chat_message_to_chat(chat_id: str, owner_key: str, query: str, answer: s
         update["$set"]["title"] = generate_chat_title(query)
 
     chats_collection.update_one({"chat_id": chat_id, "owner_key": owner_key}, update)
+    increment_message_count(owner_key)
 
 
 def _set_on_latest_message(chat_id: str, owner_key: str, topic_key: str, fields: dict):
