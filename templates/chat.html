@@ -1348,7 +1348,6 @@
   <main class="main">
     <div class="topbar" id="topbar">
       <div class="topbar-left">
-        <span class="plan-pill" id="topbar-plan-pill"><span class="plan-name">{{ plan_label }} plan</span><span class="plan-sep">·</span><a class="plan-upgrade" href="{{ upgrade_url }}">Upgrade</a></span>
         <span class="topbar-title">{{ chat.title or 'Chat' }}</span>
       </div>
       {% if user %}
@@ -1834,6 +1833,8 @@
       scrollToLatestTurn();
       if (newSessionsList && currentSessionsList) {
         currentSessionsList.innerHTML = newSessionsList.innerHTML;
+        const _se = document.querySelector('.sessions-empty');
+        if (_se && currentSessionsList.children.length > 0) _se.style.display = 'none';
       }
       if (doc.title) document.title = doc.title;
 
@@ -4780,6 +4781,8 @@
         const liveSessionsList = document.querySelector('#sessions-list');
         if (newSessionsList && liveSessionsList) {
           liveSessionsList.innerHTML = newSessionsList.innerHTML;
+          const _se = document.querySelector('.sessions-empty');
+          if (_se && liveSessionsList.children.length > 0) _se.style.display = 'none';
         }
 
         const newThreadInner = doc.querySelector('.thread-inner');
