@@ -475,27 +475,33 @@ def create_email_user(email: str, password_hash: str):
     return users_collection.find_one({"_id": result.inserted_id})
 
 
-def upsert_google_user(google_id: str, email: str, name: str):
+def upsert_google_user(google_id: str, email: str, name: str, picture: str = None):
     """Logs in an existing Google user, links Google to a matching
     email/password account, or creates a brand-new account."""
     now = datetime.now(timezone.utc)
 
     user = users_collection.find_one({"google_id": google_id})
     if user:
-        users_collection.update_one({"_id": user["_id"]}, {"$set": {"last_login_at": now}})
+        set_fields = {"last_login_at": now}
+        if picture:
+            set_fields["picture"] = picture
+        users_collection.update_one({"_id": user["_id"]}, {"$set": set_fields})
         return users_collection.find_one({"_id": user["_id"]})
 
     # Same email already registered manually -> link the Google identity
     # to that existing account instead of creating a duplicate.
     existing = users_collection.find_one({"email": email})
     if existing:
+        set_fields = {"google_id": google_id, "name": name, "provider": "both", "last_login_at": now}
+        if picture:
+            set_fields["picture"] = picture
         users_collection.update_one(
             {"_id": existing["_id"]},
-            {"$set": {"google_id": google_id, "name": name, "provider": "both", "last_login_at": now}},
+            {"$set": set_fields},
         )
         return users_collection.find_one({"_id": existing["_id"]})
 
-    result = users_collection.insert_one({
+    new_doc = {
         "email":          email,
         "name":           name,
         "google_id":      google_id,
@@ -503,7 +509,9 @@ def upsert_google_user(google_id: str, email: str, name: str):
         "provider":       "google",
         "created_at":     now,
         "last_login_at":  now,
-    })
+        "picture":        picture,
+    }
+    result = users_collection.insert_one(new_doc)
     return users_collection.find_one({"_id": result.inserted_id})
 
 
