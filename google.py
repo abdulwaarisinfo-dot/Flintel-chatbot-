@@ -112,16 +112,25 @@ def _call_rapidapi_google_search(query: str):
         "x-rapidapi-host": RAPIDAPI_GOOGLE_HOST,
         "Content-Type": "application/json",
     }
+    status = "error"
     try:
         with httpx.Client(timeout=GOOGLE_SEARCH_TIMEOUT_SECONDS) as client:
             response = client.get(
                 url, headers=headers,
                 params={"query": query, "depth": GOOGLE_SEARCH_DEPTH},
             )
+            status = "ok" if response.status_code < 400 else f"http_{response.status_code}"
             response.raise_for_status()
             return response.json()
     except Exception:
         return None
+    finally:
+        # (USAGE) one paid external request, counted apart from model tokens
+        try:
+            import usage_meter
+            usage_meter.record_external("google_search", "rapidapi", status=status)
+        except Exception:
+            pass
 
 
 def _extract_reddit_results(raw_response) -> list:
