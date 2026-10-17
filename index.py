@@ -1031,6 +1031,27 @@ def _mark_answered_at(chat_id: str, owner_key: str, topic_key: str):
         log.warning(f"Saving answered_at failed for topic_key={topic_key}: {exc}")
 
 
+def save_message_feedback(chat_id: str, owner_key: str, msg_index: int, feedback: str):
+    """Store 'up' or 'down' feedback on a specific message by its array index.
+
+    Uses the index directly (not topic_key) so repeated queries with the
+    same topic_key never misdirect the write. Idempotent: if feedback is
+    already set on that message it is overwritten (allows changing mind).
+    Best-effort — never raises past itself."""
+    if feedback not in ("up", "down"):
+        return
+    try:
+        chats_collection.update_one(
+            {"chat_id": chat_id, "owner_key": owner_key},
+            {"$set": {
+                f"messages.{msg_index}.msg_feedback": feedback,
+                "updated_at": datetime.now(timezone.utc),
+            }},
+        )
+    except Exception as exc:
+        log.warning(f"Saving feedback failed for chat_id={chat_id} idx={msg_index}: {exc}")
+
+
 def mark_google_fallback_triggered(chat_id: str, owner_key: str, topic_key: str):
     """(GOOGLE-FALLBACK FEATURE) Same targeted-update pattern as
     save_claude_answer_to_chat()/save_signal_results_to_chat() — flips
