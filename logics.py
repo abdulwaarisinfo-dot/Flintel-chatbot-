@@ -144,6 +144,7 @@ import httpx
 
 import flintel
 import timerange   # (DATE/TIME) natural-language search ranges
+import answer_integrity   # (ANSWER INTEGRITY) deterministic checks on the listed posts
 import website_intelligence
 import google as google_search   # the new google.py module
 
@@ -184,6 +185,17 @@ import logging
 log = logging.getLogger("flintel-web")
 try: import usage_meter as _um
 except Exception: _um = None
+
+
+def _usage_attribution(**ids):
+    """Tags metered API calls with the search they serve (no-op without usage_meter)."""
+    import contextlib
+    return _um.attribution(**ids) if _um is not None else contextlib.nullcontext()
+
+
+def _usage_request_id():
+    """Request id of the search being handled, if any (set by POST /search)."""
+    return _um.current_request_id() if _um is not None else None
 
 # (RETRIEVAL RECALL FIX) Bounds on the lexical candidate tier's generated
 # Mongo query — see _build_lexical_or_clause(). LEXICAL_MAX_TERMS caps how
@@ -3660,6 +3672,10 @@ pain-point/general research queries.
           "title": "<post title, or a short label if none>",
           "summary": "<max 12-15 words, minimal paraphrase — this is a reference, not the analysis>",
           "sentiment": "<positive|mixed|negative|neutral>",
+          "role": "<buyer|discussion|competitor_promo|testimonial|irrelevant — see POST LABELS>",
+          "purchase_intent": "<explicit|research|none>",
+          "product_fit": "<fits|partial|unrelated>",
+          "evidence": "<a short quote copied word for word from THIS post's title or text that supports its labels — omit if none>",
           "link": "<real post URL if available, else omit this field entirely>",
           "google_rank": <int, omit unless this post came from the supplementary Google search>
         }
@@ -3687,6 +3703,22 @@ REFERENCES RULE: every "supporting_post_indices" entry must correspond
 to a real post you were actually given — never invent an index, a URL,
 an author, or a date. If source metadata (platform, title) isn't
 available for a post, omit that detail rather than fabricating it.
+Only cite a post in any text field ("Post N") if that same post is listed
+in "posts" with that index; never cite a post you did not list.
+
+POST LABELS (each listed post): "role" — buyer (the author asks for a tool,
+service or solution for themselves), discussion (general talk, advice,
+strategy or hypothetical questions), competitor_promo (someone presenting
+or launching their own product), testimonial (someone describing a tool
+they already use), irrelevant. "purchase_intent" — explicit only when the
+author asks for a solution AND shows a purchase step (budget, trial or
+pilot, pricing to buy, a deadline); a request for recommendations alone is
+research; a budget alone is not explicit. "product_fit" — whether the
+author's need is one the user's product or topic addresses; general
+marketing questions and unrelated use cases are unrelated (do not list
+them). Competitor promotions and testimonials are market context, never
+buyer demand: never count them as buyers, leads or demand, and never rate
+a demand finding Strong on them.
 
 OPTIONAL FIELD — "business_insight" (source_list format only): after
 grounding everything above strictly in the evidence, you MAY add a
@@ -4332,7 +4364,7 @@ def _call_claude(system_prompt: str, user_message: str, max_tokens: int = None, 
         if data.get("status") == "incomplete":
             log.warning(f"LLM response incomplete | model={LLM_MODEL} | reason={data.get('incomplete_details')}")
         if _um:
-            try: _um.record_usage("llm", LLM_MODEL, *_um.extract_responses_usage(data), status=("incomplete" if data.get("status") == "incomplete" else "ok"), extra={"web_search_enabled": bool(enable_web_search)})
+            try: _um.record_usage("llm", LLM_MODEL, *_um.extract_responses_usage(data), status=("incomplete" if data.get("status") == "incomplete" else "ok"), extra={"web_search_enabled": bool(enable_web_search), "response_id": data.get("id")})
             except Exception: pass
 
     # Extract text from output items
@@ -4601,13 +4633,15 @@ def _call_claude_stream(system_prompt: str, user_message: str, max_tokens: int =
                     if _um:
                         try:
                             _r_usage = ((event.get("response") or {}).get("usage") or {})
-                            _um.record_usage("llm_stream", LLM_MODEL, _r_usage.get("input_tokens"), _r_usage.get("output_tokens"), status="ok")
+                            _um.record_usage("llm_stream", LLM_MODEL, _r_usage.get("input_tokens"), _r_usage.get("output_tokens"), status="ok",
+                                             extra={"response_id": (event.get("response") or {}).get("id")})
                         except Exception: pass
                 elif event_type in ("response.failed", "response.incomplete"):
                     if _um:
                         try:
                             _r_usage = ((event.get("response") or {}).get("usage") or {})
-                            _um.record_usage("llm_stream", LLM_MODEL, _r_usage.get("input_tokens"), _r_usage.get("output_tokens"), status="incomplete")
+                            _um.record_usage("llm_stream", LLM_MODEL, _r_usage.get("input_tokens"), _r_usage.get("output_tokens"), status="incomplete",
+                                             extra={"response_id": (event.get("response") or {}).get("id")})
                         except Exception: pass
                     log.warning(f"LLM stream ended early | type={event_type} | model={LLM_MODEL}")
                     return
@@ -7793,7 +7827,7 @@ def _resolved_request_note(query: str, resolved_query: str):
 
 def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query: str, keywords: list = None,
                               match_phrases: list = None, evidence_required: int = None, website_note: str = None,
-                              resolved_query: str = None, time_range=None):
+                              resolved_query: str = None, time_range=None, request_id: str = None):
     """(PERFORMANCE FIX) Extracted, UNCHANGED logic from the RESPONSE_TIMEOUT
     fallback branch that used to run inline inside _fill_in_message_outputs()
     — same calls, same order, same caching. Pulled out so it can be
@@ -7900,13 +7934,14 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
         try:
             _strict_fb = strict_intent_mode()
             _fb_kwargs = {"user_query": query} if _strict_fb else {}
-            matched = get_evidence_with_topup(
-                chat_id=chat_id, owner_key=owner_key, topic_key=topic_key,
-                keywords=keywords or [], evidence_required=evidence_required,
-                matcher_fn=get_matched_signals, match_phrases=match_phrases,
-                targeting_platform="all", **_fb_kwargs,
-                **({"time_range": time_range} if time_range else {}),   # (DATE/TIME)
-            )
+            with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=topic_key, request_id=request_id):
+                matched = get_evidence_with_topup(
+                    chat_id=chat_id, owner_key=owner_key, topic_key=topic_key,
+                    keywords=keywords or [], evidence_required=evidence_required,
+                    matcher_fn=get_matched_signals, match_phrases=match_phrases,
+                    targeting_platform="all", **_fb_kwargs,
+                    **({"time_range": time_range} if time_range else {}),   # (DATE/TIME)
+                )
         except Exception as exc:
             log.warning(f"Signal matching failed for topic_key={topic_key}: {exc}")
             matched = []
@@ -7942,8 +7977,9 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
             extra_ctx_parts.append(_rq_note)
         extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
 
-        answer = analyze_with_claude(query, merged_pool, extra_context=extra_ctx)
-        answer = _patch_post_urls_into_answer(answer, merged_pool)
+        with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=topic_key, request_id=request_id):
+            answer = analyze_with_claude(query, merged_pool, extra_context=extra_ctx)
+        answer = _patch_post_urls_into_answer(answer, merged_pool, query=query)
         answer = enrich_no_results_answer(answer, query, "all", time_range=time_range, keywords=keywords)   # (NO-RESULTS UI)
         final_answer, results_to_save = _finalize_answer_and_results(answer, merged_pool, seed=query)
 
@@ -8445,10 +8481,12 @@ def _finalize_answer_and_results(answer_text: str, matched: list, seed: str = ""
         return answer_text, []
     if seed and _explicit_no_posts_request(seed) and not _explicit_posts_request(seed):
         answer_text = _strip_displayed_posts(answer_text)
+    # (ANSWER INTEGRITY) each stored result carries its place in the checked
+    # report (in_report / excluded / not_selected / not_analyzed).
     if strict_intent_mode():
         # Strict: cards and answer text are ONE list.
-        return answer_text, _strict_cards_for_answer(answer_text, matched)
-    return answer_text, matched
+        return answer_text, answer_integrity.annotate_results(_strict_cards_for_answer(answer_text, matched), answer_text)
+    return answer_text, answer_integrity.annotate_results(matched, answer_text)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -8714,7 +8752,7 @@ def _resolve_answer_post_strict(post: dict, aligned: list):
     return None, None
 
 
-def _strict_patch_answer(data: dict, matched_signals: list, answer_text: str) -> str:
+def _strict_patch_answer(data: dict, matched_signals: list, answer_text: str, query=None) -> str:
     """Strict replacement for the permissive link/source/title patching."""
     fmt = data.get("format")
     if fmt not in ("source_list", "comparison"):
@@ -8801,6 +8839,8 @@ def _strict_patch_answer(data: dict, matched_signals: list, answer_text: str) ->
             "likely_reason": "The listed posts could not be matched back to their original posts with confidence.",
             "suggested_actions": [],
         }
+    elif query is not None:
+        data = answer_integrity.enforce_answer_integrity(data, matched_signals, aligned, query)
     return json.dumps(data, ensure_ascii=False)
 
 
@@ -8837,7 +8877,7 @@ def _strict_cards_for_answer(answer_text: str, matched: list) -> list:
     return cards if listed else matched
 
 
-def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str:
+def _patch_post_urls_into_answer(answer_text: str, matched_signals: list, query=None) -> str:
     """(POST_URL FIX) CLAUDE_ANALYSIS_SYSTEM_PROMPT asks for a "link"
     field with "the real post URL if available" on every post it lists —
     but Claude is deliberately NEVER shown post_url (see
@@ -8908,7 +8948,7 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str
     fmt = data.get("format")
     if strict_intent_mode():
         # Strict: identity must be confirmed; unconfirmed posts are removed.
-        return _strict_patch_answer(data, matched_signals, answer_text)
+        return _strict_patch_answer(data, matched_signals, answer_text, query=query)
     changed = False
 
     # (POST ENRICHMENT) Index i (1-based) in Claude's answer == i-th entry
@@ -8987,6 +9027,13 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str
                     _patch_platform_list(subject.get("platforms"))
     else:
         return answer_text
+
+    # (ANSWER INTEGRITY) Production callers pass the user's query: the listed
+    # posts are then classified, filtered, renumbered and counted against the
+    # stored posts (answer_integrity.py). Without it, only the patch above runs.
+    if query is not None:
+        data = answer_integrity.enforce_answer_integrity(data, matched_signals, aligned, query)
+        return json.dumps(data, ensure_ascii=False)
 
     if not changed:
         return answer_text
