@@ -182,6 +182,8 @@ from config import (
 
 import logging
 log = logging.getLogger("flintel-web")
+try: import usage_meter as _um
+except Exception: _um = None
 
 # (RETRIEVAL RECALL FIX) Bounds on the lexical candidate tier's generated
 # Mongo query — see _build_lexical_or_clause(). LEXICAL_MAX_TERMS caps how
@@ -1255,6 +1257,9 @@ def generate_query_embedding(text: str):
             input=truncated,
             timeout=EMBEDDING_TIMEOUT,
         )
+        if _um:
+            try: _um.record_usage("embedding", EMBEDDING_MODEL, response.usage.prompt_tokens, 0)
+            except Exception: pass
         return response.data[0].embedding
     except Exception as exc:
         log.warning(f"Query-embedding generation failed: {exc}")
@@ -1304,6 +1309,9 @@ def generate_query_embeddings_batch(texts: list):
             input=truncated,
             timeout=EMBEDDING_TIMEOUT,
         )
+        if _um:
+            try: _um.record_usage("embedding", EMBEDDING_MODEL, response.usage.prompt_tokens, 0)
+            except Exception: pass
         return [item.embedding for item in response.data]
     except Exception as exc:
         log.warning(f"Batch query-embedding generation failed: {exc}")
@@ -4323,6 +4331,9 @@ def _call_claude(system_prompt: str, user_message: str, max_tokens: int = None, 
         data = response.json()
         if data.get("status") == "incomplete":
             log.warning(f"LLM response incomplete | model={LLM_MODEL} | reason={data.get('incomplete_details')}")
+        if _um:
+            try: _um.record_usage("llm", LLM_MODEL, *_um.extract_responses_usage(data), status=("incomplete" if data.get("status") == "incomplete" else "ok"), extra={"web_search_enabled": bool(enable_web_search)})
+            except Exception: pass
 
     # Extract text from output items
     result_parts = []
@@ -4586,7 +4597,18 @@ def _call_claude_stream(system_prompt: str, user_message: str, max_tokens: int =
                     text = event.get("delta", "")
                     if text:
                         yield text
+                elif event_type == "response.completed":
+                    if _um:
+                        try:
+                            _r_usage = ((event.get("response") or {}).get("usage") or {})
+                            _um.record_usage("llm_stream", LLM_MODEL, _r_usage.get("input_tokens"), _r_usage.get("output_tokens"), status="ok")
+                        except Exception: pass
                 elif event_type in ("response.failed", "response.incomplete"):
+                    if _um:
+                        try:
+                            _r_usage = ((event.get("response") or {}).get("usage") or {})
+                            _um.record_usage("llm_stream", LLM_MODEL, _r_usage.get("input_tokens"), _r_usage.get("output_tokens"), status="incomplete")
+                        except Exception: pass
                     log.warning(f"LLM stream ended early | type={event_type} | model={LLM_MODEL}")
                     return
 
