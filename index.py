@@ -1,7 +1,7 @@
 """
 FLINTEL — WEB SERVICE (app wiring + chat/session/Mongo orchestration)
 ============================================================================
-This module owns: the FastAPI app itself (middleware, no-cache headers, 
+This module owns: the FastAPI app itself (middleware, no-cache headers,
 session setup, Google OAuth registration), password hashing, and every
 `flintel_users` / `flintel_users_chat` Mongo-backed function (user
 accounts, chat sessions, message bookkeeping, the busy-lock, the  
@@ -154,7 +154,7 @@ from logics import (
     resolve_unclear_topic, _extract_first_url, fetch_website_text,
     extract_keywords_from_website, _extract_claude_format,
     _extract_near_match_confidence, _NO_DATA_CLAUDE_FORMATS,
-    _patch_post_urls_into_answer, _inject_website_context_into_answer,
+    _patch_post_urls_into_answer, _inject_website_context_into_answer, _usage_attribution, _usage_request_id,
     _finalize_answer_and_results, _timeout_fallback_answer,
     get_evidence_with_topup, _resolved_request_note,
     strict_intent_mode, strict_wait_done, get_scan_status,
@@ -839,6 +839,7 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
         "search_progress": None,               # (SEARCH-PROGRESS UI) None until generated
         "search_progress_generated": False,    # (SEARCH-PROGRESS UI) fire-once guard, mirrors google_fallback_triggered
         "requested_at":       now,
+        "request_id":         _usage_request_id(),   # (USAGE) ties every metered call of this search together
         # (RESULTS-RECOMPUTE FIX) `None` here, not `[]` — an empty list is
         # a legitimate, ALREADY-COMPUTED final value (e.g. a "no_results"
         # answer genuinely has zero results). Using None to mean "not
@@ -1194,11 +1195,13 @@ def _trigger_google_fallback_search(chat_id: str, owner_key: str, msg: dict):
     message doesn't get any Google-sourced stub links, exactly like
     before this feature existed."""
     try:
-        google_search.search_google_for_reddit_posts(
-            msg.get("keywords", []),
-            google_posts_collection,
-            search_keyword_for_storage=msg.get("topic_key"),
-        )
+        with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=msg.get("topic_key"),
+                                request_id=msg.get("request_id")):
+            google_search.search_google_for_reddit_posts(
+                msg.get("keywords", []),
+                google_posts_collection,
+                search_keyword_for_storage=msg.get("topic_key"),
+            )
     except Exception as exc:
         log.warning(f"Google-fallback search failed for topic_key={msg.get('topic_key')}: {exc}")
 
@@ -1252,12 +1255,14 @@ def _generate_search_progress(chat_id: str, owner_key: str, msg: dict):
     itself is still the thing that actually persists it, and it already
     degrades gracefully (own try/except) on any storage failure."""
     try:
-        progress_content = flintel.generate_search_progress_content(
-            msg.get("query"),
-            msg.get("keywords", []),
-            msg.get("targeting_platform"),
-            _call_claude,
-        )
+        with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=msg.get("topic_key"),
+                                    request_id=msg.get("request_id")):
+            progress_content = flintel.generate_search_progress_content(
+                msg.get("query"),
+                msg.get("keywords", []),
+                msg.get("targeting_platform"),
+                _call_claude,
+            )
     except Exception as exc:
         log.warning(f"Search-progress generation failed for topic_key={msg.get('topic_key')}: {exc}")
         progress_content = None
@@ -1455,8 +1460,10 @@ def _complete_message_answer_and_results(chat_id: str, owner_key: str, msg: dict
             if _rq_note:
                 extra_ctx_parts.append(_rq_note)
             extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
-            answer = analyze_with_claude(msg["query"], merged_pool, extra_context=extra_ctx)
-            answer = _patch_post_urls_into_answer(answer, merged_pool)
+            with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=msg.get("topic_key"),
+                                    request_id=msg.get("request_id")):
+                answer = analyze_with_claude(msg["query"], merged_pool, extra_context=extra_ctx)
+            answer = _patch_post_urls_into_answer(answer, merged_pool, query=msg.get("query"))
             if msg.get("website_context"):
                 answer = _inject_website_context_into_answer(answer, msg["website_context"])
             answer = enrich_no_results_answer(answer, msg.get("query"), msg.get("targeting_platform"),   # (NO-RESULTS UI)
@@ -1656,22 +1663,24 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
         effective_evidence_limit = msg.get("evidence_required")
 
         try:
-            matched = get_evidence_with_topup(
-                chat_id=chat_id,
-                owner_key=owner_key,
-                topic_key=msg["topic_key"],
-                keywords=msg.get("keywords", []),
-                evidence_required=effective_evidence_limit,
-                matcher_fn=get_matched_signals,
-                match_phrases=msg.get("match_phrases"),
-                targeting_platform=msg.get("targeting_platform", "all"),
-                since_days=msg.get("time_window_days"),
-                unfiltered=msg.get("unfiltered", False),
-                **({"time_range": msg["time_range"]} if msg.get("time_range") else {}),   # (DATE/TIME)
-                # STRICT: the intent bridge needs the query text; without it
-                # this path would return un-filtered posts. Flag off: unchanged.
-                **({"user_query": msg.get("query")} if strict_intent_mode() else {}),
-            )
+            with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=msg.get("topic_key"),
+                                    request_id=msg.get("request_id")):
+                matched = get_evidence_with_topup(
+                    chat_id=chat_id,
+                    owner_key=owner_key,
+                    topic_key=msg["topic_key"],
+                    keywords=msg.get("keywords", []),
+                    evidence_required=effective_evidence_limit,
+                    matcher_fn=get_matched_signals,
+                    match_phrases=msg.get("match_phrases"),
+                    targeting_platform=msg.get("targeting_platform", "all"),
+                    since_days=msg.get("time_window_days"),
+                    unfiltered=msg.get("unfiltered", False),
+                    **({"time_range": msg["time_range"]} if msg.get("time_range") else {}),   # (DATE/TIME)
+                    # STRICT: the intent bridge needs the query text; without it
+                    # this path would return un-filtered posts. Flag off: unchanged.
+                    **({"user_query": msg.get("query")} if strict_intent_mode() else {}),
+                )
         except Exception as exc:
             log.warning(f"Signal matching failed for topic_key={msg.get('topic_key')}: {exc}")
             continue
@@ -1810,6 +1819,7 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                             msg.get("keywords", []), msg.get("match_phrases"), msg.get("evidence_required"),
                             msg.get("website_note"), msg.get("resolved_query"),
                             **({"time_range": msg["time_range"]} if msg.get("time_range") else {}),   # (DATE/TIME)
+                            request_id=msg.get("request_id"),
                         )
                     else:
                         _timeout_fallback_answer(
@@ -1817,6 +1827,7 @@ def _fill_in_message_outputs(chat_id: str, owner_key: str, messages: list, skip_
                             msg.get("keywords", []), msg.get("match_phrases"), msg.get("evidence_required"),
                             msg.get("website_note"), msg.get("resolved_query"),
                             **({"time_range": msg["time_range"]} if msg.get("time_range") else {}),   # (DATE/TIME)
+                            request_id=msg.get("request_id"),
                         )
             continue
 
