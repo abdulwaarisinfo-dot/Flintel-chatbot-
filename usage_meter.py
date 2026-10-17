@@ -81,10 +81,12 @@ def record_usage(call_type: str, model: str, input_tokens, output_tokens,
             input_tokens = None
         if output_tokens is not None and not isinstance(output_tokens, (int, float)):
             output_tokens = None
+        if input_tokens is None and output_tokens is None:
+            return
 
-        # Frame 1 is the direct caller (the hook site inside logics.py)
+        # Frame 2 is the caller of the hook site (e.g. _map_chunk, analyze_with_claude)
         try:
-            call_site = sys._getframe(1).f_code.co_name
+            call_site = sys._getframe(2).f_code.co_name
         except Exception:
             call_site = None
 
