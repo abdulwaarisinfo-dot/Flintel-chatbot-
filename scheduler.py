@@ -21,15 +21,20 @@ WHAT THIS FILE DOES NOT DO: no new keyword-generation logic, no new
 storage pattern, no new Mongo fields, no changes to google.py or
 logics.py. Purely scheduling + the two calls above, in order.
 
-(TRENDING SEARCH JOB) Before the Google step, the same keywords — trimmed,
+(TRENDING SEARCH JOBS) Before the Google step, the same keywords — trimmed,
 de-duplicated case-insensitively and capped at config.SEARCH_WEBSITE_KEYWORDS
-(default 200; 0/negative/invalid = off) — are also written as ONE
-flintel_search_jobs job via the existing logics.enqueue_search_job()
-(topic_key "auto_trending", upserted every cycle, targeting_platform
-TRENDING_JOB_TARGETING_PLATFORM). That write has its own try/except: a
+(default 200 considered per cycle; 0/negative/invalid = off) — each become
+their OWN flintel_search_jobs job via the existing logics.enqueue_search_job()
+(topic_key "auto_trending:<normalized keyword>", keywords [that keyword],
+targeting_platform TRENDING_JOB_TARGETING_PLATFORM). Keywords that already
+have a job are skipped, so an existing job is never updated or reset. The
+legacy combined job (topic_key "auto_trending") is no longer written and is
+left as it is. This step has its own try/except (and one per keyword): a
 failure there is only logged and the Google step still runs. The Google
 step receives the generated list exactly as before (the cap only applies
-to the job).
+to the jobs). Jobs are written ONLY by a cycle that won the schedule claim:
+a fallback cycle (Mongo schedule unavailable, so several workers may run
+at once) writes no jobs and still runs the Google step.
 
 FIRE-AND-FORGET: start_trending_keywords_scheduler() schedules an asyncio
 background task and returns immediately — it never blocks FastAPI
@@ -69,7 +74,7 @@ import config
 import database
 from database import google_posts_collection
 from google import search_google_for_reddit_posts
-from logics import enqueue_search_job, generate_trending_keywords_via_web_search
+from logics import enqueue_search_job, generate_trending_keywords_via_web_search, normalize_topic_key
 
 log = logging.getLogger(__name__)
 
@@ -81,6 +86,10 @@ TRENDING_KEYWORDS_INTERVAL_SECONDS = 43200
 # apart from "came from an actual user search", per google_posts_collection's
 # existing search_keyword field. Never changes.
 TRENDING_KEYWORDS_SEARCH_TAG = "auto_trending"
+
+# topic_key prefix of the one-keyword trending jobs ("auto_trending:<normalized keyword>").
+# Never equals the legacy combined job's topic_key "auto_trending".
+TRENDING_JOB_TOPIC_PREFIX = "auto_trending:"
 
 # targeting_platform of the trending flintel_search_jobs job. "reddit" so
 # Background Service #1 does not spend X/Twitter (RapidAPI) calls on ~200
@@ -95,7 +104,7 @@ SCHEDULE_CLAIM_LOST_RECHECK_SECONDS = 60       # after losing a claim to another
 # Outcome of the most recent _run_trending_keywords_cycle() call, filled in by
 # the cycle itself (status / keywords_count / stubs_count / job_queued) so the
 # loop can record it in the state document. Side channel only: the cycle's
-# signature, return value and logging are unchanged. Never holds keywords.
+# return value is unchanged. Never holds keywords.
 _cycle_outcome: dict = {}
 
 
@@ -128,8 +137,31 @@ def _trending_job_keywords(keywords, limit: int) -> list:
     return out
 
 
+def _trending_topic_keys(job_keywords: list) -> list:
+    """(topic_key, keyword) per keyword. A keyword that normalizes to nothing
+    is dropped; when two normalize to the same topic_key the first is kept."""
+    out, seen = [], set()
+    for kw in job_keywords:
+        normalized = normalize_topic_key(kw)
+        if not normalized:
+            continue
+        topic_key = TRENDING_JOB_TOPIC_PREFIX + normalized
+        if topic_key in seen:
+            continue
+        seen.add(topic_key)
+        out.append((topic_key, kw))
+    return out
+
+
+def _existing_job_topic_keys(topic_keys: list) -> set:
+    """topic_keys that already have a flintel_search_jobs document (one query)."""
+    cursor = database.jobs_collection.find({"topic_key": {"$in": topic_keys}}, {"topic_key": 1, "_id": 0})
+    return {doc.get("topic_key") for doc in cursor}
+
+
 async def _queue_trending_search_job(keywords) -> None:
-    """Write this cycle's keywords as the "auto_trending" search job.
+    """Write each new trending keyword as its own search job; keywords that
+    already have a job are skipped (never updated or reset).
     Never raises: a failure is logged and the caller carries on."""
     _cycle_outcome["job_queued"] = False
     try:
@@ -144,29 +176,48 @@ async def _queue_trending_search_job(keywords) -> None:
             )
             return
         job_keywords = _trending_job_keywords(keywords, limit)
-        if not job_keywords:
+        jobs = _trending_topic_keys(job_keywords)
+        if not jobs:
             log.warning("Trending-keywords scheduler: search job NOT written — no usable keywords after cleanup.")
             return
-        await asyncio.to_thread(
-            enqueue_search_job,
-            TRENDING_KEYWORDS_SEARCH_TAG,
-            job_keywords,
-            TRENDING_JOB_TARGETING_PLATFORM,
-        )
-        _cycle_outcome["job_queued"] = True
+        try:
+            existing = await asyncio.to_thread(_existing_job_topic_keys, [topic_key for topic_key, _ in jobs])
+        except Exception as exc:
+            # nothing is written without knowing what exists: never risk resetting a job
+            log.warning(
+                f"Trending-keywords scheduler: looking up existing search jobs failed "
+                f"({type(exc).__name__}); no jobs written this cycle, Google search continues."
+            )
+            return
+        created = skipped = failed = 0
+        for topic_key, keyword in jobs:
+            if topic_key in existing:
+                skipped += 1
+                continue
+            try:
+                await asyncio.to_thread(enqueue_search_job, topic_key, [keyword], TRENDING_JOB_TARGETING_PLATFORM)
+                created += 1
+            except Exception as exc:
+                failed += 1
+                # type only: the message could echo document content (keywords)
+                log.warning(
+                    f"Trending-keywords scheduler: queuing one search job failed "
+                    f"({type(exc).__name__}); continuing with the next keyword."
+                )
+        _cycle_outcome["job_queued"] = created > 0
         log.info(
-            f"Trending-keywords scheduler: job queued | "
-            f"topic_key={TRENDING_KEYWORDS_SEARCH_TAG} | keywords={len(job_keywords)}"
+            f"Trending-keywords scheduler: jobs created={created} "
+            f"skipped_existing={skipped} failed={failed}"
         )
     except Exception as exc:
         # type only: the message could echo document content (keywords)
         log.warning(
-            f"Trending-keywords scheduler: queuing the search job failed "
+            f"Trending-keywords scheduler: queuing the search jobs failed "
             f"({type(exc).__name__}); Google search continues."
         )
 
 
-async def _run_trending_keywords_cycle():
+async def _run_trending_keywords_cycle(write_jobs: bool = True):
     """One full cycle of the chain: generate up to 200 trending keywords,
     then hand them as-is to search_google_for_reddit_posts() tagged
     "auto_trending". Both underlying calls are synchronous/blocking
@@ -178,7 +229,12 @@ async def _run_trending_keywords_cycle():
     step returns None or an empty list — never calls
     search_google_for_reddit_posts() with nothing to search for. Any
     other unexpected exception anywhere in this function is caught here
-    too, so a single bad cycle can never kill the scheduler loop below."""
+    too, so a single bad cycle can never kill the scheduler loop below.
+
+    write_jobs=False (fallback cycles, run without the schedule claim):
+    no search jobs are written — overlapping uncoordinated cycles could
+    otherwise reset a job another cycle just created — and job_queued stays
+    False; the Google step still runs."""
     _cycle_outcome.clear()
     try:
         keywords = await asyncio.to_thread(generate_trending_keywords_via_web_search)
@@ -189,7 +245,14 @@ async def _run_trending_keywords_cycle():
         _cycle_outcome["keywords_count"] = len(keywords)
 
         # (TRENDING SEARCH JOB) own try/except inside; never raises
-        await _queue_trending_search_job(keywords)
+        if write_jobs:
+            await _queue_trending_search_job(keywords)
+        else:
+            _cycle_outcome["job_queued"] = False
+            log.warning(
+                "Trending-keywords scheduler: search jobs NOT written — cycle ran "
+                "without the schedule claim (fallback); Google search continues."
+            )
 
         stubs = await asyncio.to_thread(
             search_google_for_reddit_posts,
@@ -356,10 +419,11 @@ async def _trending_keywords_loop():
 
     Mongo unavailable (read/claim error): log the exception TYPE only, then
     the old in-memory behaviour for ONE cycle — sleep the full interval, run
-    the cycle without a claim — record it in Mongo if possible, and go back
-    to the persisted schedule. Bounded: at most one Mongo attempt per
-    interval while the outage lasts, never a tight retry loop. During an
-    outage several workers may each run a cycle."""
+    the cycle without a claim and without writing search jobs — record it in
+    Mongo if possible, and go back to the persisted schedule. Bounded: at
+    most one Mongo attempt per interval while the outage lasts, never a
+    tight retry loop. During an outage several workers may each run a
+    cycle (Google step only)."""
     first_check = True
     while True:
         try:
@@ -374,7 +438,7 @@ async def _trending_keywords_loop():
             )
             await asyncio.sleep(TRENDING_KEYWORDS_INTERVAL_SECONDS)
             fallback_started = _utcnow()
-            await _run_trending_keywords_cycle()
+            await _run_trending_keywords_cycle(write_jobs=False)
             try:
                 await asyncio.to_thread(_record_fallback_cycle, fallback_started)
             except Exception as rec_exc:
