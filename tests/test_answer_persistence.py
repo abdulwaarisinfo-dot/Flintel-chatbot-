@@ -153,6 +153,15 @@ QUERIES = [("Find users looking for AI jobs in Pakistan", json.dumps(GOOD)),
            ("Now in China", CUT_MID_ANSWER)]
 
 
+def _model_content(answer):
+    """The answer minus the fields answer_integrity.py adds next to the model's own."""
+    out = {k: v for k, v in answer.items() if k not in ("counts", "excluded_posts", "verified_summary")}
+    out["key_findings"] = [{k: v for k, v in f.items() if k in GOOD["key_findings"][0]} for f in out["key_findings"]]
+    out["platforms"] = [dict(e, posts=[{k: v for k, v in p.items() if k in GOOD["platforms"][0]["posts"][0]}
+                                       for p in e["posts"]]) for e in out["platforms"]]
+    return out
+
+
 def _run_session(lg, idx, chats, monkeypatch):
     """Three research turns through the REAL save path; only the LLM is faked."""
     outputs = []
@@ -175,7 +184,8 @@ def test_every_completed_request_has_a_persisted_answer(env, monkeypatch):
     msgs = doc["messages"]
     assert [m["query"] for m in msgs] == [q for q, _ in QUERIES]                     # original order
     answers = [json.loads(m["claude_answer"]) for m in msgs]
-    assert answers[0] == GOOD                                                        # normal answer intact
+    assert _model_content(answers[0]) == GOOD                                        # normal answer intact
+    assert answers[0]["counts"]["relevant"] == 1                                     # + server-side checks
     assert answers[1]["answer_status"] == "incomplete"                               # never an empty "answer"
     assert answers[2]["answer_status"] == "partial" and answers[2]["headline"] == "Remote work dominates"
     for a in answers:
