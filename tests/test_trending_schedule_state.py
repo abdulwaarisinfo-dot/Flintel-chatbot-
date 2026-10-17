@@ -142,6 +142,8 @@ class Env:
         self.cycles = []
         self.keywords = ["a", "b", "c"]
         self.gen_exc = None
+        self.enqueued = []                 # (topic_key, keywords, platform) per enqueue_search_job call
+        self.google = []                   # keyword list per Google call
 
 
 @pytest.fixture
@@ -158,11 +160,13 @@ def env(monkeypatch):
     db = types.ModuleType("database")
     db.google_posts_collection = object()
     db.auto_keywords_collection = coll
+    db.jobs_collection = types.SimpleNamespace(find=lambda flt, proj: iter([]))   # no trending job exists yet
     gg = types.ModuleType("google")
-    gg.search_google_for_reddit_posts = lambda kws, c, tag: ["stub"] * 2
+    gg.search_google_for_reddit_posts = lambda kws, c, tag: e.google.append(kws) or ["stub"] * 2
     lgm = types.ModuleType("logics")
     lgm.generate_trending_keywords_via_web_search = fake_generate
-    lgm.enqueue_search_job = lambda topic, kws, plat: None
+    lgm.enqueue_search_job = lambda topic, kws, plat: e.enqueued.append((topic, kws, plat))
+    lgm.normalize_topic_key = lambda q: " ".join(q.strip().lower().split())
     monkeypatch.setitem(sys.modules, "database", db)
     monkeypatch.setitem(sys.modules, "google", gg)
     monkeypatch.setitem(sys.modules, "logics", lgm)
@@ -345,6 +349,26 @@ def test_10_first_initialisation_race_one_winner(env):
     assert env.coll.dup_errors == 1                                 # second insert lost, handled
     assert len(env.cycles) == 1 and sorted(waits) == [0, 60]
     assert state(env)["next_due_at"] == T0 + timedelta(seconds=INTERVAL)
+
+
+# 12
+def test_12_fallback_cycle_writes_no_jobs_google_still_runs(env, caplog):
+    env.coll.fail["find_one"] = 1                                  # Mongo read fails once -> one fallback cycle
+    caplog.set_level(logging.WARNING)
+    run_loop(env, 2)
+    fallback_at = T0 + timedelta(seconds=INTERVAL)
+    assert env.cycles == [fallback_at]
+    assert env.enqueued == []                                      # no claim -> no search job written
+    assert len(env.google) == 1 and env.google[0] is env.keywords  # Google step still ran, full list
+    st = state(env)
+    assert st["last_status"] == "ok" and st["last_stubs_count"] == 2 and st["last_job_queued"] is False
+    assert "search jobs NOT written — cycle ran without the schedule claim (fallback)" in caplog.text
+    # the next CLAIMED cycle still writes one job per keyword
+    st["next_due_at"] = env.now
+    run_loop(env, 1)
+    assert len(env.cycles) == 2
+    assert [t for t, _k, _p in env.enqueued] == ["auto_trending:a", "auto_trending:b", "auto_trending:c"]
+    assert len(env.google) == 2 and state(env)["last_job_queued"] is True
 
 
 # 11
