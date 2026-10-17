@@ -57,8 +57,14 @@ def test_done_handler_completes_first_then_reveals(name):
     assert done.index("setSubmitLoading(false);") < done.index(call)
     assert done.index("finishTurnTimer(pendingTurn, 'completed', payload.requested_at);") < done.index(call)
     assert done.index("if (myGen !== softNavGeneration)") < done.index(call)
-    # the only call site: saved answers (page load / soft navigation) never animate
-    assert s.count("startAnswerReveal(") == 2          # definition + the one call above
+    # chat.html: definition + SSE done handler + soft-submit chat gate (FAST CONVERSATION)
+    # index.html: same 3 + soft-nav chat reveal (revealLatestChat gate)
+    expected = {"chat.html": 3, "index.html": 4}
+    assert s.count("startAnswerReveal(") == expected[name]
+    # Every call site outside the SSE done handler must be gated on messageType === 'chat'
+    # so search-type results are never animated twice or unexpectedly.
+    non_done_calls = expected[name] - 2  # subtract definition + done-handler call
+    assert s.count("messageType === 'chat'") >= non_done_calls
 
 
 # ── node: pure helpers ───────────────────────────────────────────────────────
@@ -172,9 +178,17 @@ def _sse():
 def browser():
     if not HAVE_BROWSER:
         pytest.skip("playwright/jinja2 not installed")
+    _FALLBACK_CHROME = "/opt/pw-browsers/chromium-1194/chrome-linux/chrome"
     try:
         p = sync_playwright().start()
-        b = p.chromium.launch()
+        try:
+            b = p.chromium.launch()
+        except Exception:
+            import pathlib
+            if pathlib.Path(_FALLBACK_CHROME).exists():
+                b = p.chromium.launch(executable_path=_FALLBACK_CHROME)
+            else:
+                raise
     except Exception as exc:   # pragma: no cover
         pytest.skip(f"chromium unavailable: {exc}")
     yield b
