@@ -3,7 +3,7 @@ routes.py — all FastAPI route handlers for the Flintel web service,
 extracted from index.py to keep that module to shared infrastructure  
 and business logic. Imports `app` from index.py and registers every
 route on it; index.py imports this module once, at the bottom, purely 
-for its side effect of registering these routes.    
+for its side effect of registering these routes.   
 """
 
 import json
@@ -118,6 +118,7 @@ from index import (
     _extract_near_match_confidence,     # <-- CLOSEST-MATCHES TIER-3 REFINEMENT: needed in stream_answer()
     _NO_DATA_CLAUDE_FORMATS,
     _patch_post_urls_into_answer,
+    _usage_attribution,
     _inject_website_context_into_answer,
     _finalize_answer_and_results,       # <-- Bug 2b helper from index.py
     _resolved_request_note,             # <-- MULTI-TURN CONTEXT: needed in stream_answer()
@@ -605,7 +606,26 @@ def home(request: Request):
     )
 
 
+def _usage_attributed(endpoint):
+    """(USAGE) One request id per POST /search, created before routing so the
+    router, topic resolution and website analysis are attributed too;
+    add_search_to_chat() stores it on the message for every later step."""
+    import functools
+    import uuid
+
+    @functools.wraps(endpoint)
+    def wrapper(request, *args, **kwargs):
+        try:
+            owner_key = get_owner(request)[0]
+        except Exception:
+            owner_key = None
+        with _usage_attribution(request_id=uuid.uuid4().hex, owner_key=owner_key, chat_id=kwargs.get("chat_id")):
+            return endpoint(request, *args, **kwargs)
+    return wrapper
+
+
 @app.post("/search")
+@_usage_attributed
 def search(
     request: Request,
     query: str = Form(...),
@@ -2118,7 +2138,9 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             kwargs["time_range"] = msg["time_range"]   # (DATE/TIME) the message's own publication range
         if cancel_event is not None:
             kwargs["cancel_event"] = cancel_event
-        return get_evidence_with_topup(**kwargs)
+        with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=topic_key,
+                                request_id=msg.get("request_id")):
+            return get_evidence_with_topup(**kwargs)
 
     matched = []
     if not nonblocking:
@@ -2266,12 +2288,14 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 # exactly mirroring _trigger_google_fallback_search()'s
                 # own post-race-fix shape.
                 try:
-                    content = flintel.generate_search_progress_content(
-                        msg.get("query"),
-                        msg.get("keywords", []),
-                        msg.get("targeting_platform"),
-                        _call_claude,
-                    )
+                    with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=msg.get("topic_key"),
+                                            request_id=msg.get("request_id")):
+                        content = flintel.generate_search_progress_content(
+                            msg.get("query"),
+                            msg.get("keywords", []),
+                            msg.get("targeting_platform"),
+                            _call_claude,
+                        )
                     if content:
                         holder["content"] = content
                 except Exception as exc:
@@ -2581,8 +2605,11 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                         flintel.build_combined_source_context(len(matched), len(google_results))
                     )
                 extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
-                full_answer = analyze_with_claude(msg["query"], merged_pool, extra_context=extra_ctx)
-                full_answer = _patch_post_urls_into_answer((full_answer or "").strip(), merged_pool) if full_answer else full_answer
+                with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=topic_key,
+                                        request_id=msg.get("request_id")):
+                    full_answer = analyze_with_claude(msg["query"], merged_pool, extra_context=extra_ctx)
+                full_answer = (_patch_post_urls_into_answer((full_answer or "").strip(), merged_pool, query=msg.get("query"))
+                               if full_answer else full_answer)
                 if full_answer and msg.get("website_context"):
                     full_answer = _inject_website_context_into_answer(full_answer, msg["website_context"])
                 if full_answer:
