@@ -54,8 +54,10 @@ from intent_prototype import doc_classifier, schemas        # noqa: E402
 # byte. (ANSWER PRESENTATION) Snapshot refreshed after the intentional
 # presentation-only prompt edit (headline / tone / field-guidance wording);
 # previous snapshot: 7e0ed41d35c2b9ed541cdf02a133f89eb56201ed9561c486cb07472f50b5b1b4 / 29993.
-ORIG_ANALYSIS_PROMPT_SHA = "7393dd4e31502cb72577f157f5fd68698fb8a3fdc3d8137a49b0a2028b885a7f"
-ORIG_ANALYSIS_PROMPT_LEN = 34123
+# Re-pinned when the base prompt gained the per-post labels / citation rule
+# (answer_integrity.py); still unaffected by STRICT_INTENT_MODE.
+ORIG_ANALYSIS_PROMPT_SHA = "a5155bf90b3a8968ffc565d699e5e212e922d6b6583f24a6bb894e547e41bdd0"
+ORIG_ANALYSIS_PROMPT_LEN = 35504
 ORIG_CLASSIFIER_PROMPT_SHA = "6c7adb5977c34d9520e5a1c1abd41bce782d620f1358936c7f21c21cb7278be4"
 
 
