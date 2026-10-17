@@ -144,6 +144,7 @@ from index import (
     save_signal_results_to_chat,
     save_claude_answer_to_chat,
     save_last_website_context_to_chat,  # <-- WEBSITE INTELLIGENCE: needed in search()
+    save_message_feedback,
     migrate_anon_chats_to_owner,
     _is_owner_busy,
     _set_owner_busy,                    # <-- FIX: was missing, used in stream_answer()
@@ -2659,6 +2660,35 @@ def delete_chat(request: Request, chat_id: str):
         request.session.pop("active_chat_id", None)
 
     return RedirectResponse(url="/", status_code=303)
+
+
+@app.post("/chat/{chat_id}/message-feedback")
+async def message_feedback(request: Request, chat_id: str):
+    """Store thumbs-up/down feedback for a specific message by array index.
+
+    Expects JSON body: {"msg_index": int, "feedback": "up" | "down"}.
+    Returns JSON {"ok": true} on success, {"ok": false, "error": "..."} on
+    failure. Auth-scoped: only the owner of the chat can post feedback."""
+    from fastapi.responses import JSONResponse
+    owner_key, _ = get_owner(request)
+    if not owner_key:
+        return JSONResponse({"ok": False, "error": "not authenticated"}, status_code=401)
+    try:
+        data = await request.json()
+        msg_index = int(data["msg_index"])
+        feedback = str(data["feedback"])
+        if feedback not in ("up", "down"):
+            raise ValueError("invalid feedback value")
+    except Exception:
+        return JSONResponse({"ok": False, "error": "invalid request body"}, status_code=400)
+    chat = get_chat_session(chat_id, owner_key)
+    if not chat:
+        return JSONResponse({"ok": False, "error": "chat not found"}, status_code=404)
+    msgs = chat.get("messages") or []
+    if not (0 <= msg_index < len(msgs)):
+        return JSONResponse({"ok": False, "error": "message index out of range"}, status_code=400)
+    save_message_feedback(chat_id, owner_key, msg_index, feedback)
+    return JSONResponse({"ok": True})
 
 
 # ─────────────────────────────────────────────────────────────────────────────
