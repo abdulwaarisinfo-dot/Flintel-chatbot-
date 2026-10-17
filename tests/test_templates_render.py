@@ -181,7 +181,7 @@ class TestTurnTimerHelpersJs:
             out = subprocess.run(["node", "-e", code], capture_output=True, text=True, timeout=20,
                                  env={**os.environ, "TZ": tz})
             assert out.returncode == 0, out.stderr
-            assert json.loads(out.stdout) == [True] * 5, tz
+            assert json.loads(out.stdout) == [True] * 5, tz 
 
     def test_bad_input_is_nan_and_elapsed_never_negative(self):
         assert self._run("[parseRequestedAt(''), parseRequestedAt(null), parseRequestedAt('garbage')].map(Number.isNaN)") == [True, True, True]
