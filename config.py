@@ -262,7 +262,27 @@ TOPIC_CACHE_MIN_TOPUP = int(os.getenv("TOPIC_CACHE_MIN_TOPUP", "5"))
 TOPIC_CACHE_TTL_DAYS = int(os.getenv("TOPIC_CACHE_TTL_DAYS", "7"))
 
 # ── Auth / session ────────────────────────────────────────────────────────
-SESSION_SECRET_KEY = os.getenv("SESSION_SECRET_KEY", "dev-only-change-me")
+# Load .env before reading SESSION_SECRET_KEY so a key defined only in
+# .env is visible to the guard below. load_dotenv() is a no-op when the
+# var is already set in the real environment, so OS-level env vars win.
+from dotenv import load_dotenv as _load_dotenv
+_load_dotenv()
+SESSION_SECRET_KEY = os.getenv("SESSION_SECRET_KEY", "")
+_INSECURE_SESSION_KEY_DEFAULTS = {"", "dev-only-change-me"}
+if SESSION_SECRET_KEY in _INSECURE_SESSION_KEY_DEFAULTS:
+    import sys
+    sys.exit(
+        "\n"
+        "FATAL: SESSION_SECRET_KEY is not set or is using an insecure default.\n"
+        "Every deployed environment (production, staging, and any dev server\n"
+        "reachable over a network) must have a strong, randomly generated key.\n"
+        "\n"
+        "Generate one now:\n"
+        "    python -c \"import secrets; print(secrets.token_hex(32))\"\n"
+        "\n"
+        "Then set it in your environment or .env file:\n"
+        "    SESSION_SECRET_KEY=<the value above>\n"
+    )
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 
