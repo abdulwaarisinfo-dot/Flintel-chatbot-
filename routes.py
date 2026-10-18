@@ -160,6 +160,7 @@ from database import users_collection  # <-- FIX: was missing, used in signup()/
 from database import google_posts_collection  # <-- GOOGLE-FALLBACK POLLING FIX: needed in stream_answer()
 from datetime import datetime, timezone
 from config import URL_PROMPT_MERGE_ENABLED, URL_PROMPT_MAX_KEYWORDS, URL_PROMPT_MAX_PHRASES, URL_MERGED_MAX_PHRASES
+import search_credits   # (SEARCH CREDITS) free-plan monthly search credits
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -546,6 +547,147 @@ def _merge_unique(primary, secondary, limit):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# (SEARCH CREDITS) Helpers for POST /search. With the kill switch on,
+# _credit_store() is None and search() runs its pre-credit code unchanged.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _credit_store():
+    return search_credits.default_store()
+
+
+def _format_credit_reset(request, resets_at) -> str:
+    try:
+        from zoneinfo import ZoneInfo
+        local = resets_at.astimezone(ZoneInfo(_request_timezone(request)))
+        hour = local.strftime("%I").lstrip("0") or "12"
+        return f"{local.strftime('%b')} {local.day}, {hour}:{local.strftime('%M %p')}"
+    except Exception:
+        return resets_at.strftime("%Y-%m-%d %H:%M UTC")
+
+
+def _delete_empty_chat(owner_key, chat_id, request):
+    """Only an empty chat (no messages) created for a denied request."""
+    if not owner_key or not chat_id:
+        return
+    try:
+        from index import chats_collection as _chats
+        result = _chats.delete_one({"chat_id": chat_id, "owner_key": owner_key, "messages": {"$size": 0}})
+        if result.deleted_count and request.session.get("active_chat_id") == chat_id:
+            request.session.pop("active_chat_id", None)
+    except Exception as exc:
+        log.warning(f"Empty-chat cleanup failed for chat_id={chat_id}: {exc}")
+
+
+def _credit_decision_response(request, decision, query, owner_key=None, cleanup_chat=None):
+    """Turn a search_credits.Decision into the route's response. Denials are
+    HTTP 429 / 503 with X-Flintel-Denial; duplicate and reconciliation answers
+    reuse the existing 200 state-card (busy-decline) path."""
+    kind = decision.kind
+    if kind in ("done", "redirect"):
+        return RedirectResponse(url=f"/chat/{decision.chat_id}" if decision.chat_id else "/", status_code=303)
+    if kind in ("exhausted", "unavailable") and decision.cleanup_ok and cleanup_chat:
+        _delete_empty_chat(owner_key, cleanup_chat, request)
+    status_code, headers, denial = 200, {}, None
+    if kind == "exhausted":
+        message = search_credits.EXHAUSTED_MESSAGE.format(reset=_format_credit_reset(request, decision.resets_at))
+        retry_after = max(1, int((decision.resets_at - datetime.now(timezone.utc)).total_seconds()))
+        status_code, denial = 429, "credits-exhausted"
+        headers = {"X-Flintel-Denial": denial, "Retry-After": str(retry_after)}
+    elif kind == "unavailable":
+        message = search_credits.UNAVAILABLE_MESSAGE
+        status_code, denial = 503, "credit-store-unavailable"
+        headers = {"X-Flintel-Denial": denial, "Retry-After": "30"}
+    elif kind == "reconciliation":
+        message = decision.message or search_credits.RECONCILIATION_MESSAGE
+    else:
+        message = decision.message or search_credits.IN_FLIGHT_MESSAGE
+    chats_safe = []
+    try:
+        if owner_key:
+            chats_safe = get_user_chat_list(owner_key)
+    except Exception as exc:
+        log.warning(f"Chat lookup failed while rendering a credit response: {exc}")
+    return templates.TemplateResponse(
+        request,
+        "index.html",
+        {
+            "error": message,
+            "denial": denial,
+            "query": query,
+            "user": get_current_user(request),
+            "chats": chats_safe,
+            "chat_id": request.session.get("active_chat_id"),
+        },
+        status_code=status_code,
+        headers=headers,
+    )
+
+
+def _run_credited_search(request, store, rid, query, topic_key, owner_key, owner_type, active_chat_id,
+                         form_chat_id, keywords, targeting_platform, message_kwargs, expects_job,
+                         time_range_obj=None, after_save=None):
+    """The accepted-search path with credits: resolve the chat first (its id is
+    recorded on the reservation), reserve, claim, enqueue only after the claim
+    matched, then save the message. Never enqueues after a rejected reservation."""
+    try:
+        if not owner_key:
+            owner_key, owner_type = get_owner(request)
+        active_chat_id = active_chat_id or form_chat_id or request.session.get("active_chat_id")
+        if not active_chat_id or not get_chat_session(active_chat_id, owner_key):
+            active_chat_id = create_chat_session(owner_key, owner_type, title=generate_chat_title(query))
+        request.session["active_chat_id"] = active_chat_id
+    except Exception as exc:
+        log.warning(f"Chat resolution failed before the credit reservation: {exc}")
+        return _credit_decision_response(request, search_credits.Decision("unavailable"), query, owner_key)
+    rid = rid or search_credits.request_id(owner_key, None)   # lookup failed earlier: a fresh, non-deduplicated id
+
+    def _enqueue(credit_request_id):
+        result = enqueue_search_job(topic_key, keywords, targeting_platform, credit_request_id=credit_request_id,
+                                    attribute=search_credits.job_attribution_enabled())
+        if time_range_obj is not None:
+            try:
+                record_job_time_range(topic_key, time_range_obj)   # (DATE/TIME) best-effort hint
+            except Exception as exc:
+                log.warning(f"Recording the job time range failed for topic_key={topic_key}: {exc}")
+        return result
+
+    try:
+        ticket = store.reserve(owner_key, owner_type, rid, topic_key, active_chat_id, expects_job,
+                               retry_message=message_kwargs)
+        if isinstance(ticket, search_credits.Decision):
+            return _credit_decision_response(request, ticket, query, owner_key, cleanup_chat=active_chat_id)
+        decision = store.run(ticket, _enqueue if expects_job else None, message_kwargs)
+    except search_credits.CreditStoreError as exc:
+        log.warning(f"Credit store unavailable for this search: {exc}")
+        decision = search_credits.Decision("unavailable", cleanup_ok=False)
+    if decision.kind == "done" and after_save is not None:
+        try:
+            after_save(decision.chat_id)
+        except Exception as exc:
+            log.warning(f"Post-save bookkeeping failed for chat_id={decision.chat_id}: {exc}")
+    return _credit_decision_response(request, decision, query, owner_key, cleanup_chat=active_chat_id)
+
+
+def _credit_precheck_response(request, store, rid, query, owner_key, cleanup_chat):
+    """(SEARCH CREDITS) Optimization only: skips website fetch/keyword LLM work
+    for an owner already at the limit, at points where the turn is certain to
+    become a search. Never charges, refunds or writes; any doubt (no store, no
+    request id, a read error, an existing entry for this id) returns None and
+    the atomic reservation stays the only authority."""
+    if store is None or not rid:
+        return None
+    try:
+        owner = owner_key or get_owner(request)[0]
+        decision = store.precheck_exhausted(owner, rid)
+    except Exception as exc:
+        log.warning(f"Credit precheck skipped: {exc}")
+        return None
+    if decision is None:
+        return None
+    return _credit_decision_response(request, decision, query, owner, cleanup_chat=cleanup_chat)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # ROUTES — SEARCH / CHAT
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -633,6 +775,7 @@ def search(
     platform: str = Form("All Platforms"),
     chat_id: str = Form(None),
     tz: str = Form(None),
+    submit_key: str = Form(None),   # (SEARCH CREDITS) same key = same request (retries)
 ):
     # (DATE/TIME) ONE reference instant for this whole request: every relative
     # phrase ("last 3 hours", "today") is resolved against it.
@@ -699,6 +842,27 @@ def search(
                     "chat_id": chat_id_safe,
                 },
             )
+
+        # ─────────────────────────────────────────────────────────────────────
+        # (SEARCH CREDITS) Same-key lookup before the router — NOT a credit
+        # check (Option B: non-search turns stay available at zero credits).
+        # A retry of a finished search redirects to it; one still in flight
+        # gets the busy card; anything else continues. A store failure here
+        # only skips the lookup — the reservation below is authoritative.
+        # ─────────────────────────────────────────────────────────────────────
+        credit_store = _credit_store()
+        credit_rid = None
+        if credit_store is not None:
+            credit_owner = None
+            try:
+                credit_owner, _credit_owner_type = get_owner(request)
+                credit_rid = search_credits.request_id(credit_owner, submit_key)
+                early = credit_store.lookup(credit_owner, credit_rid)
+            except Exception as exc:
+                log.warning(f"Credit same-key lookup failed (continuing): {exc}")
+                early = None
+            if early is not None and early.kind != "continue":
+                return _credit_decision_response(request, early, query, credit_owner)
 
         # ─────────────────────────────────────────────────────────────────────
         # v5 ROUTING STEP (v6: abuse/harm screening; KEYWORD-GENERATION SWAP:
@@ -1129,6 +1293,12 @@ def search(
                     evidence = None
 
                 if evidence:
+                    # (SEARCH CREDITS) with evidence in hand this turn is certainly a
+                    # search: skip keyword generation for an owner already at the limit
+                    early_denial = _credit_precheck_response(request, credit_store, credit_rid, query,
+                                                             owner_key, active_chat_id)
+                    if early_denial is not None:
+                        return early_denial
                     if evidence.get("evidence_quality") != "failed":
                         try:
                             kw = generate_keywords_for_website_request(
@@ -1146,6 +1316,41 @@ def search(
                         bare_seed = bare_structured_evidence.get("title") or bare_structured_evidence.get("business")
                         keywords = generate_fuzzy_keywords(bare_seed) if bare_seed else []
                     keywords = keywords[:MAX_KEYWORDS]
+
+                    if credit_store is not None:
+                        # (SEARCH CREDITS) reserve before any enqueue; legacy path below unchanged
+                        def _save_site_ctx(saved_chat_id, kw=kw, keywords=keywords, evidence=evidence):
+                            if keywords:
+                                save_last_website_context_to_chat(
+                                    saved_chat_id, owner_key or get_owner(request)[0],
+                                    {
+                                        "url": evidence["url"],
+                                        "topic_key": topic_key,
+                                        "keywords": keywords,
+                                        "match_phrases": kw.get("match_phrases"),
+                                        "business": (
+                                            (evidence.get("structured_evidence") or {}).get("business")
+                                            or (evidence.get("structured_evidence") or {}).get("title")
+                                        ),
+                                        "structured_evidence": evidence.get("structured_evidence"),
+                                    },
+                                )
+                        return _run_credited_search(
+                            request, credit_store, credit_rid, query, topic_key, owner_key, owner_type,
+                            active_chat_id, chat_id, keywords, targeting_platform,
+                            {
+                                "query": query, "topic_key": topic_key, "keywords": keywords,
+                                "targeting_platform": targeting_platform,
+                                "match_phrases": kw.get("match_phrases"),
+                                "website_only": True,
+                                "website_evidence": {
+                                    "url": evidence["url"],
+                                    "structured_evidence": evidence["structured_evidence"],
+                                    "evidence_quality": evidence["evidence_quality"],
+                                },
+                            },
+                            expects_job=bool(keywords), after_save=_save_site_ctx,
+                        )
 
                     if keywords:
                         enqueue_search_job(topic_key, keywords, targeting_platform)
@@ -1346,6 +1551,19 @@ def search(
                 # fetch_website_text() + extract_keywords_from_website()
                 # path exactly as it worked before this feature — a pure
                 # safety net, no new failure mode.
+                if credit_store is not None:
+                    # (SEARCH CREDITS) this branch always ends as a search unless the
+                    # time-range step later asks a question; parse_time_range is pure,
+                    # so evaluating it here gives the same answer it gives below
+                    try:
+                        _peek_range = timerange.parse_time_range(query, reference_utc, _request_timezone(request, tz))
+                    except Exception:
+                        _peek_range = None
+                    if not isinstance(_peek_range, timerange.Clarification):
+                        early_denial = _credit_precheck_response(request, credit_store, credit_rid, query,
+                                                                 owner_key, active_chat_id)
+                        if early_denial is not None:
+                            return early_denial
                 website_evidence = None
                 try:
                     website_evidence = get_or_fetch_website_evidence(detected_url, query, _call_claude)
@@ -1620,6 +1838,42 @@ def search(
         # keywords under this NEW topic_key would be redundant work with no
         # benefit, so it's skipped. Every other case enqueues exactly as
         # before this feature.
+        if credit_store is not None:
+            # (SEARCH CREDITS) reserve before any enqueue; the legacy path below is unchanged
+            def _save_main_ctx(saved_chat_id):
+                if website_context_url and keywords:
+                    save_last_website_context_to_chat(
+                        saved_chat_id, owner_key or get_owner(request)[0],
+                        {
+                            "url": website_context_url,
+                            "topic_key": topic_key,
+                            "keywords": keywords,
+                            "match_phrases": routed_match_phrases,
+                            "business": website_seed_for_fallback,
+                            "structured_evidence": website_structured_evidence_for_save,
+                        },
+                    )
+            credit_message = {
+                "query": query, "topic_key": topic_key, "keywords": keywords,
+                "targeting_platform": targeting_platform,
+                "time_window_days": time_window_days,
+                "unfiltered": routed_unfiltered,
+                "website_context": website_answer_context,
+                "match_phrases": routed_match_phrases,
+                "evidence_required": routed.get("evidence_required"),
+                "website_note": "\n\n".join(n for n in (website_note, build_guidance_note(query)
+                                                        if routed.get("guidance") else None,
+                                                        build_time_range_note(time_range_obj)) if n) or None,
+                "resolved_query": routed.get("resolved_query") if intent == "search" else None,
+                **({"time_range": time_range_obj.to_doc(reference_utc)} if time_range_obj is not None else {}),
+            }
+            return _run_credited_search(
+                request, credit_store, credit_rid, query, topic_key, owner_key, owner_type,
+                active_chat_id, chat_id, keywords, targeting_platform, credit_message,
+                expects_job=not reuse_website_keywords, time_range_obj=time_range_obj,
+                after_save=_save_main_ctx,
+            )
+
         if not reuse_website_keywords:
             enqueue_search_job(topic_key, keywords, targeting_platform)
             if time_range_obj is not None:
@@ -2863,7 +3117,16 @@ def api_me_usage(request: Request):
     from bson import ObjectId
     doc = users_collection.find_one({"_id": ObjectId(user["id"])}, {"message_count": 1})
     count = int((doc or {}).get("message_count", 0))
-    return JSONResponse({"message_count": count, "plan": "Free"})
+    # (SEARCH CREDITS) additive: the server-side balance for this month.
+    credits = {"enforced": False, "status": "disabled"}
+    try:
+        store = _credit_store()
+        if store is not None:
+            credits = store.status(get_owner(request)[0])
+    except Exception as exc:
+        log.warning(f"Credit status failed: {exc}")
+        credits = {"enforced": True, "status": "unavailable"}
+    return JSONResponse({"message_count": count, "plan": "Free", "credits": credits})
 
 
 @app.get("/billing/upgrade")
