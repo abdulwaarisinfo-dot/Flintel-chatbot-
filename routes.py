@@ -602,6 +602,7 @@ def home(request: Request):
             "chat_id": None,
             "chat": None,
             "pending_stream_topic_key": None,
+            **_seo_context(request),
         },
     )
 
@@ -2905,3 +2906,76 @@ def _register_icon_route(path, filename, media_type):
 
 for _p, (_f, _m) in _ICON_ROUTES.items():
     _register_icon_route(_p, _f, _m)
+
+
+# (OG IMAGE) The 512x512 logo, public, for og:image / the JSON-LD logo. Same
+# pattern and cache header as the icon routes above. Square, so the page uses
+# twitter:card "summary" (not a large preview).
+_register_icon_route("/og-image.png", "flintel-512.png", "image/png")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# (SEO) robots.txt, sitemap.xml and the home page's canonical / Open Graph /
+# JSON-LD values. Public: no auth, no session, no DB, no credits. The site URL
+# is NOT hardcoded: config.SITE_URL when set, otherwise this request's own base
+# URL (behind a TLS-terminating proxy that can be http:// — set SITE_URL).
+# Responses carry their own "public" Cache-Control, which index.py's global
+# no-store middleware leaves untouched.
+# ─────────────────────────────────────────────────────────────────────────────
+from fastapi.responses import PlainTextResponse as _SeoPlainTextResponse
+from fastapi.responses import Response as _SeoResponse
+from xml.sax.saxutils import escape as _seo_xml_escape
+
+_SEO_CACHE = {"Cache-Control": "public, max-age=3600"}
+# Every user-specific, POST or streaming route (chat pages and their stream/
+# delete/feedback, the chat list and new-chat, /search, the auth routes, login/
+# signup/logout, /api/*). "/", "/billing/upgrade", the icon routes and the SEO
+# routes themselves stay allowed.
+_ROBOTS_DISALLOW = ("/chat/", "/chats", "/search", "/auth/", "/login", "/logout", "/signup", "/api/")
+
+
+def _site_base_url(request: Request) -> str:
+    configured = (getattr(config, "SITE_URL", "") or "").strip().rstrip("/")
+    return configured or str(request.base_url).rstrip("/")
+
+
+def _seo_context(request: Request) -> dict:
+    """The four extra values the home page's <head> needs (index.html)."""
+    base = _site_base_url(request)
+    org = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Flintel",
+        "url": base + "/",
+        "logo": base + "/og-image.png",
+    }
+    # json.dumps for correct escaping; "<", ">" and "&" are written as \u escapes so the
+    # value can never close the <script> element (no "</script>" injection).
+    org_jsonld = (json.dumps(org, separators=(",", ":"))
+                  .replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026"))
+    return {
+        "canonical_url": base + "/",
+        "og_image_url": base + "/og-image.png",
+        "google_site_verification": (getattr(config, "GOOGLE_SITE_VERIFICATION", "") or "").strip(),
+        "org_jsonld": org_jsonld,
+    }
+
+
+@app.api_route("/robots.txt", methods=["GET", "HEAD"], include_in_schema=False)
+def robots_txt(request: Request):
+    lines = ["User-agent: *", "Allow: /"]
+    lines += [f"Disallow: {path}" for path in _ROBOTS_DISALLOW]
+    lines.append(f"Sitemap: {_site_base_url(request)}/sitemap.xml")
+    return _SeoPlainTextResponse("\n".join(lines) + "\n", headers=_SEO_CACHE)
+
+
+@app.api_route("/sitemap.xml", methods=["GET", "HEAD"], include_in_schema=False)
+def sitemap_xml(request: Request):
+    # Public pages only: the home page. No <lastmod> (there is no real date to state).
+    body = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+        f"<url><loc>{_seo_xml_escape(_site_base_url(request) + '/')}</loc></url>"
+        "</urlset>\n"
+    )
+    return _SeoResponse(body, media_type="application/xml", headers=_SEO_CACHE)
