@@ -43,7 +43,7 @@ def _post(key, sub, pid, title, text, **extra):
 
 
 A_TEXT = ("We're a 4-person B2B SaaS team. Looking for a Reddit monitoring tool that flags threads where people ask "
-          "for tools like ours. Budget is around $100/month and we'd start with a 2-week trial.")
+          "for tools like ours. Budget is around $100/month and we'd start with a 2-week trial. Our budget is approved.")
 POOL = [
     _post("A", "SaaS", "q1a001", "Looking for a Reddit monitoring tool, budget around $100/month", A_TEXT),
     _post("B", "startups", "q1b002", "What do you use to track Reddit mentions of your product?",
@@ -251,7 +251,8 @@ def test_every_row_is_classified_from_its_own_record(flow):
         if r["evidence"]:                                                  # every excerpt is verbatim
             assert ai.quote_in_post(r["evidence"], sig["title"], sig["post_text"]) and r["verification_status"] != "removed"
     a = rows[0]
-    assert a["evidence"] == BY_KEY["A"]["title"] and "$5k" not in a["evidence"]          # fabricated quote replaced
+    # fabricated quote replaced by verbatim post text: for a qualified lead that is the sentence stating the purchase step
+    assert a["evidence"] == "Our budget is approved." and "$5k" not in a["evidence"]
     assert any("quote was not found" in u for u in a["uncertainty"])
 
 
@@ -267,7 +268,9 @@ def test_model_labels_cannot_create_qualified_leads(flow):
     assert c == {"retrieved": 12, "unique": 12, "analyzed": 12, "listed": 12, "excluded": 3,
                  "excluded_reasons": {"irrelevant": 2, "duplicate": 1, "unverifiable": 0}, "shown": 9,
                  "relevant": 6, "uncertain": 1, "unverified": 2, "verified": 7, "buyers": 3, "qualified": 1,
-                 "researching": 2, "competitor": 2}
+                 "researching": 2, "competitor": 2,
+                 "categories": {"qualified": 1, "researching": 2, "unconfirmed": 1, "discussion": 1,
+                                "competitor": 2, "unavailable": 2}}
 
 
 def test_every_claim_cites_only_supported_rows(flow):
@@ -294,8 +297,9 @@ def test_every_claim_cites_only_supported_rows(flow):
             assert all(rows[i]["role"] == "buyer" and rows[i]["relevance"] == "relevant" for i in f["supporting_post_indices"])
     assert [d["title"] for d in ans["detailed_findings"]] == ["Research-stage demand"]     # the $5k claim is gone
     assert ans["verified_summary"] == ("Checked against the stored posts: 1 qualified lead, 2 buyers still researching, "
-                                       "1 post with unconfirmed fit, 2 competitor or vendor posts, "
-                                       "2 posts with an unavailable source; 3 posts excluded.")
+                                       "1 unconfirmed post, 1 general discussion post, 2 competitor or vendor posts, "
+                                       "2 posts with an unavailable source; 3 of 12 listed posts excluded. "
+                                       + ai.QUALIFIED_DEFINITION)
 
 
 def test_cards_match_the_report(flow):
@@ -322,8 +326,8 @@ def test_rendered_page_shows_the_same_records(integrity_browser, flow, name):
             [(str(p["index"]), p["title"], p["intent"]) for p in _rows(ans)]
         text = page.inner_text(".answer-rendered")
         assert ans["verified_summary"] in text
-        assert "6 relevant · 1 uncertain fit · 2 unverified · 7 verified · 1 qualified lead · 2 competitor/vendor · " \
-               "3 excluded (of 12 retrieved)" in text
+        assert "1 qualified lead · 2 researching · 1 unconfirmed · 1 discussion · 2 competitor/vendor · " \
+               "2 unavailable sources · 3 of 12 listed excluded" in text
         assert set(_cited(text)) <= {p["index"] for p in _rows(ans) if p["verification_status"] == "verified"}
         assert "$5k" not in text and "several others" not in text.lower() and errors == []
     finally:
