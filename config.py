@@ -62,6 +62,7 @@ untouched by this addition.
 """
 
 import os
+import logging as _logging   # (SEARCH CREDITS) config-error logging; private name, not exported
 
 __all__ = [
     # Strict intent mode + incremental rescan (accuracy over quantity)
@@ -141,6 +142,15 @@ __all__ = [
     "RESPONSE_TIMEOUT",
     # Busy-lock config
     "BUSY_FLAG_TIMEOUT_SECONDS",
+    # Search credits (search_credits.py)
+    "FREE_MONTHLY_CREDITS_DEFAULT",
+    "FREE_MONTHLY_CREDITS_EFFECTIVE",
+    "CREDIT_ENFORCEMENT_DISABLED",
+    "RESERVATION_STALE_SECONDS",
+    "ENQUEUE_TIMEOUT_SECONDS",
+    "JOB_ATTRIBUTION_CAP",
+    "CAS_MAX_TRIES",
+    "JOB_ATTRIBUTION_MODE",
     # Simulated-stream config
     "STREAM_CHUNK_CHARS",
     "STREAM_CHUNK_DELAY_SECONDS",
@@ -308,6 +318,77 @@ RESPONSE_TIMEOUT = int(os.getenv("RESPONSE_TIMEOUT", "360"))
 
 # ── Busy-lock config ──────────────────────────────────────────────────────
 BUSY_FLAG_TIMEOUT_SECONDS = int(os.getenv("BUSY_FLAG_TIMEOUT_SECONDS", "400"))
+
+# ── Search credits (search_credits.py) ───────────────────────────────────
+# FREE_MONTHLY_CREDITS: accepted searches per owner per UTC calendar month.
+# Unset/empty = 40. A whole number 1..10000 is used as given; anything else
+# (0, negative, non-integer, too large) logs an ERROR and enforces 40 —
+# an invalid value never turns enforcement off.
+FREE_MONTHLY_CREDITS_DEFAULT = 40
+
+
+def _parse_free_monthly_credits(raw):
+    if raw is None or not str(raw).strip():
+        return FREE_MONTHLY_CREDITS_DEFAULT
+    text = str(raw).strip()
+    if text.isdigit() and 1 <= int(text) <= 10000:
+        return int(text)
+    _logging.getLogger("flintel.config").error(
+        f"FREE_MONTHLY_CREDITS={text!r} is invalid (must be a whole number 1-10000); "
+        f"enforcing the default of {FREE_MONTHLY_CREDITS_DEFAULT}.")
+    return FREE_MONTHLY_CREDITS_DEFAULT
+
+
+FREE_MONTHLY_CREDITS_EFFECTIVE = _parse_free_monthly_credits(os.getenv("FREE_MONTHLY_CREDITS"))
+
+
+# CREDIT_ENFORCEMENT_DISABLED: EMERGENCY KILL SWITCH ONLY. Exactly "true"
+# (any case) turns credit enforcement off for EVERY user — searches become
+# unlimited, nothing is reserved or recorded, and LLM/collector cost is
+# unbounded while it is set. Anyone who can change the environment can
+# bypass the limit with it. Any other value is ignored (with a warning).
+def _parse_credit_kill_switch(raw):
+    if raw is None or not str(raw).strip():
+        return False
+    if str(raw).strip().lower() == "true":
+        _logging.getLogger("flintel.config").warning(
+            "CREDIT_ENFORCEMENT_DISABLED=true: EMERGENCY ONLY — search credit limits are OFF for all users.")
+        return True
+    _logging.getLogger("flintel.config").warning(
+        f"CREDIT_ENFORCEMENT_DISABLED={str(raw).strip()!r} ignored (only 'true' disables enforcement).")
+    return False
+
+
+CREDIT_ENFORCEMENT_DISABLED = _parse_credit_kill_switch(os.getenv("CREDIT_ENFORCEMENT_DISABLED"))
+RESERVATION_STALE_SECONDS = 900   # a reservation/claim this old is treated as abandoned (liveness only)
+ENQUEUE_TIMEOUT_SECONDS = 30      # bounds how long a request waits for its enqueue; never proof
+JOB_ATTRIBUTION_CAP = 50          # last N request ids kept on a job's credit_request_ids (bounded evidence)
+CAS_MAX_TRIES = 3                 # conditional-update retries after a state-preserving version change
+
+
+# JOB_ATTRIBUTION_MODE: whether a credited search also records its request id
+# on the collector's job document (`credit_request_ids`).
+#   off   (default) — the job write is exactly the pre-credit update; the
+#                     external collector sees no new field. Rare ambiguous
+#                     enqueues (timeout/crash between claim and an
+#                     acknowledged enqueue) stay charged in
+#                     needs_reconciliation until an operator closes them.
+#   field           — the same upsert also records the id, so recovery can
+#                     prove which request's enqueue landed. Enable only after
+#                     the collector is verified to accept the field.
+# Any other value logs an ERROR and uses "off".
+def _parse_job_attribution_mode(raw):
+    if raw is None or not str(raw).strip():
+        return "off"
+    text = str(raw).strip().lower()
+    if text in ("off", "field"):
+        return text
+    _logging.getLogger("flintel.config").error(
+        f"JOB_ATTRIBUTION_MODE={str(raw).strip()!r} is invalid (use 'off' or 'field'); using 'off'.")
+    return "off"
+
+
+JOB_ATTRIBUTION_MODE = _parse_job_attribution_mode(os.getenv("JOB_ATTRIBUTION_MODE"))
 
 # ── Simulated-stream config ──────────────────────────────────────────────
 STREAM_CHUNK_CHARS         = int(os.getenv("STREAM_CHUNK_CHARS", "3"))
