@@ -2912,19 +2912,33 @@
   }
   const AP_ROLE_LABELS = { buyer: 'Prospective buyer', discussion: 'Discussion', competitor_promo: 'Competitor promotion', testimonial: 'Testimonial' };
   const AP_STATUS_LABELS = { verified: 'verified', unverified: 'unverified', inaccessible: 'inaccessible', removed: 'removed' };
-  function apSourcesTable(platforms, container, heading, totals) {
+  function apSourcesTable(platforms, container, heading, totals, partial) {
     const groups = (platforms || []).filter((p) => p && (p.posts || []).length);
     if (!groups.length) return;
     apHeading(container, heading);
     // Per-platform counts exactly as given ("shown_count of total_analyzed").
     const counts = document.createElement('p');
     counts.className = 'ap-source-counts';
+    // A partial answer was cut off: posts it did not reach are missing from the table, not judged irrelevant.
+    const hasCounts = groups.some((p) => p.shown_count != null && p.total_analyzed != null);
     counts.textContent = groups.map((p) => {
       const name = platformDisplayName(normalizePlatform(p.platform));
-      return (p.shown_count != null && p.total_analyzed != null) ? `${name} · ${p.shown_count} of ${p.total_analyzed}` : name;
-    }).join(' | ');
+      if (p.shown_count == null || p.total_analyzed == null) return name;
+      return `${name} · ${p.shown_count} of ${p.total_analyzed}` + (partial ? ' analyzed posts shown' : '');
+    }).join(' | ') + (partial && hasCounts ? ' (answer cut off; posts it did not reach were not judged)' : '');
     // (ANSWER INTEGRITY) server-computed totals for the same records as the table.
-    if (totals && typeof totals.relevant === 'number') {
+    if (totals && totals.categories && typeof totals.categories === 'object') {
+      // One category per shown row; answers saved before categories existed use the line below.
+      const c = totals.categories;
+      const bits = [`${c.qualified || 0} qualified lead${c.qualified === 1 ? '' : 's'}`];
+      [['researching', 'researching', 'researching'], ['unconfirmed', 'unconfirmed', 'unconfirmed'],
+       ['discussion', 'discussion', 'discussion'], ['competitor', 'competitor/vendor', 'competitor/vendor'],
+       ['unavailable', 'unavailable source', 'unavailable sources']].forEach(([k, one, many]) => {
+        if (c[k]) bits.push(`${c[k]} ${c[k] === 1 ? one : many}`);
+      });
+      if (totals.excluded) bits.push(`${totals.excluded} of ${totals.listed} listed excluded`);
+      counts.textContent += ' — ' + bits.join(' · ');
+    } else if (totals && typeof totals.relevant === 'number') {
       const extra = (totals.uncertain ? ` · ${totals.uncertain} uncertain fit` : '') + (totals.unverified ? ` · ${totals.unverified} unverified` : '');
       counts.textContent += ` — ${totals.relevant} relevant${extra} · ${totals.verified} verified · ${totals.qualified} qualified lead${totals.qualified === 1 ? '' : 's'}`
         + ` · ${totals.competitor} competitor/vendor · ${totals.excluded} excluded (of ${totals.retrieved} retrieved)`;
@@ -3016,7 +3030,7 @@
     const divider = document.createElement('div');
     divider.className = 'section-divider';
     container.appendChild(divider);
-    apSourcesTable(data.platforms, container, 'Source posts', data.counts);
+    apSourcesTable(data.platforms, container, 'Source posts', data.counts, data.answer_status === 'partial');
     apFollowup(data, container);
   }
 
@@ -3034,7 +3048,7 @@
         container.appendChild(line);
       }
       apFindingsTable(subj.key_findings, container, null);
-      apSourcesTable(subj.platforms, container, null);
+      apSourcesTable(subj.platforms, container, null, null, data.answer_status === 'partial');
       if (si < (data.subjects || []).length - 1) {
         const div = document.createElement('div');
         div.className = 'section-divider';
