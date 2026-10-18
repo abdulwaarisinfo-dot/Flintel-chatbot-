@@ -23,18 +23,20 @@ logics.py. Purely scheduling + the two calls above, in order.
 
 (TRENDING SEARCH JOBS) Before the Google step, the same keywords — trimmed,
 de-duplicated case-insensitively and capped at config.SEARCH_WEBSITE_KEYWORDS
-(default 200 considered per cycle; 0/negative/invalid = off) — each become
-their OWN flintel_search_jobs job via the existing logics.enqueue_search_job()
-(topic_key "auto_trending:<normalized keyword>", keywords [that keyword],
-targeting_platform TRENDING_JOB_TARGETING_PLATFORM). Keywords that already
-have a job are skipped, so an existing job is never updated or reset. The
-legacy combined job (topic_key "auto_trending") is no longer written and is
-left as it is. This step has its own try/except (and one per keyword): a
-failure there is only logged and the Google step still runs. The Google
-step receives the generated list exactly as before (the cap only applies
-to the jobs). Jobs are written ONLY by a cycle that won the schedule claim:
-a fallback cycle (Mongo schedule unavailable, so several workers may run
-at once) writes no jobs and still runs the Google step.
+(default 200 considered per cycle; 0/negative/invalid = off) — are written as
+ONE combined flintel_search_jobs job per cycle via the existing
+logics.enqueue_search_job(): topic_key "auto_trending:<UTC time of the cycle,
+YYYYMMDDTHHMMSSZ>", keywords [ALL of that cycle's cleaned keywords],
+targeting_platform TRENDING_JOB_TARGETING_PLATFORM. Every cycle gets its own
+topic_key, so each 12-hour cycle creates a NEW job and an earlier cycle's job
+is never updated or reset. The legacy combined job (topic_key "auto_trending")
+and the earlier one-job-per-keyword jobs ("auto_trending:<keyword>") are no
+longer written and are left as they are. This step has its own try/except: a
+failure there is only logged (exception type only, never the keywords) and the
+Google step still runs. The Google step receives the generated list exactly as
+before (the cap only applies to the job). The job is written ONLY by a cycle
+that won the schedule claim: a fallback cycle (Mongo schedule unavailable, so
+several workers may run at once) writes no job and still runs the Google step.
 
 FIRE-AND-FORGET: start_trending_keywords_scheduler() schedules an asyncio
 background task and returns immediately — it never blocks FastAPI
@@ -74,7 +76,7 @@ import config
 import database
 from database import google_posts_collection
 from google import search_google_for_reddit_posts
-from logics import enqueue_search_job, generate_trending_keywords_via_web_search, normalize_topic_key
+from logics import enqueue_search_job, generate_trending_keywords_via_web_search
 
 log = logging.getLogger(__name__)
 
@@ -87,7 +89,7 @@ TRENDING_KEYWORDS_INTERVAL_SECONDS = 43200
 # existing search_keyword field. Never changes.
 TRENDING_KEYWORDS_SEARCH_TAG = "auto_trending"
 
-# topic_key prefix of the one-keyword trending jobs ("auto_trending:<normalized keyword>").
+# topic_key prefix of the per-cycle trending job ("auto_trending:<cycle time, YYYYMMDDTHHMMSSZ>").
 # Never equals the legacy combined job's topic_key "auto_trending".
 TRENDING_JOB_TOPIC_PREFIX = "auto_trending:"
 
@@ -137,32 +139,17 @@ def _trending_job_keywords(keywords, limit: int) -> list:
     return out
 
 
-def _trending_topic_keys(job_keywords: list) -> list:
-    """(topic_key, keyword) per keyword. A keyword that normalizes to nothing
-    is dropped; when two normalize to the same topic_key the first is kept."""
-    out, seen = [], set()
-    for kw in job_keywords:
-        normalized = normalize_topic_key(kw)
-        if not normalized:
-            continue
-        topic_key = TRENDING_JOB_TOPIC_PREFIX + normalized
-        if topic_key in seen:
-            continue
-        seen.add(topic_key)
-        out.append((topic_key, kw))
-    return out
-
-
-def _existing_job_topic_keys(topic_keys: list) -> set:
-    """topic_keys that already have a flintel_search_jobs document (one query)."""
-    cursor = database.jobs_collection.find({"topic_key": {"$in": topic_keys}}, {"topic_key": 1, "_id": 0})
-    return {doc.get("topic_key") for doc in cursor}
+def _trending_cycle_topic_key() -> str:
+    """topic_key of THIS cycle's job: the prefix plus the cycle's UTC time, so every
+    12-hour cycle gets a new job and an earlier cycle's job is never touched."""
+    when = _aware_utc(_utcnow()) or datetime.now(timezone.utc)
+    return TRENDING_JOB_TOPIC_PREFIX + when.strftime("%Y%m%dT%H%M%SZ")
 
 
 async def _queue_trending_search_job(keywords) -> None:
-    """Write each new trending keyword as its own search job; keywords that
-    already have a job are skipped (never updated or reset).
-    Never raises: a failure is logged and the caller carries on."""
+    """Write ALL of this cycle's cleaned keywords as ONE search job under a
+    per-cycle topic_key. Never raises: a failure is logged (exception type
+    only) and the caller carries on."""
     _cycle_outcome["job_queued"] = False
     try:
         limit = _search_website_keywords_limit()
@@ -176,43 +163,25 @@ async def _queue_trending_search_job(keywords) -> None:
             )
             return
         job_keywords = _trending_job_keywords(keywords, limit)
-        jobs = _trending_topic_keys(job_keywords)
-        if not jobs:
+        if not job_keywords:
             log.warning("Trending-keywords scheduler: search job NOT written — no usable keywords after cleanup.")
             return
+        topic_key = _trending_cycle_topic_key()
         try:
-            existing = await asyncio.to_thread(_existing_job_topic_keys, [topic_key for topic_key, _ in jobs])
+            await asyncio.to_thread(enqueue_search_job, topic_key, job_keywords, TRENDING_JOB_TARGETING_PLATFORM)
         except Exception as exc:
-            # nothing is written without knowing what exists: never risk resetting a job
+            # type only: the message could echo document content (keywords)
             log.warning(
-                f"Trending-keywords scheduler: looking up existing search jobs failed "
-                f"({type(exc).__name__}); no jobs written this cycle, Google search continues."
+                f"Trending-keywords scheduler: queuing the search job failed "
+                f"({type(exc).__name__}); Google search continues."
             )
             return
-        created = skipped = failed = 0
-        for topic_key, keyword in jobs:
-            if topic_key in existing:
-                skipped += 1
-                continue
-            try:
-                await asyncio.to_thread(enqueue_search_job, topic_key, [keyword], TRENDING_JOB_TARGETING_PLATFORM)
-                created += 1
-            except Exception as exc:
-                failed += 1
-                # type only: the message could echo document content (keywords)
-                log.warning(
-                    f"Trending-keywords scheduler: queuing one search job failed "
-                    f"({type(exc).__name__}); continuing with the next keyword."
-                )
-        _cycle_outcome["job_queued"] = created > 0
-        log.info(
-            f"Trending-keywords scheduler: jobs created={created} "
-            f"skipped_existing={skipped} failed={failed}"
-        )
+        _cycle_outcome["job_queued"] = True
+        log.info(f"Trending-keywords scheduler: job created topic_key={topic_key} keywords={len(job_keywords)}")
     except Exception as exc:
         # type only: the message could echo document content (keywords)
         log.warning(
-            f"Trending-keywords scheduler: queuing the search jobs failed "
+            f"Trending-keywords scheduler: queuing the search job failed "
             f"({type(exc).__name__}); Google search continues."
         )
 
@@ -232,8 +201,8 @@ async def _run_trending_keywords_cycle(write_jobs: bool = True):
     too, so a single bad cycle can never kill the scheduler loop below.
 
     write_jobs=False (fallback cycles, run without the schedule claim):
-    no search jobs are written — overlapping uncoordinated cycles could
-    otherwise reset a job another cycle just created — and job_queued stays
+    no search job is written — overlapping uncoordinated cycles would each
+    create their own job for what is one 12-hour cycle — and job_queued stays
     False; the Google step still runs."""
     _cycle_outcome.clear()
     try:
