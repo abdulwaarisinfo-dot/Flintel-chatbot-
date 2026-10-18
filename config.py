@@ -203,7 +203,9 @@ __all__ = [
 MAX_KEYWORDS = int(os.getenv("MAX_KEYWORDS", "20"))
 CLAUDE_MAX_KEYWORDS = int(os.getenv("CLAUDE_MAX_KEYWORDS", "10"))
 # Max keywords the 12-hourly trending-keywords cycle (scheduler.py) writes into
-# its own flintel_search_jobs job (topic_key "auto_trending"). Independent of
+# its ONE combined flintel_search_jobs job per cycle (topic_key
+# "auto_trending:<cycle time, YYYYMMDDTHHMMSSZ>", all keywords in a single
+# `keywords` list; each cycle creates a new job). Independent of
 # MAX_KEYWORDS / CLAUDE_MAX_KEYWORDS (user-search limits) — never derived from
 # them. 0, negative or not a number = that job is not written (kill-switch);
 # the cycle's Google search is unaffected either way.
