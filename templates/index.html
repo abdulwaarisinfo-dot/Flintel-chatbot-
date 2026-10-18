@@ -1353,7 +1353,7 @@
         <h1 class="headline">What's the internet saying?</h1>
 
         {% if error %}
-        <div class="state-card">
+        <div class="state-card"{% if denial %} data-denial="{{ denial }}"{% endif %}>
           <span class="state-icon-badge error">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 4L21 20H3L12 4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 10.5V14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="17" r="0.9" fill="currentColor"/></svg>
           </span>
@@ -1363,6 +1363,7 @@
         {% endif %}
 
         <form action="/search" method="post" id="search-form">
+          <input type="hidden" name="submit_key" value="{% if new_submit_key is defined %}{{ new_submit_key() }}{% endif %}" />
           <div class="search-box">
             <label for="search-input" class="sr-only">Search a brand, product, or topic</label>
             <textarea
@@ -1527,6 +1528,7 @@
                 <input type="hidden" name="query" value="{{ msg.query }}" />
                 <input type="hidden" name="platform" value="All Platforms" />
                 <input type="hidden" name="chat_id" value="{{ chat_id or '' }}" />
+                <input type="hidden" name="submit_key" value="{% if new_submit_key is defined %}{{ new_submit_key() }}{% endif %}" />
                 <button class="btn-outline" type="submit" style="border:1px solid #3d3d3b; cursor:pointer;">Try All Platforms</button>
               </form>
             </div>
@@ -3538,6 +3540,29 @@
   }
   // NAV-FEEDBACK-END
 
+  // (SEARCH CREDITS) Every intentional /search submit gets a fresh submit_key;
+  // the native fallback re-post (form.submit()) reuses the same key, so the
+  // server treats it as the same request. A deliberate credit denial (any
+  // status carrying X-Flintel-Denial) is shown inline and never re-posted.
+  function setFreshSubmitKey(form) {
+    try {
+      const el = form && form.querySelector('input[name="submit_key"]');
+      if (!el) return;
+      let key = '';
+      try { key = (window.crypto && window.crypto.randomUUID) ? window.crypto.randomUUID() : ''; } catch (e) { key = ''; }
+      if (!key) {
+        const bytes = new Uint8Array(16);
+        try { window.crypto.getRandomValues(bytes); } catch (e) { for (let i = 0; i < 16; i++) bytes[i] = Math.floor(Math.random() * 256); }
+        key = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+      }
+      el.value = key;
+    } catch (e) { /* keep the server-rendered key */ }
+  }
+  function flintelSearchResponseAction(response) {
+    const denial = response && response.headers && response.headers.get ? response.headers.get('X-Flintel-Denial') : null;
+    if (denial) return 'show';
+    return response && response.ok ? 'ok' : 'repost';
+  }
   async function navigateTo(url, { method = 'GET', pushState = true, body = undefined, fallbackForm = undefined, fallbackQuery = undefined, onBusyDecline = undefined, revealLatestChat = false } = {}) {
     // (RACE-CONDITION FIX) Snapshot the generation counter for THIS
     // navigation right away — anything that happens after any subsequent
@@ -3564,7 +3589,7 @@
         redirect: 'follow',
         ...(body !== undefined ? { body } : {}),
       });
-      if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+      if (flintelSearchResponseAction(response) === 'repost') throw new Error(`Request failed: ${response.status}`);
 
       const html = await response.text();
       const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -4243,6 +4268,7 @@
     // yet covered by those other two checks.
     resetChatIdInputIfHomePage();
 
+    setFreshSubmitKey(form);   // (SEARCH CREDITS) a new key for this intentional submit
     const formData = new FormData(form);
 
     // (SEND-LOCK) Lock sending and empty the box right away (FormData is already captured).
@@ -5136,6 +5162,7 @@
       // from FormData entirely (standard HTML behavior), so building it
       // after would silently drop the "query" field and make the backend's
       // required Form(...) validation fail with 422.
+      setFreshSubmitKey(form);   // (SEARCH CREDITS) a new key for this intentional submit
       const formData = new FormData(form);
       setSubmitLoading(true);
       // (SEND-LOCK) Prompt leaves the box immediately (FormData already captured above);
@@ -5160,7 +5187,7 @@
           credentials: 'same-origin',
           redirect: 'follow',
         });
-        if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+        if (flintelSearchResponseAction(response) === 'repost') throw new Error(`Request failed: ${response.status}`);
       } catch (fetchErr) {
         if (searchInput) searchInput.value = query; // (SEND-LOCK) native submit reads the live field — put the prompt back first
         console.warn('[hard-reload-fallback][search-submit][network] Genuine fetch/network failure — falling back to a real page submit. If this is happening more often than a real offline/network issue would explain, capture this exact log + the failing request in DevTools Network tab (status, timing, response) — that is the actual signal needed to diagnose it further; it cannot be root-caused from static code alone.', fetchErr);
