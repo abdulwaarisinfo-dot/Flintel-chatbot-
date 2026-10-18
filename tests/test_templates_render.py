@@ -111,38 +111,44 @@ def _render_chip_block(msg):
     jinja2 = pytest.importorskip("jinja2")
     src = _chat_src()
     start = src.index("{% if msg.claude_answer is none %}")
-    end = src.index("{% endif %}", src.index("status-completed\"><span class=\"status-dot\">", start)) + len("{% endif %}")
+    end = src.index("{% endif %}", src.index("class=\"turn-chip status-completed\"", start)) + len("{% endif %}")
     return jinja2.Template(src[start:end]).render(msg=msg)
 
 class _Msg:
-    def __init__(self, claude_answer, requested_at):
+    def __init__(self, claude_answer, requested_at, answered_at=None):
         self.claude_answer = claude_answer
         self.requested_at = requested_at
+        self.answered_at = answered_at
 
 class TestTurnTimerChipJinja:
     def test_pending_chip_has_timer_and_requested_at(self):
         html = _render_chip_block(_Msg(None, datetime(2026, 10, 4, 10, 15, 0)))
         assert "turn-timer" in html
         assert 'data-requested-at="2026-10-04T10:15:00"' in html
-        assert "status-pending" in html and "Searching…" in html   # server-rendered, no blank flash
+        assert "status-pending" in html and "data-turn-timer" in html
+        assert "Researching" in html                              # server-rendered label, no blank flash
         assert 'aria-live="off"' in html
 
     def test_pending_chip_without_requested_at_still_renders_searching(self):
         html = _render_chip_block(_Msg(None, None))
-        assert 'data-requested-at=""' in html and "Searching…" in html
+        assert 'data-requested-at=""' in html and "Researching" in html
 
     def test_answered_chip_is_plain_completed(self):
-        html = _render_chip_block(_Msg("{}", datetime(2026, 10, 4, 10, 15, 0)))
-        assert "status-completed" in html and "Completed" in html
-        assert "turn-timer" not in html and "data-requested-at" not in html
+        html = _render_chip_block(_Msg("{}", datetime(2026, 10, 4, 10, 15, 0), datetime(2026, 10, 4, 10, 15, 14)))
+        assert "status-completed" in html and "Researched" in html     # the label the chip shows once the answer is in
+        assert 'data-requested-at="2026-10-04T10:15:00"' in html and 'data-answered-at="2026-10-04T10:15:14"' in html
+        assert "Completed" not in html                                 # the superseded label
+        assert "data-turn-timer" not in html and "status-pending" not in html    # no running timer on a finished turn
 
-    def test_chat_wiring_present_and_index_untouched(self):
-        src = _chat_src()
-        assert "finishTurnTimer(pendingTurn, 'completed'" in src
-        assert src.count("finishTurnTimer(pendingTurn, 'failed'") == 2    # payload.error + onerror
+    def test_timer_wiring_present_in_chat_and_index(self):
+        pages = [_chat_src()]
         index = CHAT_HTML.parent / "index.html"
         if index.exists():
-            assert "turn-timer" not in index.read_text(encoding="utf-8")
+            pages.append(index.read_text(encoding="utf-8"))           # index.html carries the same timer helpers
+        for src in pages:
+            assert "// TURN-TIMER-HELPERS-BEGIN" in src and "function fillResearchedDurations" in src
+            assert "finishTurnTimer(pendingTurn, 'completed'" in src
+            assert src.count("finishTurnTimer(pendingTurn, 'failed'") == 2    # payload.error + onerror
 
 
 @pytest.mark.skipif(shutil.which("node") is None, reason="node not installed")
@@ -181,7 +187,7 @@ class TestTurnTimerHelpersJs:
             out = subprocess.run(["node", "-e", code], capture_output=True, text=True, timeout=20,
                                  env={**os.environ, "TZ": tz})
             assert out.returncode == 0, out.stderr
-            assert json.loads(out.stdout) == [True] * 5, tz 
+            assert json.loads(out.stdout) == [True] * 5, tz
 
     def test_bad_input_is_nan_and_elapsed_never_negative(self):
         assert self._run("[parseRequestedAt(''), parseRequestedAt(null), parseRequestedAt('garbage')].map(Number.isNaN)") == [True, True, True]
