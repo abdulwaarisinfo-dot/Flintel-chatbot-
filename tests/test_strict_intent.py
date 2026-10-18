@@ -56,8 +56,10 @@ from intent_prototype import doc_classifier, schemas        # noqa: E402
 # previous snapshot: 7e0ed41d35c2b9ed541cdf02a133f89eb56201ed9561c486cb07472f50b5b1b4 / 29993.
 # Re-pinned when the base prompt gained the per-post labels / citation rule
 # (answer_integrity.py); still unaffected by STRICT_INTENT_MODE.
-ORIG_ANALYSIS_PROMPT_SHA = "a5155bf90b3a8968ffc565d699e5e212e922d6b6583f24a6bb894e547e41bdd0"
-ORIG_ANALYSIS_PROMPT_LEN = 35504
+# Re-pinned again for the intentional wording of "purchase_intent: explicit" (an explicit purchase step; a budget amount,
+# timing, trial, demo or willingness to pay is research). previous snapshot: a5155bf9...bdd0 / 35504.
+ORIG_ANALYSIS_PROMPT_SHA = "90bdc950838b183b6d48f395ee8ad125634cc792145cd1f1c876f9aca94ee0d2"
+ORIG_ANALYSIS_PROMPT_LEN = 35776
 ORIG_CLASSIFIER_PROMPT_SHA = "6c7adb5977c34d9520e5a1c1abd41bce782d620f1358936c7f21c21cb7278be4"
 
 
