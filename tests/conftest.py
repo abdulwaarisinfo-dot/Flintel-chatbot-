@@ -3,6 +3,11 @@ import os
 # config.py refuses to start without a strong SESSION_SECRET_KEY; tests get a
 # throwaway one unless the environment already provides a key.
 os.environ.setdefault("SESSION_SECRET_KEY", "test-only-session-key-not-for-deployment")
+# Search credits are enforced by default in the app. The pre-existing route
+# tests stub `database` with MagicMock and exercise the pre-credit /search
+# behaviour, so the suite runs with the kill switch on unless the environment
+# says otherwise; tests/test_search_credit*.py switch enforcement on explicitly.
+os.environ.setdefault("CREDIT_ENFORCEMENT_DISABLED", "true")
 
 
 import pytest  # noqa: E402
