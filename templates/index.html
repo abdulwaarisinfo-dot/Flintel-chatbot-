@@ -9,6 +9,19 @@
 <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+{% if canonical_url %}
+<meta name="description" content="Search a brand, product or topic and see what people are really saying on Reddit, X / Twitter, LinkedIn and Facebook, with the source posts it is based on.">
+<link rel="canonical" href="{{ canonical_url }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Flintel">
+<meta property="og:title" content="Flintel — What's the internet saying?">
+<meta property="og:description" content="Search a brand, product or topic and see what people are really saying on Reddit, X / Twitter, LinkedIn and Facebook, with the source posts it is based on.">
+<meta property="og:url" content="{{ canonical_url }}">
+<meta property="og:image" content="{{ og_image_url }}">
+<meta name="twitter:card" content="summary">
+{% if google_site_verification %}<meta name="google-site-verification" content="{{ google_site_verification }}">{% endif %}
+<script type="application/ld+json">{{ org_jsonld | safe }}</script>
+{% endif %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style id="app-styles">
