@@ -186,6 +186,10 @@ app = FastAPI(
     openapi_url=None,
 )
 templates = Jinja2Templates(directory="templates")
+# (SEARCH CREDITS) A fresh submit key per rendered /search form; JavaScript
+# replaces it on every intentional submit, automatic retries keep it.
+import secrets as _secrets
+templates.env.globals.setdefault("new_submit_key", lambda: _secrets.token_hex(16))
 
 # Required for login sessions (stores a signed cookie, not the DB user doc).
 # Also doubles as where we stash the anonymous chat-owner UUID and the
@@ -725,7 +729,8 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
                         unfiltered: bool = False, website_context: dict = None, match_phrases: list = None,
                         evidence_required: int = None,
                         website_only: bool = False, website_evidence: dict = None,
-                        website_note: str = None, resolved_query: str = None, time_range: dict = None):
+                        website_note: str = None, resolved_query: str = None, time_range: dict = None,
+                        credit_request_id: str = None, late_delivery: tuple = None):
     """Appends a search as a new message in the chat, and auto-titles the
     chat from the very first query if it hasn't been named yet.
 
@@ -814,7 +819,17 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
     folds into analyze_with_claude()'s extra_context for this message,
     so the answer can account for how the shared website relates to the
     query. Stored on the message so it stays consistent across
-    re-answers of the same message, exactly like website_evidence."""
+    re-answers of the same message, exactly like website_evidence.
+
+    (SEARCH CREDITS) With `credit_request_id` the message carries that id and
+    the save is guarded by search_credits.message_save_filter(): it never
+    adds a second message for the same id, never writes while an operator
+    close marker exists (S-normal), and `late_delivery=(attempt, close_token)`
+    only matches a completed close of that exact attempt (S-late). The save
+    never creates a chat (no upsert). Returns True only when the message was
+    saved (matched == 1); the durable turn record and message counter follow
+    only a real save. Without `credit_request_id` everything is exactly as
+    before and nothing is returned."""
     now = datetime.now(timezone.utc)
     message = {
         "query":              query,
@@ -851,10 +866,23 @@ def add_search_to_chat(chat_id: str, owner_key: str, query: str, topic_key: str,
         "claude_answer":      None, # filled in once: Claude's answer text, grounded in `results`
     }
 
+    if credit_request_id:
+        message["credit_request_id"] = credit_request_id
+
     chat = chats_collection.find_one({"chat_id": chat_id, "owner_key": owner_key})
     update = {"$push": {"messages": message}, "$set": {"updated_at": now}}
     if chat and not chat.get("messages"):
         update["$set"]["title"] = generate_chat_title(query)
+
+    if credit_request_id:
+        import search_credits
+        result = chats_collection.update_one(
+            search_credits.message_save_filter(chat_id, owner_key, credit_request_id, late_delivery), update)
+        if result.matched_count != 1:
+            return False
+        turn_finisher.enqueue(chat_id, owner_key, topic_key, due_in_seconds=turn_finisher.NEW_TURN_DELAY_SECONDS)
+        increment_message_count(owner_key)
+        return True
 
     chats_collection.update_one({"chat_id": chat_id, "owner_key": owner_key}, update)
     # (NON-BLOCKING CHAT PAGE) Durable record that this turn must be finished
