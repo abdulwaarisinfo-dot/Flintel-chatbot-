@@ -14,6 +14,7 @@ import copy
 import datetime
 import importlib
 import json
+import re
 import sys
 import types
 from pathlib import Path
@@ -263,6 +264,15 @@ def _reopen(browser, name, chat, *, sse=None, pending=None):
     return page, errors
 
 
+# A finished research turn's chip reads "Researched 14s" (answered_at - requested_at; "Researched" alone for answers
+# saved before answered_at existed). It used to read "Completed". The class is what marks it finished.
+RESEARCHED = re.compile(r"Researched( (\d+m )?\d+s)?")
+
+
+def _researched(row):
+    return RESEARCHED.fullmatch(row["chip"] or "") is not None and row["chipClass"] == "status-completed"
+
+
 def _for_template(chat):
     out = copy.deepcopy(chat)
     for m in out["messages"]:
@@ -279,9 +289,10 @@ def test_reopened_chat_restores_prompts_and_answers(browser, env, monkeypatch, n
     try:
         rows = page.evaluate(STATE_JS)
         assert [r["q"] for r in rows] == [q for q, _ in QUERIES]
-        assert rows[0]["chip"] == "Completed" and "competition is intense" in rows[0]["shown"]
+        assert _researched(rows[0]) and "competition is intense" in rows[0]["shown"]
         assert rows[1]["chip"] == "Answer unavailable" and "didn't finish" in rows[1]["shown"] and rows[1]["askAgain"]
         assert rows[2]["chip"] == "Partial answer" and "Remote work dominates" in rows[2]["shown"]
+        assert rows[2]["chipClass"] == "status-failed"                               # existing styling hook, unchanged
         assert "cut off before it finished" in rows[2]["shown"]
         for r in rows:
             assert r["shown"]                                                        # never an empty answer
@@ -315,14 +326,14 @@ def test_existing_history_stays_compatible(browser, name):
     try:
         rows = page.evaluate(STATE_JS)
         assert [r["q"] for r in rows] == [m["query"] for m in LEGACY["messages"]]
-        assert rows[0]["chip"] == "Completed" and "competition is intense" in rows[0]["shown"]
+        assert _researched(rows[0]) and "competition is intense" in rows[0]["shown"]
         assert rows[1]["chip"] == "Answer unavailable" and rows[1]["askAgain"]       # was: blank under "Completed"
-        assert rows[2]["chip"] == "Completed" and "Kept under an unknown field." in rows[2]["shown"]  # text never hidden
-        assert rows[3]["chip"] == "Completed" and rows[3]["shown"] == "Nothing turned up."
+        assert _researched(rows[2]) and "Kept under an unknown field." in rows[2]["shown"]  # text never hidden
+        assert _researched(rows[3]) and rows[3]["shown"] == "Nothing turned up."
         assert rows[4]["chipClass"] == "status-pending" and rows[4]["chip"] != "Completed"   # interrupted: still pending, never "Completed"
         assert rows[5]["chip"] == "Answer unavailable"                               # labels-only skeleton is not an answer
-        assert rows[6]["chip"] == "Completed" and rows[6]["shown"] == "That data isn't available."
-        assert rows[7]["chip"] == "Completed" and "Extend to last 30 days" in rows[7]["shown"]
+        assert _researched(rows[6]) and rows[6]["shown"] == "That data isn't available."
+        assert _researched(rows[7]) and "Extend to last 30 days" in rows[7]["shown"]
         assert errors == []
         # nothing re-renders in a loop
         n = page.evaluate("""() => new Promise(res => { let c = 0; const o = new MutationObserver(ms => { c += ms.filter(m => {
@@ -480,7 +491,7 @@ def test_reopen_through_the_real_view_chat_route(browser, env, monkeypatch, name
         page.wait_for_timeout(300)
         rows = page.evaluate(STATE_JS)
         assert [r["q"] for r in rows] == [q for q, _ in QUERIES]
-        assert [r["chip"] for r in rows] == ["Completed", "Answer unavailable", "Partial answer"]
+        assert _researched(rows[0]) and [r["chip"] for r in rows[1:]] == ["Answer unavailable", "Partial answer"]
         assert "competition is intense" in rows[0]["shown"] and "Remote work dominates" in rows[2]["shown"]
         assert errors == []
     finally:
