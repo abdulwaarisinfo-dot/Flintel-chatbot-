@@ -132,6 +132,8 @@ import json
 import time
 import math
 import hashlib
+import hmac
+import secrets
 import heapq
 import inspect
 import threading
@@ -144,6 +146,7 @@ import httpx
 
 import flintel
 import timerange   # (DATE/TIME) natural-language search ranges
+import answer_integrity   # (ANSWER INTEGRITY) deterministic checks on the listed posts
 import website_intelligence
 import google as google_search   # the new google.py module
 
@@ -184,6 +187,17 @@ import logging
 log = logging.getLogger("flintel-web")
 try: import usage_meter as _um
 except Exception: _um = None
+
+
+def _usage_attribution(**ids):
+    """Tags metered API calls with the search they serve (no-op without usage_meter)."""
+    import contextlib
+    return _um.attribution(**ids) if _um is not None else contextlib.nullcontext()
+
+
+def _usage_request_id():
+    """Request id of the search being handled, if any (set by POST /search)."""
+    return _um.current_request_id() if _um is not None else None
 
 # (RETRIEVAL RECALL FIX) Bounds on the lexical candidate tier's generated
 # Mongo query — see _build_lexical_or_clause(). LEXICAL_MAX_TERMS caps how
@@ -3660,6 +3674,10 @@ pain-point/general research queries.
           "title": "<post title, or a short label if none>",
           "summary": "<max 12-15 words, minimal paraphrase — this is a reference, not the analysis>",
           "sentiment": "<positive|mixed|negative|neutral>",
+          "role": "<buyer|discussion|competitor_promo|testimonial|irrelevant — see POST LABELS>",
+          "purchase_intent": "<explicit|research|none>",
+          "product_fit": "<fits|partial|unrelated>",
+          "evidence": "<a short quote copied word for word from THIS post's title or text that supports its labels — omit if none>",
           "link": "<real post URL if available, else omit this field entirely>",
           "google_rank": <int, omit unless this post came from the supplementary Google search>
         }
@@ -3687,6 +3705,26 @@ REFERENCES RULE: every "supporting_post_indices" entry must correspond
 to a real post you were actually given — never invent an index, a URL,
 an author, or a date. If source metadata (platform, title) isn't
 available for a post, omit that detail rather than fabricating it.
+Only cite a post in any text field ("Post N") if that same post is listed
+in "posts" with that index; never cite a post you did not list.
+
+POST LABELS (each listed post): "role" — buyer (the author asks for a tool,
+service or solution for themselves), discussion (general talk, advice,
+strategy or hypothetical questions), competitor_promo (someone presenting
+or launching their own product), testimonial (someone describing a tool
+they already use), irrelevant. "purchase_intent" — explicit only when the
+author asks for a solution AND states an explicit purchase step: an approved
+or allocated budget (not just an amount), a committed decision to buy, sign,
+subscribe or switch, or a procurement process under way. Hypothetical,
+conditional, negated, paused or merely exploratory statements are not
+explicit. A request for recommendations, a budget amount, a deadline, a
+trial, demo or pilot, a quote request, or willingness to pay is research,
+alone or combined. "product_fit" — whether the
+author's need is one the user's product or topic addresses; general
+marketing questions and unrelated use cases are unrelated (do not list
+them). Competitor promotions and testimonials are market context, never
+buyer demand: never count them as buyers, leads or demand, and never rate
+a demand finding Strong on them.
 
 OPTIONAL FIELD — "business_insight" (source_list format only): after
 grounding everything above strictly in the evidence, you MAY add a
@@ -4047,6 +4085,21 @@ bullets. If nothing in these posts is relevant to the question, say exactly:
 post URL — you were not given any.
 End every bullet with the number(s) of the post(s) it came from, exactly as
 given, e.g. "(Post 14)" or "(Post 3, Post 17)".
+
+After the bullets, write a line containing only "POST RECORDS:" and then one
+JSON object per line for each post above that is relevant to the question
+(skip the others; if none is relevant, leave this block out):
+{"post": <its number>, "title": "<its title, copied exactly as given>", "quote": "<4 to 25 consecutive words copied exactly from THIS post's title or text>", "summary": "<one short sentence about THIS post only>", "role": "<buyer|discussion|competitor_promo|testimonial|irrelevant>", "purchase_intent": "<explicit|research|none>", "product_fit": "<fits|partial|unrelated>"}
+role: buyer = the author asks for a tool, service or solution for themselves;
+competitor_promo = presenting their own product; testimonial = describing a
+tool they already use; discussion = anything else on topic. purchase_intent:
+explicit only when the author asks for a solution AND states an explicit
+purchase step (an approved or allocated budget, a committed decision to buy,
+sign, subscribe or switch, or a procurement process under way; never
+hypothetical, conditional, negated or paused); research = asks for
+recommendations, even with a budget amount, deadline, trial, demo or pilot,
+quote request or willingness to pay. Each record describes only the post whose
+number it carries. Never include a URL.
 """
 
 # (BUGFIX PACK #3) Second-level "notes-of-notes" condensing step — only
@@ -4332,7 +4385,7 @@ def _call_claude(system_prompt: str, user_message: str, max_tokens: int = None, 
         if data.get("status") == "incomplete":
             log.warning(f"LLM response incomplete | model={LLM_MODEL} | reason={data.get('incomplete_details')}")
         if _um:
-            try: _um.record_usage("llm", LLM_MODEL, *_um.extract_responses_usage(data), status=("incomplete" if data.get("status") == "incomplete" else "ok"), extra={"web_search_enabled": bool(enable_web_search)})
+            try: _um.record_usage("llm", LLM_MODEL, *_um.extract_responses_usage(data), status=("incomplete" if data.get("status") == "incomplete" else "ok"), extra={"web_search_enabled": bool(enable_web_search), "response_id": data.get("id")})
             except Exception: pass
 
     # Extract text from output items
@@ -4386,6 +4439,98 @@ def _notes_unavailable_user_message(query: str) -> str:
         "platform / terms) — kabhi bhi kisi bahar ke tool ka naam mat "
         "lo. Tone: confident analyst giving a status report."
     )
+
+
+# ── (POST RECORDS) map-step records tied to their stored posts ──────────────
+# The map step is the only step that sees each post's title and text, so it
+# also writes one record per relevant post (CLAUDE_MAP_STEP_SYSTEM_PROMPT).
+# The server keeps a record only after answer_integrity.check_post_record()
+# accepts it against that exact post, carries the kept records to
+# _patch_post_urls_into_answer() under a per-process signature the model never
+# sees, and answer_integrity re-checks each record before a row uses it. A
+# "_post_records" field the model writes itself is removed and never used.
+_POST_RECORDS_FIELD = "_post_records"
+_POST_RECORDS_KEY = secrets.token_bytes(32)
+_POST_RECORDS_MARK = re.compile(r"^[ \t]*POST RECORDS:[ \t]*$", re.I | re.M)
+
+
+def _split_map_reply(reply, chunk: list, fingerprints: dict):
+    """(notes, records) from one map reply: the notes without the records
+    block, and {post number: record} for records that belong to this chunk and
+    pass check_post_record(). A post number claimed twice keeps no record."""
+    if not isinstance(reply, str):
+        return reply, {}
+    mark = _POST_RECORDS_MARK.search(reply)
+    if not mark:
+        return reply, {}
+    in_chunk = {p["_n"]: p for p in chunk if p.get("_n")}
+    kept, seen = {}, set()
+    for line in reply[mark.end():].splitlines():
+        line = line.strip().rstrip(",")
+        if not line.startswith("{"):
+            continue
+        try:
+            record = json.loads(line)
+        except ValueError:
+            continue
+        n = _parse_post_index(record.get("post")) if isinstance(record, dict) else None
+        if n is None:
+            continue
+        if n in seen:
+            kept.pop(n, None)
+            continue
+        seen.add(n)
+        post = in_chunk.get(n)
+        if post is None:
+            continue
+        checked = answer_integrity.check_post_record(
+            record, post.get("title"), post.get("text"), [fp for m, fp in fingerprints.items() if m != n])
+        if checked:
+            kept[n] = checked
+    return reply[:mark.start()].rstrip(), kept
+
+
+def _records_mac(payload: dict) -> str:
+    body = json.dumps(payload, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    return hmac.new(_POST_RECORDS_KEY, body, hashlib.sha256).hexdigest()
+
+
+def _with_server_fields(answer_text, records: dict = None):
+    """The final analysis JSON with any model-written "_post_records" removed
+    and, for a listed-posts answer, the server's signed records added."""
+    if not isinstance(answer_text, str):
+        return answer_text
+    cleaned = answer_text.strip()
+    if cleaned.startswith("```"):
+        cleaned = re.sub(r"^json\s*", "", cleaned.strip("`").strip(), flags=re.IGNORECASE).strip()
+    try:
+        data = json.loads(cleaned)
+    except (ValueError, TypeError):
+        return answer_text
+    if not isinstance(data, dict):
+        return answer_text
+    had = data.pop(_POST_RECORDS_FIELD, None) is not None
+    if records and data.get("format") in ("source_list", "comparison"):
+        payload = {str(n): r for n, r in sorted(records.items())}
+        data[_POST_RECORDS_FIELD] = {"records": payload, "mac": _records_mac(payload)}
+    elif not had:
+        return answer_text
+    return json.dumps(data, ensure_ascii=False)
+
+
+def _take_post_records(data) -> Optional[dict]:
+    """Removes "_post_records" from `data`, whoever wrote it, and returns
+    {post number: record} only when it carries this process's signature."""
+    if not isinstance(data, dict) or _POST_RECORDS_FIELD not in data:
+        return None
+    raw = data.pop(_POST_RECORDS_FIELD)
+    try:
+        payload, mac = raw["records"], raw["mac"]
+        if not (isinstance(payload, dict) and isinstance(mac, str) and hmac.compare_digest(mac, _records_mac(payload))):
+            return None
+        return {int(n): r for n, r in payload.items() if isinstance(r, dict)}
+    except Exception:
+        return None
 
 
 def analyze_with_claude(query: str, matched_signals: list, extra_context: str = None) -> str:
@@ -4451,28 +4596,34 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
         )
         if extra_context:
             user_message += "\n\n" + extra_context
-        return _extract_json_object_from_text(_call_claude(_analysis_system_prompt(), user_message, force_json_prefill=True))
+        return _with_server_fields(_extract_json_object_from_text(_call_claude(_analysis_system_prompt(), user_message, force_json_prefill=True)))
 
     # (POST ENRICHMENT) Global post numbers survive chunking: chunk 2's
     # first post is "[Post 13]", not "[Post 1]".
-    chunks = chunk_list(_number_posts(posts), CLAUDE_POSTS_PER_CHUNK)
+    numbered = _number_posts(posts)
+    chunks = chunk_list(numbered, CLAUDE_POSTS_PER_CHUNK)
 
     if len(chunks) <= 1:
         posts_block = _format_posts_block(posts)
         user_message = f"User's question: {query}\n\nPosts (title + text only):\n{posts_block}" + _strict_count_note(len(posts))
         if extra_context:
             user_message += "\n\n" + extra_context
-        return _extract_json_object_from_text(_call_claude(_analysis_system_prompt(), user_message, force_json_prefill=True))
+        return _with_server_fields(_extract_json_object_from_text(_call_claude(_analysis_system_prompt(), user_message, force_json_prefill=True)))
 
     # Multiple chunks -> map-reduce so no single call has to swallow every
     # matched post at once.
-    notes = []
+    # (POST RECORDS) each map reply's records are checked against their own
+    # posts here; the kept ones travel to the final answer, signed.
+    fingerprints = {p["_n"]: answer_integrity.post_fingerprint(p.get("title"), p.get("text")) for p in numbered}
+    notes, records = [], {}
     for chunk in chunks:
         try:
             note = _map_chunk(query, chunk)
         except Exception as exc:
             log.warning(f"Claude map-step failed for a chunk (skipping chunk): {exc}")
             continue
+        note, found = _split_map_reply(note, chunk, fingerprints)
+        records.update(found)                       # chunks are disjoint: one record per post at most
         if note:
             notes.append(note)
 
@@ -4512,7 +4663,7 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
         user_message = _notes_unavailable_user_message(query)
         if extra_context:
             user_message += "\n\n" + extra_context
-        return _extract_json_object_from_text(_call_claude(_analysis_system_prompt(), user_message, force_json_prefill=True))
+        return _with_server_fields(_extract_json_object_from_text(_call_claude(_analysis_system_prompt(), user_message, force_json_prefill=True)))
 
     combined_notes = "\n\n---\n\n".join(notes)
     user_message = (
@@ -4526,7 +4677,8 @@ def analyze_with_claude(query: str, matched_signals: list, extra_context: str = 
     )
     if extra_context:
         user_message += "\n\n" + extra_context
-    return _extract_json_object_from_text(_call_claude(_analysis_system_prompt(), user_message, force_json_prefill=True))
+    return _with_server_fields(_extract_json_object_from_text(_call_claude(_analysis_system_prompt(), user_message, force_json_prefill=True)),
+                               records)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -4601,13 +4753,15 @@ def _call_claude_stream(system_prompt: str, user_message: str, max_tokens: int =
                     if _um:
                         try:
                             _r_usage = ((event.get("response") or {}).get("usage") or {})
-                            _um.record_usage("llm_stream", LLM_MODEL, _r_usage.get("input_tokens"), _r_usage.get("output_tokens"), status="ok")
+                            _um.record_usage("llm_stream", LLM_MODEL, _r_usage.get("input_tokens"), _r_usage.get("output_tokens"), status="ok",
+                                             extra={"response_id": (event.get("response") or {}).get("id")})
                         except Exception: pass
                 elif event_type in ("response.failed", "response.incomplete"):
                     if _um:
                         try:
                             _r_usage = ((event.get("response") or {}).get("usage") or {})
-                            _um.record_usage("llm_stream", LLM_MODEL, _r_usage.get("input_tokens"), _r_usage.get("output_tokens"), status="incomplete")
+                            _um.record_usage("llm_stream", LLM_MODEL, _r_usage.get("input_tokens"), _r_usage.get("output_tokens"), status="incomplete",
+                                             extra={"response_id": (event.get("response") or {}).get("id")})
                         except Exception: pass
                     log.warning(f"LLM stream ended early | type={event_type} | model={LLM_MODEL}")
                     return
@@ -7793,7 +7947,7 @@ def _resolved_request_note(query: str, resolved_query: str):
 
 def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query: str, keywords: list = None,
                               match_phrases: list = None, evidence_required: int = None, website_note: str = None,
-                              resolved_query: str = None, time_range=None):
+                              resolved_query: str = None, time_range=None, request_id: str = None):
     """(PERFORMANCE FIX) Extracted, UNCHANGED logic from the RESPONSE_TIMEOUT
     fallback branch that used to run inline inside _fill_in_message_outputs()
     — same calls, same order, same caching. Pulled out so it can be
@@ -7900,13 +8054,14 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
         try:
             _strict_fb = strict_intent_mode()
             _fb_kwargs = {"user_query": query} if _strict_fb else {}
-            matched = get_evidence_with_topup(
-                chat_id=chat_id, owner_key=owner_key, topic_key=topic_key,
-                keywords=keywords or [], evidence_required=evidence_required,
-                matcher_fn=get_matched_signals, match_phrases=match_phrases,
-                targeting_platform="all", **_fb_kwargs,
-                **({"time_range": time_range} if time_range else {}),   # (DATE/TIME)
-            )
+            with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=topic_key, request_id=request_id):
+                matched = get_evidence_with_topup(
+                    chat_id=chat_id, owner_key=owner_key, topic_key=topic_key,
+                    keywords=keywords or [], evidence_required=evidence_required,
+                    matcher_fn=get_matched_signals, match_phrases=match_phrases,
+                    targeting_platform="all", **_fb_kwargs,
+                    **({"time_range": time_range} if time_range else {}),   # (DATE/TIME)
+                )
         except Exception as exc:
             log.warning(f"Signal matching failed for topic_key={topic_key}: {exc}")
             matched = []
@@ -7942,8 +8097,9 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
             extra_ctx_parts.append(_rq_note)
         extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
 
-        answer = analyze_with_claude(query, merged_pool, extra_context=extra_ctx)
-        answer = _patch_post_urls_into_answer(answer, merged_pool)
+        with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=topic_key, request_id=request_id):
+            answer = analyze_with_claude(query, merged_pool, extra_context=extra_ctx)
+        answer = _patch_post_urls_into_answer(answer, merged_pool, query=query)
         answer = enrich_no_results_answer(answer, query, "all", time_range=time_range, keywords=keywords)   # (NO-RESULTS UI)
         final_answer, results_to_save = _finalize_answer_and_results(answer, merged_pool, seed=query)
 
@@ -8445,10 +8601,12 @@ def _finalize_answer_and_results(answer_text: str, matched: list, seed: str = ""
         return answer_text, []
     if seed and _explicit_no_posts_request(seed) and not _explicit_posts_request(seed):
         answer_text = _strip_displayed_posts(answer_text)
+    # (ANSWER INTEGRITY) each stored result carries its place in the checked
+    # report (in_report / excluded / not_selected / not_analyzed).
     if strict_intent_mode():
         # Strict: cards and answer text are ONE list.
-        return answer_text, _strict_cards_for_answer(answer_text, matched)
-    return answer_text, matched
+        return answer_text, answer_integrity.annotate_results(_strict_cards_for_answer(answer_text, matched), answer_text)
+    return answer_text, answer_integrity.annotate_results(matched, answer_text)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -8714,7 +8872,7 @@ def _resolve_answer_post_strict(post: dict, aligned: list):
     return None, None
 
 
-def _strict_patch_answer(data: dict, matched_signals: list, answer_text: str) -> str:
+def _strict_patch_answer(data: dict, matched_signals: list, answer_text: str, query=None, post_records=None) -> str:
     """Strict replacement for the permissive link/source/title patching."""
     fmt = data.get("format")
     if fmt not in ("source_list", "comparison"):
@@ -8748,6 +8906,8 @@ def _strict_patch_answer(data: dict, matched_signals: list, answer_text: str) ->
                     continue
                 used.add(key)
                 new = dict(post)
+                if query is not None:   # the model's own title/number, for answer_integrity's identity check
+                    new["_model_title"], new["_model_index"] = post.get("title"), post.get("index")
                 url = sig.get("post_url")
                 if url:
                     new["link"] = url
@@ -8801,6 +8961,8 @@ def _strict_patch_answer(data: dict, matched_signals: list, answer_text: str) ->
             "likely_reason": "The listed posts could not be matched back to their original posts with confidence.",
             "suggested_actions": [],
         }
+    elif query is not None:
+        data = answer_integrity.enforce_answer_integrity(data, matched_signals, aligned, query, post_records)
     return json.dumps(data, ensure_ascii=False)
 
 
@@ -8837,7 +8999,7 @@ def _strict_cards_for_answer(answer_text: str, matched: list) -> list:
     return cards if listed else matched
 
 
-def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str:
+def _patch_post_urls_into_answer(answer_text: str, matched_signals: list, query=None) -> str:
     """(POST_URL FIX) CLAUDE_ANALYSIS_SYSTEM_PROMPT asks for a "link"
     field with "the real post URL if available" on every post it lists —
     but Claude is deliberately NEVER shown post_url (see
@@ -8904,11 +9066,18 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str
         return answer_text
     if not isinstance(data, dict):
         return answer_text
+    # (POST RECORDS) removed here whoever wrote it, so no return below can
+    # carry it into the saved answer; kept only when signed by this process.
+    if _POST_RECORDS_FIELD in data:
+        post_records = _take_post_records(data)
+        answer_text = json.dumps(data, ensure_ascii=False)
+    else:
+        post_records = None
 
     fmt = data.get("format")
     if strict_intent_mode():
         # Strict: identity must be confirmed; unconfirmed posts are removed.
-        return _strict_patch_answer(data, matched_signals, answer_text)
+        return _strict_patch_answer(data, matched_signals, answer_text, query=query, post_records=post_records)
     changed = False
 
     # (POST ENRICHMENT) Index i (1-based) in Claude's answer == i-th entry
@@ -8952,6 +9121,8 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str
                             _set(post, "title", label)
                     continue
 
+                if query is not None:   # the model's own title, for answer_integrity's identity check
+                    post["_model_title"] = post.get("title")
                 post_url = match.get("post_url")
                 if post_url:
                     _set(post, "link", post_url)
@@ -8987,6 +9158,13 @@ def _patch_post_urls_into_answer(answer_text: str, matched_signals: list) -> str
                     _patch_platform_list(subject.get("platforms"))
     else:
         return answer_text
+
+    # (ANSWER INTEGRITY) Production callers pass the user's query: the listed
+    # posts are then classified, filtered, renumbered and counted against the
+    # stored posts (answer_integrity.py). Without it, only the patch above runs.
+    if query is not None:
+        data = answer_integrity.enforce_answer_integrity(data, matched_signals, aligned, query, post_records)
+        return json.dumps(data, ensure_ascii=False)
 
     if not changed:
         return answer_text
