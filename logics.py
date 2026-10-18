@@ -820,7 +820,8 @@ def generate_fuzzy_keywords(query: str) -> list:
 # JOB QUEUE — patch into the SAME MongoDB Background Service #1 reads
 # ─────────────────────────────────────────────────────────────────────────────
 
-def enqueue_search_job(topic_key: str, keywords: list, targeting_platform: str):
+def enqueue_search_job(topic_key: str, keywords: list, targeting_platform: str, credit_request_id: str = None,
+                       attribute: bool = False):
     """Upserts a job by topic_key. Re-searching the same topic simply
     resets it to pending instead of creating a duplicate job.
 
@@ -831,30 +832,88 @@ def enqueue_search_job(topic_key: str, keywords: list, targeting_platform: str):
     by the TIME-WINDOW FEATURE: a time window only ever narrows which
     ALREADY-COLLECTED signals are matched (see get_matched_signals()
     below) — it has no bearing on what Background Service #1 goes out
-    and fetches, so it is never stored on the job document."""
-    jobs_collection.update_one(
-        {"topic_key": topic_key},
-        {"$set": {
-            "topic_key":          topic_key,
-            "keywords":           keywords,
-            # "all" | "reddit" | "x_twitter" | "linkedin" | "facebook". (PLATFORM MULTI-SELECT) a
-            # multi-platform pick is fetched as "all"; matching narrows it to the chosen platforms.
-            "targeting_platform": "all" if "," in (targeting_platform or "") else targeting_platform,
-            "status":             "pending",
-            "requested_at":       datetime.now(timezone.utc),
-            "started_at":         None,
-            "completed_at":       None,
-            "matched_count":      0,
-            "error":              None,
-            "time_range":         None,   # (DATE/TIME) see record_job_time_range()
-        }},
-        upsert=True,
-    )
+    and fetches, so it is never stored on the job document.
+
+    (SEARCH CREDITS) With `credit_request_id` the UpdateResult is returned, so
+    the caller can tell its own enqueue was applied. Only with `attribute=True`
+    (JOB_ATTRIBUTION_MODE=field) does the SAME upsert also push the id onto
+    `credit_request_ids` (last JOB_ATTRIBUTION_CAP ids kept) — bounded
+    evidence for recovery, not an idempotency guarantee. Compatibility of that
+    field with the external collector (not in this repository) is UNVERIFIED.
+    If the collection's validator definitively rejects the attribution write
+    (WriteError code 121, see _is_definitive_validation_rejection), it is
+    retried ONCE without the field and attribution is switched off for this
+    process. Any other error — timeouts, network errors, write-concern
+    errors — propagates unchanged and is never retried here. Without
+    `credit_request_id` the update, the log line and the return value (None)
+    are exactly as before."""
+    update = {"$set": {
+        "topic_key":          topic_key,
+        "keywords":           keywords,
+        # "all" | "reddit" | "x_twitter" | "linkedin" | "facebook". (PLATFORM MULTI-SELECT) a
+        # multi-platform pick is fetched as "all"; matching narrows it to the chosen platforms.
+        "targeting_platform": "all" if "," in (targeting_platform or "") else targeting_platform,
+        "status":             "pending",
+        "requested_at":       datetime.now(timezone.utc),
+        "started_at":         None,
+        "completed_at":       None,
+        "matched_count":      0,
+        "error":              None,
+        "time_range":         None,   # (DATE/TIME) see record_job_time_range()
+    }}
+    attributed = bool(credit_request_id and attribute and not _JOB_ATTRIBUTION_REJECTED["value"])
+    if attributed:
+        import config as _credit_config   # read at call time (tests patch config)
+        cap = int(getattr(_credit_config, "JOB_ATTRIBUTION_CAP", 50) or 50)
+        update["$push"] = {"credit_request_ids": {"$each": [credit_request_id], "$slice": -cap}}
+    try:
+        result = jobs_collection.update_one({"topic_key": topic_key}, update, upsert=True)
+    except Exception as exc:
+        if not (attributed and _is_definitive_validation_rejection(exc)):
+            raise   # ambiguous or unrelated: never retried here
+        # The server evaluated the attribution write and refused it, so nothing
+        # was applied. Defence in depth: confirm this request's id is not on the
+        # job before sending anything else; if that cannot be confirmed, the
+        # original error propagates (the caller holds the charge, never refunds).
+        try:
+            landed = jobs_collection.find_one({"topic_key": topic_key, "credit_request_ids": credit_request_id},
+                                              {"_id": 1}) is not None
+        except Exception:
+            raise exc
+        if landed:
+            raise exc
+        _JOB_ATTRIBUTION_REJECTED["value"] = True
+        log.error("Job attribution rejected by flintel_search_jobs validation (code 121); attribution "
+                  "disabled for this process — set JOB_ATTRIBUTION_MODE=off.")
+        result = jobs_collection.update_one({"topic_key": topic_key},
+                                            {k: v for k, v in update.items() if k != "$push"}, upsert=True)
     log.info(
         f"Job queued | topic_key={topic_key} | keywords={len(keywords)} "
         f"| targeting_platform={targeting_platform}"
+        + (f" | credit_request_id={credit_request_id}" if credit_request_id else "")
     )
+    return result if credit_request_id else None
 
+
+
+# (SEARCH CREDITS) Process-local: set after the first definitive validation
+# rejection of an attribution write; reset only by a process restart.
+_JOB_ATTRIBUTION_REJECTED = {"value": False}
+
+
+def _is_definitive_validation_rejection(exc) -> bool:
+    """True only for a single-document WriteError with code 121
+    (DocumentValidationFailure): the server evaluated the write and refused
+    it, so it was not applied — also under retryable writes, where an
+    already-applied first attempt would return its recorded success, not 121.
+    Never for write-concern errors (the write may have been applied),
+    timeouts, network errors, or any other code."""
+    try:
+        from pymongo.errors import WriteConcernError, WriteError
+    except Exception:
+        return False
+    return (isinstance(exc, WriteError) and not isinstance(exc, WriteConcernError)
+            and getattr(exc, "code", None) == 121)
 
 
 def record_job_time_range(topic_key: str, time_range) -> None:
