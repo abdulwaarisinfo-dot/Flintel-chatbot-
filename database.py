@@ -309,3 +309,21 @@ except Exception as exc:
 # last_finished_at, last_status, last_*_count, last_job_queued) — never the
 # keyword list. No extra index: the fixed _id is the only lookup key.
 auto_keywords_collection = db3.flintel_auto_keywords
+
+# (SEARCH CREDITS) One document per owner (search_credits.py): monthly
+# counters plus one entry per request id. Every write is a single-document
+# conditional update, so it uses write concern "majority": an acknowledged
+# claim or refund must not be rolled back by a failover. The unique owner_key
+# index guarantees one document per owner (and so one entry per request id).
+# The handle below is client-side only (no server call). The index — which
+# also creates the collection on the server — is only created while credit
+# enforcement is on: with CREDIT_ENFORCEMENT_DISABLED=true, startup touches
+# nothing new in the database.
+from pymongo import WriteConcern
+
+credit_usage_collection = db3.get_collection("flintel_credit_usage", write_concern=WriteConcern("majority"))
+if not getattr(_config, "CREDIT_ENFORCEMENT_DISABLED", False):
+    try:
+        credit_usage_collection.create_index("owner_key", unique=True)
+    except Exception as exc:
+        log.warning(f"Could not create flintel_credit_usage.owner_key index: {exc}")
