@@ -197,9 +197,6 @@ __all__ = [
     "LAZY_EMBED_MAX_DOCS_PER_QUERY",
     "LAZY_EMBED_BATCH_SIZE",
     "LAZY_EMBED_MIN_TEXT_CHARS",
-    # SEO basics (public site URL, Search Console tag)
-    "SITE_URL",
-    "GOOGLE_SITE_VERIFICATION",
 ]
 
 # ── Keyword / matching limits ────────────────────────────────────────────
@@ -612,14 +609,3 @@ MYSQL_READ_TIMEOUT = int(os.getenv("MYSQL_READ_TIMEOUT", "60"))
 # Comma list of database names; each one is read as `<db>`.flintel_signals.
 # Only [A-Za-z0-9_] names are accepted (anything else is skipped + warned).
 MYSQL_READ_DATABASES = os.getenv("MYSQL_READ_DATABASES", "flintel,flintel_static,flintel_google")
-
-# ── SEO basics (SEO) ─────────────────────────────────────────────────────────
-# SITE_URL: this site's public origin, e.g. https://example.com (no path, no
-# trailing slash). Used for the absolute URLs in /robots.txt, /sitemap.xml and
-# the canonical / Open Graph / JSON-LD tags. Empty (default) = built from each
-# request's own base URL, which behind a TLS-terminating proxy can come out as
-# http:// — set it in production.
-SITE_URL = os.getenv("SITE_URL", "").strip().rstrip("/")
-# GOOGLE_SITE_VERIFICATION: the Search Console "HTML tag" token. Empty (default)
-# = the <meta name="google-site-verification"> tag is not rendered at all.
-GOOGLE_SITE_VERIFICATION = os.getenv("GOOGLE_SITE_VERIFICATION", "").strip()
