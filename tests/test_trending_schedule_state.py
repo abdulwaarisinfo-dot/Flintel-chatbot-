@@ -10,9 +10,11 @@ find_one_and_update with a lock — that models, but does not prove, real Mongo
 atomicity.
 """
 import asyncio
+import concurrent.futures
 import copy
 import importlib
 import logging
+import re
 import sys
 import threading
 import types
@@ -160,13 +162,11 @@ def env(monkeypatch):
     db = types.ModuleType("database")
     db.google_posts_collection = object()
     db.auto_keywords_collection = coll
-    db.jobs_collection = types.SimpleNamespace(find=lambda flt, proj: iter([]))   # no trending job exists yet
     gg = types.ModuleType("google")
     gg.search_google_for_reddit_posts = lambda kws, c, tag: e.google.append(kws) or ["stub"] * 2
     lgm = types.ModuleType("logics")
     lgm.generate_trending_keywords_via_web_search = fake_generate
-    lgm.enqueue_search_job = lambda topic, kws, plat: e.enqueued.append((topic, kws, plat))
-    lgm.normalize_topic_key = lambda q: " ".join(q.strip().lower().split())
+    lgm.enqueue_search_job = lambda topic, kws, plat: e.enqueued.append((topic, list(kws), plat))
     monkeypatch.setitem(sys.modules, "database", db)
     monkeypatch.setitem(sys.modules, "google", gg)
     monkeypatch.setitem(sys.modules, "logics", lgm)
@@ -188,10 +188,17 @@ def env(monkeypatch):
     sys.modules.pop("scheduler", None)
 
 
+def _run(coro):
+    """asyncio.run() on a fresh thread: that thread has no running event loop, so this works even when another test
+    module has left a loop running in the main thread (the same helper test_trending_job.py uses)."""
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as ex:
+        return ex.submit(asyncio.run, coro).result()
+
+
 def run_loop(e, max_sleeps):
     e.max_sleeps = len(e.sleeps) + max_sleeps
     with pytest.raises(Stop):
-        asyncio.run(e.mod._trending_keywords_loop())
+        _run(e.mod._trending_keywords_loop())
 
 
 def state(e):
@@ -258,8 +265,11 @@ def test_4_concurrent_claims_only_one_wins(env):
     async def both():
         return await asyncio.gather(env.mod._persisted_schedule_step(False),
                                     env.mod._persisted_schedule_step(False))
-    waits = asyncio.run(both())
-    assert len(env.cycles) == 1 and sorted(waits) == [0, 60]
+    waits = sorted(_run(both()))
+    # The winner ran the cycle (wait 0). The other step either lost the claim (re-check in 60 s) or, if the winner had
+    # already finished, found the next due time in the future (capped wait of an hour): which one depends on thread
+    # timing, so both are accepted. What must hold is that exactly one cycle ran.
+    assert len(env.cycles) == 1 and waits[0] == 0 and waits[1] in (60, 3600)
 
 
 # 5
@@ -344,7 +354,7 @@ def test_10_first_initialisation_race_one_winner(env):
     async def both():
         return await asyncio.gather(env.mod._persisted_schedule_step(True),
                                     env.mod._persisted_schedule_step(True))
-    waits = asyncio.run(both())
+    waits = _run(both())
     env.coll.read_barrier = None
     assert env.coll.dup_errors == 1                                 # second insert lost, handled
     assert len(env.cycles) == 1 and sorted(waits) == [0, 60]
@@ -363,12 +373,36 @@ def test_12_fallback_cycle_writes_no_jobs_google_still_runs(env, caplog):
     st = state(env)
     assert st["last_status"] == "ok" and st["last_stubs_count"] == 2 and st["last_job_queued"] is False
     assert "search jobs NOT written — cycle ran without the schedule claim (fallback)" in caplog.text
-    # the next CLAIMED cycle still writes one job per keyword
+    # the next CLAIMED cycle writes ONE job holding all the keywords
     st["next_due_at"] = env.now
     run_loop(env, 1)
     assert len(env.cycles) == 2
-    assert [t for t, _k, _p in env.enqueued] == ["auto_trending:a", "auto_trending:b", "auto_trending:c"]
+    assert len(env.enqueued) == 1 and env.enqueued[0][1] == ["a", "b", "c"] and env.enqueued[0][2] == "reddit"
+    assert re.fullmatch(r"auto_trending:\d{8}T\d{6}Z", env.enqueued[0][0])
     assert len(env.google) == 2 and state(env)["last_job_queued"] is True
+
+
+# 13 — each claimed 12-hour cycle writes ONE job, under a new topic_key
+def test_13_two_claimed_cycles_twelve_hours_apart_two_jobs_two_topic_keys(env):
+    run_loop(env, 13)                                              # 12 hourly waits reach the second due time
+    assert env.cycles == [T0, T0 + timedelta(seconds=INTERVAL)]
+    assert env.enqueued == [("auto_trending:20261011T000000Z", ["a", "b", "c"], "reddit"),
+                            ("auto_trending:20261011T120000Z", ["a", "b", "c"], "reddit")]
+    assert len({t for t, _k, _p in env.enqueued}) == 2             # a new job each cycle, not a reuse
+    assert len(env.google) == 2 and state(env)["last_job_queued"] is True
+
+
+def test_14_enqueue_failure_in_a_claimed_cycle_google_runs_cycle_recorded(env, caplog):
+    def failing(topic, kws, plat):
+        raise RuntimeError(f"cannot write {SECRET}")
+    env.mod.enqueue_search_job = failing
+    caplog.set_level(logging.WARNING)
+    run_loop(env, 1)                                               # does not raise
+    assert len(env.google) == 1 and env.google[0] is env.keywords  # Google step still ran
+    st = state(env)
+    assert st["last_status"] == "ok" and st["last_job_queued"] is False
+    assert "queuing the search job failed (RuntimeError)" in caplog.text
+    assert "S3CR3T" not in caplog.text                             # only the exception type is logged
 
 
 # 11
