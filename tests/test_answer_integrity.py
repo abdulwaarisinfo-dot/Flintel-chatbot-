@@ -113,6 +113,13 @@ def _pool():
 
 
 POOL = _pool()
+# Post 2 as reconstructed from the pasted report states a budget amount, a free pilot and conditional willingness to pay:
+# signals only, no purchase step. POOL_APPROVED is the same pool where post 2 also states an approval, to keep the
+# qualified-lead path of the same report covered. The approval sentence is added by this test, it is not from the paste.
+APPROVAL = " Our budget has been approved by finance."
+POOL_APPROVED = copy.deepcopy(POOL)
+POOL_APPROVED[1]["post_text"] += APPROVAL
+VARIANTS = [pytest.param(False, id="as-reconstructed:budget+pilot"), pytest.param(True, id="with-approval")]
 BAD_ANSWER = {
     "format": "source_list",
     "headline": "Reddit buyers researching monitoring tools",
@@ -186,11 +193,11 @@ def _rows(data):
     return [p for e in data["platforms"] for p in e["posts"]]
 
 
-def _assert_report_is_consistent(data):
-    """Every acceptance criterion, checked on one finished answer."""
+def _assert_report_is_consistent(data, approved=False):
+    """Every acceptance criterion, checked on one finished answer. `approved`: post 2 also states an approval."""
     rows = _rows(data)
     by_title = {p["title"]: p for p in rows}
-    by_url = {s["post_url"]: s for s in POOL}
+    by_url = {s["post_url"]: s for s in (POOL_APPROVED if approved else POOL)}
 
     # 1. references: rows numbered 1..k; every citation names a row in the table
     assert [p["index"] for p in rows] == list(range(1, len(rows) + 1))
@@ -207,7 +214,16 @@ def _assert_report_is_consistent(data):
     assert set(by_title) == {SEVEN[2][1], SEVEN[6][1], SEVEN[3][1], SEVEN[13][1]}
 
     # 2 + 6. intent and roles
-    assert by_title[SEVEN[2][1]]["intent"] == "High" and by_title[SEVEN[2][1]]["qualified"] is True
+    lead = by_title[SEVEN[2][1]]
+    if approved:                                                  # an approval is a purchase step
+        assert lead["intent"] == "High" and lead["qualified"] is True and lead["purchase_intent"] == "explicit"
+    else:                                                         # a budget amount + a pilot + conditional willingness is not
+        assert lead["intent"] == "Medium" and lead["qualified"] is False and lead["purchase_intent"] == "research"
+        assert lead["purchase_signals"] == {"budget": True, "timing": False, "evaluation": True, "willingness": True,
+                                            "unconfirmed": False, "purchase_step": False}
+        assert "no confirmed purchase step" in lead["intent_reason"] and "states no budget" not in lead["intent_reason"]
+        assert data["key_findings"][0]["signal_strength"] != "Strong"                # nothing qualified backs a strong claim
+        assert data["verified_summary"].startswith("Checked against the stored posts: 0 qualified leads, 2 buyers")
     assert by_title[SEVEN[6][1]]["intent"] == "Medium" and by_title[SEVEN[6][1]]["qualified"] is False
     assert by_title[SEVEN[6][1]]["purchase_intent"] == "research"
     assert by_title[SEVEN[3][1]]["role"] == "testimonial" and by_title[SEVEN[3][1]]["qualified"] is False
@@ -221,14 +237,20 @@ def _assert_report_is_consistent(data):
         sig = by_url[p["link"]]
         assert p["evidence"] and ai.quote_in_post(p["evidence"], sig["title"], sig["post_text"]), p
         assert p["verification_status"] == "verified"
-    assert "A$150" in by_title[SEVEN[2][1]]["evidence"]
+    if approved:
+        assert by_title[SEVEN[2][1]]["evidence"] == "Our budget has been approved by finance."     # the step is the evidence
+    else:
+        assert "A$150" in by_title[SEVEN[2][1]]["evidence"]
 
     # 7. counts: one set of records behind table, summary and totals
     c = data["counts"]
+    q = 1 if approved else 0                                      # qualified leads; the other buyer is still researching
     assert c == {"retrieved": 22, "unique": 22, "analyzed": 22, "listed": 7, "excluded": 3,
                  "excluded_reasons": {"irrelevant": 3, "duplicate": 0, "unverifiable": 0}, "shown": 4,
-                 "relevant": 4, "uncertain": 0, "unverified": 0, "verified": 4, "buyers": 2, "qualified": 1,
-                 "researching": 1, "competitor": 2}
+                 "relevant": 4, "uncertain": 0, "unverified": 0, "verified": 4, "buyers": 2, "qualified": q,
+                 "researching": 2 - q, "competitor": 2,
+                 "categories": {"qualified": q, "researching": 2 - q, "unconfirmed": 0, "discussion": 0,
+                                "competitor": 2, "unavailable": 0}}
     assert c["shown"] == c["relevant"] + c["uncertain"] + c["unverified"] == c["listed"] - c["excluded"]
     assert {e["reason"] for e in data["excluded_posts"]} == {"not relevant"} and len(data["excluded_posts"]) == 3
     assert data["platforms"][0]["shown_count"] == 4 == len(rows)
@@ -243,9 +265,10 @@ def lg(env):
     return env[0]
 
 
-def test_reconstructed_seven_post_pattern_is_reconciled(lg):
-    out = json.loads(lg._patch_post_urls_into_answer(json.dumps(BAD_ANSWER), POOL, query=QUERY))
-    _assert_report_is_consistent(out)
+@pytest.mark.parametrize("approved", VARIANTS)
+def test_reconstructed_seven_post_pattern_is_reconciled(lg, approved):
+    out = json.loads(lg._patch_post_urls_into_answer(json.dumps(BAD_ANSWER), POOL_APPROVED if approved else POOL, query=QUERY))
+    _assert_report_is_consistent(out, approved)
     assert out["key_findings"][1]["impact"] == "One post (Post 2) asks for recommendations or how to market on Reddit."
     assert out["key_findings"][1]["finding"] == "One user actively researching Reddit/lead-gen tools"
     assert out["key_findings"][2]["impact"] == "Two posts (Posts 3 and 4 included in the broader set) show existing tools."
@@ -254,10 +277,11 @@ def test_reconstructed_seven_post_pattern_is_reconciled(lg):
         "Post 3 is a testimonial about RedShip; Post 4 (ThreadPilot) scores intent.")
 
 
-def test_reconstructed_seven_post_pattern_strict_mode(lg, monkeypatch):
+@pytest.mark.parametrize("approved", VARIANTS)
+def test_reconstructed_seven_post_pattern_strict_mode(lg, monkeypatch, approved):
     monkeypatch.setattr(lg, "strict_intent_mode", lambda: True)
-    out = json.loads(lg._patch_post_urls_into_answer(json.dumps(BAD_ANSWER), POOL, query=QUERY))
-    _assert_report_is_consistent(out)
+    out = json.loads(lg._patch_post_urls_into_answer(json.dumps(BAD_ANSWER), POOL_APPROVED if approved else POOL, query=QUERY))
+    _assert_report_is_consistent(out, approved)
 
 
 def test_without_query_patcher_behaviour_is_unchanged(lg):
@@ -278,6 +302,11 @@ def _sig(n, title, text, sub="SaaS", **extra):
 
 
 def _run(sigs, posts, findings=None, query="Find SaaS founders looking for a Reddit monitoring tool"):
+    # Each entry models an analysis written about the post its number names (it carries that
+    # post's title); unverified identity is covered in tests/test_report_validation.py.
+    posts = [dict(p, title=sigs[p["index"] - 1]["title"])
+             if isinstance(p, dict) and "title" not in p and isinstance(p.get("index"), int)
+             and 1 <= p["index"] <= len(sigs) else p for p in posts]
     return ai.enforce_answer_integrity(_answer(posts, findings), sigs, sigs, query)
 
 
@@ -416,57 +445,67 @@ def _fake_llm(*args, **kwargs):
     return "- Asks for a Reddit tool with a budget (Post 2)"
 
 
-def _search_to_saved_answer(lg, idx, chats, monkeypatch):
+def _search_to_saved_answer(lg, idx, chats, monkeypatch, pool=POOL):
     calls = []
     monkeypatch.setattr(lg, "_call_claude", lambda *a, **k: calls.append(a) or _fake_llm(*a, **k))
     idx.add_search_to_chat("c1", "o1", QUERY, lg.normalize_topic_key(QUERY), ["reddit monitoring"], "reddit")
     msg = chats.find_one({"chat_id": "c1", "owner_key": "o1"})["messages"][-1]
-    msg["evidence_required"] = len(POOL)          # the original run analyzed 22+ posts
-    idx._complete_message_answer_and_results("c1", "o1", msg, POOL)
+    msg["evidence_required"] = len(pool)          # the original run analyzed 22+ posts
+    idx._complete_message_answer_and_results("c1", "o1", msg, pool)
     return chats.find_one({"chat_id": "c1", "owner_key": "o1"}), calls
 
 
-def test_search_to_report_flow_persists_a_consistent_report(env, monkeypatch):
+@pytest.mark.parametrize("approved", VARIANTS)
+def test_search_to_report_flow_persists_a_consistent_report(env, monkeypatch, approved):
     lg, idx, chats = env
-    doc, calls = _search_to_saved_answer(lg, idx, chats, monkeypatch)
+    doc, calls = _search_to_saved_answer(lg, idx, chats, monkeypatch, POOL_APPROVED if approved else POOL)
     assert len(calls) == 3                        # 22 posts -> two map chunks + one reduce
-    _assert_report_is_consistent(json.loads(doc["messages"][-1]["claude_answer"]))
+    _assert_report_is_consistent(json.loads(doc["messages"][-1]["claude_answer"]), approved)
 
 
 ROWS_JS = """() => [...document.querySelectorAll('.ap-sources-table tbody tr')].map(tr =>
   [...tr.querySelectorAll('td')].map(td => td.innerText.trim()))"""
 
 
+@pytest.mark.parametrize("approved", VARIANTS)
 @pytest.mark.parametrize("name", TEMPLATES)
-def test_search_to_report_flow_renders_the_same_records(integrity_browser, env, monkeypatch, name):
+def test_search_to_report_flow_renders_the_same_records(integrity_browser, env, monkeypatch, name, approved):
     lg, idx, chats = env
-    doc, _ = _search_to_saved_answer(lg, idx, chats, monkeypatch)
+    doc, _ = _search_to_saved_answer(lg, idx, chats, monkeypatch, POOL_APPROVED if approved else POOL)
     page, errors = _reopen(integrity_browser, name, _for_template(doc))
     try:
         rows = page.evaluate(ROWS_JS)
         assert [r[0] for r in rows] == ["1", "2", "3", "4"]
         assert rows[0][2] == "I need a good reddit tool" and "A$150" in rows[0][3]
-        assert rows[0][4].startswith("High · Prospective buyer")
-        assert "Purchase: explicit · Fit: fits · Source: verified" in rows[0][4]
+        if approved:
+            assert rows[0][4].startswith("High · Prospective buyer")
+            assert "Purchase: explicit · Fit: fits · Source: verified" in rows[0][4]
+        else:
+            assert rows[0][4].startswith("Medium · Prospective buyer")
+            assert "Purchase: research · Fit: fits · Source: verified" in rows[0][4]
+            assert "no confirmed purchase step" in rows[0][3]            # the reason lists what the post does state
         assert rows[1][4].startswith("Medium") and "Purchase: research" in rows[1][4]
         assert {rows[2][4].split("\n")[0], rows[3][4].split("\n")[0]} == {"Low · Testimonial", "Low · Competitor promotion"}
         shown = {int(r[0]) for r in rows}
         assert set(_cited(page.inner_text(".answer-rendered"))) <= shown            # UI citation audit
         text = page.inner_text(".answer-rendered")
-        assert "Reddit · 4 of 22" in text and "1 qualified lead" in text and "3 excluded" in text
+        qualified = "1 qualified lead" if approved else "0 qualified leads"
+        assert "Reddit · 4 of 22" in text and qualified in text and "3 of 7 listed excluded" in text
         assert "onlyfans" not in text.lower() and "Post 22" not in text and "Post 13" not in text
         assert "not buyer demand" in text and errors == []
     finally:
         page.close()
 
 
-def test_stream_route_saves_the_reconciled_report(request, monkeypatch):
+@pytest.mark.parametrize("approved", VARIANTS)
+def test_stream_route_saves_the_reconciled_report(request, monkeypatch, approved):
     """The live SSE route (routes.stream_answer) saves the same reconciled report."""
     nb = pytest.importorskip("tests.test_nonblocking_chat_page")
     f = request.getfixturevalue("fin")
     rt = f["rt"]
-    nb._seed(f["chats"], "c20", [dict(nb._turn(QUERY, 1), evidence_required=len(POOL))])
-    monkeypatch.setattr(rt, "get_evidence_with_topup", lambda **kw: copy.deepcopy(POOL))
+    pool = POOL_APPROVED if approved else POOL
+    nb._seed(f["chats"], "c20", [dict(nb._turn(QUERY, 1), evidence_required=len(pool))])
+    monkeypatch.setattr(rt, "get_evidence_with_topup", lambda **kw: copy.deepcopy(pool))
     monkeypatch.setattr(rt, "analyze_with_claude", lambda *a, **k: json.dumps(BAD_ANSWER), raising=False)
     events = []
     for chunk in nb._stream(f, monkeypatch, "c20", topic_key=QUERY.lower()):
@@ -475,7 +514,7 @@ def test_stream_route_saves_the_reconciled_report(request, monkeypatch):
             break
     assert '"done"' in events[-1], events[-3:]
     saved = f["chats"].find_one({"chat_id": "c20"})["messages"][-1]["claude_answer"]
-    _assert_report_is_consistent(json.loads(saved))
+    _assert_report_is_consistent(json.loads(saved), approved)
 
 
 # ── 1. citation audit: every string the report carries ───────────────────────
@@ -570,7 +609,9 @@ Q = "Find SaaS founders looking for a Reddit monitoring tool"
 
 
 def test_model_fit_label_alone_does_not_make_a_post_relevant():
-    s = _sig(1, "Need a scheduling tool for my SaaS", "Need a scheduling tool for my SaaS team, budget $200/month, want a trial.")
+    # explicit purchase intent (a stated approval) with an off-topic category: intent does not make the post relevant
+    s = _sig(1, "Need a scheduling tool for my SaaS",
+             "Need a scheduling tool for my SaaS team, budget $200/month, want a trial. The budget is approved.")
     out = _run([s], [{"index": 1, "link": s["post_url"], "role": "buyer", "purchase_intent": "explicit",
                       "product_fit": "fits"}], query=Q)
     p = _rows(out)[0]
@@ -587,10 +628,13 @@ def test_without_a_model_label_the_same_post_is_excluded():
 
 @pytest.mark.parametrize("text,model,expected", [
     # (purchase_intent, product_fit, intent) vary independently
-    ("Looking for a Reddit monitoring tool for my SaaS, budget $99/mo.", {}, ("explicit", "fits", "High")),
+    ("Looking for a Reddit monitoring tool for my SaaS, budget $99/mo, approved by finance.", {}, ("explicit", "fits", "High")),
     ("Looking for a Reddit monitoring tool for my SaaS.", {}, ("research", "fits", "Medium")),
-    ("Looking for a Reddit monitoring tool for my SaaS, budget $99/mo.", {"product_fit": "partial"}, ("explicit", "partial", "Medium")),
-    ("Looking for a Reddit monitoring tool for my SaaS, budget $99/mo.", {"purchase_intent": "research"}, ("research", "fits", "Medium")),
+    ("Looking for a Reddit monitoring tool for my SaaS, budget $99/mo, approved by finance.", {"product_fit": "partial"}, ("explicit", "partial", "Medium")),
+    ("Looking for a Reddit monitoring tool for my SaaS, budget $99/mo, approved by finance.", {"purchase_intent": "research"}, ("research", "fits", "Medium")),
+    # a budget amount alone is a signal, not a purchase step (also when the model claims explicit)
+    ("Looking for a Reddit monitoring tool for my SaaS, budget $99/mo.", {}, ("research", "fits", "Medium")),
+    ("Looking for a Reddit monitoring tool for my SaaS, budget $99/mo.", {"purchase_intent": "explicit"}, ("research", "fits", "Medium")),
 ])
 def test_purchase_intent_and_fit_are_separate(text, model, expected):
     s = _sig(1, "Tool question", text)
