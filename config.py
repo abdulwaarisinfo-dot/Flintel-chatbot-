@@ -145,6 +145,11 @@ __all__ = [
     # Search credits (search_credits.py)
     "FREE_MONTHLY_CREDITS_DEFAULT",
     "FREE_MONTHLY_CREDITS_EFFECTIVE",
+    "CREDIT_COST_RANGES",
+    "CREDIT_MAX_COST",
+    "CREDIT_FALLBACK_COST",
+    "PLAN_CREDITS_STANDARD",
+    "PLAN_CREDITS_BUSINESS",
     "CREDIT_ENFORCEMENT_DISABLED",
     "RESERVATION_STALE_SECONDS",
     "ENQUEUE_TIMEOUT_SECONDS",
@@ -342,6 +347,63 @@ def _parse_free_monthly_credits(raw):
 FREE_MONTHLY_CREDITS_EFFECTIVE = _parse_free_monthly_credits(os.getenv("FREE_MONTHLY_CREDITS"))
 
 
+# (USAGE-BASED CREDITS) A search costs a whole number of credits chosen by the
+# router per effort category; the server validates it against these inclusive
+# ranges. Anything missing/invalid (or a router failure) is charged
+# CREDIT_FALLBACK_COST. Constants, not environment settings: a typo in the
+# environment must never change what a search costs.
+CREDIT_COST_RANGES = {"standard": (3, 5), "complex": (5, 8), "deep": (8, 14)}
+CREDIT_MAX_COST = max(high for _low, high in CREDIT_COST_RANGES.values())
+
+
+# CREDIT_FALLBACK_COST: the deterministic charge when the router gave no valid
+# effort/cost. Unset/empty = 4. A whole number inside the STANDARD range (3-5)
+# is used as given; anything else logs an ERROR and uses 4 — an invalid value
+# never turns enforcement off.
+CREDIT_FALLBACK_COST_DEFAULT = 4
+
+
+def _parse_credit_fallback_cost(raw):
+    if raw is None or not str(raw).strip():
+        return CREDIT_FALLBACK_COST_DEFAULT
+    text = str(raw).strip()
+    low, high = CREDIT_COST_RANGES["standard"]
+    if text.isascii() and text.isdigit() and low <= int(text) <= high:
+        return int(text)
+    _logging.getLogger("flintel.config").error(
+        f"CREDIT_FALLBACK_COST={text!r} is invalid (must be a whole number {low}-{high}); "
+        f"using the default of {CREDIT_FALLBACK_COST_DEFAULT}.")
+    return CREDIT_FALLBACK_COST_DEFAULT
+
+
+CREDIT_FALLBACK_COST = _parse_credit_fallback_cost(os.getenv("CREDIT_FALLBACK_COST"))
+
+
+# PLAN_CREDITS_STANDARD / PLAN_CREDITS_BUSINESS: monthly credits of an ACTIVE
+# paid plan record (flintel_plans); it replaces the free allowance, it does not
+# add to it. A whole number 1..1000000 is used as given; anything else logs an
+# ERROR and uses the default. Prices are informational only (no billing code).
+PLAN_CREDITS_STANDARD_DEFAULT = 400
+PLAN_CREDITS_BUSINESS_DEFAULT = 1500
+
+
+def _parse_plan_credits(name, raw, default):
+    if raw is None or not str(raw).strip():
+        return default
+    text = str(raw).strip()
+    if text.isascii() and text.isdigit() and 1 <= int(text) <= 1000000:
+        return int(text)
+    _logging.getLogger("flintel.config").error(
+        f"{name}={text!r} is invalid (must be a whole number 1-1000000); using the default of {default}.")
+    return default
+
+
+PLAN_CREDITS_STANDARD = _parse_plan_credits(
+    "PLAN_CREDITS_STANDARD", os.getenv("PLAN_CREDITS_STANDARD"), PLAN_CREDITS_STANDARD_DEFAULT)
+PLAN_CREDITS_BUSINESS = _parse_plan_credits(
+    "PLAN_CREDITS_BUSINESS", os.getenv("PLAN_CREDITS_BUSINESS"), PLAN_CREDITS_BUSINESS_DEFAULT)
+
+
 # CREDIT_ENFORCEMENT_DISABLED: EMERGENCY KILL SWITCH ONLY. Exactly "true"
 # (any case) turns credit enforcement off for EVERY user — searches become
 # unlimited, nothing is reserved or recorded, and LLM/collector cost is
@@ -360,6 +422,27 @@ def _parse_credit_kill_switch(raw):
 
 
 CREDIT_ENFORCEMENT_DISABLED = _parse_credit_kill_switch(os.getenv("CREDIT_ENFORCEMENT_DISABLED"))
+
+
+def _warn_if_free_allowance_below_max_cost(effective, enforcement_disabled=False):
+    """Startup WARNING when the free allowance is smaller than the dearest search
+    (CREDIT_MAX_COST). Nothing is clamped or changed: a search that costs more
+    than the credits available is denied with the usual exhausted message."""
+    if enforcement_disabled or effective >= CREDIT_MAX_COST:
+        return False
+    low = min(low_ for low_, _high in CREDIT_COST_RANGES.values())
+    _logging.getLogger("flintel.config").warning(
+        f"FREE_MONTHLY_CREDITS={effective} is below the maximum search cost of {CREDIT_MAX_COST} credits "
+        f"(standard {CREDIT_COST_RANGES['standard'][0]}-{CREDIT_COST_RANGES['standard'][1]}, complex "
+        f"{CREDIT_COST_RANGES['complex'][0]}-{CREDIT_COST_RANGES['complex'][1]}, deep "
+        f"{CREDIT_COST_RANGES['deep'][0]}-{CREDIT_COST_RANGES['deep'][1]}). Searches costing more than the credits "
+        f"available are denied with the 'out of free searches' message, never clamped"
+        + (f"; below {low} credits NO search can run." if effective < low else "."))
+    return True
+
+
+_warn_if_free_allowance_below_max_cost(FREE_MONTHLY_CREDITS_EFFECTIVE, CREDIT_ENFORCEMENT_DISABLED)
+
 RESERVATION_STALE_SECONDS = 900   # a reservation/claim this old is treated as abandoned (liveness only)
 ENQUEUE_TIMEOUT_SECONDS = 30      # bounds how long a request waits for its enqueue; never proof
 JOB_ATTRIBUTION_CAP = 50          # last N request ids kept on a job's credit_request_ids (bounded evidence)
