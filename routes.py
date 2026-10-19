@@ -161,6 +161,7 @@ from database import google_posts_collection  # <-- GOOGLE-FALLBACK POLLING FIX:
 from datetime import datetime, timezone
 from config import URL_PROMPT_MERGE_ENABLED, URL_PROMPT_MAX_KEYWORDS, URL_PROMPT_MAX_PHRASES, URL_MERGED_MAX_PHRASES
 import search_credits   # (SEARCH CREDITS) free-plan monthly search credits
+from jinja2 import pass_context   # (HOME UI) context-aware template helpers
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -685,6 +686,86 @@ def _credit_precheck_response(request, store, rid, query, owner_key, cleanup_cha
     if decision is None:
         return None
     return _credit_decision_response(request, decision, query, owner, cleanup_chat=cleanup_chat)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# (HOME UI) Template helpers for templates/index.html: whether this owner has
+# started a conversation (hides "Explore Flintel", shows the greeting layout)
+# and the time-of-day greeting. Read-only; derived from existing chat records.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Local hour -> heading. Morning 05:00-11:59, Afternoon 12:00-16:59,
+# Evening 17:00-20:59, Night 21:00-04:59. The browser picks the entry for its
+# own local hour (the final source of truth); the server only supplies the
+# first-paint label, from the session/default timezone.
+GREETING_BY_HOUR = tuple(
+    "Morning thoughts" if 5 <= h < 12 else
+    "Afternoon thoughts" if 12 <= h < 17 else
+    "Evening thoughts" if 17 <= h < 21 else
+    "Night thoughts"
+    for h in range(24)
+)
+
+
+def _utcnow():
+    return datetime.now(timezone.utc)
+
+
+def greeting_for_hour(hour: int) -> str:
+    return GREETING_BY_HOUR[int(hour) % 24]
+
+
+def greeting_first_paint(tz_name: str, now_utc=None) -> str:
+    """Server fallback label: the hour in `tz_name`, else in the default timezone."""
+    from zoneinfo import ZoneInfo
+    now_utc = now_utc or _utcnow()
+    try:
+        return greeting_for_hour(now_utc.astimezone(ZoneInfo(tz_name)).hour)
+    except Exception:
+        return greeting_for_hour(now_utc.astimezone(timezone.utc).hour)
+
+
+def owner_has_started_conversation(owner_key) -> bool:
+    """True when this owner has at least one saved turn with a non-blank user
+    message. Owner-scoped, read-only, uses the existing owner_key index; an
+    empty chat record, or turns with blank text, do not count. If the lookup
+    fails the owner is treated as started, so Explore Flintel never reappears
+    because of a database hiccup."""
+    if not owner_key:
+        return False
+    try:
+        from index import chats_collection as _chats
+        return _chats.find_one(
+            {"owner_key": owner_key, "messages": {"$elemMatch": {"query": {"$regex": r"\S"}}}},
+            {"_id": 1},
+        ) is not None
+    except Exception as exc:
+        log.warning(f"Conversation-started lookup failed (treating as started): {exc}")
+        return True
+
+
+@pass_context
+def _tpl_conversation_started(context) -> bool:
+    request = context.get("request")
+    if request is None:
+        return False
+    try:
+        owner_key, _owner_type = get_owner(request)
+    except Exception as exc:
+        log.warning(f"Owner lookup failed for the home page (treating as started): {exc}")
+        return True
+    return owner_has_started_conversation(owner_key)
+
+
+@pass_context
+def _tpl_home_greeting(context) -> dict:
+    request = context.get("request")
+    tz_name = _request_timezone(request) if request is not None else timerange.DEFAULT_TZ
+    return {"label": greeting_first_paint(tz_name), "hours": list(GREETING_BY_HOUR)}
+
+
+templates.env.globals["conversation_started"] = _tpl_conversation_started
+templates.env.globals["home_greeting"] = _tpl_home_greeting
 
 
 # ─────────────────────────────────────────────────────────────────────────────
