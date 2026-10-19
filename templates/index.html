@@ -23,7 +23,7 @@
 <script type="application/ld+json">{{ org_jsonld | safe }}</script>
 {% endif %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Enriqueta:wght@400&display=swap" rel="stylesheet">
 <style id="app-styles">
   /* =========================================================================
      This stylesheet is the Document 2 ("redesign") visual system, adapted to
@@ -371,6 +371,17 @@
   .headline {
     color: #fff; font-size: 27px; letter-spacing: -0.54px; font-weight: 500;
     margin-bottom: 31px; line-height: 1.2;
+  }
+  /* (HOME UI) Started-conversation homepage: centered time-of-day greeting
+     (Figma "Evening thoughts": Enriqueta 46px, -0.92px tracking). Only the
+     heading differs from the first-use hero; the search box is untouched. */
+  .headline.headline-greeting {
+    font-family: 'Enriqueta', Georgia, 'Times New Roman', serif;
+    font-size: 46px; font-weight: 400; letter-spacing: -0.92px; line-height: 1.15;
+    text-align: center; margin-bottom: 50px;
+  }
+  @media (max-width: 767px) {
+    .headline.headline-greeting { font-size: 32px; letter-spacing: -0.64px; margin-bottom: 36px; }
   }
 
   .search-box {
@@ -1204,6 +1215,29 @@
     }
   }
 </style>
+<script>
+  // (HOME UI) Greeting for the homepage hero. The browser's local hour is the
+  // final source of truth: each [data-greeting-hours] element carries the
+  // 24-entry hour->label table from the server; the server-rendered text is
+  // only the first-paint fallback. Runs on load, after soft-navigation swaps
+  // (call sites below) and whenever the tab becomes visible again.
+  window.flintelRefreshGreeting = function () {
+    try {
+      var hour = new Date().getHours();
+      var els = document.querySelectorAll('[data-greeting-hours]');
+      for (var i = 0; i < els.length; i++) {
+        var hours = JSON.parse(els[i].getAttribute('data-greeting-hours'));
+        if (hours && hours[hour] && els[i].textContent !== hours[hour]) els[i].textContent = hours[hour];
+      }
+    } catch (e) { /* keep the server-rendered label */ }
+  };
+  if (!window.__flintelGreetingBound) {
+    window.__flintelGreetingBound = true;
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible') window.flintelRefreshGreeting();
+    });
+  }
+</script>
 </head>
 <body>
 {# (UPGRADE ENTRY POINTS) One shared target + plan label for all upgrade UI.
@@ -1346,11 +1380,20 @@
       {% endif %}
     </div>
 
-    <div class="content-wrap{% if chat and chat.messages %} hidden{% endif %}" id="hero-wrap">
+    {# (HOME UI) "started" = this owner has at least one saved, non-blank user message
+       (see routes.owner_has_started_conversation). First-use owners keep the original hero. #}
+    {% set conv_started = conversation_started() if conversation_started is defined else false %}
+    <div class="content-wrap{% if chat and chat.messages %} hidden{% endif %}{% if conv_started %} hero-started{% endif %}" id="hero-wrap">
       <div class="content-inner">
 
+        {% if conv_started and home_greeting is defined %}
+        {% set greeting = home_greeting() %}
+        <h1 class="headline headline-greeting" id="home-greeting" data-greeting-hours='{{ greeting.hours|tojson }}'>{{ greeting.label }}</h1>
+        <script>if (window.flintelRefreshGreeting) window.flintelRefreshGreeting();</script>
+        {% else %}
         <p class="eyebrow">Search</p>
         <h1 class="headline">What's the internet saying?</h1>
+        {% endif %}
 
         {% if error %}
         <div class="state-card"{% if denial %} data-denial="{{ denial }}"{% endif %}>
@@ -1418,6 +1461,7 @@
           </div>
         </form>
 
+        {% if not conv_started %}
         <div class="explore-panel">
           <p class="explore-title">Explore Flintel</p>
           <div class="explore-box">
@@ -1457,6 +1501,7 @@
             </button>
           </div>
         </div>
+        {% endif %}
 
       </div>
     </div>
@@ -3645,6 +3690,7 @@
       const heroDockEl = document.getElementById('hero-optimistic-dock-input');
       const heroDockDraft = heroDockEl ? heroDockEl.value : '';
       currentMain.innerHTML = newMain.innerHTML;
+      if (window.flintelRefreshGreeting) window.flintelRefreshGreeting();   // (HOME UI) local-hour greeting after the swap
       if (newSessionsList && currentSessionsList) {
         currentSessionsList.innerHTML = newSessionsList.innerHTML;
       }
