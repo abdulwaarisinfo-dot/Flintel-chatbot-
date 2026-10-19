@@ -5493,11 +5493,34 @@ Extended search JSON shape:
 {"intent":"search","reply":null,"keywords":[...]|null,"time_window_days":<int|null>,"match_phrases":[...]|null,"evidence_required":<int|null>,"website_only":false,"url_ask_type":"generic_own_business"|"specific_topic"|"none"|null,"use_website_context":<true|false>,"website_topic_relation":"related"|"unrelated"|null}
 """
 
+# (USAGE-BASED CREDITS) Asks the SAME router call for the search's effort
+# category and a whole-number cost inside that category's range (config.py
+# CREDIT_COST_RANGES). Purely additive: it changes no routing decision and no
+# existing field; credit_cost.py validates the answer on the server and charges
+# a fixed fallback for anything invalid. The model never touches a balance.
+from config import CREDIT_COST_RANGES as _CREDIT_COST_RANGES
+
+CLAUDE_ROUTER_EFFORT_ADDENDUM = """
+SEARCH EFFORT (applies ONLY to the "search" shape — never add these keys to
+"chat", "blocked" or "clarify"). Add three more keys to the "search" object:
+"effort", "cost" and "reason". They only say how much work this search is; they
+never change what you search for or how you route.
+"effort" is exactly one of:
+  "standard" — one clear topic, brand or question of ordinary scope. cost: a whole number from %d to %d
+  "complex"  — several topics, segments, platforms or comparisons, or a narrow/filtered ask. cost: a whole number from %d to %d
+  "deep"     — broad multi-angle research, large scope, or many constraints at once. cost: a whole number from %d to %d
+"cost" is a plain JSON integer inside the range of the effort you chose (no quotes, no decimals).
+"reason" is optional: at most 15 words on why, without quoting the user's message.
+Extended search JSON shape:
+{"intent":"search", ...all the search keys above..., "effort":"standard"|"complex"|"deep","cost":<int>,"reason":"<=15 words"|null}
+""" % (_CREDIT_COST_RANGES["standard"] + _CREDIT_COST_RANGES["complex"] + _CREDIT_COST_RANGES["deep"])
+
 CLAUDE_ROUTER_SYSTEM_PROMPT = (
     CLAUDE_ROUTER_SYSTEM_PROMPT
     + "\n" + flintel.ROUTER_UNFILTERED_ADDENDUM
     + "\n" + flintel.GENERIC_PAIN_POINT_INFERENCE_ADDENDUM
     + "\n" + CLAUDE_ROUTER_WEBSITE_CONTEXT_ADDENDUM
+    + "\n" + CLAUDE_ROUTER_EFFORT_ADDENDUM
 )
 
 CLAUDE_CHAT_FALLBACK_SYSTEM_PROMPT = """
@@ -5651,7 +5674,9 @@ def _parse_router_json(raw: str, allow_previous_results: bool = False):
     target_entity = None
     intent_types = None
     resolved_query = None
+    effort = cost = effort_reason = None   # (USAGE-BASED CREDITS) raw; credit_cost.py validates
     if intent == "search":
+        effort, cost, effort_reason = data.get("effort"), data.get("cost"), data.get("reason")
         raw_keywords = data.get("keywords")
         if isinstance(raw_keywords, list):
             cleaned_keywords = []
@@ -5765,7 +5790,8 @@ def _parse_router_json(raw: str, allow_previous_results: bool = False):
             "website_only": website_only, "use_website_context": use_website_context,
             "website_topic_relation": website_topic_relation, "url_ask_type": url_ask_type,
             "target_entity": target_entity, "intent_types": intent_types,
-            "resolved_query": resolved_query, "guidance": guidance}
+            "resolved_query": resolved_query, "guidance": guidance,
+            "effort": effort, "cost": cost, "reason": effort_reason}
 
 
 # ─────────────────────────────────────────────────────────────────────────────
