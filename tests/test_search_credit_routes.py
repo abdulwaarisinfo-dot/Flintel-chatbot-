@@ -77,6 +77,19 @@ def app(env, monkeypatch):
     return {"rt": rt, "idx": idx, "lg": lg, "db": db, "state": state, "send": send, "store": store}
 
 
+@pytest.fixture
+def flat_cost(app, monkeypatch):
+    """LEGACY one-credit assumption, opt-in per test (@pytest.mark.usefixtures("flat_cost")).
+    These tests were written before usage-based costs and stub a router that sends no
+    effort; what they check (charge once, retry, exhaustion, small talk, usage) does not
+    depend on the amount, so the charge is pinned to 1 for them ONLY. The shared `app`
+    fixture is unchanged, and the stub is undone after each test, so the usage-based cost
+    tests (tests/test_credit_cost.py, tests/test_plan_credits.py and the section at the end
+    of this file) always run against the real credit_cost.select_cost."""
+    import credit_cost as cc
+    monkeypatch.setattr(app["rt"].credit_cost, "select_cost", lambda routed_: cc.CostDecision(1, "standard", None))
+
+
 def credits_doc(a):
     return a["db"].flintel_credit_usage.find_one({"owner_key": "o1"}) or {}
 
@@ -89,6 +102,7 @@ def body(resp):
     return html.unescape(resp.body.decode("utf-8"))
 
 
+@pytest.mark.usefixtures("flat_cost")
 def test_accepted_search_costs_one_credit(app):
     resp = app["send"]("Find people looking for a CRM for small teams", submit_key=KEY1)
     assert resp.status_code == 303 and resp.headers["location"].startswith("/chat/")
@@ -104,6 +118,7 @@ def test_accepted_search_costs_one_credit(app):
     assert sc.check_invariant(credits_doc(app)) == []
 
 
+@pytest.mark.usefixtures("flat_cost")
 def test_same_key_retry_redirects_without_a_new_charge_or_router_call(app):
     first = app["send"]("Find people looking for a CRM for small teams", submit_key=KEY1)
     calls = app["state"]["llm_calls"]
@@ -114,12 +129,14 @@ def test_same_key_retry_redirects_without_a_new_charge_or_router_call(app):
     assert len(app["db"].chats.find_one({"chat_id": chat_id})["messages"]) == 1
 
 
+@pytest.mark.usefixtures("flat_cost")
 def test_two_intentional_submits_with_the_same_text_are_two_searches(app):
     app["send"]("Find people looking for a CRM for small teams", submit_key=KEY1)
     app["send"]("Find people looking for a CRM for small teams", submit_key=KEY2)
     assert used(app) == 2 and len(app["state"]["enqueues"]) == 2
 
 
+@pytest.mark.usefixtures("flat_cost")
 def test_exhausted_search_is_denied_before_enqueue_and_chat_still_works(app):
     app["state"]["limit"] = 1
     app["send"]("Find people looking for a CRM for small teams", submit_key=KEY1)
@@ -137,6 +154,7 @@ def test_exhausted_search_is_denied_before_enqueue_and_chat_still_works(app):
     assert chat["messages"][-1]["message_type"] == "chat" and used(app) == 1
 
 
+@pytest.mark.usefixtures("flat_cost")
 def test_small_talk_never_touches_credits(app):
     app["state"]["limit"] = 1
     app["send"]("Find people looking for a CRM for small teams", submit_key=KEY1)
@@ -176,6 +194,7 @@ def test_kill_switch_runs_the_pre_credit_code(app, monkeypatch):
     assert "credit_request_id" not in chat["messages"][-1]
 
 
+@pytest.mark.usefixtures("flat_cost")
 def test_api_me_usage_is_additive(app, monkeypatch):
     rt = app["rt"]
     app["send"]("Find people looking for a CRM for small teams", submit_key=KEY1)
@@ -271,6 +290,7 @@ def _chat_of(a, resp):
     return a["db"].chats.find_one({"chat_id": resp.headers["location"].rsplit("/", 1)[-1]})
 
 
+@pytest.mark.usefixtures("flat_cost")
 def test_w1_accepted_bare_url_search(site):
     resp = site["send"](SITE, submit_key=KEY1)
     assert resp.status_code == 303 and used(site) == 1
@@ -286,6 +306,7 @@ def test_w1_accepted_bare_url_search(site):
     assert sc.check_invariant(credits_doc(site)) == []
 
 
+@pytest.mark.usefixtures("flat_cost")
 def test_w2_accepted_bare_url_search_without_keywords(site):
     site["knobs"]["keywords"] = {"keywords": None, "match_phrases": None}
     site["knobs"]["evidence"] = {**EVIDENCE, "structured_evidence": {}}             # no seed: no fuzzy keywords
@@ -296,6 +317,7 @@ def test_w2_accepted_bare_url_search_without_keywords(site):
     assert sc.check_invariant(credits_doc(site)) == []
 
 
+@pytest.mark.usefixtures("flat_cost")
 def test_w3_exhausted_bare_url_search(site):
     site["state"]["limit"] = 1
     site["send"](SITE, submit_key=KEY1)
@@ -311,6 +333,7 @@ def test_w3_exhausted_bare_url_search(site):
     assert sc.check_invariant(credits_doc(site)) == []
 
 
+@pytest.mark.usefixtures("flat_cost")
 def test_w3b_exhausted_url_plus_ask_skips_the_fetch(site):
     site["state"]["limit"] = 1
     site["send"](SITE, submit_key=KEY1)
@@ -321,6 +344,7 @@ def test_w3b_exhausted_url_plus_ask_skips_the_fetch(site):
     assert len(site["state"]["enqueues"]) == 1 and used(site) == 1
 
 
+@pytest.mark.usefixtures("flat_cost")
 def test_w3c_time_range_question_is_not_prechecked(site):
     site["state"]["limit"] = 1
     site["send"](SITE, submit_key=KEY1)
@@ -333,6 +357,7 @@ def test_w3c_time_range_question_is_not_prechecked(site):
     assert site["calls"]["fetch"] == fetches + 1 and used(site) == 1                  # existing interpretation kept
 
 
+@pytest.mark.usefixtures("flat_cost")
 def test_w4_same_key_retry_of_a_website_search(site):
     first = site["send"](SITE, submit_key=KEY1)
     llm, fetches, kws = site["state"]["llm_calls"], site["calls"]["fetch"], site["calls"]["keywords"]
@@ -343,6 +368,7 @@ def test_w4_same_key_retry_of_a_website_search(site):
     assert len(_chat_of(site, first)["messages"]) == 1
 
 
+@pytest.mark.usefixtures("flat_cost")
 def test_w5_url_plus_ask_search_is_charged_once(site):
     site["state"]["router"] = URL_ASK_ROUTER
     resp = site["send"](f"Find customers for my site {SITE}", submit_key=KEY1)
@@ -362,3 +388,101 @@ def test_w6_kill_switch_keeps_the_pre_credit_website_path(site, monkeypatch):
     assert resp.status_code == 303 and len(legacy) == 1 and credits_doc(site) == {}
     msg = _chat_of(site, resp)["messages"][-1]
     assert msg["website_only"] is True and "credit_request_id" not in msg
+
+
+# ── usage-based costs and the new warnings (real credit_cost.select_cost) ───
+# Nothing below uses the flat_cost fixture.
+def test_unmarked_tests_run_against_the_real_select_cost(app):
+    assert app["rt"].credit_cost.select_cost.__module__ == "credit_cost"
+
+
+def test_website_searches_are_charged_the_usage_based_cost(site):
+    resp = site["send"](SITE, submit_key=KEY1)                       # router sent no effort: the fallback
+    assert resp.status_code == 303 and used(site) == 4
+    e = credits_doc(site)["res"][sc.request_id("o1", KEY1)]
+    assert (e["cost"], e["effort"], e["state"]) == (4, "standard", sc.COMMITTED)
+    site["state"]["router"] = {**BARE_URL_ROUTER, "effort": "deep", "cost": 9, "reason": "whole site"}
+    site["send"]("https://other-site.example.com", submit_key=KEY2)   # router's own valid proposal
+    e2 = credits_doc(site)["res"][sc.request_id("o1", KEY2)]
+    assert used(site) == 13 and (e2["cost"], e2["effort"], e2["cost_reason"]) == (9, "deep", "whole site")
+    assert sc.check_invariant(credits_doc(site)) == []
+
+
+def test_website_precheck_uses_the_cost_and_logs_a_cost_based_denial(site, caplog):
+    import logging
+    site["state"]["limit"] = 14
+    site["state"]["router"] = {**BARE_URL_ROUTER, "effort": "deep", "cost": 11}
+    site["send"](SITE, submit_key=KEY1)
+    assert used(site) == 11
+    kw_calls, enqueued = site["calls"]["keywords"], len(site["state"]["enqueues"])
+    with caplog.at_level(logging.WARNING, logger="flintel.credits"):
+        denied = site["send"]("https://other-site.example.com", submit_key=KEY2)     # needs 11, 3 left
+    assert denied.status_code == 429 and "out of free searches" in body(denied)
+    assert site["calls"]["keywords"] == kw_calls and len(site["state"]["enqueues"]) == enqueued and used(site) == 11
+    assert any("cost-based" in r.getMessage() for r in caplog.records)
+
+
+def test_cost_based_denials_log_a_warning_and_plain_exhaustion_does_not(app, caplog):
+    import logging
+    app["state"]["limit"] = 14
+    app["state"]["router"] = {**SEARCH_ROUTER, "effort": "deep", "cost": 11}
+    app["send"]("Find people looking for a CRM for small teams", submit_key=KEY1)
+    with caplog.at_level(logging.WARNING, logger="flintel.credits"):
+        assert app["send"]("Find churn complaints about Notion", submit_key=KEY2).status_code == 429   # 3 left, needs 11
+    cost_based = [r for r in caplog.records if "cost-based" in r.getMessage()]
+    assert len(cost_based) == 1 and cost_based[0].levelno == logging.WARNING
+    text = cost_based[0].getMessage()
+    assert "11" in text and "limit 14" in text and "used 11" in text
+    assert "Notion" not in text and "o1" not in text                                       # no query, no owner
+    app["state"]["router"] = {**SEARCH_ROUTER, "effort": "standard", "cost": 3}
+    app["send"]("Find people asking about Pipedrive alternatives", submit_key="44444444-aaaa-4bbb-8ccc-000000000004")
+    assert used(app) == 14                                                                 # exactly exhausted
+    caplog.clear()
+    with caplog.at_level(logging.WARNING, logger="flintel.credits"):
+        assert app["send"]("Find churn complaints about Asana", submit_key="55555555-aaaa-4bbb-8ccc-000000000005"
+                           ).status_code == 429
+    assert [r for r in caplog.records if "cost-based" in r.getMessage()] == []              # nothing left: ordinary
+
+
+def test_a_search_dearer_than_the_whole_limit_logs_a_warning_and_writes_nothing(app, caplog):
+    import logging
+    app["state"]["limit"] = 10
+    app["state"]["router"] = {**SEARCH_ROUTER, "effort": "deep", "cost": 11}
+    with caplog.at_level(logging.WARNING, logger="flintel.credits"):
+        resp = app["send"]("Find people looking for a CRM for small teams", submit_key=KEY1)
+    assert resp.status_code == 429 and credits_doc(app) == {} and app["state"]["enqueues"] == []
+    assert "out of free searches" in body(resp)                                             # message unchanged
+    assert any(r.levelno == logging.WARNING and "cost-based" in r.getMessage() for r in caplog.records)
+
+
+def test_startup_warning_when_the_free_allowance_is_below_the_max_cost(caplog):
+    import logging
+    import config
+    with caplog.at_level(logging.WARNING, logger="flintel.config"):
+        assert config._warn_if_free_allowance_below_max_cost(10) is True
+    msg = caplog.records[-1].getMessage()
+    assert caplog.records[-1].levelno == logging.WARNING and "FREE_MONTHLY_CREDITS=10" in msg
+    assert "14" in msg and "never clamped" in msg and "NO search can run" not in msg
+    caplog.clear()
+    with caplog.at_level(logging.WARNING, logger="flintel.config"):
+        assert config._warn_if_free_allowance_below_max_cost(2) is True
+    assert "NO search can run" in caplog.records[-1].getMessage()
+    caplog.clear()
+    with caplog.at_level(logging.WARNING, logger="flintel.config"):
+        assert config._warn_if_free_allowance_below_max_cost(14) is False
+        assert config._warn_if_free_allowance_below_max_cost(40) is False
+        assert config._warn_if_free_allowance_below_max_cost(10, enforcement_disabled=True) is False   # kill switch
+    assert caplog.records == []
+
+
+@pytest.mark.parametrize("value,warns", [("10", True), ("13", True), ("14", False), (None, False), ("abc", False)])
+def test_importing_config_warns_only_for_a_small_free_allowance(value, warns):
+    import os
+    import subprocess
+    env = {k: v for k, v in os.environ.items() if not k.startswith(("FREE_MONTHLY", "CREDIT_"))}
+    env.update({"SESSION_SECRET_KEY": "test-only-session-key-not-for-deployment", "PYTHONPATH": str(ROOT)})
+    if value is not None:
+        env["FREE_MONTHLY_CREDITS"] = value
+    out = subprocess.run([sys.executable, "-c", "import config; print(config.FREE_MONTHLY_CREDITS_EFFECTIVE)"],
+                         cwd=ROOT, env=env, capture_output=True, text=True, timeout=60, check=True)
+    assert ("is below the maximum search cost" in out.stderr) is warns
