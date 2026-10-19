@@ -327,3 +327,16 @@ if not getattr(_config, "CREDIT_ENFORCEMENT_DISABLED", False):
         credit_usage_collection.create_index("owner_key", unique=True)
     except Exception as exc:
         log.warning(f"Could not create flintel_credit_usage.owner_key index: {exc}")
+
+# (PLAN CREDITS) One document per registered email owner with a paid plan
+# (search_credits.activate_plan / limit_for), on the same MONGODB3 database and
+# with the same majority write concern. Read-only for request handling; only
+# activate_plan (not wired to any route yet) writes it. The unique owner_key
+# index is what makes activate_plan idempotent under concurrent duplicates. As
+# for the credit collection, nothing is created while enforcement is disabled.
+plans_collection = db3.get_collection("flintel_plans", write_concern=WriteConcern("majority"))
+if not getattr(_config, "CREDIT_ENFORCEMENT_DISABLED", False):
+    try:
+        plans_collection.create_index("owner_key", unique=True)
+    except Exception as exc:
+        log.warning(f"Could not create flintel_plans.owner_key index: {exc}")
