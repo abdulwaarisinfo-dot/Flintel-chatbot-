@@ -775,6 +775,8 @@
   }
   .answer-rendered h1:first-child, .answer-rendered h2:first-child,
   .answer-rendered h3:first-child, .answer-rendered h4:first-child { margin-top: 0; }
+  /* (HOME UI) Pictures and embeds inside an answer never grow past the column. */
+  .answer-rendered img, .answer-rendered video, .answer-rendered svg, .answer-rendered iframe { max-width: 100%; height: auto; }
   .answer-rendered table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 15px; }
   .answer-rendered th, .answer-rendered td { border: 1px solid #343434; padding: 8px 12px; text-align: left; }
   .answer-rendered th { color: #fff; background: #1e1d1c; font-weight: 700; }
@@ -984,16 +986,24 @@
   @media (min-width: 1440px) {
     .thread-inner { max-width: 946px; margin: 0 auto; }
   }
+  /* (HOME UI) One shared column on screens wider than mobile: the conversation
+     (questions, answers, follow-up prompts) and the docked search box use the
+     same width — 85% of the available width, never more than 804px — and sit in
+     the same side gutters, so the conversation is never wider than the search
+     box. overflow-x:clip is a safety net: nothing inside the conversation can
+     paint past the column (tables and code blocks already scroll inside it).
+     Mobile (<=767px) is untouched. */
+  @media (min-width: 768px) {
+    .thread-inner { width: 85%; max-width: 804px; margin: 0 auto; overflow-x: clip; }
+    .docked-input-inner { width: 85%; max-width: 804px; margin: 0 auto; }
+  }
   .search-box {
     background: #1e1d1c; border: 1px solid #3d3d3b; border-radius: 18px;
     padding: 18px 24px 19px 24px; transition: border-color .15s ease;
   }
-  .search-box:focus-within {
-    border: 1px solid transparent;
-    background:
-      linear-gradient(#1e1d1c, #1e1d1c) padding-box,
-      linear-gradient(90deg, #a3e635, #4d7c0f) border-box;
-  }
+  /* (HOME UI) No "active" highlight when the search box is focused: the green
+     gradient border that used to replace the border on :focus-within is gone,
+     so the box looks the same focused or not. */
   .search-input {
     width: 100%; background: transparent; border: none; outline: none;
     color: #fff; font-size: 17px; font-weight: 500; font-family: inherit;
