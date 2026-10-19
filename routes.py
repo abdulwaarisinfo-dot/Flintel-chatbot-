@@ -161,6 +161,7 @@ from database import google_posts_collection  # <-- GOOGLE-FALLBACK POLLING FIX:
 from datetime import datetime, timezone
 from config import URL_PROMPT_MERGE_ENABLED, URL_PROMPT_MAX_KEYWORDS, URL_PROMPT_MAX_PHRASES, URL_MERGED_MAX_PHRASES
 import search_credits   # (SEARCH CREDITS) free-plan monthly search credits
+import credit_cost      # (USAGE-BASED CREDITS) validates the router's effort/cost proposal; no LLM
 from jinja2 import pass_context   # (HOME UI) context-aware template helpers
 
 
@@ -626,7 +627,7 @@ def _credit_decision_response(request, decision, query, owner_key=None, cleanup_
 
 def _run_credited_search(request, store, rid, query, topic_key, owner_key, owner_type, active_chat_id,
                          form_chat_id, keywords, targeting_platform, message_kwargs, expects_job,
-                         time_range_obj=None, after_save=None):
+                         time_range_obj=None, after_save=None, routed=None):
     """The accepted-search path with credits: resolve the chat first (its id is
     recorded on the reservation), reserve, claim, enqueue only after the claim
     matched, then save the message. Never enqueues after a rejected reservation."""
@@ -652,9 +653,14 @@ def _run_credited_search(request, store, rid, query, topic_key, owner_key, owner
                 log.warning(f"Recording the job time range failed for topic_key={topic_key}: {exc}")
         return result
 
+    # (USAGE-BASED CREDITS) The router result already in hand (no extra model
+    # call) is validated here, right before the one atomic reservation; an
+    # entry that already exists for this request id keeps its stored cost.
+    cost = credit_cost.select_cost(routed)
     try:
         ticket = store.reserve(owner_key, owner_type, rid, topic_key, active_chat_id, expects_job,
-                               retry_message=message_kwargs)
+                               retry_message=message_kwargs, cost=cost.cost, effort=cost.effort,
+                               cost_reason=cost.reason)
         if isinstance(ticket, search_credits.Decision):
             return _credit_decision_response(request, ticket, query, owner_key, cleanup_chat=active_chat_id)
         decision = store.run(ticket, _enqueue if expects_job else None, message_kwargs)
@@ -669,7 +675,7 @@ def _run_credited_search(request, store, rid, query, topic_key, owner_key, owner
     return _credit_decision_response(request, decision, query, owner_key, cleanup_chat=active_chat_id)
 
 
-def _credit_precheck_response(request, store, rid, query, owner_key, cleanup_chat):
+def _credit_precheck_response(request, store, rid, query, owner_key, cleanup_chat, routed=None):
     """(SEARCH CREDITS) Optimization only: skips website fetch/keyword LLM work
     for an owner already at the limit, at points where the turn is certain to
     become a search. Never charges, refunds or writes; any doubt (no store, no
@@ -678,8 +684,9 @@ def _credit_precheck_response(request, store, rid, query, owner_key, cleanup_cha
     if store is None or not rid:
         return None
     try:
-        owner = owner_key or get_owner(request)[0]
-        decision = store.precheck_exhausted(owner, rid)
+        owner, owner_type = (owner_key, None) if owner_key else get_owner(request)
+        decision = store.precheck_exhausted(owner, rid, cost=credit_cost.select_cost(routed).cost,
+                                            owner_type=owner_type)
     except Exception as exc:
         log.warning(f"Credit precheck skipped: {exc}")
         return None
@@ -1377,7 +1384,7 @@ def search(
                     # (SEARCH CREDITS) with evidence in hand this turn is certainly a
                     # search: skip keyword generation for an owner already at the limit
                     early_denial = _credit_precheck_response(request, credit_store, credit_rid, query,
-                                                             owner_key, active_chat_id)
+                                                             owner_key, active_chat_id, routed=routed)
                     if early_denial is not None:
                         return early_denial
                     if evidence.get("evidence_quality") != "failed":
@@ -1430,7 +1437,7 @@ def search(
                                     "evidence_quality": evidence["evidence_quality"],
                                 },
                             },
-                            expects_job=bool(keywords), after_save=_save_site_ctx,
+                            expects_job=bool(keywords), after_save=_save_site_ctx, routed=routed,
                         )
 
                     if keywords:
@@ -1642,7 +1649,7 @@ def search(
                         _peek_range = None
                     if not isinstance(_peek_range, timerange.Clarification):
                         early_denial = _credit_precheck_response(request, credit_store, credit_rid, query,
-                                                                 owner_key, active_chat_id)
+                                                                 owner_key, active_chat_id, routed=routed)
                         if early_denial is not None:
                             return early_denial
                 website_evidence = None
@@ -1952,7 +1959,7 @@ def search(
                 request, credit_store, credit_rid, query, topic_key, owner_key, owner_type,
                 active_chat_id, chat_id, keywords, targeting_platform, credit_message,
                 expects_job=not reuse_website_keywords, time_range_obj=time_range_obj,
-                after_save=_save_main_ctx,
+                after_save=_save_main_ctx, routed=routed,
             )
 
         if not reuse_website_keywords:
@@ -3203,7 +3210,8 @@ def api_me_usage(request: Request):
     try:
         store = _credit_store()
         if store is not None:
-            credits = store.status(get_owner(request)[0])
+            _owner_key, _owner_type = get_owner(request)
+            credits = store.status(_owner_key, _owner_type)
     except Exception as exc:
         log.warning(f"Credit status failed: {exc}")
         credits = {"enforced": True, "status": "unavailable"}
