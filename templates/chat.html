@@ -11,7 +11,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Enriqueta:wght@400&display=swap" rel="stylesheet">
 <style id="app-styles">
   /* =========================================================================
      Same design system used on index.html (itself Document 2's visual
@@ -1336,6 +1336,29 @@
     }
   }
 </style>
+<script>
+  // (HOME UI) Greeting for the homepage hero. The browser's local hour is the
+  // final source of truth: each [data-greeting-hours] element carries the
+  // 24-entry hour->label table from the server; the server-rendered text is
+  // only the first-paint fallback. Runs on load, after soft-navigation swaps
+  // (call sites below) and whenever the tab becomes visible again.
+  window.flintelRefreshGreeting = function () {
+    try {
+      var hour = new Date().getHours();
+      var els = document.querySelectorAll('[data-greeting-hours]');
+      for (var i = 0; i < els.length; i++) {
+        var hours = JSON.parse(els[i].getAttribute('data-greeting-hours'));
+        if (hours && hours[hour] && els[i].textContent !== hours[hour]) els[i].textContent = hours[hour];
+      }
+    } catch (e) { /* keep the server-rendered label */ }
+  };
+  if (!window.__flintelGreetingBound) {
+    window.__flintelGreetingBound = true;
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible') window.flintelRefreshGreeting();
+    });
+  }
+</script>
 </head>
 <body>
 {# (UPGRADE ENTRY POINTS) One shared target + plan label for all upgrade UI.
@@ -2029,6 +2052,7 @@
         currentStyleTag.textContent = newStyleTag.textContent;
       }
       currentMain.innerHTML = newMain.innerHTML;
+      if (window.flintelRefreshGreeting) window.flintelRefreshGreeting();   // (HOME UI) local-hour greeting after the swap
       // Re-bind everything that was previously only ever bound once at
       // initial page load (search form, attach button, platforms dropdown,
       // and the live-answer MutationObserver) against this freshly-swapped
