@@ -71,6 +71,10 @@ def has_greeting(html):
     return 'id="home-greeting"' in html
 
 
+def hero_is_started(html):
+    return re.search(r'<div class="content-wrap[^"]*\bhero-started\b[^"]*" id="hero-wrap"', html) is not None
+
+
 # ── the "conversation started" rule ─────────────────────────────────────────
 @pytest.mark.parametrize("messages,expected", [
     ([], False),                                                      # an empty chat record
@@ -133,7 +137,7 @@ def test_first_use_homepage_keeps_the_original_hero_and_explore(home):
     assert '<p class="eyebrow">Search</p>' in html
     assert re.search(r'<h1 class="headline">What(\'|&#39;)s the internet saying\?</h1>', html)
     assert has_explore(html) and html.count('data-query="Find') == 3
-    assert not has_greeting(html) and "hero-started" not in html
+    assert not has_greeting(html) and not hero_is_started(html)
 
 
 def test_owner_with_only_an_empty_chat_still_sees_the_first_use_homepage(home):
@@ -148,7 +152,7 @@ def test_started_homepage_hides_explore_and_shows_the_greeting(home):
     html = home["render"]()
     assert not has_explore(html)
     assert 'class="explore-panel"' not in html and 'data-query="Find' not in html and 'explore-title">' not in html
-    assert has_greeting(html) and "hero-started" in html
+    assert has_greeting(html) and hero_is_started(html)
     assert '<p class="eyebrow">Search</p>' not in html and "internet saying?</h1>" not in html
     assert re.search(r'<h1 class="headline headline-greeting" id="home-greeting" data-greeting-hours=\'\[', html)
 
@@ -263,7 +267,7 @@ def test_enriqueta_is_added_to_the_existing_google_fonts_request_only():
         assert "fonts.gstatic" not in text and "@import" not in text.split("</style>")[0].split("<style")[1][:200]
 
 
-def test_search_box_and_hero_container_css_are_unchanged():
+def test_search_box_and_hero_container_base_css_are_unchanged():
     css = INDEX_HTML.read_text(encoding="utf-8")
     for needle in ("""  .content-wrap {
     display: flex; align-items: center; justify-content: center;
@@ -284,7 +288,18 @@ def test_search_box_and_hero_container_css_are_unchanged():
     margin-bottom: 31px; line-height: 1.2;
   }"""):
         assert needle in css
-    assert "hero-started .search-box" not in css and "hero-started .content-inner" not in css   # box untouched
+    # the narrower box / fit-to-viewport rules exist only for the started hero, and only above mobile
+    block = css[css.index("@media (min-width: 768px) {\n    /* the started hero"):]
+    block = block[:block.index("\n  }\n") + 5]
+    assert ".content-wrap.hero-started .content-inner { width: 85%; max-width: 804px; }" in block
+    assert "calc(100vh - 62px)" in block and "padding-bottom: 28vh" in block
+
+
+def test_no_green_focus_border_on_the_search_box_in_either_template():
+    for path in (INDEX_HTML, CHAT_HTML):
+        css = path.read_text(encoding="utf-8").split("</style>")[0]
+        assert ".search-box:focus-within {" not in css and "search-box:focus" not in css
+        assert "linear-gradient(90deg, #a3e635, #4d7c0f) border-box" not in css
 
 
 # ── the helper's behaviour in a JavaScript engine ───────────────────────────
@@ -363,8 +378,12 @@ def _metrics(page):
     }""")
 
 
+FIRST_USE_BOX_WIDTH = {1440: 946, 1280: 806, 1100: 626, 900: 604}          # unchanged first-use homepage
+STARTED_BOX_WIDTH = {1920: 804, 1440: 804, 1366: 758, 1280: 685, 1100: 532, 900: 513, 768: 401}   # 85% of the column, max 804
+
+
 @pytest.mark.parametrize("width", [1440, 1280, 1100, 900])
-def test_search_box_size_is_identical_in_both_states_and_the_greeting_is_centered(home, integrity_browser, width):
+def test_first_use_layout_is_unchanged_and_started_box_is_narrower(home, integrity_browser, width):
     first_html = home["render"]()
     home["add_chat"]("o1", [{"query": "hello"}])
     started_html = home["render"]()
@@ -376,23 +395,53 @@ def test_search_box_size_is_identical_in_both_states_and_the_greeting_is_centere
         ctx1.close()
         ctx2.close()
     assert a["explore"] is True and b["explore"] is False
-    assert abs(a["box"]["w"] - b["box"]["w"]) < 0.5 and abs(a["box"]["x"] - b["box"]["x"]) < 0.5   # same box
+    assert round(a["box"]["w"]) == FIRST_USE_BOX_WIDTH[width] and a["font"] == "27px"          # first-use: exactly as before
+    assert round(b["box"]["w"]) == STARTED_BOX_WIDTH[width] < a["box"]["w"]                  # started: narrower
+    assert abs(b["box"]["cx"] - a["box"]["cx"]) < 1.5                                          # still centered
     assert b["text"] == "Evening thoughts"                                                     # the local hour wins
     assert b["align"] == "center" and abs(b["h1"]["cx"] - b["inner"]["cx"]) < 1               # greeting centered on the column
-    assert b["font"] == "46px" and "Enriqueta" in b["family"]
-    assert 30 <= b["box"]["y"] - (b["h1"]["y"] + b["h1"]["h"]) <= 60                          # greeting-to-box gap
+    assert b["font"] == "36px" and "Enriqueta" in b["family"]                                  # smaller greeting
+    assert 30 <= b["box"]["y"] - (b["h1"]["y"] + b["h1"]["h"]) <= 50                          # greeting-to-box gap
     assert not a["overflow"] and not b["overflow"]
 
 
-def test_mobile_greeting_and_no_overflow(home, integrity_browser):
+def test_started_greeting_and_box_are_raised(home, integrity_browser):
     home["add_chat"]("o1", [{"query": "hello"}])
-    ctx, page = _page(integrity_browser, home["render"](), 390, 800, hour=3)
+    ctx, page = _page(integrity_browser, home["render"](), 1440, 800, hour=14)
     try:
         m = _metrics(page)
     finally:
         ctx.close()
-    assert m["text"] == "Night thoughts" and m["font"] == "32px" and not m["overflow"] and not m["explore"]
-    assert m["box"]["x"] >= 0 and m["box"]["x"] + m["box"]["w"] <= 390
+    assert m["text"] == "Afternoon thoughts"
+    assert m["h1"]["y"] < 230 and m["box"]["y"] < 320                    # was 272 / 374 at 1440x800
+
+
+@pytest.mark.parametrize("width", [1920, 1440, 1366, 1280, 1100, 900, 768])
+@pytest.mark.parametrize("height", [1080, 800, 700, 650, 560])
+def test_started_homepage_never_scrolls(home, integrity_browser, width, height):
+    home["add_chat"]("o1", [{"query": "hello"}])
+    ctx, page = _page(integrity_browser, home["render"](), width, height, hour=14)
+    try:
+        sizes = page.evaluate("() => [document.documentElement.scrollHeight, document.documentElement.clientHeight]")
+        m = _metrics(page)
+    finally:
+        ctx.close()
+    assert sizes[0] <= sizes[1], f"page scrolls at {width}x{height}: {sizes}"
+    assert m["box"]["y"] + m["box"]["h"] <= height and not m["overflow"]       # greeting and box fully on screen
+
+
+def test_mobile_started_homepage_is_unchanged_except_for_the_smaller_greeting(home, integrity_browser):
+    home["add_chat"]("o1", [{"query": "hello"}])
+    first = home["render"]()
+    ctx, page = _page(integrity_browser, first, 390, 800, hour=3)
+    try:
+        m = _metrics(page)
+        sizes = page.evaluate("() => [document.documentElement.scrollHeight, document.documentElement.clientHeight]")
+    finally:
+        ctx.close()
+    assert m["text"] == "Night thoughts" and m["font"] == "28px" and not m["overflow"] and not m["explore"]
+    assert round(m["box"]["w"]) == 350 and m["box"]["x"] == 20                      # same box as before on mobile
+    assert sizes[0] <= sizes[1]
 
 
 def test_server_label_is_the_fallback_when_the_browser_hour_is_unavailable(home, integrity_browser, monkeypatch):
@@ -404,5 +453,145 @@ def test_server_label_is_the_fallback_when_the_browser_hour_is_unavailable(home,
                                                       "window.flintelNoop = function"), 1440)
     try:
         assert _metrics(page)["text"] == "Morning thoughts"
+    finally:
+        ctx.close()
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# The conversation never goes past the search box, on any screen; no focus highlight.
+# ═════════════════════════════════════════════════════════════════════════════
+from tests.test_answer_persistence import GOOD, NOW, ORIGIN, _for_template   # noqa: E402
+from tests.test_outreach_ui import _report                                    # noqa: E402
+
+jinja2 = pytest.importorskip("jinja2")
+LONG_URL = "https://www.example.com/" + "very-long-path-segment-" * 14 + "end"
+SCREENS = [(1920, 1000), (1536, 800), (1440, 800), (1366, 700), (1280, 720), (1100, 700), (1060, 700), (1059, 700),
+           (900, 800), (800, 800), (768, 800), (390, 800)]
+COLUMN_WIDTH = {1920: 804, 1536: 804, 1440: 804, 1366: 758, 1280: 685, 1100: 532, 1060: 498, 1059: 649, 900: 513,
+                800: 428, 768: 401, 390: 358}          # 85% of the space between the gutters, never more than 804px
+
+MEASURE_COLUMN = """() => {
+  const box = document.querySelector('.docked-input-wrap .search-box');
+  const bb = box.getBoundingClientRect();
+  const col = document.querySelector('.thread-inner, .conversation-area').getBoundingClientRect();
+  const clipped = (el) => { const r = el.getBoundingClientRect(); let left = r.left, right = r.right;
+    for (let a = el.parentElement; a && !a.matches('.thread-inner, .conversation-area'); a = a.parentElement) {
+      if (getComputedStyle(a).overflowX !== 'visible') { const ar = a.getBoundingClientRect(); left = Math.max(left, ar.left); right = Math.min(right, ar.right); } }
+    return [left, right]; };
+  const outside = [];
+  document.querySelectorAll('.thread-inner *, .conversation-area *').forEach(el => {
+    const cs = getComputedStyle(el);
+    if (cs.display === 'none' || cs.visibility === 'hidden' || cs.opacity === '0') return;
+    const r = el.getBoundingClientRect(); if (!r.width || !r.height) return;
+    const [l, rt] = clipped(el);
+    if (l < bb.left - 1 || rt > bb.right + 1) outside.push(el.tagName.toLowerCase() + '.' + String(el.className).split(' ')[0]);
+  });
+  return {box: [bb.left, bb.right], column: [col.left, col.right], outside, scrollX: document.documentElement.scrollWidth > document.documentElement.clientWidth};
+}"""
+INJECT_WIDE = """() => { const t = document.querySelector('.thread-inner .turn-block:last-child .answer-rendered, .conversation-area .turn-block:last-child .answer-rendered') || document.querySelector('.thread-inner, .conversation-area');
+  t.style.display = 'block';
+  t.insertAdjacentHTML('beforeend', '<table><thead><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr></thead><tbody><tr>' + [1,2,3,4,5,6].map(i => '<td>cell ' + i + ' ' + 'wide_unbreakable_content_'.repeat(3) + '</td>').join('') + '</tr></tbody></table><pre><code>' + 'const veryLongLine = "' + 'x'.repeat(260) + '";</code></pre><img src="data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%271400%27 height=%2780%27/>">'); 0 }"""
+
+
+def _jinja(name, chat):
+    e = jinja2.Environment(loader=jinja2.FileSystemLoader(str(ROOT / "templates")), undefined=jinja2.ChainableUndefined,
+                           autoescape=True)
+    e.globals["url_for"] = lambda *a, **k: "#"
+    return e.get_template(name).render(request=None, chat=chat, chats=[], user=None, chat_id=(chat or {}).get("chat_id"),
+                                       pending_stream_topic_key=None, messages=(chat or {}).get("messages", []))
+
+
+def _long_chat(lg, monkeypatch):
+    outreach = _report(lg, monkeypatch)                                 # a real report: wide table, cards, copy buttons
+    base = {"topic_key": None, "keywords": [], "results": [], "message_type": "chat", "requested_at": NOW}
+    msgs = [dict(base, query="Find buyers for our product " + LONG_URL,
+                 claude_answer="Here is a link " + LONG_URL + " and a long unbroken token " + "x" * 120),
+            dict(base, query="Now make me suggested message for outreach", claude_answer=outreach),
+            {"query": "Compare tools", "topic_key": "q", "keywords": [], "results": [], "claude_answer": json.dumps(GOOD),
+             "requested_at": NOW, "targeting_platform": "reddit"}]
+    return _for_template({"chat_id": "c1", "title": "t", "messages": msgs})
+
+
+def _open_chat(browser, html, width, height):
+    ctx = browser.new_context(viewport={"width": width, "height": height})
+    page = ctx.new_page()
+    page.route("**/*", lambda route: route.fulfill(status=200, headers={"Content-Type": "text/html"}, body=html)
+               if route.request.url == ORIGIN + "/chat/c1" else route.fulfill(status=200, body=""))
+    page.goto(ORIGIN + "/chat/c1")
+    page.wait_for_timeout(200)
+    page.evaluate("document.querySelectorAll('[class*=welcome]').forEach(e => e.remove()); 0")
+    return ctx, page
+
+
+@pytest.mark.parametrize("width,height", SCREENS)
+def test_chat_page_conversation_stays_inside_the_search_box_on_every_screen(env, integrity_browser, monkeypatch, width, height):
+    lg, idx, _ = env
+    html = _jinja("chat.html", _long_chat(lg, monkeypatch))
+    ctx, page = _open_chat(integrity_browser, html, width, height)
+    try:
+        real = page.evaluate(MEASURE_COLUMN)
+        page.evaluate(INJECT_WIDE)                                      # a wide table, a long code line, a 1400px picture
+        wide = page.evaluate(MEASURE_COLUMN)
+    finally:
+        ctx.close()
+    for m in (real, wide):
+        assert abs(m["box"][0] - m["column"][0]) < 1 and abs(m["box"][1] - m["column"][1]) < 1   # same left and right edge
+        assert m["outside"] == [], f"content outside the search box at {width}x{height}: {m['outside']}"
+        assert not m["scrollX"]
+    assert abs((real["box"][1] - real["box"][0]) - COLUMN_WIDTH[width]) < 1.5
+
+
+@pytest.mark.parametrize("width", [1920, 1440, 1100, 768])
+def test_index_page_conversation_area_shares_the_dock_column(env, integrity_browser, monkeypatch, width):
+    lg, idx, _ = env
+    html = _jinja("index.html", _long_chat(lg, monkeypatch))
+    ctx = integrity_browser.new_context(viewport={"width": width, "height": 800})
+    page = ctx.new_page()
+    page.route("**/*", lambda route: route.abort())
+    page.goto("about:blank")
+    page.set_content(html, wait_until="domcontentloaded")
+    try:
+        page.evaluate("""() => { const d = document.getElementById('docked-input-wrap'); d.hidden = false; d.style.display = 'block';
+                               document.getElementById('conversation-area').classList.remove('hidden'); 0 }""")
+        m = page.evaluate(MEASURE_COLUMN)
+    finally:
+        ctx.close()
+    assert abs(m["box"][0] - m["column"][0]) < 1 and abs(m["box"][1] - m["column"][1]) < 1
+    assert m["outside"] == [] and not m["scrollX"]
+
+
+FOCUS_JS = """() => { const el = document.querySelector('%s'); const box = el.closest('.search-box'); const cs = getComputedStyle(box);
+  const snap = () => ({border: cs.borderTopColor, width: cs.borderTopWidth, image: cs.backgroundImage, color: cs.backgroundColor, shadow: cs.boxShadow});
+  const before = snap(); el.focus(); const focused = document.activeElement === el; const after = snap(); return {before, after, focused}; }"""
+
+
+def _assert_no_focus_highlight(r):
+    assert r["focused"] is True
+    assert r["before"] == r["after"]                                    # focusing changes nothing about the box
+    assert r["after"]["image"] == "none" and r["after"]["border"] == "rgb(61, 61, 59)"
+    assert "163, 230, 53" not in " ".join(r["after"].values())          # no green anywhere
+
+
+def test_focusing_the_homepage_search_box_shows_no_green_stroke(home, integrity_browser):
+    home["add_chat"]("o1", [{"query": "hello"}])
+    for html in (home["render"](), ):
+        ctx, page = _page(integrity_browser, html, 1440, 800, hour=14)
+        try:
+            _assert_no_focus_highlight(page.evaluate(FOCUS_JS % "#hero-wrap #search-input"))
+        finally:
+            ctx.close()
+
+
+def test_focusing_the_first_use_and_chat_page_search_boxes_shows_no_green_stroke(home, env, integrity_browser, monkeypatch):
+    first = home["render"]()                                            # first-use homepage is also covered
+    ctx, page = _page(integrity_browser, first, 1440, 800)
+    try:
+        _assert_no_focus_highlight(page.evaluate(FOCUS_JS % "#hero-wrap #search-input"))
+    finally:
+        ctx.close()
+    lg, idx, _ = env
+    ctx, page = _open_chat(integrity_browser, _jinja("chat.html", _long_chat(lg, monkeypatch)), 1440, 800)
+    try:
+        _assert_no_focus_highlight(page.evaluate(FOCUS_JS % ".docked-input-wrap #search-input"))
     finally:
         ctx.close()
