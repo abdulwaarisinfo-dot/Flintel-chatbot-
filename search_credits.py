@@ -8,8 +8,9 @@ reconnects and page reloads never touch this module.
 
 The monthly limit is the free allowance, or the plan's allowance for a
 registered email owner with an ACTIVE record in `flintel_plans` (see
-limit_for()). There is no payment code here; activate_plan() is the function a
-future webhook would call and is not wired to any route.
+limit_for()). There is no payment-provider code here. billing.py (Lemon Squeezy)
+writes plan records through set_plan_entitlement(); activate_plan() is the older,
+provider-neutral writer and is not wired to any route.
 
 Storage: one document per owner in `flintel_credit_usage` (unique owner_key):
 
@@ -237,6 +238,98 @@ def activate_plan(plans, owner_key, plan, active_until, source_ref, now=None, ac
     return "activated"
 
 
+def _is_duplicate_key(exc) -> bool:
+    return type(exc).__name__ == "DuplicateKeyError"
+
+
+def set_plan_entitlement(plans, owner_key, plan, active_from, active_until, source_ref, billing_rev, now=None,
+                         credit_period_key=None, credit_period_ends=None) -> str:
+    """Billing-driven writer of the owner's plan record (billing.py calls it after every
+    verified subscription event). It writes the SAME record shape as activate_plan
+    (plan, active_from, active_until, source_ref, updated_at, applied_refs) plus
+    `billing_rev`, so active_plan()/limit_for() and the read-only audit need no change.
+
+    Unlike activate_plan it may also SHORTEN or close the window (cancellation, expiry),
+    and it is ordered: `billing_rev` is a number that only grows as verified events are
+    applied, and a write whose rev is not greater than the stored one is ignored
+    ("superseded"), so a stale or replayed computation can never overwrite a newer one.
+    The write is a compare-and-set on billing_rev (no reliance on a unique index for
+    correctness). Returns "applied" or "superseded". Raises ValueError for bad
+    arguments and CreditStoreError when the store fails (the caller must then NOT
+    acknowledge the billing event). A record written by activate_plan has no
+    billing_rev and is replaced by the first billing write for that owner (precedence: billing
+    wins, and a WARNING is logged when the replaced record was still an active manual entitlement).
+    `credit_period_key` / `credit_period_ends` (both or neither) name the billing period the
+    allowance is counted in (see CreditStore.allowance); without them the calendar month applies.
+    Several records for one owner (the unique index could not be built) raise CreditStoreError:
+    the caller's state is already stored, nothing is written, and the event can be retried."""
+    if not registered_owner(owner_key):
+        raise ValueError("a plan can only be written for a registered email owner")
+    if plan not in PAID_PLANS:
+        raise ValueError(f"unknown plan {plan!r}")
+    if not isinstance(source_ref, str) or not source_ref.strip():
+        raise ValueError("source_ref is required")
+    if not isinstance(billing_rev, int) or isinstance(billing_rev, bool) or billing_rev < 1:
+        raise ValueError("billing_rev must be a positive integer")
+    if not isinstance(active_from, datetime) or not isinstance(active_until, datetime):
+        raise ValueError("active_from and active_until must be datetimes")
+    start, end = _aware(active_from), _aware(active_until)
+    if end <= start:
+        raise ValueError("active_until must be after active_from")
+    if (credit_period_key is None) != (credit_period_ends is None):
+        raise ValueError("credit_period_key and credit_period_ends go together")
+    if credit_period_key is not None and not (_valid_period_key(credit_period_key) and isinstance(credit_period_ends, datetime)):
+        raise ValueError("credit_period_key must be a UTC date (YYYY-MM-DD) and credit_period_ends a datetime")
+    now = _aware(now or datetime.now(timezone.utc))
+    fields = {"plan": plan, "active_from": start, "active_until": end, "source_ref": source_ref,
+              "updated_at": now, "billing_rev": billing_rev}
+    unset = {}
+    if credit_period_key is None:
+        unset = {"credit_period_key": "", "credit_period_ends": ""}
+    else:
+        fields.update(credit_period_key=credit_period_key, credit_period_ends=_aware(credit_period_ends))
+    try:
+        for _attempt in range(4):
+            if plans.count_documents({"owner_key": owner_key}) > 1:
+                log.error("billing: several plan records exist for one owner (the unique owner_key index is missing); "
+                          "nothing was written, the subscription state is stored and the event can be retried after cleanup")
+                raise CreditStoreError("duplicate plan records")
+            current = plans.find_one({"owner_key": owner_key})
+            if current is None:
+                try:
+                    plans.insert_one({"owner_key": owner_key, **fields, "applied_refs": [source_ref]})
+                except Exception as exc:
+                    if _is_duplicate_key(exc):
+                        continue                       # someone created it meanwhile: read again
+                    raise
+                if plans.count_documents({"owner_key": owner_key}) > 1:     # no unique index: a concurrent first insert
+                    log.error("billing: duplicate plan records were created concurrently (the unique owner_key index is missing)")
+                    raise CreditStoreError("duplicate plan records")
+                return "applied"
+            stored = current.get("billing_rev")
+            if isinstance(stored, int) and not isinstance(stored, bool) and stored >= billing_rev:
+                return "superseded"
+            if stored is None and active_plan(current, now):
+                log.warning(f"billing replaces an ACTIVE manual plan entitlement ({current.get('plan')} until "
+                            f"{_aware(current.get('active_until')).isoformat()}, source {str(current.get('source_ref'))[:40]!r}) "
+                            f"with the subscription-derived {plan} entitlement")
+            update = {"$set": fields, "$addToSet": {"applied_refs": source_ref}}
+            if unset:
+                update["$unset"] = unset
+            result = plans.update_one(
+                {"_id": current["_id"], "billing_rev": stored},      # stored None matches a missing field
+                update)
+            if getattr(result, "acknowledged", True) is not True:
+                raise CreditStoreError("plan write not acknowledged")
+            if getattr(result, "matched_count", 1) == 1:
+                return "applied"
+    except CreditStoreError:
+        raise
+    except Exception as exc:
+        raise CreditStoreError(f"plan write failed: {type(exc).__name__}") from exc
+    raise CreditStoreError("plan write contention")
+
+
 def enforcement_enabled() -> bool:
     return not bool(getattr(_cfg(), "CREDIT_ENFORCEMENT_DISABLED", False))
 
@@ -269,6 +362,15 @@ def _setting(name: str, default: int) -> int:
 def period_key(now: datetime) -> str:
     now = _aware(now)
     return f"{now.year:04d}-{now.month:02d}"
+
+
+_BILLING_PERIOD_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def _valid_period_key(key) -> bool:
+    """A billing period key is the UTC date the paid period ends ("2026-11-10"). It cannot collide
+    with a calendar-month key ("2026-11") and sorts after it, so _prune keeps recent ones."""
+    return isinstance(key, str) and bool(_BILLING_PERIOD_RE.match(key))
 
 
 def period_resets_at(now: datetime) -> datetime:
@@ -412,17 +514,41 @@ class CreditStore:
         self.checkpoint = checkpoint or (lambda name, **ctx: None)   # test hook, no-op in production
 
     # ── monthly limit (free allowance, or an active paid plan) ──────────────
-    def plan_for(self, owner_key, now=None, owner_type=None) -> str:
-        """"free", or the plan name of an ACTIVE record for a registered email
-        owner. Fail closed: a plan-store read error raises CreditStoreError (the
-        route answers 503); it never falls back to a limit."""
+    def _plan_record(self, owner_key, now, owner_type):
+        """(plan, record): the plan name and its record when an ACTIVE paid record exists, else
+        ("free", None). Fail closed: a plan-store read error raises CreditStoreError."""
         if self.plans is None or not registered_owner(owner_key, owner_type):
-            return PLAN_FREE
+            return PLAN_FREE, None
         try:
             record = self.plans.find_one({"owner_key": owner_key})
         except Exception as exc:
             raise CreditStoreError(f"plan read failed: {type(exc).__name__}") from exc
-        return active_plan(record, now or self.now()) or PLAN_FREE
+        plan = active_plan(record, now)
+        return (plan, record) if plan else (PLAN_FREE, None)
+
+    def plan_for(self, owner_key, now=None, owner_type=None) -> str:
+        """"free", or the plan name of an ACTIVE record for a registered email
+        owner. Fail closed: a plan-store read error raises CreditStoreError (the
+        route answers 503); it never falls back to a limit."""
+        return self._plan_record(owner_key, now or self.now(), owner_type)[0]
+
+    def allowance(self, owner_key, now=None, owner_type=None):
+        """(limit, period, resets_at, plan) this owner is counted against right now.
+        Free owners (and plan records without a billing period, e.g. written by activate_plan)
+        use the UTC calendar month. An active record written by billing carries the billing
+        period it was paid for (`credit_period_key` = UTC date the period ends); the paid
+        allowance is counted in that period's own counter, so a renewal opens a new counter
+        once, free usage never carries in, and usage within the period is never reset."""
+        now = now or self.now()
+        plan, record = self._plan_record(owner_key, now, owner_type)
+        if plan == PLAN_FREE:
+            return int(self.limit()), period_key(now), period_resets_at(now), plan
+        limit = int(plan_credits(plan))
+        key, ends = record.get("credit_period_key"), record.get("credit_period_ends")
+        if _valid_period_key(key) and isinstance(ends, datetime):
+            end = _aware(ends)
+            return limit, key, (end if end > _aware(now) else _aware(record["active_until"])), plan
+        return limit, period_key(now), period_resets_at(now), plan
 
     def limit_for(self, owner_key, now=None, owner_type=None) -> int:
         """This owner's monthly limit right now. A plan REPLACES the free
@@ -511,8 +637,8 @@ class CreditStore:
                 "claim_unconfirmed": False, "sent_once": False, "chat_id": chat_id, "topic_key": topic_key,
                 "expects_job": bool(expects_job), "pending_message": None, "close_token": None, "audit": []}
 
-    def _exhausted(self, cleanup_ok=True):
-        return Decision("exhausted", resets_at=period_resets_at(self.now()), cleanup_ok=cleanup_ok)
+    def _exhausted(self, cleanup_ok=True, resets_at=None):
+        return Decision("exhausted", resets_at=resets_at or period_resets_at(self.now()), cleanup_ok=cleanup_ok)
 
     # ── early same-key lookup (before the router; not a credit check) ────────
     def lookup(self, owner_key, rid) -> Decision:
@@ -550,14 +676,13 @@ class CreditStore:
             return None
         if doc and ((doc.get("res") or {}).get(rid)) is not None:
             return None
-        period = period_key(self.now())
-        used = int(((doc or {}).get("used_by_period") or {}).get(period, 0))
         try:
-            limit = self.limit_for(owner_key, self.now(), owner_type)
+            limit, period, resets_at, _plan = self.allowance(owner_key, self.now(), owner_type)
         except CreditStoreError:
             return None
+        used = int(((doc or {}).get("used_by_period") or {}).get(period, 0))
         if used + _entry_cost({"cost": cost}) > limit:
-            return self._over_limit(_entry_cost({"cost": cost}), limit, used)
+            return self._over_limit(_entry_cost({"cost": cost}), limit, used, resets_at)
         return None
 
     def _decision_for(self, entry) -> Decision:
@@ -571,7 +696,7 @@ class CreditStore:
         return Decision("busy", chat_id=entry.get("chat_id"), message=IN_FLIGHT_MESSAGE)
 
     # ── reservation point (T1 / T1r / T12, or same-key handling) ────────────
-    def _over_limit(self, cost, limit, used=None) -> Decision:
+    def _over_limit(self, cost, limit, used=None, resets_at=None) -> Decision:
         """A search that costs more than the credits available (more than the whole
         limit, or more than what remains). Denied with the unchanged exhausted
         message, no write at all. The message says "out of free searches" even when
@@ -581,7 +706,7 @@ class CreditStore:
         if used is None or used < limit:
             log.warning(f"credit denial (cost-based): a search costing {cost} credits exceeds what is available "
                         f"(limit {limit}, used {'unknown' if used is None else used})")
-        return self._exhausted()
+        return self._exhausted(resets_at=resets_at)
 
     def reserve(self, owner_key, owner_type, rid, topic_key, chat_id, expects_job, retry_message=None,
                 cost=1, effort=None, cost_reason=None):
@@ -594,13 +719,12 @@ class CreditStore:
             raise ValueError(f"cost must be a whole number >= 1, got {cost!r}")
         for _ in range(4):
             now = self.now()
-            period = period_key(now)
             doc = self._read_doc(owner_key)
             entry = ((doc or {}).get("res") or {}).get(rid) if doc else None
             if entry is None:
-                limit = int(self.limit_for(owner_key, now, owner_type))   # fail closed: raises on a plan-store error
+                limit, period, resets_at, _plan = self.allowance(owner_key, now, owner_type)   # fail closed: raises on a plan-store error
                 if cost > limit:
-                    return self._over_limit(cost, limit)
+                    return self._over_limit(cost, limit, resets_at=resets_at)
                 attempt = uuid.uuid4().hex
                 new = self._new_entry(period, attempt, chat_id, topic_key, expects_job, cost=cost, effort=effort,
                                       cost_reason=cost_reason)
@@ -625,7 +749,7 @@ class CreditStore:
                 doc = self._read_doc(owner_key)
                 seen = int(((doc or {}).get("used_by_period") or {}).get(period, 0))
                 if ((doc or {}).get("res") or {}).get(rid) is None and seen + cost > limit:
-                    return self._over_limit(cost, limit, seen)
+                    return self._over_limit(cost, limit, seen, resets_at)
                 continue
             state = entry.get("state")
             if state == REFUNDED:                                         # T1r
@@ -633,9 +757,9 @@ class CreditStore:
                     and entry.get("cost") >= 1
                 r_cost = entry["cost"] if stored else cost   # the cost decided for this request id is reused
                 r_effort, r_reason = (entry.get("effort"), entry.get("cost_reason")) if stored else (effort, cost_reason)
-                limit = int(self.limit_for(owner_key, now, owner_type))
+                limit, period, resets_at, _plan = self.allowance(owner_key, now, owner_type)
                 if r_cost > limit:
-                    return self._over_limit(r_cost, limit)
+                    return self._over_limit(r_cost, limit, resets_at=resets_at)
                 attempt = uuid.uuid4().hex
                 new = self._new_entry(period, attempt, chat_id, topic_key, expects_job, ev=int(entry.get("ev", 0)) + 1,
                                       cost=r_cost, effort=r_effort, cost_reason=r_reason)
@@ -651,7 +775,7 @@ class CreditStore:
                 cur = ((again or {}).get("res") or {}).get(rid) or {}
                 seen = int(((again or {}).get("used_by_period") or {}).get(period, 0))
                 if cur.get("state") == REFUNDED and cur.get("ev") == entry.get("ev") and seen + r_cost > limit:
-                    return self._over_limit(r_cost, limit, seen)
+                    return self._over_limit(r_cost, limit, seen, resets_at)
                 continue
             if state in (RESERVED, STARTED) and self._resumable(entry):  # T12 resume
                 attempt = uuid.uuid4().hex
@@ -1093,9 +1217,9 @@ class CreditStore:
         base = {"enforced": True, "limit": int(self.limit()), "period": period_key(now),
                 "resets_at": period_resets_at(now).isoformat()}
         try:
-            plan = self.plan_for(owner_key, now, owner_type)
+            limit, period, resets_at, plan = self.allowance(owner_key, now, owner_type)
             if plan != PLAN_FREE:
-                base["limit"] = int(plan_credits(plan))
+                base.update(limit=limit, period=period, resets_at=resets_at.isoformat())
             base["plan"] = plan
             self.recover(owner_key)
             doc = self._read_doc(owner_key) or {}
