@@ -404,6 +404,37 @@ PLAN_CREDITS_BUSINESS = _parse_plan_credits(
     "PLAN_CREDITS_BUSINESS", os.getenv("PLAN_CREDITS_BUSINESS"), PLAN_CREDITS_BUSINESS_DEFAULT)
 
 
+# ── Billing (billing.py, Lemon Squeezy hosted checkout) ──────────────────
+# All five values below are required for checkout and webhooks to work; with any
+# of them missing billing.configured() is False, checkout answers 503 and the
+# webhook rejects every delivery (nothing is ever granted). They are read from
+# the environment ONLY — never hard-code them. Prices ($19 / $59) are constants
+# in billing.py (display only: the amount charged is the price of the variant
+# configured in the Lemon Squeezy dashboard, never a value sent by the browser).
+#   LEMONSQUEEZY_API_KEY             server-side API key (checkout creation)
+#   LEMONSQUEEZY_STORE_ID            numeric store id
+#   LEMONSQUEEZY_VARIANT_ID_STANDARD numeric variant id of the Standard plan ($19/month)
+#   LEMONSQUEEZY_VARIANT_ID_BUSINESS numeric variant id of the Business plan ($59/month)
+#   LEMONSQUEEZY_WEBHOOK_SECRET      signing secret of the webhook (HMAC-SHA256)
+#   LEMONSQUEEZY_TEST_MODE           exactly "true" = use/accept Lemon Squeezy TEST mode only;
+#                                    anything else = live mode only
+def _billing_value(name, numeric=False):
+    value = (os.getenv(name) or "").strip()
+    if numeric and value and not (value.isascii() and value.isdigit()):
+        _logging.getLogger("flintel.config").error(
+            f"{name} is invalid (must be a whole number); billing stays disabled until it is fixed.")
+        return ""
+    return value
+
+
+LEMONSQUEEZY_API_KEY = _billing_value("LEMONSQUEEZY_API_KEY")
+LEMONSQUEEZY_STORE_ID = _billing_value("LEMONSQUEEZY_STORE_ID", numeric=True)
+LEMONSQUEEZY_VARIANT_ID_STANDARD = _billing_value("LEMONSQUEEZY_VARIANT_ID_STANDARD", numeric=True)
+LEMONSQUEEZY_VARIANT_ID_BUSINESS = _billing_value("LEMONSQUEEZY_VARIANT_ID_BUSINESS", numeric=True)
+LEMONSQUEEZY_WEBHOOK_SECRET = _billing_value("LEMONSQUEEZY_WEBHOOK_SECRET")
+LEMONSQUEEZY_TEST_MODE = (os.getenv("LEMONSQUEEZY_TEST_MODE") or "").strip().lower() == "true"
+
+
 # CREDIT_ENFORCEMENT_DISABLED: EMERGENCY KILL SWITCH ONLY. Exactly "true"
 # (any case) turns credit enforcement off for EVERY user — searches become
 # unlimited, nothing is reserved or recorded, and LLM/collector cost is
