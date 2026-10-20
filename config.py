@@ -435,6 +435,36 @@ LEMONSQUEEZY_WEBHOOK_SECRET = _billing_value("LEMONSQUEEZY_WEBHOOK_SECRET")
 LEMONSQUEEZY_TEST_MODE = (os.getenv("LEMONSQUEEZY_TEST_MODE") or "").strip().lower() == "true"
 
 
+# ── Guest search gate (guest_gate.py) ─────────────────────────────────────────
+# A visitor who is not signed in may complete GUEST_SEARCH_LIMIT genuine searches
+# (default 1); the next real search needs an account. Counted on the SERVER, per
+# persistent guest identity (the signed fl_gid cookie), only when a real search's
+# answer was actually saved — never for small talk, errors, timeouts or cancels.
+#   GUEST_SEARCH_LIMIT            whole number >= 0; 0 switches the gate OFF (guests then only
+#                                 have the normal free credit allowance). Default 1. An invalid
+#                                 value is ignored with a warning and the default applies.
+#   GUEST_INFLIGHT_STALE_SECONDS  a reserved-but-unfinished guest search older than this may be
+#                                 taken over by a new one. Default 900; never below
+#                                 RESPONSE_TIMEOUT + 60, so a search that is still legitimately
+#                                 running is not taken over.
+#   GUEST_ID_COOKIE_MAX_AGE_DAYS  lifetime of the signed guest-identity cookie. Default 400.
+def _guest_int(name, default, minimum, maximum):
+    raw = os.getenv(name)
+    if raw is None or not str(raw).strip():
+        return default
+    text = str(raw).strip()
+    if text.isascii() and text.isdigit() and minimum <= int(text) <= maximum:
+        return int(text)
+    _logging.getLogger("flintel.config").warning(
+        f"{name}={text!r} ignored (must be a whole number {minimum}-{maximum}); using {default}.")
+    return default
+
+
+GUEST_SEARCH_LIMIT = _guest_int("GUEST_SEARCH_LIMIT", 1, 0, 1000)
+GUEST_INFLIGHT_STALE_SECONDS = max(_guest_int("GUEST_INFLIGHT_STALE_SECONDS", 900, 60, 86400), RESPONSE_TIMEOUT + 60)
+GUEST_ID_COOKIE_MAX_AGE_DAYS = _guest_int("GUEST_ID_COOKIE_MAX_AGE_DAYS", 400, 1, 400)
+
+
 # CREDIT_ENFORCEMENT_DISABLED: EMERGENCY KILL SWITCH ONLY. Exactly "true"
 # (any case) turns credit enforcement off for EVERY user — searches become
 # unlimited, nothing is reserved or recorded, and LLM/collector cost is
