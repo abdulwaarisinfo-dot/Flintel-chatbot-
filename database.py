@@ -335,8 +335,34 @@ if not getattr(_config, "CREDIT_ENFORCEMENT_DISABLED", False):
 # index is what makes activate_plan idempotent under concurrent duplicates. As
 # for the credit collection, nothing is created while enforcement is disabled.
 plans_collection = db3.get_collection("flintel_plans", write_concern=WriteConcern("majority"))
-if not getattr(_config, "CREDIT_ENFORCEMENT_DISABLED", False):
+# (BILLING) The unique owner_key index is also created when Lemon Squeezy billing is configured, so
+# the billing writer's one-record-per-owner guarantee does not depend on the credit kill switch.
+_billing_configured = all(getattr(_config, _n, "") for _n in (
+    "LEMONSQUEEZY_API_KEY", "LEMONSQUEEZY_STORE_ID", "LEMONSQUEEZY_WEBHOOK_SECRET",
+    "LEMONSQUEEZY_VARIANT_ID_STANDARD", "LEMONSQUEEZY_VARIANT_ID_BUSINESS"))
+# plans_owner_index_ok is False only when the index was needed and could not be built (for example
+# duplicate owner_key rows already exist). routes.py then refuses NEW checkouts; webhooks and existing
+# subscriptions keep working (billing never discards a paid event), and nothing here modifies or deletes data.
+plans_owner_index_ok = True
+if _billing_configured or not getattr(_config, "CREDIT_ENFORCEMENT_DISABLED", False):
     try:
         plans_collection.create_index("owner_key", unique=True)
     except Exception as exc:
-        log.warning(f"Could not create flintel_plans.owner_key index: {exc}")
+        plans_owner_index_ok = False
+        if _billing_configured:
+            log.error(f"BILLING ALERT: could not create the unique flintel_plans.owner_key index ({type(exc).__name__}): "
+                      "new checkouts are disabled until duplicate plan records are cleaned up and the index exists")
+        else:
+            log.warning(f"Could not create flintel_plans.owner_key index: {exc}")
+
+# (BILLING, billing.py) Lemon Squeezy subscription state and processed webhook deliveries, same
+# database and write concern as flintel_plans. Both use the document _id as their unique key
+# (subscription id / SHA-256 of the raw delivery body), so no index is needed for idempotency;
+# the owner_key index below only speeds up the per-owner lookup. No card data is ever stored.
+subscriptions_collection = db3.get_collection("flintel_subscriptions", write_concern=WriteConcern("majority"))
+billing_events_collection = db3.get_collection("flintel_billing_events", write_concern=WriteConcern("majority"))
+if _billing_configured:
+    try:
+        subscriptions_collection.create_index("owner_key")
+    except Exception as exc:
+        log.warning(f"Could not create flintel_subscriptions.owner_key index: {exc}")
