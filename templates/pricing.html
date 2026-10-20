@@ -152,6 +152,22 @@
   }
   .plan-cta.outline:hover { background: #252421; border-color: #3a3937; color: #fff; }
 
+  /* Billing states */
+  .plan-cta[disabled] { opacity: .55; cursor: not-allowed; }
+  .plan-cta-note { font-size: 12px; color: #7a7a77; text-align: center; margin: 10px 0 0; min-height: 16px; line-height: 1.5; }
+  .plan-cta-note a { color: var(--link-color); }
+  .plan-price-suffix { margin-left: 2px; }
+  .billing-message {
+    max-width: 960px; margin: 0 auto 20px;
+    background: #1e1d1b; border: 1px solid #2b2a28; border-radius: 10px;
+    padding: 12px 18px; font-size: 14px; color: #d1d0cf; line-height: 1.5; text-align: center;
+  }
+  .billing-message[hidden] { display: none; }
+  .link-button { background: none; border: 0; padding: 0; font: inherit; color: inherit; text-decoration: underline; cursor: pointer; }
+  .link-button:disabled, .plan-cta:disabled { opacity: .6; cursor: default; }
+  .billing-message.error { border-color: #7f2d2d; color: #f3b4b4; }
+  .billing-message.ok { border-color: #4d7c0f; color: #d9f99d; }
+
   /* Info notice below cards */
   .pricing-notice {
     max-width: 960px; margin: 28px auto 0;
@@ -211,8 +227,15 @@
   <!-- Hero -->
   <section class="pricing-hero">
     <h1>Choose your Flintel plan</h1>
-    <p>Discover high-intent Reddit conversations with AI-powered analysis.<br>Start free — upgrade when paid plans launch.</p>
+    <p>Discover high-intent Reddit conversations with AI-powered analysis.<br>Start free &mdash; upgrade when you need more search credits.</p>
   </section>
+
+  {% set catalog = plans if plans else [
+      {"plan": "standard", "label": "Standard", "price_usd": 19, "credits": 400},
+      {"plan": "business", "label": "Business", "price_usd": 59, "credits": 1500}] %}
+  {% set current_plan = (billing.plan if billing else "free") %}
+
+  <div id="billing-message" class="billing-message" role="status" aria-live="polite" hidden></div>
 
   <!-- Plan cards -->
   <div class="pricing-cards" role="list">
@@ -225,9 +248,15 @@
       <div class="plan-price-row">
         <span class="plan-price-amount">$0</span>
       </div>
-      <p class="plan-billing-note">Always free — no credit card required</p>
+      <p class="plan-billing-note">Always free &mdash; no credit card required</p>
 
       <ul class="plan-features">
+        <li>
+          <svg class="check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          {{ free_credits or 40 }} search credits per month
+        </li>
         <li>
           <svg class="check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
@@ -250,128 +279,85 @@
           <svg class="check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          Keyword and topic tracking
-        </li>
-        <li>
-          <svg class="check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
           Google and email sign-in
         </li>
       </ul>
 
       {% if user %}
-        <span class="plan-cta current" role="status" aria-label="You are currently on the Free plan">Your current plan</span>
+        {% if current_plan == "free" %}
+          <span class="plan-cta current" role="status" aria-label="You are currently on the Free plan">Your current plan</span>
+        {% else %}
+          <a class="plan-cta outline" href="/">Back to Flintel</a>
+        {% endif %}
       {% else %}
         <a class="plan-cta primary" href="/">Get started free</a>
       {% endif %}
     </article>
 
-    <!-- ── Pro (highlighted) ── -->
-    <article class="plan-card featured" role="listitem" aria-labelledby="plan-pro-name">
-      <span class="plan-badge">Recommended</span>
-      <p class="plan-status">Coming soon</p>
-      <h2 class="plan-name" id="plan-pro-name">Pro</h2>
-      <p class="plan-desc">For founders, marketers, and researchers who need deeper signal.</p>
+    {% for p in catalog %}
+    <!-- ── {{ p.label }} ── -->
+    <article class="plan-card{% if p.plan == "standard" %} featured{% endif %}" role="listitem" aria-labelledby="plan-{{ p.plan }}-name">
+      {% if p.plan == "standard" %}<span class="plan-badge">Recommended</span>{% endif %}
+      <p class="plan-status live">Available now</p>
+      <h2 class="plan-name" id="plan-{{ p.plan }}-name">{{ p.label }}</h2>
+      <p class="plan-desc">{% if p.plan == "standard" %}For founders, marketers, and researchers who search every week.{% else %}For agencies and teams running monitoring at scale.{% endif %}</p>
       <div class="plan-price-row">
-        <span class="plan-price-amount tbd">Pricing TBD</span>
+        <span class="plan-price-amount">${{ p.price_usd }}</span>
+        <span class="plan-price-suffix">/ month</span>
       </div>
-      <p class="plan-billing-note">Join the waitlist for early access &amp; pricing</p>
+      <p class="plan-billing-note">Billed monthly &middot; cancel any time</p>
 
       <ul class="plan-features">
         <li>
           <svg class="check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          Everything in Free
+          {{ "{:,}".format(p.credits) }} search credits per month
         </li>
-        <li class="coming">
-          <svg class="check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Higher monthly search volume
-        </li>
-        <li class="coming">
-          <svg class="check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Advanced intent scoring
-        </li>
-        <li class="coming">
-          <svg class="check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Priority result processing
-        </li>
-        <li class="coming">
-          <svg class="check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Search export (CSV / JSON)
-        </li>
-      </ul>
-
-      <a class="plan-cta outline"
-         href="mailto:hello.flintel@gmail.com?subject=Flintel%20Pro%20%E2%80%94%20Waitlist">
-        Join the waitlist
-      </a>
-    </article>
-
-    <!-- ── Business ── -->
-    <article class="plan-card" role="listitem" aria-labelledby="plan-biz-name">
-      <p class="plan-status">Coming soon</p>
-      <h2 class="plan-name" id="plan-biz-name">Business</h2>
-      <p class="plan-desc">For agencies and teams running monitoring at scale.</p>
-      <div class="plan-price-row">
-        <span class="plan-price-amount tbd">Pricing TBD</span>
-      </div>
-      <p class="plan-billing-note">Contact us to discuss terms</p>
-
-      <ul class="plan-features">
         <li>
           <svg class="check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          Everything in Pro
+          Everything in {% if p.plan == "standard" %}Free{% else %}Standard{% endif %}
         </li>
-        <li class="coming">
+        <li>
           <svg class="check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          Team workspace (multiple seats)
-        </li>
-        <li class="coming">
-          <svg class="check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Bulk topic monitoring
-        </li>
-        <li class="coming">
-          <svg class="check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Custom reporting
-        </li>
-        <li class="coming">
-          <svg class="check" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Priority support
+          Credits renew with each billing period
         </li>
       </ul>
 
-      <a class="plan-cta outline"
-         href="mailto:hello.flintel@gmail.com?subject=Flintel%20Business%20%E2%80%94%20Enquiry">
-        Contact us
-      </a>
+      {% if not user %}
+        <a class="plan-cta primary" href="/">Sign in to subscribe</a>
+        <p class="plan-cta-note">Create a free account or sign in, then come back to subscribe.</p>
+      {% elif current_plan == p.plan %}
+        <span class="plan-cta current" role="status" aria-label="You are currently on the {{ p.label }} plan">Your current plan</span>
+        {% if billing and billing.can_manage %}
+        <p class="plan-cta-note">
+          {% if billing.cancelled and billing.ends_at %}Cancelled &mdash; active until {{ billing.ends_at[:10] }}. {% endif %}
+          <button type="button" class="link-button" data-portal>Manage subscription</button>
+        </p>
+        {% endif %}
+      {% elif current_plan != "free" %}
+        {% if billing and billing.can_manage %}
+        <button type="button" class="plan-cta outline" data-portal>Change plan in billing portal</button>
+        {% else %}
+        <span class="plan-cta current" role="status">You have another plan</span>
+        {% endif %}
+      {% else %}
+        <button type="button" class="plan-cta primary" data-plan="{{ p.plan }}" data-label="Subscribe &mdash; ${{ p.price_usd }}/month"{% if not billing_enabled %} disabled{% endif %}>Subscribe &mdash; ${{ p.price_usd }}/month</button>
+        <p class="plan-cta-note">{% if billing_enabled %}Secure checkout by Lemon Squeezy.{% else %}Checkout isn't available right now. Please try again later.{% endif %}</p>
+      {% endif %}
     </article>
+    {% endfor %}
 
   </div><!-- /pricing-cards -->
 
   <!-- Billing notice -->
   <div class="pricing-notice" role="note">
-    Paid plans are currently in development. The Free plan is fully available with no credit card required.
-    Questions? <a href="mailto:hello.flintel@gmail.com">hello.flintel@gmail.com</a>
+    Payments are processed by Lemon Squeezy; Flintel never sees or stores your card details. Your plan activates once
+    the payment is confirmed, which can take a minute after checkout. Questions? <a href="mailto:hello.flintel@gmail.com">hello.flintel@gmail.com</a>
   </div>
 
 </main>
@@ -383,5 +369,95 @@
   </nav>
 </footer>
 
+<script>
+(function () {
+  var box = document.getElementById('billing-message');
+  function show(text, kind) {
+    if (!box) return;
+    if (!text) { box.hidden = true; box.textContent = ''; box.className = 'billing-message'; return; }
+    box.textContent = text; box.className = 'billing-message' + (kind ? ' ' + kind : ''); box.hidden = false;
+  }
+  var ERRORS = {
+    not_authenticated: 'Please sign in to subscribe.',
+    already_subscribed: 'You already have an active subscription. Use "Manage subscription" to change it.',
+    no_subscription: "We couldn't find a subscription to manage.",
+    invalid_plan: 'That plan is not available.',
+    billing_unavailable: "Checkout isn't available right now. Please try again later.",
+    checkout_failed: "We couldn't start checkout. Please try again in a moment.",
+    forbidden: 'This request was blocked. Reload the page and try again.'
+  };
+  Array.prototype.forEach.call(document.querySelectorAll('button[data-plan]'), function (btn) {
+    btn.addEventListener('click', function () {
+      if (btn.disabled) return;
+      var all = document.querySelectorAll('button[data-plan]');
+      Array.prototype.forEach.call(all, function (b) { b.disabled = true; });
+      btn.textContent = 'Opening secure checkout…';
+      show('');
+      function reset() {
+        Array.prototype.forEach.call(all, function (b) {
+          b.disabled = false; b.textContent = b.getAttribute('data-label');
+        });
+      }
+      fetch('/api/billing/checkout', {
+        method: 'POST', credentials: 'same-origin', headers: { 'Accept': 'application/json' },
+        body: new URLSearchParams({ plan: btn.getAttribute('data-plan') })
+      }).then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, data: d }; });
+      }).then(function (res) {
+        if (res.ok && res.data && res.data.url) { window.location.assign(res.data.url); return; }
+        show(ERRORS[res.data && res.data.error] || ERRORS.checkout_failed, 'error');
+        reset();
+      }).catch(function () {
+        show('Network problem. Check your connection and try again.', 'error');
+        reset();
+      });
+    });
+  });
+
+  // The billing-portal link is pre-signed and short-lived, so it is requested fresh on every click.
+  Array.prototype.forEach.call(document.querySelectorAll('button[data-portal]'), function (btn) {
+    var label = btn.textContent;
+    btn.addEventListener('click', function () {
+      if (btn.disabled) return;
+      btn.disabled = true; btn.textContent = 'Opening billing portal…'; show('');
+      fetch('/api/billing/portal', { credentials: 'same-origin', headers: { 'Accept': 'application/json' } })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, data: d }; }); })
+        .then(function (res) {
+          if (res.ok && res.data && res.data.url) { window.location.assign(res.data.url); return; }
+          show(ERRORS[res.data && res.data.error] || "We couldn't open the billing portal. Please try again in a moment.", 'error');
+          btn.disabled = false; btn.textContent = label;
+        })
+        .catch(function () {
+          show('Network problem. Check your connection and try again.', 'error');
+          btn.disabled = false; btn.textContent = label;
+        });
+    });
+  });
+
+  // Back from checkout: the redirect proves nothing. Ask the server until the verified webhook has activated the plan.
+  if (new URLSearchParams(window.location.search).get('checkout') === 'success') {
+    var tries = 0;
+    show('Thanks! Confirming your payment with our payment provider…');
+    (function poll() {
+      fetch('/api/billing/status', { credentials: 'same-origin', headers: { 'Accept': 'application/json' } })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { status: r.status, data: d }; }); })
+        .then(function (res) {
+          if (res.status === 401) { show('Please sign in to see your subscription.', 'error'); return; }
+          if (res.data && res.data.entitled && res.data.plan && res.data.plan !== 'free') {
+            show('Your ' + res.data.plan.charAt(0).toUpperCase() + res.data.plan.slice(1) + ' plan is active.', 'ok');
+            window.setTimeout(function () { window.location.replace('/billing/upgrade'); }, 1500);
+            return;
+          }
+          if (++tries < 20) { window.setTimeout(poll, 3000); return; }
+          show("We haven't received confirmation of your payment yet. Your plan activates automatically as soon as it is confirmed — reload this page in a minute.");
+        })
+        .catch(function () {
+          if (++tries < 20) { window.setTimeout(poll, 3000); return; }
+          show("We couldn't check your subscription right now. Reload this page in a minute.", 'error');
+        });
+    })();
+  }
+})();
+</script>
 </body>
 </html>
