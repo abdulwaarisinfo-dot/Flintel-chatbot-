@@ -119,6 +119,7 @@ from index import (
     _NO_DATA_CLAUDE_FORMATS,
     _patch_post_urls_into_answer,
     _usage_attribution,
+    _usage_request_id,                  # (GUEST GATE) the per-request id that owns a guest reservation
     _inject_website_context_into_answer,
     _finalize_answer_and_results,       # <-- Bug 2b helper from index.py
     _resolved_request_note,             # <-- MULTI-TURN CONTEXT: needed in stream_answer()
@@ -144,9 +145,13 @@ from index import (
     add_chat_message_to_chat,
     save_signal_results_to_chat,
     save_claude_answer_to_chat,
+    save_answer_for_gate,               # (GUEST GATE) compare-and-set answer save for gated guests
     save_last_website_context_to_chat,  # <-- WEBSITE INTELLIGENCE: needed in search()
     save_message_feedback,
     migrate_anon_chats_to_owner,
+    peek_guest_id,                      # (GUEST GATE) this browser's guest id (never creates one)
+    _read_guest_cookie,                 # (GUEST GATE) proves the browser really returned its signed identity cookie
+    _set_on_latest_message,             # (GUEST GATE) stamps a running guest search when its owner signs in
     _is_owner_busy,
     _set_owner_busy,                    # <-- FIX: was missing, used in stream_answer()
     _clear_owner_busy,                  # <-- FIX: was missing, used in stream_answer()
@@ -163,6 +168,8 @@ from config import URL_PROMPT_MERGE_ENABLED, URL_PROMPT_MAX_KEYWORDS, URL_PROMPT
 import search_credits   # (SEARCH CREDITS) free-plan monthly search credits
 import billing          # (BILLING) Lemon Squeezy checkout + webhook -> plan entitlements
 import credit_cost      # (USAGE-BASED CREDITS) validates the router's effort/cost proposal; no LLM
+import guest_gate       # (GUEST GATE) server-side limit on a visitor's genuine searches
+import uuid as _uuid
 from jinja2 import pass_context   # (HOME UI) context-aware template helpers
 
 
@@ -581,6 +588,186 @@ def _delete_empty_chat(owner_key, chat_id, request):
         log.warning(f"Empty-chat cleanup failed for chat_id={chat_id}: {exc}")
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# (GUEST GATE) A visitor who is not signed in may complete GUEST_SEARCH_LIMIT genuine searches
+# (guest_gate.py). The denial values are authoritative for the browser, which opens exactly one
+# popup from them — never from a status code alone:
+#   X-Flintel-Denial: guest-auth-required   403  guest used the allowance  -> sign-up / sign-in modal
+#   X-Flintel-Denial: credits-exhausted     429  signed-in user, no credits -> upgrade modal (unchanged)
+#   X-Flintel-Denial: guest-search-in-progress / guest-gate-unavailable      -> inline message only
+# ─────────────────────────────────────────────────────────────────────────────
+GUEST_AUTH_MESSAGE = "You've used your free search. Create your free account to continue."
+GUEST_BUSY_MESSAGE = "Your first search is still finishing. It will appear in your conversation as soon as it is ready."
+GUEST_IDENTITY_MESSAGE = ("We couldn't confirm your browser's session. Please make sure cookies are enabled, "
+                          "refresh the page and try again.")
+GUEST_UNAVAILABLE_MESSAGE = "Searching is temporarily unavailable. Please try again in a moment."
+
+
+def _guest_reserve(request, owner_key, topic_key, chat_id=None):
+    """(token, denial). token: the reservation owned by this request (None when the gate does not apply).
+    denial: a guest_gate.Decision to answer with, or None. Called right before a genuine search is accepted
+    (before its credit reservation / job enqueue). Fails closed if the gate store is unavailable."""
+    try:
+        owner = owner_key or get_owner(request)[0]
+    except Exception as exc:
+        log.warning(f"Guest gate: owner lookup failed (not applied): {exc}")
+        return None, None
+    if not guest_gate.is_guest_owner(owner):
+        return None, None
+    try:
+        gate = guest_gate.default_gate()
+    except Exception as exc:
+        log.warning(f"Guest gate unavailable: {type(exc).__name__}")
+        return None, guest_gate.Decision(guest_gate.UNAVAILABLE)
+    if gate is None:
+        return None, None
+    if not _guest_identity_confirmed(request, owner):
+        return None, guest_gate.Decision(guest_gate.IDENTITY)
+    token = _usage_request_id() or _uuid.uuid4().hex
+    decision = gate.reserve(owner, token, topic_key, chat_id)
+    if decision.kind != guest_gate.ALLOW:
+        return None, decision
+    if decision.resumed:
+        return None, None       # a retry of a search that is still being worked on: the original request owns the reservation
+    return token, None
+
+
+def _guest_identity_confirmed(request, owner):
+    """Fail closed: a guest search is only admitted when the browser really returned the signed identity cookie
+    for THIS id. A browser that refuses or drops cookies would otherwise get a brand-new identity — and a fresh
+    allowance — on every request. (The denial response itself sets the cookie, so a normal visitor is fine on the
+    next attempt.) Tampered / missing cookies never reach the gate store."""
+    try:
+        return _read_guest_cookie(request) == owner
+    except Exception:
+        return False
+
+
+def _gate_owner(request, owner_key):
+    try:
+        return owner_key or get_owner(request)[0]
+    except Exception:
+        return None
+
+
+def _guest_release(owner_key, token):
+    """Frees this request's guest reservation (nothing is counted). No-op without a token."""
+    if token:
+        guest_gate.on_search_incomplete(owner_key, token)
+
+
+def _guest_gate_denial_response(request, decision, query, owner_key=None, cleanup_chat=None):
+    """The response for a search the guest gate refused. 403 guest-auth-required opens the sign-up modal;
+    busy / unavailable are plain inline messages (neither popup)."""
+    if cleanup_chat and owner_key:
+        _delete_empty_chat(owner_key, cleanup_chat, request)
+    if decision.kind == guest_gate.AUTH_REQUIRED:
+        status_code, denial, message, headers = 403, "guest-auth-required", GUEST_AUTH_MESSAGE, {}
+    elif decision.kind == guest_gate.BUSY:
+        status_code, denial, message, headers = 409, "guest-search-in-progress", GUEST_BUSY_MESSAGE, {}
+    elif decision.kind == guest_gate.IDENTITY:
+        status_code, denial, message, headers = 403, "guest-identity-required", GUEST_IDENTITY_MESSAGE, {}
+    else:
+        status_code, denial, message, headers = 503, "guest-gate-unavailable", GUEST_UNAVAILABLE_MESSAGE, {"Retry-After": "30"}
+    headers = {**headers, "X-Flintel-Denial": denial}
+    chats_safe = []
+    try:
+        owner = owner_key or get_owner(request)[0]
+        chats_safe = get_user_chat_list(owner)
+    except Exception as exc:
+        log.warning(f"Chat lookup failed while rendering a guest-gate response: {exc}")
+    return templates.TemplateResponse(
+        request,
+        "index.html",
+        {
+            "error": message,
+            "denial": denial,
+            "query": query,
+            "user": get_current_user(request),
+            "chats": chats_safe,
+            "chat_id": request.session.get("active_chat_id"),
+            "guest_gate_state": "auth_required" if decision.kind == guest_gate.AUTH_REQUIRED else None,
+        },
+        status_code=status_code,
+        headers=headers,
+    )
+
+
+def _guest_gate_precheck(request, query, owner_key, cleanup_chat):
+    """Optimization only (read-only): refuses an already-used / busy guest before the costly website fetch and
+    keyword work. The atomic reserve at acceptance stays the only authority. None means "go on"."""
+    try:
+        owner = owner_key or get_owner(request)[0]
+        if not guest_gate.is_guest_owner(owner):
+            return None
+        gate = guest_gate.default_gate()
+        if gate is None:
+            return None
+        if not _guest_identity_confirmed(request, owner):
+            return _guest_gate_denial_response(request, guest_gate.Decision(guest_gate.IDENTITY), query, owner,
+                                               cleanup_chat=cleanup_chat)
+        decision = gate.peek(owner)
+    except Exception as exc:
+        log.warning(f"Guest gate precheck skipped: {exc}")
+        return None
+    if decision.kind == guest_gate.ALLOW:
+        return None
+    return _guest_gate_denial_response(request, decision, query, owner, cleanup_chat=cleanup_chat)
+
+
+def _guest_stop_events(chat_id, owner_key, topic_key, verdict, gate_key, token=None):
+    """SSE events for a search the gate stopped before / instead of delivering its answer. ABANDON / DISCARD: a newer search
+    owns the reservation (or the allowance is used) - the explicit superseded notice is saved so the turn finishes,
+    and nothing from the superseded run is saved or shown. DEFER: the gate store is unavailable - nothing is saved,
+    the turn stays pending for a later retry."""
+    if verdict == guest_gate.WAIT:
+        # Another runner (a first tab, a retry, the worker) is generating this very answer: no second model call.
+        # Wait for its stored answer (bounded) and replay it; the page's own reconnect logic covers a longer wait.
+        deadline = time.time() + RESPONSE_TIMEOUT
+        while time.time() < deadline:
+            try:
+                fresh = get_chat_session(chat_id, owner_key)
+                row = next((m for m in reversed((fresh or {}).get("messages") or []) if m.get("topic_key") == topic_key), None)
+            except Exception as exc:
+                log.warning(f"Polling for the running guest answer failed for topic_key={topic_key}: {exc}")
+                row = None
+            if row and row.get("claude_answer"):
+                yield f"data: {json.dumps({'delta': row['claude_answer']})}\n\n"
+                yield f"data: {json.dumps({'done': True, 'results': row.get('results') or [], **_guest_done_extra(gate_key, chat_id)})}\n\n"
+                return
+            time.sleep(1)
+        yield f"data: {json.dumps({'error': 'still working'})}\n\n"
+    elif verdict in (guest_gate.ABANDON, guest_gate.DISCARD):
+        note = guest_gate.superseded_answer()
+        stored = None
+        try:
+            # compare-and-set: the notice can never overwrite an answer another runner already stored
+            if save_answer_for_gate(chat_id, owner_key, topic_key, note, gate_key, token):
+                save_signal_results_to_chat(chat_id, owner_key, topic_key, [])
+            else:
+                stored = True
+        except Exception as exc:
+            log.warning(f"Saving the superseded-search notice failed for topic_key={topic_key}: {exc}")
+        if stored:                          # a real answer won meanwhile: show that one, never the notice
+            yield from _guest_stop_events(chat_id, owner_key, topic_key, guest_gate.WAIT, gate_key, token)
+            return
+        yield f"data: {json.dumps({'delta': note})}\n\n"
+        yield f"data: {json.dumps({'done': True, 'results': [], **_guest_done_extra(gate_key, chat_id)})}\n\n"
+    else:
+        yield f"data: {json.dumps({'error': 'temporarily unavailable'})}\n\n"
+
+
+def _guest_is_gated(gate_key, token) -> bool:
+    """True for a search the guest gate governs (a guest identity with a request token, gate on)."""
+    return bool(token) and guest_gate.is_guest_owner(gate_key) and guest_gate.default_gate() is not None
+
+
+def _guest_done_extra(owner_key, chat_id):
+    """Extra fields for the stream's final `done` event: tells the page the guest has now used the allowance so
+    it opens the sign-up modal AFTER the answer is shown. Read-only; any error means no flag."""
+    return {"guest_gate": "auth_required"} if guest_gate.auth_required_for(owner_key, chat_id) else {}
+
+
 def _credit_decision_response(request, decision, query, owner_key=None, cleanup_chat=None):
     """Turn a search_credits.Decision into the route's response. Denials are
     HTTP 429 / 503 with X-Flintel-Denial; duplicate and reconciliation answers
@@ -596,6 +783,13 @@ def _credit_decision_response(request, decision, query, owner_key=None, cleanup_
         retry_after = max(1, int((decision.resets_at - datetime.now(timezone.utc)).total_seconds()))
         status_code, denial = 429, "credits-exhausted"
         headers = {"X-Flintel-Denial": denial, "Retry-After": str(retry_after)}
+        try:
+            if guest_gate.is_guest_owner(owner_key or get_owner(request)[0]):
+                # (GUEST GATE) the existing contract (429 + credits-exhausted) is unchanged, but the server says
+                # WHO was denied, so a visitor who is not signed in is sent to sign-up and never to the upgrade popup
+                headers["X-Flintel-Audience"] = "guest"
+        except Exception:
+            pass
     elif kind == "unavailable":
         message = search_credits.UNAVAILABLE_MESSAGE
         status_code, denial = 503, "credit-store-unavailable"
@@ -644,6 +838,12 @@ def _run_credited_search(request, store, rid, query, topic_key, owner_key, owner
         return _credit_decision_response(request, search_credits.Decision("unavailable"), query, owner_key)
     rid = rid or search_credits.request_id(owner_key, None)   # lookup failed earlier: a fresh, non-deduplicated id
 
+    # (GUEST GATE) a visitor who is not signed in: reserve the one genuine search BEFORE any credit is
+    # reserved or job queued. Refused -> nothing is charged or enqueued.
+    guest_token, guest_denial = _guest_reserve(request, owner_key, topic_key, active_chat_id)
+    if guest_denial is not None:
+        return _guest_gate_denial_response(request, guest_denial, query, owner_key, cleanup_chat=active_chat_id)
+
     def _enqueue(credit_request_id):
         result = enqueue_search_job(topic_key, keywords, targeting_platform, credit_request_id=credit_request_id,
                                     attribute=search_credits.job_attribution_enabled())
@@ -659,15 +859,22 @@ def _run_credited_search(request, store, rid, query, topic_key, owner_key, owner
     # entry that already exists for this request id keeps its stored cost.
     cost = credit_cost.select_cost(routed)
     try:
-        ticket = store.reserve(owner_key, owner_type, rid, topic_key, active_chat_id, expects_job,
-                               retry_message=message_kwargs, cost=cost.cost, effort=cost.effort,
-                               cost_reason=cost.reason)
-        if isinstance(ticket, search_credits.Decision):
-            return _credit_decision_response(request, ticket, query, owner_key, cleanup_chat=active_chat_id)
-        decision = store.run(ticket, _enqueue if expects_job else None, message_kwargs)
-    except search_credits.CreditStoreError as exc:
-        log.warning(f"Credit store unavailable for this search: {exc}")
-        decision = search_credits.Decision("unavailable", cleanup_ok=False)
+        try:
+            ticket = store.reserve(owner_key, owner_type, rid, topic_key, active_chat_id, expects_job,
+                                   retry_message=message_kwargs, cost=cost.cost, effort=cost.effort,
+                                   cost_reason=cost.reason)
+            if isinstance(ticket, search_credits.Decision):
+                _guest_release(owner_key, guest_token)          # (GUEST GATE) refused: nothing was started
+                return _credit_decision_response(request, ticket, query, owner_key, cleanup_chat=active_chat_id)
+            decision = store.run(ticket, _enqueue if expects_job else None, message_kwargs)
+        except search_credits.CreditStoreError as exc:
+            log.warning(f"Credit store unavailable for this search: {exc}")
+            decision = search_credits.Decision("unavailable", cleanup_ok=False)
+    except BaseException:
+        _guest_release(owner_key, guest_token)                  # (GUEST GATE) never leave a dead reservation
+        raise
+    if decision.kind != "done":
+        _guest_release(owner_key, guest_token)                  # (GUEST GATE) not accepted: nothing counted
     if decision.kind == "done" and after_save is not None:
         try:
             after_save(decision.chat_id)
@@ -818,6 +1025,7 @@ def home(request: Request):
     request.session.pop("active_chat_id", None)
 
     chats = []
+    owner_key = None
     try:
         owner_key, _owner_type = get_owner(request)
         chats = get_user_chat_list(owner_key)
@@ -833,6 +1041,7 @@ def home(request: Request):
             "chat_id": None,
             "chat": None,
             "pending_stream_topic_key": None,
+            "guest_gate_state": guest_gate.auth_required_for(owner_key),   # (GUEST GATE) informational only
             **_seo_context(request),
         },
     )
@@ -1384,8 +1593,10 @@ def search(
                 if evidence:
                     # (SEARCH CREDITS) with evidence in hand this turn is certainly a
                     # search: skip keyword generation for an owner already at the limit
-                    early_denial = _credit_precheck_response(request, credit_store, credit_rid, query,
-                                                             owner_key, active_chat_id, routed=routed)
+                    early_denial = _guest_gate_precheck(request, query, owner_key, active_chat_id)   # (GUEST GATE)
+                    if early_denial is None:
+                        early_denial = _credit_precheck_response(request, credit_store, credit_rid, query,
+                                                                 owner_key, active_chat_id, routed=routed)
                     if early_denial is not None:
                         return early_denial
                     if evidence.get("evidence_quality") != "failed":
@@ -1441,8 +1652,16 @@ def search(
                             expects_job=bool(keywords), after_save=_save_site_ctx, routed=routed,
                         )
 
+                    # (GUEST GATE) legacy path (credit kill switch on): reserve before any job is queued
+                    guest_token, guest_denial = _guest_reserve(request, owner_key, topic_key, active_chat_id)
+                    if guest_denial is not None:
+                        return _guest_gate_denial_response(request, guest_denial, query, _gate_owner(request, owner_key))
                     if keywords:
-                        enqueue_search_job(topic_key, keywords, targeting_platform)
+                        try:
+                            enqueue_search_job(topic_key, keywords, targeting_platform)
+                        except BaseException:
+                            _guest_release(_gate_owner(request, owner_key), guest_token)
+                            raise
 
                     redirect_chat_id = None
                     try:
@@ -1640,7 +1859,7 @@ def search(
                 # fetch_website_text() + extract_keywords_from_website()
                 # path exactly as it worked before this feature — a pure
                 # safety net, no new failure mode.
-                if credit_store is not None:
+                if credit_store is not None or guest_gate.configured_limit() > 0:
                     # (SEARCH CREDITS) this branch always ends as a search unless the
                     # time-range step later asks a question; parse_time_range is pure,
                     # so evaluating it here gives the same answer it gives below
@@ -1649,8 +1868,10 @@ def search(
                     except Exception:
                         _peek_range = None
                     if not isinstance(_peek_range, timerange.Clarification):
-                        early_denial = _credit_precheck_response(request, credit_store, credit_rid, query,
-                                                                 owner_key, active_chat_id, routed=routed)
+                        early_denial = _guest_gate_precheck(request, query, owner_key, active_chat_id)   # (GUEST GATE)
+                        if early_denial is None:
+                            early_denial = _credit_precheck_response(request, credit_store, credit_rid, query,
+                                                                     owner_key, active_chat_id, routed=routed)
                         if early_denial is not None:
                             return early_denial
                 website_evidence = None
@@ -1963,10 +2184,18 @@ def search(
                 after_save=_save_main_ctx, routed=routed,
             )
 
+        # (GUEST GATE) legacy path (credit kill switch on): reserve before any job is queued
+        guest_token, guest_denial = _guest_reserve(request, owner_key, topic_key, active_chat_id)
+        if guest_denial is not None:
+            return _guest_gate_denial_response(request, guest_denial, query, _gate_owner(request, owner_key))
         if not reuse_website_keywords:
-            enqueue_search_job(topic_key, keywords, targeting_platform)
-            if time_range_obj is not None:
-                record_job_time_range(topic_key, time_range_obj)   # (DATE/TIME) hint for the collector
+            try:
+                enqueue_search_job(topic_key, keywords, targeting_platform)
+                if time_range_obj is not None:
+                    record_job_time_range(topic_key, time_range_obj)   # (DATE/TIME) hint for the collector
+            except BaseException:
+                _guest_release(_gate_owner(request, owner_key), guest_token)
+                raise
 
         # Chat/session bookkeeping is best-effort on top of the above: if
         # anything here fails — a stale/corrupt session cookie, a hiccup on the
@@ -2074,8 +2303,12 @@ def new_chat(request: Request, title: str = Form(None)):
     return RedirectResponse(url="/", status_code=303)
 
 
+# (GUEST GATE) the only sign-in error codes a redirect may carry back to a conversation page
+GUEST_AUTH_ERRORS = {"google_failed": "Google sign-in didn't complete. Please try again, or sign in with your email."}
+
+
 @app.get("/chat/{chat_id}")
-def view_chat(request: Request, chat_id: str, background_tasks: BackgroundTasks):
+def view_chat(request: Request, chat_id: str, background_tasks: BackgroundTasks, auth_error: str = None):
     """Opens a specific past chat and makes it active again — this is how
     a returning user (or a user who just logged back in with their email)
     gets the same chat back, including any previously matched post cards
@@ -2140,6 +2373,14 @@ def view_chat(request: Request, chat_id: str, background_tasks: BackgroundTasks)
             "chat": chat,
             "chats": get_user_chat_list(owner_key),
             "pending_stream_topic_key": pending_stream_topic_key,
+            # (GUEST GATE) set only for a guest who has used the allowance AND whose completed search is this
+            # conversation: the page shows the answer, then opens the sign-up modal. A refresh keeps it.
+            # While one of its searches is still unanswered (e.g. a refresh after a crash between the count and the
+            # stored answer) the modal waits: the stream delivers the answer first and then opens it.
+            "guest_gate_state": (None if any(m.get("message_type") != "chat" and m.get("claude_answer") is None
+                                             for m in (chat.get("messages") or []))
+                                 else guest_gate.auth_required_for(owner_key, chat_id)),
+            "guest_auth_error": GUEST_AUTH_ERRORS.get(auth_error or ""),
             # (PLATFORM PERSISTENCE) the chat reopens with its own platform choice;
             # older chats fall back to their latest search's platform.
             "selected_platform": _chat_platform_display(chat),
@@ -2297,6 +2538,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
         msg.get("evidence_required") or MIN_ANALYSIS_EVIDENCE,
         MAX_ANALYSIS_EVIDENCE,
     )
+    _gk = guest_gate.gate_owner(owner_key, msg)      # (GUEST GATE) the identity the gate knows this search by
 
     # Already generated/cached earlier (via the normal blocking path, or
     # a previous call to this same route) — replay it instead of ever
@@ -2324,7 +2566,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # post cards the same way a freshly-streamed one does. New
             # field only — the existing "done": true contract is
             # untouched for any client that doesn't read it.
-            yield f"data: {json.dumps({'done': True, 'results': msg.get('results') or []})}\n\n"
+            yield f"data: {json.dumps({'done': True, 'results': msg.get('results') or [], **_guest_done_extra(_gk, chat_id)})}\n\n"
         return StreamingResponse(_cached(), media_type="text/event-stream")
 
     # (WEBSITE INTELLIGENCE) A website-only message (BEHAVIOR 1 in
@@ -2391,14 +2633,21 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
 
                 if resolved_answer is not None:
                     yield f"data: {json.dumps({'delta': resolved_answer})}\n\n"
-                    yield f"data: {json.dumps({'done': True, 'results': resolved_results})}\n\n"
+                    yield f"data: {json.dumps({'done': True, 'results': resolved_results, **_guest_done_extra(_gk, chat_id)})}\n\n"
                     return
                 # else: fall through to the normal path below.
                 if turn_lease["token"] is None:   # (STREAM LEASE) the worker let go (or stalled): take the turn
                     turn_lease["token"] = turn_finisher.hold_for_stream(chat_id, owner_key, topic_key, force=True)
 
             _set_owner_busy(owner_key)
+            _lease = {}                                      # (GUEST GATE) this runner's work lease (see guest_gate)
             try:
+                # (GUEST GATE) ask the gate BEFORE any model call: a background retry or a superseded search
+                # produces nothing while another search of this visitor is admitted
+                _verdict = guest_gate.on_work_start(_gk, msg.get("request_id"), topic_key, chat_id, _lease)
+                if _verdict != guest_gate.PROCEED:
+                    yield from _guest_stop_events(chat_id, owner_key, topic_key, _verdict, _gk, msg.get("request_id"))
+                    return
                 # Fire the SAME Google-fallback pattern used elsewhere in
                 # this route (fire-once guard + background thread), so
                 # broader Reddit-evidence collection for this topic keeps
@@ -2416,6 +2665,10 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     msg["google_fallback_triggered"] = True
 
                 ev = msg.get("website_evidence") or {}
+                if not guest_gate.on_work_renew(_gk, msg.get("request_id"), _lease, force=True):
+                    # taken over by another runner: no model call, nothing saved or shown by this one
+                    yield from _guest_stop_events(chat_id, owner_key, topic_key, guest_gate.WAIT, _gk, msg.get("request_id"))
+                    return
                 try:
                     answer = website_intelligence.build_website_insight_answer(
                         url=ev.get("url") or msg["query"],
@@ -2426,10 +2679,36 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     )
                 except Exception as exc:
                     log.warning(f"Website-insight answer generation failed for topic_key={topic_key}: {exc}")
+                    guest_gate.on_search_incomplete(_gk, msg.get("request_id"))   # (GUEST GATE) not completed
                     yield f"data: {json.dumps({'error': 'analysis failed'})}\n\n"
                     return
 
                 answer = (answer or "").strip()
+
+                # (GUEST GATE) counting is the commit: only the reservation's owner may save / show the answer
+                if answer:
+                    _verdict = guest_gate.on_answer_ready(_gk, chat_id, topic_key, msg.get("request_id"), answer,
+                                                          lease=_lease)
+                    if _verdict != guest_gate.DELIVER:
+                        yield from _guest_stop_events(chat_id, owner_key, topic_key, _verdict, _gk, msg.get("request_id"))
+                        return
+
+                # (GUEST GATE) The winning answer is selected and SAVED (compare-and-set) BEFORE the first chunk is
+                # sent, so only the stored answer can reach a browser; a runner that lost replays the stored one.
+                answer_saved_first = False
+                if answer and _guest_is_gated(_gk, msg.get("request_id")):
+                    try:
+                        _won = save_answer_for_gate(chat_id, owner_key, topic_key, answer, _gk, msg.get("request_id"))
+                    except Exception as exc:
+                        log.warning(f"Saving the website-only guest answer failed for topic_key={topic_key}: {exc}")
+                        guest_gate.on_delivery_failed(_gk, msg.get("request_id"))
+                        guest_gate.on_search_incomplete(_gk, msg.get("request_id"))
+                        yield f"data: {json.dumps({'error': 'temporarily unavailable'})}\n\n"
+                        return
+                    if not _won:
+                        yield from _guest_stop_events(chat_id, owner_key, topic_key, guest_gate.WAIT, _gk, msg.get("request_id"))
+                        return
+                    answer_saved_first = True
 
                 # (SIMULATED-STREAM FIX, same pattern) Pace the final
                 # string out in small pieces to reproduce the live-typing
@@ -2441,16 +2720,23 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                         if STREAM_CHUNK_DELAY_SECONDS > 0:
                             time.sleep(STREAM_CHUNK_DELAY_SECONDS)
 
+                answer_saved = answer_saved_first
                 if answer:
                     try:
-                        save_claude_answer_to_chat(chat_id, owner_key, topic_key, answer)
+                        if not answer_saved_first:
+                            save_claude_answer_to_chat(chat_id, owner_key, topic_key, answer)
+                            answer_saved = True
                         save_signal_results_to_chat(chat_id, owner_key, topic_key, [])
                         append_to_chat_summary(chat_id, owner_key, msg["query"], answer)
                     except Exception as exc:
                         log.warning(f"Caching website-only streamed answer failed for topic_key={topic_key}: {exc}")
 
-                yield f"data: {json.dumps({'done': True, 'results': []})}\n\n"
+                # (GUEST GATE) already counted above when it was delivered; an empty answer frees the reservation
+                if not answer_saved:
+                    guest_gate.on_search_incomplete(_gk, msg.get("request_id"))
+                yield f"data: {json.dumps({'done': True, 'results': [], **_guest_done_extra(_gk, chat_id)})}\n\n"
             finally:
+                guest_gate.on_work_end(_gk, msg.get("request_id"), _lease)    # give the work lease back (any exit)
                 _clear_owner_busy(owner_key)
 
         return StreamingResponse(_with_turn_lease(_website_only_generator()), media_type="text/event-stream")
@@ -2565,7 +2851,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             if resolved_answer is not None:
                 yield "retry: 86400000\n\n"
                 yield f"data: {json.dumps({'delta': resolved_answer})}\n\n"
-                yield f"data: {json.dumps({'done': True, 'results': resolved_results})}\n\n"
+                yield f"data: {json.dumps({'done': True, 'results': resolved_results, **_guest_done_extra(_gk, chat_id)})}\n\n"
                 return
             if turn_lease["token"] is None:   # (STREAM LEASE) the worker let go (or stalled): take the turn
                 turn_lease["token"] = turn_finisher.hold_for_stream(chat_id, owner_key, topic_key, force=True)
@@ -2588,12 +2874,19 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
         # after the answer is saved) exactly once, so the flag is never
         # left set no matter how this generator ends.
         _set_owner_busy(owner_key)
+        _lease = {}                                          # (GUEST GATE) this runner's work lease (see guest_gate)
         try:
             # (SSE RECONNECT-LOOP FIX) Same "retry:" safety net as the
             # _cached() branch above — see that branch's comment for the
             # full rationale. Sent once, immediately, before any other
             # SSE payload in this stream.
             yield "retry: 86400000\n\n"
+
+            # (GUEST GATE) ask the gate BEFORE the scan / any model call (see the website-only branch above)
+            _verdict = guest_gate.on_work_start(_gk, msg.get("request_id"), topic_key, chat_id, _lease)
+            if _verdict != guest_gate.PROCEED:
+                yield from _guest_stop_events(chat_id, owner_key, topic_key, _verdict, _gk, msg.get("request_id"))
+                return
 
             # (SCAN FIX, STEP 4 — NON-BLOCKING) Show 0% right away, then start
             # the evidence scan in the BACKGROUND via acquire_scan() instead of
@@ -2776,6 +3069,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                         yield f"data: {json.dumps({'search_progress': search_progress_holder['content']})}\n\n"
                         search_progress_sent = True
 
+                    guest_gate.on_work_renew(_gk, msg.get("request_id"), _lease)    # keeps a legitimate long wait leased
                     _futures_wait([handle.future], timeout=1.5)
 
                 if scan_timed_out:
@@ -2861,6 +3155,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     if _strict_wait and _strict_done():
                         break
 
+                    guest_gate.on_work_renew(_gk, msg.get("request_id"), _lease)    # keeps a legitimate long wait leased
                     time.sleep(2)
 
                     try:
@@ -2949,6 +3244,10 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                         flintel.build_combined_source_context(len(matched), len(google_results))
                     )
                 extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
+                if not guest_gate.on_work_renew(_gk, msg.get("request_id"), _lease, force=True):
+                    # taken over by another runner: no model call, nothing saved or shown by this one
+                    yield from _guest_stop_events(chat_id, owner_key, topic_key, guest_gate.WAIT, _gk, msg.get("request_id"))
+                    return
                 with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=topic_key,
                                         request_id=msg.get("request_id")):
                     full_answer = analyze_with_claude(msg["query"], merged_pool, extra_context=extra_ctx)
@@ -2966,10 +3265,42 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 )
             except Exception as exc:
                 log.warning(f"Streaming Claude analysis failed for topic_key={topic_key}: {exc}")
+                guest_gate.on_search_incomplete(_gk, msg.get("request_id"))   # (GUEST GATE) not completed
                 yield f"data: {json.dumps({'error': 'analysis failed'})}\n\n"
                 return
 
             full_answer = (full_answer or "").strip()
+
+            # (GUEST GATE) Counting is the commit. A scan-deadline / timeout answer is built from partial evidence
+            # and is never counted (only ownership is checked); every other answer is counted HERE, before a single
+            # character is shown or saved, so a superseded worker can neither save nor show its answer.
+            _counts = not (scan_timed_out or tier3_triggered)
+            if full_answer and not _counts:
+                full_answer = guest_gate.mark_limited(_gk, msg.get("request_id"), full_answer)   # "limited results" notice
+            if full_answer:
+                _verdict = guest_gate.on_answer_ready(_gk, chat_id, topic_key, msg.get("request_id"), full_answer,
+                                                      counted=_counts, lease=_lease)
+                if _verdict != guest_gate.DELIVER:
+                    yield from _guest_stop_events(chat_id, owner_key, topic_key, _verdict, _gk, msg.get("request_id"))
+                    return
+
+            # (GUEST GATE) The winning answer is selected and SAVED (compare-and-set) BEFORE the first chunk is sent,
+            # so only the stored answer can reach a browser; a runner that lost replays the stored one instead.
+            saved_first = False
+            if full_answer and _guest_is_gated(_gk, msg.get("request_id")):
+                try:
+                    _won = save_answer_for_gate(chat_id, owner_key, topic_key, full_answer, _gk, msg.get("request_id"))
+                except Exception as exc:
+                    log.warning(f"Saving the guest answer failed for topic_key={topic_key}: {exc}")
+                    if _counts:
+                        guest_gate.on_delivery_failed(_gk, msg.get("request_id"))     # nothing was shown: take the count back
+                    guest_gate.on_search_incomplete(_gk, msg.get("request_id"))
+                    yield f"data: {json.dumps({'error': 'temporarily unavailable'})}\n\n"
+                    return
+                if not _won:
+                    yield from _guest_stop_events(chat_id, owner_key, topic_key, guest_gate.WAIT, _gk, msg.get("request_id"))
+                    return
+                saved_first = True
 
             # (SIMULATED-STREAM FIX) Step 3: pace the now-final string back out
             # in small pieces to reproduce the live-typing impression.
@@ -2983,9 +3314,12 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
             # Caching — identical calls/behavior to before, just now operating
             # on the same already-patched, already-finalized string the user
             # just watched arrive.
+            guest_answer_saved = saved_first
             if full_answer:
                 try:
-                    save_claude_answer_to_chat(chat_id, owner_key, topic_key, full_answer)
+                    if not saved_first:
+                        save_claude_answer_to_chat(chat_id, owner_key, topic_key, full_answer)
+                        guest_answer_saved = True
                     append_to_chat_summary(chat_id, owner_key, msg["query"], full_answer, keywords=msg.get("keywords"),
                                            resolved_query=msg.get("resolved_query"))
                 except Exception as exc:
@@ -3001,7 +3335,12 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                 except Exception as exc:
                     log.warning(f"Saving matched results failed for topic_key={topic_key}: {exc}")
 
-            yield f"data: {json.dumps({'done': True, 'results': results_to_save})}\n\n"
+            # (GUEST GATE) A genuine search is complete only when its real answer was saved and the scan did
+            # not hit its deadline: a timeout answer is built from a partial pool and is NOT proof of a
+            # completed search, so the guest keeps the allowance (the reservation is released).
+            if not (guest_answer_saved and _counts):
+                guest_gate.on_search_incomplete(_gk, msg.get("request_id"))   # no-op once counted (slot already cleared)
+            yield f"data: {json.dumps({'done': True, 'results': results_to_save, **_guest_done_extra(_gk, chat_id)})}\n\n"
         finally:
             # (SCAN FIX, STEP 4) Release the scan handle on EVERY exit path
             # (normal finish, error, client disconnect closing the generator).
@@ -3014,6 +3353,7 @@ def stream_answer(request: Request, chat_id: str, topic_key: str):
                     handle.release()
                 except Exception as exc:
                     log.warning(f"handle.release() failed for topic_key={topic_key}: {exc}")
+            guest_gate.on_work_end(_gk, msg.get("request_id"), _lease)    # give the work lease back (any exit)
             _clear_owner_busy(owner_key)
 
     return StreamingResponse(_with_turn_lease(event_generator()), media_type="text/event-stream")
@@ -3066,18 +3406,79 @@ async def message_feedback(request: Request, chat_id: str):
 # ROUTES — AUTH: GOOGLE OAUTH
 # ─────────────────────────────────────────────────────────────────────────────
 
+def _wants_json(request: Request) -> bool:
+    """The sign-up modal posts with fetch() and Accept: application/json; a plain form post is unchanged."""
+    return "application/json" in (request.headers.get("accept") or "").lower()
+
+
+def _auth_json(payload, status_code=200):
+    from fastapi.responses import JSONResponse
+    return JSONResponse(payload, status_code=status_code)
+
+
+def _guest_resume_chat(guest_id, resume_requested):
+    """(GUEST GATE) The conversation of the guest's completed search, to reopen after sign-in. Taken from the
+    SERVER-held gate record of this browser's guest id — never from the client — and only when the guest
+    actually used the allowance and asked to resume. None otherwise."""
+    if not resume_requested or not guest_id:
+        return None
+    return guest_gate.resume_chat_id(guest_id)
+
+
+def _hand_over_guest_search(guest_id, email):
+    """(GUEST GATE) A visitor signed in while a search of theirs is still running. The chat has just moved to the
+    account, so the search will finish under the account's name; stamping its message with the guest id makes the
+    pipeline keep reporting to the SAME reservation (counted on success, released by its own token on failure). The
+    account is not charged and the search is not run again. Best effort - never blocks the sign-in."""
+    try:
+        live = guest_gate.on_guest_authenticated(guest_id)
+        if live and live.get("chat_id") and live.get("topic_key"):
+            _set_on_latest_message(live["chat_id"], email, live["topic_key"], {"guest_gate_owner": guest_id})
+    except Exception as exc:
+        log.warning(f"Handing the running guest search over failed (sign-in still succeeded): {exc}")
+
+
+def _post_auth_target(request: Request, resume_chat, email) -> str:
+    """Where to land after signing in: that conversation if (and only if) it now belongs to the signed-in
+    account, otherwise the normal home page. Idempotent: a duplicate callback lands on the same place."""
+    if resume_chat:
+        try:
+            if get_chat_session(resume_chat, email):
+                request.session["active_chat_id"] = resume_chat
+                return f"/chat/{resume_chat}"
+        except Exception as exc:
+            log.warning(f"Resuming the guest conversation failed (using the home page): {exc}")
+    return "/"
+
+
 @app.get("/auth/google/login")
-async def google_login(request: Request):
+async def google_login(request: Request, resume: str = None):
+    # (GUEST GATE) remembered in the signed session across the Google round trip; honoured only if the
+    # server-side gate record says this guest really used the allowance
+    if resume == "1":
+        request.session["guest_resume"] = True
+    else:
+        request.session.pop("guest_resume", None)
     redirect_uri = request.url_for("google_callback")
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
 
 @app.get("/auth/google/callback")
 async def google_callback(request: Request):
+    resume_requested = bool(request.session.pop("guest_resume", False))      # (GUEST GATE) one-shot flag
+    guest_id = peek_guest_id(request)
+    resume_chat = _guest_resume_chat(guest_id, resume_requested)
     try:
         token = await oauth.google.authorize_access_token(request)
     except Exception as exc:
         log.warning(f"Google OAuth callback failed: {exc}")
+        if resume_chat:
+            try:
+                if get_chat_session(resume_chat, guest_id):
+                    # (GUEST GATE) back to the SAME conversation with a useful message; nothing was lost
+                    return RedirectResponse(url=f"/chat/{resume_chat}?auth_error=google_failed", status_code=303)
+            except Exception as lookup_exc:
+                log.warning(f"Guest conversation lookup failed after a Google error: {lookup_exc}")
         return templates.TemplateResponse(
             request,
             "index.html",
@@ -3097,7 +3498,7 @@ async def google_callback(request: Request):
     # resolves this request, so we can migrate any guest chats onto the
     # account being signed into — same as v2's existing linking behavior,
     # just extended to chat history too.
-    anon_id = request.session.get("anon_id")
+    anon_id = guest_id
 
     user_doc = upsert_google_user(google_id=google_id, email=email, name=name, picture=picture)
     _log_user_in(request, user_doc)
@@ -3105,9 +3506,10 @@ async def google_callback(request: Request):
         migrate_anon_chats_to_owner(anon_id, email)
     except Exception as exc:
         log.warning(f"Guest chat migration failed for {email} (sign-in still succeeded): {exc}")
+    _hand_over_guest_search(anon_id, email)                 # (GUEST GATE) a running search keeps its reservation
     log.info(f"Google sign-in | email={email}")
 
-    return RedirectResponse(url="/")
+    return RedirectResponse(url=_post_auth_target(request, resume_chat, email))
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -3120,10 +3522,13 @@ def signup(
     email: str = Form(...),
     password: str = Form(...),
     confirm_password: str = Form(...),
+    resume: str = Form(None),    # (GUEST GATE) "1" = reopen the conversation of my completed guest search
 ):
     email_norm = email.strip().lower()
 
     if password != confirm_password:
+        if _wants_json(request):
+            return _auth_json({"ok": False, "error": "Passwords do not match."}, 400)
         return templates.TemplateResponse(
             request,
             "index.html",
@@ -3131,6 +3536,8 @@ def signup(
         )
 
     if len(password) < 8:
+        if _wants_json(request):
+            return _auth_json({"ok": False, "error": "Password must be at least 8 characters."}, 400)
         return templates.TemplateResponse(
             request,
             "index.html",
@@ -3138,13 +3545,16 @@ def signup(
         )
 
     if users_collection.find_one({"email": email_norm}):
+        if _wants_json(request):
+            return _auth_json({"ok": False, "error": "An account with that email already exists."}, 409)
         return templates.TemplateResponse(
             request,
             "index.html",
             {"error": "An account with that email already exists.", "user": None},
         )
 
-    anon_id = request.session.get("anon_id")
+    anon_id = peek_guest_id(request)
+    resume_chat = _guest_resume_chat(anon_id, resume == "1")
 
     password_hash = pwd_context.hash(password)
     user_doc = create_email_user(email_norm, password_hash)
@@ -3153,24 +3563,31 @@ def signup(
         migrate_anon_chats_to_owner(anon_id, email_norm)
     except Exception as exc:
         log.warning(f"Guest chat migration failed for {email_norm} (signup still succeeded): {exc}")
+    _hand_over_guest_search(anon_id, email_norm)            # (GUEST GATE) a running search keeps its reservation
     log.info(f"New email signup | email={email_norm}")
 
-    return RedirectResponse(url="/", status_code=303)
+    target = _post_auth_target(request, resume_chat, email_norm)
+    if _wants_json(request):
+        return _auth_json({"ok": True, "redirect": target})
+    return RedirectResponse(url=target, status_code=303)
 
 
 @app.post("/login")
-def login(request: Request, email: str = Form(...), password: str = Form(...)):
+def login(request: Request, email: str = Form(...), password: str = Form(...), resume: str = Form(None)):
     email_norm = email.strip().lower()
     user = users_collection.find_one({"email": email_norm})
 
     if not user or not user.get("password_hash") or not pwd_context.verify(password, user["password_hash"]):
+        if _wants_json(request):
+            return _auth_json({"ok": False, "error": "Invalid email or password."}, 401)
         return templates.TemplateResponse(
             request,
             "index.html",
             {"error": "Invalid email or password.", "query": None, "user": None},
         )
 
-    anon_id = request.session.get("anon_id")
+    anon_id = peek_guest_id(request)
+    resume_chat = _guest_resume_chat(anon_id, resume == "1")
 
     users_collection.update_one(
         {"_id": user["_id"]}, {"$set": {"last_login_at": datetime.now(timezone.utc)}}
@@ -3180,9 +3597,13 @@ def login(request: Request, email: str = Form(...), password: str = Form(...)):
         migrate_anon_chats_to_owner(anon_id, email_norm)
     except Exception as exc:
         log.warning(f"Guest chat migration failed for {email_norm} (login still succeeded): {exc}")
+    _hand_over_guest_search(anon_id, email_norm)            # (GUEST GATE) a running search keeps its reservation
     log.info(f"Email login | email={email_norm}")
 
-    return RedirectResponse(url="/", status_code=303)
+    target = _post_auth_target(request, resume_chat, email_norm)
+    if _wants_json(request):
+        return _auth_json({"ok": True, "redirect": target})
+    return RedirectResponse(url=target, status_code=303)
 
 
 @app.get("/logout")
