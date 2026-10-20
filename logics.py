@@ -8032,7 +8032,8 @@ def _resolved_request_note(query: str, resolved_query: str):
 
 def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query: str, keywords: list = None,
                               match_phrases: list = None, evidence_required: int = None, website_note: str = None,
-                              resolved_query: str = None, time_range=None, request_id: str = None):
+                              resolved_query: str = None, time_range=None, request_id: str = None,
+                              gate_owner: str = None):
     """(PERFORMANCE FIX) Extracted, UNCHANGED logic from the RESPONSE_TIMEOUT
     fallback branch that used to run inline inside _fill_in_message_outputs()
     — same calls, same order, same caching. Pulled out so it can be
@@ -8099,10 +8100,28 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
     time. By the time this function actually RUNS, index.py has already
     finished importing logics.py, so this local import resolves fine."""
     from index import (
-        get_chat_session, save_claude_answer_to_chat,
+        get_chat_session, save_claude_answer_to_chat, save_answer_for_gate,
         save_signal_results_to_chat, append_to_chat_summary, _clear_owner_busy,
     )
+    import guest_gate
+    gate_key = gate_owner or owner_key       # (GUEST GATE) the identity the gate knows this search by
+
+    def _superseded():
+        """(GUEST GATE) This search no longer owns its reservation: finish the turn with the explicit notice only."""
+        try:
+            # compare-and-set: the notice can never overwrite an answer another runner already stored
+            if save_answer_for_gate(chat_id, owner_key, topic_key, guest_gate.superseded_answer(), gate_key, request_id):
+                save_signal_results_to_chat(chat_id, owner_key, topic_key, [])
+        except Exception as exc:
+            log.warning(f"Saving the superseded-search notice failed for topic_key={topic_key}: {exc}")
+    gate_lease = {}
     try:
+        # (GUEST GATE) ask the gate BEFORE any model call (a background retry may not start a second search)
+        verdict = guest_gate.on_work_start(gate_key, request_id, topic_key, chat_id, gate_lease)
+        if verdict != guest_gate.PROCEED:
+            if verdict == guest_gate.ABANDON:
+                _superseded()
+            return
         # (EVIDENCE-BUDGET FEATURE) Resolved once, up front — used for
         # both the get_matched_signals() `limit` pass below and the
         # merge_matched_and_google_results() `max_total` pass. Mirrors
@@ -8182,13 +8201,27 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
             extra_ctx_parts.append(_rq_note)
         extra_ctx = "\n\n".join(extra_ctx_parts) if extra_ctx_parts else None
 
+        if not guest_gate.on_work_renew(gate_key, request_id, gate_lease, force=True):
+            return                  # (GUEST GATE) this runner was taken over: no model call, nothing saved or shown
         with _usage_attribution(chat_id=chat_id, owner_key=owner_key, topic_key=topic_key, request_id=request_id):
             answer = analyze_with_claude(query, merged_pool, extra_context=extra_ctx)
         answer = _patch_post_urls_into_answer(answer, merged_pool, query=query)
         answer = enrich_no_results_answer(answer, query, "all", time_range=time_range, keywords=keywords)   # (NO-RESULTS UI)
         final_answer, results_to_save = _finalize_answer_and_results(answer, merged_pool, seed=query)
 
-        save_claude_answer_to_chat(chat_id, owner_key, topic_key, final_answer)
+        final_answer = guest_gate.mark_limited(gate_key, request_id, final_answer)   # (GUEST GATE) says "limited results"
+        # (GUEST GATE) a timeout-fallback answer is never counted, but only the reservation's owner may save it
+        verdict = guest_gate.on_answer_ready(gate_key, chat_id, topic_key, request_id, final_answer, counted=False,
+                                             lease=gate_lease)
+        if verdict != guest_gate.DELIVER:
+            if verdict == guest_gate.DISCARD:
+                _superseded()
+            return                                          # WAIT: taken over; DEFER: stays pending for a later retry
+        if not save_answer_for_gate(chat_id, owner_key, topic_key, final_answer, gate_key, request_id):
+            return                                          # another runner's answer is already stored: this one is dropped
+        # (GUEST GATE) a saved timeout-fallback answer is NOT a completed search: free the guest's
+        # reservation, but only if THIS request still owns it (a newer search is never released).
+        guest_gate.on_search_incomplete(gate_key, request_id)
         try:
             save_signal_results_to_chat(chat_id, owner_key, topic_key, results_to_save)
         except Exception as exc:
@@ -8200,7 +8233,9 @@ def _timeout_fallback_answer(chat_id: str, owner_key: str, topic_key: str, query
             log.warning(f"Updating chat summary failed for topic_key={topic_key}: {exc}")
     except Exception as exc:
         log.warning(f"Timeout-fallback analysis failed for topic_key={topic_key}: {exc}")
+        guest_gate.on_search_incomplete(gate_key, request_id)   # (GUEST GATE) nothing usable was saved
     finally:
+        guest_gate.on_work_end(gate_key, request_id, gate_lease)   # give the work lease back (any exit)
         _clear_owner_busy(owner_key)
 # (BUGFIX PACK #1) Formats CLAUDE_ANALYSIS_SYSTEM_PROMPT can return that
 # mean "no real grounded data to show" — when claude_answer parses to one
