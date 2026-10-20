@@ -161,6 +161,7 @@ from database import google_posts_collection  # <-- GOOGLE-FALLBACK POLLING FIX:
 from datetime import datetime, timezone
 from config import URL_PROMPT_MERGE_ENABLED, URL_PROMPT_MAX_KEYWORDS, URL_PROMPT_MAX_PHRASES, URL_MERGED_MAX_PHRASES
 import search_credits   # (SEARCH CREDITS) free-plan monthly search credits
+import billing          # (BILLING) Lemon Squeezy checkout + webhook -> plan entitlements
 import credit_cost      # (USAGE-BASED CREDITS) validates the router's effort/cost proposal; no LLM
 from jinja2 import pass_context   # (HOME UI) context-aware template helpers
 
@@ -3215,17 +3216,142 @@ def api_me_usage(request: Request):
     except Exception as exc:
         log.warning(f"Credit status failed: {exc}")
         credits = {"enforced": True, "status": "unavailable"}
-    return JSONResponse({"message_count": count, "plan": "Free", "credits": credits})
+    plan_name = str(credits.get("plan") or "free").capitalize() if isinstance(credits, dict) else "Free"
+    return JSONResponse({"message_count": count, "plan": plan_name, "credits": credits})
+
+
+def _billing_stores():
+    """(subscriptions, processed webhook events, plan records) collections. A function so tests can swap them."""
+    import database
+    return database.subscriptions_collection, database.billing_events_collection, database.plans_collection
+
+
+def _billing_json(payload, status=200):
+    from fastapi.responses import JSONResponse
+    return JSONResponse(payload, status_code=status)
+
+
+def _billing_checkout_enabled() -> bool:
+    """New checkouts need billing configured AND the unique flintel_plans.owner_key index (database.py sets
+    plans_owner_index_ok=False when it could not be built). Existing subscriptions and incoming webhooks are
+    NOT affected by this gate: a paid event is never discarded because the index is missing."""
+    if not billing.configured():
+        return False
+    try:
+        import database
+        return getattr(database, "plans_owner_index_ok", True) is not False
+    except Exception:
+        return False
 
 
 @app.get("/billing/upgrade")
 def billing_upgrade(request: Request):
-    """Pricing page. No billing system exists yet — paid plans show honest coming-soon state."""
+    """Pricing page. Paid plans start a Lemon Squeezy hosted checkout (POST /api/billing/checkout); the
+    plan only becomes active when the verified webhook has been processed, never on this page's success redirect."""
+    user = get_current_user(request)
+    state = None
+    if user and user.get("email"):
+        try:
+            subs, _events, plans = _billing_stores()
+            state = billing.status_for_owner(subs, plans, user["email"])
+        except Exception as exc:
+            log.warning(f"Billing status unavailable for the pricing page: {type(exc).__name__}")
     return templates.TemplateResponse(
         request,
         "pricing.html",
-        {"user": get_current_user(request)},
+        {"user": user, "plans": billing.plan_catalog(), "billing_enabled": _billing_checkout_enabled(), "billing": state,
+         "free_credits": billing.free_monthly_credits()},
     )
+
+
+@app.post("/api/billing/checkout")
+def billing_checkout(request: Request, plan: str = Form("")):
+    """Create a hosted checkout for the signed-in user. The browser sends only a plan NAME; price, variant,
+    credits and the account the subscription belongs to are all decided here."""
+    from urllib.parse import urlparse
+    user = get_current_user(request)
+    if not user or not user.get("email"):
+        return _billing_json({"error": "not_authenticated"}, 401)
+    origin = request.headers.get("origin")
+    if origin and urlparse(origin).netloc != request.url.netloc:
+        return _billing_json({"error": "forbidden"}, 403)
+    if plan not in billing.PAID_PLANS:
+        return _billing_json({"error": "invalid_plan"}, 400)
+    if not _billing_checkout_enabled():
+        return _billing_json({"error": "billing_unavailable"}, 503)
+    owner = user["email"]
+    try:
+        subs, _events, _plans = _billing_stores()
+        existing = billing.has_live_subscription(subs, owner)
+    except Exception as exc:
+        log.warning(f"Checkout refused, subscription lookup failed: {type(exc).__name__}")
+        return _billing_json({"error": "billing_unavailable"}, 503)
+    if existing:
+        return _billing_json({"error": "already_subscribed"}, 409)
+    try:
+        url = billing.create_checkout(owner, plan, f"{_site_base_url(request)}/billing/upgrade?checkout=success")
+    except billing.BillingError as exc:
+        return _billing_json({"error": "checkout_failed", "message": exc.public}, 503)
+    except ValueError:
+        return _billing_json({"error": "invalid_plan"}, 400)
+    return _billing_json({"url": url})
+
+
+@app.get("/api/billing/status")
+def billing_status(request: Request):
+    """The signed-in user's own subscription state (never another user's). Used by the pricing page after checkout."""
+    user = get_current_user(request)
+    if not user or not user.get("email"):
+        return _billing_json({"error": "not_authenticated"}, 401)
+    try:
+        subs, _events, plans = _billing_stores()
+        return _billing_json(billing.status_for_owner(subs, plans, user["email"]))
+    except Exception as exc:
+        log.warning(f"Billing status failed: {type(exc).__name__}")
+        return _billing_json({"error": "billing_unavailable"}, 503)
+
+
+@app.get("/api/billing/portal")
+def billing_portal(request: Request):
+    """A freshly fetched customer-portal URL for the signed-in user's own subscription. The provider's link is
+    pre-signed and valid for 24 hours, so it is requested when the user clicks and never stored or cached."""
+    user = get_current_user(request)
+    if not user or not user.get("email"):
+        return _billing_json({"error": "not_authenticated"}, 401)
+    if not billing.configured():
+        return _billing_json({"error": "billing_unavailable"}, 503)
+    try:
+        subs, _events, _plans = _billing_stores()
+        url = billing.fresh_portal_url(subs, user["email"])
+    except Exception as exc:
+        log.warning(f"Billing portal link unavailable: {type(exc).__name__}")
+        return _billing_json({"error": "billing_unavailable"}, 503)
+    if not url:
+        return _billing_json({"error": "no_subscription"}, 404)
+    return _billing_json({"url": url})
+
+
+@app.post("/webhooks/lemonsqueezy")
+async def lemonsqueezy_webhook(request: Request):
+    """Lemon Squeezy webhook. No session or login: the HMAC-SHA256 signature over the RAW body is the only
+    credential. 2xx = processed or safely ignored (do not retry); 401 bad signature; 409 / 5xx = retry later."""
+    from starlette.concurrency import run_in_threadpool
+    length = request.headers.get("content-length")
+    if length and length.isdigit() and int(length) > billing.MAX_BODY_BYTES:
+        return _billing_json({"error": "too_large"}, 413)
+    raw = await request.body()
+    try:
+        subs, events, plans = _billing_stores()
+        result = await run_in_threadpool(billing.handle_webhook, raw, request.headers.get("x-signature"),
+                                         request.headers.get("x-event-name"), subs, events, plans)
+    except billing.WebhookRejected as rejected:
+        return _billing_json({"error": rejected.reason}, rejected.http_status)
+    except billing.WebhookBusy:
+        return _billing_json({"error": "busy"}, 409)
+    except Exception as exc:
+        log.error(f"Lemon Squeezy webhook failed: {type(exc).__name__}")
+        return _billing_json({"error": "processing_failed"}, 500)
+    return _billing_json({"status": result.get("status")})
 
 
 # ─────────────────────────────────────────────────────────────────────────────
