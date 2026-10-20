@@ -8,6 +8,10 @@ os.environ.setdefault("SESSION_SECRET_KEY", "test-only-session-key-not-for-deplo
 # behaviour, so the suite runs with the kill switch on unless the environment
 # says otherwise; tests/test_search_credit*.py switch enforcement on explicitly.
 os.environ.setdefault("CREDIT_ENFORCEMENT_DISABLED", "true")
+# The guest search gate (guest_gate.py) is ON by default in the app (one genuine search per visitor). The
+# pre-existing route tests drive /search as a guest with stubbed storage and expect the old behaviour, so the
+# suite runs with the gate off unless a test switches it on (tests/test_guest_gate.py does, explicitly).
+os.environ.setdefault("GUEST_SEARCH_LIMIT", "0")
 
 
 import pytest  # noqa: E402
