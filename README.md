@@ -138,3 +138,82 @@ scheduler. Failures and timeouts are caught and logged at DEBUG only.
 
 A self-ping only keeps an awake process awake. It cannot wake an instance that is already
 asleep. Each worker process runs its own loop. Check your host's terms on keep-alive traffic.
+
+## Billing (Lemon Squeezy)
+
+Paid plans are monthly subscriptions sold through Lemon Squeezy's **hosted checkout** (Lemon Squeezy is the
+merchant of record; Flintel never sees or stores card details).
+
+| Plan | Price | Credits |
+|---|---|---|
+| Free | $0 | `FREE_MONTHLY_CREDITS` (default 40) |
+| Standard | $19 / month | `PLAN_CREDITS_STANDARD` (default 400) |
+| Business | $59 / month | `PLAN_CREDITS_BUSINESS` (default 1500) |
+
+### Environment variables (all five are required; names only here, values in `.env` / the host's secret store)
+
+| Variable | Meaning |
+|---|---|
+| `LEMONSQUEEZY_API_KEY` | API key used server-side to create checkouts |
+| `LEMONSQUEEZY_STORE_ID` | numeric store id; events from any other store are ignored |
+| `LEMONSQUEEZY_VARIANT_ID_STANDARD` | numeric variant id of the Standard monthly subscription |
+| `LEMONSQUEEZY_VARIANT_ID_BUSINESS` | numeric variant id of the Business monthly subscription (must differ from Standard) |
+| `LEMONSQUEEZY_WEBHOOK_SECRET` | the webhook's signing secret (HMAC-SHA256 of the raw body) |
+| `LEMONSQUEEZY_TEST_MODE` | optional; exactly `true` = accept/create test-mode checkouts only, otherwise live only |
+
+With any of the five missing, checkout answers 503, the pricing buttons are disabled and the webhook rejects every
+delivery. See `.env.example` for placeholders.
+
+### Lemon Squeezy dashboard setup (one-time, done by you)
+1. Create the store; create two **subscription** products/variants billed monthly at $19 and $59; note both variant ids.
+2. Create an API key (test mode while testing) and note the store id.
+3. Add a webhook: URL `https://<your-site>/webhooks/lemonsqueezy`, a signing secret of your choice, and the events
+   `subscription_created`, `subscription_updated`, `subscription_cancelled`, `subscription_resumed`, `subscription_expired`,
+   `subscription_paused`, `subscription_unpaused`, `subscription_payment_success`, `subscription_payment_failed`,
+   `subscription_payment_recovered`, `subscription_payment_refunded`.
+4. Set the five variables above on the server and restart.
+
+### Routes
+* `GET /billing/upgrade` — pricing page (server-rendered prices/credits; the page never shows a plan as active before the webhook).
+* `POST /api/billing/checkout` (form field `plan` = `standard` | `business`; signed-in users only) → `{"url": <hosted checkout>}`.
+  The browser sends only the plan name. The variant, store, price and the account the subscription belongs to are chosen
+  by the server; the owner is carried in the checkout's custom data together with a server-side HMAC that the webhook verifies.
+* `GET /api/billing/status` — the signed-in user's own subscription state.
+* `GET /api/billing/portal` — a **freshly fetched** customer-portal URL for the signed-in user's own subscription. Lemon
+  Squeezy's portal links are pre-signed and expire after 24 hours, so they are requested on click and never stored.
+* `POST /webhooks/lemonsqueezy` — signature-verified webhook (no session; the signature is the only credential).
+
+### How a subscription becomes credits
+`billing.py` verifies the signature, ignores deliveries of another store/mode/variant or without a verified owner,
+de-duplicates by the SHA-256 of the raw body **and, for paid invoices, by invoice id** (`payment:<subscription>:<invoice>` in
+`flintel_billing_events`, shared by `subscription_payment_success` and `_recovered`), stores the subscription (`flintel_subscriptions`,
+ordered by Lemon Squeezy's `updated_at` so stale events are ignored) and then writes the owner's **existing** plan record
+(`flintel_plans`, via `search_credits.set_plan_entitlement`). `limit_for()` already turns an active plan record into 400 / 1500
+credits; usage counters are never touched, so a retried event cannot create credits twice. Only invoices with status `paid`
+count; a payment event for a subscription not recorded yet is answered 409 so Lemon Squeezy retries it.
+* Paid through: `renews_at` while `active`/`on_trial`; `cancelled` keeps access until `ends_at`; `expired` ends now;
+  `past_due`/`unpaid`/`paused` never extend access beyond what was already paid for. A failed payment grants nothing.
+* After a successful renewal payment the subscription is re-read from the Lemon Squeezy API, so a renewal is not lost if
+  `subscription_updated` is late.
+* **Credit period (billing-anchored):** a paid plan's 400 / 1500 credits are counted in the *billing period* that was paid for,
+  not in the calendar month. The plan record carries `credit_period_key` (the UTC date the period ends) and the credit store
+  counts usage under that key. A new counter opens only when the paid-through date jumps forward by at least 20 days (a
+  renewal), so duplicated, replayed or re-ordered events, upgrades and downgrades inside the period never open a second
+  counter or reset usage. Usage on the free plan (calendar-month counter) never carries into a paid period; an upgrade
+  keeps the period's usage; a downgrade lowers the limit without erasing usage (searches are denied until the period ends);
+  after expiry the free calendar-month allowance applies again. Two overlapping subscriptions each have their own period:
+  the higher plan is counted while it is entitled, then the other one with its own counter.
+* **Refunds (policy R2):** a **full** refund of the invoice that funded the *current* period closes that period immediately
+  (`revoked_period_key`); the next separately paid period is unaffected. A **partial** refund is recorded and revokes nothing.
+  A refund of an older invoice is recorded only, and a refund that cannot be matched to the funding invoice (or whose
+  amounts cannot be classified) changes nothing and is logged at ERROR for manual review (`refund_review_at`).
+* **Manual plans:** an operator-written plan record (`activate_plan`, unchanged) is replaced by the first billing write for that
+  owner; if that record was still active a WARNING is logged.
+* **Plan index:** `flintel_plans.owner_key` must be unique. If the index cannot be built (for example duplicate rows already
+  exist) startup logs `BILLING ALERT`, modifies nothing, and **new checkouts are disabled**; webhooks and existing
+  subscriptions keep being processed (the subscription state is always stored; if several plan rows exist for an owner the
+  plan write is refused with a 500 so Lemon Squeezy retries after you clean up).
+
+### Tests
+`python -m pytest tests/test_billing_lemonsqueezy.py tests/test_billing_hardening.py` — mocked provider, mongomock, no network. Live provider behaviour
+(real payload shapes, the checkout API) is **not** covered by automated tests; verify it once in Lemon Squeezy test mode.
