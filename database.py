@@ -366,3 +366,8 @@ if _billing_configured:
         subscriptions_collection.create_index("owner_key")
     except Exception as exc:
         log.warning(f"Could not create flintel_subscriptions.owner_key index: {exc}")
+
+# (GUEST GATE, guest_gate.py) One small document per guest identity, keyed by the document _id (the
+# guest id), so its atomic reserve / complete / release updates need no extra index. Holds only a
+# counter, the in-flight reservation and timestamps — no IP address, e-mail or search text.
+guest_gate_collection = db3.get_collection("flintel_guest_gate", write_concern=WriteConcern("majority"))
