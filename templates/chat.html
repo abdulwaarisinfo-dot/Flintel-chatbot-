@@ -1345,6 +1345,31 @@
       animation: none; background: none; -webkit-text-fill-color: currentColor; color: #c9c8c5;
     }
   }
+  /* GUEST-GATE-CSS-BEGIN — sign-up gate mode of the auth modal + the signed-in search-limit modal (shared verbatim with chat.html / index.html) */
+  .auth-overlay .auth-modal { max-height: calc(100vh - 40px); overflow-y: auto; }
+  .auth-gate-title, .auth-gate-copy, .auth-gate-note { display: none; }
+  .auth-overlay.gate-mode .auth-gate-title { display: block; }
+  .auth-overlay.gate-mode .auth-gate-copy, .auth-overlay.gate-mode .auth-gate-note { display: block; }
+  .auth-overlay.gate-mode #auth-modal-title, .auth-overlay.gate-mode #auth-apple-btn { display: none; }
+  .auth-gate-copy, .limit-copy { color: #a8a7a5; font-size: 13px; line-height: 1.55; text-align: center; margin: -8px 0 20px 0; }
+  .auth-gate-note { color: #757473; font-size: 12px; text-align: center; margin-top: 14px; }
+  .auth-gate-note::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #C1FB3B; margin-right: 7px; vertical-align: middle; }
+  .auth-error { color: #f3b4b4; font-size: 13px; line-height: 1.45; text-align: center; margin: 12px 0 0 0; }
+  .auth-error[hidden] { display: none; }
+  .auth-overlay.gate-mode .welcome-btn-continue.active, #limit-cta { background: #C1FB3B; color: #191817; font-weight: 700; text-decoration: none; }
+  .auth-overlay.gate-mode .welcome-btn-continue.active:hover, #limit-cta:hover { filter: brightness(0.95); }
+  .auth-overlay .welcome-btn.is-busy { opacity: .6; pointer-events: none; }
+  .auth-overlay .auth-modal:focus-visible, .auth-overlay button:focus-visible, .auth-overlay a:focus-visible, .auth-overlay input:focus-visible { outline: 2px solid #C1FB3B; outline-offset: 2px; }
+  .limit-facts { margin: 0 0 18px 0; padding: 12px 14px; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; font-size: 13px; color: #d6d5d4; }
+  .limit-facts[hidden] { display: none; }
+  .limit-facts div { display: flex; justify-content: space-between; gap: 12px; padding: 3px 0; }
+  .limit-facts dt { color: #757473; }
+  .limit-facts dd { margin: 0; text-align: right; }
+  #limit-cta { display: flex; align-items: center; justify-content: center; }
+  .limit-later { background: transparent; color: #a8a7a5; border: none; cursor: pointer; margin-top: 8px; }
+  .limit-later:hover { color: #fff; }
+  @media (max-width: 480px) { .auth-overlay { padding: 12px; align-items: flex-end; } .auth-overlay .auth-modal { width: 100%; padding: 32px 22px 28px 22px; } }
+  /* GUEST-GATE-CSS-END */
 </style>
 <script>
   // (HOME UI) Greeting for the homepage hero. The browser's local hour is the
@@ -1553,6 +1578,8 @@
 
   <!-- Main -->
   <main class="main">
+    {# (GUEST GATE) server-decided request to open the sign-up modal after a refresh / auth redirect (JS reads it; never trusted for access) #}
+    {% if guest_gate_state == 'auth_required' or guest_auth_error %}<div id="guest-gate-marker" data-state="auth_required"{% if guest_auth_error %} data-error="{{ guest_auth_error }}"{% endif %} hidden></div>{% endif %}
     <div class="topbar" id="topbar">
       <div class="topbar-left">
         <span class="topbar-title">{{ chat.title or 'Chat' }}</span>
@@ -4073,7 +4100,7 @@
     if (!chip) return;
     chip.classList.remove('status-pending', 'status-completed');
     chip.classList.add('status-failed');
-    chip.innerHTML = '<span class="status-dot"></span>' + (state === 'partial' ? 'Partial answer' : 'Answer unavailable');
+    chip.innerHTML = '<span class="status-dot"></span>' + (state === 'partial' ? 'Partial answer' : state === 'limited' ? 'Limited results' : 'Answer unavailable');
   }
   function askAgainButton(wrap) {
     const turn = wrap.closest('.turn-block');
@@ -4106,6 +4133,17 @@
     renderedEl.appendChild(p);
     renderedEl.appendChild(askAgainButton(wrap));
     markTurnAnswerState(wrap, 'partial');
+  }
+  // (GUEST GATE) A guest's search that ran out of time is answered from the evidence found so far. The server marks
+  // it answer_status "limited" and it does NOT use up the free search; say so instead of showing it as a finished one.
+  function appendLimitedAnswerNotice(wrap, renderedEl) {
+    const p = document.createElement('p');
+    p.className = 'block-text answer-limited-note';
+    p.style.marginTop = '20px';
+    p.textContent = 'These results are limited: the search ran out of time before every source was checked. This did not use up your free search - ask again for a fuller answer.';
+    renderedEl.appendChild(p);
+    renderedEl.appendChild(askAgainButton(wrap));
+    markTurnAnswerState(wrap, 'limited');
   }
   function answerHasText(data) {
     // Same rule as logics._answer_has_content(): any non-empty text outside
@@ -4201,6 +4239,8 @@
           renderAnswerUnavailable(wrap, renderedEl);
         } else if (data.answer_status === 'partial') {
           appendPartialAnswerNotice(wrap, renderedEl);
+        } else if (data.answer_status === 'limited') {
+          appendLimitedAnswerNotice(wrap, renderedEl);
         }
         // (BUG 1 FIX) Only mark as rendered for a KNOWN format that
         // actually went through one of the real render* functions above —
@@ -4777,6 +4817,7 @@
         setSubmitLoading(false);
         // Freeze the status chip: "Completed · <total time>".
         finishTurnTimer(pendingTurn, 'completed', payload.requested_at);
+        if (window.flintelGate) window.flintelGate.afterAnswer(payload);   // (GUEST GATE) answer first, then the sign-up modal
         // No page reload — the accumulated text is now complete, valid
         // JSON. Render it in-place, right where the loading-row was,
         // reusing the exact same structured-render logic every other
@@ -5069,6 +5110,7 @@
           credentials: 'same-origin',
           redirect: 'follow',
         });
+        if (window.flintelGate) window.flintelGate.handleDenial(response);   // (GUEST GATE) sign-up / upgrade modal from the server's denial headers
         if (flintelSearchResponseAction(response) === 'repost') throw new Error(`Request failed: ${response.status}`);
       } catch (fetchErr) {
         if (searchInput) searchInput.value = query; // (SEND-LOCK) native submit reads the live field — put the prompt back first
@@ -5208,6 +5250,327 @@
 </script>
   </main>
 </div>
+
+<div class="auth-overlay" id="auth-overlay">
+  <div class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" tabindex="-1">
+    <button class="auth-close" id="auth-close-btn" type="button" aria-label="Close">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 1L10 10M10 1L1 10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    </button>
+    <span class="auth-avatar">
+      <img src="data:image/png;base64,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" alt="Flintel" />
+    </span>
+    <p class="auth-modal-title" id="auth-modal-title">Sign in to Flintel</p>
+    <h2 class="auth-modal-title auth-gate-title" id="auth-gate-title">Your next insight starts here.</h2>
+    <p class="auth-gate-copy" id="auth-gate-copy">You've used your free search. Create your free account to continue exploring conversations, uncover opportunities, and keep your research in one place.</p>
+
+    <a class="welcome-btn welcome-btn-google" id="auth-google-link" href="/auth/google/login">
+      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
+      Continue with Google
+    </a>
+    <button class="welcome-btn welcome-btn-apple" id="auth-apple-btn" type="button">
+      <svg width="15" height="18" viewBox="0 0 24 24" fill="#d6d5d4"><path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.53-3.24 0-1.44.66-2.21.47-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+      Continue with Apple
+    </button>
+
+    <div class="welcome-divider"></div>
+
+    <!-- Real POST to /login -->
+    <form action="/login" method="post" id="login-form" class="auth-form">
+      <input type="hidden" name="resume" value="">
+      <div class="welcome-field">
+        <label for="login-email" class="sr-only">Email</label>
+        <input type="email" id="login-email" name="email" required autocomplete="email" placeholder="Email" />
+      </div>
+      <div class="welcome-field">
+        <label for="login-password" class="sr-only">Password</label>
+        <input type="password" id="login-password" name="password" required autocomplete="current-password" placeholder="Password" />
+      </div>
+      <button class="welcome-btn welcome-btn-continue active" type="submit">Log in</button>
+    </form>
+
+    <!-- Real POST to /signup -->
+    <form action="/signup" method="post" id="signup-form" class="auth-form hidden">
+      <input type="hidden" name="resume" value="">
+      <div class="welcome-field">
+        <label for="signup-email" class="sr-only">Email</label>
+        <input type="email" id="signup-email" name="email" required autocomplete="email" placeholder="Email" />
+      </div>
+      <div class="welcome-field">
+        <label for="signup-password" class="sr-only">Password</label>
+        <input type="password" id="signup-password" name="password" required minlength="8" autocomplete="new-password" placeholder="Password" />
+      </div>
+      <div class="welcome-field">
+        <label for="signup-confirm-password" class="sr-only">Confirm password</label>
+        <input type="password" id="signup-confirm-password" name="confirm_password" required minlength="8" autocomplete="new-password" placeholder="Confirm password" />
+      </div>
+      <button class="welcome-btn welcome-btn-continue active" type="submit">Create account</button>
+    </form>
+
+    <p class="auth-switch">
+      <span id="auth-switch-to-signup">Don't have an account? <button type="button" id="show-signup-btn">Sign up</button></span>
+      <span id="auth-switch-to-login" class="hidden">Already have an account? <button type="button" id="show-login-btn">Sign in</button></span>
+    </p>
+    <p class="auth-gate-note" id="auth-gate-note">Your current search and its answer will be preserved.</p>
+    <p class="auth-error" id="auth-error" role="alert" aria-live="polite" hidden></p>
+  </div>
+</div>
+
+<!-- GUEST-GATE-LIMIT-MODAL-BEGIN — signed-in users only: shown when the server denies a search with X-Flintel-Denial: credits-exhausted -->
+<div class="auth-overlay" id="limit-overlay">
+  <div class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="limit-title" aria-describedby="limit-copy" tabindex="-1">
+    <button class="auth-close" id="limit-close-btn" type="button" aria-label="Close">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 1L10 10M10 1L1 10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    </button>
+    <p class="auth-modal-title" id="limit-title">You've reached your search limit.</p>
+    <p class="limit-copy" id="limit-copy">You've used the searches included in your current plan. Upgrade to continue exploring conversations and discovering opportunities.</p>
+    <dl class="limit-facts" id="limit-facts" hidden></dl>
+    <a class="welcome-btn welcome-btn-continue active" id="limit-cta" href="/billing/upgrade">View upgrade options</a>
+    <button class="welcome-btn limit-later" id="limit-later-btn" type="button">Maybe later</button>
+  </div>
+</div>
+<!-- GUEST-GATE-LIMIT-MODAL-END -->
+<script>
+/* GUEST-GATE-JS-BEGIN — shared verbatim by chat.html and index.html.
+   Two DIFFERENT popups, chosen only from the server's X-Flintel-Denial / X-Flintel-Audience headers (never from a
+   status code alone, never from browser storage):
+     guest-auth-required, or credits-exhausted + X-Flintel-Audience: guest  ->  sign-up / sign-in modal (visitor, not signed in)
+     credits-exhausted for a signed-in user                                  ->  search-limit / upgrade modal
+   Everything else (busy, unavailable, validation, network) keeps the existing inline error handling.
+   Enforcement is on the server; closing a modal never unlocks anything. */
+(function () {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  let returnFocus = null;
+
+  function safeRedirect(path) {
+    return typeof path === 'string' && path.charAt(0) === '/' && path.charAt(1) !== '/' && path.indexOf('\\') === -1;
+  }
+  function focusables(root) {
+    return Array.prototype.filter.call(
+      root.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"])'),
+      (n) => n.offsetParent !== null);
+  }
+  function openOverlay(overlay, preferred) {
+    if (!overlay) return;
+    if (!overlay.classList.contains('visible')) returnFocus = document.activeElement;
+    overlay.classList.add('visible');
+    const dlg = overlay.querySelector('[role="dialog"]');
+    window.setTimeout(() => {
+      const t = preferred && preferred.offsetParent !== null ? preferred : (dlg || overlay);
+      try { t.focus(); } catch (e) { /* focus is a nicety */ }
+    }, 30);
+  }
+  function closeOverlay(overlay) {
+    if (!overlay || !overlay.classList.contains('visible')) return;
+    overlay.classList.remove('visible');
+    if (returnFocus && document.contains(returnFocus)) { try { returnFocus.focus(); } catch (e) { /* ignore */ } }
+    returnFocus = null;
+  }
+  function dismissWelcome() {
+    const w = $('welcome-overlay');
+    if (w) w.classList.remove('visible');
+    const sb = $('sidebar-bottom');
+    if (sb) sb.classList.remove('sidebar-bottom-hidden');
+    try { sessionStorage.setItem('flintel_welcome_dismissed', '1'); } catch (e) { /* private mode */ }
+  }
+
+  // ---- sign-up / sign-in modal (the shared #auth-overlay in "gate mode") ----
+  function setMode(mode) {
+    const isSignup = mode === 'signup';
+    const lf = $('login-form'), sf = $('signup-form'), toS = $('auth-switch-to-signup'), toL = $('auth-switch-to-login');
+    if (lf) lf.classList.toggle('hidden', isSignup);
+    if (sf) sf.classList.toggle('hidden', !isSignup);
+    if (toS) toS.classList.toggle('hidden', isSignup);
+    if (toL) toL.classList.toggle('hidden', !isSignup);
+  }
+  function setResume(on) {
+    Array.prototype.forEach.call(document.querySelectorAll('#auth-overlay input[name="resume"]'), (i) => { i.value = on ? '1' : ''; });
+    const g = $('auth-google-link');
+    if (g) g.setAttribute('href', on ? '/auth/google/login?resume=1' : '/auth/google/login');
+  }
+  function showError(msg) {
+    const e = $('auth-error');
+    if (!e) return;
+    e.textContent = msg || '';
+    e.hidden = !msg;
+  }
+  function gateLabels(on) {
+    const sf = $('signup-form');
+    const b = sf ? sf.querySelector('button[type="submit"]') : null;
+    if (b) { if (!b.dataset.label) b.dataset.label = b.textContent; b.textContent = on ? 'Create your free account' : b.dataset.label; }
+    const o = $('auth-overlay');
+    const dlg = o ? o.querySelector('[role="dialog"]') : null;
+    if (dlg) {
+      dlg.setAttribute('aria-labelledby', on ? 'auth-gate-title' : 'auth-modal-title');
+      if (on) dlg.setAttribute('aria-describedby', 'auth-gate-copy'); else dlg.removeAttribute('aria-describedby');
+    }
+  }
+  function resetGuestMode() {
+    const o = $('auth-overlay');
+    if (!o) return;
+    o.classList.remove('gate-mode');
+    setResume(false);
+    showError('');
+    gateLabels(false);
+  }
+  function openGuest(opts) {
+    const o = $('auth-overlay');
+    if (!o) return false;
+    closeLimit();
+    dismissWelcome();
+    o.classList.add('gate-mode');
+    setResume(true);
+    setMode((opts && opts.mode) || 'signup');
+    showError((opts && opts.error) || '');
+    gateLabels(true);
+    openOverlay(o, $('signup-email'));
+    return true;
+  }
+  function closeGuest() {
+    const o = $('auth-overlay');
+    if (!o) return;
+    closeOverlay(o);
+    resetGuestMode();
+  }
+  async function submitAuth(e) {
+    const o = $('auth-overlay');
+    if (!o || !o.classList.contains('gate-mode')) return;       // the normal modal keeps its native form post
+    e.preventDefault();
+    const form = e.currentTarget;
+    const btn = form.querySelector('button[type="submit"]');
+    if (btn) btn.classList.add('is-busy');
+    showError('');
+    try {
+      const resp = await fetch(form.action, {
+        method: 'POST', body: new FormData(form), credentials: 'same-origin',
+        headers: { 'Accept': 'application/json' }, redirect: 'follow',
+      });
+      let data = {};
+      try { data = await resp.json(); } catch (err) { data = {}; }
+      if (resp.ok && data && data.ok && safeRedirect(data.redirect)) { window.location.assign(data.redirect); return; }
+      showError((data && data.error) || 'Something went wrong. Please try again.');
+    } catch (err) {
+      showError('Network problem. Check your connection and try again.');
+    }
+    if (btn) btn.classList.remove('is-busy');
+  }
+
+  // ---- signed-in user's search-limit / upgrade modal ----
+  function closeLimit() { closeOverlay($('limit-overlay')); }
+  function loadUsage() {
+    const facts = $('limit-facts'), copy = $('limit-copy');
+    if (!facts || typeof fetch !== 'function') return;
+    fetch('/api/me/usage', { credentials: 'same-origin', headers: { 'Accept': 'application/json' } })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        const c = d && d.credits;
+        if (!c || c.status !== 'ok') return;                      // no verified figures: show none
+        const rows = [];
+        if (d.plan) rows.push(['Plan', String(d.plan)]);
+        if (Number.isFinite(c.used) && Number.isFinite(c.limit)) rows.push(['Searches used', c.used + ' of ' + c.limit]);
+        if (c.resets_at) {
+          const t = new Date(c.resets_at);
+          if (!isNaN(t.getTime())) rows.push(['Credits reset', t.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })]);
+        }
+        if (!rows.length) return;
+        facts.textContent = '';
+        rows.forEach((kv) => {
+          const row = document.createElement('div'), dt = document.createElement('dt'), dd = document.createElement('dd');
+          dt.textContent = kv[0]; dd.textContent = kv[1];
+          row.appendChild(dt); row.appendChild(dd); facts.appendChild(row);
+        });
+        facts.hidden = false;
+        if (copy && Number.isFinite(c.remaining) && c.remaining > 0) {
+          copy.textContent = 'This search needs more credits than you have left (' + c.remaining + ' remaining). Upgrade to continue exploring conversations and discovering opportunities.';
+        }
+      })
+      .catch(() => { /* the generic copy stays */ });
+  }
+  function openLimit() {
+    const o = $('limit-overlay');
+    if (!o) return false;
+    closeGuest();
+    dismissWelcome();
+    const wasOpen = o.classList.contains('visible');
+    openOverlay(o, $('limit-cta'));
+    if (!wasOpen) loadUsage();
+    return true;
+  }
+
+  // ---- classification: authoritative server headers only ----
+  function denialKind(response) {
+    try {
+      const h = response && response.headers && typeof response.headers.get === 'function' ? response.headers : null;
+      if (!h) return null;
+      const d = h.get('X-Flintel-Denial');
+      if (d === 'guest-auth-required') return 'guest-auth';
+      if (d === 'credits-exhausted') return h.get('X-Flintel-Audience') === 'guest' ? 'guest-auth' : 'credit-limit';
+    } catch (e) { /* unclassifiable: no popup */ }
+    return null;
+  }
+  function handleDenial(response) {          // never throws: it runs inside the submit handlers' fetch try-blocks
+    try {
+      const kind = denialKind(response);
+      if (kind === 'guest-auth') openGuest();
+      else if (kind === 'credit-limit') openLimit();
+      return kind;
+    } catch (e) { return null; }
+  }
+  function afterAnswer(payload) {            // the stream's final event: the answer is on screen, THEN the modal
+    try { if (payload && payload.guest_gate === 'auth_required') window.setTimeout(() => openGuest(), 700); } catch (e) { /* ignore */ }
+  }
+  function applyMarker() {                   // a server-rendered page asks for a modal (refresh, auth redirect, full-page denial)
+    const m = $('guest-gate-marker');
+    if (!m || m.dataset.handled) return;
+    m.dataset.handled = '1';
+    const st = m.dataset.state, err = m.dataset.error || '';
+    window.setTimeout(() => {
+      if (st === 'auth_required') openGuest({ error: err });
+      else if (st === 'credit_limit') openLimit();
+    }, 350);
+  }
+
+  // ---- one-time wiring (idempotent: index.html's own handlers may also exist) ----
+  function wire() {
+    const once = (el, ev, fn) => { if (el && !el.dataset['gate' + ev]) { el.dataset['gate' + ev] = '1'; el.addEventListener(ev, fn); } };
+    const ao = $('auth-overlay'), lo = $('limit-overlay');
+    once($('show-signup-btn'), 'click', () => setMode('signup'));
+    once($('show-login-btn'), 'click', () => setMode('login'));
+    once($('auth-close-btn'), 'click', closeGuest);
+    once($('limit-close-btn'), 'click', closeLimit);
+    once($('limit-later-btn'), 'click', closeLimit);
+    once(ao, 'click', (e) => { if (e.target === ao) closeGuest(); });
+    once(lo, 'click', (e) => { if (e.target === lo) closeLimit(); });
+    once($('login-form'), 'submit', submitAuth);
+    once($('signup-form'), 'submit', submitAuth);
+    if (!document.documentElement.dataset.gateKeys) {
+      document.documentElement.dataset.gateKeys = '1';
+      document.addEventListener('keydown', (e) => {
+        const open = ($('limit-overlay') && $('limit-overlay').classList.contains('visible')) ? $('limit-overlay')
+          : (($('auth-overlay') && $('auth-overlay').classList.contains('visible')) ? $('auth-overlay') : null);
+        if (!open) return;
+        if (e.key === 'Escape') { e.preventDefault(); if (open.id === 'limit-overlay') closeLimit(); else closeGuest(); return; }
+        if (e.key !== 'Tab') return;
+        const f = focusables(open);
+        if (!f.length) return;
+        const first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      });
+    }
+    const main = document.querySelector('main.main');
+    if (main && window.MutationObserver && !main.dataset.gateObserved) {
+      main.dataset.gateObserved = '1';
+      new MutationObserver(applyMarker).observe(main, { childList: true });
+    }
+    applyMarker();
+  }
+
+  window.flintelGate = { denialKind, handleDenial, openGuest, closeGuest, openLimit, closeLimit, afterAnswer, applyMarker, resetGuestMode, safeRedirect };
+  try { wire(); } catch (e) { /* never break the page */ }
+})();
+/* GUEST-GATE-JS-END */
+</script>
 
 <!-- Markdown rendering for msg.claude_answer (see .answer-raw /
      .answer-rendered above), same behavior as index.html. If either script
