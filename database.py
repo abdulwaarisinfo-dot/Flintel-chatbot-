@@ -371,3 +371,12 @@ if _billing_configured:
 # guest id), so its atomic reserve / complete / release updates need no extra index. Holds only a
 # counter, the in-flight reservation and timestamps — no IP address, e-mail or search text.
 guest_gate_collection = db3.get_collection("flintel_guest_gate", write_concern=WriteConcern("majority"))
+
+# (EMAIL SIGN-UP CODES, email_verification.py) One small document per address being verified (_id = the
+# normalised address) plus one send counter per client address. Holds only a keyed HASH of the 6-digit code,
+# attempt/send counters and timestamps - never the code itself. Documents delete themselves after `expires_at`.
+email_codes_collection = db3.get_collection("flintel_email_codes", write_concern=WriteConcern("majority"))
+try:
+    email_codes_collection.create_index("expires_at", expireAfterSeconds=0)
+except Exception as exc:
+    log.warning(f"Could not create flintel_email_codes.expires_at TTL index (codes still expire by their own timestamp): {exc}")
