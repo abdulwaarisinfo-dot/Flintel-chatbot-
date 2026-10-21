@@ -169,6 +169,7 @@ import search_credits   # (SEARCH CREDITS) free-plan monthly search credits
 import billing          # (BILLING) Lemon Squeezy checkout + webhook -> plan entitlements
 import credit_cost      # (USAGE-BASED CREDITS) validates the router's effort/cost proposal; no LLM
 import guest_gate       # (GUEST GATE) server-side limit on a visitor's genuine searches
+import email_verification   # (EMAIL SIGN-UP) emailed 6-digit code before an account is created
 import uuid as _uuid
 from jinja2 import pass_context   # (HOME UI) context-aware template helpers
 
@@ -3516,15 +3517,86 @@ async def google_callback(request: Request):
 # ROUTES — AUTH: EMAIL + PASSWORD
 # ─────────────────────────────────────────────────────────────────────────────
 
+def _client_ip(request: Request) -> str:
+    """The client address for the per-address send allowance: the LAST X-Forwarded-For hop (appended by our own
+    proxy; earlier hops are client-supplied), else the socket peer."""
+    fwd = (request.headers.get("x-forwarded-for") or "").split(",")[-1].strip()
+    return fwd or (request.client.host if request.client else "unknown")
+
+
+_CODE_MESSAGES = {
+    email_verification.INVALID: "That code isn't right. Check it and try again.",
+    email_verification.EXPIRED: "That code has expired. Request a new one.",
+    email_verification.LOCKED: "Too many wrong attempts. Request a new code.",
+}
+
+
+@app.post("/signup/code")
+def signup_send_code(request: Request, email: str = Form(...)):
+    """Step 1 of email sign-up: email a 6-digit code. Creates nothing; an address that already has an account is told so
+    (as /signup always did) and is NOT emailed."""
+    email_norm = email_verification.normalise_email(email)
+    if not email_norm:
+        return _auth_json({"ok": False, "error": "Enter a valid email address."}, 400)
+    if users_collection.find_one({"email": email_norm}):
+        return _auth_json({"ok": False, "reason": "exists", "error": "An account with that email already exists. Sign in instead."}, 409)
+    try:
+        store = email_verification.default_store()
+        status, code, retry = store.issue(email_norm, email_verification.client_key(_client_ip(request)))
+    except Exception as exc:
+        log.warning(f"Verification code store unavailable: {exc}")
+        return _auth_json({"ok": False, "error": "We couldn't send a code right now. Please try again shortly."}, 503)
+    if status == email_verification.COOLDOWN:
+        return _auth_json({"ok": False, "reason": "cooldown", "retry_after": retry,
+                           "error": f"Please wait {retry} seconds before requesting another code."}, 429)
+    if status == email_verification.LIMITED:
+        return _auth_json({"ok": False, "reason": "limited", "retry_after": retry,
+                           "error": "Too many codes requested. Please try again later."}, 429)
+    try:
+        email_verification.send_code(email_norm, code)
+    except email_verification.EmailNotConfigured as exc:
+        store.discard(email_norm)
+        log.error(f"Email sign-up is not available: {exc}")
+        return _auth_json({"ok": False, "reason": "unavailable", "error": "Email sign-up is temporarily unavailable. Please use Google instead."}, 503)
+    except email_verification.EmailSendFailed:
+        store.discard(email_norm)
+        return _auth_json({"ok": False, "reason": "send_failed", "error": "We couldn't send the email. Check the address and try again."}, 502)
+    request.session.pop("signup_verified", None)           # a new code invalidates any earlier verification
+    return _auth_json({"ok": True, "email": email_norm, "retry_after": retry, "expires_in": email_verification.CODE_TTL_SECONDS})
+
+
+@app.post("/signup/verify")
+def signup_verify_code(request: Request, email: str = Form(...), code: str = Form(...)):
+    """Step 2: check the emailed code. On success the signed session remembers that THIS browser verified THIS address."""
+    email_norm = email_verification.normalise_email(email)
+    if not email_norm:
+        return _auth_json({"ok": False, "error": "Enter a valid email address."}, 400)
+    try:
+        result = email_verification.default_store().verify(email_norm, code)
+    except Exception as exc:
+        log.warning(f"Verification code check failed: {exc}")
+        return _auth_json({"ok": False, "error": "We couldn't check the code right now. Please try again."}, 503)
+    if result != email_verification.OK:
+        return _auth_json({"ok": False, "reason": result, "error": _CODE_MESSAGES.get(result, _CODE_MESSAGES[email_verification.INVALID])},
+                          429 if result == email_verification.LOCKED else 400)
+    request.session["signup_verified"] = email_verification.verified_marker(email_norm)
+    return _auth_json({"ok": True, "email": email_norm})
+
+
 @app.post("/signup")
 def signup(
     request: Request,
-    email: str = Form(...),
     password: str = Form(...),
     confirm_password: str = Form(...),
     resume: str = Form(None),    # (GUEST GATE) "1" = reopen the conversation of my completed guest search
 ):
-    email_norm = email.strip().lower()
+    """Step 3: set the password for the address this browser just verified (the address is taken from the signed
+    session, never from the request), create the account and sign the visitor in."""
+    email_norm = email_verification.verified_email(request.session)
+    if not email_norm:
+        if _wants_json(request):
+            return _auth_json({"ok": False, "reason": "verification_required", "error": "Verify your email first."}, 403)
+        return templates.TemplateResponse(request, "index.html", {"error": "Verify your email first.", "user": None})
 
     if password != confirm_password:
         if _wants_json(request):
@@ -3545,6 +3617,7 @@ def signup(
         )
 
     if users_collection.find_one({"email": email_norm}):
+        request.session.pop("signup_verified", None)
         if _wants_json(request):
             return _auth_json({"ok": False, "error": "An account with that email already exists."}, 409)
         return templates.TemplateResponse(
@@ -3557,7 +3630,15 @@ def signup(
     resume_chat = _guest_resume_chat(anon_id, resume == "1")
 
     password_hash = pwd_context.hash(password)
-    user_doc = create_email_user(email_norm, password_hash)
+    try:
+        user_doc = create_email_user(email_norm, password_hash)
+    except Exception as exc:                                  # the unique email index: a parallel sign-up won
+        log.warning(f"Email signup could not create the account: {exc}")
+        request.session.pop("signup_verified", None)
+        if _wants_json(request):
+            return _auth_json({"ok": False, "error": "An account with that email already exists."}, 409)
+        return RedirectResponse(url="/", status_code=303)
+    request.session.pop("signup_verified", None)              # single use
     _log_user_in(request, user_doc)
     try:
         migrate_anon_chats_to_owner(anon_id, email_norm)
