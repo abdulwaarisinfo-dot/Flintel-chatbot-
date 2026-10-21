@@ -24,6 +24,7 @@ from pathlib import Path
 import pytest
 from starlette.requests import Request
 
+from tests.otp_helpers import signup_with_code  # noqa: F401  (real e-mail-code sign-up, delivery captured)
 from tests.test_answer_persistence import env, GOOD  # noqa: F401  (fixture + sample answer)
 from tests.test_search_credit_routes import (  # noqa: F401  (fixtures + helpers)
     CHAT_ROUTER, KEY1, KEY2, SEARCH_ROUTER, app, body, flat_cost,
@@ -519,9 +520,7 @@ def _guest_with_completed_chat(a, gg):
 
 def test_signup_moves_the_guest_chat_to_the_account_and_resumes_it_without_a_new_search(auth, gg):
     owner = _guest_with_completed_chat(auth, gg)
-    resp = _post_form(auth["client"], "/signup", {"email": "new@example.com", "password": "correct-horse-1",
-                                                  "confirm_password": "correct-horse-1", "resume": "1"},
-                      {"Accept": "application/json"})
+    resp = signup_with_code(auth["client"], "new@example.com")
     data = resp.json()
     assert resp.status_code == 200 and data["ok"] is True and data["redirect"] == "/chat/c-guest"
     chat = auth["chats"].find_one({"chat_id": "c-guest"})
@@ -532,26 +531,20 @@ def test_signup_moves_the_guest_chat_to_the_account_and_resumes_it_without_a_new
 def test_resume_is_taken_from_server_state_never_from_the_client(auth, gg):
     _guest_with_completed_chat(auth, gg)
     auth["chats"].insert_one({"chat_id": "c-foreign", "owner_key": "someone@else.example", "title": "x", "messages": []})
-    resp = _post_form(auth["client"], "/signup", {"email": "new2@example.com", "password": "correct-horse-1",
-                                                  "confirm_password": "correct-horse-1", "resume": "1",
-                                                  "chat_id": "c-foreign", "next": "/chat/c-foreign"},
-                      {"Accept": "application/json"})
+    resp = signup_with_code(auth["client"], "new2@example.com", extra={"chat_id": "c-foreign", "next": "/chat/c-foreign"})
     assert resp.json()["redirect"] == "/chat/c-guest"                              # the forged id is ignored
     assert auth["chats"].find_one({"chat_id": "c-foreign"})["owner_key"] == "someone@else.example"
 
 
 def test_without_the_resume_flag_a_signup_behaves_as_before(auth, gg):
     _guest_with_completed_chat(auth, gg)
-    resp = _post_form(auth["client"], "/signup", {"email": "plain@example.com", "password": "correct-horse-1",
-                                                  "confirm_password": "correct-horse-1"})
+    resp = signup_with_code(auth["client"], "plain@example.com", resume="", headers={})
     assert resp.status_code in (302, 303) and resp.headers["location"] == "/"
 
 
 def test_resume_does_nothing_for_a_visitor_who_never_used_the_allowance(auth, gg):
     auth["client"].get("/")
-    resp = _post_form(auth["client"], "/signup", {"email": "early@example.com", "password": "correct-horse-1",
-                                                  "confirm_password": "correct-horse-1", "resume": "1"},
-                      {"Accept": "application/json"})
+    resp = signup_with_code(auth["client"], "early@example.com")
     assert resp.json()["redirect"] == "/"
 
 
@@ -758,12 +751,12 @@ def test_guest_denial_opens_only_the_signup_modal_with_the_required_copy(page, n
     assert visible(page, "#auth-overlay") and not visible(page, "#limit-overlay")
     dlg = page.locator("#auth-overlay [role=dialog]")
     text = dlg.inner_text()
-    assert "Your next insight starts here." in text and "You've used your free search." in text
-    assert "Create your free account" in text and "Your current search and its answer will be preserved." in text
-    assert "Sign in" in text
+    assert "Your next insight starts here." in text and "Create your free account to keep exploring." in text
+    assert "Continue with Google" in text and "Your current search and its answer will be preserved." in text
+    assert "Already have an account?" in text and "Sign in" in text
     assert page.locator("#auth-apple-btn").is_hidden()                              # no non-working provider button
     assert page.get_attribute("#auth-google-link", "href") == "/auth/google/login?resume=1"
-    assert page.eval_on_selector_all("#auth-overlay input[name=resume]", "els=>els.map(e=>e.value)") == ["1", "1"]
+    assert page.eval_on_selector_all("#auth-overlay input[name=resume], #signup-flow input[name=resume]", "els=>els.map(e=>e.value)") == ["1", "1"]
     assert dlg.get_attribute("aria-modal") == "true" and dlg.get_attribute("aria-labelledby") == "auth-gate-title"
     assert page.evaluate("document.getElementById('auth-gate-title').textContent") == "Your next insight starts here."
     assert page.errors == []
@@ -869,27 +862,45 @@ def test_dialog_is_accessible_focus_moves_in_is_trapped_and_returns(page):
 
 
 @needs_browser
-def test_gate_mode_form_posts_json_and_follows_only_a_local_redirect(page):
+def test_gate_mode_signup_steps_post_json_and_follow_only_a_local_redirect(page):
     seen = {}
 
-    def signup(route):
-        seen["accept"] = route.request.headers.get("accept")
-        seen["body"] = route.request.post_data
-        route.fulfill(status=200, content_type="application/json", body=json.dumps({"ok": True, "redirect": "//evil.example/x"}))
-    page.route("**/signup", signup)
+    def ok(path, body):
+        def handler(route):
+            seen[path] = {"accept": route.request.headers.get("accept"), "body": route.request.post_data}
+            route.fulfill(status=200, content_type="application/json", body=json.dumps(body))
+        return handler
+    page.route("**/signup/code", ok("code", {"ok": True, "email": "a@example.com", "retry_after": 30}))
+    page.route("**/signup/verify", ok("verify", {"ok": True, "email": "a@example.com"}))
+    page.route("**/signup", ok("signup", {"ok": True, "redirect": "//evil.example/x"}))
     load(page, render("index.html"))
     page.evaluate(f"window.flintelGate.handleDenial({fake({'X-Flintel-Denial': 'guest-auth-required'})})")
     page.fill("#signup-email", "a@example.com")
+    page.click("#signup-form button[type=submit]")
+    page.wait_for_selector("#signup-flow.visible #flow-code.is-active")
+    page.wait_for_function("document.activeElement && document.activeElement.classList.contains('otp-box')")   # the first box has the cursor
+    page.keyboard.type("123456")
+    assert page.eval_on_selector_all(".otp-box", "els=>els.map(e=>e.value).join('')") == "123456"
+    page.click("#otp-confirm")
+    page.wait_for_selector("#flow-password.is-active")
     page.fill("#signup-password", "correct-horse-1")
     page.fill("#signup-confirm-password", "correct-horse-1")
-    page.click("#signup-form button[type=submit]")
-    page.wait_for_function("!document.querySelector('#signup-form button[type=submit]').classList.contains('is-busy')")
-    assert seen["accept"] == "application/json" and re.search(r'name="resume"\r\n\r\n1', seen["body"])
-    assert "evil.example" not in page.url and page.url.endswith("/__page__")        # a protocol-relative redirect is refused
-    assert page.locator("#auth-error").is_visible()
+    page.click("#pw-submit")
+    page.wait_for_selector("#flow-done.is-active")
+    assert all(seen[k]["accept"] == "application/json" for k in ("code", "verify", "signup"))
+    assert "a@example.com" in seen["code"]["body"] and "password" not in seen["code"]["body"]
+    assert "123456" in seen["verify"]["body"] and "a@example.com" in seen["verify"]["body"]
+    assert re.search(r'name="resume"\r\n\r\n1', seen["signup"]["body"])
     assert page.evaluate("window.flintelGate.safeRedirect('//evil.example')") is False
     assert page.evaluate("window.flintelGate.safeRedirect('/chat/abc')") is True
     assert page.evaluate("window.flintelGate.safeRedirect('https://evil.example')") is False
+    assert page.errors == []
+    requests = []
+    page.on("request", lambda r: requests.append(r.url))
+    page.click("#flow-done-continue")                                               # leaves the "account created" screen now
+    page.wait_for_timeout(500)
+    assert not any("evil.example" in u for u in requests)                           # a protocol-relative redirect is never followed ...
+    assert ORIGIN + "/" in requests                                                 # ... the visitor lands on the home page instead
 
 
 @needs_browser
@@ -926,21 +937,74 @@ def _pending_chat():
         "requested_at": dt.datetime(2026, 10, 20, 12, 0, 0)}]}
 
 
+TIMING_PROBE = """
+(() => {
+  window.__t = {};
+  const mark = (k) => { if (!(k in window.__t)) window.__t[k] = performance.now(); };
+  new MutationObserver(() => {
+    if (document.querySelector('.answer-wrap')) mark('answer');
+    const o = document.getElementById('auth-overlay');
+    if (o && o.classList.contains('visible')) {
+      mark('modal');
+      window.__t.revealingWhenOpened = !!document.querySelector('.answer-wrap[aria-busy="true"]');
+    }
+  }).observe(document, {subtree: true, childList: true, attributes: true, attributeFilter: ['class']});
+})();
+"""
+
+
 @needs_browser
 @pytest.mark.parametrize("flag,expect_modal", [({"guest_gate": "auth_required"}, True), ({}, False)])
 def test_streamed_answer_is_on_screen_before_the_signup_modal(page, flag, expect_modal):
     page.add_init_script(FAKE_STREAM % {"answer": json.dumps(json.dumps(GOOD)), "extra": json.dumps(flag)})
+    page.add_init_script(TIMING_PROBE)
     load(page, render("chat.html", chat=_pending_chat(), chat_id="c1", pending_stream_topic_key="tk1"))
     page.wait_for_selector(".answer-wrap", timeout=5000)                             # the answer is rendered ...
     assert not visible(page, "#auth-overlay")                                         # ... while no modal is open yet
     if expect_modal:
-        page.wait_for_selector("#auth-overlay.visible", timeout=4000)                 # ... and only then the sign-up modal
+        page.wait_for_selector("#auth-overlay.visible", timeout=6000)                 # ... and only then the sign-up modal
         assert page.locator(".answer-wrap").count() == 1                              # the answer stays behind it
         assert "Your next insight starts here." in page.locator("#auth-overlay [role=dialog]").inner_text()
+        t = page.evaluate("window.__t")
+        assert t["modal"] - t["answer"] >= 1400, t                                    # 1-2 seconds AFTER the answer, never with it
+        assert t["revealingWhenOpened"] is False, t                                   # and never while the answer is still being revealed
     else:
-        page.wait_for_timeout(1200)
+        page.wait_for_timeout(2400)
         assert not visible(page, "#auth-overlay")
     assert page.errors == []
+
+
+@needs_browser
+def test_the_modal_waits_for_a_running_reveal_to_end_and_then_pauses(page):
+    """The typing reveal marks the answer aria-busy while it runs. The gate must not open until that ends, then wait."""
+    load(page, render("chat.html", chat=CHAT, chat_id="c1"))
+    page.evaluate("""() => {
+      const w = document.createElement('div'); w.className = 'answer-wrap'; w.id = 'fake-answer'; w.setAttribute('aria-busy', 'true');
+      document.body.appendChild(w);
+      window.__open = 0;
+      new MutationObserver(() => { if (!window.__open && document.getElementById('auth-overlay').classList.contains('visible')) window.__open = performance.now(); })
+        .observe(document.getElementById('auth-overlay'), {attributes: true, attributeFilter: ['class']});
+      window.flintelGate.afterAnswer({done: true, guest_gate: 'auth_required'});
+      window.__revealEnded = 0;
+      setTimeout(() => { window.__revealEnded = performance.now(); w.removeAttribute('aria-busy'); }, 2500);
+    }""")
+    page.wait_for_timeout(2300)
+    assert not visible(page, "#auth-overlay")                                         # still revealing: nothing yet
+    page.wait_for_timeout(700)
+    assert not visible(page, "#auth-overlay")                                         # reveal over, but the pause has not elapsed
+    page.wait_for_selector("#auth-overlay.visible", timeout=3000)
+    gap = page.evaluate("window.__open - window.__revealEnded")
+    assert 1300 <= gap <= 2600, gap                                                   # about 1.5 s after the answer finished
+
+
+@needs_browser
+def test_a_reveal_that_never_ends_cannot_hold_the_modal_back_forever(page):
+    load(page, render("chat.html", chat=CHAT, chat_id="c1"))
+    page.evaluate("""() => {
+      const w = document.createElement('div'); w.className = 'answer-wrap'; w.setAttribute('aria-busy', 'true'); document.body.appendChild(w);
+      window.flintelGate.afterAnswer({done: true, guest_gate: 'auth_required'});
+    }""")
+    page.wait_for_selector("#auth-overlay.visible", timeout=14000)
 
 
 # ══════════════════ HARDENING PASS ═════════════════════════════════════════════════════════════════
@@ -1257,12 +1321,11 @@ def test_failed_authentication_leaves_the_guest_conversation_and_allowance_untou
     before = e2e["gate_coll"].find_one({"_id": guest_id})
     bad_login = client.post("/login", data={"email": "nobody@example.com", "password": "wrong-password-1", "resume": "1"},
                             headers={"Accept": "application/json"})
-    bad_signup = client.post("/signup", data={"email": "x@example.com", "password": "short", "confirm_password": "short", "resume": "1"},
-                             headers={"Accept": "application/json"})
-    mismatch = client.post("/signup", data={"email": "x@example.com", "password": "correct-horse-1",
-                                            "confirm_password": "different-horse-1", "resume": "1"},
-                           headers={"Accept": "application/json"})
-    assert [r.json()["ok"] for r in (bad_login, bad_signup, mismatch)] == [False, False, False]
+    unverified = client.post("/signup", data={"password": "correct-horse-1", "confirm_password": "correct-horse-1", "resume": "1"},
+                             headers={"Accept": "application/json"})                       # no verified address in this browser
+    bad_signup = signup_with_code(client, "x@example.com", password="short")
+    mismatch = signup_with_code(client, "y@example.com", confirm="different-horse-1")
+    assert [r.json()["ok"] for r in (bad_login, unverified, bad_signup, mismatch)] == [False, False, False, False]
     assert e2e["db"].chats.find_one({"chat_id": chat_id})["owner_key"] == guest_id     # still the guest's
     assert e2e["gate_coll"].find_one({"_id": guest_id}) == before                       # gate record unchanged
 
