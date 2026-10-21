@@ -20,6 +20,7 @@ import sys
 
 import pytest
 
+from tests.otp_helpers import signup_with_code  # noqa: F401
 from tests.test_guest_gate import (  # noqa: F401  (fixtures and helpers shared with the main gate tests)
     GOOD, KEY1, KEY2, Clock, _Oauth, _capture_real_identity_check, app, body, coll, clock, cookie_value, e2e, env, flat_cost,
     gapp, gate_doc, gg, gid_of, make_gate, mongomock, pipeline, post_search, _guest_search,
@@ -322,8 +323,7 @@ def _finish_under(e2e, chat_id, email, llm):
 
 
 def _signup(client, email="mid@example.com"):
-    return client.post("/signup", data={"email": email, "password": "correct-horse-1", "confirm_password": "correct-horse-1",
-                                        "resume": "1"}, headers={"Accept": "application/json"})
+    return signup_with_code(client, email)
 
 
 @pytest.mark.usefixtures("flat_cost")
