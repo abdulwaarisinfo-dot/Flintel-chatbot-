@@ -1239,30 +1239,124 @@
       animation: none; background: none; -webkit-text-fill-color: currentColor; color: #c9c8c5;
     }
   }
-  /* GUEST-GATE-CSS-BEGIN — sign-up gate mode of the auth modal + the signed-in search-limit modal (shared verbatim with chat.html / index.html) */
-  .auth-overlay .auth-modal { max-height: calc(100vh - 40px); overflow-y: auto; }
+  /* GUEST-GATE-CSS-BEGIN — sign-up gate mode of the auth modal, the e-mail code sign-up flow + the signed-in search-limit modal (shared verbatim with chat.html / index.html) */
+  /* Compact card. It sizes to its content and never scrolls at normal viewport heights (no overflow rule on purpose);
+     only a very short window (below) may scroll, with the scrollbar hidden. */
+  .auth-overlay { background: rgba(0,0,0,0.62); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+  .auth-overlay .auth-modal { width: 356px; padding: 28px 28px 20px 28px; border-radius: 16px; max-height: none; overflow: visible; }
+  .auth-overlay.visible .auth-modal { animation: gatePop .2s ease-out; }
+  @keyframes gatePop { from { opacity: 0; transform: translateY(8px) scale(.985); } to { opacity: 1; transform: none; } }
+  .auth-overlay .auth-close { top: 12px; right: 12px; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .auth-overlay .auth-close:hover { background: rgba(255,255,255,0.07); }
+  .auth-overlay .auth-avatar { width: 28px; height: 28px; margin: 0 auto 14px auto; }
+  .auth-overlay .auth-modal-title { font-size: 19px; line-height: 1.3; letter-spacing: 0; margin-bottom: 14px; }
+  .auth-overlay .welcome-btn { height: 42px; border-radius: 10px; font-size: 14px; letter-spacing: 0; line-height: 1.2; }
+  .auth-overlay .welcome-btn-google { margin-bottom: 0; }
+  .auth-overlay .welcome-btn-apple { margin: 8px 0 0 0; }
+  .auth-overlay .welcome-field { margin-bottom: 8px; }
+  .auth-overlay .welcome-field input { height: 42px; border-radius: 10px; padding: 0 14px; font-size: 14px; font-weight: 500; letter-spacing: 0; line-height: 1.2; }
+  .auth-overlay .welcome-field input::placeholder { font-weight: 400; }
+  .auth-overlay .welcome-divider { height: auto; background: none; display: flex; align-items: center; gap: 12px; margin: 12px 0; color: #5f5e5c; font-size: 12px; }
+  .auth-overlay .welcome-divider::before, .auth-overlay .welcome-divider::after { content: ""; flex: 1; height: 1px; background: #343332; }
+  .auth-overlay .welcome-btn-continue { margin-top: 2px; }
+  .auth-overlay .auth-switch { margin-top: 14px; font-size: 13px; }
   .auth-gate-title, .auth-gate-copy, .auth-gate-note { display: none; }
-  .auth-overlay.gate-mode .auth-gate-title { display: block; }
+  .auth-overlay.gate-mode .auth-gate-title { display: block; margin-bottom: 6px; }
   .auth-overlay.gate-mode .auth-gate-copy, .auth-overlay.gate-mode .auth-gate-note { display: block; }
   .auth-overlay.gate-mode #auth-modal-title, .auth-overlay.gate-mode #auth-apple-btn { display: none; }
-  .auth-gate-copy, .limit-copy { color: #a8a7a5; font-size: 13px; line-height: 1.55; text-align: center; margin: -8px 0 20px 0; }
-  .auth-gate-note { color: #757473; font-size: 12px; text-align: center; margin-top: 14px; }
+  .auth-gate-copy, .limit-copy { color: #a8a7a5; font-size: 13px; line-height: 1.5; text-align: center; margin: 0 0 16px 0; }
+  .auth-gate-note { color: #757473; font-size: 12px; line-height: 1.4; text-align: center; margin: 10px 0 0 0; }
   .auth-gate-note::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #C1FB3B; margin-right: 7px; vertical-align: middle; }
-  .auth-error { color: #f3b4b4; font-size: 13px; line-height: 1.45; text-align: center; margin: 12px 0 0 0; }
+  .auth-error { color: #f3b4b4; font-size: 13px; line-height: 1.4; text-align: center; margin: 10px 0 0 0; }
   .auth-error[hidden] { display: none; }
   .auth-overlay.gate-mode .welcome-btn-continue.active, #limit-cta { background: #C1FB3B; color: #191817; font-weight: 700; text-decoration: none; }
   .auth-overlay.gate-mode .welcome-btn-continue.active:hover, #limit-cta:hover { filter: brightness(0.95); }
   .auth-overlay .welcome-btn.is-busy { opacity: .6; pointer-events: none; }
+  .auth-overlay .welcome-field input:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(193,251,59,0.16); }
   .auth-overlay .auth-modal:focus-visible, .auth-overlay button:focus-visible, .auth-overlay a:focus-visible, .auth-overlay input:focus-visible { outline: 2px solid #C1FB3B; outline-offset: 2px; }
-  .limit-facts { margin: 0 0 18px 0; padding: 12px 14px; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; font-size: 13px; color: #d6d5d4; }
+  .limit-facts { margin: 0 0 14px 0; padding: 10px 14px; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; font-size: 13px; color: #d6d5d4; }
   .limit-facts[hidden] { display: none; }
   .limit-facts div { display: flex; justify-content: space-between; gap: 12px; padding: 3px 0; }
   .limit-facts dt { color: #757473; }
   .limit-facts dd { margin: 0; text-align: right; }
   #limit-cta { display: flex; align-items: center; justify-content: center; }
-  .limit-later { background: transparent; color: #a8a7a5; border: none; cursor: pointer; margin-top: 8px; }
+  .limit-later { background: transparent; color: #a8a7a5; border: none; cursor: pointer; margin-top: 4px; }
   .limit-later:hover { color: #fff; }
-  @media (max-width: 480px) { .auth-overlay { padding: 12px; align-items: flex-end; } .auth-overlay .auth-modal { width: 100%; padding: 32px 22px 28px 22px; } }
+  @media (max-height: 600px) { .auth-overlay .auth-avatar { display: none; } .auth-overlay .auth-modal { padding-top: 26px; } .auth-overlay.gate-mode .auth-gate-copy { display: none; } }
+  @media (max-height: 460px) { .auth-overlay { align-items: flex-start; overflow-y: auto; scrollbar-width: none; } .auth-overlay::-webkit-scrollbar { display: none; } .auth-overlay .auth-modal { margin: auto; } }
+  @media (max-width: 480px) { .auth-overlay { padding: 0; align-items: flex-end; } .auth-overlay .auth-modal { width: 100%; border-radius: 16px 16px 0 0; padding: 26px 20px calc(20px + env(safe-area-inset-bottom, 0px)) 20px; } }
+
+  /* ── e-mail code sign-up: full-screen steps (code → password → done) ── */
+  .flow-overlay { display: none; position: fixed; inset: 0; z-index: 40; background: #181818; color: #f1f0ee; overflow-y: auto; scrollbar-width: none; }
+  .flow-overlay::-webkit-scrollbar { display: none; }
+  .flow-overlay.visible { display: flex; animation: flowFade .22s ease-out; }
+  @keyframes flowFade { from { opacity: 0; } to { opacity: 1; } }
+  .flow-inner { margin: auto; width: 100%; max-width: 392px; padding: 64px 20px 40px 20px; display: none; flex-direction: column; align-items: center; text-align: center; }
+  .flow-inner.is-active { display: flex; }
+  .flow-close { position: fixed; top: 20px; right: 20px; width: 40px; height: 40px; border-radius: 50%; background: #262626; color: #a8a7a5; display: flex; align-items: center; justify-content: center; transition: background .15s ease, color .15s ease; }
+  .flow-close:hover { background: #303030; color: #fff; }
+  .flow-icon { width: 76px; height: 76px; border-radius: 50%; background: #202020; border: 1px solid #2d2d2d; display: flex; align-items: center; justify-content: center; color: #e3e2e0; }
+  .flow-icon svg { display: block; }
+  .flow-title { font-family: 'Enriqueta', Georgia, 'Times New Roman', serif; font-weight: 400; font-size: 34px; line-height: 1.15; letter-spacing: -0.5px; color: #f4f3f1; margin: 24px 0 10px 0; }
+  .flow-sub { color: #8d8c8a; font-size: 15px; line-height: 1.5; margin: 0 0 28px 0; max-width: 340px; }
+  .flow-sub b { display: block; margin-top: 2px; color: #d6d5d4; font-weight: 600; overflow-wrap: anywhere; }
+  .otp-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 16px; }
+  .otp-box { width: 48px; height: 58px; background: #232323; border: 1px solid #333; border-radius: 12px; color: #fff; text-align: center; font-family: inherit; font-size: 24px; font-weight: 600; caret-color: #C1FB3B; outline: none; padding: 0; transition: border-color .15s ease, box-shadow .15s ease; }
+  .otp-box:focus { border-color: #C1FB3B; box-shadow: 0 0 0 3px rgba(193,251,59,0.14); }
+  .otp-box.filled { border-color: #4b4a49; }
+  .otp-row.is-error .otp-box { border-color: #e5575c; }
+  .otp-row.shake { animation: otpShake .36s ease-in-out; }
+  @keyframes otpShake { 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+  .flow-msg { min-height: 20px; margin: 0 0 12px 0; font-size: 13px; line-height: 1.4; color: #f3b4b4; }
+  .flow-msg.ok { color: #C1FB3B; }
+  .flow-msg:empty { min-height: 0; margin: 0; }
+  .flow-form { width: 100%; }
+  .flow-field { position: relative; margin-bottom: 10px; }
+  .flow-field input { width: 100%; height: 50px; background: #232323; border: 1px solid #333; border-radius: 12px; color: #fff; padding: 0 64px 0 16px; font-family: inherit; font-size: 15px; outline: none; transition: border-color .15s ease, box-shadow .15s ease; }
+  .flow-field input::placeholder { color: #6f6e6c; }
+  .flow-field input:focus { border-color: #C1FB3B; box-shadow: 0 0 0 3px rgba(193,251,59,0.14); }
+  .flow-field .flow-toggle { position: absolute; right: 6px; top: 6px; height: 38px; padding: 0 10px; border-radius: 8px; color: #8d8c8a; font-size: 13px; font-weight: 600; }
+  .flow-field .flow-toggle:hover { color: #fff; }
+  .flow-hint { color: #6f6e6c; font-size: 12px; text-align: left; margin: 0 0 14px 2px; }
+  .flow-btn { width: 100%; height: 50px; border-radius: 12px; background: #2b2b2b; color: rgba(255,255,255,0.38); font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; border: none; transition: background .15s ease, color .15s ease, filter .15s ease; cursor: default; }
+  .flow-btn.active { background: #C1FB3B; color: #191817; font-weight: 700; cursor: pointer; }
+  .flow-btn.active:hover { filter: brightness(0.95); }
+  .flow-btn.is-busy { opacity: .6; pointer-events: none; }
+  .flow-links { display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 18px; font-size: 13px; color: #8d8c8a; }
+  .flow-link { color: #d6d5d4; font-size: 13px; font-weight: 600; padding: 4px 8px; border-radius: 6px; }
+  .flow-link:hover:not(:disabled) { text-decoration: underline; }
+  .flow-link:disabled { color: #6f6e6c; font-weight: 500; cursor: default; }
+  .flow-overlay button:focus-visible, .flow-overlay input:focus-visible { outline: 2px solid #C1FB3B; outline-offset: 2px; }
+  .flow-plane { animation: flowFloat 3.2s ease-in-out infinite; }
+  @keyframes flowFloat { 50% { transform: translateY(-2px); } }
+  /* done: account created */
+  .done-badge { position: relative; width: 96px; height: 96px; display: flex; align-items: center; justify-content: center; }
+  .done-badge svg { width: 96px; height: 96px; overflow: visible; }
+  .done-ring { stroke: #C1FB3B; stroke-width: 3; fill: rgba(193,251,59,0.08); stroke-dasharray: 264; stroke-dashoffset: 264; transform: rotate(-90deg); transform-origin: 48px 48px; animation: doneRing .7s cubic-bezier(.4,.1,.2,1) .05s forwards; }
+  .done-check { stroke: #C1FB3B; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; fill: none; stroke-dasharray: 48; stroke-dashoffset: 48; animation: doneCheck .38s ease-out .62s forwards; }
+  .done-badge::after { content: ""; position: absolute; inset: 0; border-radius: 50%; box-shadow: 0 0 0 0 rgba(193,251,59,0.45); animation: donePulse 1.1s ease-out .75s 1; }
+  @keyframes doneRing { to { stroke-dashoffset: 0; } }
+  @keyframes doneCheck { to { stroke-dashoffset: 0; } }
+  @keyframes donePulse { to { box-shadow: 0 0 0 26px rgba(193,251,59,0); } }
+  .confetti { position: absolute; left: 50%; top: 50%; width: 0; height: 0; pointer-events: none; }
+  .confetti i { position: absolute; left: -4px; top: -4px; width: 8px; height: 12px; border-radius: 2px; opacity: 0; background: var(--c); animation: confettiBurst 1.25s cubic-bezier(.15,.7,.3,1) .7s forwards; }
+  @keyframes confettiBurst { 0% { opacity: 1; transform: translate(0,0) rotate(0) scale(.6); } 70% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(1); } }
+  .done-bar { width: 168px; height: 3px; border-radius: 3px; background: #2b2b2b; overflow: hidden; margin: 8px 0 22px 0; }
+  .done-bar > span { display: block; height: 100%; width: 0; background: #C1FB3B; border-radius: 3px; }
+  .flow-inner.is-active .done-bar > span { animation: doneBar 2.6s linear .9s forwards; }
+  @keyframes doneBar { to { width: 100%; } }
+  .done-reveal { opacity: 0; transform: translateY(6px); animation: doneUp .45s ease-out .75s forwards; }
+  @keyframes doneUp { to { opacity: 1; transform: none; } }
+  .done-step .flow-title { margin-top: 20px; }
+  .done-step .flow-title, .done-step .flow-sub { position: relative; z-index: 1; }
+  @media (max-width: 400px) { .otp-row { gap: 7px; } .otp-box { width: 42px; height: 54px; font-size: 22px; } .flow-title { font-size: 30px; } }
+  @media (prefers-reduced-motion: reduce) {
+    .auth-overlay.visible .auth-modal, .flow-overlay.visible, .flow-plane, .otp-row.shake { animation: none; }
+    .done-ring, .done-check { animation: none; stroke-dashoffset: 0; }
+    .done-badge::after, .confetti { display: none; }
+    .done-reveal { animation: none; opacity: 1; transform: none; }
+    .flow-inner.is-active .done-bar > span { animation: none; width: 100%; }
+  }
   /* GUEST-GATE-CSS-END */
 </style>
 <script>
@@ -1757,7 +1851,7 @@
 </div>
 {% endif %}
 
-<!-- Sign in / Sign up modal — wired to index.py's real auth routes -->
+<!-- GUEST-GATE-AUTH-MODAL-BEGIN — compact sign-in / sign-up card (e-mail sign-up continues in the full-screen #signup-flow below) -->
 <div class="auth-overlay" id="auth-overlay">
   <div class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" tabindex="-1">
     <button class="auth-close" id="auth-close-btn" type="button" aria-label="Close">
@@ -1768,7 +1862,7 @@
     </span>
     <p class="auth-modal-title" id="auth-modal-title">Sign in to Flintel</p>
     <h2 class="auth-modal-title auth-gate-title" id="auth-gate-title">Your next insight starts here.</h2>
-    <p class="auth-gate-copy" id="auth-gate-copy">You've used your free search. Create your free account to continue exploring conversations, uncover opportunities, and keep your research in one place.</p>
+    <p class="auth-gate-copy" id="auth-gate-copy">Create your free account to keep exploring.</p>
 
     <a class="welcome-btn welcome-btn-google" id="auth-google-link" href="/auth/google/login">
       <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
@@ -1779,7 +1873,7 @@
       Continue with Apple
     </button>
 
-    <div class="welcome-divider"></div>
+    <div class="welcome-divider"><span>or</span></div>
 
     <!-- Real POST to /login -->
     <form action="/login" method="post" id="login-form" class="auth-form">
@@ -1795,32 +1889,91 @@
       <button class="welcome-btn welcome-btn-continue active" type="submit">Log in</button>
     </form>
 
-    <!-- Real POST to /signup -->
-    <form action="/signup" method="post" id="signup-form" class="auth-form hidden">
-      <input type="hidden" name="resume" value="">
+    <!-- Sign-up step 1: the e-mail address only. POST /signup/code e-mails a 6-digit code; the flow continues in #signup-flow -->
+    <form action="/signup/code" method="post" id="signup-form" class="auth-form hidden" novalidate>
       <div class="welcome-field">
         <label for="signup-email" class="sr-only">Email</label>
-        <input type="email" id="signup-email" name="email" required autocomplete="email" placeholder="Email" />
+        <input type="email" id="signup-email" name="email" required autocomplete="email" placeholder="Email address" />
       </div>
-      <div class="welcome-field">
-        <label for="signup-password" class="sr-only">Password</label>
-        <input type="password" id="signup-password" name="password" required minlength="8" autocomplete="new-password" placeholder="Password" />
-      </div>
-      <div class="welcome-field">
-        <label for="signup-confirm-password" class="sr-only">Confirm password</label>
-        <input type="password" id="signup-confirm-password" name="confirm_password" required minlength="8" autocomplete="new-password" placeholder="Confirm password" />
-      </div>
-      <button class="welcome-btn welcome-btn-continue active" type="submit">Create account</button>
+      <button class="welcome-btn welcome-btn-continue active" type="submit">Continue</button>
     </form>
+    <p class="auth-gate-note" id="auth-gate-note">Your current search and its answer will be preserved.</p>
+    <p class="auth-error" id="auth-error" role="alert" aria-live="polite" hidden></p>
 
     <p class="auth-switch">
       <span id="auth-switch-to-signup">Don't have an account? <button type="button" id="show-signup-btn">Sign up</button></span>
       <span id="auth-switch-to-login" class="hidden">Already have an account? <button type="button" id="show-login-btn">Sign in</button></span>
     </p>
-    <p class="auth-gate-note" id="auth-gate-note">Your current search and its answer will be preserved.</p>
-    <p class="auth-error" id="auth-error" role="alert" aria-live="polite" hidden></p>
   </div>
 </div>
+
+<!-- Sign-up steps 2-4 (full screen): 6-digit code from the e-mail -> password -> account created. Opened by the script below. -->
+<div class="flow-overlay" id="signup-flow" role="dialog" aria-modal="true" aria-labelledby="flow-code-title" tabindex="-1">
+  <button class="flow-close" id="flow-close-btn" type="button" aria-label="Close">
+    <svg width="13" height="13" viewBox="0 0 11 11" fill="none"><path d="M1 1L10 10M10 1L1 10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+  </button>
+
+  <section class="flow-inner" id="flow-code" data-step="code" aria-live="polite">
+    <div class="flow-icon" aria-hidden="true">
+      <svg class="flow-plane" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/><path d="M2.5 19.5c1.6-.4 2.6-1.4 3.2-2.6" stroke-dasharray="1 2.6"/><path d="M5 22.2c.9-.2 1.6-.7 2-1.4" stroke-dasharray="1 2.6"/>
+      </svg>
+    </div>
+    <h1 class="flow-title" id="flow-code-title">Check your email</h1>
+    <p class="flow-sub" id="flow-code-sub">A 6-digit code has been sent to <b id="otp-email"></b></p>
+    <form id="otp-form" action="/signup/verify" method="post" class="flow-form" novalidate>
+      <div class="otp-row" id="otp-row" role="group" aria-label="6-digit code">
+        <input class="otp-box" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" aria-label="Digit 1 of 6">
+        <input class="otp-box" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="Digit 2 of 6">
+        <input class="otp-box" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="Digit 3 of 6">
+        <input class="otp-box" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="Digit 4 of 6">
+        <input class="otp-box" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="Digit 5 of 6">
+        <input class="otp-box" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="Digit 6 of 6">
+      </div>
+      <p class="flow-msg" id="otp-msg" role="alert"></p>
+      <button class="flow-btn" id="otp-confirm" type="submit" disabled>Confirm</button>
+    </form>
+    <div class="flow-links">
+      <span>Didn't get it? <button class="flow-link" id="otp-resend" type="button">Resend code</button></span>
+      <button class="flow-link" id="otp-change" type="button">Use a different email</button>
+    </div>
+  </section>
+
+  <section class="flow-inner" id="flow-password" data-step="password">
+    <div class="flow-icon" aria-hidden="true">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg>
+    </div>
+    <h1 class="flow-title" id="flow-password-title">Create your password</h1>
+    <p class="flow-sub">Email verified. Choose a password for <b id="pw-email"></b></p>
+    <form id="password-form" action="/signup" method="post" class="flow-form" novalidate>
+      <input type="hidden" name="resume" value="">
+      <div class="flow-field">
+        <label for="signup-password" class="sr-only">Password</label>
+        <input type="password" id="signup-password" name="password" required minlength="8" autocomplete="new-password" placeholder="Password">
+        <button class="flow-toggle" id="pw-toggle" type="button" aria-pressed="false" aria-label="Show passwords">Show</button>
+      </div>
+      <div class="flow-field">
+        <label for="signup-confirm-password" class="sr-only">Confirm password</label>
+        <input type="password" id="signup-confirm-password" name="confirm_password" required minlength="8" autocomplete="new-password" placeholder="Confirm password">
+      </div>
+      <p class="flow-hint">At least 8 characters.</p>
+      <p class="flow-msg" id="pw-msg" role="alert"></p>
+      <button class="flow-btn" id="pw-submit" type="submit" disabled>Create account</button>
+    </form>
+  </section>
+
+  <section class="flow-inner done-step" id="flow-done" data-step="done" aria-live="polite">
+    <div class="done-badge" aria-hidden="true">
+      <svg viewBox="0 0 96 96"><circle class="done-ring" cx="48" cy="48" r="42"/><path class="done-check" d="M31 49l12 12 23-25"/></svg>
+      <div class="confetti"><i style="--x:70px;--y:-6px;--r:-90deg;--c:#C1FB3B"></i><i style="--x:97px;--y:34px;--r:-37deg;--c:#F5F4F2"></i><i style="--x:82px;--y:34px;--r:16deg;--c:#7DD3FC"></i><i style="--x:48px;--y:34px;--r:69deg;--c:#FDBA74"></i><i style="--x:33px;--y:34px;--r:122deg;--c:#F9A8D4"></i><i style="--x:-1px;--y:34px;--r:175deg;--c:#A78BFA"></i><i style="--x:-15px;--y:34px;--r:228deg;--c:#C1FB3B"></i><i style="--x:-54px;--y:34px;--r:-79deg;--c:#F5F4F2"></i><i style="--x:-59px;--y:34px;--r:-26deg;--c:#7DD3FC"></i><i style="--x:-74px;--y:27px;--r:27deg;--c:#FDBA74"></i><i style="--x:-69px;--y:14px;--r:80deg;--c:#F9A8D4"></i><i style="--x:-108px;--y:-22px;--r:133deg;--c:#A78BFA"></i><i style="--x:-96px;--y:-34px;--r:186deg;--c:#C1FB3B"></i><i style="--x:-68px;--y:-66px;--r:239deg;--c:#F5F4F2"></i><i style="--x:-54px;--y:-68px;--r:-68deg;--c:#7DD3FC"></i><i style="--x:-20px;--y:-76px;--r:-15deg;--c:#FDBA74"></i><i style="--x:-16px;--y:-115px;--r:38deg;--c:#F9A8D4"></i><i style="--x:29px;--y:-103px;--r:91deg;--c:#A78BFA"></i><i style="--x:38px;--y:-90px;--r:144deg;--c:#C1FB3B"></i><i style="--x:63px;--y:-60px;--r:197deg;--c:#F5F4F2"></i><i style="--x:62px;--y:-46px;--r:250deg;--c:#7DD3FC"></i><i style="--x:110px;--y:-21px;--r:-57deg;--c:#FDBA74"></i></div>
+    </div>
+    <h1 class="flow-title done-reveal" id="flow-done-title">Your account is ready</h1>
+    <p class="flow-sub done-reveal">Welcome to Flintel. You're signed in &mdash; taking you back to your research.</p>
+    <div class="done-bar done-reveal" aria-hidden="true"><span></span></div>
+    <button class="flow-btn active done-reveal" id="flow-done-continue" type="button" style="max-width:260px">Continue</button>
+  </section>
+</div>
+<!-- GUEST-GATE-AUTH-MODAL-END -->
 
 <!-- GUEST-GATE-LIMIT-MODAL-BEGIN — signed-in users only: shown when the server denies a search with X-Flintel-Denial: credits-exhausted -->
 <div class="auth-overlay" id="limit-overlay">
@@ -1843,11 +1996,18 @@
      guest-auth-required, or credits-exhausted + X-Flintel-Audience: guest  ->  sign-up / sign-in modal (visitor, not signed in)
      credits-exhausted for a signed-in user                                  ->  search-limit / upgrade modal
    Everything else (busy, unavailable, validation, network) keeps the existing inline error handling.
-   Enforcement is on the server; closing a modal never unlocks anything. */
+   Enforcement is on the server; closing a modal never unlocks anything.
+   After a guest's answer the sign-up modal appears only once the answer has FINISHED displaying (the typing reveal is
+   over), plus a short pause. E-mail sign-up: address -> emailed 6-digit code -> password -> "account created" -> signed in. */
 (function () {
   'use strict';
   const $ = (id) => document.getElementById(id);
+  const AFTER_ANSWER_DELAY_MS = 1500;      // the popup shows this long after the answer has finished displaying
+  const SETTLE_POLL_MS = 120;
+  const SETTLE_MAX_MS = 9000;              // the reveal animation lasts at most ~5 s; never wait forever
+  const DONE_REDIRECT_MS = 3400;           // how long the "account created" screen plays before the sign-in lands
   let returnFocus = null;
+  let settleTimer = 0;
 
   function safeRedirect(path) {
     return typeof path === 'string' && path.charAt(0) === '/' && path.charAt(1) !== '/' && path.indexOf('\\') === -1;
@@ -1857,19 +2017,28 @@
       root.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"])'),
       (n) => n.offsetParent !== null);
   }
-  function openOverlay(overlay, preferred) {
+  function openOverlay(overlay, preferred, keepReturn) {
     if (!overlay) return;
-    if (!overlay.classList.contains('visible')) returnFocus = document.activeElement;
+    if (!keepReturn && !overlay.classList.contains('visible')) returnFocus = document.activeElement;
     overlay.classList.add('visible');
-    const dlg = overlay.querySelector('[role="dialog"]');
+    const dlg = overlay.matches('[role="dialog"]') ? overlay : overlay.querySelector('[role="dialog"]');
+    const before = document.activeElement;
     window.setTimeout(() => {
       const t = preferred && preferred.offsetParent !== null ? preferred : (dlg || overlay);
-      try { t.focus(); } catch (e) { /* focus is a nicety */ }
+      focusUnlessMoved(t, before, overlay);
     }, 30);
   }
-  function closeOverlay(overlay) {
+  function focusUnlessMoved(target, before, within) {   // never steal the cursor from a field the visitor has already clicked into
+    try {
+      const a = document.activeElement;
+      if (!target || (a && a !== before && a !== document.body && within && within.contains(a))) return;
+      target.focus();
+    } catch (e) { /* focus is a nicety */ }
+  }
+  function closeOverlay(overlay, keepReturn) {
     if (!overlay || !overlay.classList.contains('visible')) return;
     overlay.classList.remove('visible');
+    if (keepReturn) return;
     if (returnFocus && document.contains(returnFocus)) { try { returnFocus.focus(); } catch (e) { /* ignore */ } }
     returnFocus = null;
   }
@@ -1880,8 +2049,31 @@
     if (sb) sb.classList.remove('sidebar-bottom-hidden');
     try { sessionStorage.setItem('flintel_welcome_dismissed', '1'); } catch (e) { /* private mode */ }
   }
+  function post(url, fields) {               // JSON round trip; never throws, resolves {ok, status, data}
+    const fd = new FormData();
+    Object.keys(fields).forEach((k) => fd.append(k, fields[k]));
+    return fetch(url, { method: 'POST', body: fd, credentials: 'same-origin', headers: { 'Accept': 'application/json' }, redirect: 'follow' })
+      .then((resp) => resp.json().catch(() => ({})).then((data) => ({ ok: resp.ok && !!(data && data.ok), status: resp.status, data: data || {} })))
+      .catch(() => ({ ok: false, status: 0, data: { error: 'Network problem. Check your connection and try again.' } }));
+  }
+
+  // ---- when may a modal appear after an answer? only once the answer has finished displaying ----
+  function answerStillRevealing() { return !!document.querySelector('.answer-wrap[aria-busy="true"]'); }
+  function afterAnswerSettles(open, delay) {
+    window.clearTimeout(settleTimer);
+    const t0 = Date.now();
+    const tick = () => {
+      if (answerStillRevealing() && Date.now() - t0 < SETTLE_MAX_MS) { settleTimer = window.setTimeout(tick, SETTLE_POLL_MS); return; }
+      settleTimer = window.setTimeout(() => { try { open(); } catch (e) { /* ignore */ } }, delay);
+    };
+    settleTimer = window.setTimeout(tick, SETTLE_POLL_MS);
+  }
 
   // ---- sign-up / sign-in modal (the shared #auth-overlay in "gate mode") ----
+  const GATE_TEXT = {
+    signup: ['Your next insight starts here.', 'Create your free account to keep exploring.'],
+    login: ['Welcome back.', 'Sign in to keep exploring.'],
+  };
   function setMode(mode) {
     const isSignup = mode === 'signup';
     const lf = $('login-form'), sf = $('signup-form'), toS = $('auth-switch-to-signup'), toL = $('auth-switch-to-login');
@@ -1889,9 +2081,14 @@
     if (sf) sf.classList.toggle('hidden', !isSignup);
     if (toS) toS.classList.toggle('hidden', isSignup);
     if (toL) toL.classList.toggle('hidden', !isSignup);
+    const t = $('auth-modal-title'), gt = $('auth-gate-title'), gc = $('auth-gate-copy');
+    if (t) t.textContent = isSignup ? 'Create your account' : 'Sign in to Flintel';
+    if (gt) gt.textContent = GATE_TEXT[mode === 'login' ? 'login' : 'signup'][0];
+    if (gc) gc.textContent = GATE_TEXT[mode === 'login' ? 'login' : 'signup'][1];
+    showError('');
   }
   function setResume(on) {
-    Array.prototype.forEach.call(document.querySelectorAll('#auth-overlay input[name="resume"]'), (i) => { i.value = on ? '1' : ''; });
+    Array.prototype.forEach.call(document.querySelectorAll('#auth-overlay input[name="resume"], #signup-flow input[name="resume"]'), (i) => { i.value = on ? '1' : ''; });
     const g = $('auth-google-link');
     if (g) g.setAttribute('href', on ? '/auth/google/login?resume=1' : '/auth/google/login');
   }
@@ -1902,9 +2099,6 @@
     e.hidden = !msg;
   }
   function gateLabels(on) {
-    const sf = $('signup-form');
-    const b = sf ? sf.querySelector('button[type="submit"]') : null;
-    if (b) { if (!b.dataset.label) b.dataset.label = b.textContent; b.textContent = on ? 'Create your free account' : b.dataset.label; }
     const o = $('auth-overlay');
     const dlg = o ? o.querySelector('[role="dialog"]') : null;
     if (dlg) {
@@ -1924,6 +2118,7 @@
     const o = $('auth-overlay');
     if (!o) return false;
     closeLimit();
+    closeFlowSilently();
     dismissWelcome();
     o.classList.add('gate-mode');
     setResume(true);
@@ -1939,7 +2134,7 @@
     closeOverlay(o);
     resetGuestMode();
   }
-  async function submitAuth(e) {
+  async function submitAuth(e) {             // /login (and Google-less password sign-in) while in gate mode
     const o = $('auth-overlay');
     if (!o || !o.classList.contains('gate-mode')) return;       // the normal modal keeps its native form post
     e.preventDefault();
@@ -1960,6 +2155,192 @@
       showError('Network problem. Check your connection and try again.');
     }
     if (btn) btn.classList.remove('is-busy');
+  }
+
+  // ---- e-mail sign-up: step 1 (address) -> full-screen steps 2-4 ----
+  const flow = { email: '', step: '', cooldownTimer: 0, doneTimer: 0, redirect: '/' };
+  const FLOW_STEPS = { code: ['flow-code', 'flow-code-title'], password: ['flow-password', 'flow-password-title'], done: ['flow-done', 'flow-done-title'] };
+  function otpBoxes() { return Array.prototype.slice.call(document.querySelectorAll('#signup-flow .otp-box')); }
+  function otpValue() { return otpBoxes().map((b) => b.value).join(''); }
+  function setMsg(id, text, ok) {
+    const m = $(id);
+    if (!m) return;
+    m.textContent = text || '';
+    m.classList.toggle('ok', !!(text && ok));
+  }
+  function syncOtp() {
+    const full = /^\d{6}$/.test(otpValue());
+    const b = $('otp-confirm');
+    if (b) { b.disabled = !full; b.classList.toggle('active', full); }
+    otpBoxes().forEach((x) => x.classList.toggle('filled', !!x.value));
+  }
+  function otpError(msg, shake) {
+    setMsg('otp-msg', msg, false);
+    const row = $('otp-row');
+    if (!row) return;
+    row.classList.toggle('is-error', !!msg);
+    if (msg && shake) { row.classList.remove('shake'); void row.offsetWidth; row.classList.add('shake'); }
+  }
+  function otpFill(start, digits) {
+    const boxes = otpBoxes();
+    let i = start;
+    for (let k = 0; k < digits.length && i < boxes.length; k++, i++) boxes[i].value = digits.charAt(k);
+    const next = boxes[Math.min(i, boxes.length - 1)];
+    if (next) next.focus();
+    otpError('');
+    syncOtp();
+  }
+  function otpClear() { otpBoxes().forEach((b) => { b.value = ''; }); otpError(''); syncOtp(); }
+  function showStep(step) {
+    flow.step = step;
+    Object.keys(FLOW_STEPS).forEach((k) => { const s = $(FLOW_STEPS[k][0]); if (s) s.classList.toggle('is-active', k === step); });
+    const f = $('signup-flow');
+    if (f) f.setAttribute('aria-labelledby', FLOW_STEPS[step][1]);
+    const close = $('flow-close-btn');
+    if (close) close.style.display = step === 'done' ? 'none' : '';
+    const focusTarget = step === 'code' ? otpBoxes()[0] : (step === 'password' ? $('signup-password') : $('flow-done-continue'));
+    const before = document.activeElement;
+    window.setTimeout(() => { if (focusTarget && focusTarget.offsetParent !== null) focusUnlessMoved(focusTarget, before, f); }, 40);
+  }
+  function startCooldown(seconds) {
+    window.clearInterval(flow.cooldownTimer);
+    const b = $('otp-resend');
+    if (!b) return;
+    let left = Math.max(0, Math.floor(seconds || 0));
+    const paint = () => {
+      b.disabled = left > 0;
+      b.textContent = left > 0 ? 'Resend in ' + left + 's' : 'Resend code';
+    };
+    paint();
+    if (left <= 0) return;
+    flow.cooldownTimer = window.setInterval(() => { left -= 1; paint(); if (left <= 0) window.clearInterval(flow.cooldownTimer); }, 1000);
+  }
+  function startFlow(email, retryAfter) {
+    const a = $('auth-overlay'), f = $('signup-flow');
+    if (!f) return;
+    flow.email = email;
+    const oe = $('otp-email'), pe = $('pw-email');
+    if (oe) oe.textContent = email;
+    if (pe) pe.textContent = email;
+    otpClear();
+    setMsg('pw-msg', '');
+    ['signup-password', 'signup-confirm-password'].forEach((id) => { const i = $(id); if (i) i.value = ''; });
+    syncPassword();
+    if (a) closeOverlay(a, true);                          // keeps gate-mode + the "resume my search" flag for the final step
+    showStep('code');
+    openOverlay(f, otpBoxes()[0], true);
+    startCooldown(retryAfter);
+  }
+  function resetFlow() {
+    window.clearInterval(flow.cooldownTimer);
+    window.clearTimeout(flow.doneTimer);
+    flow.email = ''; flow.step = '';
+    otpClear();
+    Object.keys(FLOW_STEPS).forEach((k) => { const s = $(FLOW_STEPS[k][0]); if (s) s.classList.remove('is-active'); });
+  }
+  function closeFlowSilently() {             // hide the full-screen flow without touching the compact card
+    const f = $('signup-flow');
+    if (f && f.classList.contains('visible')) { f.classList.remove('visible'); resetFlow(); }
+  }
+  function closeFlow() {                     // the X / Escape: leaves everything closed (a guest's allowance is unchanged)
+    const f = $('signup-flow');
+    if (!f || !f.classList.contains('visible')) return;
+    closeOverlay(f);
+    resetFlow();
+    resetGuestMode();
+  }
+  function backToEmail(message, mode) {     // wrong address / expired verification / existing account: reopen the compact card
+    const em = flow.email;
+    closeFlowSilently();
+    const a = $('auth-overlay');
+    if (!a) return;
+    setMode(mode || 'signup');
+    const inp = $((mode === 'login') ? 'login-email' : 'signup-email');
+    if (inp && em) inp.value = em;
+    showError(message || '');
+    openOverlay(a, inp, true);
+  }
+  async function submitEmail(e) {            // step 1
+    e.preventDefault();
+    const form = e.currentTarget, input = $('signup-email');
+    const btn = form.querySelector('button[type="submit"]');
+    const email = ((input && input.value) || '').trim();
+    showError('');
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { showError('Enter a valid email address.'); if (input) input.focus(); return; }
+    if (btn) btn.classList.add('is-busy');
+    const r = await post(form.getAttribute('action') || '/signup/code', { email: email });
+    if (btn) btn.classList.remove('is-busy');
+    if (r.ok) { startFlow(r.data.email || email, r.data.retry_after); return; }
+    if (r.data && r.data.reason === 'exists') {   // already registered: move to sign-in with the address filled in
+      const li = $('login-email');
+      setMode('login');
+      if (li) li.value = email;
+      showError('You already have an account. Sign in below.');
+      return;
+    }
+    if (r.data && r.data.reason === 'cooldown') { startFlow(email, r.data.retry_after); setMsg('otp-msg', 'A code was just sent. Check your inbox.', true); return; }
+    showError((r.data && r.data.error) || 'Something went wrong. Please try again.');
+  }
+  async function submitCode(e) {             // step 2
+    if (e) e.preventDefault();
+    const code = otpValue();
+    const btn = $('otp-confirm');
+    if (!/^\d{6}$/.test(code) || (btn && btn.classList.contains('is-busy'))) return;
+    if (btn) btn.classList.add('is-busy');
+    const r = await post('/signup/verify', { email: flow.email, code: code });
+    if (btn) btn.classList.remove('is-busy');
+    if (r.ok) { otpError(''); showStep('password'); return; }
+    const reason = r.data && r.data.reason;
+    const msg = (r.data && r.data.error) || 'We couldn\'t check the code. Please try again.';
+    if (reason === 'expired' || reason === 'locked') { otpClear(); otpError(msg, false); return; }
+    otpClear();                                // a wrong code: empty boxes, shake, message, cursor back in the first box
+    otpError(msg, true);
+    const first = otpBoxes()[0];
+    if (first) first.focus();
+  }
+  async function resendCode() {
+    const b = $('otp-resend');
+    if (!flow.email || (b && b.disabled)) return;
+    if (b) b.disabled = true;
+    const r = await post('/signup/code', { email: flow.email });
+    if (r.ok) { otpClear(); setMsg('otp-msg', 'A new code is on its way.', true); startCooldown(r.data.retry_after); return; }
+    setMsg('otp-msg', (r.data && r.data.error) || 'We couldn\'t send a new code.', false);
+    startCooldown((r.data && r.data.retry_after) || 0);
+  }
+  function syncPassword() {
+    const p = $('signup-password'), c = $('signup-confirm-password'), b = $('pw-submit');
+    const ready = !!(p && c && p.value && c.value);
+    if (b) { b.disabled = !ready; b.classList.toggle('active', ready); }
+  }
+  async function submitPassword(e) {         // step 3
+    e.preventDefault();
+    const form = e.currentTarget;
+    const p = $('signup-password'), c = $('signup-confirm-password'), btn = $('pw-submit');
+    if (btn && btn.classList.contains('is-busy')) return;
+    if (!p.value || p.value.length < 8) { setMsg('pw-msg', 'Use at least 8 characters.'); p.focus(); return; }
+    if (p.value !== c.value) { setMsg('pw-msg', 'The passwords don\'t match.'); c.focus(); return; }
+    setMsg('pw-msg', '');
+    if (btn) btn.classList.add('is-busy');
+    const r = await post(form.getAttribute('action') || '/signup', {
+      password: p.value, confirm_password: c.value, resume: (form.querySelector('input[name="resume"]') || {}).value || '' });
+    if (btn) btn.classList.remove('is-busy');
+    if (r.ok) {
+      flow.redirect = safeRedirect(r.data.redirect) ? r.data.redirect : '/';
+      p.value = ''; c.value = '';
+      showStep('done');
+      window.clearTimeout(flow.doneTimer);
+      flow.doneTimer = window.setTimeout(finishDone, DONE_REDIRECT_MS);
+      return;
+    }
+    const reason = r.data && r.data.reason;
+    if (r.status === 403 || reason === 'verification_required') { backToEmail('Your verification expired. Enter your email to get a new code.'); return; }
+    if (r.status === 409) { backToEmail('An account with that email already exists. Sign in instead.', 'login'); return; }
+    setMsg('pw-msg', (r.data && r.data.error) || 'Something went wrong. Please try again.');
+  }
+  function finishDone() {
+    window.clearTimeout(flow.doneTimer);
+    if (flow.step !== 'done') return;
+    window.location.assign(flow.redirect || '/');
   }
 
   // ---- signed-in user's search-limit / upgrade modal ----
@@ -1997,6 +2378,7 @@
     const o = $('limit-overlay');
     if (!o) return false;
     closeGuest();
+    closeFlowSilently();
     dismissWelcome();
     const wasOpen = o.classList.contains('visible');
     openOverlay(o, $('limit-cta'));
@@ -2023,21 +2405,49 @@
       return kind;
     } catch (e) { return null; }
   }
-  function afterAnswer(payload) {            // the stream's final event: the answer is on screen, THEN the modal
-    try { if (payload && payload.guest_gate === 'auth_required') window.setTimeout(() => openGuest(), 700); } catch (e) { /* ignore */ }
+  function afterAnswer(payload) {            // the stream's final event: the answer is shown IN FULL first, then ~1.5 s later the modal
+    try { if (payload && payload.guest_gate === 'auth_required') afterAnswerSettles(() => openGuest(), AFTER_ANSWER_DELAY_MS); } catch (e) { /* ignore */ }
   }
   function applyMarker() {                   // a server-rendered page asks for a modal (refresh, auth redirect, full-page denial)
     const m = $('guest-gate-marker');
     if (!m || m.dataset.handled) return;
     m.dataset.handled = '1';
     const st = m.dataset.state, err = m.dataset.error || '';
-    window.setTimeout(() => {
+    afterAnswerSettles(() => {
       if (st === 'auth_required') openGuest({ error: err });
       else if (st === 'credit_limit') openLimit();
     }, 350);
   }
 
   // ---- one-time wiring (idempotent: index.html's own handlers may also exist) ----
+  function wireOtp() {
+    const boxes = otpBoxes();
+    boxes.forEach((box, i) => {
+      if (box.dataset.gateOtp) return;
+      box.dataset.gateOtp = '1';
+      box.addEventListener('input', () => {
+        const digits = box.value.replace(/\D/g, '');
+        if (digits.length > 1) { box.value = ''; otpFill(i, digits.slice(0, 6 - i)); return; }   // autofill / fast typing
+        box.value = digits;
+        otpError('');
+        if (digits && boxes[i + 1]) boxes[i + 1].focus();
+        syncOtp();
+      });
+      box.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !box.value && boxes[i - 1]) { e.preventDefault(); boxes[i - 1].value = ''; boxes[i - 1].focus(); syncOtp(); }
+        else if (e.key === 'ArrowLeft' && boxes[i - 1]) { e.preventDefault(); boxes[i - 1].focus(); }
+        else if (e.key === 'ArrowRight' && boxes[i + 1]) { e.preventDefault(); boxes[i + 1].focus(); }
+      });
+      box.addEventListener('paste', (e) => {
+        const text = ((e.clipboardData || window.clipboardData).getData('text') || '').replace(/\D/g, '');
+        if (!text) return;
+        e.preventDefault();
+        otpClear();
+        otpFill(0, text.slice(0, 6));
+      });
+      box.addEventListener('focus', () => { try { box.select(); } catch (err) { /* ignore */ } });
+    });
+  }
   function wire() {
     const once = (el, ev, fn) => { if (el && !el.dataset['gate' + ev]) { el.dataset['gate' + ev] = '1'; el.addEventListener(ev, fn); } };
     const ao = $('auth-overlay'), lo = $('limit-overlay');
@@ -2049,14 +2459,36 @@
     once(ao, 'click', (e) => { if (e.target === ao) closeGuest(); });
     once(lo, 'click', (e) => { if (e.target === lo) closeLimit(); });
     once($('login-form'), 'submit', submitAuth);
-    once($('signup-form'), 'submit', submitAuth);
+    once($('signup-form'), 'submit', submitEmail);
+    once($('otp-form'), 'submit', submitCode);
+    once($('otp-resend'), 'click', resendCode);
+    once($('otp-change'), 'click', () => backToEmail(''));
+    once($('password-form'), 'submit', submitPassword);
+    once($('signup-password'), 'input', syncPassword);
+    once($('signup-confirm-password'), 'input', syncPassword);
+    once($('pw-toggle'), 'click', () => {
+      const t = $('pw-toggle'), p = $('signup-password'), c = $('signup-confirm-password');
+      const show = p.type === 'password';
+      p.type = c.type = show ? 'text' : 'password';
+      t.textContent = show ? 'Hide' : 'Show';
+      t.setAttribute('aria-pressed', show ? 'true' : 'false');
+      t.setAttribute('aria-label', show ? 'Hide passwords' : 'Show passwords');
+    });
+    once($('flow-close-btn'), 'click', closeFlow);
+    once($('flow-done-continue'), 'click', finishDone);
+    wireOtp();
     if (!document.documentElement.dataset.gateKeys) {
       document.documentElement.dataset.gateKeys = '1';
       document.addEventListener('keydown', (e) => {
-        const open = ($('limit-overlay') && $('limit-overlay').classList.contains('visible')) ? $('limit-overlay')
-          : (($('auth-overlay') && $('auth-overlay').classList.contains('visible')) ? $('auth-overlay') : null);
+        const vis = (id) => { const n = $(id); return n && n.classList.contains('visible') ? n : null; };
+        const open = vis('signup-flow') || vis('limit-overlay') || vis('auth-overlay');
         if (!open) return;
-        if (e.key === 'Escape') { e.preventDefault(); if (open.id === 'limit-overlay') closeLimit(); else closeGuest(); return; }
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          if (open.id === 'signup-flow') { if (flow.step === 'done') finishDone(); else closeFlow(); }
+          else if (open.id === 'limit-overlay') closeLimit(); else closeGuest();
+          return;
+        }
         if (e.key !== 'Tab') return;
         const f = focusables(open);
         if (!f.length) return;
@@ -2073,7 +2505,7 @@
     applyMarker();
   }
 
-  window.flintelGate = { denialKind, handleDenial, openGuest, closeGuest, openLimit, closeLimit, afterAnswer, applyMarker, resetGuestMode, safeRedirect };
+  window.flintelGate = { denialKind, handleDenial, openGuest, closeGuest, openLimit, closeLimit, afterAnswer, applyMarker, resetGuestMode, safeRedirect, startFlow, closeFlow };
   try { wire(); } catch (e) { /* never break the page */ }
 })();
 /* GUEST-GATE-JS-END */
@@ -5416,7 +5848,6 @@
         setSubmitLoading(false);
         // Freeze the status chip: "Completed · <total time>".
         finishTurnTimer(pendingTurn, 'completed', payload.requested_at);
-        if (window.flintelGate) window.flintelGate.afterAnswer(payload);   // (GUEST GATE) answer first, then the sign-up modal
         const loadingRow = pendingTurn.querySelector(`#loading-row-${CSS.escape(topicKey)}`);
         if (loadingRow) {
           const wrap = document.createElement('div');
@@ -5460,6 +5891,8 @@
           // the completion/unlock calls have already run. Shows the answer
           // in full instantly whenever it can't animate safely.
           startAnswerReveal(wrap, { isCurrent: () => myGen === softNavGeneration });
+          // (GUEST GATE) the answer is on screen and its reveal has started; the sign-up modal waits for the reveal to END, then ~1.5 s
+          if (window.flintelGate) window.flintelGate.afterAnswer(payload);
         } else {
           window.location.reload();
         }
