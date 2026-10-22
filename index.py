@@ -534,9 +534,10 @@ def create_email_user(email: str, password_hash: str):
     return users_collection.find_one({"_id": result.inserted_id})
 
 
-def upsert_google_user(google_id: str, email: str, name: str, picture: str = None):
+def upsert_google_user(google_id: str, email: str, name: str, picture: str = None, created_out: dict = None):
     """Logs in an existing Google user, links Google to a matching
-    email/password account, or creates a brand-new account."""
+    email/password account, or creates a brand-new account. `created_out`, when a dict is passed, gets
+    {"created": True} ONLY when this call created the account (a login or a link to an existing account leaves it empty)."""
     now = datetime.now(timezone.utc)
 
     user = users_collection.find_one({"google_id": google_id})
@@ -571,6 +572,8 @@ def upsert_google_user(google_id: str, email: str, name: str, picture: str = Non
         "picture":        picture,
     }
     result = users_collection.insert_one(new_doc)
+    if isinstance(created_out, dict):
+        created_out["created"] = True
     return users_collection.find_one({"_id": result.inserted_id})
 
 
