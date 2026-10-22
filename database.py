@@ -327,6 +327,12 @@ if not getattr(_config, "CREDIT_ENFORCEMENT_DISABLED", False):
         credit_usage_collection.create_index("owner_key", unique=True)
     except Exception as exc:
         log.warning(f"Could not create flintel_credit_usage.owner_key index: {exc}")
+# (INDEX GUARD) create_index() returning (or its failure being logged) proves nothing: VERIFY that the unique owner_key
+# index exists. While it does not, search_credits.py refuses every credit operation that could create a document, charge or
+# entitlement (fail closed); reads, refunds and recovery keep working; duplicates are reported, never merged. See index_guard.py.
+import index_guard
+index_guard.register("flintel_credit_usage", credit_usage_collection,
+                     required=not getattr(_config, "CREDIT_ENFORCEMENT_DISABLED", False))
 
 # (PLAN CREDITS) One document per registered email owner with a paid plan
 # (search_credits.activate_plan / limit_for), on the same MONGODB3 database and
@@ -354,6 +360,11 @@ if _billing_configured or not getattr(_config, "CREDIT_ENFORCEMENT_DISABLED", Fa
                       "new checkouts are disabled until duplicate plan records are cleaned up and the index exists")
         else:
             log.warning(f"Could not create flintel_plans.owner_key index: {exc}")
+# (INDEX GUARD) verified, not assumed: same required-ness as the creation above. A failed verification also clears
+# plans_owner_index_ok (new checkouts are refused) and makes the plan-record writers refuse to create/alter entitlements.
+_plans_index_required = _billing_configured or not getattr(_config, "CREDIT_ENFORCEMENT_DISABLED", False)
+if index_guard.register("flintel_plans", plans_collection, required=_plans_index_required) not in index_guard.OK_STATES:
+    plans_owner_index_ok = False
 
 # (BILLING, billing.py) Lemon Squeezy subscription state and processed webhook deliveries, same
 # database and write concern as flintel_plans. Both use the document _id as their unique key
