@@ -1,0 +1,11 @@
+{
+  "name": "flintel-frontend-build",
+  "private": true,
+  "type": "module",
+  "scripts": { "build": "node build_frontend.mjs" },
+  "dependencies": {
+    "clean-css": "^5.3.3",
+    "javascript-obfuscator": "^4.1.1",
+    "terser": "^5.31.0"
+  }
+}
