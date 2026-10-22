@@ -27,6 +27,13 @@ MIN_PERIOD_JUMP_DAYS (a renewal), so a replayed, duplicated or re-ordered event,
 inside the period, or a late `subscription_updated` can neither open a second counter nor reset usage.
 Usage made on the free plan (calendar-month counter) never carries into the paid period.
 
+FIRST-PAID CARRYOVER (only when the webhook is given a CreditStore; routes.py passes it): the unused free credits of
+the owner's first genuine free -> paid activation become a bonus of that FIRST paid period only. See _first_activation:
+claim (plan record) -> freeze + snapshot (usage document) -> activate with the decision in one conditional write ->
+verify. Pre-feature subscribers (a plan record without `carryover`), a resubscription and a later plan change never
+receive it; a renewal opens a new period key and is exactly the plan grant. Those checks span three documents and are a
+protocol of fencing and eventual correction, not a cross-document transaction.
+
 PAYMENT IDENTITY: a paid invoice (`subscription-invoices` id) is claimed once in flintel_billing_events
 as `payment:<subscription>:<invoice>`; `subscription_payment_success` and `subscription_payment_recovered`
 for the same invoice share that claim, so one renewal is applied exactly once whatever the event names,
@@ -61,6 +68,8 @@ import hmac
 import json
 import logging
 import re
+import threading
+import time
 from datetime import datetime, timedelta, timezone
 
 import search_credits as sc
@@ -384,16 +393,21 @@ def _apply_subscription(subs, sub_id, attrs, plan, owner, event_name, now):
     raise sc.CreditStoreError("subscription write contention")
 
 
-def recompute(subs, plans, owner, now=None) -> str:
-    """Write the owner's plan record from ALL of their stored subscriptions. Deterministic and idempotent
-    (the same documents give the same record); ordered by billing_rev (see set_plan_entitlement)."""
-    now = _aware(now or _utcnow())
+def default_credit_store():
+    """The production credit store, or None while credit enforcement is switched off (then no carryover is computed).
+    The webhook route calls this so that routes.py itself never reaches the credit store outside search()/usage."""
+    return sc.default_store()
+
+
+def _plan_inputs(subs, owner, now):
+    """What the owner's plan record should say, derived from ALL of their stored subscriptions. -> ("no_subscription" |
+    "nothing_to_write", None) or ("ready", {docs, rev, best, start, end, period, entitled})."""
     try:
         docs = list(subs.find({"owner_key": owner}))
     except Exception as exc:
         raise sc.CreditStoreError(f"subscription read failed: {type(exc).__name__}") from exc
     if not docs:
-        return "no_subscription"
+        return "no_subscription", None
     rev = sum(int(d.get("rev") or 0) for d in docs)
 
     def until(d):
@@ -406,7 +420,7 @@ def recompute(subs, plans, owner, now=None) -> str:
     else:                                            # nothing entitles right now: close the window
         past = [d for d in docs if d.get("plan") in sc.PAID_PLANS and until(d)]
         if not past:
-            return "nothing_to_write"
+            return "nothing_to_write", None
         best = max(past, key=lambda d: until(d))
         end = min(until(best), now)
     started = _aware(best.get("started_at")) if best.get("started_at") else now
@@ -414,8 +428,129 @@ def recompute(subs, plans, owner, now=None) -> str:
     period = {}
     if entitled and best.get("period_key") and best.get("period_ends"):
         period = {"credit_period_key": best["period_key"], "credit_period_ends": _aware(best["period_ends"])}
-    return sc.set_plan_entitlement(plans, owner, best["plan"], start, end,
-                                   f"ls-sub:{best['_id']}:rev{rev}", rev, now, **period)
+    return "ready", {"docs": docs, "rev": rev, "best": best, "start": start, "end": end, "period": period,
+                     "entitled": bool(entitled)}
+
+
+def _source_ref(d) -> str:
+    return f"ls-sub:{d['best']['_id']}:rev{d['rev']}"
+
+
+def recompute(subs, plans, owner, now=None, credits=None) -> str:
+    """Write the owner's plan record from ALL of their stored subscriptions. Deterministic and idempotent
+    (the same documents give the same record); ordered by billing_rev (see set_plan_entitlement).
+    `credits` (a CreditStore) switches on the first free -> paid CARRYOVER (see _first_activation); without it this is
+    exactly the original behaviour."""
+    now = _aware(now or _utcnow())
+    code, d = _plan_inputs(subs, owner, now)
+    if code != "ready":
+        return code
+    if credits is None:
+        return sc.set_plan_entitlement(plans, owner, d["best"]["plan"], d["start"], d["end"], _source_ref(d), d["rev"], now,
+                                       **d["period"])
+    return _recompute_with_carryover(subs, plans, owner, d, now, credits)
+
+
+def _recompute_with_carryover(subs, plans, owner, d, now, credits) -> str:
+    best = d["best"]
+    try:
+        row = plans.find_one({"owner_key": owner})
+    except Exception as exc:
+        raise sc.CreditStoreError(f"plan read failed: {type(exc).__name__}") from exc
+    carry = (row or {}).get("carryover") if isinstance((row or {}).get("carryover"), dict) else None
+    prior_history = any(x["_id"] != best["_id"] and x.get("plan") in sc.PAID_PLANS for x in d["docs"])
+
+    def plain(mark_undecided=False):
+        return sc.set_plan_entitlement(plans, owner, best["plan"], d["start"], d["end"], _source_ref(d), d["rev"], now,
+                                       mark_undecided=mark_undecided, **d["period"])
+    if not d["entitled"]:                                      # a closing write needs no claim
+        return plain(mark_undecided=(row is None and not prior_history))
+    eligible_row = row is None or (carry is not None and carry.get("state") in ("undecided", "claiming"))
+    if not eligible_row or (row is None and prior_history):    # pre-feature subscriber, decided, or a resubscription
+        return plain()
+    if not d["period"]:                                        # no billing period key: no carryover; a live claim still defers
+        if carry and carry.get("state") == "claiming":
+            at = _aware(carry.get("claim_at"))
+            if at is None or (now - at).total_seconds() < sc._claim_stale_seconds():
+                raise WebhookBusy()
+        return plain()
+    return _first_activation(subs, plans, owner, d, now, credits)
+
+
+def _guest_handover_ready(owner, credits, now) -> bool:
+    """(GUEST HANDOVER) Before the FIRST paid activation: apply any guest handover claimed for this owner and refuse (False ->
+    WebhookBusy, a retryable 409) while one is still unresolved - its target month is over and nobody has explicitly applied
+    or waived it - so the carryover can never silently omit credits the guest already used. Any error is 'not ready':
+    nothing is guessed. An operator resolves it with guest_gate.resolve_handover() and the provider's retry (or a replay of
+    the event) then proceeds."""
+    try:
+        import guest_gate
+        ready = guest_gate.handover_ready_for_activation(owner, credits, now)
+    except Exception as exc:
+        log.warning(f"billing: the guest handover check failed ({type(exc).__name__}); the activation is retried later")
+        return False
+    if not ready:
+        log.warning(f"billing: first activation of {owner} deferred - a guest handover is pending an explicit resolution")
+    return ready
+
+
+def _first_activation(subs, plans, owner, d, now, credits) -> str:
+    """The first free -> paid activation, fenced end to end:
+      0 guest check             any guest handover claimed for this owner is applied; WebhookBusy (409) while one is unresolved
+      1 claim   (plan record)   one attempt at a time; another live claim -> WebhookBusy (409, retried by the provider)
+      2 freeze  (usage doc)     the free month's counter is frozen and the unused free credits snapshotted in ONE
+                                conditional update; deferred (WebhookBusy) while a free reservation is still refundable
+      3 re-read                 the subscription documents again, so the write below uses current data
+      4 activate (plan record)  ONE conditional update: plan fields + the carryover decision, matching only while the claim is
+                                still ours and the record is exactly the version read
+      5 verify                  if the subscription advanced meanwhile, write the newer entitlement (ordinary ordered write)
+    The freeze STAYS after step 4 (it is what refuses a stale free reservation); it is cleared lazily once the plan no longer
+    entitles. These checks across the plan, usage and subscription documents are a protocol (fenced, then eventually
+    corrected), NOT a cross-document transaction."""
+    import uuid
+    claim_id = uuid.uuid4().hex
+    best, period = d["best"], d["period"]["credit_period_key"]
+    if not _guest_handover_ready(owner, credits, now):
+        raise WebhookBusy()      # a guest handover is unresolved: nothing is claimed, frozen or written; retried later
+    status = sc.claim_activation(plans, owner, claim_id, now)
+    if status == "busy":
+        raise WebhookBusy()
+    if status == "ineligible":
+        return sc.set_plan_entitlement(plans, owner, best["plan"], d["start"], d["end"], _source_ref(d), d["rev"], now, **d["period"])
+    free_period = None
+    try:
+        free_period = credits.carryover_free_period(owner, now)
+        credits.freeze_free_period(owner, free_period, claim_id, best["_id"], period, now)
+        code, d2 = _plan_inputs(subs, owner, now)
+        if code != "ready" or not d2["entitled"] or d2["best"]["_id"] != best["_id"] \
+                or d2["period"].get("credit_period_key") != period:
+            credits.release_activation(owner, claim_id, free_period)          # the inputs moved: start over on the retry
+            raise WebhookBusy()
+        d = d2
+        outcome = sc.activate_with_carryover(
+            plans, owner, d["best"]["plan"], d["start"], d["end"], _source_ref(d), d["rev"], now, period,
+            d["period"]["credit_period_ends"],
+            {"claim_id": claim_id, "sub_id": d["best"]["_id"], "free_period": free_period, "free_limit": credits.limit()})
+    except sc.ActivationDeferred:
+        credits.release_activation(owner, claim_id, free_period)
+        raise WebhookBusy() from None
+    if outcome == "applied":
+        written = d["rev"]
+        for _attempt in range(3):                                              # eventual correction, not atomicity
+            code3, d3 = _plan_inputs(subs, owner, now)
+            if code3 != "ready" or d3["rev"] <= written:
+                break
+            sc.set_plan_entitlement(plans, owner, d3["best"]["plan"], d3["start"], d3["end"], _source_ref(d3), d3["rev"], now,
+                                    **d3["period"])
+            written = d3["rev"]
+        return "applied"
+    if outcome == "foreign_entitled":
+        sc.decide_zero(plans, owner, claim_id, now)                            # never a bonus for an entitlement we did not write
+        return "superseded"
+    if outcome == "superseded":
+        credits.release_activation(owner, claim_id, free_period)
+        return "superseded"
+    raise WebhookBusy()                                                        # "lost": another attempt owns the claim now
 
 
 # ── invoice and refund bookkeeping (compare-and-set on the subscription document) ──
@@ -564,7 +699,7 @@ def _validated_subscription(data, store_id):
     return sub_id, attrs, plan
 
 
-def handle_webhook(raw, signature, event_header, subs, events, plans, now=None, get=None) -> dict:
+def handle_webhook(raw, signature, event_header, subs, events, plans, now=None, get=None, credits=None) -> dict:
     """Process one delivery. Returns {"status": applied|duplicate|stale|ignored, ...}. Raises WebhookRejected
     (answer with .http_status, nothing changed), WebhookBusy (409, retried later) or lets a store/provider
     error propagate (500: Lemon Squeezy retries; every step is safe to repeat)."""
@@ -597,7 +732,7 @@ def handle_webhook(raw, signature, event_header, subs, events, plans, now=None, 
     if claim == "busy":
         raise WebhookBusy()
     try:
-        result = _process(name, meta, data, subs, events, plans, now, get)
+        result = _process(name, meta, data, subs, events, plans, now, get, credits)
     except WebhookRejected as rejected:
         _finish(events, key, "done", f"rejected:{rejected.reason}")
         if rejected.http_status == 200:
@@ -610,7 +745,7 @@ def handle_webhook(raw, signature, event_header, subs, events, plans, now=None, 
     return result
 
 
-def _process(name, meta, data, subs, events, plans, now, get):
+def _process(name, meta, data, subs, events, plans, now, get, credits=None):
     store_id = _setting("LEMONSQUEEZY_STORE_ID")
     if name in SUBSCRIPTION_EVENTS:
         sub_id, attrs, plan = _validated_subscription(data, store_id)
@@ -621,7 +756,7 @@ def _process(name, meta, data, subs, events, plans, now, get):
         if not owner:
             raise WebhookRejected(200, "no verified owner")
         outcome = _apply_subscription(subs, sub_id, attrs, plan, owner, name, now)
-        written = recompute(subs, plans, owner, now)
+        written = recompute(subs, plans, owner, now, credits)
         log.info(f"billing event {name} sub={sub_id} -> {outcome}/{written}")
         return {"status": outcome, "plan_record": written}
 
@@ -656,7 +791,7 @@ def _process(name, meta, data, subs, events, plans, now, get):
         if reason in FUNDING_REASONS and created is None and kind == "full":
             raise WebhookRejected(200, "refund without invoice created_at")
         note = _apply_refund(subs, sub_id, inv_id, kind, reason, created, now)
-        written = recompute(subs, plans, owner, now)
+        written = recompute(subs, plans, owner, now, credits)
         log.info(f"billing event {name} sub={sub_id} -> {note}/{written}")
         return {"status": "applied", "plan_record": written, "refund": note}
 
@@ -679,7 +814,7 @@ def _process(name, meta, data, subs, events, plans, now, get):
             raise WebhookRejected(200, "refresh mismatch")
         outcome = _apply_subscription(subs, sub_id, attrs2, plan, owner, name, now)
         invoice_note = _record_paid_invoice(subs, sub_id, inv_id, reason, created, now)
-        written = recompute(subs, plans, owner, now)
+        written = recompute(subs, plans, owner, now, credits)
     except Exception:
         _finish(events, key, "failed", "error")
         raise
@@ -710,10 +845,100 @@ def status_for_owner(subs, plans, owner, now=None) -> dict:
     pick = max(live, key=lambda d: (PLAN_RANK[d["plan"]], until(d))) if live else \
         max(docs, key=lambda d: _aware(d["ls_updated_at"]) if d.get("ls_updated_at") else now)
     iso = lambda v: _aware(v).isoformat() if v else None   # noqa: E731
-    return {**base, "plan": pick["plan"] if live else sc.PLAN_FREE, "status": pick.get("status"),
-            "cancelled": bool(pick.get("cancelled")), "renews_at": iso(pick.get("renews_at")),
-            "ends_at": iso(pick.get("ends_at")), "entitled_until": iso(pick.get("entitled_until")),
-            "can_manage": True, "revoked": bool(pick.get("revoked_period_key")) and not live, "entitled": bool(live)}
+    out = {**base, "plan": pick["plan"] if live else sc.PLAN_FREE, "status": pick.get("status"),
+           "cancelled": bool(pick.get("cancelled")), "renews_at": iso(pick.get("renews_at")),
+           "ends_at": iso(pick.get("ends_at")), "entitled_until": iso(pick.get("entitled_until")),
+           "can_manage": True, "revoked": bool(pick.get("revoked_period_key")) and not live, "entitled": bool(live),
+           "subscription_plan": pick["plan"], "activation": "active" if live else "none"}
+    if plans is not None:
+        pend = pending_activation(subs, plans, owner, now)
+        if pend is not None:      # a paid subscription exists but the account still has FREE limits: never show it as active
+            out["activation"] = pend["state"]
+            out["subscription_plan"] = pend["plan"]
+            if pend["state"] == "pending":
+                out.update(plan=sc.PLAN_FREE, entitled=False)
+    return out
+
+
+def pending_activation(subs, plans, owner, now=None):
+    """DERIVED (no stored state): is a paid subscription not (yet) backed by an activated entitlement?
+    -> None | {"state": "pending" | "expired_unactivated", "plan", "sub_id", "entitled_until"}.
+    pending: the subscription entitles right now but the owner's plan record does not carry that subscription's billing
+    period. expired_unactivated: that paid period has already ended and was never activated - NOT extended, NOT refunded
+    here: surfaced for an operator decision. Raises sc.CreditStoreError on a read failure."""
+    now = _aware(now or _utcnow())
+    if not sc.registered_owner(owner):
+        return None
+    try:
+        docs = [d for d in subs.find({"owner_key": owner}) if d.get("plan") in sc.PAID_PLANS and d.get("entitled_until")]
+        row = plans.find_one({"owner_key": owner}) if plans is not None else None
+    except Exception as exc:
+        raise sc.CreditStoreError(f"pending-activation read failed: {type(exc).__name__}") from exc
+    if not docs:
+        return None
+    activated = {row.get("credit_period_key")} if isinstance(row, dict) and row.get("plan") in sc.PAID_PLANS else set()
+    live = [d for d in docs if _aware(d["entitled_until"]) > now]
+    if live:
+        best = max(live, key=lambda d: (PLAN_RANK[d["plan"]], _aware(d["entitled_until"])))
+        rank_ok = sc.active_plan(row, now) is not None and PLAN_RANK.get(sc.active_plan(row, now), 0) >= PLAN_RANK[best["plan"]]
+        if rank_ok:
+            return None
+        return {"state": "pending", "plan": best["plan"], "sub_id": best["_id"], "entitled_until": _aware(best["entitled_until"])}
+    never = [d for d in docs if d.get("period_key") and d.get("period_key") not in activated and not d.get("revoked_period_key")]
+    if never:
+        d = max(never, key=lambda d: _aware(d["entitled_until"]))
+        return {"state": "expired_unactivated", "plan": d["plan"], "sub_id": d["_id"], "entitled_until": _aware(d["entitled_until"])}
+    return None
+
+
+_RESUME_LAST = {}                 # owner -> monotonic time of the last attempt (per process; a restart simply allows a retry)
+_RESUME_LOCK = threading.Lock()
+RESUME_MIN_INTERVAL_SECONDS = 30
+
+
+def resume_activation(subs, plans, owner, credits, now=None, min_interval=None):
+    """Re-enter the EXISTING first-activation protocol for an owner whose paid subscription is waiting for its entitlement.
+    The only writer is recompute() (claim -> freeze -> checked activation write), so no check is skipped and a repeat,
+    a concurrent call, a stale subscription revision or a replayed webhook cannot grant twice. Rate limited per owner.
+    -> "not_pending" | "rate_limited" | "activated" | "deferred" | "expired_unactivated" | "error". Never raises."""
+    try:
+        state = pending_activation(subs, plans, owner, now)
+        if state is None:
+            return "not_pending"
+        if state["state"] == "expired_unactivated":
+            log.warning(f"billing: the paid period of subscription {state['sub_id']} ended before activation; left for an "
+                        f"operator decision (no extension, no refund, no entitlement)")
+            return "expired_unactivated"
+        wait = RESUME_MIN_INTERVAL_SECONDS if min_interval is None else min_interval
+        with _RESUME_LOCK:
+            last = _RESUME_LAST.get(owner)
+            if last is not None and time.monotonic() - last < wait:
+                return "rate_limited"
+            _RESUME_LAST[owner] = time.monotonic()
+            if len(_RESUME_LAST) > 5000:
+                _RESUME_LAST.clear()
+        recompute(subs, plans, owner, now, credits)
+        return "activated" if pending_activation(subs, plans, owner, now) is None else "deferred"
+    except WebhookBusy:
+        return "deferred"
+    except Exception as exc:
+        log.warning(f"billing: resuming the activation failed ({type(exc).__name__}); it stays pending")
+        return "error"
+
+
+def _default_collections():
+    import database
+    return database.subscriptions_collection, database.plans_collection
+
+
+def resume_activation_default(owner, credits, now=None):
+    """resume_activation() with the production collections. Never raises."""
+    try:
+        subs, plans = _default_collections()
+        return resume_activation(subs, plans, owner, credits, now)
+    except Exception as exc:
+        log.warning(f"billing: resume unavailable ({type(exc).__name__})")
+        return "error"
 
 
 def has_live_subscription(subs, owner, now=None):
