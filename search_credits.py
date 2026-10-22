@@ -49,6 +49,20 @@ That list is bounded evidence only, not an idempotency guarantee; a missing
 id never refunds anything. COMPATIBILITY WITH THE EXTERNAL COLLECTOR (which
 reads flintel_search_jobs and is not in this repository) IS UNVERIFIED.
 
+CARRYOVER AND GUEST HANDOVER (additive; nothing here changes how a reservation, refund or commit moves a counter):
+
+* First free -> paid carryover. The unused free credits of the owner's FIRST paid activation become a bonus of that first
+  billing period only (`carryover_by_period.<period key>.<claim id>` on the usage document; the decision marker is
+  `carryover` on the plan record). The whole thing is fenced by a claim on the plan record (`claim_activation`,
+  `activate_with_carryover`) and a persistent FREEZE of the free month's counter (`freeze_free_period`): every free-period
+  reservation is a conditional update on the same usage document that refuses while the freeze is present, so no free usage
+  can slip between the snapshot and the activation. `carryover_bonus()` is the ONE place the bonus is computed; allowance(),
+  status(), precheck_exhausted() and reserve() all use it (via allowance).
+* Guest handover. A guest who signs up has their completed usage (and the cost of a search that is still running, as a
+  HOLD) charged once to the new account's first free window (`seed_guest_handover`). The charge is recorded as
+  `used` + `archived` of that month, so C[P] = L[P] + A[P] holds without any live entry; `commit_guest_hold` /
+  `release_guest_hold` finish or undo exactly that amount once.
+
 Operator close (resolve "close") uses a marker on the chat document
 (`credit_close.<rid>`): every message save's own filter refuses to write while
 a marker exists, except the documented S-late save of the original request.
@@ -148,6 +162,20 @@ class CreditStoreError(Exception):
     """The credit store could not be read or written, or the outcome of a write is unknown."""
 
 
+USAGE_INDEX = "flintel_credit_usage"      # index_guard names of the two collections whose unique owner_key index is
+PLANS_INDEX = "flintel_plans"             # required for correctness (see index_guard.py)
+
+
+def _require_index(name):
+    """Fail closed: refuse an operation that can create a charge, a document or an entitlement while the unique owner_key
+    index it relies on is not verified (missing / not unique / duplicates / unverifiable). Settlement, refund, recovery and
+    read paths do not call this. Unregistered (tests, scripts) always passes."""
+    import index_guard
+    ok, state = index_guard.check(name)
+    if not ok:
+        raise CreditStoreError(f"required unique index unavailable: {name} ({state})")
+
+
 def _cfg():
     import config   # read at call time: tests reload/patch config
     return config
@@ -177,6 +205,34 @@ def plan_credits(plan: str):
     except (TypeError, ValueError):
         value = default
     return value if 1 <= value <= 1000000 else default
+
+
+def _carry_entry(record, doc, period):
+    """(marker, entry) of the authoritative carryover for `period`, or (None, None). The marker must be `decided` with a
+    bonus, name this period, and its claim id must name an entry of the same subscription and free period."""
+    m = (record or {}).get("carryover") if isinstance(record, dict) else None
+    if not isinstance(m, dict) or m.get("state") != "decided" or m.get("no_bonus") or m.get("period_key") != period:
+        return None, None
+    by_period = ((doc or {}).get("carryover_by_period") or {}).get(period) or {}
+    entry = by_period.get(m.get("claim_id")) if isinstance(by_period, dict) else None
+    if not isinstance(entry, dict) or entry.get("sub_id") != m.get("sub_id") or entry.get("free_period") != m.get("free_period"):
+        return None, None
+    if not isinstance(entry.get("bonus"), int) or isinstance(entry.get("bonus"), bool) or entry["bonus"] < 0:
+        return None, None
+    return m, entry
+
+
+def carryover_bonus(record, doc, period) -> int:
+    """THE effective first-period carryover bonus: the frozen snapshot, capped by the unused free credits of the same
+    document right now (it can only ever be lowered by the cap, never raised). 0 without an authoritative marker."""
+    m, entry = _carry_entry(record, doc, period)
+    if m is None:
+        return 0
+    try:
+        free_used = int(((doc or {}).get("used_by_period") or {}).get(m["free_period"], 0))
+        return max(0, min(int(entry["bonus"]), int(m.get("free_limit") or 0) - free_used))
+    except (TypeError, ValueError):
+        return 0
 
 
 def registered_owner(owner_key, owner_type=None) -> bool:
@@ -222,6 +278,7 @@ def activate_plan(plans, owner_key, plan, active_until, source_ref, now=None, ac
     start = _aware(active_from) if active_from is not None else now
     if _aware(active_until) <= start:
         raise ValueError("active_until must be after active_from")
+    _require_index(PLANS_INDEX)
     try:
         result = plans.update_one(
             {"owner_key": owner_key, "applied_refs": {"$ne": source_ref}},
@@ -243,7 +300,7 @@ def _is_duplicate_key(exc) -> bool:
 
 
 def set_plan_entitlement(plans, owner_key, plan, active_from, active_until, source_ref, billing_rev, now=None,
-                         credit_period_key=None, credit_period_ends=None) -> str:
+                         credit_period_key=None, credit_period_ends=None, mark_undecided=False) -> str:
     """Billing-driven writer of the owner's plan record (billing.py calls it after every
     verified subscription event). It writes the SAME record shape as activate_plan
     (plan, active_from, active_until, source_ref, updated_at, applied_refs) plus
@@ -261,6 +318,8 @@ def set_plan_entitlement(plans, owner_key, plan, active_from, active_until, sour
     wins, and a WARNING is logged when the replaced record was still an active manual entitlement).
     `credit_period_key` / `credit_period_ends` (both or neither) name the billing period the
     allowance is counted in (see CreditStore.allowance); without them the calendar month applies.
+    `mark_undecided` (insert only) stores `carryover: {state: "undecided"}` on a brand-new owner's first record when
+    that record is not an active window. This function never touches an existing record's `carryover` sub-document.
     Several records for one owner (the unique index could not be built) raise CreditStoreError:
     the caller's state is already stored, nothing is written, and the event can be retried."""
     if not registered_owner(owner_key):
@@ -280,6 +339,7 @@ def set_plan_entitlement(plans, owner_key, plan, active_from, active_until, sour
         raise ValueError("credit_period_key and credit_period_ends go together")
     if credit_period_key is not None and not (_valid_period_key(credit_period_key) and isinstance(credit_period_ends, datetime)):
         raise ValueError("credit_period_key must be a UTC date (YYYY-MM-DD) and credit_period_ends a datetime")
+    _require_index(PLANS_INDEX)
     now = _aware(now or datetime.now(timezone.utc))
     fields = {"plan": plan, "active_from": start, "active_until": end, "source_ref": source_ref,
               "updated_at": now, "billing_rev": billing_rev}
@@ -297,7 +357,10 @@ def set_plan_entitlement(plans, owner_key, plan, active_from, active_until, sour
             current = plans.find_one({"owner_key": owner_key})
             if current is None:
                 try:
-                    plans.insert_one({"owner_key": owner_key, **fields, "applied_refs": [source_ref]})
+                    doc = {"owner_key": owner_key, **fields, "applied_refs": [source_ref]}
+                    if mark_undecided:     # a NEW owner whose first write is not an active window: still eligible for the carryover
+                        doc["carryover"] = {"state": "undecided"}
+                    plans.insert_one(doc)
                 except Exception as exc:
                     if _is_duplicate_key(exc):
                         continue                       # someone created it meanwhile: read again
@@ -328,6 +391,153 @@ def set_plan_entitlement(plans, owner_key, plan, active_from, active_until, sour
     except Exception as exc:
         raise CreditStoreError(f"plan write failed: {type(exc).__name__}") from exc
     raise CreditStoreError("plan write contention")
+
+
+# ── first free -> paid carryover: the activation claim (plan record) ─────────────────────────────────────────
+# The claim is a fencing token on the owner's plan record, stored ONLY in the `carryover` sub-document (never in plan,
+# dates, source_ref, applied_refs, billing_rev or credit_period_*):
+#   absent       a pre-feature subscriber (or an owner written without carryover support): never eligible, never written
+#   undecided    a new owner whose first record was not an active window: still eligible
+#   claiming     one activation attempt (claim_id, claim_at) is in progress
+#   decided      terminal: {claim_id, period_key, sub_id, free_period, free_limit} (a bonus), or {no_bonus: True}
+class ActivationDeferred(Exception):
+    """The first activation cannot proceed right now (a free-period reservation is still refundable, a guest hold is
+    pending, another attempt holds a live claim or freeze): retry later. Nothing was applied."""
+
+
+def _claim_stale_seconds() -> int:
+    return _setting("ACTIVATION_CLAIM_STALE_SECONDS", 120)
+
+
+def claim_activation(plans, owner_key, claim_id, now) -> str:
+    """Try to take the activation claim. "claimed" | "busy" (a live claim of another attempt, younger than the stale
+    limit) | "ineligible" (pre-feature record, or the carryover is already decided). A claim older than the stale limit is
+    taken over by compare-and-set on its id (the previous holder's later write then matches nothing). The stale limit
+    only decides WHEN a waiting party may take over; correctness never depends on it."""
+    now = _aware(now)
+    stale = timedelta(seconds=_claim_stale_seconds())
+    _require_index(PLANS_INDEX)
+    try:
+        for _ in range(4):
+            row = plans.find_one({"owner_key": owner_key})
+            if row is None:
+                try:
+                    plans.insert_one({"owner_key": owner_key, "carryover": {"state": "claiming", "claim_id": claim_id, "claim_at": now}})
+                    return "claimed"
+                except Exception as exc:
+                    if _is_duplicate_key(exc):
+                        continue
+                    raise
+            carry = row.get("carryover")
+            if not isinstance(carry, dict):
+                return "ineligible"
+            state = carry.get("state")
+            if state == "undecided":
+                if active_plan(row, now) is not None:        # entitled by a writer that never claimed: terminal, no bonus
+                    plans.update_one({"owner_key": owner_key, "carryover.state": "undecided"},
+                                     {"$set": {"carryover": {"state": "decided", "no_bonus": True, "decided_at": now}}})
+                    return "ineligible"
+                res = plans.update_one({"owner_key": owner_key, "carryover.state": "undecided"},
+                                       {"$set": {"carryover.state": "claiming", "carryover.claim_id": claim_id,
+                                                 "carryover.claim_at": now}})
+                if getattr(res, "matched_count", 0) == 1:
+                    return "claimed"
+                continue
+            if state == "claiming":
+                at = _aware(carry.get("claim_at"))
+                if at is not None and now - at < stale:
+                    return "busy"
+                res = plans.update_one({"owner_key": owner_key, "carryover.state": "claiming",
+                                        "carryover.claim_id": carry.get("claim_id")},
+                                       {"$set": {"carryover.claim_id": claim_id, "carryover.claim_at": now}})
+                if getattr(res, "matched_count", 0) == 1:
+                    return "claimed"
+                continue
+            return "ineligible"
+    except CreditStoreError:
+        raise
+    except Exception as exc:
+        raise CreditStoreError(f"claim failed: {type(exc).__name__}") from exc
+    raise CreditStoreError("claim contention")
+
+
+def revoke_claim(plans, owner_key, claim_id, now=None, force=False) -> bool:
+    """claiming(claim_id) -> undecided, one compare-and-set on the plan record. Without `force` only a claim older than
+    the stale limit may be revoked (a waiting party); `force` is the holder's own cooperative release."""
+    filt = {"owner_key": owner_key, "carryover.state": "claiming", "carryover.claim_id": claim_id}
+    if not force:
+        filt["carryover.claim_at"] = {"$lte": _aware(now or datetime.now(timezone.utc)) - timedelta(seconds=_claim_stale_seconds())}
+    try:
+        res = plans.update_one(filt, {"$set": {"carryover.state": "undecided"},
+                                      "$unset": {"carryover.claim_id": "", "carryover.claim_at": ""}})
+    except Exception as exc:
+        raise CreditStoreError(f"revoke failed: {type(exc).__name__}") from exc
+    return getattr(res, "matched_count", 0) == 1
+
+
+def decide_zero(plans, owner_key, claim_id, now=None) -> bool:
+    """claiming(claim_id) -> decided WITHOUT a bonus. Used when the plan turned out to be entitled by a writer that did
+    not hold the claim: the carryover is closed for good and nothing is attached to an entitlement this attempt did not write."""
+    try:
+        res = plans.update_one({"owner_key": owner_key, "carryover.state": "claiming", "carryover.claim_id": claim_id},
+                               {"$set": {"carryover.state": "decided", "carryover.no_bonus": True,
+                                         "carryover.decided_at": _aware(now or datetime.now(timezone.utc))}})
+    except Exception as exc:
+        raise CreditStoreError(f"decide failed: {type(exc).__name__}") from exc
+    return getattr(res, "matched_count", 0) == 1
+
+
+def activate_with_carryover(plans, owner_key, plan, active_from, active_until, source_ref, billing_rev, now,
+                            credit_period_key, credit_period_ends, claim) -> str:
+    """The ONE write that activates the plan and records the carryover decision. `claim` = {claim_id, sub_id,
+    free_period, free_limit}. One conditional update on the plan record: it matches only while the claim is still this
+    attempt's AND the record is exactly the version that was read (billing_rev, source_ref, updated_at), so it can neither
+    overwrite a newer revision nor an entitlement another writer made, and a revoked claim writes nothing. Returns
+    "applied" | "superseded" (a revision >= ours is stored) | "lost" (the claim is not ours any more) |
+    "foreign_entitled" (the plan is already entitling and was not written by this claim)."""
+    if not registered_owner(owner_key):
+        raise ValueError("a plan can only be written for a registered email owner")
+    if plan not in PAID_PLANS:
+        raise ValueError(f"unknown plan {plan!r}")
+    if not isinstance(billing_rev, int) or isinstance(billing_rev, bool) or billing_rev < 1:
+        raise ValueError("billing_rev must be a positive integer")
+    if not _valid_period_key(credit_period_key) or not isinstance(credit_period_ends, datetime):
+        raise ValueError("the carryover needs a billing period key and its end")
+    start, end, now = _aware(active_from), _aware(active_until), _aware(now)
+    if end <= start:
+        raise ValueError("active_until must be after active_from")
+    cid = claim["claim_id"]
+    _require_index(PLANS_INDEX)
+    fields = {"plan": plan, "active_from": start, "active_until": end, "source_ref": source_ref, "updated_at": now,
+              "billing_rev": billing_rev, "credit_period_key": credit_period_key,
+              "credit_period_ends": _aware(credit_period_ends)}
+    marker = {"carryover.state": "decided", "carryover.period_key": credit_period_key, "carryover.sub_id": claim["sub_id"],
+              "carryover.free_period": claim["free_period"], "carryover.free_limit": int(claim["free_limit"]),
+              "carryover.decided_at": now}
+    try:
+        for _ in range(4):
+            row = plans.find_one({"owner_key": owner_key})
+            carry = (row or {}).get("carryover")
+            if row is None or not isinstance(carry, dict) or carry.get("state") != "claiming" or carry.get("claim_id") != cid:
+                return "lost"
+            stored = row.get("billing_rev")
+            if isinstance(stored, int) and not isinstance(stored, bool) and stored >= billing_rev:
+                return "superseded"
+            if active_plan(row, now) is not None:
+                return "foreign_entitled"
+            filt = {"_id": row["_id"], "carryover.state": "claiming", "carryover.claim_id": cid, "billing_rev": stored,
+                    "source_ref": row["source_ref"] if "source_ref" in row else {"$exists": False},
+                    "updated_at": row["updated_at"] if "updated_at" in row else {"$exists": False}}
+            res = plans.update_one(filt, {"$set": {**fields, **marker}, "$addToSet": {"applied_refs": source_ref}})
+            if getattr(res, "acknowledged", True) is not True:
+                raise CreditStoreError("plan write not acknowledged")
+            if getattr(res, "matched_count", 0) == 1:
+                return "applied"
+    except CreditStoreError:
+        raise
+    except Exception as exc:
+        raise CreditStoreError(f"activation write failed: {type(exc).__name__}") from exc
+    raise CreditStoreError("activation write contention")
 
 
 def enforcement_enabled() -> bool:
@@ -373,10 +583,29 @@ def _valid_period_key(key) -> bool:
     return isinstance(key, str) and bool(_BILLING_PERIOD_RE.match(key))
 
 
+_FREE_PERIOD_RE = re.compile(r"^\d{4}-\d{2}$")
+
+
+def _is_free_period_key(key) -> bool:
+    """A UTC calendar-month key ("2026-03"): the free allowance's period, the only one a freeze or a guest seed may touch."""
+    return isinstance(key, str) and bool(_FREE_PERIOD_RE.match(key))
+
+
 def period_resets_at(now: datetime) -> datetime:
     now = _aware(now)
     year, month = (now.year + 1, 1) if now.month == 12 else (now.year, now.month + 1)
     return datetime(year, month, 1, tzinfo=timezone.utc)
+
+
+def handover_window_period(at: datetime) -> str:
+    """The free-allowance month that receives a guest's handed-over usage: the month of `at`, unless fewer than
+    GUEST_HANDOVER_MIN_REMAINING_HOURS (72) remain in it - then the next UTC month, the first one in which a free
+    allowance can really be spent. A pure function of the stored claim time."""
+    at = _aware(at)
+    hours = _setting("GUEST_HANDOVER_MIN_REMAINING_HOURS", 72)
+    if (period_resets_at(at) - at) < timedelta(hours=hours):
+        return period_key(period_resets_at(at))
+    return period_key(at)
 
 
 def previous_period(period: str) -> str:
@@ -503,6 +732,9 @@ class Ticket:
 
 
 # ── the store ────────────────────────────────────────────────────────────────
+_UNSET = object()    # "the caller did not pass the usage document" (None means "there is none")
+
+
 class CreditStore:
     def __init__(self, coll, chats, jobs, save_message, clock=None, enabled=None, limit=None, checkpoint=None,
                  plans=None):
@@ -532,32 +764,344 @@ class CreditStore:
         route answers 503); it never falls back to a limit."""
         return self._plan_record(owner_key, now or self.now(), owner_type)[0]
 
-    def allowance(self, owner_key, now=None, owner_type=None):
+    def allowance(self, owner_key, now=None, owner_type=None, doc=_UNSET):
         """(limit, period, resets_at, plan) this owner is counted against right now.
         Free owners (and plan records without a billing period, e.g. written by activate_plan)
         use the UTC calendar month. An active record written by billing carries the billing
         period it was paid for (`credit_period_key` = UTC date the period ends); the paid
         allowance is counted in that period's own counter, so a renewal opens a new counter
-        once, free usage never carries in, and usage within the period is never reset."""
+        once, free usage never carries in, and usage within the period is never reset.
+        The returned limit is the EFFECTIVE limit: the plan's grant plus carryover_bonus() (the first paid period's
+        carried-over free credits, 0 for every other period and for every owner without a carryover). Every consumer
+        - reserve(), precheck_exhausted(), status(), limit_for() - gets it from here, so they cannot disagree.
+        `doc` is the owner's usage document when the caller already holds it (None/{} = there is none)."""
+        return self._allowance_full(owner_key, now, owner_type, doc)[:4]
+
+    def _allowance_full(self, owner_key, now=None, owner_type=None, doc=_UNSET):
+        """allowance() plus the equality guards a reservation must add to its conditional update so that the bonus it
+        used is still the one stored (and the free counter it was capped by is unchanged) when the update is applied."""
         now = now or self.now()
         plan, record = self._plan_record(owner_key, now, owner_type)
         if plan == PLAN_FREE:
-            return int(self.limit()), period_key(now), period_resets_at(now), plan
+            return int(self.limit()), period_key(now), period_resets_at(now), plan, {}
         limit = int(plan_credits(plan))
         key, ends = record.get("credit_period_key"), record.get("credit_period_ends")
         if _valid_period_key(key) and isinstance(ends, datetime):
             end = _aware(ends)
-            return limit, key, (end if end > _aware(now) else _aware(record["active_until"])), plan
-        return limit, period_key(now), period_resets_at(now), plan
+            resets = end if end > _aware(now) else _aware(record["active_until"])
+            bonus, guard = 0, {}
+            if isinstance(record.get("carryover"), dict):
+                if doc is _UNSET:
+                    doc = self._read_doc(owner_key)
+                m, entry = _carry_entry(record, doc, key)
+                if m is not None:
+                    bonus = carryover_bonus(record, doc, key)
+                    free_used = ((doc or {}).get("used_by_period") or {}).get(m["free_period"])
+                    guard = {f"carryover_by_period.{key}.{m['claim_id']}.bonus": entry["bonus"],
+                             f"used_by_period.{m['free_period']}": free_used if free_used is not None else {"$exists": False}}
+            return limit + bonus, key, resets, plan, guard
+        return limit, period_key(now), period_resets_at(now), plan, {}
 
     def limit_for(self, owner_key, now=None, owner_type=None) -> int:
-        """This owner's monthly limit right now. A plan REPLACES the free
+        """This owner's monthly limit right now (the effective limit of allowance()). A plan REPLACES the free
         allowance; after it expires the free allowance applies again, so usage
         above it simply denies until the next period (counters are never rewritten)."""
-        plan = self.plan_for(owner_key, now, owner_type)
-        if plan == PLAN_FREE:
-            return int(self.limit())
-        return int(plan_credits(plan))
+        return int(self.allowance(owner_key, now, owner_type)[0])
+
+    # ── first paid activation: the persistent freeze of the free month ──────────────────────────────────────
+    # `freeze.<free month>` = {id, at} on the USAGE document. A free-period reservation is a conditional update on the same
+    # document that requires the freeze to be absent, and the freeze itself is one conditional update that requires the
+    # free counter to be exactly what was read: so a reservation either lands before it (and is in the snapshot) or is
+    # refused/redirected after it. It stays until the plan lapses (see _resolve_freeze), so a reservation that read the
+    # allowance as "free" just before the plan write can never land after it.
+    @staticmethod
+    def _frozen_id(doc, period):
+        if not _is_free_period_key(period):
+            return None
+        fz = ((doc or {}).get("freeze") or {}).get(period)
+        return fz.get("id") if isinstance(fz, dict) else None
+
+    @staticmethod
+    def _freeze_guard(period) -> dict:
+        return {f"freeze.{period}": {"$exists": False}} if _is_free_period_key(period) else {}
+
+    def _plan_row(self, owner_key):
+        if self.plans is None:
+            return None
+        try:
+            return self.plans.find_one({"owner_key": owner_key})
+        except Exception as exc:
+            raise CreditStoreError(f"plan read failed: {type(exc).__name__}") from exc
+
+    def _clear_freeze(self, owner_key, period, freeze_id) -> bool:
+        """Remove exactly the freeze `freeze_id` (a newer freeze has another id and is never matched)."""
+        return self._update({"owner_key": owner_key, f"freeze.{period}.id": freeze_id}, {"$unset": {f"freeze.{period}": ""}})
+
+    def _resolve_freeze(self, owner_key, period, freeze_id, now) -> str:
+        """A free-period reservation met freeze `freeze_id` (read from the usage document FIRST; the plan record is read
+        after, which is what makes the orphan test safe: a freeze is only written after its claim is on the plan record, so
+        a plan claim that differs from the freeze id means that claim was revoked or replaced). Returns
+          "cleared"   the freeze was an orphan (its claim is gone) or its activation ended while the plan no longer
+                      entitles: it was removed, go on
+          "redirect"  the activation is decided and the plan entitles: this period is no longer this owner's allowance,
+                      re-read the allowance (it is the paid period now)
+          "retry"     the claim changed under us, look again
+          "refuse"    a live claim younger than the stale limit holds it: try again later"""
+        row = self._plan_row(owner_key)
+        carry = (row or {}).get("carryover") if isinstance((row or {}).get("carryover"), dict) else {}
+        claim, state = carry.get("claim_id"), carry.get("state")
+        if claim != freeze_id:
+            self._clear_freeze(owner_key, period, freeze_id)
+            return "cleared"
+        if state == "decided":
+            if active_plan(row, now) is not None:
+                return "redirect"
+            self._clear_freeze(owner_key, period, freeze_id)
+            return "cleared"
+        if state == "claiming":
+            at = _aware(carry.get("claim_at"))
+            if at is None or (_aware(now) - at) >= timedelta(seconds=_claim_stale_seconds()):
+                if revoke_claim(self.plans, owner_key, freeze_id, now):
+                    self._clear_freeze(owner_key, period, freeze_id)
+                    return "cleared"
+                return "retry"
+        return "refuse"
+
+    def carryover_free_period(self, owner_key, now=None) -> str:
+        """The free month whose unused credits a first paid activation carries over: the activation month, or the
+        guest-handover window month when that is later (a month-end signup's first real free allowance)."""
+        now = now or self.now()
+        window = (((self._read_doc(owner_key) or {}).get("guest_handover")) or {}).get("period")
+        base = period_key(now)
+        return max(base, window) if _is_free_period_key(window) else base
+
+    @staticmethod
+    def _free_period_quiescent(doc, free_period) -> bool:
+        """No entry of `free_period` can still be refunded (only reserved/started can, :36-39), and no guest hold of
+        that period is pending (a release would lower the counter)."""
+        for entry in ((doc or {}).get("res") or {}).values():
+            if entry.get("period") == free_period and entry.get("state") in (RESERVED, STARTED):
+                return False
+        hold = (((doc or {}).get("guest_handover")) or {}).get("hold")
+        if isinstance(hold, dict) and hold.get("state") == "held" and hold.get("period") == free_period:
+            return False
+        return True
+
+    def freeze_free_period(self, owner_key, free_period, claim_id, sub_id, period, now=None, owner_type="email") -> dict:
+        """Freeze `free_period` and record the snapshot (unused free credits) for this claim, in ONE conditional update of
+        the usage document. Raises ActivationDeferred (nothing frozen) while a free-period reservation is still
+        refundable, a guest hold is pending, or another live activation holds the freeze. Idempotent for the same claim.
+        -> {"bonus", "frozen_used"}."""
+        now = _aware(now or self.now())
+        if not _is_free_period_key(free_period) or not _valid_period_key(period):
+            raise ValueError("a free month and a billing period key are required")
+        _require_index(USAGE_INDEX)
+        limit = int(self.limit())
+        try:
+            self.recover(owner_key)                                # refunds stale holds first (recovery never needs the owner)
+        except CreditStoreError as exc:
+            log.warning(f"recovery before the activation freeze failed: {exc}")
+        for _ in range(4):
+            doc = self._read_doc(owner_key)
+            fz = ((doc or {}).get("freeze") or {}).get(free_period)
+            if isinstance(fz, dict):
+                if fz.get("id") == claim_id:                       # a retry of this very claim
+                    entry = ((((doc or {}).get("carryover_by_period") or {}).get(period) or {}).get(claim_id))
+                    if isinstance(entry, dict):
+                        return {"bonus": entry["bonus"], "frozen_used": entry.get("frozen_used", 0)}
+                    raise ActivationDeferred("a freeze without its snapshot")
+                if self._resolve_freeze(owner_key, free_period, fz.get("id"), now) == "cleared":
+                    continue
+                raise ActivationDeferred("another activation holds the free period")
+            if not self._free_period_quiescent(doc, free_period):
+                raise ActivationDeferred("a free-period reservation is still refundable")
+            used_map = (doc or {}).get("used_by_period") or {}
+            used = int(used_map.get(free_period, 0))
+            bonus = max(0, limit - used)
+            cond = {"owner_key": owner_key, f"freeze.{free_period}": {"$exists": False},
+                    f"used_by_period.{free_period}": used if free_period in used_map else {"$exists": False}}
+            update = {"$set": {f"freeze.{free_period}": {"id": claim_id, "at": now},
+                               f"carryover_by_period.{period}.{claim_id}": {"bonus": bonus, "sub_id": sub_id,
+                                                                            "free_period": free_period, "frozen_used": used,
+                                                                            "at": now}},
+                      "$setOnInsert": {"owner_type": owner_type, "used_by_period": {}, "limit_max_by_period": {},
+                                       "archived_by_period": {}, "res": {}}}
+            try:
+                self.coll.update_one(cond, update, upsert=True)
+            except Exception as exc:
+                if _is_duplicate_key(exc):
+                    continue                                       # the counter or the freeze moved: look again
+                raise CreditStoreError(f"freeze failed: {type(exc).__name__}") from exc
+            return {"bonus": bonus, "frozen_used": used}
+        raise ActivationDeferred("the free counter kept changing")
+
+    def release_activation(self, owner_key, claim_id, free_period=None) -> None:
+        """The claim holder's cooperative release: revoke the claim first (so its plan write can never match), then clear
+        its own freeze by exact id. Never raises for 'nothing to do'."""
+        revoke_claim(self.plans, owner_key, claim_id, force=True)
+        if free_period:
+            self._clear_freeze(owner_key, free_period, claim_id)
+
+    # ── guest handover: usage a guest already completed, charged once to the new account ──────────────────────
+    def seed_guest_handover(self, owner_key, owner_type, guest_id, period, snapshot, hold_token=None, hold_cost=0, now=None) -> dict:
+        """Charge the account's free month `period` (the handover window) for `snapshot` credits the guest already used
+        plus, when a guest search is still running, `hold_cost` credits as a pending HOLD. One conditional update,
+        guarded by the marker `guest_handover` (so a repeat adds nothing): `used` and `archived` of that month rise by the
+        applied amount together, which keeps C = L + A without a live entry. The amount is clamped to what the grant
+        has room for (the balance is never negative) and the applied amounts are recorded, so a release restores exactly
+        what was charged. -> {"status": "applied"|"duplicate", "applied_snapshot", "applied_hold"}."""
+        if not _is_free_period_key(period):
+            raise ValueError("the handover period must be a calendar month")
+        now = _aware(now or self.now())
+        limit = int(self.limit())
+        snapshot, hold_cost = max(0, int(snapshot)), max(0, int(hold_cost or 0))
+        if snapshot == 0 and not hold_token:
+            return {"status": "nothing_to_move", "applied_snapshot": 0, "applied_hold": 0}    # a closed identity, no usage
+        _require_index(USAGE_INDEX)
+        if period < period_key(now):
+            return self._record_pending_expired(owner_key, owner_type, guest_id, period, snapshot, hold_token, hold_cost, now)
+        for _ in range(4):
+            doc = self._read_doc(owner_key)
+            existing = (doc or {}).get("guest_handover")
+            if isinstance(existing, dict):
+                hold = existing.get("hold") or {}
+                return {"status": "duplicate", "applied_snapshot": existing.get("applied_snapshot", 0),
+                        "applied_hold": hold.get("applied", 0)}
+            frozen = self._frozen_id(doc, period)
+            if frozen is not None:
+                self._resolve_freeze(owner_key, period, frozen, now)
+                continue
+            used_map = (doc or {}).get("used_by_period") or {}
+            used = int(used_map.get(period, 0))
+            room = max(0, limit - used)
+            a_snap = min(snapshot, room)
+            a_hold = min(hold_cost, room - a_snap) if hold_token else 0
+            total = a_snap + a_hold
+            marker = {"guest": guest_id, "period": period, "snapshot": snapshot, "applied_snapshot": a_snap, "at": now,
+                      "hold": ({"token": hold_token, "cost": hold_cost, "applied": a_hold, "period": period, "state": "held"}
+                               if hold_token else None)}
+            if doc is None:
+                try:
+                    self.coll.insert_one({"owner_key": owner_key, "owner_type": owner_type, "used_by_period": {period: total},
+                                          "limit_max_by_period": {period: limit}, "archived_by_period": {period: total},
+                                          "res": {}, "guest_handover": marker})
+                    return {"status": "applied", "applied_snapshot": a_snap, "applied_hold": a_hold}
+                except Exception as exc:
+                    if _is_duplicate_key(exc):
+                        continue
+                    raise CreditStoreError(f"seed failed: {type(exc).__name__}") from exc
+            ok = self._update(
+                {"owner_key": owner_key, "guest_handover": {"$exists": False}, f"freeze.{period}": {"$exists": False},
+                 f"used_by_period.{period}": used if period in used_map else {"$exists": False}},
+                {"$inc": {f"used_by_period.{period}": total, f"archived_by_period.{period}": total},
+                 "$max": {f"limit_max_by_period.{period}": limit}, "$set": {"guest_handover": marker}})
+            if ok:
+                return {"status": "applied", "applied_snapshot": a_snap, "applied_hold": a_hold}
+        raise CreditStoreError("guest handover contention")
+
+    # ── a handover whose target month is already over: recoverable, never auto-resolved ─────────────────────────
+    # absent --seed, month over--> guest_handover_pending (NO counter changes, NOT complete, result "pending_expired")
+    # pending --seed/reconcile again--> unchanged (no write)
+    # pending --resolve_pending_guest_handover("apply_late"| "waive", reason)--> guest_handover (applied, with the resolution)
+    # The deduction is only ever applied to the ORIGINAL target month, and only by an explicit resolution. A first paid
+    # activation is refused (retryable) while a pending handover exists (billing._first_activation).
+    def _record_pending_expired(self, owner_key, owner_type, guest_id, period, snapshot, hold_token, hold_cost, now) -> dict:
+        if not _is_free_period_key(period):
+            raise ValueError("the handover period must be a calendar month")
+        result = {"status": "pending_expired", "applied_snapshot": 0, "applied_hold": 0}
+        marker = {"guest": guest_id, "period": period, "snapshot": snapshot, "at": now, "reason": "target_period_expired",
+                  "hold": {"token": hold_token, "cost": hold_cost} if hold_token else None}
+        for _ in range(4):
+            doc = self._read_doc(owner_key)
+            if isinstance((doc or {}).get("guest_handover"), dict):
+                existing = doc["guest_handover"]
+                return {"status": "duplicate", "applied_snapshot": existing.get("applied_snapshot", 0),
+                        "applied_hold": (existing.get("hold") or {}).get("applied", existing.get("applied_hold", 0))}
+            if isinstance((doc or {}).get("guest_handover_pending"), dict):
+                return result
+            if doc is None:
+                try:
+                    self.coll.insert_one({"owner_key": owner_key, "owner_type": owner_type, "used_by_period": {},
+                                          "limit_max_by_period": {}, "archived_by_period": {}, "res": {},
+                                          "guest_handover_pending": marker})
+                    return result
+                except Exception as exc:
+                    if _is_duplicate_key(exc):
+                        continue
+                    raise CreditStoreError(f"pending record failed: {type(exc).__name__}") from exc
+            if self._update({"owner_key": owner_key, "guest_handover": {"$exists": False},
+                             "guest_handover_pending": {"$exists": False}}, {"$set": {"guest_handover_pending": marker}}):
+                return result
+        raise CreditStoreError("guest handover contention")
+
+    def has_pending_guest_handover(self, owner_key) -> bool:
+        return isinstance((self._read_doc(owner_key) or {}).get("guest_handover_pending"), dict)
+
+    def resolve_pending_guest_handover(self, owner_key, guest_id, outcome, reason, snapshot, hold_amount=0, now=None) -> dict:
+        """Record the explicit resolution of a pending handover, exactly once (one conditional update that also removes the
+        pending record). "apply_late" raises used + archived of the ORIGINAL month together (clamped to its room; refused
+        while that month is frozen for a carryover); "waive" applies nothing. -> {"status": "applied_late"|"waived"|
+        "duplicate"|"no_pending"|"period_frozen", ...}."""
+        if outcome not in ("apply_late", "waive") or not isinstance(reason, str) or not reason.strip():
+            raise ValueError("an explicit outcome and a reason are required")
+        _require_index(USAGE_INDEX)
+        now = _aware(now or self.now())
+        limit = int(self.limit())
+        for _ in range(4):
+            doc = self._read_doc(owner_key)
+            existing = (doc or {}).get("guest_handover")
+            if isinstance(existing, dict):
+                return {"status": "duplicate", "resolution": existing.get("resolution")}
+            pending = (doc or {}).get("guest_handover_pending")
+            if not isinstance(pending, dict) or pending.get("guest") != guest_id:
+                return {"status": "no_pending"}
+            period = pending["period"]
+            used_map = (doc or {}).get("used_by_period") or {}
+            a_snap = a_hold = 0
+            if outcome == "apply_late":
+                if self._frozen_id(doc, period) is not None:
+                    return {"status": "period_frozen"}
+                room = max(0, limit - int(used_map.get(period, 0)))
+                a_snap = min(max(0, int(snapshot)), room)
+                a_hold = min(max(0, int(hold_amount)), room - a_snap)
+            total = a_snap + a_hold
+            marker = {"guest": guest_id, "period": period, "snapshot": max(0, int(snapshot)), "applied_snapshot": a_snap,
+                      "applied_hold": a_hold, "at": now, "hold": None, "late": outcome == "apply_late",
+                      "waived": outcome == "waive",
+                      "resolution": {"outcome": outcome, "reason": reason.strip()[:200], "at": now}}
+            filt = {"owner_key": owner_key, "guest_handover": {"$exists": False}, "guest_handover_pending.guest": guest_id}
+            update = {"$set": {"guest_handover": marker}, "$unset": {"guest_handover_pending": ""}}
+            if total:
+                filt[f"used_by_period.{period}"] = int(used_map[period]) if period in used_map else {"$exists": False}
+                filt[f"freeze.{period}"] = {"$exists": False}
+                update["$inc"] = {f"used_by_period.{period}": total, f"archived_by_period.{period}": total}
+                update["$max"] = {f"limit_max_by_period.{period}": limit}
+            if self._update(filt, update):
+                return {"status": "applied_late" if outcome == "apply_late" else "waived", "period": period,
+                        "applied_snapshot": a_snap, "applied_hold": a_hold}
+        raise CreditStoreError("guest handover resolution contention")
+
+    def commit_guest_hold(self, owner_key, token) -> bool:
+        """held -> committed (terminal). The charge was made when the hold was seeded: no counter changes."""
+        return self._update({"owner_key": owner_key, "guest_handover.hold.token": token, "guest_handover.hold.state": "held"},
+                            {"$set": {"guest_handover.hold.state": "committed", "guest_handover.hold.committed_at": self.now()}})
+
+    def release_guest_hold(self, owner_key, token, now=None) -> str:
+        """held -> released (terminal): give back exactly the applied amount, once, to the month it was charged to.
+        "released" | "released_past_period" (that month is over: bookkeeping only, no effect on today's allowance) |
+        "noop" (already committed or released, or not this account's hold)."""
+        now = _aware(now or self.now())
+        doc = self._read_doc(owner_key)
+        hold = (((doc or {}).get("guest_handover")) or {}).get("hold")
+        if not isinstance(hold, dict) or hold.get("token") != token or hold.get("state") != "held":
+            return "noop"
+        amount, period = int(hold.get("applied") or 0), hold.get("period")
+        ok = self._update({"owner_key": owner_key, "guest_handover.hold.token": token, "guest_handover.hold.state": "held"},
+                          {"$inc": {f"used_by_period.{period}": -amount, f"archived_by_period.{period}": -amount},
+                           "$set": {"guest_handover.hold.state": "released", "guest_handover.hold.released_at": now}})
+        if not ok:
+            return "noop"
+        return "released_past_period" if period < period_key(now) else "released"
 
     # ── low-level reads/writes ───────────────────────────────────────────────
     def _read_doc(self, owner_key):
@@ -677,7 +1221,8 @@ class CreditStore:
         if doc and ((doc.get("res") or {}).get(rid)) is not None:
             return None
         try:
-            limit, period, resets_at, _plan = self.allowance(owner_key, self.now(), owner_type)
+            limit, period, resets_at, _plan = self.allowance(owner_key, self.now(), owner_type,
+                                                              doc=doc if doc is not None else {})
         except CreditStoreError:
             return None
         used = int(((doc or {}).get("used_by_period") or {}).get(period, 0))
@@ -717,12 +1262,19 @@ class CreditStore:
         resume or reconciliation never changes or repeats the charge."""
         if isinstance(cost, bool) or not isinstance(cost, int) or cost < 1:
             raise ValueError(f"cost must be a whole number >= 1, got {cost!r}")
+        _require_index(USAGE_INDEX)
         for _ in range(4):
             now = self.now()
             doc = self._read_doc(owner_key)
             entry = ((doc or {}).get("res") or {}).get(rid) if doc else None
             if entry is None:
-                limit, period, resets_at, _plan = self.allowance(owner_key, now, owner_type)   # fail closed: raises on a plan-store error
+                limit, period, resets_at, _plan, guard = self._allowance_full(
+                    owner_key, now, owner_type, doc if doc is not None else {})    # fail closed: raises on a plan-store error
+                frozen = self._frozen_id(doc, period)
+                if frozen is not None:                      # the free month is frozen for a first paid activation
+                    if self._resolve_freeze(owner_key, period, frozen, now) == "refuse":
+                        return Decision("unavailable")
+                    continue
                 if cost > limit:
                     return self._over_limit(cost, limit, resets_at=resets_at)
                 attempt = uuid.uuid4().hex
@@ -739,7 +1291,7 @@ class CreditStore:
                             raise CreditStoreError(f"insert failed: {type(exc).__name__}") from exc
                         continue   # another request created the document first
                 ok = self._update(
-                    {"owner_key": owner_key, f"res.{rid}": {"$exists": False},
+                    {"owner_key": owner_key, f"res.{rid}": {"$exists": False}, **guard, **self._freeze_guard(period),
                      "$or": [{f"used_by_period.{period}": {"$exists": False}},
                              {f"used_by_period.{period}": {"$lte": limit - cost}}]},
                     {"$set": {f"res.{rid}": new}, "$inc": {f"used_by_period.{period}": cost},
@@ -757,7 +1309,12 @@ class CreditStore:
                     and entry.get("cost") >= 1
                 r_cost = entry["cost"] if stored else cost   # the cost decided for this request id is reused
                 r_effort, r_reason = (entry.get("effort"), entry.get("cost_reason")) if stored else (effort, cost_reason)
-                limit, period, resets_at, _plan = self.allowance(owner_key, now, owner_type)
+                limit, period, resets_at, _plan, guard = self._allowance_full(owner_key, now, owner_type, doc)
+                frozen = self._frozen_id(doc, period)
+                if frozen is not None:
+                    if self._resolve_freeze(owner_key, period, frozen, now) == "refuse":
+                        return Decision("unavailable")
+                    continue
                 if r_cost > limit:
                     return self._over_limit(r_cost, limit, resets_at=resets_at)
                 attempt = uuid.uuid4().hex
@@ -765,6 +1322,7 @@ class CreditStore:
                                       cost=r_cost, effort=r_effort, cost_reason=r_reason)
                 ok = self._update(
                     {"owner_key": owner_key, f"res.{rid}.state": REFUNDED, f"res.{rid}.ev": entry.get("ev"),
+                     **guard, **self._freeze_guard(period),
                      "$or": [{f"used_by_period.{period}": {"$exists": False}},
                              {f"used_by_period.{period}": {"$lte": limit - r_cost}}]},
                     {"$set": {f"res.{rid}": new}, "$inc": {f"used_by_period.{period}": r_cost},
@@ -1217,12 +1775,13 @@ class CreditStore:
         base = {"enforced": True, "limit": int(self.limit()), "period": period_key(now),
                 "resets_at": period_resets_at(now).isoformat()}
         try:
-            limit, period, resets_at, plan = self.allowance(owner_key, now, owner_type)
+            self._plan_record(owner_key, now, owner_type)              # fail closed on a plan-store error, as before
+            self.recover(owner_key)
+            doc = self._read_doc(owner_key) or {}
+            limit, period, resets_at, plan = self.allowance(owner_key, now, owner_type, doc=doc)
             if plan != PLAN_FREE:
                 base.update(limit=limit, period=period, resets_at=resets_at.isoformat())
             base["plan"] = plan
-            self.recover(owner_key)
-            doc = self._read_doc(owner_key) or {}
         except CreditStoreError:
             return {**base, "status": "unavailable", "used": None, "remaining": None,
                     "needs_reconciliation": None, "close_in_progress": None}
