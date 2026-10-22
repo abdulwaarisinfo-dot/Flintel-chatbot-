@@ -101,7 +101,7 @@ from index import (
     # business logic
     normalize_topic_key,
     normalize_platform,
-    normalize_platforms,
+    normalize_platforms, supported_platforms,
     generate_fuzzy_keywords,
     enqueue_search_job,
     get_matched_signals,
@@ -1142,7 +1142,7 @@ def search(
 
     try:
         topic_key = normalize_topic_key(query)
-        targeting_platform = normalize_platforms(platform)   # (PLATFORM MULTI-SELECT) one, several or all
+        targeting_platform = supported_platforms(platform)   # (PLATFORM MULTI-SELECT) + (COMING SOON) only live platforms ever reach the search
 
         if not topic_key:
             # Best-effort context for the error re-render only — never let a
@@ -1221,7 +1221,7 @@ def search(
                 if not chat_exists(fast_chat_id, fast_owner):
                     fast_chat_id = create_chat_session(fast_owner, fast_owner_type, title=generate_chat_title(query))
                 request.session["active_chat_id"] = fast_chat_id
-                set_chat_platform(fast_chat_id, fast_owner, platform_display_value(platform))   # (PLATFORM PERSISTENCE)
+                set_chat_platform(fast_chat_id, fast_owner, platform_display_value(targeting_platform))   # (PLATFORM PERSISTENCE)
                 return _save_plain_reply_and_redirect(fast_chat_id, fast_owner, query, early_reply)
             except Exception as exc:
                 log.warning(f"Early small-talk path failed for query={query!r} (continuing normally): {exc}")
@@ -1240,7 +1240,7 @@ def search(
                 if not chat_exists(ex_chat_id, ex_owner):
                     ex_chat_id = create_chat_session(ex_owner, ex_owner_type, title=generate_chat_title(query))
                 request.session["active_chat_id"] = ex_chat_id
-                set_chat_platform(ex_chat_id, ex_owner, platform_display_value(platform))
+                set_chat_platform(ex_chat_id, ex_owner, platform_display_value(targeting_platform))
                 ex_answer = exploratory_reply(explore)
                 set_chat_research_offer(ex_chat_id, ex_owner, {"query": explore["offer"], "answer": ex_answer})
                 return _save_plain_reply_and_redirect(ex_chat_id, ex_owner, query, ex_answer)
@@ -1315,7 +1315,7 @@ def search(
             if not active_chat_id or not get_chat_session(active_chat_id, owner_key):
                 active_chat_id = create_chat_session(owner_key, owner_type, title=generate_chat_title(query))
             request.session["active_chat_id"] = active_chat_id
-            set_chat_platform(active_chat_id, owner_key, platform_display_value(platform))   # (PLATFORM PERSISTENCE)
+            set_chat_platform(active_chat_id, owner_key, platform_display_value(targeting_platform))   # (PLATFORM PERSISTENCE)
 
             existing_chat = get_chat_session(active_chat_id, owner_key)
             chat_summary = (existing_chat or {}).get("summary") or ""
@@ -2159,7 +2159,7 @@ def search(
             if not chat_exists(clarify_chat_id, owner_key):
                 clarify_chat_id = create_chat_session(owner_key, owner_type, title=generate_chat_title(query))
             request.session["active_chat_id"] = clarify_chat_id
-            set_chat_platform(clarify_chat_id, owner_key, platform_display_value(platform))
+            set_chat_platform(clarify_chat_id, owner_key, platform_display_value(targeting_platform))
             return _save_plain_reply_and_redirect(clarify_chat_id, owner_key, query, _parsed_range.question)
         if isinstance(_parsed_range, timerange.TimeRange):
             time_range_obj = _parsed_range
