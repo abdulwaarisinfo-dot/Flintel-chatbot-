@@ -2,9 +2,9 @@
 routes.py — all FastAPI route handlers for the Flintel web service,
 extracted from index.py to keep that module to shared infrastructure  
 and business logic. Imports `app` from index.py and registers every
-route on it; index.py imports this module once, at the bottom, purely
+route on it; index.py imports this module once, at the bottom, purely 
 for its side effect of registering these routes.   
-""" 
+"""
 
 import json
 import re
@@ -597,17 +597,20 @@ def _delete_empty_chat(owner_key, chat_id, request):
 #   X-Flintel-Denial: credits-exhausted     429  signed-in user, no credits -> upgrade modal (unchanged)
 #   X-Flintel-Denial: guest-search-in-progress / guest-gate-unavailable      -> inline message only
 # ─────────────────────────────────────────────────────────────────────────────
-GUEST_AUTH_MESSAGE = "You've used your free search. Create your free account to continue."
+GUEST_AUTH_MESSAGE = "You've used your free credits. Create your free account to continue."
 GUEST_BUSY_MESSAGE = "Your first search is still finishing. It will appear in your conversation as soon as it is ready."
 GUEST_IDENTITY_MESSAGE = ("We couldn't confirm your browser's session. Please make sure cookies are enabled, "
                           "refresh the page and try again.")
 GUEST_UNAVAILABLE_MESSAGE = "Searching is temporarily unavailable. Please try again in a moment."
 
 
-def _guest_reserve(request, owner_key, topic_key, chat_id=None):
+def _guest_reserve(request, owner_key, topic_key, chat_id=None, cost=None, cost_reason=None, routed=None):
     """(token, denial). token: the reservation owned by this request (None when the gate does not apply).
     denial: a guest_gate.Decision to answer with, or None. Called right before a genuine search is accepted
-    (before its credit reservation / job enqueue). Fails closed if the gate store is unavailable."""
+    (before its credit reservation / job enqueue). Fails closed if the gate store is unavailable.
+    (GUEST CREDITS) The search's cost is bound to the reservation here, BEFORE anything is enqueued: `cost` when the caller
+    already decided it (the credited path), otherwise - only for an eligible guest with the gate on - the routed cost from
+    guest_gate.routed_cost(routed). If that cannot be decided the search is refused as unavailable (nothing reserved)."""
     try:
         owner = owner_key or get_owner(request)[0]
     except Exception as exc:
@@ -624,8 +627,15 @@ def _guest_reserve(request, owner_key, topic_key, chat_id=None):
         return None, None
     if not _guest_identity_confirmed(request, owner):
         return None, guest_gate.Decision(guest_gate.IDENTITY)
+    if cost is None and routed is not None:
+        try:
+            routed_decision = guest_gate.routed_cost(routed)
+            cost, cost_reason = routed_decision.cost, routed_decision.reason
+        except Exception as exc:
+            log.warning(f"Guest gate: the routed cost could not be decided ({type(exc).__name__}); search refused, nothing reserved")
+            return None, guest_gate.Decision(guest_gate.UNAVAILABLE)
     token = _usage_request_id() or _uuid.uuid4().hex
-    decision = gate.reserve(owner, token, topic_key, chat_id)
+    decision = gate.reserve(owner, token, topic_key, chat_id, cost=cost, cost_reason=cost_reason)
     if decision.kind != guest_gate.ALLOW:
         return None, decision
     if decision.resumed:
@@ -642,6 +652,19 @@ def _guest_identity_confirmed(request, owner):
         return _read_guest_cookie(request) == owner
     except Exception:
         return False
+
+
+def _guest_bind_cost(owner_key, token, cost):
+    """(GUEST CREDITS) After the credit reservation: the gate counts THIS cost when the answer completes (the credit store's
+    stored charge wins over the value passed at reserve time). No token / no cost: nothing. Never raises."""
+    if not token or not cost:
+        return
+    try:
+        gate = guest_gate.default_gate()
+        if gate is not None:
+            gate.bind_cost(owner_key, token, cost)
+    except Exception as exc:
+        log.warning(f"Guest gate cost binding skipped: {type(exc).__name__}")
 
 
 def _gate_owner(request, owner_key):
@@ -841,7 +864,9 @@ def _run_credited_search(request, store, rid, query, topic_key, owner_key, owner
 
     # (GUEST GATE) a visitor who is not signed in: reserve the one genuine search BEFORE any credit is
     # reserved or job queued. Refused -> nothing is charged or enqueued.
-    guest_token, guest_denial = _guest_reserve(request, owner_key, topic_key, active_chat_id)
+    cost = credit_cost.select_cost(routed)               # (USAGE-BASED CREDITS) also the cost a guest's completed answer counts
+    guest_token, guest_denial = _guest_reserve(request, owner_key, topic_key, active_chat_id, cost=cost.cost,
+                                               cost_reason=cost.reason)
     if guest_denial is not None:
         return _guest_gate_denial_response(request, guest_denial, query, owner_key, cleanup_chat=active_chat_id)
 
@@ -858,7 +883,6 @@ def _run_credited_search(request, store, rid, query, topic_key, owner_key, owner
     # (USAGE-BASED CREDITS) The router result already in hand (no extra model
     # call) is validated here, right before the one atomic reservation; an
     # entry that already exists for this request id keeps its stored cost.
-    cost = credit_cost.select_cost(routed)
     try:
         try:
             ticket = store.reserve(owner_key, owner_type, rid, topic_key, active_chat_id, expects_job,
@@ -867,6 +891,7 @@ def _run_credited_search(request, store, rid, query, topic_key, owner_key, owner
             if isinstance(ticket, search_credits.Decision):
                 _guest_release(owner_key, guest_token)          # (GUEST GATE) refused: nothing was started
                 return _credit_decision_response(request, ticket, query, owner_key, cleanup_chat=active_chat_id)
+            _guest_bind_cost(owner_key, guest_token, getattr(ticket, "cost", None))   # the stored charge is what counts
             decision = store.run(ticket, _enqueue if expects_job else None, message_kwargs)
         except search_credits.CreditStoreError as exc:
             log.warning(f"Credit store unavailable for this search: {exc}")
@@ -1654,7 +1679,7 @@ def search(
                         )
 
                     # (GUEST GATE) legacy path (credit kill switch on): reserve before any job is queued
-                    guest_token, guest_denial = _guest_reserve(request, owner_key, topic_key, active_chat_id)
+                    guest_token, guest_denial = _guest_reserve(request, owner_key, topic_key, active_chat_id, routed=routed)
                     if guest_denial is not None:
                         return _guest_gate_denial_response(request, guest_denial, query, _gate_owner(request, owner_key))
                     if keywords:
@@ -2186,7 +2211,7 @@ def search(
             )
 
         # (GUEST GATE) legacy path (credit kill switch on): reserve before any job is queued
-        guest_token, guest_denial = _guest_reserve(request, owner_key, topic_key, active_chat_id)
+        guest_token, guest_denial = _guest_reserve(request, owner_key, topic_key, active_chat_id, routed=routed)
         if guest_denial is not None:
             return _guest_gate_denial_response(request, guest_denial, query, _gate_owner(request, owner_key))
         if not reuse_website_keywords:
@@ -3501,7 +3526,10 @@ async def google_callback(request: Request):
     # just extended to chat history too.
     anon_id = guest_id
 
-    user_doc = upsert_google_user(google_id=google_id, email=email, name=name, picture=picture)
+    created = {}
+    user_doc = upsert_google_user(google_id=google_id, email=email, name=name, picture=picture, created_out=created)
+    if created.get("created"):                               # (GUEST CREDITS) only a brand-new account takes over guest usage
+        guest_gate.handover_to_account(anon_id, email)
     _log_user_in(request, user_doc)
     try:
         migrate_anon_chats_to_owner(anon_id, email)
@@ -3639,6 +3667,7 @@ def signup(
             return _auth_json({"ok": False, "error": "An account with that email already exists."}, 409)
         return RedirectResponse(url="/", status_code=303)
     request.session.pop("signup_verified", None)              # single use
+    guest_gate.handover_to_account(anon_id, email_norm)      # (GUEST CREDITS) a NEW account: the guest's usage reduces its first free grant, once
     _log_user_in(request, user_doc)
     try:
         migrate_anon_chats_to_owner(anon_id, email_norm)
@@ -3698,6 +3727,27 @@ def logout(request: Request):
     return RedirectResponse(url="/")
 
 
+@app.get("/api/health/ready")
+def api_health_ready():
+    """Readiness of the subsystems that depend on a required unique index (index_guard.py). Always 200 so the app stays
+    reachable for diagnostics and recovery; `status` is "degraded" while a subsystem is refusing credit operations. No keys,
+    counts or other data: only a coarse state per subsystem."""
+    from fastapi.responses import JSONResponse
+    import index_guard
+    snap = index_guard.snapshot()
+
+    def coarse(name):
+        state = snap.get(name, "unmanaged")
+        return state if state in index_guard.OK_STATES else "unavailable"
+    subsystems = {"credits": coarse("flintel_credit_usage"), "billing_plans": coarse("flintel_plans")}
+    reasons = {label: snap[name] for label, name in (("credits", "flintel_credit_usage"), ("billing_plans", "flintel_plans"))
+               if name in snap and subsystems[label] == "unavailable"}
+    body = {"status": "degraded" if reasons else "ok", "subsystems": subsystems}
+    if reasons:
+        body["reasons"] = reasons
+    return JSONResponse(body)
+
+
 @app.get("/api/me/usage")
 def api_me_usage(request: Request):
     """Returns the current user's lifetime message count. 401 if not logged in."""
@@ -3705,6 +3755,10 @@ def api_me_usage(request: Request):
     user = get_current_user(request)
     if not user:
         return JSONResponse({"error": "not_authenticated"}, status_code=401)
+    try:                                                  # (GUEST CREDITS) finish an interrupted handover of THIS account, if any
+        guest_gate.reconcile_handover(peek_guest_id(request), user.get("email"))
+    except Exception as exc:
+        log.warning(f"Guest handover reconcile skipped: {type(exc).__name__}")
     from bson import ObjectId
     doc = users_collection.find_one({"_id": ObjectId(user["id"])}, {"message_count": 1})
     count = int((doc or {}).get("message_count", 0))
@@ -3740,6 +3794,9 @@ def _billing_checkout_enabled() -> bool:
     if not billing.configured():
         return False
     try:
+        import index_guard
+        if index_guard.is_registered("flintel_plans"):          # verified at startup and re-verified while it is refused
+            return index_guard.check("flintel_plans")[0]
         import database
         return getattr(database, "plans_owner_index_ok", True) is not False
     except Exception:
@@ -3807,6 +3864,10 @@ def billing_status(request: Request):
         return _billing_json({"error": "not_authenticated"}, 401)
     try:
         subs, _events, plans = _billing_stores()
+        try:                       # bounded, rate-limited retry opportunity for a deferred first activation (no sweep exists)
+            billing.resume_activation(subs, plans, user["email"], _billing_credit_store())
+        except Exception as exc:
+            log.warning(f"Activation resume skipped: {type(exc).__name__}")
         return _billing_json(billing.status_for_owner(subs, plans, user["email"]))
     except Exception as exc:
         log.warning(f"Billing status failed: {type(exc).__name__}")
@@ -3833,6 +3894,13 @@ def billing_portal(request: Request):
     return _billing_json({"url": url})
 
 
+def _billing_credit_store():
+    """The credit store the billing webhook hands to billing.handle_webhook for the first-paid carryover (None while credit
+    enforcement is switched off). Resolved by billing, not here: the pages, the stream and reloads must never read the
+    credit store (a test pins that to search() and /api/me/usage); the webhook is neither of those."""
+    return billing.default_credit_store()
+
+
 @app.post("/webhooks/lemonsqueezy")
 async def lemonsqueezy_webhook(request: Request):
     """Lemon Squeezy webhook. No session or login: the HMAC-SHA256 signature over the RAW body is the only
@@ -3844,8 +3912,13 @@ async def lemonsqueezy_webhook(request: Request):
     raw = await request.body()
     try:
         subs, events, plans = _billing_stores()
+        try:
+            credits = _billing_credit_store()            # (CARRYOVER) None while credit enforcement is switched off
+        except Exception as exc:
+            log.warning(f"Credit store unavailable for the billing webhook (no carryover this time): {type(exc).__name__}")
+            credits = None
         result = await run_in_threadpool(billing.handle_webhook, raw, request.headers.get("x-signature"),
-                                         request.headers.get("x-event-name"), subs, events, plans)
+                                         request.headers.get("x-event-name"), subs, events, plans, None, None, credits)
     except billing.WebhookRejected as rejected:
         return _billing_json({"error": rejected.reason}, rejected.http_status)
     except billing.WebhookBusy:
