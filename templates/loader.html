@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flintel</title>
+</head>
+<body>
+<script>
+// load index.html
+fetch('/_app', { credentials: 'same-origin', headers: { 'X-Flintel-Client': '1' } })
+  .then(function (r) { if (!r.ok) throw 0; return r.text(); })
+  .then(function (html) { document.open(); document.write(html); document.close(); })
+  .catch(function () { document.body.innerHTML = 'Unable to load. Please refresh.'; });
+</script>
+</body>
+</html>
