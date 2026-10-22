@@ -525,4 +525,3 @@ def test_a_returning_google_user_gets_no_handover(gauth, gg, monkeypatch):
     gauth["client"].get("/auth/google/callback", follow_redirects=False)
     assert gauth["acct_coll"].find_one({"owner_key": "gg@example.com"}) is None
     assert "handover" not in gauth["gate"].find_one({"_id": owner})
-test_guest_credits.py
