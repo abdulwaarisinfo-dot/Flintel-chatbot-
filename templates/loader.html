@@ -8,8 +8,12 @@
 <body>
 <script>
 // load index.html
-fetch('/_app', { credentials: 'same-origin', headers: { 'X-Flintel-Client': '1' } })
-  .then(function (r) { if (!r.ok) throw 0; return r.text(); })
+fetch(location.pathname + location.search, { credentials: 'same-origin', headers: { 'X-Flintel-Client': '1' } })
+  .then(function (r) {
+    if (!r.ok && r.status >= 500) throw 0;
+    if (r.redirected) { try { history.replaceState(null, '', new URL(r.url).pathname + new URL(r.url).search); } catch (e) {} }
+    return r.text();
+  })
   .then(function (html) { document.open(); document.write(html); document.close(); })
   .catch(function () { document.body.innerHTML = 'Unable to load. Please refresh.'; });
 </script>
