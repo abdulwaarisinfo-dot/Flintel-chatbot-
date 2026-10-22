@@ -638,6 +638,16 @@ def normalize_platforms(raw: str) -> str:
     return ",".join(ordered)
 
 
+def supported_platforms(raw: str) -> str:
+    """(COMING SOON) Request-path enforcement: the normalized selection restricted to platforms that are actually live
+    (LIVE_PLATFORM_KEYS, today "reddit"). Unsupported or unknown values are dropped; "all", empty, or nothing supported
+    means every supported platform. Never returns an unsupported platform."""
+    live = [p for p in _PLATFORM_ORDER if p in LIVE_PLATFORM_KEYS]
+    key = normalize_platforms(raw)
+    picked = [] if key == "all" else [k for k in key.split(",") if k in live]
+    return ",".join(picked or live)
+
+
 # (PLATFORM PERSISTENCE) The platform dropdown's display value for a stored
 # selection — only ever built from known labels (never echoes user input).
 _PLATFORM_LABELS = {"x_twitter": "X / Twitter", "reddit": "Reddit", "linkedin": "LinkedIn", "facebook": "Facebook"}
