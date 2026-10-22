@@ -1,5 +1,5 @@
 """
-search_credits.py — monthly search credits (STAGE 1 backend).
+search_credits.py — monthly search credits (STAGE 1 backend). 
 
 An accepted search (a normal search or a website-URL search) costs a whole
 number of credits chosen once, before the reservation (credit_cost.py), and
