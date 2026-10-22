@@ -147,7 +147,7 @@ def _cfg_strict_wait() -> float:
 
 
 from logics import (
-    normalize_topic_key, normalize_platform, normalize_platforms, generate_fuzzy_keywords,
+    normalize_topic_key, normalize_platform, normalize_platforms, supported_platforms, generate_fuzzy_keywords,
     enrich_no_results_answer,   # (NO-RESULTS UI)
     enqueue_search_job, get_matched_signals, analyze_with_claude,
     analyze_with_claude_stream, _extract_json_object_from_text,   # (REAL-TIME STREAMING) re-exported for routes.py's stream_answer()
