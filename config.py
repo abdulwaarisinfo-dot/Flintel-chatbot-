@@ -461,6 +461,22 @@ def _guest_int(name, default, minimum, maximum):
 
 
 GUEST_SEARCH_LIMIT = _guest_int("GUEST_SEARCH_LIMIT", 1, 0, 1000)
+# (GUEST CREDITS) GUEST_CREDIT_ALLOWANCE: the guest allowance in CREDITS (cumulative, measured with the existing
+# research-cost calculation). Unset/invalid -> None. Precedence (guest_gate.gate_mode()):
+#   1. GUEST_CREDIT_ALLOWANCE set (whole number >= 0; 0 = gate off)  -> credit allowance, that value
+#   2. unset, but GUEST_SEARCH_LIMIT explicitly set                  -> the legacy "N completed searches" rule (0 = off)
+#   3. neither set                                                    -> credit allowance, default 5
+# When both are set the credit allowance wins.
+GUEST_CREDIT_ALLOWANCE_DEFAULT = 5
+GUEST_CREDIT_ALLOWANCE = (_guest_int("GUEST_CREDIT_ALLOWANCE", -1, 0, 100000)
+                          if (os.getenv("GUEST_CREDIT_ALLOWANCE") or "").strip() else -1)
+GUEST_CREDIT_ALLOWANCE = None if GUEST_CREDIT_ALLOWANCE < 0 else GUEST_CREDIT_ALLOWANCE
+GUEST_SEARCH_LIMIT_EXPLICIT = bool((os.getenv("GUEST_SEARCH_LIMIT") or "").strip())
+# Code constants (not environment settings): a signup with fewer hours than this left in its UTC month hands the guest
+# usage over to the NEXT month (the first month in which a free allowance can really be spent); an activation claim older
+# than this may be revoked or taken over (liveness only - correctness never depends on it).
+GUEST_HANDOVER_MIN_REMAINING_HOURS = 72
+ACTIVATION_CLAIM_STALE_SECONDS = 120
 GUEST_INFLIGHT_STALE_SECONDS = max(_guest_int("GUEST_INFLIGHT_STALE_SECONDS", 900, 60, 86400), RESPONSE_TIMEOUT + 60)
 GUEST_ID_COOKIE_MAX_AGE_DAYS = _guest_int("GUEST_ID_COOKIE_MAX_AGE_DAYS", 400, 1, 400)
 
