@@ -186,7 +186,17 @@ app = FastAPI(
     redoc_url=None,
     openapi_url=None,
 )
-templates = Jinja2Templates(directory="templates")
+# Agar dist/ maujood ho to protected frontend serve hota hai, warna readable templates/.
+
+import os as _os
+_DIST_TEMPLATES = _os.path.join("dist", "templates")
+_DIST_ASSETS = _os.path.join("dist", "assets")
+_USE_DIST = _os.path.isdir(_DIST_TEMPLATES) and _os.getenv("FLINTEL_USE_SOURCE_TEMPLATES") != "1"
+templates = Jinja2Templates(directory=_DIST_TEMPLATES if _USE_DIST else "templates")
+if _USE_DIST and _os.path.isdir(_DIST_ASSETS):
+    from fastapi.staticfiles import StaticFiles as _StaticFiles
+    app.mount("/assets", _StaticFiles(directory=_DIST_ASSETS), name="assets")
+    
 # (SEARCH CREDITS) A fresh submit key per rendered /search form; JavaScript
 # replaces it on every intentional submit, automatic retries keep it.
 import secrets as _secrets
