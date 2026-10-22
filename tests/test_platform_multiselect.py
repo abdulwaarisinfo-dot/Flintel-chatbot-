@@ -102,9 +102,15 @@ def test_job_gets_all_for_multi_and_single_unchanged(lg, monkeypatch):
     assert sent == ["all", "reddit"]
 
 
-def test_search_route_uses_normalize_platforms():
+def test_search_route_uses_normalize_platforms(lg):
+    # behaviour: the value the route derives is built on normalize_platforms but limited to live platforms
+    assert lg.normalize_platforms("Reddit, LinkedIn") == "reddit,linkedin"
+    assert lg.supported_platforms("Reddit, LinkedIn") == "reddit"
+    assert lg.supported_platforms("All Platforms") == "reddit"
+    # wiring: /search must not hand the raw normalized value to the search/job path
     src = (ROOT / "routes.py").read_text(encoding="utf-8")
-    assert "targeting_platform = normalize_platforms(platform)" in src
+    assert "targeting_platform = supported_platforms(platform)" in src
+    assert "targeting_platform = normalize_platforms(platform)" not in src
 
 
 # ── templates (static) ───────────────────────────────────────────────────────
