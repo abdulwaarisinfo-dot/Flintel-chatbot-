@@ -208,6 +208,9 @@ templates.env.globals.setdefault("new_submit_key", lambda: _secrets.token_hex(16
 # pointer in Claude/ChatGPT.
 app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET_KEY)
 
+from frontend_loader import install_frontend_loader
+install_frontend_loader(app)
+
 # ─────────────────────────────────────────────────────────────────────────────
 # (GUEST IDENTITY) A guest's id used to live only in the 14-day session cookie, so it
 # vanished with it (and with the guest's chats). It is now ALSO kept in a separate,
