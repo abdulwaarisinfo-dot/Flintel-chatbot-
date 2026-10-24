@@ -3,9 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#171615">
 <title>Flintel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+  /* Same background as the real app (index.html / chat.html: #171615),
+     so there is no white flash while the real page is being fetched. */
+  html, body { margin: 0; height: 100%; background: #171615; color: #a0a09d;
+               font-family: 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif; }
+  #fl-loader { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+  #fl-loader i { width: 28px; height: 28px; box-sizing: border-box; border-radius: 50%;
+                 border: 3px solid #2a2928; border-top-color: #8a8987;
+                 animation: fl-spin .8s linear infinite; }
+  #fl-error { font-size: 15px; line-height: 1.6; text-align: center; padding: 0 24px; }
+  #fl-error a { color: #009dff; text-decoration: none; }
+  @keyframes fl-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { #fl-loader i { animation-duration: 2s; } }
+</style>
 </head>
 <body>
+<div id="fl-loader"><i role="status" aria-label="Loading"></i></div>
+<noscript><div id="fl-error" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center">Please enable JavaScript to use Flintel.</div></noscript>
 <script>
 // load index.html
 fetch(location.pathname + location.search, { credentials: 'same-origin', headers: { 'X-Flintel-Client': '1' } })
@@ -15,7 +34,10 @@ fetch(location.pathname + location.search, { credentials: 'same-origin', headers
     return r.text();
   })
   .then(function (html) { document.open(); document.write(html); document.close(); })
-  .catch(function () { document.body.innerHTML = 'Unable to load. Please refresh.'; });
+  .catch(function () {
+    var l = document.getElementById('fl-loader');
+    l.innerHTML = '<div id="fl-error">Unable to load. <a href="" onclick="location.reload();return false;">Refresh</a></div>';
+  });
 </script>
 </body>
 </html>
