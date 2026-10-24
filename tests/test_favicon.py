@@ -105,9 +105,9 @@ def test_other_routes_still_no_store(app_env):
 def test_templates_carry_icon_links(tpl):
     src = (ROOT / "templates" / tpl).read_text(encoding="utf-8")
     head = src[:src.index("</head>")]
-    for frag in ('rel="icon" href="/favicon.ico"', 'href="/favicon-48x48.png"',
-                 'href="/favicon-96x96.png"', 'href="/favicon-192x192.png"',
-                 'rel="apple-touch-icon" href="/apple-touch-icon.png"'):
+    for frag in ('rel="icon" href="/favicon.ico?v=3"', 'href="/favicon-48x48.png?v=3"',
+                 'href="/favicon-96x96.png?v=3"', 'href="/favicon-192x192.png?v=3"',
+                 'rel="apple-touch-icon" href="/apple-touch-icon.png?v=3"'):
         assert frag in head, f"{tpl} missing {frag}"
 
 
