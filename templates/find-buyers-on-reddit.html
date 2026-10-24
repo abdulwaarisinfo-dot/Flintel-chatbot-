@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Find Buyers and Leads on Reddit — Flintel</title>
+<meta name="description" content="Find Reddit posts where people ask for a tool or recommendation, each labelled by buying intent and linked to its source. No guaranteed leads.">
+<link rel="canonical" href="{{ canonical_url }}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Flintel">
+<meta property="og:title" content="Find Buyers and Leads on Reddit — Flintel">
+<meta property="og:description" content="Find Reddit posts where people ask for a tool or recommendation, each labelled by buying intent and linked to its source. No guaranteed leads.">
+<meta property="og:url" content="{{ canonical_url }}">
+<meta property="og:image" content="{{ og_image_url }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico?v=3" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png?v=3">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png?v=3">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png?v=3">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --link-color: #009dff; --link-color-hover: #4db8ff; }
+  html { font-family: 'Figtree', sans-serif; background: #171615; color: #d1d0cf; -webkit-font-smoothing: antialiased; }
+  body { min-height: 100vh; display: flex; flex-direction: column; }
+  a, button { font-family: inherit; cursor: pointer; background: none; border: none; color: inherit; text-decoration: none; }
+
+  /* ── Topbar (same as the pricing page) ── */
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 62px; border-bottom: 1px solid #2b2a28; flex-shrink: 0; }
+  .logo-group { display: flex; align-items: center; gap: 9px; }
+  .logo-mark { width: 28px; height: 28px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+  .logo-mark img { width: 100%; height: 100%; object-fit: cover; }
+  .logo-text { color: #fff; font-size: 16px; font-weight: 500; letter-spacing: 0.16px; }
+  .topbar-nav { display: flex; align-items: center; gap: 20px; }
+  .topbar-nav a { font-size: 13.5px; font-weight: 500; color: #7a7a77; transition: color .15s; }
+  .topbar-nav a:hover { color: #d1d0cf; }
+
+  /* ── Article ── */
+  main { flex: 1; padding: 0 20px 72px; }
+  .article { max-width: 760px; margin: 0 auto; }
+  .hero { padding: 64px 0 36px; }
+  .eyebrow { font-size: 14px; color: #757473; letter-spacing: 0.15px; margin-bottom: 12px; }
+  h1 { font-size: 36px; font-weight: 700; color: #fff; line-height: 1.18; letter-spacing: -0.01em; margin-bottom: 16px; }
+  .lead { font-size: 17px; line-height: 1.65; color: #b4b3b0; }
+  h2 { font-size: 24px; font-weight: 600; color: #fff; letter-spacing: -0.01em; line-height: 1.25; margin: 48px 0 14px; }
+  h3 { font-size: 17px; font-weight: 600; color: #e8e7e5; margin: 22px 0 6px; }
+  p, li { font-size: 16px; line-height: 1.7; color: #b4b3b0; }
+  p { margin-bottom: 14px; }
+  ul, ol { padding-left: 22px; margin-bottom: 14px; }
+  li { margin-bottom: 8px; }
+  strong { color: #e8e7e5; font-weight: 600; }
+  .article a { color: var(--link-color); }
+  .article a:hover { color: var(--link-color-hover); text-decoration: underline; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 24px; }
+  .cta-btn { display: inline-block; background: #2563EB; color: #fff !important; font-size: 15px; font-weight: 600; padding: 12px 22px; border-radius: 10px; transition: background .15s; }
+  .cta-btn:hover { background: #1D4ED8; text-decoration: none !important; }
+  .cta-note { font-size: 14px; color: #7a7a77; }
+
+  .labels { display: grid; gap: 12px; margin: 18px 0 8px; }
+  .label-card { background: #1e1d1b; border: 1px solid #2b2a28; border-radius: 12px; padding: 16px 18px; }
+  .label-card h3 { margin: 0 0 6px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+  .label-card h3 span { font-size: 14px; font-weight: 500; color: #7a7a77; }
+  .label-card p { margin: 0; font-size: 15px; }
+
+  .example { background: #1e1d1b; border: 1px solid #2b2a28; border-radius: 12px; padding: 6px 18px 4px; margin: 18px 0 8px; }
+  .example-row { padding: 14px 0; border-bottom: 1px solid #2b2a28; }
+  .example-row:last-child { border-bottom: none; }
+  .example-row q { display: block; color: #e8e7e5; font-size: 15px; line-height: 1.6; margin-bottom: 6px; }
+  .example-row p { margin: 0; font-size: 14.5px; }
+  .tag { display: inline-block; font-size: 12.5px; font-weight: 600; color: #fff; background: #2b2a28; border-radius: 6px; padding: 2px 8px; margin-right: 8px; }
+  .tag-high { background: #2563EB; }
+  .callout { border-left: 3px solid #2563EB; padding: 2px 0 2px 16px; margin: 18px 0; }
+  .callout p { margin-bottom: 0; }
+
+  /* ── Footer (same as the pricing page) ── */
+  footer { border-top: 1px solid #2b2a28; padding: 24px; text-align: center; font-size: 13px; color: #7a7a77; margin-top: auto; }
+  .footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 24px; }
+  .footer-links a { color: #7a7a77; transition: color .15s; }
+  .footer-links a:hover { color: #d1d0cf; }
+
+  @media (max-width: 640px) {
+    .topbar { padding: 0 16px; }
+    .topbar-nav { gap: 14px; }
+    main { padding: 0 16px 56px; }
+    .hero { padding: 40px 0 24px; }
+    h1 { font-size: 28px; }
+    h2 { font-size: 21px; margin-top: 40px; }
+    .lead { font-size: 16px; }
+    .cta-btn { width: 100%; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="logo-group" href="/" aria-label="Flintel home">
+    <div class="logo-mark">
+      <img src="/favicon-48x48.png?v=3" alt="" aria-hidden="true">
+    </div>
+    <span class="logo-text">Flintel</span>
+  </a>
+  <nav class="topbar-nav" aria-label="Main">
+    <a href="/billing/upgrade">Pricing</a>
+    <a href="/">Try Flintel</a>
+  </nav>
+</header>
+
+<main>
+<article class="article">
+
+  <header class="hero">
+    <p class="eyebrow">Use case</p>
+    <h1>Find buyers and leads on Reddit</h1>
+    <p class="lead">People often say what they are looking for on Reddit before they ever talk to a vendor: &ldquo;what do you use for&nbsp;&hellip;?&rdquo;, &ldquo;alternatives to&nbsp;&hellip;&rdquo;, &ldquo;we have budget and need to switch&rdquo;. Flintel searches Reddit conversations about your topic, labels each post by what its author is actually asking for, and links every result back to the original post, so you can read it before you act on it.</p>
+    <div class="cta-row">
+      <a class="cta-btn" href="/">Try a Flintel search</a>
+      <span class="cta-note">Free plan with monthly search credits. No card needed to start.</span>
+    </div>
+  </header>
+
+  <h2>What Flintel looks for</h2>
+  <p>Flintel works from Reddit posts it has collected. For a brand, product or topic you type in, it looks for conversations such as:</p>
+  <ul>
+    <li>people asking for a tool, service or recommendation in your category;</li>
+    <li>people comparing options or asking for alternatives to a competitor;</li>
+    <li>people describing a problem your product could solve;</li>
+    <li>vendors promoting their own tools, and users talking about tools they already use. These are shown too, because they tell you about the market, but they are not counted as buyers.</li>
+  </ul>
+  <p>Each result is a Reddit post with a summary, its subreddit, its posted date, a sentiment, and an intent label. You can add a website address to your search so it reflects what your business does, and you can ask for a time range, for example &ldquo;from today&rdquo; or &ldquo;the last 7 days&rdquo;.</p>
+  <div class="callout"><p><strong>Reddit only, today.</strong> Reddit is the only platform Flintel searches. Other platforms are not available yet, and nothing on this page applies to them.</p></div>
+
+  <h2>How the intent labels work</h2>
+  <p>Every post in the results table gets one intent label, shown with a short reason and, where one exists, an excerpt from the post. Labels are based on what the post itself says. Flintel matches each analysed post to the stored Reddit post, and a row it cannot verify is shown as Uncertain instead of High or Medium.</p>
+  <div class="labels">
+    <div class="label-card">
+      <h3>High <span>a qualified lead</span></h3>
+      <p>The author asks for a solution in your category <strong>and</strong> states an explicit purchase step: an approved budget, a committed decision to buy, sign, subscribe or switch, or an active procurement process. The post also has to fit what you searched for.</p>
+    </div>
+    <div class="label-card">
+      <h3>Medium <span>a prospective buyer still researching</span></h3>
+      <p>The author asks for recommendations or compares tools, but no confirmed purchase step is stated. It is also used when a purchase step is stated but the post only partly matches your search.</p>
+    </div>
+    <div class="label-card">
+      <h3>Low <span>discussion, competitor promotion or testimonial</span></h3>
+      <p>The author is not asking for a tool for themselves (general discussion), is a vendor promoting their own product, or is describing a tool they already use. These show what the market is saying, not buyer demand.</p>
+    </div>
+    <div class="label-card">
+      <h3>Uncertain <span>could not be confirmed</span></h3>
+      <p>The post asks for a solution, but its relevance to your search is unclear, no supporting excerpt could be found, or the analysis for that row could not be verified. Read these yourself before deciding anything.</p>
+    </div>
+  </div>
+
+  <h3>What &ldquo;qualified lead&rdquo; means here</h3>
+  <p>Only a post labelled High is a qualified lead. Budget, timing, a trial or demo, and willingness to pay are shown as signals, but none of them qualifies a lead on its own. A purchase statement that is conditional, hypothetical, on hold, about someone else, or already in the past does not count as a purchase step.</p>
+  <p>That is a deliberately strict definition. A search can return many useful conversations and no qualified leads, and that is a normal result. Flintel does not relabel posts to make a result look better.</p>
+
+  <h2>An example workflow</h2>
+  <p>Say you sell invoicing software to freelancers. This is an illustration of how to read results, not real Flintel output, and the posts below are made up.</p>
+  <ol>
+    <li><strong>Search</strong> &ldquo;invoicing software for freelancers&rdquo;, with your website address if you want the search to reflect your product. Add &ldquo;from the last 7 days&rdquo; if you only want recent posts.</li>
+    <li><strong>Read the summary</strong> to see what people are asking for and complaining about, then scan the source posts table.</li>
+    <li><strong>Work through the labels.</strong> Open the High and Medium posts first and read the originals. Skim Low posts for market context, such as which competitors people mention.</li>
+    <li><strong>Check each post yourself</strong> before you reply or reach out: the date, the subreddit&rsquo;s rules on self-promotion, and whether your product really fits.</li>
+  </ol>
+  <div class="example" role="group" aria-label="Illustrative example, not real results">
+    <div class="example-row">
+      <q>Budget is approved. We&rsquo;re moving off spreadsheets for invoicing this month and need something that handles recurring clients.</q>
+      <p><span class="tag tag-high">High</span>Asks for a solution and states an approved budget and a decision to switch.</p>
+    </div>
+    <div class="example-row">
+      <q>What do you all use for invoicing as a freelancer? Looking for suggestions.</q>
+      <p><span class="tag">Medium</span>Asks for recommendations; no purchase step is stated.</p>
+    </div>
+    <div class="example-row">
+      <q>I&rsquo;ve used the same invoicing app for three years and it&rsquo;s been great.</q>
+      <p><span class="tag">Low</span>A testimonial about a tool already in use: market proof, not demand.</p>
+    </div>
+  </div>
+
+  <h2>Who uses this</h2>
+  <ul>
+    <li><strong>Founders and small teams</strong> who want to see where people ask for alternatives to a competitor, and in their own words.</li>
+    <li><strong>Marketers and agencies</strong> researching what a client&rsquo;s audience asks about before they plan content or outreach.</li>
+    <li><strong>Product and customer research</strong>, to find recurring pain points and the language people use to describe them.</li>
+    <li><strong>Competitive research</strong>, using comparison searches to see how two products are discussed side by side.</li>
+  </ul>
+
+  <h2>Limits to know about</h2>
+  <ul>
+    <li><strong>No guaranteed leads.</strong> Flintel shows what has actually been posted and collected. Some searches return no qualified leads, and some return no posts at all.</li>
+    <li><strong>Reddit only.</strong> Other platforms are not part of Flintel yet.</li>
+    <li><strong>Coverage is not all of Reddit.</strong> Results come from the posts Flintel has collected, so a relevant post can be missing.</li>
+    <li><strong>Labels are automated judgements.</strong> They are based on the text of a post and can be wrong. Open the source post and read it.</li>
+    <li><strong>Flintel does not contact anyone.</strong> It finds and explains posts. It does not message people, post for you, or supply contact details.</li>
+    <li><strong>Follow each community&rsquo;s rules.</strong> Many subreddits restrict self-promotion, so check before you reply.</li>
+  </ul>
+
+  <h2>Try it on your own market</h2>
+  <p>Run a search for your product or category and read the source posts yourself. The free plan includes monthly search credits, and the <a href="/billing/upgrade">pricing page</a> lists what the paid plans add.</p>
+  <div class="cta-row">
+    <a class="cta-btn" href="/">Try a Flintel search</a>
+    <a href="/billing/upgrade">See pricing</a>
+  </div>
+
+  <h2>Common questions</h2>
+  <h3>Does Flintel give me a list of leads?</h3>
+  <p>No. It gives you Reddit posts matching your search, each with an intent label, a reason, and a link to the original. Whether a post is a lead for you is your decision after reading it.</p>
+  <h3>Which platforms does it search?</h3>
+  <p>Reddit only. Other platforms are not available yet.</p>
+  <h3>Why does a search sometimes show zero qualified leads?</h3>
+  <p>Because the definition is strict. Many people asking for a tool have not stated a budget, a decision or a procurement step. Those posts appear as Medium instead, and they can still be worth reading.</p>
+  <h3>Can I limit results to recent posts?</h3>
+  <p>Yes. Add a time range to your search, such as &ldquo;from today&rdquo; or &ldquo;the last 7 days&rdquo;.</p>
+
+</article>
+</main>
+
+<footer>
+  <nav class="footer-links" aria-label="Footer links">
+    <a href="/">Flintel home</a>
+    <a href="/billing/upgrade">Pricing</a>
+    <a href="mailto:hello.flintel@gmail.com">Contact</a>
+  </nav>
+</footer>
+
+</body>
+</html>
