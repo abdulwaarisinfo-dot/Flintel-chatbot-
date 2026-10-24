@@ -2,7 +2,7 @@
 routes.py — all FastAPI route handlers for the Flintel web service,
 extracted from index.py to keep that module to shared infrastructure  
 and business logic. Imports `app` from index.py and registers every
-route on it; index.py imports this module once, at the bottom, purely
+route on it; index.py imports this module once, at the bottom, purely 
 for its side effect of registering these routes.   
 """
 
@@ -985,11 +985,26 @@ def owner_has_started_conversation(owner_key) -> bool:
         return True
 
 
+def _is_fresh_visitor(request) -> bool:
+    """True only when the request carries NO identity at all: not signed in, no guest id in the session and no valid
+    signed guest cookie (a tampered or missing cookie reads as None). Such a visitor (a first visit, or a search crawler)
+    is about to be given a brand-new random id, so it cannot own any chat and no database lookup is needed. Anything
+    uncertain returns False so the existing behaviour applies. Must be evaluated BEFORE get_owner(), which writes the new
+    id into the session."""
+    try:
+        session = request.session
+        return not (session.get("user_id") or session.get("anon_id") or _read_guest_cookie(request))
+    except Exception:
+        return False
+
+
 @pass_context
 def _tpl_conversation_started(context) -> bool:
     request = context.get("request")
     if request is None:
         return False
+    if getattr(getattr(request, "state", None), "fresh_visitor", False):
+        return False                       # nothing to look up; a lookup failure must not hide the public page content
     try:
         owner_key, _owner_type = get_owner(request)
     except Exception as exc:
@@ -1048,6 +1063,7 @@ def home(request: Request):
     # any path other than the "New" button), since search()'s own
     # `chat_id or request.session.get("active_chat_id")` fallback
     # would still resolve to that stale value.
+    request.state.fresh_visitor = _is_fresh_visitor(request)   # (SEO) before get_owner() gives this request an id
     request.session.pop("active_chat_id", None)
 
     chats = []
@@ -3819,7 +3835,8 @@ def billing_upgrade(request: Request):
         request,
         "pricing.html",
         {"user": user, "plans": billing.plan_catalog(), "billing_enabled": _billing_checkout_enabled(), "billing": state,
-         "free_credits": billing.free_monthly_credits()},
+         "free_credits": billing.free_monthly_credits(),
+         "canonical_url": _site_base_url(request) + "/billing/upgrade", "og_image_url": _site_base_url(request) + "/og-card.png"},
     )
 
 
@@ -3966,6 +3983,10 @@ for _p, (_f, _m) in _ICON_ROUTES.items():
 # twitter:card "summary" (not a large preview).
 _register_icon_route("/og-image.png", "flintel-512.png", "image/png")
 
+# (OG CARD) 1200x630 social-preview card: the same logo artwork, unmodified, centred on the app's dark background.
+# /og-image.png above is kept as it is (it is also the Organization logo in the JSON-LD).
+_register_icon_route("/og-card.png", "og-card.png", "image/png")
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # (SEO) robots.txt, sitemap.xml and the home page's canonical / Open Graph /
@@ -3984,6 +4005,7 @@ _SEO_CACHE = {"Cache-Control": "public, max-age=3600"}
 # delete/feedback, the chat list and new-chat, /search, the auth routes, login/
 # signup/logout, /api/*). "/", "/billing/upgrade", the icon routes and the SEO
 # routes themselves stay allowed.
+_SITEMAP_PATHS = ("/", "/billing/upgrade", "/find-buyers-on-reddit")
 _ROBOTS_DISALLOW = ("/chat/", "/chats", "/search", "/auth/", "/login", "/logout", "/signup", "/api/")
 
 
@@ -4008,10 +4030,20 @@ def _seo_context(request: Request) -> dict:
                   .replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026"))
     return {
         "canonical_url": base + "/",
-        "og_image_url": base + "/og-image.png",
+        "og_image_url": base + "/og-card.png",
         "google_site_verification": (getattr(config, "GOOGLE_SITE_VERIFICATION", "") or "").strip(),
         "org_jsonld": org_jsonld,
     }
+
+
+@app.get("/find-buyers-on-reddit", include_in_schema=False)
+def find_buyers_on_reddit(request: Request):
+    """(SEO) Public use-case page. Static content: no session, no user, no database, no credits."""
+    base = _site_base_url(request)
+    return templates.TemplateResponse(
+        request, "find-buyers-on-reddit.html",
+        {"canonical_url": base + "/find-buyers-on-reddit", "og_image_url": base + "/og-card.png"},
+        headers=_SEO_CACHE)
 
 
 @app.api_route("/robots.txt", methods=["GET", "HEAD"], include_in_schema=False)
@@ -4024,11 +4056,12 @@ def robots_txt(request: Request):
 
 @app.api_route("/sitemap.xml", methods=["GET", "HEAD"], include_in_schema=False)
 def sitemap_xml(request: Request):
-    # Public pages only: the home page. No <lastmod> (there is no real date to state).
+    # Public pages only: the home page and the pricing page. No <lastmod> (there is no real date to state).
+    base = _site_base_url(request)
     body = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-        f"<url><loc>{_seo_xml_escape(_site_base_url(request) + '/')}</loc></url>"
-        "</urlset>\n"
+        + "".join(f"<url><loc>{_seo_xml_escape(base + path)}</loc></url>" for path in _SITEMAP_PATHS)
+        + "</urlset>\n"
     )
     return _SeoResponse(body, media_type="application/xml", headers=_SEO_CACHE)
