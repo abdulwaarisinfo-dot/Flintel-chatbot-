@@ -132,12 +132,12 @@ def test_every_disallowed_prefix_matches_a_real_route_and_no_allowed_page_is_blo
         assert any(p.startswith(d) for d in EXPECTED_DISALLOW), f"{p} is not covered by a Disallow rule"
     for d in EXPECTED_DISALLOW:
         assert any(p.startswith(d) for p in paths), f"Disallow {d} matches no route"
-    for allowed in ("/", "/billing/upgrade", "/favicon.ico", "/og-image.png", "/robots.txt", "/sitemap.xml"):
+    for allowed in ("/", "/billing/upgrade", "/find-buyers-on-reddit", "/favicon.ico", "/og-image.png", "/og-card.png", "/robots.txt", "/sitemap.xml"):
         assert not any(allowed.startswith(d) for d in EXPECTED_DISALLOW), f"{allowed} must stay crawlable"
 
 
 # 2 ─ sitemap.xml
-def test_sitemap_xml_valid_and_only_the_home_page(app_env):
+def test_sitemap_xml_valid_and_lists_only_public_pages(app_env):
     idx, _rts, db_names = app_env
     c = _client(idx)
     r = c.get("/sitemap.xml", follow_redirects=False)
@@ -146,8 +146,8 @@ def test_sitemap_xml_valid_and_only_the_home_page(app_env):
     root = ET.fromstring(r.content)                                       # valid XML
     assert root.tag == SITEMAP_NS + "urlset"
     urls = [u.find(SITEMAP_NS + "loc").text for u in root.findall(SITEMAP_NS + "url")]
-    assert urls == ["http://testserver/"]
-    assert "/chat/" not in r.text and "/billing/upgrade" not in r.text and "lastmod" not in r.text
+    assert urls == ["http://testserver/", "http://testserver/billing/upgrade", "http://testserver/find-buyers-on-reddit"]
+    assert "/chat/" not in r.text and "lastmod" not in r.text
     assert r.headers["cache-control"].startswith("public") and "no-store" not in r.headers["cache-control"]
     assert "set-cookie" not in r.headers and not c.cookies
     assert [n for n, m in db_names.items() if m.mock_calls] == []
@@ -166,7 +166,7 @@ def test_site_url_env_wins_when_set_and_request_host_is_used_when_empty(app_env,
     assert loc == "https://www.example.test/"
     html = c.get("/").text
     assert '<link rel="canonical" href="https://www.example.test/">' in html
-    assert 'content="https://www.example.test/og-image.png"' in html
+    assert 'content="https://www.example.test/og-card.png"' in html
     assert json.loads(_jsonld(html))["url"] == "https://www.example.test/"
     _set_config(monkeypatch, SITE_URL="")
     assert '<link rel="canonical" href="http://testserver/">' in c.get("/").text
@@ -196,12 +196,13 @@ def test_home_page_has_description_canonical_og_and_valid_jsonld(app_env):
     r = _client(idx).get("/")
     assert r.status_code == 200
     head = _head_of(r.text)
-    assert '<meta name="description" content="Search a brand, product or topic' in head
+    assert '<meta name="description" content="Search a brand, product or topic and see what people say about it on Reddit' in head
     assert '<link rel="canonical" href="http://testserver/">' in head
-    assert '<meta property="og:title" content="Flintel — What\'s the internet saying?">' in head
-    assert '<meta property="og:image" content="http://testserver/og-image.png">' in head
+    assert '<meta property="og:title" content="Flintel — Find Reddit conversations about your brand, product or market">' in head
+    assert '<meta property="og:image" content="http://testserver/og-card.png">' in head
     assert '<meta property="og:url" content="http://testserver/">' in head
-    assert '<meta property="og:type" content="website">' in head and '<meta name="twitter:card" content="summary">' in head
+    assert '<meta property="og:type" content="website">' in head and '<meta name="twitter:card" content="summary_large_image">' in head
+    assert '<meta property="og:image:width" content="1200">' in head and '<meta property="og:image:height" content="630">' in head
     data = json.loads(_jsonld(head))                                       # valid JSON
     assert data == {"@context": "https://schema.org", "@type": "Organization", "name": "Flintel",
                     "url": "http://testserver/", "logo": "http://testserver/og-image.png"}
@@ -211,12 +212,72 @@ def test_home_page_has_description_canonical_og_and_valid_jsonld(app_env):
 
 def test_description_names_only_platforms_flintel_really_searches(app_env):
     idx, _rts, _ = app_env
-    head = _head_of(_client(idx).get("/").text)
+    html = _client(idx).get("/").text
+    head = _head_of(html)
+    for tag in (r'<meta name="description" content="([^"]*)"', r'<meta property="og:description" content="([^"]*)"'):
+        desc = re.search(tag, head).group(1)
+        assert len(desc) <= 160 and "Reddit" in desc
+        for name in ("X / Twitter", "Twitter", "LinkedIn", "Facebook", "Hacker News"):     # only Reddit is live
+            assert name not in desc, (tag, name)
+    title = re.search(r"<title>([^<]*)</title>", head).group(1)
+    assert "Reddit" in title and not any(n in title for n in ("Twitter", "LinkedIn", "Facebook"))
+
+
+def _fresh_visitor_home(idx, rts, monkeypatch):
+    """The home page as a first-time visitor (or crawler) gets it: no conversation started."""
+    monkeypatch.setattr(rts, "get_owner", lambda request: ("guest:fresh", "anonymous"))
+    monkeypatch.setattr(rts, "owner_has_started_conversation", lambda owner_key: False)
+    monkeypatch.setattr(rts, "get_user_chat_list", lambda owner_key: [])
+    return _client(idx).get("/").text
+
+
+def test_home_visible_marketing_text_claims_only_reddit(app_env, monkeypatch):
+    idx, rts, _ = app_env
+    html = _fresh_visitor_home(idx, rts, monkeypatch)
+    about = re.search(r'<section class="seo-about".*?</section>', html, re.S).group(0)
+    text = re.sub(r"<[^>]+>", " ", about)
+    assert "Reddit" in text and "Other platforms are not available yet" in text
+    for name in ("Twitter", "LinkedIn", "Facebook", "Instagram", "TikTok"):
+        assert name not in text, name
+    assert "does not guarantee leads" in text                                      # no promise of leads
+    assert len(text.split()) >= 150
+    assert "<h1" not in about and html[:html.index('class="seo-about"')].count("<h1 class=\"headline\">") == 1   # the hero keeps the only H1
+    assert 'href="/billing/upgrade"' in about                                      # crawlable link to pricing
+    explore = html[html.index('class="explore-panel"'):html.index('class="seo-about"')]
+    assert 'alt="Reddit"' in explore and 'alt="LinkedIn"' not in explore and 'alt="Facebook"' not in explore
+
+
+def test_pricing_page_has_metadata_and_is_in_the_sitemap(app_env, monkeypatch):
+    idx, _rts, _ = app_env
+    c = _client(idx)
+    r = c.get("/billing/upgrade")
+    assert r.status_code == 200
+    head = _head_of(r.text)
+    assert "<title>Pricing — Flintel</title>" in head
     desc = re.search(r'<meta name="description" content="([^"]*)"', head).group(1)
-    assert len(desc) <= 160
-    for name in ("Reddit", "X / Twitter", "LinkedIn", "Facebook"):
-        assert name in desc
-    assert "Hacker News" not in desc                                       # not a source Flintel has
+    assert 0 < len(desc) <= 160 and "Reddit" in desc and "LinkedIn" not in desc and "Twitter" not in desc
+    assert '<link rel="canonical" href="http://testserver/billing/upgrade">' in head
+    assert '<meta property="og:url" content="http://testserver/billing/upgrade">' in head
+    assert "noindex" not in head
+    locs = [e.text for e in ET.fromstring(c.get("/sitemap.xml").content).iter(f"{SITEMAP_NS}loc")]
+    assert locs == ["http://testserver/", "http://testserver/billing/upgrade", "http://testserver/find-buyers-on-reddit"]
+
+
+def test_production_site_url_drives_every_absolute_url(app_env, monkeypatch):
+    idx, _rts, _ = app_env
+    c = _client(idx)
+    _set_config(monkeypatch, SITE_URL="https://getflintel.com")
+    assert "Sitemap: https://getflintel.com/sitemap.xml" in c.get("/robots.txt").text
+    locs = [e.text for e in ET.fromstring(c.get("/sitemap.xml").content).iter(f"{SITEMAP_NS}loc")]
+    assert locs == ["https://getflintel.com/", "https://getflintel.com/billing/upgrade",
+                    "https://getflintel.com/find-buyers-on-reddit"]
+    home = c.get("/").text
+    assert '<link rel="canonical" href="https://getflintel.com/">' in home
+    assert 'content="https://getflintel.com/og-card.png"' in home and "testserver" not in _head_of(home)
+    pricing = c.get("/billing/upgrade").text
+    assert '<link rel="canonical" href="https://getflintel.com/billing/upgrade">' in pricing
+    assert "testserver" not in _head_of(pricing)
+    assert "SITE_URL=https://getflintel.com" in (ROOT / ".env.example").read_text(encoding="utf-8")
 
 
 def test_google_site_verification_only_when_set_and_escaped(app_env, monkeypatch):
@@ -281,7 +342,7 @@ def test_og_image_png_public_512(app_env):
 def test_only_the_public_routes_are_cacheable(app_env):
     idx, _rts, _ = app_env
     c = _client(idx)
-    for path in ("/robots.txt", "/sitemap.xml", "/og-image.png", "/favicon.ico"):
+    for path in ("/robots.txt", "/sitemap.xml", "/og-image.png", "/og-card.png", "/favicon.ico"):
         assert c.get(path).headers["cache-control"].startswith("public"), path
     for path in ("/", "/does-not-exist-xyz"):
         assert "no-store" in c.get(path).headers["cache-control"], path
@@ -296,4 +357,111 @@ def test_index_render_without_the_new_keys_still_200_and_has_no_seo_tags(app_env
     for frag in ('rel="canonical"', "og:title", "og:image", 'name="description"', "application/ld+json",
                  "google-site-verification", 'name="twitter:card"'):
         assert frag not in r.text, frag
-    assert 'rel="icon" href="/favicon.ico"' in r.text                       # the rest of the head is unchanged
+    assert 'rel="icon" href="/favicon.ico?v=3"' in r.text                       # the rest of the head is unchanged
+
+
+def test_about_section_is_hidden_once_a_conversation_has_started(app_env, monkeypatch):
+    idx, rts, _ = app_env
+    c = _client(idx)
+    c.get("/")                                                      # a returning browser: it now holds its identity cookies
+    monkeypatch.setattr(rts, "owner_has_started_conversation", lambda owner_key: True)
+    monkeypatch.setattr(rts, "get_user_chat_list", lambda owner_key: [])
+    assert 'class="seo-about"' not in c.get("/").text
+    css = (ROOT / "templates" / "index.html").read_text(encoding="utf-8")
+    assert "#hero-wrap.hidden ~ .seo-about { display: none; }" in css           # and it hides with the hero on submit
+
+
+# 9 ─ og-card: the 1200x630 social preview, same logo artwork on the app's dark background; /og-image.png is untouched
+def test_og_card_png_is_public_1200x630_and_og_image_is_unchanged(app_env):
+    idx, _rts, db_names = app_env
+    c = _client(idx)
+    r = c.get("/og-card.png", follow_redirects=False)
+    assert r.status_code == 200 and r.headers["content-type"].startswith("image/png")
+    assert r.content[:8] == PNG_MAGIC and struct.unpack(">II", r.content[16:24]) == (1200, 630)
+    assert r.headers["cache-control"].startswith("public") and "set-cookie" not in r.headers and not c.cookies
+    assert [n for n, m in db_names.items() if m.mock_calls] == []
+    assert c.head("/og-card.png").status_code == 200
+    old = c.get("/og-image.png")
+    assert old.status_code == 200 and struct.unpack(">II", old.content[16:24]) == (512, 512)   # existing route intact
+    assert old.content == (ROOT / "logo" / "flintel-512.png").read_bytes()
+    home = _head_of(c.get("/").text)
+    assert json.loads(_jsonld(home))["logo"] == "http://testserver/og-image.png"              # the Organization logo stays square
+
+
+def test_og_card_keeps_the_logo_artwork_exactly(app_env):
+    import io
+    from PIL import Image
+    idx, _rts, _ = app_env
+    card = Image.open(io.BytesIO(_client(idx).get("/og-card.png").content)).convert("RGB")
+    logo = Image.open(ROOT / "logo" / "flintel-512.png").convert("RGBA")
+    expected = Image.new("RGBA", (512, 512), (23, 22, 21, 255))
+    expected.alpha_composite(logo)                                                            # the logo, unscaled, on #171615
+    box = ((1200 - 512) // 2, (630 - 512) // 2)
+    assert card.crop(box + (box[0] + 512, box[1] + 512)).tobytes() == expected.convert("RGB").tobytes()
+    assert card.getpixel((5, 5)) == (23, 22, 21) and card.getpixel((1194, 624)) == (23, 22, 21)   # plain dark elsewhere
+
+
+def test_pricing_page_uses_the_og_card(app_env):
+    idx, _rts, _ = app_env
+    head = _head_of(_client(idx).get("/billing/upgrade").text)
+    assert '<meta property="og:image" content="http://testserver/og-card.png">' in head
+    assert 'content="1200"' in head and 'content="630"' in head and 'content="summary_large_image"' in head
+
+
+# 10 ─ a database failure must not hide the public home content from a visitor with no identity (first visit / crawler)
+def _failing_chats(idx, monkeypatch):
+    calls = []
+
+    def boom(*a, **k):
+        calls.append(1)
+        raise RuntimeError("database unavailable")
+    monkeypatch.setattr(idx, "chats_collection", MagicMock(find_one=boom, find=boom, aggregate=boom))
+    return calls
+
+
+def test_lookup_failure_does_not_hide_the_about_section_from_a_visitor_without_cookies(app_env, monkeypatch):
+    idx, _rts, _ = app_env
+    calls = _failing_chats(idx, monkeypatch)
+    html = _client(idx).get("/").text                       # a brand-new client: no cookie of any kind
+    assert 'class="seo-about"' in html and "What's the internet saying?" in html
+    assert 'id="home-greeting"' not in html                   # the stable H1, not the returning-user greeting
+    assert calls == []                                        # a first visit owns no chats, so nothing was looked up
+
+
+def test_lookup_failure_keeps_the_existing_behaviour_for_a_returning_visitor(app_env, monkeypatch):
+    idx, _rts, _ = app_env
+    c = _client(idx)
+    assert c.get("/").status_code == 200 and c.cookies           # the first visit hands out the session + guest cookies
+    calls = _failing_chats(idx, monkeypatch)
+    html = c.get("/").text                                    # same browser again: now it HAS an identity
+    assert calls and 'class="seo-about"' not in html          # lookup attempted; the failure still counts as "started"
+
+
+def test_a_returning_visitor_with_no_chats_still_sees_the_about_section(app_env, monkeypatch):
+    idx, _rts, _ = app_env
+    c = _client(idx)
+    c.get("/")
+    monkeypatch.setattr(idx, "chats_collection", MagicMock(find_one=lambda *a, **k: None))
+    assert 'class="seo-about"' in c.get("/").text
+
+
+def test_fresh_visitor_detection_never_assumes_an_identity(app_env):
+    idx, rts, _ = app_env
+
+    class Req:
+        def __init__(self, session, cookie_ok=False):
+            self.session, self._ok = session, cookie_ok
+    real = rts._read_guest_cookie
+    try:
+        rts._read_guest_cookie = lambda request: "a" * 32 if request._ok else None
+        assert rts._is_fresh_visitor(Req({})) is True
+        assert rts._is_fresh_visitor(Req({"active_chat_id": "x"})) is True                     # unrelated session keys
+        assert rts._is_fresh_visitor(Req({"user_id": "u1"})) is False                         # signed in
+        assert rts._is_fresh_visitor(Req({"anon_id": "b" * 32})) is False                     # returning guest (session)
+        assert rts._is_fresh_visitor(Req({}, cookie_ok=True)) is False                        # returning guest (signed cookie)
+        assert rts._is_fresh_visitor(object()) is False                                       # anything unexpected -> old behaviour
+    finally:
+        rts._read_guest_cookie = real
+    forged = _client(idx)
+    forged.cookies.set("fl_gid", "not-a-valid-signature")
+    assert rts._read_guest_cookie.__name__ and 'class="seo-about"' in forged.get("/").text     # a forged cookie proves nothing
