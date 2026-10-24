@@ -427,6 +427,7 @@ address per hour. An address that already has an account is told so and is not e
 | Variable | Meaning |
 |---|---|
 | `EMAIL_BACKEND` | `smtp` (default when `SMTP_HOST` is set) or `console` (LOCAL DEVELOPMENT ONLY: logs the code; refused when `SITE_URL` is https). |
+| `SITE_URL` | Public origin, e.g. `https://getflintel.com` (no path). Used for canonical URLs, `sitemap.xml`, `robots.txt` and the social image. If empty, the request host is used, which can give wrong canonicals behind proxies or on preview hosts, so set it in production. |
 | `SMTP_HOST`, `SMTP_PORT` (587), `SMTP_USERNAME`, `SMTP_PASSWORD` | Any SMTP provider. Port 465 = implicit SSL, otherwise STARTTLS (`SMTP_USE_SSL` / `SMTP_USE_TLS` override). |
 | `EMAIL_FROM` | Sender address; its domain must be verified with the provider (SPF/DKIM) to reach inboxes. |
 
