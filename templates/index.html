@@ -3,22 +3,24 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Flintel — What's the internet saying?</title>
+<title>Flintel — Find Reddit conversations about your brand, product or market</title>
 <link rel="icon" href="/favicon.ico?v=3" sizes="any">
 <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png?v=3">
 <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png?v=3">
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png?v=3">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3">
 {% if canonical_url %}
-<meta name="description" content="Search a brand, product or topic and see what people are really saying on Reddit, X / Twitter, LinkedIn and Facebook, with the source posts it is based on.">
+<meta name="description" content="Search a brand, product or topic and see what people say about it on Reddit, with the source posts, buying-intent signals and sentiment behind every answer.">
 <link rel="canonical" href="{{ canonical_url }}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Flintel">
-<meta property="og:title" content="Flintel — What's the internet saying?">
-<meta property="og:description" content="Search a brand, product or topic and see what people are really saying on Reddit, X / Twitter, LinkedIn and Facebook, with the source posts it is based on.">
+<meta property="og:title" content="Flintel — Find Reddit conversations about your brand, product or market">
+<meta property="og:description" content="Search a brand, product or topic and see what people say about it on Reddit, with the source posts, buying-intent signals and sentiment behind every answer.">
 <meta property="og:url" content="{{ canonical_url }}">
 <meta property="og:image" content="{{ og_image_url }}">
-<meta name="twitter:card" content="summary">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 {% if google_site_verification %}<meta name="google-site-verification" content="{{ google_site_verification }}">{% endif %}
 <script type="application/ld+json">{{ org_jsonld | safe }}</script>
 {% endif %}
@@ -366,6 +368,18 @@
     .content-wrap { padding-left: 109px; padding-right: 109px; justify-content: center; }
     .content-inner { max-width: 946px; width: 100%; }
   }
+
+
+  /* (SEO) Plain-text description of the product for visitors and crawlers. Sits below the hero (its position is unchanged)
+     and disappears with it once a conversation starts. */
+  .seo-about { max-width: 720px; margin: 0 auto; padding: 8px 20px 64px; color: #a8a7a4; font-size: 15px; line-height: 1.65; }
+  @media (min-width: 1060px) { .seo-about { max-width: 946px; padding-left: 109px; padding-right: 109px; box-sizing: content-box; } }
+  .seo-about h2 { color: #fff; font-size: 20px; font-weight: 600; letter-spacing: -0.2px; margin: 36px 0 10px; }
+  .seo-about h3 { color: #e8e7e5; font-size: 16px; font-weight: 600; margin: 20px 0 4px; }
+  .seo-about p, .seo-about li { margin-bottom: 10px; }
+  .seo-about ol, .seo-about ul { padding-left: 22px; }
+  .seo-about a { color: #009dff; text-decoration: underline; text-underline-offset: 2px; }
+  #hero-wrap.hidden ~ .seo-about { display: none; }
 
   .eyebrow { color: #757473; font-size: 15px; letter-spacing: 0.15px; margin-bottom: 13px; }
   .headline {
@@ -1623,8 +1637,6 @@
               </span>
               <span class="explore-row-right">
                 <span class="explore-avatars">
-                  <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNSIgaGVpZ2h0PSIxNSIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMiIgZmlsbD0iIzBBNjZDMiIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDYsNikgc2NhbGUoMC41MDAwMDApIj48cGF0aCBkPSJNMjAuNDQ3IDIwLjQ1MmgtMy41NTR2LTUuNTY5YzAtMS4zMjgtLjAyNy0zLjAzNy0xLjg1Mi0zLjAzNy0xLjg1MyAwLTIuMTM2IDEuNDQ1LTIuMTM2IDIuOTM5djUuNjY3SDkuMzUxVjloMy40MTR2MS41NjFoLjA0NmMuNDc3LS45IDEuNjM3LTEuODUgMy4zNy0xLjg1IDMuNjAxIDAgNC4yNjcgMi4zNyA0LjI2NyA1LjQ1NXY2LjI4NnpNNS4zMzcgNy40MzNjLTEuMTQ0IDAtMi4wNjMtLjkyNi0yLjA2My0yLjA2NSAwLTEuMTM4LjkyLTIuMDYzIDIuMDYzLTIuMDYzIDEuMTQgMCAyLjA2NC45MjUgMi4wNjQgMi4wNjMgMCAxLjEzOS0uOTI1IDIuMDY1LTIuMDY0IDIuMDY1em0xLjc4MiAxMy4wMTlIMy41NTVWOWgzLjU2NHYxMS40NTJ6TTIyLjIyNSAwSDEuNzcxQy43OTIgMCAwIC43NzQgMCAxLjcyOXYyMC41NDJDMCAyMy4yMjcuNzkyIDI0IDEuNzcxIDI0aDIwLjQ1MUMyMy4yIDI0IDI0IDIzLjIyNyAyNCAyMi4yNzFWMS43MjlDMjQgLjc3NCAyMy4yIDAgMjIuMjIyIDBoLjAwM3oiIGZpbGw9IiNmZmYiLz48L2c+PC9zdmc+" alt="LinkedIn" />
-                  <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNSIgaGVpZ2h0PSIxNSIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMiIgZmlsbD0iIzE4NzdGMiIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDYsNikgc2NhbGUoMC41MDAwMDApIj48cGF0aCBkPSJNMjIuNjc1IDBoLTIxLjM1Yy0uNzMyIDAtMS4zMjUuNTkzLTEuMzI1IDEuMzI1djIxLjM1MWMwIC43MzEuNTkzIDEuMzI0IDEuMzI1IDEuMzI0aDExLjQ5NXYtOS4yOTRoLTMuMTI4di0zLjYyMmgzLjEyOHYtMi42NzFjMC0zLjEgMS44OTMtNC43ODggNC42NTktNC43ODggMS4zMjUgMCAyLjQ2My4wOTkgMi43OTUuMTQzdjMuMjRsLTEuOTE4LjAwMWMtMS41MDQgMC0xLjc5NS43MTUtMS43OTUgMS43NjN2Mi4zMTNoMy41ODdsLS40NjcgMy42MjJoLTMuMTJ2OS4yOTNoNi4xMTZjLjczIDAgMS4zMjMtLjU5MyAxLjMyMy0xLjMyNXYtMjEuMzVjMC0uNzMyLS41OTMtMS4zMjUtMS4zMjUtMS4zMjV6IiBmaWxsPSIjZmZmIi8+PC9nPjwvc3ZnPg==" alt="Facebook" />
                   <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNSIgaGVpZ2h0PSIxNSIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMiIgZmlsbD0iI0ZGNDUwMCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDYsNikgc2NhbGUoMC4wMjM0MzgpIj48cGF0aCBkPSJNNDQwLjMgMjAzLjVjLTE1IDAtMjguMiA2LjItMzcuOSAxNS45LTM1LjctMjQuNy04My44LTQwLjYtMTM3LjEtNDIuM0wyOTMgNTIuM2w4OC4yIDE5LjhjMCAyMS42IDE3LjYgMzkuMiAzOS4yIDM5LjIgMjIgMCAzOS42LTE4IDM5LjYtMzkuNnMtMTcuNi0zOS42LTM5LjYtMzkuNmMtMTUuNCAwLTI4LjUgOS4zLTM1LjMgMjJsLTk3LjQtMjEuNmMtNC45LTEuMy05LjcgMi4yLTExIDcuMWwtMjUuMSAxMTEuNGMtNTMuNyAyLjItMTAxLjggMTguMS0xMzcuNSA0Mi41LTkuNy05LjctMjMuMy0xNi0zOC4xLTE2LTQzLjUgMC03My4yIDQzLjYtNTMuNCA4Mi4xLTEuMSA0LjktMS43IDEwLjMtMS43IDE1LjUgMCA2NS4xIDc4LjQgMTE4LjMgMTc1IDExOC4zIDk2LjkgMCAxNzUuMy01My4yIDE3NS4zLTExOC4zIDAtNS41LS42LTEwLjktMS43LTE1LjkgMTkuOS0zOC40LTkuNC04MS44LTUzLTgxLjh6bS0yNjkuMSA5MS4yYzAtMjMuNCAxOS4yLTQyLjYgNDIuNi00Mi42IDIzLjQgMCA0Mi42IDE5LjIgNDIuNiA0Mi42IDAgMjMuNC0xOS4yIDQyLjYtNDIuNiA0Mi42LTIzLjQgMC00Mi42LTE5LjItNDIuNi00Mi42em0xODEuMyA4OC45Yy0yMy45IDIzLjYtNjkgMjUuNS04My41IDI1LjUtMTQuNiAwLTU5LjQtMi4yLTgzLjUtMjUuNS0zLjUtMy41LTMuNS05LjIgMC0xMi43IDMuNS0zLjUgOS4yLTMuNSAxMi43IDAgMTUuNCAxNS42IDQ3LjQgMjEuMiA3MC41IDIxLjJzNTUuNC01LjkgNzAuNS0yMS4yYzMuNS0zLjUgOS4yLTMuNSAxMi43IDAgMy43IDMuNSAzLjcgOS4yLjMgMTIuN3ptLTguNy00NmMtMjMuNCAwLTQyLjYtMTkuMi00Mi42LTQyLjYgMC0yMy40IDE5LjItNDIuNiA0Mi42LTQyLjYgMjMuNCAwIDQyLjYgMTkuMiA0Mi42IDQyLjYtLjEgMjMuNC0xOS4yIDQyLjYtNDIuNiA0Mi42eiIgZmlsbD0iI2ZmZiIvPjwvZz48L3N2Zz4=" alt="Reddit" />
                 </span>
                 <svg width="6" height="10" viewBox="0 0 6 10" fill="none"><path d="M1 1L5 5L1 9" stroke="#757473" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1656,6 +1668,36 @@
 
       </div>
     </div>
+
+    {% if not conv_started and not (chat and chat.messages) %}
+    <section class="seo-about" id="about-flintel" aria-labelledby="about-flintel-title">
+      <h2 id="about-flintel-title">Find out what Reddit is saying about your brand, product or market</h2>
+      <p>Flintel searches Reddit conversations that match a brand, product or topic you type in, then writes a short summary of what people are saying. Every answer links back to the Reddit posts it is based on, so you can open them and read the originals.</p>
+
+      <h2>How it works</h2>
+      <ol>
+        <li>Search a brand, product or topic, or include a website address so the search reflects what your business does.</li>
+        <li>Flintel finds relevant Reddit posts and labels each one by buying intent and sentiment.</li>
+        <li>Read the summary, then open the source posts, each with its subreddit, summary, intent, posted date and sentiment.</li>
+      </ol>
+
+      <h2>What you can use it for</h2>
+      <ul>
+        <li>See how people talk about your brand or a competitor.</li>
+        <li>Spot recurring customer pain points and questions.</li>
+        <li>Find posts from people asking for alternatives or comparing options.</li>
+        <li>Narrow a search to a time range, for example posts from today or the last week.</li>
+      </ul>
+
+      <h2>Common questions</h2>
+      <h3>Which platforms does Flintel search?</h3>
+      <p>Reddit. Other platforms are not available yet.</p>
+      <h3>Will Flintel find me leads?</h3>
+      <p>Flintel shows what has actually been posted and collected, and labels the posts it finds. It does not guarantee leads, and a search can return useful conversations without any that look ready to buy. <a href="/find-buyers-on-reddit">Read how buying-intent labels and qualified leads work</a>.</p>
+      <h3>Is Flintel free to try?</h3>
+      <p>There is a free plan with monthly search credits. See the <a href="/billing/upgrade">pricing page</a> for plans.</p>
+    </section>
+    {% endif %}
 
     <!-- Conversation area: one .turn-block per real message in the active
          chat. `chat` is passed in from index.py's home()/chat() route for
