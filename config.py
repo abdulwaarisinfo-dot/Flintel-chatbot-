@@ -151,6 +151,18 @@ __all__ = [
     "PLAN_CREDITS_STANDARD",
     "PLAN_CREDITS_BUSINESS",
     "CREDIT_ENFORCEMENT_DISABLED",
+    "TURN_FINISH_ENABLED",
+    "TURN_FINISH_DRY_RUN",
+    "TURN_FINISH_BACKFILL_ENABLED",
+    "TURN_FINISH_BACKFILL_MAX_CHATS",
+    "TURN_FINISH_BACKFILL_MAX_TURNS",
+    "TURN_FINISH_BACKFILL_MAX_AGE_DAYS",
+    "TURN_FINISH_ONDEMAND_MAX_AGE_HOURS",
+    "TURN_FINISH_ONDEMAND_MAX_TURNS",
+    "TURN_FINISH_MAX_PASSES_PER_HOUR",
+    "TURN_FINISH_ATTEMPTS_WARN",
+    "TURN_FINISH_MAX_AGE_DAYS",
+    "TURN_FINISH_SUMMARY_SECONDS",
     "RESERVATION_STALE_SECONDS",
     "ENQUEUE_TIMEOUT_SECONDS",
     "JOB_ATTRIBUTION_CAP",
@@ -499,6 +511,62 @@ def _parse_credit_kill_switch(raw):
 
 
 CREDIT_ENFORCEMENT_DISABLED = _parse_credit_kill_switch(os.getenv("CREDIT_ENFORCEMENT_DISABLED"))
+
+
+# TURN_FINISH_ENABLED: the durable turn queue (turn_finisher.py) is OFF unless this is exactly "true" (any case).
+# Anything else, including 1/yes/on, is ignored with a warning. Off means database.py defines no queue collection
+# and nothing in the app creates, claims or processes queue documents.
+def _parse_turn_finish_enabled(raw):
+    if raw is None or not str(raw).strip():
+        return False
+    if str(raw).strip().lower() == "true":
+        return True
+    _logging.getLogger("flintel.config").warning(
+        f"TURN_FINISH_ENABLED={str(raw).strip()!r} ignored (only 'true' enables the turn queue); it stays OFF.")
+    return False
+
+
+# TURN_FINISH_DRY_RUN: defaults to true. While true (and, in this version, always: see turn_finisher.py) the queue
+# only RECORDS turns; it claims, leases, processes and answers nothing. Only an explicit "false" (any case) turns
+# it off; any other value is ignored with a warning and the dry run stays on.
+def _parse_turn_finish_dry_run(raw):
+    if raw is None or not str(raw).strip():
+        return True
+    text = str(raw).strip().lower()
+    if text in ("true", "false"):
+        return text == "true"
+    _logging.getLogger("flintel.config").warning(
+        f"TURN_FINISH_DRY_RUN={str(raw).strip()!r} ignored (use 'true' or 'false'); the dry run stays ON.")
+    return True
+
+
+TURN_FINISH_ENABLED = _parse_turn_finish_enabled(os.getenv("TURN_FINISH_ENABLED"))
+TURN_FINISH_DRY_RUN = _parse_turn_finish_dry_run(os.getenv("TURN_FINISH_DRY_RUN"))
+
+
+# Limits of the durable turn queue (turn_finisher.py). They only matter once processing exists (never in a dry run) and are all
+# bounded: a missing, non-numeric or out-of-range value falls back to the default (with a warning), so no setting can
+# produce 0 / negative / unlimited batches or budgets.
+def _turn_finish_strict_true(name):
+    raw = os.getenv(name)
+    if raw is None or not str(raw).strip():
+        return False
+    if str(raw).strip().lower() == "true":
+        return True
+    _logging.getLogger("flintel.config").warning(f"{name}={str(raw).strip()!r} ignored (only 'true' enables it); it stays OFF.")
+    return False
+
+
+TURN_FINISH_BACKFILL_ENABLED = _turn_finish_strict_true("TURN_FINISH_BACKFILL_ENABLED")      # OFF by default
+TURN_FINISH_BACKFILL_MAX_CHATS = _guest_int("TURN_FINISH_BACKFILL_MAX_CHATS", 20, 1, 200)      # chats scanned per pass
+TURN_FINISH_BACKFILL_MAX_TURNS = _guest_int("TURN_FINISH_BACKFILL_MAX_TURNS", 50, 1, 200)      # turns recorded per pass
+TURN_FINISH_BACKFILL_MAX_AGE_DAYS = _guest_int("TURN_FINISH_BACKFILL_MAX_AGE_DAYS", 3, 1, 30)  # only recent turns
+TURN_FINISH_ONDEMAND_MAX_AGE_HOURS = _guest_int("TURN_FINISH_ONDEMAND_MAX_AGE_HOURS", 0, 0, 720)  # 0 = page views record nothing
+TURN_FINISH_ONDEMAND_MAX_TURNS = _guest_int("TURN_FINISH_ONDEMAND_MAX_TURNS", 5, 1, 50)       # per page view
+TURN_FINISH_MAX_PASSES_PER_HOUR = _guest_int("TURN_FINISH_MAX_PASSES_PER_HOUR", 20, 1, 1000)   # a PASS budget, not money
+TURN_FINISH_ATTEMPTS_WARN = _guest_int("TURN_FINISH_ATTEMPTS_WARN", 8, 1, 100)
+TURN_FINISH_MAX_AGE_DAYS = _guest_int("TURN_FINISH_MAX_AGE_DAYS", 30, 1, 365)                  # older jobs are parked
+TURN_FINISH_SUMMARY_SECONDS = _guest_int("TURN_FINISH_SUMMARY_SECONDS", 300, 60, 3600)
 
 
 def _warn_if_free_allowance_below_max_cost(effective, enforcement_disabled=False):
