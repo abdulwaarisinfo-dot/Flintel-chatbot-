@@ -648,6 +648,20 @@ def supported_platforms(raw: str) -> str:
     return ",".join(picked or live)
 
 
+def unsupported_requested(raw) -> tuple:
+    """(COMING SOON) What the request explicitly asked for that is not live: (labels, names_a_live_source). Only platforms
+    the request names count; "All Platforms", empty and unknown values never produce a label. names_a_live_source is True
+    when the request names a live platform or means "all", so an unsupported-only request is (labels, False)."""
+    labels, live = [], False
+    for part in (raw or "").split(","):
+        key = PLATFORM_KEY_MAP.get(part.strip().lower())
+        if key == "all" or key in LIVE_PLATFORM_KEYS:
+            live = True
+        elif key in _PLATFORM_LABELS and _PLATFORM_LABELS[key] not in labels:
+            labels.append(_PLATFORM_LABELS[key])
+    return labels, live
+
+
 # (PLATFORM PERSISTENCE) The platform dropdown's display value for a stored
 # selection — only ever built from known labels (never echoes user input).
 _PLATFORM_LABELS = {"x_twitter": "X / Twitter", "reddit": "Reddit", "linkedin": "LinkedIn", "facebook": "Facebook"}
