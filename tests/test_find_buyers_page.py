@@ -153,7 +153,10 @@ def test_renders_cleanly_on_mobile_and_desktop(app_env):
     pytest.importorskip("playwright")
     from playwright.sync_api import sync_playwright
     html = _page(app_env).text
-    p = sync_playwright().start()
+    try:
+        p = sync_playwright().start()
+    except Exception as exc:                                                      # e.g. another test left an asyncio loop running
+        pytest.skip(f"playwright unavailable: {str(exc)[:80]}")
     try:
         browser = p.chromium.launch()
     except Exception as exc:                                                      # no usable Chromium in this environment
