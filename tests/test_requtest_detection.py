@@ -319,7 +319,7 @@ def test_i_have_been_looking_is_a_buyer_post():
     assert ai._detect_role("Alt", "I have been looking for an alternative to HubSpot for weeks.")[0] == "buyer"
 
 
-def test_generic_noun_requests_are_deliberately_unchanged():
+def test_generic_noun_requests_are_deliberately_unchanged(): 
     """The generic-noun path does not use the new checks and behaves exactly as before this work, including its known
     weaknesses (a negated, past, second-person or aggregate sentence with a noun is still a request). Pinned here so
     any change to it is deliberate."""
