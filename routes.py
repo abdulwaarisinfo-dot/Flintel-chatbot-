@@ -101,7 +101,7 @@ from index import (
     # business logic
     normalize_topic_key,
     normalize_platform,
-    normalize_platforms, supported_platforms,
+    normalize_platforms, supported_platforms, unsupported_requested,
     generate_fuzzy_keywords,
     enqueue_search_job,
     get_matched_signals,
@@ -409,6 +409,13 @@ def _chat_platform_display(chat: dict) -> str:
         if msg.get("message_type") != "chat" and msg.get("targeting_platform"):
             return platform_display_value(msg["targeting_platform"])
     return "All Platforms"
+
+def _chat_unsearched_platforms(chat: dict) -> list:
+    """(COMING SOON) Platforms the chat's latest search was asked for but did not cover. Only known labels are returned."""
+    saved = (chat or {}).get("unsearched_platforms")
+    known = ("X / Twitter", "LinkedIn", "Facebook")
+    return [p for p in saved if p in known] if isinstance(saved, list) else []
+
 
 def _save_plain_reply_and_redirect(chat_id: str, owner_key: str, query: str, answer: str):
     """(OPTION A) Saves a plain (non-search) reply in the chat and redirects to
@@ -966,12 +973,13 @@ def greeting_first_paint(tz_name: str, now_utc=None) -> str:
         return greeting_for_hour(now_utc.astimezone(timezone.utc).hour)
 
 
-def owner_has_started_conversation(owner_key) -> bool:
+def owner_has_started_conversation(owner_key, on_error: bool = True) -> bool:
     """True when this owner has at least one saved turn with a non-blank user
     message. Owner-scoped, read-only, uses the existing owner_key index; an
     empty chat record, or turns with blank text, do not count. If the lookup
-    fails the owner is treated as started, so Explore Flintel never reappears
-    because of a database hiccup."""
+    fails it answers `on_error`: True by default (treated as started, so Explore
+    Flintel never reappears because of a database hiccup); a first-time visitor
+    passes False so a database error never hides the public About section."""
     if not owner_key:
         return False
     try:
@@ -981,8 +989,8 @@ def owner_has_started_conversation(owner_key) -> bool:
             {"_id": 1},
         ) is not None
     except Exception as exc:
-        log.warning(f"Conversation-started lookup failed (treating as started): {exc}")
-        return True
+        log.warning(f"Conversation-started lookup failed ({type(exc).__name__}); answering {on_error}")
+        return on_error
 
 
 def _is_fresh_visitor(request) -> bool:
@@ -1003,14 +1011,15 @@ def _tpl_conversation_started(context) -> bool:
     request = context.get("request")
     if request is None:
         return False
-    if getattr(getattr(request, "state", None), "fresh_visitor", False):
-        return False                       # nothing to look up; a lookup failure must not hide the public page content
+    fresh = bool(getattr(getattr(request, "state", None), "fresh_visitor", False))
     try:
         owner_key, _owner_type = get_owner(request)
     except Exception as exc:
-        log.warning(f"Owner lookup failed for the home page (treating as started): {exc}")
-        return True
-    return owner_has_started_conversation(owner_key)
+        log.warning(f"Owner lookup failed for the home page ({type(exc).__name__}); "
+                    f"treating as {'not started' if fresh else 'started'}")
+        return not fresh
+    # A first-time visitor fails open to "not started" (About stays visible); an existing owner fails to "started".
+    return owner_has_started_conversation(owner_key, on_error=not fresh)
 
 
 @pass_context
@@ -1159,8 +1168,15 @@ def search(
     try:
         topic_key = normalize_topic_key(query)
         targeting_platform = supported_platforms(platform)   # (PLATFORM MULTI-SELECT) + (COMING SOON) only live platforms ever reach the search
+        # (COMING SOON) what was explicitly selected but is not searched: disclosed on the chat page; a request for ONLY
+        # such sources is declined below, before any chat, credit or job exists, instead of becoming a Reddit search.
+        skipped_platforms, _names_live = unsupported_requested(platform)
+        platform_error = None
+        if skipped_platforms and not _names_live:
+            platform_error = (f"{', '.join(skipped_platforms)} {'is' if len(skipped_platforms) == 1 else 'are'} not supported yet. "
+                              "Flintel searches Reddit right now. Select Reddit and search again.")
 
-        if not topic_key:
+        if not topic_key or platform_error:
             # Best-effort context for the error re-render only — never let a
             # chat-lookup hiccup get in the way of showing the validation error.
             chats_safe, chat_id_safe = [], None
@@ -1175,7 +1191,7 @@ def search(
                 request,
                 "index.html",
                 {
-                    "error": "Please enter a search term.",
+                    "error": platform_error or "Please enter a search term.",
                     "query": query,
                     "user": get_current_user(request),
                     "chats": chats_safe,
@@ -1237,7 +1253,7 @@ def search(
                 if not chat_exists(fast_chat_id, fast_owner):
                     fast_chat_id = create_chat_session(fast_owner, fast_owner_type, title=generate_chat_title(query))
                 request.session["active_chat_id"] = fast_chat_id
-                set_chat_platform(fast_chat_id, fast_owner, platform_display_value(targeting_platform))   # (PLATFORM PERSISTENCE)
+                set_chat_platform(fast_chat_id, fast_owner, platform_display_value(targeting_platform), skipped_platforms)   # (PLATFORM PERSISTENCE)
                 return _save_plain_reply_and_redirect(fast_chat_id, fast_owner, query, early_reply)
             except Exception as exc:
                 log.warning(f"Early small-talk path failed for query={query!r} (continuing normally): {exc}")
@@ -1256,7 +1272,7 @@ def search(
                 if not chat_exists(ex_chat_id, ex_owner):
                     ex_chat_id = create_chat_session(ex_owner, ex_owner_type, title=generate_chat_title(query))
                 request.session["active_chat_id"] = ex_chat_id
-                set_chat_platform(ex_chat_id, ex_owner, platform_display_value(targeting_platform))
+                set_chat_platform(ex_chat_id, ex_owner, platform_display_value(targeting_platform), skipped_platforms)
                 ex_answer = exploratory_reply(explore)
                 set_chat_research_offer(ex_chat_id, ex_owner, {"query": explore["offer"], "answer": ex_answer})
                 return _save_plain_reply_and_redirect(ex_chat_id, ex_owner, query, ex_answer)
@@ -1331,7 +1347,7 @@ def search(
             if not active_chat_id or not get_chat_session(active_chat_id, owner_key):
                 active_chat_id = create_chat_session(owner_key, owner_type, title=generate_chat_title(query))
             request.session["active_chat_id"] = active_chat_id
-            set_chat_platform(active_chat_id, owner_key, platform_display_value(targeting_platform))   # (PLATFORM PERSISTENCE)
+            set_chat_platform(active_chat_id, owner_key, platform_display_value(targeting_platform), skipped_platforms)   # (PLATFORM PERSISTENCE)
 
             existing_chat = get_chat_session(active_chat_id, owner_key)
             chat_summary = (existing_chat or {}).get("summary") or ""
@@ -2175,7 +2191,7 @@ def search(
             if not chat_exists(clarify_chat_id, owner_key):
                 clarify_chat_id = create_chat_session(owner_key, owner_type, title=generate_chat_title(query))
             request.session["active_chat_id"] = clarify_chat_id
-            set_chat_platform(clarify_chat_id, owner_key, platform_display_value(targeting_platform))
+            set_chat_platform(clarify_chat_id, owner_key, platform_display_value(targeting_platform), skipped_platforms)
             return _save_plain_reply_and_redirect(clarify_chat_id, owner_key, query, _parsed_range.question)
         if isinstance(_parsed_range, timerange.TimeRange):
             time_range_obj = _parsed_range
@@ -2426,6 +2442,7 @@ def view_chat(request: Request, chat_id: str, background_tasks: BackgroundTasks,
             # (PLATFORM PERSISTENCE) the chat reopens with its own platform choice;
             # older chats fall back to their latest search's platform.
             "selected_platform": _chat_platform_display(chat),
+            "unsearched_platforms": _chat_unsearched_platforms(chat),
         },
     )
 
