@@ -49,10 +49,13 @@ def test_link_and_chip_styles(name):
 @pytest.mark.parametrize("name", TEMPLATES)
 def test_green_non_link_accents_untouched(name):
     s = _src(name)
-    for rule in (".btn-outline:hover { border-color: #a3e635; color: #a3e635; }",
-                 ".auth-switch button { color: #a3e635; font-weight: 600; }",
-                 ".add-btn:hover { color: #a3e635; }",
-                 "background: #a3e635; color: #171615; border-radius: 9px; padding: 10px 18px;"):
+    # The brand accent moved from lime (#a3e635) to electric blue (#2563EB); the non-link accents keep their rules with the
+    # new colour (white text on the blue button for contrast), and no lime is left in the template.
+    assert "#a3e635" not in s.lower()
+    for rule in (".btn-outline:hover { border-color: #2563EB; color: #2563EB; }",
+                 ".auth-switch button { color: #2563EB; font-weight: 600; }",
+                 ".add-btn:hover { color: #2563EB; }",
+                 "background: #2563EB; color: #fff; border-radius: 9px; padding: 10px 18px;"):
         assert rule in s, rule
 
 
