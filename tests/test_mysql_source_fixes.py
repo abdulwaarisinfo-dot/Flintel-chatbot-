@@ -81,7 +81,8 @@ def test_f1_enabled_but_pymysql_missing_is_failure(lg, cfg, monkeypatch, caplog)
     caplog.set_level(logging.WARNING, logger="flintel-web")
     out, st, _ = run(lg, monkeypatch, [mdoc("m/1", 0.9)])
     assert [p["post_url"] for p in out] == ["m/1"]                      # Mongo still answers
-    assert st["failed_labels"] == ["mysql_flintel", "mysql_flintel_static", "mysql_flintel_google"]
+    # the three sources are read in parallel, so labels are recorded in completion order: the set is the contract
+    assert sorted(st["failed_labels"]) == sorted(["mysql_flintel", "mysql_flintel_static", "mysql_flintel_google"])
     assert st["complete"] is False
     assert caplog.text.count("pymysql is not available") == 1          # one-time warning kept
     assert PASSWORD not in caplog.text
