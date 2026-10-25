@@ -855,8 +855,8 @@ def status_for_owner(subs, plans, owner, now=None) -> dict:
         if pend is not None:      # a paid subscription exists but the account still has FREE limits: never show it as active
             out["activation"] = pend["state"]
             out["subscription_plan"] = pend["plan"]
-            if pend["state"] == "pending":
-                out.update(plan=sc.PLAN_FREE, entitled=False)
+            if pend["state"] == "pending":      # report the plan enforcement applies now (an earlier, lower plan), else free
+                out.update(plan=pend.get("enforced_plan") or sc.PLAN_FREE, entitled=bool(pend.get("enforced_plan")))
     return out
 
 
@@ -883,7 +883,8 @@ def pending_activation(subs, plans, owner, now=None):
         rank_ok = sc.active_plan(row, now) is not None and PLAN_RANK.get(sc.active_plan(row, now), 0) >= PLAN_RANK[best["plan"]]
         if rank_ok:
             return None
-        return {"state": "pending", "plan": best["plan"], "sub_id": best["_id"], "entitled_until": _aware(best["entitled_until"])}
+        return {"state": "pending", "plan": best["plan"], "sub_id": best["_id"], "entitled_until": _aware(best["entitled_until"]),
+                "enforced_plan": sc.active_plan(row, now)}     # the plan limits are applied under right now (None = free)
     never = [d for d in docs if d.get("period_key") and d.get("period_key") not in activated and not d.get("revoked_period_key")]
     if never:
         d = max(never, key=lambda d: _aware(d["entitled_until"]))
