@@ -101,6 +101,70 @@ _REQUEST = re.compile(
     r"best (?:[\w-]+ ){0,4}" + _SOLUTION_NOUN + r"|alternatives? (?:to|for)|vs\.?|versus|compar\w+|"
     r"is there (?:a|an|any)|does anyone (?:know|use)|who (?:sells|offers))\b", re.I)
 _SOLUTION = re.compile(r"\b" + _SOLUTION_NOUN + r"\b", re.I)
+# A request that says what is wanted without a generic noun: an ask for alternatives to a NAMED product ("Looking for
+# an alternative to HubSpot"), or an explicit ask for recommendations. Two shapes count, and only when the ask is live:
+#   * a first-person ask: "(I/we am/have been/...) looking for | need | want | seeking ... an alternative to X";
+#   * a question: "Does anyone know alternatives to X?", "Any good alternatives to X?", "What are the best alternatives
+#     to X?", "What do you recommend for ...?" (the sentence must end with a question mark).
+# So a listicle or statement ("Here are five alternatives to Salesforce", "I recommend these alternatives to X"), second-
+# person marketing ("If you are looking for an alternative to X, try Acme"), a statement about others ("My clients are
+# looking for ..."), a rhetorical question and an old story ("We were looking for ... and switched to Acme") are not
+# requests. General advice or suggestions ("looking for advice", "suggestions for names") are not product requests.
+# The name must start with a capital or digit (case-sensitive on purpose); a lower-case name is not detected.
+# The generic-noun path (_SOLUTION) is deliberately NOT subject to these checks and behaves exactly as before.
+_ALT = r"(?:alternatives?|replacements?|substitutes?)\s+(?:to|for)\s+(?-i:[A-Z0-9])"
+_PERSON_ASK = re.compile(                      # needs a first-person frame before the cue
+    r"\b(?:looking for|in search of|searching for|seeking|needs?|needing|wants?|wanting)\b"
+    r"[^.!?\n]{0,20}?\b(?:" + _ALT + r"|recommendations?\s+(?:for|on)\b)", re.I)
+_QUESTION_ASK = re.compile(                    # needs the sentence to be a question
+    r"\b(?:(?:can|could|does|would|did|has)\s+)?anyone\s+(?:know|knows|have|has|got|use|used|tried|recommend|suggest)\b"
+    r"[^.!?\n]{0,25}?\b" + _ALT + r"|"
+    r"\banyone\s+(?:recommend|suggest)\b|"
+    r"\bany\s+(?:(?:good|decent|other|better|cheaper|cheap|free|affordable|simpler|solid|viable|real)\s+){0,2}" + _ALT + r"|"
+    r"\bany\s+recommendations?\s+(?:for|on)\b|"
+    r"\b(?:what|which)\s+(?:do|would|should|can|could)\s+you\s+(?:use|recommend|suggest)\b", re.I)
+# "What are the best alternatives to X?": the wh-word has to open the sentence, not appear inside a statement.
+_NAMED_ALT_QUESTION = re.compile(
+    r"^\W*(?:(?:and|so|but|also)\W+)?(?:what|which)(?:'s| is| are)?\s+(?:(?:the|some|a|an|good|best|better|cheaper|other|decent)\s+){0,3}"
+    + _ALT, re.I)
+# Only the clause right before the cue is looked at (split at punctuation, dashes and connectives), so an unrelated
+# negation or story earlier in the sentence does not cancel a genuine ask.
+_CLAUSE_SPLIT = re.compile(r"[.!?;:,()—–]|\s-\s|\b(?:so|and|but|because|then|since|while|though|although)\b", re.I)
+_NEGATION_BEFORE = re.compile(r"(?:\bnot\b|\bno\b|\bnever\b|\bwithout\b|n't\b|\bcannot\b)", re.I)
+# What may stand before a first-person cue: nothing, or I/we (or "our team/company/...") with present-tense helpers
+# ("I have been", "we are now").
+# "was/were/had", "you", "my clients", "if you are", "people who are" are not in this list, so they are not live asks.
+_PERSON_FRAME = re.compile(
+    r"^\W*(?:(?:also|please|hi|hey|hello|ok|okay|still|currently|now|just|really|actively|basically|honestly|again|"
+    r"urgently|desperately)\W+)*(?:(?:i|we)(?:'m|'re|'ve|'d|'ll)?\W*|"
+    r"(?:my|our)\W+(?:team|company|business|startup|agency|shop|store|firm|department|org|organi[sz]ation)\W+)?"
+    r"(?:(?:am|are|is|have|has|do|will|would|can|could|really|still|currently|now|just|also|actively|been|again|urgently|"
+    r"desperately|basically|honestly|always|constantly|seriously)\W+)*$", re.I)
+_SETTLED_AFTER = re.compile(
+    r"\b(?:and|then|so|but)\s+(?:\w+ly\s+)?(?:we\s+|i\s+)?(?:\w+ly\s+)?(?:ended up|switched|moved|migrated|went|chose|picked|settled)\b", re.I)
+_FIRST_PERSON = re.compile(r"\b(?:i|we|me|us)\b", re.I)
+
+
+def _live_ask(pattern, sentence: str, person: bool = False) -> bool:
+    question = sentence.rstrip().endswith("?")
+    for m in pattern.finditer(sentence):
+        clause = _CLAUSE_SPLIT.split(sentence[:m.start()])[-1]
+        if _NEGATION_BEFORE.search(clause) or (person and not _PERSON_FRAME.match(clause)) or (not person and not question):
+            continue
+        if _SETTLED_AFTER.search(sentence[m.end():]):
+            continue
+        return True
+    return False
+
+
+def _is_request(sentence: str) -> bool:
+    """A request cue plus something that says what is wanted: a generic solution noun, or a live first-person or
+    question-form ask for a named alternative or for recommendations."""
+    return bool(_REQUEST.search(sentence) and (
+        _SOLUTION.search(sentence) or _live_ask(_PERSON_ASK, sentence, person=True)
+        or _live_ask(_QUESTION_ASK, sentence) or _live_ask(_NAMED_ALT_QUESTION, sentence)))
+
+
 _PROMO = re.compile(
     r"\b(?:i|we)\s+(?:just\s+|recently\s+|finally\s+|have\s+|'ve\s+)?(?:built|made|created|launched|developed|shipped|released|coded)\b|"
     r"\b(?:i|we)'ve\s+(?:built|made|created|launched|developed)\b|\bintroducing\b|"
@@ -355,15 +419,25 @@ def _detect_role(title: str, text: str):
     """(role, triggering sentence) from the post's own words."""
     title_sents = _sentences(title)
     body_sents = _sentences(text)
+    # Deliberately the stricter, noun-based test: a title like "Looking for an alternative to HubSpot?" is also how
+    # promotions are headlined, so it must not stop the body from being checked for promotion.
     title_request = any(_REQUEST.search(s) and _SOLUTION.search(s) for s in title_sents)
     for s in title_sents + ([] if title_request else body_sents):
         if _PROMO.search(s):
             return "competitor_promo", s
     for s in title_sents + body_sents:
+        # The original, noun-based test on purpose: a request phrase without a generic noun must not hide a
+        # testimonial ("If you are looking for an alternative to X, we switched to Acme and it saved us hours").
         if _TESTIMONIAL.search(s) and not (_REQUEST.search(s) and _SOLUTION.search(s)):
             return "testimonial", s
     for s in title_sents + body_sents:
-        if _REQUEST.search(s) and _SOLUTION.search(s):
+        if _is_request(s):
+            # A named-alternative question in the TITLE over a body that never speaks in the first person (a ranking, a
+            # product blurb) is an article or an advert, not a personal ask. A title-only post, or a body with
+            # "I"/"we", is still a request. The generic-noun path is not affected.
+            if (s in title_sents and not _SOLUTION.search(s) and body_sents
+                    and not any(_FIRST_PERSON.search(b) for b in body_sents)):
+                continue
             return "buyer", s
     return "discussion", None
 
@@ -689,7 +763,7 @@ def purchase_signals(title, text) -> dict:
      "unconfirmed": [{"sentence", "why"}] steps that were found but do not count}"""
     sents = _sentences(title) + _sentences(text)
     cache = {}
-    out = {"request": any(_REQUEST.search(s) and _SOLUTION.search(s) for s in sents),
+    out = {"request": any(_is_request(s) for s in sents),
            "budget": [], "timing": [], "evaluation": [], "willingness": [], "purchase_step": [], "unconfirmed": []}
 
     def add(key, s):
@@ -795,7 +869,7 @@ def _pick_evidence(title: str, text: str, role, trigger, sg=None):
         signalled = [s for s in sents if any(s in sg[k] for k in ("budget", "timing", "evaluation", "willingness"))]
         both = [s for s in signalled if _REQUEST.search(s)]
         unconf = [u["sentence"] for u in sg["unconfirmed"]]
-        req = [s for s in sents if _REQUEST.search(s) and _SOLUTION.search(s)]
+        req = [s for s in sents if _is_request(s)]
         for group in (sg["purchase_step"], unconf, both, signalled, req):
             if group:
                 return _clip(group[0])
