@@ -147,7 +147,7 @@ def _cfg_strict_wait() -> float:
 
 
 from logics import (
-    normalize_topic_key, normalize_platform, normalize_platforms, supported_platforms, generate_fuzzy_keywords,
+    normalize_topic_key, normalize_platform, normalize_platforms, supported_platforms, unsupported_requested, generate_fuzzy_keywords,
     enrich_no_results_answer,   # (NO-RESULTS UI)
     enqueue_search_job, get_matched_signals, analyze_with_claude,
     analyze_with_claude_stream, _extract_json_object_from_text,   # (REAL-TIME STREAMING) re-exported for routes.py's stream_answer()
@@ -186,17 +186,7 @@ app = FastAPI(
     redoc_url=None,
     openapi_url=None,
 )
-# Agar dist/ maujood ho to protected frontend serve hota hai, warna readable templates/.
-
-import os as _os
-_DIST_TEMPLATES = _os.path.join("dist", "templates")
-_DIST_ASSETS = _os.path.join("dist", "assets")
-_USE_DIST = _os.path.isdir(_DIST_TEMPLATES) and _os.getenv("FLINTEL_USE_SOURCE_TEMPLATES") != "1"
-templates = Jinja2Templates(directory=_DIST_TEMPLATES if _USE_DIST else "templates")
-if _USE_DIST and _os.path.isdir(_DIST_ASSETS):
-    from fastapi.staticfiles import StaticFiles as _StaticFiles
-    app.mount("/assets", _StaticFiles(directory=_DIST_ASSETS), name="assets")
-    
+templates = Jinja2Templates(directory="templates")
 # (SEARCH CREDITS) A fresh submit key per rendered /search form; JavaScript
 # replaces it on every intentional submit, automatic retries keep it.
 import secrets as _secrets
@@ -207,9 +197,6 @@ templates.env.globals.setdefault("new_submit_key", lambda: _secrets.token_hex(16
 # currently active chat_id, exactly like a browser-local "current chat"
 # pointer in Claude/ChatGPT.
 app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET_KEY)
-
-from frontend_loader import install_frontend_loader
-install_frontend_loader(app)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # (GUEST IDENTITY) A guest's id used to live only in the 14-day session cookie, so it
@@ -753,13 +740,16 @@ def get_user_chat_list(owner_key: str):
     )
 
 
-def set_chat_platform(chat_id: str, owner_key: str, display_value: str):
+def set_chat_platform(chat_id: str, owner_key: str, display_value: str, unsearched=None):
     """(PLATFORM PERSISTENCE) Remembers the platform choice this chat was last
-    used with, so its page reopens with the same selection. Best-effort."""
+    used with, so its page reopens with the same selection, and which explicitly
+    selected platforms that search did not cover (replaced on every search, so
+    it never describes an older one). Best-effort."""
     try:
         if chat_id and display_value:
             chats_collection.update_one({"chat_id": chat_id, "owner_key": owner_key},
-                                        {"$set": {"selected_platform": display_value}})
+                                        {"$set": {"selected_platform": display_value,
+                                                  "unsearched_platforms": list(unsearched or [])}})
     except Exception as exc:
         log.warning(f"Saving the platform selection failed for chat_id={chat_id}: {exc}")
 
@@ -2134,7 +2124,7 @@ def schedule_unfinished_turns(chat_id: str, owner_key: str, messages: list, skip
     cheap queue writes happen in the request. Never raises."""
     ids = []
     try:
-        for key in turn_finisher.unfinished_topic_keys(messages):
+        for key in turn_finisher.ondemand_topic_keys(messages):   # legacy: all; dry run: none; governed: recent + capped
             if skip_topic_key and key == skip_topic_key:
                 continue
             if turn_finisher.enqueue(chat_id, owner_key, key, due_in_seconds=0, pull_forward=True):
