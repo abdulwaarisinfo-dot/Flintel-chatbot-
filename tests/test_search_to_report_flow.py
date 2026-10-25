@@ -325,9 +325,11 @@ def test_rendered_page_shows_the_same_records(integrity_browser, flow, name):
         assert [(r[0], r[2], r[4].split("\n")[0].split(" · ")[0]) for r in rows] == \
             [(str(p["index"]), p["title"], p["intent"]) for p in _rows(ans)]
         text = page.inner_text(".answer-rendered")
-        assert ans["verified_summary"] in text
-        assert "1 qualified lead · 2 researching · 1 unconfirmed · 1 discussion · 2 competitor/vendor · " \
-               "2 unavailable sources · 3 of 12 listed excluded" in text
+        # the classification line / verified_summary prose are not shown on the page (removed on purpose); the stored answer
+        # still carries them, and the rendered table below is what the user sees
+        assert ans["verified_summary"] and ans["counts"]["qualified"] == 1
+        assert ans["verified_summary"] not in text and "Checked against the stored posts" not in text
+        assert "listed excluded" not in text and "2 researching" not in text and "1 qualified lead" not in text
         assert set(_cited(text)) <= {p["index"] for p in _rows(ans) if p["verification_status"] == "verified"}
         assert "$5k" not in text and "several others" not in text.lower() and errors == []
     finally:
