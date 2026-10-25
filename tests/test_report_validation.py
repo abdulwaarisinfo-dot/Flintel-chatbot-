@@ -291,10 +291,14 @@ def test_22_budget_trial_and_timing_without_an_approval_stay_medium(lg, monkeypa
 
 
 @pytest.mark.parametrize("name", ["chat.html", "index.html"])
-def test_21_footer_uses_categories_and_keeps_the_old_line_for_saved_answers(name):
+def test_21_footer_shows_no_classification_counts_but_the_data_keeps_them(name):
+    """The per-platform classification line (categories, "listed excluded", "excluded (of N retrieved)") was removed from the
+    page on purpose; the counts, the categories and verified_summary stay on the stored answer and are produced by the server
+    (see test_20 above). Only a cut-off answer keeps a one-line notice, and the table block builds no category text."""
     src = (ROOT / "templates" / name).read_text(encoding="utf-8")
     start = src.index("function apSourcesTable(")
-    block = src[start:src.index("container.appendChild(counts);", start)]
-    assert "totals.categories" in block and "listed excluded" in block
-    assert "excluded (of ${totals.retrieved} retrieved)" in block                 # answers saved before the patch
-    assert re.search(r"if \(totals && totals\.categories.*?\} else if \(totals && typeof totals\.relevant", block, re.S)
+    block = src[start:src.index("const anyIntent", start)]
+    for gone in ("totals.categories", "listed excluded", "excluded (of ", "qualified lead", "researching", "verified_summary"):
+        assert gone not in block, gone
+    assert "if (partial)" in block and "answer cut off; posts it did not reach were not judged" in block
+    assert "verified_summary" not in src and "totals.categories" not in src               # nothing else renders the counts either
