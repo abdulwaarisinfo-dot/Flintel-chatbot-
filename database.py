@@ -378,6 +378,13 @@ if _billing_configured:
     except Exception as exc:
         log.warning(f"Could not create flintel_subscriptions.owner_key index: {exc}")
 
+# (TURN QUEUE, turn_finisher.py) The durable queue of unfinished research turns. The handle is defined ONLY when
+# TURN_FINISH_ENABLED=true; without it the attribute does not exist and every queue function is a no-op (the behaviour
+# before this feature). Client-side handle only: no collection or index is created here, so nothing changes in the
+# database until a turn is first recorded. See turn_finisher.py (dry-run) and the README.
+if getattr(_config, "TURN_FINISH_ENABLED", False):
+    turn_finishing_collection = db3.get_collection("flintel_turn_finishing", write_concern=WriteConcern("majority"))
+
 # (GUEST GATE, guest_gate.py) One small document per guest identity, keyed by the document _id (the
 # guest id), so its atomic reserve / complete / release updates need no extra index. Holds only a
 # counter, the in-flight reservation and timestamps — no IP address, e-mail or search text.
