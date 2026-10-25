@@ -17,6 +17,7 @@ import search_credits as sc  # noqa: E402
 from tests.test_billing_hardening import cfg, db, wd  # noqa: F401,E402
 from tests.test_credit_carryover import ALICE, NOW, carry, created_raw, deliver_c, entry_of, free_charge, plan, store, sub_event, usage  # noqa: E402
 from tests.test_credit_carryover import inv_ok as carry_inv_ok  # noqa: E402
+from tests.test_credit_carryover import V_BIZ, sub_change  # noqa: E402
 from tests.test_credit_corrections import FEB, G, b_guest, bworld  # noqa: F401,E402
 from tests.test_guest_gate import gg  # noqa: F401,E402
 from tests.test_billing_hardening import D  # noqa: E402
@@ -237,3 +238,36 @@ def test_index_guard_rejects_hashed_and_malformed_specs():
     assert ig.verify_unique_index(C({"x": {"key": 5, "unique": True}}))[0] == "unverifiable"
     assert ig.verify_unique_index(C({"x": {"key": [("owner_key", 1)], "unique": "yes"}}))[0] != "ok"
     assert ig.verify_unique_index(C({"x": {"key": [("owner_key", -1)], "unique": True}}))[0] == "ok"
+
+
+class _FailPlanWrites:
+    """A plans collection whose WRITES fail while reads work: a plan-store outage between the subscription write and the plan write."""
+
+    def __init__(self, coll):
+        self._c = coll
+
+    def __getattr__(self, name):
+        return getattr(self._c, name)
+
+    def update_one(self, *a, **k):
+        raise RuntimeError("plan store down")
+
+    def insert_one(self, *a, **k):
+        raise RuntimeError("plan store down")
+
+
+def test_pending_upgrade_status_reports_the_plan_in_force_and_changes_nothing(cfg, wd):
+    """An active Standard plan record + a live Business subscription whose plan write failed (the provider will retry): the status
+    shows what enforcement applies (Standard, entitled) with the pending upgrade kept separate; enforcement and records are untouched."""
+    assert deliver_c(wd, created_raw(), NOW)["status"] == "applied"                       # plain activation (no carryover): Standard 400
+    at = NOW + D(days=2)
+    with pytest.raises(sc.CreditStoreError):                                              # upgrade event: subscription written, plan write fails
+        deliver_c(wd, sub_change(V_BIZ, "business", at), at, plans=_FailPlanWrites(wd.plans))
+    st = store(wd, at)
+    assert plan(wd)["plan"] == "standard" and st.plan_for(ALICE, at) == "standard" and st.limit_for(ALICE, at) == 400
+    assert wd.subs.find_one({"owner_key": ALICE})["plan"] == "business"                  # the subscription is ahead of the plan record
+    before = (plan(wd), usage(wd), list(wd.subs.find({})))
+    s = status(wd, at)
+    assert (s["plan"], s["entitled"], s["activation"], s["subscription_plan"]) == ("standard", True, "pending", "business")
+    assert st.limit_for(ALICE, at) == 400                                                 # enforcement is unchanged
+    assert (plan(wd), usage(wd), list(wd.subs.find({}))) == before                        # the status read wrote nothing
