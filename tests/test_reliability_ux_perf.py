@@ -28,6 +28,9 @@ import sys
 import time
 
 import pytest
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
 
 from tests.test_answer_persistence import FakeChats, env  # noqa: F401  (fixture)
 
@@ -145,9 +148,72 @@ def test_research_submit_saves_and_renders_the_chosen_platform(app_env):
     assert doc["selected_platform"] == "Reddit"
     assert doc["messages"][-1]["targeting_platform"] == "reddit"
     assert rt._chat_platform_display(doc) == "Reddit"
-    # a follow-up with another selection updates it
-    rt.search(_Req(), query="Find people looking for an ERP", platform="X / Twitter, LinkedIn", chat_id=cid)
-    assert chats.find_one({"chat_id": cid, "owner_key": OWNER})["selected_platform"] == "X / Twitter, LinkedIn"
+
+
+def _chat_doc(chats, cid):
+    return chats.find_one({"chat_id": cid, "owner_key": OWNER})
+
+
+def test_reddit_only_search_has_nothing_to_disclose(app_env):
+    lg, idx, rt, chats, state = app_env
+    resp = rt.search(_Req(), query="Find people looking for a CRM", platform="Reddit", chat_id=None)
+    doc = _chat_doc(chats, resp.headers["location"].rsplit("/", 1)[-1])
+    assert doc["messages"][-1]["targeting_platform"] == "reddit" and doc["unsearched_platforms"] == []
+    assert rt._chat_unsearched_platforms(doc) == []
+
+
+def test_mixed_selection_searches_reddit_only_and_records_what_was_not_searched(app_env):
+    lg, idx, rt, chats, state = app_env
+    resp = rt.search(_Req(), query="Find people looking for a CRM", platform="Reddit, LinkedIn, Facebook", chat_id=None)
+    cid = resp.headers["location"].rsplit("/", 1)[-1]
+    doc = _chat_doc(chats, cid)
+    assert doc["messages"][-1]["targeting_platform"] == "reddit" and doc["selected_platform"] == "Reddit"
+    assert doc["unsearched_platforms"] == ["LinkedIn", "Facebook"] and rt._chat_unsearched_platforms(doc) == ["LinkedIn", "Facebook"]
+    # the next, Reddit-only search replaces the note: it never describes an older search
+    rt.search(_Req(), query="Find people looking for an ERP", platform="Reddit", chat_id=cid)
+    assert _chat_doc(chats, cid)["unsearched_platforms"] == []
+
+
+def test_unsupported_only_selection_is_declined_without_a_chat_a_job_or_a_charge(app_env):
+    lg, idx, rt, chats, state = app_env
+    store_calls = []
+    monkey_store = lambda: store_calls.append(1)            # any credit-store access would be recorded here
+    rt._credit_store, real = monkey_store, rt._credit_store
+    try:
+        resp = rt.search(_Req(), query="Find people looking for a CRM", platform="X / Twitter, LinkedIn", chat_id=None)
+    finally:
+        rt._credit_store = real
+    body = resp.body.decode("utf-8")
+    assert "X / Twitter, LinkedIn are not supported yet" in body and "Select Reddit" in body
+    assert not chats.docs and state["jobs"] == [] and store_calls == [] and state["calls"] == []     # no chat, job, credit or model call
+    one = rt.search(_Req(), query="Find people looking for a CRM", platform="Facebook", chat_id=None)
+    assert "Facebook is not supported yet" in one.body.decode("utf-8") and not chats.docs
+
+
+@pytest.mark.parametrize("raw", ["All Platforms", "", None, "<script>", "reddit"])
+def test_default_and_unknown_selections_are_not_reported_as_unsupported(env, raw):
+    lg, _, _ = env
+    assert lg.unsupported_requested(raw)[0] == []
+
+
+def test_unsupported_requested_names_only_what_was_selected(env):
+    lg, _, _ = env
+    assert lg.unsupported_requested("Reddit, LinkedIn, Facebook") == (["LinkedIn", "Facebook"], True)
+    assert lg.unsupported_requested("X / Twitter, LinkedIn") == (["X / Twitter", "LinkedIn"], False)
+    assert lg.unsupported_requested("Facebook, Facebook") == (["Facebook"], False)
+    assert lg.unsupported_requested("All Platforms, LinkedIn")[1] is True            # "all" is a live selection
+
+
+def test_chat_page_discloses_what_was_not_searched_with_known_labels_only(app_env):
+    lg, idx, rt, chats, state = app_env
+    assert rt._chat_unsearched_platforms({"unsearched_platforms": ["LinkedIn", "<b>x</b>", "Reddit"]}) == ["LinkedIn"]
+    assert rt._chat_unsearched_platforms({}) == [] and rt._chat_unsearched_platforms({"unsearched_platforms": "x"}) == []
+    src = (ROOT / "templates" / "chat.html").read_text(encoding="utf-8")
+    snippet = src[src.index("{% if unsearched_platforms %}"):src.index("{% endif %}", src.index("{% if unsearched_platforms %}")) + 11]
+    out = rt.templates.env.from_string(snippet).render(unsearched_platforms=["LinkedIn", "Facebook"])
+    assert "Searched: Reddit. Not searched: LinkedIn, Facebook (not supported yet)." in out
+    assert rt.templates.env.from_string(snippet).render(unsearched_platforms=[]).strip() == ""
+    assert '"unsearched_platforms": _chat_unsearched_platforms(chat)' in (ROOT / "routes.py").read_text(encoding="utf-8")
 
 
 def test_older_chats_without_a_saved_platform_fall_back_safely(app_env):
