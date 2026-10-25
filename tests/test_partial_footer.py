@@ -68,8 +68,8 @@ def _footer(browser, name, answer):
         state = page.evaluate(STATE_JS)
         assert len(state) == 1, state
         footer = [t for t in lines if t.startswith(("Reddit", "X (Twitter)"))]
-        assert len(footer) == 1, lines
-        return footer[0], state[0], errors
+        assert len(footer) <= 1, lines
+        return (footer[0] if footer else None), state[0], errors
     finally:
         page.close()
 
@@ -78,8 +78,7 @@ def _footer(browser, name, answer):
 def test_complete_answer_keeps_the_existing_footer(integrity_browser, name):
     answer = _report(4, shown=4, total=22, counts=_counts(listed=7, excluded=3, qualified=1))
     footer, state, errors = _footer(integrity_browser, name, answer)
-    assert footer == "Reddit · 4 of 22 — 1 qualified lead · 3 of 7 listed excluded"
-    assert "cut off" not in footer and "analyzed posts shown" not in footer
+    assert footer is None                       # the classification line is not shown for a complete answer
     assert state["chipClass"] == "status-completed" and state["chip"] != "Partial answer", state
     assert errors == []
 
@@ -88,7 +87,7 @@ def test_complete_answer_keeps_the_existing_footer(integrity_browser, name):
 def test_explicit_complete_status_is_not_treated_as_partial(integrity_browser, name):
     answer = _report(4, shown=4, total=22, counts=_counts(listed=4, excluded=0, qualified=2), status="complete")
     footer, state, errors = _footer(integrity_browser, name, answer)
-    assert footer == "Reddit · 4 of 22 — 2 qualified leads"
+    assert footer is None
     assert state["chipClass"] == "status-completed" and errors == []
 
 
@@ -96,7 +95,7 @@ def test_explicit_complete_status_is_not_treated_as_partial(integrity_browser, n
 def test_partial_answer_says_the_answer_was_cut_off(integrity_browser, name):
     answer = _report(6, shown=6, total=20, counts=_counts(listed=6, excluded=0, qualified=1), status="partial")
     footer, state, errors = _footer(integrity_browser, name, answer)
-    assert footer == f"Reddit · 6 of 20 analyzed posts shown{CUT_OFF} — 1 qualified lead"
+    assert footer == f"Reddit · 6 of 20 analyzed posts shown{CUT_OFF}"
     # the unrecovered posts are not described as rejected, irrelevant or excluded
     assert not re.search(r"irrelevant|rejected|excluded|not relevant", footer.replace("were not judged", ""), re.I)
     # the existing chip contract is unchanged: label and class
@@ -110,10 +109,8 @@ def test_partial_answer_with_excluded_posts_keeps_the_excluded_clause(integrity_
     # 20 analyzed, the cut-off reply listed 12, the integrity step dropped 2 of them, 10 are shown
     answer = _report(10, shown=10, total=20, counts=_counts(listed=12, excluded=2, qualified=3), status="partial")
     footer, state, errors = _footer(integrity_browser, name, answer)
-    assert footer == f"Reddit · 10 of 20 analyzed posts shown{CUT_OFF} — 3 qualified leads · 2 of 12 listed excluded"
-    assert footer.count("cut off") == 1
-    # the two different gaps stay separate: not reached (cut off) vs listed then excluded
-    assert footer.index("cut off") < footer.index("2 of 12 listed excluded")
+    assert footer == f"Reddit · 10 of 20 analyzed posts shown{CUT_OFF}"
+    assert footer.count("cut off") == 1 and "qualified" not in footer and "excluded" not in footer
     assert state["chip"] == "Partial answer" and state["chipClass"] == "status-failed" and errors == []
 
 
@@ -127,7 +124,7 @@ def test_partial_answer_without_any_counts_adds_no_numbers_or_qualifier(integrit
 @pytest.mark.parametrize("name", TEMPLATES)
 def test_complete_answer_without_any_counts_is_unchanged(integrity_browser, name):
     footer, state, errors = _footer(integrity_browser, name, _report(3))
-    assert footer == "Reddit" and state["chipClass"] == "status-completed" and errors == []
+    assert footer is None and state["chipClass"] == "status-completed" and errors == []
 
 
 @pytest.mark.parametrize("name", TEMPLATES)
@@ -149,7 +146,7 @@ def test_partial_answer_names_each_platform_but_qualifies_once(integrity_browser
         page.close()
     footer = next(t for t in lines if t.startswith("Reddit"))
     assert footer == ("Reddit · 2 of 8 analyzed posts shown | X (Twitter) · 1 of 4 analyzed posts shown"
-                      + CUT_OFF + " — 0 qualified leads · 1 of 3 listed excluded")
+                      + CUT_OFF)
     assert errors == []
 
 
@@ -159,9 +156,11 @@ def test_footer_branch_is_driven_by_the_status_the_page_receives(name):
     src = (ROOT / "templates" / name).read_text(encoding="utf-8")
     start = src.index("function apSourcesTable(")
     block = src[start:src.index("container.appendChild(counts);", start)]
-    assert "function apSourcesTable(platforms, container, heading, totals, partial)" in block
+    assert "function apSourcesTable(platforms, container, heading, totals, partial, complete)" in block
     assert "analyzed posts shown" in block and "answer cut off; posts it did not reach were not judged" in block
-    assert "apSourcesTable(data.platforms, container, 'Source posts', data.counts, data.answer_status === 'partial')" in src
+    assert "qualified lead" not in block and "competitor/vendor" not in block      # no classification counts in the UI
+    assert ("apSourcesTable(data.platforms, container, 'Source posts', data.counts, data.answer_status === 'partial',\n"
+            "      data.answer_status == null || data.answer_status === 'complete')") in src       # complete = no status, or "complete"
     # the comparison view builds one footer per subject, through the same function and the same flag
     assert "apSourcesTable(subj.platforms, container, null, null, data.answer_status === 'partial')" in src
 
@@ -194,7 +193,7 @@ def _footers(browser, name, answer):
 @pytest.mark.parametrize("name", TEMPLATES)
 def test_complete_comparison_keeps_the_existing_footers(integrity_browser, name):
     lines, state, errors = _footers(integrity_browser, name, _comparison())
-    assert lines == ["Reddit · 2 of 5", "Reddit · 1 of 5"]
+    assert lines == []
     assert state["chipClass"] == "status-completed" and errors == []
 
 
@@ -210,3 +209,55 @@ def test_partial_comparison_without_counts_adds_no_numbers_or_qualifier(integrit
     lines, state, errors = _footers(integrity_browser, name, _comparison(counts=False, status="partial"))
     assert lines == ["Reddit", "Reddit"]
     assert state["chip"] == "Partial answer" and errors == []
+
+
+# --- excluded-posts note: a complete report whose stored counts confirm exclusions says so, without any counts ---------------
+NOTE = "Some retrieved posts were left out of this report because they were duplicates or not relevant to your request."
+
+
+def _lines(browser, name, answer):
+    page, errors = _reopen(browser, name, _chat(answer))
+    try:
+        return page.evaluate(FOOTER_JS), errors
+    finally:
+        page.close()
+
+
+@pytest.mark.parametrize("name", TEMPLATES)
+def test_complete_answer_with_excluded_posts_shows_the_plain_note(integrity_browser, name):
+    lines, errors = _lines(integrity_browser, name, _report(4, shown=4, total=22, counts=_counts(listed=7, excluded=3, qualified=1)))
+    assert lines == [NOTE] and errors == []
+    assert not re.search(r"\d|qualified|research|competitor|unconfirmed|discussion|unavailable", lines[0], re.I)   # no counts or categories
+
+
+@pytest.mark.parametrize("name", TEMPLATES)
+@pytest.mark.parametrize("answer", [
+    _report(4, shown=4, total=22, counts=_counts(listed=4, excluded=0, qualified=2)),                    # zero exclusions
+    _report(4, shown=4, total=22, counts=_counts(listed=4, excluded=0, qualified=2), status="complete"),  # explicit complete, zero
+    _report(3),                                                                                         # no counts stored (older answer)
+    _report(3, status="complete"),                                                                      # explicit complete, no counts
+])
+def test_no_note_when_nothing_is_confirmed_excluded(integrity_browser, name, answer):
+    lines, errors = _lines(integrity_browser, name, answer)
+    assert lines == [] and errors == []
+
+
+@pytest.mark.parametrize("name", TEMPLATES)
+@pytest.mark.parametrize("status", [None, "complete"])
+def test_note_for_a_recognised_complete_status_with_positive_exclusions(integrity_browser, name, status):
+    # production complete answers carry no answer_status at all; "complete" is accepted as the explicit spelling
+    lines, errors = _lines(integrity_browser, name, _report(4, shown=4, total=22, counts=_counts(listed=7, excluded=3, qualified=1), status=status))
+    assert lines == [NOTE] and errors == []
+
+
+@pytest.mark.parametrize("name", TEMPLATES)
+@pytest.mark.parametrize("status", ["incomplete", "limited", "something-new", ""])
+def test_no_note_for_incomplete_limited_or_unknown_status(integrity_browser, name, status):
+    lines, errors = _lines(integrity_browser, name, _report(4, shown=4, total=22, counts=_counts(listed=7, excluded=3, qualified=1), status=status))
+    assert lines == [] and errors == []
+
+
+@pytest.mark.parametrize("name", TEMPLATES)
+def test_partial_answer_keeps_only_the_cut_off_notice_not_the_note(integrity_browser, name):
+    lines, errors = _lines(integrity_browser, name, _report(10, shown=10, total=20, counts=_counts(listed=12, excluded=2, qualified=3), status="partial"))
+    assert lines == [f"Reddit · 10 of 20 analyzed posts shown{CUT_OFF}"] and errors == []
