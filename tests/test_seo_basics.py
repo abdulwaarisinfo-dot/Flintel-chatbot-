@@ -226,7 +226,7 @@ def test_description_names_only_platforms_flintel_really_searches(app_env):
 def _fresh_visitor_home(idx, rts, monkeypatch):
     """The home page as a first-time visitor (or crawler) gets it: no conversation started."""
     monkeypatch.setattr(rts, "get_owner", lambda request: ("guest:fresh", "anonymous"))
-    monkeypatch.setattr(rts, "owner_has_started_conversation", lambda owner_key: False)
+    monkeypatch.setattr(rts, "owner_has_started_conversation", lambda owner_key, on_error=True: False)
     monkeypatch.setattr(rts, "get_user_chat_list", lambda owner_key: [])
     return _client(idx).get("/").text
 
@@ -364,7 +364,7 @@ def test_about_section_is_hidden_once_a_conversation_has_started(app_env, monkey
     idx, rts, _ = app_env
     c = _client(idx)
     c.get("/")                                                      # a returning browser: it now holds its identity cookies
-    monkeypatch.setattr(rts, "owner_has_started_conversation", lambda owner_key: True)
+    monkeypatch.setattr(rts, "owner_has_started_conversation", lambda owner_key, on_error=True: True)
     monkeypatch.setattr(rts, "get_user_chat_list", lambda owner_key: [])
     assert 'class="seo-about"' not in c.get("/").text
     css = (ROOT / "templates" / "index.html").read_text(encoding="utf-8")
@@ -425,7 +425,8 @@ def test_lookup_failure_does_not_hide_the_about_section_from_a_visitor_without_c
     html = _client(idx).get("/").text                       # a brand-new client: no cookie of any kind
     assert 'class="seo-about"' in html and "What's the internet saying?" in html
     assert 'id="home-greeting"' not in html                   # the stable H1, not the returning-user greeting
-    assert calls == []                                        # a first visit owns no chats, so nothing was looked up
+    assert calls                                              # the lookup was attempted (once) and its failure fails open
+    assert len(calls) == 1                                    # and not repeated within one render
 
 
 def test_lookup_failure_keeps_the_existing_behaviour_for_a_returning_visitor(app_env, monkeypatch):
@@ -445,7 +446,7 @@ def test_a_returning_visitor_with_no_chats_still_sees_the_about_section(app_env,
     assert 'class="seo-about"' in c.get("/").text
 
 
-def test_fresh_visitor_detection_never_assumes_an_identity(app_env):
+def test_fresh_visitor_detection_never_assumes_an_identity(app_env, monkeypatch):
     idx, rts, _ = app_env
 
     class Req:
@@ -462,6 +463,57 @@ def test_fresh_visitor_detection_never_assumes_an_identity(app_env):
         assert rts._is_fresh_visitor(object()) is False                                       # anything unexpected -> old behaviour
     finally:
         rts._read_guest_cookie = real
+    monkeypatch.setattr(idx, "chats_collection", MagicMock(find_one=lambda *a, **k: None))   # the fixture DB is a stub
     forged = _client(idx)
     forged.cookies.set("fl_gid", "not-a-valid-signature")
     assert rts._read_guest_cookie.__name__ and 'class="seo-about"' in forged.get("/").text     # a forged cookie proves nothing
+
+
+# --- six cases of the About-section rule (fresh / existing owner / lookup failure) ---------------------------------
+
+def test_case1_fresh_visitor_healthy_db_sees_about(app_env, monkeypatch):
+    idx, _rts, _ = app_env
+    monkeypatch.setattr(idx, "chats_collection", MagicMock(find_one=lambda *a, **k: None))
+    assert 'class="seo-about"' in _client(idx).get("/").text
+
+
+def test_case2_fresh_visitor_lookup_failure_sees_about(app_env, monkeypatch):
+    idx, _rts, _ = app_env
+    _failing_chats(idx, monkeypatch)
+    assert 'class="seo-about"' in _client(idx).get("/").text
+
+
+def test_case3_existing_owner_with_conversations_does_not_see_about(app_env, monkeypatch):
+    idx, _rts, _ = app_env
+    c = _client(idx)
+    c.get("/")
+    monkeypatch.setattr(idx, "chats_collection", MagicMock(find_one=lambda *a, **k: {"_id": 1}))
+    assert 'class="seo-about"' not in c.get("/").text
+
+
+def test_case4_existing_owner_lookup_failure_still_counts_as_started(app_env, monkeypatch):
+    idx, _rts, _ = app_env
+    c = _client(idx)
+    c.get("/")
+    _failing_chats(idx, monkeypatch)
+    assert 'class="seo-about"' not in c.get("/").text
+
+
+def test_case5_get_owner_raising_follows_the_visitor_kind(app_env, monkeypatch):
+    idx, rts, _ = app_env
+    def boom(request):
+        raise RuntimeError("secret-detail")
+    monkeypatch.setattr(rts, "get_owner", boom)
+    ctx = lambda fresh: {"request": types.SimpleNamespace(state=types.SimpleNamespace(fresh_visitor=fresh))}
+    assert rts._tpl_conversation_started(ctx(True)) is False       # first-time visitor: About stays
+    assert rts._tpl_conversation_started(ctx(False)) is True       # existing owner: unchanged
+
+
+def test_case6_on_error_parameter_and_sanitized_logging(app_env, monkeypatch, caplog):
+    idx, rts, _ = app_env
+    _failing_chats(idx, monkeypatch)
+    with caplog.at_level("WARNING"):
+        assert rts.owner_has_started_conversation("o1") is True                    # default: treated as started
+        assert rts.owner_has_started_conversation("o1", on_error=False) is False
+    assert "lookup failed" in caplog.text
+    assert "database unavailable" not in caplog.text                                      # no raw exception text is logged
