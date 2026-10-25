@@ -63,9 +63,11 @@ def test_section_code_removed(name):
 @pytest.mark.parametrize("name", TEMPLATES)
 def test_green_non_link_accents_untouched(name):
     s = (ROOT / "templates" / name).read_text(encoding="utf-8")
-    for rule in (".btn-outline:hover { border-color: #a3e635; color: #a3e635; }",
-                 ".auth-switch button { color: #a3e635; font-weight: 600; }",
-                 ".add-btn:hover { color: #a3e635; }"):
+    # Accent colour is now electric blue (#2563EB); the rules themselves are unchanged and no lime remains.
+    assert "#a3e635" not in s.lower()
+    for rule in (".btn-outline:hover { border-color: #2563EB; color: #2563EB; }",
+                 ".auth-switch button { color: #2563EB; font-weight: 600; }",
+                 ".add-btn:hover { color: #2563EB; }"):
         assert rule in s, rule
 
 
